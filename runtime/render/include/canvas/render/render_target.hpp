@@ -150,6 +150,8 @@ class SurfaceProviderRegistry final {
     [[nodiscard]] SurfaceProviderDisposition resize(SurfaceMetrics metrics);
     [[nodiscard]] SurfaceProviderDisposition markLost() noexcept;
     [[nodiscard]] SurfaceProviderDisposition rebind() noexcept;
+    [[nodiscard]] SurfaceProviderDisposition rebind(SurfaceMetrics metrics) noexcept;
+    [[nodiscard]] SurfaceProviderDisposition adoptPrepared(SurfaceMetrics metrics) noexcept;
     [[nodiscard]] const RenderTargetInfo& activeInfo() const noexcept { return *activeInfo_; }
     [[nodiscard]] SkiaSurfaceProvider* activeProvider() const noexcept { return activeProvider_.get(); }
     [[nodiscard]] const SurfaceLifecycle& lifecycle() const noexcept { return lifecycle_; }

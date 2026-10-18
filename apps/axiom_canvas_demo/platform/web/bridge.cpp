@@ -146,6 +146,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_pointer_sample_phase(
         1U, pointerId, sequence, timestamp, x, y, pressure, 0.0F, 0.0F,
         {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
         static_cast<canvas::input::PointerPhase>(phase)});
+    if (!value->lifecycle.composition().ownerPump()) return 0;
     if (!value->lifecycle.composition().submit(batch)) return 0;
     ++value->pointerSamples;
     return 1;
@@ -156,7 +157,8 @@ EMSCRIPTEN_KEEPALIVE std::uint64_t axiom_web_pointer_samples(std::uintptr_t hand
 EMSCRIPTEN_KEEPALIVE int axiom_web_present_smoke(std::uintptr_t handle) {
     auto* value = instance(handle);
     if (value == nullptr || !value->backend || !value->backend->ready()) return 0;
-    const auto frameId = canvas::render::FrameId{value->presentedFrames + 1U};
+    const auto frameId = canvas::render::FrameId{
+        value->lifecycle.composition().runtime().nextCanonicalFrameId()};
     auto& composition = value->lifecycle.composition();
     canvas::interaction::PreviewPresentationCapture previewCapture{};
     std::uint64_t previewPresents = 0U;

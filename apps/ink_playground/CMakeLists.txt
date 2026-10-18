@@ -12,7 +12,8 @@ target_include_directories(axiom_ink_playground_common PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(axiom_ink_playground_common PUBLIC
     canvas_runtime_foundation canvas_runtime_control canvas_runtime_input canvas_runtime_ink
-    canvas_runtime_editor canvas_runtime_interaction canvas_runtime_render)
+    canvas_runtime_editor canvas_runtime_interaction canvas_runtime_render
+    canvas_runtime_composition)
 target_compile_features(axiom_ink_playground_common PUBLIC cxx_std_20)
 
 # Resolve the published SDK in this directory as well as runtime/render: the
@@ -290,7 +291,6 @@ if(WIN32 AND TARGET arc_Windows)
   endif()
   add_executable(axiom_ink_playground_windows WIN32
     platform/windows/main.cpp
-    platform/windows/windows_d3d12_skia_surface_provider.cpp
     platform/windows/windows_smoke_evidence.cpp)
   if(CanvasSkia_ICU_DATA_PATH)
     add_custom_command(TARGET axiom_ink_playground_windows POST_BUILD
@@ -301,7 +301,10 @@ if(WIN32 AND TARGET arc_Windows)
       ${CMAKE_SOURCE_DIR}/debug_ui/include)
   target_link_libraries(axiom_ink_playground_windows PRIVATE
       axiom_ink_playground_common canvas_debug_ui Arc::Windows CanvasSkia::Skia
+      axiom_minimal_windows_surface
       d3d12 dxgi dcomp libcpmt)
+  target_include_directories(axiom_ink_playground_windows PRIVATE
+      ${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host)
   if(BUILD_TESTING)
   endif()
 endif()

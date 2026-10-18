@@ -79,6 +79,12 @@ SurfaceProviderDisposition RuntimeAppBinding::markSurfaceLost() noexcept {
 SurfaceProviderDisposition RuntimeAppBinding::rebindSurface() noexcept {
     return surfaces_.rebind();
 }
+SurfaceProviderDisposition RuntimeAppBinding::rebindSurface(SurfaceMetrics metrics) noexcept {
+    return surfaces_.rebind(metrics);
+}
+SurfaceProviderDisposition RuntimeAppBinding::adoptPreparedSurface(SurfaceMetrics metrics) noexcept {
+    return surfaces_.adoptPrepared(metrics);
+}
 
 SurfaceProviderDisposition RuntimeAppBinding::registerPreviewSurfaceProfile(
     SurfaceProfile profile) {

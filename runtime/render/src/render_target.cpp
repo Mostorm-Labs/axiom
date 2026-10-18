@@ -220,4 +220,70 @@ SurfaceProviderDisposition SurfaceProviderRegistry::rebind() noexcept {
     return SurfaceProviderDisposition::kCommitted;
 }
 
+SurfaceProviderDisposition SurfaceProviderRegistry::rebind(SurfaceMetrics metrics) noexcept {
+    if (activeProvider_ == nullptr || !validMetrics(metrics)) {
+        return SurfaceProviderDisposition::kInvalidProfile;
+    }
+    const auto currentSurface = lifecycle_.current().surfaceGeneration.value();
+    const auto currentMetrics = lifecycle_.current().metricsGeneration.value();
+    if (currentSurface == std::numeric_limits<std::uint64_t>::max() ||
+        currentMetrics == std::numeric_limits<std::uint64_t>::max()) {
+        return SurfaceProviderDisposition::kGenerationExhausted;
+    }
+    if (activeProvider_->resize(metrics.physicalWidth, metrics.physicalHeight).code !=
+        BackendSubmissionCode::kAccepted) {
+        return SurfaceProviderDisposition::kProviderUnavailable;
+    }
+    const auto nextSurface = currentSurface + 1U;
+    while (activeProvider_->generation() < nextSurface) {
+        if (activeProvider_->advanceGeneration().code != BackendSubmissionCode::kAccepted) {
+            return SurfaceProviderDisposition::kProviderUnavailable;
+        }
+    }
+    if (activeProvider_->generation() > nextSurface) return SurfaceProviderDisposition::kStaleFrame;
+    const auto acquired = activeProvider_->acquire();
+    if (acquired.code != SkiaSurfaceAcquireCode::kAcquired) {
+        return SurfaceProviderDisposition::kProviderUnavailable;
+    }
+    activeProvider_->release();
+    if (lifecycle_.replace(SurfaceSnapshot{lifecycle_.current().viewId,
+                                           SurfaceGeneration{nextSurface},
+                                           MetricsGeneration{currentMetrics + 1U},
+                                           metrics}) != SurfaceLifecycleDisposition::kReplaced) {
+        return SurfaceProviderDisposition::kMetricsMismatch;
+    }
+    activeInfo_.emplace(activeInfo_->profileId, activeInfo_->kind, activeInfo_->backend,
+                        activeInfo_->format, metrics, activeInfo_->capabilities);
+    return SurfaceProviderDisposition::kCommitted;
+}
+
+SurfaceProviderDisposition SurfaceProviderRegistry::adoptPrepared(SurfaceMetrics metrics) noexcept {
+    if (activeProvider_ == nullptr || !validMetrics(metrics)) {
+        return SurfaceProviderDisposition::kInvalidProfile;
+    }
+    if (activeProvider_->generation() != lifecycle_.current().surfaceGeneration.value()) {
+        return SurfaceProviderDisposition::kStaleFrame;
+    }
+    if (activeInfo_->metrics.physicalWidth != metrics.physicalWidth ||
+        activeInfo_->metrics.physicalHeight != metrics.physicalHeight) {
+        return SurfaceProviderDisposition::kMetricsMismatch;
+    }
+    const auto acquired = activeProvider_->acquire();
+    if (acquired.code != SkiaSurfaceAcquireCode::kAcquired) {
+        return SurfaceProviderDisposition::kProviderUnavailable;
+    }
+    activeProvider_->release();
+    // A prepared provider already owns the current surface generation. Adopt
+    // the complete metrics atomically so tracker/frame identities see the same
+    // logical and physical dimensions as the provider descriptor.
+    const auto lifecycleResult = lifecycle_.adoptPrepared(metrics);
+    if (lifecycleResult != SurfaceLifecycleDisposition::kReplaced &&
+        lifecycleResult != SurfaceLifecycleDisposition::kNoGenerationAdvance) {
+        return SurfaceProviderDisposition::kMetricsMismatch;
+    }
+    activeInfo_.emplace(activeInfo_->profileId, activeInfo_->kind, activeInfo_->backend,
+                        activeInfo_->format, metrics, activeInfo_->capabilities);
+    return SurfaceProviderDisposition::kCommitted;
+}
+
 } // namespace canvas::render

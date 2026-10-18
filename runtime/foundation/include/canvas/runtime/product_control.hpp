@@ -32,6 +32,7 @@ enum class CameraFitTarget : std::uint8_t { kDocument, kSelection, kObject, kWor
 
 struct ProductControlRequest final {
   ProductControlAction action = ProductControlAction::kSetTool;
+  std::uint64_t clientId = 1;
   std::uint64_t requestId = 0;
   std::uint64_t runtimeGeneration = 0;
   std::uint64_t deadlineSequence = 0;

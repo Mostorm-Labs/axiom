@@ -106,6 +106,7 @@ target_compile_features(canvas_runtime_render PUBLIC cxx_std_20)
 
 if(MSVC)
     target_compile_options(canvas_runtime_render PRIVATE /W4 /permissive- /WX /EHsc)
+    target_compile_options(canvas_runtime_render PRIVATE /wd4702)
 else()
     target_compile_options(canvas_runtime_render PRIVATE -Wall -Wextra -Wpedantic -Werror)
     if(EMSCRIPTEN)

@@ -148,6 +148,9 @@ std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence) {
             desired.strokeEnabled = current.selectedAppearance.strokeEnabled;
             desired.stroke = current.selectedAppearance.stroke;
           }
+          if (desired.strokeWidth == base.strokeWidth) {
+            desired.strokeWidth = current.selectedAppearance.strokeWidth;
+          }
           if (desired.opacity == base.opacity) desired.opacity = current.selectedAppearance.opacity;
           request.payload.appearance = desired;
         }

@@ -7,6 +7,11 @@ namespace canvas::web_demo {
 WebSurfaceHost::WebSurfaceHost(render::SurfaceSnapshot initial) noexcept
     : lifecycle_(initial), presentation_(lifecycle_), composition_(initial.viewId) {
     (void)composition_.open();
+    facade_ = std::make_unique<runtime::CanvasRuntimeFacade>(
+        composition_.runtime(), {1U, initial.viewId.value(),
+                                  initial.surfaceGeneration.value(),
+                                  initial.metricsGeneration.value()});
+    composition_.attachControlFacade(facade_.get());
     (void)composition_.bindSurface(initial.metrics.physicalWidth,
                                    initial.metrics.physicalHeight);
     // RuntimeAppBinding advances its provider generation during the initial
@@ -59,9 +64,23 @@ WebSurfaceDisposition WebSurfaceHost::bind(const render::SurfaceSnapshot& replac
         return WebSurfaceDisposition::kRebound;
     }
     auto runtimeSurface = composition_.runtime().surface();
-    if (!runtimeSurface.available &&
-        composition_.state() == runtime::RuntimeCompositionState::kLost) {
-        if (!composition_.rebindSurface()) return WebSurfaceDisposition::kRejectedStale;
+    // Composition owns the lifecycle transition. A Web bridge may have
+    // prepared replacement providers first, which makes the Runtime surface
+    // look available while the Composition is still Lost; do not treat that
+    // intermediate fact as a completed restore.
+    if (composition_.state() == runtime::RuntimeCompositionState::kLost) {
+        const auto current = composition_.runtime().surface();
+        const bool adopted = current.available &&
+            current.generation == replacement.surfaceGeneration.value() &&
+            current.width == replacement.metrics.physicalWidth &&
+            current.height == replacement.metrics.physicalHeight;
+        if (adopted) {
+            if (!composition_.adoptPreparedSurface(current.generation, replacement.metrics)) {
+                return WebSurfaceDisposition::kRejectedStale;
+            }
+        } else if (!composition_.rebindSurface(replacement.metrics)) {
+            return WebSurfaceDisposition::kRejectedStale;
+        }
         runtimeSurface = composition_.runtime().surface();
     }
     if (!runtimeSurface.available ||

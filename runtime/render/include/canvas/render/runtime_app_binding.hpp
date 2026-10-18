@@ -60,6 +60,8 @@ class RuntimeAppBinding final {
     [[nodiscard]] SurfaceProviderDisposition resizeSurface(SurfaceMetrics metrics);
     [[nodiscard]] SurfaceProviderDisposition markSurfaceLost() noexcept;
     [[nodiscard]] SurfaceProviderDisposition rebindSurface() noexcept;
+    [[nodiscard]] SurfaceProviderDisposition rebindSurface(SurfaceMetrics metrics) noexcept;
+    [[nodiscard]] SurfaceProviderDisposition adoptPreparedSurface(SurfaceMetrics metrics) noexcept;
     [[nodiscard]] SurfaceProviderDisposition registerPreviewSurfaceProfile(
         SurfaceProfile profile);
     [[nodiscard]] SurfaceProviderDisposition selectPreviewRenderProfile(

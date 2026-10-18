@@ -69,6 +69,11 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
     target_include_directories(axiom_demo_web_surface_tests PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/platform/web)
     target_compile_features(axiom_demo_web_surface_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_demo_web_surface_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_demo_web_surface_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+    endif()
     add_test(NAME G3WebSurfaceHost COMMAND axiom_demo_web_surface_tests)
 endif()
 

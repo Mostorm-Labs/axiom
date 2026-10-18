@@ -43,6 +43,7 @@ class SurfaceLifecycle final {
 
     [[nodiscard]] SurfaceAcquireResult acquire() const;
     [[nodiscard]] SurfaceLifecycleDisposition replace(const SurfaceSnapshot& replacement);
+    [[nodiscard]] SurfaceLifecycleDisposition adoptPrepared(const SurfaceMetrics& metrics) noexcept;
     [[nodiscard]] SurfaceLifecycleDisposition markLost(ViewId viewId) noexcept;
 
     [[nodiscard]] const SurfaceSnapshot& current() const noexcept { return *_current; }

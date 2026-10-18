@@ -1,4 +1,5 @@
 #include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/canvas_runtime_facade.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "canvas/text/text_layout.hpp"
 
@@ -157,6 +158,9 @@ bool RuntimeComposition::ownerPump() noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
   if (!canMutate()) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
   ++ownerPumpCount_;
+  if (controlFacade_ != nullptr) {
+    (void)controlFacade_->process(ownerPumpCount_);
+  }
   bool derivedRefresh = false;
   for (const auto& notification : notifications_) {
     const auto* entry = resources_.find(notification.resourceId);
@@ -197,6 +201,27 @@ bool RuntimeComposition::rebindSurface() noexcept {
   if (state_ != RuntimeCompositionState::kLost) return false;
   const auto& surface = runtime_->surface();
   if (!runtime_->rebindSurface() && !surface.available) return false;
+  ++providerEpoch_;
+  return transition(RuntimeCompositionState::kReady);
+}
+bool RuntimeComposition::rebindSurface(const render::SurfaceMetrics& metrics) noexcept {
+  if (state_ != RuntimeCompositionState::kLost ||
+      !runtime_->rebindSurface(metrics)) return false;
+  ++providerEpoch_;
+  return transition(RuntimeCompositionState::kReady);
+}
+bool RuntimeComposition::adoptPreparedSurface(
+    std::uint64_t expectedGeneration, const render::SurfaceMetrics& metrics) noexcept {
+  if (state_ != RuntimeCompositionState::kLost || expectedGeneration == 0U) return false;
+  const auto& surface = runtime_->surface();
+  if (!surface.available || surface.generation != expectedGeneration ||
+      surface.width != metrics.physicalWidth || surface.height != metrics.physicalHeight) {
+    return false;
+  }
+  // The preview registry is independent from the canonical registry. Rebind
+  // it only as part of this same owner-side commit; it must not advance the
+  // canonical generation.
+  if (!runtime_->adoptPreparedSurface(metrics)) return false;
   ++providerEpoch_;
   return transition(RuntimeCompositionState::kReady);
 }

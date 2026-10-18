@@ -84,9 +84,13 @@ struct QualificationObservation final {
 
 struct SurfaceBinding final {
   std::uint64_t generation = 0;
+  float logicalWidth = 0.0F;
+  float logicalHeight = 0.0F;
   std::uint32_t width = 0;
   std::uint32_t height = 0;
   bool available = false;
+  float devicePixelRatio = 1.0F;
+  float displayScale = 1.0F;
 };
 
 struct BaselineTraceSample final {
@@ -404,6 +408,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool resizeSurface(std::uint32_t width, std::uint32_t height) noexcept;
   [[nodiscard]] bool loseSurface() noexcept;
   [[nodiscard]] bool rebindSurface() noexcept;
+  [[nodiscard]] bool rebindSurface(const render::SurfaceMetrics& metrics) noexcept;
+  [[nodiscard]] bool adoptPreparedSurface(const render::SurfaceMetrics& metrics) noexcept;
   [[nodiscard]] bool rebindPreviewSurface() noexcept;
   [[nodiscard]] bool registerSurfaceProvider(std::string profileId,
                                               std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept;
@@ -503,10 +509,14 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
            keyedStrokeIds_.empty() && history_.canRedo();
   }
   [[nodiscard]] bool undo() noexcept {
-    return canUndo() && history_.undo();
+    if (!canUndo() || !history_.undo()) return false;
+    canonicalPresentationDirty_ = true;
+    return true;
   }
   [[nodiscard]] bool redo() noexcept {
-    return canRedo() && history_.redo();
+    if (!canRedo() || !history_.redo()) return false;
+    canonicalPresentationDirty_ = true;
+    return true;
   }
   void recordPresentation(std::string evidenceKind, std::size_t pendingHandoffs,
                           double frameMs);
@@ -531,6 +541,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
       const ink::StrokeRecord&, std::uint64_t operationId) const;
   [[nodiscard]] std::uint64_t localOperationOrdinal() const noexcept;
   [[nodiscard]] bool historySceneReady() const noexcept;
+  [[nodiscard]] bool canonicalWriteAdmission() const noexcept;
   void observeApplied(const semantic::Operation&, const semantic::ApplyResult&) noexcept;
   [[nodiscard]] bool applyLocalHistoryOperation(
       semantic::Operation forward, semantic::Operation inverse) noexcept;

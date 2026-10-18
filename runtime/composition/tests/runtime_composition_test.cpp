@@ -1,6 +1,7 @@
 #include "canvas/runtime/runtime_composition.hpp"
 #include <cassert>
 #include <algorithm>
+#include <array>
 #include <string>
 
 namespace {
@@ -16,7 +17,6 @@ canvas::semantic::ResourceManifestEntry entry(std::uint64_t id) {
   value.metadata = {0x08, 0x01, 0x10, 0x01, 0x18, 0x01, 0x20, 0x01};
   return value;
 }
-
 canvas::semantic::ResourceManifest makeManifest(std::uint64_t count) {
   canvas::semantic::ResourceManifest value;
   value.manifest_revision = 1U;
@@ -217,5 +217,65 @@ int main() {
       remote, canvas::semantic::ApplySource::kRemoteSync);
   assert(remoteResult.disposition != canvas::semantic::ApplyDisposition::kApplied);
   assert(closedMutation.runtime().semanticObjectCount() == beforeClosedRemote);
+
+  // Every direct canonical owner ingress must reject writes after the
+  // surface is lost, before the semantic engine is touched.
+  canvas::runtime::RuntimeComposition lostIngress;
+  assert(lostIngress.open());
+  assert(lostIngress.bindSurface(256U, 256U));
+  assert(lostIngress.registerSource(31U));
+  auto& lostRuntime = lostIngress.runtime();
+  assert(lostRuntime.selectTool(canvas::interaction::CanvasEditingRuntime::ToolMode::kBrush));
+  canvas::input::PlatformPointerBatch brushBatch;
+  brushBatch.samples.push_back({31U, 71U, 1U, 1'000U, 10.0F, 10.0F, 0.5F, 0.0F, 0.0F,
+                               {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+                               canvas::input::PointerPhase::kDown});
+  brushBatch.samples.push_back({31U, 71U, 2U, 2'000U, 20.0F, 20.0F, 0.5F, 0.0F, 0.0F,
+                               {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+                               canvas::input::PointerPhase::kMove});
+  assert(lostIngress.submit(brushBatch));
+  const auto beforeLostBrushObjects = lostRuntime.semanticObjectCount();
+  const auto beforeLostBrushGeneration = lostRuntime.semanticGeneration();
+  assert(lostIngress.loseSurface());
+  assert(!lostRuntime.finishBrushSession(71U));
+  assert(lostRuntime.semanticObjectCount() == beforeLostBrushObjects);
+  assert(lostRuntime.semanticGeneration() == beforeLostBrushGeneration);
+
+  canvas::semantic::Operation lostOperation{
+      canvas::semantic::OperationId{canvas::foundation::ObjectId::fromUint64(1200U)},
+      canvas::semantic::DocumentId{canvas::foundation::ObjectId::fromUint64(1U)}, 1U, 1U,
+      canvas::semantic::InsertObjectsOp{{shape(1201U)}}};
+  canvas::interaction::OperationRequest lostRequest{1200U, lostOperation};
+  auto& operationPort = static_cast<canvas::interaction::OperationSubmitPort&>(lostRuntime);
+  assert(!operationPort.submit(lostRequest).accepted);
+  assert(lostRuntime.semanticObjectCount() == beforeLostBrushObjects);
+
+  auto& historyPort = static_cast<canvas::interaction::HistorySubmitPort&>(lostRuntime);
+  const std::array<canvas::semantic::Operation, 1> historyOperation{lostOperation};
+  assert(!historyPort.submit(historyOperation, canvas::semantic::ApplySource::kUndoRedo).accepted);
+  assert(lostRuntime.semanticObjectCount() == beforeLostBrushObjects);
+
+  // A successful canonical commit must leave a frame demand for a deferred
+  // platform presenter to consume.
+  canvas::runtime::RuntimeComposition demandComposition;
+  assert(demandComposition.open());
+  assert(demandComposition.bindSurface(256U, 256U));
+  assert(demandComposition.registerSource(41U));
+  demandComposition.runtime().setPlatformPresentationDeferred(true);
+  assert(demandComposition.requestCanonicalFrame(
+      demandComposition.runtime().nextCanonicalFrameId()));
+  assert(!demandComposition.readback().canonicalDemand);
+  canvas::input::PlatformPointerBatch demandDown;
+  demandDown.samples.push_back({41U, 5U, 1U, 1'000U, 20.0F, 20.0F, 0.5F, 0.0F, 0.0F,
+                               {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
+                               canvas::input::PointerPhase::kDown});
+  canvas::input::PlatformPointerBatch demandUp = demandDown;
+  demandUp.samples.front().sequence = 2U;
+  demandUp.samples.front().timestampNs = 2'000U;
+  demandUp.samples.front().x = 80.0F;
+  demandUp.samples.front().phase = canvas::input::PointerPhase::kUp;
+  assert(demandComposition.submit(demandDown));
+  assert(demandComposition.submit(demandUp));
+  assert(demandComposition.readback().canonicalDemand);
   return 0;
 }

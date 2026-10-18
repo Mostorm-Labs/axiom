@@ -36,7 +36,6 @@ bool propertyBool(const semantic::PropertyBag& bag, std::uint32_t id, bool fallb
     if (const auto* value = std::get_if<bool>(&entry.value)) return *value;
   return fallback;
 }
-
 }
 namespace {
 bool validAppearance(const runtime::CanvasAppearance& a) {
@@ -787,7 +786,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
       // in Runtime makes the scheduling decision explicit without doing a
       // fence wait from the input callback.
       canonicalPresentationDirty_ = true;
-    } else if (!presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) {
+    } else if (!presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false)) {
       return false;
     }
   }
@@ -863,9 +862,9 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     if (!creation.begin(key, creationPreset_, CreationStyle{appearanceProperties(futureAppearance_,
                         creationPreset_<=CreationPreset::kTriangle)},
                         {content.first, content.second}, viewport, seed)) { eraseSession(); return false; }
-    canonicalPresentationDirty_ = true;
+  canonicalPresentationDirty_ = true;
     if (platformPresentationDeferred_) transientOverlayDirty_ = true;
-    else (void)presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
+    else (void)presentTransientOverlayFrame(nextCanonicalFrameId());
     return true;
   }
   const auto session = creations_.find(key);
@@ -879,7 +878,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     // frame, so make the owner host repaint immediately after every move.
     canonicalPresentationDirty_ = true;
     if (platformPresentationDeferred_) transientOverlayDirty_ = true;
-    else (void)presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
+    else (void)presentTransientOverlayFrame(nextCanonicalFrameId());
     return true;
   }
   if (phase == input::PointerPhase::kCancel) {
@@ -1173,6 +1172,11 @@ semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
   return result;
 }
 
+bool CanvasEditingRuntime::canonicalWriteAdmission() const noexcept {
+  return !closed_ && surface_.available &&
+         std::this_thread::get_id() == ownerThread_ && !publicationCallbackActive_;
+}
+
 bool CanvasEditingRuntime::applyLocalHistoryOperation(
     semantic::Operation forward, semantic::Operation inverse) noexcept {
   if (closed_ || !surface_.available || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_) return false;
@@ -1427,7 +1431,7 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
       semanticGeneration_.current(), runtimeSceneHost_->revision(),
       render::SurfaceGeneration{surface_.generation},
       render::MetricsGeneration{surface_.generation},
-      render::FrameId{canonicalFrameCount_ + 1U},
+      render::FrameId{nextCanonicalFrameId()},
       foundation::WorldRect{0.0F, 0.0F, static_cast<float>(surface_.width),
                             static_cast<float>(surface_.height)}};
   selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
@@ -1490,7 +1494,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     if (editingHandle_ == render::HandleKind::kNone && !moveSelected) {
       (void)selectAtViewPoint(x,y);
       editingPointer_ = key;
-      (void)presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
+      (void)presentTransientOverlayFrame(nextCanonicalFrameId());
       return true;
     }
     const auto* object = semanticObjects_.find(selection_.primary());
@@ -1507,7 +1511,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     editingDownWorld_ = {world.first,world.second};
     editingGeneration_ = semanticGeneration_.current();
     editingChanged_ = false;
-    (void)presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
+    (void)presentTransientOverlayFrame(nextCanonicalFrameId());
     return true;
   }
   if (key != editingPointer_) return true;
@@ -1651,8 +1655,8 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     // in the same interaction frame as the resolved snap, without waiting for
     // a canonical operation or a later unrelated repaint.
     (void)renderSelectionOverlay();
-    canonicalPresentationDirty_ = true;
-    (void)presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
+  canonicalPresentationDirty_ = true;
+    (void)presentTransientOverlayFrame(nextCanonicalFrameId());
     if (phase == input::PointerPhase::kUp) {
       const bool accepted=!editingChanged_ || transformDrag_.commit();
       if (accepted && editingChanged_) {
@@ -1778,7 +1782,7 @@ bool CanvasEditingRuntime::eraserBegin(std::uint64_t pointerId) noexcept {
   // render pump presents it. Do that handoff before starting an eraser so the
   // overlay cannot expose the shape's former location for one frame.
   if (canonicalPresentationDirty_ && surface_.available && activeSurfaceProvider() != nullptr) {
-    if (!presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false)) return false;
+    if (!presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false)) return false;
   }
   std::lock_guard lock(previewStateMutex_);
   if (toolMode_ == ToolMode::kBrush || pointerId == 0U || eraserTraces_.contains(pointerId)) return false;
@@ -1914,6 +1918,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(false);
   const auto it = eraserTraces_.find(pointerId);
   if (it == eraserTraces_.end()) return false;
+  if (!canonicalWriteAdmission()) return false;
   if (it->second.empty() || runtimeSceneHost_ == nullptr) {
     eraserTraces_.erase(it);
     eraserPreviewRevisions_.erase(pointerId);
@@ -2101,11 +2106,12 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
     // next frame; a failed projection must not lose the accepted history.
     (void)sceneCoordinator_->apply(*sceneCompiler_, input);
   }
+  canonicalPresentationDirty_ = true;
   if (!platformPresentationDeferred_) {
     // Semantic acceptance is already complete. A failed derived present must
     // not skip preview cleanup; the next frame may recover the Scene while the
     // eraser overlay is retired immediately.
-    (void)presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+    (void)presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false);
   }
   if (previewController_ != nullptr && previewController_->active()) {
     if (!previewController_->cancelSession(pointerId) || previewProvider_ == nullptr ||
@@ -2260,6 +2266,7 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
   std::lock_guard lock(previewStateMutex_);
   const auto it = brushSessions_.find(pointerId);
   if (it == brushSessions_.end()) return false;
+  if (!canonicalWriteAdmission()) return false;
   AXIOM_ANDROID_DIAG("finish begin pointer=%llu objects=%zu scene_gen=%llu", static_cast<unsigned long long>(pointerId), semanticObjects_.size(), static_cast<unsigned long long>(semanticGeneration_.current().value()));
   ink::BrushCommitIntent intent;
   if (it->second->seal(intent) != ink::BrushSessionError::kNone) return false;
@@ -2311,6 +2318,7 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
     const auto synchronized = sceneCoordinator_->apply(*sceneCompiler_, sceneInput);
     AXIOM_ANDROID_DIAG("scene apply pointer=%llu ok=%d objects=%zu scene_gen=%llu", static_cast<unsigned long long>(pointerId), synchronized ? 1 : 0, semanticObjects_.size(), static_cast<unsigned long long>(semanticGeneration_.current().value()));
   }
+  canonicalPresentationDirty_ = true;
   if (applied.commit_record.has_value()) {
     const ink::CanonicalHandoffIdentity identity{
         1U, pointerId, 1U, applied.commit_record->operation_id,
@@ -2406,7 +2414,7 @@ bool CanvasEditingRuntime::applyViewportNavigation(
       canonicalPresentationDirty_ = true;
       return true;
     }
-    return presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+    return presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false);
   }
   return true;
 }
@@ -2435,7 +2443,7 @@ bool CanvasEditingRuntime::setViewportZoomAt(float zoom, float anchorX,
       canonicalPresentationDirty_ = true;
       return true;
     }
-    return presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+    return presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false);
   }
   return true;
 }
@@ -2471,7 +2479,7 @@ bool CanvasEditingRuntime::fitViewportToContent(
       canonicalPresentationDirty_ = true;
       return true;
     }
-    return presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+    return presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false);
   }
   return true;
 }
@@ -2531,7 +2539,7 @@ semantic::Operation CanvasEditingRuntime::legacyStrokeOperation(
 
 interaction::SubmitResult CanvasEditingRuntime::submit(
     const interaction::OperationRequest& request) {
-  if (std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_)
+  if (!canonicalWriteAdmission())
     return interaction::SubmitResult::rejected();
   if (request.operationId == 0U) return interaction::SubmitResult::rejected();
   // Identity alone carries no semantic intent. Legacy Ink supplies its
@@ -2561,6 +2569,7 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
     ++submittedOperationCount_;
     observeApplied(operation, applied);
   }
+    canonicalPresentationDirty_ = true;
   return interaction::SubmitResult::acceptedResult();
 }
 
@@ -2621,7 +2630,7 @@ bool CanvasEditingRuntime::recoverHistoryScene() noexcept {
 
 interaction::SubmitResult CanvasEditingRuntime::submit(
     std::span<const semantic::Operation> operations, semantic::ApplySource source) {
-  if (closed_ || std::this_thread::get_id() != ownerThread_ || publicationCallbackActive_)
+  if (!canonicalWriteAdmission())
     return interaction::SubmitResult::rejected();
   // This host records only one-operation compensation entries. Reject larger
   // batches before mutation; other EditorHistory owners may support them.
@@ -2649,7 +2658,7 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
     // Once Semantic has accepted, presentation/projection failure cannot
     // reject that mutation. The next frame recovers the derived Scene.
     if (!platformPresentationDeferred_) {
-      (void)presentCanonicalFrame(canonicalFrameCount_ + 1U, 0.0, false);
+      (void)presentCanonicalFrame(nextCanonicalFrameId(), 0.0, false);
     }
   }
   return interaction::SubmitResult::acceptedResult();
@@ -2677,34 +2686,47 @@ bool CanvasEditingRuntime::bindSurface(std::uint32_t width,
           1.0F, 1.0F}) != render::SurfaceProviderDisposition::kCommitted) {
     return false;
   }
-  surface_ = SurfaceBinding{appBinding_->surfaces().lifecycle().current().surfaceGeneration.value(), width, height, true};
+  const auto& initialMetrics = appBinding_->surfaces().lifecycle().current().metrics;
+  surface_ = SurfaceBinding{appBinding_->surfaces().lifecycle().current().surfaceGeneration.value(),
+                            initialMetrics.logicalWidth, initialMetrics.logicalHeight,
+                            width, height, true, initialMetrics.devicePixelRatio,
+                            initialMetrics.displayScale};
   lifecycle_ = std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
       viewId_, render::SurfaceGeneration{surface_.generation},
       render::MetricsGeneration{surface_.generation},
-      render::SurfaceMetrics{static_cast<float>(width), static_cast<float>(height),
-                             width, height, 1.0F, 1.0F}});
+      initialMetrics});
   tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
 #if !defined(__EMSCRIPTEN__)
   // Native hosts use the deterministic transparent overlay until their
   // platform provider is registered. Web owns both canvas/context resources
   // and registers its preview provider explicitly after the canonical one.
-  auto previewProvider = std::make_unique<render::TransparentOverlaySkiaSurfaceProvider>();
-  if (previewProvider->resize(width, height).code != render::BackendSubmissionCode::kAccepted) {
-    return false;
+  // A platform consumer may have already registered a real preview provider
+  // (for example the Windows D3D12/DirectComposition adapter). Preserve that
+  // provider and only create the raster overlay for legacy hosts with no
+  // preview surface profile yet.
+  if (appBinding_->previewSurfaces() == nullptr) {
+    auto previewProvider = std::make_unique<render::TransparentOverlaySkiaSurfaceProvider>();
+    if (previewProvider->resize(width, height).code != render::BackendSubmissionCode::kAccepted) {
+      return false;
+    }
+    auto* previewRaw = previewProvider.get();
+    auto previewInfo = previewProvider->describe();
+    previewInfo.profileId = "arc-preview-surface";
+    if (appBinding_->registerPreviewSurfaceProfile(
+            render::SurfaceProfile{previewInfo, std::move(previewProvider)}) !=
+        render::SurfaceProviderDisposition::kCommitted) {
+      return false;
+    }
+    previewProvider_ = previewRaw;
+  } else {
+    previewProvider_ = appBinding_->previewSurfaces()->activeProvider();
   }
-  auto* previewRaw = previewProvider.get();
-  auto previewInfo = previewProvider->describe();
-  previewInfo.profileId = "arc-preview-surface";
-  if (appBinding_->registerPreviewSurfaceProfile(
-          render::SurfaceProfile{previewInfo, std::move(previewProvider)}) !=
-      render::SurfaceProviderDisposition::kCommitted) {
-    return false;
-  }
-  previewProvider_ = previewRaw;
+  if (previewProvider_ == nullptr) return false;
   previewController_ = std::make_unique<render::PreviewSurfaceController>(
       skiaRenderer_, *previewProvider_);
 #endif
   ++resizeEvents_;
+  canonicalPresentationDirty_ = true;
   return true;
 }
 
@@ -2728,15 +2750,19 @@ bool CanvasEditingRuntime::resizeSurface(std::uint32_t width,
   surface_.width = width;
   surface_.height = height;
   surface_.available = true;
+  const auto& resizedMetrics = appBinding_->surfaces().activeInfo().metrics;
+  surface_.logicalWidth = resizedMetrics.logicalWidth;
+  surface_.logicalHeight = resizedMetrics.logicalHeight;
+  surface_.devicePixelRatio = resizedMetrics.devicePixelRatio;
+  surface_.displayScale = resizedMetrics.displayScale;
   lifecycle_ = std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
       viewId_, render::SurfaceGeneration{surface_.generation},
       render::MetricsGeneration{surface_.generation},
-      render::SurfaceMetrics{static_cast<float>(width), static_cast<float>(height),
-                             width, height, 1.0F, 1.0F}});
+      resizedMetrics});
   tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
   if (previewProvider_ == nullptr || appBinding_->previewSurfaces() == nullptr ||
       appBinding_->resizePreviewSurface(render::SurfaceMetrics{
-          static_cast<float>(width), static_cast<float>(height), width, height,
+      static_cast<float>(width), static_cast<float>(height), width, height,
           1.0F, 1.0F}) != render::SurfaceProviderDisposition::kCommitted) {
     return false;
   }
@@ -2745,6 +2771,7 @@ bool CanvasEditingRuntime::resizeSurface(std::uint32_t width,
     return false;
   }
   ++resizeEvents_;
+  canonicalPresentationDirty_ = true;
   return true;
 }
 
@@ -2775,12 +2802,72 @@ bool CanvasEditingRuntime::rebindSurface() noexcept {
     return false;
   }
   surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
+  const auto& reboundMetrics = appBinding_->surfaces().lifecycle().current().metrics;
+  surface_.width = reboundMetrics.physicalWidth;
+  surface_.height = reboundMetrics.physicalHeight;
   surface_.available = true;
+  surface_.logicalWidth = reboundMetrics.logicalWidth;
+  surface_.logicalHeight = reboundMetrics.logicalHeight;
+  surface_.devicePixelRatio = reboundMetrics.devicePixelRatio;
+  surface_.displayScale = reboundMetrics.displayScale;
   lifecycle_ = std::make_unique<render::SurfaceLifecycle>(
       appBinding_->surfaces().lifecycle().current());
   tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
-  if (previewController_ != nullptr && !previewController_->rebind(previewProvider_->generation())) return false;
+  if (previewController_ != nullptr && previewController_->active() &&
+      !previewController_->rebind(previewProvider_->generation())) return false;
   ++rebindEvents_;
+  return true;
+}
+
+bool CanvasEditingRuntime::rebindSurface(const render::SurfaceMetrics& metrics) noexcept {
+  if (editingPointer_.valid()) cancelSelectionTransform();
+  std::lock_guard providerLock(previewProviderMutex_);
+  std::lock_guard lock(previewStateMutex_);
+  if (appBinding_ == nullptr ||
+      appBinding_->rebindSurface(metrics) != render::SurfaceProviderDisposition::kCommitted ||
+      (previewProvider_ != nullptr && appBinding_->resizePreviewSurface(metrics) !=
+           render::SurfaceProviderDisposition::kCommitted)) {
+    return false;
+  }
+  surface_.generation = appBinding_->surfaces().lifecycle().current().surfaceGeneration.value();
+  surface_.width = metrics.physicalWidth;
+  surface_.height = metrics.physicalHeight;
+  surface_.logicalWidth = metrics.logicalWidth;
+  surface_.logicalHeight = metrics.logicalHeight;
+  surface_.available = true;
+  surface_.devicePixelRatio = metrics.devicePixelRatio;
+  surface_.displayScale = metrics.displayScale;
+  lifecycle_ = std::make_unique<render::SurfaceLifecycle>(
+      appBinding_->surfaces().lifecycle().current());
+  tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
+  if (previewController_ != nullptr && previewProvider_ != nullptr &&
+      previewController_->active() &&
+      !previewController_->rebind(previewProvider_->generation())) return false;
+  ++rebindEvents_;
+  canonicalPresentationDirty_ = true;
+  return true;
+}
+
+bool CanvasEditingRuntime::adoptPreparedSurface(const render::SurfaceMetrics& metrics) noexcept {
+  std::lock_guard providerLock(previewProviderMutex_);
+  std::lock_guard lock(previewStateMutex_);
+  if (appBinding_ == nullptr ||
+      appBinding_->adoptPreparedSurface(metrics) != render::SurfaceProviderDisposition::kCommitted) {
+    return false;
+  }
+  if (previewProvider_ != nullptr &&
+      previewController_ != nullptr && previewController_->active() &&
+      !previewController_->rebind(previewProvider_->generation())) return false;
+  surface_.width = metrics.physicalWidth;
+  surface_.height = metrics.physicalHeight;
+  surface_.logicalWidth = metrics.logicalWidth;
+  surface_.logicalHeight = metrics.logicalHeight;
+  surface_.available = true;
+  surface_.devicePixelRatio = metrics.devicePixelRatio;
+  surface_.displayScale = metrics.displayScale;
+  lifecycle_ = std::make_unique<render::SurfaceLifecycle>(appBinding_->surfaces().lifecycle().current());
+  tracker_ = std::make_unique<render::PresentationTracker>(*lifecycle_);
+  canonicalPresentationDirty_ = true;
   return true;
 }
 
@@ -2912,7 +2999,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   AXIOM_ANDROID_DIAG("present begin frame=%llu objects=%zu scene_records=%zu", static_cast<unsigned long long>(frameId), semanticObjects_.size(), sceneCoordinator_ == nullptr ? 0U : sceneCoordinator_->runtimeScene().records().size());
   if (!surface_.available || frameId == 0U) { AXIOM_ANDROID_DIAG("present reject surface=%d frame=%llu", surface_.available ? 1 : 0, static_cast<unsigned long long>(frameId)); return false; }
   if (frameIdHighWater_ == std::numeric_limits<std::uint64_t>::max()) return false;
-  if (frameId <= frameIdHighWater_) frameId = frameIdHighWater_ + 1U;
+  if (frameId <= frameIdHighWater_) return false;
   frameIdHighWater_ = frameId;
   if (runtimeSceneHost_ == nullptr || sceneCoordinator_ == nullptr ||
       activeSurfaceProvider() == nullptr) { AXIOM_ANDROID_DIAG("present reject missing deps"); return false; }
@@ -2957,9 +3044,9 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       // renderer authority. Keep it covering the physical target; the
       // camera above carries the actual pinch transform.
       worldViewport,
-      render::SurfaceMetrics{static_cast<float>(surface_.width),
-                             static_cast<float>(surface_.height), surface_.width,
-                             surface_.height, 1.0F, 1.0F},
+       render::SurfaceMetrics{surface_.logicalWidth, surface_.logicalHeight,
+                             surface_.width, surface_.height,
+                             surface_.devicePixelRatio, surface_.displayScale},
       semanticGeneration, runtimeSceneHost_->revision(),
       render::SurfaceGeneration{surface_.generation},
       render::MetricsGeneration{surface_.generation}, render::FrameId{frameId},
@@ -3171,7 +3258,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
     return false;
   }
   if (frameIdHighWater_ == std::numeric_limits<std::uint64_t>::max()) return false;
-  if (frameId <= frameIdHighWater_) frameId = frameIdHighWater_ + 1U;
+  if (frameId <= frameIdHighWater_) return false;
   frameIdHighWater_ = frameId;
   if (!recoverHistoryScene()) return false;
   const auto viewport = viewportController_->state();
@@ -3205,9 +3292,10 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
                           zoom, 0.0F,
                           render::CameraGeneration{cameraGeneration()}},
       worldViewport,
-      render::SurfaceMetrics{static_cast<float>(surface_.width),
-                             static_cast<float>(surface_.height), surface_.width,
-                             surface_.height, 1.0F, 1.0F},
+       render::SurfaceMetrics{surface_.logicalWidth, surface_.logicalHeight,
+                              surface_.width, surface_.height,
+                              surface_.devicePixelRatio,
+                              surface_.displayScale},
       semanticGeneration_.current(), runtimeSceneHost_->revision(),
       render::SurfaceGeneration{surface_.generation},
       render::MetricsGeneration{surface_.generation}, render::FrameId{frameId},
@@ -3280,7 +3368,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
 bool CanvasEditingRuntime::retryTransientOverlayFrame() noexcept {
   if (!transientOverlayDirty_) return true;
   if (!creationActive() && !selectionTransformActive()) return clearTransientOverlay();
-  return presentTransientOverlayFrame(canonicalFrameCount_ + 1U);
+  return presentTransientOverlayFrame(nextCanonicalFrameId());
 }
 
 bool CanvasEditingRuntime::clearTransientOverlay() noexcept {

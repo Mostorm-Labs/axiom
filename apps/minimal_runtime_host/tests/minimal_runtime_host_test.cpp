@@ -1,4 +1,5 @@
 #include "minimal_runtime_host.hpp"
+#include "minimal_runtime_facade.hpp"
 #include "canvas/interaction/creation_session.hpp"
 
 #include <cassert>
@@ -66,5 +67,39 @@ int main() {
   canvas::minimal_runtime_host::MinimalRuntimeHost realHost;
   assert(realHost.registerSource(9U));
   realEditingWithoutHostToolCallbacks(realHost);
+
+  canvas::minimal_runtime_host::MinimalRuntimeHost facadeHost;
+  canvas::minimal_runtime_host::MinimalRuntimeFacade facade(facadeHost);
+  assert(facadeHost.runtime().bindSurface(256, 256));
+  const auto target = facade.mountedCanvasTargets().front();
+  assert(facade.setBrush(2U, 1U, 1U, target.runtimeEpoch).state ==
+         canvas::runtime::ProductControlState::kQueued);
+  assert(facade.process() == 1U);
+  assert(facadeHost.runtime().selectedBrushProfile() == "marker-flat-v1");
+
+  assert(facade.setSelectionMode(true, 2U, target.runtimeEpoch).state ==
+         canvas::runtime::ProductControlState::kQueued);
+  assert(facade.process() == 1U);
+  assert(facadeHost.runtime().selectionMode());
+
+  assert(facade.setEraser(2U, 3U, target.runtimeEpoch).state ==
+         canvas::runtime::ProductControlState::kQueued);
+  assert(facade.process() == 1U);
+  assert(facadeHost.runtime().toolMode() ==
+         canvas::interaction::CanvasEditingRuntime::ToolMode::kPartialEraser);
+
+  const auto creation = facade.submitCanvasControl([&] {
+    canvas::runtime::CanvasControlRequest request{};
+    request.clientId = 1U;
+    request.requestId = 4U;
+    request.target = target;
+    request.payload.kind = canvas::runtime::CanvasControlPayloadKind::kSelectCreationPreset;
+    request.payload.creationPreset = canvas::runtime::CanvasCreationPreset::kEllipse;
+    return request;
+  }());
+  assert(creation.state == canvas::runtime::ProductControlState::kQueued);
+  assert(facade.process() == 1U);
+  assert(facadeHost.runtime().creationPreset() ==
+         canvas::interaction::CreationPreset::kEllipse);
   return 0;
 }

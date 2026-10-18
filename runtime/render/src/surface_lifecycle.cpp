@@ -76,6 +76,21 @@ SurfaceLifecycleDisposition SurfaceLifecycle::replace(const SurfaceSnapshot& rep
     return SurfaceLifecycleDisposition::kReplaced;
 }
 
+SurfaceLifecycleDisposition SurfaceLifecycle::adoptPrepared(
+    const SurfaceMetrics& metrics) noexcept {
+    if (!_current || !validMetrics(metrics)) {
+        return SurfaceLifecycleDisposition::kInvalidMetrics;
+    }
+    if (_available) {
+        return _current->metrics == metrics ? SurfaceLifecycleDisposition::kNoGenerationAdvance
+                                            : SurfaceLifecycleDisposition::kMetricsMismatch;
+    }
+    _current.emplace(_current->viewId, _current->surfaceGeneration,
+                     _current->metricsGeneration, metrics);
+    _available = true;
+    return SurfaceLifecycleDisposition::kReplaced;
+}
+
 SurfaceLifecycleDisposition SurfaceLifecycle::markLost(ViewId viewId) noexcept {
     if (viewId != _current->viewId) {
         return SurfaceLifecycleDisposition::kWrongView;

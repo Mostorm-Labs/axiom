@@ -5,6 +5,7 @@
 #include "canvas/render/frame_state.hpp"
 #include "canvas/render/presentation_tracker.hpp"
 #include "canvas/render/surface_lifecycle.hpp"
+#include "canvas/render/skia_surface_provider.hpp"
 #include "canvas/semantic/semantic_generation.hpp"
 
 #include <cassert>
@@ -129,6 +130,25 @@ void invalidReplacementHasNoRuntimeSideEffect() {
     assert(host.lifecycle().current() == lifecycleBefore);
 }
 
+void preparedBridgeProvidersAreAdoptedWithoutDoubleAdvance() {
+    WebSurfaceHost host{surface(70, 70, metrics(320U, 180U))};
+    assert(host.markLost() == SurfaceLifecycleDisposition::kLost);
+    auto canonical = std::make_unique<RasterSkiaSurfaceProvider>();
+    assert(canonical->resize(640U, 360U).code == BackendSubmissionCode::kAccepted);
+    assert(host.composition().runtime().registerSurfaceProvider(
+        "prepared-web-canonical", std::move(canonical)));
+    auto preview = std::make_unique<RasterSkiaSurfaceProvider>();
+    assert(preview->resize(640U, 360U).code == BackendSubmissionCode::kAccepted);
+    assert(host.composition().runtime().registerPreviewSurfaceProvider(
+        "prepared-web-preview", std::move(preview)));
+    const auto prepared = host.composition().runtime().surface();
+    assert(prepared.available);
+    assert(host.bind(surface(prepared.generation, prepared.generation,
+                             metrics(640U, 360U))) == WebSurfaceDisposition::kRebound);
+    assert(host.composition().state() == canvas::runtime::RuntimeCompositionState::kReady);
+    assert(host.composition().runtime().surface().generation == prepared.generation);
+}
+
 } // namespace
 
 int main() {
@@ -137,5 +157,6 @@ int main() {
     runtimeCompositionCanonicalFeedbackClosesTheHandoff();
     compositionAndPlatformShareSurfaceIdentity();
     invalidReplacementHasNoRuntimeSideEffect();
+    preparedBridgeProvidersAreAdoptedWithoutDoubleAdvance();
     return 0;
 }

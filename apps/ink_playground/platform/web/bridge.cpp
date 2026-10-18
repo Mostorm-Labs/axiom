@@ -65,6 +65,22 @@ class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacad
   void processCanvasControlsAtSafePoint(std::uint64_t sequence) noexcept {
     (void)processCanvasControls(sequence);
   }
+  [[nodiscard]] canvas::runtime::ProductControlReceipt settle(
+      canvas::runtime::ProductControlReceipt receipt,
+      std::uint64_t sequence) noexcept {
+    if (receipt.state != canvas::runtime::ProductControlState::kQueued) return receipt;
+    processCanvasControlsAtSafePoint(sequence);
+    if (receipt.control.has_value()) {
+      if (const auto terminal = canvasControlReceipt(receipt.control->key);
+          terminal.has_value()) {
+        receipt.control = terminal;
+        receipt.state = terminal->state == canvas::runtime::CanvasControlReceiptState::kApplied
+            ? canvas::runtime::ProductControlState::kApplied
+            : canvas::runtime::ProductControlState::kRejected;
+      }
+    }
+    return receipt;
+  }
   [[nodiscard]] std::uint64_t nextRequestId() noexcept {
     if (nextRequest_ == 0U) nextRequest_ = 1U;
     return nextRequest_++;
@@ -79,120 +95,6 @@ class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacad
             {host_.canUndo(), host_.canRedo()},
             {static_cast<std::uint32_t>(host_.toolMode()), false, 0U, 0U,
              host_.snapCandidateCount(), 0U, 0U}};
-  }
-  [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
-    const auto diagnostics = readDiagnostics();
-    const auto& profile = host_.selectedBrushProfile();
-    auto result = canvas::runtime::RuntimeStateSnapshot{{diagnostics.identity.runtimeGeneration, diagnostics.identity.documentGeneration,
-             diagnostics.identity.documentRevision, diagnostics.identity.viewGeneration,
-             diagnostics.identity.surfaceGeneration},
-            {diagnostics.interaction.toolId,
-             profile == "vector-solid-v1" ? 1U : profile == "marker-flat-v1" ? 2U
-             : profile == "chalk-grain-v1" ? 3U : 4U,
-             host_.selectedBrushRevision(),
-             host_.toolMode() == Host::ToolMode::kObjectEraser ? 1U
-             : host_.toolMode() == Host::ToolMode::kPartialEraser ? 2U : 0U},
-            {diagnostics.camera.scale, diagnostics.camera.translationX,
-             diagnostics.camera.translationY},
-            {diagnostics.history.canUndo, diagnostics.history.canRedo},
-            {diagnostics.interaction.selectionMode,
-             diagnostics.interaction.selectedObjectCount,
-             diagnostics.interaction.selectedPrimaryObject,
-             diagnostics.interaction.snapCandidateCount}, {}};
-    const auto control = readCanvasControlSnapshot(canvasTarget());
-    result.control.selectedKind = control.selectedKind;
-    result.control.selectedVersion = control.selectedVersion;
-    result.control.selectedShapeKind = control.selectedShapeKind;
-    result.control.selectedLocked = control.selectedLocked;
-    result.control.selectedVisible = control.selectedVisible;
-    result.control.selectedSizeSupported = control.selectedSizeSupported;
-    result.control.selectedWidth = control.selectedWidth;
-    result.control.selectedHeight = control.selectedHeight;
-    for (int i = 0; i < 6; ++i) result.control.selectedTransform[i] = control.selectedTransform[i];
-    result.control.semanticGeneration = control.semanticGeneration;
-    result.control.appliedCommitEpoch = control.appliedCommitEpoch;
-    result.control.appliedCommitOrdinal = control.appliedCommitOrdinal;
-    result.control.presentedSemanticGeneration = control.presentedSemanticGeneration;
-    result.control.axisLocalDurable = control.axisLocalDurable;
-    result.control.axisCloudSynced = control.axisCloudSynced;
-    return result;
-  }
-  [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(
-      const canvas::runtime::ProductControlRequest& request) noexcept override {
-    canvas::runtime::ProductControlReceipt receipt{request.requestId,
-        canvas::runtime::ProductControlState::kRejected, 1U};
-    if (request.runtimeGeneration != 0U && request.runtimeGeneration != 1U) return receipt;
-    if (request.action == canvas::runtime::ProductControlAction::kSetBrush) {
-      static constexpr const char* profiles[] = {
-          "vector-solid-v1", "marker-flat-v1", "chalk-grain-v1", "membrane-v1"};
-      if (request.brushId < 1U || request.brushId > 4U) return receipt;
-      const auto revision = request.brushRevision == 0U
-          ? (request.brushId == 3U ? 4U : 1U) : request.brushRevision;
-      if (host_.selectTool(Host::ToolMode::kBrush) &&
-          host_.selectBrushProfile(profiles[request.brushId - 1U], revision)) {
-        receipt.state = canvas::runtime::ProductControlState::kApplied;
-      }
-      return receipt;
-    }
-    if (request.action == canvas::runtime::ProductControlAction::kSetEraser) {
-      const auto mode = request.eraserId == 1U ? Host::ToolMode::kObjectEraser
-          : request.eraserId == 2U ? Host::ToolMode::kPartialEraser : Host::ToolMode::kBrush;
-      if (request.eraserId != 0U && host_.selectTool(mode)) {
-        receipt.state = canvas::runtime::ProductControlState::kApplied;
-      }
-      return receipt;
-    }
-    if (request.action == canvas::runtime::ProductControlAction::kSetTool) {
-      bool applied = false;
-      if (request.toolId == 0U) {
-        applied = host_.setSelectionMode(false) && host_.selectTool(Host::ToolMode::kBrush);
-      } else if (request.toolId == 1U) {
-        applied = host_.setSelectionMode(false) &&
-            host_.selectTool(Host::ToolMode::kObjectEraser);
-      } else if (request.toolId == 2U) {
-        applied = host_.setSelectionMode(false) &&
-            host_.selectTool(Host::ToolMode::kPartialEraser);
-      }
-      receipt.state = applied ? canvas::runtime::ProductControlState::kApplied
-                              : canvas::runtime::ProductControlState::kRejected;
-      return receipt;
-    }
-    if (request.action == canvas::runtime::ProductControlAction::kSetSelectionMode) {
-      receipt.state = host_.setSelectionMode(request.selectionMode)
-          ? canvas::runtime::ProductControlState::kApplied
-          : canvas::runtime::ProductControlState::kRejected;
-      return receipt;
-    }
-    if (request.action == canvas::runtime::ProductControlAction::kUndo ||
-        request.action == canvas::runtime::ProductControlAction::kRedo) {
-      const bool applied = request.action == canvas::runtime::ProductControlAction::kUndo
-          ? host_.undo() : host_.redo();
-      receipt.state = applied ? canvas::runtime::ProductControlState::kApplied
-                              : canvas::runtime::ProductControlState::kRejected;
-      return receipt;
-    }
-    if (request.action == canvas::runtime::ProductControlAction::kSetCamera) {
-      const bool applied = request.cameraAction ==
-              static_cast<std::uint32_t>(canvas::runtime::CameraControlAction::kFitToContent)
-          ? (request.cameraFitTarget == canvas::runtime::CameraFitTarget::kSelection
-                 ? host_.fitViewportToSelection()
-                 : request.cameraFitTarget == canvas::runtime::CameraFitTarget::kObject
-                     ? host_.fitViewportToObject(
-                         canvas::foundation::ObjectId::fromUint64(request.cameraObjectId))
-                     : host_.fitViewportToContent())
-          : host_.applyViewportNavigation({
-              request.cameraAction == static_cast<std::uint32_t>(canvas::runtime::CameraControlAction::kZoomAt)
-                  ? canvas::interaction::ViewportNavigationKind::kBrowserGesture
-                  : canvas::interaction::ViewportNavigationKind::kWheelPan,
-              request.deltaX, request.deltaY, request.anchorX, request.anchorY,
-              request.scaleDelta});
-      receipt.state = applied
-          ? canvas::runtime::ProductControlState::kApplied
-          : canvas::runtime::ProductControlState::kRejected;
-      return receipt;
-    }
-    receipt.state = canvas::runtime::ProductControlState::kUnsupported;
-    return receipt;
   }
  private:
   Host& host_;
@@ -440,14 +342,16 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_select_brush_profile(
   }
   if (brushId == 0U) return 0;
   const auto generation = facade->readRuntimeState().identity.runtimeGeneration;
-  return facade->setBrush(brushId, revision, facade->nextRequestId(), generation).state ==
+  const auto id = facade->nextRequestId();
+  return facade->settle(facade->setBrush(brushId, revision, id, generation, 0xC001U), id).state ==
       canvas::runtime::ProductControlState::kApplied ? 1 : 0;
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_select_tool(std::uint32_t value, int tool) {
   auto* facade = runtimeFacade(value);
   if (facade == nullptr || tool < 0 || tool > 2) return 0;
   const auto generation = facade->readRuntimeState().identity.runtimeGeneration;
-  return facade->setTool(static_cast<std::uint32_t>(tool), facade->nextRequestId(), generation).state ==
+  const auto id = facade->nextRequestId();
+  return facade->settle(facade->setTool(static_cast<std::uint32_t>(tool), id, generation, 0xC001U), id).state ==
       canvas::runtime::ProductControlState::kApplied ? 1 : 0;
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_eraser_begin(std::uint32_t value, std::uint32_t pointer) {
@@ -584,11 +488,13 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_debug_ui_key(std::uint32_t value,
   }
   ImGui::GetIO().AddKeyEvent(imguiKey, isDown);
   if (isDown && state.ctrlDown && imguiKey == ImGuiKey_Z) {
-    (void)state.runtime->undo(state.runtime->nextRequestId(),
-                              state.runtime->readRuntimeState().identity.runtimeGeneration);
+    const auto id = state.runtime->nextRequestId();
+    (void)state.runtime->settle(
+        state.runtime->undo(id, state.runtime->readRuntimeState().identity.runtimeGeneration, 0xC001U), id);
   } else if (isDown && state.ctrlDown && imguiKey == ImGuiKey_Y) {
-    (void)state.runtime->redo(state.runtime->nextRequestId(),
-                              state.runtime->readRuntimeState().identity.runtimeGeneration);
+    const auto id = state.runtime->nextRequestId();
+    (void)state.runtime->settle(
+        state.runtime->redo(id, state.runtime->readRuntimeState().identity.runtimeGeneration, 0xC001U), id);
   }
   return renderDebugUi(value) ? 1 : 0;
 }

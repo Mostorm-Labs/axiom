@@ -15,6 +15,7 @@ namespace canvas::render { class ImageResourceResolver; }
 namespace canvas::text { class RichTextLayoutService; }
 
 namespace canvas::runtime {
+class CanvasRuntimeFacade;
 
 enum class RuntimeCompositionState : std::uint8_t {
   kCreated,
@@ -61,9 +62,16 @@ class RuntimeComposition final {
   [[nodiscard]] bool publishResource(const ResourceBindingToken& token,
                                      std::vector<std::uint8_t> bytes) noexcept;
   [[nodiscard]] bool ownerPump() noexcept;
+  void attachControlFacade(CanvasRuntimeFacade* facade) noexcept { controlFacade_ = facade; }
   [[nodiscard]] bool requestCanonicalFrame(std::uint64_t frameId) noexcept;
   [[nodiscard]] bool loseSurface() noexcept;
   [[nodiscard]] bool rebindSurface() noexcept;
+  [[nodiscard]] bool rebindSurface(const render::SurfaceMetrics& metrics) noexcept;
+  // Adopt providers that the platform prepared before entering the composition
+  // boundary. This validates the already-live identity without advancing it a
+  // second time.
+  [[nodiscard]] bool adoptPreparedSurface(std::uint64_t expectedGeneration,
+                                          const render::SurfaceMetrics& metrics) noexcept;
   [[nodiscard]] bool receivePlatformPresented(
       const render::PresentedFeedback& feedback) noexcept;
   [[nodiscard]] bool stop() noexcept;
@@ -107,6 +115,7 @@ class RuntimeComposition final {
   ResourcePortError lastResourceError_ = ResourcePortError::kNone;
   std::thread::id ownerThread_;
   render::ViewId viewId_{render::ViewId{1}};
+  CanvasRuntimeFacade* controlFacade_ = nullptr;
 };
 
 }  // namespace canvas::runtime

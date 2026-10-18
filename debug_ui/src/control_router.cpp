@@ -112,7 +112,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setTool(
     return receipt;
   }
   canvas::runtime::CanvasControlRequest request{};
-  request.clientId = 1;
+  request.clientId = 0xD001U;
   request.requestId = requestId;
   request.deadlineSequence = deadline();
   const auto targets = runtime_->mountedCanvasTargets();
@@ -131,7 +131,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setBrush(std::uint32_
                                                                       std::uint32_t revision) noexcept {
   const auto id = nextRequestId();
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
-                                     : runtime_->setBrush(brushId, revision, id, frame_.stamp.runtimeGeneration);
+                                     : runtime_->setBrush(brushId, revision, id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("set-brush", receipt);
   return receipt;
 }
@@ -139,7 +139,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setBrush(std::uint32_
 canvas::runtime::ProductControlReceipt DebugControlRouter::setEraser(std::uint32_t eraserId) noexcept {
   const auto id = nextRequestId();
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
-                                     : runtime_->setEraser(eraserId, id, frame_.stamp.runtimeGeneration);
+                                     : runtime_->setEraser(eraserId, id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("set-eraser", receipt);
   return receipt;
 }
@@ -147,7 +147,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setEraser(std::uint32
 canvas::runtime::ProductControlReceipt DebugControlRouter::setSelectionMode(bool enabled) noexcept {
   const auto id = nextRequestId();
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
-                                     : runtime_->setSelectionMode(enabled, id, frame_.stamp.runtimeGeneration);
+                                     : runtime_->setSelectionMode(enabled, id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("set-selection-mode", receipt);
   return receipt;
 }
@@ -155,7 +155,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setSelectionMode(bool
 canvas::runtime::ProductControlReceipt DebugControlRouter::undo() noexcept {
   const auto id = nextRequestId();
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
-                                     : runtime_->undo(id, frame_.stamp.runtimeGeneration);
+                                     : runtime_->undo(id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("undo", receipt);
   return receipt;
 }
@@ -163,7 +163,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::undo() noexcept {
 canvas::runtime::ProductControlReceipt DebugControlRouter::redo() noexcept {
   const auto id = nextRequestId();
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
-                                     : runtime_->redo(id, frame_.stamp.runtimeGeneration);
+                                     : runtime_->redo(id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("redo", receipt);
   return receipt;
 }
@@ -178,7 +178,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setCreationPreset(
   }
   const auto targets = runtime_->mountedCanvasTargets();
   canvas::runtime::CanvasControlRequest request{};
-  request.clientId = 1U;
+  request.clientId = 0xD001U;
   request.requestId = requestId;
   request.deadlineSequence = deadline();
   request.target = targets.empty()
@@ -196,7 +196,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setCreationPreset(
 canvas::runtime::ProductControlReceipt DebugControlRouter::panBy(float dx, float dy) noexcept {
   const auto id = nextRequestId();
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
-                                     : runtime_->panBy(dx, dy, id, frame_.stamp.runtimeGeneration);
+                                     : runtime_->panBy(dx, dy, id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("pan", receipt);
   return receipt;
 }
@@ -205,7 +205,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::zoomAt(float x, float
                                                                    float scaleDelta) noexcept {
   const auto id = nextRequestId();
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
-                                     : runtime_->zoomAt(x, y, scaleDelta, id, frame_.stamp.runtimeGeneration);
+                                     : runtime_->zoomAt(x, y, scaleDelta, id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("zoom", receipt);
   return receipt;
 }
@@ -213,7 +213,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::zoomAt(float x, float
 canvas::runtime::ProductControlReceipt DebugControlRouter::fitToContent() noexcept {
   const auto id = nextRequestId();
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
-                                     : runtime_->fitToContent(id, frame_.stamp.runtimeGeneration);
+                                     : runtime_->fitToContent(id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("fit-content", receipt);
   return receipt;
 }
@@ -232,7 +232,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::fitToSelection() noex
     return receipt;
   }
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
-                                     : runtime_->fitToSelection(id, frame_.stamp.runtimeGeneration);
+                                     : runtime_->fitToSelection(id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("fit-selection", receipt);
   return receipt;
 }
@@ -245,7 +245,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::fitPrimaryObject() no
     return receipt;
   }
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
-                                     : runtime_->fitToObject(frame_.primaryObject, id, frame_.stamp.runtimeGeneration);
+                                     : runtime_->fitToObject(frame_.primaryObject, id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("fit-primary", receipt);
   return receipt;
 }
@@ -260,7 +260,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::selectedAction(
   }
   const auto targets = runtime_->mountedCanvasTargets();
   canvas::runtime::CanvasControlRequest request{};
-  request.clientId = 1U;
+  request.clientId = 0xD001U;
   request.requestId = requestId;
   request.deadlineSequence = deadline();
   request.target = targets.empty()

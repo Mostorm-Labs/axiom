@@ -156,39 +156,6 @@ enum : int {
   kToolObjectEraser, kToolPartialEraser, kToolSelection
 };
 
-bool applyWindowsToolToHost(State& value, int command) {
-  bool selected = false;
-  if (command == kToolVector || command == kToolMarker ||
-      command == kToolChalk || command == kToolMembrane) {
-    const char* profile = command == kToolVector ? "vector-solid-v1" :
-        command == kToolMarker ? "marker-flat-v1" :
-        command == kToolChalk ? "chalk-grain-v1" : "membrane-v1";
-    const auto revision = command == kToolChalk ? 4U : 1U;
-    selected = value.host->setSelectionMode(false) &&
-               value.host->selectTool(InkPlaygroundHost::ToolMode::kBrush) &&
-               value.host->selectBrushProfile(profile, revision);
-  } else if (command == kToolObjectEraser) {
-    selected = value.host->setSelectionMode(false) &&
-               value.host->selectTool(InkPlaygroundHost::ToolMode::kObjectEraser);
-  } else if (command == kToolPartialEraser) {
-    selected = value.host->setSelectionMode(false) &&
-               value.host->selectTool(InkPlaygroundHost::ToolMode::kPartialEraser);
-  } else if (command == kToolSelection) {
-    if (!value.host->selectionMode()) value.selectionPreviousTool = value.selectedTool;
-    selected = value.host->setSelectionMode(true);
-  } else {
-    return false;
-  }
-  if (!selected) return false;
-  if (!value.selectionPointers.empty()) clearCanvasInput(value);
-  value.selectedTool = command;
-  for (const auto& [id, button] : value.toolButtons) {
-    SendMessageW(button, BM_SETCHECK, id == command ? BST_CHECKED : BST_UNCHECKED, 0);
-  }
-  InvalidateRect(value.window, nullptr, FALSE);
-  return true;
-}
-
 bool selectWindowsTool(State& value, int command);
 
 void syncWindowsToolPresentation(State& value, int command) {
@@ -285,135 +252,6 @@ class WindowsRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeF
                  : state_.host->selectionOverlay()->updateCount(),
              static_cast<std::uint64_t>(state_.host->transientTransformCount())}};
   }
-  [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
-    const auto diagnostics = readDiagnostics();
-    auto result = canvas::runtime::RuntimeStateSnapshot{{diagnostics.identity.runtimeGeneration, diagnostics.identity.documentGeneration,
-             diagnostics.identity.documentRevision, diagnostics.identity.viewGeneration,
-             diagnostics.identity.surfaceGeneration},
-            {diagnostics.interaction.toolId,
-             state_.host->selectedBrushProfile() == "vector-solid-v1" ? 1U :
-                 state_.host->selectedBrushProfile() == "marker-flat-v1" ? 2U :
-                 state_.host->selectedBrushProfile() == "chalk-grain-v1" ? 3U : 4U,
-             state_.host->selectedBrushRevision(),
-             state_.host->toolMode() == InkPlaygroundHost::ToolMode::kObjectEraser ? 1U :
-                 state_.host->toolMode() == InkPlaygroundHost::ToolMode::kPartialEraser ? 2U : 0U},
-            {diagnostics.camera.scale, diagnostics.camera.translationX,
-             diagnostics.camera.translationY},
-            {diagnostics.history.canUndo, diagnostics.history.canRedo},
-            {diagnostics.interaction.selectionMode,
-             diagnostics.interaction.selectedObjectCount,
-             diagnostics.interaction.selectedPrimaryObject,
-             diagnostics.interaction.snapCandidateCount}, {}};
-    const auto control = readCanvasControlSnapshot(canvasTarget());
-    result.control.selectedKind = control.selectedKind;
-    result.control.selectedVersion = control.selectedVersion;
-    result.control.selectedShapeKind = control.selectedShapeKind;
-    result.control.selectedLocked = control.selectedLocked;
-    result.control.selectedVisible = control.selectedVisible;
-    result.control.selectedSizeSupported = control.selectedSizeSupported;
-    result.control.selectedWidth = control.selectedWidth;
-    result.control.selectedHeight = control.selectedHeight;
-    for (int i = 0; i < 6; ++i) result.control.selectedTransform[i] = control.selectedTransform[i];
-    result.control.semanticGeneration = control.semanticGeneration;
-    result.control.appliedCommitEpoch = control.appliedCommitEpoch;
-    result.control.appliedCommitOrdinal = control.appliedCommitOrdinal;
-    result.control.presentedSemanticGeneration = control.presentedSemanticGeneration;
-    result.control.axisLocalDurable = control.axisLocalDurable;
-    result.control.axisCloudSynced = control.axisCloudSynced;
-    return result;
-  }
-  [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(
-      const canvas::runtime::ProductControlRequest& request) noexcept override {
-    canvas::runtime::ProductControlReceipt receipt{request.requestId,
-        canvas::runtime::ProductControlState::kRejected, 1U};
-    if (request.runtimeGeneration != 0U && request.runtimeGeneration != 1U) return receipt;
-    if (request.action == canvas::runtime::ProductControlAction::kSetBrush) {
-      static constexpr const char* kProfiles[] = {
-          "vector-solid-v1", "marker-flat-v1", "chalk-grain-v1", "membrane-v1"};
-      const auto profile = request.brushId >= 1U && request.brushId <= 4U
-          ? kProfiles[request.brushId - 1U] : nullptr;
-      const auto revision = request.brushRevision == 0U
-          ? (request.brushId == 3U ? 4U : 1U) : request.brushRevision;
-      if (profile != nullptr && state_.host->setSelectionMode(false) &&
-          state_.host->selectTool(InkPlaygroundHost::ToolMode::kBrush) &&
-          state_.host->selectBrushProfile(profile, revision)) {
-        syncWindowsToolPresentation(state_, 4100 + static_cast<int>(request.brushId));
-        clearCanvasInput(state_);
-        receipt.state = canvas::runtime::ProductControlState::kApplied;
-      }
-      return receipt;
-    }
-    if (request.action == canvas::runtime::ProductControlAction::kSetCamera) {
-      if (!state_.selectionPointers.empty()) clearCanvasInput(state_);
-      const bool applied = request.cameraAction ==
-              static_cast<std::uint32_t>(canvas::runtime::CameraControlAction::kFitToContent)
-          ? (request.cameraFitTarget == canvas::runtime::CameraFitTarget::kSelection
-                 ? state_.host->fitViewportToSelection()
-                 : request.cameraFitTarget == canvas::runtime::CameraFitTarget::kObject
-                     ? state_.host->fitViewportToObject(
-                         canvas::foundation::ObjectId::fromUint64(request.cameraObjectId))
-                     : state_.host->fitViewportToContent())
-          : state_.host->applyViewportNavigation({
-              request.cameraAction == static_cast<std::uint32_t>(canvas::runtime::CameraControlAction::kZoomAt)
-                  ? canvas::interaction::ViewportNavigationKind::kBrowserGesture
-                  : canvas::interaction::ViewportNavigationKind::kWheelPan,
-              request.deltaX, request.deltaY, request.anchorX, request.anchorY,
-              request.scaleDelta});
-      if (applied) {
-        receipt.state = canvas::runtime::ProductControlState::kApplied;
-      }
-      return receipt;
-    }
-    if (request.action == canvas::runtime::ProductControlAction::kSetSelectionMode) {
-      if (request.selectionMode && !state_.host->selectionMode()) {
-        state_.selectionPreviousTool = state_.selectedTool;
-      }
-      if (state_.host->setSelectionMode(request.selectionMode)) {
-        if (request.selectionMode) {
-          state_.selectedTool = kToolSelection;
-        } else if (state_.selectedTool == kToolSelection) {
-          state_.selectedTool = state_.selectionPreviousTool;
-        }
-        clearCanvasInput(state_);
-        state_.canonicalFrameReady = false;
-        receipt.state = canvas::runtime::ProductControlState::kApplied;
-        InvalidateRect(state_.window, nullptr, FALSE);
-      }
-      return receipt;
-    }
-    if (request.action == canvas::runtime::ProductControlAction::kUndo ||
-        request.action == canvas::runtime::ProductControlAction::kRedo) {
-      const bool applied = request.action == canvas::runtime::ProductControlAction::kUndo
-          ? state_.host->undo() : state_.host->redo();
-      receipt.state = applied ? canvas::runtime::ProductControlState::kApplied
-                              : canvas::runtime::ProductControlState::kRejected;
-      if (applied) {
-        state_.canonicalFrameReady = false;
-        InvalidateRect(state_.window, nullptr, FALSE);
-      }
-      return receipt;
-    }
-    if (request.action == canvas::runtime::ProductControlAction::kSetEraser) {
-      const auto mode = request.eraserId == 1U
-          ? InkPlaygroundHost::ToolMode::kObjectEraser
-          : request.eraserId == 2U ? InkPlaygroundHost::ToolMode::kPartialEraser
-                                   : InkPlaygroundHost::ToolMode::kBrush;
-      if (request.eraserId != 0U && state_.host->setSelectionMode(false) &&
-          state_.host->selectTool(mode)) {
-        syncWindowsToolPresentation(state_, request.eraserId == 1U ? 4105 : 4106);
-        clearCanvasInput(state_);
-        receipt.state = canvas::runtime::ProductControlState::kApplied;
-      }
-      return receipt;
-    }
-    if (request.action != canvas::runtime::ProductControlAction::kSetTool) {
-      receipt.state = canvas::runtime::ProductControlState::kUnsupported;
-      return receipt;
-    }
-    if (!applyWindowsToolToHost(state_, static_cast<int>(request.toolId))) return receipt;
-    receipt.state = canvas::runtime::ProductControlState::kApplied;
-    return receipt;
-  }
  private:
   State& state_;
 };
@@ -427,15 +265,25 @@ bool selectWindowsTool(State& value, int command) {
       command == kToolChalk || command == kToolMembrane) {
     const auto brushId = static_cast<std::uint32_t>(command - kToolVector + 1);
     const auto revision = command == kToolChalk ? 4U : 1U;
-    receipt = value.runtimeFacade->setBrush(brushId, revision, requestId, generation);
+    receipt = value.runtimeFacade->setBrush(brushId, revision, requestId, generation, 0xB001U);
   } else if (command == kToolObjectEraser || command == kToolPartialEraser) {
     receipt = value.runtimeFacade->setEraser(
         static_cast<std::uint32_t>(command == kToolObjectEraser ? 1U : 2U),
-        requestId, generation);
+        requestId, generation, 0xB001U);
   } else if (command == kToolSelection) {
-    receipt = value.runtimeFacade->setSelectionMode(true, requestId, generation);
+    receipt = value.runtimeFacade->setSelectionMode(true, requestId, generation, 0xB001U);
   } else {
     return false;
+  }
+  if (receipt.state == canvas::runtime::ProductControlState::kQueued) {
+    value.runtimeFacade->processCanvasControlsAtSafePoint(value.pointerSampleSequence + 1U);
+    if (const auto terminal = value.runtimeFacade->canvasControlReceipt(
+            {1U, requestId}); terminal.has_value()) {
+      receipt.control = terminal;
+      receipt.state = terminal->state == canvas::runtime::CanvasControlReceiptState::kApplied
+          ? canvas::runtime::ProductControlState::kApplied
+          : canvas::runtime::ProductControlState::kRejected;
+    }
   }
   if (receipt.state != canvas::runtime::ProductControlState::kApplied) return false;
   syncWindowsToolPresentation(value, command);

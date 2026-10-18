@@ -62,9 +62,10 @@ class RuntimeFacade {
   // and Debug UI cannot grow parallel mutation APIs.
   [[nodiscard]] virtual ProductControlReceipt setTool(
       std::uint32_t toolId, std::uint64_t requestId,
-      std::uint64_t runtimeGeneration) noexcept {
+      std::uint64_t runtimeGeneration, std::uint64_t clientId = 1) noexcept {
     ProductControlRequest request{};
     request.action = ProductControlAction::kSetTool;
+    request.clientId = clientId;
     request.requestId = requestId;
     request.runtimeGeneration = runtimeGeneration;
     request.toolId = toolId;
@@ -72,9 +73,10 @@ class RuntimeFacade {
   }
   [[nodiscard]] virtual ProductControlReceipt setBrush(
       std::uint32_t brushId, std::uint32_t revision, std::uint64_t requestId,
-      std::uint64_t runtimeGeneration) noexcept {
+      std::uint64_t runtimeGeneration, std::uint64_t clientId = 1) noexcept {
     ProductControlRequest request{};
     request.action = ProductControlAction::kSetBrush;
+    request.clientId = clientId;
     request.requestId = requestId;
     request.runtimeGeneration = runtimeGeneration;
     request.brushId = brushId;
@@ -83,9 +85,10 @@ class RuntimeFacade {
   }
   [[nodiscard]] virtual ProductControlReceipt setEraser(
       std::uint32_t eraserId, std::uint64_t requestId,
-      std::uint64_t runtimeGeneration) noexcept {
+      std::uint64_t runtimeGeneration, std::uint64_t clientId = 1) noexcept {
     ProductControlRequest request{};
     request.action = ProductControlAction::kSetEraser;
+    request.clientId = clientId;
     request.requestId = requestId;
     request.runtimeGeneration = runtimeGeneration;
     request.eraserId = eraserId;
@@ -93,26 +96,31 @@ class RuntimeFacade {
   }
   [[nodiscard]] virtual ProductControlReceipt setSelectionMode(
       bool enabled, std::uint64_t requestId,
-      std::uint64_t runtimeGeneration) noexcept {
+      std::uint64_t runtimeGeneration, std::uint64_t clientId = 1) noexcept {
     ProductControlRequest request{};
     request.action = ProductControlAction::kSetSelectionMode;
+    request.clientId = clientId;
     request.requestId = requestId;
     request.runtimeGeneration = runtimeGeneration;
     request.selectionMode = enabled;
     return submitProductControl(request);
   }
   [[nodiscard]] virtual ProductControlReceipt undo(
-      std::uint64_t requestId, std::uint64_t runtimeGeneration) noexcept {
+      std::uint64_t requestId, std::uint64_t runtimeGeneration,
+      std::uint64_t clientId = 1) noexcept {
     ProductControlRequest request{};
     request.action = ProductControlAction::kUndo;
+    request.clientId = clientId;
     request.requestId = requestId;
     request.runtimeGeneration = runtimeGeneration;
     return submitProductControl(request);
   }
   [[nodiscard]] virtual ProductControlReceipt redo(
-      std::uint64_t requestId, std::uint64_t runtimeGeneration) noexcept {
+      std::uint64_t requestId, std::uint64_t runtimeGeneration,
+      std::uint64_t clientId = 1) noexcept {
     ProductControlRequest request{};
     request.action = ProductControlAction::kRedo;
+    request.clientId = clientId;
     request.requestId = requestId;
     request.runtimeGeneration = runtimeGeneration;
     return submitProductControl(request);
@@ -120,9 +128,10 @@ class RuntimeFacade {
   [[nodiscard]] virtual ProductControlReceipt setCamera(
       CameraControlAction cameraAction, float anchorX, float anchorY,
       float deltaX, float deltaY, float scaleDelta, std::uint64_t requestId,
-      std::uint64_t runtimeGeneration) noexcept {
+      std::uint64_t runtimeGeneration, std::uint64_t clientId = 1) noexcept {
     ProductControlRequest request{};
     request.action = ProductControlAction::kSetCamera;
+    request.clientId = clientId;
     request.requestId = requestId;
     request.runtimeGeneration = runtimeGeneration;
     request.cameraAction = static_cast<std::uint32_t>(cameraAction);
@@ -135,25 +144,28 @@ class RuntimeFacade {
   }
   [[nodiscard]] ProductControlReceipt panBy(
       float deltaX, float deltaY, std::uint64_t requestId,
-      std::uint64_t runtimeGeneration) noexcept {
+      std::uint64_t runtimeGeneration, std::uint64_t clientId = 1) noexcept {
     return setCamera(CameraControlAction::kPan, 0.0F, 0.0F, deltaX, deltaY,
-                     1.0F, requestId, runtimeGeneration);
+                     1.0F, requestId, runtimeGeneration, clientId);
   }
   [[nodiscard]] ProductControlReceipt zoomAt(
       float anchorX, float anchorY, float scaleDelta, std::uint64_t requestId,
-      std::uint64_t runtimeGeneration) noexcept {
+      std::uint64_t runtimeGeneration, std::uint64_t clientId = 1) noexcept {
     return setCamera(CameraControlAction::kZoomAt, anchorX, anchorY, 0.0F,
-                     0.0F, scaleDelta, requestId, runtimeGeneration);
+                     0.0F, scaleDelta, requestId, runtimeGeneration, clientId);
   }
   [[nodiscard]] ProductControlReceipt fitToContent(
-      std::uint64_t requestId, std::uint64_t runtimeGeneration) noexcept {
+      std::uint64_t requestId, std::uint64_t runtimeGeneration,
+      std::uint64_t clientId = 1) noexcept {
     return setCamera(CameraControlAction::kFitToContent, 0.0F, 0.0F, 0.0F,
-                     0.0F, 1.0F, requestId, runtimeGeneration);
+                     0.0F, 1.0F, requestId, runtimeGeneration, clientId);
   }
   [[nodiscard]] ProductControlReceipt fitToSelection(
-      std::uint64_t requestId, std::uint64_t runtimeGeneration) noexcept {
+      std::uint64_t requestId, std::uint64_t runtimeGeneration,
+      std::uint64_t clientId = 1) noexcept {
     ProductControlRequest request{};
     request.action = ProductControlAction::kSetCamera;
+    request.clientId = clientId;
     request.requestId = requestId;
     request.runtimeGeneration = runtimeGeneration;
     request.cameraAction = static_cast<std::uint32_t>(CameraControlAction::kFitToContent);
@@ -162,9 +174,10 @@ class RuntimeFacade {
   }
   [[nodiscard]] ProductControlReceipt fitToObject(
       std::uint64_t objectId, std::uint64_t requestId,
-      std::uint64_t runtimeGeneration) noexcept {
+      std::uint64_t runtimeGeneration, std::uint64_t clientId = 1) noexcept {
     ProductControlRequest request{};
     request.action = ProductControlAction::kSetCamera;
+    request.clientId = clientId;
     request.requestId = requestId;
     request.runtimeGeneration = runtimeGeneration;
     request.cameraAction = static_cast<std::uint32_t>(CameraControlAction::kFitToContent);

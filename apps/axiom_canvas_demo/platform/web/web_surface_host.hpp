@@ -3,6 +3,9 @@
 #include "canvas/render/presentation_tracker.hpp"
 #include "canvas/render/surface_lifecycle.hpp"
 #include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/canvas_runtime_facade.hpp"
+
+#include <memory>
 
 namespace canvas::web_demo {
 
@@ -18,11 +21,13 @@ class WebSurfaceHost final {
     [[nodiscard]] bool syncRuntimeSurfaceIdentity() noexcept;
     [[nodiscard]] const render::SurfaceLifecycle& lifecycle() const noexcept { return lifecycle_; }
     [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
+    [[nodiscard]] runtime::CanvasRuntimeFacade& facade() noexcept { return *facade_; }
 
   private:
     render::SurfaceLifecycle lifecycle_;
     render::PresentationTracker presentation_;
     runtime::RuntimeComposition composition_;
+    std::unique_ptr<runtime::CanvasRuntimeFacade> facade_;
 };
 
 } // namespace canvas::web_demo
