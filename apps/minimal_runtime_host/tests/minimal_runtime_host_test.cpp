@@ -3,12 +3,14 @@
 #include "canvas/interaction/creation_session.hpp"
 
 #include <cassert>
+#include <thread>
 
 using canvas::interaction::DispatchMode;
 using canvas::input::PlatformPointerBatch;
 using canvas::input::PlatformPointerSample;
 using canvas::input::PointerPhase;
 using canvas::input::SampleProvenance;
+
 
 static PlatformPointerBatch down(std::uint64_t sequence) {
   PlatformPointerBatch batch;
@@ -21,8 +23,8 @@ static PlatformPointerBatch down(std::uint64_t sequence) {
 
 template<class Host>
 static void realEditingWithoutHostToolCallbacks(Host& host) {
-  if constexpr (requires { host.runtime(); }) {
-    auto& runtime = host.runtime();
+  {
+    auto& runtime = host.composition().runtime();
     assert(runtime.bindSurface(256, 256));
     assert(runtime.selectCreationPreset(canvas::interaction::CreationPreset::kRectangle));
     auto d = down(10U);
@@ -58,8 +60,6 @@ static void realEditingWithoutHostToolCallbacks(Host& host) {
     assert(runtime.redo());
     const auto redone=runtime.selectedObjectRecord(); assert(redone);
     assert(redone->transform == moved->transform);
-  } else {
-    assert(false && "Minimal Host must expose real reusable editing, not event counters");
   }
 }
 
@@ -70,22 +70,22 @@ int main() {
 
   canvas::minimal_runtime_host::MinimalRuntimeHost facadeHost;
   canvas::minimal_runtime_host::MinimalRuntimeFacade facade(facadeHost);
-  assert(facadeHost.runtime().bindSurface(256, 256));
+  assert(facadeHost.composition().bindSurface(256, 256));
   const auto target = facade.mountedCanvasTargets().front();
   assert(facade.setBrush(2U, 1U, 1U, target.runtimeEpoch).state ==
          canvas::runtime::ProductControlState::kQueued);
   assert(facade.process() == 1U);
-  assert(facadeHost.runtime().selectedBrushProfile() == "marker-flat-v1");
+  assert(facadeHost.composition().runtime().selectedBrushProfile() == "marker-flat-v1");
 
   assert(facade.setSelectionMode(true, 2U, target.runtimeEpoch).state ==
          canvas::runtime::ProductControlState::kQueued);
   assert(facade.process() == 1U);
-  assert(facadeHost.runtime().selectionMode());
+  assert(facadeHost.composition().runtime().selectionMode());
 
   assert(facade.setEraser(2U, 3U, target.runtimeEpoch).state ==
          canvas::runtime::ProductControlState::kQueued);
   assert(facade.process() == 1U);
-  assert(facadeHost.runtime().toolMode() ==
+  assert(facadeHost.composition().runtime().toolMode() ==
          canvas::interaction::CanvasEditingRuntime::ToolMode::kPartialEraser);
 
   const auto creation = facade.submitCanvasControl([&] {
@@ -99,7 +99,42 @@ int main() {
   }());
   assert(creation.state == canvas::runtime::ProductControlState::kQueued);
   assert(facade.process() == 1U);
-  assert(facadeHost.runtime().creationPreset() ==
+  assert(facadeHost.composition().runtime().creationPreset() ==
          canvas::interaction::CreationPreset::kEllipse);
+
+  // The facade's public pump must share Composition's owner clock; a second
+  // counter must not roll the deadline domain back after prior frame pumps.
+  canvas::minimal_runtime_host::MinimalRuntimeHost clockHost;
+  canvas::minimal_runtime_host::MinimalRuntimeFacade clockFacade(clockHost);
+  assert(clockHost.composition().bindSurface(256U, 256U));
+  for (std::uint64_t i = 0; i < 300U; ++i) assert(clockHost.composition().ownerPump());
+  assert(clockFacade.process() == 0U);
+  canvas::runtime::CanvasControlRequest rectangleRequest{};
+  rectangleRequest.clientId = 0xD001U;
+  rectangleRequest.requestId = 9U;
+  rectangleRequest.target = clockFacade.target();
+  rectangleRequest.payload.kind =
+      canvas::runtime::CanvasControlPayloadKind::kSelectCreationPreset;
+  rectangleRequest.payload.creationPreset =
+      canvas::runtime::CanvasCreationPreset::kRectangle;
+  const auto rectangle = clockFacade.submitCanvasControl(rectangleRequest);
+  assert(rectangle.state == canvas::runtime::ProductControlState::kQueued);
+  assert(clockHost.composition().ownerPump());
+  assert(clockFacade.canvasControlReceipt(rectangle.control->key)->state ==
+         canvas::runtime::CanvasControlReceiptState::kApplied);
+  assert(clockHost.composition().runtime().creationMode());
+
+  // Public mutation ports reject non-owner calls before touching the runtime.
+  canvas::runtime::RuntimeComposition threadFence;
+  assert(threadFence.open() && threadFence.bindSurface(256U, 256U));
+  bool resized = true;
+  bool registered = true;
+  std::thread worker([&] {
+    resized = threadFence.resizeSurface(300U, 200U);
+    registered = threadFence.registerSource(77U);
+  });
+  worker.join();
+  assert(!resized && !registered);
+  assert(threadFence.surfaceSnapshot().width == 256U);
   return 0;
 }

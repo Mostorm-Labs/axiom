@@ -13,7 +13,6 @@ class MinimalRuntimeHost final {
                                       std::uint64_t sequence,
                                       std::uint64_t timestampNs) noexcept;
   [[nodiscard]] bool submit(const input::PlatformPointerBatch& batch) noexcept;
-  [[nodiscard]] interaction::CanvasEditingRuntime& runtime() noexcept { return composition_.runtime(); }
   [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
  private:
   runtime::RuntimeComposition composition_;

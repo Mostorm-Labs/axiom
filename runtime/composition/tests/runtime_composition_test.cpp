@@ -46,11 +46,9 @@ int main() {
   assert(composition.open());
   assert(composition.bindSurface(256U, 256U));
   assert(composition.registerSource(9U));
-  // Public Composition input must consume an attached Facade control before
-  // routing the next pointer batch. Hosts must not need a private pre-pump.
-  canvas::runtime::CanvasRuntimeFacade controlFacade(composition.runtime(),
-                                                      {1U, 1U, 1U, 1U});
-  composition.attachControlFacade(&controlFacade);
+  // Public Composition input consumes the Composition-owned facade before
+  // routing the next pointer batch. Hosts must not attach a second owner.
+  auto& controlFacade = composition.controlFacade();
   canvas::runtime::CanvasControlRequest presetRequest{};
   presetRequest.clientId = 0xD001U;
   presetRequest.requestId = 1U;
@@ -318,9 +316,7 @@ int main() {
   assert(idleFrameComposition.bindSurface(256U, 256U));
   auto idleManifest = makeManifest(1U);
   assert(idleFrameComposition.bindManifest(idleManifest, 31U));
-  canvas::runtime::CanvasRuntimeFacade idleFacade(
-      idleFrameComposition.runtime(), {1U, 1U, 1U, 1U});
-  idleFrameComposition.attachControlFacade(&idleFacade);
+  auto& idleFacade = idleFrameComposition.controlFacade();
   assert(idleFrameComposition.publishResource(
       canvas::foundation::ObjectId::fromUint64(1U), {0x01U}));
   const auto idleControl = idleFacade.setSelectionMode(true, 1U, 1U);
@@ -345,9 +341,7 @@ int main() {
     assert(cameraComposition.open());
     assert(cameraComposition.bindSurface(256U, 256U));
     cameraComposition.runtime().setPlatformPresentationDeferred(deferred);
-    canvas::runtime::CanvasRuntimeFacade cameraFacade(
-        cameraComposition.runtime(), {1U, 1U, 1U, 1U});
-    cameraComposition.attachControlFacade(&cameraFacade);
+    auto& cameraFacade = cameraComposition.controlFacade();
     const auto queued = cameraFacade.zoomAt(20.0F, 20.0F, 2.0F, 1U, 1U);
     assert(queued.state == canvas::runtime::ProductControlState::kQueued);
     const auto requestedFrame = cameraComposition.runtime().nextCanonicalFrameId();
@@ -361,7 +355,6 @@ int main() {
     assert(submitted.has_value());
     assert(submitted->frameId.value() == requestedFrame);
     assert(cameraComposition.runtime().platformPresentationDeferred() == deferred);
-    cameraComposition.attachControlFacade(nullptr);
   }
   return 0;
 }

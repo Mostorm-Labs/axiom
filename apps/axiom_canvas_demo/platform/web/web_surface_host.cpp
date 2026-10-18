@@ -7,30 +7,22 @@ namespace canvas::web_demo {
 WebSurfaceHost::WebSurfaceHost(render::SurfaceSnapshot initial) noexcept
     : lifecycle_(initial), presentation_(lifecycle_), composition_(initial.viewId) {
     (void)composition_.open();
-    facade_ = std::make_unique<runtime::CanvasRuntimeFacade>(
-        composition_.runtime(),
-        runtime::CanvasTargetKey{
-            1U,
-            initial.viewId.value(),
-            initial.surfaceGeneration.value(),
-            initial.metricsGeneration.value()});
-    composition_.attachControlFacade(facade_.get());
     (void)composition_.bindSurface(initial.metrics.physicalWidth,
                                    initial.metrics.physicalHeight);
     // RuntimeAppBinding advances its provider generation during the initial
     // bind. Bring it to the platform's declared generation before exposing
     // frames, so both sides share one identity from the first submission.
-    while (composition_.runtime().surface().generation <
+    while (composition_.surfaceSnapshot().surfaceGeneration <
            initial.surfaceGeneration.value()) {
         if (!composition_.resizeSurface(initial.metrics.physicalWidth,
                                         initial.metrics.physicalHeight)) break;
     }
-    const auto runtimeSurface = composition_.runtime().surface();
+    const auto runtimeSurface = composition_.surfaceSnapshot();
     (void)lifecycle_.replace(render::SurfaceSnapshot{
-        initial.viewId, render::SurfaceGeneration{runtimeSurface.generation},
-        render::MetricsGeneration{runtimeSurface.generation},
-        render::SurfaceMetrics{static_cast<float>(runtimeSurface.width),
-                               static_cast<float>(runtimeSurface.height),
+        initial.viewId, render::SurfaceGeneration{runtimeSurface.surfaceGeneration},
+        render::MetricsGeneration{runtimeSurface.metricsGeneration},
+        render::SurfaceMetrics{runtimeSurface.logicalWidth,
+                               runtimeSurface.logicalHeight,
                                runtimeSurface.width, runtimeSurface.height,
                                initial.metrics.devicePixelRatio,
                                initial.metrics.displayScale}});
@@ -66,38 +58,38 @@ WebSurfaceDisposition WebSurfaceHost::bind(const render::SurfaceSnapshot& replac
     if (planned == render::SurfaceLifecycleDisposition::kNoGenerationAdvance) {
         return WebSurfaceDisposition::kRebound;
     }
-    auto runtimeSurface = composition_.runtime().surface();
+    auto runtimeSurface = composition_.surfaceSnapshot();
     // Composition owns the lifecycle transition. A Web bridge may have
     // prepared replacement providers first, which makes the Runtime surface
     // look available while the Composition is still Lost; do not treat that
     // intermediate fact as a completed restore.
     if (composition_.state() == runtime::RuntimeCompositionState::kLost) {
-        const auto current = composition_.runtime().surface();
+        const auto current = composition_.surfaceSnapshot();
         const bool adopted = current.available &&
-            current.generation == replacement.surfaceGeneration.value() &&
+            current.surfaceGeneration == replacement.surfaceGeneration.value() &&
             current.width == replacement.metrics.physicalWidth &&
             current.height == replacement.metrics.physicalHeight;
         if (adopted) {
-            if (!composition_.adoptPreparedSurface(current.generation, replacement.metrics)) {
+            if (!composition_.adoptPreparedSurface(current.surfaceGeneration, replacement.metrics)) {
                 return WebSurfaceDisposition::kRejectedStale;
             }
         } else if (!composition_.rebindSurface(replacement.metrics)) {
             return WebSurfaceDisposition::kRejectedStale;
         }
-        runtimeSurface = composition_.runtime().surface();
+        runtimeSurface = composition_.surfaceSnapshot();
     }
     if (!runtimeSurface.available ||
-        runtimeSurface.generation > replacement.surfaceGeneration.value()) {
+        runtimeSurface.surfaceGeneration > replacement.surfaceGeneration.value()) {
         return WebSurfaceDisposition::kRejectedStale;
     }
-    while (runtimeSurface.generation < replacement.surfaceGeneration.value()) {
+    while (runtimeSurface.surfaceGeneration < replacement.surfaceGeneration.value()) {
         if (!composition_.resizeSurface(replacement.metrics.physicalWidth,
                                         replacement.metrics.physicalHeight)) {
             return WebSurfaceDisposition::kRejectedStale;
         }
-        runtimeSurface = composition_.runtime().surface();
+        runtimeSurface = composition_.surfaceSnapshot();
     }
-    if (runtimeSurface.generation != replacement.surfaceGeneration.value() ||
+    if (runtimeSurface.surfaceGeneration != replacement.surfaceGeneration.value() ||
         runtimeSurface.width != replacement.metrics.physicalWidth ||
         runtimeSurface.height != replacement.metrics.physicalHeight) {
         return WebSurfaceDisposition::kRejectedStale;
@@ -121,16 +113,16 @@ WebSurfaceDisposition WebSurfaceHost::bind(const render::SurfaceSnapshot& replac
 }
 
 bool WebSurfaceHost::syncRuntimeSurfaceIdentity() noexcept {
-    const auto runtimeSurface = composition_.runtime().surface();
-    if (!runtimeSurface.available || runtimeSurface.generation == 0U) return false;
+    const auto runtimeSurface = composition_.surfaceSnapshot();
+    if (!runtimeSurface.available || runtimeSurface.surfaceGeneration == 0U) return false;
     const auto current = lifecycle_.current();
-    if (runtimeSurface.generation == current.surfaceGeneration.value()) return true;
-    if (runtimeSurface.generation < current.surfaceGeneration.value()) return false;
+    if (runtimeSurface.surfaceGeneration == current.surfaceGeneration.value()) return true;
+    if (runtimeSurface.surfaceGeneration < current.surfaceGeneration.value()) return false;
     const auto result = lifecycle_.replace(render::SurfaceSnapshot{
-        current.viewId, render::SurfaceGeneration{runtimeSurface.generation},
-        render::MetricsGeneration{runtimeSurface.generation},
-        render::SurfaceMetrics{static_cast<float>(runtimeSurface.width),
-                               static_cast<float>(runtimeSurface.height),
+        current.viewId, render::SurfaceGeneration{runtimeSurface.surfaceGeneration},
+        render::MetricsGeneration{runtimeSurface.metricsGeneration},
+        render::SurfaceMetrics{runtimeSurface.logicalWidth,
+                               runtimeSurface.logicalHeight,
                                runtimeSurface.width, runtimeSurface.height,
                                current.metrics.devicePixelRatio,
                                current.metrics.displayScale}});
@@ -156,7 +148,7 @@ render::PresentFeedbackDisposition WebSurfaceHost::feedback(const render::Presen
     const auto disposition = presentation_.receive(value);
     if (disposition != render::PresentFeedbackDisposition::kPresented) return disposition;
     auto runtimeFeedback = value;
-    if (const auto submitted = composition_.runtime().lastSubmittedCanonicalFrame();
+    if (const auto submitted = composition_.lastSubmittedCanonicalFrame();
         submitted.has_value() && submitted->frameId == value.frameId) {
         runtimeFeedback.viewId = submitted->viewId;
         runtimeFeedback.surfaceGeneration = submitted->surfaceGeneration;

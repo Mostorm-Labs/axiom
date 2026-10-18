@@ -44,9 +44,9 @@ LRESULT CALLBACK WindowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
             GetWindowLongPtrW(window, GWLP_USERDATA));
         if (host != nullptr && !host->releasingCaptureForPointerUp()) {
             const auto sequence = host->nextInputSequence();
-            (void)host->composition().runtime().unregisterInputSource(
+            (void)host->composition().unregisterSource(
                 1U, sequence, sequence * 1'000'000U);
-            host->composition().runtime().cancelAllPointers();
+            (void)host->composition().cancelAllPointers();
             (void)host->composition().registerSource(1U);
             InvalidateRect(window, nullptr, FALSE);
         }
@@ -148,9 +148,10 @@ bool WindowsCanonicalSurfaceHost::initialize(std::uint32_t width,
     observation_.surfaceGeneration = 1;
     observation_.metricsGeneration = 1;
     if (!composition_.bindSurface(width, height) || !composition_.registerSource(1U)) { if (error) *error = "Runtime composition surface bind failed"; return false; }
-    observation_.surfaceGeneration = composition_.runtime().surface().generation;
-    observation_.metricsGeneration = composition_.runtime().surface().generation;
-    composition_.runtime().setPlatformPresentationDeferred(true);
+    const auto bound = composition_.surfaceSnapshot();
+    observation_.surfaceGeneration = bound.surfaceGeneration;
+    observation_.metricsGeneration = bound.metricsGeneration;
+    (void)composition_.setPlatformPresentationDeferred(true);
     return true;
 }
 
@@ -182,8 +183,8 @@ bool WindowsCanonicalSurfaceHost::resizeForSmoke(std::uint32_t width,
         *error = "SetWindowPos failed";
         return false;
     }
-    if (composition_.runtime().surface().width != width ||
-        composition_.runtime().surface().height != height) {
+    if (composition_.surfaceSnapshot().width != width ||
+        composition_.surfaceSnapshot().height != height) {
         return resizeForWindow(width, height, error);
     }
     return true;
@@ -198,17 +199,17 @@ bool WindowsCanonicalSurfaceHost::resizeForWindow(std::uint32_t width,
         return false;
     }
     if (impl_->width == width && impl_->height == height &&
-        composition_.runtime().surface().width == width &&
-        composition_.runtime().surface().height == height) return true;
+        composition_.surfaceSnapshot().width == width &&
+        composition_.surfaceSnapshot().height == height) return true;
     if (!composition_.resizeSurface(width, height)) {
         *error = "Runtime composition resize did not produce a fresh surface";
         return false;
     }
-    const auto live = composition_.runtime().surface();
+    const auto live = composition_.surfaceSnapshot();
     const auto current = surface_->lifecycle().current();
     const auto replacement = render::SurfaceSnapshot{
-        current.viewId, render::SurfaceGeneration{live.generation},
-        render::MetricsGeneration{live.generation},
+        current.viewId, render::SurfaceGeneration{live.surfaceGeneration},
+        render::MetricsGeneration{live.metricsGeneration},
         render::SurfaceMetrics{static_cast<float>(width), static_cast<float>(height),
                                width, height, 1.0F, 1.0F}};
     if (surface_->bind(replacement) != WindowsSurfaceDisposition::kRebound) {
@@ -218,8 +219,8 @@ bool WindowsCanonicalSurfaceHost::resizeForWindow(std::uint32_t width,
     impl_->width = width;
     impl_->height = height;
     ++observation_.resizeEvents;
-    observation_.surfaceGeneration = live.generation;
-    observation_.metricsGeneration = live.generation;
+    observation_.surfaceGeneration = live.surfaceGeneration;
+    observation_.metricsGeneration = live.metricsGeneration;
     if (!composition_.requestCanonicalFrame(nextCanonicalFrameId())) {
         *error = "Runtime composition resize did not request a canonical redraw";
         return false;
@@ -263,27 +264,25 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
         if (error != nullptr) *error = "Windows paint target is unavailable";
         return false;
     }
-    auto* provider = composition_.runtime().activeSurfaceProvider();
-    if (provider == nullptr) { *error = "Runtime canonical provider is unavailable"; return false; }
-    const auto info = provider->describe();
+    if (!composition_.canonicalProviderAvailable()) { *error = "Runtime canonical provider is unavailable"; return false; }
+    const auto surfaceInfo = composition_.surfaceSnapshot();
     interaction::PreviewPresentationCapture previewCapture{};
     std::uint64_t previewPresentCount = 0;
-    const bool hadPreview = composition_.runtime().previewActive();
+    const bool hadPreview = composition_.previewActive();
     const bool havePreview = hadPreview &&
-        ((composition_.runtime().capturePreviewPresentation(previewCapture) &&
-          composition_.runtime().renderPreviewPresentation(previewCapture, &previewPresentCount)) ||
-         (composition_.runtime().previewSurfaceProvider() != nullptr));
-    std::vector<std::uint8_t> rgba(static_cast<std::size_t>(info.metrics.physicalWidth) *
-                                   info.metrics.physicalHeight * 4U);
-    if (provider->readbackRgba(rgba).code != render::BackendSubmissionCode::kAccepted) {
+        ((composition_.capturePreviewPresentation(previewCapture) &&
+          composition_.renderPreviewPresentation(previewCapture, &previewPresentCount)) ||
+         composition_.previewProviderAvailable());
+    std::vector<std::uint8_t> rgba(static_cast<std::size_t>(surfaceInfo.width) *
+                                   surfaceInfo.height * 4U);
+    if (!composition_.readCanonicalRgba(rgba)) {
         *error = "Runtime canonical readback failed";
         return false;
     }
     if (havePreview) {
-        auto* preview = composition_.runtime().previewSurfaceProvider();
-        if (preview != nullptr) {
+        if (composition_.previewProviderAvailable()) {
             std::vector<std::uint8_t> overlay(rgba.size());
-            if (preview->readbackRgba(overlay).code == render::BackendSubmissionCode::kAccepted) {
+            if (composition_.readPreviewRgba(overlay)) {
                 for (std::size_t i = 0; i + 3U < rgba.size(); i += 4U) {
                     const float alpha = static_cast<float>(overlay[i + 3U]) / 255.0F;
                     if (alpha <= 0.0F) continue;
@@ -299,19 +298,19 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
     for (std::size_t i = 0; i + 3U < rgba.size(); i += 4U) std::swap(rgba[i], rgba[i + 2U]);
     BITMAPINFO bitmap{};
     bitmap.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-    bitmap.bmiHeader.biWidth = static_cast<LONG>(info.metrics.physicalWidth);
-    bitmap.bmiHeader.biHeight = -static_cast<LONG>(info.metrics.physicalHeight);
+    bitmap.bmiHeader.biWidth = static_cast<LONG>(surfaceInfo.width);
+    bitmap.bmiHeader.biHeight = -static_cast<LONG>(surfaceInfo.height);
     bitmap.bmiHeader.biPlanes = 1;
     bitmap.bmiHeader.biBitCount = 32;
     bitmap.bmiHeader.biCompression = BI_RGB;
-    const int width = static_cast<int>(info.metrics.physicalWidth);
-    const int height = static_cast<int>(info.metrics.physicalHeight);
+    const int width = static_cast<int>(surfaceInfo.width);
+    const int height = static_cast<int>(surfaceInfo.height);
     if (StretchDIBits(dc, 0, 0, width, height, 0, 0, width, height,
                       rgba.data(), &bitmap, DIB_RGB_COLORS, SRCCOPY) == GDI_ERROR) {
         *error = "Windows canonical DIB presentation failed";
         return false;
     }
-    if (const auto frame = composition_.runtime().lastSubmittedCanonicalFrame(); frame.has_value() &&
+    if (const auto frame = composition_.lastSubmittedCanonicalFrame(); frame.has_value() &&
         frame->frameId.value() != lastPresentedFrame_) {
         if (!composition_.receivePlatformPresented({
                 frame->viewId, frame->frameId, frame->surfaceGeneration,
@@ -323,15 +322,15 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
         lastPresentedFrame_ = frame->frameId.value();
     }
     if (havePreview && previewCapture.contentRevision != 0U &&
-        composition_.runtime().previewActive() &&
-        !composition_.runtime().acknowledgePreviewPresentation(
+        composition_.previewActive() &&
+        !composition_.acknowledgePreviewPresentation(
             previewCapture, previewPresentCount)) {
         *error = "Windows preview acknowledgement rejected";
         return false;
     }
-    if (hadPreview && !composition_.runtime().previewActive()) {
+    if (hadPreview && !composition_.previewActive()) {
         std::vector<std::uint8_t> canonical(rgba.size());
-        if (provider->readbackRgba(canonical).code != render::BackendSubmissionCode::kAccepted) {
+        if (!composition_.readCanonicalRgba(canonical)) {
             *error = "Windows canonical redraw after preview retirement failed";
             return false;
         }

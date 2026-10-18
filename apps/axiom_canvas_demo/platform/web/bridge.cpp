@@ -49,7 +49,7 @@ EMSCRIPTEN_KEEPALIVE std::uintptr_t axiom_web_create(
     if (!value->backend->ready()) return 0;
     auto surfaceProvider = canvas::render::WebGlSurfaceProvider::fromCurrentContext(pw, ph);
     if (surfaceProvider == nullptr ||
-        !value->lifecycle.composition().runtime().registerSurfaceProvider(
+        !value->lifecycle.composition().registerSurfaceProvider(
             "webgl-window", std::move(surfaceProvider)) ||
         !value->lifecycle.syncRuntimeSurfaceIdentity()) return 0;
     auto previewProvider = std::make_unique<canvas::render::WebGlSurfaceProvider>(
@@ -59,9 +59,9 @@ EMSCRIPTEN_KEEPALIVE std::uintptr_t axiom_web_create(
                 if (canvas) canvas.style.visibility = $0 ? 'visible' : 'hidden';
             }, visible ? 1 : 0); }});
     if (!previewProvider || !previewProvider->ready() ||
-        !value->lifecycle.composition().runtime().registerPreviewSurfaceProvider(
+        !value->lifecycle.composition().registerPreviewSurfaceProvider(
             "webgl-preview", std::move(previewProvider))) return 0;
-    value->lifecycle.composition().runtime().setPlatformPresentationDeferred(true);
+    (void)value->lifecycle.composition().setPlatformPresentationDeferred(true);
     value->surfaceGeneration = value->lifecycle.lifecycle().current().surfaceGeneration.value();
     value->metricsGeneration = value->lifecycle.lifecycle().current().metricsGeneration.value();
     if (!value->lifecycle.composition().registerSource(1U)) return 0;
@@ -79,7 +79,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_resize(
     if (!backend->ready()) return 0;
     auto surfaceProvider = canvas::render::WebGlSurfaceProvider::fromCurrentContext(pw, ph);
     if (surfaceProvider == nullptr ||
-        !value->lifecycle.composition().runtime().registerSurfaceProvider(
+        !value->lifecycle.composition().registerSurfaceProvider(
             std::string("webgl-window-") + std::to_string(value->surfaceGeneration + 1U),
             std::move(surfaceProvider))) return 0;
     auto previewProvider = std::make_unique<canvas::render::WebGlSurfaceProvider>(
@@ -89,14 +89,14 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_resize(
                 if (canvas) canvas.style.visibility = $0 ? 'visible' : 'hidden';
             }, visible ? 1 : 0); }});
     if (!previewProvider || !previewProvider->ready() ||
-        !value->lifecycle.composition().runtime().registerPreviewSurfaceProvider(
+        !value->lifecycle.composition().registerPreviewSurfaceProvider(
             "webgl-preview-" + std::to_string(value->surfaceGeneration + 1U),
             std::move(previewProvider))) return 0;
-    value->lifecycle.composition().runtime().setPlatformPresentationDeferred(true);
-    const auto current = value->lifecycle.composition().runtime().surface();
-    const auto surface = current.generation;
-    const auto metricsGeneration = current.generation;
-    if (!value->lifecycle.composition().runtime().surface().available ||
+    (void)value->lifecycle.composition().setPlatformPresentationDeferred(true);
+    const auto current = value->lifecycle.composition().surfaceSnapshot();
+    const auto surface = current.surfaceGeneration;
+    const auto metricsGeneration = current.metricsGeneration;
+    if (!value->lifecycle.composition().surfaceSnapshot().available ||
         value->lifecycle.bind(canvas::render::SurfaceSnapshot{
             value->view, canvas::render::SurfaceGeneration{surface},
             canvas::render::MetricsGeneration{metricsGeneration}, metrics}) !=
@@ -146,7 +146,6 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_pointer_sample_phase(
         1U, pointerId, sequence, timestamp, x, y, pressure, 0.0F, 0.0F,
         {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent,
         static_cast<canvas::input::PointerPhase>(phase)});
-    if (!value->lifecycle.composition().ownerPump()) return 0;
     if (!value->lifecycle.composition().submit(batch)) return 0;
     ++value->pointerSamples;
     return 1;
@@ -158,7 +157,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_present_smoke(std::uintptr_t handle) {
     auto* value = instance(handle);
     if (value == nullptr || !value->backend || !value->backend->ready()) return 0;
     const auto frameId = canvas::render::FrameId{
-        value->lifecycle.composition().runtime().nextCanonicalFrameId()};
+        value->lifecycle.composition().nextCanonicalFrameId()};
     auto& composition = value->lifecycle.composition();
     // The public frame opportunity is the shared Runtime owner safe point.
     // Advance controls/resources before capturing preview state so an idle
@@ -166,16 +165,16 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_present_smoke(std::uintptr_t handle) {
     if (!composition.requestCanonicalFrame(frameId.value())) return 0;
     canvas::interaction::PreviewPresentationCapture previewCapture{};
     std::uint64_t previewPresents = 0U;
-    const bool havePreview = composition.runtime().capturePreviewPresentation(previewCapture) &&
-        composition.runtime().renderPreviewPresentation(previewCapture, &previewPresents);
-    const auto submitted = composition.runtime().lastSubmittedCanonicalFrame();
+    const bool havePreview = composition.capturePreviewPresentation(previewCapture) &&
+        composition.renderPreviewPresentation(previewCapture, &previewPresents);
+    const auto submitted = composition.lastSubmittedCanonicalFrame();
     if (!submitted.has_value() || submitted->frameId != frameId) return 0;
     if (!composition.receivePlatformPresented({
             submitted->viewId, submitted->frameId, submitted->surfaceGeneration,
             submitted->metricsGeneration, canvas::render::PresentOutcome::kPresented,
             canvas::render::PresentEvidenceKind::kPlatformQualified,
             std::nullopt})) return 0;
-    if (havePreview && !composition.runtime().acknowledgePreviewPresentation(
+    if (havePreview && !composition.acknowledgePreviewPresentation(
             previewCapture, previewPresents)) return 0;
     ++value->presentedFrames;
     return 1;

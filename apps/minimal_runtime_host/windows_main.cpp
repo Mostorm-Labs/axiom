@@ -45,22 +45,20 @@ struct State final {
 
 void paintCanvas(State& state, HDC dc) {
   auto& composition = state.host->composition();
-  auto& runtime = state.host->runtime();
+  const auto surface = composition.surfaceSnapshot();
   canvas::interaction::PreviewPresentationCapture previewCapture{};
   std::uint64_t previewPresentCount = 0U;
-  const bool hadPreview = runtime.previewActive();
+  const bool hadPreview = composition.previewActive();
   bool previewRenderedThisPaint = false;
-  if (hadPreview && runtime.previewRenderState().dirty &&
-      runtime.capturePreviewPresentation(previewCapture)) {
+  if (hadPreview && composition.previewRenderState().dirty &&
+      composition.capturePreviewPresentation(previewCapture)) {
     previewRenderedThisPaint =
-        runtime.renderPreviewPresentation(previewCapture, &previewPresentCount);
+        composition.renderPreviewPresentation(previewCapture, &previewPresentCount);
   }
-  auto* provider = runtime.activeSurfaceProvider();
-  if (provider == nullptr) return;
-  const auto& surface = state.host->runtime().surface();
+  if (!composition.canonicalProviderAvailable()) return;
   if (surface.width == 0U || surface.height == 0U) return;
-  if (provider->describe().backend == canvas::render::RenderTargetBackend::kD3D12) {
-    if (const auto frame = runtime.lastSubmittedCanonicalFrame(); frame.has_value() &&
+  if (composition.canonicalBackend() == canvas::render::RenderTargetBackend::kD3D12) {
+    if (const auto frame = composition.lastSubmittedCanonicalFrame(); frame.has_value() &&
         frame->frameId.value() != state.lastPresentedFrame) {
       if (composition.receivePlatformPresented({
               frame->viewId, frame->frameId, frame->surfaceGeneration,
@@ -69,8 +67,8 @@ void paintCanvas(State& state, HDC dc) {
         state.lastPresentedFrame = frame->frameId.value();
       }
     }
-    if (previewRenderedThisPaint && runtime.previewActive()) {
-      (void)runtime.acknowledgePreviewPresentation(previewCapture, previewPresentCount);
+    if (previewRenderedThisPaint && composition.previewActive()) {
+      (void)composition.acknowledgePreviewPresentation(previewCapture, previewPresentCount);
     }
     return;
   }
@@ -78,29 +76,27 @@ void paintCanvas(State& state, HDC dc) {
   // canonicalFrameCount is a stable content serial across the local submit /
   // platform-feedback transition. Using the transient submitted frame id
   // here would force one unnecessary full readback after every feedback.
-  const auto canonicalSerial = runtime.canonicalFrameCount();
-  const auto surfaceGeneration = surface.generation;
+  const auto canonicalSerial = composition.canonicalContentSerial();
+  const auto surfaceGeneration = surface.surfaceGeneration;
   if (state.presentationCache.shouldReadCanonical(
           surfaceGeneration, canonicalSerial, byteCount)) {
     std::vector<std::uint8_t> pixels(byteCount);
-    if (provider->readbackRgba(pixels).code !=
-        canvas::render::BackendSubmissionCode::kAccepted) return;
+    if (!composition.readCanonicalRgba(pixels)) return;
     state.presentationCache.markCanonicalRead(surfaceGeneration, canonicalSerial,
                                               std::move(pixels));
   }
 
-  auto* previewProvider = runtime.previewSurfaceProvider();
-  const auto previewState = runtime.previewRenderState();
-  const auto previewGeneration = hadPreview ? runtime.previewSurfaceGeneration() : 0U;
+  const bool previewProviderAvailable = composition.previewProviderAvailable();
+  const auto previewState = composition.previewRenderState();
+  const auto previewGeneration = hadPreview ? composition.previewSurfaceGeneration() : 0U;
   const auto previewRevision = hadPreview ? previewState.contentRevision : 0U;
   if (!hadPreview) {
     state.presentationCache.clearPreview();
-  } else if (previewProvider != nullptr &&
+  } else if (previewProviderAvailable &&
              (previewRenderedThisPaint || state.presentationCache.shouldReadPreview(
                   previewGeneration, previewRevision, byteCount))) {
     std::vector<std::uint8_t> overlay(byteCount);
-    if (previewProvider->readbackRgba(overlay).code ==
-        canvas::render::BackendSubmissionCode::kAccepted) {
+    if (composition.readPreviewRgba(overlay)) {
       state.presentationCache.markPreviewRead(previewGeneration, previewRevision,
                                               std::move(overlay));
     }
@@ -135,7 +131,7 @@ void paintCanvas(State& state, HDC dc) {
                 static_cast<int>(surface.width), static_cast<int>(surface.height),
                 state.presentationCache.compositePixels().data(), &info,
                 DIB_RGB_COLORS, SRCCOPY);
-  if (const auto frame = runtime.lastSubmittedCanonicalFrame(); frame.has_value() &&
+  if (const auto frame = composition.lastSubmittedCanonicalFrame(); frame.has_value() &&
       frame->frameId.value() != state.lastPresentedFrame) {
     if (composition.receivePlatformPresented({
             frame->viewId, frame->frameId, frame->surfaceGeneration,
@@ -144,8 +140,8 @@ void paintCanvas(State& state, HDC dc) {
       state.lastPresentedFrame = frame->frameId.value();
     }
   }
-  if (previewRenderedThisPaint && runtime.previewActive()) {
-    (void)runtime.acknowledgePreviewPresentation(previewCapture, previewPresentCount);
+  if (previewRenderedThisPaint && composition.previewActive()) {
+    (void)composition.acknowledgePreviewPresentation(previewCapture, previewPresentCount);
   }
 }
 
@@ -174,20 +170,9 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
 #endif
   switch (message) {
     case WM_TIMER: {
-      (void)state->host->composition().ownerPump();
-      bool needsCanvasPaint = false;
-      if (state->host->runtime().canonicalPresentationDirty()) {
-        const auto frameId = state->host->runtime().nextCanonicalFrameId();
-        if (frameId != 0U) {
-          needsCanvasPaint = state->host->composition().requestCanonicalFrame(frameId) ||
-              needsCanvasPaint;
-        }
-      }
-      const auto& runtime = state->host->runtime();
-      needsCanvasPaint = runtime.previewRenderState().dirty ||
-          runtime.transientOverlayDirty() ||
-          runtime.pendingCanonicalHandoffCount() != 0U ||
-          runtime.lastSubmittedCanonicalFrame().has_value() || needsCanvasPaint;
+      canvas::runtime::RuntimeFrameOpportunity opportunity{};
+      const bool frameReady = state->host->composition().serviceFrameOpportunity(false, opportunity);
+      const bool needsCanvasPaint = frameReady && opportunity.needsPaint;
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
       if (state->debugUi) state->debugUi->refresh();
 #endif
@@ -253,16 +238,16 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   auto canonicalProvider = std::make_unique<canvas::minimal_runtime_host::WindowsD3D12SurfaceProvider>(
       state.window, true);
   if (canonicalProvider->resize(1024U, 768U).code != canvas::render::BackendSubmissionCode::kAccepted ||
-      !state.host->runtime().registerSurfaceProvider("windows-d3d12-canonical",
+      !state.host->composition().registerSurfaceProvider("windows-d3d12-canonical",
           std::move(canonicalProvider))) return 1;
   auto previewProvider = std::make_unique<canvas::minimal_runtime_host::WindowsD3D12SurfaceProvider>(
       state.window, false);
   previewProvider->setOverlayOffset(0, 0);
   if (previewProvider->resize(1024U, 768U).code != canvas::render::BackendSubmissionCode::kAccepted ||
-      !state.host->runtime().registerPreviewSurfaceProvider("windows-d3d12-preview",
+      !state.host->composition().registerPreviewSurfaceProvider("windows-d3d12-preview",
           std::move(previewProvider))) return 1;
   if (!state.host->composition().bindSurface(1024U, 768U) || !state.host->registerSource(1U)) return 1;
-  state.host->runtime().setPlatformPresentationDeferred(true);
+  (void)state.host->composition().setPlatformPresentationDeferred(true);
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
   state.controller = std::make_unique<canvas::debug_ui::DebugController>(
       canvas::debug_ui::DebugControllerContext{state.facade.get(), nullptr, nullptr,

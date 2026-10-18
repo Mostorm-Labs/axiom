@@ -55,7 +55,7 @@ class WindowsCanonicalSurfaceHost final {
     [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
     [[nodiscard]] std::uint64_t nextInputSequence() noexcept { return ++inputSequence_; }
     [[nodiscard]] std::uint64_t nextCanonicalFrameId() noexcept {
-        const auto runtimeNext = composition_.runtime().nextCanonicalFrameId();
+        const auto runtimeNext = composition_.nextCanonicalFrameId();
         if (runtimeNext != 0U && nextFrameId_ < runtimeNext) nextFrameId_ = runtimeNext;
         return nextFrameId_++;
     }

@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <algorithm>
+#include <string>
 
 namespace canvas::runtime {
 
@@ -19,11 +20,22 @@ RuntimeComposition::RuntimeComposition(render::ViewId viewId)
 #if defined(CANVAS_RENDER_HAS_SKIA)
   imageResolver_ = std::make_unique<canvas::render::ImageResourceResolver>(*provider_);
 #endif
+  controlFacade_ = std::make_unique<CanvasRuntimeFacade>(
+      *runtime_, CanvasTargetKey{1U, viewId.value(), 1U, 1U});
 #if defined(CANVAS_RENDER_HAS_SKIA)
   runtime_->bindResourceServices(imageResolver_.get(), textLayoutService_.get());
 #else
   runtime_->bindResourceServices(nullptr, textLayoutService_.get());
 #endif
+}
+void RuntimeComposition::refreshControlTarget() noexcept {
+  if (controlFacade_ == nullptr) return;
+  const auto surface = runtime_->surface();
+  controlFacade_->setTarget(CanvasTargetKey{
+      resources_.lifetimeGeneration,
+      viewId_.value(),
+      surface.generation == 0U ? 1U : surface.generation,
+      surface.generation == 0U ? 1U : surface.generation});
 }
 RuntimeComposition::~RuntimeComposition() { (void)close(); }
 bool RuntimeComposition::transition(RuntimeCompositionState next) noexcept {
@@ -35,11 +47,33 @@ bool RuntimeComposition::open() noexcept {
   return state_ == RuntimeCompositionState::kCreated && transition(RuntimeCompositionState::kBound);
 }
 bool RuntimeComposition::bindSurface(std::uint32_t width, std::uint32_t height) noexcept {
-  return state_ == RuntimeCompositionState::kBound && runtime_->bindSurface(width, height) && transition(RuntimeCompositionState::kReady);
+  if (std::this_thread::get_id() != ownerThread_) return false;
+  const bool bound = state_ == RuntimeCompositionState::kBound &&
+      runtime_->bindSurface(width, height) && transition(RuntimeCompositionState::kReady);
+  if (bound) refreshControlTarget();
+  return bound;
 }
 bool RuntimeComposition::resizeSurface(std::uint32_t width, std::uint32_t height) noexcept {
-  if (!canMutate() || width == 0U || height == 0U) return false;
-  return runtime_->resizeSurface(width, height);
+  if (std::this_thread::get_id() != ownerThread_ || !canMutate() || width == 0U || height == 0U) return false;
+  const bool resized = runtime_->resizeSurface(width, height);
+  if (resized) refreshControlTarget();
+  return resized;
+}
+bool RuntimeComposition::registerSurfaceProvider(
+    std::string profileId,
+    std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ ||
+      (state_ != RuntimeCompositionState::kBound && !canMutate()) ||
+      provider == nullptr || profileId.empty()) return false;
+  return runtime_->registerSurfaceProvider(std::move(profileId), std::move(provider));
+}
+bool RuntimeComposition::registerPreviewSurfaceProvider(
+    std::string profileId,
+    std::unique_ptr<render::SkiaSurfaceProvider> provider) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ ||
+      (state_ != RuntimeCompositionState::kBound && !canMutate()) ||
+      provider == nullptr || profileId.empty()) return false;
+  return runtime_->registerPreviewSurfaceProvider(std::move(profileId), std::move(provider));
 }
 bool RuntimeComposition::refreshManifestDerivedState() noexcept {
   runtime_->bindResourceManifest(&resources_.manifest);
@@ -69,11 +103,23 @@ bool RuntimeComposition::bindManifest(const semantic::ResourceManifest& manifest
   return true;
 }
 bool RuntimeComposition::registerSource(input::InputSourceId source) noexcept {
+  if (std::this_thread::get_id() != ownerThread_) return false;
   if (state_ == RuntimeCompositionState::kBound && runtime_->surface().available) {
     state_ = RuntimeCompositionState::kReady;
   }
   return (state_ == RuntimeCompositionState::kBound || canMutate()) &&
       runtime_->registerInputSource(source, "composition");
+}
+bool RuntimeComposition::unregisterSource(input::InputSourceId source,
+                                           std::uint64_t sequence,
+                                           std::uint64_t timestampNs) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+  return runtime_->unregisterInputSource(source, sequence, timestampNs);
+}
+bool RuntimeComposition::cancelAllPointers() noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+  runtime_->cancelAllPointers();
+  return true;
 }
 bool RuntimeComposition::submit(const input::PlatformPointerBatch& batch) noexcept {
   if (state_ == RuntimeCompositionState::kBound && runtime_->surface().available) {
@@ -164,10 +210,14 @@ bool RuntimeComposition::publishResource(const ResourceBindingToken& token,
 }
 bool RuntimeComposition::ownerPump() noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
+  if (state_ == RuntimeCompositionState::kBound && runtime_->surface().available) {
+    state_ = RuntimeCompositionState::kReady;
+  }
   if (!canMutate()) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
   ++ownerPumpCount_;
+  lastOwnerControlCount_ = 0;
   if (controlFacade_ != nullptr) {
-    (void)controlFacade_->process(ownerPumpCount_);
+    lastOwnerControlCount_ = controlFacade_->process(ownerPumpCount_);
   }
   bool derivedRefresh = false;
   for (const auto& notification : notifications_) {
@@ -212,6 +262,28 @@ bool RuntimeComposition::requestCanonicalFrame(std::uint64_t frameId) noexcept {
   runtime_->setPlatformPresentationDeferred(wasDeferred);
   if (!pumped) return false;
   return runtime_->presentCanonicalFrame(frameId, 0.0, false);
+}
+bool RuntimeComposition::serviceFrameOpportunity(
+    bool forceCanonical, RuntimeFrameOpportunity& out) noexcept {
+  out = {};
+  if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+  const bool shouldCanonical = forceCanonical || runtime_->canonicalPresentationDirty();
+  if (shouldCanonical) {
+    const auto frameId = runtime_->nextCanonicalFrameId();
+    if (frameId == 0U || !requestCanonicalFrame(frameId)) return false;
+    out.canonicalRequested = true;
+  } else if (!ownerPump()) {
+    return false;
+  }
+  out.previewActive = runtime_->previewActive();
+  out.previewDirty = runtime_->previewRenderState().dirty;
+  out.pendingCanonicalHandoff = runtime_->pendingCanonicalHandoffCount();
+  out.previewSurfaceGeneration = runtime_->previewSurfaceGeneration();
+  out.previewRevision = runtime_->previewRenderState().contentRevision;
+  out.canonicalFrame = runtime_->lastSubmittedCanonicalFrame();
+  out.needsPaint = out.canonicalRequested || out.previewDirty ||
+      out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value();
+  return true;
 }
 bool RuntimeComposition::receivePlatformPresented(const render::PresentedFeedback& feedback) noexcept { return canMutate() && runtime_->receivePlatformPresented(feedback); }
 bool RuntimeComposition::loseSurface() noexcept {
@@ -258,7 +330,93 @@ bool RuntimeComposition::detach() noexcept {
 bool RuntimeComposition::close() noexcept { if (state_ == RuntimeCompositionState::kClosed) return true; if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
 RuntimeCompositionReceipt RuntimeComposition::readback() const noexcept {
   const auto& runtime = *runtime_;
-  return {state_, resources_.lifetimeGeneration, ownerPumpCount_, resources_.manifest.manifest_revision, runtime.sceneRevision(), runtime.semanticGeneration().value(), notifications_.size(), runtime.lastSubmittedCanonicalFrame().has_value(), runtime.canonicalPresentationDirty()};
+  return {state_, resources_.lifetimeGeneration, ownerPumpCount_, lastOwnerControlCount_, resources_.manifest.manifest_revision, runtime.sceneRevision(), runtime.semanticGeneration().value(), notifications_.size(), runtime.lastSubmittedCanonicalFrame().has_value(), runtime.canonicalPresentationDirty()};
+}
+
+RuntimeSurfaceSnapshot RuntimeComposition::surfaceSnapshot() const noexcept {
+  const auto surface = runtime_->surface();
+  RuntimeSurfaceSnapshot out{};
+  out.viewId = viewId_;
+  out.surfaceGeneration = surface.generation;
+  out.metricsGeneration = surface.generation;
+  out.logicalWidth = surface.logicalWidth;
+  out.logicalHeight = surface.logicalHeight;
+  out.width = surface.width;
+  out.height = surface.height;
+  out.devicePixelRatio = surface.devicePixelRatio;
+  out.displayScale = surface.displayScale;
+  out.available = surface.available;
+  out.backend = canonicalBackend();
+  return out;
+}
+
+std::uint64_t RuntimeComposition::previewSurfaceGeneration() const noexcept {
+  return runtime_->previewSurfaceGeneration();
+}
+
+render::RenderTargetBackend RuntimeComposition::canonicalBackend() const noexcept {
+  const auto* provider = const_cast<interaction::CanvasEditingRuntime&>(*runtime_)
+      .activeSurfaceProvider();
+  return provider == nullptr ? render::RenderTargetBackend::kRaster
+                             : provider->describe().backend;
+}
+
+std::uint64_t RuntimeComposition::nextCanonicalFrameId() const noexcept {
+  return runtime_->nextCanonicalFrameId();
+}
+std::uint64_t RuntimeComposition::canonicalContentSerial() const noexcept {
+  return runtime_->canonicalFrameCount();
+}
+std::optional<render::RuntimeFrameIdentity>
+RuntimeComposition::lastSubmittedCanonicalFrame() const noexcept {
+  return runtime_->lastSubmittedCanonicalFrame();
+}
+bool RuntimeComposition::canonicalPresentationDirty() const noexcept {
+  return runtime_->canonicalPresentationDirty();
+}
+bool RuntimeComposition::previewActive() const noexcept { return runtime_->previewActive(); }
+const render::SurfaceRenderState& RuntimeComposition::previewRenderState() const noexcept {
+  return runtime_->previewRenderState();
+}
+bool RuntimeComposition::capturePreviewPresentation(
+    interaction::PreviewPresentationCapture& capture) const noexcept {
+  return const_cast<interaction::CanvasEditingRuntime&>(*runtime_)
+      .capturePreviewPresentation(capture);
+}
+bool RuntimeComposition::renderPreviewPresentation(
+    const interaction::PreviewPresentationCapture& capture,
+    std::uint64_t* presentCount) noexcept {
+  if (std::this_thread::get_id() != ownerThread_) return false;
+  return runtime_->renderPreviewPresentation(capture, presentCount);
+}
+bool RuntimeComposition::acknowledgePreviewPresentation(
+    const interaction::PreviewPresentationCapture& capture,
+    std::uint64_t presentCount) noexcept {
+  if (std::this_thread::get_id() != ownerThread_) return false;
+  return runtime_->acknowledgePreviewPresentation(capture, presentCount);
+}
+bool RuntimeComposition::readCanonicalRgba(std::span<std::uint8_t> destination) noexcept {
+  if (std::this_thread::get_id() != ownerThread_) return false;
+  auto* provider = runtime_->activeSurfaceProvider();
+  return provider != nullptr &&
+      provider->readbackRgba(destination).code == render::BackendSubmissionCode::kAccepted;
+}
+bool RuntimeComposition::readPreviewRgba(std::span<std::uint8_t> destination) noexcept {
+  if (std::this_thread::get_id() != ownerThread_) return false;
+  auto* provider = runtime_->previewSurfaceProvider();
+  return provider != nullptr &&
+      provider->readbackRgba(destination).code == render::BackendSubmissionCode::kAccepted;
+}
+bool RuntimeComposition::canonicalProviderAvailable() const noexcept {
+  return runtime_->activeSurfaceProvider() != nullptr;
+}
+bool RuntimeComposition::previewProviderAvailable() const noexcept {
+  return runtime_->previewSurfaceProvider() != nullptr;
+}
+bool RuntimeComposition::setPlatformPresentationDeferred(bool deferred) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+  runtime_->setPlatformPresentationDeferred(deferred);
+  return true;
 }
 std::optional<ResourcePortReceipt> RuntimeComposition::resourceReceipt(
     foundation::ObjectId id) const noexcept {
