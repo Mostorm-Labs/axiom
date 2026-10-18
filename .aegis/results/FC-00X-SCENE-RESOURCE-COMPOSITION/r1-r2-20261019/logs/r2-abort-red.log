@@ -1,0 +1,31 @@
+Test project C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/out/p32-f08-msvc1951
+    Start 61: FC00XRuntimeComposition
+1/1 Test #61: FC00XRuntimeComposition ..........Exit code 0xc0000409***Exception:   2.50 sec
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\p32-f08-msvc1951\runtime\composition\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\p32-f08-msvc1951\runtime\composition\icudtl.dat.
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=3 objects=0 scene_records=0
+[axiom] present begin frame=4 objects=0 scene_records=0
+[axiom] present begin frame=5 objects=0 scene_records=0
+[axiom] present begin frame=6 objects=0 scene_records=0
+[axiom] present begin frame=7 objects=0 scene_records=0
+[axiom] present begin frame=8 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+Assertion failed: c.qualificationRuntime().previewSurfaceProvider()->describe().metrics.physicalWidth == 128U, file C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\runtime\composition\tests\runtime_composition_test.cpp, line 547
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   2.57 sec
+
+The following tests FAILED:
+	 61 - FC00XRuntimeComposition (Exit code 0xc0000409)
+Errors while running CTest

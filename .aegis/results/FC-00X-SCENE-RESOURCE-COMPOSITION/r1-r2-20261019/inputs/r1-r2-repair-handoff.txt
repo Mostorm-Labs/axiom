@@ -1,0 +1,75 @@
+请直接执行本轮 S1/S2 的两项窄修复，不停在分析或计划。人类在 reviewer 会话已明确授权：“让隔壁会话开始执行这些缺漏的修复吧，执行完成后再通知这边进行再次审核”。
+
+Repository: Mostorm-Labs/axiom
+Origin: https://github.com/Mostorm-Labs/axiom.git
+Execution branch: codex/fc00x-scene-resource-composition-p32-f08-resume
+Worktree: C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume
+本轮审查基准/ancestor anchor: 7d22700a5020974c38cff690a530a23abbcd8d21
+产品实现基准: 7453884345a175f6aebad52225cfafaf337f2f3e
+本消息为人类确认的 R1/R2 实现缺陷修复范围，不伪称新的 repo-local P31 或 P36 authorization 文件已经物化，也不更改既有语义Authority。
+
+先读取适用AGENTS，核对origin身份、fetch原分支、记录实际starting_revision、核对anchor祖先关系。若后代已有有效修复，先核对delta并从首个未完成项恢复；不要回滚或重做。已知工作区仅未跟踪imgui.ini，保留。不要reset、覆盖未提交工作、force-push、切main、合并PR。
+
+必读独立审查及完整可运行复现：
+D:/axreview/fc00x-20261019/s1-s2-independent-review-v1/review-report.md
+同目录 boundary_probe.cpp、extra.cppfrag、setup_probe.py、build_probe.py、output.log、baseline.json。
+独立源码归档是7d22700a；审查聚焦构建+24项回归及真实D3D12资源测试1项均通过，独立probe编译/链接exit0、运行exit2，准确表示两项正确性oracle失败，不能把exit2解释成环境问题。
+
+沿用原固定S1/S2十组矩阵，本轮只修R1/R2，保留所有已经验证的行为。不得追加S4、旧Playground迁移、全面改名、新对象/Operation/schema、稳定C ABI变化、Core线程、SDK锁或历史Authority/Golden/Gate/PHYS修改。Android/APK继续DEFERRED。
+
+R1 [P2] Canonical工作反馈也必须有Runtime实例/寿命/submission归属
+对应原S1工作回执身份与矩阵9。PreviewWork隔离已经正确，Canonical仍只依赖可碰撞的view/frame/surface/metrics字段。
+位置：
+runtime/composition/src/runtime_composition.cpp:442-444
+runtime/interaction/src/canvas_editing_runtime.cpp:3124-3140
+runtime/render/include/canvas/render/presentation_tracker.hpp:45-54
+runtime/render/include/canvas/render/runtime_frame_coordinator.hpp:12-19
+
+公共接口真实复现：
+A/B两个Runtime使用相同允许复用ViewId=1，各自open/bind128/registerSource/deferred；都Down/Move/Up提交一个笔迹；serviceFrameOpportunity产生相等Canonical identity。只正确确认B自己的PreviewWork，再把A的Canonical PresentedFeedback交给B。B错误接受、清除自己submitted frame、退休自己preview，尚未有B的真实Canonical反馈。
+输出：
+equalIdentity=1 acceptedAinB=1 BsubmittedAfter=0 previewBefore=1 previewAfter=0 pendingBefore=1
+
+修复共同帧工作与完成资格，让Canonical也关联真正的创建实例、寿命、绑定、submission；平台原样回传对应工作身份，Runtime验证原工作资格后再推进。复用已实现实例nonce和共同frame入口或等价的不可碰撞关联，不把正确性托付给Host自行分辨，也不能只用ViewId或本地计数。不要为此更改canonical CommitStamp/RuntimeEpoch语义；无需新Facade/多窗口框架。不要简单拒绝所有Canonical回执。普通Windows/Web消费者不能退回mutable editor/低层capture/render/ack。
+若需要调整内部C++工作/完成数据形状，更新所有本轮普通Windows/Web Minimal接线，保留稳定C ABI。旧裸反馈入口若还兼容，不能继续作为绕过隔离的普通平台通道。
+
+验证必须同时覆盖：
+- 同ViewId不同Runtime的Canonical A→B被拒绝且B的pending/preview/qualified状态不变；B自己的合法反馈正常。
+- close/recreate复用ViewId及计数时，旧Canonical完成不能影响新实例。
+- 同实例旧A/新B、跨绑定/metrics、重复/未知/失败重试。
+- pending Brush正确两种反馈顺序，只有当前实例自己的Canonical与Preview资格闭合才退休。
+- 已修PreviewWork跨实例和当前合法回执继续通过。
+
+R2 [P2] Closed等终态先于重入resize处理，不能被覆盖为Lost
+对应矩阵7/close终态。当前resizeSurface只先判断owner，再进入surfaceTransitionActive分支并无条件state_=Lost。
+位置：
+runtime/composition/src/runtime_composition.cpp:117-124
+同文件close():492。
+
+真实Runtime+Raster resize边界hook复现：
+Ready→外层resize准备中→hook调用close得到Closed(7)→同hook再调用resizeSurface→内层返回false却把state改成Lost(3)→外层返回false，最终仍Lost。内部editor已经closed，外部却可能继续尝试恢复。
+没有观察到关闭后能继续改Document，勿夸大影响。
+输出：
+reentrant after close state=7
+reentrant resize after close accepted=0 state=3
+outer after close+resize: result=0 state=3 closedEnum=7 available=0
+
+修复owner/state准入顺序和终态保护；重入只允许取消尚有效的原事务，不能覆写Closed/Stopping/Quiescent，也不能再推进关闭后身份或发布旧候选。不要仅修输出枚举而保留资源/发布副作用。
+验证close→resize、close→lost、stop/close后迟到事件组合；保持关闭终态及身份，旧候选不发布，输入/控制/帧完成继续拒绝。原单个resize/lost中断后的合法恢复正向必须保持。
+
+执行与固定结束条件：
+1. 开工先写简短design preflight，说明两条链的实际owner、身份/状态校验、影响文件与测试；无真实上游冲突时直接继续，不再等待批准。
+2. 先以正确行为oracle在旧实现观察RED，再改生产代码、GREEN；保留实际命令、退出码与完整日志。可以把review probe改为当前公开C++接口，但不能删掉缺陷场景或只断言字段存在。
+3. 重跑原固定10项及实际受影响保护，至少保留上一轮24项+真实D3D12 paired test；按实际JUnit列举结果，不编造数字或把skip算PASS。身份/ABI接线改变所影响的Windows Minimal Debug UI on/off exe和实际Web page/WASM必须构建验证。复用锁定发布SDK与Store，不重建Skia/Protobuf等SDK。
+4. 本轮blocking是两项缺陷关闭、相关回归、受影响平台构建与reviewer可获取源码/日志。Hosted CI保持原合同要求，不新增门槛；物理未观察仍PHYSICAL_PENDING，Android DEFERRED。
+5. 连续完成所有可执行项、diff/scope核对及必要证据后正常commit/push到原分支，返回READY_FOR_CONTROL_REVIEW。若真实Authority/Verification冲突、环境或剩余冻结验证失败，准确分类和列出未完成项；中间测试绿/一个提交不是终点。
+6. 返回starting_revision、result_revision、materialized_ref、evidence_input_refs、矩阵映射、命令日志、Windows exe与Web产物绝对路径/hash。若有indexed evidence，按最终文件字节验证长度/SHA-256；不造自引用commit hash。无需为了形式强加额外evidence-only提交。
+7. 未改变现有Gate、不宣称P34/物理PASS，也不继续新功能。
+
+结束后主动通知 reviewer 会话：
+threadId: 01a13d78-2852-7342-b02a-c5fcf62ce0c1
+hostId: local
+title: Axiom Canvas - GACCODE (5)
+使用send_message_to_thread发送精确结果及复验请求，并引用本消息开头人类直接授权，勿虚构消息ID。若通知工具失败，如实报告。
+独立审查结束后由人类确认，不由实现者自签接受。
+

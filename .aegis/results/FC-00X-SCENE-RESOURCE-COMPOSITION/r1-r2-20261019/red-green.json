@@ -1,0 +1,30 @@
+{
+  "red": [
+    {
+      "test": "R1 cross-instance canonical rejection",
+      "log": "logs/r1-red.log",
+      "exit_code": -1073740791
+    },
+    {
+      "test": "R2 close then reentrant resize preserves Closed",
+      "log": "logs/r2-red.log",
+      "exit_code": -1073740791
+    },
+    {
+      "test": "R2 terminal abort prevents starting second-role prepare",
+      "log": "logs/r2-abort-red.log",
+      "exit_code": 8
+    }
+  ],
+  "green": "logs/r1-r2-exact-tests.xml",
+  "review_probe": {
+    "compile_exit": 0,
+    "link_exit": 0,
+    "run_exit": 0,
+    "residual_oracle_failures": 0,
+    "log": "probe/output.log",
+    "note": "Original independent diagnostic adapted only to typed work/feedback ingress. Executed by implementer as corroboration; does not claim new independent review."
+  },
+  "probe_adaptation": "Web mapping calls echo submittedCanonicalWork; Composition calls echo opportunity.canonicalWork. Original bad behavior scenarios and failure counts retained. Initial adaptation compile errors were corrected before successful run.",
+  "original_review_probe_exit": 2
+}
