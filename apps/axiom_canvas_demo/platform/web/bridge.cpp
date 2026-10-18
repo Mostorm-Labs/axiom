@@ -160,11 +160,14 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_present_smoke(std::uintptr_t handle) {
     const auto frameId = canvas::render::FrameId{
         value->lifecycle.composition().runtime().nextCanonicalFrameId()};
     auto& composition = value->lifecycle.composition();
+    // The public frame opportunity is the shared Runtime owner safe point.
+    // Advance controls/resources before capturing preview state so an idle
+    // rAF frame cannot present a stale preview after a queued Debug UI change.
+    if (!composition.requestCanonicalFrame(frameId.value())) return 0;
     canvas::interaction::PreviewPresentationCapture previewCapture{};
     std::uint64_t previewPresents = 0U;
     const bool havePreview = composition.runtime().capturePreviewPresentation(previewCapture) &&
         composition.runtime().renderPreviewPresentation(previewCapture, &previewPresents);
-    if (!composition.requestCanonicalFrame(frameId.value())) return 0;
     const auto submitted = composition.runtime().lastSubmittedCanonicalFrame();
     if (!submitted.has_value() || submitted->frameId != frameId) return 0;
     if (!composition.receivePlatformPresented({

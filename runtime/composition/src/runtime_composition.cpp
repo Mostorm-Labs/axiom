@@ -197,7 +197,14 @@ bool RuntimeComposition::ownerPump() noexcept {
   }
   return true;
 }
-bool RuntimeComposition::requestCanonicalFrame(std::uint64_t frameId) noexcept { return canMutate() && runtime_->presentCanonicalFrame(frameId, 0.0, false); }
+bool RuntimeComposition::requestCanonicalFrame(std::uint64_t frameId) noexcept {
+  if (!canMutate() || std::this_thread::get_id() != ownerThread_) return false;
+  // A frame opportunity is also the shared owner safe point. This advances
+  // accepted controls and resource notifications even when the surface is
+  // idle and no pointer batch arrives (for example Web rAF/present).
+  if (!ownerPump()) return false;
+  return runtime_->presentCanonicalFrame(frameId, 0.0, false);
+}
 bool RuntimeComposition::receivePlatformPresented(const render::PresentedFeedback& feedback) noexcept { return canMutate() && runtime_->receivePlatformPresented(feedback); }
 bool RuntimeComposition::loseSurface() noexcept {
   if (state_ != RuntimeCompositionState::kReady || !runtime_->loseSurface()) return false;

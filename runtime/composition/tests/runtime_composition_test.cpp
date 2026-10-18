@@ -309,5 +309,32 @@ int main() {
   assert(demandComposition.submit(demandDown));
   assert(demandComposition.submit(demandUp));
   assert(demandComposition.readback().canonicalDemand);
+
+  // A public frame opportunity must also advance accepted controls and
+  // resource notifications when no pointer batch arrives. This is the Web
+  // rAF/present path and must not depend on a host-specific ownerPump call.
+  canvas::runtime::RuntimeComposition idleFrameComposition;
+  assert(idleFrameComposition.open());
+  assert(idleFrameComposition.bindSurface(256U, 256U));
+  auto idleManifest = makeManifest(1U);
+  assert(idleFrameComposition.bindManifest(idleManifest, 31U));
+  canvas::runtime::CanvasRuntimeFacade idleFacade(
+      idleFrameComposition.runtime(), {1U, 1U, 1U, 1U});
+  idleFrameComposition.attachControlFacade(&idleFacade);
+  assert(idleFrameComposition.publishResource(
+      canvas::foundation::ObjectId::fromUint64(1U), {0x01U}));
+  const auto idleControl = idleFacade.setSelectionMode(true, 1U, 1U);
+  assert(idleControl.state == canvas::runtime::ProductControlState::kQueued);
+  assert(!idleFrameComposition.runtime().selectionMode());
+  assert(idleFrameComposition.requestCanonicalFrame(
+      idleFrameComposition.runtime().nextCanonicalFrameId()));
+  const auto idleReceipt = idleFacade.canvasControlReceipt({1U, 1U});
+  assert(idleReceipt.has_value());
+  assert(idleReceipt->state ==
+         canvas::runtime::CanvasControlReceiptState::kApplied);
+  assert(idleFrameComposition.runtime().selectionMode());
+  assert(idleFrameComposition.readback().pendingNotifications == 0U);
+  assert(idleFrameComposition.resourceReceipt(
+      canvas::foundation::ObjectId::fromUint64(1U)).has_value());
   return 0;
 }
