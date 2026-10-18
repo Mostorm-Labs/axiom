@@ -1,4 +1,5 @@
 #include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/canvas_runtime_facade.hpp"
 #include <cassert>
 #include <algorithm>
 #include <array>
@@ -45,6 +46,37 @@ int main() {
   assert(composition.open());
   assert(composition.bindSurface(256U, 256U));
   assert(composition.registerSource(9U));
+  // Public Composition input must consume an attached Facade control before
+  // routing the next pointer batch. Hosts must not need a private pre-pump.
+  canvas::runtime::CanvasRuntimeFacade controlFacade(composition.runtime(),
+                                                      {1U, 1U, 1U, 1U});
+  composition.attachControlFacade(&controlFacade);
+  canvas::runtime::CanvasControlRequest presetRequest{};
+  presetRequest.clientId = 0xD001U;
+  presetRequest.requestId = 1U;
+  presetRequest.target = controlFacade.target();
+  presetRequest.payload.kind =
+      canvas::runtime::CanvasControlPayloadKind::kSelectCreationPreset;
+  presetRequest.payload.creationPreset =
+      canvas::runtime::CanvasCreationPreset::kEllipse;
+  assert(controlFacade.submitCanvasControl(presetRequest).state ==
+         canvas::runtime::ProductControlState::kQueued);
+  canvas::input::PlatformPointerBatch controlDown;
+  controlDown.samples.push_back({9U, 91U, 1U, 1'000U, 20.0F, 20.0F, 0.5F,
+                                 0.0F, 0.0F, {}, {},
+                                 canvas::input::SampleProvenance::kConfirmedCurrent,
+                                 canvas::input::PointerPhase::kDown});
+  canvas::input::PlatformPointerBatch controlUp = controlDown;
+  controlUp.samples.front().sequence = 2U;
+  controlUp.samples.front().timestampNs = 2'000U;
+  controlUp.samples.front().x = 80.0F;
+  controlUp.samples.front().y = 60.0F;
+  controlUp.samples.front().phase = canvas::input::PointerPhase::kUp;
+  assert(composition.submit(controlDown));
+  assert(composition.submit(controlUp));
+  assert(composition.runtime().creationPreset() ==
+         canvas::interaction::CreationPreset::kEllipse);
+  assert(composition.runtime().semanticObjectCount() == 1U);
   canvas::semantic::ResourceManifest manifest;
   canvas::semantic::ResourceManifestEntry entry;
   entry.resource_id = canvas::semantic::ResourceId{canvas::foundation::ObjectId::fromUint64(7U)};

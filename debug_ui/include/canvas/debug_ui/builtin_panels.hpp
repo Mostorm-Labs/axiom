@@ -20,7 +20,6 @@ namespace panel_detail {
 [[nodiscard]] inline bool canSubmitProduct(const DebugPanelContext& context) noexcept {
   return context.controls.hasRuntimeOwner() &&
       context.snapshot.product.availability == DebugAvailability::kAvailable &&
-      context.snapshot.platform.availability == DebugAvailability::kAvailable &&
       context.snapshot.coherence == SnapshotCoherence::kCoherent &&
       context.snapshot.stamp.runtimeGeneration != 0;
 }

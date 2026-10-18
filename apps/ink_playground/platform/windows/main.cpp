@@ -277,12 +277,14 @@ bool selectWindowsTool(State& value, int command) {
   }
   if (receipt.state == canvas::runtime::ProductControlState::kQueued) {
     value.runtimeFacade->processCanvasControlsAtSafePoint(value.pointerSampleSequence + 1U);
-    if (const auto terminal = value.runtimeFacade->canvasControlReceipt(
-            {1U, requestId}); terminal.has_value()) {
+    if (receipt.control.has_value()) {
+      if (const auto terminal = value.runtimeFacade->canvasControlReceipt(
+              receipt.control->key); terminal.has_value()) {
       receipt.control = terminal;
       receipt.state = terminal->state == canvas::runtime::CanvasControlReceiptState::kApplied
           ? canvas::runtime::ProductControlState::kApplied
           : canvas::runtime::ProductControlState::kRejected;
+      }
     }
   }
   if (receipt.state != canvas::runtime::ProductControlState::kApplied) return false;

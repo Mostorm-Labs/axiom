@@ -8,9 +8,12 @@ WebSurfaceHost::WebSurfaceHost(render::SurfaceSnapshot initial) noexcept
     : lifecycle_(initial), presentation_(lifecycle_), composition_(initial.viewId) {
     (void)composition_.open();
     facade_ = std::make_unique<runtime::CanvasRuntimeFacade>(
-        composition_.runtime(), {1U, initial.viewId.value(),
-                                  initial.surfaceGeneration.value(),
-                                  initial.metricsGeneration.value()});
+        composition_.runtime(),
+        runtime::CanvasTargetKey{
+            1U,
+            initial.viewId.value(),
+            initial.surfaceGeneration.value(),
+            initial.metricsGeneration.value()});
     composition_.attachControlFacade(facade_.get());
     (void)composition_.bindSurface(initial.metrics.physicalWidth,
                                    initial.metrics.physicalHeight);

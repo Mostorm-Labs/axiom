@@ -79,7 +79,15 @@ bool RuntimeComposition::submit(const input::PlatformPointerBatch& batch) noexce
   if (state_ == RuntimeCompositionState::kBound && runtime_->surface().available) {
     state_ = RuntimeCompositionState::kReady;
   }
-  return canMutate() && !batch.samples.empty() &&
+  if (!canMutate() || batch.samples.empty()) return false;
+  // Controls submitted through the public RuntimeFacade share this owner
+  // boundary. Consume them before the next platform input batch so a host
+  // cannot observe one gesture under stale tool/creation state.
+  if (controlFacade_ != nullptr && std::this_thread::get_id() == ownerThread_) {
+    ++ownerPumpCount_;
+    (void)controlFacade_->process(ownerPumpCount_);
+  }
+  return
       runtime_->acceptPlatformBatch(batch, batch.samples.back().timestampNs);
 }
 semantic::ApplyResult RuntimeComposition::applyExternalOperation(
