@@ -1,0 +1,107 @@
+{
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "starting_revision": "ae1a2e79b1f4e2eb36f81655f6819cc4a8a8173a",
+  "result_revision": "7453884345a175f6aebad52225cfafaf337f2f3e",
+  "materialized_ref": "7453884345a175f6aebad52225cfafaf337f2f3e",
+  "package_ref": ".aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/package.json@02e905874e81038ac42b86c15499831699637cbb",
+  "execution_branch": "codex/fc00x-scene-resource-composition-p32-f08-resume",
+  "task_anchor": "ae1a2e79b1f4e2eb36f81655f6819cc4a8a8173a",
+  "tests": {
+    "fixed_matrix": "25/25 PASS",
+    "matrix_log": "out/s2-final-tests-v2.log",
+    "assertion_audit": "out/s2-assertion-audit.json",
+    "native_d3d12_pair": "PASS; out/s2-native-d3d12-test.log",
+    "git_diff_check": "PASS"
+  },
+  "red_green": {
+    "prebind": "out/s2-prebind-red.log",
+    "staged": "out/s2-staged-red.log",
+    "generation_exhaustion": "out/s2-exhaust-red.log",
+    "preview_replacement": "out/s2-live-replace-red.log",
+    "dpr_chrome": "out/s2-chrome-red-test.log",
+    "control_readback": "out/s2-control-readback-red-test.log",
+    "green": "out/s2-final-tests-v2.log"
+  },
+  "builds": {
+    "windows_debug_ui_on": "out/s2-verified-native-build.log",
+    "windows_debug_ui_off": "out/s2-verified-win-off-build.log",
+    "web_debug_ui_on": "out/s2-verified-web-on-build.log",
+    "web_debug_ui_off": "out/s2-verified-web-off-build.log",
+    "compiler": "MSVC 14.51.36231; clang-cl 22.1.8; Windows SDK 10.0.26100.0"
+  },
+  "artifacts": {
+    "out/p32-f08-msvc1951/apps/minimal_runtime_host/axiom_minimal_runtime_host_windows.exe": {
+      "sha256": "cecbc8ceb6a1f64fb9489e582f74427d26cd63b2e6a9251c8deb032cb10a3099",
+      "bytes": 10964480
+    },
+    "out/p32-f08-msvc1951-off/apps/minimal_runtime_host/axiom_minimal_runtime_host_windows.exe": {
+      "sha256": "8740c458239350906cb16c2d936eb9e5116f1c7d61c55de5a9c98ed8bbfc8c76",
+      "bytes": 10486784
+    },
+    "out/p32-web-debug-on/apps/axiom_canvas_demo/axiom_canvas_demo_web.js": {
+      "sha256": "4f4f242cbae4d7b408528843cb059b58d96b36f7ae52a9fdaba0c91e6dc4399f",
+      "bytes": 110691
+    },
+    "out/p32-web-debug-on/apps/axiom_canvas_demo/axiom_canvas_demo_web.wasm": {
+      "sha256": "96c2a6d7fbb30b29160acfe7a7383fbf4b4b78c54fe0278c4484382305a21e05",
+      "bytes": 8852462
+    },
+    "out/p32-web-debug-on/apps/axiom_canvas_demo/index.html": {
+      "sha256": "23e7edc0e8991615cca6583e7749d545c33381e99960b11d5dafaf4d1ba634df",
+      "bytes": 4182
+    },
+    "out/p32-web-debug-off/apps/axiom_canvas_demo/axiom_canvas_demo_web.js": {
+      "sha256": "4f4f242cbae4d7b408528843cb059b58d96b36f7ae52a9fdaba0c91e6dc4399f",
+      "bytes": 110691
+    },
+    "out/p32-web-debug-off/apps/axiom_canvas_demo/axiom_canvas_demo_web.wasm": {
+      "sha256": "96c2a6d7fbb30b29160acfe7a7383fbf4b4b78c54fe0278c4484382305a21e05",
+      "bytes": 8852462
+    },
+    "out/p32-web-debug-off/apps/axiom_canvas_demo/index.html": {
+      "sha256": "23e7edc0e8991615cca6583e7749d545c33381e99960b11d5dafaf4d1ba634df",
+      "bytes": 4182
+    }
+  },
+  "physical_status": "PHYSICAL_PENDING",
+  "android_status": "DEFERRED_NOT_BLOCKING",
+  "limitations": [
+    "Web builds emit 3 pre-existing warnings, explicitly downgraded in configured CMAKE_CXX_FLAGS; no browser observation in this run.",
+    "Windows D3D12 native automated pair test passed; manual window/DPI/maximize observation remains PHYSICAL_PENDING.",
+    "imgui.ini is pre-existing untracked and excluded."
+  ],
+  "changed_files": [
+    "apps/axiom_canvas_demo/platform/web/bridge.cpp",
+    "apps/axiom_canvas_demo/platform/web/web_surface_host.cpp",
+    "apps/axiom_canvas_demo/platform/web/web_surface_host.hpp",
+    "apps/axiom_canvas_demo/tests/web_surface_host_test.cpp",
+    "apps/minimal_runtime_host/CMakeLists.txt",
+    "apps/minimal_runtime_host/tests/minimal_runtime_host_test.cpp",
+    "apps/minimal_runtime_host/tests/windows_surface_binding_test.cpp",
+    "apps/minimal_runtime_host/windows_d3d12_surface_provider.cpp",
+    "apps/minimal_runtime_host/windows_d3d12_surface_provider.hpp",
+    "apps/minimal_runtime_host/windows_main.cpp",
+    "runtime/composition/include/canvas/runtime/resource_binding.hpp",
+    "runtime/composition/include/canvas/runtime/runtime_composition.hpp",
+    "runtime/composition/src/canvas_runtime_facade.cpp",
+    "runtime/composition/src/resource_binding.cpp",
+    "runtime/composition/src/runtime_composition.cpp",
+    "runtime/composition/tests/runtime_composition_test.cpp",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+    "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "runtime/render/CMakeLists.txt",
+    "runtime/render/include/canvas/render/preview_surface.hpp",
+    "runtime/render/include/canvas/render/render_target.hpp",
+    "runtime/render/include/canvas/render/runtime_app_binding.hpp",
+    "runtime/render/include/canvas/render/skia_surface_provider.hpp",
+    "runtime/render/include/canvas/render/surface_lifecycle.hpp",
+    "runtime/render/src/preview_surface.cpp",
+    "runtime/render/src/render_target.cpp",
+    "runtime/render/src/runtime_app_binding.cpp",
+    "runtime/render/src/skia_renderer.cpp",
+    "runtime/render/src/surface_lifecycle.cpp",
+    "runtime/render/tests/runtime_app_binding_test.cpp"
+  ]
+}
