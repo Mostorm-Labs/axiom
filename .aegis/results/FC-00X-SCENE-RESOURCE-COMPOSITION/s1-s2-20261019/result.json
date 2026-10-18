@@ -1,0 +1,52 @@
+{
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "scope": "S1_INSTANCE_ISOLATION_S2_SURFACE_LIFECYCLE",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "starting_revision": "ae1a2e79b1f4e2eb36f81655f6819cc4a8a8173a",
+  "result_revision": "7453884345a175f6aebad52225cfafaf337f2f3e",
+  "build_ref": "5ce43ead7883f8bdadb0f8540f78af4692a2aaa9",
+  "materialization_note": "Final evidence commit is the pushed descendant returned to the reviewer. This file does not invent its own future commit hash.",
+  "execution_branch": "codex/fc00x-scene-resource-composition-p32-f08-resume",
+  "task_anchor": {
+    "revision": "ae1a2e79b1f4e2eb36f81655f6819cc4a8a8173a",
+    "relation": "ancestor"
+  },
+  "inherited_package_ref": "repo:.aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/package.json@e87a0fb3cec8e667fb0df3e8a4c2650c9e437c10",
+  "execution_authorization": {
+    "kind": "DIRECT_HUMAN_S1_S2_REPAIR_HANDOFF",
+    "path": "inputs/s1-instance-s2-lifecycle-repair-handoff.txt",
+    "sha256": "5deb47e753a00caf3b4c6443509f9dfb2ab8ae8944c3bb72f43724cf79678f2c"
+  },
+  "tests": {
+    "passed": 25,
+    "failed": 0,
+    "skipped": 0,
+    "junit": "logs/s2-exact-tests.xml",
+    "native_assertion_audit": "facts/assertion-audit.json"
+  },
+  "evidence_input_refs": [
+    "coverage-map.json",
+    "red-green.json",
+    "commands.json",
+    "scope-audit.json",
+    "artifacts.json",
+    "manual-testing.md",
+    "facts/build-environment.json",
+    "facts/source-files.json"
+  ],
+  "remaining_blockers": [],
+  "physical_status": "PHYSICAL_PENDING",
+  "android_status": "DEFERRED_NOT_BLOCKING",
+  "limits": [
+    "No manual Windows or browser physical acceptance claimed.",
+    "Web builds retain existing dangling-else, sign-compare and deprecated-declarations warning exceptions. Earlier full compile logs are retained alongside exact incremental rebuild logs.",
+    "Focused builds use Semantic codec OFF. Locked Semantic SDK offline Store resolution was verified separately; no dependency rebuild occurred.",
+    "An exploratory all-target build encountered existing unrelated C4458 in canvas_interaction_coordinator_test.cpp. The required finite matrix is complete; full repository build success is not claimed.",
+    "Runtime instance/work exhaustion guards were inspected, not driven through 2^64 allocations. Surface generation exhaustion has an executed max-1 regression.",
+    "Windows advanced pen/multi-touch and Web S4 product-control expansion remain outside this repair."
+  ],
+  "official_gate_pass_claimed": false,
+  "reviewer_thread": "01a13d78-2852-7342-b02a-c5fcf62ce0c1",
+  "evidence_materialization_rule": "Resolve this directory at the exact containing evidence commit returned in s2-final-result.json and final execution report."
+}

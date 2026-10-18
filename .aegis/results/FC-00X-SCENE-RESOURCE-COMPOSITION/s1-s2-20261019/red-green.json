@@ -1,0 +1,17 @@
+{
+  "review_diagnostics": [
+    "inputs/v5-output.log",
+    "inputs/v5-metrics-output.log",
+    "inputs/output.log"
+  ],
+  "correct_behavior_assertion_red": [
+    "logs/s2-prebind-red.log",
+    "logs/s2-staged-red.log",
+    "logs/s2-exhaust-red.log",
+    "logs/s2-live-replace-red.log",
+    "logs/s2-chrome-red-test.log",
+    "logs/s2-control-readback-red-test.log"
+  ],
+  "green": "logs/s2-exact-tests.xml",
+  "note": "Review diagnostic exit 0 reproduces bad behavior; it is not correct-behavior PASS. Incremental RED line numbers refer to tests at execution time. Current source retains equivalent assertions. Earlier DPR probe with wrong service/readback timing was corrected and is NOT counted as valid RED."
+}

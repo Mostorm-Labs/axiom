@@ -1,0 +1,138 @@
+请继续执行 Axiom 当前 Runtime 收口工作。本轮直接的人类授权是：
+“好的，按照这个方案来修复S2吧，并且在此次的handoff包中，将s1的实例隔离也修复进去，让隔壁会话开始执行这些缺漏的方案吧，执行完成后再通知这边进行再次审核。”
+
+本消息及下列固定范围是这轮修复任务；不是要求你再提出方案等待批准，也不伪称一个新的 repo-local P31 已提交。保留既有 FC-00X Authority/Verification 的语义与已有实现，从首个未完成项连续执行到完整收口或准确的真实阻塞。
+
+一、仓库、基线与范围
+
+Repository: Mostorm-Labs/axiom
+Origin: https://github.com/Mostorm-Labs/axiom.git
+Execution branch: codex/fc00x-scene-resource-composition-p32-f08-resume
+Worktree: C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume
+本轮独立审查基准/anchor（ancestor）:
+ae1a2e79b1f4e2eb36f81655f6819cc4a8a8173a
+
+先读适用 AGENTS.md、确认仓库身份，fetch 原分支，记录实际 starting_revision 和工作区状态。若 HEAD 是上述基准的后代，先核对新增 diff 后保留有效工作继续；不要仅因 HEAD 前进而拒绝恢复。若分叉或有真实授权冲突，准确 fail closed。已知只有未跟踪 imgui.ini，必须保留。不要 reset/覆盖未提交工作/force-push/切 main/合并 PR。
+
+必读本轮已被人类认可的分析：
+D:/axreview/fc00x-20261018/runtime-boundary-s2-analysis-v1/analysis-and-repair-plan.md
+同目录 boundary_probe.cpp、output.log 是 S2 故障复现。
+D:/axreview/fc00x-20261018/runtime-public-boundary-reverify-v5/
+含跨实例 probe、metrics_probe.cpp、metrics-output.log、独立构建和10项回归。
+
+只收口 S1 实例/寿命隔离 + S2 完整 metrics/生命周期事务。
+保留已通过的单实例旧A/新B隔离、失败重试、Lost/restore、S3低层接口封口、公共 owner pump、控制期限/回执、共同 Facade、资源生命周期、D3D12接入。
+S4 Web 产品控制扩展、Windows高级原生笔触/多指接线、命名词典全面改名、旧Playground清理，不增加为本轮工作或新阻塞。当前选定 Minimal 的 Windows/Web 接入中与 S2 有关的代码必须修好。
+不得新增对象/Operation/schema，改 canonical CommitStamp/RuntimeEpoch 权威、稳定C ABI、SDK锁、历史Gate/PHYS记录。Core不得创建OS线程。Android/APK继续DEFERRED。
+
+二、开工预检与RED
+
+开工前写简短 ImplementationDesignPreflight：现有流、目标owner、prepare/commit/publication/abort、实际类型和文件、测试映射、尚有无真实语义冲突。没有上游冲突时，这只是内部执行检查点，随后直接实现。
+先把下面已复现缺陷转成“正确行为”断言，在未改生产代码前运行观察预期RED并保留日志；review探针exit0表示坏行为复现成功，不是正确性PASS。
+不要把“已有初始generation断言需要保真”本身当成无法做S2的理由。核对精确合同，按正确prepare/adopt实现保护它；不删除断言、不改Authority来迁就补丁。若确有上游矛盾，给出确切条款/测试与最早冲突层，而非泛称需要先冻结。
+
+三、S1：工作回执归属实例及寿命
+
+现有PreviewWork只关联workId/contentRevision/surfaceGeneration；每个Runtime的workId从1开始。独立复现中view11/view22的两个Runtime产生同样token，A回执被B接受并把B标记qualified。这是API隔离缺口，不宣称普通单窗口已发生串回执。
+
+给工作token绑定真实创建者Runtime实例/寿命与对应submission，内部关联view、绑定寿命、surface/metrics/content身份。平台原样回传token，Runtime拒绝别的实例、旧绑定、旧寿命、已关闭/重建实例、未知/重复/过期完成。
+可复用真正唯一的既有运行期身份，否则用最小非canonical实例身份；不能仅用可能复用的viewId、对象地址或默认RuntimeEpoch=1冒充全进程唯一身份。无需多窗口产品、动态Registry或新线程。身份耗尽fail closed。
+同实例Move/resize后的旧A不得确认B，同内容失败重试仍正常，合法当前工作仍可完成。不要用全部拒绝回执来通过负向用例。
+
+四、S2：统一完整绑定提交，而非只加metrics重载
+
+已复现的同一根因：
+1. logical100x80/physical200x160/DPR2在Runtime被还原为logical200x160/DPR1。
+2. Preview resize失败时返回false，但Canonical已256x256→320x240，Preview仍256x256，Runtime仍Ready，surface2→3而control attachment仍2，旧请求随后Applied。
+3. Ready时register Canonical provider直接激活新资源，没有更新control target，旧请求Applied。
+4. 注册provider后registerSource可使Bound→Ready，未正式bind且preview不可用。
+5. Web通过重复resize追generation；metricsGeneration在包装层被surface.generation替代。
+
+必须形成一条覆盖初始绑定、metrics-only、物理resize、provider替换、lost/rebind/adopt、close的共同提交路径。
+
+职责与流程：
+- Runtime持有唯一accepted绑定快照：完整logical/physical/DPR/displayScale、view/attachment/寿命、SurfaceGeneration、MetricsGeneration、两角色provider/资源关联。
+- Platform提供原生资源准备、线程/锁/GPU affinity、真实执行和反馈；Host组装并转发事实，不决定Ready或preview退休。
+- 在资源副作用前完成可预判校验：owner/state、完整有限合法metrics、期望绑定身份、generation耗尽等。
+- 准备Canonical与Preview两角色，校验尺寸/格式/资格；准备期间不提前显示/激活候选visual/canvas。
+- 提交前再次确认期望绑定仍有效；期间若再次resize/lost/close，旧候选必须abort且不能修改新绑定。
+- owner阶段一次发布所有accepted状态，连同control target、resource binding token、Canonical/Preview fences及快照一起更新。
+- register必须明确登记候选与正式激活的区别；不能再让registerSource/submit顺便绕过完整surface bind。
+
+失败语义必须真实：
+A. 若准备失败而旧资源完好，丢弃候选，保留旧的完整合法绑定。
+B. 若device/context已失效或原地重建已经破坏旧资源，统一进入Lost/不可用并使旧结果失效，禁止混合Ready。
+C. 两角色全部准备验证成功后，才提交新完整绑定。
+不是所有失败都可能“无物理副作用并保留旧资源”。当前D3D12 resize会先销毁旧资源；不能仅恢复几个数值声称GPU回滚成功。
+“原子”是状态发布一致，不表示阻塞UI owner等待GPU或引入通用事务框架。资源释放须保持实际异步寿命和平台affinity。
+
+generation与metrics：
+- surface资源代际、metrics代际具有独立含义/存储；数字可以相等或同时推进，不要求人为不同。
+- 初次已prepared provider不得因register/select/bind反复resize凑代际。
+- 相同metrics及资源幂等；logical/DPR/displayScale-only变化且物理资源可复用时，不为凑代际重建GPU。
+- provider同尺寸替换仍要失效旧绑定工作；profile切换若既有合同要求两个代际都推进，应保留。
+- SurfaceLifecycle::replace已支持surface不变/metrics推进，包装层不得丢掉该能力。
+- lost/restore、direct rebind、metrics rebind、prepared adopt都必须发布一致新身份，不允许只在少数成功包装方法refreshControlTarget。
+- 普通Host使用完整SurfaceMetrics，获得Runtime接受结果，不自行分配Runtime epoch或循环resize追数字。width/height兼容入口如保留，只作明确DPR1参考入口。
+- provider物理像素描述不等于完整逻辑metrics；不要据此推断DPR1。
+- 复用现有结果类型或最小扩展，能区分committed/no-op/失败保留旧绑定/Lost；不要再造平行Facade。
+
+输入/Session：
+写清Windows client、Web CSS样本到Runtime/render/world的坐标合同；只变换一次。fractional DPR按平台实际舍入提供accepted facts。不要Windows/Web各加临时DPR倍率，也不要盲乘DPR和displayScale。
+metrics改变时，旧history样本和活跃Session沿用已接受坐标依据/取消策略，不能用新metrics重解释旧点。最小化零尺寸按现有暂停/可见性政策处理，不当作合法0x0 surface，也不无条件当device loss。
+若实际触及未接受的交互政策，明确提出精确冲突，不能在失败分支临时发明产品决定。
+
+公共边界继续保持：
+普通Windows/Web Minimal Host及Debug UI不取可修改editor，不调用runtime()/editingRuntime()/controlPort或低层capture/render/ack。公共frame机会→平台执行→携带对应身份反馈仍是唯一正常呈现链。Canonical和Preview继续为两个独立surface，不能通过合并surface规避事务问题。
+
+五、固定完整验证矩阵（本轮终点不再逐项后加）
+
+1. 初始/prepared provider一次提交，无重复resize追代际；注册输入不能跳过bind，成功正式bind后可正常输入。
+2. DPR1/分数DPR/2，logical≠physical，Runtime与平台accepted完整快照一致。
+3. metrics-only更新资源复用/身份推进正确，旧metrics反馈拒绝，坐标正确。
+4. 双角色physical resize成功才发布，连续resize保持一致。
+5. 第一/第二角色准备失败：完整旧绑定保留或一致Lost，绝无混合Ready；覆盖现有实际破坏旧资源的实现路径，真实资源事实不能由纯数值mock替代。
+6. provider替换/direct rebind/metrics rebind/prepared adopt：control/resource/frame身份一起更新；旧控制/资源/帧结果无效，fresh工作正常。
+7. 准备期间再次resize/lost/close使旧候选无效；无旧完成复活已关闭实例。
+8. 经真实公共口input→创建/选择/移动→readback，在DPR情形位置和尺寸正确；Session/cancel保真。
+9. 实例A/B交换token、同view值不同实例、close/recreate、旧A新B、同内容失败重试、重复/未知回执；负向不污染当前合法工作。
+10. 相同更新幂等、非法metrics/耗尽/wrong-thread无不一致副作用，资源释放及异步affinity有效。
+
+覆盖真实Runtime/registry/lifecycle及实际Raster provider，可在故障边界注入失败，但不能只测复制实现逻辑的fake。平台能力不足的路径如实记录，不把native编译当真机PASS。
+保留10项共同聚焦回归：
+DUIM1Control
+F08FrameQualificationBoundary
+FC00XRuntimeComposition
+FC00XRuntimeFacade
+FC00XMinimalRuntimeHost
+FC00XMinimalPresentationCache
+PX0Workbench
+DUIM1PanelModel
+PX0ControlRouter
+G3WebSurfaceHost
+并运行本次确实受影响的SurfaceProviderRegistry/SurfaceLifecycle/RuntimeAppBinding/Composition/input/frame保护测试，使用仓库实际target。不要无差别重跑所有G0-G3。
+
+构建：
+- Windows Minimal Debug UI on/off实际exe。
+- 当前选定Web Minimal桥的真实WASM/page构建；原生G3WebSurfaceHost测试不等于WASM/浏览器通过。
+- 使用已锁定Semantic SDK和Skia SDK消费链，禁止重编SDK依赖。优先复用Store/cache和现有工具链；若解析缓存，按AGENTS以offline复核。
+- Windows/Web物理观察未完成仍PHYSICAL_PENDING；Android/APK DEFERRED。
+- 若Web工具链/发布包确实不可用，给出准确命令和错误，完成不依赖它的所有工作后报告BLOCKED_ENVIRONMENT，不把未跑项写PASS。
+
+六、结束条件、提交推送与主动回传
+
+本轮blocking evidence：开工预检、上述关键缺陷RED→GREEN、固定矩阵覆盖表、实际命令/退出码/日志、相关回归、Windows与Web构建结果、diff/scope审查、可解析的精确源码及证据引用。
+Hosted CI仅在原合同要求时blocking；否则可以作为补充，不为本轮新增provider门槛。人工物理观察不伪造，不阻碍你完成其余自动化和提交推送。
+
+所有可执行项完成后才返回READY_FOR_CONTROL_REVIEW；中间一项test绿或一个commit不是结束条件。真实Authority/Verification冲突、环境失败或剩余冻结验证失败需准确分类并提供证据，不报完成。
+提交必要实现/回归/结果到原分支并正常push，不能force或合main。记录starting_revision、result_revision、reviewer可访问的materialized_ref、evidence_input_refs、变更文件、全部矩阵已覆盖/未覆盖项；若源码和证据分两次提交，准确分别标明，不造自引用hash。
+给出Windows实际exe绝对路径、hash及最小人工步骤：最大化/恢复、DPI/resize、绘制选择移动、控制在恢复前后、preview交接。不要宣称Gate/P34/物理验收PASS。
+
+完成后必须主动通知 reviewer 会话：
+threadId: 01a13d78-2852-7342-b02a-c5fcf62ce0c1
+hostId: local
+title: Axiom Canvas - GACCODE (5)
+人类在本会话已直接授权“执行完成后再通知这边进行再次审核”；引用这一授权即可，不编造用户消息ID。使用send_message_to_thread发送精确revision、原分支、变更摘要、覆盖表/日志/产物引用和所有剩余项，明确请求按Runtime预期边界及本固定S1/S2矩阵独立复验。如工具故障，明确报告通知失败而非声称已通知。
+
+最终由本reviewer独立审查，再由人类确认。不要自己宣布独立审查完成、改变Gate或继续新对象开发。
+

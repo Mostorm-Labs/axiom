@@ -1,0 +1,15 @@
+[1/3] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_facade.cpp.o
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/composition/src/canvas_runtime_facade.cpp:1:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:4:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/interaction/include\canvas/interaction/canvas_editing_runtime.hpp:22:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/skia_surface_provider.hpp:3:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/render_backend.hpp:3:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/frame_plan.hpp:5:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/reference_draw_list.hpp:4:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/scene/include\canvas/scene/scene_types.hpp:6:
+C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/foundation/include\canvas/foundation/stable_order_key.hpp:29:35: warning: comparison of integers of different signs: 'std::size_t' (aka 'unsigned long') and 'const int' [-Wsign-compare]
+   29 |         for (std::size_t i = 0; i < count; ++i) value = (value << 8U) | _bytes[i];
+      |                                 ~ ^ ~~~~~
+1 warning generated.
+[2/3] Linking CXX static library runtime\composition\libcanvas_runtime_composition.a
+[3/3] Linking CXX executable apps\axiom_canvas_demo\axiom_canvas_demo_web.js

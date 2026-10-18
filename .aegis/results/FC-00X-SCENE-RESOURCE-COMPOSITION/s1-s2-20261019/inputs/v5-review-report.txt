@@ -1,0 +1,130 @@
+FC-00X unified Runtime boundary independent re-review v5
+
+Repository: Mostorm-Labs/axiom
+Branch: codex/fc00x-scene-resource-composition-p32-f08-resume
+Starting revision: 1a1a8901beff1326a2e5d34aaf80855d95810b53
+Reviewed result_revision / materialized_ref: ae1a2e79b1f4e2eb36f81655f6819cc4a8a8173a
+Local HEAD and live origin branch (git ls-remote) both matched ae1a2e79.
+Ancestor check from 1a1a8901: exit 0.
+Tracked producer tree clean, existing untracked imgui.ini preserved.
+Diff: 6 files, 85 insertions / 17 deletions; frame token/completion, caller adaptations, low-level API access, tests. No full metrics implementation or Minimal behavior expansion in this delta.
+Independent source.zip/source/ is an archive of exact ae1a2e79.
+
+Review contract:
+  D:/axreview/fc00x-20261018/runtime-interface-audit-v1/unified-runtime-boundary-closure-handoff.txt
+  Human subsequently asked to narrow review consumers to Windows/Web Minimal Host + necessary common Runtime regressions. Legacy Playground or extra Demo-only issues are not new blockers.
+  This consumer narrowing did NOT remove S2 complete metrics/lifecycle or S4 Minimal's own real control/input access requirements.
+
+Conclusion: PARTIAL IMPLEMENTATION; unified S1-S4 closure is not complete.
+  S1: single-instance late A/B fixed; cross-instance token fencing still fails.
+  S2: withdrawn / unimplemented; the original metrics mismatch remains reproduced.
+  S3: private capture/render/ack boundary independently confirmed; ordinary public-only consumers compile and edit.
+  S4: Minimal parity/access is incomplete, concretely at the Web product control bridge and existing native-input adaptation.
+  No official Gate/P34/PHYS verdict issued. No new repair dispatched; human confirmation is required.
+
+1. [P2 / S1 frozen requirement] Preview work tokens are not bound to a Runtime/view owner.
+
+Source:
+  runtime/composition/include/canvas/runtime/runtime_composition.hpp:56-62,229
+  runtime/composition/src/runtime_composition.cpp:307-315,329-333
+
+PreviewWork contains only workId/contentRevision/surfaceGeneration. nextPreviewWorkId_ starts at 1 in every instance. finish compares these three values without an instance/lifetime/view binding.
+
+Independent real public-API reproduction:
+  Create Runtime A(view11) and B(view22), same owner thread, separate real providers and input registrations.
+  Down/Move each, then service each first preview opportunity.
+  Both return token (workId=1, contentRevision=2, surfaceGeneration=1).
+  Pass A's actual returned token as completion to B, with no B observation.
+  B returns accepted and changes qualifiedRevision 0 -> 2, dirty true -> false.
+
+Raw output:
+  OBSERVED cross-instance completion: viewA=11 viewB=22 workA=1 workB=1 equalToken=1 acceptedAinB=1 qualifiedBefore=0 qualifiedAfter=2 dirtyB=0
+
+This proves false qualification across existing public Runtime instances. It does not claim a native physical flicker was observed. Work identity must include or bind to the creating owner/lifetime/view so a different Runtime's token cannot compare equal. No new multi-window feature, canonical ID, worker or registry is required to establish instance isolation.
+The original S1 expressly required instance/lifetime/view binding and cross-instance rejection. This is a failed existing obligation, not an added acceptance rule.
+
+Positive S1 checks now passing independently:
+  - service A -> Move/resize -> service B -> delayed A rejects and keeps B dirty/unqualified.
+  - B's own token then completes B.
+  - Superseded Move/resize capture recovery changes real preview pixels.
+  - Plain presentation failure retries, duplicate no-op, Lost/rebind recovery.
+  - Canonical A/B, B-first, duplicate/unknown isolation and mapping capacity failure preserve valid pending frame.
+
+2. [P2 / S2 frozen requirement] Complete metrics/lifecycle is unimplemented and still divergent.
+
+Producer explicitly reported reverting the S2 prototype after provider initial-generation regressions. Source confirms Composition bindSurface/resizeSurface still accept only physical width/height, surfaceSnapshot still aliases metricsGeneration from surface.generation, and WebSurfaceHost still loops resize to chase an external generation.
+
+Independent metrics_probe against exact ae1a2e79 libraries:
+  input logical100x80, physical200x160, DPR2;
+  initial Runtime logical200x160/physical200x160/DPR1/gen2;
+  initial platform logical200x160/physical200x160/DPR2/gen2;
+  accepted bind to logical100x80/physical200x160/DPR2 yields:
+    Runtime logical200x160/DPR1/gen3;
+    platform logical100x80/DPR2/gen3.
+
+See metrics-output.log and metrics_probe.cpp.
+This is a real state divergence; downstream coordinate/viewport/resize problems are risks inferred from it, not additional manually observed defects.
+
+Withdrawing broken changes preserved the previous baseline, but does not complete S2. A prototype breaking initial generation tests is not by itself evidence of an unavoidable upstream Authority conflict. If there is a true frozen contradiction, return the exact conflicting contract/tests and root classification; otherwise the initial bind/adopt/resize implementation must preserve valid generation semantics while accepting full metrics. The executor cannot redefine this already-authorized required slice as optional successor work merely to return a completed result.
+
+3. [P2 / S4 frozen requirement] The Minimal Web consumer does not expose the required existing product behaviors.
+
+Sources:
+  apps/axiom_canvas_demo/platform/web/bridge.cpp:40-181
+  apps/axiom_canvas_demo/platform/web/index.html:15-95
+  apps/axiom_canvas_demo/CMakeLists.txt:92
+  apps/minimal_runtime_host/windows_main.cpp:138-147,189-191
+
+The selected Web minimal/demo page and its WASM exports expose create/destroy, pointer, resize/loss, present and basic counters. There is no product-control export/readback or attached Debug UI/control UI through which this ordinary Web consumer can choose Shape/preset/eraser, invoke Undo/Redo or set the other existing product intents. Access to RuntimeFacade exists inside C++, but is not a usable page-to-Runtime path. This is a concrete missing consumer connection, not a claim that the common Runtime has no creation implementation.
+
+Windows Minimal has shared Debug UI control access, but its native input path still handles basic WM_LBUTTON/WM_MOUSEMOVE with source/pointer fixed to 1 and pressure0.5; no WM_POINTER/WM_TOUCH/history/device adapter has been connected there. Therefore equivalence to existing pen/touch/input behavior has not been established by the native Minimal implementation. Manual observation being pending is distinct from missing source wiring.
+
+S4 did not require new objects or new input policies; it required existing supported behavior to be usable through Minimal's real public chain. The current six-file patch does not deliver that coverage. No absence of a named evidence matrix alone is used as a blocker: the source-level missing control/device paths are the substantive gaps.
+Legacy Playground inheritance, legacy qualification macro propagation, or extra Windows Demo compatibility are deliberately not separate blockers in this narrowed review.
+
+S3 / public boundary positive checks:
+  Compile-time public-only checks, WITHOUT AXIOM_RUNTIME_QUALIFICATION:
+    no accessible runtime(), capturePreviewPresentation, renderPreviewPresentation or acknowledgePreviewPresentation on RuntimeComposition;
+    no process(ownerSequence) on the RuntimeFacade public base;
+    Composition::controlFacade returns RuntimeFacade&.
+  RuntimeComposition capture/render/ack definitions still exist privately for internal implementation, which is appropriate.
+  Real Minimal facade + Debug UI Router after300 owner pumps -> Rectangle create/select -> selectedObjectCount1 / selectedKind Shape.
+  No ordinary mutable-editor bypass was needed by the probe or new consumer source.
+  Header includes / forwarding facade names still admit cleanup, but are not additional blocking correctness requirements in this review.
+
+Other protected independent checks:
+  wrong-thread resize/register/lost/close reject;
+  direct/metrics/prepared restore changes control target and fences old requests;
+  20 owner pumps produce no fabricated provider presents;
+  same-opportunity resource notification creates render demand;
+  actual ImGui Tools text correctly distinguishes active preset from disabled last preset.
+
+Verification:
+  Fresh configure/build of exact source: exit0 using configure_build.py.
+  Focused CTest: 10/10 PASS, exit0, ctest-focused.log:
+    DUIM1Control, F08FrameQualificationBoundary, FC00XRuntimeComposition,
+    FC00XRuntimeFacade, FC00XMinimalRuntimeHost, FC00XMinimalPresentationCache,
+    PX0Workbench, DUIM1PanelModel, PX0ControlRouter, G3WebSurfaceHost.
+  Public-only probe compile/link/run exit0, with assertions enabled.
+  Metrics probe compile/link/run exit0.
+  OBSERVED assertions intentionally establish defects; their run0 is not a correct-behavior PASS for those cases.
+  Independent Windows Minimal debug-on build: build-windows-minimal.log.
+  Producer Debug UI on/off binary hashes independently matched callback:
+    on 5D6F1069E8E867DA197EBAC000204638606237956916D0865F4B2C1B08B6EB04
+    off 1F08CD1099BA1EB8A2D5AADC5B68AC2D8E15D3D79DFBCF5CDC1D16281311420E
+  Reused published locked SDKs; no dependency source builds or lock changes.
+  Diagnostic profile retains previous warning demotions; not a universal strict-WX certification. Missing ICU data warning remains; no text-render claim inferred.
+  No new WASM/browser build or Windows/Web physical test performed. PHYSICAL_PENDING; Android/APK DEFERRED.
+
+Handoff continuity:
+  Producer callback said completed/pushed but also explicitly identified S2 as withdrawn. Independent review records the exact partial scope rather than accepting the label as whole-package completion. S1-S4 remains the human-approved target; only consumer breadth was narrowed.
+  Naming glossary proposals from this chat are not added as implementation obligations.
+
+Evidence references relative to this directory:
+  review-report.txt, boundary_probe.cpp, output.log, build_probe.py,
+  metrics_probe.cpp, metrics-output.log, build_metrics_probe.py,
+  configure_build.py, configure.log, build.log, ctest-focused.log,
+  compile.log, link.log, metrics-compile.log, metrics-link.log,
+  build-windows-minimal.log, review-artifacts.json, source.zip and source/.
+
+Reviewer did not edit production/formal tests/project control, commit/push, or send another repair request. Human decides the next action.
