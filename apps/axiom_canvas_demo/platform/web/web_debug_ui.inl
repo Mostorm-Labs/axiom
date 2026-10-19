@@ -8,6 +8,8 @@
 
 namespace {
 class WebDebugUi final : public canvas::runtime::PlatformDiagnostics {
+    static constexpr int kPanelWidth = 410;
+    static constexpr int kPanelHeight = 650;
     canvas::runtime::RuntimeComposition& composition_;
     std::unique_ptr<canvas::debug_ui::DebugController> controller_;
     std::unique_ptr<canvas::render::WebGlSurfaceProvider> provider_;
@@ -26,7 +28,7 @@ class WebDebugUi final : public canvas::runtime::PlatformDiagnostics {
     }
     bool initialize() {
         provider_ = std::make_unique<canvas::render::WebGlSurfaceProvider>(
-            canvas::render::WebGlSurfaceConfig{"#debugUi", 900, 650});
+            canvas::render::WebGlSurfaceConfig{"#debugUi", kPanelWidth, kPanelHeight});
         if (!provider_->ready())
             return false;
         controller_ = std::make_unique<canvas::debug_ui::DebugController>(
@@ -40,7 +42,7 @@ class WebDebugUi final : public canvas::runtime::PlatformDiagnostics {
         ImGui::StyleColorsDark();
         auto& io = ImGui::GetIO();
         io.IniFilename = nullptr;
-        io.DisplaySize = ImVec2(900, 650);
+        io.DisplaySize = ImVec2(kPanelWidth, kPanelHeight);
         unsigned char* pixels = nullptr;
         int width = 0, height = 0;
         io.Fonts->GetTexDataAsAlpha8(&pixels, &width, &height);

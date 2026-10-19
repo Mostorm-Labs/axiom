@@ -17,10 +17,25 @@ bool referencesResource(const ObjectRecord& object, const ResourceId& resource) 
     bool found = false;
     std::visit([&](const auto& content) {
         using T = std::decay_t<decltype(content)>;
-        if constexpr (std::is_same_v<T, ImageContent>) found = content.resource_id == resource;
-        else if constexpr (std::is_same_v<T, RichTextContent>) for (const auto& paragraph : content.document.paragraphs) for (const auto& run : paragraph.runs) if (run.style.font_resource_id && *run.style.font_resource_id == resource) found = true;
-        else if constexpr (std::is_same_v<T, VectorStrokeContent> || std::is_same_v<T, DabStrokeContent>) found = content.stroke.brush.texture_resource_id && *content.stroke.brush.texture_resource_id == resource;
-        else if constexpr (std::is_same_v<T, BrushStrokeContent> || std::is_same_v<T, DabBrushStrokeContent>) for (const auto& binding : content.stroke.snapshot.resources) if (binding.resource_id == resource.value) found = true;
+        if constexpr (std::is_same_v<T, ImageContent>) {
+            found = content.resource_id == resource;
+        } else if constexpr (std::is_same_v<T, RichTextContent>) {
+            for (const auto& paragraph : content.document.paragraphs) {
+                for (const auto& run : paragraph.runs) {
+                    if (run.style.font_resource_id && *run.style.font_resource_id == resource) {
+                        found = true;
+                    }
+                }
+            }
+        } else if constexpr (std::is_same_v<T, VectorStrokeContent> || std::is_same_v<T, DabStrokeContent>) {
+            found = content.stroke.brush.texture_resource_id && *content.stroke.brush.texture_resource_id == resource;
+        } else if constexpr (std::is_same_v<T, BrushStrokeContent> || std::is_same_v<T, DabBrushStrokeContent>) {
+            for (const auto& binding : content.stroke.snapshot.resources) {
+                if (binding.resource_id == resource.value) {
+                    found = true;
+                }
+            }
+        }
     }, object.content);
     return found;
 }

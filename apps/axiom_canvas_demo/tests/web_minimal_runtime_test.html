@@ -2,7 +2,7 @@
 <iframe id="app" src="../index.html" width="1000" height="720"></iframe>
 <pre id="result">PENDING</pre>
 <script type="module">
-const frame = document.getElementById('app'), results = [];
+const frame = document.getElementById('app'), results = [], uiGeometry = [];
 const assert = (value, message) => { if (!value) throw new Error(message); };
 frame.addEventListener('load', async () => {
   try {
@@ -123,6 +123,17 @@ frame.addEventListener('load', async () => {
       host.toggleDebugUi(); await host.flush();
       assert(pixels('debugUi').visible > 0, 'Debug UI has no pixels');
       const debug = doc.getElementById('debugUi');
+      const bounds = debug.getBoundingClientRect();
+      assert(bounds.width <= 410, `Debug UI width ${bounds.width}px exceeds 410px`);
+      assert(debug.width === 410, `Debug UI backing width ${debug.width}px stretches the panel`);
+      const beforeResize = host.observation();
+      for (const width of [1200, 800, 360]) {
+        host.resize(width, 700, 2); await host.flush();
+        const rect = debug.getBoundingClientRect();
+        uiGeometry.push({stageWidth: width, panelWidth: rect.width, backingWidth: debug.width});
+        assert(rect.width === Math.min(410, width - 16), 'Debug UI does not fit its bounded host width');
+      }
+      host.resize(beforeResize.logicalWidth, beforeResize.logicalHeight, beforeResize.dpr); await host.flush();
       debug.setPointerCapture = () => {}; debug.releasePointerCapture = () => {};
       const count = host.observation().pointerSamples;
       clock += 600;
@@ -185,7 +196,7 @@ frame.addEventListener('load', async () => {
       const trace=host.observation().trace;
       assert(trace.some(v=>v.source===1) && trace.some(v=>v.source===2 && v.history),'sources/history not preserved');
     });
-    document.getElementById('result').textContent = JSON.stringify({status: 'PASS', results, observation: host.observation()});
+    document.getElementById('result').textContent = JSON.stringify({status: 'PASS', results, uiGeometry, observation: host.observation()});
   } catch (error) {
     document.getElementById('result').textContent = JSON.stringify({status: 'FAIL', results, error: String(error), stack: error.stack});
   }

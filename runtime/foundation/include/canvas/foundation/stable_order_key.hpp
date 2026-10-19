@@ -25,7 +25,7 @@ class StableOrderKey final {
 
     [[nodiscard]] constexpr std::uint64_t value() const {
         std::uint64_t value = 0;
-        const auto count = _size > 8 ? 8 : _size;
+        const std::size_t count = _size > 8 ? 8U : _size;
         for (std::size_t i = 0; i < count; ++i) value = (value << 8U) | _bytes[i];
         return value;
     }
