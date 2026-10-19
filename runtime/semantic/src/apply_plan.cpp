@@ -75,7 +75,7 @@ PrepareResult prepareApplyPlan(const Operation& operation, const StatefulValidat
         } else if constexpr (std::is_same_v<T, SetImageContentOp>) { ReplaceObjectsStatePlanInputs out; status=validateSetImageContentState(payload,context.objects,&out); if(status.ok()) plan.replacements=std::move(out.replacements);
         } else if constexpr (std::is_same_v<T, AddEraseMasksOp>) { ReplaceObjectsStatePlanInputs out; status=validateAddEraseMasksState(payload,context.objects,&out); if(status.ok()) plan.replacements=std::move(out.replacements);
         } else if constexpr (std::is_same_v<T, RemoveEraseMasksOp>) { ReplaceObjectsStatePlanInputs out; status=validateRemoveEraseMasksState(payload,context.objects,&out); if(status.ok()) plan.replacements=std::move(out.replacements);
-        } else if constexpr (std::is_same_v<T, EditRichTextOp>) { ReplaceObjectsStatePlanInputs out; status=validateEditRichTextState(payload,context.objects,&out); if(status.ok()) plan.replacements=std::move(out.replacements);
+        } else if constexpr (std::is_same_v<T, EditRichTextOp>) { ReplaceObjectsStatePlanInputs out; status=validateEditRichTextStateForDocument(payload,context.objects,&out,operation.document_id); if(status.ok()) plan.replacements=std::move(out.replacements);
         } else if constexpr (std::is_same_v<T, SetConnectorContentOp>) { ReplaceObjectsStatePlanInputs out; status=validateSetConnectorContentState(payload,context.objects,&out); if(status.ok()) plan.replacements=std::move(out.replacements); }
         else if constexpr (std::is_same_v<T, UpdateResourceManifestOp>) {
             if (context.manifest == nullptr || !validateResourceManifest(*context.manifest) || payload.expected_manifest_revision != context.manifest->manifest_revision) { status = {StatefulIssue::kInvalidApplicability}; return; }
@@ -116,6 +116,19 @@ PrepareResult prepareApplyPlan(const Operation& operation, const StatefulValidat
         }
     }, operation.payload);
     if (!status.ok()) return rejected(status);
+    const auto validateTextReferences=[&](const ObjectRecord& object) {
+        if(object.kind!=ObjectKind::kRichText || object.kind_version!=2U) return true;
+        if(!context.manifest || !validateResourceManifest(*context.manifest)) return false;
+        const auto* content=std::get_if<RichTextContent>(&object.content);if(!content)return false;
+        for(const auto& paragraph:content->document.paragraphs) for(const auto& run:paragraph.runs) {
+            if(!run.style.font_resource_id)return false;
+            const auto found=std::find_if(context.manifest->entries.begin(),context.manifest->entries.end(),[&](const auto& entry){return entry.resource_id==*run.style.font_resource_id && entry.resource_kind==ResourceKind::kFont;});
+            if(found==context.manifest->entries.end())return false;
+        }
+        return true;
+    };
+    for(const auto& object:plan.creates)if(!validateTextReferences(object))return rejected({StatefulIssue::kInvalidReference});
+    for(const auto& object:plan.replacements)if(!validateTextReferences(object))return rejected({StatefulIssue::kInvalidReference});
     return {PrepareDisposition::kPrepared, {}, std::move(plan)};
 }
 } // namespace canvas::semantic

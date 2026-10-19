@@ -1,4 +1,6 @@
 #pragma once
+namespace canvas::runtime { class CanvasRuntimeFacade; }
+#include "canvas/interaction/text_edit_session.hpp"
 
 #include "canvas/input/input_router.hpp"
 #include "canvas/input/platform_input_contract.hpp"
@@ -129,6 +131,7 @@ struct PreviewPresentationCapture final {
 // owners and their lifecycle are composed here; platform Hosts supply resources
 // and execution opportunities without implementing tool behavior.
 class CanvasEditingRuntime : public interaction::SemanticReadPort,
+                                private interaction::TextEditPort,
                                 public interaction::SceneQueryPort,
                                 public interaction::ViewStatePort,
                                 public interaction::OperationSubmitPort,
@@ -138,6 +141,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
                                 public render::SessionCancelSink,
                                 public interaction::InteractionDispatchPort {
   friend class canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+  friend class canvas::runtime::CanvasRuntimeFacade;
   public:
   enum class ToolMode : std::uint8_t { kBrush = 0, kObjectEraser = 1, kPartialEraser = 2 };
   explicit CanvasEditingRuntime(render::ViewId viewId = render::ViewId{1});
@@ -566,6 +570,19 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] std::uint64_t localOperationOrdinal() const noexcept;
   [[nodiscard]] bool historySceneReady() const noexcept;
   [[nodiscard]] bool canonicalWriteAdmission() const noexcept;
+  bool textReady() const noexcept override;
+  bool textClosed() const noexcept override { return closed_; }
+  bool textWritable(semantic::ObjectId) const noexcept override;
+  semantic::DocumentId textDocument() const noexcept override { return documentId_; }
+  std::uint64_t textGeneration() const noexcept override { return semanticGeneration_.current().value(); }
+  const semantic::ObjectRecord* textRecord(semantic::ObjectId id) const noexcept override { return semanticObjects_.find(id); }
+  std::vector<semantic::ObjectRecord> textObjects() const override { return semanticObjects_.allObjects(); }
+  const semantic::ResourceManifest* textManifest() const noexcept override { return resourceManifestPort_; }
+  semantic::ObjectId allocateTextIdentity() override;
+  semantic::OperationId allocateTextOperation() override { return allocateOperationId(); }
+  semantic::PrepareResult prepareTextOperation(const semantic::Operation&) const override;
+  bool applyTextOperation(semantic::Operation f,semantic::Operation i) override { return applyLocalHistoryOperation(std::move(f),std::move(i)); }
+  std::pair<float,float> textContentPoint(float x,float y) const noexcept override { return viewportController_->viewToContent(x,y); }
   void observeApplied(const semantic::Operation&, const semantic::ApplyResult&) noexcept;
   [[nodiscard]] bool applyLocalHistoryOperation(
       semantic::Operation forward, semantic::Operation inverse) noexcept;
@@ -655,6 +672,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   semantic::ResourceManifest* resourceManifestPort_ = &resourceManifest_;
   semantic::DocumentId documentId_{canvas::foundation::ObjectId::fromUint64(1U)};
   std::uint64_t nextHistoryOperationOrdinal_ = (std::uint64_t{1} << 63U);
+    std::uint64_t nextTextIdentity_ = 1;
   std::unordered_map<std::uint64_t, PendingBrushCommit> pendingBrushCommits_;
   ink::ArcPreviewSink* arcPreviewSink_ = nullptr;
   ink::CanonicalVisibilitySink* canonicalVisibilitySink_ = nullptr;

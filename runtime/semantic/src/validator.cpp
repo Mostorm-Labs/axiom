@@ -1,4 +1,5 @@
 #include "canvas/semantic/validator.hpp"
+#include "canvas/semantic/rich_text_state.hpp"
 #include "canvas/semantic/geometry_accounting_v1.hpp"
 
 #include "object_record_semantics_internal.hpp"
@@ -436,17 +437,26 @@ bool validRichTextStep(const RichTextStep& step) noexcept {
                 }
             } else if constexpr (std::is_same_v<Step, SplitParagraphStep>) {
                 return validId(value.paragraph_id) && validId(value.new_paragraph_id);
-            } else {
+            } else if constexpr (std::is_same_v<Step, MergeParagraphStep>) {
                 return validId(value.first_paragraph_id) && validId(value.second_paragraph_id);
+            } else if constexpr (std::is_same_v<Step, SetRichTextLayoutStep>) {
+                RichTextContent content;content.layout=value.layout;
+                return validRichTextLayoutState(value.target_kind_version,content);
+            } else {
+                return validRichTextLayoutState(value.state.kind_version,value.state.content) &&
+                       validRichTextDocument(value.state.content.document);
             }
         },
         step);
 }
 
 bool validRichTextDelta(const RichTextDelta& delta) noexcept {
-    if (delta.delta_version != 1U || delta.steps.empty()) return false;
+    if ((delta.delta_version != 1U && delta.delta_version != 2U) || delta.steps.empty()) return false;
+    if (delta.delta_version == 1U ? !delta.expected_state_digest.empty() : delta.expected_state_digest.size()!=32U) return false;
     std::size_t inserted_bytes = 0U;
     for (const auto& step : delta.steps) {
+        if ((std::holds_alternative<SetRichTextLayoutStep>(step) || std::holds_alternative<RestoreRichTextStateStep>(step)) &&
+            (delta.delta_version!=2U || delta.steps.size()!=1U)) return false;
         if (!validRichTextStep(step)) return false;
         if (const auto* insert = std::get_if<InsertTextStep>(&step)) {
             if (insert->text.size() > kMaxRichTextInsertBytes - inserted_bytes) return false;
@@ -544,6 +554,9 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
     if (object.kind == ObjectKind::kShape && object.kind_version == 2U) {
         return std::holds_alternative<ShapeContent>(object.content);
     }
+    if (object.kind == ObjectKind::kRichText && object.kind_version == 2U) {
+        return std::holds_alternative<RichTextContent>(object.content);
+    }
     if (object.kind_version != 1U) return false;
     switch (object.kind) {
         case ObjectKind::kShape:
@@ -599,7 +612,7 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
         if (!validImage(*image)) return false;
     }
     if (const auto* rich = std::get_if<RichTextContent>(&object.content)) {
-        if (!validRichTextDocument(rich->document)) return false;
+        if (!validRichTextDocument(rich->document) || !validRichTextLayoutState(object.kind_version,*rich)) return false;
     }
     if (const auto* connector = std::get_if<ConnectorContent>(&object.content)) {
         if (!validConnector(*connector)) return false;

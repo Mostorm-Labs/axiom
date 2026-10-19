@@ -19,10 +19,12 @@ bool supportedSnapshotVersion(std::uint32_t version) noexcept {
 }
 
 bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability capability, const ObjectRecord& object) noexcept {
+    if (object.kind == ObjectKind::kRichText && object.kind_version == 2U)
+        return schema_version==3U && (static_cast<unsigned>(capability)&2U)!=0U;
     if (object.kind != ObjectKind::kShape || object.kind_version != 2U) return true;
     const auto* shape = std::get_if<ShapeContent>(&object.content);
     return shape == nullptr || shape->shape_kind != 3U ||
-           (schema_version == 2U && capability == SnapshotCapability::kShape2Triangle);
+           ((schema_version == 2U || schema_version == 3U) && (static_cast<unsigned>(capability)&1U)!=0U);
 }
 
 SnapshotBootstrapResult rejectWithoutFailure(StatefulIssue issue) {
@@ -41,7 +43,8 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
                                     SnapshotCapability capability,
                                     DocumentRuntimeState& state,
                                     Store& objects,
-                                    SemanticGenerationState& generation) {
+                                    SemanticGenerationState& generation,
+                                    const SnapshotBootstrapper::CheckpointBinding* checkpoint = nullptr) {
     if (state != DocumentRuntimeState::kLoading) {
         return rejectWithoutFailure(StatefulIssue::kInvalidApplicability);
     }
@@ -52,13 +55,19 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
     if (!supportedSnapshotVersion(snapshot.schema_version) || snapshot.document_id.isZero()) {
         return rejectLoading(state, StatefulIssue::kInvalidApplicability);
     }
+    if(snapshot.schema_version==3U) {
+        if(!checkpoint || checkpoint->document!=snapshot.document_id ||
+           checkpoint->source_revision!=snapshot.document_revision || checkpoint->frontier!=snapshot.recovery_frontier ||
+           checkpoint->checkpoint_digest!=snapshot.checkpoint_digest || !SnapshotCodec::encode(snapshot,capability).ok())
+            return rejectLoading(state,StatefulIssue::kInvalidApplicability);
+    }
     if (snapshot.schema_version >= 3U && (!snapshot.manifest_present || !validateResourceManifest(snapshot.manifest) ||
         snapshot.digest_algorithm != 1U || snapshot.document_digest.size() != 32U ||
         snapshot.checkpoint_digest.size() != 32U || snapshot.recovery_frontier.empty() ||
         snapshot.capability_requirements.empty())) {
         return rejectLoading(state, StatefulIssue::kInvalidApplicability);
     }
-    if (snapshot.schema_version < 3U && snapshot.manifest_present) {
+    if (snapshot.schema_version < 3U && (snapshot.manifest_present || snapshot.document_revision!=0 || snapshot.digest_algorithm!=0 || !snapshot.recovery_frontier.empty() || !snapshot.document_digest.empty() || !snapshot.capability_requirements.empty() || !snapshot.checkpoint_digest.empty())) {
         return rejectLoading(state, StatefulIssue::kInvalidApplicability);
     }
 
@@ -137,10 +146,11 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
 template <typename Store>
 SnapshotBootstrapResult restoreWithManifestImpl(const SemanticSnapshot& snapshot,
     SnapshotCapability capability, DocumentRuntimeState& state, Store& objects,
-    ResourceManifest& manifest, SemanticGenerationState& generation) {
+    ResourceManifest& manifest, SemanticGenerationState& generation,
+    const SnapshotBootstrapper::CheckpointBinding* checkpoint = nullptr) {
     if (snapshot.schema_version < 3U || !snapshot.manifest_present) return rejectWithoutFailure(StatefulIssue::kInvalidApplicability);
     const auto before = manifest;
-    const auto result = restoreImpl(snapshot, capability, state, objects, generation);
+    const auto result = restoreImpl(snapshot, capability, state, objects, generation,checkpoint);
     if (!result.restored) return result;
     manifest = snapshot.manifest;
     if (!validateResourceManifest(manifest)) { manifest = before; return rejectLoading(state, StatefulIssue::kInvalidApplicability); }
@@ -148,6 +158,17 @@ SnapshotBootstrapResult restoreWithManifestImpl(const SemanticSnapshot& snapshot
 }
 
 } // namespace
+
+SnapshotBootstrapResult SnapshotBootstrapper::restore(const SemanticSnapshot& snapshot,
+    SnapshotCapability capability,DocumentRuntimeState& state,ReferenceObjectStore& objects,
+    ResourceManifest& manifest,SemanticGenerationState& generation,const CheckpointBinding& checkpoint) {
+    return restoreWithManifestImpl(snapshot,capability,state,objects,manifest,generation,&checkpoint);
+}
+SnapshotBootstrapResult SnapshotBootstrapper::restore(const SemanticSnapshot& snapshot,
+    SnapshotCapability capability,DocumentRuntimeState& state,IndexedObjectStore& objects,
+    ResourceManifest& manifest,SemanticGenerationState& generation,const CheckpointBinding& checkpoint) {
+    return restoreWithManifestImpl(snapshot,capability,state,objects,manifest,generation,&checkpoint);
+}
 
 SnapshotBootstrapResult SnapshotBootstrapper::restore(
     const SemanticSnapshot& snapshot,

@@ -17,6 +17,18 @@ struct SnapshotBootstrapResult final {
 
 class SnapshotBootstrapper final {
   public:
+    struct CheckpointBinding final {
+        DocumentId document{};
+        std::uint64_t source_revision = 0;
+        std::vector<std::uint8_t> frontier;
+        std::vector<std::uint8_t> checkpoint_digest;
+    };
+    [[nodiscard]] static SnapshotBootstrapResult restore(
+        const SemanticSnapshot&, SnapshotCapability, DocumentRuntimeState&,
+        ReferenceObjectStore&, ResourceManifest&, SemanticGenerationState&, const CheckpointBinding&);
+    [[nodiscard]] static SnapshotBootstrapResult restore(
+        const SemanticSnapshot&, SnapshotCapability, DocumentRuntimeState&,
+        IndexedObjectStore&, ResourceManifest&, SemanticGenerationState&, const CheckpointBinding&);
     [[nodiscard]] static SnapshotBootstrapResult restore(
         const SemanticSnapshot& snapshot,
         DocumentRuntimeState& state,

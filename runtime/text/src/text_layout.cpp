@@ -183,8 +183,8 @@ struct RichTextLayoutService::Impl {
         return faces.emplace(token,std::move(result)).first->second;
     }
 #endif
-    std::shared_ptr<const TextLayoutSnapshot> layoutParagraph(const semantic::Paragraph& p) {
-        auto out=std::make_shared<TextLayoutSnapshot>(); out->context=context;
+    std::shared_ptr<const TextLayoutSnapshot> layoutParagraph(const semantic::Paragraph& p,LayoutContext layoutContext) {
+        auto out=std::make_shared<TextLayoutSnapshot>(); out->context=layoutContext;
         Encoding content; encodeParagraph(content,p); out->contentDigest=content.digest();
 #ifndef CANVAS_TEXT_HAS_SKIA
         out->diagnostics.push_back("text-stack-unavailable");
@@ -222,7 +222,7 @@ struct RichTextLayoutService::Impl {
                 if(r.style.underline) text.setDecoration(skia::textlayout::TextDecoration::kUnderline);
                 builder->pushStyle(text); builder->addText(r.text.data(),r.text.size()); builder->pop();
             }
-            auto paragraph=builder->Build(); paragraph->layout(context.width);
+            auto paragraph=builder->Build(); paragraph->layout(layoutContext.width);
             if(paragraph->unresolvedGlyphs()>0) out->diagnostics.push_back("font-glyph-unavailable");
             std::vector<LineMetrics> lines; paragraph->getLineMetrics(lines);
             foundation::WorldRect bounds{}; bool have=false;
@@ -280,26 +280,28 @@ void RichTextLayoutService::setContext(LayoutContext c) { impl_->context=c; }
 std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolve(
     foundation::ObjectId id, const semantic::RichTextContent& content) {
     auto& state=*impl_; ++state.counters.requests;
-    Encoding semantic; semantic.number<std::uint64_t>(content.document.paragraphs.size());
+    auto context=state.context;if(content.layout)context.width=static_cast<float>(content.layout->wrap_width);
+    Encoding semantic; if(content.layout){semantic.string("fixed-width-v2");semantic.number(content.layout->wrap_width);}
+    semantic.number<std::uint64_t>(content.document.paragraphs.size());
     for(const auto& p:content.document.paragraphs) encodeParagraph(semantic,p);
     const auto contentDigest=semantic.digest();
-    Encoding key=semantic; key.string(kTextStackProfile); key.number(state.context.width); key.number(state.context.revision);
+    Encoding key=semantic; key.string(kTextStackProfile); key.number(context.width); key.number(context.revision);
     for(const auto& p:content.document.paragraphs) state.dependencies(key,p);
     const auto token=key.digest();
     if(auto found=state.objects.find(id);found!=state.objects.end() && found->second.key==token) {
         ++state.counters.cacheHits; return found->second.snapshot;
     }
     const auto start=std::chrono::steady_clock::now();
-    auto out=std::make_shared<TextLayoutSnapshot>(); out->contentDigest=contentDigest; out->context=state.context;
-    if(!std::isfinite(state.context.width) || state.context.width<=0) out->diagnostics.push_back("invalid-layout-context");
+    auto out=std::make_shared<TextLayoutSnapshot>(); out->contentDigest=contentDigest; out->context=context;
+    if(!std::isfinite(context.width) || context.width<=0) out->diagnostics.push_back("invalid-layout-context");
     else {
         float y=0; bool have=false;
         for(const auto& p:content.document.paragraphs) {
             Encoding paragraphKey; encodeParagraph(paragraphKey,p); state.dependencies(paragraphKey,p);
-            paragraphKey.number(state.context.width); paragraphKey.number(state.context.revision);
+            paragraphKey.number(context.width); paragraphKey.number(context.revision);
             const auto hash=paragraphKey.digest(); auto& cached=state.paragraphs[{id,p.id}];
             if(cached.key!=hash || !cached.snapshot) {
-                cached={hash,state.layoutParagraph(p)}; ++state.counters.paragraphLayouts;
+                cached={hash,state.layoutParagraph(p,context)}; ++state.counters.paragraphLayouts;
             } else ++state.counters.paragraphCacheHits;
             const auto& fragment=*cached.snapshot;
             y+=static_cast<float>(p.style.spacing_before);

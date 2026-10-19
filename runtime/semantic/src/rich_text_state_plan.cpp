@@ -118,10 +118,14 @@ StatefulResult prepareRichTextDeltaState(
                 if (start > vals.size() || count > vals.size() - start) return invalid();
                 for (std::size_t j = start; j < start + count; ++j) vals[j].style = value.style;
                 rebuildRuns(*p, vals); return StatefulResult{};
-            } else {
+            } else if constexpr (std::is_same_v<T, SetParagraphStyleStep>) {
                 Paragraph* p = paragraphById(result.document, value.paragraph_id);
                 if (!p) return invalid();
                 p->style = value.style; return StatefulResult{};
+            } else if constexpr (std::is_same_v<T, SetRichTextLayoutStep>) {
+                result.layout=value.layout; return StatefulResult{};
+            } else {
+                result=value.state.content; return StatefulResult{};
             }
         }, step);
         if (!status.ok()) return status;

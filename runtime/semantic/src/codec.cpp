@@ -513,8 +513,8 @@ bool allowsField(const std::string& root_type, std::uint32_t field) {
     if (root_type == "DocumentSnapshot") return field >= 1U && field <= 10U;
     if (root_type == "ParagraphStyle") return field >= 1U && field <= 4U;
     if (root_type == "RichTextDocument") return field == 1U;
-    if (root_type == "RichTextDelta") return field == 1U || field == 2U;
-    if (root_type == "RichTextStep") return field >= 1U && field <= 6U;
+    if (root_type == "RichTextDelta") return field >= 1U && field <= 3U;
+    if (root_type == "RichTextStep") return field >= 1U && field <= 8U;
     if (root_type == "PressureMapping") return field >= 1U && field <= 3U;
     if (root_type == "BrushDescriptor") return field >= 1U && field <= 11U;
     if (root_type == "StrokeRecord") return field >= 1U && field <= 4U;
@@ -532,7 +532,7 @@ bool hasExpectedWireType(const std::string& root_type, std::uint32_t field, std:
     if (root_type == "DocumentSnapshot") return (field == 1U && type == 2U) || (field == 2U && type == 0U) || (field == 3U && type == 2U) || (field == 4U && type == 2U) || (field == 5U && type == 0U) || (field == 6U && type == 2U) || (field == 7U && type == 0U) || (field >= 8U && field <= 10U && type == 2U);
     if (root_type == "ParagraphStyle") return (field == 1U && type == 0U) || (field >= 2U && type == 1U);
     if (root_type == "RichTextDocument") return field == 1U && type == 2U;
-    if (root_type == "RichTextDelta") return (field == 1U && type == 0U) || (field == 2U && type == 2U);
+    if (root_type == "RichTextDelta") return (field == 1U && type == 0U) || ((field == 2U || field == 3U) && type == 2U);
     if (root_type == "RichTextStep") return type == 2U;
     if (root_type == "PressureMapping") return (field == 1U && type == 0U) || (field >= 2U && type == 2U);
     if (root_type == "BrushDescriptor") {
@@ -902,6 +902,19 @@ bool mapRichTextStep(const auditoryworks::axiom::v1::RichTextStep& source, canva
         const auto& item = source.set_paragraph_style();
         if (!mapId(item.paragraph_id(), first) || !mapParagraphStyle(item.style(), paragraph_style)) return false;
         destination = canvas::semantic::SetParagraphStyleStep{first, paragraph_style};
+    } else if (source.has_set_layout()) {
+        const auto& item=source.set_layout();
+        if(!item.has_target_kind_version())return false;
+        std::optional<canvas::semantic::RichTextLayout> layout;
+        if(item.has_layout()){if(!item.layout().has_wrap_width())return false;layout=canvas::semantic::RichTextLayout{item.layout().wrap_width()};}
+        destination=canvas::semantic::SetRichTextLayoutStep{item.target_kind_version(),layout};
+    } else if (source.has_restore_state()) {
+        const auto& item=source.restore_state();
+        if(!item.has_state() || !item.state().has_kind_version() || !item.state().has_document()) return false;
+        canvas::semantic::RichTextState state;state.kind_version=item.state().kind_version();
+        if(!mapRichTextDocument(item.state().document(),state.content.document))return false;
+        if(item.state().has_layout()){if(!item.state().layout().has_wrap_width())return false;state.content.layout=canvas::semantic::RichTextLayout{item.state().layout().wrap_width()};}
+        destination=canvas::semantic::RestoreRichTextStateStep{std::move(state)};
     } else {
         return false;
     }
@@ -910,6 +923,7 @@ bool mapRichTextStep(const auditoryworks::axiom::v1::RichTextStep& source, canva
 
 bool mapRichTextDelta(const auditoryworks::axiom::v1::RichTextDelta& source, canvas::semantic::RichTextDelta& destination) {
     destination.delta_version = source.delta_version();
+    destination.expected_state_digest.assign(source.expected_state_digest().begin(),source.expected_state_digest().end());
     destination.steps.clear();
     destination.steps.reserve(static_cast<std::size_t>(source.steps_size()));
     for (const auto& step : source.steps()) {
@@ -1022,9 +1036,11 @@ std::string jsonRichTextStep(const canvas::semantic::RichTextStep& step) {
         } else if constexpr (std::is_same_v<Item, canvas::semantic::SetInlineStyleStep>) {
             return "{\"kind\":\"SetInlineStyle\",\"paragraphId\":" + jsonString(bytesHex(item.paragraph_id.bytes)) +
                 ",\"startScalar\":" + std::to_string(item.start_scalar) + ",\"scalarCount\":" + std::to_string(item.scalar_count) + "}";
-        } else {
+        } else if constexpr (std::is_same_v<Item, canvas::semantic::SetParagraphStyleStep>) {
             return "{\"kind\":\"SetParagraphStyle\",\"paragraphId\":" + jsonString(bytesHex(item.paragraph_id.bytes)) + "}";
-        }
+        } else if constexpr (std::is_same_v<Item, canvas::semantic::SetRichTextLayoutStep>) {
+            return "{\"kind\":\"SetRichTextLayout\"}";
+        } else { return "{\"kind\":\"RestoreRichTextState\"}"; }
     }, step);
 }
 
@@ -1332,6 +1348,12 @@ SemanticError internal::preflightDocumentSnapshotV1(std::span<const std::uint8_t
                                                            : SemanticError::kMalformedWire;
     }
     return SemanticError::kNone;
+}
+
+CodecResult internal::canonicalEncodeProto(const google::protobuf::Message& message) {
+    std::vector<std::uint8_t> bytes;
+    if (!canonicalEncodeMessage(message, bytes)) return {SemanticError::kMalformedWire,{}};
+    return {SemanticError::kNone,std::move(bytes)};
 }
 
 CodecResult internal::canonicalEncodeDocumentSnapshot(

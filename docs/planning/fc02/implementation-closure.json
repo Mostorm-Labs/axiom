@@ -1,0 +1,16 @@
+{
+  "task": "FC02-RUNTIME-TEXT-INITIAL",
+  "repository": {"provider": "github", "full_name": "Mostorm-Labs/axiom"},
+  "execution_ref": "codex/fc02-runtime-boundary-design",
+  "task_anchor": {"revision": "3ddc58d2fa9d21f107e9f208c3a5dbf954a34290", "relation": "ancestor"},
+  "authorization": "User request to implement the next step against the preceding concrete semantic and Runtime input designs; no new semantic choices.",
+  "design_refs": ["docs/planning/FC02_SEMANTIC_CONTRACT.md@79aa19c15dc60df633ad5a9eab7aaeb7a46866ed", "docs/planning/FC02_RUNTIME_INPUT_CONTRACT.md@3ddc58d2fa9d21f107e9f208c3a5dbf954a34290"],
+  "required_changes": ["RichText2 width and guarded delta2 layout/text/exact restore with strict codec and atomic engine integration", "History preflight and text-only compensation", "Runtime-owned text ingress/session and Facade routing exercised by FakeIME against real Semantic/History", "Snapshot3 accepted digest projection, strict capabilities and typed bootstrap checks", "Per-object layout width; narrow regression checks and durable evidence"],
+  "forbidden_changes": ["Authority, Golden or historical descriptor lock changes", "Historical Gate/PHYS claims", "SDK lock changes or dependency source rebuilds", "Legacy Web/Playground test rewiring", "Android repairs", "Lasso, G5, new canonical ObjectKind/OperationKind or stable ABI"],
+  "tests": {"required": ["FC02Text: old-implementation RED then real engine/History/Facade positive and rejection tests", "Existing semantic codec, text state, engine, Snapshot1/2 and history tests", "Existing composition/facade/brush frame retry tests", "Current schema reproducibility and preserved historical descriptor"], "hosted_required": [], "hosted_optional": ["Existing scoped CI if a PR is requested"]},
+  "evidence": {"blocking": ["Local build/test outputs, source identity, RED/GREEN summary and pushed result revision"], "corroborative": ["Prior 17-scenario protocol model"]},
+  "terminal_success": ["All required changes implemented and scoped local checks pass", "Result and verification material committed/pushed; no product/physical acceptance assertion"],
+  "terminal_blockers": ["AUTHORITY_CONFLICT", "MISSING_REQUIRED_INPUT", "ENVIRONMENT_BLOCKER", "FROZEN_VERIFICATION_FAILURE", "NEW_HIGH_IMPACT_FAILURE_MODE"],
+  "continue_until_terminal_state": true,
+  "unresolved_semantic_decisions": []
+}

@@ -1,6 +1,7 @@
 #include "canvas/interaction/editor_history.hpp"
 
 #include <algorithm>
+#include <new>
 
 namespace canvas::interaction {
 
@@ -13,6 +14,7 @@ bool historyExpectationsMatch(const semantic::ObjectStore& store,
             current->kind_version != expected.record->kind_version) return false;
         const auto& record = *expected.record;
         switch (expected.aspect) {
+            case HistoryAspect::kRichTextContent: if (current->content != record.content) return false; break;
             case HistoryAspect::kWholeRecord: if (*current != record) return false; break;
             case HistoryAspect::kTransform: if (current->transform != record.transform) return false; break;
             case HistoryAspect::kPlacement: if (current->placement != record.placement) return false; break;
@@ -50,6 +52,7 @@ bool supportedForward(const semantic::Operation& operation) noexcept {
         case OperationKind::kSetPlacements:
         case OperationKind::kPatchProperties:
         case OperationKind::kSetObjectSize:
+        case OperationKind::kEditRichText:
             return true;
         default:
             return false;
@@ -66,6 +69,7 @@ bool supportedInverse(const semantic::Operation& operation) noexcept {
         case OperationKind::kSetPlacements:
         case OperationKind::kPatchProperties:
         case OperationKind::kSetObjectSize:
+        case OperationKind::kEditRichText:
             return true;
         default:
             return false;
@@ -81,18 +85,30 @@ bool EditorHistory::record(semantic::Operation forward,
 bool EditorHistory::recordConditional(semantic::Operation forward,
     std::vector<semantic::Operation> inverse, std::vector<HistoryExpectation> before,
     std::vector<HistoryExpectation> after) {
+    auto prepared=prepareRecord(forward,inverse,std::move(before),std::move(after));
+    if(!prepared) return false;
+    commitPrepared(std::move(*prepared));return true;
+}
+std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareRecord(
+    const semantic::Operation& forward,const std::vector<semantic::Operation>& inverse,
+    std::vector<HistoryExpectation> before,std::vector<HistoryExpectation> after) {
     if (!supportedForward(forward) || inverse.empty() || forward.id.isZero()) {
-        return false;
+        return std::nullopt;
     }
     for (const auto& item : inverse) {
         if (!supportedInverse(item) || item.document_id != forward.document_id || item.id.isZero()) {
-            return false;
+            return std::nullopt;
         }
     }
+    try {
+        entries_.reserve(cursor_+1);
+        return PreparedEntry{forward,inverse,std::move(before),std::move(after)};
+    } catch(const std::bad_alloc&) { return std::nullopt; }
+}
+void EditorHistory::commitPrepared(PreparedEntry&& entry) noexcept {
     entries_.resize(cursor_);
-    entries_.push_back({std::move(forward), std::move(inverse),std::move(before),std::move(after)});
+    entries_.push_back(std::move(entry));
     cursor_ = entries_.size();
-    return true;
 }
 
 bool EditorHistory::identityKnown(const semantic::OperationId& id) const noexcept {
@@ -123,6 +139,7 @@ bool EditorHistory::submitFresh(std::span<const semantic::Operation> operations,
         operation.id = id;
         allocated.push_back(id);
     }
+    emittedOperationIds_.reserve(emittedOperationIds_.size()+allocated.size());
     if (!submit_.submitConditional(fresh, semantic::ApplySource::kUndoRedo, expectations).accepted) return false;
     emittedOperationIds_.insert(emittedOperationIds_.end(), allocated.begin(), allocated.end());
     return true;
@@ -136,7 +153,10 @@ bool EditorHistory::undo() {
 
 bool EditorHistory::redo() {
     if (!canRedo()) return false;
-    const auto& forward = entries_[cursor_].forward;
+    auto forward = entries_[cursor_].forward;
+    if (const auto* insert=std::get_if<semantic::InsertObjectsOp>(&forward.payload); insert &&
+        std::all_of(insert->objects.begin(),insert->objects.end(),[](const auto& object){return object.kind==semantic::ObjectKind::kRichText;}))
+        forward.payload=semantic::RestoreObjectsOp{insert->objects};
     if (!submitFresh(std::span<const semantic::Operation>(&forward, 1), entries_[cursor_].before)) return false;
     ++cursor_;
     return true;

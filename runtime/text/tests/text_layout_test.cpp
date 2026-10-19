@@ -36,6 +36,19 @@ int main() {
         return 1;
     }
     assert(layout.resolve(id, input) == ready);
+    // Object-local widths must not change another object or the legacy context.
+    auto fixedNarrow=content("Canvas Canvas Canvas Canvas",latin);
+    fixedNarrow.layout=semantic::RichTextLayout{50};
+    auto fixedWide=fixedNarrow;fixedWide.layout->wrap_width=400;
+    const auto small=layout.resolve(foundation::ObjectId::fromUint64(20),fixedNarrow);
+    const auto large=layout.resolve(foundation::ObjectId::fromUint64(21),fixedWide);
+    assert(small->diagnostics.empty() && large->diagnostics.empty());
+    assert(small->lines.size()>large->lines.size());
+    assert(layout.resolve(id,input)==ready);
+    assert(layout.resolve(foundation::ObjectId::fromUint64(20),fixedNarrow)==small);
+    assert(layout.resolve(foundation::ObjectId::fromUint64(21),fixedWide)==large);
+    assert(small->digest!=large->digest);
+
     const auto narrow = layout.resolve(id, content("iiii", latin));
     const auto wide = layout.resolve(id, content("WWWW", latin));
     assert(wide->localBounds.right > narrow->localBounds.right);

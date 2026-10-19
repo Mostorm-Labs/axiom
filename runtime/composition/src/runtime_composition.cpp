@@ -36,7 +36,7 @@ RuntimeComposition::RuntimeComposition(render::ViewId viewId)
   imageResolver_ = std::make_unique<canvas::render::ImageResourceResolver>(*provider_);
 #endif
   controlFacade_ = std::make_unique<CanvasRuntimeFacade>(
-      *runtime_, CanvasTargetKey{1U, viewId.value(), 1U, 1U});
+      *runtime_, CanvasTargetKey{1U, viewId.value(), 1U, 1U},runtimeInstanceId_);
 #if defined(CANVAS_RENDER_HAS_SKIA)
   runtime_->bindResourceServices(imageResolver_.get(), textLayoutService_.get());
 #else
@@ -305,7 +305,7 @@ bool RuntimeComposition::publishResource(const ResourceBindingToken& token,
 }
 bool RuntimeComposition::ownerPump() noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
-  if (!canMutate()) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
+  if (!canMutate() && state_!=RuntimeCompositionState::kLost) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
   ++ownerPumpCount_;
   lastOwnerControlCount_ = 0;
   if (controlFacade_ != nullptr) {

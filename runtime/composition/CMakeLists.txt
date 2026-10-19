@@ -2,7 +2,8 @@ add_library(canvas_runtime_composition STATIC
     src/resource_binding.cpp
     src/scene_adapter.cpp
     src/runtime_composition.cpp
-    src/canvas_runtime_facade.cpp)
+    src/canvas_runtime_facade.cpp
+    src/canvas_runtime_text.cpp)
 target_include_directories(canvas_runtime_composition PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
@@ -22,6 +23,19 @@ else()
 endif()
 
 if(BUILD_TESTING)
+  if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
+  find_package(Protobuf CONFIG REQUIRED)
+  add_executable(axiom_fc02_text_tests tests/fc02_text_test.cpp)
+  target_link_libraries(axiom_fc02_text_tests PRIVATE canvas_runtime_composition GTest::gtest_main protobuf::libprotobuf)
+  target_include_directories(axiom_fc02_text_tests PRIVATE ${PROJECT_BINARY_DIR}/runtime/semantic/generated)
+  target_compile_definitions(axiom_fc02_text_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+  if(MSVC)
+    target_compile_options(axiom_fc02_text_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_fc02_text_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME FC02Text COMMAND axiom_fc02_text_tests)
+  endif()
   add_executable(axiom_brush_batch_frame_retry_tests
       tests/brush_batch_frame_retry_test.cpp)
   target_link_libraries(axiom_brush_batch_frame_retry_tests PRIVATE canvas_runtime_composition)

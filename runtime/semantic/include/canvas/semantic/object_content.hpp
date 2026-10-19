@@ -207,8 +207,13 @@ struct RichTextDocument final {
     bool operator==(const RichTextDocument&) const = default;
 };
 
+struct RichTextLayout final {
+    double wrap_width = 0.0;
+    bool operator==(const RichTextLayout&) const = default;
+};
 struct RichTextContent final {
     RichTextDocument document{};
+    std::optional<RichTextLayout> layout = std::nullopt;
 
     bool operator==(const RichTextContent&) const = default;
 };
@@ -261,17 +266,34 @@ struct SetParagraphStyleStep final {
     bool operator==(const SetParagraphStyleStep&) const = default;
 };
 
+struct RichTextState final {
+    std::uint32_t kind_version = 0;
+    RichTextContent content{};
+    bool operator==(const RichTextState&) const = default;
+};
+struct SetRichTextLayoutStep final {
+    std::uint32_t target_kind_version = 0;
+    std::optional<RichTextLayout> layout = std::nullopt;
+    bool operator==(const SetRichTextLayoutStep&) const = default;
+};
+struct RestoreRichTextStateStep final {
+    RichTextState state{};
+    bool operator==(const RestoreRichTextStateStep&) const = default;
+};
 using RichTextStep = std::variant<
     InsertTextStep,
     DeleteTextStep,
     SplitParagraphStep,
     MergeParagraphStep,
     SetInlineStyleStep,
-    SetParagraphStyleStep>;
+    SetParagraphStyleStep,
+    SetRichTextLayoutStep,
+    RestoreRichTextStateStep>;
 
 struct RichTextDelta final {
     std::uint32_t delta_version = 0;
     std::vector<RichTextStep> steps;
+    std::vector<std::uint8_t> expected_state_digest{};
 
     bool operator==(const RichTextDelta&) const = default;
 };

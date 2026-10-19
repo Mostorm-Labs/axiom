@@ -64,4 +64,11 @@ MinimalRuntimeFacade::readPlatformDiagnostics() const noexcept {
   return out;
 }
 
+runtime::TextReceipt MinimalRuntimeFacade::submitTextIntent(const runtime::TextIntent& r) { return host_.composition().controlFacade().submitTextIntent(r); }
+runtime::TextReceipt MinimalRuntimeFacade::submitTextInput(const runtime::TextInputEvent& r) { return host_.composition().controlFacade().submitTextInput(r); }
+runtime::TextEditorSnapshot MinimalRuntimeFacade::readTextEditor() const { return host_.composition().controlFacade().readTextEditor(); }
+std::optional<runtime::TextReceipt> MinimalRuntimeFacade::textInputReceipt(const runtime::TextSessionToken& t,std::uint64_t s) const { return host_.composition().controlFacade().textInputReceipt(t,s); }
+std::optional<runtime::TextReceipt> MinimalRuntimeFacade::textIntentReceipt(std::uint64_t c,std::uint64_t r) const { return host_.composition().controlFacade().textIntentReceipt(c,r); }
+bool MinimalRuntimeFacade::acknowledgeTextInput(const runtime::TextSessionToken& t,std::uint64_t s) { return host_.composition().controlFacade().acknowledgeTextInput(t,s); }
+
 }  // namespace canvas::minimal_runtime_host

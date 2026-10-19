@@ -343,7 +343,7 @@ CanvasEditingRuntime::CanvasEditingRuntime(render::ViewId viewId)
       ink_(std::make_unique<ink::InkEngine>(ink::BrushDescriptor{1.0F})),
       preview_(std::make_unique<ink::PreviewModel>()),
       interaction_(std::make_unique<interaction::InteractionRuntime>(
-          *this, *this, *this, *this, *this)),
+          *this, *this, *this, *this, *this,static_cast<TextEditPort*>(this))),
       lifecycle_(std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
           viewId, render::SurfaceGeneration{1},
           render::MetricsGeneration{1},
@@ -595,6 +595,7 @@ bool CanvasEditingRuntime::accept(const input::PointerSampleBatch& batch,
       input_->dispatch(batch) != input::DispatchDisposition::kDelivered) {
     return false;
   }
+  if (interaction_->textSession() && interaction_->textSession()->read().phase != runtime::TextPhase::kClosed) return true;
   std::vector<ink::StrokePoint> confirmed;
   std::vector<ink::StrokePoint> predicted;
   confirmed.reserve(batch.samples.size());
@@ -700,6 +701,9 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   }
   const auto routed = appBinding_->submit(source, batch);
   if (!routed.accepted && !routed.terminalCancel) { AXIOM_ANDROID_DIAG("ingress rejected samples=%zu", routed.normalized.samples.size()); return false; }
+  // Normalize/retire full pointer identities even while the text editor owns input.
+  if (interaction_->textSession() && interaction_->textSession()->read().phase != runtime::TextPhase::kClosed)
+    return routed.accepted || routed.terminalCancel;
   if (selectionMode_ || creationMode_ || creationActive() || panTool_) {
     for (const auto& sample : routed.normalized.samples) {
       if (!sample.key.valid()) continue;
@@ -1217,17 +1221,47 @@ bool CanvasEditingRuntime::canonicalWriteAdmission() const noexcept {
          std::this_thread::get_id() == ownerThread_ && !publicationCallbackActive_;
 }
 
+bool CanvasEditingRuntime::textReady() const noexcept {
+  return canonicalWriteAdmission() && historySceneReady() && brushSessions_.empty() && eraserTraces_.empty() && keyedStrokeIds_.empty() &&
+         creations_.empty() && panPointers_.empty() && dispatchRuntime_.activeCount()==0 && !selectionTransformActive();
+}
+bool CanvasEditingRuntime::textWritable(semantic::ObjectId id) const noexcept {
+  const auto* current=semanticObjects_.find(id);
+  for(std::size_t count=0;current && count<=semanticObjects_.size();++count) {
+    for(const auto& entry:current->properties.entries) {
+      if(entry.field_id==2 && std::holds_alternative<bool>(entry.value) && std::get<bool>(entry.value))return false;
+      if(entry.field_id==1 && std::holds_alternative<bool>(entry.value) && !std::get<bool>(entry.value))return false;
+    }
+    if(!current->placement.parent_id)return true;
+    current=semanticObjects_.find(*current->placement.parent_id);
+  }
+  return false;
+}
+semantic::ObjectId CanvasEditingRuntime::allocateTextIdentity() {
+  while(nextTextIdentity_!=0) {
+    auto id=foundation::ObjectId::fromUint64(nextTextIdentity_++);id.bytes[15]=0xF2;
+    bool found=semanticObjects_.contains(id);
+    for(const auto& object:semanticObjects_.allObjects())if(const auto* rich=std::get_if<semantic::RichTextContent>(&object.content))
+      for(const auto& paragraph:rich->document.paragraphs)found=found || paragraph.id==id;
+    if(!found)return id;
+  }return {};
+}
+semantic::PrepareResult CanvasEditingRuntime::prepareTextOperation(const semantic::Operation& operation) const {
+  return operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_,resourceManifestPort_});
+}
+
 bool CanvasEditingRuntime::applyLocalHistoryOperation(
     semantic::Operation forward, semantic::Operation inverse) noexcept {
   if (!canonicalWriteAdmission()) return false;
   if (!historySceneReady() || forward.id.isZero() || inverse.id.isZero()) return false;
-  const auto prepared=operationEngine_.prepare(forward,{semanticObjects_,appliedOperations_});
+  const auto prepared=operationEngine_.prepare(forward,{semanticObjects_,appliedOperations_,resourceManifestPort_});
   if(prepared.disposition!=semantic::PrepareDisposition::kPrepared || !prepared.plan) return false;
   interaction::HistoryAspect aspect=interaction::HistoryAspect::kWholeRecord;
   if(forward.kind()==semantic::OperationKind::kSetTransforms) aspect=interaction::HistoryAspect::kTransform;
   if(forward.kind()==semantic::OperationKind::kSetObjectSize) aspect=interaction::HistoryAspect::kSize;
   if(forward.kind()==semantic::OperationKind::kSetPlacements) aspect=interaction::HistoryAspect::kPlacement;
   if(forward.kind()==semantic::OperationKind::kPatchProperties) aspect=interaction::HistoryAspect::kProperties;
+  if(forward.kind()==semantic::OperationKind::kEditRichText) aspect=interaction::HistoryAspect::kRichTextContent;
   std::vector<interaction::HistoryExpectation> before,after;
   const auto capture=[&](semantic::ObjectId id,const semantic::ObjectRecord* post) {
     const auto* prior=semanticObjects_.find(id);
@@ -1240,11 +1274,13 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
   for(const auto& object:prepared.plan->creates)capture(object.id,&object);
   for(const auto& object:prepared.plan->replacements)capture(object.id,&object);
   for(const auto id:prepared.plan->deletes)capture(id,nullptr);
-  const auto applied = operationEngine_.apply(
-      forward, semantic::ApplySource::kLocalInteraction, semanticObjects_,
-      appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+  auto historyEntry=history_.prepareRecord(forward,{inverse},std::move(before),std::move(after));
+  if(!historyEntry) return false;
+  const auto applied = resourceManifestPort_
+      ? operationEngine_.apply(forward, semantic::ApplySource::kLocalInteraction, semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_)
+      : operationEngine_.apply(forward, semantic::ApplySource::kLocalInteraction, semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   if (applied.disposition != semantic::ApplyDisposition::kApplied) return false;
-  if (!history_.recordConditional(forward, {inverse},std::move(before),std::move(after))) std::terminate();
+  history_.commitPrepared(std::move(*historyEntry));
   if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr &&
       sceneCompiler_ != nullptr) {
     const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current(), resourceManifestPort_);
@@ -1418,7 +1454,7 @@ bool CanvasEditingRuntime::deleteSelectedObjects() noexcept {
   const auto forwardId=allocateOperationId(),inverseId=allocateOperationId();
   semantic::Operation operation{forwardId,documentId_,1,1,
       semantic::DeleteObjectsOp{{selection_.selected().begin(),selection_.selected().end()}}};
-  const auto plan=operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_});
+  const auto plan=operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_,resourceManifestPort_});
   if(plan.disposition!=semantic::PrepareDisposition::kPrepared || !plan.plan) return false;
   semantic::RestoreObjectsOp inverse;
   for(const auto id:plan.plan->deletes) {
@@ -2628,13 +2664,15 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
 interaction::SubmitResult CanvasEditingRuntime::submitConditional(
     std::span<const semantic::Operation> operations, semantic::ApplySource source,
     std::span<const interaction::HistoryExpectation> expectations) {
+  for(const auto& operation:operations)if(const auto* text=std::get_if<semantic::EditRichTextOp>(&operation.payload))
+    if(!textWritable(text->object_id))return interaction::SubmitResult::rejected();
   if(!interaction::historyExpectationsMatch(semanticObjects_,expectations))
     return interaction::SubmitResult::rejected();
   // Resolve the actual deletion closure in this same owner phase. A remote
   // child or dependent connector that was not part of the captured postimage
   // makes compensation conflict, before any canonical apply or publication.
   for(const auto& operation:operations)if(operation.kind()==semantic::OperationKind::kDeleteObjects && !expectations.empty()) {
-    const auto plan=operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_});
+    const auto plan=operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_,resourceManifestPort_});
     if(!plan.plan || plan.disposition!=semantic::PrepareDisposition::kPrepared)
       return interaction::SubmitResult::rejected();
     for(const auto id:plan.plan->deletes)
@@ -2689,9 +2727,9 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
   if (operations.size() != 1U || source != semantic::ApplySource::kUndoRedo ||
       !historySceneReady()) return interaction::SubmitResult::rejected();
   for (const auto& operation : operations) {
-    const auto applied = operationEngine_.apply(
-        operation, source, semanticObjects_, appliedOperations_, semanticGeneration_,
-        canonicalCommitClock_);
+    const auto applied = resourceManifestPort_
+        ? operationEngine_.apply(operation, source, semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_)
+        : operationEngine_.apply(operation, source, semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
     if (applied.disposition != semantic::ApplyDisposition::kApplied) {
       return interaction::SubmitResult::rejected();
     }

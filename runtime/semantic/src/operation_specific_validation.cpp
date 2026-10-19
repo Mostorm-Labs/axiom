@@ -6,6 +6,8 @@
 #include "canvas/semantic/operation_state_validator.hpp"
 #include "canvas/semantic/staged_object_view.hpp"
 #include "rich_text_state_plan.hpp"
+#include "canvas/semantic/rich_text_state.hpp"
+#include "object_record_semantics_internal.hpp"
 
 #include <algorithm>
 #include <map>
@@ -72,7 +74,30 @@ StatefulResult validateSplitStrokesState(const SplitStrokesOp&op,const ObjectSto
 
 StatefulResult validateAddEraseMasksState(const AddEraseMasksOp&op,const ObjectStore&base,ReplaceObjectsStatePlanInputs*out){if(!out)return fail(StatefulIssue::kInvalidApplicability);ReplaceObjectsStatePlanInputs r;for(const auto&i:op.items){const auto*c=base.find(i.object_id);if(!c)return fail(StatefulIssue::kObjectMissing);auto s=validateRecordStateForOperation(*c,StateRule::kStrokeTarget);if(!s.ok())return s;auto n=*c;for(const auto&m:i.masks){if(std::any_of(n.erase_masks.begin(),n.erase_masks.end(),[&](const auto&x){return x.id==m.id; }))return fail(StatefulIssue::kMaskStateInvalid);n.erase_masks.push_back(m);}std::sort(n.erase_masks.begin(),n.erase_masks.end(),[](const auto&a,const auto&b){return a.id<b.id;});r.replacements.push_back(std::move(n));}*out=std::move(r);return{};}
 StatefulResult validateRemoveEraseMasksState(const RemoveEraseMasksOp&op,const ObjectStore&base,ReplaceObjectsStatePlanInputs*out){if(!out)return fail(StatefulIssue::kInvalidApplicability);ReplaceObjectsStatePlanInputs r;for(const auto&i:op.items){const auto*c=base.find(i.object_id);if(!c)return fail(StatefulIssue::kObjectMissing);auto s=validateRecordStateForOperation(*c,StateRule::kStrokeTarget);if(!s.ok())return s;auto n=*c;for(const auto&id:i.mask_ids){auto it=std::find_if(n.erase_masks.begin(),n.erase_masks.end(),[&](const auto&m){return m.id==id;});if(it==n.erase_masks.end())return fail(StatefulIssue::kMaskStateInvalid);n.erase_masks.erase(it);}r.replacements.push_back(std::move(n));}*out=std::move(r);return{};}
-StatefulResult validateEditRichTextState(const EditRichTextOp&op,const ObjectStore&base,ReplaceObjectsStatePlanInputs*out){if(!out)return fail(StatefulIssue::kInvalidApplicability);const auto*c=base.find(op.object_id);if(!c)return fail(StatefulIssue::kObjectMissing);auto s=validateRecordStateForOperation(*c,StateRule::kRichTextTarget);if(!s.ok())return s;const auto*x=std::get_if<RichTextContent>(&c->content);if(!x)return fail(StatefulIssue::kInvalidApplicability);RichTextContent next;auto r=internal::prepareRichTextDeltaState(*x,op.delta,&next);if(!r.ok())return r;auto n=*c;n.content=std::move(next);out->replacements={std::move(n)};return{};}
+StatefulResult validateEditRichTextState(const EditRichTextOp& op,const ObjectStore& base,ReplaceObjectsStatePlanInputs* out) {
+    return validateEditRichTextStateForDocument(op,base,out,DocumentId{});
+}
+StatefulResult validateEditRichTextStateForDocument(const EditRichTextOp& op,const ObjectStore& base,ReplaceObjectsStatePlanInputs* out,DocumentId document) {
+    if(!out) return fail(StatefulIssue::kInvalidApplicability);
+    const auto* current=base.find(op.object_id);
+    if(!current) return fail(StatefulIssue::kObjectMissing);
+    const auto target=validateRecordStateForOperation(*current,StateRule::kRichTextTarget);
+    if(!target.ok())return target;
+    if(!internal::validateObjectRecord(*current)) return fail(StatefulIssue::kInvalidKindVersion);
+    if(op.delta.delta_version==1 && current->kind_version!=1) return fail(StatefulIssue::kInvalidKindVersion);
+    if(op.delta.delta_version==2 && (op.delta.expected_state_digest.size()!=32 ||
+       richTextStateDigest(document,*current)!=op.delta.expected_state_digest)) return fail(StatefulIssue::kTextStateInvalid);
+    RichTextContent next;
+    const auto status=internal::prepareRichTextDeltaState(std::get<RichTextContent>(current->content),op.delta,&next);
+    if(!status.ok()) return status;
+    auto result=*current;result.content=std::move(next);
+    for(const auto& step:op.delta.steps) {
+        if(const auto* layout=std::get_if<SetRichTextLayoutStep>(&step)) result.kind_version=layout->target_kind_version;
+        if(const auto* restore=std::get_if<RestoreRichTextStateStep>(&step)) result.kind_version=restore->state.kind_version;
+    }
+    if(!internal::validateObjectRecord(result)) return fail(StatefulIssue::kTextStateInvalid);
+    out->replacements={std::move(result)};return {};
+}
 StatefulResult validateSetConnectorContentState(const SetConnectorContentOp&op,const ObjectStore&base,ReplaceObjectsStatePlanInputs*out){if(!out)return fail(StatefulIssue::kInvalidApplicability);const auto*c=base.find(op.object_id);if(!c)return fail(StatefulIssue::kObjectMissing);auto s=validateRecordStateForOperation(*c,StateRule::kConnectorTarget);if(!s.ok())return s;auto n=*c;n.content=op.content;StagedObjectView staged(base);if(!staged.stageReplace(n))return fail(StatefulIssue::kObjectMissing);auto r=validateConnectorReferences(staged,op.content);if(!r.ok())return r;out->replacements={std::move(n)};return{};}
 
 } // namespace canvas::semantic

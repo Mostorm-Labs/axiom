@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="3" failures="3" disabled="0" errors="0" time="0.005" timestamp="2026-10-19T18:31:16.576" name="AllTests">
+  <testsuite name="FC02Facade" tests="3" failures="3" disabled="0" skipped="0" errors="0" time="0.004" timestamp="2026-10-19T18:31:16.576">
+    <testcase name="PublicationReadCannotInvalidateOwnFinishingComposition" file="C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp" line="265" status="run" result="completed" time="0.003" timestamp="2026-10-19T18:31:16.576" classname="FC02Facade">
+      <failure message="C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:280&#x0A;Expected equality of these values:&#x0A;  sink.observed.phase&#x0A;    Which is: 1-byte object &lt;01&gt;&#x0A;  TextPhase::kFinishing&#x0A;    Which is: 1-byte object &lt;03&gt;&#x0A;" type=""><![CDATA[C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:280
+Expected equality of these values:
+  sink.observed.phase
+    Which is: 1-byte object <01>
+  TextPhase::kFinishing
+    Which is: 1-byte object <03>
+]]></failure>
+      <failure message="C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:281&#x0A;Expected equality of these values:&#x0A;  sink.observed.projection&#x0A;    Which is: u&quot;AB&quot;&#x0A;  u&quot;A&quot;&#x0A;" type=""><![CDATA[C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:281
+Expected equality of these values:
+  sink.observed.projection
+    Which is: u"AB"
+  u"A"
+]]></failure>
+      <failure message="C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:282&#x0A;Expected equality of these values:&#x0A;  h.facade.readTextEditor().phase&#x0A;    Which is: 1-byte object &lt;01&gt;&#x0A;  TextPhase::kClosed&#x0A;    Which is: 1-byte object &lt;00&gt;&#x0A;" type=""><![CDATA[C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:282
+Expected equality of these values:
+  h.facade.readTextEditor().phase
+    Which is: 1-byte object <01>
+  TextPhase::kClosed
+    Which is: 1-byte object <00>
+]]></failure>
+      <failure message="C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:283&#x0A;Expected equality of these values:&#x0A;  h.facade.textIntentReceipt(7,h.request)-&gt;status&#x0A;    Which is: 1-byte object &lt;04&gt;&#x0A;  TextStatus::kApplied&#x0A;    Which is: 1-byte object &lt;03&gt;&#x0A;" type=""><![CDATA[C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:283
+Expected equality of these values:
+  h.facade.textIntentReceipt(7,h.request)->status
+    Which is: 1-byte object <04>
+  TextStatus::kApplied
+    Which is: 1-byte object <03>
+]]></failure>
+    </testcase>
+    <testcase name="TextOwnershipConsumesPointerLifecycleWithoutStartingInk" file="C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp" line="286" status="run" result="completed" time="0.001" timestamp="2026-10-19T18:31:16.579" classname="FC02Facade">
+      <failure message="C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:295&#x0A;Expected equality of these values:&#x0A;  h.operations()&#x0A;    Which is: 1&#x0A;  0U&#x0A;    Which is: 0&#x0A;" type=""><![CDATA[C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:295
+Expected equality of these values:
+  h.operations()
+    Which is: 1
+  0U
+    Which is: 0
+]]></failure>
+      <failure message="C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:295&#x0A;Expected equality of these values:&#x0A;  h.composition.semanticObjectCount()&#x0A;    Which is: 1&#x0A;  0U&#x0A;    Which is: 0&#x0A;" type=""><![CDATA[C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:295
+Expected equality of these values:
+  h.composition.semanticObjectCount()
+    Which is: 1
+  0U
+    Which is: 0
+]]></failure>
+    </testcase>
+    <testcase name="FailedTerminalKeepsPreimageAndRetryDoesNotRewriteRejection" file="C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp" line="301" status="run" result="completed" time="0." timestamp="2026-10-19T18:31:16.581" classname="FC02Facade">
+      <failure message="C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:311&#x0A;Expected equality of these values:&#x0A;  h.send(repeat).status&#x0A;    Which is: 1-byte object &lt;02&gt;&#x0A;  TextStatus::kRejected&#x0A;    Which is: 1-byte object &lt;04&gt;&#x0A;" type=""><![CDATA[C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:311
+Expected equality of these values:
+  h.send(repeat).status
+    Which is: 1-byte object <02>
+  TextStatus::kRejected
+    Which is: 1-byte object <04>
+]]></failure>
+      <failure message="C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:313&#x0A;Value of: h.composition.bindSurface(256,256)&#x0A;  Actual: false&#x0A;Expected: true&#x0A;" type=""><![CDATA[C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp:313
+Value of: h.composition.bindSurface(256,256)
+  Actual: false
+Expected: true
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

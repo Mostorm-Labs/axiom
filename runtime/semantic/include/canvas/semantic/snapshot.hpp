@@ -14,6 +14,9 @@ namespace canvas::semantic {
 enum class SnapshotCapability : std::uint8_t {
     kLegacyV1 = 0,
     kShape2Triangle = 1,
+    // Explicit capability bits; 0/1 retain their released identities.
+    kRichTextFixedWidthV2 = 2,
+    kShape2TriangleAndRichTextFixedWidthV2 = 3,
 };
 
 struct SemanticSnapshot final {
@@ -43,6 +46,9 @@ struct SnapshotDecodeResult final {
 
 class SnapshotCodec final {
   public:
+    // Captured objects/manifest/revision/frontier must already share one read view.
+    // Computes the accepted algorithm1 projections; does not invent a frontier.
+    [[nodiscard]] static bool bindDigests(SemanticSnapshot&, SnapshotCapability capability = SnapshotCapability::kLegacyV1);
     [[nodiscard]] static CodecResult encode(const SemanticSnapshot& snapshot, SnapshotCapability capability = SnapshotCapability::kLegacyV1);
     [[nodiscard]] static SnapshotDecodeResult decode(const std::vector<std::uint8_t>& bytes, SnapshotCapability capability = SnapshotCapability::kLegacyV1);
 };

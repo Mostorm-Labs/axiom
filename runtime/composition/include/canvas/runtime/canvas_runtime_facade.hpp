@@ -11,6 +11,10 @@
 #include <thread>
 #include <atomic>
 #include <vector>
+#include <deque>
+#include <mutex>
+#include <variant>
+#include <unordered_map>
 
 namespace canvas::runtime {
 
@@ -21,15 +25,21 @@ class CanvasRuntimeFacade : public RuntimeFacade {
  public:
 #if defined(AXIOM_RUNTIME_QUALIFICATION)
   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
-                      CanvasTargetKey target) noexcept;
+                      CanvasTargetKey target,std::uint64_t runtimeInstance = 1) noexcept;
 #else
  private:
   friend class RuntimeComposition;
   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
-                      CanvasTargetKey target) noexcept;
+                      CanvasTargetKey target,std::uint64_t runtimeInstance = 1) noexcept;
  public:
 #endif
   ~CanvasRuntimeFacade() override;
+  [[nodiscard]] TextReceipt submitTextIntent(const TextIntent&) override;
+  [[nodiscard]] TextReceipt submitTextInput(const TextInputEvent&) override;
+  [[nodiscard]] TextEditorSnapshot readTextEditor() const override;
+  [[nodiscard]] std::optional<TextReceipt> textInputReceipt(const TextSessionToken&,std::uint64_t) const override;
+  [[nodiscard]] std::optional<TextReceipt> textIntentReceipt(std::uint64_t,std::uint64_t) const override;
+  [[nodiscard]] bool acknowledgeTextInput(const TextSessionToken&,std::uint64_t) override;
   CanvasRuntimeFacade(const CanvasRuntimeFacade&) = delete;
   CanvasRuntimeFacade& operator=(const CanvasRuntimeFacade&) = delete;
 
@@ -77,6 +87,16 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   }
  private:
   struct Binding;
+  [[nodiscard]] std::size_t processIngress(std::uint64_t);
+  void finishTextReceipts();
+  using Work = std::variant<CanvasControlRequest,TextIntent,TextInputEvent>;
+  mutable std::mutex ingressMutex_;
+  std::deque<Work> ingress_;
+  std::deque<CanvasControlRequest> deferredControls_;
+  std::deque<std::pair<TextIntent,TextReceipt>> textIntents_;
+  std::deque<std::pair<TextInputEvent,TextReceipt>> textInputs_;
+  std::unordered_map<std::uint64_t,std::uint64_t> textClientHighWater_;
+  std::atomic_size_t pendingWork_{0};
   void refreshTarget() const noexcept;
 
   interaction::CanvasEditingRuntime& runtime_;

@@ -1,4 +1,5 @@
 #include "canvas/runtime/canvas_runtime_facade.hpp"
+#include "canvas/interaction/text_edit_session.hpp"
 #include "canvas/semantic/property_value.hpp"
 
 namespace canvas::runtime {
@@ -201,10 +202,11 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
 
 
 CanvasRuntimeFacade::CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
-                                         CanvasTargetKey target) noexcept
+                                         CanvasTargetKey target,std::uint64_t runtimeInstance) noexcept
     : runtime_(runtime), binding_(std::make_unique<Binding>(runtime)),
       service_(std::make_unique<CanvasControlService>(*binding_)) {
   binding_->setTarget(target);
+  if(runtime_.interaction_ && runtime_.interaction_->textSession())runtime_.interaction_->textSession()->configure(runtimeInstance,target.viewId);
 }
 CanvasRuntimeFacade::~CanvasRuntimeFacade() = default;
 bool CanvasRuntimeFacade::ownerThread() const noexcept {
@@ -231,7 +233,12 @@ ProductControlReceipt CanvasRuntimeFacade::submitCanvasControl(const CanvasContr
     return {request.requestId, ProductControlState::kRejected,
             request.target.runtimeEpoch, stale};
   }
+  std::scoped_lock ingressLock(ingressMutex_);
   const auto receipt = service_->enqueue(request);
+  if(receipt.state==CanvasControlReceiptState::kQueued){
+    if(pendingWork_.load()>=256){service_->rejectPending({request.clientId,request.requestId},CanvasControlError::kQueueFull);return {request.requestId,ProductControlState::kRejected,request.target.runtimeEpoch,std::nullopt};}
+    ingress_.push_back(request);++pendingWork_;
+  }
   ProductControlReceipt out{request.requestId,
       receipt.state == CanvasControlReceiptState::kQueued ? ProductControlState::kQueued
         : receipt.state == CanvasControlReceiptState::kApplied ? ProductControlState::kApplied
@@ -364,7 +371,7 @@ std::optional<CanvasControlReceipt> CanvasRuntimeFacade::canvasControlReceipt(Ca
 std::size_t CanvasRuntimeFacade::process(std::uint64_t ownerSequence) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || processing_.exchange(true)) return 0;
   controlSequence_.store(ownerSequence, std::memory_order_release);
-  const auto result = service_->processPending(ownerSequence);
+  const auto result = processIngress(ownerSequence);
   processing_ = false;
   return result;
 }

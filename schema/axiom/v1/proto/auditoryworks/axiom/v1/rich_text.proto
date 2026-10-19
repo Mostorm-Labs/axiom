@@ -33,7 +33,11 @@ message ParagraphStyle {
 message TextRun { string text = 1; TextStyle style = 2; }
 message Paragraph { Id128 paragraph_id = 1; ParagraphStyle style = 2; repeated TextRun runs = 3; }
 message RichTextDocument { repeated Paragraph paragraphs = 1; }
-message RichTextContent { RichTextDocument document = 1; }
+message RichTextLayoutV2 { double wrap_width = 1; }
+message RichTextContent { RichTextDocument document = 1; RichTextLayoutV2 layout = 2; }
+message RichTextStateV2 { uint32 kind_version = 1; RichTextDocument document = 2; RichTextLayoutV2 layout = 3; }
+message SetRichTextLayoutStep { uint32 target_kind_version = 1; RichTextLayoutV2 layout = 2; }
+message RestoreRichTextStateStep { RichTextStateV2 state = 1; }
 
 message InsertTextStep { Id128 paragraph_id = 1; uint32 scalar_offset = 2; string text = 3; TextStyle style = 4; }
 message DeleteTextStep { Id128 paragraph_id = 1; uint32 start_scalar = 2; uint32 scalar_count = 3; }
@@ -49,9 +53,12 @@ message RichTextStep {
     MergeParagraphStep merge_paragraph = 4;
     SetInlineStyleStep set_inline_style = 5;
     SetParagraphStyleStep set_paragraph_style = 6;
+    SetRichTextLayoutStep set_layout = 7;
+    RestoreRichTextStateStep restore_state = 8;
   }
 }
 message RichTextDelta {
   uint32 delta_version = 1;
   repeated RichTextStep steps = 2;
+  bytes expected_state_digest = 3;
 }

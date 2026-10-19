@@ -10,6 +10,12 @@ class MinimalRuntimeFacade final : public runtime::RuntimeFacade,
                                    public runtime::PlatformDiagnostics {
  public:
   explicit MinimalRuntimeFacade(MinimalRuntimeHost& host) noexcept;
+  runtime::TextReceipt submitTextIntent(const runtime::TextIntent&) override;
+  runtime::TextReceipt submitTextInput(const runtime::TextInputEvent&) override;
+  runtime::TextEditorSnapshot readTextEditor() const override;
+  std::optional<runtime::TextReceipt> textInputReceipt(const runtime::TextSessionToken&,std::uint64_t) const override;
+  std::optional<runtime::TextReceipt> textIntentReceipt(std::uint64_t,std::uint64_t) const override;
+  bool acknowledgeTextInput(const runtime::TextSessionToken&,std::uint64_t) override;
   [[nodiscard]] runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override;
   [[nodiscard]] runtime::ProductControlReceipt submitProductControl(
       const runtime::ProductControlRequest& request) noexcept override;

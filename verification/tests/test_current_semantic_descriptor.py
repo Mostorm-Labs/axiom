@@ -38,7 +38,7 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
                     for field in message.fields:
                         self.assertIn(field, messages[message.name].fields)
 
-    def test_additions_are_limited_to_the_existing_resource_release(self):
+    def test_additions_are_limited_to_resource_release_and_fc02_text(self):
         before = descriptor.parse_descriptor((DIRECTORY / "descriptor.lock.pb").read_bytes())
         after = descriptor.parse_descriptor((DIRECTORY / "descriptor.current.pb").read_bytes())
         new_messages = {}
@@ -54,6 +54,7 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
                     if fields:
                         extra_fields[(Path(name).name, message.name)] = {field.number for field in fields}
         self.assertEqual(new_messages, {
+            "rich_text.proto": {"RichTextLayoutV2", "RichTextStateV2", "SetRichTextLayoutStep", "RestoreRichTextStateStep"},
             "operation.proto": {"ResourceExpectation", "ReactivateResource", "UpdateResourceManifestOp"},
             "snapshot.proto": {"ImageResourceMetadataV1", "FontResourceMetadataV1",
                 "BrushResourceMetadataV1", "ResourceManifestEntry", "ResourceManifestTombstone",
@@ -61,6 +62,9 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
         })
         self.assertEqual(extra_fields, {
             ("operation.proto", "OperationPayload"): {16},
+            ("rich_text.proto", "RichTextContent"): {2},
+            ("rich_text.proto", "RichTextStep"): {7, 8},
+            ("rich_text.proto", "RichTextDelta"): {3},
             ("snapshot.proto", "DocumentSnapshot"): set(range(4, 11)),
         })
 

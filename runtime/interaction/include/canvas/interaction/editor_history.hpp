@@ -11,7 +11,7 @@
 
 namespace canvas::interaction {
 
-enum class HistoryAspect : std::uint8_t { kWholeRecord, kTransform, kSize, kPlacement, kProperties };
+enum class HistoryAspect : std::uint8_t { kWholeRecord, kTransform, kSize, kPlacement, kProperties, kRichTextContent };
 struct HistoryExpectation final {
     semantic::ObjectId objectId{};
     std::optional<semantic::ObjectRecord> record;
@@ -41,6 +41,16 @@ class HistorySubmitPort {
 
 class EditorHistory final {
   public:
+    struct PreparedEntry final {
+        semantic::Operation forward;
+        std::vector<semantic::Operation> inverse;
+        std::vector<HistoryExpectation> before;
+        std::vector<HistoryExpectation> after;
+    };
+    [[nodiscard]] std::optional<PreparedEntry> prepareRecord(
+        const semantic::Operation& forward, const std::vector<semantic::Operation>& inverse,
+        std::vector<HistoryExpectation> before, std::vector<HistoryExpectation> after);
+    void commitPrepared(PreparedEntry&&) noexcept;
     explicit EditorHistory(HistorySubmitPort& submit) noexcept : submit_(submit) {}
 
     // The inverse is the semantic preimage captured by the owning command.
@@ -58,12 +68,7 @@ class EditorHistory final {
     [[nodiscard]] std::size_t size() const noexcept { return entries_.size(); }
 
   private:
-    struct Entry final {
-        semantic::Operation forward;
-        std::vector<semantic::Operation> inverse;
-        std::vector<HistoryExpectation> before;
-        std::vector<HistoryExpectation> after;
-    };
+    using Entry = PreparedEntry;
 
     [[nodiscard]] bool submitFresh(std::span<const semantic::Operation> operations,
                                   std::span<const HistoryExpectation> expectations);
