@@ -217,6 +217,20 @@ bool RuntimeComposition::submit(const input::PlatformPointerBatch& batch) noexce
   return
       runtime_->acceptPlatformBatch(batch, batch.samples.back().timestampNs);
 }
+std::optional<input::PointerKey> RuntimeComposition::platformKey(
+    input::InputSourceId source, input::PointerId pointer) const noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || !runtime_) return std::nullopt;
+  return runtime_->platformKey(source, pointer);
+}
+bool RuntimeComposition::cancelPlatformPointer(const input::PointerKey& key,
+    std::uint64_t sequence, std::uint64_t timestampNs) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || surfaceTransitionActive_ || !canMutate()) return false;
+  return runtime_->cancelPlatformPointer(key, sequence, timestampNs);
+}
+std::size_t RuntimeComposition::semanticObjectCount() const noexcept {
+  return std::this_thread::get_id() == ownerThread_ && runtime_
+      ? runtime_->semanticObjectCount() : 0U;
+}
 semantic::ApplyResult RuntimeComposition::applyExternalOperation(
     const semantic::Operation& operation, semantic::ApplySource source) noexcept {
   if (!canMutate() || std::this_thread::get_id() != ownerThread_) return {};

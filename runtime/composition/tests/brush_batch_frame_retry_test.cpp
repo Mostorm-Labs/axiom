@@ -77,6 +77,25 @@ void batchEvaluatesOnce() {
   assert(runtime.baselineTrace().size() == 128U);
 }
 
+void unavailablePressureUsesBrushPolicy() {
+  InspectRuntime runtime;
+  prepare(runtime);
+  assert(runtime.selectBrushProfile("membrane-v1", 1U));
+  auto down = point(1U, input::PointerPhase::kDown);
+  auto up = point(2U, input::PointerPhase::kUp);
+  down.pressure = up.pressure = 0.0F;
+  down.capabilities.pressure = up.capabilities.pressure = false;
+  assert(send(runtime, {{down, up}}));
+  const auto objects = runtime.objects();
+  assert(objects.size() == 1U);
+  const auto& stroke = std::get<semantic::DabBrushStrokeContent>(objects.front().content).stroke;
+  assert(stroke.confirmed_samples.size() == 2U);
+  std::printf("unavailable device pressure: expected brush missing-pressure policy=0.5 actual=%.3f\n",
+      stroke.confirmed_samples.front().pressure.value_or(-1.0));
+  std::fflush(stdout);
+  assert(stroke.confirmed_samples.front().pressure == 0.5);
+}
+
 void batchPreservesGeometryCommitAndTerminals() {
   for (const auto profile : {"vector-solid-v1", "marker-flat-v1", "chalk-grain-v1", "membrane-v1"}) {
     InspectRuntime batched, singles;
@@ -352,5 +371,6 @@ int main(int argc, char** argv) {
   else if (mode == "semantics") batchPreservesGeometryCommitAndTerminals();
   else if (mode == "pending-feedback") busyCanonicalPreservesAlreadySubmittedFeedback();
   else if (mode == "fatal") fatalProviderFailureIsNotRetry();
+  else if (mode == "pressure") unavailablePressureUsesBrushPolicy();
   else batchEvaluatesOnce();
 }

@@ -489,28 +489,7 @@ bool CanvasEditingRuntime::pan(const input::PointerSample& sample,
 bool CanvasEditingRuntime::brush(const input::PointerSample& sample,
                               std::uint64_t session) noexcept {
   if (!sample.key.valid()) return false;
-  if (sample.phase == input::PointerPhase::kDown && !sample.predicted) {
-    const auto profile = selectedBrushProfile_ == "vector-solid-v1" ? 1U
-        : selectedBrushProfile_ == "marker-flat-v1" ? 2U
-        : selectedBrushProfile_ == "chalk-grain-v1" ? 3U : 4U;
-    if (!beginBrushSession(session, profile)) return false;
-    // The Down sample is part of the confirmed stroke and must reach the
-    // BrushSession immediately; begin only establishes session state.
-    return appendBrushSample(session, sample.x, sample.y, sample.pressure,
-                             sample.sequence, false, false);
-  }
-  if (sample.phase != input::PointerPhase::kCancel) {
-    if (!appendBrushSample(session, sample.x, sample.y, sample.pressure,
-                           sample.sequence, sample.predicted, false)) return false;
-  }
-  if (sample.phase == input::PointerPhase::kUp && !sample.predicted) {
-    const auto finished = finishBrushSession(session);
-    return finished;
-  }
-  if (sample.phase == input::PointerPhase::kCancel && !sample.predicted) {
-    (void)cancelBrushSession(session);
-  }
-  return true;
+  return brushBatch(std::span<const input::PointerSample>(&sample, 1U), session);
 }
 
 bool CanvasEditingRuntime::brushBatch(
@@ -528,7 +507,8 @@ bool CanvasEditingRuntime::brushBatch(
   confirmed.reserve(samples.size());
   for (const auto& sample : samples) {
     if (sample.phase == input::PointerPhase::kCancel) break;
-    const ink::BrushSample point{sample.x, sample.y, sample.pressure, true, sample.sequence};
+    const ink::BrushSample point{sample.x, sample.y, sample.pressure,
+                                 sample.capabilities.pressure, sample.sequence};
     if (sample.predicted) predicted.push_back(point);
     else {
       // A confirmed observation replaces the preceding speculative tail.
@@ -1007,7 +987,9 @@ void CanvasEditingRuntime::onSessionCancel(
     const input::PlatformInteractionIngressResult& result) noexcept {
   for (const auto& sample : result.normalized.samples) {
     if (!sample.key.valid()) continue;
-    (void)coordinator_->route(sample);
+    const auto routing = coordinator_->route(sample);
+    if (routing.endedViewport) viewportController_->endGesture();
+    baselineDownTimestamps_.erase(sample.key);
     (void)cancelStroke(sample.key);
     (void)dispatchRuntime_.cancel(sample);
     panPointers_.erase(sample.key);

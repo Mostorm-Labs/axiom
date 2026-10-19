@@ -37,6 +37,12 @@ void PlatformInteractionIngress::cancelAll(
 PlatformInteractionIngressResult PlatformInteractionIngress::submit(
     const PlatformPointerBatch& batch) noexcept {
   PlatformInteractionIngressResult result{};
+  // A batch is one device/source boundary. Validate before begin/end so a
+  // malformed batch cannot partially admit contacts or cancel another source.
+  if (!batch.samples.empty()) {
+    const auto source = batch.samples.front().source;
+    for (const auto& sample : batch.samples) if (sample.source != source) return result;
+  }
   for (const auto& sample : batch.samples) {
     if (sample.source == 0 || sample.pointer == 0 || sample.sequence == 0 ||
         sample.timestampNs == 0) {

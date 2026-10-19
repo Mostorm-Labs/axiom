@@ -55,6 +55,15 @@ if(WIN32)
     ${PROJECT_SOURCE_DIR}/runtime/foundation/include
     ${CANVAS_SKIA_SDK_ROOT})
   target_compile_features(axiom_minimal_runtime_host_windows PRIVATE cxx_std_20)
+  axiom_configure_build_info(axiom_minimal_runtime_host_windows)
+  # Package variables are directory-scoped; the imported Skia target may have
+  # been created by a sibling consumer. Use the locked package's runtime asset.
+  if(EXISTS "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat")
+    add_custom_command(TARGET axiom_minimal_runtime_host_windows POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat"
+        "$<TARGET_FILE_DIR:axiom_minimal_runtime_host_windows>/icudtl.dat")
+  endif()
   target_compile_definitions(axiom_minimal_runtime_host_windows PRIVATE
     NOMINMAX)
   if(MSVC)
@@ -66,6 +75,18 @@ endif()
 
 if(BUILD_TESTING)
   if(WIN32)
+    add_executable(axiom_minimal_windows_touch_pipeline_tests
+      tests/windows_touch_pipeline_test.cpp)
+    target_link_libraries(axiom_minimal_windows_touch_pipeline_tests PRIVATE
+      axiom_minimal_runtime_host axiom_minimal_windows_surface user32 gdi32 libcpmt)
+    target_compile_features(axiom_minimal_windows_touch_pipeline_tests PRIVATE cxx_std_20)
+    target_compile_definitions(axiom_minimal_windows_touch_pipeline_tests PRIVATE
+      NOMINMAX AXIOM_MINIMAL_HAS_DEBUG_UI=0 AXIOM_RUNTIME_QUALIFICATION=1)
+    if(MSVC)
+      target_compile_options(axiom_minimal_windows_touch_pipeline_tests PRIVATE
+        /W4 /permissive- /WX /EHsc /UNDEBUG /wd4201 /wd4244 /wd4267)
+    endif()
+    add_test(NAME FC00XWindowsTouchIngress COMMAND axiom_minimal_windows_touch_pipeline_tests)
     add_executable(axiom_minimal_windows_input_pipeline_tests
       tests/windows_input_pipeline_test.cpp)
     target_link_libraries(axiom_minimal_windows_input_pipeline_tests PRIVATE

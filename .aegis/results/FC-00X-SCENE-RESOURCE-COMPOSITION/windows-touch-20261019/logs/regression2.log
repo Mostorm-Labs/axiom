@@ -1,0 +1,25 @@
+Test project C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/p32-touch/build
+    Start 106: C1CommonIngress
+1/2 Test #106: C1CommonIngress ..................   Passed    0.06 sec
+    Start 152: FC00XWindowsTouchIngress
+2/2 Test #152: FC00XWindowsTouchIngress .........***Failed    0.09 sec
+SkIcuLoader: datafile missing: C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\out\p32-touch\build\apps\minimal_runtime_host\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\out\p32-touch\build\apps\minimal_runtime_host\icudtl.dat.
+WM_POINTERDOWN -> Runtime: expected=1 actual=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+PASS single/history/promotion/one-coordinate-map objects=1 operations=1 trace=4 viewport=0 scale=1.000000
+[axiom] finish begin pointer=2 objects=1 scene_gen=1
+[axiom] scene apply pointer=2 ok=1 objects=2 scene_gen=2
+PASS generation-reuse/stale-key/stale-native-cancel/stale-down objects=2 operations=2 trace=7 viewport=0 scale=1.000000
+PASS 250ms-chord/zoom/one-up/other-continues objects=2 operations=2 trace=14 viewport=0 scale=1.300000
+Assertion failed: std::abs(runtime.viewportGesture().scale - scaleBeforeCancel) < .0001F, file C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\apps\minimal_runtime_host\tests\windows_touch_pipeline_test.cpp, line 176
+
+
+50% tests passed, 1 tests failed out of 2
+
+Total Test time (real) =   0.25 sec
+
+The following tests FAILED:
+	152 - FC00XWindowsTouchIngress (Failed)
+Errors while running CTest

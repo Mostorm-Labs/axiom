@@ -14,6 +14,9 @@
 #include <array>
 #include <cmath>
 #include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <map>
 #include <memory>
 #include <optional>
 #include <string>
@@ -30,6 +33,11 @@ constexpr UINT kOverlaySyncMessage = WM_APP + 1U;
 
 using canvas::minimal_runtime_host::MinimalRuntimeFacade;
 
+struct NativeContact final {
+  canvas::input::PointerKey key{};
+  POINTER_INFO last{};
+};
+
 struct State final {
   HWND window = nullptr;
   std::unique_ptr<MinimalRuntimeHost> host;
@@ -43,10 +51,18 @@ struct State final {
   std::uint64_t lastPresentedFrame = 0;
   bool releasingPointerUp = false;
   std::optional<MOUSEMOVEPOINT> lastMousePoint;
+  std::optional<canvas::input::PointerKey> mouseKey;
+  std::map<std::pair<HANDLE, POINTER_INPUT_TYPE>, canvas::input::InputSourceId> nativeSources;
+  canvas::input::InputSourceId nextSource = 2U;
+  std::map<UINT32, NativeContact> nativeContacts;
+  std::map<std::pair<canvas::input::InputSourceId, UINT32>, POINTER_INFO> nativeWatermarks;
+  std::unique_ptr<std::FILE, decltype(&std::fclose)> inputLog{nullptr, &std::fclose};
   canvas::minimal_runtime_host::WindowsD3D12SurfaceProvider* previewProvider = nullptr;
   canvas::minimal_runtime_host::WindowsPresentationCache presentationCache;
   canvas::runtime::RuntimeFrameOpportunity frameOpportunity{};
 };
+
+#include "windows_pointer_input.inl"
 
 canvas::render::SurfaceMetrics clientMetrics(HWND window, std::uint32_t width,
                                              std::uint32_t height) noexcept {
@@ -168,7 +184,7 @@ void sendPointer(State& state, LPARAM lParam, canvas::input::PointerPhase phase)
     const auto sampledAt = now >= age ? (now - age) * 1'000'000U : 0U;
     state.timestamp = (std::max)(state.timestamp + 1U, sampledAt);
     batch.samples.push_back({1U, 1U, ++state.sequence, state.timestamp,
-        sampleX, sampleY, 0.5F, 0.0F, 0.0F, {}, {}, provenance, samplePhase});
+        sampleX, sampleY, 0.0F, 0.0F, 0.0F, {}, {}, provenance, samplePhase});
   };
   POINT screen{GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
   const bool screenAvailable = ClientToScreen(state.window, &screen) != FALSE;
@@ -228,7 +244,17 @@ void sendPointer(State& state, LPARAM lParam, canvas::input::PointerPhase phase)
   if (phase == canvas::input::PointerPhase::kUp || phase == canvas::input::PointerPhase::kCancel)
     state.lastMousePoint.reset();
   if (batch.samples.empty()) return;
-  (void)state.host->submit(batch);
+  const auto before = state.mouseKey;
+  const bool accepted = state.host->submit(batch);
+  if (phase == canvas::input::PointerPhase::kDown)
+    state.mouseKey = state.host->composition().platformKey(1U, 1U);
+  logInput(state, "mouse", accepted, state.mouseKey ? *state.mouseKey : before.value_or(canvas::input::PointerKey{}), &batch);
+  if (!accepted && state.mouseKey) {
+    cancelKey(state, *state.mouseKey, "mouse-rejected");
+    state.lastMousePoint.reset();
+  }
+  if (!accepted || phase == canvas::input::PointerPhase::kUp || phase == canvas::input::PointerPhase::kCancel)
+    state.mouseKey.reset();
   InvalidateRect(state.window, nullptr, FALSE);
 }
 
@@ -245,6 +271,32 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
   if (state->debugUi && state->debugUi->handleMessage(window, message, wParam, lParam)) return 0;
 #endif
   switch (message) {
+    case WM_POINTERDOWN:
+    case WM_POINTERUPDATE:
+    case WM_POINTERUP:
+      if (sendNativePointer(*state, message, GET_POINTERID_WPARAM(wParam))) return 0;
+      return DefWindowProcW(window, message, wParam, lParam);
+    case WM_POINTERCAPTURECHANGED:
+      if (const auto it = state->nativeContacts.find(GET_POINTERID_WPARAM(wParam));
+          it != state->nativeContacts.end()) {
+        POINTER_INFO info{};
+        if (GetPointerInfo(GET_POINTERID_WPARAM(wParam), &info) &&
+            (olderNativeObservation(info, it->second.last) ||
+             info.sourceDevice != it->second.last.sourceDevice)) return 0;
+      }
+      cancelNativePointer(*state, GET_POINTERID_WPARAM(wParam), "pointer-capture-lost");
+      return 0;
+    case WM_POINTERDEVICECHANGE:
+      if (wParam == PDC_REMOVAL) removeNativeDevice(*state, reinterpret_cast<HANDLE>(lParam));
+      return 0;
+    case WM_KILLFOCUS:
+    case WM_CANCELMODE:
+    case WM_ENTERSIZEMOVE:
+      cancelHostPointers(*state, "window-cancel");
+      return DefWindowProcW(window, message, wParam, lParam);
+    case WM_ACTIVATEAPP:
+      if (!wParam) cancelHostPointers(*state, "app-deactivated");
+      return DefWindowProcW(window, message, wParam, lParam);
     case WM_MOVE:
     case WM_WINDOWPOSCHANGED: {
       const auto result = DefWindowProcW(window, message, wParam, lParam);
@@ -261,6 +313,10 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       const bool frameReady = state->host->composition().serviceFrameOpportunity(
           false, state->frameOpportunity);
       const bool needsCanvasPaint = frameReady && state->frameOpportunity.needsPaint;
+      if (state->frameOpportunity.canonicalRequested || state->frameOpportunity.previewRendered)
+        logInput(*state, "frame-opportunity", frameReady, {});
+      if (state->host->composition().readback().lastOwnerControlCount != 0U)
+        logInput(*state, "facade-control", true, {});
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
       if (state->debugUi) state->debugUi->refresh();
 #endif
@@ -268,6 +324,7 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       return 0;
     }
     case WM_SIZE:
+      cancelHostPointers(*state, "resize");
       if (LOWORD(lParam) != 0U && HIWORD(lParam) != 0U)
         if (state->host->composition().resizeSurface(clientMetrics(window, LOWORD(lParam), HIWORD(lParam)))) {
           state->presentationCache.reset();
@@ -278,6 +335,7 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
 #endif
       return 0;
     case WM_DPICHANGED: {
+      cancelHostPointers(*state, "dpi-change");
       const auto* bounds = reinterpret_cast<const RECT*>(lParam);
       SetWindowPos(window, nullptr, bounds->left, bounds->top,
           bounds->right - bounds->left, bounds->bottom - bounds->top,
@@ -295,13 +353,26 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     case WM_KEYDOWN:
       if (wParam == VK_F12) {
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
-        if (state->debugUi) { state->debugUi->toggle(); return 0; }
+        if (state->debugUi) {
+          state->debugUi->toggle();
+          logInput(*state, state->debugUi->visible() ? "debug-ui-on" : "debug-ui-off", true, {});
+          return 0;
+        }
 #endif
       }
       return 0;
-    case WM_LBUTTONDOWN: SetCapture(window); sendPointer(*state, lParam, canvas::input::PointerPhase::kDown); return 0;
-    case WM_MOUSEMOVE: if (wParam & MK_LBUTTON) sendPointer(*state, lParam, canvas::input::PointerPhase::kMove); return 0;
+    case WM_LBUTTONDOWN:
+      if (isPromotedPointerMouse()) return 0;
+      SetCapture(window);
+      sendPointer(*state, lParam, canvas::input::PointerPhase::kDown);
+      if (!state->mouseKey) releaseHostMouseCapture(*state);
+      return 0;
+    case WM_MOUSEMOVE:
+      if (!isPromotedPointerMouse() && state->mouseKey && (wParam & MK_LBUTTON))
+        sendPointer(*state, lParam, canvas::input::PointerPhase::kMove);
+      return 0;
     case WM_LBUTTONUP:
+      if (isPromotedPointerMouse() || !state->mouseKey) return 0;
       state->releasingPointerUp = true;
       ReleaseCapture();
       state->releasingPointerUp = false;
@@ -310,13 +381,18 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     case WM_CAPTURECHANGED:
       if (!state->releasingPointerUp) {
         state->lastMousePoint.reset();
-        (void)state->host->unregisterSource(1U, ++state->sequence, ++state->timestamp);
-        (void)state->host->registerSource(1U);
+        if (state->mouseKey) cancelKey(*state, *state->mouseKey, "mouse-capture-lost");
+        state->mouseKey.reset();
       }
       InvalidateRect(window, nullptr, FALSE);
       return 0;
     case WM_PAINT: { PAINTSTRUCT paint{}; HDC dc = BeginPaint(window, &paint); paintCanvas(*state, dc); EndPaint(window, &paint); return 0; }
-    case WM_DESTROY: PostQuitMessage(0); return 0;
+    case WM_CLOSE:
+      cancelHostPointers(*state, "window-close");
+      return DefWindowProcW(window, message, wParam, lParam);
+    case WM_DESTROY:
+      cancelHostPointers(*state, "window-destroy");
+      PostQuitMessage(0); return 0;
     default: return DefWindowProcW(window, message, wParam, lParam);
   }
 }
@@ -329,6 +405,13 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   klass.lpszClassName = kWindowClass; klass.hCursor = LoadCursorW(nullptr, MAKEINTRESOURCEW(32512));
   if (RegisterClassW(&klass) == 0 && GetLastError() != ERROR_CLASS_ALREADY_EXISTS) return 1;
   State state{}; state.host = std::make_unique<MinimalRuntimeHost>();
+  wchar_t* logPath = nullptr;
+  std::size_t logPathLength = 0;
+  if (_wdupenv_s(&logPath, &logPathLength, L"AXIOM_MINIMAL_INPUT_LOG") == 0 && logPath) {
+    std::FILE* file = nullptr;
+    if (_wfopen_s(&file, logPath, L"w") == 0) state.inputLog.reset(file);
+    std::free(logPath);
+  }
   state.facade = std::make_unique<MinimalRuntimeFacade>(*state.host);
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
   state.debugUi = std::make_unique<canvas::debug_ui::WindowsDebugUiHost>();
@@ -337,6 +420,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
       WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT,
       1024, 768, nullptr, nullptr, instance, &state);
   if (!state.window) return 1;
+  (void)RegisterPointerDeviceNotifications(state.window, TRUE);
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
   if (!state.debugUi->initialize(state.window)) return 1;
 #endif
@@ -358,6 +442,18 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
           std::move(previewProvider))) return 1;
   if (!state.host->composition().bindSurface(clientMetrics(state.window, width, height)) ||
       !state.host->registerSource(1U)) return 1;
+  if (state.inputLog) {
+#if defined(AXIOM_BUILD_SOURCE_REVISION)
+    std::fprintf(state.inputLog.get(), "build_revision=%s dirty=%d msvc=%d pid=%lu debug_ui_enabled=%d\n",
+        AXIOM_BUILD_SOURCE_REVISION, AXIOM_BUILD_DIRTY, _MSC_FULL_VER,
+        GetCurrentProcessId(), AXIOM_MINIMAL_HAS_DEBUG_UI);
+#endif
+    const auto metrics = state.host->composition().surfaceSnapshot();
+    std::fprintf(state.inputLog.get(), "surface physical=%ux%u logical=%.3fx%.3f dpr=%.3f dpi=%u\n",
+        metrics.width, metrics.height, metrics.logicalWidth, metrics.logicalHeight,
+        metrics.devicePixelRatio, GetDpiForWindow(state.window));
+    logInput(state, "startup", true, {});
+  }
   (void)state.host->composition().setPlatformPresentationDeferred(true);
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
   state.controller = std::make_unique<canvas::debug_ui::DebugController>(

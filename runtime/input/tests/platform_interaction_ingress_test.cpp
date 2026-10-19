@@ -5,6 +5,17 @@
 using namespace canvas::input;
 
 int main() {
+  // Reject the entire mixed-source batch before admitting either Down.
+  {
+    PlatformInteractionIngress mixedIngress;
+    PlatformPointerBatch mixed;
+    PlatformPointerSample a{11, 7, 1, 100}; a.phase = PointerPhase::kDown;
+    auto b = a; b.source = 12;
+    mixed.samples = {a, b};
+    const auto rejected = mixedIngress.submit(mixed);
+    assert(!rejected.accepted && rejected.normalized.samples.empty());
+    assert(mixedIngress.activeCount() == 0U);
+  }
   PlatformInteractionIngress ingress;
   assert(ingress.captureGate().onBatchBoundary() == InputCaptureDecision::kPassThrough);
   assert(ingress.captureGate().onTerminalBoundary() == InputCaptureDecision::kRelease);

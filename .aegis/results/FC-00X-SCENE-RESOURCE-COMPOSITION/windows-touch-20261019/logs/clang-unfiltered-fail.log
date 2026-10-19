@@ -1,0 +1,18 @@
+clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+Target: x86_64-pc-windows-msvc
+Thread model: posix
+InstalledDir: C:\Users\NearHub\Documents\ChatGPT\axiom\.deps\llvm\bin
+
+SOURCE runtime/interaction/src/canvas_editing_runtime.cpp
+C:\Users\NearHub\Documents\ChatGPT\axiom\.deps\llvm\bin\clang-cl.exe /nologo /TP -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -D_HAS_ITERATOR_DEBUGGING=0 -D_ITERATOR_DEBUG_LEVEL=0 -IC:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\interaction\include -IC:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\scene\include -IC:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\text\include -IC:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\foundation\include -IC:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\include -IC:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\input\include -IC:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\render\include -IC:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\ink\include -IC:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\.deps\nlohmann-json\single_include /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MT /W4 /permissive- /WX /EHsc C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\interaction\src\canvas_editing_runtime.cpp /Zs
+In file included from C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\interaction\src\canvas_editing_runtime.cpp:1:
+In file included from C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\interaction\include\canvas/interaction/canvas_editing_runtime.hpp:22:
+In file included from C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\render\include\canvas/render/skia_surface_provider.hpp:3:
+In file included from C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\render\include\canvas/render/render_backend.hpp:3:
+In file included from C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\render\include\canvas/render/frame_plan.hpp:5:
+In file included from C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\render\include\canvas/render/reference_draw_list.hpp:4:
+In file included from C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\scene\include\canvas/scene/scene_types.hpp:6:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\foundation\include\canvas/foundation/stable_order_key.hpp(29,35): error: comparison of integers of different signs: 'std::size_t' (aka 'unsigned long long') and 'const int' [-Werror,-Wsign-compare]
+   29 |         for (std::size_t i = 0; i < count; ++i) value = (value << 8U) | _bytes[i];
+      |                                 ~ ^ ~~~~~
+1 error generated.

@@ -136,6 +136,13 @@ class RuntimeComposition final {
                                       std::uint64_t sequence,
                                       std::uint64_t timestampNs) noexcept;
   [[nodiscard]] bool cancelAllPointers() noexcept;
+  // Internal platform receipts. Generation ownership stays in input ingress;
+  // native capture loss must echo the accepted full key, never a bare ID.
+  [[nodiscard]] std::optional<input::PointerKey> platformKey(
+      input::InputSourceId source, input::PointerId pointer) const noexcept;
+  [[nodiscard]] bool cancelPlatformPointer(const input::PointerKey& key,
+      std::uint64_t sequence, std::uint64_t timestampNs) noexcept;
+  [[nodiscard]] std::size_t semanticObjectCount() const noexcept;
   [[nodiscard]] bool submit(const input::PlatformPointerBatch& batch) noexcept;
   [[nodiscard]] semantic::ApplyResult applyExternalOperation(
       const semantic::Operation& operation, semantic::ApplySource source) noexcept;
