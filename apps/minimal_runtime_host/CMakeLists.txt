@@ -1,5 +1,8 @@
+include(${PROJECT_SOURCE_DIR}/cmake/AxiomHostTextFont.cmake)
+axiom_resolve_host_text_font()
+
 add_library(axiom_minimal_runtime_host STATIC minimal_runtime_host.cpp minimal_runtime_facade.cpp)
-target_include_directories(axiom_minimal_runtime_host PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(axiom_minimal_runtime_host PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${AXIOM_HOST_FONT_INCLUDE})
 target_include_directories(axiom_minimal_runtime_host PUBLIC
   ${PROJECT_SOURCE_DIR}/runtime/control/include
   ${PROJECT_SOURCE_DIR}/runtime/foundation/include)
@@ -63,8 +66,7 @@ if(WIN32 AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PR
     ${CANVAS_SKIA_SDK_ROOT})
   target_compile_features(axiom_minimal_runtime_host_windows PRIVATE cxx_std_20)
   axiom_configure_build_info(axiom_minimal_runtime_host_windows)
-  add_custom_command(TARGET axiom_minimal_runtime_host_windows POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CanvasSkia_FONT_PATH}" "$<TARGET_FILE_DIR:axiom_minimal_runtime_host_windows>/axiom-font.ttf")
+  axiom_package_host_text_font(axiom_minimal_runtime_host_windows)
   # Package variables are directory-scoped; the imported Skia target may have
   # been created by a sibling consumer. Use the locked package's runtime asset.
   if(EXISTS "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat")
@@ -91,8 +93,8 @@ if(BUILD_TESTING)
     if(MSVC)
       target_compile_options(axiom_minimal_windows_text_pipeline_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG /wd4201 /wd4244 /wd4267)
     endif()
+    axiom_package_host_text_font(axiom_minimal_windows_text_pipeline_tests)
     add_custom_command(TARGET axiom_minimal_windows_text_pipeline_tests POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CanvasSkia_FONT_PATH}" "$<TARGET_FILE_DIR:axiom_minimal_windows_text_pipeline_tests>/axiom-font.ttf"
       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat" "$<TARGET_FILE_DIR:axiom_minimal_windows_text_pipeline_tests>/icudtl.dat")
     add_test(NAME FC02WindowsTextIngress COMMAND axiom_minimal_windows_text_pipeline_tests)
     add_executable(axiom_minimal_windows_touch_pipeline_tests

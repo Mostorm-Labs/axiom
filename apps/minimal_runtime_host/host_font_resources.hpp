@@ -1,6 +1,7 @@
 #pragma once
 #include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/text/text_layout.hpp"
+#include "axiom/host_text_font.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -16,10 +17,11 @@ inline bool bindHostTextFont(runtime::RuntimeComposition& composition,
         return false;
     semantic::ResourceManifest manifest;
     semantic::ResourceManifestEntry font;
-    font.resource_id = semantic::ResourceId{foundation::ObjectId::fromUint64(0xFC0201)};
+    // New bytes get a new identity; prior Roboto resources are not substituted.
+    font.resource_id = semantic::ResourceId{foundation::ObjectId::fromUint64(0xFC0202)};
     font.resource_kind = semantic::ResourceKind::kFont;
     font.resource_revision = 1;
-    font.content_hash = "sha256:" + std::string(text::kRobotoSha256);
+    font.content_hash = "sha256:" + std::string(kHostTextFontSha256);
     font.byte_length = bytes.size();
     font.decode_version = 1;
     font.layout_version = 1;

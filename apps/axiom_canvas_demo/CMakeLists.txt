@@ -78,10 +78,12 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
 endif()
 
 if(EMSCRIPTEN)
+    include(${PROJECT_SOURCE_DIR}/cmake/AxiomHostTextFont.cmake)
+    axiom_resolve_host_text_font()
     add_executable(axiom_canvas_demo_web
         platform/web/bridge.cpp)
     target_link_libraries(axiom_canvas_demo_web PRIVATE axiom_canvas_demo_common)
-    target_include_directories(axiom_canvas_demo_web PRIVATE platform/web ${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+    target_include_directories(axiom_canvas_demo_web PRIVATE platform/web ${AXIOM_HOST_FONT_INCLUDE} ${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
     find_package(CanvasSkia CONFIG REQUIRED PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia" NO_DEFAULT_PATH)
     target_compile_features(axiom_canvas_demo_web PRIVATE cxx_std_20)
     axiom_configure_build_info(axiom_canvas_demo_web)
@@ -103,8 +105,12 @@ if(EMSCRIPTEN)
     configure_file(tests/web_fc02_text_test.html ${CMAKE_CURRENT_BINARY_DIR}/tests/web_fc02_text_test.html COPYONLY)
     configure_file(tests/web_minimal_runtime_test.html
         ${CMAKE_CURRENT_BINARY_DIR}/tests/web_minimal_runtime_test.html COPYONLY)
+    configure_file(${AXIOM_HOST_FONT_ROOT}/LICENSE.txt ${CMAKE_CURRENT_BINARY_DIR}/axiom-font.LICENSE.txt COPYONLY)
+    configure_file(${AXIOM_HOST_FONT_ROOT}/NOTICE.txt ${CMAKE_CURRENT_BINARY_DIR}/axiom-font.NOTICE.txt COPYONLY)
     target_link_options(axiom_canvas_demo_web PRIVATE
-        "--preload-file" "${CanvasSkia_FONT_PATH}@/axiom-font.ttf"
+        "SHELL:--preload-file \"${AXIOM_HOST_FONT_PATH}@/axiom-font.otf\""
+        "SHELL:--preload-file \"${AXIOM_HOST_FONT_ROOT}/LICENSE.txt@/axiom-font.LICENSE.txt\""
+        "SHELL:--preload-file \"${AXIOM_HOST_FONT_ROOT}/NOTICE.txt@/axiom-font.NOTICE.txt\""
         "-sMODULARIZE=1" "-sEXPORT_ES6=1" "-sEXPORT_NAME=createAxiomCanvasModule"
         "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1" "-sMIN_WEBGL_VERSION=2" "-sMAX_WEBGL_VERSION=2"
         "-sEXPORTED_FUNCTIONS=['_malloc','_free']"

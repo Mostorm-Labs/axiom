@@ -1,5 +1,6 @@
 #include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/text/text_layout.hpp"
+#include "host_font_resources.hpp"
 
 #include <fstream>
 #include <gtest/gtest.h>
@@ -10,9 +11,14 @@ struct Host {
     runtime::RuntimeComposition runtime;
     runtime::RuntimeFacade& facade = runtime.controlFacade();
     std::uint64_t request = 0;
-    Host() {
+    explicit Host(bool hostFont = false) {
         if (!runtime.open() || !runtime.bindSurface(256, 256))
             throw std::runtime_error("bind");
+        if (hostFont) {
+            if (!minimal_runtime_host::bindHostTextFont(runtime, FC02_HOST_FONT))
+                throw std::runtime_error("host font");
+            return;
+        }
         semantic::ResourceManifest manifest;
         semantic::ResourceManifestEntry font;
         font.resource_id = semantic::ResourceId{foundation::ObjectId::fromUint64(500)};
@@ -186,6 +192,36 @@ TEST(FC02Geometry, TextToolCreatesAndSelectsWithoutInkAndMissingGlyphIsExplicit)
     ASSERT_FALSE(g.diagnostics.empty());
     EXPECT_EQ(g.diagnostics.front(), "font-glyph-unavailable");
     EXPECT_EQ(h.facade.readTextEditor().projection.substr(0, 2), u"\u4f60\u597d");
+}
+
+TEST(FC02Geometry, HostFontChinesePreeditAndCanonicalUseActualGlyphs) {
+    Host h(true);
+    using namespace runtime;
+    const std::u16string sample = u"\u4f60\u597d\uff0c\u4e16\u754c\uff01 Axiom "
+                                  u"\u4e2d\u6587\u8f93\u5165\u6d4b\u8bd5 123 \u7e41\u9ad4\u9f8d";
+    ASSERT_EQ(h.intent(TextIntentKind::kCreate).status, TextStatus::kApplied);
+    ASSERT_EQ(h.input(TextInputKind::kBegin).status, TextStatus::kObserved);
+    ASSERT_EQ(h.input(TextInputKind::kUpdate, sample).status, TextStatus::kObserved);
+    const auto preedit = h.facade.readTextGeometry();
+    ASSERT_TRUE(preedit.available) << "Host font must shape full Chinese/Latin preedit";
+    EXPECT_TRUE(preedit.diagnostics.empty());
+    EXPECT_EQ(h.runtime.semanticObjectCount(), 0U);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), 0U);
+    ASSERT_EQ(h.input(TextInputKind::kCommit, sample).status, TextStatus::kApplied);
+    EXPECT_EQ(h.facade.readTextEditor().projection, sample);
+    EXPECT_TRUE(h.facade.readTextGeometry().available);
+    EXPECT_EQ(h.runtime.semanticObjectCount(), 1U);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), 1U);
+    runtime::RuntimeFrameOpportunity frame;
+    ASSERT_TRUE(h.runtime.serviceFrameOpportunity(false, frame));
+    std::vector<std::uint8_t> pixels(256 * 256 * 4);
+    ASSERT_TRUE(h.runtime.readCanonicalRgba(pixels));
+    std::size_t dark = 0;
+    for (std::size_t i = 0; i < pixels.size(); i += 4)
+        if (pixels[i] < 200 && pixels[i + 1] < 200 && pixels[i + 2] < 200)
+            ++dark;
+    EXPECT_GT(dark, 100U);
+    EXPECT_EQ(h.intent(TextIntentKind::kFinish).status, TextStatus::kApplied);
 }
 
 } // namespace

@@ -466,7 +466,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   if (!state.host->composition().bindSurface(clientMetrics(state.window, width, height)) ||
       !state.host->registerSource(1U)) return 1;
   std::array<wchar_t,32768> modulePath{};const auto moduleLength=GetModuleFileNameW(nullptr,modulePath.data(),static_cast<DWORD>(modulePath.size()));
-  if(moduleLength==0 || moduleLength>=modulePath.size() || !canvas::minimal_runtime_host::bindHostTextFont(state.host->composition(),std::filesystem::path(modulePath.data()).parent_path()/L"axiom-font.ttf"))return 1;
+  if(moduleLength==0 || moduleLength>=modulePath.size() || !canvas::minimal_runtime_host::bindHostTextFont(state.host->composition(),std::filesystem::path(modulePath.data()).parent_path()/L"axiom-font.otf"))return 1;
   if (state.inputLog) {
 #if defined(AXIOM_BUILD_SOURCE_REVISION)
     std::fprintf(state.inputLog.get(), "build_revision=%s dirty=%d msvc=%d pid=%lu debug_ui_enabled=%d\n",

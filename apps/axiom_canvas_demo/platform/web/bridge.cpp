@@ -150,7 +150,7 @@ EMSCRIPTEN_KEEPALIVE std::uintptr_t axiom_web_create(
     auto v = std::make_unique<WebInstance>(render::SurfaceMetrics{lw, lh, pw, ph, dpr, 1});
     if (!bind(*v, selector, {lw, lh, pw, ph, dpr, 1}))
         return 0;
-    if(!minimal_runtime_host::bindHostTextFont(v->lifecycle.composition(),"/axiom-font.ttf"))return 0;
+    if(!minimal_runtime_host::bindHostTextFont(v->lifecycle.composition(),"/axiom-font.otf"))return 0;
     for (std::uint32_t s = 1; s <= 3; ++s)
         if (!v->lifecycle.composition().registerSource(s))
             return 0;

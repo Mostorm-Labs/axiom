@@ -53,7 +53,7 @@ int main() {
     state.facade = std::make_unique<MinimalRuntimeFacade>(*state.host);
     auto& composition = state.host->composition();
     assert(composition.bindSurface(640, 480));
-    assert(canvas::minimal_runtime_host::bindHostTextFont(composition, "axiom-font.ttf"));
+    assert(canvas::minimal_runtime_host::bindHostTextFont(composition, "axiom-font.otf"));
     auto& facade = *state.facade;
     TextIntent create;
     create.kind = TextIntentKind::kCreate;

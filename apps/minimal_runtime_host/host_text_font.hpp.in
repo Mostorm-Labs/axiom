@@ -1,0 +1,6 @@
+#pragma once
+#include <string_view>
+
+namespace canvas::minimal_runtime_host {
+inline constexpr std::string_view kHostTextFontSha256 = "@AXIOM_HOST_FONT_SHA256@";
+} // namespace canvas::minimal_runtime_host
