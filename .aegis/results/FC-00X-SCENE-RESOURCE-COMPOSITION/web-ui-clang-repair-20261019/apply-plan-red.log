@@ -1,0 +1,4 @@
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\src\apply_plan.cpp:22:9: error: add explicit braces to avoid dangling else [-Werror,-Wdangling-else]
+   22 |         else if constexpr (std::is_same_v<T, VectorStrokeContent> || std::is_same_v<T, DabStrokeContent>) found = content.stroke.brush.texture_resource_id && *content.stroke.brush.texture_resource_id == resource;
+      |         ^
+1 error generated.
