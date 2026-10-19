@@ -1,0 +1,146 @@
+[
+  {
+    "id": "E01",
+    "obligation": "FC01-B01",
+    "frozen_classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+    "historical_record": ".aegis/results/FC-01-DEV/E01/semantic-shape2-corpus-results.json",
+    "historical_status": "PARTIAL_NOT_CLOSED",
+    "historical_subject": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+    "historical_gap": "Native semantic regression and exact three Golden binding checks pass; all 25 authored-case mapping is not yet materialized.",
+    "supplemental_historical_gap": null,
+    "current_qualification": "NOT_YET_QUALIFIED_BY_THIS_AUDIT",
+    "current_code_failure_inferred": false,
+    "closeout_focus": "Complete frozen SH2-G01..25 mapping and independent wire/typed admission comparison; preserve V1 negatives."
+  },
+  {
+    "id": "E02",
+    "obligation": "FC01-B02",
+    "frozen_classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+    "historical_record": ".aegis/results/FC-01-DEV/E02/ingress-snapshot-replay-compat.json",
+    "historical_status": "PARTIAL_NOT_CLOSED",
+    "historical_subject": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+    "historical_gap": "Typed admission/capability/snapshot/replay native tests pass; live host/collaboration and complete ingress coverage remain.",
+    "supplemental_historical_gap": null,
+    "current_qualification": "NOT_YET_QUALIFIED_BY_THIS_AUDIT",
+    "current_code_failure_inferred": false,
+    "closeout_focus": "Qualify typed/wire/restore/replay/remote, idempotency and Snapshot2 reader/writer capability cases."
+  },
+  {
+    "id": "E03",
+    "obligation": "FC01-B03",
+    "frozen_classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+    "historical_record": ".aegis/results/FC-01-DEV/E03/interaction-create-red-and-green.json",
+    "historical_status": null,
+    "historical_subject": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+    "historical_gap": null,
+    "supplemental_historical_gap": [
+      "full authored IN-01..12 runner not yet materialized"
+    ],
+    "current_qualification": "NOT_YET_QUALIFIED_BY_THIS_AUDIT",
+    "current_code_failure_inferred": false,
+    "closeout_focus": "Map the frozen Create terminal/source-loss schedules to current common Runtime; preserve historical RED chronology honestly."
+  },
+  {
+    "id": "E04",
+    "obligation": "FC01-B04",
+    "frozen_classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+    "historical_record": ".aegis/results/FC-01-DEV/E04/snap-guide-independent-differential.json",
+    "historical_status": "PASS_PENDING_CONTROL_REVIEW",
+    "historical_subject": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+    "historical_gap": null,
+    "supplemental_historical_gap": null,
+    "current_qualification": "NOT_YET_QUALIFIED_BY_THIS_AUDIT",
+    "current_code_failure_inferred": false,
+    "closeout_focus": "Requalify independent far-axis Snap, DPR/camera math and preview-to-Up consistency on current source."
+  },
+  {
+    "id": "E05",
+    "obligation": "FC01-B05",
+    "frozen_classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+    "historical_record": ".aegis/results/FC-01-DEV/E05/scene-geometry-hit-render.json",
+    "historical_status": "PARTIAL_NOT_CLOSED",
+    "historical_subject": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+    "historical_gap": "Six analytic Scene regressions pass; pinned Skia raster probes cannot execute without locked SDK.",
+    "supplemental_historical_gap": [
+      "full raster probe matrix and exact final-source build evidence pending"
+    ],
+    "current_qualification": "NOT_YET_QUALIFIED_BY_THIS_AUDIT",
+    "current_code_failure_inferred": false,
+    "closeout_focus": "Requalify analytic Triangle/Line/Arrow geometry, Full/Incremental Scene and pinned headless raster cases; locked Skia is now available."
+  },
+  {
+    "id": "E06",
+    "obligation": "FC01-B06",
+    "frozen_classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+    "historical_record": ".aegis/results/FC-01-DEV/E06/history-preimage-closure.json",
+    "historical_status": "NOT_IMPLEMENTED",
+    "historical_subject": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+    "historical_gap": "Selected actions/conditional History not delivered.",
+    "supplemental_historical_gap": [
+      "complete delete closure, multi-selection, placement/style matrix incomplete"
+    ],
+    "current_qualification": "NOT_YET_QUALIFIED_BY_THIS_AUDIT",
+    "current_code_failure_inferred": false,
+    "closeout_focus": "Qualify selected commands and complete conditional History/preimage/delete-closure conflict matrix; do not infer missing implementation from obsolete reports."
+  },
+  {
+    "id": "E07",
+    "obligation": "FC01-B07",
+    "frozen_classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+    "historical_record": ".aegis/results/FC-01-DEV/E07/facade-owner-queue-readback.json",
+    "historical_status": "NOT_CLOSED_DRAFT_QUARANTINED",
+    "historical_subject": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+    "historical_gap": "Draft queue/preset wiring archived; pure service/router regressions do not close Facade owner/off-owner/reentrant/full-ID/two-view matrix.",
+    "supplemental_historical_gap": [
+      "full selected readback and Debug UI controls still need panel wiring"
+    ],
+    "current_qualification": "NOT_YET_QUALIFIED_BY_THIS_AUDIT",
+    "current_code_failure_inferred": false,
+    "closeout_focus": "Map current RuntimeFacade owner queue, target fences, coherent full-ID readback and UI routing to the frozen matrix."
+  },
+  {
+    "id": "E08",
+    "obligation": "FC01-B08",
+    "frozen_classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+    "historical_record": ".aegis/results/FC-01-DEV/E08/host-profile-build-and-simulation.json",
+    "historical_status": "BLOCKED_ENVIRONMENT_ANDROID_DEFERRED",
+    "historical_subject": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+    "historical_gap": "Android native build/APK was explicitly deferred by the user; no Android claim is made. Windows native and Web/WASM source-qualified builds completed successfully; deterministic host simulation and physical device observation remain separate evidence.",
+    "supplemental_historical_gap": [
+      "no physical device UI evidence; Android APK not produced"
+    ],
+    "current_qualification": "NOT_YET_QUALIFIED_BY_THIS_AUDIT",
+    "current_code_failure_inferred": false,
+    "closeout_focus": "Bind current real Minimal Windows/Web builds and adapter observations; keep Android user deferral explicit and reconcile frozen applicability before full closure."
+  },
+  {
+    "id": "E09",
+    "obligation": "FC01-B09",
+    "frozen_classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+    "historical_record": ".aegis/results/FC-01-DEV/E09/publication-presentation-axis-truth.json",
+    "historical_status": "PASS_PENDING_CONTROL_REVIEW",
+    "historical_subject": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+    "historical_gap": null,
+    "supplemental_historical_gap": null,
+    "current_qualification": "NOT_YET_QUALIFIED_BY_THIS_AUDIT",
+    "current_code_failure_inferred": false,
+    "closeout_focus": "Qualify Canonical Applied, backend-qualified Presented and Axis durability/NoEcho as distinct facts on current owners."
+  },
+  {
+    "id": "E10",
+    "obligation": "FC01-B10",
+    "frozen_classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+    "historical_record": ".aegis/results/FC-01-DEV/E10/subject-authority-scope-regression.json",
+    "historical_status": "PARTIAL_NOT_CLOSED",
+    "historical_subject": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+    "historical_gap": "Anchor/locks/source projections/Golden/protected scope match; 528 core and 6 Scene regressions pass. Host and complete interaction regression remain.",
+    "supplemental_historical_gap": [
+      "historical first-mutation ImplementationDesignPreflight/RED order is explicitly not retroactively proven",
+      "complete E01-E09 evidence closure remains pending",
+      "Android host verification deferred by user"
+    ],
+    "current_qualification": "NOT_YET_QUALIFIED_BY_THIS_AUDIT",
+    "current_code_failure_inferred": false,
+    "closeout_focus": "Unify exact package/source/provider identities, inherited authorized deltas, protected scope and regression mapping; independent review decides final Gate."
+  }
+]
