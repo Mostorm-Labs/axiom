@@ -6,8 +6,9 @@
 
 本轮负责产品对象、交互与语义变更设计。目标是让独立 RichText 对象能够创建、编辑、
 按自身宽度换行、保存回放及撤销重做，并保留共享 Runtime 的单一状态归属。
-下述用户决策已确认；字段载体、版本和 mutation 扩展仍是设计提案，尚未修改生产代码、
-发布 registry、proto、Authority、Golden 或验收状态。
+下述用户决策已确认；宽度载体、版本、migration、精确 Undo 和混合 Snapshot 方案已经在
+[后续语义合同](FC02_SEMANTIC_CONTRACT.md)收敛为一个设计。该合同取代本文件的候选表述，
+尚未修改生产代码、发布 registry、proto、Authority、Golden 或验收状态。
 
 ## 1. 已确认的产品规则
 
@@ -24,7 +25,7 @@
 | 文本框宽度 | 每个框独立，进入持久化语义；不能只存在 UI、view 或 LayoutContext 中 |
 
 IME 候选确认与 Enter 命令必须通过 adapter 的合成事实区分，不能仅依赖 keyCode。
-单击默认宽度的具体数值仍是工具预设；拖拽创建是否启用不是本轮用户已经确认的事项。
+后续合同将本轮单击创建默认宽度选为 320 本地单位；拖拽创建不在本轮新增。
 新建草稿的宽度在第一次有效提交时与文本一同持久化。
 
 既有对象被用户删成空文本后仍是既有对象；“空草稿不保存”不意味着离开时偷偷删除它。
@@ -65,14 +66,14 @@ G6 恢复工程不在本轮实现范围。独立宽度需求也不自动批准�
 
 ## 4. 宽度的持久化含义
 
-独立宽度是对象本地坐标中的**换行约束宽度**，不是屏幕像素宽度。建议固定宽度、自动高度：
+独立宽度是对象本地坐标中的**换行约束宽度**，不是屏幕像素宽度。采用固定宽度、自动高度：
 
 - 改宽度会重排段落并改变派生高度/Bounds，不改变字号或 Object Transform。
 - 整体缩放使用 Object Transform；字体与宽度的 canonical 值保持不变。
 - pan/zoom/DPI/窗口 resize 只改变映射和呈现，不产生宽度 Operation。
 - 换行、glyph、行高结果、caret box、缓存 revision 不写回 Document。
-- 宽度须有限且大于零；还须能安全转换为布局引擎使用的有限正数，不能接受 NaN、Inf、
-  零、负值或转换后溢出/下溢。具体统一上限在物理合同中明确，不能由不同宿主各定一套。
+- 宽度须有限且大于零；具体 binary32 正常数边界及统一转换规则见后续合同第二节，
+  不能由不同宿主各定一套或静默 clamp。
 - 对象宽度进入内容身份、序列化、digest、Snapshot、replay 和 Undo 的一致性检查。
 
 新建文本框保存自己的显式宽度，默认工具宽度也必须写入对象，不能依赖以后可能改变的
@@ -83,17 +84,17 @@ G6 恢复工程不在本轮实现范围。独立宽度需求也不自动批准�
 
 | 方案 | 优点 | 代价/问题 | 本轮建议 |
 | --- | --- | --- | --- |
-| RichTextContent 的版本化布局约束；扩展 EditRichText delta | 宽度与文本结构由同一语义 owner 管理；可单 Operation 修改 | 需显式版本、migration、旧 reader 拒绝及 inverse 设计 | 优先细化 |
-| 现有 PropertyBag 增加专用字段，用 PatchProperties | 可以复用 property History 路径，旧 validator 对未知 FieldId 会拒绝 | 仍须发布新的 registry 字段；当前 PropertyValue 没有 double，且 Property impact 不会自动触发文本重排 | 保留比较，不为少改代码直接选择 |
+| RichTextContent 的版本化布局约束；扩展 EditRichText delta | 宽度与文本结构由同一语义 owner 管理；可单 Operation 修改 | 需显式版本、migration、旧 reader 拒绝及 inverse 设计 | 已选择，见后续合同 |
+| 现有 PropertyBag 增加专用字段，用 PatchProperties | 可以复用 property History 路径，旧 validator 对未知 FieldId 会拒绝 | 仍须发布新的 registry 字段；当前 PropertyValue 没有 double，且 Property impact 不会自动触发文本重排 | 不采用，保留取舍原因 |
 | 扩展 SetObjectSize 的 width/height 用法 | 控件名称相近 | 自动高度不是 canonical 输入；不能为了沿用接口伪造 height，或把 resize 与排版宽度混为一谈 | 不采用 |
 | 宿主/View 字典保存宽度 | 接线简单 | 新宿主、Snapshot、replay 与 Undo 丢失语义；形成第二状态源 | 不采用 |
 
-建议宽度归 RichTextContent，因为它改变对象的换行/布局结构。最终需有显式语义增量，
+宽度归 RichTextContent，因为它改变对象的换行/布局结构。实施需要显式语义增量，
 不能通过隐藏字段、任意 JSON 或复用现有 FieldId 绕过发布合同。
 
-### 版本化内容方案的候选边界
+### 版本化内容方案
 
-以下 `RichText/2`、`RichTextDelta/2` 是候选后继版本称呼，尚不是已发布数值分配。
+以下 `RichText/2`、`RichTextDelta/2` 是后继合同选定的拟议版本，尚不是已发布数值分配。
 
 1. 旧 RichText/1 内容、编码与布局默认值原样保留。
 2. 新文本内容增加显式固定宽度约束；新对象通过同一个 InsertObjects 保存文本和宽度。
@@ -101,39 +102,39 @@ G6 恢复工程不在本轮实现范围。独立宽度需求也不自动批准�
    整个对象的宽度；它不是逐段设置宽度，也不引入新 OperationKind 或全局 Transaction。
 4. 宽度更新携带单次有效最终值；拖动期间只有 transient reflow，松手才提交。
 5. 旧对象取得独立宽度需要显式、原 ID 上的格式迁移，不能 Delete/Reinsert 或编辑即升级。
-   候选是版本化布局步骤表达目标布局格式：`LegacyV1` 或 `FixedWidthV2(width)`，
+   版本化布局步骤表达目标布局格式：`LegacyV1` 或 `FixedWidthV2(width)`，
    原子改变对应的内容版本。迁移 inverse 必须恢复旧版本与缺省状态；若不能做到，
-   不能以“看起来一样”代替恢复。该步骤与版本转换规则须一并确定后才能编码。
-6. 为先收窄 mutation，布局步骤初版建议独占一个 delta；它不与 text replacement 或
+   不能以“看起来一样”代替恢复。精确字段、guard 与版本转换规则见后续合同。
+6. 为先收窄 mutation，布局步骤初版独占一个 delta；它不与 text replacement 或
    Transform 组成假原子操作。新建时文本、宽度和 Transform 已在一个 InsertObjects 内。
-7. 普通宽度编辑建议左上本地锚点固定，先通过数值控件/右侧重排把手实现。
+7. 普通宽度编辑左上本地锚点固定，先通过数值控件/右侧重排把手实现。
    左侧把手保持右边缘涉及额外平移，不能悄悄分成宽度、Transform 两次提交冒充原子 resize。
 8. 新 reader 同时读取原格式与新格式；旧 reader 必须拒绝不支持的对象/delta，而不是
    丢掉宽度后继续保存。Snapshot/能力准入也须覆盖整个文档，不能靠 UI 隐藏控件代替。
 
-### Operation / 兼容矩阵提案
+### Operation / 兼容矩阵
 
 对照当前 `validator.cpp`：Operation `schema_version=1`、`payload_version=1` 是普通
-对象/文本入口；payload 2 有既有 Brush 专用语义。建议保留该 envelope，让内容版本与
+对象/文本入口；payload 2 有既有 Brush 专用语义。保留该 envelope，让内容版本与
 delta 版本各自承担新文本格式准入，不占用 Brush 的 payload 2。
 
 | 意图 | 候选 canonical 结果 | inverse / 边界 |
 | --- | --- | --- |
 | 新建有宽度文本 | 一个 schema1/payload1 InsertObjects，含 RichText/2 与显式宽度 | DeleteObjects；Redo RestoreObjects 保留对象、段落身份和宽度 |
-| 编辑旧 RichText/1 的文字 | 原 EditRichText + delta1；不自动格式迁移 | 原版本内的文本 inverse |
-| 编辑 RichText/2 的文字 | EditRichText + delta2，使用既有文本步骤语义 | 一个反向 delta，恢复文本及段落/style 前像 |
+| 编辑旧 RichText/1 的文字 | 新 editor 使用 EditRichText + guarded delta2，仍保持 V1；历史 delta1 保留 | delta2 Restore 完整前像，保留原 run 边界 |
+| 编辑 RichText/2 的文字 | EditRichText + guarded delta2，使用既有文本步骤语义 | delta2 Restore 完整前像，包括段落/style/布局 |
 | 新格式宽度 W0→W1 | EditRichText + delta2，唯一布局步骤，目标 FixedWidthV2(W1) | FixedWidthV2(W0) |
 | 旧对象明确取得独立宽度 | 同一对象 ID，唯一布局步骤 LegacyV1→FixedWidthV2(W)；原子更新内容格式版本 | 显式 LegacyV1 布局步骤恢复原缺省状态与 kind_version |
 
 `LegacyV1` 是迁移 inverse 的明确目标状态，不是把宽度设零、不完整 V2 或任意 kind
 转换。进入 V2 必须有有效宽度；回到 V1 必须移除该扩展；不匹配的格式/字段组合一律拒绝。
-布局格式切换只在独占布局步骤中允许，不在普通文字步骤或 codec 里隐式发生。对其它 Kind
+布局格式切换只在独占布局步骤或精确状态恢复中允许，不在普通文字步骤或 codec 里隐式发生。对其它 Kind
 以及未经定义的版本迁移均拒绝。
 
-含 V2 文本的新 Snapshot 建议继续消费已有资源清单 Snapshot3 通路，不自动增加第四种
+含 V2 文本的新 Snapshot 继续消费已有资源清单 Snapshot3 通路，不自动增加第四种
 Snapshot 格式；需要在 capability 与对象版本双层证明旧 reader 整体拒绝。已有 Snapshot1/2/3
-与旧对象的编码不因本轮设计被重写。能力标识、具体 proto tags、版本化布局载体及机器
-projection 仍是待评审的物理合同，不能仅在新 reader 中放宽校验便宣称兼容完成。
+与旧对象的编码不因本轮设计被重写。能力标识、具体 proto tags、版本化布局载体及 guard
+projection 见后续合同；实施前需要严格接入，不能仅放宽新 reader 便宣称兼容完成。
 
 源码还有一个必须纳入的共存问题：`snapshot.cpp` 与 `snapshot_bootstrap.cpp` 目前只在
 Snapshot2 + Triangle capability 下允许 Shape/2 Triangle；不能据此声称 Snapshot3 已经
@@ -185,11 +186,12 @@ lifecycle 通知直接解释成“将最后一帧合成预览写入文档”；�
 
 ## 7. Undo、冲突和派生状态
 
-- EditorHistory 需要接受 EditRichText 的 forward/inverse。文本 inverse 使用提交前的
-  段落 ID、scalar 范围、run/段落样式；不能把字符数当 UTF-16 或丢失被删片段的样式。
+- EditorHistory 需要接受 EditRichText 的 forward/inverse。文本 inverse 使用 delta2 的
+  完整状态恢复，精确保留前像 run 边界、段落 ID/样式和布局；现有六步骤的简单反向序列
+  不能保证精确可逆，已用当前 Semantic 代码复现。不能把字符数当 UTF-16。
 - 宽度 Undo 恢复前值；格式迁移 Undo 还须恢复内容版本/缺省状态。使用新的 Operation ID
   重放 inverse，文档对象/段落身份保持原语义。提交被拒绝时不新增成功的 History 项。
-- 初版建议一次 confirmed edit 或一次最终宽度修改对应一个 Undo 项；长时间连续输入合并
+- 初版一次 confirmed edit 或一次最终宽度修改对应一个 Undo 项；长时间连续输入合并
   与多 Operation 用户历史组不在此处自动扩展。内部多-step delta 仍是单 Operation。
 - 远端有序 canonical apply 不等待文本会话。无关对象变化可继续；目标内容变化使旧投影
   stale，需明确 resync/取消旧合成。不能仅凭全局 generation 不同就取消所有编辑，也不能
@@ -211,7 +213,8 @@ lifecycle 通知直接解释成“将最后一帧合成预览写入文档”；�
 | Snapshot 有 glyph cluster/line，尚无完整编辑查询 API | 同一布局 owner 内补 caret/selection/hit geometry；不按平均字符宽度猜 |
 | Minimal Host 只有 pointer/control 和 Debug UI 字符输入 | 产品文本 ingress/projection、真实 IME、单一焦点/输入路由与退出屏障 |
 
-先完成宽度格式/版本与 mutation 的可审查模型，再推进架构接口；首个可编码切片应是
+宽度格式/版本、迁移、Undo 与 Snapshot 的可审查模型已在后续合同完成，下一步推进接口。
+首个可编码切片应先满足严格语义准入/History，再接
 共享 Runtime 的投影/会话与 FakeIME，随后才接真实 Windows/Web。此处不先做一个 DOM
 权威编辑器或临时宿主文本框来绕过模型。
 
@@ -230,4 +233,5 @@ lifecycle 通知直接解释成“将最后一帧合成预览写入文档”；�
 | Triangle、Ink、Shape、新文本与字体资源同文档保存/恢复 | 新能力集完整准入；旧格式原样保留；不能只单测纯文本 Snapshot |
 | zoom/DPI/resize 与字体资源变化 | 坐标只映射一次；canonical 宽度不变；正确重排/失效 |
 
-下一步交接物是本文件的版本/mutation收敛与经其约束的 Runtime 接口设计；尚未启动生产实现。
+下一步交接物是受后续合同约束的 Runtime 接口设计；尚未启动生产实现。Snapshot3 现有
+digest 投影与绑定合同的差异已明确记录，持久化写入前必须在原边界解决，不能静默改算法。

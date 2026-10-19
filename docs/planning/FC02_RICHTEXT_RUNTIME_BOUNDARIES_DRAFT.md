@@ -9,8 +9,10 @@ Design branch: `codex/fc02-runtime-boundary-design`.
 The user has confirmed per-object persistent text-box width, Enter to finish,
 Ctrl+Enter for a paragraph, and automatic composition completion/commit on tool
 switch or controlled page exit. See [the product and semantic design](FC02_PRODUCT_AND_SEMANTIC_DESIGN.md).
-Its versioned width/mutation proposal must be settled before freezing detailed
-architecture APIs. This updates the earlier uniform-width and cancel-on-exit
+The [semantic contract](FC02_SEMANTIC_CONTRACT.md) now selects versioned layout,
+explicit migration, guarded exact-state undo and combined Snapshot3 admission.
+Detailed APIs must consume that contract and its identified persistence blockers.
+This updates the earlier uniform-width and cancel-on-exit
 candidate assumptions below; it does not change published semantic authority.
 
 The user authorized the merge after schema-check alignment and explicitly
@@ -67,8 +69,8 @@ collaborative merge, G5 performance work or the later G6 recovery programme.
 sessions. It does not become a standalone editor in `runtime/text` or an app-side
 controller. Reconcile the current minimal `EditorSession` integration seam before
 adding a second session owner. No parallel Registry or new canonical ObjectKind
-is proposed. A versioned RichText content/delta extension for width is under
-semantic design; physical identifiers and compatibility are not yet frozen.
+is proposed. The semantic design selects RichText/2 layout and guarded delta2
+text/layout/restore operations; proposed wire identifiers are not yet published.
 
 Runtime allocates object, paragraph and operation identities. Keep full canonical
 IDs across the facade/projection boundary. The present generic `OperationRequest`
@@ -95,8 +97,8 @@ flowchart LR
 
 1. A text tool/entry intent enters the existing Facade lane. Runtime resolves the
    target, attachment and editing session; the host receives a bounded projection
-   and physical focus request. Exact creation/entry gestures remain a product
-   decision below.
+   and physical focus request. Text-tool click creates a draft; double-click edits
+   existing text. The first nonempty commit inserts one complete object.
 2. The adapter reports composition begin/update/end/cancel, replacement text,
    selection and focus facts with the projection token. Runtime converts offsets
    to `ParagraphId + Unicode scalar index`, validates the session and resolves
@@ -156,26 +158,28 @@ events without routing each IME update through an inspector-style control draft.
   their local undo stack cannot become document history. Runtime remains the
   committed Undo/Redo owner; composition-local undo needs explicit routing.
 
-## Decisions to resolve before coding the affected slice
+## Inputs to the next interface design
 
-| Decision | Design question |
+| Area | Settled input / remaining interface detail |
 | --- | --- |
-| Creation | Click/double-click and empty-draft rules retained; default style/width and optional drag-create need detail |
+| Creation | Click/double-click and empty-draft rules retained; width preset 320 is stored on first insertion; no added drag-create |
 | Entry/exit | Enter finish / Ctrl+Enter paragraph / auto-finish on tool or controlled page exit confirmed; failure/callback order needs design |
-| Sizing | Independent persistent width confirmed; versioned storage, mutation and legacy migration remain proposed |
-| History | One composition commit's undo unit, ordinary typing grouping and composition-local Undo |
+| Sizing | Semantic contract selects content layout, explicit guarded migration, fixed local anchor and derived height |
+| History | One confirmed edit/final width is one item, guarded full text preimage restoration; no initial typing grouping; route composition-local Undo |
 | Formatting | Initial enabled inline/paragraph controls and object-selection vs range-selection targets |
 | Conflicts | Exact resync/cancel rule for remote changes to active text; no implied concurrent text merge |
 | Platforms | First usable Windows/Web slices and Android adapter timing; no inferred physical acceptance |
 
-These are bounded questions for the next design pass, not permission to infer new
-semantic fields or to copy POC-04 `TextTransaction`/UTF-16 canonical positions.
+The semantic contract settles persistence and Undo; the next pass resolves the
+remaining interface details. This does not permit inferring additional semantic
+fields or copying POC-04 `TextTransaction`/UTF-16 canonical positions.
 
 ## Proposed implementation slices and minimum proof
 
-1. Reconcile existing operations, history inversion, conflict notices and layout
-   geometry; settle creation/exit and undo rules. Keep product-visible behaviour
-   separate from implementation API choices.
+1. Consume the semantic contract's creation/exit, versioned width, exact Undo and
+   mixed-document rules. Design interfaces for history preflight, conflict notices
+   and layout geometry. Resolve the recorded Snapshot3 capability/digest gaps
+   before enabling the new persistence writer; preserve frozen legacy evidence.
 2. Implement a Runtime-owned session/projection with FakeIME first. Prove repeated
    updates preserve canonical state, one accepted commit applies once, cancellation
    produces no operation, rejection resyncs, and stale tokens cannot edit new text.
