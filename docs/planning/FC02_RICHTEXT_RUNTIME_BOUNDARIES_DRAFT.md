@@ -1,10 +1,17 @@
 # FC-02 RichText editor: Runtime boundaries (design draft)
 
-Status: draft for discussion, 2026-10-19. No implementation or new stable ABI.
+Status: conditional architecture draft, updated 2026-10-19. No implementation or new stable ABI.
 Baseline main: `ea135122f8e3266cafa433d69903f7950a5e6300`, merged via
 [PR #148](https://github.com/Mostorm-Labs/axiom/pull/148), containing integration
 head `6d8bf236468c3dd2a29d7ba213125df8ba12b840`.
 Design branch: `codex/fc02-runtime-boundary-design`.
+
+The user has confirmed per-object persistent text-box width, Enter to finish,
+Ctrl+Enter for a paragraph, and automatic composition completion/commit on tool
+switch or controlled page exit. See [the product and semantic design](FC02_PRODUCT_AND_SEMANTIC_DESIGN.md).
+Its versioned width/mutation proposal must be settled before freezing detailed
+architecture APIs. This updates the earlier uniform-width and cancel-on-exit
+candidate assumptions below; it does not change published semantic authority.
 
 The user authorized the merge after schema-check alignment and explicitly
 deferred legacy Web/Playground test wiring and Android compilation repairs.
@@ -18,7 +25,8 @@ committed undo/redo to the shared Runtime consumed by Minimal Host. The user's
 requested sequence is FC-02 → FC-03 → FC-01A → FC-04. This document records that
 direction without rewriting historical execution/Gate records.
 
-FC-02 consumes the existing RichText semantic model and the G4.7 layout stack.
+FC-02 reuses the existing RichText document and G4.7 layout stack, and proposes a
+versioned semantic addition for independently persistent text-box width.
 It includes the text producer's object bounds and common selection capability;
 FC-01A/FC-04 can then operate on the produced objects. It does not implement
 lasso, advanced multi-object editing, Sticky/ShapeText, clipboard, character-level
@@ -58,8 +66,9 @@ collaborative merge, G5 performance work or the later G6 recovery programme.
 `TextEditSession` belongs under `runtime/interaction`, orchestrated with existing
 sessions. It does not become a standalone editor in `runtime/text` or an app-side
 controller. Reconcile the current minimal `EditorSession` integration seam before
-adding a second session owner. No new Registry, canonical object kind or protocol
-version is proposed.
+adding a second session owner. No parallel Registry or new canonical ObjectKind
+is proposed. A versioned RichText content/delta extension for width is under
+semantic design; physical identifiers and compatibility are not yet frozen.
 
 Runtime allocates object, paragraph and operation identities. Keep full canonical
 IDs across the facade/projection boundary. The present generic `OperationRequest`
@@ -128,7 +137,9 @@ events without routing each IME update through an inspector-style control draft.
 - Consume G4.7 geometry for caret, selection and hit testing. If the current
   snapshot lacks a query, extend that service's derived geometry seam. Do not
   introduce a DOM measurement engine. `LayoutContext.width/revision` is container
-  policy, never inferred from camera zoom or persisted as a new semantic field.
+  policy. For new fixed-width text it is resolved from per-object canonical
+  width; retain the legacy context behaviour for old objects. Layout snapshots,
+  height, cache revision and camera zoom remain derived rather than width truth.
 - Host maps screen/client coordinates to logical view once; Runtime applies
   view/world/object transforms. The reverse caret anchor is returned with
   geometry/metrics identity so the host positions the native candidate UI once.
@@ -136,9 +147,11 @@ events without routing each IME update through an inspector-style control draft.
   routing has one accepted interaction owner at a time; text input and Debug UI
   must not also draw on the canvas. Existing multi-contact intent policy remains
   unchanged; entering text editing must use its interruption/focus rules.
-- Tool change, blur, Escape, host detach and document close terminate or suspend
-  the session according to the applicable product policy. Late commits are
-  fenced. Do not infer commit-versus-cancel from a native blur event alone.
+- Tool change and controlled page exit now request composition completion and
+  canonical commit before allowing the exit, per the user's product decision.
+  Enter finishes and Ctrl+Enter inserts a paragraph outside IME key consumption.
+  Escape cancellation, forced host detach and late callbacks retain explicit
+  termination/failure fences; native blur alone is not a successful commit receipt.
 - Native editing controls may carry a bounded disposable text projection, but
   their local undo stack cannot become document history. Runtime remains the
   committed Undo/Redo owner; composition-local undo needs explicit routing.
@@ -147,9 +160,9 @@ events without routing each IME update through an inspector-style control draft.
 
 | Decision | Design question |
 | --- | --- |
-| Creation | Click vs drag, default insertion style, and when an empty draft becomes an object |
-| Entry/exit | Editing gesture and explicit commit/cancel semantics for blur, Escape and tool switch |
-| Sizing | Initial wrap/container width and whether resize changes layout policy or object transform |
+| Creation | Click/double-click and empty-draft rules retained; default style/width and optional drag-create need detail |
+| Entry/exit | Enter finish / Ctrl+Enter paragraph / auto-finish on tool or controlled page exit confirmed; failure/callback order needs design |
+| Sizing | Independent persistent width confirmed; versioned storage, mutation and legacy migration remain proposed |
 | History | One composition commit's undo unit, ordinary typing grouping and composition-local Undo |
 | Formatting | Initial enabled inline/paragraph controls and object-selection vs range-selection targets |
 | Conflicts | Exact resync/cancel rule for remote changes to active text; no implied concurrent text merge |
