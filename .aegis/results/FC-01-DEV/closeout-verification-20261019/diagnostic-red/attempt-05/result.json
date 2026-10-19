@@ -1,0 +1,845 @@
+{
+  "started_at": "2026-10-19T07:18:32.740311+00:00",
+  "repository": "https://github.com/Mostorm-Labs/axiom.git",
+  "source_revision": "3f84ecabc2294121a2f4b9e78bb7f073585576ac",
+  "working_tree_changes": [
+    "M apps/ink_playground/CMakeLists.txt",
+    " M apps/ink_playground/tests/fc01_host_publication_truth_test.cpp",
+    " M apps/ink_playground/tests/selected_actions_test.cpp",
+    " M runtime/composition/tests/canvas_runtime_facade_test.cpp",
+    " M runtime/interaction/CMakeLists.txt",
+    " M runtime/render/CMakeLists.txt",
+    " M runtime/semantic/tests/CMakeLists.txt",
+    " M runtime/semantic/tests/fc01_shape2_apply_test.cpp",
+    " M verification/fc01/run_source_loss.py",
+    "?? verification/fc01/run_closeout.py",
+    "?? verification/fc01/verify_shape2_wire.py"
+  ],
+  "build": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build",
+  "commands": [
+    {
+      "name": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build",
+        "--target",
+        "canvas_semantic_fc01_shape2_validation_test",
+        "canvas_semantic_fc01_shape2_apply_test",
+        "canvas_semantic_codec_test",
+        "canvas_semantic_codec_operation_ingress_test",
+        "canvas_semantic_g1_06_snapshot_test",
+        "canvas_semantic_g1_06_snapshot_bootstrap_test",
+        "canvas_semantic_brush_snapshot_v2_test",
+        "canvas_semantic_brush_engine_codec_test",
+        "canvas_semantic_operation_engine_15_operation_conformance_test",
+        "axiom_fc01_creation_session_tests",
+        "axiom_fc01_creation_control_binding_tests",
+        "axiom_fc01_snap_creation_differential_tests",
+        "axiom_fc01_host_publication_truth_tests",
+        "axiom_fc01_selected_actions_tests",
+        "axiom_editor_history_tests",
+        "axiom_fc00x_runtime_facade_tests",
+        "axiom_fc00x_runtime_composition_tests",
+        "canvas_fc01_derived_geometry_test",
+        "canvas_semantic_operation_engine_axis_publication_truth_test",
+        "axiom_render_headless_skia_tests",
+        "axiom_minimal_runtime_host_windows",
+        "canvas_semantic_golden_probe",
+        "--parallel",
+        "4"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "test",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build",
+        "--output-on-failure",
+        "--no-tests=error",
+        "--output-junit",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\attempt-05\\ctest.xml",
+        "-R",
+        "FC01|FC00XRuntime(Facade|Composition)|G4EditorHistory|^canvas_fc01_derived_geometry$|G3HeadlessSkia|SemanticCodec|codec_operation_ingress|brush_snapshot_v2|brush_engine_codec|Snapshot|OperationEngine15"
+      ],
+      "exit_code": 8
+    }
+  ],
+  "tests": [
+    {
+      "name": "SemanticCodec.EncodesAndDecodesCanonicalOperation",
+      "result": "PASS",
+      "seconds": "0.0154765"
+    },
+    {
+      "name": "SemanticCodec.CanonicalizesNegativeZeroToPositiveZero",
+      "result": "PASS",
+      "seconds": "0.016181"
+    },
+    {
+      "name": "SemanticCodec.StableSeedContainsExactlySixtyCases",
+      "result": "PASS",
+      "seconds": "0.014511"
+    },
+    {
+      "name": "SemanticCodec.ProtobufRuntimeRoundTripsAllReconciledOperations",
+      "result": "PASS",
+      "seconds": "0.014957"
+    },
+    {
+      "name": "SemanticCodec.ProtobufWirePresenceDistinguishesMissingExplicitZeroAndOne",
+      "result": "PASS",
+      "seconds": "0.0155078"
+    },
+    {
+      "name": "SemanticCodec.ProtobufPreflightRejectsOversizedNestedObjectRecord",
+      "result": "PASS",
+      "seconds": "0.0533777"
+    },
+    {
+      "name": "SemanticCodec.ProtobufPreflightRejectsUnknownDuplicateWrongTypeAndOverflowFields",
+      "result": "PASS",
+      "seconds": "0.0143304"
+    },
+    {
+      "name": "SemanticCodec.ProtobufPreflightRejectsNestedSplitReplacementCollectionOverflow",
+      "result": "PASS",
+      "seconds": "0.0140867"
+    },
+    {
+      "name": "SemanticCodec.ProtobufPreflightAllowsKeyedBatchAtLimitAndRejectsAboveLimit",
+      "result": "PASS",
+      "seconds": "0.0158032"
+    },
+    {
+      "name": "SemanticCodec.ProtobufPreflightRejectsNestedRemovedMaskCollectionOverflow",
+      "result": "PASS",
+      "seconds": "0.0137339"
+    },
+    {
+      "name": "SemanticCodec.ProtobufPreflightRejectsPersistentEraseMaskCollectionOverflow",
+      "result": "PASS",
+      "seconds": "0.0133013"
+    },
+    {
+      "name": "SemanticCodec.ProtobufPreflightRejectsNestedOrderKeyByteOverflow",
+      "result": "PASS",
+      "seconds": "0.0139347"
+    },
+    {
+      "name": "SemanticCodec.ProtobufPreflightRejectsNestedRichTextRunStringOverflow",
+      "result": "PASS",
+      "seconds": "0.0193317"
+    },
+    {
+      "name": "SemanticCodec.ProtobufPreflightAllowsExactRichTextRunStringLimit",
+      "result": "PASS",
+      "seconds": "0.0193118"
+    },
+    {
+      "name": "SemanticCodec.ProtobufPreflightRejectsOversizedEditRichTextInsertBeforeParse",
+      "result": "PASS",
+      "seconds": "0.0414916"
+    },
+    {
+      "name": "SemanticCodec.ProtobufPreflightEnforcesEditRichTextAggregateBeforeParse",
+      "result": "PASS",
+      "seconds": "0.117848"
+    },
+    {
+      "name": "SemanticCodec.ProtobufPreflightAllowsExactEraseMaskCollectionLimit",
+      "result": "PASS",
+      "seconds": "0.0185613"
+    },
+    {
+      "name": "SemanticCodec.ObservesAuthorityGoldenVec2AsCanonicalBytes",
+      "result": "PASS",
+      "seconds": "0.0127952"
+    },
+    {
+      "name": "SemanticCodec.ObservesAuthorityCanonicalityAndStableNegativeOutcomes",
+      "result": "PASS",
+      "seconds": "0.0169663"
+    },
+    {
+      "name": "SemanticCodec.RejectsUnpackedDashSegmentsWithCanonicalPackedCategory",
+      "result": "PASS",
+      "seconds": "0.0126937"
+    },
+    {
+      "name": "SemanticCodec.ObservesRichTextDeltaAsCanonicalBytesAndCountBasedProjection",
+      "result": "PASS",
+      "seconds": "0.0180849"
+    },
+    {
+      "name": "SemanticCodec.AcceptsOrderedRepeatedRichTextDeltaSteps",
+      "result": "PASS",
+      "seconds": "0.0133551"
+    },
+    {
+      "name": "SemanticCodec.ObservesRichTextDocumentWithReleasedParagraphStyleProjection",
+      "result": "PASS",
+      "seconds": "0.015047"
+    },
+    {
+      "name": "SemanticCodec.ObservesStrokeFixedSeedAndDabCenterAsCanonicalProjection",
+      "result": "PASS",
+      "seconds": "0.0144991"
+    },
+    {
+      "name": "SemanticCodecNegative.RejectsTruncatedWire",
+      "result": "PASS",
+      "seconds": "0.0130563"
+    },
+    {
+      "name": "SemanticCodecNegative.RejectsUnsupportedVersion",
+      "result": "PASS",
+      "seconds": "0.0121003"
+    },
+    {
+      "name": "SemanticCodecNegative.RejectsUnknownOperation",
+      "result": "PASS",
+      "seconds": "0.0146168"
+    },
+    {
+      "name": "SemanticCodecNegative.RejectsDuplicateAndUnorderedCanonicalFields",
+      "result": "PASS",
+      "seconds": "0.0123924"
+    },
+    {
+      "name": "SemanticCodecNegative.RejectsNonFiniteAndOversizedValues",
+      "result": "PASS",
+      "seconds": "0.0128483"
+    },
+    {
+      "name": "SemanticCodecNegative.EnforcesOperationWireSizeBoundaryBeforeDecode",
+      "result": "PASS",
+      "seconds": "0.0361862"
+    },
+    {
+      "name": "SemanticCodecNegative.EnforcesCustomOperationWireSizeLimit",
+      "result": "PASS",
+      "seconds": "0.0589794"
+    },
+    {
+      "name": "brush_engine_codec.BrushEngineCodec.AcceptsOnlyVersionedNewObjectBranch",
+      "result": "PASS",
+      "seconds": "0.0162174"
+    },
+    {
+      "name": "brush_engine_codec.BrushEngineCodec.AddStrokeRequiresPayloadVersionTwo",
+      "result": "PASS",
+      "seconds": "0.0161591"
+    },
+    {
+      "name": "brush_engine_codec.BrushEngineCodec.ProtobufAddStrokeV2RoundTripsBeforeMutation",
+      "result": "PASS",
+      "seconds": "0.0166343"
+    },
+    {
+      "name": "brush_snapshot_v2.BrushSnapshotV2.NewObjectIsRecognizedBeforeMutation",
+      "result": "PASS",
+      "seconds": "0.022755"
+    },
+    {
+      "name": "brush_snapshot_v2.BrushSnapshotV2.DabBrushStrokeRoundTripsWithoutChangingLegacyDabShape",
+      "result": "PASS",
+      "seconds": "0.014722"
+    },
+    {
+      "name": "brush_snapshot_v2.BrushSnapshotV2.MembraneDabBrushStrokeRoundTripsWithDistinctProfile",
+      "result": "PASS",
+      "seconds": "0.0158189"
+    },
+    {
+      "name": "codec_operation_ingress.CodecOperationIngress.DecodesIndependentNonEmptyWireRepresentativesForAllFamilies",
+      "result": "PASS",
+      "seconds": "0.0179093"
+    },
+    {
+      "name": "codec_operation_ingress.CodecOperationIngress.DecodedOperationIsConsumableByOperationEngine",
+      "result": "PASS",
+      "seconds": "0.0169046"
+    },
+    {
+      "name": "codec_operation_ingress.CodecOperationIngress.PreservesConfiguredNestedValues",
+      "result": "PASS",
+      "seconds": "0.0154276"
+    },
+    {
+      "name": "codec_operation_ingress.CodecOperationIngress.PreservesNestedValuesAcrossAllConfiguredFamilies",
+      "result": "PASS",
+      "seconds": "0.0175345"
+    },
+    {
+      "name": "G106Snapshot.ProtobufOffContractOrRoundTrip",
+      "result": "PASS",
+      "seconds": "0.0168912"
+    },
+    {
+      "name": "G106Snapshot.RejectsInvalidEnvelopeAndDuplicateIds",
+      "result": "FAIL",
+      "seconds": "0.0163751"
+    },
+    {
+      "name": "G106Snapshot.RejectsUnknownSnapshotWireFieldsBeforeGeneratedParse",
+      "result": "PASS",
+      "seconds": "0.0155982"
+    },
+    {
+      "name": "G106Snapshot.RejectsUnknownAndAmbiguousNestedWireBeforeMapping",
+      "result": "PASS",
+      "seconds": "0.0144585"
+    },
+    {
+      "name": "G106Snapshot.RejectsDuplicateSingularAndMissingRequiredSemanticPresence",
+      "result": "PASS",
+      "seconds": "0.0160045"
+    },
+    {
+      "name": "G106Snapshot.RejectsSemanticallyInvalidMappedRecordWithSharedValidator",
+      "result": "PASS",
+      "seconds": "0.0159067"
+    },
+    {
+      "name": "G106Snapshot.MapsDirectColorValueMechanicallyThenRejectsItSemantically",
+      "result": "PASS",
+      "seconds": "0.0125417"
+    },
+    {
+      "name": "G106Snapshot.RejectsSemanticallyInvalidObjectOnEncode",
+      "result": "PASS",
+      "seconds": "0.0247346"
+    },
+    {
+      "name": "G106Snapshot.CanonicalizesPropertyBagEntryPermutation",
+      "result": "PASS",
+      "seconds": "0.0156999"
+    },
+    {
+      "name": "G106Snapshot.CanonicalizesEraseMaskSetPermutationOnDabStroke",
+      "result": "PASS",
+      "seconds": "0.0164418"
+    },
+    {
+      "name": "G106Snapshot.CanonicalizesF32NegativeZeroInPropertyValue",
+      "result": "PASS",
+      "seconds": "0.0159362"
+    },
+    {
+      "name": "G106Snapshot.CanonicalizesF64NegativeZeroInTransform",
+      "result": "PASS",
+      "seconds": "0.0164598"
+    },
+    {
+      "name": "G106Snapshot.RoundTripsAllV1ContentAndCanonicalizesOrder",
+      "result": "PASS",
+      "seconds": "0.0177116"
+    },
+    {
+      "name": "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.EmptySnapshotRestoresWhileLoadingWithoutAdvancingGeneration",
+      "result": "PASS",
+      "seconds": "0.0114233"
+    },
+    {
+      "name": "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RestoresCanonicalReferenceAndIndexedCandidates",
+      "result": "PASS",
+      "seconds": "0.0104459"
+    },
+    {
+      "name": "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.ReferenceAndIndexedProjectionMatchesCandidateProjection",
+      "result": "PASS",
+      "seconds": "0.0104835"
+    },
+    {
+      "name": "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RestoresHierarchyAndConnectorGraph",
+      "result": "PASS",
+      "seconds": "0.0098801"
+    },
+    {
+      "name": "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsNonLoadingStatesWithoutChangingAnything",
+      "result": "PASS",
+      "seconds": "0.0100948"
+    },
+    {
+      "name": "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsNonEmptyTargetAndLeavesItUnchanged",
+      "result": "PASS",
+      "seconds": "0.0124974"
+    },
+    {
+      "name": "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsInvalidCandidateBeforeMutation",
+      "result": "PASS",
+      "seconds": "0.0117715"
+    },
+    {
+      "name": "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsDuplicateAndBrokenHierarchyBeforeMutation",
+      "result": "PASS",
+      "seconds": "0.0120259"
+    },
+    {
+      "name": "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsInvalidParentCapabilityAndConnectorReferences",
+      "result": "PASS",
+      "seconds": "0.0117499"
+    },
+    {
+      "name": "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsZeroDocumentAndUnsupportedSchema",
+      "result": "PASS",
+      "seconds": "0.0118981"
+    },
+    {
+      "name": "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.SnapshotOneRejectsTriangleAndSnapshotTwoRestoresIt",
+      "result": "PASS",
+      "seconds": "0.0109839"
+    },
+    {
+      "name": "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.NegativeFixturesRejectAtomicallyOnReferenceAndIndexedProviders",
+      "result": "PASS",
+      "seconds": "0.0119808"
+    },
+    {
+      "name": "FC01Shape2Validation.AdmitsOnlyVersionedTriangleTuple",
+      "result": "PASS",
+      "seconds": "0.0107861"
+    },
+    {
+      "name": "FC01Shape2Validation.KeepsLegacyShapeKindsValid",
+      "result": "PASS",
+      "seconds": "0.0119049"
+    },
+    {
+      "name": "FC01Shape2Apply.TypedInsertUsesUniversalTupleValidation",
+      "result": "PASS",
+      "seconds": "0.0137888"
+    },
+    {
+      "name": "FC01Shape2Apply.TypedIngressChecksEnvelopeBeforeMutation",
+      "result": "PASS",
+      "seconds": "0.0147523"
+    },
+    {
+      "name": "FC01Shape2Apply.TypedIngressNormalizesBeforeIdempotency",
+      "result": "PASS",
+      "seconds": "0.0148474"
+    },
+    {
+      "name": "FC01Shape2Apply.MixedBatchRejectsAtomicallyAndFailedReplayNeverReady",
+      "result": "PASS",
+      "seconds": "0.0146422"
+    },
+    {
+      "name": "FC01Shape2Apply.SnapshotTriangleRequiresExplicitReaderCapability",
+      "result": "PASS",
+      "seconds": "0.0128708"
+    },
+    {
+      "name": "FC01Shape2Apply.CapableSnapshotRoundTripAndLegacyWriterRefusal",
+      "result": "PASS",
+      "seconds": "0.0169175"
+    },
+    {
+      "name": "FC01Shape2Apply.FrozenIndependentOperationGoldenMatchesProductionEncoding",
+      "result": "PASS",
+      "seconds": "0.0185651"
+    },
+    {
+      "name": "FC01Shape2Apply.GoldenRootsAndNestedUnknownWireFailClosed",
+      "result": "PASS",
+      "seconds": "0.0160664"
+    },
+    {
+      "name": "FC01Shape2Closeout.FrozenNegativeTupleAndExtentMatrixIsAtomic",
+      "result": "PASS",
+      "seconds": "0.0218215"
+    },
+    {
+      "name": "FC01Shape2Closeout.AlteredPayloadCollisionPreservesOriginalCommit",
+      "result": "PASS",
+      "seconds": "0.0154757"
+    },
+    {
+      "name": "FC01Shape2Closeout.LegacySnapshotRemainsV1AndTriangleCannotBeDowngraded",
+      "result": "PASS",
+      "seconds": "0.0157596"
+    },
+    {
+      "name": "FC01Shape2Closeout.AttachedConnectorCannotTargetTriangle",
+      "result": "PASS",
+      "seconds": "0.0147159"
+    },
+    {
+      "name": "OperationEngine15OperationConformance.AuthorityFirstIndependentTableHasExactlyFifteenKinds",
+      "result": "PASS",
+      "seconds": "0.0127197"
+    },
+    {
+      "name": "OperationEngine15OperationConformance.AppliedInsertHasExactCanonicalCommitForBothProviders",
+      "result": "PASS",
+      "seconds": "0.0127905"
+    },
+    {
+      "name": "OperationEngine15OperationConformance.PayloadV2AdmitsDabBrushExceptionAlongsideVectorBrush",
+      "result": "PASS",
+      "seconds": "0.0132957"
+    },
+    {
+      "name": "OperationEngine15OperationConformance.CollisionAndNegativeFixtureAreSideEffectFree",
+      "result": "PASS",
+      "seconds": "0.0125971"
+    },
+    {
+      "name": "OperationEngine15OperationConformance.LiteralAuthorityTableDrivesAllFifteenOperationFixtures",
+      "result": "PASS",
+      "seconds": "0.0148006"
+    },
+    {
+      "name": "OperationEngine15OperationConformance.EveryFamilyHasAtomicNegativeFixtureOnBothProviders",
+      "result": "PASS",
+      "seconds": "0.0143373"
+    },
+    {
+      "name": "OperationEngine15OperationConformance.DeleteSubtreeCascadesAttachedConnectorsAndPreservesSentinel",
+      "result": "PASS",
+      "seconds": "0.0147968"
+    },
+    {
+      "name": "OperationEngine15OperationConformance.SplitStrokesDeletesSourceAndCreatesDeterministicReplacements",
+      "result": "PASS",
+      "seconds": "0.012709"
+    },
+    {
+      "name": "OperationEngine15OperationConformance.IdempotencyAndCollisionAreAtomicOnBothProviders",
+      "result": "PASS",
+      "seconds": "0.013228"
+    },
+    {
+      "name": "OperationEngine15OperationConformance.ApplySourcesShareCanonicalResultsAndDifferOnlyInPublication",
+      "result": "PASS",
+      "seconds": "0.0137873"
+    },
+    {
+      "name": "OperationEngine15OperationConformance.PatchPropertiesProducesLiteralSortedFieldChange",
+      "result": "PASS",
+      "seconds": "0.0120259"
+    },
+    {
+      "name": "OperationEngine15OperationConformance.AllFifteenFamiliesApplyOnBothProviders",
+      "result": "PASS",
+      "seconds": "0.012514"
+    },
+    {
+      "name": "FC01AxisPublicationTruth",
+      "result": "PASS",
+      "seconds": "0.0963464"
+    },
+    {
+      "name": "canvas_fc01_derived_geometry",
+      "result": "PASS",
+      "seconds": "0.0961117"
+    },
+    {
+      "name": "G4EditorHistory",
+      "result": "PASS",
+      "seconds": "0.0792307"
+    },
+    {
+      "name": "FC01EditorHistoryInverseFamilies",
+      "result": "PASS",
+      "seconds": "0.0114886"
+    },
+    {
+      "name": "G3HeadlessSkia",
+      "result": "PASS",
+      "seconds": "0.240065"
+    },
+    {
+      "name": "FC01TriangleConnectorRaster",
+      "result": "PASS",
+      "seconds": "0.0334486"
+    },
+    {
+      "name": "FC00XRuntimeComposition",
+      "result": "PASS",
+      "seconds": "0.186984"
+    },
+    {
+      "name": "FC00XRuntimeFacade",
+      "result": "PASS",
+      "seconds": "0.231813"
+    },
+    {
+      "name": "PX0DebugSnapshot",
+      "result": "NOT_RUN",
+      "seconds": "0"
+    },
+    {
+      "name": "FC01CreationSession",
+      "result": "PASS",
+      "seconds": "0.0661827"
+    },
+    {
+      "name": "FC01CreationControlBinding",
+      "result": "PASS",
+      "seconds": "0.16181"
+    },
+    {
+      "name": "FC01CreationPreview",
+      "result": "FAIL",
+      "seconds": "2.4714"
+    },
+    {
+      "name": "FC01CreationSources",
+      "result": "PASS",
+      "seconds": "0.0487546"
+    },
+    {
+      "name": "FC01CreationOwnerQueue",
+      "result": "PASS",
+      "seconds": "0.012491"
+    },
+    {
+      "name": "FC01SnapCreationDifferential",
+      "result": "PASS",
+      "seconds": "1.37316"
+    },
+    {
+      "name": "FC01HostPublicationTruth",
+      "result": "FAIL",
+      "seconds": "2.16605"
+    },
+    {
+      "name": "FC01SelectedActions",
+      "result": "PASS",
+      "seconds": "0.203923"
+    },
+    {
+      "name": "FC01SelectedRemoteConflict",
+      "result": "PASS",
+      "seconds": "0.0106609"
+    },
+    {
+      "name": "FC01InsertHistory",
+      "result": "PASS",
+      "seconds": "0.0203707"
+    },
+    {
+      "name": "FC01SelectedLocked",
+      "result": "PASS",
+      "seconds": "0.0108689"
+    },
+    {
+      "name": "FC01SelectedDependent",
+      "result": "PASS",
+      "seconds": "0.0149691"
+    },
+    {
+      "name": "FC01SelectedPreimageMatrix",
+      "result": "PASS",
+      "seconds": "0.714908"
+    }
+  ],
+  "status": "TEST_FAIL",
+  "physical_claim": false,
+  "gate_claim": null,
+  "binaries": {
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tests\\canvas_semantic_codec_test.exe": {
+      "sha256": "a571c832564b3bbce668ec7315afd6522589f06314cb3c4953d9e86e3410d2f5",
+      "bytes": 3026944
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tests\\canvas_semantic_brush_engine_codec_test.exe": {
+      "sha256": "9f9b18c88a30ec3753bbd777f246877f2f1566c2f8ba40ed9584607e37126133",
+      "bytes": 2820608
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tests\\canvas_semantic_brush_snapshot_v2_test.exe": {
+      "sha256": "70cae873f7fe0bf5937950acaf3be6f1cdcb4e3741a393ccf50fe0809285f469",
+      "bytes": 2691072
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tests\\canvas_semantic_codec_operation_ingress_test.exe": {
+      "sha256": "7808be3d08a6a9506965e6429373b3cf80d03b0de419594a7678606886520c63",
+      "bytes": 2994176
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tests\\canvas_semantic_g1_06_snapshot_test.exe": {
+      "sha256": "beb9eecbefa56d4148b63c134bfaffe8965581a86e57c603999d0d5c8ef428a6",
+      "bytes": 2855424
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tests\\canvas_semantic_g1_06_snapshot_bootstrap_test.exe": {
+      "sha256": "b2f4e323dfeea800a7f9552b954e714f63c0884bd5f8fbe912332324a0813518",
+      "bytes": 1114112
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tests\\canvas_semantic_fc01_shape2_validation_test.exe": {
+      "sha256": "6d82cc1f6929d9448a00be1bcfc6a2c9180bc46a4d9e994e7b41bc9dd8465c79",
+      "bytes": 858112
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tests\\canvas_semantic_fc01_shape2_apply_test.exe": {
+      "sha256": "a1d214294fca27ab7b1b80c6a0a20ddd047707b479d077995ab9d2045d9c8209",
+      "bytes": 3297280
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tests\\canvas_semantic_operation_engine_15_operation_conformance_test.exe": {
+      "sha256": "dde1637109ebf58c179520d8d8a1fec435b2b392283a9c0234d512fbfce04360",
+      "bytes": 1560064
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tests\\canvas_semantic_operation_engine_axis_publication_truth_test.exe": {
+      "sha256": "e0a98893dc95a2c755f923038a1274109412d86cae574f47b3524066d967f0af",
+      "bytes": 530944
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\scene\\tests\\canvas_fc01_derived_geometry_test.exe": {
+      "sha256": "0ed3e65a2c0cf58d2fb70023fb541dd645dd1a0750912255a9a1c54cc5790912",
+      "bytes": 2880000
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\interaction\\axiom_editor_history_tests.exe": {
+      "sha256": "bc9f69427d59f25992966d6c53b921e17934b4389e78aca9da105f6898d1418d",
+      "bytes": 303616
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\render\\axiom_render_headless_skia_tests.exe": {
+      "sha256": "39b03c69bde98728789890883730c19b88729a35b82b8be6357d119778c3f216",
+      "bytes": 4593152
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\composition\\axiom_fc00x_runtime_composition_tests.exe": {
+      "sha256": "81a128482c08071748059e14334ff0573b4688824dda1b7c8922aa70942b1e10",
+      "bytes": 7844864
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\composition\\axiom_fc00x_runtime_facade_tests.exe": {
+      "sha256": "238838b1580a12f2efb3f33676e946115eba6bd3a86efc5cfd4d8348896fd023",
+      "bytes": 7450112
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\apps\\ink_playground\\axiom_fc01_creation_session_tests.exe": {
+      "sha256": "4438013d8fe43a6e237d2a2671f52fd99c561ac43337943f347aec30a73f6afc",
+      "bytes": 225792
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\apps\\ink_playground\\axiom_fc01_creation_control_binding_tests.exe": {
+      "sha256": "d81650580ed91c1e2fb2c4d74541462c6522cb3634e6a92ba4cb84e5dfb435c4",
+      "bytes": 7456256
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\apps\\ink_playground\\axiom_fc01_snap_creation_differential_tests.exe": {
+      "sha256": "706f9af77b51e1238ead36275baf8a8ba12b14ca4f4d499dc2375f30b67e297f",
+      "bytes": 7399936
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\apps\\ink_playground\\axiom_fc01_host_publication_truth_tests.exe": {
+      "sha256": "448f719edd6d614239c9517ba639bf4485ee28c006b2187e71a0ba7aefa27ab8",
+      "bytes": 7443968
+    },
+    "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\apps\\ink_playground\\axiom_fc01_selected_actions_tests.exe": {
+      "sha256": "5c10b489a55a95d07289350b111edf12fc31ed14223c56e5ca910f1be58ad15b",
+      "bytes": 7421952
+    }
+  },
+  "selected_tests": [
+    "SemanticCodec.EncodesAndDecodesCanonicalOperation",
+    "SemanticCodec.CanonicalizesNegativeZeroToPositiveZero",
+    "SemanticCodec.StableSeedContainsExactlySixtyCases",
+    "SemanticCodec.ProtobufRuntimeRoundTripsAllReconciledOperations",
+    "SemanticCodec.ProtobufWirePresenceDistinguishesMissingExplicitZeroAndOne",
+    "SemanticCodec.ProtobufPreflightRejectsOversizedNestedObjectRecord",
+    "SemanticCodec.ProtobufPreflightRejectsUnknownDuplicateWrongTypeAndOverflowFields",
+    "SemanticCodec.ProtobufPreflightRejectsNestedSplitReplacementCollectionOverflow",
+    "SemanticCodec.ProtobufPreflightAllowsKeyedBatchAtLimitAndRejectsAboveLimit",
+    "SemanticCodec.ProtobufPreflightRejectsNestedRemovedMaskCollectionOverflow",
+    "SemanticCodec.ProtobufPreflightRejectsPersistentEraseMaskCollectionOverflow",
+    "SemanticCodec.ProtobufPreflightRejectsNestedOrderKeyByteOverflow",
+    "SemanticCodec.ProtobufPreflightRejectsNestedRichTextRunStringOverflow",
+    "SemanticCodec.ProtobufPreflightAllowsExactRichTextRunStringLimit",
+    "SemanticCodec.ProtobufPreflightRejectsOversizedEditRichTextInsertBeforeParse",
+    "SemanticCodec.ProtobufPreflightEnforcesEditRichTextAggregateBeforeParse",
+    "SemanticCodec.ProtobufPreflightAllowsExactEraseMaskCollectionLimit",
+    "SemanticCodec.ObservesAuthorityGoldenVec2AsCanonicalBytes",
+    "SemanticCodec.ObservesAuthorityCanonicalityAndStableNegativeOutcomes",
+    "SemanticCodec.RejectsUnpackedDashSegmentsWithCanonicalPackedCategory",
+    "SemanticCodec.ObservesRichTextDeltaAsCanonicalBytesAndCountBasedProjection",
+    "SemanticCodec.AcceptsOrderedRepeatedRichTextDeltaSteps",
+    "SemanticCodec.ObservesRichTextDocumentWithReleasedParagraphStyleProjection",
+    "SemanticCodec.ObservesStrokeFixedSeedAndDabCenterAsCanonicalProjection",
+    "SemanticCodecNegative.RejectsTruncatedWire",
+    "SemanticCodecNegative.RejectsUnsupportedVersion",
+    "SemanticCodecNegative.RejectsUnknownOperation",
+    "SemanticCodecNegative.RejectsDuplicateAndUnorderedCanonicalFields",
+    "SemanticCodecNegative.RejectsNonFiniteAndOversizedValues",
+    "SemanticCodecNegative.EnforcesOperationWireSizeBoundaryBeforeDecode",
+    "SemanticCodecNegative.EnforcesCustomOperationWireSizeLimit",
+    "brush_engine_codec.BrushEngineCodec.AcceptsOnlyVersionedNewObjectBranch",
+    "brush_engine_codec.BrushEngineCodec.AddStrokeRequiresPayloadVersionTwo",
+    "brush_engine_codec.BrushEngineCodec.ProtobufAddStrokeV2RoundTripsBeforeMutation",
+    "brush_snapshot_v2.BrushSnapshotV2.NewObjectIsRecognizedBeforeMutation",
+    "brush_snapshot_v2.BrushSnapshotV2.DabBrushStrokeRoundTripsWithoutChangingLegacyDabShape",
+    "brush_snapshot_v2.BrushSnapshotV2.MembraneDabBrushStrokeRoundTripsWithDistinctProfile",
+    "codec_operation_ingress.CodecOperationIngress.DecodesIndependentNonEmptyWireRepresentativesForAllFamilies",
+    "codec_operation_ingress.CodecOperationIngress.DecodedOperationIsConsumableByOperationEngine",
+    "codec_operation_ingress.CodecOperationIngress.PreservesConfiguredNestedValues",
+    "codec_operation_ingress.CodecOperationIngress.PreservesNestedValuesAcrossAllConfiguredFamilies",
+    "G106Snapshot.ProtobufOffContractOrRoundTrip",
+    "G106Snapshot.RejectsInvalidEnvelopeAndDuplicateIds",
+    "G106Snapshot.RejectsUnknownSnapshotWireFieldsBeforeGeneratedParse",
+    "G106Snapshot.RejectsUnknownAndAmbiguousNestedWireBeforeMapping",
+    "G106Snapshot.RejectsDuplicateSingularAndMissingRequiredSemanticPresence",
+    "G106Snapshot.RejectsSemanticallyInvalidMappedRecordWithSharedValidator",
+    "G106Snapshot.MapsDirectColorValueMechanicallyThenRejectsItSemantically",
+    "G106Snapshot.RejectsSemanticallyInvalidObjectOnEncode",
+    "G106Snapshot.CanonicalizesPropertyBagEntryPermutation",
+    "G106Snapshot.CanonicalizesEraseMaskSetPermutationOnDabStroke",
+    "G106Snapshot.CanonicalizesF32NegativeZeroInPropertyValue",
+    "G106Snapshot.CanonicalizesF64NegativeZeroInTransform",
+    "G106Snapshot.RoundTripsAllV1ContentAndCanonicalizesOrder",
+    "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.EmptySnapshotRestoresWhileLoadingWithoutAdvancingGeneration",
+    "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RestoresCanonicalReferenceAndIndexedCandidates",
+    "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.ReferenceAndIndexedProjectionMatchesCandidateProjection",
+    "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RestoresHierarchyAndConnectorGraph",
+    "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsNonLoadingStatesWithoutChangingAnything",
+    "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsNonEmptyTargetAndLeavesItUnchanged",
+    "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsInvalidCandidateBeforeMutation",
+    "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsDuplicateAndBrokenHierarchyBeforeMutation",
+    "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsInvalidParentCapabilityAndConnectorReferences",
+    "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsZeroDocumentAndUnsupportedSchema",
+    "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.SnapshotOneRejectsTriangleAndSnapshotTwoRestoresIt",
+    "g1_06_snapshot_bootstrap.G106SnapshotBootstrap.NegativeFixturesRejectAtomicallyOnReferenceAndIndexedProviders",
+    "FC01Shape2Validation.AdmitsOnlyVersionedTriangleTuple",
+    "FC01Shape2Validation.KeepsLegacyShapeKindsValid",
+    "FC01Shape2Apply.TypedInsertUsesUniversalTupleValidation",
+    "FC01Shape2Apply.TypedIngressChecksEnvelopeBeforeMutation",
+    "FC01Shape2Apply.TypedIngressNormalizesBeforeIdempotency",
+    "FC01Shape2Apply.MixedBatchRejectsAtomicallyAndFailedReplayNeverReady",
+    "FC01Shape2Apply.SnapshotTriangleRequiresExplicitReaderCapability",
+    "FC01Shape2Apply.CapableSnapshotRoundTripAndLegacyWriterRefusal",
+    "FC01Shape2Apply.FrozenIndependentOperationGoldenMatchesProductionEncoding",
+    "FC01Shape2Apply.GoldenRootsAndNestedUnknownWireFailClosed",
+    "FC01Shape2Closeout.FrozenNegativeTupleAndExtentMatrixIsAtomic",
+    "FC01Shape2Closeout.AlteredPayloadCollisionPreservesOriginalCommit",
+    "FC01Shape2Closeout.LegacySnapshotRemainsV1AndTriangleCannotBeDowngraded",
+    "FC01Shape2Closeout.AttachedConnectorCannotTargetTriangle",
+    "OperationEngine15OperationConformance.AuthorityFirstIndependentTableHasExactlyFifteenKinds",
+    "OperationEngine15OperationConformance.AppliedInsertHasExactCanonicalCommitForBothProviders",
+    "OperationEngine15OperationConformance.PayloadV2AdmitsDabBrushExceptionAlongsideVectorBrush",
+    "OperationEngine15OperationConformance.CollisionAndNegativeFixtureAreSideEffectFree",
+    "OperationEngine15OperationConformance.LiteralAuthorityTableDrivesAllFifteenOperationFixtures",
+    "OperationEngine15OperationConformance.EveryFamilyHasAtomicNegativeFixtureOnBothProviders",
+    "OperationEngine15OperationConformance.DeleteSubtreeCascadesAttachedConnectorsAndPreservesSentinel",
+    "OperationEngine15OperationConformance.SplitStrokesDeletesSourceAndCreatesDeterministicReplacements",
+    "OperationEngine15OperationConformance.IdempotencyAndCollisionAreAtomicOnBothProviders",
+    "OperationEngine15OperationConformance.ApplySourcesShareCanonicalResultsAndDifferOnlyInPublication",
+    "OperationEngine15OperationConformance.PatchPropertiesProducesLiteralSortedFieldChange",
+    "OperationEngine15OperationConformance.AllFifteenFamiliesApplyOnBothProviders",
+    "FC01AxisPublicationTruth",
+    "canvas_fc01_derived_geometry",
+    "G4EditorHistory",
+    "FC01EditorHistoryInverseFamilies",
+    "G3HeadlessSkia",
+    "FC01TriangleConnectorRaster",
+    "FC00XRuntimeComposition",
+    "FC00XRuntimeFacade",
+    "PX0DebugSnapshot",
+    "FC01CreationSession",
+    "FC01CreationControlBinding",
+    "FC01CreationPreview",
+    "FC01CreationSources",
+    "FC01CreationOwnerQueue",
+    "FC01SnapCreationDifferential",
+    "FC01HostPublicationTruth",
+    "FC01SelectedActions",
+    "FC01SelectedRemoteConflict",
+    "FC01InsertHistory",
+    "FC01SelectedLocked",
+    "FC01SelectedDependent",
+    "FC01SelectedPreimageMatrix"
+  ],
+  "binaries_unchanged_during_run": true,
+  "finished_at": "2026-10-19T07:19:46.481215+00:00"
+}

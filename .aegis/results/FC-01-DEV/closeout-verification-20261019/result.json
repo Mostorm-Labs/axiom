@@ -1,0 +1,122 @@
+{
+  "recorded_at": "2026-10-19T07:37:26.306520+00:00",
+  "task": "FC-01 closeout",
+  "status": "BLOCKED_EVIDENCE",
+  "result_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+  "start_revision": "3f84ecabc2294121a2f4b9e78bb7f073585576ac",
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/p32-windows-minimal-touch",
+  "materialized_ref_resolution": "Exact pushed commit containing this record and artifact-index.json; returned after sealing, not a guessed self/future SHA.",
+  "package_materialization_ref": "c98110c015f975012f25db5efa66c9679da35630",
+  "changed_files": [
+    "apps/ink_playground/CMakeLists.txt",
+    "apps/ink_playground/tests/creation_control_binding_test.cpp",
+    "apps/ink_playground/tests/fc01_host_publication_truth_test.cpp",
+    "apps/ink_playground/tests/ink_playground_history_test_access.hpp",
+    "apps/ink_playground/tests/selected_actions_test.cpp",
+    "runtime/composition/tests/canvas_runtime_facade_test.cpp",
+    "runtime/interaction/CMakeLists.txt",
+    "runtime/render/CMakeLists.txt",
+    "runtime/scene/tests/derived_geometry_test.cpp",
+    "runtime/semantic/tests/CMakeLists.txt",
+    "runtime/semantic/tests/fc01_shape2_apply_test.cpp",
+    "runtime/semantic/tests/g1_06_snapshot_test.cpp",
+    "verification/fc01/run_closeout.py",
+    "verification/fc01/run_source_loss.py",
+    "verification/fc01/verify_shape2_wire.py"
+  ],
+  "native": {
+    "result_ref": "native/result.json",
+    "pass_count": 129,
+    "binary": {
+      "source_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+      "exe_path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe",
+      "sha256": "549d6f1f44c760713f06016b68975b8ba0d5be68bece02f87a02abeab4babfcc",
+      "pid": 20228,
+      "process_observation": {
+        "ProcessId": 20228,
+        "ExecutablePath": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe"
+      },
+      "running_after_startup": true,
+      "exact_process_path_match": true,
+      "debug_ui_build": "ON/full",
+      "input_action": "None; CLI startup/lifecycle smoke only",
+      "physical_result": "PHYSICAL_PENDING",
+      "new_manual_functional_claim": false,
+      "close_requested": false,
+      "exit_method": "Stopped the owned smoke process; no clean-shutdown claim"
+    },
+    "test_source_clean": true
+  },
+  "wire": {
+    "result_ref": "wire/result.json",
+    "checks": 25,
+    "full_SH2_G01_to_G25_claim": false
+  },
+  "web": {
+    "off": {
+      "result": "PASS",
+      "checks": 13,
+      "artifact_ref": "web/off/artifacts.json",
+      "result_ref": "web/off/browser-result.json"
+    },
+    "on": {
+      "result": "PASS",
+      "checks": 13,
+      "artifact_ref": "web/on/artifacts.json",
+      "result_ref": "web/on/browser-result.json"
+    }
+  },
+  "source_loss": {
+    "result_ref": "source-loss/result.json",
+    "baseline_expected_RED": true,
+    "candidate_GREEN": true,
+    "original_pre_mutation_chronology_proven": false
+  },
+  "evidence_input_refs": [
+    "obligation-matrix.json",
+    "shape2-case-mapping.json",
+    "scope-audit.json",
+    "provider-facts.json",
+    "native/result.json",
+    "wire/result.json",
+    "source-loss/result.json",
+    "web/on/browser-result.json",
+    "web/off/browser-result.json"
+  ],
+  "remaining_blockers": [
+    {
+      "class": "BLOCKED_EVIDENCE",
+      "families": [
+        "E01",
+        "E02",
+        "E05",
+        "E07"
+      ],
+      "reason": "Incomplete exact frozen matrix / live mixed-version integration coverage; see per-case residuals. Green aggregates are not a substitute."
+    },
+    {
+      "class": "FROZEN_VERIFICATION_FAILURE",
+      "families": [
+        "E03"
+      ],
+      "reason": "Original pre-first-production-mutation RED order remains unproven; requires control-owner disposition, cannot be fixed by rewriting history."
+    },
+    {
+      "class": "ENVIRONMENT_BLOCKER",
+      "families": [
+        "E08"
+      ],
+      "reason": "Android explicitly deferred by the user; retain prior status, no waiver or automatic PASS."
+    }
+  ],
+  "production_behavior_changes": [],
+  "authority_golden_historical_gate_phys_android_changes": [],
+  "next_narrow_fix_required": "Verification/integration qualification first; no new product implementation defect observed in completed current comparators. Mixed-client owner/applicability and historical-order disposition require the controlling layer.",
+  "physical_status": "No new per-item observation; PHYSICAL_PENDING. Prior high-level Windows/Web human feedback retained as inherited evidence.",
+  "fc01a_work_started": false,
+  "fc01a_direction": "Defer until FC02/FC03, assess with FC04 after FC01 closeout.",
+  "gate_claim": null,
+  "phys_claim": false,
+  "independent_control_review_claim": false
+}

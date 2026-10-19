@@ -1,0 +1,270 @@
+Test project C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/fc01-closeout/build
+        Start   5: SemanticCodec.EncodesAndDecodesCanonicalOperation
+  1/121 Test   #5: SemanticCodec.EncodesAndDecodesCanonicalOperation ...............................................................   Passed    0.02 sec
+        Start   6: SemanticCodec.CanonicalizesNegativeZeroToPositiveZero
+  2/121 Test   #6: SemanticCodec.CanonicalizesNegativeZeroToPositiveZero ...........................................................   Passed    0.01 sec
+        Start   7: SemanticCodec.StableSeedContainsExactlySixtyCases
+  3/121 Test   #7: SemanticCodec.StableSeedContainsExactlySixtyCases ...............................................................   Passed    0.01 sec
+        Start   8: SemanticCodec.ProtobufRuntimeRoundTripsAllReconciledOperations
+  4/121 Test   #8: SemanticCodec.ProtobufRuntimeRoundTripsAllReconciledOperations ..................................................   Passed    0.01 sec
+        Start   9: SemanticCodec.ProtobufWirePresenceDistinguishesMissingExplicitZeroAndOne
+  5/121 Test   #9: SemanticCodec.ProtobufWirePresenceDistinguishesMissingExplicitZeroAndOne ........................................   Passed    0.02 sec
+        Start  10: SemanticCodec.ProtobufPreflightRejectsOversizedNestedObjectRecord
+  6/121 Test  #10: SemanticCodec.ProtobufPreflightRejectsOversizedNestedObjectRecord ...............................................   Passed    0.05 sec
+        Start  11: SemanticCodec.ProtobufPreflightRejectsUnknownDuplicateWrongTypeAndOverflowFields
+  7/121 Test  #11: SemanticCodec.ProtobufPreflightRejectsUnknownDuplicateWrongTypeAndOverflowFields ................................   Passed    0.01 sec
+        Start  12: SemanticCodec.ProtobufPreflightRejectsNestedSplitReplacementCollectionOverflow
+  8/121 Test  #12: SemanticCodec.ProtobufPreflightRejectsNestedSplitReplacementCollectionOverflow ..................................   Passed    0.01 sec
+        Start  13: SemanticCodec.ProtobufPreflightAllowsKeyedBatchAtLimitAndRejectsAboveLimit
+  9/121 Test  #13: SemanticCodec.ProtobufPreflightAllowsKeyedBatchAtLimitAndRejectsAboveLimit ......................................   Passed    0.02 sec
+        Start  14: SemanticCodec.ProtobufPreflightRejectsNestedRemovedMaskCollectionOverflow
+ 10/121 Test  #14: SemanticCodec.ProtobufPreflightRejectsNestedRemovedMaskCollectionOverflow .......................................   Passed    0.01 sec
+        Start  15: SemanticCodec.ProtobufPreflightRejectsPersistentEraseMaskCollectionOverflow
+ 11/121 Test  #15: SemanticCodec.ProtobufPreflightRejectsPersistentEraseMaskCollectionOverflow .....................................   Passed    0.01 sec
+        Start  16: SemanticCodec.ProtobufPreflightRejectsNestedOrderKeyByteOverflow
+ 12/121 Test  #16: SemanticCodec.ProtobufPreflightRejectsNestedOrderKeyByteOverflow ................................................   Passed    0.01 sec
+        Start  17: SemanticCodec.ProtobufPreflightRejectsNestedRichTextRunStringOverflow
+ 13/121 Test  #17: SemanticCodec.ProtobufPreflightRejectsNestedRichTextRunStringOverflow ...........................................   Passed    0.02 sec
+        Start  18: SemanticCodec.ProtobufPreflightAllowsExactRichTextRunStringLimit
+ 14/121 Test  #18: SemanticCodec.ProtobufPreflightAllowsExactRichTextRunStringLimit ................................................   Passed    0.02 sec
+        Start  19: SemanticCodec.ProtobufPreflightRejectsOversizedEditRichTextInsertBeforeParse
+ 15/121 Test  #19: SemanticCodec.ProtobufPreflightRejectsOversizedEditRichTextInsertBeforeParse ....................................   Passed    0.04 sec
+        Start  20: SemanticCodec.ProtobufPreflightEnforcesEditRichTextAggregateBeforeParse
+ 16/121 Test  #20: SemanticCodec.ProtobufPreflightEnforcesEditRichTextAggregateBeforeParse .........................................   Passed    0.11 sec
+        Start  21: SemanticCodec.ProtobufPreflightAllowsExactEraseMaskCollectionLimit
+ 17/121 Test  #21: SemanticCodec.ProtobufPreflightAllowsExactEraseMaskCollectionLimit ..............................................   Passed    0.02 sec
+        Start  22: SemanticCodec.ObservesAuthorityGoldenVec2AsCanonicalBytes
+ 18/121 Test  #22: SemanticCodec.ObservesAuthorityGoldenVec2AsCanonicalBytes .......................................................   Passed    0.01 sec
+        Start  23: SemanticCodec.ObservesAuthorityCanonicalityAndStableNegativeOutcomes
+ 19/121 Test  #23: SemanticCodec.ObservesAuthorityCanonicalityAndStableNegativeOutcomes ............................................   Passed    0.02 sec
+        Start  24: SemanticCodec.RejectsUnpackedDashSegmentsWithCanonicalPackedCategory
+ 20/121 Test  #24: SemanticCodec.RejectsUnpackedDashSegmentsWithCanonicalPackedCategory ............................................   Passed    0.01 sec
+        Start  25: SemanticCodec.ObservesRichTextDeltaAsCanonicalBytesAndCountBasedProjection
+ 21/121 Test  #25: SemanticCodec.ObservesRichTextDeltaAsCanonicalBytesAndCountBasedProjection ......................................   Passed    0.01 sec
+        Start  26: SemanticCodec.AcceptsOrderedRepeatedRichTextDeltaSteps
+ 22/121 Test  #26: SemanticCodec.AcceptsOrderedRepeatedRichTextDeltaSteps ..........................................................   Passed    0.01 sec
+        Start  27: SemanticCodec.ObservesRichTextDocumentWithReleasedParagraphStyleProjection
+ 23/121 Test  #27: SemanticCodec.ObservesRichTextDocumentWithReleasedParagraphStyleProjection ......................................   Passed    0.01 sec
+        Start  28: SemanticCodec.ObservesStrokeFixedSeedAndDabCenterAsCanonicalProjection
+ 24/121 Test  #28: SemanticCodec.ObservesStrokeFixedSeedAndDabCenterAsCanonicalProjection ..........................................   Passed    0.01 sec
+        Start  29: SemanticCodecNegative.RejectsTruncatedWire
+ 25/121 Test  #29: SemanticCodecNegative.RejectsTruncatedWire ......................................................................   Passed    0.01 sec
+        Start  30: SemanticCodecNegative.RejectsUnsupportedVersion
+ 26/121 Test  #30: SemanticCodecNegative.RejectsUnsupportedVersion .................................................................   Passed    0.01 sec
+        Start  31: SemanticCodecNegative.RejectsUnknownOperation
+ 27/121 Test  #31: SemanticCodecNegative.RejectsUnknownOperation ...................................................................   Passed    0.01 sec
+        Start  32: SemanticCodecNegative.RejectsDuplicateAndUnorderedCanonicalFields
+ 28/121 Test  #32: SemanticCodecNegative.RejectsDuplicateAndUnorderedCanonicalFields ...............................................   Passed    0.01 sec
+        Start  33: SemanticCodecNegative.RejectsNonFiniteAndOversizedValues
+ 29/121 Test  #33: SemanticCodecNegative.RejectsNonFiniteAndOversizedValues ........................................................   Passed    0.01 sec
+        Start  34: SemanticCodecNegative.EnforcesOperationWireSizeBoundaryBeforeDecode
+ 30/121 Test  #34: SemanticCodecNegative.EnforcesOperationWireSizeBoundaryBeforeDecode .............................................   Passed    0.03 sec
+        Start  35: SemanticCodecNegative.EnforcesCustomOperationWireSizeLimit
+ 31/121 Test  #35: SemanticCodecNegative.EnforcesCustomOperationWireSizeLimit ......................................................   Passed    0.06 sec
+        Start  36: brush_engine_codec.BrushEngineCodec.AcceptsOnlyVersionedNewObjectBranch
+ 32/121 Test  #36: brush_engine_codec.BrushEngineCodec.AcceptsOnlyVersionedNewObjectBranch .........................................   Passed    0.01 sec
+        Start  37: brush_engine_codec.BrushEngineCodec.AddStrokeRequiresPayloadVersionTwo
+ 33/121 Test  #37: brush_engine_codec.BrushEngineCodec.AddStrokeRequiresPayloadVersionTwo ..........................................   Passed    0.01 sec
+        Start  38: brush_engine_codec.BrushEngineCodec.ProtobufAddStrokeV2RoundTripsBeforeMutation
+ 34/121 Test  #38: brush_engine_codec.BrushEngineCodec.ProtobufAddStrokeV2RoundTripsBeforeMutation .................................   Passed    0.01 sec
+        Start  39: brush_snapshot_v2.BrushSnapshotV2.NewObjectIsRecognizedBeforeMutation
+ 35/121 Test  #39: brush_snapshot_v2.BrushSnapshotV2.NewObjectIsRecognizedBeforeMutation ...........................................   Passed    0.01 sec
+        Start  40: brush_snapshot_v2.BrushSnapshotV2.DabBrushStrokeRoundTripsWithoutChangingLegacyDabShape
+ 36/121 Test  #40: brush_snapshot_v2.BrushSnapshotV2.DabBrushStrokeRoundTripsWithoutChangingLegacyDabShape .........................   Passed    0.02 sec
+        Start  41: brush_snapshot_v2.BrushSnapshotV2.MembraneDabBrushStrokeRoundTripsWithDistinctProfile
+ 37/121 Test  #41: brush_snapshot_v2.BrushSnapshotV2.MembraneDabBrushStrokeRoundTripsWithDistinctProfile ...........................   Passed    0.01 sec
+        Start  42: codec_operation_ingress.CodecOperationIngress.DecodesIndependentNonEmptyWireRepresentativesForAllFamilies
+ 38/121 Test  #42: codec_operation_ingress.CodecOperationIngress.DecodesIndependentNonEmptyWireRepresentativesForAllFamilies .......   Passed    0.01 sec
+        Start  43: codec_operation_ingress.CodecOperationIngress.DecodedOperationIsConsumableByOperationEngine
+ 39/121 Test  #43: codec_operation_ingress.CodecOperationIngress.DecodedOperationIsConsumableByOperationEngine .....................   Passed    0.02 sec
+        Start  44: codec_operation_ingress.CodecOperationIngress.PreservesConfiguredNestedValues
+ 40/121 Test  #44: codec_operation_ingress.CodecOperationIngress.PreservesConfiguredNestedValues ...................................   Passed    0.01 sec
+        Start  45: codec_operation_ingress.CodecOperationIngress.PreservesNestedValuesAcrossAllConfiguredFamilies
+ 41/121 Test  #45: codec_operation_ingress.CodecOperationIngress.PreservesNestedValuesAcrossAllConfiguredFamilies ..................   Passed    0.02 sec
+        Start  46: G106Snapshot.ProtobufOffContractOrRoundTrip
+ 42/121 Test  #46: G106Snapshot.ProtobufOffContractOrRoundTrip .....................................................................   Passed    0.02 sec
+        Start  47: G106Snapshot.RejectsInvalidEnvelopeAndDuplicateIds
+ 43/121 Test  #47: G106Snapshot.RejectsInvalidEnvelopeAndDuplicateIds ..............................................................   Passed    0.02 sec
+        Start  48: G106Snapshot.RejectsUnknownSnapshotWireFieldsBeforeGeneratedParse
+ 44/121 Test  #48: G106Snapshot.RejectsUnknownSnapshotWireFieldsBeforeGeneratedParse ...............................................   Passed    0.01 sec
+        Start  49: G106Snapshot.RejectsUnknownAndAmbiguousNestedWireBeforeMapping
+ 45/121 Test  #49: G106Snapshot.RejectsUnknownAndAmbiguousNestedWireBeforeMapping ..................................................   Passed    0.02 sec
+        Start  50: G106Snapshot.RejectsDuplicateSingularAndMissingRequiredSemanticPresence
+ 46/121 Test  #50: G106Snapshot.RejectsDuplicateSingularAndMissingRequiredSemanticPresence .........................................   Passed    0.01 sec
+        Start  51: G106Snapshot.RejectsSemanticallyInvalidMappedRecordWithSharedValidator
+ 47/121 Test  #51: G106Snapshot.RejectsSemanticallyInvalidMappedRecordWithSharedValidator ..........................................   Passed    0.01 sec
+        Start  52: G106Snapshot.MapsDirectColorValueMechanicallyThenRejectsItSemantically
+ 48/121 Test  #52: G106Snapshot.MapsDirectColorValueMechanicallyThenRejectsItSemantically ..........................................   Passed    0.01 sec
+        Start  53: G106Snapshot.RejectsSemanticallyInvalidObjectOnEncode
+ 49/121 Test  #53: G106Snapshot.RejectsSemanticallyInvalidObjectOnEncode ...........................................................   Passed    0.01 sec
+        Start  54: G106Snapshot.CanonicalizesPropertyBagEntryPermutation
+ 50/121 Test  #54: G106Snapshot.CanonicalizesPropertyBagEntryPermutation ...........................................................   Passed    0.02 sec
+        Start  55: G106Snapshot.CanonicalizesEraseMaskSetPermutationOnDabStroke
+ 51/121 Test  #55: G106Snapshot.CanonicalizesEraseMaskSetPermutationOnDabStroke ....................................................   Passed    0.02 sec
+        Start  56: G106Snapshot.CanonicalizesF32NegativeZeroInPropertyValue
+ 52/121 Test  #56: G106Snapshot.CanonicalizesF32NegativeZeroInPropertyValue ........................................................   Passed    0.01 sec
+        Start  57: G106Snapshot.CanonicalizesF64NegativeZeroInTransform
+ 53/121 Test  #57: G106Snapshot.CanonicalizesF64NegativeZeroInTransform ............................................................   Passed    0.01 sec
+        Start  58: G106Snapshot.RoundTripsAllV1ContentAndCanonicalizesOrder
+ 54/121 Test  #58: G106Snapshot.RoundTripsAllV1ContentAndCanonicalizesOrder ........................................................   Passed    0.02 sec
+        Start  59: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.EmptySnapshotRestoresWhileLoadingWithoutAdvancingGeneration
+ 55/121 Test  #59: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.EmptySnapshotRestoresWhileLoadingWithoutAdvancingGeneration ......   Passed    0.01 sec
+        Start  60: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RestoresCanonicalReferenceAndIndexedCandidates
+ 56/121 Test  #60: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RestoresCanonicalReferenceAndIndexedCandidates ...................   Passed    0.01 sec
+        Start  61: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.ReferenceAndIndexedProjectionMatchesCandidateProjection
+ 57/121 Test  #61: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.ReferenceAndIndexedProjectionMatchesCandidateProjection ..........   Passed    0.01 sec
+        Start  62: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RestoresHierarchyAndConnectorGraph
+ 58/121 Test  #62: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RestoresHierarchyAndConnectorGraph ...............................   Passed    0.01 sec
+        Start  63: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsNonLoadingStatesWithoutChangingAnything
+ 59/121 Test  #63: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsNonLoadingStatesWithoutChangingAnything ...................   Passed    0.01 sec
+        Start  64: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsNonEmptyTargetAndLeavesItUnchanged
+ 60/121 Test  #64: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsNonEmptyTargetAndLeavesItUnchanged ........................   Passed    0.01 sec
+        Start  65: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsInvalidCandidateBeforeMutation
+ 61/121 Test  #65: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsInvalidCandidateBeforeMutation ............................   Passed    0.01 sec
+        Start  66: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsDuplicateAndBrokenHierarchyBeforeMutation
+ 62/121 Test  #66: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsDuplicateAndBrokenHierarchyBeforeMutation .................   Passed    0.01 sec
+        Start  67: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsInvalidParentCapabilityAndConnectorReferences
+ 63/121 Test  #67: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsInvalidParentCapabilityAndConnectorReferences .............   Passed    0.01 sec
+        Start  68: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsZeroDocumentAndUnsupportedSchema
+ 64/121 Test  #68: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsZeroDocumentAndUnsupportedSchema ..........................   Passed    0.01 sec
+        Start  69: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.SnapshotOneRejectsTriangleAndSnapshotTwoRestoresIt
+ 65/121 Test  #69: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.SnapshotOneRejectsTriangleAndSnapshotTwoRestoresIt ...............   Passed    0.01 sec
+        Start  70: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.NegativeFixturesRejectAtomicallyOnReferenceAndIndexedProviders
+ 66/121 Test  #70: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.NegativeFixturesRejectAtomicallyOnReferenceAndIndexedProviders ...   Passed    0.01 sec
+        Start  80: FC01Shape2Validation.AdmitsOnlyVersionedTriangleTuple
+ 67/121 Test  #80: FC01Shape2Validation.AdmitsOnlyVersionedTriangleTuple ...........................................................   Passed    0.01 sec
+        Start  81: FC01Shape2Validation.KeepsLegacyShapeKindsValid
+ 68/121 Test  #81: FC01Shape2Validation.KeepsLegacyShapeKindsValid .................................................................   Passed    0.01 sec
+        Start  82: FC01Shape2Apply.TypedInsertUsesUniversalTupleValidation
+ 69/121 Test  #82: FC01Shape2Apply.TypedInsertUsesUniversalTupleValidation .........................................................   Passed    0.01 sec
+        Start  83: FC01Shape2Apply.TypedIngressChecksEnvelopeBeforeMutation
+ 70/121 Test  #83: FC01Shape2Apply.TypedIngressChecksEnvelopeBeforeMutation ........................................................   Passed    0.01 sec
+        Start  84: FC01Shape2Apply.TypedIngressNormalizesBeforeIdempotency
+ 71/121 Test  #84: FC01Shape2Apply.TypedIngressNormalizesBeforeIdempotency .........................................................   Passed    0.01 sec
+        Start  85: FC01Shape2Apply.MixedBatchRejectsAtomicallyAndFailedReplayNeverReady
+ 72/121 Test  #85: FC01Shape2Apply.MixedBatchRejectsAtomicallyAndFailedReplayNeverReady ............................................   Passed    0.01 sec
+        Start  86: FC01Shape2Apply.SnapshotTriangleRequiresExplicitReaderCapability
+ 73/121 Test  #86: FC01Shape2Apply.SnapshotTriangleRequiresExplicitReaderCapability ................................................   Passed    0.01 sec
+        Start  87: FC01Shape2Apply.CapableSnapshotRoundTripAndLegacyWriterRefusal
+ 74/121 Test  #87: FC01Shape2Apply.CapableSnapshotRoundTripAndLegacyWriterRefusal ..................................................   Passed    0.01 sec
+        Start  88: FC01Shape2Apply.FrozenIndependentOperationGoldenMatchesProductionEncoding
+ 75/121 Test  #88: FC01Shape2Apply.FrozenIndependentOperationGoldenMatchesProductionEncoding .......................................   Passed    0.02 sec
+        Start  89: FC01Shape2Apply.GoldenRootsAndNestedUnknownWireFailClosed
+ 76/121 Test  #89: FC01Shape2Apply.GoldenRootsAndNestedUnknownWireFailClosed .......................................................   Passed    0.01 sec
+        Start  90: FC01Shape2Closeout.FrozenNegativeTupleAndExtentMatrixIsAtomic
+ 77/121 Test  #90: FC01Shape2Closeout.FrozenNegativeTupleAndExtentMatrixIsAtomic ...................................................   Passed    0.01 sec
+        Start  91: FC01Shape2Closeout.AlteredPayloadCollisionPreservesOriginalCommit
+ 78/121 Test  #91: FC01Shape2Closeout.AlteredPayloadCollisionPreservesOriginalCommit ...............................................   Passed    0.01 sec
+        Start  92: FC01Shape2Closeout.LegacySnapshotRemainsV1AndTriangleCannotBeDowngraded
+ 79/121 Test  #92: FC01Shape2Closeout.LegacySnapshotRemainsV1AndTriangleCannotBeDowngraded .........................................   Passed    0.02 sec
+        Start  93: FC01Shape2Closeout.AttachedConnectorCannotTargetTriangle
+ 80/121 Test  #93: FC01Shape2Closeout.AttachedConnectorCannotTargetTriangle ........................................................   Passed    0.01 sec
+        Start 133: OperationEngine15OperationConformance.AuthorityFirstIndependentTableHasExactlyFifteenKinds
+ 81/121 Test #133: OperationEngine15OperationConformance.AuthorityFirstIndependentTableHasExactlyFifteenKinds ......................   Passed    0.01 sec
+        Start 134: OperationEngine15OperationConformance.AppliedInsertHasExactCanonicalCommitForBothProviders
+ 82/121 Test #134: OperationEngine15OperationConformance.AppliedInsertHasExactCanonicalCommitForBothProviders ......................   Passed    0.01 sec
+        Start 135: OperationEngine15OperationConformance.PayloadV2AdmitsDabBrushExceptionAlongsideVectorBrush
+ 83/121 Test #135: OperationEngine15OperationConformance.PayloadV2AdmitsDabBrushExceptionAlongsideVectorBrush ......................   Passed    0.01 sec
+        Start 136: OperationEngine15OperationConformance.CollisionAndNegativeFixtureAreSideEffectFree
+ 84/121 Test #136: OperationEngine15OperationConformance.CollisionAndNegativeFixtureAreSideEffectFree ..............................   Passed    0.01 sec
+        Start 137: OperationEngine15OperationConformance.LiteralAuthorityTableDrivesAllFifteenOperationFixtures
+ 85/121 Test #137: OperationEngine15OperationConformance.LiteralAuthorityTableDrivesAllFifteenOperationFixtures ....................   Passed    0.01 sec
+        Start 138: OperationEngine15OperationConformance.EveryFamilyHasAtomicNegativeFixtureOnBothProviders
+ 86/121 Test #138: OperationEngine15OperationConformance.EveryFamilyHasAtomicNegativeFixtureOnBothProviders ........................   Passed    0.01 sec
+        Start 139: OperationEngine15OperationConformance.DeleteSubtreeCascadesAttachedConnectorsAndPreservesSentinel
+ 87/121 Test #139: OperationEngine15OperationConformance.DeleteSubtreeCascadesAttachedConnectorsAndPreservesSentinel ...............   Passed    0.01 sec
+        Start 140: OperationEngine15OperationConformance.SplitStrokesDeletesSourceAndCreatesDeterministicReplacements
+ 88/121 Test #140: OperationEngine15OperationConformance.SplitStrokesDeletesSourceAndCreatesDeterministicReplacements ..............   Passed    0.01 sec
+        Start 141: OperationEngine15OperationConformance.IdempotencyAndCollisionAreAtomicOnBothProviders
+ 89/121 Test #141: OperationEngine15OperationConformance.IdempotencyAndCollisionAreAtomicOnBothProviders ...........................   Passed    0.01 sec
+        Start 142: OperationEngine15OperationConformance.ApplySourcesShareCanonicalResultsAndDifferOnlyInPublication
+ 90/121 Test #142: OperationEngine15OperationConformance.ApplySourcesShareCanonicalResultsAndDifferOnlyInPublication ...............   Passed    0.01 sec
+        Start 143: OperationEngine15OperationConformance.PatchPropertiesProducesLiteralSortedFieldChange
+ 91/121 Test #143: OperationEngine15OperationConformance.PatchPropertiesProducesLiteralSortedFieldChange ...........................   Passed    0.01 sec
+        Start 144: OperationEngine15OperationConformance.AllFifteenFamiliesApplyOnBothProviders
+ 92/121 Test #144: OperationEngine15OperationConformance.AllFifteenFamiliesApplyOnBothProviders ....................................   Passed    0.01 sec
+        Start 147: FC01AxisPublicationTruth
+ 93/121 Test #147: FC01AxisPublicationTruth ........................................................................................   Passed    0.01 sec
+        Start 169: canvas_fc01_derived_geometry
+ 94/121 Test #169: canvas_fc01_derived_geometry ....................................................................................   Passed    0.01 sec
+        Start 176: G4EditorHistory
+ 95/121 Test #176: G4EditorHistory .................................................................................................   Passed    0.01 sec
+        Start 177: FC01EditorHistoryInverseFamilies
+ 96/121 Test #177: FC01EditorHistoryInverseFamilies ................................................................................   Passed    0.01 sec
+        Start 216: G3HeadlessSkia
+ 97/121 Test #216: G3HeadlessSkia ..................................................................................................   Passed    0.08 sec
+        Start 217: FC01TriangleConnectorRaster
+ 98/121 Test #217: FC01TriangleConnectorRaster .....................................................................................   Passed    0.04 sec
+        Start 236: FC00XRuntimeComposition
+ 99/121 Test #236: FC00XRuntimeComposition .........................................................................................   Passed    0.10 sec
+        Start 237: FC00XRuntimeFacade
+100/121 Test #237: FC00XRuntimeFacade ..............................................................................................   Passed    0.01 sec
+        Start 257: FC01CreationSession
+101/121 Test #257: FC01CreationSession .............................................................................................   Passed    0.01 sec
+        Start 258: FC01CreationControlBinding
+102/121 Test #258: FC01CreationControlBinding ......................................................................................   Passed    0.13 sec
+        Start 259: FC01CreationPreview
+103/121 Test #259: FC01CreationPreview .............................................................................................   Passed    0.03 sec
+        Start 260: FC01CreationSources
+104/121 Test #260: FC01CreationSources .............................................................................................   Passed    0.05 sec
+        Start 261: FC01CreationOwnerQueue
+105/121 Test #261: FC01CreationOwnerQueue ..........................................................................................   Passed    0.01 sec
+        Start 262: FC01Creation-arrow
+106/121 Test #262: FC01Creation-arrow ..............................................................................................   Passed    0.02 sec
+        Start 263: FC01Creation-arrow-arrow
+107/121 Test #263: FC01Creation-arrow-arrow ........................................................................................   Passed    0.01 sec
+        Start 264: FC01Creation-arrow-arrow-pointer
+108/121 Test #264: FC01Creation-arrow-arrow-pointer ................................................................................   Passed    0.01 sec
+        Start 265: FC01Creation-line-line-pointer
+109/121 Test #265: FC01Creation-line-line-pointer ..................................................................................   Passed    0.01 sec
+        Start 266: FC01Creation-unregister
+110/121 Test #266: FC01Creation-unregister .........................................................................................   Passed    0.01 sec
+        Start 267: FC01Creation-width-style
+111/121 Test #267: FC01Creation-width-style ........................................................................................Exit code 0xc0000409***Exception:   2.91 sec
+Assertion failed: result.width == 9 && result.color == remote.color && result.cap == remote.cap && result.join == remote.join && result.dash == remote.dash, file C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\apps\ink_playground\tests\creation_control_binding_test.cpp, line 295
+
+        Start 268: FC01Creation-failed-down
+112/121 Test #268: FC01Creation-failed-down ........................................................................................   Passed    0.01 sec
+        Start 269: FC01Creation-target-capture
+113/121 Test #269: FC01Creation-target-capture .....................................................................................Exit code 0xc0000409***Exception:   3.85 sec
+Assertion failed: service.processPending(1) == 1, file C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\apps\ink_playground\tests\creation_control_binding_test.cpp, line 319
+
+        Start 270: FC01SnapCreationDifferential
+114/121 Test #270: FC01SnapCreationDifferential ....................................................................................   Passed    1.11 sec
+        Start 271: FC01HostPublicationTruth
+115/121 Test #271: FC01HostPublicationTruth ........................................................................................Exit code 0xc0000409***Exception:   4.49 sec
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+Assertion failed: action(), file C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\apps\ink_playground\tests\fc01_host_publication_truth_test.cpp, line 205
+
+        Start 272: FC01SelectedActions
+116/121 Test #272: FC01SelectedActions .............................................................................................   Passed    0.05 sec
+        Start 273: FC01SelectedRemoteConflict
+117/121 Test #273: FC01SelectedRemoteConflict ......................................................................................   Passed    0.01 sec
+        Start 274: FC01InsertHistory
+118/121 Test #274: FC01InsertHistory ...............................................................................................   Passed    0.02 sec
+        Start 275: FC01SelectedLocked
+119/121 Test #275: FC01SelectedLocked ..............................................................................................   Passed    0.01 sec
+        Start 276: FC01SelectedDependent
+120/121 Test #276: FC01SelectedDependent ...........................................................................................   Passed    0.01 sec
+        Start 277: FC01SelectedPreimageMatrix
+121/121 Test #277: FC01SelectedPreimageMatrix ......................................................................................   Passed    0.71 sec
+
+98% tests passed, 3 tests failed out of 121
+
+Total Test time (real) =  15.36 sec
+
+The following tests FAILED:
+	267 - FC01Creation-width-style (Exit code 0xc0000409)
+	269 - FC01Creation-target-capture (Exit code 0xc0000409)
+	271 - FC01HostPublicationTruth (Exit code 0xc0000409)
+Errors while running CTest

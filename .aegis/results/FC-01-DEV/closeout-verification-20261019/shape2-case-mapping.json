@@ -1,0 +1,177 @@
+[
+  {
+    "id": "SH2-G01",
+    "frozen_input": "Triangle versioned (1,2,3) W100 H80",
+    "frozen_expected": "accept",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "canvas_fc01_derived_geometry"
+  },
+  {
+    "id": "SH2-G02",
+    "frozen_input": "Triangle hit probes",
+    "frozen_expected": "accept",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "canvas_fc01_derived_geometry"
+  },
+  {
+    "id": "SH2-G03",
+    "frozen_input": "Triangle snap center",
+    "frozen_expected": "accept",
+    "status": "PARTIAL",
+    "current_observation_or_gap": "Snap differential covers bbox reference; no separate Triangle-centroid negative execution"
+  },
+  {
+    "id": "SH2-G04",
+    "frozen_input": "Shape2 intrinsic W200 H40",
+    "frozen_expected": "accept",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "canvas_fc01_derived_geometry / FC01SelectedPreimageMatrix"
+  },
+  {
+    "id": "SH2-G05",
+    "frozen_input": "Old Shape/1 kinds1,2",
+    "frozen_expected": "accept",
+    "status": "PARTIAL",
+    "current_observation_or_gap": "V1 tuples/roundtrip pass; full historical SH-G01..18 mapping missing"
+  },
+  {
+    "id": "SH2-G06",
+    "frozen_input": "Shape/1 shapeKind3",
+    "frozen_expected": "reject",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "wire / FC01Shape2Closeout.FrozenNegativeTupleAndExtentMatrixIsAtomic"
+  },
+  {
+    "id": "SH2-G07",
+    "frozen_input": "Shape/2 kind1 and kind2",
+    "frozen_expected": "reject",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "FC01Shape2Closeout.FrozenNegativeTupleAndExtentMatrixIsAtomic"
+  },
+  {
+    "id": "SH2-G08",
+    "frozen_input": "Shape/2 0/4+ or kindVersion3",
+    "frozen_expected": "reject",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "wire / FC01Shape2Closeout.FrozenNegativeTupleAndExtentMatrixIsAtomic"
+  },
+  {
+    "id": "SH2-G09",
+    "frozen_input": "Shape2 zero and negative W/H",
+    "frozen_expected": "reject",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "wire / FC01Shape2Closeout.FrozenNegativeTupleAndExtentMatrixIsAtomic"
+  },
+  {
+    "id": "SH2-G10",
+    "frozen_input": "Shape2 NaN/Infinity/-0 W/H",
+    "frozen_expected": "reject",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "wire / FC01Shape2Closeout.FrozenNegativeTupleAndExtentMatrixIsAtomic"
+  },
+  {
+    "id": "SH2-G11",
+    "frozen_input": "Missing required ShapeContent scalar presence",
+    "frozen_expected": "reject",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "wire SH2-G11-missing-*"
+  },
+  {
+    "id": "SH2-G12",
+    "frozen_input": "Wrong oneof/ObjectKind/kind_version",
+    "frozen_expected": "reject",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "FC01Shape2Closeout.FrozenNegativeTupleAndExtentMatrixIsAtomic"
+  },
+  {
+    "id": "SH2-G13",
+    "frozen_input": "Fill None Stroke None opacity default",
+    "frozen_expected": "accept",
+    "status": "PARTIAL",
+    "current_observation_or_gap": "None geometry retained; full canonical property/default record scenario not separately enumerated"
+  },
+  {
+    "id": "SH2-G14",
+    "frozen_input": "Triangle translation/rotation/reflection",
+    "frozen_expected": "accept",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "canvas_fc01_derived_geometry"
+  },
+  {
+    "id": "SH2-G15",
+    "frozen_input": "Independently authored Shape2 canonical wire bytes",
+    "frozen_expected": "accept",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "wire SH2-G15-* exact decoded-hex hashes and byte comparator"
+  },
+  {
+    "id": "SH2-G16",
+    "frozen_input": "New reader old V1 snapshot/operation stream",
+    "frozen_expected": "accept",
+    "status": "PARTIAL",
+    "current_observation_or_gap": "Snapshot1 preservation / old codec negatives; full frozen legacy stream mapping not claimed"
+  },
+  {
+    "id": "SH2-G17",
+    "frozen_input": "Snapshot2 Triangle with capable reader",
+    "frozen_expected": "accept",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "FC01Shape2Apply.CapableSnapshotRoundTripAndLegacyWriterRefusal"
+  },
+  {
+    "id": "SH2-G18",
+    "frozen_input": "Snapshot1 carrying Triangle",
+    "frozen_expected": "reject",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "FC01Shape2Closeout.LegacySnapshotRemainsV1AndTriangleCannotBeDowngraded"
+  },
+  {
+    "id": "SH2-G19",
+    "frozen_input": "Legacy reader Triangle insertion/snapshot",
+    "frozen_expected": "reject",
+    "status": "PARTIAL",
+    "current_observation_or_gap": "Legacy Snapshot refusal passes; live legacy-operation client admission unproven"
+  },
+  {
+    "id": "SH2-G20",
+    "frozen_input": "Insert -> Undo -> Restore Triangle",
+    "frozen_expected": "accept",
+    "status": "PARTIAL",
+    "current_observation_or_gap": "Triangle Delete/Restore and exact preimage pass; explicit Triangle Insert Undo/Redo sequence not separately enumerated"
+  },
+  {
+    "id": "SH2-G21",
+    "frozen_input": "Connector AttachedEndpoint target Shape/2",
+    "frozen_expected": "reject",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "FC01Shape2Closeout.AttachedConnectorCannotTargetTriangle"
+  },
+  {
+    "id": "SH2-G22",
+    "frozen_input": "Historical shape regression",
+    "frozen_expected": "accept",
+    "status": "PARTIAL",
+    "current_observation_or_gap": "Protected Golden/schema untouched; complete historical SH-G01..18 mapping missing"
+  },
+  {
+    "id": "SH2-G23",
+    "frozen_input": "Incompatible writer/reader in mixed-version session",
+    "frozen_expected": "reject",
+    "status": "UNPROVEN_INTEGRATION",
+    "current_observation_or_gap": "No qualified mixed-version writable-peer session admission seam"
+  },
+  {
+    "id": "SH2-G24",
+    "frozen_input": "Cancel create preview before submit",
+    "frozen_expected": "no_submission",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "FC01SnapCreationDifferential / FC01HostPublicationTruth"
+  },
+  {
+    "id": "SH2-G25",
+    "frozen_input": "Malformed wire len/duplicate singular/unknown field",
+    "frozen_expected": "reject",
+    "status": "COVERED_CURRENT",
+    "current_observation_or_gap": "wire SH2-G25-*"
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "D01",
+    "initial": "FAIL_BUILD",
+    "actual": "MSVC /WX C4244 in existing E09 unsigned coordinate expression",
+    "root_cause": "Implicit unsigned-to-float conversion",
+    "fix": "Explicit float conversion; no suppression",
+    "current": "PASS",
+    "evidence": "diagnostic-red/attempt-03/build.log"
+  },
+  {
+    "id": "D02",
+    "initial": "FAIL_LINK",
+    "actual": "Shape2 isolated validator target cannot resolve validateResourceManifestEntry",
+    "root_cause": "Test copied validator.cpp without its new semantic dependency",
+    "fix": "Link the production semantic library",
+    "current": "PASS",
+    "evidence": "diagnostic-red/attempt-04/build.log"
+  },
+  {
+    "id": "D03",
+    "initial": "FAIL_TEST",
+    "actual": "Unknown Snapshot version negative used now-supported Snapshot/3",
+    "root_cause": "Outdated fixture envelope assumption",
+    "fix": "Use truly unknown version; preserve Shape1/Triangle negative",
+    "current": "PASS",
+    "evidence": "diagnostic-red/attempt-05/test.log"
+  },
+  {
+    "id": "D04",
+    "initial": "FAIL_TEST",
+    "actual": "Preview/publication tests reused frame IDs consumed by automatic preview",
+    "root_cause": "Outdated manual frame sequencing",
+    "fix": "Use current frame allocator; preserve stale-feedback tests",
+    "current": "PASS",
+    "evidence": "diagnostic-red/attempt-05/test.log"
+  },
+  {
+    "id": "D05",
+    "initial": "FALSE_COVERAGE_FOUND",
+    "actual": "Generic argc>1 branch intercepted Arrow/Line scenario dispatch",
+    "root_cause": "Unreachable dispatcher branches / missing CTest registrations",
+    "fix": "Explicit owner branch, reject unknown mode, register scenarios and require execution marker",
+    "current": "PASS"
+  },
+  {
+    "id": "D06",
+    "initial": "FAIL_TEST",
+    "actual": "Queued style scenario edited remote state before the queue captured its base; stale selection expected an Apply count",
+    "root_cause": "Fixture interleaving / receipt-count assumptions",
+    "fix": "Interleave remote edit after enqueue; rejected stale target performs zero Apply and preserves full objects/counts",
+    "current": "PASS",
+    "evidence": "diagnostic-red/attempt-06/test.log"
+  },
+  {
+    "id": "D07",
+    "initial": "FAIL_TEST",
+    "actual": "Publication fixture equated local submit with Presented and attempted a new intent after surface loss",
+    "root_cause": "Fixture did not supply qualified feedback; lifecycle admission rejects new intents without a surface",
+    "fix": "Require submit-only remains unpresented; approximate/duplicate reject; exact deterministic feedback qualifies. Apply compensation before surface loss, then prove render/Axis failure cannot roll it back.",
+    "current": "PASS",
+    "evidence": "diagnostic-red/attempt-06/test.log"
+  },
+  {
+    "id": "D08",
+    "initial": "HARNESS_INVOCATION_ERROR",
+    "actual": "Initial local command used an unavailable headless target spelling / overbroad Snapshot regex selected an unbuilt Debug fixture",
+    "fix": "Resolve actual CMake target and explicit test-family regex. Not a candidate implementation failure. Original native run result retains NOT_RUN.",
+    "current": "RESOLVED",
+    "evidence": "diagnostic-red/attempt-05/result.json"
+  }
+]

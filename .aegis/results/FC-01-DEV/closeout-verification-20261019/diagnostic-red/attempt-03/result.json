@@ -1,0 +1,53 @@
+{
+  "started_at": "2026-10-19T07:14:57.402278+00:00",
+  "repository": "https://github.com/Mostorm-Labs/axiom.git",
+  "source_revision": "3f84ecabc2294121a2f4b9e78bb7f073585576ac",
+  "working_tree_changes": [
+    "M apps/ink_playground/CMakeLists.txt",
+    " M apps/ink_playground/tests/selected_actions_test.cpp",
+    " M runtime/interaction/CMakeLists.txt",
+    " M runtime/semantic/tests/fc01_shape2_apply_test.cpp",
+    " M verification/fc01/run_source_loss.py",
+    "?? verification/fc01/run_closeout.py"
+  ],
+  "build": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build",
+  "commands": [
+    {
+      "name": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build",
+        "--target",
+        "canvas_semantic_fc01_shape2_validation_test",
+        "canvas_semantic_fc01_shape2_apply_test",
+        "canvas_semantic_codec_test",
+        "canvas_semantic_codec_operation_ingress_test",
+        "canvas_semantic_g1_06_snapshot_test",
+        "canvas_semantic_g1_06_snapshot_bootstrap_test",
+        "canvas_semantic_brush_snapshot_v2_test",
+        "canvas_semantic_brush_engine_codec_test",
+        "canvas_semantic_operation_engine_15_operation_conformance_test",
+        "axiom_fc01_creation_session_tests",
+        "axiom_fc01_creation_control_binding_tests",
+        "axiom_fc01_snap_creation_differential_tests",
+        "axiom_fc01_host_publication_truth_tests",
+        "axiom_fc01_selected_actions_tests",
+        "axiom_editor_history_tests",
+        "axiom_fc00x_runtime_facade_tests",
+        "axiom_fc00x_runtime_composition_tests",
+        "canvas_fc01_derived_geometry_test",
+        "canvas_semantic_operation_engine_axis_publication_truth_test",
+        "axiom_render_headless_skia_tests",
+        "axiom_minimal_runtime_host_windows",
+        "--parallel",
+        "4"
+      ],
+      "exit_code": 2
+    }
+  ],
+  "tests": [],
+  "status": "BUILD_FAIL",
+  "physical_claim": false,
+  "gate_claim": null
+}

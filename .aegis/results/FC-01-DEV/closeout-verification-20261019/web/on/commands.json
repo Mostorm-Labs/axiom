@@ -1,0 +1,28 @@
+[
+  {
+    "command": [
+      "cmake",
+      "-S",
+      ".",
+      "-B",
+      "out/p32-web/build",
+      "-DCMAKE_CXX_FLAGS=-fexceptions",
+      "-DCMAKE_PROJECT_INCLUDE=",
+      "-DAXIOM_BUILD_DEBUG_UI=ON",
+      "-DAXIOM_DEBUG_UI_PROFILE=full"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "cmake",
+      "--build",
+      "out/p32-web/build",
+      "--target",
+      "axiom_canvas_demo_web",
+      "-j",
+      "4"
+    ],
+    "exit_code": 0
+  }
+]
