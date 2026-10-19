@@ -473,6 +473,12 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool canonicalPresentationDirty() const noexcept {
     return canonicalPresentationDirty_;
   }
+  [[nodiscard]] bool canonicalPresentationRetryable() const noexcept {
+    return canonicalPresentationRetryable_;
+  }
+  [[nodiscard]] bool previewPresentationRetryable() const noexcept {
+    return previewPresentationRetryable_;
+  }
   // Owner-side derived resources can invalidate the current pixels without
   // mutating the semantic document or history.
   void markCanonicalPresentationDirty() noexcept { canonicalPresentationDirty_ = true; }
@@ -538,6 +544,13 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool creation(const input::PointerSample&, std::uint64_t) noexcept override;
   [[nodiscard]] bool pan(const input::PointerSample&, std::uint64_t) noexcept override;
   [[nodiscard]] bool brush(const input::PointerSample&, std::uint64_t) noexcept override;
+  [[nodiscard]] bool brushBatch(
+      std::span<const input::PointerSample>, std::uint64_t) noexcept override;
+  [[nodiscard]] bool appendBrushSamples(
+      std::uint64_t pointerId,
+      std::span<const ink::BrushSample> confirmed,
+      std::span<const ink::BrushSample> predicted,
+      bool renderPreview = true) noexcept;
   [[nodiscard]] bool eraser(const input::PointerSample&, std::uint64_t) noexcept override;
   [[nodiscard]] bool cancel(interaction::DispatchMode, const input::PointerSample&,
                             std::uint64_t) noexcept override;
@@ -674,6 +687,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   // exposing the old canonical surface for one compositor refresh.
   bool transientOverlayHandoffPending_ = false;
   bool platformPresentationDeferred_ = false;
+  bool canonicalPresentationRetryable_ = false;
+  bool previewPresentationRetryable_ = false;
   bool closed_ = false;
   std::uint64_t resizeEvents_ = 0;
   std::uint64_t surfaceLostEvents_ = 0;

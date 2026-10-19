@@ -22,7 +22,9 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     const EditingOverlay* selectionOverlay) {
     const auto acquired = provider.acquire();
     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
-        return BackendSubmissionResult::rejected(acquired.message);
+        return acquired.code == SkiaSurfaceAcquireCode::kUnavailable
+            ? BackendSubmissionResult::retry(acquired.message)
+            : BackendSubmissionResult::rejected(acquired.message);
     }
     if (acquired.frame.generation != plan.frame.surfaceGeneration.value()) {
         provider.release();
@@ -177,7 +179,9 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
     }
     const auto acquired = provider.acquire();
     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
-        return BackendSubmissionResult::rejected(acquired.message);
+        return acquired.code == SkiaSurfaceAcquireCode::kUnavailable
+            ? BackendSubmissionResult::retry(acquired.message)
+            : BackendSubmissionResult::rejected(acquired.message);
     }
     if (acquired.frame.generation != geometry.surfaceGeneration.value()) {
         provider.release();

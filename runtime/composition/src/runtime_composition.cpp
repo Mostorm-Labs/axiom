@@ -372,8 +372,9 @@ bool RuntimeComposition::serviceFrameOpportunity(
   if (nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
   if (shouldCanonical) {
     const auto frameId = runtime_->nextCanonicalFrameId();
-    if (frameId == 0U || !runtime_->presentCanonicalFrame(frameId, 0.0, false)) return false;
-    out.canonicalRequested = true;
+    if (frameId == 0U) return false;
+    out.canonicalRequested = runtime_->presentCanonicalFrame(frameId, 0.0, false);
+    if (!out.canonicalRequested && !runtime_->canonicalPresentationRetryable()) return false;
   }
   if (!captureCanonicalWork()) return false;
   out.previewActive = runtime_->previewActive();
@@ -383,14 +384,17 @@ bool RuntimeComposition::serviceFrameOpportunity(
     interaction::PreviewPresentationCapture capture{};
     if (runtime_->capturePreviewPresentation(capture)) {
       std::uint64_t presentCount = 0U;
-      if (!runtime_->renderPreviewPresentation(capture, &presentCount)) return false;
-      pendingPreviewCapture_ = capture;
-      pendingPreviewPresentCount_ = presentCount;
-      pendingPreviewWorkId_ = nextPreviewWorkId_++;
-      pendingPreviewIdentity_ = RuntimeFrameOpportunity::PreviewWork{
-          runtimeInstanceId_, viewId_.value(), resources_.lifetimeGeneration,
-          pendingPreviewWorkId_, capture.contentRevision, capture.surfaceGeneration,
-          runtime_->surface().metricsGeneration};
+      if (runtime_->renderPreviewPresentation(capture, &presentCount)) {
+        pendingPreviewCapture_ = std::move(capture);
+        pendingPreviewPresentCount_ = presentCount;
+        pendingPreviewWorkId_ = nextPreviewWorkId_++;
+        pendingPreviewIdentity_ = RuntimeFrameOpportunity::PreviewWork{
+            runtimeInstanceId_, viewId_.value(), resources_.lifetimeGeneration,
+            pendingPreviewWorkId_, pendingPreviewCapture_->contentRevision,
+            pendingPreviewCapture_->surfaceGeneration, runtime_->surface().metricsGeneration};
+      } else if (!runtime_->previewPresentationRetryable()) {
+        return false;
+      }
     }
   }
   out.previewRendered = pendingPreviewCapture_.has_value();

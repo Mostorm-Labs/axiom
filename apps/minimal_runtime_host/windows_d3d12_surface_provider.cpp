@@ -177,11 +177,11 @@ canvas::render::BackendSubmissionResult WindowsD3D12SurfaceProvider::present() n
   // refresh interval. Canonical presentation has its own qualified handoff;
   // this surface only publishes the latest preview frame.
   const auto presentHr = impl_->swapChain->Present(0, 0);
+  if (presentHr == DXGI_ERROR_WAS_STILL_DRAWING || presentHr == DXGI_STATUS_OCCLUDED) {
+    return canvas::render::BackendSubmissionResult::retry(
+        "D3D12 present temporarily unavailable");
+  }
   if (FAILED(presentHr)) {
-    if (presentHr == DXGI_ERROR_WAS_STILL_DRAWING || presentHr == DXGI_STATUS_OCCLUDED) {
-      return canvas::render::BackendSubmissionResult::rejected(
-          "D3D12 present temporarily unavailable");
-    }
     std::fprintf(stderr, "[d3d12] present failed owner=%d gen=%llu index=%u hr=0x%08lx\\n",
                  attachToOwner_ ? 1 : 0,
                  static_cast<unsigned long long>(generation()), index,

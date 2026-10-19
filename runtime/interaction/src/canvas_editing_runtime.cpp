@@ -513,6 +513,39 @@ bool CanvasEditingRuntime::brush(const input::PointerSample& sample,
   return true;
 }
 
+bool CanvasEditingRuntime::brushBatch(
+    std::span<const input::PointerSample> samples,
+    std::uint64_t session) noexcept {
+  if (samples.empty()) return false;
+  if (samples.front().phase == input::PointerPhase::kDown) {
+    const auto profile = selectedBrushProfile_ == "vector-solid-v1" ? 1U
+        : selectedBrushProfile_ == "marker-flat-v1" ? 2U
+        : selectedBrushProfile_ == "chalk-grain-v1" ? 3U : 4U;
+    if (!beginBrushSession(session, profile)) return false;
+  }
+  std::vector<ink::BrushSample> confirmed;
+  std::vector<ink::BrushSample> predicted;
+  confirmed.reserve(samples.size());
+  for (const auto& sample : samples) {
+    if (sample.phase == input::PointerPhase::kCancel) break;
+    const ink::BrushSample point{sample.x, sample.y, sample.pressure, true, sample.sequence};
+    if (sample.predicted) predicted.push_back(point);
+    else {
+      // A confirmed observation replaces the preceding speculative tail.
+      predicted.clear();
+      confirmed.push_back(point);
+    }
+  }
+  if ((!confirmed.empty() || !predicted.empty()) &&
+      !appendBrushSamples(session, confirmed, predicted, false)) return false;
+  const auto& last = samples.back();
+  if (!last.predicted && last.phase == input::PointerPhase::kUp)
+    return finishBrushSession(session);
+  if (!last.predicted && last.phase == input::PointerPhase::kCancel)
+    return cancelBrushSession(session);
+  return true;
+}
+
 bool CanvasEditingRuntime::eraser(const input::PointerSample& sample,
                                std::uint64_t session) noexcept {
   if (!sample.key.valid()) return false;
@@ -696,6 +729,13 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
     return routed.accepted || routed.terminalCancel;
   }
   bool previewDirty = false;
+  std::vector<input::PointerSample> inkBatch;
+  const auto flushInk = [&]() {
+    if (inkBatch.empty()) return true;
+    const bool accepted = dispatchRuntime_.submitBatch(inkBatch);
+    inkBatch.clear();
+    return accepted;
+  };
   const auto viewportBefore = viewportController_->state();
   for (const auto& sample : routed.normalized.samples) {
     if (!sample.key.valid()) continue;
@@ -722,7 +762,14 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
                                 true, 0U, 0U});
       continue;
     }
+    if (!inkBatch.empty() && (sample.key != inkBatch.front().key ||
+        sample.phase == input::PointerPhase::kDown ||
+        sample.phase == input::PointerPhase::kCancel)) {
+      if (!flushInk()) return false;
+    }
     auto routing = coordinator_->route(sample);
+    if ((!routing.cancelPointers.empty() || routing.cancelsInk ||
+         !routing.routesToInk) && !flushInk()) return false;
     if (routing.endedViewport) viewportController_->endGesture();
     // Preserve the original AutoIntent handoff boundary: once Runtime claims
     // a viewport gesture, every pending ink session participating in that
@@ -767,14 +814,16 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
                                  viewportController_->state().translationX,
                                  viewportController_->state().translationY});
     if (routing.routesToInk) {
-      if (!dispatchRuntime_.submit(routing.routedSample)) return false;
+      inkBatch.push_back(routing.routedSample);
       previewDirty = true;
     }
     if (sample.phase == input::PointerPhase::kUp ||
         sample.phase == input::PointerPhase::kCancel) {
+      if (!flushInk()) return false;
       baselineDownTimestamps_.erase(sample.key);
     }
   }
+  if (!flushInk()) return false;
   const auto viewportAfter = viewportController_->state();
   const bool viewportChanged = viewportBefore.scale != viewportAfter.scale ||
       viewportBefore.translationX != viewportAfter.translationX ||
@@ -2148,15 +2197,21 @@ bool CanvasEditingRuntime::eraserCancel(std::uint64_t pointerId) noexcept {
 bool CanvasEditingRuntime::appendBrushSample(std::uint64_t pointerId, double x, double y,
                                           double pressure, std::uint64_t sequence,
                                           bool predicted, bool renderPreview) noexcept {
+  const ink::BrushSample sample{x, y, pressure, true, sequence};
+  return predicted
+      ? appendBrushSamples(pointerId, {}, std::span<const ink::BrushSample>(&sample, 1), renderPreview)
+      : appendBrushSamples(pointerId, std::span<const ink::BrushSample>(&sample, 1), {}, renderPreview);
+}
+
+bool CanvasEditingRuntime::appendBrushSamples(
+    std::uint64_t pointerId, std::span<const ink::BrushSample> confirmed,
+    std::span<const ink::BrushSample> predicted, bool renderPreview) noexcept {
   std::lock_guard lock(previewStateMutex_);
   const auto it = brushSessions_.find(pointerId);
   if (it == brushSessions_.end()) return false;
-  ink::BrushSample sample{x, y, pressure, true, sequence};
   ink::BrushPreviewDelta delta;
-  const auto error = predicted
-      ? it->second->append({}, std::span<const ink::BrushSample>(&sample, 1), delta)
-      : it->second->append(std::span<const ink::BrushSample>(&sample, 1), {}, delta);
-  if (error != ink::BrushSessionError::kNone) { AXIOM_ANDROID_DIAG("BrushSession append error=%d confirmed=%zu predicted=%zu seq=%llu", static_cast<int>(error), static_cast<std::size_t>(predicted ? 0 : 1), static_cast<std::size_t>(predicted ? 1 : 0), static_cast<unsigned long long>(sequence)); return false; }
+  const auto error = it->second->append(confirmed, predicted, delta);
+  if (error != ink::BrushSessionError::kNone) { AXIOM_ANDROID_DIAG("BrushSession append error=%d confirmed=%zu predicted=%zu", static_cast<int>(error), confirmed.size(), predicted.size()); return false; }
   if (arcPreviewSink_ != nullptr) {
     const ink::PreviewIdentity identity{1U, pointerId, 1U};
     const auto disposition = arcPreviewSink_->update(identity, delta);
@@ -2195,6 +2250,7 @@ bool CanvasEditingRuntime::capturePreviewPresentation(
 bool CanvasEditingRuntime::renderPreviewPresentation(
     const PreviewPresentationCapture& capture,
     std::uint64_t* presentCount) noexcept {
+  previewPresentationRetryable_ = false;
   std::lock_guard renderLock(previewRenderMutex_);
   std::lock_guard providerLock(previewProviderMutex_);
   render::SkiaSurfaceProvider* provider = nullptr;
@@ -2207,6 +2263,7 @@ bool CanvasEditingRuntime::renderPreviewPresentation(
   }
   const auto result = previewRenderer_.renderPreview(*provider, capture.geometry,
                                                   capture.style);
+  previewPresentationRetryable_ = result.code == render::BackendSubmissionCode::kRetry;
   if (result.code != render::BackendSubmissionCode::kAccepted) return false;
   // Windows deferred presentation submits the preview directly from the
   // platform render pump, bypassing PreviewSurfaceController::renderIfDirty.
@@ -2951,6 +3008,7 @@ bool CanvasEditingRuntime::previewActive() const noexcept {
 bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
                                               double frameMs,
                                               bool retirePreview) noexcept {
+  canonicalPresentationRetryable_ = false;
   AXIOM_ANDROID_DIAG("present begin frame=%llu objects=%zu scene_records=%zu", static_cast<unsigned long long>(frameId), semanticObjects_.size(), sceneCoordinator_ == nullptr ? 0U : sceneCoordinator_->runtimeScene().records().size());
   if (!surface_.available || frameId == 0U) { AXIOM_ANDROID_DIAG("present reject surface=%d frame=%llu", surface_.available ? 1 : 0, static_cast<unsigned long long>(frameId)); return false; }
   if (frameIdHighWater_ == std::numeric_limits<std::uint64_t>::max()) return false;
@@ -3011,10 +3069,6 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       {frame.viewId, frame.frameId, frame.sceneReadToken.value(),
        frame.sceneGeneration.value(), frame.surfaceGeneration, frame.metricsGeneration},
       frame.metrics, render::FrameRole::kCanonical};
-  if (frameCoordinator_.request(canonicalCapture) != render::RuntimeFrameDisposition::kAccepted) {
-    AXIOM_ANDROID_DIAG("frame coordinator rejected canonical capture");
-    return false;
-  }
   auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
   if (!visibility) { AXIOM_ANDROID_DIAG("present visibility failed"); return false; }
   // A selected object can be dragged into view from outside the canonical
@@ -3064,12 +3118,19 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value(),
                                                   selectionOverlay());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) {
+    canonicalPresentationRetryable_ = rendered.code == render::BackendSubmissionCode::kRetry;
+    if (canonicalPresentationRetryable_) canonicalPresentationDirty_ = true;
     AXIOM_ANDROID_DIAG("present skia failed: %s framegen=%llu providergen=%llu",
                        rendered.message.c_str(),
                        static_cast<unsigned long long>(frame.surfaceGeneration.value()),
                        static_cast<unsigned long long>(activeSurfaceProvider()->generation()));
     return false;
   }
+  // Publish the replacement identity only after the provider accepts it. A
+  // busy backbuffer must not invalidate feedback for the last submitted
+  // frame; successful newer submissions retain normal supersession rules.
+  if (frameCoordinator_.request(canonicalCapture) != render::RuntimeFrameDisposition::kAccepted)
+    return false;
   if (frameCoordinator_.submit(render::FrameRole::kCanonical, frame.frameId, false) !=
       render::RuntimeFrameDisposition::kAccepted) {
     AXIOM_ANDROID_DIAG("frame coordinator rejected canonical submit");

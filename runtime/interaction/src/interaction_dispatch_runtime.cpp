@@ -48,6 +48,51 @@ bool InteractionDispatchRuntime::submit(const input::PointerSample& sample) noex
   return true;
 }
 
+bool InteractionDispatchRuntime::submitBatch(
+    std::span<const input::PointerSample> samples) noexcept {
+  if (samples.empty()) return false;
+  for (std::size_t begin = 0U; begin < samples.size();) {
+    const auto& first = samples[begin];
+    const bool startsSession = first.phase == input::PointerPhase::kDown;
+    auto it = sessions_.find(first.key);
+    const auto mode = startsSession ? port_.dispatchMode()
+        : it != sessions_.end() ? it->second.mode : DispatchMode::kBrush;
+    if (!first.key.valid() || mode != DispatchMode::kBrush ||
+        first.phase == input::PointerPhase::kCancel ||
+        (startsSession ? first.predicted || it != sessions_.end() : it == sessions_.end())) {
+      if (!submit(first)) return false;
+      ++begin;
+      continue;
+    }
+    std::size_t end = begin + 1U;
+    while (samples[end - 1U].phase != input::PointerPhase::kUp && end < samples.size() &&
+           samples[end].key == first.key &&
+           samples[end].phase != input::PointerPhase::kDown &&
+           samples[end].phase != input::PointerPhase::kCancel) {
+      ++end;
+    }
+    if (startsSession) {
+      const auto id = nextSessionId_++;
+      if (id == 0U) return false;
+      it = sessions_.emplace(first.key, Session{mode, id}).first;
+    }
+    const auto id = it->second.id;
+    const bool accepted = port_.brushBatch(samples.subspan(begin, end - begin), id);
+    if (!accepted) {
+      if (startsSession) {
+        auto cancelled = first;
+        cancelled.phase = input::PointerPhase::kCancel;
+        (void)port_.cancel(mode, cancelled, id);
+        sessions_.erase(first.key);
+      }
+      return false;
+    }
+    if (samples[end - 1U].phase == input::PointerPhase::kUp) sessions_.erase(first.key);
+    begin = end;
+  }
+  return true;
+}
+
 bool InteractionDispatchRuntime::cancel(const input::PointerSample& sample) noexcept {
   if (!sample.key.valid()) return false;
   const auto it = sessions_.find(sample.key);

@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <unordered_map>
+#include <span>
 
 namespace canvas::interaction {
 
@@ -37,6 +38,17 @@ class InteractionDispatchPort {
                                  std::uint64_t sessionId) noexcept = 0;
   [[nodiscard]] virtual bool brush(const input::PointerSample&,
                                    std::uint64_t sessionId) noexcept = 0;
+  // Batch ingress preserves the ordered pointer samples while allowing a
+  // brush implementation to evaluate one retained geometry delta per batch.
+  // The default keeps existing ports source-compatible.
+  [[nodiscard]] virtual bool brushBatch(
+      std::span<const input::PointerSample> samples,
+      std::uint64_t sessionId) noexcept {
+    for (const auto& sample : samples) {
+      if (!brush(sample, sessionId)) return false;
+    }
+    return true;
+  }
   [[nodiscard]] virtual bool eraser(const input::PointerSample&,
                                     std::uint64_t sessionId) noexcept = 0;
   [[nodiscard]] virtual bool cancel(DispatchMode, const input::PointerSample&,
@@ -48,6 +60,8 @@ class InteractionDispatchRuntime final {
   explicit InteractionDispatchRuntime(InteractionDispatchPort& port) noexcept : port_(port) {}
 
   [[nodiscard]] bool submit(const input::PointerSample& sample) noexcept;
+  [[nodiscard]] bool submitBatch(
+      std::span<const input::PointerSample> samples) noexcept;
   [[nodiscard]] bool cancel(const input::PointerSample& sample) noexcept;
   void cancelAll() noexcept;
   [[nodiscard]] std::size_t activeCount() const noexcept { return sessions_.size(); }
