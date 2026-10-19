@@ -63,3 +63,26 @@ Package/Evidence preflight: exact local package refs are internally valid;
 required proof seams are executable; no new semantic decisions remain after the
 user clarification. Scope, Authority and verification conflicts: none. Dependency
 policy: locked Semantic Store and installed locked Skia only; MSVC 19.51 x64.
+
+Native-run finding: the clean `d447e7098d1a0717da731323a6299f3c5c0e21cc`
+executable failed first-frame production rendering at 192 DPI with a 998×697
+physical / 499×348.5 logical surface. This is recorded as FAIL, with exact
+launch identity and native logs retained. The production shared draw function
+used the headless integral-rectangle fixture predicate for its viewport clip.
+The existing production scalar-range rectangle predicate already permits the
+accepted fractional SurfaceMetrics. The narrow correction uses that predicate
+for production clip admission only; HeadlessSkiaBackend::submit keeps its
+strict integral predicate and Golden unchanged. The native D3D12 test now
+actually presents a 256×255 / 128×127.5 frame before exercising resize/loss.
+It failed with `progressed=0 canonical=0` before the correction. The headless
+test is added to the selected regression set to protect the fixture contract.
+
+The first native run also showed that the optional diagnostic stream was
+opened exclusively. It now permits shared readers while keeping one writer,
+so PowerShell can inspect flushed input evidence during manual operation.
+
+Clang qualification limit: raw clang-cl /WX fails in the unchanged, out-of-scope
+foundation/stable_order_key.hpp:29 (`-Wsign-compare`). The exact baseline header
+is unchanged. A separate diagnostic preinclude filters only that header's
+known warning and restores /WX before all changed code. This is corroborative
+changed-source checking, never a claim that the unfiltered Clang build passes.

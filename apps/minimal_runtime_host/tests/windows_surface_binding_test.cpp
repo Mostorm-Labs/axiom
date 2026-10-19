@@ -68,6 +68,15 @@ int main() {
     assert(composition.resizeSurface({128.0F, 128.0F, 256U, 256U, 2.0F, 1.25F}));
     assert(canonicalRaw->generation() == 1U && previewRaw->generation() == 1U);
     const auto before = composition.surfaceSnapshot();
+    // Odd physical client dimensions at 200% DPI produce fractional logical
+    // clips. Bind-only checks miss the production renderer's first frame.
+    assert(composition.resizeSurface({128.0F, 127.5F, 256U, 255U, 2.0F, 2.0F}));
+    runtime::RuntimeFrameOpportunity fractionalFrame{};
+    const bool fractionalPresented = composition.serviceFrameOpportunity(true, fractionalFrame);
+    std::printf("D3D12 fractional logical clip: progressed=%d canonical=%d\n",
+        fractionalPresented, fractionalFrame.canonicalRequested);
+    std::fflush(stdout);
+    assert(fractionalPresented && fractionalFrame.canonicalFrame);
     previewRaw->rejectResize = true;
     assert(!composition.resizeSurface(320U, 240U));
     assert(canonicalRaw->describe().metrics.physicalWidth == 320U);

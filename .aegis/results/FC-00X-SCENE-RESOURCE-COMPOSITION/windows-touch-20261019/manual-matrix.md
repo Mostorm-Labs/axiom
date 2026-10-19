@@ -54,6 +54,6 @@ PID、设备和 DPI。运行日志由 AXIOM_MINIMAL_INPUT_LOG 指定；F12 打�
 | D7 | 提交后 brush handoff 退休 | 未人工观察 | PHYSICAL_PENDING |
 | D8 | surface 不可用/occluded 时 retry；canonical feedback 不丢 | 未人工观察设备场景 | PHYSICAL_PENDING |
 
-自动测试与本表分开：47 个选定 CTest 项包含上述可自动观察的入口、身份、
+自动测试与本表分开：48 个选定 CTest 项包含上述可自动观察的入口、身份、
 坐标、取消、相机恢复、连续采样、失败 Down、facade、surface 和 frame retry 回归。
 逐个机器结果以 selected-tests.xml / selected-tests.log 为准。

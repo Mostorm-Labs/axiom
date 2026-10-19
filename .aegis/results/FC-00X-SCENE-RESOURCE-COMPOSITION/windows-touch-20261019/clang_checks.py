@@ -29,6 +29,8 @@ sources = {
     'runtime/input/src/platform_interaction_ingress.cpp',
     'runtime/input/tests/platform_interaction_ingress_test.cpp',
     'runtime/interaction/src/canvas_editing_runtime.cpp',
+    'runtime/render/src/skia_headless_backend.cpp',
+    'apps/minimal_runtime_host/tests/windows_surface_binding_test.cpp',
 }
 commands = []
 with (out / 'clang-checks.log').open('w') as log:

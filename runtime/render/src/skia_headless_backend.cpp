@@ -692,7 +692,7 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     // the shared provider path must not turn an off-screen stroke into a
     // failed canonical handoff.
     if (!validAffine(plan.referenceDrawList.worldToView) ||
-        !validRect(plan.referenceDrawList.viewportClip)) {
+        !validProductionRect(plan.referenceDrawList.viewportClip)) {
         return BackendSubmissionResult::rejected("invalid transform or clip");
     }
     for (const auto& entry : plan.referenceDrawList.entries) {

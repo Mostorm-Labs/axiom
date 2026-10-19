@@ -9,6 +9,7 @@
 
 #include <windows.h>
 #include <windowsx.h>
+#include <share.h>
 
 #include <algorithm>
 #include <array>
@@ -408,8 +409,9 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   wchar_t* logPath = nullptr;
   std::size_t logPathLength = 0;
   if (_wdupenv_s(&logPath, &logPathLength, L"AXIOM_MINIMAL_INPUT_LOG") == 0 && logPath) {
-    std::FILE* file = nullptr;
-    if (_wfopen_s(&file, logPath, L"w") == 0) state.inputLog.reset(file);
+    // The CLI verifier may read the flushed diagnostics while the user keeps
+    // drawing. Keep a single writer but permit shared readers.
+    state.inputLog.reset(_wfsopen(logPath, L"w", _SH_DENYWR));
     std::free(logPath);
   }
   state.facade = std::make_unique<MinimalRuntimeFacade>(*state.host);
