@@ -72,3 +72,5 @@ std::optional<runtime::TextReceipt> MinimalRuntimeFacade::textIntentReceipt(std:
 bool MinimalRuntimeFacade::acknowledgeTextInput(const runtime::TextSessionToken& t,std::uint64_t s) { return host_.composition().controlFacade().acknowledgeTextInput(t,s); }
 
 }  // namespace canvas::minimal_runtime_host
+
+namespace canvas::minimal_runtime_host { runtime::TextGeometrySnapshot MinimalRuntimeFacade::readTextGeometry(const std::optional<runtime::TextGeometryToken>& expected) const { return host_.composition().controlFacade().readTextGeometry(expected); } }

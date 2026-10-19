@@ -86,6 +86,10 @@ TextEditorSnapshot CanvasRuntimeFacade::readTextEditor() const {
         return {};
     return runtime_.interaction_->textSession()->read();
 }
+TextGeometrySnapshot CanvasRuntimeFacade::readTextGeometry(const std::optional<TextGeometryToken>& expected) const {
+    if(!ownerThread() || runtime_.closed())return {};
+    auto geometry=runtime_.textGeometry(target());if(expected && *expected!=geometry.token)geometry.available=false;return geometry;
+}
 std::optional<TextReceipt> CanvasRuntimeFacade::textInputReceipt(const TextSessionToken& token,
                                                                  std::uint64_t sequence) const {
     if (!ownerThread())
@@ -135,7 +139,7 @@ void CanvasRuntimeFacade::finishTextReceipts() {
     std::scoped_lock lock(ingressMutex_);
     for (auto& entry : textIntents_)
         if (entry.second.status == TextStatus::kQueued &&
-            entry.first.kind == TextIntentKind::kFinish &&
+            (entry.first.kind == TextIntentKind::kFinish || entry.first.kind == TextIntentKind::kCompleteComposition) &&
             scope(entry.first.token, snapshot.token) &&
             snapshot.exitStatus != TextStatus::kQueued) {
             entry.second.status = snapshot.exitStatus;
@@ -215,6 +219,7 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
             else
                 count += service_->processPending(sequence, key);
         } else if (auto* intent = std::get_if<TextIntent>(&item)) {
+            if(intent->kind==TextIntentKind::kEditAtPoint){intent->object=runtime_.hitTextAtView(intent->viewX,intent->viewY);intent->kind=TextIntentKind::kEdit;}
             const auto result = !isTargetCurrent(intent->target)
                                     ? receipt(TextStatus::kStale, intent->requestId)
                                 : text ? text->intent(*intent)
@@ -245,6 +250,7 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
             }
             ++count;
         }
+        runtime_.canonicalPresentationDirty_=true;
         --pendingWork_;
         finishTextReceipts();
     }

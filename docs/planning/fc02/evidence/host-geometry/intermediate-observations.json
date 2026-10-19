@@ -1,0 +1,40 @@
+[
+  {
+    "result": "FAIL",
+    "kind": "RED wiring diagnostic",
+    "expected": "actual geometry and native IME host wiring",
+    "actual": "4 missing-entry diagnostics failed before implementation",
+    "log": "boundary-red.log"
+  },
+  {
+    "result": "FAIL",
+    "kind": "test fixture compile",
+    "actual": "new test compared ProductControlState with CanvasControlReceiptState; corrected test enum, no production policy change"
+  },
+  {
+    "result": "FAIL",
+    "kind": "strict Clang no-Debug-UI build",
+    "actual": "unused admitWindowsDebugFocus; corrected conditional compilation, retained -Werror"
+  },
+  {
+    "result": "FAIL",
+    "kind": "Web regression environment mismatch",
+    "actual": "first Chrome headless run DPR=1 while regression requires DPR=2; ResizeObserver correctly reapplied real browser DPR; repeated with deviceScaleFactor=2 passes without changing regression or resizing policy"
+  },
+  {
+    "result": "FAIL",
+    "kind": "font resource limitation",
+    "actual": "locked SDK CJK font is an 8732-byte subset containing only U+662F; no general Chinese coverage; default host uses locked Roboto and exposes font-glyph-unavailable; confirmed Semantic text remains intact"
+  },
+  {
+    "result": "PASS",
+    "kind": "fixture correction",
+    "actual": "font manifest fixture requires layout_version=1; real-font tests pass after specifying it"
+  },
+  {
+    "result": "FAIL",
+    "kind": "Web font recovery status",
+    "actual": "confirmed supported text recovered but previous font-glyph-unavailable stayed visible; added failing regression, derive current geometry diagnostics separately; recovery passes after fix",
+    "log": "font-recovery-red.json"
+  }
+]

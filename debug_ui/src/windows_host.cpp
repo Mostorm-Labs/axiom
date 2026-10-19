@@ -174,6 +174,8 @@ bool WindowsDebugUiHost::handleMessage(HWND source, UINT message, WPARAM wParam,
                   message == WM_MBUTTONUP || message == WM_XBUTTONUP;
   const bool cancel = message == WM_CANCELMODE || message == WM_CAPTURECHANGED ||
                       message == WM_KILLFOCUS;
+  if(down && focusAdmission_ && !focusAdmission_())return true;
+  if(down)SetFocus(source);
   if (down) {
     activeInputSequence_ = DebugInputSequence{0U, ++inputSequence_};
     (void)inputCapture_->begin(*activeInputSequence_, DebugInputOwner::kDebug);
@@ -306,6 +308,7 @@ LRESULT CALLBACK WindowsDebugUiHost::overlayWindowProc(HWND w, UINT message,
     SetWindowLongPtrW(w, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(self));
   }
   if (!self) return DefWindowProcW(w, message, wParam, lParam);
+  if(message==WM_KEYDOWN && wParam==VK_F12){PostMessageW(self->window_,message,wParam,lParam);return 0;}
   if (self->handleMessage(w, message, wParam, lParam)) return 0;
   if (message == WM_PAINT) {
     PAINTSTRUCT paint{}; HDC dc = BeginPaint(w, &paint);

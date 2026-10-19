@@ -3,6 +3,10 @@
 #include "web_surface_host.hpp"
 
 #include <GLES3/gl3.h>
+#include "host_font_resources.hpp"
+#include "nlohmann/json.hpp"
+#include <cstring>
+#include <stdexcept>
 #include <algorithm>
 #include <cmath>
 #include <emscripten/emscripten.h>
@@ -62,6 +66,7 @@ struct WebInstance final {
     input::PointerKey lastPointer{};
     std::uint64_t pointerSamples = 0, sequence = 0, request = 0, presentedFrames = 0, retries = 0,
                   rejectedInputs = 0;
+    std::uint64_t lastTextIntent=0;
     bool forceCanonical = true;
     runtime::CanvasControlReceiptState lastControl =
         runtime::CanvasControlReceiptState::kUnsupported;
@@ -145,6 +150,7 @@ EMSCRIPTEN_KEEPALIVE std::uintptr_t axiom_web_create(
     auto v = std::make_unique<WebInstance>(render::SurfaceMetrics{lw, lh, pw, ph, dpr, 1});
     if (!bind(*v, selector, {lw, lh, pw, ph, dpr, 1}))
         return 0;
+    if(!minimal_runtime_host::bindHostTextFont(v->lifecycle.composition(),"/axiom-font.ttf"))return 0;
     for (std::uint32_t s = 1; s <= 3; ++s)
         if (!v->lifecycle.composition().registerSource(s))
             return 0;
@@ -493,3 +499,5 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_debug_text(std::uintptr_t h, const char* valu
 #endif
 }
 }
+
+#include "text_bridge.inl"

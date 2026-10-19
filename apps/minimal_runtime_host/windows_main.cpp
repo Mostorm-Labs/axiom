@@ -1,6 +1,7 @@
 #include "minimal_runtime_host.hpp"
 #include "minimal_runtime_facade.hpp"
 #include "windows_presentation_cache.hpp"
+#include "host_font_resources.hpp"
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
 #include "canvas/debug_ui/controller.hpp"
 #include "canvas/debug_ui/windows_host.hpp"
@@ -9,6 +10,9 @@
 
 #include <windows.h>
 #include <windowsx.h>
+#include <imm.h>
+#include <deque>
+#include <filesystem>
 #include <share.h>
 
 #include <algorithm>
@@ -39,8 +43,19 @@ struct NativeContact final {
   POINTER_INFO last{};
 };
 
+struct TextFact { int kind=0; canvas::runtime::TextInputKind input=canvas::runtime::TextInputKind::kSelection; canvas::runtime::TextIntentKind intent=canvas::runtime::TextIntentKind::kFinish; std::u16string text; std::optional<std::uint32_t> cursor; std::optional<canvas::runtime::TextSessionToken> token; std::optional<canvas::runtime::TextRange> range; float x=0,y=0; bool afterTerminal=false; };
 struct State final {
   HWND window = nullptr;
+  std::deque<TextFact> textFacts;
+  std::optional<TextFact> pendingNativeTerminal;
+  bool continuationPending=false,ownTerminalAccepted=false;
+  bool nativeComposing=false, closeAfterText=false, debugAfterText=false;
+  std::uint64_t imeSerial=0,textRequest=0,finishEffect=0,finishSession=0;
+  char16_t highSurrogate=0;
+  canvas::runtime::TextSessionToken highSurrogateToken{};
+  canvas::runtime::TextSessionToken nativeTextToken{};
+  canvas::runtime::TextRange nativeTextRange{};
+  bool textFault=false;
   std::unique_ptr<MinimalRuntimeHost> host;
   std::unique_ptr<MinimalRuntimeFacade> facade;
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
@@ -64,6 +79,7 @@ struct State final {
 };
 
 #include "windows_pointer_input.inl"
+#include "windows_text_input.inl"
 
 canvas::render::SurfaceMetrics clientMetrics(HWND window, std::uint32_t width,
                                              std::uint32_t height) noexcept {
@@ -271,6 +287,7 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
   if (state->debugUi && state->debugUi->handleMessage(window, message, wParam, lParam)) return 0;
 #endif
+  if(const auto text=windowsTextMessage(*state,message,wParam,lParam))return *text;
   switch (message) {
     case WM_POINTERDOWN:
     case WM_POINTERUPDATE:
@@ -311,6 +328,7 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
 #endif
       return 0;
     case WM_TIMER: {
+      pumpWindowsText(*state);
       const bool frameReady = state->host->composition().serviceFrameOpportunity(
           false, state->frameOpportunity);
       const bool needsCanvasPaint = frameReady && state->frameOpportunity.needsPaint;
@@ -355,6 +373,7 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       if (wParam == VK_F12) {
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
         if (state->debugUi) {
+          if(!admitWindowsDebugFocus(*state)){state->debugAfterText=true;return 0;}
           state->debugUi->toggle();
           logInput(*state, state->debugUi->visible() ? "debug-ui-on" : "debug-ui-off", true, {});
           return 0;
@@ -389,6 +408,7 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       return 0;
     case WM_PAINT: { PAINTSTRUCT paint{}; HDC dc = BeginPaint(window, &paint); paintCanvas(*state, dc); EndPaint(window, &paint); return 0; }
     case WM_CLOSE:
+      if(!finishWindowsText(*state)){state->closeAfterText=true;return 0;}
       cancelHostPointers(*state, "window-close");
       return DefWindowProcW(window, message, wParam, lParam);
     case WM_DESTROY:
@@ -403,6 +423,7 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   (void)SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   WNDCLASSW klass{}; klass.hInstance = instance; klass.lpfnWndProc = windowProc;
+  klass.style=CS_DBLCLKS;
   klass.lpszClassName = kWindowClass; klass.hCursor = LoadCursorW(nullptr, MAKEINTRESOURCEW(32512));
   if (RegisterClassW(&klass) == 0 && GetLastError() != ERROR_CLASS_ALREADY_EXISTS) return 1;
   State state{}; state.host = std::make_unique<MinimalRuntimeHost>();
@@ -444,6 +465,8 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
           std::move(previewProvider))) return 1;
   if (!state.host->composition().bindSurface(clientMetrics(state.window, width, height)) ||
       !state.host->registerSource(1U)) return 1;
+  std::array<wchar_t,32768> modulePath{};const auto moduleLength=GetModuleFileNameW(nullptr,modulePath.data(),static_cast<DWORD>(modulePath.size()));
+  if(moduleLength==0 || moduleLength>=modulePath.size() || !canvas::minimal_runtime_host::bindHostTextFont(state.host->composition(),std::filesystem::path(modulePath.data()).parent_path()/L"axiom-font.ttf"))return 1;
   if (state.inputLog) {
 #if defined(AXIOM_BUILD_SOURCE_REVISION)
     std::fprintf(state.inputLog.get(), "build_revision=%s dirty=%d msvc=%d pid=%lu debug_ui_enabled=%d\n",
@@ -462,6 +485,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
       canvas::debug_ui::DebugControllerContext{state.facade.get(), nullptr, nullptr,
           state.facade.get(), nullptr, nullptr, nullptr});
   state.debugUi->setController(state.controller.get());
+  state.debugUi->setFocusAdmission([&state]{return admitWindowsDebugFocus(state);});
 #endif
   SetTimer(state.window, kTimer, kTimerMs, nullptr);
   ShowWindow(state.window, show == SW_HIDE || show == 0 ? SW_SHOWNORMAL : show);

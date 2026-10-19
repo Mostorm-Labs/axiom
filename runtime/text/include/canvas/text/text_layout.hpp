@@ -5,14 +5,17 @@
 #include "canvas/semantic/object_content.hpp"
 
 #include <memory>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
 
 namespace canvas::text {
 inline constexpr std::string_view kTextStackProfile = "r1-full-v1/skparagraph/icu-v1";
-inline constexpr std::string_view kRobotoSha256 = "466989fd178ca6ed13641893b7003e5d6ec36e42c2a816dee71f87b775ea097f";
-inline constexpr std::string_view kNotoSha256 = "e7f71fc8aec139bb21cc541067eabb162b87aeeac0ccfcb3c835a20d0cee340a";
+inline constexpr std::string_view kRobotoSha256 =
+    "466989fd178ca6ed13641893b7003e5d6ec36e42c2a816dee71f87b775ea097f";
+inline constexpr std::string_view kNotoSha256 =
+    "e7f71fc8aec139bb21cc541067eabb162b87aeeac0ccfcb3c835a20d0cee340a";
 
 // Supplied by the application/container or verification harness, never inferred
 // from camera/viewport state. This is derived layout policy, not canonical size.
@@ -77,6 +80,14 @@ struct TextLayoutSnapshot final {
     std::vector<TextDecoration> decorations;
     std::vector<std::string> diagnostics;
 };
+struct EditingGeometry final {
+    std::vector<std::string> diagnostics;
+    bool available = false;
+    std::string layoutIdentity;
+    foundation::WorldRect caret{};
+    std::vector<foundation::WorldRect> selection;
+    std::optional<std::uint32_t> hit;
+};
 struct LayoutMetrics final {
     std::uint64_t requests = 0, cacheHits = 0, objectLayouts = 0;
     std::uint64_t paragraphLayouts = 0, paragraphCacheHits = 0, fontMaterializations = 0;
@@ -94,9 +105,17 @@ class RichTextLayoutService final {
     void registerFont(FontResourceDescriptor);
     void clearFonts() noexcept;
     void setContext(LayoutContext);
-    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot> resolve(
-        foundation::ObjectId, const semantic::RichTextContent&);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolve(foundation::ObjectId, const semantic::RichTextContent&);
+    [[nodiscard]] EditingGeometry
+    editingGeometry(foundation::ObjectId,
+                    const semantic::RichTextContent&,
+                    std::uint32_t start,
+                    std::uint32_t length,
+                    std::optional<foundation::WorldPoint> hit = std::nullopt);
+    [[nodiscard]] std::vector<std::uint32_t> graphemeBoundaries(const std::u16string&) const;
     [[nodiscard]] LayoutMetrics metrics() const noexcept;
+
   private:
     struct Impl;
     std::unique_ptr<Impl> impl_;

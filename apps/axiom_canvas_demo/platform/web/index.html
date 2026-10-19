@@ -13,7 +13,7 @@ header strong { flex:1; } button { padding:6px 12px; }
 [hidden] { display:none!important; }
 #status { margin:0; flex:0 0 20px; padding:6px 16px; color:#384454; background:#f7f8fa; font:12px/20px system-ui; }
 </style>
-<header><strong>Axiom Minimal Runtime Host · Web</strong><button id="debugUiToggle" type="button" hidden>Debug UI</button></header>
+<header><strong>Axiom Minimal Runtime Host · Web</strong><label>Text width <input id="textWidth" type="number" min="1" max="1000000" value="320" style="width:72px" disabled></label><button id="textTool" type="button">Text</button><button id="debugUiToggle" type="button" hidden>Debug UI</button></header>
 <div id="stage"><canvas id="axiom-canvas"></canvas><canvas id="axiom-preview"></canvas><canvas id="debugUi" width="410" height="650" hidden tabindex="0"></canvas></div>
 <pre id="status">正在启动…</pre>
 <script type="module" src="./host.js"></script>

@@ -22,6 +22,7 @@ class TextEditPort {
     virtual semantic::OperationId allocateTextOperation() = 0;
     virtual semantic::PrepareResult prepareTextOperation(const semantic::Operation&) const = 0;
     virtual bool applyTextOperation(semantic::Operation, semantic::Operation) = 0;
+    virtual std::vector<std::uint32_t> textGraphemes(const std::u16string&) const=0;
     virtual std::pair<float, float> textContentPoint(float, float) const noexcept = 0;
 };
 // Owned by InteractionRuntime, sharing its singleton session manager and the
@@ -36,8 +37,9 @@ class TextEditSession final {
     [[nodiscard]] std::optional<runtime::TextReceipt> receipt(const runtime::TextSessionToken&,
                                                               std::uint64_t) const;
     [[nodiscard]] bool acknowledge(const runtime::TextSessionToken&, std::uint64_t);
-    [[nodiscard]] runtime::TextStatus finish();
+    [[nodiscard]] runtime::TextStatus finish(bool keepEditor = false);
     void detach() noexcept;
+    [[nodiscard]] std::optional<semantic::ObjectRecord> presentation();
 
   private:
     void refresh();
@@ -58,6 +60,7 @@ class TextEditSession final {
                   lastComposition_ = 0, acknowledged_ = 0;
     semantic::ObjectId lastOperation_{};
     bool applying_ = false;
+    bool finishKeepsEditor_ = false;
     std::optional<runtime::TextReceipt> terminalReceipt_;
 };
 } // namespace canvas::interaction

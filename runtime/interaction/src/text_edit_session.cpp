@@ -244,14 +244,16 @@ bool TextEditSession::acknowledge(const TextSessionToken& token, std::uint64_t t
     std::erase_if(journal_, [&](const auto& item) { return item.first.sequence <= acknowledged_; });
     return true;
 }
-runtime::TextStatus TextEditSession::finish() {
+runtime::TextStatus TextEditSession::finish(bool keepEditor) {
     refresh();
     if (state_.phase == TextPhase::kClosed)
         return TextStatus::kApplied;
     if (state_.phase == TextPhase::kCommitFailed)
         return TextStatus::kRejected;
     if (state_.composition != 0) {
+        if(!keepEditor)finishKeepsEditor_=false;
         if (state_.finishEffect == 0) {
+            finishKeepsEditor_=keepEditor;
             if (effect_ == std::numeric_limits<std::uint64_t>::max())
                 return TextStatus::kRejected;
             state_.finishEffect = ++effect_;
@@ -261,7 +263,7 @@ runtime::TextStatus TextEditSession::finish() {
         return TextStatus::kQueued;
     }
     state_.exitStatus = TextStatus::kApplied;
-    end();
+    if(!keepEditor)end();
     return TextStatus::kApplied;
 }
 runtime::TextStatus TextEditSession::applyDelta(RichTextDelta delta) {
@@ -535,6 +537,7 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
     if (state_.phase == TextPhase::kClosed || request.token != state_.token)
         return outcome(TextStatus::kStale, request.requestId);
     switch (request.kind) {
+    case TextIntentKind::kCompleteComposition:return outcome(finish(true),request.requestId);
     case TextIntentKind::kFinish:
         return outcome(finish(), request.requestId);
     case TextIntentKind::kEscape:
@@ -581,11 +584,28 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
                 state_.phase = TextPhase::kEditing;
                 if (state_.finishEffect) {
                     state_.exitStatus = TextStatus::kApplied;
-                    end();
+                    if(finishKeepsEditor_){state_.finishEffect=0;state_.phase=TextPhase::kEditing;}else end();
                 }
             }
             return outcome(result, request.requestId);
         }
+    case TextIntentKind::kSelectAll:
+        if(state_.composition)return outcome(TextStatus::kBusy,request.requestId);
+        state_.selection={0,static_cast<std::uint32_t>(state_.projection.size())};return outcome(TextStatus::kObserved,request.requestId);
+    case TextIntentKind::kBackspace: case TextIntentKind::kDelete: case TextIntentKind::kLeft: case TextIntentKind::kRight: {
+        if(state_.composition)return outcome(TextStatus::kBusy,request.requestId);
+        auto range=state_.selection;auto breaks=owner_.textGraphemes(state_.projection);
+        if(breaks.empty())return outcome(TextStatus::kUnsupported,request.requestId);
+        if(request.kind==TextIntentKind::kLeft || request.kind==TextIntentKind::kRight){
+            auto pos=range.start;
+            if(request.kind==TextIntentKind::kLeft){auto it=std::lower_bound(breaks.begin(),breaks.end(),pos);if(!range.length && it!=breaks.begin())pos=*std::prev(it);}
+            else{pos+=range.length;auto it=std::upper_bound(breaks.begin(),breaks.end(),pos);if(!range.length && it!=breaks.end())pos=*it;}
+            state_.selection={pos,0};return outcome(TextStatus::kObserved,request.requestId);
+        }
+        if(!range.length){if(request.kind==TextIntentKind::kBackspace){auto it=std::lower_bound(breaks.begin(),breaks.end(),range.start);if(it==breaks.begin())return outcome(TextStatus::kObserved,request.requestId);range.start=*std::prev(it);range.length=state_.selection.start-range.start;}
+            else{auto it=std::upper_bound(breaks.begin(),breaks.end(),range.start);if(it==breaks.end())return outcome(TextStatus::kObserved,request.requestId);range.length=*it-range.start;}}
+        return outcome(replace(range,u""),request.requestId);
+    }
     case TextIntentKind::kResync:
         return outcome(TextStatus::kObserved, request.requestId);
     default:
@@ -626,7 +646,7 @@ runtime::TextReceipt TextEditSession::input(const TextInputEvent& event) {
     } else if (event.token.projection != state_.token.projection)
         status = TextStatus::kStale;
     else if (!validRange(state_.projection, event.range) || !utf8(event.text) ||
-             (event.finishEffect && event.kind != TextInputKind::kCommit) ||
+             (event.finishEffect && event.kind != TextInputKind::kCommit && event.kind != TextInputKind::kFinishFailed) ||
              (event.preeditSelection &&
               ((event.kind != TextInputKind::kUpdate && event.kind != TextInputKind::kCommit) ||
                !validRange(event.text, *event.preeditSelection))))
@@ -685,7 +705,7 @@ runtime::TextReceipt TextEditSession::input(const TextInputEvent& event) {
                     static_cast<std::uint32_t>(event.range.start + event.text.size()), 0};
                 if (state_.finishEffect) {
                     state_.exitStatus = TextStatus::kApplied;
-                    end();
+                    if(finishKeepsEditor_){state_.finishEffect=0;state_.phase=TextPhase::kEditing;}else end();
                 }
             } else {
                 failed_ = event;
@@ -694,6 +714,9 @@ runtime::TextReceipt TextEditSession::input(const TextInputEvent& event) {
                     state_.exitStatus = TextStatus::kRejected;
             }
             break;
+        case TextInputKind::kFinishFailed:
+            if(!state_.composition || event.finishEffect!=state_.finishEffect || !state_.finishEffect)break;
+            state_.finishEffect=0;state_.exitStatus=TextStatus::kRejected;state_.phase=TextPhase::kComposing;status=TextStatus::kRejected;break;
         case TextInputKind::kSelection:
             if (!event.composition) {
                 state_.selection = event.range;
@@ -711,5 +734,34 @@ runtime::TextReceipt TextEditSession::input(const TextInputEvent& event) {
     journal_.push_back({event, receipt});
     ++state_.nextInputSequence;
     return receipt;
+}
+
+std::optional<semantic::ObjectRecord> TextEditSession::presentation() {
+    refresh();if(state_.phase==TextPhase::kClosed)return std::nullopt;
+    auto object=base_?*base_:draft_;
+    const auto* original=base_?std::get_if<RichTextContent>(&base_->content):nullptr;
+    if(original && !state_.composition && !original->document.paragraphs.empty()){
+        // Empty paragraphs still need the admitted font for a real caret metric.
+        auto& content=std::get<RichTextContent>(object.content);
+        for(auto& p:content.document.paragraphs)if(p.runs.empty())p.runs.push_back({"",style_});
+        return object;
+    }
+    std::u16string visible=state_.projection;std::vector<TextStyle> styles;
+    if(original)for(const auto& p:original->document.paragraphs){for(const auto& r:p.runs){std::u16string part;if(!utf16(r.text,part))return std::nullopt;styles.insert(styles.end(),part.size(),r.style);}styles.push_back(style_);}
+    styles.resize(visible.size(),style_);
+    if(state_.composition){visible.replace(state_.replacement.start,state_.replacement.length,state_.preedit);auto it=styles.begin()+state_.replacement.start;it=styles.erase(it,it+state_.replacement.length);styles.insert(it,state_.preedit.size(),style_);}
+    RichTextContent content;content.layout=original?original->layout:std::optional<RichTextLayout>{RichTextLayout{state_.width}};
+    std::size_t start=0,index=0;
+    do {const auto end=visible.find(u'\n',start),stop=end==std::u16string::npos?visible.size():end;
+        Paragraph p;auto transient=object.id;transient.bytes[12]^=0x80;transient.bytes[10]=static_cast<std::uint8_t>(index);transient.bytes[11]=static_cast<std::uint8_t>(index>>8U);
+        p.id=original && index<original->document.paragraphs.size()?original->document.paragraphs[index].id:transient;
+        p.style=original && index<original->document.paragraphs.size()?original->document.paragraphs[index].style:ParagraphStyle{ParagraphAlignment::kLeft,1,0,0};
+        for(auto offset=start;offset<stop;){auto next=offset+1;while(next<stop && styles[next]==styles[offset])++next;
+            if(next<stop && visible[next]>=0xDC00 && visible[next]<=0xDFFF)++next;
+            const auto value=utf8(visible.substr(offset,next-offset));if(!value)return std::nullopt;p.runs.push_back({*value,styles[offset]});offset=next;}
+        if(p.runs.empty())p.runs.push_back({"",style_});content.document.paragraphs.push_back(std::move(p));++index;
+        if(end==std::u16string::npos)break;start=end+1;
+    }while(start<=visible.size());
+    object.content=std::move(content);return object;
 }
 } // namespace canvas::interaction

@@ -26,7 +26,7 @@ struct CanvasTargetKeyHash final {
   }
 };
 
-enum class CanvasToolKind : std::uint8_t { kInk, kSelect, kEraser, kPan };
+enum class CanvasToolKind : std::uint8_t { kInk, kSelect, kEraser, kPan, kText };
 enum class CanvasCreationPreset : std::uint8_t {
   kRectangle,
   kEllipse,

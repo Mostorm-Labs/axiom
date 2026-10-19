@@ -445,3 +445,11 @@ DebugActivityState DebugControlRouter::mapSurface(canvas::runtime::SurfaceContro
 }
 
 }  // namespace canvas::debug_ui
+
+namespace canvas::debug_ui {
+canvas::runtime::TextEditorSnapshot DebugControlRouter::textEditor() const {return runtime_?runtime_->readTextEditor():canvas::runtime::TextEditorSnapshot{};}
+canvas::runtime::TextReceipt DebugControlRouter::setTextWidth(double width){
+ if(!runtime_ || runtime_->mountedCanvasTargets().empty())return {};
+ canvas::runtime::TextIntent request;request.kind=canvas::runtime::TextIntentKind::kSetWidth;request.clientId=0xD002;request.requestId=nextRequestId();request.target=runtime_->mountedCanvasTargets().front();request.token=runtime_->readTextEditor().token;request.width=width;return runtime_->submitTextIntent(request);
+}
+}

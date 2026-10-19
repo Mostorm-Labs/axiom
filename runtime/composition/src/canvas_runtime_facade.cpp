@@ -20,6 +20,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     auto& runtime = runtime_;
     const auto& p = request.payload;
     bool applied = false;
+
     switch (p.kind) {
       case CanvasControlPayloadKind::kSelectTool:
         if (p.tool == CanvasToolKind::kSelect) applied = runtime.setSelectionMode(true);
@@ -103,7 +104,9 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
                 ? p.eraser.diameterLogicalPx.value : runtime.eraserDiameterLogicalPx());
         break;
     }
-    if (applied) { ++revision_; return {}; }
+    if (applied) {
+    if(p.kind==CanvasControlPayloadKind::kSelectTool || p.kind==CanvasControlPayloadKind::kSelectPreset || p.kind==CanvasControlPayloadKind::kSelectCreationPreset)runtime.setTextTool(p.kind==CanvasControlPayloadKind::kSelectTool && p.tool==CanvasToolKind::kText);
+      ++revision_; return {}; }
     return CanvasControlApplyResult{CanvasControlError::kBusy, "runtime rejected request"};
   }
 
@@ -142,7 +145,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     out.size = runtime.inkSize(); out.opacity = runtime.inkOpacity();
     const auto color = runtime.inkColor(); out.color = {color[0], color[1], color[2], color[3]};
     out.eraserMode = runtime.eraserMode(); out.eraserDiameterLogicalPx = runtime.eraserDiameterLogicalPx();
-    out.tool = runtime.selectionMode() ? CanvasToolKind::kSelect
+    out.tool = runtime.textTool() ? CanvasToolKind::kText : runtime.selectionMode() ? CanvasToolKind::kSelect
         : runtime.panTool() ? CanvasToolKind::kPan
         : runtime.toolMode() == canvas::interaction::CanvasEditingRuntime::ToolMode::kObjectEraser ||
           runtime.toolMode() == canvas::interaction::CanvasEditingRuntime::ToolMode::kPartialEraser
@@ -272,7 +275,8 @@ ProductControlReceipt CanvasRuntimeFacade::submitProductControl(const ProductCon
   switch (request.action) {
     case ProductControlAction::kSetTool:
       canvas.payload.kind = CanvasControlPayloadKind::kSelectTool;
-      if (request.toolId == 4102U) canvas.payload.tool = CanvasToolKind::kSelect;
+      if (request.toolId == 4106U) canvas.payload.tool=CanvasToolKind::kText;
+      else if (request.toolId == 4102U) canvas.payload.tool = CanvasToolKind::kSelect;
       else if (request.toolId == 4103U) canvas.payload.tool = CanvasToolKind::kPan;
       else if (request.toolId == 4104U) { canvas.payload.tool = CanvasToolKind::kEraser; canvas.payload.eraser.mode = OptionPatch<std::uint32_t>::set(2U); }
       else if (request.toolId == 4105U) { canvas.payload.tool = CanvasToolKind::kEraser; canvas.payload.eraser.mode = OptionPatch<std::uint32_t>::set(1U); }
@@ -326,7 +330,7 @@ RuntimeStateSnapshot CanvasRuntimeFacade::readRuntimeState() const noexcept {
   out.identity = {target().runtimeEpoch, runtime_.semanticGeneration().value(),
                   static_cast<std::uint64_t>(runtime_.submittedOperationCount()), target().viewEpoch,
                   runtime_.surface().generation};
-  out.tool = {runtime_.selectionMode() ? 2U : runtime_.panTool() ? 3U :
+  out.tool = {runtime_.textTool() ? 4U : runtime_.selectionMode() ? 2U : runtime_.panTool() ? 3U :
                 (runtime_.toolMode() == interaction::CanvasEditingRuntime::ToolMode::kObjectEraser ||
                  runtime_.toolMode() == interaction::CanvasEditingRuntime::ToolMode::kPartialEraser) ? 0U : 1U,
               runtime_.selectedBrushProfile() == "vector-solid-v1" ? 1U :

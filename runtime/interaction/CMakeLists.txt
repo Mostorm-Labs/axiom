@@ -34,6 +34,7 @@ endif()
 # cycle. It never includes Playground or Debug UI.
 add_library(canvas_runtime_editor STATIC
     src/canvas_editing_runtime.cpp
+    src/canvas_text_geometry.cpp
     src/brush_commit_adapter.cpp)
 target_include_directories(canvas_runtime_editor PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include

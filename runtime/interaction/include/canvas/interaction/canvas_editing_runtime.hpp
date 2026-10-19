@@ -256,6 +256,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] const render::EditingOverlay* selectionOverlay() const noexcept {
     return selectionView_ == nullptr ? nullptr : &selectionView_->editingOverlay();
   }
+  bool setTextTool(bool value) noexcept { textTool_=value;return true; }
+  bool textTool() const noexcept {return textTool_;}
   [[nodiscard]] bool selectBrushProfile(std::string_view profileId,
                                         std::uint32_t revision = 1U) noexcept;
   [[nodiscard]] bool setInkOptions(float size, float red, float green, float blue,
@@ -571,6 +573,11 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool historySceneReady() const noexcept;
   [[nodiscard]] bool canonicalWriteAdmission() const noexcept;
   bool textReady() const noexcept override;
+  std::vector<std::uint32_t> textGraphemes(const std::u16string&) const override;
+  runtime::TextGeometrySnapshot textGeometry(const runtime::CanvasTargetKey&);
+  std::optional<std::uint32_t> textHit(const semantic::ObjectRecord&,float,float);
+  semantic::ObjectId hitTextAtView(float,float);
+  bool textPointer(const input::PointerSample&);
   bool textClosed() const noexcept override { return closed_; }
   bool textWritable(semantic::ObjectId) const noexcept override;
   semantic::DocumentId textDocument() const noexcept override { return documentId_; }
@@ -673,6 +680,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   semantic::DocumentId documentId_{canvas::foundation::ObjectId::fromUint64(1U)};
   std::uint64_t nextHistoryOperationOrdinal_ = (std::uint64_t{1} << 63U);
     std::uint64_t nextTextIdentity_ = 1;
+  bool textTool_=false;
+  input::PointerKey textSelectionPointer_{};
+  std::uint32_t textSelectionAnchor_=0;
+  std::unordered_set<input::PointerKey,input::PointerKeyHash> textPointerKeys_;
   std::unordered_map<std::uint64_t, PendingBrushCommit> pendingBrushCommits_;
   ink::ArcPreviewSink* arcPreviewSink_ = nullptr;
   ink::CanonicalVisibilitySink* canonicalVisibilitySink_ = nullptr;

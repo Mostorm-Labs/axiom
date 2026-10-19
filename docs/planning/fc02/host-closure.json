@@ -1,0 +1,51 @@
+{
+  "task": "FC02-TEXT-HOST-GEOMETRY",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "codex/fc02-runtime-boundary-design",
+  "task_anchor": {
+    "revision": "c68a057ce3e9a80cfb203f3c88abed20b8286295",
+    "relation": "ancestor"
+  },
+  "design_refs": [
+    "docs/planning/FC02_RUNTIME_INPUT_CONTRACT.md@3ddc58d2fa9d21f107e9f208c3a5dbf954a34290",
+    "docs/planning/FC02_PRODUCT_AND_SEMANTIC_DESIGN.md@d15acacceda1cf12f8d89846b15a4ec44dbd3cc0"
+  ],
+  "required_changes": [
+    "TextLayout actual shaped caret/hit/selection geometry and grapheme boundaries; stale geometry rejection",
+    "Runtime text tool/pointer/edit intents; preedit feedback through existing Render/frame lifecycle",
+    "Windows IMM32 input, real completion/cancel/focus handling and UI",
+    "Web composition/beforeinput adapter, complete identity transport and controlled focus/exit",
+    "Locked font assets consumed by both hosts; build, regressions and durable result"
+  ],
+  "forbidden_changes": [
+    "Authority, Golden, historical Gate/PHYS, SDK locks",
+    "Android, legacy Playground tests, lasso/G5/new canonical ObjectKind/OperationKind/stable ABI",
+    "host canonical text/delta/Undo or alternate font/layout engine"
+  ],
+  "tests": {
+    "required": [
+      "RED host-boundary diagnostic",
+      "real font geometry/grapheme/stale identity and canonical/preedit invariants",
+      "platform payload/completion/dedup/focus contract tests",
+      "existing scoped 223 CTest and schema checks",
+      "Windows D3D12 and actual Web target builds / strict compiler checks"
+    ],
+    "hosted_required": [],
+    "physical": "User-operated; unobserved remains PHYSICAL_PENDING"
+  },
+  "terminal_success": [
+    "Required code and local checks complete, committed/pushed evidence; explicit physical limits"
+  ],
+  "terminal_blockers": [
+    "AUTHORITY_CONFLICT",
+    "MISSING_REQUIRED_INPUT",
+    "ENVIRONMENT_BLOCKER",
+    "FROZEN_VERIFICATION_FAILURE",
+    "NEW_HIGH_IMPACT_FAILURE_MODE"
+  ],
+  "continue_until_terminal_state": true,
+  "unresolved_semantic_decisions": []
+}

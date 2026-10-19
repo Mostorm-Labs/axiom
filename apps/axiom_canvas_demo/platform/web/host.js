@@ -1,4 +1,5 @@
 import createModule from './axiom_canvas_demo_web.js';
+import {installTextInput} from './text_input.js';
 
 const canvas = document.getElementById('axiom-canvas');
 const preview = document.getElementById('axiom-preview');
@@ -30,6 +31,11 @@ globalThis.axiomMinimalReady = (async () => {
     demand ||= dirty;
     if (!scheduled && handle && !document.hidden) scheduled = requestAnimationFrame(tick);
   };
+  const textInput=installTextInput({module,handle,canvas,stage,schedule});
+  document.getElementById("textTool").addEventListener("click",()=>textInput.finish().then(()=>{module._axiom_web_text_tool(handle);schedule();}).catch(error=>{status.textContent=String(error);}));
+  const textWidth=document.getElementById('textWidth');
+  textWidth.addEventListener('pointerdown',event=>{if(textInput.snapshot().phase!==0){if(textInput.snapshot().composition!=='0')event.preventDefault();textInput.complete().then(()=>textWidth.focus()).catch(error=>{stage.dataset.textError=String(error);});}});
+  textWidth.addEventListener('change',()=>textInput.intent(5,{width:Number(textWidth.value)}));
   function tick() {
     scheduled = 0;
     if (!handle || document.hidden || failure || !module._axiom_web_backend_ready(handle)) return;
@@ -49,8 +55,10 @@ globalThis.axiomMinimalReady = (async () => {
         if (result === 3) { demand = true; schedule(false); }
         if (debugVisible) module._axiom_web_debug(handle, 5, 0, 0, 0);
       }
+      textInput.sync();
+      const editor=textInput.snapshot();textWidth.disabled=editor.phase===0;if(document.activeElement!==textWidth)textWidth.value=editor.width;
       const state = observation();
-      status.textContent = `对象 ${state.objects} · 操作 ${state.operations} · 缩放 ${state.camera.scale.toFixed(2)} · 帧 ${state.presentedFrames}`;
+      status.textContent = (stage.dataset.textError||textInput.error()) || `对象 ${state.objects} · 操作 ${state.operations} · 缩放 ${state.camera.scale.toFixed(2)} · 帧 ${state.presentedFrames}`;
       if (pending) schedule(false);
     } catch (error) { fail(error); }
   }
@@ -167,6 +175,7 @@ globalThis.axiomMinimalReady = (async () => {
   // validation and all state changes remain in the composition-owned facade.
   const controls = {tool:0,preset:1,ink:2,eraser:3,pan:4,zoom:5,setZoom:6,fit:7,undo:8,redo:9,shape:10};
   const control = async (kind,...values) => {
+    if(["tool","preset","eraser","shape"].includes(kind))await textInput.finish();
     cancelInputs('facade-control');
     const args = Array.from({length:6},(_,i) => values[i] ?? 0);
     const code = typeof kind === 'string' ? controls[kind] : kind;
@@ -175,7 +184,8 @@ globalThis.axiomMinimalReady = (async () => {
     if (observation().controlState !== 1) throw new Error(`RuntimeFacade control not applied: ${observation().controlState}`);
     return observation();
   };
-  const toggleDebugUi = () => {
+  const toggleDebugUi = async () => {
+    try{await textInput.complete();}catch(error){status.textContent=String(error);return;}
     if (!observation().debugUiEnabled) return;
     cancelInputs('debug-toggle');
     debugVisible = !debugVisible; debug.hidden = !debugVisible;
@@ -188,6 +198,7 @@ globalThis.axiomMinimalReady = (async () => {
     const r = debug.getBoundingClientRect();
     return [(event.clientX-r.left)*debug.width/r.width,(event.clientY-r.top)*debug.height/r.height];
   };
+  debug.addEventListener("pointerdown",event=>{if(textInput.snapshot().phase!==0){const composing=textInput.snapshot().composition!=="0";if(composing){event.preventDefault();event.stopImmediatePropagation();}textInput.complete().then(()=>debug.focus()).catch(error=>{status.textContent=String(error);});}},true);
   for (const [type,phase] of [['pointerdown',0],['pointermove',1],['pointerup',2],['pointercancel',3],['lostpointercapture',3]]) {
     debug.addEventListener(type,event => {
       if (phase === 0) { cancelInputs('debug-input'); debugPointers.set(event.pointerId,event.button < 0 ? 0 : event.button); debug.setPointerCapture(event.pointerId); }
@@ -216,7 +227,7 @@ globalThis.axiomMinimalReady = (async () => {
     if (type === 'keydown' && event.ctrlKey && (event.code === 'KeyZ' || event.code === 'KeyY')) {
       control(event.code === 'KeyZ' ? 'undo' : 'redo').catch(fail); event.preventDefault(); return;
     }
-    if (!debugVisible) return;
+    if (!debugVisible || (document.activeElement!==debug && document.activeElement?.id==='axiom-ime')) return;
     module._axiom_web_debug(handle,9,0,0,(event.ctrlKey?1:0)|(event.shiftKey?2:0)|(event.altKey?4:0)|(event.metaKey?8:0));
     const key = keys[event.code] ?? (/^Key[A-Z]$/.test(event.code) ? 546+event.code.charCodeAt(3)-65
       : /^Digit[0-9]$/.test(event.code) ? 536+Number(event.code.slice(5)) : 0);
@@ -228,8 +239,10 @@ globalThis.axiomMinimalReady = (async () => {
   });
   addEventListener('blur',() => { cancelInputs('focus-loss'); for (const button of debugPointers.values()) module._axiom_web_debug(handle,3,-1,-1,button); debugPointers.clear(); });
   document.addEventListener('visibilitychange',() => { if (document.hidden) cancelInputs('hidden'); else schedule(); });
-  addEventListener('pagehide',() => { if (handle) { resizeObserver.disconnect(); cancelInputs('close'); cancelAnimationFrame(scheduled); module._axiom_web_destroy(handle); handle = 0; } },{once:true});
-  const host = {module,handle,observation,flush,control,resize,toggleDebugUi,
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)textInput.finish().catch(error=>{status.textContent=String(error);});});
+  addEventListener('beforeunload',event=>{if(textInput.snapshot().phase!==0){textInput.finish().catch(()=>{});event.preventDefault();event.returnValue='';}});
+  addEventListener('pagehide',() => { if (handle) { textInput.dispose(); resizeObserver.disconnect(); cancelInputs('close'); cancelAnimationFrame(scheduled); module._axiom_web_destroy(handle); handle = 0; } },{once:true});
+  const host = {module,handle,observation,flush,control,resize,toggleDebugUi,textInput,
     loseSurface() { cancelInputs('surface-loss'); pending = false; return module._axiom_web_lose_surface(handle); }};
   globalThis.axiomMinimalHost = host;
   await flush();

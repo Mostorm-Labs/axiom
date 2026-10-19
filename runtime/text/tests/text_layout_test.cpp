@@ -36,6 +36,15 @@ int main() {
         return 1;
     }
     assert(layout.resolve(id, input) == ready);
+    const auto geometry=layout.editingGeometry(id,input,0,2);
+    assert(geometry.available && !geometry.selection.empty());
+    const auto caretEnd=layout.editingGeometry(id,input,9,0);
+    assert(caretEnd.available && caretEnd.caret.left>geometry.caret.left);
+    const auto hit=layout.editingGeometry(id,input,0,0,foundation::WorldPoint{caretEnd.caret.left,caretEnd.caret.top+2});
+    assert(hit.available && hit.hit && *hit.hit<=9);
+    const auto breaks=layout.graphemeBoundaries(u"A\u0301\U0001F600B");
+    assert((breaks==std::vector<std::uint32_t>{0,2,4,5}));
+
     // Object-local widths must not change another object or the legacy context.
     auto fixedNarrow=content("Canvas Canvas Canvas Canvas",latin);
     fixedNarrow.layout=semantic::RichTextLayout{50};

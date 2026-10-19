@@ -702,8 +702,11 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   const auto routed = appBinding_->submit(source, batch);
   if (!routed.accepted && !routed.terminalCancel) { AXIOM_ANDROID_DIAG("ingress rejected samples=%zu", routed.normalized.samples.size()); return false; }
   // Normalize/retire full pointer identities even while the text editor owns input.
-  if (interaction_->textSession() && interaction_->textSession()->read().phase != runtime::TextPhase::kClosed)
+  if(textTool_ || (interaction_->textSession() && interaction_->textSession()->read().phase!=runtime::TextPhase::kClosed) || !textPointerKeys_.empty()){
+    for(const auto& sample:routed.normalized.samples)(void)textPointer(sample);
+    if(routed.terminalCancel)textPointerKeys_.clear();
     return routed.accepted || routed.terminalCancel;
+  }
   if (selectionMode_ || creationMode_ || creationActive() || panTool_) {
     for (const auto& sample : routed.normalized.samples) {
       if (!sample.key.valid()) continue;
@@ -1005,6 +1008,7 @@ void CanvasEditingRuntime::onSessionCancel(
 }
 
 void CanvasEditingRuntime::cancelAllPointers() noexcept {
+  textPointerKeys_.clear();
   creations_.clear();
   creationFences_.clear();
   cancelSelectionTransform();
@@ -3121,6 +3125,16 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       references.value().digest.clear();
     }
   }
+
+  const auto textState=interaction_->textSession()?interaction_->textSession()->read():runtime::TextEditorSnapshot{};
+  if(interaction_->textSession() && textLayoutService_){if(const auto object=interaction_->textSession()->presentation()){
+    const auto& content=std::get<semantic::RichTextContent>(object->content);const auto layout=textLayoutService_->resolve(object->id,content);
+    if(layout->diagnostics.empty()){
+      render::ReferenceTraversalEntry entry{};entry.record.objectId=object->id;entry.record.kind=semantic::ObjectKind::kRichText;entry.record.kindVersion=object->kind_version;entry.record.transform=object->transform;entry.record.content=content;entry.record.textLayout=layout;entry.record.placement.order_key=semantic::OrderKey({255});
+      const auto bounds=canvas::scene::computeBounds(*object,layout.get());entry.record.geometryBounds=bounds.geometry;entry.record.visualBounds=bounds.visual;entry.record.worldBounds=bounds.world;entry.command=render::RichTextReferenceCommand{content,layout};
+      auto& entries=references.value().entries;const auto existing=std::find_if(entries.begin(),entries.end(),[&](const auto& value){return value.record.objectId==object->id;});if(existing!=entries.end())*existing=std::move(entry);else entries.push_back(std::move(entry));references.value().canonicalBytes.clear();references.value().digest.clear();
+    }
+  }}
   const auto plan = render::FramePlanBuilder::build(frame, references.value());
   if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
   if (selectionMode_) (void)renderSelectionOverlay();
@@ -3139,6 +3153,11 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     }
     selectionView_->editingOverlay().setCreationPreview(creationPreview().record, guides);
   } else if (!selectionMode_) selectionView_.reset();
+  if(textState.phase!=runtime::TextPhase::kClosed){
+    selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
+    const auto geometry=textGeometry({1,viewId_.value(),surface_.metricsGeneration,surface_.generation});
+    if(geometry.available){selectionView_->editingOverlay().textCaret=geometry.caret;selectionView_->editingOverlay().textSelection=geometry.selection;}
+  }
   const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value(),
                                                   selectionOverlay());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) {

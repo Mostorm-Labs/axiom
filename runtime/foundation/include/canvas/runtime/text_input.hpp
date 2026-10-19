@@ -3,6 +3,7 @@
 
 #include <optional>
 #include <string>
+#include <vector>
 
 namespace canvas::runtime {
 // Source API for the initial editor. No native handles or canonical mutations.
@@ -16,7 +17,15 @@ struct TextRange final {
     std::uint32_t start = 0, length = 0;
     bool operator==(const TextRange&) const = default;
 };
-enum class TextInputKind : std::uint8_t { kBegin, kUpdate, kCommit, kCancel, kReplace, kSelection };
+enum class TextInputKind : std::uint8_t {
+    kBegin,
+    kUpdate,
+    kCommit,
+    kCancel,
+    kReplace,
+    kSelection,
+    kFinishFailed
+};
 enum class TextStatus : std::uint8_t {
     kUnsupported,
     kQueued,
@@ -48,7 +57,14 @@ enum class TextIntentKind : std::uint8_t {
     kEscape,
     kSetWidth,
     kRetry,
-    kResync
+    kResync,
+    kBackspace,
+    kDelete,
+    kLeft,
+    kRight,
+    kSelectAll,
+    kEditAtPoint,
+    kCompleteComposition
 };
 struct TextIntent final {
     CanvasTargetKey target{};
@@ -77,5 +93,19 @@ struct TextEditorSnapshot final {
     std::size_t projectionLimit = 65536;
     double width = 320;
     TextStatus exitStatus = TextStatus::kObserved;
+};
+struct TextGeometryToken final {
+    TextSessionToken session{};
+    CanvasTargetKey target{};
+    std::uint64_t camera = 0;
+    std::string layout;
+    bool operator==(const TextGeometryToken&) const = default;
+};
+struct TextGeometrySnapshot final {
+    std::vector<std::string> diagnostics;
+    bool available = false;
+    TextGeometryToken token{};
+    std::array<float, 8> caret{};
+    std::vector<std::array<float, 8>> selection;
 };
 } // namespace canvas::runtime

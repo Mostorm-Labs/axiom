@@ -37,6 +37,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   [[nodiscard]] TextReceipt submitTextIntent(const TextIntent&) override;
   [[nodiscard]] TextReceipt submitTextInput(const TextInputEvent&) override;
   [[nodiscard]] TextEditorSnapshot readTextEditor() const override;
+  [[nodiscard]] TextGeometrySnapshot readTextGeometry(const std::optional<TextGeometryToken>& expected = std::nullopt) const override;
   [[nodiscard]] std::optional<TextReceipt> textInputReceipt(const TextSessionToken&,std::uint64_t) const override;
   [[nodiscard]] std::optional<TextReceipt> textIntentReceipt(std::uint64_t,std::uint64_t) const override;
   [[nodiscard]] bool acknowledgeTextInput(const TextSessionToken&,std::uint64_t) override;

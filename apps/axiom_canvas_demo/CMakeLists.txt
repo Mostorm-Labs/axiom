@@ -81,7 +81,8 @@ if(EMSCRIPTEN)
     add_executable(axiom_canvas_demo_web
         platform/web/bridge.cpp)
     target_link_libraries(axiom_canvas_demo_web PRIVATE axiom_canvas_demo_common)
-    target_include_directories(axiom_canvas_demo_web PRIVATE platform/web)
+    target_include_directories(axiom_canvas_demo_web PRIVATE platform/web ${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+    find_package(CanvasSkia CONFIG REQUIRED PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia" NO_DEFAULT_PATH)
     target_compile_features(axiom_canvas_demo_web PRIVATE cxx_std_20)
     axiom_configure_build_info(axiom_canvas_demo_web)
     if(AXIOM_BUILD_DEBUG_UI)
@@ -97,12 +98,15 @@ if(EMSCRIPTEN)
     set_target_properties(axiom_canvas_demo_web PROPERTIES SUFFIX ".js")
     configure_file(platform/web/index.html
         ${CMAKE_CURRENT_BINARY_DIR}/index.html COPYONLY)
+    configure_file(platform/web/text_input.js ${CMAKE_CURRENT_BINARY_DIR}/text_input.js COPYONLY)
     configure_file(platform/web/host.js ${CMAKE_CURRENT_BINARY_DIR}/host.js COPYONLY)
+    configure_file(tests/web_fc02_text_test.html ${CMAKE_CURRENT_BINARY_DIR}/tests/web_fc02_text_test.html COPYONLY)
     configure_file(tests/web_minimal_runtime_test.html
         ${CMAKE_CURRENT_BINARY_DIR}/tests/web_minimal_runtime_test.html COPYONLY)
     target_link_options(axiom_canvas_demo_web PRIVATE
+        "--preload-file" "${CanvasSkia_FONT_PATH}@/axiom-font.ttf"
         "-sMODULARIZE=1" "-sEXPORT_ES6=1" "-sEXPORT_NAME=createAxiomCanvasModule"
         "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1" "-sMIN_WEBGL_VERSION=2" "-sMAX_WEBGL_VERSION=2"
         "-sEXPORTED_FUNCTIONS=['_malloc','_free']"
-        "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8']")
+        "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8','stringToUTF16']")
 endif()

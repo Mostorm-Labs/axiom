@@ -13,6 +13,7 @@ class MinimalRuntimeFacade final : public runtime::RuntimeFacade,
   runtime::TextReceipt submitTextIntent(const runtime::TextIntent&) override;
   runtime::TextReceipt submitTextInput(const runtime::TextInputEvent&) override;
   runtime::TextEditorSnapshot readTextEditor() const override;
+  [[nodiscard]] runtime::TextGeometrySnapshot readTextGeometry(const std::optional<runtime::TextGeometryToken>& expected = std::nullopt) const override;
   std::optional<runtime::TextReceipt> textInputReceipt(const runtime::TextSessionToken&,std::uint64_t) const override;
   std::optional<runtime::TextReceipt> textIntentReceipt(std::uint64_t,std::uint64_t) const override;
   bool acknowledgeTextInput(const runtime::TextSessionToken&,std::uint64_t) override;

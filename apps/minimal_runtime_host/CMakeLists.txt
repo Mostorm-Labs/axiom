@@ -30,7 +30,7 @@ if(WIN32 AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PR
     ${PROJECT_SOURCE_DIR}/runtime/semantic/include
     ${PROJECT_SOURCE_DIR}/runtime/scene/include
     ${CANVAS_SKIA_SDK_ROOT})
-  target_link_libraries(axiom_minimal_windows_surface PUBLIC d3d12 dxgi dcomp)
+  target_link_libraries(axiom_minimal_windows_surface PUBLIC d3d12 dxgi dcomp imm32)
   if(TARGET CanvasSkia::Skia)
     target_link_libraries(axiom_minimal_windows_surface PUBLIC CanvasSkia::Skia)
   endif()
@@ -45,7 +45,7 @@ if(WIN32 AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PR
   add_executable(axiom_minimal_runtime_host_windows WIN32
     windows_main.cpp)
   target_link_libraries(axiom_minimal_runtime_host_windows PRIVATE
-    axiom_minimal_runtime_host axiom_minimal_windows_surface canvas_runtime_control user32 gdi32 libcpmt)
+    axiom_minimal_runtime_host axiom_minimal_windows_surface canvas_runtime_control user32 gdi32 imm32 libcpmt)
   if(AXIOM_BUILD_DEBUG_UI)
     target_link_libraries(axiom_minimal_runtime_host_windows PRIVATE canvas_debug_ui)
     target_compile_definitions(axiom_minimal_runtime_host_windows PRIVATE AXIOM_MINIMAL_HAS_DEBUG_UI=1)
@@ -63,6 +63,8 @@ if(WIN32 AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PR
     ${CANVAS_SKIA_SDK_ROOT})
   target_compile_features(axiom_minimal_runtime_host_windows PRIVATE cxx_std_20)
   axiom_configure_build_info(axiom_minimal_runtime_host_windows)
+  add_custom_command(TARGET axiom_minimal_runtime_host_windows POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CanvasSkia_FONT_PATH}" "$<TARGET_FILE_DIR:axiom_minimal_runtime_host_windows>/axiom-font.ttf")
   # Package variables are directory-scoped; the imported Skia target may have
   # been created by a sibling consumer. Use the locked package's runtime asset.
   if(EXISTS "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat")
@@ -82,6 +84,17 @@ endif()
 
 if(BUILD_TESTING)
   if(WIN32 AND TARGET axiom_minimal_windows_surface)
+    add_executable(axiom_minimal_windows_text_pipeline_tests tests/windows_text_pipeline_test.cpp)
+    target_link_libraries(axiom_minimal_windows_text_pipeline_tests PRIVATE axiom_minimal_runtime_host axiom_minimal_windows_surface user32 gdi32 libcpmt)
+    target_compile_features(axiom_minimal_windows_text_pipeline_tests PRIVATE cxx_std_20)
+    target_compile_definitions(axiom_minimal_windows_text_pipeline_tests PRIVATE NOMINMAX AXIOM_MINIMAL_HAS_DEBUG_UI=0 AXIOM_RUNTIME_QUALIFICATION=1)
+    if(MSVC)
+      target_compile_options(axiom_minimal_windows_text_pipeline_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG /wd4201 /wd4244 /wd4267)
+    endif()
+    add_custom_command(TARGET axiom_minimal_windows_text_pipeline_tests POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CanvasSkia_FONT_PATH}" "$<TARGET_FILE_DIR:axiom_minimal_windows_text_pipeline_tests>/axiom-font.ttf"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat" "$<TARGET_FILE_DIR:axiom_minimal_windows_text_pipeline_tests>/icudtl.dat")
+    add_test(NAME FC02WindowsTextIngress COMMAND axiom_minimal_windows_text_pipeline_tests)
     add_executable(axiom_minimal_windows_touch_pipeline_tests
       tests/windows_touch_pipeline_test.cpp)
     target_link_libraries(axiom_minimal_windows_touch_pipeline_tests PRIVATE

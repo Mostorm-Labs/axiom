@@ -1,0 +1,633 @@
+{
+  "browser": "Chrome/155.0.8059.84",
+  "result": {
+    "result": "FAIL",
+    "error": "Error: resolved font diagnostic remained stuck after recovery",
+    "stack": "Error: resolved font diagnostic remained stuck after recovery\n    at assert (http://127.0.0.1:8769/tests/web_fc02_text_test.html:6:48)\n    at http://127.0.0.1:8769/tests/web_fc02_text_test.html:49:186\n    at async test (http://127.0.0.1:8769/tests/web_fc02_text_test.html:20:35)\n    at async HTMLIFrameElement.<anonymous> (http://127.0.0.1:8769/tests/web_fc02_text_test.html:45:3)",
+    "results": [
+      {
+        "name": "Text toolbar / empty draft has no canonical object",
+        "result": "PASS",
+        "snapshot": {
+          "composition": "0",
+          "effect": "0",
+          "exit": 2,
+          "geometry": {
+            "available": true,
+            "camera": "1",
+            "caret": [
+              80,
+              80,
+              81,
+              80,
+              81,
+              96,
+              80,
+              96
+            ],
+            "diagnostics": [],
+            "layout": "8169dd4b466475f0e9885b4afa0de6430853ebffb2f961f3401ec0edf75fb183:0:0"
+          },
+          "phase": 1,
+          "preedit": [],
+          "projection": [],
+          "replacement": [
+            0,
+            0
+          ],
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "1",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          },
+          "width": 320
+        },
+        "runtime": {
+          "owner": "RuntimeComposition",
+          "revision": "c68a057ce3e9a80cfb203f3c88abed20b8286295",
+          "dirty": 1,
+          "debugUiEnabled": true,
+          "state": 2,
+          "objects": 0,
+          "operations": 0,
+          "pointerSamples": 2,
+          "rejectedInputs": 0,
+          "activePointers": 0,
+          "presentedFrames": 3,
+          "retries": 3,
+          "pendingFrame": false,
+          "previewActive": false,
+          "surfaceGeneration": 1,
+          "metricsGeneration": 1,
+          "width": 2000,
+          "height": 1262,
+          "logicalWidth": 1000,
+          "logicalHeight": 631,
+          "dpr": 2,
+          "controlState": 9,
+          "tool": 4,
+          "creationMode": false,
+          "creationPreset": 0,
+          "size": 16,
+          "opacity": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "lastPointer": {
+            "source": 1,
+            "pointer": 51,
+            "generation": 1
+          },
+          "error": "",
+          "failure": "",
+          "trace": [
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 51,
+              "generation": "1",
+              "phase": 0,
+              "timestampNs": "735200000",
+              "x": 80,
+              "y": 80,
+              "pressure": 0,
+              "history": false
+            },
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 51,
+              "generation": "1",
+              "phase": 2,
+              "timestampNs": "737400000",
+              "x": 80,
+              "y": 80,
+              "pressure": 0,
+              "history": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "synthetic native preedit / terminal dedup / actual Runtime commit",
+        "result": "PASS",
+        "snapshot": {
+          "composition": "0",
+          "effect": "0",
+          "exit": 2,
+          "geometry": {
+            "available": true,
+            "camera": "1",
+            "caret": [
+              132.52999877929688,
+              77.81999969482422,
+              133.52999877929688,
+              77.81999969482422,
+              133.52999877929688,
+              96.56999969482422,
+              132.52999877929688,
+              96.56999969482422
+            ],
+            "diagnostics": [],
+            "layout": "ae0ccd5271422867eac2ce87fc70860375debf0e477a4e60c2c3a4ccb81f86b7:6:0"
+          },
+          "phase": 1,
+          "preedit": [],
+          "projection": [
+            67,
+            97,
+            110,
+            118,
+            97,
+            115
+          ],
+          "replacement": [
+            0,
+            0
+          ],
+          "selection": [
+            6,
+            0
+          ],
+          "sequence": "4",
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "2",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          },
+          "width": 320
+        },
+        "runtime": {
+          "owner": "RuntimeComposition",
+          "revision": "c68a057ce3e9a80cfb203f3c88abed20b8286295",
+          "dirty": 1,
+          "debugUiEnabled": true,
+          "state": 2,
+          "objects": 1,
+          "operations": 1,
+          "pointerSamples": 2,
+          "rejectedInputs": 0,
+          "activePointers": 0,
+          "presentedFrames": 5,
+          "retries": 5,
+          "pendingFrame": false,
+          "previewActive": false,
+          "surfaceGeneration": 1,
+          "metricsGeneration": 1,
+          "width": 2000,
+          "height": 1262,
+          "logicalWidth": 1000,
+          "logicalHeight": 631,
+          "dpr": 2,
+          "controlState": 9,
+          "tool": 4,
+          "creationMode": false,
+          "creationPreset": 0,
+          "size": 16,
+          "opacity": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "lastPointer": {
+            "source": 1,
+            "pointer": 51,
+            "generation": 1
+          },
+          "error": "",
+          "failure": "",
+          "trace": [
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 51,
+              "generation": "1",
+              "phase": 0,
+              "timestampNs": "735200000",
+              "x": 80,
+              "y": 80,
+              "pressure": 0,
+              "history": false
+            },
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 51,
+              "generation": "1",
+              "phase": 2,
+              "timestampNs": "737400000",
+              "x": 80,
+              "y": 80,
+              "pressure": 0,
+              "history": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "Debug focus completes composition and retains editor / width persistence",
+        "result": "PASS",
+        "snapshot": {
+          "composition": "0",
+          "effect": "0",
+          "exit": 3,
+          "geometry": {
+            "available": true,
+            "camera": "1",
+            "caret": [
+              146.92999267578125,
+              77.81999969482422,
+              147.92999267578125,
+              77.81999969482422,
+              147.92999267578125,
+              96.56999969482422,
+              146.92999267578125,
+              96.56999969482422
+            ],
+            "diagnostics": [],
+            "layout": "33bbbf47f29ad763ae846ee4a9716397a5ceb1b0099b4ef13e9cddcaace778c9:8:0"
+          },
+          "phase": 1,
+          "preedit": [],
+          "projection": [
+            67,
+            97,
+            110,
+            118,
+            97,
+            115,
+            32,
+            65
+          ],
+          "replacement": [
+            6,
+            0
+          ],
+          "selection": [
+            8,
+            0
+          ],
+          "sequence": "7",
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "4",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          },
+          "width": 120
+        },
+        "runtime": {
+          "owner": "RuntimeComposition",
+          "revision": "c68a057ce3e9a80cfb203f3c88abed20b8286295",
+          "dirty": 1,
+          "debugUiEnabled": true,
+          "state": 2,
+          "objects": 1,
+          "operations": 3,
+          "pointerSamples": 2,
+          "rejectedInputs": 0,
+          "activePointers": 0,
+          "presentedFrames": 10,
+          "retries": 5,
+          "pendingFrame": false,
+          "previewActive": false,
+          "surfaceGeneration": 1,
+          "metricsGeneration": 1,
+          "width": 2000,
+          "height": 1262,
+          "logicalWidth": 1000,
+          "logicalHeight": 631,
+          "dpr": 2,
+          "controlState": 9,
+          "tool": 4,
+          "creationMode": false,
+          "creationPreset": 0,
+          "size": 16,
+          "opacity": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "lastPointer": {
+            "source": 1,
+            "pointer": 51,
+            "generation": 1
+          },
+          "error": "",
+          "failure": "",
+          "trace": [
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 51,
+              "generation": "1",
+              "phase": 0,
+              "timestampNs": "735200000",
+              "x": 80,
+              "y": 80,
+              "pressure": 0,
+              "history": false
+            },
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 51,
+              "generation": "1",
+              "phase": 2,
+              "timestampNs": "737400000",
+              "x": 80,
+              "y": 80,
+              "pressure": 0,
+              "history": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "Ctrl+Enter paragraph / Enter finishes / resize keeps text",
+        "result": "PASS",
+        "snapshot": {
+          "composition": "0",
+          "effect": "0",
+          "exit": 3,
+          "geometry": {
+            "available": false,
+            "camera": "0",
+            "caret": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "diagnostics": [],
+            "layout": ""
+          },
+          "phase": 0,
+          "preedit": [],
+          "projection": [
+            67,
+            97,
+            110,
+            118,
+            97,
+            115,
+            32,
+            65,
+            10,
+            66
+          ],
+          "replacement": [
+            6,
+            0
+          ],
+          "selection": [
+            10,
+            0
+          ],
+          "sequence": "8",
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "6",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          },
+          "width": 120
+        },
+        "runtime": {
+          "owner": "RuntimeComposition",
+          "revision": "c68a057ce3e9a80cfb203f3c88abed20b8286295",
+          "dirty": 1,
+          "debugUiEnabled": true,
+          "state": 2,
+          "objects": 1,
+          "operations": 5,
+          "pointerSamples": 2,
+          "rejectedInputs": 0,
+          "activePointers": 0,
+          "presentedFrames": 14,
+          "retries": 7,
+          "pendingFrame": false,
+          "previewActive": false,
+          "surfaceGeneration": 3,
+          "metricsGeneration": 3,
+          "width": 1600,
+          "height": 960,
+          "logicalWidth": 800,
+          "logicalHeight": 480,
+          "dpr": 2,
+          "controlState": 9,
+          "tool": 4,
+          "creationMode": false,
+          "creationPreset": 0,
+          "size": 16,
+          "opacity": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "lastPointer": {
+            "source": 1,
+            "pointer": 51,
+            "generation": 1
+          },
+          "error": "",
+          "failure": "",
+          "trace": [
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 51,
+              "generation": "1",
+              "phase": 0,
+              "timestampNs": "735200000",
+              "x": 80,
+              "y": 80,
+              "pressure": 0,
+              "history": false
+            },
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 51,
+              "generation": "1",
+              "phase": 2,
+              "timestampNs": "737400000",
+              "x": 80,
+              "y": 80,
+              "pressure": 0,
+              "history": false
+            },
+            {
+              "kind": "cancel-all",
+              "reason": "resize"
+            },
+            {
+              "kind": "cancel-all",
+              "reason": "resize"
+            }
+          ]
+        }
+      },
+      {
+        "name": "double click existing / grapheme deletion / missing glyph diagnostic",
+        "result": "PASS",
+        "snapshot": {
+          "composition": "0",
+          "effect": "0",
+          "exit": 2,
+          "geometry": {
+            "available": false,
+            "camera": "1",
+            "caret": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "diagnostics": [
+              "font-glyph-unavailable"
+            ],
+            "layout": "e11e5054758360b2f2ad5ce6a6617e5c5c1e5caa3ec4ace5433d74c8d8b1f753:2:0"
+          },
+          "phase": 1,
+          "preedit": [],
+          "projection": [
+            20320,
+            22909
+          ],
+          "replacement": [
+            0,
+            0
+          ],
+          "selection": [
+            2,
+            0
+          ],
+          "sequence": "3",
+          "token": {
+            "adapter": "2",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "4",
+            "runtime": "1",
+            "session": "2",
+            "view": "301"
+          },
+          "width": 120
+        },
+        "runtime": {
+          "owner": "RuntimeComposition",
+          "revision": "c68a057ce3e9a80cfb203f3c88abed20b8286295",
+          "dirty": 1,
+          "debugUiEnabled": true,
+          "state": 2,
+          "objects": 1,
+          "operations": 8,
+          "pointerSamples": 2,
+          "rejectedInputs": 0,
+          "activePointers": 0,
+          "presentedFrames": 19,
+          "retries": 9,
+          "pendingFrame": false,
+          "previewActive": false,
+          "surfaceGeneration": 3,
+          "metricsGeneration": 3,
+          "width": 1600,
+          "height": 960,
+          "logicalWidth": 800,
+          "logicalHeight": 480,
+          "dpr": 2,
+          "controlState": 9,
+          "tool": 4,
+          "creationMode": false,
+          "creationPreset": 0,
+          "size": 16,
+          "opacity": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "lastPointer": {
+            "source": 1,
+            "pointer": 51,
+            "generation": 1
+          },
+          "error": "",
+          "failure": "",
+          "trace": [
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 51,
+              "generation": "1",
+              "phase": 0,
+              "timestampNs": "735200000",
+              "x": 80,
+              "y": 80,
+              "pressure": 0,
+              "history": false
+            },
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 51,
+              "generation": "1",
+              "phase": 2,
+              "timestampNs": "737400000",
+              "x": 80,
+              "y": 80,
+              "pressure": 0,
+              "history": false
+            },
+            {
+              "kind": "cancel-all",
+              "reason": "resize"
+            },
+            {
+              "kind": "cancel-all",
+              "reason": "resize"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

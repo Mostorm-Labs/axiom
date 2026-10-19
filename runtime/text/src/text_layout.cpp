@@ -139,6 +139,8 @@ struct RichTextLayoutService::Impl {
     std::map<foundation::ObjectId,Cached> objects;
     std::map<std::pair<foundation::ObjectId,foundation::ObjectId>,Cached> paragraphs;
 #ifdef CANVAS_TEXT_HAS_SKIA
+    std::shared_ptr<Paragraph> lastShaped;
+    std::map<std::pair<foundation::ObjectId,foundation::ObjectId>,std::shared_ptr<Paragraph>> shaped;
     struct Face { FontObservation observation; sk_sp<SkTypeface> face; std::string diagnostic; };
     std::map<std::string,Face> faces;
     sk_sp<SkUnicode> unicode = SkUnicodes::ICU::Make();
@@ -189,6 +191,7 @@ struct RichTextLayoutService::Impl {
 #ifndef CANVAS_TEXT_HAS_SKIA
         out->diagnostics.push_back("text-stack-unavailable");
 #else
+        lastShaped.reset();
         if(!unicode) out->diagnostics.push_back("text-unicode-unavailable");
         auto provider=sk_make_sp<TypefaceFontProvider>();
         std::vector<Face*> resolved;
@@ -259,6 +262,7 @@ struct RichTextLayoutService::Impl {
             out->localBounds=bounds;
             // Include line advance height even for blank paragraphs.
             out->localBounds.bottom=std::max(out->localBounds.bottom,paragraph->getHeight());
+            lastShaped=std::move(paragraph);
         }
 #endif
         out->digest=snapshotDigest(*out); return out;
@@ -274,6 +278,7 @@ void RichTextLayoutService::clearFonts() noexcept {
     impl_->paragraphs.clear();
 #ifdef CANVAS_TEXT_HAS_SKIA
     impl_->faces.clear();
+    impl_->shaped.clear();
 #endif
 }
 void RichTextLayoutService::setContext(LayoutContext c) { impl_->context=c; }
@@ -302,6 +307,9 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolve(
             const auto hash=paragraphKey.digest(); auto& cached=state.paragraphs[{id,p.id}];
             if(cached.key!=hash || !cached.snapshot) {
                 cached={hash,state.layoutParagraph(p,context)}; ++state.counters.paragraphLayouts;
+#ifdef CANVAS_TEXT_HAS_SKIA
+                state.shaped[{id,p.id}]=state.lastShaped;
+#endif
             } else ++state.counters.paragraphCacheHits;
             const auto& fragment=*cached.snapshot;
             y+=static_cast<float>(p.style.spacing_before);
@@ -318,6 +326,52 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolve(
     }
     out->digest=snapshotDigest(*out); state.objects[id]={token,out}; ++state.counters.objectLayouts;
     state.counters.layoutCpuMs+=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
+    return out;
+}
+
+std::vector<std::uint32_t> RichTextLayoutService::graphemeBoundaries(const std::u16string& text) const {
+    std::vector<std::uint32_t> out;
+#ifdef CANVAS_TEXT_HAS_SKIA
+    if(!impl_->unicode || text.size()>65536)return out;
+    impl_->unicode->forEachBreak(text.data(),static_cast<int>(text.size()),SkUnicode::BreakType::kGraphemes,[&](int position,int){if(position>=0)out.push_back(static_cast<std::uint32_t>(position));});
+#else
+    (void)text;
+#endif
+    return out;
+}
+EditingGeometry RichTextLayoutService::editingGeometry(foundation::ObjectId id,const semantic::RichTextContent& content,std::uint32_t start,std::uint32_t length,std::optional<foundation::WorldPoint> hit) {
+    EditingGeometry out;const auto layout=resolve(id,content);out.layoutIdentity=layout->digest;out.diagnostics=layout->diagnostics;
+#ifdef CANVAS_TEXT_HAS_SKIA
+    if(!layout->diagnostics.empty())return out;
+    std::uint64_t total=0;bool caret=false;
+    for(std::size_t i=0;i<content.document.paragraphs.size();++i){
+        const auto& source=content.document.paragraphs[i];std::string bytes;for(const auto& run:source.runs)bytes+=run.text;
+        const auto utf16=SkUnicode::convertUtf8ToUtf16(bytes.data(),static_cast<int>(bytes.size()));
+        const auto found=impl_->shaped.find({id,source.id});if(found==impl_->shaped.end()||!found->second)return {};
+        auto& paragraph=*found->second;const auto y=layout->paragraphs[i].bounds.top;
+        const auto localStart=start>=total?static_cast<std::uint64_t>(start)-total:0;
+        if(!caret && start>=total && localStart<=utf16.size()) {
+            if(localStart<utf16.size() && utf16[localStart]>=0xDC00 && utf16[localStart]<=0xDFFF)return {};
+            Paragraph::GlyphInfo info{};
+            if(!utf16.empty() && paragraph.getGlyphInfoAtUTF16Offset(static_cast<std::size_t>(localStart==utf16.size()?localStart-1:localStart),&info)){
+                const bool trailing=localStart==utf16.size();const bool rtl=info.fDirection==TextDirection::kRtl;
+                const auto x=trailing!=rtl?info.fGraphemeLayoutBounds.right():info.fGraphemeLayoutBounds.left();
+                out.caret={x,info.fGraphemeLayoutBounds.top()+y,x+1,info.fGraphemeLayoutBounds.bottom()+y};
+            }else{const float height=paragraph.getHeight();if(!(height>0))return {};out.caret={0,y,1,y+height};}
+            caret=true;
+        }
+        const auto a=std::max<std::uint64_t>(start,total),b=std::min<std::uint64_t>(static_cast<std::uint64_t>(start)+length,total+utf16.size());
+        if(a<b)for(const auto& box:paragraph.getRectsForRange(static_cast<unsigned>(a-total),static_cast<unsigned>(b-total),RectHeightStyle::kTight,RectWidthStyle::kTight))
+            out.selection.push_back({box.rect.left(),box.rect.top()+y,box.rect.right(),box.rect.bottom()+y});
+        if(hit && (hit->y>=y || i==0) && (hit->y<layout->paragraphs[i].bounds.bottom || i+1==content.document.paragraphs.size())){
+            const auto position=paragraph.getGlyphPositionAtCoordinate(hit->x,hit->y-y);out.hit=static_cast<std::uint32_t>(total+std::min<std::size_t>(position.position,utf16.size()));
+        }
+        total+=utf16.size();if(i+1<content.document.paragraphs.size())++total;
+    }
+    out.available=caret && static_cast<std::uint64_t>(start)+length<=total;
+#else
+    (void)start;(void)length;(void)hit;
+#endif
     return out;
 }
 LayoutMetrics RichTextLayoutService::metrics() const noexcept { return impl_->counters; }

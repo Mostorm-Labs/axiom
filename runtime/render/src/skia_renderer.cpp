@@ -47,6 +47,12 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         canvas->save();
         canvas->scale(plan.frame.metrics.physicalWidth / plan.frame.metrics.logicalWidth,
                       plan.frame.metrics.physicalHeight / plan.frame.metrics.logicalHeight);
+        if(selectionOverlay->textCaret){
+            SkPaint paint;paint.setAntiAlias(true);paint.setColor4f({0.12F,0.45F,0.9F,0.25F},nullptr);
+            const auto draw=[&](const auto& quad){SkPathBuilder path;path.moveTo(quad[0],quad[1]);for(std::size_t i=1;i<4;++i)path.lineTo(quad[i*2],quad[i*2+1]);path.close();canvas->drawPath(path.detach(),paint);};
+            for(const auto& quad:selectionOverlay->textSelection)draw(quad);
+            paint.setColor4f({0.05F,0.12F,0.2F,1},nullptr);draw(*selectionOverlay->textCaret);
+        }
         SkPaint guidePaint;
         guidePaint.setAntiAlias(true);
         guidePaint.setStyle(SkPaint::kStroke_Style);

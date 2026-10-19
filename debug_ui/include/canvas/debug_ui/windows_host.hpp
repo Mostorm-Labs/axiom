@@ -5,6 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <memory>
+#include <functional>
 #include <vector>
 struct ImGuiContext;
 namespace canvas::debug_ui {
@@ -29,7 +30,9 @@ class WindowsDebugUiHost final {
   void paint(HDC dc) const;
   // Test seam for the Windows input scheduling contract.
   [[nodiscard]] std::uint64_t renderCountForTesting() const noexcept;
+  [[nodiscard]] HWND nativeWindow() const noexcept { return overlay_; }
   [[nodiscard]] HWND overlayForTesting() const noexcept { return overlay_; }
+  void setFocusAdmission(std::function<bool()> admission) { focusAdmission_=std::move(admission); }
   void setController(DebugController* controller) noexcept { controller_ = controller; }
   // The product host owns the gate so Debug and Canvas input sequences are
   // latched in one place. A private fallback keeps standalone qualification
@@ -64,6 +67,7 @@ class WindowsDebugUiHost final {
   std::uint64_t inputSequence_ = 0;
   std::optional<DebugInputSequence> activeInputSequence_;
   bool refreshPending_ = false;
+  std::function<bool()> focusAdmission_;
 };
 }  // namespace canvas::debug_ui
 #endif

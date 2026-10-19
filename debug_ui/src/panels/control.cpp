@@ -14,6 +14,9 @@ void tools(DebugPanelContext& context) {
     ImGui::Text("Product: %s", panel_detail::availabilityLabel(snapshot.product.availability));
     if (!context.controls.hasRuntimeOwner())
         ImGui::TextUnformatted("Tool controls: Unsupported (Runtime owner unbound)");
+    if(ImGui::Button("Text tool")){(void)context.controls.setTool(canvas::runtime::CanvasToolKind::kText);context.ui.markControlSubmitted();}
+    const auto text=context.controls.textEditor();
+    if(text.phase!=canvas::runtime::TextPhase::kClosed){double width=text.width;if(ImGui::InputDouble("Text wrap width",&width)){(void)context.controls.setTextWidth(width);context.ui.markControlSubmitted();}ImGui::Text("Text phase %u / IME %llu",static_cast<unsigned>(text.phase),static_cast<unsigned long long>(text.composition));}
     bool selectionMode = snapshot.product.value.selection.enabled;
     ImGui::BeginDisabled(!panel_detail::canSubmitProduct(context));
     if (ImGui::Checkbox("Selection mode", &selectionMode)) {

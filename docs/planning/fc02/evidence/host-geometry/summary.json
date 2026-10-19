@@ -1,0 +1,22 @@
+{
+  "base_revision": "c68a057ce3e9a80cfb203f3c88abed20b8286295",
+  "branch": "codex/fc02-runtime-boundary-design",
+  "local_results": {
+    "ctest": {
+      "passed": 226,
+      "failed": 0
+    },
+    "fc02_integration_included_in_ctest": 24,
+    "schema_and_boundary": 13,
+    "strict_clang_cpp_sources": 15,
+    "web_text_scenarios": 6,
+    "web_existing_scenarios": 13
+  },
+  "physical": "PHYSICAL_PENDING",
+  "known_failure": {
+    "status": "FAIL",
+    "classification": "MISSING_REQUIRED_INPUT",
+    "detail": "Locked font resources have no general CJK coverage; no silent replacement or SDK lock modification"
+  },
+  "authority_gate_phys": "unchanged / no acceptance claim"
+}
