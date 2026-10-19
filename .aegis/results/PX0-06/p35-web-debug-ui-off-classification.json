@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-06",
+  "stage": "P35_DEFECT_CLASSIFICATION",
+  "reviewed_code_revision": "57fb2bde23eb93b88f9e06c8bafbdcb437fc3cff",
+  "finding_id": "PX0-06-LF1-web-debug-ui-off-build-break",
+  "classification": "IMPLEMENTATION_DEFECT",
+  "blocking": true,
+  "owning_layer": "P36",
+  "rationale": {
+    "why_implementation_defect": "The PX0-06 implementation moved unconditional Web product-toolbar/create/destroy code onto WebRuntimeFacade while leaving that facade and its runtime maps inside AXIOM_WEB_DEBUG_UI. The defect is therefore in the implementation placement/lifetime of the already-authorized Web RuntimeFacade path.",
+    "why_not_authority_defect": "Authority already requires temporary toolbar mutation to converge on RuntimeFacade while platform Debug UI remains an optional/debug concern.",
+    "why_not_task_package_defect": "The original package adequately authorized bridge.cpp host convergence and explicitly required the RuntimeFacade lifecycle to be independent of Debug UI visibility. The missing debug-off build oracle contributed to detection latency but does not make the implementation bug structurally unrepairable under the authorized file.",
+    "why_not_environment_defect": "The failure follows deterministically from C++ preprocessing and the repository's explicit AXIOM_WEB_DEBUG_UI=0 configuration path."
+  },
+  "repair_boundary": {
+    "authorized_file": "apps/ink_playground/platform/web/bridge.cpp",
+    "required_intent": "Move the Web RuntimeFacade product adapter and per-host facade lifetime outside the AXIOM_WEB_DEBUG_UI conditional, while keeping DebugController/ImGui/Web Debug UI presentation code conditional. Preserve the same RuntimeFacade instance for toolbar and DebugController when Debug UI is enabled.",
+    "production_semantics_change": "No new product semantics; repair availability/compile ownership only.",
+    "forbidden": [
+      "Runtime/foundation contract changes",
+      "CMake option/policy changes solely to force Debug UI on",
+      "warning-policy changes",
+      "Windows host redesign",
+      "panel/Workbench/router behavior changes",
+      "PX0-07 physical closure"
+    ]
+  },
+  "reverification": {
+    "required": [
+      "Compile axiom_ink_playground_web with AXIOM_BUILD_DEBUG_UI=OFF / AXIOM_WEB_DEBUG_UI=0 using an appropriate existing Web profile or equivalent clean configuration.",
+      "Rerun g4-5-web-debug-ui-physical axiom_ink_playground_web build.",
+      "Rerun Web structural contract.",
+      "Rerun relevant PX0/DUI focused regressions and scope/diff checks."
+    ],
+    "note": "The debug-off compile is the unique oracle for the newly discovered compatibility failure mode."
+  },
+  "next_stage": "P36_FIX_REVERIFICATION",
+  "return_surface_after_reverify": "CONTROL_REVIEW",
+  "official_gate_pass_claimed": false
+}

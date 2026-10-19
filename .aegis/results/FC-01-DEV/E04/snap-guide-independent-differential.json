@@ -1,0 +1,60 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B04",
+  "status": "PASS_PENDING_CONTROL_REVIEW",
+  "requirement_ref": "verification.lock.json#FC01-B04",
+  "oracle": "independent linear candidate reference + finite SceneQuery-backed CreationSession + camera matrix",
+  "acceptance": {},
+  "provider_run_refs": [
+    "continuation-logs/blocker-closure/e04-exact-source.log",
+    "continuation-logs/committed-runs/fc3d448e-windows-qualified/result.json"
+  ],
+  "logs": {
+    "continuation-logs/blocker-closure/e04-final-r2.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "continuation-logs/blocker-closure/e04-final.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "continuation-logs/blocker-closure/e04-green-first.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "continuation-logs/blocker-closure/e04-logical-dpr-red.log": {
+      "bytes": 219,
+      "sha256": "5be77097554b3f1b96ac4ffc5df3ff981a901c6ec1f2c21b676974511f37ce23"
+    },
+    "continuation-logs/blocker-closure/e04-stale-target-green.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "continuation-logs/blocker-closure/e04-stale-target-red.log": {
+      "bytes": 308,
+      "sha256": "1b3bd1b622a3e09f60d783e661fa19c42ae4ae7c0e459b72a8f560839d515e55"
+    },
+    "continuation-logs/blocker-closure/focused-final-r2.log": {
+      "bytes": 6390,
+      "sha256": "07cd41b910c2f7dddb03507d91b07afff1ece26930c4d8d0952699ba6538b9a4"
+    }
+  },
+  "source_subject_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "pass_from_frozen_comparator": false,
+  "materialized_ref_resolution": "Reviewer resolves this artifact at the pushed result commit; no self/future SHA asserted.",
+  "comparator": {
+    "independent_linear_reference": true,
+    "scene_query_indexed_reference": true,
+    "camera_projection": true,
+    "cases": 360,
+    "direct_reference_source": true,
+    "zero_canonical_move_cancel": true
+  },
+  "current_source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "qualified_for_current_result": false,
+  "carry_forward_status": "PRIOR_UNQUALIFIED_RUN_NOT_CURRENT_RESULT"
+}

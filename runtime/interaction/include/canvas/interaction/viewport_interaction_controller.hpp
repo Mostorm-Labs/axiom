@@ -27,6 +27,11 @@ class ViewportInteractionController final {
                                    const input::PointerSample& second) noexcept;
   void endGesture() noexcept;
   [[nodiscard]] bool applyNavigation(const ViewportNavigationSample& sample) noexcept;
+  [[nodiscard]] bool setCamera(float zoom, float translationX,
+                               float translationY) noexcept;
+  [[nodiscard]] std::uint64_t cameraGeneration() const noexcept {
+    return cameraGeneration_;
+  }
   [[nodiscard]] const ViewportGesture& state() const noexcept { return state_; }
   [[nodiscard]] const ViewportGesture& committed() const noexcept { return committed_; }
   [[nodiscard]] std::pair<float, float> viewToContent(float x, float y) const noexcept;
@@ -36,6 +41,7 @@ class ViewportInteractionController final {
   TwoFingerViewportGesture gesture_;
   ViewportGesture state_{};
   ViewportGesture committed_{};
+  std::uint64_t cameraGeneration_ = 1;
 };
 
 }  // namespace canvas::interaction

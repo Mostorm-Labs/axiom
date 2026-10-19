@@ -1,0 +1,13 @@
+{
+  "schema_version":"0.1",
+  "format":"aegis-evidence-contract-v1",
+  "task_id":"FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION",
+  "output_root":".aegis/results/FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION/",
+  "required_artifacts":["package-binding-preflight.json","implementation-design-preflight.json","red-preflight.json","rm-types.json","rm-operation.json","rm-changeset.json","rm-snapshot.json","rm-compatibility.json","scope-audit.json","result.json"],
+  "blocking":["exact accepted Authority binding","frozen semantic implementation and regression evidence","reviewer-resolvable exact result revision/materialized_ref"],
+  "corroborative":["build/CTest logs","digest vectors","manual source audit"],
+  "materialization_requirement":"P31 package must be pushed as an immutable reviewer-resolvable commit; P32 must push exact implementation/result/evidence revision before READY_FOR_CONTROL_REVIEW.",
+  "physical_status":"PHYSICAL_PENDING; semantic/headless package only",
+  "android_status":"DEFERRED_NOT_BLOCKING",
+  "producer_may_claim_gate_pass":false
+}

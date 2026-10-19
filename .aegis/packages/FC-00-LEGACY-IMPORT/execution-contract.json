@@ -1,0 +1,190 @@
+{
+  "schema_version": "0.1",
+  "task_id": "FC-00-LEGACY-IMPORT",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Record source and tool identity preflight, trusted anchor ancestry, P31 content hash validation and all authority/verification oracle bindings.",
+        "Perform ImplementationDesignPreflight for legacy-to-canonical Project State import; no unresolved semantic/authority/verification decisions.",
+        "Observe official v0.6 RED on untouched pinned pseudo-v0.6 source before writing imported output.",
+        "Preserve all six original source files through exact immutable Git ref and source Git blob SHA identities; create a lossless legacy readiness audit of the exact two original READY_FOR_P31 Gate records.",
+        "Implement one deterministic authored-manifest importer without using a second State Generator, with fixed first-import 25 Gate/Decision, 29 Bound, 34 Evidence, four historic Authorities, project.profile standard and no lifecycle_hint.",
+        "Use the package-frozen expected-crosswalk.json and independent source-vs-target oracle: 25/29/2/34/4 exact historical cohort semantic equivalence; include four high-impact negative fixtures.",
+        "Use pinned official Aegis v0.6 validate/recompute --write/check plus stable second computation; preserve generated state schema as official.",
+        "Materialize all frozen evidence summaries/log refs under .aegis/results/FC-00-LEGACY-IMPORT and push exact remotely reviewer-resolvable result ref.",
+        "Return READY_FOR_CONTROL_REVIEW with exact package/materialized/result/evidence input refs only; do not issue official P34 PASS."
+      ],
+      "authorized_mutation_scope": [
+        ".aegis/project.json",
+        ".aegis/authorities.json",
+        ".aegis/gates.json",
+        ".aegis/evidence.json",
+        ".aegis/integrations.json",
+        ".aegis/state.json",
+        ".aegis/legacy/FC-00-LEGACY-IMPORT/**",
+        ".aegis/results/FC-00-LEGACY-IMPORT/**",
+        "tools/aegis_compat/fc00_legacy_import.py",
+        "tests/project_state/test_fc00_legacy_import.py"
+      ],
+      "preserve_unchanged": [
+        ".aegis/packages/FC-00-LEGACY-IMPORT/**",
+        ".aegis/results/GT-*/**",
+        ".aegis/results/PX0-07/**",
+        ".aegis/packages/GT-*/**",
+        ".aegis/packages/PX0-07/**",
+        "runtime/**",
+        "arc/**",
+        "apps/**",
+        "debug_ui/**",
+        "verification/**",
+        "docs/**"
+      ],
+      "forbidden_changes": [
+        "Any Runtime/ARC/Skia/Brush/Shape/Editor/host/product code modification, G5 or FC-01 implementation.",
+        "Any mutation of original six historical files at the immutable source commit or existing GT/PX0 evidence/results.",
+        "Any hidden PASS promotion from historical READY_FOR_P31, any invented accepted Gate/Integration or rebind to newer PASS.",
+        "Any `gate_decision_binding.kind=absent` synthesized for the 29 original Bound integrations.",
+        "Any new FC Track Current Authority in first historical-only import; it requires its own follow-up reviewed change.",
+        "Any global change to Mostorm-Labs/aegis official model, migration or compute tool.",
+        "Any plain `transition-check` from invalid pseudo-v0.6 interpreted as historical import proof.",
+        "Any future P34 PASS / product release / physical Gate PASS claim made from P32."
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "exact current parser/source publication flow",
+        "target project/gate/evidence/integration data representation",
+        "exact importer and independent oracle file paths",
+        "preserved immutable original identities and abort path",
+        "decision/occurrence old-new one-to-one mapping",
+        "stage/Authority and generated state owner",
+        "each P20 obligation -> test/evidence mapping",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "Original pinned pseudo-v0.6 source must fail official Aegis validate with exit code 2 and INVALID. If it passes unexpectedly, stop as VERIFICATION_DESIGN_DEFECT.",
+      "observation_seam": "Pinned official Aegis v0.6 CLI over immutable .aegis original source"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "FC00-T01-RED",
+          "command_or_oracle": "Pinned Aegis CLI `validate` on untouched pseudo-v0.6 source.",
+          "expected_result": "Exit 2 and INVALID output. If unexpectedly green, fail closed as verification design conflict.",
+          "blocking_reason": "Prove old representation is not accidentally accepted as canonical."
+        },
+        {
+          "id": "FC00-T02-MAPPING",
+          "command_or_oracle": "Independent unittest/test_fc00_legacy_import.py parsing pinned raw source and normalized output with package-frozen expected-crosswalk.json, excluding importer code.",
+          "expected_result": "All 25 decisions, 29 integrations, 2 readiness, 34 evidence and 4 authority original identities semantically equal with 0 Absent/new PASS.",
+          "blocking_reason": "Official v0.6 cannot detect a wrong but valid PASS-to-PASS historical binding."
+        },
+        {
+          "id": "FC00-T03-NEGATIVES",
+          "command_or_oracle": "RED and four independent negative tests: different valid PASS target; readiness-to-PASS; altered Integrated occurrence; mismatched source blob.",
+          "expected_result": "Each targeted negative fails for the specified invariant; no vacuous oracle.",
+          "blocking_reason": "Detect high-impact false history or source substitution not covered by official parser."
+        },
+        {
+          "id": "FC00-T04-V06",
+          "command_or_oracle": "PYTHONPATH=/abs/aegis python3 -m tools.aegis_state.cli validate /abs/axiom-imported",
+          "expected_result": "Exit 0 and VALID.",
+          "blocking_reason": "Only official v0.6 implementation may validate new canonical manifest."
+        },
+        {
+          "id": "FC00-T05-STATE",
+          "command_or_oracle": "Official Aegis recompute /abs/axiom-imported --write, check, repeat recompute --write, check. Compare bytes and SHA-256 of generated state.json.",
+          "expected_result": "All exit 0; STATE_WRITTEN, STATE_OK; repeated state.json bytes identical.",
+          "blocking_reason": "Projection drift and nondeterminism invalidate successor routing."
+        },
+        {
+          "id": "FC00-T06-SCOPE",
+          "command_or_oracle": "git diff --name-only 6fc1508f1a971abc5a90e068d0cc5f6ae82c064b..<result_revision> and git diff --check 6fc1508f1a971abc5a90e068d0cc5f6ae82c064b..<result_revision>; separate frozen-fact review.",
+          "expected_result": "Only authorized import/tests/evidence paths; no product source or original result/Gate/PX0 changes; reviewer can resolve remote commit.",
+          "blocking_reason": "Prevent unauthorized semantic or historical acceptance changes."
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        {
+          "id": "FC00-HOSTED-OPTIONAL",
+          "oracle": "Hosted CI or rerun to corroborate deterministic schema/state and scope; not a separate mandatory provider Gate.",
+          "classification": "corroborative"
+        }
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "FC00-LI-01 source-identity.json",
+        "FC00-LI-02/03/04 legacy-import-equivalence.json and pre-frozen expected-crosswalk.json",
+        "FC00-LI-05 official-v06-cli.json and logs",
+        "FC00-LI-06 negative-oracle.json",
+        "FC00-LI-07 scope-identity.json and reviewer-resolvable result ref"
+      ],
+      "corroborative": [
+        "screenshots",
+        "redundant hosted CI using same oracle",
+        "clean worktree if explicit scope/revision evidence already sufficient"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "All six legacy Git blob identities are tied to the exact source revision and immutable raw input is reviewer-resolvable.",
+        "All 25 formal Gate Decisions preserve original verdict/evidence/authority/stage facts with an exact bijective old-new identity map; no new PASS.",
+        "All 29 Bound Integration occurrence identities are semantically unchanged, with no Absent or rebind; 27 integrated and 2 closed_unmerged.",
+        "Both complete READY_FOR_P31 source Gate objects are archived and excluded from official Gate decisions.",
+        "All 34 historical Evidence and all four historical Authorities match the independent oracle and accepted G4 supersession.",
+        "All targeted independent RED and negative tests reject their intended material faults.",
+        "Official pinned Aegis v0.6 validate, recompute --write, check and second stable check pass on normalized output.",
+        "Authorized-scope Git diff and git diff --check pass without original Gate/evidence/product source changes.",
+        "All blocking evidence is pushed to a reviewer-resolvable exact source/ref in Mostorm-Labs/axiom.",
+        "P32 returns READY_FOR_CONTROL_REVIEW and exact identities without issuing P34 Gate PASS."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "PACKAGE_BINDING_DEFECT",
+        "EVIDENCE_CONTRACT_DEFECT"
+      ],
+      "return_statuses": [
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_AUTHORITY",
+        "BLOCKED_MISSING_INPUT",
+        "BLOCKED_ENVIRONMENT",
+        "BLOCKED_IMPLEMENTATION",
+        "BLOCKED_EVIDENCE"
+      ],
+      "classification_rule": "Return earliest untrusted layer and exact blocker with preserved valid work; no invented waiver, new oracle, or iterative P33 scope expansion."
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "success_status": "READY_FOR_CONTROL_REVIEW",
+      "return_surface": "CONTROL_REVIEW",
+      "emit_only": [
+        "result_revision",
+        "materialized_ref",
+        "evidence_input_refs",
+        "provider_run_refs"
+      ],
+      "official_p34_pass_claim_forbidden": true
+    }
+  }
+}

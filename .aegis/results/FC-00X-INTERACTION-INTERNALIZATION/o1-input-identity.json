@@ -1,0 +1,13 @@
+{
+  "schema": "fc00x-o1-input-identity-v2",
+  "status": "PASS_FOCUSED_AND_MATRIX",
+  "evidence": [
+    "PlatformInteractionIngress source/pointer/generation preservation",
+    "G4InputRouter PASS",
+    "G4MultiPointerFoundation PASS",
+    "C1CommonIngress PASS",
+    "C1CrossPlatformFixtureParity PASS",
+    "FC00XMinimalRuntimeHost PASS"
+  ],
+  "notes": "PointerKey remains the normalized identity; source loss and late generation handling remain in Runtime ingress."
+}

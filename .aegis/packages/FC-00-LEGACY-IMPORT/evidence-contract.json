@@ -1,0 +1,65 @@
+{
+  "schema_version": "0.1",
+  "task_id": "FC-00-LEGACY-IMPORT",
+  "review_boundary": "P34 independently resolves exact Axiom P31 package, immutable legacy source, pinned Aegis v0.6 tooling, static mapping/oracle, committed first canonical manifest, generated state and resulting evidence on exact remotely accessible P32 ref. Only P34 can issue Gate PASS.",
+  "hosted_verification_required": false,
+  "blocking_evidence": [
+    {
+      "id": "FC00-LI-01",
+      "artifact": ".aegis/results/FC-00-LEGACY-IMPORT/source-identity.json",
+      "needed_for": "canonical source and tool identity"
+    },
+    {
+      "id": "FC00-LI-02",
+      "artifact": ".aegis/results/FC-00-LEGACY-IMPORT/legacy-import-equivalence.json",
+      "needed_for": "25 Gate Decision bidirectional equivalence"
+    },
+    {
+      "id": "FC00-LI-03",
+      "artifact": ".aegis/results/FC-00-LEGACY-IMPORT/legacy-import-equivalence.json",
+      "needed_for": "29 Integration occurrence and original Bound link invariants"
+    },
+    {
+      "id": "FC00-LI-04",
+      "artifact": ".aegis/results/FC-00-LEGACY-IMPORT/legacy-import-equivalence.json",
+      "needed_for": "readiness, evidence and authority semantic identity"
+    },
+    {
+      "id": "FC00-LI-05",
+      "artifact": ".aegis/results/FC-00-LEGACY-IMPORT/official-v06-cli.json",
+      "needed_for": "official pinned canonical parser + deterministic generated state"
+    },
+    {
+      "id": "FC00-LI-06",
+      "artifact": ".aegis/results/FC-00-LEGACY-IMPORT/negative-oracle.json",
+      "needed_for": "high impact wrong-pass binding/readiness/source mutations"
+    },
+    {
+      "id": "FC00-LI-07",
+      "artifact": ".aegis/results/FC-00-LEGACY-IMPORT/scope-identity.json",
+      "needed_for": "authorized paths and reviewer-accessible exact result revision"
+    }
+  ],
+  "frozen_input_fixture": {
+    "path": ".aegis/packages/FC-00-LEGACY-IMPORT/expected-crosswalk.json",
+    "sha256": "sha256:11182d2ce1ec6ab7b070b816ae14cec9358fefbdcc784b5470efdcc4cec262ac"
+  },
+  "corroborative_evidence": [
+    "extra independent-looking CI logs that reuse same oracle",
+    "screenshots",
+    "clean-worktree status when exact diff/test already proves scope"
+  ],
+  "provider_qualification": "No Windows/Web/Android GUI physical validation is required or sufficient for the control-plane-only Legacy Import. The original physical qualification debts remain independent.",
+  "identity_contract": {
+    "legacy_subject_revision": "6fc1508f1a971abc5a90e068d0cc5f6ae82c064b",
+    "tool_revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba",
+    "materialization": "P32 must push a reviewer-resolvable exact result commit/ref in Mostorm-Labs/axiom; local-only artifacts are insufficient",
+    "return_only": [
+      "result_revision",
+      "materialized_ref",
+      "evidence_input_refs",
+      "provider_run_refs"
+    ],
+    "gate_owner": "aegis-gate-review P34"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "schema": "fc00x-runtime-isolation-v1",
+  "obligation": "FC00X-ISO-01",
+  "test": "FC00XRuntimeIsolation",
+  "result": "PASS",
+  "assertions": ["two RuntimeAppBinding instances accept equal source/pointer identities independently", "source loss on A does not cancel B", "surface generation resize on A does not change B", "closing FrameCoordinator A does not invalidate B"],
+  "provider": "C:/fc00x-runtime-build",
+  "source_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc"
+}

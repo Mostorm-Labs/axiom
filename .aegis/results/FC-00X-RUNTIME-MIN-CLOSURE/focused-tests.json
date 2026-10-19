@@ -1,0 +1,55 @@
+{
+  "schema": "fc00x-focused-tests-v1",
+  "source_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+  "records": [
+    {
+      "id": "FC00X-OWNER-CLOSURE",
+      "command": "MSVC cl runtime_app_binding.cpp + runtime_app_binding_test.cpp (compile-only; Skia link unavailable)",
+      "status": "COMPILE_PASS",
+      "exit_code": 0,
+      "notes": "Test source compiles with SessionCancelSink assertions; executable link deferred because locked Skia provider is unavailable."
+    },
+    {
+      "id": "FC00X-FRAME-COORDINATOR",
+      "command": "cl runtime_frame_coordinator.cpp runtime_frame_coordinator_test.cpp && out/fc00x-frame-coordinator.exe",
+      "status": "PASS",
+      "exit_code": 0,
+      "notes": "Stale rejection, busy retry, preview/canonical role separation, qualified retirement and close invalidation passed."
+    },
+    {
+      "id": "FC00X-INPUT-INGRESS",
+      "command": "cl active_pointer_registry.cpp platform_interaction_ingress.cpp platform_interaction_ingress_test.cpp && out/fc00x-ingress.exe",
+      "status": "PASS",
+      "exit_code": 0,
+      "notes": "PointerKey/source generation and source loss baseline regression passed."
+    },
+    {
+      "id": "FC00X-CONTROL-SERVICE",
+      "command": "cl canvas_control_service.cpp canvas_control_service_test.cpp && out/fc00x-control.exe",
+      "status": "PASS",
+      "exit_code": 0,
+      "notes": "Queue/receipt target fencing baseline regression passed."
+    },
+    {
+      "id": "FC00X-SINGLE-FILE-TYPECHECK",
+      "command": "cl runtime_app_binding.cpp, canvas_control_binding.cpp, ink_playground_host.cpp",
+      "status": "PASS",
+      "exit_code": 0,
+      "notes": "All changed production translation units compile individually with MSVC 19.51."
+    },
+    {
+      "id": "FC00X-G46-G45-RENDERER-CONFLICT",
+      "command": "ctest --test-dir out/fc00x-windows -C Release --output-on-failure -R \"G3HeadlessSkia|G46PlaygroundTransform|G45BrushRuntimePipeline\"",
+      "status": "PASS",
+      "exit_code": 0,
+      "notes": "3/3 passed after conditional ink-layer isolation; standalone legacy ink erase stays transparent, Brush-v2 and shape-overlap semantics remain intact."
+    },
+    {
+      "id": "FC00X-ISO-01",
+      "command": "ctest --test-dir C:/fc00x-runtime-build -R FC00XRuntimeIsolation --output-on-failure",
+      "status": "PASS",
+      "exit_code": 0,
+      "notes": "Two RuntimeAppBinding and two RuntimeFrameCoordinator instances remain independent across source loss, source reuse, surface resize and close."
+    }
+  ]
+}

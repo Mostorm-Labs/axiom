@@ -1,0 +1,16 @@
+Test project C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/p32-touch/build
+    Start 157: FC00XS2WindowsSurfaceBinding
+1/1 Test #157: FC00XS2WindowsSurfaceBinding .....Exit code 0xc0000409***Exception:   2.33 sec
+[d3d12] resize owner=1 old=0x0 new=256x256 gen=0\n[d3d12] resize ready owner=1 gen=1\n[d3d12] resize owner=0 old=0x0 new=256x256 gen=0\n[d3d12] resize ready owner=0 gen=1\n[d3d12] resize owner=1 old=256x256 new=256x255 gen=1\n[d3d12] resize ready owner=1 gen=2\n[d3d12] resize owner=0 old=256x256 new=256x255 gen=1\n[d3d12] resize ready owner=0 gen=2\n[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: invalid transform or clip framegen=2 providergen=2
+D3D12 fractional logical clip: progressed=0 canonical=0
+Assertion failed: fractionalPresented && fractionalFrame.canonicalFrame, file C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\apps\minimal_runtime_host\tests\windows_surface_binding_test.cpp, line 79
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   2.42 sec
+
+The following tests FAILED:
+	157 - FC00XS2WindowsSurfaceBinding (Exit code 0xc0000409)
+Errors while running CTest

@@ -1,0 +1,18 @@
+{
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "GT-G4.6-B",
+  "output_root": ".aegis/results/GT-G4.6-B/",
+  "required_artifacts": [
+    "repo-reconciliation.json",
+    "scope-audit.json",
+    "build.log",
+    "ctest.log",
+    "camera-trace.json",
+    "fit-policy.json",
+    "snap-trace.json",
+    "query-structure.json",
+    "result.json"
+  ],
+  "review_boundary": "exact result revision + reviewer-accessible branch/PR + applicable hosted CI",
+  "producer_may_claim_gate_pass": false
+}

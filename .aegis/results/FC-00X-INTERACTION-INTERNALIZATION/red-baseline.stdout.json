@@ -1,0 +1,39 @@
+{
+  "oracle": "FC-00X-INTERACTION-INTERNALIZATION-RED-v1",
+  "expect": "baseline-red",
+  "status": "RED",
+  "observations": {
+    "INT-RED-HOST-DISPATCH": {
+      "violations": [
+        "if (selectionMode_)",
+        "if (creationMode_ || creationActive())",
+        "beginBrushSession(sample.key.pointer",
+        "eraserBegin(sample.key.pointer)",
+        "finishBrushSession(sample.key.pointer)"
+      ],
+      "baseline_defect_observed": true,
+      "source_scope": "read-only source boundary oracle"
+    },
+    "INT-RED-WINDOWS-HUD": {
+      "violations": [
+        "TextOutW(",
+        "preview_present:",
+        "Arc preview:",
+        "runtime preview:",
+        "SPACE = preview"
+      ],
+      "baseline_defect_observed": true,
+      "source_scope": "read-only source boundary oracle"
+    },
+    "INT-RED-WEB-PLATFORM-COMMIT": {
+      "violations": [
+        "phase == 2",
+        "presentCanonicalFrame",
+        "phase == 3",
+        "cancelBrushSession(pointer)"
+      ],
+      "baseline_defect_observed": true,
+      "source_scope": "read-only source boundary oracle"
+    }
+  }
+}

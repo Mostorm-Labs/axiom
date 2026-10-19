@@ -1,0 +1,62 @@
+[1/8] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/runtime_app_binding.cpp.o
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/src/runtime_app_binding.cpp:2:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/skia_surface_provider.hpp:3:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/render_backend.hpp:3:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/frame_plan.hpp:5:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/reference_draw_list.hpp:4:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/scene/include\canvas/scene/scene_types.hpp:6:
+C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/foundation/include\canvas/foundation/stable_order_key.hpp:29:35: warning: comparison of integers of different signs: 'std::size_t' (aka 'unsigned long') and 'const int' [-Wsign-compare]
+   29 |         for (std::size_t i = 0; i < count; ++i) value = (value << 8U) | _bytes[i];
+      |                                 ~ ^ ~~~~~
+1 warning generated.
+[2/8] Linking CXX static library runtime\render\libcanvas_runtime_render.a
+[3/8] Building CXX object apps/axiom_canvas_demo/CMakeFiles/axiom_canvas_demo_common.dir/platform/web/web_surface_host.cpp.o
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/apps/axiom_canvas_demo/platform/web/web_surface_host.cpp:1:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/apps/axiom_canvas_demo/platform/web\web_surface_host.hpp:5:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/composition/include\canvas/runtime/runtime_composition.hpp:3:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/interaction/include\canvas/interaction/canvas_editing_runtime.hpp:22:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/skia_surface_provider.hpp:3:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/render_backend.hpp:3:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/frame_plan.hpp:5:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/reference_draw_list.hpp:4:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/scene/include\canvas/scene/scene_types.hpp:6:
+C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/foundation/include\canvas/foundation/stable_order_key.hpp:29:35: warning: comparison of integers of different signs: 'std::size_t' (aka 'unsigned long') and 'const int' [-Wsign-compare]
+   29 |         for (std::size_t i = 0; i < count; ++i) value = (value << 8U) | _bytes[i];
+      |                                 ~ ^ ~~~~~
+1 warning generated.
+[4/8] Building CXX object apps/axiom_canvas_demo/CMakeFiles/axiom_canvas_demo_web.dir/platform/web/bridge.cpp.o
+C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/apps/axiom_canvas_demo/platform/web/bridge.cpp:28:37: warning: 'WebGlSurfaceBackend' is deprecated: use WebGlSurfaceProvider with SkiaRenderer [-Wdeprecated-declarations]
+   28 |     std::unique_ptr<canvas::render::WebGlSurfaceBackend> backend;
+      |                                     ^
+C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/webgl_surface_backend.hpp:72:9: note: 'WebGlSurfaceBackend' has been explicitly marked deprecated here
+   72 | class [[deprecated("use WebGlSurfaceProvider with SkiaRenderer")]] WebGlSurfaceBackend final : public IRenderBackend {
+      |         ^
+C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/apps/axiom_canvas_demo/platform/web/bridge.cpp:47:55: warning: 'WebGlSurfaceBackend' is deprecated: use WebGlSurfaceProvider with SkiaRenderer [-Wdeprecated-declarations]
+   47 |     value->backend = std::make_unique<canvas::render::WebGlSurfaceBackend>(
+      |                                                       ^
+C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/webgl_surface_backend.hpp:72:9: note: 'WebGlSurfaceBackend' has been explicitly marked deprecated here
+   72 | class [[deprecated("use WebGlSurfaceProvider with SkiaRenderer")]] WebGlSurfaceBackend final : public IRenderBackend {
+      |         ^
+C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/apps/axiom_canvas_demo/platform/web/bridge.cpp:93:53: warning: 'WebGlSurfaceBackend' is deprecated: use WebGlSurfaceProvider with SkiaRenderer [-Wdeprecated-declarations]
+   93 |     auto backend = std::make_unique<canvas::render::WebGlSurfaceBackend>(
+      |                                                     ^
+C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/webgl_surface_backend.hpp:72:9: note: 'WebGlSurfaceBackend' has been explicitly marked deprecated here
+   72 | class [[deprecated("use WebGlSurfaceProvider with SkiaRenderer")]] WebGlSurfaceBackend final : public IRenderBackend {
+      |         ^
+3 warnings generated.
+[5/8] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/runtime_composition.cpp.o
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/composition/src/runtime_composition.cpp:1:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/composition/include\canvas/runtime/runtime_composition.hpp:3:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/interaction/include\canvas/interaction/canvas_editing_runtime.hpp:22:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/skia_surface_provider.hpp:3:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/render_backend.hpp:3:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/frame_plan.hpp:5:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/render/include\canvas/render/reference_draw_list.hpp:4:
+In file included from C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/scene/include\canvas/scene/scene_types.hpp:6:
+C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume/runtime/foundation/include\canvas/foundation/stable_order_key.hpp:29:35: warning: comparison of integers of different signs: 'std::size_t' (aka 'unsigned long') and 'const int' [-Wsign-compare]
+   29 |         for (std::size_t i = 0; i < count; ++i) value = (value << 8U) | _bytes[i];
+      |                                 ~ ^ ~~~~~
+1 warning generated.
+[6/8] Linking CXX static library runtime\composition\libcanvas_runtime_composition.a
+[7/8] Linking CXX static library apps\axiom_canvas_demo\libaxiom_canvas_demo_common.a
+[8/8] Linking CXX executable apps\axiom_canvas_demo\axiom_canvas_demo_web.js

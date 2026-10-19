@@ -7,7 +7,7 @@ namespace canvas::scene {
 class FullSceneCompiler final {
   public:
     [[nodiscard]] static foundation::Result<RuntimeSceneProjection> compile(
-        const semantic::SemanticReadView& view);
+        const semantic::SemanticReadView& view, text::RichTextLayoutService* textService = nullptr);
 };
 
 } // namespace canvas::scene

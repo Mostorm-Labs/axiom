@@ -16,7 +16,7 @@ bool isKnownObjectKind(ObjectKind kind) noexcept {
 
 bool isKnownOperationKind(OperationKind kind) noexcept {
     const auto value = static_cast<std::uint8_t>(kind);
-    return value >= 1U && value <= 15U;
+    return value >= 1U && value <= 16U;
 }
 
 } // namespace canvas::semantic

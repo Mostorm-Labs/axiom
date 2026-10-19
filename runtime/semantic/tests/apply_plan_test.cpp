@@ -475,4 +475,65 @@ TEST(ApplyPlan, RepeatedPlanningAgainstUnchangedStateIsDeterministic) {
     EXPECT_EQ(store.allObjects(), before);
 }
 
+TEST(ApplyPlan, ResourceRemovalChecksEverySupportedContentReference) {
+    const ResourceId referenced{id(800U)};
+    const ResourceId unused{id(801U)};
+    VectorStrokeContent vector;
+    vector.stroke.brush.texture_resource_id = referenced;
+    DabStrokeContent dab;
+    dab.stroke.brush.texture_resource_id = referenced;
+    BrushResourceBinding binding;
+    binding.resource_id = referenced.value;
+    BrushStrokeContent brush;
+    brush.stroke.snapshot.resources.push_back(binding);
+    DabBrushStrokeContent dabBrush;
+    dabBrush.stroke.snapshot.resources.push_back(binding);
+    RichTextContent text;
+    Paragraph paragraph;
+    paragraph.runs.resize(2);
+    paragraph.runs.back().style.font_resource_id = referenced;
+    text.document.paragraphs.push_back(paragraph);
+    const std::vector<ObjectContent> contents{imageContent(), text, vector, dab, brush, dabBrush};
+    for (const auto& content : contents) {
+        SCOPED_TRACE(content.index());
+        ReferenceObjectStore store;
+        auto object = shape(1U);
+        object.content = content;
+        insert(store, object); // Isolate reference scanning at the existing store/prepare seam.
+        Applied applied;
+        ResourceManifest manifest;
+        for (const auto resource : {referenced, unused}) {
+            ResourceManifestEntry entry;
+            entry.resource_id = resource;
+            entry.resource_revision = 1;
+            entry.content_hash = "sha256:" + std::string(64, 'a');
+            entry.byte_length = 1;
+            entry.decode_version = 1;
+            entry.metadata = {0x08, 0x01, 0x10, 0x01, 0x18, 0x01, 0x20, 0x01};
+            manifest.entries.push_back(entry);
+        }
+        ASSERT_TRUE(validateResourceManifest(manifest));
+        const auto before = store.allObjects();
+        for (const auto resource : {referenced, unused}) {
+            UpdateResourceManifestOp payload;
+            payload.removes = {resource};
+            payload.expectations = {{resource, ResourceExpectationState::kActive, 1}};
+            const auto result = prepareApplyPlan(operation(payload, 300U),
+                StatefulValidationContext{store, applied, &manifest});
+            if (resource == referenced) {
+                EXPECT_EQ(result.disposition, PrepareDisposition::kRejected);
+                EXPECT_EQ(result.error.issue, StatefulIssue::kInvalidReference);
+                EXPECT_FALSE(result.plan.has_value());
+            } else {
+                ASSERT_EQ(result.disposition, PrepareDisposition::kPrepared);
+                ASSERT_TRUE(result.plan->manifest.has_value());
+                ASSERT_EQ(result.plan->manifest->entries.size(), 1U);
+                EXPECT_EQ(result.plan->manifest->entries.front().resource_id, referenced);
+            }
+            EXPECT_EQ(store.allObjects(), before);
+            EXPECT_EQ(manifest.entries.size(), 2U);
+        }
+    }
+}
+
 } // namespace canvas::semantic

@@ -1,0 +1,81 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-02",
+  "stage": "P36_FIX_REVERIFICATION",
+  "authorized": true,
+  "surface": "CODE_REVERIFY",
+  "executor": "codex",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "origin_package": {
+    "path": ".aegis/packages/PX0-02/package.json",
+    "materialization_ref": "40a1f3af7e122851e7464b771f8704730475abbe"
+  },
+  "exact_cursor": "0941891536952bf944ebf9c5c4593c6ae4e9feb6",
+  "repair_class": "IMPLEMENTATION_DEFECT",
+  "preserve": [
+    "All valid PX0-02 structured DebugSnapshot implementation at 0941891536952bf944ebf9c5c4593c6ae4e9feb6",
+    "DebugSnapshotAssembler architecture and coherence algorithm",
+    "Windows/Web common assembler migration",
+    "RuntimeFacade/Diagnostics contracts from PX0-01",
+    "Current product-control/input-capture/active-stroke behavior",
+    "DUI-M1 BLOCKED_EVIDENCE/PHYSICAL_PENDING status"
+  ],
+  "scope": {
+    "required": [
+      "Fix legacy panel availability so Canvas is inspectable only when Platform is Available, while Surface is inspectable when Platform is Available or Degraded.",
+      "Extend DUIM1PanelModel regression coverage for Platform Degraded: Canvas unavailable, Surface available.",
+      "Complete PX0DebugSnapshot frozen oracle coverage for first-attempt-change then second-attempt-stable -> Coherent with exactly four RuntimeState reads.",
+      "Complete PX0DebugSnapshot coverage for absent Arc while Product/Axiom/Platform/Telemetry remain independently usable.",
+      "Complete PX0DebugSnapshot coverage for Platform surfaceAvailable=false -> Degraded.",
+      "Complete PX0DebugSnapshot coverage for Product/Surface receipt passthrough from DebugActivitySource.",
+      "Complete PX0DebugSnapshot coverage for snapshotSequence increment across captures.",
+      "Complete PX0DebugSnapshot coverage for telemetry-absent frameId fallback to platform.presentCount."
+    ],
+    "allowed_paths": [
+      "debug_ui/include/canvas/debug_ui/panels.hpp",
+      "debug_ui/tests/dui_m1_panel_model_test.cpp",
+      "debug_ui/tests/snapshot_assembler_test.cpp",
+      ".aegis/results/PX0-02/**"
+    ],
+    "forbidden": [
+      "Any DebugSnapshot schema redesign beyond the existing PX0-02 result",
+      "Any DebugSnapshotAssembler architecture or provider-ownership redesign",
+      "runtime/foundation/**",
+      "apps/ink_playground/platform/**",
+      "debug_ui/src/controller.cpp",
+      "debug_ui/src/windows_host.cpp",
+      "DebugControlRouter",
+      "DebugActivityLog",
+      "generic DebugCommand retirement",
+      "Workspace/PanelRegistry/Workbench",
+      "Preview repair",
+      ".aegis/results/GT-DUI-M1/**",
+      "PX0-03 implementation",
+      "Any physical/Gate PASS claim"
+    ]
+  },
+  "required_reverification": [
+    "PX0DebugSnapshot",
+    "DUI20DebugUiContracts",
+    "DUIM1PanelModel",
+    "PX0RuntimeFacadeContract",
+    "DUIM1RuntimeFacade",
+    "DUIM1ViewControls",
+    "Windows/Web structural pytest contract set",
+    "git diff --check",
+    "authorized-scope diff from exact_cursor"
+  ],
+  "terminal_success": [
+    "The degraded Surface panel behavior matches the frozen PX0-02 mapping.",
+    "All previously missing frozen PX0DebugSnapshot cases are explicitly exercised and pass.",
+    "All required regressions pass.",
+    "Only allowed repair paths changed from exact_cursor.",
+    "The repaired exact result is committed and pushed to a reviewer-resolvable ref.",
+    "Return READY_FOR_CONTROL_REVIEW without claiming P34/PX0/DUI-M1/Preview PASS."
+  ],
+  "official_gate_pass_forbidden": true,
+  "next_surface": "CODE_REVERIFY"
+}

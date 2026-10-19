@@ -1,0 +1,54 @@
+{
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "scope": "S1_S2_R1_R2_NARROW_REPAIR",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "starting_revision": "7d22700a5020974c38cff690a530a23abbcd8d21",
+  "result_revision": "1f00471f2ffeefd42e20d88e3796ce04f4e58023",
+  "build_revision": "1f00471f2ffeefd42e20d88e3796ce04f4e58023",
+  "execution_branch": "codex/fc00x-scene-resource-composition-p32-f08-resume",
+  "task_anchor": {
+    "revision": "7d22700a5020974c38cff690a530a23abbcd8d21",
+    "relation": "ancestor"
+  },
+  "materialization_rule": "Exact containing evidence commit is returned in final report after push; no self-reference invented.",
+  "execution_authorization": {
+    "kind": "HUMAN_CONFIRMED_R1_R2_HANDOFF",
+    "path": "inputs/r1-r2-repair-handoff.txt",
+    "sha256": "4375d9f1c8ef493e3c69870e0e1acd598aab23950a122b2d2b677c5d1d2dddce"
+  },
+  "tests": {
+    "passed": 25,
+    "failed": 0,
+    "skipped": 0,
+    "junit": "logs/r1-r2-exact-tests.xml",
+    "assertions": "facts/assertion-audit.json",
+    "probe_compile_exit": 0,
+    "probe_link_exit": 0,
+    "probe_run_exit": 0,
+    "residual_oracle_failures": 0
+  },
+  "evidence_input_refs": [
+    "design-preflight.txt",
+    "coverage-map.json",
+    "red-green.json",
+    "commands.json",
+    "scope-audit.json",
+    "artifacts.json",
+    "facts/build-environment.json",
+    "facts/source-files.json",
+    "manual-testing.md"
+  ],
+  "remaining_blockers": [],
+  "physical_status": "PHYSICAL_PENDING",
+  "android_status": "DEFERRED_NOT_BLOCKING",
+  "limitations": [
+    "Windows/browser manual visual observation not performed.",
+    "Web retains existing three configured warning exceptions.",
+    "Focused Semantic codec OFF; offline Store resolution passed; no SDK rebuild.",
+    "Canonical instance/lifetime/work identity is Composition-owned; lower-level legacy editor feedback remains behind existing ordinary-consumer boundary.",
+    "Original review probe was adapted and executed by implementer; independent re-review still required.",
+    "Web-off environment initialization had one transient pre-build nonzero exit with no compile log, then a successful logged retry; final exact build passed."
+  ],
+  "official_gate_pass_claimed": false
+}

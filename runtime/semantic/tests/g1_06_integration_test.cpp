@@ -255,7 +255,7 @@ std::vector<Operation> allFamilyContinuation() {
                   6112U),
         operation(RemoveEraseMasksOp{{EraseMaskRemoveItem{vector_stroke_record.id, {added_mask.id}}}},
                   6113U),
-        operation(EditRichTextOp{rich_text_record.id, RichTextDelta{}}, 6114U),
+        operation(EditRichTextOp{rich_text_record.id, RichTextDelta{1U, {SetParagraphStyleStep{std::get<RichTextContent>(rich_text_record.content).document.paragraphs.front().id, std::get<RichTextContent>(rich_text_record.content).document.paragraphs.front().style}}}}, 6114U),
         operation(SetConnectorContentOp{connector_record.id, changed_connector}, 6115U)};
 }
 

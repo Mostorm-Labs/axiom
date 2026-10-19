@@ -1,0 +1,65 @@
+{
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "GT-G4.6-C",
+  "output_root": ".aegis/results/GT-G4.6-C/",
+  "required_artifacts": [
+    "repo-reconciliation.json",
+    "scope-audit.json",
+    "build-manifest.json",
+    "scenario-manifest.json",
+    "hud-metrics.json",
+    "workload-corpus-manifest.json",
+    "platform/windows.json",
+    "platform/web.json",
+    "platform/android.json",
+    "regression-matrix.json",
+    "result.json"
+  ],
+  "review_boundary": "exact qualification result revision + reviewer-accessible artifacts + hosted CI/provider refs",
+  "producer_may_claim_gate_pass": false,
+  "evidence_compilation": {
+    "version": "GT-G4.6-C-P31-v0.2",
+    "obligation_mappings": {
+      "G46C-BUNDLE-001": [
+        "build-manifest.json",
+        "scenario-manifest.json",
+        "hud-metrics.json"
+      ],
+      "G46C-PHYS-002": [
+        "platform/windows.json",
+        "platform/web.json",
+        "platform/android.json"
+      ],
+      "G46C-WORKLOAD-003": [
+        "workload-corpus-manifest.json",
+        "hud-metrics.json"
+      ],
+      "G46C-COEXIST-004": [
+        "hud-metrics.json",
+        "platform/windows.json",
+        "platform/web.json",
+        "platform/android.json",
+        "regression-matrix.json"
+      ],
+      "G46C-REGRESS-005": [
+        "regression-matrix.json",
+        "scope-audit.json"
+      ]
+    },
+    "identity_fields": [
+      "result_revision",
+      "artifact_sha256",
+      "platform_device_profile",
+      "scenario_id",
+      "workload_input_digest",
+      "provider_run_attempt_job_artifact_refs_where_hosted"
+    ],
+    "rules": [
+      "Generated artifact values must originate from real observations, not manually copied totals.",
+      "Physical records require actual observations; templates/pending/skipped records cannot count as PASS.",
+      "Workload timing observations are separate from deterministic replay identity.",
+      "Evidence is durable only when reviewer-resolvable at an exact commit/PR head with matching provider artifacts."
+    ]
+  },
+  "original_required_artifacts_preserved": true
+}

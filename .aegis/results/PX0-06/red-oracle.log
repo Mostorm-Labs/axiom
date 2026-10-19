@@ -1,0 +1,6 @@
+PX0-06 pre-mutation oracle
+updated frozen Windows/Web structural contracts against PX0-05 baseline
+expected RED observed before production mutation:
+- Windows target boundary failures: 4
+- Web target boundary failures: 3
+runner: direct importlib Python runner

@@ -1,0 +1,190 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "gate_scope": "development_only",
+  "materialization": {
+    "repository": {
+      "provider": "github",
+      "full_name": "Mostorm-Labs/axiom"
+    },
+    "base_trusted_control_revision": "62a99c439e39636088c55e43cf7d76963bfe20eb",
+    "output_root": ".aegis/results/FC-01-DEV/",
+    "must_be_reviewer_accessible": true,
+    "subject_revision": "exact P32 result source commit",
+    "materialized_ref": "Same-repository exact pushed Git commit/PR ref, NOT worktree-only paths",
+    "provider_identifiers": "Exact CI or local build/run/attempt/profile and binary digest when applicable",
+    "retry_note": "No evidence-only descendant when exact PR-head+CI already qualifies under the frozen Standard contract"
+  },
+  "required_evidence_families": [
+    {
+      "obligation_id": "FC01-B01",
+      "id": "E01",
+      "path": "E01/semantic-shape2-corpus-results.json",
+      "classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+      "requirement_oracle_acceptance": "Bind to verification.lock.json corresponding FC01-Bxx and independently authored Expected values; do not generate Expected from candidate output"
+    },
+    {
+      "obligation_id": "FC01-B02",
+      "id": "E02",
+      "path": "E02/ingress-snapshot-replay-compat.json",
+      "classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+      "requirement_oracle_acceptance": "Bind to verification.lock.json corresponding FC01-Bxx and independently authored Expected values; do not generate Expected from candidate output"
+    },
+    {
+      "obligation_id": "FC01-B03",
+      "id": "E03",
+      "path": "E03/interaction-create-red-and-green.json",
+      "classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+      "requirement_oracle_acceptance": "Bind to verification.lock.json corresponding FC01-Bxx and independently authored Expected values; do not generate Expected from candidate output"
+    },
+    {
+      "obligation_id": "FC01-B04",
+      "id": "E04",
+      "path": "E04/snap-guide-independent-differential.json",
+      "classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+      "requirement_oracle_acceptance": "Bind to verification.lock.json corresponding FC01-Bxx and independently authored Expected values; do not generate Expected from candidate output"
+    },
+    {
+      "obligation_id": "FC01-B05",
+      "id": "E05",
+      "path": "E05/scene-geometry-hit-render.json",
+      "classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+      "requirement_oracle_acceptance": "Bind to verification.lock.json corresponding FC01-Bxx and independently authored Expected values; do not generate Expected from candidate output"
+    },
+    {
+      "obligation_id": "FC01-B06",
+      "id": "E06",
+      "path": "E06/history-preimage-closure.json",
+      "classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+      "requirement_oracle_acceptance": "Bind to verification.lock.json corresponding FC01-Bxx and independently authored Expected values; do not generate Expected from candidate output"
+    },
+    {
+      "obligation_id": "FC01-B07",
+      "id": "E07",
+      "path": "E07/facade-owner-queue-readback.json",
+      "classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+      "requirement_oracle_acceptance": "Bind to verification.lock.json corresponding FC01-Bxx and independently authored Expected values; do not generate Expected from candidate output"
+    },
+    {
+      "obligation_id": "FC01-B08",
+      "id": "E08",
+      "path": "E08/host-profile-build-and-simulation.json",
+      "classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+      "requirement_oracle_acceptance": "Bind to verification.lock.json corresponding FC01-Bxx and independently authored Expected values; do not generate Expected from candidate output"
+    },
+    {
+      "obligation_id": "FC01-B09",
+      "id": "E09",
+      "path": "E09/publication-presentation-axis-truth.json",
+      "classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+      "requirement_oracle_acceptance": "Bind to verification.lock.json corresponding FC01-Bxx and independently authored Expected values; do not generate Expected from candidate output"
+    },
+    {
+      "obligation_id": "FC01-B10",
+      "id": "E10",
+      "path": "E10/subject-authority-scope-regression.json",
+      "classification": "BLOCKING_P20_DISTINCT_FAILURE_MODE",
+      "requirement_oracle_acceptance": "Bind to verification.lock.json corresponding FC01-Bxx and independently authored Expected values; do not generate Expected from candidate output"
+    }
+  ],
+  "evidence_manifest": {
+    "path": "evidence-manifest.json",
+    "schema_id": "fc01-dev-evidence-v0.1",
+    "classification": "CONTAINER_FOR_FROZEN_E01_TO_E10_NOT_NEW_GATE_OBLIGATION",
+    "must_include": [
+      "task_id",
+      "gate_id",
+      "exact_source_sha_and_ref",
+      "package_ref_and_lock_sha256",
+      "independent_oracle_refs_and_fixture_digests",
+      "provider_run_refs_or_durable_logs",
+      "expected_actual_first_divergence",
+      "each_required_obligation_status",
+      "subject_binary_hashes",
+      "physical_claim_false"
+    ]
+  },
+  "red_oracle_preflight": {
+    "required_for_correctness": true,
+    "id": "FC01-RED-01",
+    "path": "red-preflight.json",
+    "baseline_source": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+    "expected_result": "Old source known-bad should RED; new code GREEN",
+    "false_positive": "VERIFICATION_DESIGN_DEFECT",
+    "classification": "MAPPED_TO_FC01_B03_NOT_ADDITIONAL_GATE"
+  },
+  "physical_debt_ledger": {
+    "path": "physical-debt-ledger.json",
+    "classification": "CARRY_FORWARD_METADATA_NOT_SEPARATE_DEV_GATE",
+    "preserve_original_subjects": [
+      "PX0-07 Windows H1 23",
+      "PX0-07 Web H2 23",
+      "G4.6-C original physical matrix",
+      "G4.7 original physical obligations",
+      "FC-13 final campaign"
+    ],
+    "must_not_claim_physical_pass": true
+  },
+  "host_build_provider": {
+    "id": "E08",
+    "target_profiles": [
+      "windows-host",
+      "web-wasm",
+      "android-native"
+    ],
+    "required": "Affected supported host build/link and deterministic adapter sample tests with real compiler/SDK/provider identity",
+    "missing_environment": "BLOCKED_ENVIRONMENT with exact provider/toolchain gap, not PASS via an unqualified mock",
+    "physical_device_required_now": false
+  },
+  "artifact_fields": {
+    "schema_id": "fc01-dev-evidence-v0.1",
+    "required": [
+      "task_id",
+      "gate_id",
+      "obligation_id",
+      "requirement_ref",
+      "invariant_ref",
+      "high_impact_failure_mode",
+      "residual_detection_gap",
+      "independent_oracle_ref_and_sha",
+      "fixture_ref_sha",
+      "result_repository_revision_and_materialized_ref",
+      "binary_digest_and_profile",
+      "provider_run_identity",
+      "expected_observed_result",
+      "first_divergence_or_null",
+      "pass_from_frozen_comparator",
+      "blocking_justification",
+      "physical_claim_false"
+    ]
+  },
+  "allowed_reviewer_fallback": "An alternate artifact mechanism may satisfy an already-frozen obligation only when reviewer proves equal independent detection; cannot silently replace high-impact failure proof with same implementation logging.",
+  "blocking_policy": "Each FC01-B01..B10 requires its corresponding one logical E01-E10 group at P34. Do not invent additional screenshots, duplicate CI, FPS, recursive provenance checks as blockers.",
+  "corroborative": [
+    "duplicate test run same oracle",
+    "multiple screenshots of already independently covered correctness",
+    "user-operated Windows/Android device visual observations now",
+    "new performance/G5 numbers",
+    "generator provenance-of-provenance if independent existing validator already covers"
+  ],
+  "return_contract": {
+    "status": "READY_FOR_CONTROL_REVIEW only after frozen E01-E10 completion or explicit blocker",
+    "fields": [
+      "result_revision",
+      "materialized_ref",
+      "evidence_input_refs",
+      "provider_run_refs"
+    ],
+    "no_gate_verdict": true,
+    "review_owner": "aegis-gate-review at P34"
+  },
+  "no_change": [
+    "historical Gate Decisions 25",
+    "historic Integrations 29",
+    "historic Evidence 34",
+    "PX0/G4.6/G4.7 original PHYS",
+    "FC-13 physical without real provider proof"
+  ]
+}

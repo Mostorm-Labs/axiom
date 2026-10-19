@@ -1,0 +1,90 @@
+{
+  "format": "aegis-verification-lock-v1",
+  "task_id": "GT-DUI-M1",
+  "obligations": [
+    {
+      "id": "M1-01",
+      "test_names": [
+        "DUIM1Control"
+      ],
+      "requirement": "Targeted control admission and coherent state",
+      "acceptance": "Stale/closed/reattached/read-only target rejected with no owner mutation; apply rechecks identity; two views and clients isolated; duplicate Undo executes at most once; bounded queue and receipts; source-driven state refresh."
+    },
+    {
+      "id": "M1-02",
+      "test_names": [
+        "DUIM1ToolOptions"
+      ],
+      "requirement": "Real tool switching",
+      "acceptance": "Ink/Select/Eraser/Pan affect the actual next input route through common owner; busy switches are atomic and side-effect free; no canonical operation from tool choice."
+    },
+    {
+      "id": "M1-03",
+      "test_names": [
+        "DUIM1ToolOptions"
+      ],
+      "requirement": "Exact preset catalog and selection",
+      "acceptance": "Missing/invalid/resource-incomplete preset leaves whole old state; valid preset is resolved once with preserved explicit overrides and truthful profile/revision."
+    },
+    {
+      "id": "M1-04",
+      "test_names": [
+        "DUIM1ToolOptions"
+      ],
+      "requirement": "Ordinary options affect actual output",
+      "acceptance": "Same input/seed with size 4/12, red/blue, opacity 1/0.25 changes expected geometry/paint and captured snapshot; opacity zero valid; old sessions unchanged; eraser diameter is logical-space at DPR 1/2."
+    },
+    {
+      "id": "M1-05",
+      "test_names": [
+        "DUIM1ViewControls"
+      ],
+      "requirement": "Camera and Fit coherence",
+      "acceptance": "Zoom 0.5/1/2 and anchored zoom obey accepted policy; full ObjectId and WorldRect used; empty selection preserves camera; two-view resize/rebind and overlay coherent; canonical/shared Scene content unchanged."
+    },
+    {
+      "id": "M1-06",
+      "test_names": [
+        "DUIM1PanelModel",
+        "DUIM1PlatformControl"
+      ],
+      "requirement": "UI feedback, history and platform routing",
+      "acceptance": "Actual UI submits through common binding, shows owner outcomes and canUndo/canRedo; busy/error rollback truthful; UI capture prevents stray ink; equivalent control-path automated traces across binding adapters."
+    },
+    {
+      "id": "M1-07",
+      "test_names": [
+        "DUIM1BuildInfo",
+        "DUIM1Qualification"
+      ],
+      "requirement": "Build identity and deliverable coverage",
+      "acceptance": "Generated actual commit/dirty/platform/version or explicit unknown; experimental-off ordinary controls work; all seven mandatory rows and platform bundle identities reported without declaring unobserved physical PASS."
+    }
+  ],
+  "required_test_inventory": [
+    "DUIM1Control",
+    "DUIM1ToolOptions",
+    "DUIM1ViewControls",
+    "DUIM1PanelModel",
+    "DUIM1PlatformControl",
+    "DUIM1BuildInfo",
+    "DUIM1Qualification"
+  ],
+  "numeric_oracle": {
+    "geometry_absolute_tolerance": 0.0001,
+    "units": "deterministic logical/content test coordinates",
+    "identity_state_count_comparison": "exact",
+    "raster": "assert captured per-session paint and representative color/coverage; do not impose cross-GPU byte-identical screenshots"
+  },
+  "physical_policy": {
+    "P32_required": false,
+    "delivery_acceptance_required": true,
+    "profiles": [
+      "Windows",
+      "Web",
+      "Android"
+    ],
+    "not_observed_status": "PHYSICAL_PENDING",
+    "rule": "Build and model tests never prove real physical UI PASS."
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-01",
+  "obligations": [
+    {
+      "id": "PX0-01-V1-runtime-facade-independence",
+      "requirement": "RuntimeFacade is a product-only interface and does not inherit RuntimeDiagnostics/IAxiomDiagnostics.",
+      "oracle": "A focused C++ contract test statically asserts RuntimeDiagnostics is not a base of RuntimeFacade and instantiates a RuntimeFacade probe without implementing readDiagnostics().",
+      "acceptance": "The contract test compiles and passes; RuntimeFacade product helpers and readRuntimeState remain callable without diagnostics capability.",
+      "evidence_required": "PX0RuntimeFacadeContract test at the exact result revision"
+    },
+    {
+      "id": "PX0-01-V2-structured-product-state",
+      "requirement": "RuntimeStateSnapshot is grouped into identity, tool, camera, history, and selection product-safe projections without renderer/runtime-internal pointers.",
+      "oracle": "Focused contract tests construct/read every grouped projection and repository review confirms no forbidden internal pointer/member type is introduced.",
+      "acceptance": "All existing state semantics are represented by the grouped projection and compilation succeeds for current Debug UI/platform consumers.",
+      "evidence_required": "PX0RuntimeFacadeContract plus exact source diff"
+    },
+    {
+      "id": "PX0-01-V3-dui-common-adapter-preservation",
+      "requirement": "DUI-M1 CanvasRuntimeFacadeAdapter remains the common CanvasControlService-backed product control adapter for Windows/Web.",
+      "oracle": "DUIM1RuntimeFacade and DUIM1ViewControls pass; source review confirms CanvasRuntimeFacadeAdapter still derives from RuntimeFacade, still delegates Canvas controls to CanvasControlService, and Windows/Web derive from it rather than creating replacement control lanes.",
+      "acceptance": "No new parallel Canvas control service/path exists and existing DUI-M1 product control semantics remain intact.",
+      "evidence_required": "DUIM1RuntimeFacade, DUIM1ViewControls, and exact source diff"
+    },
+    {
+      "id": "PX0-01-V4-brush-eraser-request-semantics",
+      "requirement": "Brush and eraser product helpers do not overload ProductControlRequest.toolId.",
+      "oracle": "Focused contract tests capture submitted requests from setBrush/setEraser and assert brushId/brushRevision or eraserId are set while toolId remains reserved for kSetTool. Windows adapter behavior tests/source assertions verify temporary selected-tool presentation is derived without the overloaded field.",
+      "acceptance": "Brush/Eraser selection behavior remains correct and toolId is no longer used as brush/eraser identity.",
+      "evidence_required": "PX0RuntimeFacadeContract, DUIM1RuntimeFacade, and relevant structural tests"
+    },
+    {
+      "id": "PX0-01-V5-diagnostics-separation",
+      "requirement": "IAxiomDiagnostics remains read-only and independent from RuntimeFacade, with a typed FeatureDiagnosticsSnapshot seam.",
+      "oracle": "Focused C++ contract tests implement RuntimeFacade and IAxiomDiagnostics independently, read core diagnostics, and verify successor feature diagnostic sections default unsupported/unavailable without product semantics.",
+      "acceptance": "Windows/Web may implement both capabilities through separate inheritance; Product consumers need only RuntimeFacade.",
+      "evidence_required": "PX0RuntimeFacadeContract plus exact source diff"
+    },
+    {
+      "id": "PX0-01-V6-platform-and-telemetry-owner-projection",
+      "requirement": "Resolved canonical Surface mode and the existing live sampleHz/frameMs/queueAgeMs observations have explicit read-only owner projections needed by later common snapshot assembly.",
+      "oracle": "PlatformDiagnosticsSnapshot exposes canonicalSurfaceMode and TelemetrySnapshot exposes sampleHz/frameMs/queueAgeMs; current Windows/Web provider/adapters populate these from existing Surface/HUD truth where that provider exists, without moving snapshot assembly.",
+      "acceptance": "No platform-local semantic rule is invented and existing metric values remain available to current Debug UI construction.",
+      "evidence_required": "PX0RuntimeFacadeContract plus current Debug UI/structural regression tests"
+    },
+    {
+      "id": "PX0-01-V7-no-premature-px0-layers",
+      "requirement": "PX0-01 does not implement PX0-02 or later architecture.",
+      "oracle": "Exact source diff contains no common DebugSnapshotAssembler, DebugControlRouter, Activity Log, Workspace/PanelRegistry migration, generic DebugCommand retirement, or host convergence.",
+      "acceptance": "Only contract-boundary and mechanically required adapter/test changes are present.",
+      "evidence_required": "exact result diff"
+    },
+    {
+      "id": "PX0-01-V8-dui-evidence-preservation",
+      "requirement": "Deferred DUI-M1/Windows preview physical evidence status is untouched.",
+      "oracle": "No file under .aegis/results/GT-DUI-M1, GT-G4-05 preview evidence, or preview-specific product source is modified except compile-only changes explicitly required by authorized contract files; no PASS claim is added.",
+      "acceptance": "DUI-M1 remains BLOCKED_EVIDENCE/PHYSICAL_PENDING and PX0-01 does not claim physical closure.",
+      "evidence_required": "exact result diff"
+    }
+  ]
+}

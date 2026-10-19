@@ -1,0 +1,40 @@
+{
+  "format": "aegis-execution-package-v1",
+  "task_id": "GT-DUI-M1",
+  "title": "DUI-M1 Canvas Control Baseline",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "execution_ref": "codex/dui-m1-canvas-control",
+  "task_anchor": {
+    "revision": "9760a8ad910aaa1d1232c9cf24723e4d311d9816",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "terminal_target": "READY_FOR_CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "c42c908fd77925db9934a2f6b8c3f4b78eb8493e3b6e60e937de44cc279ad952"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "95e01b31842aa2733cbf96b450647f7028c53a7e12ccc4270af788b6e67b1dd0"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "77bf93d50a8dc8d9e9fe587a245dbc9abc71b2d9acff7f633cde2fa82392cee1"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "b2a798e59da572f52ce1b82761516cc89f4471c2385a3377dd6d32e687922825"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "8bc2ddb133434cd5b7aa9b52b44ac23d66d8128a1d7028736562d4ad6e07014b"
+  }
+}

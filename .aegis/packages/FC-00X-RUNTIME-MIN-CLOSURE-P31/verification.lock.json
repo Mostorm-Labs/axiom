@@ -1,0 +1,186 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-verification-lock-v1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "FROZEN_AFTER_P20_CORRECTION",
+  "trusted_basis": {
+    "repository_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+    "authority_lock": "authority.lock.json",
+    "verification_owner": "Aegis Implementation P31 package, with independent Control Review before P32",
+    "test_cli_rule": "Resolve the exact configured build directory and test target from CTest discovery; never treat an unmatched regex as PASS.",
+    "p20_correction_revision": "1507e6657520a72b7d9e1402a2a4cceb881cbc95",
+    "p20_red_oracle": "p20-red-oracle.py; expected baseline exit 1"
+  },
+  "obligations": [
+    {
+      "id": "FC00X-S0-01",
+      "requirement": "Freeze one-owner Document/View/Runtime composition, narrow Host ports, async capture lifetime, close order and platform execution context before production mutation.",
+      "oracle": "ImplementationDesignPreflight records current Host -> Runtime -> owner flow, target owner/prepare/commit/publication/abort flow, exact affected files, and no unresolved semantic decisions; independent scope reviewer checks the record against current headers and ADRs.",
+      "acceptance": "The preflight has unresolved_semantic_decisions=[], authority_conflict=false, verification_conflict=false, package_scope_conflict=false, and maps every S1-S3 obligation to an oracle.",
+      "evidence_required": [
+        "implementation-design-preflight.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-S1-01",
+      "requirement": "Source loss/unregister delivers a keyed Cancel to the real Session owner and does not cancel another source sharing the same pointerId.",
+      "oracle": "P20 baseline RED is the read-only source/contract oracle; post-fix acceptance is a separate owner-adapter test receiving keyed Cancel.",
+      "acceptance": "Baseline RED is recorded in p20-red-preflight.json; after implementation, owner-adapter acceptance requires exactly one keyed Cancel, B alive, no canonical commit, and next Down starts a fresh generation.",
+      "evidence_required": [
+        "s1-input-session.json",
+        "red-preflight.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-S1-02",
+      "requirement": "PointerKey identity and late-generation fencing remain intact through InputRouter, CreationSession, BrushSession, selection, pan and eraser paths.",
+      "oracle": "Two-source same-pointer schedule plus late Move/Up/Cancel and next Down; compare owner session ledger, canonical operation count and per-source traces.",
+      "acceptance": "No cross-source cancellation, no duplicate/ghost operation, stale generation rejected, and valid next gesture accepted.",
+      "evidence_required": [
+        "s1-input-session.json",
+        "runtime-isolation.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-S2-01",
+      "requirement": "Runtime coordinates dirty/stale/retry and keeps Preview alive until matching Canonical handoff; resize/rebind/loss/close invalidate old captures.",
+      "oracle": "Immutable frame/preview capture schedule with busy/retry, matching and mismatched document/surface/metrics generations, resize, loss, rebind and close; inspect visible-role and retirement state.",
+      "acceptance": "No flashback to old canonical, stale capture never presents, preview retires only after qualified matching canonical visibility, close leaves no pending task or borrowed owner pointer.",
+      "evidence_required": [
+        "s2-frame-coordinator.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-S2-02",
+      "requirement": "Frame requests use real logical/physical size, DPR and metrics generation; Canonical and Preview lifecycle remain independent.",
+      "oracle": "Non-1 DPR metrics update and independent canonical/preview loss/restored schedule; verify FrameState, SurfaceSnapshot and provider calls.",
+      "acceptance": "Coordinate conversion uses supplied metrics exactly, roles do not cross-invalidate, and no fixed DPR=1 or stale target is emitted.",
+      "evidence_required": [
+        "s2-frame-coordinator.json",
+        "render-lifecycle-regressions.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-S2-03",
+      "requirement": "Accepted/flush/fence feedback is not reported as physical Presented without qualifying platform evidence.",
+      "oracle": "PresentationTracker and CanonicalHandoffEvaluator schedule accepted, approximate and platform-qualified feedback, including duplicate/conflict/stale generation cases.",
+      "acceptance": "Only matching platform-qualified feedback enables the contractually eligible handoff; unknown/approximate evidence remains visible and non-qualified.",
+      "evidence_required": [
+        "s2-frame-coordinator.json",
+        "render-lifecycle-regressions.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-S3-01",
+      "requirement": "Control requests retain their original target and context fence through queueing and owner-safe-point application.",
+      "oracle": "Queue request against target A, switch selection to B, then process; delete/restore/rebind/session/permission/resource invalidation schedules are exercised.",
+      "acceptance": "A is modified only when its fence is valid; B is never accidentally modified; stale/expired/invalidated receipts are explicit.",
+      "evidence_required": [
+        "s3-control-truth.json",
+        "control-regressions.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-S3-02",
+      "requirement": "Primary-only and selection-set intent remain distinct; a leaf strokeWidth edit preserves each target's other canonical style fields.",
+      "oracle": "Two selected objects with different color/cap/join/dash receive a width-only patch and a primary-only command; compare before/after canonical records and operation payload.",
+      "acceptance": "Exactly one existing operation per accepted edit, all non-target style leaves preserved, no compound draft overwrites remote color changes, Clear reset remains unimplemented/open.",
+      "evidence_required": [
+        "s3-control-truth.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-S3-03",
+      "requirement": "Control snapshot/readback reports real availability, writable, busy, permission, resource, revision, receipt and confirmed values; it does not hard-code PASS.",
+      "oracle": "P20 baseline RED is the read-only source/contract oracle; post-fix acceptance is a separate degraded-owner test.",
+      "acceptance": "Baseline RED is recorded in p20-red-preflight.json; after implementation, snapshot mirrors unavailable/writable/busy owner state and separates pending from confirmed values.",
+      "evidence_required": [
+        "s3-control-truth.json",
+        "red-preflight.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-ISO-01",
+      "requirement": "Two independent Runtime/View instances do not share input, session, frame, control, preview or canonical state.",
+      "oracle": "Run identical and interleaved source/frame/control schedules against two instances and compare instance-local ledgers, surface generations and snapshots.",
+      "acceptance": "No cross-instance event, generation, receipt or presentation state is observed.",
+      "evidence_required": [
+        "runtime-isolation.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-SCOPE-01",
+      "requirement": "Only the authorized runtime/host/test/evidence paths change, and FC-01 worktree and historical controls remain untouched.",
+      "oracle": "Exact diff from 201cc8841a0e6de4cd4b8a3dfc6c337820d35704, protected-path audit, git diff --check, and comparison of FC-01 worktree/status before and after.",
+      "acceptance": "No product feature expansion, public ABI rewrite, package-input mutation, FC-01/PX0/G4 result mutation, or unauthorized path; clean diff check.",
+      "evidence_required": [
+        "scope-audit.json",
+        "repository-reconciliation.json"
+      ],
+      "classification": "BLOCKING"
+    }
+  ],
+  "existing_regression_set": [
+    "G3RuntimeAppBinding",
+    "C1CommonIngress",
+    "G4MultiContactCoordinator",
+    "G4ViewportGesture",
+    "C0CanvasInteractionCoordinator",
+    "C0ViewportInteractionController",
+    "G4PlatformNormalization",
+    "C1CrossPlatformFixtureParity",
+    "G3RenderTargetSwitching",
+    "G3SkiaSurfaceProvider",
+    "G3PreviewSurface",
+    "G3SurfacePresentation",
+    "G4CanonicalHandoff",
+    "G4WindowsPreviewDispatch",
+    "G45BrushRuntimePipeline",
+    "G46EditingOverlay",
+    "G4InkPlaygroundComposition",
+    "G4InkPlaygroundSurface",
+    "G4InkPlaygroundPreview",
+    "G4InkPlaygroundSelection",
+    "G46PlaygroundTransform",
+    "PX0RuntimeFacadeContract",
+    "PX0ControlRouter",
+    "PX0DebugSnapshot",
+    "DUIM1RuntimeFacade",
+    "DUIM1Control"
+  ],
+  "planned_oracle_targets": [
+    "FC00XRuntimeOwnerClosure",
+    "FC00XFrameCoordinator",
+    "FC00XControlTruth",
+    "FC00XRuntimeIsolation"
+  ],
+  "p20_correction_inputs": [
+    {
+      "path": "p20-verification-design.json",
+      "sha256": "5bd15f814b3696dc547d840a6bb6d1abe3b4cbaa06c2f08c841e1add75ca56f1"
+    },
+    {
+      "path": "p20-red-oracle.py",
+      "sha256": "6e6ef4826ca15d843431a3b9026ae90d808791f575a6da4a45ecf452f18b805f"
+    },
+    {
+      "path": "p20-authority-binding.py",
+      "sha256": "d501d36f6fc945e3012027c0943edd7445aaaaa5d6f4f58fb3d74e6d8cbcdb7d"
+    },
+    {
+      "path": ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/p20-red-preflight.json",
+      "sha256": "4fdcd3e1280249e15c62d57ef623b95b79a3aa70bd46439195a2d7e2f70a0f0f"
+    }
+  ]
+}

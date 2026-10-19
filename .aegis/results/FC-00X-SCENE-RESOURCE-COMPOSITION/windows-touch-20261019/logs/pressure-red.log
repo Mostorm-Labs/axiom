@@ -1,0 +1,16 @@
+Test project C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/p32-touch/build
+    Start 145: FC00XBrushPressureCapability
+1/1 Test #145: FC00XBrushPressureCapability .....Exit code 0xc0000409***Exception:   2.16 sec
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+unavailable device pressure: expected brush missing-pressure policy=0.5 actual=0.000
+Assertion failed: stroke.confirmed_samples.front().pressure == 0.5, file C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\brush_batch_frame_retry_test.cpp, line 96
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   2.46 sec
+
+The following tests FAILED:
+	145 - FC00XBrushPressureCapability (Exit code 0xc0000409)
+Errors while running CTest

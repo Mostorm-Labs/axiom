@@ -1,0 +1,73 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-03",
+  "stage": "P36_FIX_REVERIFICATION_V2",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "execution_ref": "codex/px0-03-p36-v2-test-oracle",
+  "result_revision": "172ef085cc68b66258e535779b3df15cc0bbadbd",
+  "materialized_ref": "refs/heads/codex/px0-03-p36-v2-test-oracle",
+  "origin_cursor": "007b541f5ab365cccd2938a7145afa10be9e37ca",
+  "authorization_ref": "983d665780db8a065f5304e781a0ae50995854e3",
+  "package_ref": "a4726b21fa0b8421dae3e260636962b07491fa69",
+  "verification": {
+    "PX0ControlRouter": {
+      "result": "PASS",
+      "count": 1,
+      "build": "out/px0-p36-app4",
+      "oracle_repairs": [
+        "default-capacity-64",
+        "bounded-state-and-readback-parity",
+        "owner-non-interference",
+        "cross-owner-request-id-monotonicity",
+        "exact-terminal-transition-count",
+        "refresh-no-runtime-calls"
+      ]
+    },
+    "PX0DebugUiRegressionSet": {
+      "result": "PASS",
+      "count": 4,
+      "build": "out/px0-p36-app4"
+    },
+    "DUIM1RuntimeFacade": {
+      "result": "PASS",
+      "count": 1,
+      "build": "out/px0-p36-app4"
+    },
+    "DUIM1ViewControls": {
+      "result": "PASS",
+      "count": 1,
+      "build": "out/px0-p36-app4"
+    },
+    "WindowsWebStructuralContracts": {
+      "result": "PASS",
+      "count": 30,
+      "runner": "direct Python invocation",
+      "pytest": "unavailable: No module named pytest"
+    },
+    "tree_check": {
+      "result": "PASS",
+      "generic_debug_ui_command_absent": true,
+      "owner_queues_present": true
+    },
+    "git_diff_check": {
+      "result": "PASS"
+    }
+  },
+  "scope_audit": {
+    "base_revision": "007b541f5ab365cccd2938a7145afa10be9e37ca",
+    "allowed_paths_only": true,
+    "changed_paths": [
+      "debug_ui/tests/control_router_test.cpp",
+      ".aegis/results/PX0-03/p36-v2-reverification.json"
+    ],
+    "production_source_changed": false
+  },
+  "environment_notes": [
+    "The required Python pytest module is not installed; the same 30 structural contract functions were invoked directly and all passed.",
+    "Windows verification used the installed Visual Studio 18 x64 developer environment and the repository locked Skia SDK.",
+    "The pre-existing runtime_contract_test.cpp missing-field-initializers diagnostic remains outside this test-only repair and did not fail the required target.",
+    "No physical qualification, official Gate PASS, PX0-03 PASS, PX0 PASS, or DUI-M1 PASS is claimed."
+  ],
+  "official_gate_pass_claimed": false,
+  "next_surface": "CONTROL_REVIEW"
+}

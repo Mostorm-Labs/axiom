@@ -31,7 +31,8 @@ enum class HitTestKindMask : std::uint32_t {
     kRichText = 1U << 3U,
     kVectorStroke = 1U << 4U,
     kDabStroke = 1U << 5U,
-    kAll = 0x3f,
+    kConnector = 1U << 6U,
+    kAll = 0x7f,
 };
 
 struct HitTestFilter final {

@@ -18,8 +18,12 @@ assert "drawBrushSegment" not in source
 assert "getContext(\"2d\")" not in source
 assert "BigInt(sequence)" in source
 assert "BigInt(timeNs)" in source
-assert "BigInt(++sampleSequence)" in source
+assert "BigInt(sequence)" in source
 assert "const trace = [];" in source
+assert "Number.isFinite(sample.pressure) ? sample.pressure : 0.5" in source
+assert "const pointerTool = sample.pointerType === \"pen\"" in source
+assert source.count('phase === "cancel"') >= 1
+assert "BigInt(++sampleSequence)" not in source.split('const send =', 1)[1]
 assert "scheduleEvidenceSnapshot" in source
 assert "setTimeout(() => persistEvidence" in source
 assert "convertToBlob" not in worker_source

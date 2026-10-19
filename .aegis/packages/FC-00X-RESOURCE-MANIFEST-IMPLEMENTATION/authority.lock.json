@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-authority-lock-v1",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION",
+  "stage": "P31_TASK_PACKAGING",
+  "authority_status": "CURRENT_ACCEPTED_P12_P13_AUTHORITY",
+  "repository": {"provider":"github","full_name":"Mostorm-Labs/axiom","source_revision":"02078a36818e7722309aefe679089a48212a424d"},
+  "accepted_authority": {
+    "id":"fc00x-resource-manifest-p12-p13-v0.4",
+    "scope":"semantic:axiom/resource-manifest-p12-p13",
+    "kind":"semantic-schema-operation",
+    "version":"v0.4",
+    "status":"Current",
+    "accepted_revision":"057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "package_ref":"repo:.aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json@057464f9fab2db4b67c032134cce3f5f417a64e0",
+    "package_sha256":"f8b3ff32b604d19be1f93d37e3f275c64569b199e72cdb05aab204a1e60401d5",
+    "acceptance_ref":"repo:.aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json@f5e0cfbc6b324b9fcabe77280d9363b10b1cf680",
+    "acceptance_sha256":"b77ec8ad1c0da295d6920a98a82efe34cf0bc4104b1aa2fc8913e1203f28b8b1"
+  },
+  "owned_semantics": {
+    "manifest": "ResourceManifest schema=1 with active entries and latest tombstone per full ResourceId",
+    "entry_fields": ["resource_id","resource_kind","resource_revision","content_hash","byte_length","decode_version","layout_version","metadata"],
+    "operation": "UpdateResourceManifest OperationKind=16 / OperationPayload tag=16 / envelope schema=1 payload=1",
+    "changeset": "ResourceManifestChangeFlags Created=1 Updated=2 Removed=4 with immutable before/after values",
+    "snapshot": "DocumentSnapshot schema=3 fields 4..10 with explicit presence, semantic digest and checkpoint digest",
+    "compatibility": "Legacy schema 1/2 remain read-only only with explicit legacy admission and no mixed extension fields"
+  },
+  "forbidden": [
+    "new ObjectKind, FieldId, OperationKind other than accepted OperationKind=16",
+    "reusing or renumbering existing operations 1..15",
+    "provider/Host metadata as canonical authority",
+    "composition-owned second manifest",
+    "silent legacy mixed-profile fallback",
+    "modification of historical Gate, Authority, Evidence, Golden or PHYS records",
+    "POC-06/Arc logic, public stable C ABI/SDK, Android delivery, G5 optimization"
+  ],
+  "source_contracts": [
+    {"path":".aegis/packages/FC-00X-RESOURCE-MANIFEST-P12-P13/package.json","sha256":"f8b3ff32b604d19be1f93d37e3f275c64569b199e72cdb05aab204a1e60401d5","role":"accepted-authority-package"},
+    {"path":".aegis/results/FC-00X-RESOURCE-MANIFEST-P12-P13/p23-authority-acceptance-v0.4.json","sha256":"b77ec8ad1c0da295d6920a98a82efe34cf0bc4104b1aa2fc8913e1203f28b8b1","role":"acceptance-record"},
+    {"path":"runtime/semantic/include/canvas/semantic/snapshot.hpp","sha256":"29d4eb14f0c9bbff6733e8f777197a0f827bb6faf3eab18e6393b4db69f19c4e","role":"current-source"},
+    {"path":"runtime/semantic/include/canvas/semantic/operation.hpp","sha256":"91465d13fc316294a958dc6c5b411af6719c3311741af9e0e1f7a93ac28f3b6e","role":"current-source"},
+    {"path":"runtime/semantic/include/canvas/semantic/change_set.hpp","sha256":"63cee37d86a68489591556aeefe22c390911897b3b15c4d99a072f81714a8879","role":"current-source"},
+    {"path":"schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto","sha256":"25b02a6ab12ba911a66ed0644e9d74bf98f967cd373bbe6461d52e93bf242032","role":"current-source"}
+  ]
+}

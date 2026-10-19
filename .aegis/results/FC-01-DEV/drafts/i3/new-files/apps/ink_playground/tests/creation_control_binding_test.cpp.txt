@@ -1,0 +1,41 @@
+#include "../common/canvas_control_binding.hpp"
+#include "canvas/input/platform_input_contract.hpp"
+
+#include <cassert>
+
+using namespace canvas::ink_playground;
+using namespace canvas::runtime;
+using namespace canvas::input;
+
+int main() {
+  InkPlaygroundHost host;
+  assert(host.bindSurface(320U, 240U));
+  const CanvasTargetKey target{1U, 1U, 1U, 1U};
+  CanvasControlBinding binding(host, target);
+  CanvasControlRequest request{};
+  request.clientId = 7U;
+  request.requestId = 1U;
+  request.target = target;
+  request.payload.kind = CanvasControlPayloadKind::kSelectCreationPreset;
+  request.payload.creationPreset = CanvasCreationPreset::kArrow;
+  assert(binding.apply(request).error == CanvasControlError::kNone);
+  const auto before = host.submittedOperationCount();
+  PlatformPointerBatch down;
+  down.samples.push_back({11U, 42U, 1U, 1000U, 20.0F, 30.0F, 0.5F, 0.0F, 0.0F,
+                          {}, {}, SampleProvenance::kConfirmedCurrent, PointerPhase::kDown});
+  PlatformPointerBatch move;
+  move.samples.push_back({11U, 42U, 2U, 2000U, 120.0F, 30.0F, 0.5F, 0.0F, 0.0F,
+                          {}, {}, SampleProvenance::kConfirmedCurrent, PointerPhase::kMove});
+  PlatformPointerBatch up;
+  up.samples.push_back({11U, 42U, 3U, 3000U, 120.0F, 30.0F, 0.5F, 0.0F, 0.0F,
+                        {}, {}, SampleProvenance::kConfirmedCurrent, PointerPhase::kUp});
+  assert(host.acceptPlatformBatch(down, 1000U));
+  assert(host.acceptPlatformBatch(move, 2000U));
+  assert(host.submittedOperationCount() == before);
+  assert(host.acceptPlatformBatch(up, 3000U));
+  assert(host.submittedOperationCount() == before + 1U);
+  const auto snapshot = binding.snapshot(target);
+  assert(snapshot.creationPreset == CanvasCreationPreset::kArrow);
+  assert(!snapshot.creationActive);
+  return 0;
+}

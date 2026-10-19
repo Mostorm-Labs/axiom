@@ -1,0 +1,31 @@
+{
+  "format": "aegis-execution-package-v1",
+  "task_id": "GT-G4.6-A",
+  "title": "G4.6 Entry Reconciliation + Editing Presentation",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "execution_ref": "codex/g4-6-a-editing-presentation",
+  "task_anchor": {
+    "revision": "cc985b174cafc5d5dd743bd66701cfe117278de8",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "authority_lock_ref": {
+    "path": "authority.lock.json"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json"
+  }
+}

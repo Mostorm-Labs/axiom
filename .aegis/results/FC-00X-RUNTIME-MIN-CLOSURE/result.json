@@ -1,0 +1,53 @@
+{
+  "schema": "fc00x-runtime-min-closure-result-v0.2",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+  "materialized_ref": "refs/heads/codex/fc00x-runtime-minimum-closure",
+  "implementation_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+  "package_ref": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4/package.json@f2fcc0e3152337cf88caee7ba7afa0306389d6da",
+  "starting_revision": "6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
+  "completed_slices": [
+    "S0 ImplementationDesignPreflight",
+    "S1 source-scoped cancel owner delivery",
+    "S2 RuntimeFrameCoordinator with focused oracle",
+    "S3 owner-derived CanvasControlBinding availability/busy readback"
+  ],
+  "pending_slices": [],
+  "focused_regression": "PASS: 28/28 corrected FC-00X matrix; legacy POC-06/Arc Windows preview tests excluded by corrected package",
+  "full_build": "BLOCKED_ENVIRONMENT: existing MSVC standard-header resolution failures after CMake reconfigure; focused matrix remains complete",
+  "skia_materialization": "PASS locked Windows release archive SHA and SDK identity",
+  "imgui_materialization": "PASS commit f1cc2ae15e53a861a874c3034aae6798fde194ab",
+  "physical_status": "PHYSICAL_PENDING",
+  "official_gate_pass": false,
+  "evidence_refs": [
+    "p20-red-preflight.json",
+    "implementation-design-preflight.json",
+    "repository-reconciliation.json",
+    "package-binding-preflight.json",
+    "red-preflight.json",
+    "s1-input-session.json",
+    "s2-frame-coordinator.json",
+    "s3-control-truth.json",
+    "runtime-isolation.json",
+    "render-lifecycle-regressions.json",
+    "control-regressions.json",
+    "scope-audit.json",
+    "test-inventory.json",
+    "windows-build.log",
+    "frozen-regressions.log",
+    "control-regressions.log",
+    "p36-poc06-test-removal.json"
+  ],
+  "remaining_blockers": [
+    "BLOCKED_ENVIRONMENT: full/incremental graph reaches existing MSVC standard-header resolution failures; not caused by POC-06 test removal",
+    "PHYSICAL_PENDING: no physical host acceptance claimed"
+  ],
+  "nonclaims": [
+    "No Gate/P34 PASS",
+    "No FC-01/PX0/G4/G5 status change",
+    "Android deferred"
+  ],
+  "evidence_integrity": "corrected P31 package locks, deletion scope and exact 28-test log SHA-256 verified"
+}

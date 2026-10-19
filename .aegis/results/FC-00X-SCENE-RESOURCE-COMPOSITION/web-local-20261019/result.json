@@ -1,0 +1,94 @@
+{
+  "source_revision": "bd3eaf8af26bf710de7a0458a5fc9920d71b5589",
+  "source_tree": "3a351f56427ba1b08543147c064bc62ad5913a75",
+  "tracked_source_dirty": false,
+  "status": "LOCAL_WEB_FUNCTIONAL_TEST_PREPARED_WITH_BASELINE_WARNING_EXCEPTIONS",
+  "strict_web_build": "FAIL",
+  "baseline_warning_exceptions": [
+    "Exact unchanged stable_order_key.hpp header: force-include with -Wsign-compare isolated by diagnostic push/pop",
+    "Exact unchanged apply_plan.cpp source only: -Wno-error=dangling-else via local deferred CMake include"
+  ],
+  "project_source_modified": false,
+  "web_interaction_entry": "ink_playground",
+  "p32_composition_reference_entry": "axiom_canvas_demo",
+  "reference_limit": "Small reference canvas; no full Minimal Host control UI",
+  "chrome_startup_smoke": {
+    "status": "PASS",
+    "exit_code": 0,
+    "url": "http://127.0.0.1:8765/ink_playground/?revision=bd3eaf8af26bf710de7a0458a5fc9920d71b5589",
+    "hud": {
+      "pointCount": 0,
+      "coalescedBatch": 0,
+      "evidence": "pending",
+      "viewportScale": "1.00",
+      "viewportTranslationX": "0.00",
+      "viewportTranslationY": "0.00",
+      "surface": "skia-webgl2",
+      "brushProfile": "vector-solid-v1",
+      "tool": "brush"
+    },
+    "physical_status": "PHYSICAL_PENDING",
+    "scope": "Chrome headless CLI startup only; no human input or physical interaction inferred"
+  },
+  "physical_status": "PHYSICAL_PENDING",
+  "windows_feedback": "USER_REPORTED_NORMAL; see windows-user-observation/observation.json",
+  "official_gate_or_phys_status_changed": false,
+  "artifacts": [
+    {
+      "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\ink_playground\\index.html",
+      "bytes": 25180,
+      "sha256": "abad336622e4f3cd888c15b14f134a9d44f7a63489e66ba1dcc2433396ec166c",
+      "url": "http://127.0.0.1:8765/ink_playground/index.html",
+      "http_status": 200,
+      "content_type": "text/html"
+    },
+    {
+      "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\ink_playground\\axiom_ink_playground_web.js",
+      "bytes": 135108,
+      "sha256": "5c1fb866823034fae0b0e8a03dbeb20d11a4b396a90e070789674848630fe933",
+      "url": "http://127.0.0.1:8765/ink_playground/axiom_ink_playground_web.js",
+      "http_status": 200,
+      "content_type": "text/javascript"
+    },
+    {
+      "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\ink_playground\\axiom_ink_playground_web.wasm",
+      "bytes": 9675248,
+      "sha256": "d70608bdf1452e493c5d5de1ec0787e5e129f4f39a40927ae7ae52bb7c734815",
+      "url": "http://127.0.0.1:8765/ink_playground/axiom_ink_playground_web.wasm",
+      "http_status": 200,
+      "content_type": "application/wasm"
+    },
+    {
+      "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\ink_playground\\evidence_worker.js",
+      "bytes": 1696,
+      "sha256": "eae3eeec65180b091c04647ecb0d81acce09f9d41fdc5465b7fb72f9d9c66c71",
+      "url": "http://127.0.0.1:8765/ink_playground/evidence_worker.js",
+      "http_status": 200,
+      "content_type": "text/javascript"
+    },
+    {
+      "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\index.html",
+      "bytes": 4182,
+      "sha256": "23e7edc0e8991615cca6583e7749d545c33381e99960b11d5dafaf4d1ba634df",
+      "url": "http://127.0.0.1:8765/axiom_canvas_demo/index.html",
+      "http_status": 200,
+      "content_type": "text/html"
+    },
+    {
+      "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.js",
+      "bytes": 121385,
+      "sha256": "729b3469838e7b43a70d3f39c4d638cd3476cb8116fa4239045f09b68c439670",
+      "url": "http://127.0.0.1:8765/axiom_canvas_demo/axiom_canvas_demo_web.js",
+      "http_status": 200,
+      "content_type": "text/javascript"
+    },
+    {
+      "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.wasm",
+      "bytes": 9126406,
+      "sha256": "b49bebbb4561b46f22780d6f118506ef8dc2192976b5ac62086ad5c3d4055dc3",
+      "url": "http://127.0.0.1:8765/axiom_canvas_demo/axiom_canvas_demo_web.wasm",
+      "http_status": 200,
+      "content_type": "application/wasm"
+    }
+  ]
+}

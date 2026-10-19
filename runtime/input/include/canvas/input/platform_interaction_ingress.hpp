@@ -25,6 +25,8 @@ class PlatformInteractionIngress final {
       const PlatformPointerBatch& batch) noexcept;
   [[nodiscard]] PlatformInteractionIngressResult sourceLost(
       InputSourceId source, std::uint64_t sequence, std::uint64_t timestampNs) noexcept;
+  [[nodiscard]] PlatformInteractionIngressResult cancelPointer(
+      const PointerKey& key, std::uint64_t sequence, std::uint64_t timestampNs) noexcept;
   [[nodiscard]] bool accepts(const PointerKey& key) const noexcept {
     return registry_.accepts(key);
   }
@@ -58,6 +60,7 @@ class PlatformInteractionIngress final {
 
   ActivePointerRegistry registry_;
   std::unordered_map<Identity, PointerKey, IdentityHash> active_;
+  std::unordered_map<Identity, std::uint64_t, IdentityHash> lastSequence_;
   PassThroughInputCaptureGate captureGate_;
 };
 

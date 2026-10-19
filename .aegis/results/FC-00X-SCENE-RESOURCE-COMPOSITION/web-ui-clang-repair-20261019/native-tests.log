@@ -1,0 +1,163 @@
+Test project C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/p32-touch/build
+      Start  37: ApplyPlan.AlreadyAppliedShortCircuitsBeforeObjectStoreLookup
+ 1/79 Test  #37: ApplyPlan.AlreadyAppliedShortCircuitsBeforeObjectStoreLookup ...............................   Passed    0.02 sec
+      Start  38: ApplyPlan.CollisionShortCircuitsBeforeObjectStoreLookupWithExactIssue
+ 2/79 Test  #38: ApplyPlan.CollisionShortCircuitsBeforeObjectStoreLookupWithExactIssue ......................   Passed    0.02 sec
+      Start  39: ApplyPlan.LowerLevelRejectionPreservesIssueAndLeaksNoPartialPlan
+ 3/79 Test  #39: ApplyPlan.LowerLevelRejectionPreservesIssueAndLeaksNoPartialPlan ...........................   Passed    0.03 sec
+      Start  40: ApplyPlan.NewInsertProjectsCreatesAndPreparedInvariant
+ 4/79 Test  #40: ApplyPlan.NewInsertProjectsCreatesAndPreparedInvariant .....................................   Passed    0.02 sec
+      Start  41: ApplyPlan.DeleteObjectsProjectsAcceptedB5ClosureExactly
+ 5/79 Test  #41: ApplyPlan.DeleteObjectsProjectsAcceptedB5ClosureExactly ....................................   Passed    0.02 sec
+      Start  42: ApplyPlan.RestoreObjectsProjectsCreates
+ 6/79 Test  #42: ApplyPlan.RestoreObjectsProjectsCreates ....................................................   Passed    0.02 sec
+      Start  43: ApplyPlan.SplitStrokesUsesGenericDeletesAndCreatesWithoutDeleteClosure
+ 7/79 Test  #43: ApplyPlan.SplitStrokesUsesGenericDeletesAndCreatesWithoutDeleteClosure .....................   Passed    0.02 sec
+      Start  44: ApplyPlan.RepresentativeB7CreateProjectionUsesAddStroke
+ 8/79 Test  #44: ApplyPlan.RepresentativeB7CreateProjectionUsesAddStroke ....................................   Passed    0.02 sec
+      Start  45: ApplyPlan.RepresentativeB7ReplacementProjectionUsesSetTransforms
+ 9/79 Test  #45: ApplyPlan.RepresentativeB7ReplacementProjectionUsesSetTransforms ...........................   Passed    0.02 sec
+      Start  46: ApplyPlan.AllFifteenOperationKindsDispatchSmoke
+10/79 Test  #46: ApplyPlan.AllFifteenOperationKindsDispatchSmoke ............................................   Passed    0.02 sec
+      Start  47: ApplyPlan.RepeatedPlanningAgainstUnchangedStateIsDeterministic
+11/79 Test  #47: ApplyPlan.RepeatedPlanningAgainstUnchangedStateIsDeterministic .............................   Passed    0.02 sec
+      Start  48: ApplyPlan.ResourceRemovalChecksEverySupportedContentReference
+12/79 Test  #48: ApplyPlan.ResourceRemovalChecksEverySupportedContentReference ..............................   Passed    0.02 sec
+      Start  49: AtomicApply.AppliesPreparedMixedPlanToBothStoresWithExplicitFinalState
+13/79 Test  #49: AtomicApply.AppliesPreparedMixedPlanToBothStoresWithExplicitFinalState .....................   Passed    0.02 sec
+      Start  50: AtomicApply.RejectsExistingCreateTargetBeforeAnyEarlierMutation
+14/79 Test  #50: AtomicApply.RejectsExistingCreateTargetBeforeAnyEarlierMutation ............................   Passed    0.02 sec
+      Start  51: AtomicApply.RejectsDuplicateCreateIdBeforeAnyEarlierMutation
+15/79 Test  #51: AtomicApply.RejectsDuplicateCreateIdBeforeAnyEarlierMutation ...............................   Passed    0.02 sec
+      Start  52: AtomicApply.RejectsMissingReplacementTargetBeforeAnyEarlierMutation
+16/79 Test  #52: AtomicApply.RejectsMissingReplacementTargetBeforeAnyEarlierMutation ........................   Passed    0.02 sec
+      Start  53: AtomicApply.RejectsDuplicateReplacementIdBeforeAnyEarlierMutation
+17/79 Test  #53: AtomicApply.RejectsDuplicateReplacementIdBeforeAnyEarlierMutation ..........................   Passed    0.02 sec
+      Start  54: AtomicApply.RejectsMissingDeleteTargetBeforeAnyEarlierMutation
+18/79 Test  #54: AtomicApply.RejectsMissingDeleteTargetBeforeAnyEarlierMutation .............................   Passed    0.02 sec
+      Start  55: AtomicApply.RejectsDuplicateDeleteIdBeforeAnyEarlierMutation
+19/79 Test  #55: AtomicApply.RejectsDuplicateDeleteIdBeforeAnyEarlierMutation ...............................   Passed    0.02 sec
+      Start  56: AtomicApply.RejectsContradictoryCreateAndReplacementIdBeforeAnyMutation
+20/79 Test  #56: AtomicApply.RejectsContradictoryCreateAndReplacementIdBeforeAnyMutation ....................   Passed    0.02 sec
+      Start  57: AtomicApply.RejectsContradictoryCreateAndDeleteIdBeforeAnyMutation
+21/79 Test  #57: AtomicApply.RejectsContradictoryCreateAndDeleteIdBeforeAnyMutation .........................   Passed    0.02 sec
+      Start  58: AtomicApply.RejectsContradictoryReplacementAndDeleteIdBeforeAnyMutation
+22/79 Test  #58: AtomicApply.RejectsContradictoryReplacementAndDeleteIdBeforeAnyMutation ....................   Passed    0.02 sec
+      Start  61: OperationEngineApply.FirstSeenInsertAppliesExpectedStateAndRecordsLedgerForBothProviders
+23/79 Test  #61: OperationEngineApply.FirstSeenInsertAppliesExpectedStateAndRecordsLedgerForBothProviders ...   Passed    0.02 sec
+      Start  62: OperationEngineApply.SameIdAndCanonicalOperationIsAlreadyAppliedWithoutSecondMutation
+24/79 Test  #62: OperationEngineApply.SameIdAndCanonicalOperationIsAlreadyAppliedWithoutSecondMutation ......   Passed    0.02 sec
+      Start  63: OperationEngineApply.SameIdAndDifferentOperationRejectsCollisionWithoutLedgerOverwrite
+25/79 Test  #63: OperationEngineApply.SameIdAndDifferentOperationRejectsCollisionWithoutLedgerOverwrite .....   Passed    0.02 sec
+      Start  64: OperationEngineApply.FirstSeenStateInvalidOperationRejectsWithoutLedgerEntry
+26/79 Test  #64: OperationEngineApply.FirstSeenStateInvalidOperationRejectsWithoutLedgerEntry ...............   Passed    0.01 sec
+      Start  86: resource_manifest.ResourceManifest.ValidEntryAndCanonicalOrdering
+27/79 Test  #86: resource_manifest.ResourceManifest.ValidEntryAndCanonicalOrdering ..........................   Passed    0.02 sec
+      Start  87: resource_manifest.ResourceManifest.RejectsUppercaseHash
+28/79 Test  #87: resource_manifest.ResourceManifest.RejectsUppercaseHash ....................................   Passed    0.02 sec
+      Start  88: resource_manifest.ResourceManifest.RejectsDuplicateIds
+29/79 Test  #88: resource_manifest.ResourceManifest.RejectsDuplicateIds .....................................   Passed    0.02 sec
+      Start  89: resource_manifest.ResourceManifest.OperationEngineAppliesCreateAndEmitsResourceChange
+30/79 Test  #89: resource_manifest.ResourceManifest.OperationEngineAppliesCreateAndEmitsResourceChange ......   Passed    0.02 sec
+      Start 114: G4InteractionSessionManager
+31/79 Test #114: G4InteractionSessionManager ................................................................   Passed    0.09 sec
+      Start 115: G4SelectionSession
+32/79 Test #115: G4SelectionSession .........................................................................   Passed    0.11 sec
+      Start 116: G4TransformSession
+33/79 Test #116: G4TransformSession .........................................................................   Passed    0.09 sec
+      Start 117: G46TransformHandleDrag
+34/79 Test #117: G46TransformHandleDrag .....................................................................   Passed    0.09 sec
+      Start 118: G4EraserSession
+35/79 Test #118: G4EraserSession ............................................................................   Passed    0.09 sec
+      Start 120: G4SessionConflict
+36/79 Test #120: G4SessionConflict ..........................................................................   Passed    0.09 sec
+      Start 121: G4SessionLifecycle
+37/79 Test #121: G4SessionLifecycle .........................................................................   Passed    0.08 sec
+      Start 123: G4MultiContactCoordinator
+38/79 Test #123: G4MultiContactCoordinator ..................................................................   Passed    0.09 sec
+      Start 124: G4ViewportGesture
+39/79 Test #124: G4ViewportGesture ..........................................................................   Passed    0.09 sec
+      Start 126: C0ViewportInteractionController
+40/79 Test #126: C0ViewportInteractionController ............................................................   Passed    0.10 sec
+      Start 129: G4InputRouter
+41/79 Test #129: G4InputRouter ..............................................................................   Passed    0.02 sec
+      Start 130: G4MultiPointerFoundation
+42/79 Test #130: G4MultiPointerFoundation ...................................................................   Passed    0.03 sec
+      Start 131: G4PlatformNormalization
+43/79 Test #131: G4PlatformNormalization ....................................................................   Passed    0.03 sec
+      Start 132: C1CommonIngress
+44/79 Test #132: C1CommonIngress ............................................................................   Passed    0.03 sec
+      Start 133: C1CrossPlatformFixtureParity
+45/79 Test #133: C1CrossPlatformFixtureParity ...............................................................   Passed    0.03 sec
+      Start 155: G3RuntimeAppBinding
+46/79 Test #155: G3RuntimeAppBinding ........................................................................   Passed    0.12 sec
+      Start 156: FC00XRuntimeIsolation
+47/79 Test #156: FC00XRuntimeIsolation ......................................................................   Passed    0.13 sec
+      Start 158: G3HeadlessSkia
+48/79 Test #158: G3HeadlessSkia .............................................................................   Passed    0.30 sec
+      Start 159: FC00XFrameCoordinator
+49/79 Test #159: FC00XFrameCoordinator ......................................................................   Passed    0.09 sec
+      Start 160: G3RenderTargetSwitching
+50/79 Test #160: G3RenderTargetSwitching ....................................................................   Passed    0.08 sec
+      Start 161: G3SkiaSurfaceProvider
+51/79 Test #161: G3SkiaSurfaceProvider ......................................................................   Passed    0.15 sec
+      Start 162: G3PreviewSurface
+52/79 Test #162: G3PreviewSurface ...........................................................................   Passed    0.13 sec
+      Start 163: G3SurfacePresentation
+53/79 Test #163: G3SurfacePresentation ......................................................................   Passed    0.08 sec
+      Start 164: G3FrameState
+54/79 Test #164: G3FrameState ...............................................................................   Passed    0.08 sec
+      Start 165: G46EditingOverlay
+55/79 Test #165: G46EditingOverlay ..........................................................................   Passed    0.07 sec
+      Start 169: G4CanonicalHandoff
+56/79 Test #169: G4CanonicalHandoff .........................................................................   Passed    0.08 sec
+      Start 170: FC00XBrushBatchEvaluation
+57/79 Test #170: FC00XBrushBatchEvaluation ..................................................................   Passed    0.23 sec
+      Start 171: FC00XBrushPressureCapability
+58/79 Test #171: FC00XBrushPressureCapability ...............................................................   Passed    0.02 sec
+      Start 172: FC00XBrushBatchSemantics
+59/79 Test #172: FC00XBrushBatchSemantics ...................................................................   Passed    0.06 sec
+      Start 173: FC00XCanonicalBusyPreviewProgress
+60/79 Test #173: FC00XCanonicalBusyPreviewProgress ..........................................................   Passed    0.02 sec
+      Start 174: FC00XPreviewBusyCanonicalProgress
+61/79 Test #174: FC00XPreviewBusyCanonicalProgress ..........................................................   Passed    0.02 sec
+      Start 175: FC00XBusyCanonicalPendingFeedback
+62/79 Test #175: FC00XBusyCanonicalPendingFeedback ..........................................................   Passed    0.02 sec
+      Start 176: FC00XFatalProviderFailure
+63/79 Test #176: FC00XFatalProviderFailure ..................................................................   Passed    0.02 sec
+      Start 177: FC00XRuntimeComposition
+64/79 Test #177: FC00XRuntimeComposition ....................................................................   Passed    0.26 sec
+      Start 178: FC00XRuntimeFacade
+65/79 Test #178: FC00XRuntimeFacade .........................................................................   Passed    0.30 sec
+      Start 179: FC00XWindowsTouchIngress
+66/79 Test #179: FC00XWindowsTouchIngress ...................................................................   Passed    0.19 sec
+      Start 180: FC00XWindowsMouseHistory
+67/79 Test #180: FC00XWindowsMouseHistory ...................................................................   Passed    0.25 sec
+      Start 181: FC00XWindowsPreviewOrigin
+68/79 Test #181: FC00XWindowsPreviewOrigin ..................................................................   Passed    0.34 sec
+      Start 182: FC00XPreviewCanonicalCoordinates
+69/79 Test #182: FC00XPreviewCanonicalCoordinates ...........................................................   Passed    0.16 sec
+      Start 183: FC00XS2WindowsSurfaceBinding
+70/79 Test #183: FC00XS2WindowsSurfaceBinding ...............................................................   Passed    0.64 sec
+      Start 184: FC00XMinimalRuntimeHost
+71/79 Test #184: FC00XMinimalRuntimeHost ....................................................................   Passed    0.29 sec
+      Start 185: FC00XMinimalPresentationCache
+72/79 Test #185: FC00XMinimalPresentationCache ..............................................................   Passed    0.05 sec
+      Start 186: DUIWindowsHostInputDispatch
+73/79 Test #186: DUIWindowsHostInputDispatch ................................................................   Passed    0.29 sec
+      Start 188: PX0Workbench
+74/79 Test #188: PX0Workbench ...............................................................................   Passed    0.05 sec
+      Start 190: PX0RuntimeFacadeContract
+75/79 Test #190: PX0RuntimeFacadeContract ...................................................................   Passed    0.04 sec
+      Start 191: DUIM1PanelModel
+76/79 Test #191: DUIM1PanelModel ............................................................................   Passed    0.04 sec
+      Start 192: PX0ControlRouter
+77/79 Test #192: PX0ControlRouter ...........................................................................   Passed    0.27 sec
+      Start 193: PX0DebugSnapshot
+78/79 Test #193: PX0DebugSnapshot ...........................................................................   Passed    0.03 sec
+      Start 197: G3WebSurfaceHost
+79/79 Test #197: G3WebSurfaceHost ...........................................................................   Passed    0.19 sec
+
+100% tests passed out of 79
+
+Total Test time (real) =  10.06 sec

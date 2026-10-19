@@ -1,0 +1,50 @@
+{
+  "command": [
+    "python",
+    "-u",
+    "tools/skia/fetch.py",
+    "--target",
+    "windows-x64-d3d12",
+    "--variant",
+    "release",
+    "--lock",
+    "r1-full-skia-sdk.lock.json",
+    "--profile",
+    "tools/skia/profiles/r1-full-v1.json",
+    "--install-root",
+    "D:/axbuild/fc01-skia-sdk"
+  ],
+  "timeout_seconds": 120,
+  "elapsed_seconds": 120.203,
+  "exit_code": 1,
+  "timed_out": true,
+  "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "archives": [
+    {
+      "path": "D:\\axbuild\\fc01-skia-sdk\\.windows-x64-d3d12-1neqrx4s\\skia-sdk-r1-full-v1-windows-x64-d3d12-release.zip",
+      "bytes": 1048576,
+      "sha256": "ffd0ccde138b550fbd508bdb6960db807323c64af352dc09993fd686385dd99d"
+    },
+    {
+      "path": "D:\\axbuild\\fc01-skia-sdk\\.windows-x64-d3d12-3u_l1qz0\\skia-sdk-r1-full-v1-windows-x64-d3d12-release.zip",
+      "bytes": 38797312,
+      "sha256": "9bbd5c51886f47f82bcf3a85d14fcad72fa4396365b88b44efcd90c47d9355fd"
+    },
+    {
+      "path": "D:\\axbuild\\fc01-skia-sdk\\.windows-x64-d3d12-5odhlfvj\\skia-sdk-r1-full-v1-windows-x64-d3d12-release.zip",
+      "bytes": 10485760,
+      "sha256": "b8292d98d7602589e005e6a9d29e379f5e8b995ee997cd433982639aef7311c2"
+    },
+    {
+      "path": "D:\\axbuild\\fc01-skia-sdk\\.windows-x64-d3d12-n0hg1f0a\\skia-sdk-r1-full-v1-windows-x64-d3d12-release.zip",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:\\axbuild\\fc01-skia-sdk\\.windows-x64-d3d12-x59lm06n\\skia-sdk-r1-full-v1-windows-x64-d3d12-release.zip",
+      "bytes": 16777216,
+      "sha256": "0515a1566deaf1a2ca9717482bd36582fbf5a0776b7e1edeea89dcf9c43ddd8c"
+    }
+  ],
+  "manifest_exists": false
+}

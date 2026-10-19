@@ -66,7 +66,7 @@ class SemanticCmakeExecutionTest(unittest.TestCase):
         source = CMAKE.read_text(encoding='utf-8')
         (semantic / 'CMakeLists.txt').write_text(source, encoding='utf-8')
         (semantic / 'tools/CMakeLists.txt').write_text('# No product tooling in the orchestration fixture.\n')
-        for name in re.findall(r'src/[a-z_]+\.cpp', source):
+        for name in re.findall(r'src/[a-z0-9_]+\.cpp', source):
             path = semantic / name
             path.parent.mkdir(exist_ok=True)
             path.write_text('// Fixture: CMake configuration only.\n')

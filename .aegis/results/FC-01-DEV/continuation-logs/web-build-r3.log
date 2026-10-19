@@ -1,0 +1,269 @@
+[0/2] Re-checking globbed directories...
+[1/178] Generating generated/auditoryworks/axiom/v1/brush_engine.pb.cc, generated/auditoryworks/axiom/v1/brush_stroke.pb.cc, generated/auditoryworks/axiom/v1/common.pb.cc, generated/auditoryworks/axiom/v1/connector.pb.cc, generated/auditoryworks/axiom/v1/erase_mask.pb.cc, generated/auditoryworks/axiom/v1/geometry.pb.cc, generated/auditoryworks/axiom/v1/object.pb.cc, generated/auditoryworks/axiom/v1/operation.pb.cc, generated/auditoryworks/axiom/v1/paint.pb.cc, generated/auditoryworks/axiom/v1/property.pb.cc, generated/auditoryworks/axiom/v1/rich_text.pb.cc, generated/auditoryworks/axiom/v1/snapshot.pb.cc, generated/auditoryworks/axiom/v1/vector_path.pb.cc, generated/auditoryworks/axiom/v1/brush_engine.pb.h, generated/auditoryworks/axiom/v1/brush_stroke.pb.h, generated/auditoryworks/axiom/v1/common.pb.h, generated/auditoryworks/axiom/v1/connector.pb.h, generated/auditoryworks/axiom/v1/erase_mask.pb.h, generated/auditoryworks/axiom/v1/geometry.pb.h, generated/auditoryworks/axiom/v1/object.pb.h, generated/auditoryworks/axiom/v1/operation.pb.h, generated/auditoryworks/axiom/v1/paint.pb.h, generated/auditoryworks/axiom/v1/property.pb.h, generated/auditoryworks/axiom/v1/rich_text.pb.h, generated/auditoryworks/axiom/v1/snapshot.pb.h, generated/auditoryworks/axiom/v1/vector_path.pb.h
+[2/178] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/build_info.cpp.o
+[3/178] Building CXX object runtime/text/CMakeFiles/canvas_runtime_text.dir/src/sha256.cpp.o
+[4/178] Building CXX object runtime/input/CMakeFiles/canvas_runtime_input.dir/src/input_router.cpp.o
+[5/178] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/canvas_control_service.cpp.o
+[6/178] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/direct_render_scene.cpp.o
+FAILED: runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/direct_render_scene.cpp.o 
+C:\Developer\emsdk\upstream\emscripten\em++.bat -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/foundation/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/text/include -fexceptions -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/direct_render_scene.cpp.o -MF runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\direct_render_scene.cpp.o.d -o runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/direct_render_scene.cpp.o -c C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/direct_render_scene.cpp
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/direct_render_scene.cpp:1:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include\canvas/scene/direct_render_scene.hpp:3:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include\canvas/scene/render_scene.hpp:4:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include\canvas/scene/scene_types.hpp:8:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/object_record.hpp:5:
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:25:10: error: explicitly defaulted three-way comparison operator is implicitly deleted [-Werror,-Wdefaulted-function-deleted]
+    auto operator<=>(const OrderKey&) const = default;
+         ^
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:29:31: note: defaulted 'operator<=>' is implicitly deleted because there is no viable three-way comparison function for member 'bytes_'
+    std::vector<std::uint8_t> bytes_;
+                              ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__utility/pair.h:340:1: note: candidate template ignored: could not match 'pair' against 'vector'
+operator<=>(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\tuple:1544:1: note: candidate template ignored: could not match 'tuple' against 'vector'
+operator<=>(const tuple<_Tp...>& __x, const tuple<_Up...>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\tuple:1544:1: note: candidate template ignored: could not match 'tuple' against 'vector'
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/move_iterator.h:273:6: note: candidate template ignored: could not match 'move_iterator' against 'vector'
+auto operator<=>(const move_iterator<_Iter1>& __x, const move_iterator<_Iter2>& __y)
+     ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/move_iterator.h:273:6: note: candidate template ignored: could not match 'move_iterator' against 'vector'
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/reverse_iterator.h:286:1: note: candidate template ignored: could not match 'reverse_iterator' against 'vector'
+operator<=>(const reverse_iterator<_Iter1>& __x, const reverse_iterator<_Iter2>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/reverse_iterator.h:286:1: note: candidate template ignored: could not match 'reverse_iterator' against 'vector'
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:25:47: note: replace 'default' with 'delete'
+    auto operator<=>(const OrderKey&) const = default;
+                                              ^~~~~~~
+                                              delete
+1 error generated.
+em++: error: 'C:/Developer/emsdk/upstream/bin\clang++.exe -target wasm32-unknown-emscripten -fvisibility=default -mllvm -combiner-global-alias-analysis=false -mllvm -enable-emscripten-cxx-exceptions -mllvm -enable-emscripten-sjlj -mllvm -disable-lsr -DEMSCRIPTEN -IC:\Developer\emsdk\upstream\emscripten\cache\sysroot\include\SDL --sysroot=C:\Developer\emsdk\upstream\emscripten\cache\sysroot -Xclang -iwithsysroot/include\compat -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/foundation/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/text/include -fexceptions -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/direct_render_scene.cpp.o -MF runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\direct_render_scene.cpp.o.d -c C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/direct_render_scene.cpp -o runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/direct_render_scene.cpp.o' failed (returned 1)
+[7/178] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/damage_tracker.cpp.o
+FAILED: runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/damage_tracker.cpp.o 
+C:\Developer\emsdk\upstream\emscripten\em++.bat -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/foundation/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/text/include -fexceptions -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/damage_tracker.cpp.o -MF runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\damage_tracker.cpp.o.d -o runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/damage_tracker.cpp.o -c C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/damage_tracker.cpp
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/damage_tracker.cpp:1:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include\canvas/scene/damage_tracker.hpp:4:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include\canvas/scene/scene_types.hpp:8:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/object_record.hpp:5:
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:25:10: error: explicitly defaulted three-way comparison operator is implicitly deleted [-Werror,-Wdefaulted-function-deleted]
+    auto operator<=>(const OrderKey&) const = default;
+         ^
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:29:31: note: defaulted 'operator<=>' is implicitly deleted because there is no viable three-way comparison function for member 'bytes_'
+    std::vector<std::uint8_t> bytes_;
+                              ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__utility/pair.h:340:1: note: candidate template ignored: could not match 'pair' against 'vector'
+operator<=>(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\tuple:1544:1: note: candidate template ignored: could not match 'tuple' against 'vector'
+operator<=>(const tuple<_Tp...>& __x, const tuple<_Up...>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\tuple:1544:1: note: candidate template ignored: could not match 'tuple' against 'vector'
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/move_iterator.h:273:6: note: candidate template ignored: could not match 'move_iterator' against 'vector'
+auto operator<=>(const move_iterator<_Iter1>& __x, const move_iterator<_Iter2>& __y)
+     ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/move_iterator.h:273:6: note: candidate template ignored: could not match 'move_iterator' against 'vector'
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/reverse_iterator.h:286:1: note: candidate template ignored: could not match 'reverse_iterator' against 'vector'
+operator<=>(const reverse_iterator<_Iter1>& __x, const reverse_iterator<_Iter2>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/reverse_iterator.h:286:1: note: candidate template ignored: could not match 'reverse_iterator' against 'vector'
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:25:47: note: replace 'default' with 'delete'
+    auto operator<=>(const OrderKey&) const = default;
+                                              ^~~~~~~
+                                              delete
+1 error generated.
+em++: error: 'C:/Developer/emsdk/upstream/bin\clang++.exe -target wasm32-unknown-emscripten -fvisibility=default -mllvm -combiner-global-alias-analysis=false -mllvm -enable-emscripten-cxx-exceptions -mllvm -enable-emscripten-sjlj -mllvm -disable-lsr -DEMSCRIPTEN -IC:\Developer\emsdk\upstream\emscripten\cache\sysroot\include\SDL --sysroot=C:\Developer\emsdk\upstream\emscripten\cache\sysroot -Xclang -iwithsysroot/include\compat -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/foundation/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/text/include -fexceptions -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/damage_tracker.cpp.o -MF runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\damage_tracker.cpp.o.d -c C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/damage_tracker.cpp -o runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/damage_tracker.cpp.o' failed (returned 1)
+[8/178] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene.cpp.o
+FAILED: runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene.cpp.o 
+C:\Developer\emsdk\upstream\emscripten\em++.bat -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/foundation/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/text/include -fexceptions -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene.cpp.o -MF runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\scene.cpp.o.d -o runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene.cpp.o -c C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:1:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include\canvas/scene/scene.hpp:4:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include\canvas/scene/damage_tracker.hpp:4:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include\canvas/scene/scene_types.hpp:8:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/object_record.hpp:5:
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:25:10: error: explicitly defaulted three-way comparison operator is implicitly deleted [-Werror,-Wdefaulted-function-deleted]
+    auto operator<=>(const OrderKey&) const = default;
+         ^
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:29:31: note: defaulted 'operator<=>' is implicitly deleted because there is no viable three-way comparison function for member 'bytes_'
+    std::vector<std::uint8_t> bytes_;
+                              ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__utility/pair.h:340:1: note: candidate template ignored: could not match 'pair' against 'vector'
+operator<=>(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\tuple:1544:1: note: candidate template ignored: could not match 'tuple' against 'vector'
+operator<=>(const tuple<_Tp...>& __x, const tuple<_Up...>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\tuple:1544:1: note: candidate template ignored: could not match 'tuple' against 'vector'
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/move_iterator.h:273:6: note: candidate template ignored: could not match 'move_iterator' against 'vector'
+auto operator<=>(const move_iterator<_Iter1>& __x, const move_iterator<_Iter2>& __y)
+     ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/move_iterator.h:273:6: note: candidate template ignored: could not match 'move_iterator' against 'vector'
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/reverse_iterator.h:286:1: note: candidate template ignored: could not match 'reverse_iterator' against 'vector'
+operator<=>(const reverse_iterator<_Iter1>& __x, const reverse_iterator<_Iter2>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/reverse_iterator.h:286:1: note: candidate template ignored: could not match 'reverse_iterator' against 'vector'
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:25:47: note: replace 'default' with 'delete'
+    auto operator<=>(const OrderKey&) const = default;
+                                              ^~~~~~~
+                                              delete
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:50:55: error: object of type 'const OrderKey' cannot be compared because its 'operator<=>' is implicitly deleted
+                      return left.placement.order_key < right.placement.order_key;
+                                                      ^
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:25:10: note: explicitly defaulted function was implicitly deleted here
+    auto operator<=>(const OrderKey&) const = default;
+         ^
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:29:31: note: defaulted 'operator<=>' is implicitly deleted because there is no viable three-way comparison function for member 'bytes_'
+    std::vector<std::uint8_t> bytes_;
+                              ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__utility/pair.h:340:1: note: candidate template ignored: could not match 'pair' against 'vector'
+operator<=>(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\tuple:1544:1: note: candidate template ignored: could not match 'tuple' against 'vector'
+operator<=>(const tuple<_Tp...>& __x, const tuple<_Up...>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\tuple:1544:1: note: candidate template ignored: could not match 'tuple' against 'vector'
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/move_iterator.h:273:6: note: candidate template ignored: could not match 'move_iterator' against 'vector'
+auto operator<=>(const move_iterator<_Iter1>& __x, const move_iterator<_Iter2>& __y)
+     ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/move_iterator.h:273:6: note: candidate template ignored: could not match 'move_iterator' against 'vector'
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/reverse_iterator.h:286:1: note: candidate template ignored: could not match 'reverse_iterator' against 'vector'
+operator<=>(const reverse_iterator<_Iter1>& __x, const reverse_iterator<_Iter2>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/reverse_iterator.h:286:1: note: candidate template ignored: could not match 'reverse_iterator' against 'vector'
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:216:59: error: object of type 'const OrderKey' cannot be compared because its 'operator<=>' is implicitly deleted
+                          return left.placement.order_key < right.placement.order_key;
+                                                          ^
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:25:10: note: explicitly defaulted function was implicitly deleted here
+    auto operator<=>(const OrderKey&) const = default;
+         ^
+C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include\canvas/semantic/order_key.hpp:29:31: note: defaulted 'operator<=>' is implicitly deleted because there is no viable three-way comparison function for member 'bytes_'
+    std::vector<std::uint8_t> bytes_;
+                              ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__utility/pair.h:340:1: note: candidate template ignored: could not match 'pair' against 'vector'
+operator<=>(const pair<_T1,_T2>& __x, const pair<_T1,_T2>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\tuple:1544:1: note: candidate template ignored: could not match 'tuple' against 'vector'
+operator<=>(const tuple<_Tp...>& __x, const tuple<_Up...>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\tuple:1544:1: note: candidate template ignored: could not match 'tuple' against 'vector'
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/move_iterator.h:273:6: note: candidate template ignored: could not match 'move_iterator' against 'vector'
+auto operator<=>(const move_iterator<_Iter1>& __x, const move_iterator<_Iter2>& __y)
+     ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/move_iterator.h:273:6: note: candidate template ignored: could not match 'move_iterator' against 'vector'
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/reverse_iterator.h:286:1: note: candidate template ignored: could not match 'reverse_iterator' against 'vector'
+operator<=>(const reverse_iterator<_Iter1>& __x, const reverse_iterator<_Iter2>& __y)
+^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__iterator/reverse_iterator.h:286:1: note: candidate template ignored: could not match 'reverse_iterator' against 'vector'
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:1:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include\canvas/scene/scene.hpp:3:
+In file included from C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/foundation/include\canvas/foundation/result.hpp:4:
+In file included from C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\string:551:
+In file included from C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\string_view:222:
+In file included from C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\algorithm:1774:
+In file included from C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/nth_element.h:15:
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:242:3: error: no matching function for call to '__sort3'
+  std::__sort3<_AlgPolicy, _Compare>(__x1, __x2, __x3, __c);
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:440:12: note: in instantiation of function template specialization 'std::__sort3_maybe_branchless<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, canvas::RuntimeSceneRecord *>' requested here
+      std::__sort3_maybe_branchless<_AlgPolicy, _Compare>(__first, __first + difference_type(1), --__last, __comp);
+           ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:627:8: note: in instantiation of function template specialization 'std::__introsort<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, canvas::RuntimeSceneRecord *>' requested here
+  std::__introsort<_AlgPolicy, _Compare>(__first, __last, __comp, __depth_limit);
+       ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:687:10: note: in instantiation of function template specialization 'std::__sort<(lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, canvas::RuntimeSceneRecord *>' requested here
+    std::__sort<_WrappedComp>(std::__unwrap_iter(__first), std::__unwrap_iter(__last), __wrapped_comp);
+         ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:83:40: note: candidate template ignored: substitution failure [with _AlgPolicy = std::_ClassicAlgPolicy, _Compare = (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, _ForwardIterator = canvas::RuntimeSceneRecord *]
+_LIBCPP_CONSTEXPR_AFTER_CXX11 unsigned __sort3(_ForwardIterator __x, _ForwardIterator __y, _ForwardIterator __z,
+                                       ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:125:18: error: no matching function for call to '__sort3'
+  unsigned __r = std::__sort3<_AlgPolicy, _Compare>(__x1, __x2, __x3, __c);
+                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:260:8: note: in instantiation of function template specialization 'std::__sort4<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, canvas::RuntimeSceneRecord *>' requested here
+  std::__sort4<_AlgPolicy, _Compare>(__x1, __x2, __x3, __x4, __c);
+       ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:443:12: note: in instantiation of function template specialization 'std::__sort4_maybe_branchless<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, canvas::RuntimeSceneRecord *>' requested here
+      std::__sort4_maybe_branchless<_AlgPolicy, _Compare>(
+           ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:627:8: note: in instantiation of function template specialization 'std::__introsort<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, canvas::RuntimeSceneRecord *>' requested here
+  std::__introsort<_AlgPolicy, _Compare>(__first, __last, __comp, __depth_limit);
+       ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:687:10: note: in instantiation of function template specialization 'std::__sort<(lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, canvas::RuntimeSceneRecord *>' requested here
+    std::__sort<_WrappedComp>(std::__unwrap_iter(__first), std::__unwrap_iter(__last), __wrapped_comp);
+         ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:83:40: note: candidate template ignored: substitution failure [with _AlgPolicy = std::_ClassicAlgPolicy, _Compare = (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, _ForwardIterator = canvas::RuntimeSceneRecord *]
+_LIBCPP_CONSTEXPR_AFTER_CXX11 unsigned __sort3(_ForwardIterator __x, _ForwardIterator __y, _ForwardIterator __z,
+                                       ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:153:18: error: no matching function for call to '__sort4'
+  unsigned __r = std::__sort4<_AlgPolicy, _Compare>(__x1, __x2, __x3, __x4, __c);
+                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:179:15: note: in instantiation of function template specialization 'std::__sort5<(lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, canvas::RuntimeSceneRecord *>' requested here
+  return std::__sort5<_WrappedComp>(
+              ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:473:26: note: in instantiation of function template specialization 'std::__sort5_wrap_policy<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, canvas::RuntimeSceneRecord *>' requested here
+        __n_swaps = std::__sort5_wrap_policy<_AlgPolicy, _Compare>(
+                         ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:627:8: note: in instantiation of function template specialization 'std::__introsort<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, canvas::RuntimeSceneRecord *>' requested here
+  std::__introsort<_AlgPolicy, _Compare>(__first, __last, __comp, __depth_limit);
+       ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:687:10: note: in instantiation of function template specialization 'std::__sort<(lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:48:15) &, canvas::RuntimeSceneRecord *>' requested here
+    std::__sort<_WrappedComp>(std::__unwrap_iter(__first), std::__unwrap_iter(__last), __wrapped_comp);
+         ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:121:10: note: candidate template ignored: substitution failure [with _AlgPolicy = _AlgPolicy, _Compare = _Compare, _ForwardIterator = canvas::RuntimeSceneRecord *]
+unsigned __sort4(_ForwardIterator __x1, _ForwardIterator __x2, _ForwardIterator __x3, _ForwardIterator __x4,
+         ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:242:3: error: no matching function for call to '__sort3'
+  std::__sort3<_AlgPolicy, _Compare>(__x1, __x2, __x3, __c);
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:440:12: note: in instantiation of function template specialization 'std::__sort3_maybe_branchless<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, canvas::RuntimeSceneRecord *>' requested here
+      std::__sort3_maybe_branchless<_AlgPolicy, _Compare>(__first, __first + difference_type(1), --__last, __comp);
+           ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:627:8: note: in instantiation of function template specialization 'std::__introsort<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, canvas::RuntimeSceneRecord *>' requested here
+  std::__introsort<_AlgPolicy, _Compare>(__first, __last, __comp, __depth_limit);
+       ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:687:10: note: in instantiation of function template specialization 'std::__sort<(lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, canvas::RuntimeSceneRecord *>' requested here
+    std::__sort<_WrappedComp>(std::__unwrap_iter(__first), std::__unwrap_iter(__last), __wrapped_comp);
+         ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:83:40: note: candidate template ignored: substitution failure [with _AlgPolicy = std::_ClassicAlgPolicy, _Compare = (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, _ForwardIterator = canvas::RuntimeSceneRecord *]
+_LIBCPP_CONSTEXPR_AFTER_CXX11 unsigned __sort3(_ForwardIterator __x, _ForwardIterator __y, _ForwardIterator __z,
+                                       ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:125:18: error: no matching function for call to '__sort3'
+  unsigned __r = std::__sort3<_AlgPolicy, _Compare>(__x1, __x2, __x3, __c);
+                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:260:8: note: in instantiation of function template specialization 'std::__sort4<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, canvas::RuntimeSceneRecord *>' requested here
+  std::__sort4<_AlgPolicy, _Compare>(__x1, __x2, __x3, __x4, __c);
+       ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:443:12: note: in instantiation of function template specialization 'std::__sort4_maybe_branchless<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, canvas::RuntimeSceneRecord *>' requested here
+      std::__sort4_maybe_branchless<_AlgPolicy, _Compare>(
+           ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:627:8: note: in instantiation of function template specialization 'std::__introsort<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, canvas::RuntimeSceneRecord *>' requested here
+  std::__introsort<_AlgPolicy, _Compare>(__first, __last, __comp, __depth_limit);
+       ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:687:10: note: in instantiation of function template specialization 'std::__sort<(lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, canvas::RuntimeSceneRecord *>' requested here
+    std::__sort<_WrappedComp>(std::__unwrap_iter(__first), std::__unwrap_iter(__last), __wrapped_comp);
+         ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:83:40: note: candidate template ignored: substitution failure [with _AlgPolicy = std::_ClassicAlgPolicy, _Compare = (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, _ForwardIterator = canvas::RuntimeSceneRecord *]
+_LIBCPP_CONSTEXPR_AFTER_CXX11 unsigned __sort3(_ForwardIterator __x, _ForwardIterator __y, _ForwardIterator __z,
+                                       ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:153:18: error: no matching function for call to '__sort4'
+  unsigned __r = std::__sort4<_AlgPolicy, _Compare>(__x1, __x2, __x3, __x4, __c);
+                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:179:15: note: in instantiation of function template specialization 'std::__sort5<(lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, canvas::RuntimeSceneRecord *>' requested here
+  return std::__sort5<_WrappedComp>(
+              ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:473:26: note: in instantiation of function template specialization 'std::__sort5_wrap_policy<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, canvas::RuntimeSceneRecord *>' requested here
+        __n_swaps = std::__sort5_wrap_policy<_AlgPolicy, _Compare>(
+                         ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:627:8: note: in instantiation of function template specialization 'std::__introsort<std::_ClassicAlgPolicy, (lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, canvas::RuntimeSceneRecord *>' requested here
+  std::__introsort<_AlgPolicy, _Compare>(__first, __last, __comp, __depth_limit);
+       ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:687:10: note: in instantiation of function template specialization 'std::__sort<(lambda at C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp:214:19) &, canvas::RuntimeSceneRecord *>' requested here
+    std::__sort<_WrappedComp>(std::__unwrap_iter(__first), std::__unwrap_iter(__last), __wrapped_comp);
+         ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/sort.h:121:10: note: candidate template ignored: substitution failure [with _AlgPolicy = _AlgPolicy, _Compare = _Compare, _ForwardIterator = canvas::RuntimeSceneRecord *]
+unsigned __sort4(_ForwardIterator __x1, _ForwardIterator __x2, _ForwardIterator __x3, _ForwardIterator __x4,
+         ^
+9 errors generated.
+em++: error: 'C:/Developer/emsdk/upstream/bin\clang++.exe -target wasm32-unknown-emscripten -fvisibility=default -mllvm -combiner-global-alias-analysis=false -mllvm -enable-emscripten-cxx-exceptions -mllvm -enable-emscripten-sjlj -mllvm -disable-lsr -DEMSCRIPTEN -IC:\Developer\emsdk\upstream\emscripten\cache\sysroot\include\SDL --sysroot=C:\Developer\emsdk\upstream\emscripten\cache\sysroot -Xclang -iwithsysroot/include\compat -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/foundation/include -IC:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/text/include -fexceptions -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene.cpp.o -MF runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\scene.cpp.o.d -c C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas/runtime/scene/src/scene.cpp -o runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene.cpp.o' failed (returned 1)
+[9/178] Building CXX object runtime/text/CMakeFiles/canvas_runtime_text.dir/src/text_layout.cpp.o
+ninja: build stopped: subcommand failed.

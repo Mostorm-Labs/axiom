@@ -1,0 +1,72 @@
+{
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "stage": "P32_IMPLEMENTATION_REVERIFY",
+  "result_revision": "f37511d6325052fe0811e872ea3a64631b2736a9",
+  "materialized_ref": "f37511d6325052fe0811e872ea3a64631b2736a9",
+  "status": "BLOCKED_ENVIRONMENT",
+  "verification": {
+    "diff_check": "PASS",
+    "changed_translation_units_compile": "PASS",
+    "link_and_run": "BLOCKED_ENVIRONMENT",
+    "link_failure": "locked Skia/MSVC ABI unresolved __std_* symbols",
+    "physical_windows_web": "PHYSICAL_PENDING"
+  },
+  "changed_files": [
+    {
+      "path": "apps/axiom_canvas_demo/platform/web/bridge.cpp",
+      "sha256": "023d97ff28f5d0ccd6077acfdd854e0e2063760949e5f8c7d41cd5ddb02c9d41"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/platform/web/index.html",
+      "sha256": "539fabfab7018abc3f0279c96bc7537b53fef37e15e2beba5739f11a8d1ffc62"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/platform/web/web_surface_host.cpp",
+      "sha256": "eece098a2d0c8c0eb4dd39f569aaf75f4591f512afe22b758134bb5645bafde1"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/platform/web/web_surface_host.hpp",
+      "sha256": "28dc4a80e43c8e9c5583835346ff208f20a675aed831200c16e2c5790e23d52c"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/platform/windows/windows_canonical_surface_host.cpp",
+      "sha256": "31274b59a67bd2c9e55bb65cf3954235ed41378c6f42993bf061cc03209c5daa"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/platform/windows/windows_canonical_surface_host.hpp",
+      "sha256": "41778a5f5ddc80047bc3896835c3660b4d8a9a69da0b92d19aeb0554faebc8bc"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/tests/web_surface_host_test.cpp",
+      "sha256": "237a6f45d5036d3bd0b4d318c00d3602e5e66bcb2e0edcd82f43bb5cb104ea49"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "208564017d4b59e4183695efaeb2fc3c4b24158dd26590c884197cf1913b73ff"
+    },
+    {
+      "path": "runtime/composition/tests/runtime_composition_test.cpp",
+      "sha256": "9b70f8693d21010a13e4ea5ceb9155643afff6b0da6570d682e93ab024aa3393"
+    },
+    {
+      "path": "runtime/interaction/CMakeLists.txt",
+      "sha256": "8107d58b31d9d18b21b5205dda198082c77480288a58d22d5cee155199535ad9"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "026c96be4ca6bb522facc28b683ca89768cf6e0196c1525d4a7ccf120ea58065"
+    },
+    {
+      "path": "runtime/interaction/tests/content_revision_style_test.cpp",
+      "sha256": "8832097b888282c4f3d8d7a9cd45cd3c840ffb146d97ee85796fddc40516fc4b"
+    }
+  ],
+  "evidence_input_refs": [
+    "D:/axreview/fc00x-20261017/third-handoff-code-review/v11-reverify/review.txt",
+    "D:/axreview/fc00x-20261017/third-handoff-code-review/v11-reverify/probe-output.log"
+  ],
+  "remaining_blockers": [
+    "Locked prebuilt Skia libraries do not link with available MSVC toolchain.",
+    "No manual Windows/Web physical observation; Android deferred."
+  ]
+}

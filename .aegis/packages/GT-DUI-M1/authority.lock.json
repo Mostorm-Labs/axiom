@@ -1,0 +1,47 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-DUI-M1",
+  "current": true,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "9760a8ad910aaa1d1232c9cf24723e4d311d9816",
+    "relation": "ancestor"
+  },
+  "trusted_basis": [
+    {
+      "stage": "ApprovedM1ExecutionProjection",
+      "source_kind": "control_plane_execution_projection",
+      "source_revision": "dui-m1-control-2026-10-10-v1",
+      "path": "sources/approved-inputs.md",
+      "content_sha256": "2471c93bcf83ef783fb77004ccc311ae4292652101bbd49b92ebaf4028a2c3e0",
+      "upstream_url": "https://app.notion.com/p/3f54c57a590c8109bdaed4754d9accaa",
+      "upstream_observed_page_version": "2026-10-10T03:24:07.005Z",
+      "note": "Hash binds the explicitly condensed local projection, not the full Notion page; approved plan and closure are traced inside it."
+    },
+    {
+      "stage": "RepositoryReality",
+      "ref": "git:9760a8ad910aaa1d1232c9cf24723e4d311d9816",
+      "title": "post-G4.7 code/automation development baseline; no Gate PASS inferred"
+    }
+  ],
+  "entry_authorization": {
+    "source": "User-approved two-track continuation and 2026-10-10 scope clarification",
+    "M1_before_combined_physical_allowed": true,
+    "G4_7_gate_pass_claimed": false,
+    "G5_authorized": false
+  },
+  "frozen_scope": [
+    "M1-01",
+    "M1-02",
+    "M1-03",
+    "M1-04",
+    "M1-05",
+    "M1-06",
+    "M1-07"
+  ],
+  "input_integrity": "Resolve every local path from this package directory at the supplied materialization ref. Immutable task inputs; implementation results belong in results root.",
+  "scope_correction": "Background must be syncable document semantics in M2. The entire synchronization workflow is NOT required now and is not a pre-G5 blocker."
+}

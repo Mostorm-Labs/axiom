@@ -1,0 +1,1329 @@
+{
+  "status": "PASS",
+  "results": [
+    {
+      "name": "DOM Down/Move/Up renders preview and canonical",
+      "result": "PASS"
+    },
+    {
+      "name": "ten strokes retain sampling and independent commits",
+      "result": "PASS"
+    },
+    {
+      "name": "Facade Shape presets and return to Ink",
+      "result": "PASS"
+    },
+    {
+      "name": "Facade Undo and Redo read back",
+      "result": "PASS"
+    },
+    {
+      "name": "cancel, identity reuse and stale generation rejection",
+      "result": "PASS"
+    },
+    {
+      "name": "frozen AutoIntent: within 250 ms zoom; later MultiInk",
+      "result": "PASS"
+    },
+    {
+      "name": "resize cancels active input and preserves canonical",
+      "result": "PASS"
+    },
+    {
+      "name": "Debug UI sibling uses Facade and cannot penetrate canvas",
+      "result": "PASS"
+    },
+    {
+      "name": "idle does not continuously submit canonical frames",
+      "result": "PASS"
+    },
+    {
+      "name": "capture/focus loss cancel input and the next stroke works",
+      "result": "PASS"
+    },
+    {
+      "name": "failed Down permits tool switch and next drawing",
+      "result": "PASS"
+    },
+    {
+      "name": "surface loss/rebind preserves canonical and permits drawing",
+      "result": "PASS"
+    },
+    {
+      "name": "mouse/pen sources, coalesced history and tool controls use the same owner",
+      "result": "PASS"
+    }
+  ],
+  "uiGeometry": [],
+  "observation": {
+    "owner": "RuntimeComposition",
+    "revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+    "dirty": 0,
+    "debugUiEnabled": false,
+    "state": 2,
+    "objects": 26,
+    "operations": 28,
+    "pointerSamples": 96,
+    "rejectedInputs": 0,
+    "activePointers": 0,
+    "presentedFrames": 44,
+    "retries": 86,
+    "pendingFrame": false,
+    "previewActive": false,
+    "surfaceGeneration": 3,
+    "metricsGeneration": 3,
+    "width": 1003,
+    "height": 695,
+    "logicalWidth": 501.5,
+    "logicalHeight": 347.5,
+    "dpr": 2,
+    "controlState": 1,
+    "tool": 0,
+    "creationMode": false,
+    "creationPreset": 4,
+    "size": 9,
+    "opacity": 0.6,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "lastPointer": {
+      "source": 2,
+      "pointer": 111,
+      "generation": 1
+    },
+    "error": "",
+    "failure": "",
+    "trace": [
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 1,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "1600000000",
+        "x": 40,
+        "y": 80,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 1,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "1616000000",
+        "x": 110,
+        "y": 80,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 1,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "1632000000",
+        "x": 180,
+        "y": 80,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 10,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "2200000000",
+        "x": 40,
+        "y": 100,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 10,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "2216000000",
+        "x": 110,
+        "y": 100,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 10,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "2232000000",
+        "x": 180,
+        "y": 100,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 11,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "2800000000",
+        "x": 40,
+        "y": 112,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 11,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "2816000000",
+        "x": 110,
+        "y": 112,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 11,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "2832000000",
+        "x": 180,
+        "y": 112,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 12,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "3400000000",
+        "x": 40,
+        "y": 124,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 12,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "3416000000",
+        "x": 110,
+        "y": 124,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 12,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "3432000000",
+        "x": 180,
+        "y": 124,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 13,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "4000000000",
+        "x": 40,
+        "y": 136,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 13,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "4016000000",
+        "x": 110,
+        "y": 136,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 13,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "4032000000",
+        "x": 180,
+        "y": 136,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 14,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "4600000000",
+        "x": 40,
+        "y": 148,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 14,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "4616000000",
+        "x": 110,
+        "y": 148,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 14,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "4632000000",
+        "x": 180,
+        "y": 148,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 15,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "5200000000",
+        "x": 40,
+        "y": 160,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 15,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "5216000000",
+        "x": 110,
+        "y": 160,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 15,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "5232000000",
+        "x": 180,
+        "y": 160,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 16,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "5800000000",
+        "x": 40,
+        "y": 172,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 16,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "5816000000",
+        "x": 110,
+        "y": 172,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 16,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "5832000000",
+        "x": 180,
+        "y": 172,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 17,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "6400000000",
+        "x": 40,
+        "y": 184,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 17,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "6416000000",
+        "x": 110,
+        "y": 184,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 17,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "6432000000",
+        "x": 180,
+        "y": 184,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 18,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "7000000000",
+        "x": 40,
+        "y": 196,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 18,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "7016000000",
+        "x": 110,
+        "y": 196,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 18,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "7032000000",
+        "x": 180,
+        "y": 196,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 19,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "7600000000",
+        "x": 40,
+        "y": 208,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 19,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "7616000000",
+        "x": 110,
+        "y": 208,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 19,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "7632000000",
+        "x": 180,
+        "y": 208,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 30,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "8200000000",
+        "x": 250,
+        "y": 50,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 30,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "8216000000",
+        "x": 360,
+        "y": 85,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 30,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "8232000000",
+        "x": 360,
+        "y": 85,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 31,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "8800000000",
+        "x": 250,
+        "y": 95,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 31,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "8816000000",
+        "x": 360,
+        "y": 130,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 31,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "8832000000",
+        "x": 360,
+        "y": 130,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 32,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "9400000000",
+        "x": 250,
+        "y": 140,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 32,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "9416000000",
+        "x": 360,
+        "y": 175,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 32,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "9432000000",
+        "x": 360,
+        "y": 175,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 33,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "10000000000",
+        "x": 250,
+        "y": 185,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 33,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "10016000000",
+        "x": 360,
+        "y": 220,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 33,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "10032000000",
+        "x": 360,
+        "y": 220,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 34,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "10600000000",
+        "x": 250,
+        "y": 230,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 34,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "10616000000",
+        "x": 360,
+        "y": 265,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 34,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "10632000000",
+        "x": 360,
+        "y": 265,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 40,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "11200000000",
+        "x": 40,
+        "y": 280,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 40,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "11216000000",
+        "x": 110,
+        "y": 280,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 40,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "11232000000",
+        "x": 180,
+        "y": 280,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 50,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "11800000000",
+        "x": 60,
+        "y": 320,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 50,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "11816000000",
+        "x": 120,
+        "y": 320,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 50,
+        "generation": "1",
+        "phase": 3,
+        "timestampNs": "11832000000",
+        "x": 120,
+        "y": 320,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 50,
+        "generation": "2",
+        "phase": 0,
+        "timestampNs": "12400000000",
+        "x": 60,
+        "y": 340,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 50,
+        "generation": "2",
+        "phase": 1,
+        "timestampNs": "12416000000",
+        "x": 120,
+        "y": 340,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 50,
+        "generation": "2",
+        "phase": 2,
+        "timestampNs": "12432000000",
+        "x": 180,
+        "y": 340,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 60,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "13000000000",
+        "x": 200,
+        "y": 200,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 61,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "13100000000",
+        "x": 260,
+        "y": 200,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 61,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "13116000000",
+        "x": 320,
+        "y": 200,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 60,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "13132000000",
+        "x": 200,
+        "y": 200,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 61,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "13148000000",
+        "x": 320,
+        "y": 200,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 62,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "14000000000",
+        "x": 80,
+        "y": 250,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 63,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "14300000000",
+        "x": 200,
+        "y": 300,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 62,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "14316000000",
+        "x": 140,
+        "y": 250,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 63,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "14332000000",
+        "x": 260,
+        "y": 300,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 62,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "14348000000",
+        "x": 160,
+        "y": 250,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 63,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "14364000000",
+        "x": 280,
+        "y": 300,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 70,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "14600000000",
+        "x": 60,
+        "y": 60,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "resize"
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 71,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "15200000000",
+        "x": 40,
+        "y": 100,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 71,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "15216000000",
+        "x": 110,
+        "y": 100,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 71,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "15232000000",
+        "x": 180,
+        "y": 100,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 90,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "15800000000",
+        "x": 40,
+        "y": 150,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 90,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "15816000000",
+        "x": 110,
+        "y": 150,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 91,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "16400000000",
+        "x": 40,
+        "y": 180,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 91,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "16416000000",
+        "x": 110,
+        "y": 180,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "focus-loss"
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 92,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "17000000000",
+        "x": 40,
+        "y": 200,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 92,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "17016000000",
+        "x": 110,
+        "y": 200,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 92,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "17032000000",
+        "x": 180,
+        "y": 200,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "failed-down"
+      },
+      {
+        "kind": "failed-down",
+        "error": "Error: fixture capture failure"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 94,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "18200000000",
+        "x": 40,
+        "y": 220,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 94,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "18216000000",
+        "x": 110,
+        "y": 220,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 94,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "18232000000",
+        "x": 180,
+        "y": 220,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 95,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "18800000000",
+        "x": 40,
+        "y": 240,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "surface-loss"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "resize"
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 96,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "19400000000",
+        "x": 40,
+        "y": 250,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 96,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "19416000000",
+        "x": 110,
+        "y": 250,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 3,
+        "pointer": 96,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "19432000000",
+        "x": 180,
+        "y": 250,
+        "pressure": 0.5,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 110,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "20000000000",
+        "x": 40,
+        "y": 280,
+        "pressure": 0.699999988079071,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 110,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "20016000000",
+        "x": 90,
+        "y": 280,
+        "pressure": 0.699999988079071,
+        "history": true
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 110,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "20024000000",
+        "x": 130,
+        "y": 280,
+        "pressure": 0.699999988079071,
+        "history": true
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 110,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "20032000000",
+        "x": 150,
+        "y": 280,
+        "pressure": 0.699999988079071,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 110,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "20048000000",
+        "x": 180,
+        "y": 280,
+        "pressure": 0.699999988079071,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 2,
+        "pointer": 111,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "20600000000",
+        "x": 40,
+        "y": 280,
+        "pressure": 0.699999988079071,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 2,
+        "pointer": 111,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "20616000000",
+        "x": 90,
+        "y": 280,
+        "pressure": 0.699999988079071,
+        "history": true
+      },
+      {
+        "kind": "pointer",
+        "source": 2,
+        "pointer": 111,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "20624000000",
+        "x": 130,
+        "y": 280,
+        "pressure": 0.699999988079071,
+        "history": true
+      },
+      {
+        "kind": "pointer",
+        "source": 2,
+        "pointer": 111,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "20632000000",
+        "x": 150,
+        "y": 280,
+        "pressure": 0.699999988079071,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 2,
+        "pointer": 111,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "20648000000",
+        "x": 180,
+        "y": 280,
+        "pressure": 0.699999988079071,
+        "history": false
+      }
+    ]
+  }
+}

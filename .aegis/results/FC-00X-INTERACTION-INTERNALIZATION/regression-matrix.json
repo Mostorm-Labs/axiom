@@ -1,0 +1,19 @@
+{
+  "schema": "fc00x-regression-matrix-v4",
+  "status": "PASS_WINDOWS_WEB_BUILD",
+  "implementation_revision": "246cd1d0b0183d665458846eb775a378d3e6cc07",
+  "windows_frozen_targets": "36/36 PASS",
+  "independent_behavior_probe": "4/4 PASS",
+  "web_debug_on": "BUILD PASS",
+  "web_debug_off": "BUILD PASS",
+  "contract_tests": "4/4 PASS",
+  "android": "DEFERRED_NOT_BLOCKING",
+  "physical_status": "PHYSICAL_PENDING",
+  "commands": [
+    "cmake --build out/fc00x-windows-playground-v2 --target axiom_ink_playground_windows --parallel 8",
+    "ctest --test-dir out/g3-windows-release -R <frozen 36 target regex> --output-on-failure",
+    "python D:/axreview/fc00x-20261016/interaction-code-review/build_probe.py",
+    "cmake --build out/g3-web-release --target axiom_ink_playground_web --parallel 8",
+    "cmake --build out/fc00x-web-debug-off --target axiom_ink_playground_web --parallel 8"
+  ]
+}

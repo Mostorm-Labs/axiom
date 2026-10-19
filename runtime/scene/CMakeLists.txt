@@ -7,6 +7,7 @@ add_library(canvas_runtime_scene STATIC
     src/incremental_runtime_full_materialization_bridge.cpp
     src/bounds_system.cpp
     src/reference_geometry.cpp
+    src/derived_geometry.cpp
     src/scene_impact.cpp
     src/scene_dependency_graph.cpp
     src/scene_record_store.cpp
@@ -22,7 +23,7 @@ target_sources(canvas_runtime_scene PRIVATE
 target_include_directories(canvas_runtime_scene PUBLIC include
                            ${PROJECT_SOURCE_DIR}/runtime/semantic/include)
 target_link_libraries(canvas_runtime_scene PUBLIC canvas_runtime_foundation
-                      canvas_runtime_semantic)
+                      canvas_runtime_semantic canvas_runtime_text)
 target_compile_features(canvas_runtime_scene PUBLIC cxx_std_20)
 
 if(MSVC)

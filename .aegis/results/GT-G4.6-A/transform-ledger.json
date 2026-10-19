@@ -1,0 +1,12 @@
+{
+  "task_id": "GT-G4.6-A",
+  "sequence": [
+    {"phase": "move", "canonical_operations": 0, "transient_override": true},
+    {"phase": "resize", "canonical_operations": 0, "transient_override": true},
+    {"phase": "rotate", "canonical_operations": 0, "transient_override": true},
+    {"phase": "commit", "canonical_operations": 1, "transient_override": false},
+    {"phase": "cancel", "canonical_operations": 0, "transient_override": false}
+  ],
+  "test": "G46TransformHandleDrag + G4TransformSession",
+  "status": "PASS"
+}

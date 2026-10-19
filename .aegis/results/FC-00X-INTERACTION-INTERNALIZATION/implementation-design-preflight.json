@@ -1,0 +1,33 @@
+{
+  "schema": "fc00x-interaction-internalization-design-preflight-v1",
+  "task_id": "FC-00X-INTERACTION-INTERNALIZATION",
+  "status": "PASS",
+  "current_flow": "Windows/Web adapter -> RuntimeAppBinding/PlatformInteractionIngress -> Host InputRouter/CanvasInteractionCoordinator -> Host session helpers -> Operation/History/Scene -> Frame/Preview/Canonical -> platform and Debug UI",
+  "target_flow": "Windows/Web adapter -> shared Runtime dispatch/input/session owners -> existing Operation/History/Scene and Frame/Preview/Canonical owners -> platform presentation and Debug UI readback",
+  "owners": {
+    "platform": "native decode,capture,surface acquire/present,execution context",
+    "runtime": "PointerKey identity,dispatch,Session lifecycle,preview/canonical qualification,control fences",
+    "host": "composition root,ports and resources",
+    "debug_ui": "explicit controls and snapshot presentation only"
+  },
+  "affected_files": [
+    "runtime/interaction/include/canvas/interaction/interaction_dispatch_runtime.hpp",
+    "runtime/interaction/src/interaction_dispatch_runtime.cpp",
+    "apps/ink_playground/common/ink_playground_host.cpp",
+    "apps/ink_playground/common/ink_playground_host.hpp",
+    "apps/ink_playground/platform/web/bridge.cpp",
+    "apps/ink_playground/platform/windows/main.cpp"
+  ],
+  "mapping": {
+    "O1": "InteractionDispatchRuntime plus existing PlatformInteractionIngress/InputRouter",
+    "O2": "Host adapter port forwards existing Brush/Eraser/Creation/Selection/Pan owners",
+    "O3": "existing Operation/History/Scene and presentation functions retained",
+    "O4": "Web no direct Up/Cancel canonical decision; Windows HUD removed",
+    "O5": "contract fixtures and focused CTest"
+  },
+  "close_order": "source loss -> keyed cancel -> session cleanup -> preview retirement; surface loss/rebind invalidates captures before next frame",
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

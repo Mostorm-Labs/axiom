@@ -1,0 +1,37 @@
+{
+  "task_id": "FC-01",
+  "slice": "FC01-I3",
+  "owner": "runtime/interaction/CreationSession with InkPlaygroundHost thin composition adapter",
+  "prepare": "Down captures typed CreationPreset and effective property style in one CreationSession. Scene records supply finite, visible, non-selected SnapTargets through the existing SnapResolver.",
+  "move": "Move updates CreationPreview; visible object SnapResolver candidates are projected through camera scale; canonical generation remains unchanged.",
+  "commit": "A valid confirmed Up materializes exactly one ObjectRecord and submits exactly one InsertObjects operation via OperationEngine, then publishes through SceneCoordinator.",
+  "abort": "Cancel, wrong pointer, invalid/nonfinite extents, stale owner state, or zero-sized geometry clears the session and submits zero operations.",
+  "presets": {
+    "rectangle": "Shape/1 shape_kind=1",
+    "ellipse": "Shape/1 shape_kind=2",
+    "triangle": "Shape/2 shape_kind=3",
+    "line": "Connector/1 FreePoint-FreePoint Straight",
+    "arrow": "Connector/1 FreePoint-FreePoint Straight with field 0x201 Arrow"
+  },
+  "oracles": [
+    "FC01-B03",
+    "FC01-B04",
+    "FC01-B07"
+  ],
+  "reused_owners": [
+    "InputRouter",
+    "InteractionRuntime",
+    "OperationEngine",
+    "SceneCoordinator",
+    "RuntimeFacade",
+    "CanvasControlService"
+  ],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "physical_claim": false,
+  "gate_claim": "none",
+  "publication": "Creation preview guide publication to EditingOverlay remains incomplete and is a blocking B04 item.",
+  "status": "PARTIAL_NOT_CLOSED"
+}

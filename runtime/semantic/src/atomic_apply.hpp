@@ -3,6 +3,7 @@
 #include "canvas/semantic/apply_plan.hpp"
 #include "canvas/semantic/indexed_object_store.hpp"
 #include "canvas/semantic/reference_object_store.hpp"
+#include "canvas/semantic/resource_manifest.hpp"
 
 #include <cstdint>
 
@@ -23,6 +24,16 @@ struct AtomicApplyResult final {
 
 [[nodiscard]] AtomicApplyResult applyPreparedPlan(
     IndexedObjectStore& store,
+    const PreparedApplyPlan& plan);
+
+[[nodiscard]] AtomicApplyResult applyPreparedPlan(
+    ReferenceObjectStore& store,
+    ResourceManifest& manifest,
+    const PreparedApplyPlan& plan);
+
+[[nodiscard]] AtomicApplyResult applyPreparedPlan(
+    IndexedObjectStore& store,
+    ResourceManifest& manifest,
     const PreparedApplyPlan& plan);
 
 } // namespace canvas::semantic::internal

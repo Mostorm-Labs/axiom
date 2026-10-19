@@ -1,0 +1,50 @@
+{
+  "format": "aegis-package-materialization-manifest-v1",
+  "task_id": "GT-DUI-M1",
+  "encoding": "UTF-8; LF; exact Git blob bytes",
+  "files": [
+    {
+      "path": "authority.lock.json",
+      "bytes": 1812,
+      "sha256": "c42c908fd77925db9934a2f6b8c3f4b78eb8493e3b6e60e937de44cc279ad952",
+      "git_blob_sha": "e16144c3a659029e869d4b131a3d2e0ffb55a06d"
+    },
+    {
+      "path": "evidence-contract.json",
+      "bytes": 1216,
+      "sha256": "b2a798e59da572f52ce1b82761516cc89f4471c2385a3377dd6d32e687922825",
+      "git_blob_sha": "324844d0f7d9d9e6ad35b8ca56290a4ac799207e"
+    },
+    {
+      "path": "execution-contract.json",
+      "bytes": 4498,
+      "sha256": "77bf93d50a8dc8d9e9fe587a245dbc9abc71b2d9acff7f633cde2fa82392cee1",
+      "git_blob_sha": "53ed2865539f9f8527a757b1432886181c6bd4cc"
+    },
+    {
+      "path": "implementation-context.md",
+      "bytes": 7928,
+      "sha256": "8bc2ddb133434cd5b7aa9b52b44ac23d66d8128a1d7028736562d4ad6e07014b",
+      "git_blob_sha": "57a4b9ffa2459e36ca4ffb1431afabe750f8d831"
+    },
+    {
+      "path": "package.json",
+      "bytes": 1370,
+      "sha256": "fd74eabb0e971493c6d78e2e617fd0a2418650b29254b68a99d3c0a82fe39dcb",
+      "git_blob_sha": "f63f80cbd011728d99e2837a12d904a9cd33dc54"
+    },
+    {
+      "path": "sources/approved-inputs.md",
+      "bytes": 7252,
+      "sha256": "2471c93bcf83ef783fb77004ccc311ae4292652101bbd49b92ebaf4028a2c3e0",
+      "git_blob_sha": "098802ea3474344d3047df5f1e61bd337a64a551"
+    },
+    {
+      "path": "verification.lock.json",
+      "bytes": 3561,
+      "sha256": "95e01b31842aa2733cbf96b450647f7028c53a7e12ccc4270af788b6e67b1dd0",
+      "git_blob_sha": "4183d0fdbf643d4beb087d51cf0f008c32842384"
+    }
+  ],
+  "self_reference": "This manifest intentionally does not hash itself; its immutable Git object binds it."
+}

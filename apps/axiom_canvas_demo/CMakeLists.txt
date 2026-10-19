@@ -5,7 +5,8 @@ add_library(axiom_canvas_demo_common STATIC
     platform/web/web_surface_host.cpp)
 target_include_directories(axiom_canvas_demo_common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(axiom_canvas_demo_common PUBLIC
-    canvas_runtime_foundation canvas_runtime_scene canvas_runtime_render)
+    canvas_runtime_foundation canvas_runtime_scene canvas_runtime_render
+    canvas_runtime_composition)
 target_compile_features(axiom_canvas_demo_common PUBLIC cxx_std_20)
 
 if(MSVC)
@@ -25,6 +26,11 @@ if(WIN32)
     target_compile_features(axiom_canvas_demo_windows PRIVATE cxx_std_20)
     target_compile_definitions(axiom_canvas_demo_windows PRIVATE
         NOMINMAX WIN32_LEAN_AND_MEAN)
+    if(MSVC)
+        target_compile_options(axiom_canvas_demo_windows PRIVATE /W4 /permissive- /WX /EHsc)
+    else()
+        target_compile_options(axiom_canvas_demo_windows PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
     target_link_libraries(axiom_canvas_demo_windows PRIVATE user32)
 endif()
 
@@ -41,9 +47,9 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
 
     foreach(target axiom_demo_camera_tests axiom_demo_hit_select_tests)
         if(MSVC)
-            target_compile_options(${target} PRIVATE /W4 /permissive- /WX /EHsc)
+            target_compile_options(${target} PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
         else()
-            target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+            target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
         endif()
     endforeach()
 
@@ -63,6 +69,11 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
     target_include_directories(axiom_demo_web_surface_tests PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/platform/web)
     target_compile_features(axiom_demo_web_surface_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_demo_web_surface_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_demo_web_surface_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+    endif()
     add_test(NAME G3WebSurfaceHost COMMAND axiom_demo_web_surface_tests)
 endif()
 
@@ -72,12 +83,26 @@ if(EMSCRIPTEN)
     target_link_libraries(axiom_canvas_demo_web PRIVATE axiom_canvas_demo_common)
     target_include_directories(axiom_canvas_demo_web PRIVATE platform/web)
     target_compile_features(axiom_canvas_demo_web PRIVATE cxx_std_20)
+    axiom_configure_build_info(axiom_canvas_demo_web)
+    if(AXIOM_BUILD_DEBUG_UI)
+        target_link_libraries(axiom_canvas_demo_web PRIVATE canvas_debug_ui)
+        target_include_directories(axiom_canvas_demo_web PRIVATE
+            ${CMAKE_SOURCE_DIR}/.deps/imgui)
+        target_include_directories(axiom_canvas_demo_web SYSTEM PRIVATE ${CANVAS_SKIA_SDK_ROOT})
+        target_compile_definitions(axiom_canvas_demo_web PRIVATE AXIOM_WEB_DEBUG_UI=1)
+    else()
+        target_compile_definitions(axiom_canvas_demo_web PRIVATE AXIOM_WEB_DEBUG_UI=0)
+    endif()
+    target_compile_options(axiom_canvas_demo_web PRIVATE -Wall -Wextra -Wpedantic -Werror)
     set_target_properties(axiom_canvas_demo_web PROPERTIES SUFFIX ".js")
     configure_file(platform/web/index.html
         ${CMAKE_CURRENT_BINARY_DIR}/index.html COPYONLY)
+    configure_file(platform/web/host.js ${CMAKE_CURRENT_BINARY_DIR}/host.js COPYONLY)
+    configure_file(tests/web_minimal_runtime_test.html
+        ${CMAKE_CURRENT_BINARY_DIR}/tests/web_minimal_runtime_test.html COPYONLY)
     target_link_options(axiom_canvas_demo_web PRIVATE
         "-sMODULARIZE=1" "-sEXPORT_ES6=1" "-sEXPORT_NAME=createAxiomCanvasModule"
         "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1" "-sMIN_WEBGL_VERSION=2" "-sMAX_WEBGL_VERSION=2"
-        "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_web_create','_axiom_web_destroy','_axiom_web_resize','_axiom_web_lose_surface','_axiom_web_surface_generation','_axiom_web_metrics_generation','_axiom_web_backend_ready','_axiom_web_pointer_sample','_axiom_web_pointer_samples','_axiom_web_present_smoke','_axiom_web_presented_frames']"
+        "-sEXPORTED_FUNCTIONS=['_malloc','_free']"
         "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8']")
 endif()

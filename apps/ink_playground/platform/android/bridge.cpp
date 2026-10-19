@@ -20,6 +20,7 @@ using canvas::ink_playground::InkPlaygroundHost;
 struct AndroidHost final {
   std::unique_ptr<InkPlaygroundHost> host = std::make_unique<InkPlaygroundHost>();
   std::uint64_t serial = 0, digest = 0, primitiveCount = 0, family = 1;
+  std::uint64_t sourceEpoch = 1;
   bool canonicalMutation = false;
   std::uint64_t cpuCopyCount = 0;
   std::uint64_t presentCount = 0;
@@ -49,7 +50,7 @@ bool submitBatch(AndroidHost& value, std::uint64_t pointerId,
   for (std::size_t index = 0; index < count; ++index) {
     auto phase = phases[index];
     if (phase == 1 && value.activePointers.contains(logicalPointer)) phase = 2;
-    batch.samples.push_back({1U, *identity, sequences[index], timestampNs[index],
+    batch.samples.push_back({sourceEpoch, *identity, sequences[index], timestampNs[index],
       x[index], y[index], pressure[index], 0.0F, 0.0F, {}, {},
       canvas::input::SampleProvenance::kConfirmedCurrent,
       phase == 1 ? canvas::input::PointerPhase::kDown :
@@ -59,7 +60,7 @@ bool submitBatch(AndroidHost& value, std::uint64_t pointerId,
   if (!accepted) return false;
   for (const auto& sample : batch.samples) {
     if (sample.phase == canvas::input::PointerPhase::kDown) value.activePointers.insert(logicalPointer);
-    if (sample.phase == canvas::input::PointerPhase::kUp) value.activePointers.erase(logicalPointer);
+    if (sample.phase == canvas::input::PointerPhase::kUp || sample.phase == canvas::input::PointerPhase::kCancel) value.activePointers.erase(logicalPointer);
   }
   value.family = static_cast<std::uint64_t>(family);
   if (batch.samples.back().phase == canvas::input::PointerPhase::kUp) {
@@ -74,6 +75,23 @@ bool submitBatch(AndroidHost& value, std::uint64_t pointerId,
 }
 
 extern "C" {
+int axiom_ink_android_text_scenario(void* handle,const char* name,std::uint32_t count) {
+  auto* value=asHost(handle);
+  if(!value || !name || !value->host->configureBundledTextResources() || !value->host->seedTextScenario(name,count)) return 0;
+  return value->host->presentCanonicalFrame(value->host->canonicalFrameCount()+1,0,false)?1:0;
+}
+int axiom_ink_android_text_action(void* handle,const char* action) {
+  auto* value=asHost(handle); if(!value || !action) return 0;
+  auto& host=*value->host; const std::string_view kind(action);
+  const bool ok=kind=="missing"?host.setTextFontsAvailable(false):kind=="ready"?host.setTextFontsAvailable(true):
+      kind=="transform"?host.transformTextScenario(0):kind=="camera"?host.applyViewportNavigation(
+        {canvas::interaction::ViewportNavigationKind::kBrowserGesture,0,0,128,128,1.25F}):host.applyTextScenarioEdit(0,kind);
+  return ok && host.presentCanonicalFrame(host.canonicalFrameCount()+1,0,false)?1:0;
+}
+const char* axiom_ink_android_text_metrics(void* handle) {
+  static std::string json; const auto* value=asHost(handle);
+  json=value?value->host->textQualificationJson():"{}"; return json.c_str();
+}
 void* axiom_ink_android_create_host(std::uint32_t width, std::uint32_t height) {
   if (width == 0U || height == 0U) return nullptr; auto value = std::make_unique<AndroidHost>();
   if (!initPrograms(*value) || !value->host->bindSurface(width, height)) return nullptr;
@@ -235,8 +253,8 @@ const char* axiom_ink_android_baseline_observation(void* handle, const char* rea
 #endif
   json = canvas::ink_playground::platformBrushBaselineObservationJson(
       "android", reality, artifactIdentity, *value->host,
-      {"MotionEvent.history→JNI→PlatformPointerBatch", "C++ InkPlaygroundHost",
-       "Skia raster", "CPU raster buffer→Java byte[]→Bitmap→Canvas", submissions,
+      {"MotionEvent.history鈫扟NI鈫扨latformPointerBatch", "C++ InkPlaygroundHost",
+       "Skia raster", "CPU raster buffer鈫扟ava byte[]鈫払itmap鈫扖anvas", submissions,
        readbacks, copies, value->presentCount, "true"});
   return json.c_str();
 }

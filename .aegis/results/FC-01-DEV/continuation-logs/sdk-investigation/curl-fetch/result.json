@@ -1,0 +1,25 @@
+{
+  "command": [
+    "curl.exe",
+    "--location",
+    "--fail",
+    "--connect-timeout",
+    "20",
+    "--max-time",
+    "900",
+    "--retry",
+    "2",
+    "--retry-delay",
+    "2",
+    "--output",
+    "D:\\axbuild\\fc01-skia-sdk\\locked-windows-release.zip",
+    "https://github.com/Mostorm-Labs/Axiom/releases/download/skia-sdk-r1-full-v1-54c1999dc79d094d/skia-sdk-r1-full-v1-windows-x64-d3d12-release.zip"
+  ],
+  "exit_code": 35,
+  "elapsed_seconds": 41.46900000004098,
+  "locked_bytes": 62542343,
+  "locked_sha256": "1fae3cdc8bda27615cd406013913ff7e6daedaebe555b88e7e896c2680a396b5",
+  "bytes": null,
+  "sha256": null,
+  "lock_match": false
+}

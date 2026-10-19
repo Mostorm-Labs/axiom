@@ -1,0 +1,42 @@
+{
+  "format": "aegis-evidence-repair-v1",
+  "task_id": "GT-G4.7",
+  "stage": "P36 CODE_REVERIFY",
+  "classification": "IMPLEMENTATION_OWNED_EVIDENCE_REPAIR",
+  "base_revision": "324b0cc43c1fd67969c58d7acc2be65c22f51817",
+  "result_revision": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+  "materialized_ref": "refs/tags/codex/gt-g4-7-evidence-repair-20261010-v1",
+  "package_materialization_ref": "a761ec115442a1fd94ccdb7ea2f98921703f3122",
+  "repaired_findings": [
+    {
+      "finding": "Declared evidence identity resolved an older result",
+      "repair": "Create a unique annotated Git tag for the corrected evidence payload; report the exact peeled commit SHA outside the payload."
+    },
+    {
+      "finding": "Scope inventory duplicated stale hashes, including its own hash",
+      "repair": "Keep a path inventory in scope audit and one nonrecursive hash manifest."
+    },
+    {
+      "finding": "Manifest hashed checkout CRLF instead of durable LF blob bytes",
+      "repair": "SHA-256 of git show <materialized-ref>:<path> raw output, with no text pipeline or newline conversion."
+    }
+  ],
+  "provider_policy": "Keep exact implementation run 37978210023 attempt 1; refreshed jobs, artifact digests, repository identity and expiry from GitHub API.",
+  "test_policy": "Fresh 18-test focused regression; preserve original evidence logs and prior reviewer timing finding.",
+  "prior_review_nonblocking_findings": [
+    {
+      "test": "G4WindowsPreviewDispatch",
+      "observation": "Earlier reviewer first selected run failed at windows_preview_dispatch_test.cpp:257; three isolated reruns and complete 13-test rerun passed. Timing/stability finding remains open; no source changed in this repair."
+    },
+    {
+      "subject": "PR checks",
+      "observation": "Inherited platform/pr-contract Windows consumer and G4.6-C Windows/Web CI failures are separate integration findings. G4.7 qualification success is not a merge-ready claim."
+    }
+  ],
+  "final_gate_verdict": null,
+  "review_status": "READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "official_g4_6_gate_pass": false,
+  "official_g4_7_gate_pass": false,
+  "g5_authorization": false,
+  "physical_observation": "DEFERRED_TO_COMBINED_G4_6_G4_7"
+}

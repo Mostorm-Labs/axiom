@@ -1,0 +1,9 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.6-B-GUIDE-REPAIR",
+  "required_changes": ["SnapResolution guide output", "EditingOverlay guide storage", "common SkiaRenderer guide drawing", "host lifecycle wiring", "regression evidence"],
+  "forbidden_changes": ["new scene/overlay semantics", "canonical mutation", "platform-specific guide renderer", "threshold/candidate policy changes"],
+  "required_tests": ["G46BViewportConstraints", "G46EditingOverlay", "affected playground selection/transform tests", "G4/G4.5 focused regressions", "git diff --check"],
+  "terminal_success": "READY_FOR_CONTROL_REVIEW",
+  "producer_may_not_claim": ["G4.6 Gate PASS", "P34 PASS"]
+}

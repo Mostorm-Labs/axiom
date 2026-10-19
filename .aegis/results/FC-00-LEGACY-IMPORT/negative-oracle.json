@@ -1,0 +1,67 @@
+{
+  "all_targeted_invariants_rejected": true,
+  "legacy_red": {
+    "command": [
+      "python",
+      "-m",
+      "tools.aegis_state.cli",
+      "validate",
+      "C:\\Users\\Chado\\AppData\\Local\\Temp\\tmp19vdmmo9"
+    ],
+    "exit_code": 2,
+    "id": "legacy-red",
+    "stderr": "",
+    "stdout": "INVALID: project: project must be an object\nINVALID: evidence ev-g3-completion: missing non-empty type\nINVALID: evidence ev-g4-entry-readiness: missing non-empty type\nINVALID: evidence ev-gt-g4-01-p34: missing non-empty type\nINVALID: evidence ev-gt-g4-02-p34: missing non-empty type\nINVALID: evidence ev-gt-g4-03-p34: missing non-empty type\nINVALID: evidence ev-gt-g4-04-p34: missing non-empty type\nINVALID: evidence ev-gt-g4-05-p34: missing non-empty type\nINVALID: evidence ev-gt-g4-06-p34: missing non-empty type\nINVALID: evidence ev-gt-g4-07-p34: missing non-empty type\nINVALID: evidence ev-gt-g4-08-p34: missing non-empty type\nINVALID: evidence ev-gt-g4-09-p34: missing non-empty type\nINVALID: evidence ev-g2-canonical-main: missing non-empty type\nINVALID: evidence ev-g3-entry-readiness: missing non-empty type\nINVALID: evidence ev-gt-g3-01-p34: missing non-empty type\nINVALID: evidence ev-gt-g3-02-p34: missing non-empty type\nINVALID: evidence ev-gt-g3-03-p34: missing non-empty type\nINVALID: evidence ev-gt-g3-04-p34: missing non-empty type\nINVALID: evidence ev-int-pr88-g3-04: missing non-empty type\nINVALID: evidence ev-gt-g3-05-p34: missing non-empty type\nINVALID: evidence ev-int-pr91-g3-05: missing non-empty type\nINVALID: evidence ev-gt-g3-06-p34: missing non-empty type\nINVALID: evidence ev-int-pr92-g3-06: missing non-empty type\nINVALID: evidence ev-gt-g3-07-p34: missing non-empty type\nINVALID: evidence ev-int-pr94-g3-07: missing non-empty type\nINVALID: evidence ev-gt-g3-08-p34: missing non-empty type\nINVALID: evidence ev-int-pr96-g3-08: missing non-empty type\nINVALID: evidence ev-gt-g3-09-p34: missing non-empty type\nINVALID: evidence ev-int-pr98-g3-09: missing non-empty type\nINVALID: evidence ev-gt-g3-10-p34: missing non-empty type\nINVALID: evidence ev-int-pr100-g3-10: missing non-empty type\nINVALID: evidence ev-gt-g4-10-p34: missing non-empty type\nINVALID: evidence ev-gt-g4-11-p34: missing non-empty type\nINVALID: evidence ev-gt-g4-12-p34: missing non-empty type\nINVALID: evidence ev-g4-completion: missing non-empty type\nINVALID: gate g2-final-convergence: missing non-empty stage\nINVALID: gate g3-entry-readiness: missing non-empty stage\nINVALID: gate gt-g3-01: missing non-empty stage\nINVALID: gate gt-g3-02: missing non-empty stage\nINVALID: gate gt-g3-03: missing non-empty stage\nINVALID: gate gt-g3-04: missing non-empty stage\nINVALID: gate gt-g3-05: missing non-empty stage\nINVALID: gate gt-g3-06: missing non-empty stage\nINVALID: gate gt-g3-07: missing non-empty stage\nINVALID: gate gt-g3-08: missing non-empty stage\nINVALID: gate gt-g3-09: missing non-empty stage\nINVALID: gate gt-g3-10: missing non-empty stage\nINVALID: gate g3-completion: missing non-empty stage\nINVALID: gate g4-entry-readiness: missing non-empty stage\nINVALID: gate gt-g4-01: missing non-empty stage\nINVALID: gate gt-g4-02: missing non-empty stage\nINVALID: gate gt-g4-03: missing non-empty stage\nINVALID: gate gt-g4-04: missing non-empty stage\nINVALID: gate gt-g4-05: missing non-empty stage\nINVALID: gate gt-g4-06: missing non-empty stage\nINVALID: gate gt-g4-07: missing non-empty stage\nINVALID: gate gt-g4-08: missing non-empty stage\nINVALID: gate gt-g4-09: missing non-empty stage\nINVALID: gate gt-g4-10: missing non-empty stage\nINVALID: gate gt-g4-11: missing non-empty stage\nINVALID: gate gt-g4-12: missing non-empty stage\nINVALID: gate g4-completion: missing non-empty stage\nINVALID: gate g2-final-convergence: requires at least one gate decision\nINVALID: gate g3-entry-readiness: requires at least one gate decision\nINVALID: gate gt-g3-01: requires at least one gate decision\nINVALID: gate gt-g3-02: requires at least one gate decision\nINVALID: gate gt-g3-03: requires at least one gate decision\nINVALID: gate gt-g3-04: requires at least one gate decision\nINVALID: gate gt-g3-05: requires at least one gate decision\nINVALID: gate gt-g3-06: requires at least one gate decision\nINVALID: gate gt-g3-07: requires at least one gate decision\nINVALID: gate gt-g3-08: requires at least one gate decision\nINVALID: gate gt-g3-09: requires at least one gate decision\nINVALID: gate gt-g3-10: requires at least one gate decision\nINVALID: gate g3-completion: requires at least one gate decision\nINVALID: gate g4-entry-readiness: requires at least one gate decision\nINVALID: gate gt-g4-01: requires at least one gate decision\nINVALID: gate gt-g4-02: requires at least one gate decision\nINVALID: gate gt-g4-03: requires at least one gate decision\nINVALID: gate gt-g4-04: requires at least one gate decision\nINVALID: gate gt-g4-05: requires at least one gate decision\nINVALID: gate gt-g4-06: requires at least one gate decision\nINVALID: gate gt-g4-07: requires at least one gate decision\nINVALID: gate gt-g4-08: requires at least one gate decision\nINVALID: gate gt-g4-09: requires at least one gate decision\nINVALID: gate gt-g4-10: requires at least one gate decision\nINVALID: gate gt-g4-11: requires at least one gate decision\nINVALID: gate gt-g4-12: requires at least one gate decision\nINVALID: gate g4-completion: requires at least one gate decision\nINVALID: integration int-pr84-g2-canonical-main: dangling gate decision g2-closure-2026-09-16\nINVALID: integration int-pr85-g3-01: dangling gate decision gt-g3-01-p34-2026-09-17\nINVALID: integration int-pr86-g3-02: dangling gate decision gt-g3-02-p34-2026-09-17\nINVALID: integration int-pr87-g3-03: dangling gate decision gt-g3-03-p34-2026-09-18\nINVALID: integration int-branch-g3-04-p34-review: dangling gate decision gt-g3-04-p34-2026-09-18\nINVALID: integration int-branch-g3-04-p34-review: integrated_revision is only allowed when status=integrated\nINVALID: integration int-pr88-g3-04: dangling gate decision gt-g3-04-p34-2026-09-18\nINVALID: integration int-pr91-g3-05: dangling gate decision gt-g3-05-p34-2026-09-19\nINVALID: integration int-branch-g3-06-p34-review: dangling gate decision gt-g3-06-p34-2026-09-19\nINVALID: integration int-branch-g3-06-p34-review: integrated_revision is only allowed when status=integrated\nINVALID: integration int-pr92-g3-06: dangling gate decision gt-g3-06-p34-2026-09-19\nINVALID: integration int-branch-g3-07-awaiting-integration: dangling gate decision gt-g3-07-p34-2026-09-19\nINVALID: integration int-branch-g3-08-awaiting-integration: dangling gate decision gt-g3-08-p34-2026-09-19\nINVALID: integration int-branch-g3-09-awaiting-integration: dangling gate decision gt-g3-09-p34-2026-09-19\nINVALID: integration int-pr100-g3-10: dangling gate decision gt-g3-10-p34-2026-09-19\nINVALID: integration int-pr102-g3-11: dangling gate decision g3-completion-2026-09-19\nINVALID: integration int-pr104-g3-completion-record: dangling gate decision g3-completion-2026-09-19\nINVALID: integration int-pr105-g4-01: dangling gate decision gt-g4-01-p34-2026-09-19\nINVALID: integration int-pr106-g4-02: dangling gate decision gt-g4-02-p34-2026-09-19\nINVALID: integration int-pr108-g4-03: dangling gate decision gt-g4-03-p34-2026-09-19\nINVALID: integration int-pr109-g4-03: dangling gate decision gt-g4-03-p34-2026-09-19\nINVALID: integration int-pr111-g4-04: dangling gate decision gt-g4-04-p34-2026-09-19\nINVALID: integration int-pr113-g4-05: dangling gate decision gt-g4-05-p34-2026-09-19\nINVALID: integration int-pr115-g4-06: dangling gate decision gt-g4-06-p34-2026-09-19\nINVALID: integration int-pr117-g4-07: dangling gate decision gt-g4-07-p34-2026-09-19\nINVALID: integration int-pr119-g4-08: dangling gate decision gt-g4-08-p34-2026-09-19\nINVALID: integration int-pr121-g4-09: dangling gate decision gt-g4-09-p34-2026-09-19\nINVALID: integration int-pr123-g4-10: dangling gate decision gt-g4-10-p34-2026-09-19\nINVALID: integration int-pr125-g4-11: dangling gate decision gt-g4-11-p34-2026-09-19\nINVALID: integration int-pr127-g4-12: dangling gate decision gt-g4-12-p34-2026-09-20\nINVALID: integration int-g4-completion: dangling gate decision g4-completion-2026-09-20\n"
+  },
+  "negative_controls": [
+    {
+      "expected_invariant": "binding:",
+      "id": "different-valid-PASS-binding",
+      "official_validator": {
+        "command": [
+          "python",
+          "-m",
+          "tools.aegis_state.cli",
+          "validate",
+          "C:\\Users\\Chado\\AppData\\Local\\Temp\\tmple45q8lt"
+        ],
+        "exit_code": 0,
+        "stderr": "",
+        "stdout": "VALID\n"
+      },
+      "oracle_errors": [
+        "binding: int-pr85-g3-01"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_invariant": "gate_cohort:",
+      "id": "readiness-promoted-PASS",
+      "oracle_errors": [
+        "gate_cohort: readiness promotion or missing formal Gate",
+        "decision_cohort: new/dropped decision"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_invariant": "occurrence:",
+      "id": "changed-integrated-occurrence",
+      "oracle_errors": [
+        "occurrence: int-pr84-g2-canonical-main/integrated_revision"
+      ],
+      "rejected": true
+    },
+    {
+      "expected_invariant": "source_blob:",
+      "id": "different-source-blob",
+      "oracle_errors": [
+        "source_blob: gates.json"
+      ],
+      "rejected": true
+    }
+  ],
+  "package_revision": "06bcf8348f7898ddfb3a327a81ba1874857e47e1",
+  "repository": "Mostorm-Labs/axiom",
+  "source_revision": "6fc1508f1a971abc5a90e068d0cc5f6ae82c064b",
+  "tool_revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba"
+}

@@ -1,0 +1,55 @@
+{
+  "cwd": "C:/Users/Chado/.codex/worktrees/fc00x-scene-resource-composition-p32-f08-resume",
+  "build_ref": "5ce43ead7883f8bdadb0f8540f78af4692a2aaa9",
+  "commands": [
+    {
+      "id": "fixed-build",
+      "command": "call \"C:/Program Files/Microsoft Visual Studio/18/Community/Common7/Tools/VsDevCmd.bat\" -arch=x64 && cmake --build out/p32-f08-msvc1951 --target axiom_demo_web_surface_tests axiom_minimal_runtime_host_tests axiom_minimal_presentation_cache_tests axiom_debug_ui_workbench_tests axiom_dui_m1_panel_model_tests axiom_debug_ui_control_router_tests axiom_fc00x_runtime_composition_tests axiom_fc00x_runtime_facade_tests axiom_dui_m1_control_tests axiom_interaction_session_tests axiom_selection_session_tests axiom_transform_session_tests axiom_transform_handle_drag_tests axiom_eraser_session_tests axiom_runtime_app_binding_tests axiom_runtime_isolation_tests axiom_runtime_frame_coordinator_tests axiom_render_target_tests axiom_render_skia_surface_provider_tests axiom_render_preview_surface_tests axiom_render_surface_presentation_tests axiom_render_frame_state_tests axiom_canonical_handoff_tests axiom_minimal_runtime_host_windows axiom_minimal_windows_surface_binding_tests -j 6",
+      "exit_code": 0,
+      "log": "logs/s2-verified-native-build.log"
+    },
+    {
+      "id": "win-on-exact",
+      "command": "call \"C:/Program Files/Microsoft Visual Studio/18/Community/Common7/Tools/VsDevCmd.bat\" -arch=x64 && cmake -S . -B out/p32-f08-msvc1951 && cmake --build out/p32-f08-msvc1951 --target axiom_minimal_runtime_host_windows axiom_fc00x_runtime_composition_tests axiom_fc00x_runtime_facade_tests axiom_minimal_runtime_host_tests axiom_minimal_windows_surface_binding_tests axiom_debug_ui_control_router_tests axiom_demo_web_surface_tests -j 4",
+      "exit_code": 0,
+      "log": "logs/s2-exact-win-on-build.log"
+    },
+    {
+      "id": "win-off-exact",
+      "command": "call \"C:/Program Files/Microsoft Visual Studio/18/Community/Common7/Tools/VsDevCmd.bat\" -arch=x64 && cmake -S . -B out/p32-f08-msvc1951-off && cmake --build out/p32-f08-msvc1951-off --target axiom_minimal_runtime_host_windows -j 4",
+      "exit_code": 0,
+      "log": "logs/s2-exact-win-off-build.log"
+    },
+    {
+      "id": "web-on-exact",
+      "command": "call .deps/emsdk/emsdk_env.bat && cmake -S . -B out/p32-web-debug-on && cmake --build out/p32-web-debug-on --target axiom_canvas_demo_web -j 4",
+      "exit_code": 0,
+      "log": "logs/s2-exact-web-on-build.log"
+    },
+    {
+      "id": "web-off-exact",
+      "command": "call .deps/emsdk/emsdk_env.bat && cmake -S . -B out/p32-web-debug-off && cmake --build out/p32-web-debug-off --target axiom_canvas_demo_web -j 4",
+      "exit_code": 0,
+      "log": "logs/s2-exact-web-off-build.log"
+    },
+    {
+      "id": "exact-tests",
+      "command": "ctest --test-dir out/p32-f08-msvc1951 -R \"^(G3WebSurfaceHost|FC00XMinimalRuntimeHost|FC00XMinimalPresentationCache|PX0Workbench|DUIM1PanelModel|PX0ControlRouter|FC00XRuntimeComposition|FC00XRuntimeFacade|DUIM1Control|F08FrameQualificationBoundary|G4InteractionSessionManager|G4SelectionSession|G4TransformSession|G46TransformHandleDrag|G4EraserSession|G3RuntimeAppBinding|FC00XRuntimeIsolation|FC00XFrameCoordinator|G3RenderTargetSwitching|G3SkiaSurfaceProvider|G3PreviewSurface|G3SurfacePresentation|G3FrameState|G4CanonicalHandoff|FC00XS2WindowsSurfaceBinding)$\" --output-on-failure --output-junit s2-exact-tests.xml",
+      "exit_code": 0,
+      "log": "logs/s2-exact-tests.log"
+    },
+    {
+      "id": "semantic-offline",
+      "command": "python tools/setup_build_environment.py --semantic --offline --facts-output out/s2-semantic-environment-final.json --status",
+      "exit_code": 0,
+      "log": "logs/s2-semantic-resolve-final.log"
+    },
+    {
+      "id": "outside-fixed-matrix-build",
+      "command": "cmake --build out/p32-f08-msvc1951 -j 6",
+      "exit_code": 1,
+      "log": "logs/s2-full-build.log"
+    }
+  ],
+  "outside_matrix_failure": "Existing unrelated canvas_interaction_coordinator_test.cpp C4458 mode parameter shadows member; unchanged. Full repository build/suite not claimed."
+}

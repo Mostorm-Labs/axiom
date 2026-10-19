@@ -1,0 +1,122 @@
+{
+  "schema_version": "0.1",
+  "task_id": "FC-00-LEGACY-IMPORT",
+  "current": true,
+  "current_scope": "control-plane:axiom/project-state/legacy-import",
+  "authority_status": "CURRENT_ACCEPTED_SCOPE_LIMITED",
+  "sources": [
+    {
+      "role": "authority",
+      "provider": "notion",
+      "id": "3f64c57a590c8178bb0ce21304969491",
+      "url": "https://app.notion.com/p/3f64c57a590c8178bb0ce21304969491",
+      "revision": "2026-10-11T14:03:31.165Z",
+      "content_hash": "sha256:605e8e5b605bf2a313a96e9f759b84c87c3160f63ac5cfb7e52667723753c9c9",
+      "trusted_sections": [
+        "P23-C01",
+        "P23-C02",
+        "P23-C03",
+        "P23-C04",
+        "P23-C05",
+        "five-axis and handoff"
+      ]
+    },
+    {
+      "role": "reconciliation",
+      "provider": "notion",
+      "id": "3f64c57a590c81ec97bde185d6b94567",
+      "url": "https://app.notion.com/p/3f64c57a590c81ec97bde185d6b94567",
+      "revision": "2026-10-11T14:04:17.113Z",
+      "content_hash": "sha256:3eddc96fbab51dcfdf76f744f05cac7dc75c8f21b7122b0e0c8f7384dc8346fe",
+      "trusted_sections": [
+        "approved historical mapping and import boundary"
+      ]
+    },
+    {
+      "role": "verification",
+      "provider": "notion",
+      "id": "3f64c57a590c8174b2bec34724a8131d",
+      "url": "https://app.notion.com/p/3f64c57a590c8174b2bec34724a8131d",
+      "revision": "2026-10-11T14:04:18.756Z",
+      "content_hash": "sha256:767b316090a60c0daae32ff50333325c9f31df15dcc379c5d7d4d407d81a7d5a",
+      "trusted_sections": [
+        "FC00-LI-01..07",
+        "required red and negative oracles",
+        "blocking evidence contract"
+      ]
+    },
+    {
+      "role": "crosswalk",
+      "provider": "notion",
+      "id": "3f64c57a590c81b2b4d6c8312fa945a9",
+      "url": "https://app.notion.com/p/3f64c57a590c81b2b4d6c8312fa945a9",
+      "revision": "2026-10-11T14:04:20.277Z",
+      "content_hash": "sha256:11bddff59875674512cf08a359bf6c27df957c17145f072f175299fddcd9003b",
+      "trusted_sections": [
+        "approved historical mapping and import boundary"
+      ]
+    },
+    {
+      "role": "source_legacy_manifests",
+      "provider": "github",
+      "repository": "Mostorm-Labs/axiom",
+      "revision": "6fc1508f1a971abc5a90e068d0cc5f6ae82c064b",
+      "content_hashes": {
+        ".aegis/project.json": "git-blob-sha1:917f90742f407033dd60e22c69558f67b96c8c4e",
+        ".aegis/authorities.json": "git-blob-sha1:ced6a70072b1d23adb229386772f30443773ba15",
+        ".aegis/gates.json": "git-blob-sha1:b464ad3ae83df38255b37488be3b768fff14a125",
+        ".aegis/evidence.json": "git-blob-sha1:e3810158c6cf9e1fab17a41fcb18bd2816cc3456",
+        ".aegis/integrations.json": "git-blob-sha1:9f4c8321204b5fe0badcb347ef41c93c856fdd9f",
+        ".aegis/state.json": "git-blob-sha1:0a1191c4181beac361a48235c4b2a245dedc01ea"
+      }
+    },
+    {
+      "role": "official_project_state_tool",
+      "provider": "github",
+      "repository": "Mostorm-Labs/aegis",
+      "revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba",
+      "path": "tools/aegis_state",
+      "content_hash": "git-commit-sha1:00d3690ca2cdde15b3f919c54ccc8ef6290f55ba"
+    }
+  ],
+  "trusted_statements": {
+    "objective": "Produce a first valid Aegis v0.6 Project State representation from immutable Axiom pseudo-v0.6 historical manifests without changing historical Gate/Integration meaning.",
+    "accepted_compatibility_model": "ONE_TIME_LEGACY_IMPORT",
+    "project_identity": {
+      "id": "axiom",
+      "name": "Axiom",
+      "profile": "standard",
+      "lifecycle_hint": "OMIT"
+    },
+    "normalized_historical_cohort": {
+      "gate_contracts": 25,
+      "decisions": 25,
+      "integrations": 29,
+      "evidence": 34,
+      "authorities": 4,
+      "readiness_archive": 2
+    },
+    "gate_stage_policy": {
+      "g2_final_convergence": "G2_FINAL_CONVERGENCE_REVIEW",
+      "g3_and_g4_work_package_and_completion": "P34",
+      "source": "expected-crosswalk.json"
+    },
+    "historical_decisions": "Normalize old arbitrary ID to <same-gate-id>::decision::0001, preserve raw original and reversible binding map; no new approval events.",
+    "historical_bindings": "Retain 29 Bound occurrences and their semantic original references; no Absent; no rebind to later PASS; 27 integrated + 2 closed_unmerged.",
+    "readiness": "Two READY_FOR_P31 Gate records remain fully archived as historical input and do not become official v0.6 Gate Contracts/Decisions.",
+    "first_import_authority": "Only historical four G2/G3/G4 authority records. FC Track repo-local Current Authority is a separate post-P34 append-only task.",
+    "historical_g4": "Old G4 authority remains Superseded and relevant to its prior Gates; G4 v0.3 remains Current; G4 Completion is functional PASS_WITH_FINDINGS not physical or pressure PASS.",
+    "original_project_checkpoint": "Preserve old canonical_revision=4924139d1d8a4bd380c01b618155cca2c4f23abe in Git historical source, never rewrite as main/PX0 evidence head.",
+    "verification_owner": "FC-00 P20 seven obligations FC00-LI-01..07; independent migration equivalence and pinned official Aegis validate/recompute/check; P34 independent verdict.",
+    "package_boundary": "P31 controls only schema/control-plane migration artifacts. P32 does not mutate original source revision. No product runtime, platform, brush, renderer, editor or design changes."
+  },
+  "forbidden_interpretations": [
+    "Initial invalid pseudo-v0.6 source qualifies as a preceding official v0.6 snapshot.",
+    "Ordinary official v0.6 transition-check from invalid legacy source is sufficient migration proof.",
+    "Mapping old historical Decision IDs to normalized IDs constitutes new Gate PASS or changes occurrence-time Gate decisions.",
+    "Two READY_FOR_P31 entries may become PASS/BLOCKED official Gate decisions.",
+    "A P31/P32 package or Notion Current implies PX0/G4.6/G4.7 physical Gate PASS or FC-00/FC-01 closure.",
+    "FC Track fifth Current Authority can be added during the first historical import.",
+    "A separate Axiom runtime State Generator or changes to the official Aegis global v0.6 schema are authorized."
+  ]
+}

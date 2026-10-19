@@ -43,12 +43,16 @@ class SurfaceLifecycle final {
 
     [[nodiscard]] SurfaceAcquireResult acquire() const;
     [[nodiscard]] SurfaceLifecycleDisposition replace(const SurfaceSnapshot& replacement);
+    [[nodiscard]] SurfaceLifecycleDisposition adoptPrepared(const SurfaceMetrics& metrics) noexcept;
     [[nodiscard]] SurfaceLifecycleDisposition markLost(ViewId viewId) noexcept;
 
     [[nodiscard]] const SurfaceSnapshot& current() const noexcept { return *_current; }
     [[nodiscard]] bool available() const noexcept { return _available; }
 
   private:
+    friend class SurfaceProviderRegistry;
+    [[nodiscard]] SurfaceLifecycleDisposition publishPrepared(
+        const SurfaceSnapshot& snapshot, bool initialBinding) noexcept;
     std::optional<SurfaceSnapshot> _current;
     bool _available = false;
 };

@@ -1,0 +1,20 @@
+web_host_page_test.py 1 PASS
+c0_web_navigation_contract_test.py 1 PASS
+web_imgui_debug_ui_contract_test.py 6 PASS
+{
+  "user_statement": "经测试，各项功能正常，在本机开始web端功能的测试吧，使用chrome浏览器打开页面",
+  "status": "USER_REPORTED_NORMAL",
+  "observation_scope": "用户汇总反馈；未提供逐项实际操作记录，不将日志推断或汇总反馈改写为独立逐项验收。",
+  "source_revision": "b68e8f9f2c1bca65277f832dd78193f4ae0e2c0f",
+  "event_counts": {
+    "debug-ui-on": 1,
+    "facade-control": 5,
+    "frame-opportunity": 419,
+    "mouse": 29,
+    "pointer": 1798,
+    "startup": 1
+  },
+  "rejected_event_count": 0,
+  "last_frame": "event=frame-opportunity accepted=1 source=0 pointer=0 generation=0 state=2 objects=19 operations=25 frame=915 handoff=1 preview=1 camera=(0.357815,409.948,152.618)",
+  "official_gate_or_phys_status_changed": false
+}

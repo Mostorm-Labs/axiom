@@ -1,0 +1,61 @@
+{
+  "schema": "fc00x-p20-authority-binding-v1",
+  "source_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+  "bindings": [
+    {
+      "id": "g2-canonical-main",
+      "status": "Current",
+      "materialized_path": ".aegis/packages/GT-G3-00/authority.lock.json",
+      "materialized_git_blob_sha1": "d9959b1ef0638eb3f802371df6f3b583e09587bc",
+      "materialized_sha256": "7ca1477afcc23f59b4f4e4d8c8bd0228f4ffcf2f2c81d029aa427d99857288d5",
+      "materialized_at_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+      "external_source": {
+        "provider": "notion",
+        "ref": "notion://3dd4c57a-590c-81a9-827e-e348102413d0",
+        "revision": "2026-09-16T13:46:29.808Z"
+      }
+    },
+    {
+      "id": "g3-capability-authority",
+      "status": "Current",
+      "materialized_path": ".aegis/packages/GT-G3-03/authority.lock.json",
+      "materialized_git_blob_sha1": "ca06444d3b11a82f0aa185715362287d9b94598c",
+      "materialized_sha256": "44f3a70e0e8e3968b59993ab5ee51c3510fc59ff00e03db8f5afb2b5b19b45c9",
+      "materialized_at_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+      "external_source": {
+        "provider": "notion",
+        "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+        "revision": "2026-09-13T04:49:44.764Z",
+        "content_hash": "063c6be5b6e9a535e493a2585f2f4a4035cd1ec0724b36d0bad368bc726413a3"
+      }
+    },
+    {
+      "id": "g4-capability-authority-v0.3",
+      "status": "Current",
+      "materialized_path": ".aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
+      "materialized_git_blob_sha1": "ce9372593688d13d4e5a3884d0068b6ea227c4cf",
+      "materialized_sha256": "19f37395b0d7b506059b730c6ee5dc38a9f9ee5466d91f5d5363d32818fc2bf8",
+      "materialized_at_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+      "external_source": {
+        "provider": "notion",
+        "ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
+        "content_hash": "9f0f8870d2f31138482ce32f6377aedaff65294fd7ca3c52622b2fcdbf7c88a2"
+      }
+    },
+    {
+      "id": "fc-feature-completion-execution-v0.2",
+      "status": "Current",
+      "materialized_path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/4-3f74c57a590c8139b903f14f0aae0c57.json",
+      "materialized_git_blob_sha1": "0375203a27eccaefff48379dac6b1f4d200f64fa",
+      "materialized_sha256": "6b65aaa53c202527a459e1e0640d535eba127f0c68b2cd580b77d9e5936fd0c3",
+      "materialized_at_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+      "external_source": {
+        "provider": "notion",
+        "ref": "notion://3f74c57a590c8139b903f14f0aae0c57",
+        "revision": "2026-10-12T02:17:38.007Z",
+        "content_hash": "6b65aaa53c202527a459e1e0640d535eba127f0c68b2cd580b77d9e5936fd0c3"
+      }
+    }
+  ],
+  "production_mutation_performed": false
+}

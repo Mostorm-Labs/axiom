@@ -1,0 +1,71 @@
+{
+  "start_revision": "3f84ecabc2294121a2f4b9e78bb7f073585576ac",
+  "result_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+  "changed_files": [
+    "apps/ink_playground/CMakeLists.txt",
+    "apps/ink_playground/tests/creation_control_binding_test.cpp",
+    "apps/ink_playground/tests/fc01_host_publication_truth_test.cpp",
+    "apps/ink_playground/tests/ink_playground_history_test_access.hpp",
+    "apps/ink_playground/tests/selected_actions_test.cpp",
+    "runtime/composition/tests/canvas_runtime_facade_test.cpp",
+    "runtime/interaction/CMakeLists.txt",
+    "runtime/render/CMakeLists.txt",
+    "runtime/scene/tests/derived_geometry_test.cpp",
+    "runtime/semantic/tests/CMakeLists.txt",
+    "runtime/semantic/tests/fc01_shape2_apply_test.cpp",
+    "runtime/semantic/tests/g1_06_snapshot_test.cpp",
+    "verification/fc01/run_closeout.py",
+    "verification/fc01/run_source_loss.py",
+    "verification/fc01/verify_shape2_wire.py"
+  ],
+  "repository": "https://github.com/Mostorm-Labs/axiom.git",
+  "branch": "codex/p32-windows-minimal-touch",
+  "package_materialization_ref": "c98110c015f975012f25db5efa66c9679da35630",
+  "bindings": [
+    {
+      "path": ".aegis/packages/FC-01/authority.lock.json",
+      "sha256": "b0753dff1729c3b0e320dc9989cad121e168b14f6e816f265cc89db7c2896535",
+      "result": "MATCH"
+    },
+    {
+      "path": ".aegis/packages/FC-01/verification.lock.json",
+      "sha256": "7160d86677cc9ee3657ec1c725ee997ac54d13655e55356a21d75c86bbe14e25",
+      "result": "MATCH"
+    },
+    {
+      "path": ".aegis/packages/FC-01/execution-contract.json",
+      "sha256": "fd63e503e2fc93900d05ede9c3cac1021583f8309606e37c9aec313edb5e63b7",
+      "result": "MATCH"
+    },
+    {
+      "path": ".aegis/packages/FC-01/implementation-context.md",
+      "sha256": "e63307ec332447ad161e5742c9654f5e75b7fe5be87280adc055d70b8e3ec06b",
+      "result": "MATCH"
+    },
+    {
+      "path": ".aegis/packages/FC-01/evidence-contract.json",
+      "sha256": "05211ff131d124ce409f864eb0bd3364700a8d9c0398bd6ba2ba49e5d62edf1b",
+      "result": "MATCH"
+    }
+  ],
+  "ancestry_verified": true,
+  "new_protected_path_changes": [],
+  "production_behavior_changes_this_round": [],
+  "inherited_windows_web_source_equivalence": {
+    "prior_source": "e42c907f827e33864d80a47ba7f9d5938ba14e3a",
+    "equal_production_partitions": [
+      "runtime/interaction/src",
+      "runtime/input/src",
+      "runtime/input/include",
+      "runtime/composition/src",
+      "apps/minimal_runtime_host",
+      "apps/axiom_canvas_demo/platform/web",
+      "debug_ui/src",
+      "runtime/semantic/src",
+      "runtime/render/src",
+      "runtime/scene/src",
+      "schema"
+    ],
+    "limitation": "Does not relabel inherited test runs as runs executed at the new revision."
+  }
+}

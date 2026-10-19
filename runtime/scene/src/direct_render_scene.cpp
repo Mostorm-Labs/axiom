@@ -27,6 +27,29 @@ float distanceToRect(const WorldPoint& point, const WorldRect& rect) {
     return std::hypot(dx, dy);
 }
 
+bool hasVisibleFill(const semantic::PropertyBag& properties) noexcept {
+    for (const auto& entry : properties.entries) {
+        if (entry.field_id != 0x100U) continue;
+        if (const auto* fill = std::get_if<semantic::FillStyleValue>(&entry.value)) {
+            if (const auto* solid = std::get_if<semantic::SolidFill>(fill)) return solid->color.a > 0.0F;
+            return false;
+        }
+    }
+    return true;
+}
+
+float strokeHalfWidth(const semantic::PropertyBag& properties) noexcept {
+    for (const auto& entry : properties.entries) {
+        if (entry.field_id != 0x101U) continue;
+        if (const auto* stroke = std::get_if<semantic::StrokeStyleValue>(&entry.value)) {
+            if (const auto* solid = std::get_if<semantic::SolidStroke>(stroke))
+                return static_cast<float>(std::max(0.0, solid->width) * 0.5);
+            return 0.0F;
+        }
+    }
+    return 0.0F;
+}
+
 } // namespace
 
 foundation::Result<std::unique_ptr<IPreparedRenderSceneUpdate>>
@@ -70,6 +93,9 @@ DirectRenderScene::prepareReplace(std::span<const SceneRecord> records,
                 record.orderKey,
                 record.worldBounds,
                 record.renderPayload,
+                record.derivedGeometry,
+                record.localTransform,
+                record.properties,
             });
         }
         return prepareRecords(std::move(nextRecords), revision);
@@ -109,6 +135,9 @@ DirectRenderScene::prepareApply(std::span<const SceneMutation> mutations,
                     mutation.after->orderKey,
                     mutation.after->worldBounds,
                     mutation.after->renderPayload,
+                    mutation.after->derivedGeometry,
+                    mutation.after->localTransform,
+                    mutation.after->properties,
                 });
                 break;
             case SceneMutationKind::kUpdate:
@@ -122,6 +151,9 @@ DirectRenderScene::prepareApply(std::span<const SceneMutation> mutations,
                     mutation.after->orderKey,
                     mutation.after->worldBounds,
                     mutation.after->renderPayload,
+                    mutation.after->derivedGeometry,
+                    mutation.after->localTransform,
+                    mutation.after->properties,
                 };
                 break;
             case SceneMutationKind::kRemove:
@@ -163,7 +195,7 @@ DirectRenderScene::prepareDelta(const SceneDelta& delta,
                 changed.push_back(RenderRecord{mutation.after->objectId,
                                                mutation.after->orderKey,
                                                mutation.after->worldBounds,
-                                               mutation.after->renderPayload});
+                                               mutation.after->renderPayload, mutation.after->derivedGeometry, mutation.after->localTransform, mutation.after->properties});
             }
         }
         auto update = std::make_unique<PreparedUpdate>();
@@ -188,7 +220,7 @@ void DirectRenderScene::commit(std::unique_ptr<IPreparedRenderSceneUpdate> prepa
             const auto found = _index.find(mutation.objectId);
             if (mutation.kind == SceneMutationKind::kInsert && mutation.after) {
                 RenderRecord record{mutation.after->objectId, mutation.after->orderKey,
-                                    mutation.after->worldBounds, mutation.after->renderPayload};
+                                    mutation.after->worldBounds, mutation.after->renderPayload, mutation.after->derivedGeometry, mutation.after->localTransform, mutation.after->properties};
                 _index[record.objectId] = _records.size();
                 _records.push_back(record);
             } else if (mutation.kind == SceneMutationKind::kUpdate && found != _index.end() &&
@@ -196,7 +228,7 @@ void DirectRenderScene::commit(std::unique_ptr<IPreparedRenderSceneUpdate> prepa
                 _records[found->second] = RenderRecord{mutation.after->objectId,
                                                        mutation.after->orderKey,
                                                        mutation.after->worldBounds,
-                                                       mutation.after->renderPayload};
+                                                       mutation.after->renderPayload, mutation.after->derivedGeometry, mutation.after->localTransform, mutation.after->properties};
             } else if (mutation.kind == SceneMutationKind::kRemove && found != _index.end()) {
                 const std::size_t removed = found->second;
                 const std::size_t last = _records.size() - 1;
@@ -230,9 +262,40 @@ DirectRenderScene::preciseHitTest(const PreciseHitRequest& request) const {
         return foundation::Result<PreciseHit>::failure(
             makeError(foundation::ErrorCode::kMissingObject, "Precise hit ObjectId is missing"));
     }
-    const float distance = distanceToRect(request.worldPoint, _records[found->second].worldBounds);
-    return foundation::Result<PreciseHit>::success(
-        PreciseHit{distance <= request.tolerance, distance});
+    const RenderRecord& record = _records[found->second];
+    float distance = distanceToRect(request.worldPoint, record.worldBounds);
+    bool hit = distance <= request.tolerance;
+    const auto world = [&](WorldPoint point) {
+        const auto& transform = record.localTransform;
+        return WorldPoint{static_cast<float>(transform.a * point.x + transform.c * point.y + transform.tx),
+                          static_cast<float>(transform.b * point.x + transform.d * point.y + transform.ty)};
+    };
+    if (const auto* triangle = std::get_if<scene::TriangleGeometry>(&record.derivedGeometry)) {
+        const scene::TriangleGeometry transformed{world(triangle->top), world(triangle->right), world(triangle->left), {}};
+        distance = std::min({scene::distanceToSegment(request.worldPoint, transformed.top, transformed.right),
+                             scene::distanceToSegment(request.worldPoint, transformed.right, transformed.left),
+                             scene::distanceToSegment(request.worldPoint, transformed.left, transformed.top)});
+        const float stroke = strokeHalfWidth(record.properties);
+        hit = (hasVisibleFill(record.properties) && scene::pointInTriangle(request.worldPoint, transformed)) ||
+              distance <= request.tolerance + stroke;
+        if (hit) distance = 0.0F;
+    } else if (const auto* connector = std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry)) {
+        const scene::ConnectorGeometry transformed{world(connector->start), world(connector->end), connector->arrow_end};
+        hit = scene::pointOnConnector(request.worldPoint, transformed, request.tolerance);
+        distance = scene::distanceToSegment(request.worldPoint, transformed.start, transformed.end);
+        if (connector->arrow_end) {
+            const auto head = scene::arrowHead(*connector);
+            const scene::TriangleGeometry transformedHead{world(head.tip), world(head.left), world(head.right), {}};
+            const float headDistance = std::min({
+                scene::distanceToSegment(request.worldPoint, transformedHead.top, transformedHead.right),
+                scene::distanceToSegment(request.worldPoint, transformedHead.right, transformedHead.left),
+                scene::distanceToSegment(request.worldPoint, transformedHead.left, transformedHead.top)});
+            hit = hit || scene::pointInTriangle(request.worldPoint, transformedHead) ||
+                  headDistance <= request.tolerance;
+            distance = std::min(distance, headDistance);
+        }
+    }
+    return foundation::Result<PreciseHit>::success(PreciseHit{hit, distance});
 }
 
 foundation::Result<SceneDrawList>

@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-01",
+  "artifacts": [],
+  "review_boundary": "Exact pushed result revision on refs/heads/codex/px0-01-contract-boundary-cleanup. Independent review resolves the repo-local package, exact source diff, and reruns or inspects the frozen required test/oracle set against that result.",
+  "hosted_verification_required": false,
+  "blocking_evidence": [
+    "reviewer-resolvable exact result revision/ref",
+    "PX0RuntimeFacadeContract",
+    "DUIM1RuntimeFacade",
+    "DUIM1ViewControls",
+    "DUI20DebugUiContracts",
+    "DUIM1PanelModel",
+    "Windows/Web structural pytest contract set",
+    "scope diff and git diff --check"
+  ],
+  "corroborative_evidence": [
+    "optional Windows hosted build",
+    "optional Web hosted build when environment permits"
+  ],
+  "official_claim_boundary": "P32 may return READY_FOR_CONTROL_REVIEW only. It must not issue PX0-01 P34 PASS, PX0 PASS, DUI-M1 PASS, or any physical/preview PASS.",
+  "materialization_requirement": "The exact implementation result must be pushed to refs/heads/codex/px0-01-contract-boundary-cleanup or an equivalently reviewer-resolvable exact ref before returning READY_FOR_CONTROL_REVIEW."
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "stage": "P33_RESUME_INTERRUPTED_WORK",
+  "authorization_revision": "v0.1",
+  "governing_package": {
+    "package_id": "PX0-05-P31-v0.3",
+    "package_path": ".aegis/packages/PX0-05/package.json",
+    "package_content_commit": "3706867e8d877178a5ca90652e11471759c7152c"
+  },
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "4a35e8fc041e90040d05fe8e8d55766fa8014806",
+    "relation": "ancestor"
+  },
+  "accepted_resume_cursor": null,
+  "expected_position_classification": "ANCHOR_DESCENDANT_WITHOUT_CURSOR",
+  "candidate_local_state": {
+    "worktree_hint": "C:/Users/Chado/.codex/worktrees/px0-05-existing-capability-migration-clean",
+    "durable": false,
+    "gate_evidence": false,
+    "candidate_completed_work": [
+      "six Workbench workspace explicit panel registration",
+      "legacy Transitional panel removal",
+      "snapshot-backed product/control readback",
+      "Router owner-presence queries and owner-gated engineering actions",
+      "UI-local camera drafts and View controls",
+      "Surface/Axiom actions within frozen support boundaries",
+      "Unsupported placeholders including Scenarios",
+      "PX0Workbench and PX0ControlRouter focused changes",
+      "PX0-05 Windows structural contract changes",
+      "real ImGui widget activation validation"
+    ],
+    "trust_rule": "Treat every item as a reconciliation candidate only. Preserve it only after exact diff/source/test inspection proves conformance with PX0-05-P31-v0.3."
+  },
+  "reconciliation_steps": [
+    "Resolve repository identity and the exact v0.3 package materialization before inspecting the local worktree.",
+    "Verify task_anchor ancestry against the local worktree base/HEAD. If ancestry cannot be established, return BLOCKED_EXECUTION_DIVERGENCE.",
+    "Inspect git status, HEAD, staged/unstaged/untracked files and full diff in the preserved local worktree.",
+    "Compare every changed path to the v0.3 authorized mutation scope. Forbidden or ambiguous mutations fail closed; do not silently discard evidence of divergence.",
+    "Map existing changes to each frozen PX0-05 obligation and required change. Mark verified completed items and identify the first incomplete frozen obligation.",
+    "Ensure windows_debug_ui_selection_contract_test.py no longer requires legacy BeginTabBar / Canvas / Selection / RuntimeFacade tabs, while preserving pointer-path and terminal-clear/facade synchronization assertions.",
+    "Establish a P33 reconciliation record under .aegis/results/PX0-05/ before continuing implementation.",
+    "Resume only the first incomplete frozen obligation; do not replay or rewrite already-valid work."
+  ],
+  "native_verification": {
+    "clean_build_required": true,
+    "reuse_prior_px0_05_cache_forbidden": true,
+    "CANVAS_BUILD_RF01": "ON",
+    "CANVAS_BUILD_POC01": "OFF",
+    "profile": "locked Ninja Release clang-cl + Windows x64 D3D12 Release Skia profile accepted by PX0-04 / PX0-BUILD-01",
+    "diagnostic_source_revision": "beaccca42b3587b19daf981b93587fd6322f2d26",
+    "diagnostic_evidence_head": "def8f6deebc54af72e109fb9ad0875fbbf4949e4",
+    "recurrence_rule": "If canvas/scene/scene_types.hpp is missing under this exact fresh profile, return BLOCKED_ENVIRONMENT; do not modify Runtime/Render/Scene within PX0-05."
+  },
+  "continuation_contract": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "terminal_success": "Satisfy the complete PX0-05-P31-v0.3 closure contract, commit and push an exact reviewer-resolvable result on codex/px0-05-existing-capability-migration.",
+    "official_gate_pass_forbidden": true
+  },
+  "repetition_guard": "Any newly discovered requirement absent from v0.3 must be classified by root cause. TASK_PACKAGE_DEFECT returns to P31; VERIFICATION_DESIGN_DEFECT returns to Verification ownership. P33 must not grow the finish line.",
+  "official_gate_pass_claimed": false
+}

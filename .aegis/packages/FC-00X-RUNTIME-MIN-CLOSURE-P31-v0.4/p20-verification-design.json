@@ -1,0 +1,112 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-verification-design-correction-v1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P20_VERIFICATION_DESIGN",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "purpose": "Repair the two P31 review blockers before any production implementation: exact repo-local Authority identity and executable zero-mutation RED oracles.",
+  "trusted_basis": {
+    "repository": "Mostorm-Labs/axiom",
+    "source_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+    "worktree": "C:/Users/Chado/.codex/worktrees/fc00x-runtime-minimum-closure/canvas",
+    "fc01_protected_worktree": "C:/Users/Chado/.codex/worktrees/fc-01-creation-tools-p32/canvas"
+  },
+  "authority_reconciliation": {
+    "rule": "Every implementation-relevant Authority is bound to a repository-resolvable materialized file plus its Git blob SHA-1 and exact byte SHA-256. External provider identity and revision remain recorded when present.",
+    "bindings": [
+      {
+        "id": "g2-canonical-main",
+        "status": "Current",
+        "materialized_path": ".aegis/packages/GT-G3-00/authority.lock.json",
+        "materialized_git_blob_sha1": "d9959b1ef0638eb3f802371df6f3b583e09587bc",
+        "materialized_sha256": "7ca1477afcc23f59b4f4e4d8c8bd0228f4ffcf2f2c81d029aa427d99857288d5",
+        "materialized_at_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+        "external_source": {
+          "provider": "notion",
+          "ref": "notion://3dd4c57a-590c-81a9-827e-e348102413d0",
+          "revision": "2026-09-16T13:46:29.808Z"
+        },
+        "canonical_result_revision": "07654767eac7b021ca6e89004e36448ccebb727d"
+      },
+      {
+        "id": "g3-capability-authority",
+        "status": "Current",
+        "materialized_path": ".aegis/packages/GT-G3-03/authority.lock.json",
+        "materialized_git_blob_sha1": "ca06444d3b11a82f0aa185715362287d9b94598c",
+        "materialized_sha256": "44f3a70e0e8e3968b59993ab5ee51c3510fc59ff00e03db8f5afb2b5b19b45c9",
+        "materialized_at_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+        "external_source": {
+          "provider": "notion",
+          "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+          "revision": "2026-09-13T04:49:44.764Z",
+          "content_hash": "063c6be5b6e9a535e493a2585f2f4a4035cd1ec0724b36d0bad368bc726413a3"
+        }
+      },
+      {
+        "id": "g4-capability-authority-v0.3",
+        "status": "Current",
+        "materialized_path": ".aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
+        "materialized_git_blob_sha1": "ce9372593688d13d4e5a3884d0068b6ea227c4cf",
+        "materialized_sha256": "19f37395b0d7b506059b730c6ee5dc38a9f9ee5466d91f5d5363d32818fc2bf8",
+        "materialized_at_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+        "external_source": {
+          "provider": "notion",
+          "ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
+          "content_hash": "9f0f8870d2f31138482ce32f6377aedaff65294fd7ca3c52622b2fcdbf7c88a2"
+        }
+      },
+      {
+        "id": "fc-feature-completion-execution-v0.2",
+        "status": "Current",
+        "materialized_path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/4-3f74c57a590c8139b903f14f0aae0c57.json",
+        "materialized_git_blob_sha1": "0375203a27eccaefff48379dac6b1f4d200f64fa",
+        "materialized_sha256": "6b65aaa53c202527a459e1e0640d535eba127f0c68b2cd580b77d9e5936fd0c3",
+        "materialized_at_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+        "external_source": {
+          "provider": "notion",
+          "ref": "notion://3f74c57a590c8139b903f14f0aae0c57",
+          "revision": "2026-10-12T02:17:38.007Z",
+          "content_hash": "6b65aaa53c202527a459e1e0640d535eba127f0c68b2cd580b77d9e5936fd0c3"
+        },
+        "scope_note": "This Authority remains an FC-track dependency only; it does not authorize FC-01 implementation in this task."
+      }
+    ],
+    "history_rule": "No Authority, Gate, Integration or Evidence record is modified by this correction. Superseded authorities remain preserved in .aegis/authorities.json."
+  },
+  "red_oracles": [
+    {
+      "id": "FC00X-RED-S1-source-cancel-delivery",
+      "requirement": "A source loss/unregister must deliver a keyed Cancel to the real session owner without cancelling another source.",
+      "baseline_failure_mode": "RuntimeAppBinding::notifySourceLost discards the normalized cancel result and unregisterInputSource removes only registration; no owner delivery seam exists.",
+      "independent_observation": "Read-only source oracle inspects the composition boundary for a cancellation sink/return path and proves the baseline has a discarded result plus no unregister cancellation call.",
+      "fixture": "runtime/render/src/runtime_app_binding.cpp and runtime/render/include/canvas/render/runtime_app_binding.hpp at the task anchor",
+      "command": "python .aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE/p20-red-oracle.py --root . --expect baseline-red",
+      "expected_exit": 1,
+      "expected_status": "RED",
+      "post_fix_acceptance": "A separate accepted P32 owner-adapter test must require a typed owner delivery port, a returned/forwarded keyed Cancel, and unregister routing through the same source-scoped path. This read-only RED oracle is not reused as the post-fix acceptance oracle.",
+      "evidence": "p20-red-preflight.json"
+    },
+    {
+      "id": "FC00X-RED-S3-control-readback-truth",
+      "requirement": "Control snapshot/readback must report real owner availability, writability and busy state.",
+      "baseline_failure_mode": "CanvasControlBinding::snapshot hard-codes targetAvailable=true, writable=true and busy=false.",
+      "independent_observation": "Read-only source oracle locates literal unconditional assignments and verifies no owner-state port is read for these fields.",
+      "fixture": "apps/ink_playground/common/canvas_control_binding.cpp and apps/ink_playground/common/canvas_control_binding.hpp at the task anchor",
+      "command": "python .aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE/p20-red-oracle.py --root . --expect baseline-red",
+      "expected_exit": 1,
+      "expected_status": "RED",
+      "post_fix_acceptance": "A separate accepted P32 owner-state test must drive unavailable, writable, and busy states through a test-only owner adapter and compare snapshot/readback to those values. This read-only RED oracle is not reused as the post-fix acceptance oracle.",
+      "evidence": "p20-red-preflight.json"
+    }
+  ],
+  "independence_and_limits": {
+    "why_not_a_production_test": "The pre-mutation RED is intentionally a read-only source/contract oracle. It does not require adding an owner port before the defect is observed and cannot be made green by changing only the oracle.",
+    "later_green_oracle": "After P32 implementation, focused runtime tests with a test-only owner adapter and degraded owner state must exercise the corrected contracts; those tests are acceptance evidence, not this P20 RED proof.",
+    "not_claimed": [
+      "No production code changed",
+      "No P32 authorization",
+      "No Gate PASS",
+      "No physical evidence"
+    ]
+  }
+}

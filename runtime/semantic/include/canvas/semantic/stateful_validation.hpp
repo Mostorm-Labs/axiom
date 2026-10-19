@@ -3,6 +3,7 @@
 #include "canvas/semantic/object_store.hpp"
 #include "canvas/semantic/operation.hpp"
 #include "canvas/semantic/operation_fingerprint.hpp"
+#include "canvas/semantic/resource_manifest.hpp"
 
 #include <cstdint>
 #include <optional>
@@ -44,6 +45,7 @@ class AppliedOperationView {
 struct StatefulValidationContext final {
     const ObjectStore& objects;
     const AppliedOperationView& applied_operations;
+    const ResourceManifest* manifest = nullptr;
 };
 
 } // namespace canvas::semantic

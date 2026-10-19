@@ -1,0 +1,93 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-verification-design-correction-contract-v1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P20_VERIFICATION_DESIGN_CORRECTION",
+  "implementation": {
+    "required_changes": [
+      "None to product/runtime source. Correct only repo-local package bindings and verification-design material."
+    ],
+    "authorized_mutation_scope": [
+      ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE/**",
+      ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/**"
+    ],
+    "preserve_unchanged": [
+      "runtime/**",
+      "apps/**",
+      "debug_ui/**",
+      ".aegis/authorities.json",
+      ".aegis/gates.json",
+      ".aegis/evidence.json",
+      ".aegis/integrations.json",
+      ".aegis/packages/FC-01/**",
+      ".aegis/results/FC-01-DEV/**"
+    ],
+    "forbidden_changes": [
+      "Any product/runtime/host/platform source change",
+      "Any FC-01/PX0/G4/G5 result, Authority, Gate, Evidence or Integration mutation",
+      "Any implementation package expansion or P32 handoff",
+      "Any oracle rewrite after observing baseline RED"
+    ]
+  },
+  "preflights": {
+    "repository_identity": "Mostorm-Labs/axiom via origin URL",
+    "authority_binding": "All four implementation-relevant authorities resolve to existing repo files with exact path, Git blob SHA-1, byte SHA-256, source revision/hash where available",
+    "red_oracle": "Run p20-red-oracle.py on untouched source; expected exit 1 and status RED; production mutation count must be zero"
+  },
+  "tests": {
+    "required": [
+      {
+        "id": "P20-AUTHORITY-BINDING",
+        "command_or_oracle": "Python binding validator over p20-verification-design.json and package lock refs",
+        "expected_result": "PASS; every materialized path exists and every Git blob/byte SHA matches",
+        "blocking_reason": "Exact trust identity is prerequisite to any P31 package."
+      },
+      {
+        "id": "P20-RED-S1-S3",
+        "command_or_oracle": "python .aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE/p20-red-oracle.py --root . --expect baseline-red",
+        "expected_result": "exit 1, both baseline defects observed, no source mutation",
+        "blocking_reason": "The two known failure modes must be observable before implementation."
+      },
+      {
+        "id": "P20-SCOPE",
+        "command_or_oracle": "git diff --name-only 201cc8841a0e6de4cd4b8a3dfc6c337820d35704..HEAD; git diff --check",
+        "expected_result": "Only package/result correction files changed and diff check is clean",
+        "blocking_reason": "Prevents P20 correction from becoming implementation."
+      }
+    ]
+  },
+  "evidence": {
+    "blocking": [
+      "p20-verification-design.json",
+      "authority-binding-manifest.json",
+      "p20-red-preflight.json",
+      "exact package-local SHA-256 refs",
+      "zero production-source diff"
+    ],
+    "corroborative": [
+      "source review transcript"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Exact Authority bindings independently resolve",
+      "P20 RED oracle exits 1 with both defects observed",
+      "Only package/result correction paths changed",
+      "P31/P32 remain explicitly unauthorized",
+      "Return P20_READY_FOR_CONTROL_REVIEW"
+    ]
+  },
+  "terminal_blockers": [
+    "BLOCKED_REPOSITORY_IDENTITY",
+    "BLOCKED_AUTHORITY",
+    "BLOCKED_VERIFICATION_DESIGN",
+    "BLOCKED_EVIDENCE",
+    "BLOCKED_SCOPE"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "p31_p32_authorized": false,
+    "official_gate_pass_forbidden": true
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "toolchain": {
+    "sdk": ".deps/skia-sdk/windows-x64-d3d12/release",
+    "compiler": "MSVC 19.51.36246.0",
+    "semantic": "locked consumer path"
+  },
+  "revision": "ed1d8a4f6d8762d98ca1f69396cbf59f74623c4c",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "artifacts": {
+    "windows_exe": "out/p32-skia-msvc1951/apps/axiom_canvas_demo/axiom_canvas_demo_windows.exe",
+    "windows_exe_sha256": "38033c9673d4a0c2141f0786021d58931d7405377ad91b9777b4e4a119e2fd4f"
+  },
+  "schema": "fc00x-scene-resource-composition-evidence-v0.7",
+  "worktree": "C:\\Users\\Chado\\.codex\\worktrees\\fc00x-scene-resource-composition-p32-f08-resume",
+  "blockers": [
+    "Delayed platform presentation path retains preview until exact PresentedFeedback; existing brush pipeline fixture expects local retirement without feedback.",
+    "Web debug-on/off physical build not rerun because Emscripten/Ninja locked environment is unavailable.",
+    "No manual Windows/Web physical observation performed."
+  ],
+  "tests": {
+    "image_resource": "PASS",
+    "minimal_runtime_host": "PASS",
+    "scene_projection": "PASS",
+    "web_debug_off": "BLOCKED_ENVIRONMENT_EMSCRIPTEN",
+    "fc01_creation_control_binding": "PASS",
+    "scene_atomic_publication": "PASS",
+    "f08_frame_qualification": "PASS",
+    "web_surface_host": "PASS",
+    "runtime_app_binding": "PASS",
+    "playground_transform": "BLOCKED_IMPLEMENTATION_DELAYED_PLATFORM_FEEDBACK",
+    "windows_surface_adapter": "PASS",
+    "resource_composition": "PASS",
+    "fc01_creation_session": "PASS",
+    "scene_incremental": "PASS",
+    "text_pipeline": "PASS",
+    "preview_surface": "PASS",
+    "scene_binding": "PASS",
+    "web_debug_on": "BLOCKED_ENVIRONMENT_EMSCRIPTEN",
+    "runtime_frame_coordinator": "PASS",
+    "ink_playground": "PASS",
+    "scene_recovery": "PASS",
+    "brush_runtime_pipeline": "BLOCKED_IMPLEMENTATION_DELAYED_PLATFORM_FEEDBACK",
+    "runtime_isolation": "PASS",
+    "fc01_selected_actions": "PASS"
+  }
+}

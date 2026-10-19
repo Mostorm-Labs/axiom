@@ -3,12 +3,23 @@
 #include "canvas/interaction/interaction_ports.hpp"
 #include "canvas/semantic/apply_source.hpp"
 #include "canvas/semantic/operation.hpp"
+#include "canvas/semantic/object_store.hpp"
 
 #include <cstddef>
 #include <span>
 #include <vector>
 
 namespace canvas::interaction {
+
+enum class HistoryAspect : std::uint8_t { kWholeRecord, kTransform, kSize, kPlacement, kProperties };
+struct HistoryExpectation final {
+    semantic::ObjectId objectId{};
+    std::optional<semantic::ObjectRecord> record;
+    HistoryAspect aspect = HistoryAspect::kWholeRecord;
+    std::vector<std::uint32_t> fields;
+};
+[[nodiscard]] bool historyExpectationsMatch(const semantic::ObjectStore&,
+                                          std::span<const HistoryExpectation>) noexcept;
 
 // The history boundary owns local intention records only. Canonical state is
 // changed exclusively by the submit port with ordinary typed Operations.
@@ -19,6 +30,13 @@ class HistorySubmitPort {
     [[nodiscard]] virtual SubmitResult submit(
         std::span<const semantic::Operation> operations,
         semantic::ApplySource source) = 0;
+    // The owner checks expectations and deletion closure in the same serialized
+    // phase as apply. Owners without this capability fail closed.
+    [[nodiscard]] virtual SubmitResult submitConditional(
+        std::span<const semantic::Operation> operations, semantic::ApplySource source,
+        std::span<const HistoryExpectation> expectations) {
+        return expectations.empty() ? submit(operations, source) : SubmitResult::rejected();
+    }
 };
 
 class EditorHistory final {
@@ -30,6 +48,9 @@ class EditorHistory final {
     // applied here and neither can mutate canonical storage directly.
     [[nodiscard]] bool record(semantic::Operation forward,
                               std::vector<semantic::Operation> inverse);
+    [[nodiscard]] bool recordConditional(semantic::Operation forward,
+        std::vector<semantic::Operation> inverse,
+        std::vector<HistoryExpectation> before, std::vector<HistoryExpectation> after);
     [[nodiscard]] bool undo();
     [[nodiscard]] bool redo();
     [[nodiscard]] bool canUndo() const noexcept { return cursor_ > 0; }
@@ -40,9 +61,12 @@ class EditorHistory final {
     struct Entry final {
         semantic::Operation forward;
         std::vector<semantic::Operation> inverse;
+        std::vector<HistoryExpectation> before;
+        std::vector<HistoryExpectation> after;
     };
 
-    [[nodiscard]] bool submitFresh(std::span<const semantic::Operation> operations);
+    [[nodiscard]] bool submitFresh(std::span<const semantic::Operation> operations,
+                                  std::span<const HistoryExpectation> expectations);
     [[nodiscard]] bool identityKnown(const semantic::OperationId& id) const noexcept;
 
     HistorySubmitPort& submit_;

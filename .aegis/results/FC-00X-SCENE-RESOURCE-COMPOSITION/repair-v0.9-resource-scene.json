@@ -1,0 +1,46 @@
+{
+  "schema": "fc00x-scene-resource-composition-evidence-v0.9",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "result_revision": "dbe625a9",
+  "package_ref": "repo:.aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/package.json@e87a0fb3cec8e667fb0df3e8a4c2650c9e437c10",
+  "task_anchor": "0e9ba85f94d62e6e3939d5d1397b1c681c1b1a2a",
+  "resource_lifecycle": {
+    "removed_receipt": "implemented_and_tested_in_source",
+    "queue_full_no_side_effect": "implemented_and_tested_in_source",
+    "stale_token_version_hash": "implemented_and_compiled",
+    "rebind_notification_binding_changed": "implemented_and_tested_in_source"
+  },
+  "scene": {
+    "tests": [
+      "canvas_g2_a3_full_incremental_equivalence.exe exit=0",
+      "canvas_g2_a6_incremental_equivalence.exe exit=0",
+      "canvas_g2_a6_atomic_publication.exe exit=0",
+      "canvas_rf01_scene_binding_test.exe exit=0",
+      "canvas_rf01_full_rebuild_test.exe exit=0"
+    ],
+    "content_invalidation": "content digest plus property and erase-mask stamp",
+    "public_compiler": "FullSceneCompiler consumed by CanvasEditingRuntime compiler",
+    "identity": "full ObjectId hashed for derived slots",
+    "order_key": "full variable-length key preserved through SceneOrderKey"
+  },
+  "builds": {
+    "runtime_editor": "PASS static library in out/p32-compile",
+    "minimal_host": "BLOCKED_ENVIRONMENT same Skia link boundary",
+    "runtime_composition": "PASS static library in out/p32-compile",
+    "skia_windows": "BLOCKED_ENVIRONMENT locked Skia archives require clang-cl/compatible CRT; current MSVC link reports __std_* unresolved"
+  },
+  "remaining_blockers": [
+    "R2 downstream image/text/brush resource-derived refresh and frame demand not fully wired through RuntimeComposition",
+    "R4 Windows/Web Minimal continuous editing loop and debug-on/off Web artifacts not complete",
+    "Brush canonical/preview retirement still requires real matching platform feedback regression",
+    "No manual physical observation"
+  ],
+  "changed_file_sha256": {
+    "runtime/composition/src/runtime_composition.cpp": "6d3e448832d022fb39e9ff62ed514b9dbe9d38c217144a84d70a2eccbe759819",
+    "runtime/composition/tests/runtime_composition_test.cpp": "82805c081d0c3b8d3ce3e38f3abdc5420e0865e20ef614a6679609851d3727e4",
+    "runtime/foundation/include/canvas/foundation/stable_order_key.hpp": "79a76109d4b0225c3336f9a3e93c5790fd4312503e88aea5eb385625195abf0d",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "96ee5bff645081dfc7b813216ecebdacf32f024a16f5748dd9be10f981363088",
+    "runtime/scene/include/canvas/scene/runtime_scene_projection.hpp": "c1fcebaac14656ec46d84b6a705bffa6af6bcc50d57e9d0fa144d8fc01df41d1"
+  },
+  "status": "BLOCKED_IMPLEMENTATION"
+}

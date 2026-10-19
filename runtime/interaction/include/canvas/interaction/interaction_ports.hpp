@@ -1,6 +1,9 @@
 #pragma once
 
+#include "canvas/semantic/operation.hpp"
+
 #include <cstdint>
+#include <optional>
 
 namespace canvas::interaction {
 
@@ -24,6 +27,7 @@ class ViewStatePort {
 
 struct OperationRequest final {
     std::uint64_t operationId = 0;
+    std::optional<semantic::Operation> operation{};
 };
 
 struct SubmitResult final {

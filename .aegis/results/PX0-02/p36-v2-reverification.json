@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-02",
+  "stage": "P36_FIX_REVERIFICATION",
+  "authorization_revision": "v2",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "repair_class": "TEST_DEFECT",
+  "origin_revision": "ab51f9f675c0f49bd054f8a9013b3ed59d9f39d8",
+  "authorized_paths": ["debug_ui/tests/snapshot_assembler_test.cpp"],
+  "verification": {
+    "PX0DebugSnapshot": "PASS",
+    "DUI20DebugUiContracts": "PASS",
+    "DUIM1PanelModel": "PASS",
+    "PX0RuntimeFacadeContract": "PASS",
+    "DUIM1RuntimeFacade": "PASS",
+    "DUIM1ViewControls": "PASS",
+    "windows_web_structural_pytest": "23 passed",
+    "git_diff_check": "PASS",
+    "scope_audit": "PASS"
+  },
+  "oracle_coverage": {
+    "retry_first_mismatch_second_stable": {"coherence": "Coherent", "runtime_reads": 4},
+    "absent_arc": {"arc": "Unsupported", "product": "Available", "axiom": "Available", "platform": "Degraded", "telemetry": "Available"}
+  },
+  "physical_status": "PHYSICAL_PENDING",
+  "official_gate_pass_claim": false,
+  "preview_repair_claim": false
+}

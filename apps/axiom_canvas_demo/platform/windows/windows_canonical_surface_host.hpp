@@ -4,9 +4,18 @@
 
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/render/render_backend.hpp"
+#include "canvas/runtime/runtime_composition.hpp"
 
 #include <cstdint>
 #include <string>
+#include <atomic>
+#include <vector>
+
+#if defined(_WIN32)
+#include <windows.h>
+#else
+using HDC = void*;
+#endif
 
 namespace canvas::windows_demo {
 
@@ -36,9 +45,18 @@ class WindowsCanonicalSurfaceHost final {
     [[nodiscard]] bool resizeForSmoke(std::uint32_t width,
                                       std::uint32_t height,
                                       std::string* error);
+    [[nodiscard]] bool resizeForWindow(std::uint32_t width,
+                                       std::uint32_t height,
+                                       std::string* error);
     [[nodiscard]] bool submit(render::IRenderBackend& backend,
                                const render::FramePlan& plan,
                                std::string* error);
+    [[nodiscard]] bool paintCanonical(HDC dc, std::string* error);
+    [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
+    [[nodiscard]] std::uint64_t nextInputSequence() noexcept { return ++inputSequence_; }
+    [[nodiscard]] bool releasingCaptureForPointerUp() const noexcept;
+    void beginPointerUpCaptureRelease() noexcept;
+    void endPointerUpCaptureRelease() noexcept;
     [[nodiscard]] const WindowsSmokeObservation& observation() const noexcept {
         return observation_;
     }
@@ -48,6 +66,9 @@ class WindowsCanonicalSurfaceHost final {
     Impl* impl_ = nullptr;
     WindowsSmokeObservation observation_{};
     WindowsSurfaceAdapter* surface_ = nullptr;
+    runtime::RuntimeComposition composition_;
+    std::atomic<std::uint64_t> inputSequence_{0};
+    std::uint64_t lastPresentedFrame_ = 0;
 };
 
 } // namespace canvas::windows_demo

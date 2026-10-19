@@ -1,0 +1,21 @@
+{
+  "task_id": "GT-G4.6-C",
+  "baseline_revision": "d6c1c031264dffb5a1bb419538bd456e92ebc163",
+  "scope": "Application composition and qualification only; runtime production and root build remain untouched",
+  "fixture_flow": "Qualification scene -> existing InsertObjects OperationEngine -> Scene coordinator publication -> existing FrameState/render owners; reject active sessions or duplicate setup, never mutate store directly",
+  "observation_flow": "Existing owner generations/counts plus measured app query/render durations and frame samples -> immutable qualification observation -> JSON export and optional common ImGui consumer",
+  "platform_flow": "Windows/Web/Android controls invoke existing host selection/camera/transform entry points; normalized pointer ingress is retained",
+  "abort_flow": "Existing cancelSelectionTransform and pointer cancellation clear transient state; no canonical mutation during previews",
+  "obligations": {
+    "G46C-BUNDLE-001": "Common deterministic fixtures, scenario selectors, HUD and exact build export",
+    "G46C-WORKLOAD-003": "Native replay runner with content-addressed inputs, digest/counter repeatability and separately measured timings",
+    "G46C-COEXIST-004": "Existing programmable BrushRuntime Laser plus existing Pen sessions and per-view overlay; temporal output remains noncanonical",
+    "G46C-PHYS-002": "Fixed checklist bound to result/build/device; missing observations remain blocking",
+    "G46C-REGRESS-005": "Enumerated applicable CTest and platform contract checks, hosted jobs"
+  },
+  "verification_plan": ["RED real-camera observation", "fixture operation and transient isolation integration tests", "replay twice and compare deterministic output", "required regressions", "Windows/Web/Android build profiles", "physical checklist"],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

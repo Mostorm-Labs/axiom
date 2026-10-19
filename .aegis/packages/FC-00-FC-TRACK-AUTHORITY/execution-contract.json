@@ -1,0 +1,157 @@
+{
+  "schema_version": "0.1",
+  "task_id": "FC-00-FC-TRACK-AUTHORITY",
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "Preflight repo/package/P23/P34/source and frozen v0.6 baseline, inspect exact expected-authority append and no duplicate Current",
+        "Record implementation design and abort plan, preserve old valid v0.6 source as transition predecessor",
+        "Append exactly one frozen FC Current record to authorities.json; preserve original four objects; no new Gate/Evidence/Integration",
+        "Run official pinned v0.6->v0.6 transition-check, validate, recompute --write, check, stable repeat",
+        "Validate independently preserved 25 Decisions/29 Bound/history and generated digest, narrow diff",
+        "Materialize all blocking evidence, push exact reviewer-accessible P32 revision and return CONTROL_REVIEW"
+      ],
+      "authorized_mutation_scope": [
+        ".aegis/authorities.json",
+        ".aegis/state.json",
+        ".aegis/results/FC-00-FC-TRACK-AUTHORITY/**"
+      ],
+      "preserve_unchanged": [
+        ".aegis/project.json",
+        ".aegis/gates.json",
+        ".aegis/evidence.json",
+        ".aegis/integrations.json",
+        ".aegis/packages/**",
+        ".aegis/legacy/**",
+        ".aegis/results/FC-00-LEGACY-IMPORT/**",
+        ".aegis/results/PX0-07/**",
+        ".aegis/results/GT-*/**",
+        "runtime/**",
+        "arc/**",
+        "apps/**",
+        "tools/**",
+        "tests/**",
+        "verification/**",
+        "docs/**"
+      ],
+      "forbidden_changes": [
+        "No historic Gate Decision, physical/pass claim or Integration Binding rewrite",
+        "No G4 Capability supersession; only distinct FC execution policy",
+        "No project.lifecycle_hint update",
+        "No manual state.json generator or global Aegis tool change",
+        "No FC-01 Shape, G5 or FC-00 Closure implementation",
+        "No P32-issued P34 PASS"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "immutable old/new v0.6 roots",
+        "Authority append/publish/abort steps",
+        "exact old records vs new fifth identity",
+        "evidence and verification coverage"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false
+      }
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "FA01",
+          "oracle": "Baseline pinned official validate/check + locked source identities",
+          "expected": "exit0"
+        },
+        {
+          "id": "FA02",
+          "oracle": "Independent authorities old4 exact plus one descriptor and no duplicate Current",
+          "expected": "PASS"
+        },
+        {
+          "id": "FA03",
+          "oracle": "Exact old/new authored project, gates, evidence, integrations Git bytes and 25/29 bindings",
+          "expected": "identical"
+        },
+        {
+          "id": "FA04",
+          "oracle": "Pinned official transition-check old canonical v0.6 to new v0.6",
+          "expected": "exit0"
+        },
+        {
+          "id": "FA05",
+          "oracle": "Pinned official validate, recompute --write, check, repeat stable",
+          "expected": "exit0; VALID; STATE_OK; identical state SHA"
+        },
+        {
+          "id": "FA06",
+          "oracle": "Exact diff whitelist + git diff --check and remotely resolved P32 ref",
+          "expected": "PASS"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        {
+          "id": "FC00-FA-CI",
+          "classification": "CORROBORATIVE"
+        }
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "FC00-FA-01",
+        "FC00-FA-02",
+        "FC00-FA-03",
+        "FC00-FA-04",
+        "FC00-FA-05"
+      ],
+      "corroborative": [
+        "screenshots",
+        "duplicate hosted CLI output"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "exact Source/P31 locks/P34 accepted and official tool resolved",
+        "five Authorities with one exact new FC Current and original four unchanged",
+        "old 25 Decisions, 29 Bound and all historic Gate/physical obligations unchanged",
+        "official Aegis v0.6 transition-check, validate, recompute, check and stable repeat successful",
+        "narrow source scope and durable evidence pushed to remote exact ref",
+        "P32 returns READY_FOR_CONTROL_REVIEW without declaring P34/FC-00/FC-01 PASS"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "REPOSITORY_IDENTITY",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "FROZEN_VERIFICATION_FAILURE",
+        "ENVIRONMENT_BLOCKER",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ],
+      "return_statuses": [
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_AUTHORITY",
+        "BLOCKED_MISSING_INPUT",
+        "BLOCKED_ENVIRONMENT",
+        "BLOCKED_IMPLEMENTATION",
+        "BLOCKED_EVIDENCE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "success_status": "READY_FOR_CONTROL_REVIEW",
+      "return_surface": "CONTROL_REVIEW",
+      "emit_only": [
+        "result_revision",
+        "materialized_ref",
+        "evidence_input_refs",
+        "provider_run_refs"
+      ],
+      "p34_claim_forbidden": true
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "official_gate_pass_claimed": false,
+  "jobs": {
+    "windows": {
+      "artifact_name": "g4-7-windows-1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+      "artifact_id": 11639489588,
+      "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37978210023/job/113981772583",
+      "name": "g4.7/windows-qualification",
+      "databaseId": 113981772583,
+      "conclusion": "success",
+      "artifact_digest": "sha256:1e632987a8731ef8e15a09bd8b0649f1968f03431ee22b87a5fe87a436e865de",
+      "run_attempt": 1,
+      "status": "completed",
+      "head_sha": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+      "artifact_expired": false,
+      "artifact_size_in_bytes": 14934210,
+      "artifact_expires_at": "2027-01-07T19:08:50Z"
+    },
+    "web": {
+      "artifact_name": "g4-7-web-1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+      "artifact_id": 11639459027,
+      "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37978210023/job/113981772556",
+      "name": "g4.7/web-qualification",
+      "databaseId": 113981772556,
+      "conclusion": "success",
+      "artifact_digest": "sha256:cc8b3ca7d5d67fa773d1d7666157b9178760df0236b1f01af1136bac2e307f3d",
+      "run_attempt": 1,
+      "status": "completed",
+      "head_sha": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+      "artifact_expired": false,
+      "artifact_size_in_bytes": 3687567,
+      "artifact_expires_at": "2027-01-07T19:08:50Z"
+    },
+    "android": {
+      "artifact_name": "g4-7-android-1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+      "artifact_id": 11640555388,
+      "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37978210023/job/113981773154",
+      "name": "g4.7/android-qualification",
+      "databaseId": 113981773154,
+      "conclusion": "success",
+      "artifact_digest": "sha256:a3773f9cb359ad8d2bdebc2e01363a66b6794a03a1af2e491dacad74d6a30c92",
+      "run_attempt": 1,
+      "status": "completed",
+      "head_sha": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+      "artifact_expired": false,
+      "artifact_size_in_bytes": 28033099,
+      "artifact_expires_at": "2027-01-07T19:08:50Z"
+    }
+  },
+  "source": "GitHub Actions API",
+  "artifact_refs": [
+    "11639489588",
+    "11639459027",
+    "11640555388"
+  ],
+  "pull_request": 145,
+  "task_id": "GT-G4.7",
+  "schema_version": "aegis-hosted-provider-evidence-v1",
+  "implementation_revision": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+  "all_jobs": "PASS",
+  "provider": "github-actions",
+  "run": {
+    "status": "completed",
+    "databaseId": 37978210023,
+    "url": "https://github.com/Mostorm-Labs/axiom/actions/runs/37978210023",
+    "conclusion": "success",
+    "headSha": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+    "attempt": 1,
+    "event": "pull_request",
+    "workflow_path": ".github/workflows/g4-7-qualification.yml"
+  },
+  "result_revision": "1c0de4ba677a668f67bab774819c244b8bf4f3a5",
+  "repository": {
+    "full_name": "Mostorm-Labs/axiom",
+    "repository_id": 1306396623
+  },
+  "verified_at_utc": "2026-10-10T02:24:35.277404+00:00",
+  "binding_policy": "Primary run is on the exact implementation revision. Evidence-only descendants preserve all non-evidence Git blobs; later evidence-head runs are corroborative, not replacements for this exact-result run."
+}

@@ -1,0 +1,618 @@
+{
+  "schema_version": "0.6",
+  "evidence": [
+    {
+      "id": "ev-g3-completion",
+      "kind": "gate-closure-and-repository-baseline",
+      "status": "available",
+      "ref": "repo:.aegis/results/GT-G3-11/g3-gate-report.json",
+      "supports": ["g3-completion"],
+      "inputs": ["git:f2a64ebc49ce842d583ee2f6990124ceaf0b310b", "repo:.aegis/results/GT-G3-11/g3-gate-report.json", "repo:.aegis/results/GT-G3-11/result.json", "repo:.aegis/results/GT-G3-11/p34-control-review.json", "github:Mostorm-Labs/axiom#102@20ddb28108367fce35744d4f991a07516318eb92", "github:Mostorm-Labs/axiom#104@f2a64ebc49ce842d583ee2f6990124ceaf0b310b"],
+      "conclusion": {"g3_verdict": "PASS", "g3_status": "CLOSED", "g3_11_verdict": "PASS", "canonical_main_revision": "f2a64ebc49ce842d583ee2f6990124ceaf0b310b", "integration_revision": "20ddb28108367fce35744d4f991a07516318eb92", "official_pass_claimed": true, "successor_started": false}
+    },
+    {
+      "id": "ev-g4-entry-readiness",
+      "kind": "successor-entry-review",
+      "status": "available",
+      "ref": "repo:.aegis/gates.json#g4-entry-readiness",
+      "supports": ["g4-entry-readiness", "g4-capability-authority"],
+      "inputs": ["notion://3c84c57a-590c-8112-8f21-c0494d187cdb", "git:f2a64ebc49ce842d583ee2f6990124ceaf0b310b", "repo:.aegis/results/GT-G3-11/g3-gate-report.json"],
+      "conclusion": {"upstream_g3_gate": "PASS", "g4_plan_status": "Current Execution Authority", "g4_v01_superseded": true, "g4_duplicate_canonical_write_path": "forbidden", "g4_entry_status": "READY_FOR_P31", "current_work_package": "GT-G4-01", "implementation_started": false}
+    },
+    {"id":"ev-gt-g4-01-p34","kind":"gate-review-and-repository-integration","status":"available","ref":"git:4698e9c530efd06b84cb6a037267bfb61cffcd88","supports":["gt-g4-01","int-pr105-g4-01"],"inputs":["git:31b5df4844db07261330567fd4b8d7317290b01f","github:Mostorm-Labs/axiom#105","repo:.aegis/results/GT-G4-01/session-evidence.json","repo:.aegis/results/GT-G4-01/scope-evidence.json"],"conclusion":{"gate_verdict":"PASS","integration_status":"integrated","integration_revision":"4698e9c530efd06b84cb6a037267bfb61cffcd88","rf01":{"passed":20,"failed":0},"official_gate_pass_claimed":true}},
+    {"id":"ev-gt-g4-02-p34","kind":"gate-review-and-repository-integration","status":"available","ref":"git:e0b2749f1c1bd3addd22897cfadd201b51d95246","supports":["gt-g4-02","int-pr106-g4-02"],"inputs":["git:1d27367f3093b039b8a95d11145d87dda78850dd","github:Mostorm-Labs/axiom#106","repo:.aegis/results/GT-G4-02/input-evidence.json","repo:.aegis/results/GT-G4-02/scope-evidence.json"],"conclusion":{"gate_verdict":"PASS","integration_status":"integrated","integration_revision":"e0b2749f1c1bd3addd22897cfadd201b51d95246","rf01":{"passed":21,"failed":0},"official_gate_pass_claimed":true}},
+    {"id":"ev-gt-g4-03-p34","kind":"gate-review-and-p36-reverification","status":"available","ref":"git:893d0d450a6682ec5d498c761deb653ea6a7c21b","supports":["gt-g4-03","int-pr109-g4-03"],"inputs":["git:17fba7c8a1d0d59318a8daca65e126967726e943","github:Mostorm-Labs/axiom#108","github:Mostorm-Labs/axiom#109","repo:.aegis/results/GT-G4-03/ink-evidence.json","repo:.aegis/results/GT-G4-03/scope-evidence.json"],"conclusion":{"gate_verdict":"PASS","p36_reverification":"PASS","integration_status":"integrated","integration_revision":"893d0d450a6682ec5d498c761deb653ea6a7c21b","rf01":{"passed":22,"failed":0},"incremental_60s_240hz":{"processed_samples":14400,"status":"PASS"},"cancel_isolation":"PASS","official_gate_pass_claimed":true}},
+    {"id":"ev-gt-g4-04-p34","kind":"gate-review-and-p36-reverification","status":"available","ref":"git:f277f32a3a54bfeb095972d7bf2ff066e1ff4961","supports":["gt-g4-04","int-pr111-g4-04"],"inputs":["git:339403b891f80d872e63a3cf880a18651b84225d","git:af1d5b2ffbaebb0b77a056047ddc839f0dc42047","github:Mostorm-Labs/axiom#111","repo:.aegis/results/GT-G4-04/p34-control-review.json","repo:.aegis/results/GT-G4-04/trace-evidence.json","repo:.aegis/results/GT-G4-04/replay-evidence.json","repo:.aegis/results/GT-G4-04/lifecycle-evidence.json","repo:.aegis/results/GT-G4-04/corpus-evidence.json"],"conclusion":{"gate_verdict":"PASS","p36_reverification":"PASS","integration_status":"integrated","integration_revision":"f277f32a3a54bfeb095972d7bf2ff066e1ff4961","rf01":{"passed":23,"failed":0},"hosted_run":35445183810,"pointer_trace_cases":11,"long_60s_confirmed_samples":14400,"official_gate_pass_claimed":true}},
+    {"id":"ev-gt-g4-05-p34","kind":"gate-review-and-repository-integration","status":"available","ref":"git:3615a9898a694710e432c93b28ffc96d87532338","supports":["gt-g4-05","int-pr113-g4-05"],"inputs":["git:db16ef7c753b491f421e3ce895e4b2c6683358b3","git:3ebd7b491e719dbfe451864f3188ede3cc571fb2","github:Mostorm-Labs/axiom#113","repo:.aegis/results/GT-G4-05/p34-control-review.json","repo:.aegis/results/GT-G4-05/preview-evidence.json","repo:.aegis/results/GT-G4-05/fallback-evidence.json","repo:.aegis/results/GT-G4-05/scope-evidence.json"],"conclusion":{"gate_verdict":"PASS","integration_status":"integrated","integration_revision":"3615a9898a694710e432c93b28ffc96d87532338","rf01":{"passed":24,"failed":0},"hosted_ci":"not_reported","official_gate_pass_claimed":true}},
+    {"id":"ev-gt-g4-06-p34","kind":"gate-review-and-repository-integration","status":"available","ref":"git:2c0abf636cb32ada4c29e6dfc7a4554c9651a64c","supports":["gt-g4-06","int-pr115-g4-06"],"inputs":["git:74f086db7dc6945facac704f5269f09ac3b67e0a","git:45291ebfa31e189887e7a9a401f1437752e51658","github:Mostorm-Labs/axiom#115","repo:.aegis/results/GT-G4-06/p34-control-review.json","repo:.aegis/results/GT-G4-06/handoff-evidence.json","repo:.aegis/results/GT-G4-06/scope-evidence.json"],"conclusion":{"gate_verdict":"PASS","integration_status":"integrated","integration_revision":"a7abd85b54c5671dcab8ee964315a1eb522a9b8f","focused":{"passed":1,"failed":0},"rf01":{"passed":24,"failed":0},"hosted_ci":"not_required_by_package","official_gate_pass_claimed":true}},
+    {"id":"ev-gt-g4-07-p34","kind":"gate-review-and-repository-integration","status":"available","ref":"git:22b075551d0429ba98539514861d6b4016814810","supports":["gt-g4-07","int-pr117-g4-07"],"inputs":["git:693622a3eb56761da459c817346eb11e1f4d594e","git:22b075551d0429ba98539514861d6b4016814810","github:Mostorm-Labs/axiom#117","repo:.aegis/packages/GT-G4-07/package.json","repo:.aegis/results/GT-G4-07/result.json","repo:.aegis/results/GT-G4-07/selection-evidence.json","repo:.aegis/results/GT-G4-07/policy-evidence.json","repo:.aegis/results/GT-G4-07/scope-evidence.json","repo:.aegis/results/GT-G4-07/p34-control-review.json"],"conclusion":{"gate_verdict":"PASS","integration_status":"integrated","integration_revision":"f6f44591bfae51767d4cdff80714981a23e34aae","focused":{"passed":1,"failed":0},"rf01":{"passed":25,"failed":0},"official_gate_pass_claimed":true}},
+    {"id":"ev-gt-g4-08-p34","kind":"gate-review-and-repository-integration","status":"available","ref":"git:4de5d64e8825a5322199cfe04e21c3344002c56a","supports":["gt-g4-08","int-pr119-g4-08"],"inputs":["git:667cab1ddc89851fd8f297dd1d35c1134ea3b64f","git:4de5d64e8825a5322199cfe04e21c3344002c56a","github:Mostorm-Labs/axiom#119","repo:.aegis/results/GT-G4-08/transform-evidence.json","repo:.aegis/results/GT-G4-08/scope-evidence.json","repo:.aegis/results/GT-G4-08/p34-control-review.json"],"conclusion":{"gate_verdict":"PASS","integration_status":"integrated","integration_revision":"34c7269ed69d02fc12ca3cbcc19e15815d028deb","focused":{"passed":1,"failed":0},"rf01":{"passed":26,"failed":0},"official_gate_pass_claimed":true}},
+    {"id":"ev-gt-g4-09-p34","kind":"gate-review-and-repository-integration","status":"available","ref":"git:3dbe034c7053fc98c17b5b0a146be97b5ea6fd94","supports":["gt-g4-09","int-pr121-g4-09"],"inputs":["git:225b5977ec70e158d12884f53eeb256c1b2a86f0","git:3dbe034c7053fc98c17b5b0a146be97b5ea6fd94","github:Mostorm-Labs/axiom#121","repo:.aegis/results/GT-G4-09/eraser-evidence.json","repo:.aegis/results/GT-G4-09/scope-evidence.json","repo:.aegis/results/GT-G4-09/p34-control-review.json"],"conclusion":{"gate_verdict":"PASS","integration_status":"integrated","integration_revision":"3c6adadd40f8972cff96550a4d29e3b944bfc153","focused":{"passed":1,"failed":0},"rf01":{"passed":27,"failed":0},"partial_strategy_claimed":false,"official_gate_pass_claimed":true}},
+    {
+      "id": "ev-g2-canonical-main",
+      "kind": "gate-closure-and-repository-baseline",
+      "status": "available",
+      "ref": "git:07654767eac7b021ca6e89004e36448ccebb727d",
+      "supports": ["g2-canonical-main"],
+      "source_authority": "notion://3dd4c57a-590c-81a9-827e-e348102413d0",
+      "conclusion": {
+        "g2_verdict": "PASS",
+        "g2_status": "G2_CLOSED",
+        "canonical_main_runtime_foundation": true,
+        "g3_ingress_ready": true,
+        "result_revision_binding_verified": "07654767eac7b021ca6e89004e36448ccebb727d"
+      }
+    },
+    {
+      "id": "ev-g3-entry-readiness",
+      "kind": "entry-review",
+      "status": "available",
+      "ref": "repo:.aegis/evidence.json#ev-g3-entry-readiness",
+      "supports": ["g3-entry-readiness", "g3-capability-authority"],
+      "inputs": [
+        "notion://3c44c57a-590c-81a1-be07-e154c7c0d611",
+        "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+        "notion://3da4c57a-590c-8160-a895-e71681e78860",
+        "notion://3da4c57a-590c-81a5-957c-eba685849887",
+        "notion://3da4c57a-590c-81ba-a1a4-da47b2ab35de",
+        "notion://3da4c57a-590c-811a-963c-f294cf8e4009",
+        "notion://3da4c57a-590c-8175-9945-d6cadcc95e74",
+        "notion://3dd4c57a-590c-81a9-827e-e348102413d0"
+      ],
+      "conclusion": {
+        "g2_to_g3_boundary": "satisfied",
+        "g3_duplicate_runtimescene": "forbidden",
+        "g3_implementation_authorized": false,
+        "g3_p31_materialized": true,
+        "p31_materialized_ref": "e2d0d066dbe338f42bc3ecfbc780db419500f1dd",
+        "superseded_p31_package": "GT-G3-00-P31-v0.1",
+        "current_p31_package": "GT-G3-01-P31-v0.1",
+        "current_p31_materialized_ref": "e2d0d066dbe338f42bc3ecfbc780db419500f1dd",
+        "status": "READY_FOR_REVIEWER_SIZED_EXECUTION",
+        "boundary_review": "G3_READY_FOR_P31",
+        "implementation_plan": "repo:.aegis/plans/GT-G3-00-P30-Implementation-Plan-v0.1.md"
+        ,"p31_package": "repo:.aegis/packages/GT-G3-01/package.json"
+      }
+    },
+    {
+      "id": "ev-gt-g3-01-p34",
+      "kind": "gate-review-and-repository-integration",
+      "status": "available",
+      "ref": "git:47ffe5b69d7dda457d16203e41803086c880c174",
+      "supports": ["gt-g3-01", "int-pr85-g3-01"],
+      "inputs": [
+        "git:eb3861aefecd55188ca29787d3cb9e112a05cdef",
+        "github:Mostorm-Labs/axiom#85",
+        "repo:.aegis/results/GT-G3-01/result.json"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "integration_status": "integrated",
+        "result_revision": "eb3861aefecd55188ca29787d3cb9e112a05cdef",
+        "canonical_merge_revision": "47ffe5b69d7dda457d16203e41803086c880c174",
+        "hosted_checks": "PASS"
+      }
+    },
+    {
+      "id": "ev-gt-g3-02-p34",
+      "kind": "gate-review-and-repository-integration",
+      "status": "available",
+      "ref": "git:fe1d03903995d9bcfd46b01212617f8043b9f2ab",
+      "supports": ["gt-g3-02", "int-pr86-g3-02"],
+      "inputs": [
+        "git:754619b716d7f4c27d2d8089a1276b8ac43df435",
+        "github:Mostorm-Labs/axiom#86",
+        "repo:.aegis/packages/GT-G3-02/package.json",
+        "repo:.aegis/results/GT-G3-02/result.json",
+        "repo:.aegis/results/GT-G3-02/locality-counters.json",
+        "github-actions:35190174039",
+        "github-actions:35190174038"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS_WITH_FINDINGS",
+        "integration_status": "integrated",
+        "result_revision": "754619b716d7f4c27d2d8089a1276b8ac43df435",
+        "canonical_merge_revision": "fe1d03903995d9bcfd46b01212617f8043b9f2ab",
+        "hosted_checks": "PASS",
+        "non_blocking_finding": "The pre-integration generated state cache contained a pending G3-02 package-materialization placeholder; exact package locks and result evidence were valid."
+      }
+    },
+    {
+      "id": "ev-gt-g3-03-p34",
+      "kind": "gate-review-and-repository-integration",
+      "status": "available",
+      "ref": "git:b995329df9cd299db4990362d1f3c6ac155ee4fb",
+      "supports": ["gt-g3-03", "int-pr87-g3-03"],
+      "inputs": [
+        "git:fb8f5d9146b11c9b0595c6aa8a2fcb153fe5c355",
+        "github:Mostorm-Labs/axiom#87",
+        "repo:.aegis/packages/GT-G3-03/package.json",
+        "repo:.aegis/results/GT-G3-03/result.json",
+        "repo:.aegis/results/GT-G3-03/fixture-inventory.json",
+        "repo:.aegis/results/GT-G3-03/reference-plan-evidence.json",
+        "repo:.aegis/results/GT-G3-03/traversal-counters.json"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "integration_status": "integrated",
+        "result_revision": "fb8f5d9146b11c9b0595c6aa8a2fcb153fe5c355",
+        "canonical_merge_revision": "b995329df9cd299db4990362d1f3c6ac155ee4fb",
+        "hosted_checks": "NOT_REQUIRED",
+        "independent_review": {
+          "nine_kind_full_field_corpus": "PASS",
+          "source_expected_corpus_independence": "PASS",
+          "g3_focused_matrix": "PASS",
+          "rf01_g2_predecessor_matrix": "PASS",
+          "boundary_scan": "PASS",
+          "git_diff_check": "PASS"
+        }
+      }
+    },
+    {
+      "id": "ev-gt-g3-04-p34",
+      "kind": "gate-review-and-p36-reverification",
+      "status": "available",
+      "ref": "git:250f88a6f46600c8cde09d7cf4044103a29ffd0e",
+      "supports": ["gt-g3-04"],
+      "inputs": [
+        "git:250f88a6f46600c8cde09d7cf4044103a29ffd0e",
+        "repo:.aegis/packages/GT-G3-04/package.json",
+        "repo:.aegis/results/GT-G3-04/result.json",
+        "repo:.aegis/results/GT-G3-04/p36-reverification.json",
+        "repo:.aegis/results/GT-G3-04/frame-orchestration-evidence.json",
+        "repo:.aegis/results/GT-G3-04/backend-evidence.json",
+        "repo:.aegis/results/GT-G3-04/p35-defect-classification.json",
+        "repo:.aegis/results/GT-G3-04/p36-continuation-authorization.json"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "result_revision": "250f88a6f46600c8cde09d7cf4044103a29ffd0e",
+        "execution_branch": "codex/g3-04-frame-orchestration-backend",
+        "frozen_requirement_audit": {
+          "G3-04-V1-frame-plan-binding": "PASS",
+          "G3-04-V2-private-backend-boundary": "PASS",
+          "G3-04-V3-deterministic-failure": "PASS",
+          "G3-04-V4-boundary-hygiene": "PASS"
+        },
+        "frozen_evidence_audit": {
+          "nine_kind_fixture": "PASS",
+          "complete_record_fields": "PASS",
+          "complete_command_variants": "PASS",
+          "accepted_and_rejected_backend_observations": "PASS",
+          "g3_focused_matrix": {"passed": 4, "failed": 0},
+          "rf01_g2_predecessor_matrix": {"passed": 19, "failed": 0},
+          "git_diff_check": "PASS"
+        },
+        "repository_reality_audit": {
+          "remote_head_matches_result": "PASS",
+          "p36_mutation_scope": "PASS",
+          "production_files_changed": false,
+          "forbidden_dependency_scan": "PASS"
+        },
+        "official_gate_pass_claimed": true
+      }
+    },
+    {
+      "id": "ev-int-pr88-g3-04",
+      "kind": "repository-integration-occurrence",
+      "status": "available",
+      "ref": "github:Mostorm-Labs/axiom#88@11fec1b308de03886ef5294b54654f48df95455f",
+      "supports": ["int-pr88-g3-04"],
+      "inputs": [
+        "github:Mostorm-Labs/axiom#88",
+        "git:11fec1b308de03886ef5294b54654f48df95455f",
+        "git:29657fc645b0490f7733294cd5a952ced3bb0f34"
+      ],
+      "conclusion": {
+        "pull_request": 88,
+        "target_ref": "refs/heads/main",
+        "integrated_revision": "11fec1b308de03886ef5294b54654f48df95455f",
+        "parent_revision": "29657fc645b0490f7733294cd5a952ced3bb0f34",
+        "gate_decision_id": "gt-g3-04-p34-2026-09-18",
+        "integration_status": "integrated"
+      }
+    },
+    {
+      "id": "ev-gt-g3-05-p34",
+      "kind": "gate-review",
+      "status": "available",
+      "ref": "git:dc322ebae979ee1fe6ab5935b35187091bf99d6c",
+      "supports": ["gt-g3-05"],
+      "inputs": [
+        "git:dc322ebae979ee1fe6ab5935b35187091bf99d6c",
+        "repo:.aegis/packages/GT-G3-05/package.json",
+        "repo:.aegis/results/GT-G3-05/result.json",
+        "repo:.aegis/results/GT-G3-05/headless-golden-evidence.json",
+        "repo:.aegis/results/GT-G3-05/rejection-evidence.json",
+        "repo:.aegis/results/GT-G3-05/scope-evidence.json"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "result_revision": "dc322ebae979ee1fe6ab5935b35187091bf99d6c",
+        "execution_branch": "codex/g3-05-headless-skia-backend",
+        "frozen_requirement_audit": {
+          "G3-05-V1-private-skia-boundary": "PASS",
+          "G3-05-V2-deterministic-raster": "PASS",
+          "G3-05-V3-reference-command-coverage": "PASS",
+          "G3-05-V4-rejection-isolation": "PASS",
+          "G3-05-V5-boundary-hygiene": "PASS"
+        },
+        "frozen_evidence_audit": {
+          "g3_focused_matrix": {"passed": 5, "failed": 0},
+          "rf01_g2_predecessor_matrix": {"passed": 19, "failed": 0},
+          "runtime_boundary_contracts": {"passed": 76, "failed": 0},
+          "authorized_changed_paths": {"passed": 9, "failed": 0},
+          "scope_violations": 0,
+          "git_diff_check": "PASS",
+          "rgba_bytes": 262144,
+          "golden_digest": "fnv1a64:296a704f0d0b9165",
+          "sdk_id": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731"
+        },
+        "repository_reality_audit": {
+          "remote_head_matches_result": "PASS",
+          "mutation_scope": "PASS",
+          "forbidden_dependency_scan": "PASS"
+        },
+        "official_gate_pass_claimed": true
+      }
+    },
+    {
+      "id": "ev-int-pr91-g3-05",
+      "kind": "repository-integration-occurrence",
+      "status": "available",
+      "ref": "github:Mostorm-Labs/axiom#91@3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+      "supports": ["int-pr91-g3-05"],
+      "inputs": [
+        "github:Mostorm-Labs/axiom#91",
+        "git:3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+        "git:dc322ebae979ee1fe6ab5935b35187091bf99d6c",
+        "git:b38f46ab953cf979efcbcfac255e9a2a7acc7b2d"
+      ],
+      "conclusion": {
+        "pull_request": 91,
+        "target_ref": "refs/heads/main",
+        "head_result_revision": "dc322ebae979ee1fe6ab5935b35187091bf99d6c",
+        "integrated_revision": "3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+        "parent_revision": "b38f46ab953cf979efcbcfac255e9a2a7acc7b2d",
+        "gate_decision_id": "gt-g3-05-p34-2026-09-19",
+        "integration_status": "integrated"
+      }
+    },
+    {
+      "id": "ev-gt-g3-06-p34",
+      "kind": "gate-review",
+      "status": "available",
+      "ref": "git:51602eaca54dccff7ce00c8f1f726e0bbe855bb2",
+      "supports": ["gt-g3-06", "int-branch-g3-06-p34-review"],
+      "inputs": [
+        "git:51602eaca54dccff7ce00c8f1f726e0bbe855bb2",
+        "git:3057e9e69595db09a20c60597d88b9f292dbf328",
+        "git:0d572f8cbdf2d77370b706dad4da3797747b264a",
+        "repo:.aegis/packages/GT-G3-06/package.json",
+        "repo:.aegis/results/GT-G3-06/result.json",
+        "repo:.aegis/results/GT-G3-06/implementation-design-preflight.json",
+        "repo:.aegis/results/GT-G3-06/surface-lifecycle-evidence.json",
+        "repo:.aegis/results/GT-G3-06/presentation-tracker-evidence.json",
+        "repo:.aegis/results/GT-G3-06/scope-evidence.json"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS_WITH_FINDINGS",
+        "result_revision": "51602eaca54dccff7ce00c8f1f726e0bbe855bb2",
+        "execution_branch": "codex/g3-06-surface-presentation-tracker",
+        "frozen_requirement_audit": {
+          "G3-06-V1-surface-generation-lifecycle": "PASS",
+          "G3-06-V2-submitted-versus-presented": "PASS",
+          "G3-06-V3-stale-feedback-rejection": "PASS",
+          "G3-06-V4-feedback-correlation-and-idempotency": "PASS",
+          "G3-06-V5-boundary-and-regression": "PASS"
+        },
+        "frozen_evidence_audit": {
+          "package_content_hashes": {"passed": 5, "failed": 0},
+          "blocking_evidence_inputs": {"passed": 3, "failed": 0},
+          "implementation_design_preflight": "PASS",
+          "surface_lifecycle_oracle": "PASS",
+          "presentation_tracker_oracle": "PASS",
+          "g3_focused_matrix": {"passed": 5, "failed": 0},
+          "locked_sdk_headless_matrix": {"passed": 1, "failed": 0},
+          "rf01_g2_predecessor_matrix": {"passed": 19, "failed": 0},
+          "sdk_id": "c80d17c76fb2ea4f7f5b3e3c859173c44399cf1e76bb573dbe086dff49c80731",
+          "sdk_downloaded_bytes": 0,
+          "git_diff_check": "PASS"
+        },
+        "repository_reality_audit": {
+          "repository_identity": "github:Mostorm-Labs/axiom",
+          "remote_result_resolved": true,
+          "remote_head_matches_result_at_review_start": true,
+          "task_anchor_ancestry": "PASS",
+          "p32_mutation_scope": "PASS",
+          "forbidden_dependency_scan": "PASS",
+          "production_files_outside_scope": false
+        },
+        "new_findings": {
+          "blocking_high_impact": [],
+          "non_blocking": [
+            {
+              "classification": "NON_BLOCKING_HARDENING",
+              "failure_mode": "A future consumer could mistake current() for an availability-qualified accessor after surface loss.",
+              "impact": "No current incorrect presentation or stale acquire path; the retained snapshot is historical state only.",
+              "existing_independent_coverage": "acquire() returns kUnavailable/no snapshot after loss; PresentationTracker submit/receive reject unavailable or stale generations; call-site review found no unguarded production consumer.",
+              "new_evidence_unique_detection_value": "None for the frozen G3-06 correctness boundary.",
+              "blocking_justification": "Not blocking under Gate Closure Stability; this is naming/API hardening for successor work."
+            }
+          ]
+        },
+        "official_gate_pass_claimed": true
+      }
+    },
+    {
+      "id": "ev-int-pr92-g3-06",
+      "kind": "repository-integration-occurrence",
+      "status": "available",
+      "ref": "github:Mostorm-Labs/axiom#92@4ea688da42da0005eaed5cae4931f5c44936697e",
+      "supports": ["int-pr92-g3-06"],
+      "inputs": [
+        "github:Mostorm-Labs/axiom#92",
+        "git:4ea688da42da0005eaed5cae4931f5c44936697e",
+        "git:2babe4e63350344e7ba0f815a45e79ad57ce0660",
+        "git:51602eaca54dccff7ce00c8f1f726e0bbe855bb2",
+        "git:3136e754b9bddf3d36efbd1f0cdda534b189ac56"
+      ],
+      "conclusion": {
+        "pull_request": 92,
+        "target_ref": "refs/heads/main",
+        "head_review_revision": "2babe4e63350344e7ba0f815a45e79ad57ce0660",
+        "result_revision": "51602eaca54dccff7ce00c8f1f726e0bbe855bb2",
+        "integrated_revision": "4ea688da42da0005eaed5cae4931f5c44936697e",
+        "parent_revision": "3136e754b9bddf3d36efbd1f0cdda534b189ac56",
+        "gate_decision_id": "gt-g3-06-p34-2026-09-19",
+        "integration_status": "integrated"
+      }
+    },
+    {
+      "id": "ev-gt-g3-07-p34",
+      "kind": "gate-review",
+      "status": "available",
+      "ref": "git:c37e1cc432d8d4356767a094d096f6b413160bd5",
+      "supports": ["gt-g3-07", "int-branch-g3-07-awaiting-integration"],
+      "inputs": [
+        "git:c37e1cc432d8d4356767a094d096f6b413160bd5",
+        "git:ac4fdc6c049f6410c6ab9a4c31516761a23b8d6e",
+        "git:83770ee3891dd9c84ea6f80500efe920751ad6c7",
+        "repo:.aegis/packages/GT-G3-07/package.json",
+        "repo:.aegis/results/GT-G3-07/p20-verification-design-v0.2.json",
+        "repo:.aegis/results/GT-G3-07/demo-cli-evidence.json",
+        "repo:.aegis/results/GT-G3-07/artifact-determinism-evidence.json",
+        "repo:.aegis/results/GT-G3-07/scope-evidence.json",
+        "repo:.aegis/results/GT-G3-07/p36-fix-reverification-v3.json",
+        "repo:.aegis/results/GT-G3-07/p34-control-review-v4.json"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "result_revision": "c37e1cc432d8d4356767a094d096f6b413160bd5",
+        "execution_branch": "codex/g3-07-headless-canvas-demo",
+        "package_id": "GT-G3-07-P31-v0.5",
+        "package_materialization_ref": "ac4fdc6c049f6410c6ab9a4c31516761a23b8d6e",
+        "structural_records": 9,
+        "pixel_records": 8,
+        "runtime_group_findable": true,
+        "group_pixel_contribution": false,
+        "g3_focused_matrix": {"passed": 7, "failed": 0},
+        "rf01_g2_matrix": {"passed": 19, "failed": 0},
+        "full_ctest": {"passed": 537, "failed": 0},
+        "git_diff_check": "PASS",
+        "mutation_scope": "PASS",
+        "official_gate_pass_claimed": true,
+        "integration_status": "integrated",
+        "integration_revision": "f4592e263a1101f0a03fd208e78b321389dc80c8"
+      }
+    },
+    {
+      "id": "ev-int-pr94-g3-07",
+      "kind": "repository-integration-occurrence",
+      "status": "available",
+      "ref": "github:Mostorm-Labs/axiom#94@f4592e263a1101f0a03fd208e78b321389dc80c8",
+      "supports": ["int-branch-g3-07-awaiting-integration"],
+      "inputs": [
+        "github:Mostorm-Labs/axiom#94",
+        "git:c37e1cc432d8d4356767a094d096f6b413160bd5",
+        "git:26b7ac9bca009862188461258c00e3716e7e0f8d",
+        "git:f4592e263a1101f0a03fd208e78b321389dc80c8",
+        "git:6bb6c21ac62f0baef55f01ee0867ac7de08e501b"
+      ],
+      "conclusion": {
+        "pull_request": 94,
+        "target_ref": "refs/heads/main",
+        "source_result_revision": "c37e1cc432d8d4356767a094d096f6b413160bd5",
+        "source_gate_closure_revision": "26b7ac9bca009862188461258c00e3716e7e0f8d",
+        "integrated_revision": "f4592e263a1101f0a03fd208e78b321389dc80c8",
+        "parent_revision": "6bb6c21ac62f0baef55f01ee0867ac7de08e501b",
+        "gate_decision_id": "gt-g3-07-p34-2026-09-19",
+        "integration_status": "integrated",
+        "integration_conformance": "conforming"
+      }
+    },
+    {
+      "id": "ev-gt-g3-08-p34",
+      "kind": "gate-review-and-p36-reverification",
+      "status": "available",
+      "ref": "git:143f36f1d48a542fdcc700a4bcc2c6cdac07fe57",
+      "supports": ["gt-g3-08", "int-branch-g3-08-awaiting-integration"],
+      "inputs": [
+        "git:143f36f1d48a542fdcc700a4bcc2c6cdac07fe57",
+        "git:e013a8de4750e90769501adea8b1abf460517092",
+        "repo:.aegis/packages/GT-G3-08/package.json",
+        "repo:.aegis/results/GT-G3-08/camera-evidence.json",
+        "repo:.aegis/results/GT-G3-08/hit-select-evidence.json",
+        "repo:.aegis/results/GT-G3-08/scope-evidence.json",
+        "repo:.aegis/results/GT-G3-08/p36-fix-reverification.json",
+        "repo:.aegis/results/GT-G3-08/p34-control-review.json"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "result_revision": "143f36f1d48a542fdcc700a4bcc2c6cdac07fe57",
+        "execution_branch": "codex/g3-08-camera-hit-select-harness",
+        "g3_host_debug": {"passed": 7, "failed": 0},
+        "rf01_host_debug": {"passed": 19, "failed": 0},
+        "git_diff_check": "PASS",
+        "mutation_scope": "PASS",
+        "official_gate_pass_claimed": true,
+        "integration_status": "integrated",
+        "integration_revision": "cebccffbdc79f42951ed96c741b3b1d1f48fa6d4",
+        "integration_ref": "github:Mostorm-Labs/axiom#96"
+      }
+    },
+    {
+      "id": "ev-int-pr96-g3-08",
+      "kind": "repository-integration-occurrence",
+      "status": "available",
+      "ref": "github:Mostorm-Labs/axiom#96@cebccffbdc79f42951ed96c741b3b1d1f48fa6d4",
+      "supports": ["int-branch-g3-08-awaiting-integration"],
+      "inputs": [
+        "github:Mostorm-Labs/axiom#96",
+        "git:143f36f1d48a542fdcc700a4bcc2c6cdac07fe57",
+        "git:a37ea1969059606bb6b2c0a3b7874c09c9211739",
+        "git:cebccffbdc79f42951ed96c741b3b1d1f48fa6d4",
+        "git:636aca53536e5096868f9c5ed716ef6d0891a875"
+      ],
+      "conclusion": {
+        "pull_request": 96,
+        "target_ref": "refs/heads/main",
+        "source_result_revision": "143f36f1d48a542fdcc700a4bcc2c6cdac07fe57",
+        "source_gate_closure_revision": "a37ea1969059606bb6b2c0a3b7874c09c9211739",
+        "integrated_revision": "cebccffbdc79f42951ed96c741b3b1d1f48fa6d4",
+        "parent_revision": "636aca53536e5096868f9c5ed716ef6d0891a875",
+        "gate_decision_id": "gt-g3-08-p34-2026-09-19",
+        "integration_status": "integrated",
+        "integration_conformance": "conforming"
+      }
+    },
+    {
+      "id": "ev-gt-g3-09-p34",
+      "kind": "gate-review",
+      "status": "available",
+      "ref": "git:11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+      "supports": ["gt-g3-09", "int-branch-g3-09-awaiting-integration"],
+      "inputs": [
+        "git:11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+        "repo:.aegis/packages/GT-G3-09/package.json",
+        "repo:.aegis/results/GT-G3-09/result.json",
+        "repo:.aegis/results/GT-G3-09/surface-evidence.json",
+        "repo:.aegis/results/GT-G3-09/scope-evidence.json",
+        "repo:.aegis/results/GT-G3-09/windows-smoke-evidence.json",
+        "repo:.aegis/results/GT-G3-09/p34-control-review.json",
+        "github:Mostorm-Labs/axiom/actions/runs/35425698446"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "result_revision": "11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+        "execution_branch": "codex/g3-09-windows-canonical-surface-host",
+        "package_id": "GT-G3-09-P31-v0.2",
+        "windows_run_id": 35425698446,
+        "windows_job_id": 105851124944,
+        "windows_artifact_id": 10578969623,
+        "g3_host_debug": {"passed": 8, "failed": 0},
+        "rf01_g2_host_debug": {"passed": 19, "failed": 0},
+        "git_diff_check": "PASS",
+        "mutation_scope": "PASS",
+        "official_gate_pass_claimed": true,
+        "integration_status": "integrated",
+        "integration_revision": "d018ddbaf2afadd9974b66f5a0c200fd2aa2b478",
+        "integration_ref": "github:Mostorm-Labs/axiom#98"
+      }
+    },
+    {
+      "id": "ev-int-pr98-g3-09",
+      "kind": "repository-integration-occurrence",
+      "status": "available",
+      "ref": "github:Mostorm-Labs/axiom#98@d018ddbaf2afadd9974b66f5a0c200fd2aa2b478",
+      "supports": ["int-branch-g3-09-awaiting-integration"],
+      "inputs": [
+        "github:Mostorm-Labs/axiom#98",
+        "git:11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+        "git:8b969c83ee16ec009148293dee2784504c00dbe3",
+        "git:d018ddbaf2afadd9974b66f5a0c200fd2aa2b478",
+        "git:d3e15490db44732884f6146624ad3186feed78c2"
+      ],
+      "conclusion": {
+        "pull_request": 98,
+        "target_ref": "refs/heads/main",
+        "source_result_revision": "11f5a9d5897f769a1256726be1bfc1ddc3b8c78a",
+        "source_gate_closure_revision": "8b969c83ee16ec009148293dee2784504c00dbe3",
+        "integrated_revision": "d018ddbaf2afadd9974b66f5a0c200fd2aa2b478",
+        "parent_revision": "d3e15490db44732884f6146624ad3186feed78c2",
+        "gate_decision_id": "gt-g3-09-p34-2026-09-19",
+        "integration_status": "integrated",
+        "integration_conformance": "conforming"
+      }
+    },
+    {
+      "id": "ev-gt-g3-10-p34",
+      "kind": "gate-review",
+      "status": "available",
+      "ref": "git:3b5708c1d2ffa779dd750671965de193b72bf742",
+      "supports": ["gt-g3-10", "int-pr100-g3-10"],
+      "inputs": [
+        "git:3b5708c1d2ffa779dd750671965de193b72bf742",
+        "git:1d45b4e04ec0e623d188bc00b10ee9964a254b81",
+        "git:a64ee96f8d9ead4630b13f1180164cd9406d5729",
+        "repo:.aegis/packages/GT-G3-10/package.json",
+        "repo:.aegis/results/GT-G3-10/result.json",
+        "repo:.aegis/results/GT-G3-10/surface-evidence.json",
+        "repo:.aegis/results/GT-G3-10/scope-evidence.json",
+        "repo:.aegis/results/GT-G3-10/web-smoke-evidence.json",
+        "repo:.aegis/results/GT-G3-10/web-hosted-provider-evidence.json",
+        "repo:.aegis/results/GT-G3-10/p34-control-review.json",
+        "github:Mostorm-Labs/axiom/actions/runs/35431069408",
+        "github:Mostorm-Labs/axiom#100@3b5708c1d2ffa779dd750671965de193b72bf742"
+      ],
+      "conclusion": {
+        "gate_verdict": "PASS",
+        "result_revision": "1d45b4e04ec0e623d188bc00b10ee9964a254b81",
+        "reviewed_branch_head": "3b5708c1d2ffa779dd750671965de193b72bf742",
+        "execution_branch": "codex/g3-10-web-canonical-surface-host",
+        "package_id": "GT-G3-10-P31-v0.4",
+        "web_run_id": 35431069408,
+        "web_job_id": 105865614798,
+        "web_artifact_id": 10580447960,
+        "g3_host_debug": {"passed": 9, "failed": 0},
+        "rf01_g2_host_debug": {"passed": 19, "failed": 0},
+        "git_diff_check": "PASS",
+        "mutation_scope": "PASS",
+        "official_gate_pass_claimed": true,
+        "integration_status": "integrated",
+        "integration_revision": "40f806e6199c3bda520fb434d16428d12642c955",
+        "integration_ref": "github:Mostorm-Labs/axiom#100"
+      }
+    },
+    {
+      "id": "ev-int-pr100-g3-10",
+      "kind": "repository-integration-occurrence",
+      "status": "available",
+      "ref": "github:Mostorm-Labs/axiom#100@40f806e6199c3bda520fb434d16428d12642c955",
+      "supports": ["int-pr100-g3-10"],
+      "inputs": [
+        "github:Mostorm-Labs/axiom#100",
+        "git:1d45b4e04ec0e623d188bc00b10ee9964a254b81",
+        "git:478a4d45effc552eed80b5d28e88a6bf0c072955",
+        "git:40f806e6199c3bda520fb434d16428d12642c955",
+        "git:1aafd5dcd99a641db2e1285a6c67efd8d7c0c409"
+      ],
+      "conclusion": {
+        "pull_request": 100,
+        "target_ref": "refs/heads/main",
+        "source_result_revision": "1d45b4e04ec0e623d188bc00b10ee9964a254b81",
+        "source_gate_closure_revision": "478a4d45effc552eed80b5d28e88a6bf0c072955",
+        "integrated_revision": "40f806e6199c3bda520fb434d16428d12642c955",
+        "parent_revision": "1aafd5dcd99a641db2e1285a6c67efd8d7c0c409",
+        "gate_decision_id": "gt-g3-10-p34-2026-09-19",
+        "integration_status": "integrated",
+        "integration_conformance": "conforming"
+      }
+    }
+    ,{
+      "id":"ev-gt-g4-10-p34","kind":"gate-review-and-repository-integration","status":"available","ref":"git:ac121915ff5e66c9af0be56b2ace0ef8c332d68b","supports":["gt-g4-10","int-pr123-g4-10"],"inputs":["git:3f0f32c66e58c4f80752f2e7bdc6a33d220215f5","github:Mostorm-Labs/axiom#123","repo:.aegis/packages/GT-G4-10/package.json","repo:.aegis/results/GT-G4-10/result.json","repo:.aegis/results/GT-G4-10/history-evidence.json","repo:.aegis/results/GT-G4-10/scope-evidence.json","repo:.aegis/results/GT-G4-10/p34-control-review.json"],"conclusion":{"gate_verdict":"PASS","result_revision":"3f0f32c66e58c4f80752f2e7bdc6a33d220215f5","package_id":"GT-G4-10-P31-v0.1","focused":{"passed":1,"failed":0},"rf01":{"passed":28,"failed":0},"git_diff_check":"PASS","mutation_scope":"PASS","integration_status":"integrated","integration_revision":"8e4543b670c1aaad65dac666fe67b2b5365d6d2d","integration_ref":"github:Mostorm-Labs/axiom#123","official_gate_pass_claimed":true}}
+    ,{"id":"ev-gt-g4-11-p34","kind":"gate-review-and-repository-integration","status":"available","ref":"git:b0e70b32","supports":["gt-g4-11","int-pr125-g4-11"],"inputs":["git:b0bf20fccfcb3dbaf3c09d12b578275b6e6f18e7","github:Mostorm-Labs/axiom#125","repo:.aegis/packages/GT-G4-11/package.json","repo:.aegis/results/GT-G4-11/result.json","repo:.aegis/results/GT-G4-11/conflict-evidence.json","repo:.aegis/results/GT-G4-11/lifecycle-evidence.json","repo:.aegis/results/GT-G4-11/scope-evidence.json","repo:.aegis/results/GT-G4-11/p34-control-review.json"],"conclusion":{"gate_verdict":"PASS","result_revision":"b0bf20fccfcb3dbaf3c09d12b578275b6e6f18e7","package_id":"GT-G4-11-P31-v0.1","focused":{"conflict":1,"lifecycle":1},"rf01":{"passed":30,"failed":0},"git_diff_check":"PASS","mutation_scope":"PASS","integration_status":"integrated","integration_revision":"0565c2a05b6b333e45b637753ff890c0f9802746","integration_ref":"github:Mostorm-Labs/axiom#125","official_gate_pass_claimed":true}},
+    {"id":"ev-gt-g4-12-p34","kind":"gate-review-and-repository-integration","status":"available","ref":"repo:.aegis/results/GT-G4-12/p34-control-review-v0.4.json","supports":["gt-g4-12","int-pr127-g4-12"],"inputs":["git:50a1d864ad72375f42404dcec8ff0226ec70cde8","github:Mostorm-Labs/axiom#127","git:0a1e074013521fe42a9430bfe707af5a4705d7bc","repo:.aegis/results/GT-G4-12/platform-evidence.json","repo:.aegis/results/GT-G4-12/windows-functional-smoke-evidence.json","repo:.aegis/results/GT-G4-12/android-functional-smoke-evidence.json"],"conclusion":{"gate_verdict":"PASS_WITH_FINDINGS","result_revision":"50a1d864ad72375f42404dcec8ff0226ec70cde8","integration_status":"integrated","integration_revision":"0a1e074013521fe42a9430bfe707af5a4705d7bc","accepted_capability":"PASS_G4_FUNCTIONAL_INTEGRATION","official_gate_pass_claimed":true}},
+    {"id":"ev-g4-completion","kind":"g4-gate-report","status":"available","ref":"repo:.aegis/results/GT-G4-13/g4-gate-report.json","supports":["g4-completion","int-g4-completion"],"inputs":["git:0a1e074013521fe42a9430bfe707af5a4705d7bc","repo:.aegis/results/GT-G4-13/g4-gate-report.json","repo:.aegis/results/GT-G4-13/closure-summary.json","repo:.aegis/results/GT-G4-13/repository-integrity.json","repo:.aegis/results/GT-G4-13/p34-control-review.json"],"conclusion":{"gate_verdict":"PASS_WITH_FINDINGS","accepted_capability":"PASS_G4_FUNCTIONAL_INTEGRATION","physical_pass":false,"pressure_pass":false,"official_gate_pass_claimed":true,"successor_started":false}}
+  ]
+}

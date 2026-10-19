@@ -57,6 +57,24 @@ class OperationEngine final {
         AppliedOperationLedger& applied_operations,
         SemanticGenerationState& generation,
         CanonicalCommitClock& canonical_commit_clock) const;
+
+    [[nodiscard]] ApplyResult apply(
+        const Operation& operation,
+        ApplySource source,
+        ReferenceObjectStore& objects,
+        ResourceManifest& manifest,
+        AppliedOperationLedger& applied_operations,
+        SemanticGenerationState& generation,
+        CanonicalCommitClock& canonical_commit_clock) const;
+
+    [[nodiscard]] ApplyResult apply(
+        const Operation& operation,
+        ApplySource source,
+        IndexedObjectStore& objects,
+        ResourceManifest& manifest,
+        AppliedOperationLedger& applied_operations,
+        SemanticGenerationState& generation,
+        CanonicalCommitClock& canonical_commit_clock) const;
 };
 
 } // namespace canvas::semantic

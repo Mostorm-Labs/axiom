@@ -7,9 +7,9 @@
 namespace canvas::internal {
 
 foundation::Result<FullMaterializedScene> materializeFullScene(
-    const semantic::SemanticReadView& view) {
+    const semantic::SemanticReadView& view, text::RichTextLayoutService* textService) {
     try {
-        const auto compiled = scene::FullSceneCompiler::compile(view);
+        const auto compiled = scene::FullSceneCompiler::compile(view,textService);
         if (!compiled) return foundation::Result<FullMaterializedScene>::failure(compiled.error());
         FullMaterializedScene result;
         result.generation = compiled.value().generation;
@@ -24,11 +24,13 @@ foundation::Result<FullMaterializedScene> materializeFullScene(
                 .properties = source.properties,
                 .content = source.content,
                 .eraseMasks = source.eraseMasks,
+                .derivedGeometry = source.derivedGeometry,
                 .geometryBounds = source.geometryBounds,
                 .visualBounds = source.visualBounds,
                 .worldBounds = source.worldBounds,
                 .referenceGeometryDigest = source.referenceGeometryDigest,
                 .directDependencies = source.directDependencies,
+                .textLayout = source.textLayout,
             });
         }
         return foundation::Result<FullMaterializedScene>::success(std::move(result));

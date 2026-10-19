@@ -1,0 +1,50 @@
+Traceback (most recent call last):
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\urllib\request.py", line 1348, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\http\client.py", line 1283, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\http\client.py", line 1329, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\http\client.py", line 1278, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\http\client.py", line 1038, in _send_output
+    self.send(msg)
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\http\client.py", line 976, in send
+    self.connect()
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\http\client.py", line 1448, in connect
+    super().connect()
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\http\client.py", line 942, in connect
+    self.sock = self._create_connection(
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 851, in create_connection
+    raise exceptions[0]
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\socket.py", line 836, in create_connection
+    sock.connect(sa)
+TimeoutError: [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<string>", line 19, in <module>
+  File "C:\Users\Chado\.codex\worktrees\fc-01-creation-tools-p32\canvas\tools/skia\fetch.py", line 156, in install
+    size = download(url, archive)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 9, in monitored_download
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\urllib\request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\urllib\request.py", line 519, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\urllib\request.py", line 536, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\urllib\request.py", line 496, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\urllib\request.py", line 1391, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\urllib\request.py", line 1351, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [WinError 10060] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond>

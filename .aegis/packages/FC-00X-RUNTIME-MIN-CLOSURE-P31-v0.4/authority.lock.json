@@ -1,0 +1,193 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-authority-lock-v1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P31_TASK_PACKAGING",
+  "authority_status": "CURRENT_REPO_LOCAL_ACCEPTED_INPUT_AFTER_P20_REVIEW",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "source_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704"
+  },
+  "trusted_authorities": [
+    {
+      "id": "g2-canonical-main",
+      "scope": "gate:G2/runtime-foundation",
+      "status": "Current",
+      "ref": "git:07654767eac7b021ca6e89004e36448ccebb727d",
+      "owns": [
+        "RuntimeScene",
+        "SceneRecordStore",
+        "BoundsSystem",
+        "SpatialIndex",
+        "atomic_publication",
+        "recovery_contract"
+      ],
+      "forbids": [
+        "duplicate_RuntimeScene",
+        "SemanticDocument_direct_render",
+        "G5_tile_render_group_raster_cache_scheduler"
+      ],
+      "materialized_path": ".aegis/packages/GT-G3-00/authority.lock.json",
+      "materialized_git_blob_sha1": "d9959b1ef0638eb3f802371df6f3b583e09587bc",
+      "materialized_sha256": "7ca1477afcc23f59b4f4e4d8c8bd0228f4ffcf2f2c81d029aa427d99857288d5",
+      "materialized_at_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+      "external_source": {
+        "provider": "notion",
+        "ref": "notion://3dd4c57a-590c-81a9-827e-e348102413d0",
+        "revision": "2026-09-16T13:46:29.808Z"
+      },
+      "canonical_result_revision": "07654767eac7b021ca6e89004e36448ccebb727d"
+    },
+    {
+      "id": "g3-capability-authority",
+      "scope": "capability:G3/basic-canonical-canvas",
+      "status": "Current",
+      "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+      "owns": [
+        "RenderTarget",
+        "RenderFrame",
+        "camera_view_pan_zoom_clip_dpr",
+        "PresentationTracker",
+        "per_view_RenderCore",
+        "headless_windows_web_reference_hosts"
+      ],
+      "forbids": [
+        "duplicate_canonical_state",
+        "G5_tile_cache_raster_cache_scheduler"
+      ],
+      "materialized_path": ".aegis/packages/GT-G3-03/authority.lock.json",
+      "materialized_git_blob_sha1": "ca06444d3b11a82f0aa185715362287d9b94598c",
+      "materialized_sha256": "44f3a70e0e8e3968b59993ab5ee51c3510fc59ff00e03db8f5afb2b5b19b45c9",
+      "materialized_at_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+      "external_source": {
+        "provider": "notion",
+        "ref": "notion://3c84c57a-590c-81b6-bab3-c36fc6842c4f",
+        "revision": "2026-09-13T04:49:44.764Z",
+        "content_hash": "063c6be5b6e9a535e493a2585f2f4a4035cd1ec0724b36d0bad368bc726413a3"
+      }
+    },
+    {
+      "id": "g4-capability-authority-v0.3",
+      "scope": "capability:G4/interaction-ink",
+      "status": "Current",
+      "ref": "repo:.aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
+      "owns": [
+        "InteractionRuntime",
+        "EditorSession",
+        "InteractionSessionManager",
+        "InputRouter",
+        "PreviewModel",
+        "CanonicalVisible_handoff",
+        "Selection",
+        "TransformSession",
+        "EraserSession_V1",
+        "EditorHistory",
+        "Ink_Playground_0.1"
+      ],
+      "forbids": [
+        "duplicate_canonical_write_path",
+        "SemanticWritePort_from_interaction",
+        "invent_partial_erase_strategy",
+        "G5_tile_render_group_raster_cache_scheduler"
+      ],
+      "materialized_path": ".aegis/results/GT-G4-12/g4-functional-completion-authority-v0.3.json",
+      "materialized_git_blob_sha1": "ce9372593688d13d4e5a3884d0068b6ea227c4cf",
+      "materialized_sha256": "19f37395b0d7b506059b730c6ee5dc38a9f9ee5466d91f5d5363d32818fc2bf8",
+      "materialized_at_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+      "external_source": {
+        "provider": "notion",
+        "ref": "notion://3c84c57a-590c-8112-8f21-c0494d187cdb",
+        "content_hash": "9f0f8870d2f31138482ce32f6377aedaff65294fd7ca3c52622b2fcdbf7c88a2"
+      }
+    },
+    {
+      "id": "fc-feature-completion-execution-v0.2",
+      "scope": "execution:FC/feature-completion",
+      "status": "Current",
+      "ref": "notion://3f74c57a-590c-8139b903f14f0aae0c57",
+      "depends_on": [
+        "g4-capability-authority-v0.3"
+      ],
+      "relevant_constraint": "FC-01..FC-12 require their own frozen P20/P31 and independent DEV review; this runtime closure is a shared prerequisite and does not authorize FC-01 feature work.",
+      "materialized_path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/4-3f74c57a590c8139b903f14f0aae0c57.json",
+      "materialized_git_blob_sha1": "0375203a27eccaefff48379dac6b1f4d200f64fa",
+      "materialized_sha256": "6b65aaa53c202527a459e1e0640d535eba127f0c68b2cd580b77d9e5936fd0c3",
+      "materialized_at_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+      "external_source": {
+        "provider": "notion",
+        "ref": "notion://3f74c57a590c8139b903f14f0aae0c57",
+        "revision": "2026-10-12T02:17:38.007Z",
+        "content_hash": "6b65aaa53c202527a459e1e0640d535eba127f0c68b2cd580b77d9e5936fd0c3"
+      },
+      "scope_note": "FC-track dependency only; does not authorize FC-01 implementation here."
+    }
+  ],
+  "repository_contracts": [
+    {
+      "path": "docs/adr/0022-runtime-public-c-api-and-cpp-style.md",
+      "role": "implementation-input",
+      "sha256": "4f7246e781634c07e338de4cfd30f54a4f6143a85c3044366c6624a376a4aac3",
+      "constraints": [
+        "single-owner/manual-poll",
+        "Core creates no OS thread or system message loop",
+        "no-reentry",
+        "GPU affinity"
+      ]
+    },
+    {
+      "path": "docs/adr/0024-arc-fastink-module-boundary.md",
+      "role": "implementation-input",
+      "sha256": "c2d3e98e7929d03637d6fa296a623d93e9312f387feb024aa77b36a145d61ab5",
+      "constraints": [
+        "Platform Host is composition root",
+        "Canonical and Preview target ownership remain separate",
+        "source loss is explicit",
+        "Arc does not present Canonical backbuffer"
+      ]
+    },
+    {
+      "path": "docs/adr/0025-product-shell-page-operation-data-runtime.md",
+      "role": "implementation-input",
+      "sha256": "c2cd3c935134c93cdbbb54b52e1f8c3e5868d70f2e343acae25030810c8ef309",
+      "constraints": [
+        "Host composes Document/View/Runtime",
+        "Runtime does not own network/database/files",
+        "one Page maps to one Document"
+      ]
+    },
+    {
+      "path": "docs/api/RUNTIME_C_API_CONTRACT.md",
+      "role": "R1 implementation-input only",
+      "sha256": "fbcf538a4f7f9cf8490211b0d4289d58ada215ebb528893dc286e22e8799a82f",
+      "constraints": [
+        "no public ABI delivery in this task",
+        "opaque surface handles",
+        "typed input batches",
+        "Runtime publishes frame decisions; Platform owns vsync/present"
+      ]
+    }
+  ],
+  "frozen_scope": {
+    "document_view_runtime": "Keep the existing single Document/single View owners. Add only narrow internal ports and coordinators; do not extract a complete Editor composition.",
+    "input_session": "Preserve PointerKey source/pointer/generation identity; source loss/unregister cancels only the owning sessions; late generations are rejected.",
+    "frame": "Runtime owns dirty/stale/retry/handoff/retirement qualification; Platform owns surface/GPU acquire/present/context and supplies real metrics/feedback.",
+    "control": "Commands retain target and context fence; snapshots/readback come from the real owner; pending draft is separate from confirmed Runtime state.",
+    "clear_policy": "Clear-style reset remains OPEN and is not implemented by this task."
+  },
+  "forbidden_decisions": [
+    "new OperationKind/ObjectKind/FieldId/Protobuf tag",
+    "new canonical owner or duplicate Document/Selection/Session/Frame owner",
+    "public C ABI implementation or docs/api contract rewrite",
+    "full Editor composition extraction",
+    "background schema/object list/PNG export/full Sync",
+    "FC-01 Shape/Connector semantics or any PX0/G4 historical result rewrite",
+    "Core OS thread/message loop or ad-hoc JSON event bus"
+  ],
+  "p20_correction": {
+    "revision": "1507e6657520a72b7d9e1402a2a4cceb881cbc95",
+    "status": "ACCEPTED_FOR_P31_PACKAGING",
+    "design_path": "p20-verification-design.json",
+    "red_preflight_path": ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/p20-red-preflight.json"
+  }
+}

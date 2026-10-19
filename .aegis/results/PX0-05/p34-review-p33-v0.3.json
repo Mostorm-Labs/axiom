@@ -1,0 +1,58 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "stage": "P34_GATE_REVIEW",
+  "reviewed_code_revision": "9c5e3587358ad982ddab56ca2369cd285e330c5d",
+  "reviewed_materialized_ref": "refs/heads/codex/px0-05-existing-capability-migration",
+  "reviewed_evidence_head": "4b7ca8856a2c94b5fcdd2569009a9be669405955",
+  "governing_package": {
+    "package_id": "PX0-05-P31-v0.3",
+    "materialization_ref": "361d2c0d7a29f0a549c87d688d5d0aa6b33f5c03"
+  },
+  "frozen_requirement_audit": {
+    "passed": [
+      "PX0-05 implementation result is durably materialized and descends from the trusted P33 package state.",
+      "Structural Debug UI contract set passed.",
+      "Fresh RF01=ON / POC01=OFF native canvas_debug_ui and Windows application build passed.",
+      "Eight focused CTest targets passed.",
+      "Authorized-scope audit and git diff --check passed.",
+      "Six-workspace capability migration is present in the durable result."
+    ],
+    "failed": [
+      {
+        "id": "PX0-05-T4/PX0RuntimeFacadeContract",
+        "classification": "FROZEN_REQUIREMENT_FAILURE",
+        "failure": "debug_ui/tests/runtime_contract_test.cpp fails to compile under the frozen clang-cl /W4 /WX test profile because RuntimeProbe::submitProductControl aggregate-initializes ProductControlReceipt without its existing control field.",
+        "evidence": ".aegis/results/PX0-05/build-tests-v0.3.log"
+      }
+    ]
+  },
+  "frozen_evidence_audit": {
+    "passed": [
+      "Exact reviewer-resolvable result/evidence boundary.",
+      "Structural test evidence.",
+      "Fresh native build evidence.",
+      "Focused regression evidence excluding the unbuildable PX0RuntimeFacadeContract.",
+      "Scope/diff evidence."
+    ],
+    "failed": [
+      {
+        "id": "PX0RuntimeFacadeContract",
+        "residual_gap": "The frozen RuntimeFacade contract test cannot execute because its own test fixture is rejected at compile time by the frozen warning-as-error profile."
+      }
+    ]
+  },
+  "repository_reality_audit": {
+    "preexisting_test_fixture_defect": true,
+    "runtime_contract_test_blob_unchanged_between_anchor_and_result": "2213b675a18f115f9c0f046c7d86786714c85292",
+    "product_control_header_blob_unchanged_between_anchor_and_result": "25b80ba4764e7183066c98368665cdba57e6e45a",
+    "px0_05_runtime_foundation_mutation": false,
+    "exact_failure": "runtime_contract_test.cpp:21 -Wmissing-field-initializers for ProductControlReceipt::control"
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": []
+  },
+  "verdict": "BLOCKED_AUTHORITY",
+  "rationale": "The frozen verification failure is real, but repository reality proves it is a pre-existing test-artifact defect outside the PX0-05 v0.3 authorized mutation scope. The current implementation package is structurally unable to satisfy its own required PX0RuntimeFacadeContract oracle without changing an unauthorized file."
+}

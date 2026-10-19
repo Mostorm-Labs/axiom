@@ -77,6 +77,12 @@ BrushSessionError BrushSession::append(std::span<const BrushSample> confirmed,
     if (!result) { confirmed_.resize(oldSize); error_ = BrushSessionError::kInvalid; return error_; }
     if (!confirmed.empty()) lastSequence_ = confirmed.back().sequence;
     out.revision = ++revision_;
+    out.hasPaint = true;
+    out.red = static_cast<float>(state_.package.paint.red);
+    out.green = static_cast<float>(state_.package.paint.green);
+    out.blue = static_cast<float>(state_.package.paint.blue);
+    out.alpha = static_cast<float>(state_.package.paint.alpha);
+    out.opacity = static_cast<float>(state_.package.paint.opacity);
     out.outline = std::move(result.outline);
     if (state_.package.profileId == "chalk-grain-v1" &&
         (state_.package.revision >= 2U && state_.package.revision <= 4U)) {

@@ -1,0 +1,140 @@
+{
+  "tool_repository": "Mostorm-Labs/aegis",
+  "tool_revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba",
+  "base_revision": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+  "starting_revision": "19ec3483240ab03152678b3ea7fb9f568da39852",
+  "control_status": "READY_FOR_CONTROL_REVIEW_NO_GATE_VERDICT",
+  "observations": [
+    {
+      "id": "base-validate",
+      "command": [
+        "C:/Users/Chado/AppData/Local/Programs/Python/Python311/python.exe",
+        "-m",
+        "tools.aegis_state.cli",
+        "validate",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-00-fc-track-authority\\canvas"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "PYTHONPATH": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "exit_code": 0,
+      "stdout": "VALID\n",
+      "stderr": ""
+    },
+    {
+      "id": "base-check",
+      "command": [
+        "C:/Users/Chado/AppData/Local/Programs/Python/Python311/python.exe",
+        "-m",
+        "tools.aegis_state.cli",
+        "check",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-00-fc-track-authority\\canvas"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "PYTHONPATH": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "exit_code": 0,
+      "stdout": "STATE_OK\n",
+      "stderr": ""
+    },
+    {
+      "id": "head-validate",
+      "command": [
+        "C:/Users/Chado/AppData/Local/Programs/Python/Python311/python.exe",
+        "-m",
+        "tools.aegis_state.cli",
+        "validate",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-authority-golden\\canvas"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "PYTHONPATH": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "exit_code": 0,
+      "stdout": "VALID\n",
+      "stderr": ""
+    },
+    {
+      "id": "transition-check",
+      "command": [
+        "C:/Users/Chado/AppData/Local/Programs/Python/Python311/python.exe",
+        "-m",
+        "tools.aegis_state.cli",
+        "transition-check",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-00-fc-track-authority\\canvas",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-authority-golden\\canvas"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "PYTHONPATH": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "exit_code": 0,
+      "stdout": "TRANSITION_OK\n",
+      "stderr": ""
+    },
+    {
+      "id": "recompute-1",
+      "command": [
+        "C:/Users/Chado/AppData/Local/Programs/Python/Python311/python.exe",
+        "-m",
+        "tools.aegis_state.cli",
+        "recompute",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-authority-golden\\canvas",
+        "--write"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "PYTHONPATH": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "exit_code": 0,
+      "stdout": "STATE_WRITTEN: C:\\Users\\Chado\\.codex\\worktrees\\fc-01-authority-golden\\canvas\\.aegis\\state.json\n",
+      "stderr": "",
+      "state_sha256": "8e8947b1edb86406cbbb5a05c69875fa844d06b012d783b73e8345c0fab7ed71",
+      "state_length": 14400
+    },
+    {
+      "id": "check-1",
+      "command": [
+        "C:/Users/Chado/AppData/Local/Programs/Python/Python311/python.exe",
+        "-m",
+        "tools.aegis_state.cli",
+        "check",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-authority-golden\\canvas"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "PYTHONPATH": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "exit_code": 0,
+      "stdout": "STATE_OK\n",
+      "stderr": ""
+    },
+    {
+      "id": "recompute-2",
+      "command": [
+        "C:/Users/Chado/AppData/Local/Programs/Python/Python311/python.exe",
+        "-m",
+        "tools.aegis_state.cli",
+        "recompute",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-authority-golden\\canvas",
+        "--write"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "PYTHONPATH": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "exit_code": 0,
+      "stdout": "STATE_WRITTEN: C:\\Users\\Chado\\.codex\\worktrees\\fc-01-authority-golden\\canvas\\.aegis\\state.json\n",
+      "stderr": "",
+      "state_sha256": "8e8947b1edb86406cbbb5a05c69875fa844d06b012d783b73e8345c0fab7ed71",
+      "state_length": 14400,
+      "bytes_identical_to_first": true
+    },
+    {
+      "id": "check-2",
+      "command": [
+        "C:/Users/Chado/AppData/Local/Programs/Python/Python311/python.exe",
+        "-m",
+        "tools.aegis_state.cli",
+        "check",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-authority-golden\\canvas"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "PYTHONPATH": "C:\\Users\\Chado\\.codex\\temp\\fc00-aegis-00d3690c",
+      "exit_code": 0,
+      "stdout": "STATE_OK\n",
+      "stderr": ""
+    }
+  ],
+  "second_recompute_stable": true,
+  "windows_cli_state_sha256": "8e8947b1edb86406cbbb5a05c69875fa844d06b012d783b73e8345c0fab7ed71",
+  "git_lf_state_sha256": "11b963aa2d21f83c352febfa961f2027b378a42e164b5217a00089ed3d336245"
+}

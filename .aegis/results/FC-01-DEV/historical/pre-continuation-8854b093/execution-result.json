@@ -1,0 +1,62 @@
+{
+  "task_id": "FC-01",
+  "stage": "P32_IMPLEMENTATION",
+  "execution_ref": "codex/fc-01-creation-tools-p32",
+  "package_ref": ".aegis/packages/FC-01/package.json",
+  "package_materialization_ref": "c98110c015f975012f25db5efa66c9679da35630",
+  "task_anchor": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+  "trusted_control_subject_revision": "62a99c439e39636088c55e43cf7d76963bfe20eb",
+  "starting_revision": "c98110c015f975012f25db5efa66c9679da35630",
+  "implementation_revision": "cd2b61cb743c5aa2abeec59988d780e1d3937c4f",
+  "result_revision": "cd2b61cb743c5aa2abeec59988d780e1d3937c4f",
+  "materialized_ref_resolution": "Exact pushed evidence commit is returned to CONTROL_REVIEW; this record does not claim its own future commit SHA.",
+  "scope": "FC01-I0 source-scoped PlatformInteractionIngress cancellation only",
+  "red_oracle": {
+    "id": "FC01-RED-01",
+    "baseline_revision": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+    "baseline_result": "RED",
+    "candidate_result": "GREEN",
+    "oracle_source": "verification/fc01/red_source_loss_test.cpp",
+    "runner": "verification/fc01/run_source_loss.py",
+    "report": ".aegis/results/FC-01-DEV/E03/interaction-create-red-and-green.json",
+    "observations": [
+      "sourceA pen cancellation emits one keyed Cancel and removes only sourceA",
+      "sourceB touch/finger key remains registered and accepts Move and Up",
+      "sourceA loss does not set terminalCancel while sourceB remains active",
+      "unknown source loss is rejected without terminal cancellation"
+    ]
+  },
+  "regressions": [
+    "runtime/input/tests/platform_interaction_ingress_test.cpp",
+    "runtime/input/tests/c1_platform_fixture_test.cpp"
+  ],
+  "provider": {
+    "profile": "local-windows-native",
+    "compiler": "MSVC 14.44.35207 cl.exe",
+    "sdk": "Windows SDK selected by VS2022 vcvars64",
+    "semantic_sdk": "not required for FC01-RED-01",
+    "logs": ".aegis/results/FC-01-DEV/E03/logs/"
+  },
+  "completed_slices": ["FC01-I0 source-loss implementation and focused oracle"],
+  "not_started_slices": ["FC01-I1", "FC01-I2", "FC01-I3", "FC01-I4", "FC01-I5", "FC01-I6"],
+  "preflight_status": {
+    "repository_identity": "PASS",
+    "package_binding": "PASS using Git blob bytes",
+    "evidence_contract": "PASS for required paths and return fields",
+    "implementation_design_preflight": "NOT_PROVEN_BEFORE_FIRST_PRODUCTION_MUTATION",
+    "red_preflight": "RECORDED_AFTER_PRIOR_PROVISIONAL_MUTATION; old anchor RED and candidate GREEN reproduced",
+    "authority_conflict": false,
+    "verification_conflict": false,
+    "package_scope_conflict": false
+  },
+  "remaining_blockers": [
+    {
+      "class": "BLOCKED_EVIDENCE",
+      "reason": "The durable execution history cannot prove that ImplementationDesignPreflight and FC01-RED-01 were completed before the first production mutation, as required by EXECUTION_CLOSURE_CONTRACT. The later source-pinned RED/GREEN replay is retained as corroborative behavior evidence only.",
+      "required_action": "Control Review must classify whether this evidence-order defect is acceptable for continuation or requires a corrected P32/P33 authorization. No I1-I6 work was started under this result."
+    }
+  ],
+  "physical_claim": false,
+  "gate_claim": "none",
+  "status": "BLOCKED_EVIDENCE"
+}

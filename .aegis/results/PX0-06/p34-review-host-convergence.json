@@ -1,0 +1,88 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-06",
+  "stage": "P34_GATE_REVIEW",
+  "governing_package": {
+    "package_id": "PX0-06-P31-v0.1",
+    "materialization_ref": "3d18d030abea60b991fc7436fb8524a44760c979"
+  },
+  "reviewed_code_revision": "57fb2bde23eb93b88f9e06c8bafbdcb437fc3cff",
+  "reviewed_materialized_ref": "refs/heads/codex/px0-06-host-convergence",
+  "reviewed_evidence_head": "5f69f7f596481868c9027d4c265081588c41fad1",
+  "frozen_requirement_audit": {
+    "passed": [
+      "WindowsDebugUiHost thin-controller boundary under the frozen debug-enabled path",
+      "Windows common DebugController composition",
+      "Windows temporary toolbar RuntimeFacade mutation path",
+      "Windows input/render lifecycle structural invariants",
+      "Web common DebugController composition under AXIOM_WEB_DEBUG_UI=1",
+      "Web temporary toolbar RuntimeFacade mutation path under AXIOM_WEB_DEBUG_UI=1",
+      "temporary toolbar and G4.7 qualification-harness preservation",
+      "nine focused PX0/DUI regression targets",
+      "fresh locked Windows native build",
+      "g4-5-web-debug-ui-physical Web build",
+      "authorized scope and git diff --check"
+    ],
+    "failed": []
+  },
+  "frozen_evidence_audit": {
+    "passed": [
+      "pre-mutation structural RED evidence",
+      "36/36 Windows/Web structural contracts",
+      "9/9 focused CTest evidence",
+      "Windows native canvas_debug_ui + axiom_ink_playground_windows build",
+      "debug-enabled Web physical target build",
+      "scope audit and exact result/evidence identity"
+    ],
+    "failed": []
+  },
+  "repository_reality_audit": {
+    "result_revision": "57fb2bde23eb93b88f9e06c8bafbdcb437fc3cff",
+    "evidence_only_descendant": "5f69f7f596481868c9027d4c265081588c41fad1",
+    "result_to_evidence_source_changes": false,
+    "newly_discovered_compatibility_defect": {
+      "file": "apps/ink_playground/platform/web/bridge.cpp",
+      "facts": [
+        "WebRuntimeFacade, runtimeFacades(), runtimeFacade(), DebugUiState and controller code are inside #if AXIOM_WEB_DEBUG_UI ... #endif.",
+        "axiom_ink_create(), axiom_ink_destroy(), axiom_ink_select_brush_profile() and axiom_ink_select_tool() are outside that conditional and unconditionally reference WebRuntimeFacade/runtimeFacades()/runtimeFacade().",
+        "apps/ink_playground/CMakeLists.txt explicitly supports AXIOM_BUILD_DEBUG_UI=OFF by defining AXIOM_WEB_DEBUG_UI=0.",
+        "Top-level AXIOM_BUILD_DEBUG_UI defaults to OFF."
+      ],
+      "consequence": "The Web Ink Playground translation unit is not compilable in the supported/default AXIOM_WEB_DEBUG_UI=0 configuration after PX0-06, because product-toolbar exports now depend on symbols compiled only when Debug UI is enabled."
+    }
+  },
+  "new_findings": {
+    "blocking_high_impact": [
+      {
+        "id": "PX0-06-LF1-web-debug-ui-off-build-break",
+        "failure_mode": "Building axiom_ink_playground_web with AXIOM_BUILD_DEBUG_UI=OFF / AXIOM_WEB_DEBUG_UI=0 leaves WebRuntimeFacade/runtimeFacade(s) undefined while unconditional exported product-toolbar/create/destroy functions reference them.",
+        "impact": "Supported/default Web build compatibility is broken. The temporary product toolbar path cannot exist independently of the Debug UI build feature, contradicting the product/control ownership intent and preventing the Web target from compiling when Debug UI is disabled.",
+        "existing_independent_coverage": "Frozen structural tests inspect the debug-enabled source shape and the only frozen Web build is g4-5-web-debug-ui-physical with AXIOM_BUILD_DEBUG_UI=ON. Neither compiles the AXIOM_WEB_DEBUG_UI=0 branch.",
+        "new_evidence_unique_detection_value": "A Debug-UI-off Web compile (or an equivalent compile-guard oracle) exercises the mutually exclusive preprocessor branch that all frozen Web evidence omits.",
+        "why_existing_frozen_evidence_did_not_cover_it": "PX0-06-P31-v0.1 froze only the debug-enabled physical Web target; the structural oracle checked RuntimeFacade routing but not preprocessor availability of that product path when AXIOM_WEB_DEBUG_UI=0.",
+        "blocking_justification": "This is an implementation-introduced build-compatibility regression on an explicitly supported CMake configuration whose global option defaults to OFF. It is not a confidence-only gap: repository preprocessing makes the translation unit invalid in that mode.",
+        "why_it_is_severe_enough_to_override_closure_stability": "The defect prevents an existing supported/default Web product target from compiling and couples a product-control path to a debug-only feature flag. That is a high-impact compatibility failure directly caused by the PX0-06 convergence change."
+      }
+    ],
+    "non_blocking": [
+      {
+        "id": "PX0-06-NF1-manual-physical-pending",
+        "finding": "Manual Windows/Web spot-check was not run.",
+        "rationale": "The governing package classifies manual physical observation as corroborative only; PX0-07 owns physical closure."
+      },
+      {
+        "id": "PX0-06-NF2-existing-msvc-full-tree-warning",
+        "finding": "Existing unrelated MSVC runtime/semantic C4702 /WX issue remains.",
+        "rationale": "Outside PX0-06 and not required by its accepted clang-cl native profile."
+      }
+    ]
+  },
+  "verdict": "BLOCKED_IMPLEMENTATION",
+  "closure": {
+    "px0_06_closed": false,
+    "px0_closed": false,
+    "dui_m1_physical_status_changed": false,
+    "physical_qualification_changed": false
+  },
+  "official_claim_boundary": "No PX0-06/PX0/DUI-M1/physical/Gate PASS is issued."
+}

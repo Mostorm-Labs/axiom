@@ -1,0 +1,24 @@
+{
+  "format": "aegis-result-v1",
+  "task_id": "GT-G4.6-D",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "231cb7363650836c9d4c5502573860b932132f1e",
+  "materialized_ref": "codex/g4-6-d-debug-ui-selection",
+  "package_ref": ".aegis/packages/GT-G4.6-D/package.json",
+  "evidence_refs": [
+    ".aegis/results/GT-G4.6-D/repo-reconciliation.json",
+    ".aegis/results/GT-G4.6-D/scope-audit.json",
+    ".aegis/results/GT-G4.6-D/build.log",
+    ".aegis/results/GT-G4.6-D/ctest.log",
+    ".aegis/results/GT-G4.6-D/tab-contract.json",
+    ".aegis/results/GT-G4.6-D/selection-trace.json",
+    ".aegis/results/GT-G4.6-D/overlay-ownership.json"
+  ],
+  "verification": {
+    "build": "PASS",
+    "focused_ctest": "49/49 passed",
+    "python_selection_contract": "3/3 passed",
+    "git_diff_check": "PASS"
+  },
+  "producer_may_claim_gate_pass": false
+}

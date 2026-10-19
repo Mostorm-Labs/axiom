@@ -1,0 +1,208 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "FC-00X-INTERACTION-INTERNALIZATION",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "O0: materialize owner and port inventory and ImplementationDesignPreflight before production mutation.",
+        "O1: move input identity and session lifecycle decisions into existing Runtime owners without changing public ABI.",
+        "O2: internalize existing Brush/Object Eraser/Creation/Selection/Transform/Pan dispatch and cancel/commit behavior.",
+        "O3: route OperationEngine/History/Scene publication and Preview/Canonical frame handoff through existing Runtime owners.",
+        "O4: switch Windows/Web/Control/Diagnostics consumers to the common Runtime path, fix Web field fidelity and Up/Cancel ownership, remove independent Ink Playground HUD.",
+        "O5: add minimal non-Playground host and Windows/Web adapter fixtures; remove replaced duplicate business entry points and keep forwarding wrappers where needed.",
+        "Materialize all P32 evidence under .aegis/results/FC-00X-INTERACTION-INTERNALIZATION/"
+      ],
+      "authorized_mutation_scope": [
+        "runtime/input/include/canvas/input/**",
+        "runtime/input/src/**",
+        "runtime/input/tests/**",
+        "runtime/interaction/include/canvas/interaction/**",
+        "runtime/interaction/src/**",
+        "runtime/interaction/tests/**",
+        "runtime/render/include/canvas/render/**",
+        "runtime/render/src/**",
+        "runtime/render/tests/**",
+        "runtime/control/include/canvas/control/**",
+        "runtime/control/src/**",
+        "runtime/control/tests/**",
+        "runtime/foundation/include/canvas/runtime/**",
+        "runtime/foundation/src/**",
+        "runtime/foundation/tests/**",
+        "apps/ink_playground/common/**",
+        "apps/ink_playground/platform/windows/**",
+        "apps/ink_playground/platform/web/**",
+        "apps/ink_playground/tests/**",
+        "apps/**/minimal_runtime_host/**",
+        "runtime/**/fixtures/**",
+        "CMakeLists.txt",
+        "CMakePresets.json",
+        "runtime/*/CMakeLists.txt",
+        "apps/ink_playground/CMakeLists.txt",
+        ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/**"
+      ],
+      "preserve_unchanged": [
+        ".aegis/authorities.json",
+        ".aegis/gates.json",
+        ".aegis/evidence.json",
+        ".aegis/integrations.json",
+        ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4/**",
+        ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/**",
+        ".aegis/packages/FC-01/**",
+        ".aegis/results/FC-01-DEV/**",
+        ".aegis/results/GT-*/**",
+        ".aegis/results/PX0-*/**",
+        "verification/corpus/**",
+        "docs/api/**",
+        "semantic-sdk.lock.json",
+        "r1-full-skia-sdk.lock.json"
+      ],
+      "forbidden_changes": [
+        "New Document/Selection/Session/Scene/History/Frame truth or second canonical write path.",
+        "New ObjectKind, FieldId, OperationKind, Protobuf tag, schema/golden or selected Shape conversion.",
+        "Public C ABI implementation or docs/api normative contract rewrite.",
+        "FC-01 Shape/Connector implementation, semantic authority, Golden fixtures or result rewrite.",
+        "POC-06/Arc tests and logic outside the shared Runtime boundary; do not resurrect removed legacy preview tests.",
+        "Core-created OS threads/system message loop, ad-hoc JSON event bus, network/file/database/sync/export work.",
+        "Android build/APK or Android product changes in this package; Android remains deferred.",
+        "Skia/Protobuf source rebuild or lock changes; consume accepted prebuilt SDKs."
+      ]
+    },
+    "preflights": {
+      "repository_identity": true,
+      "package_binding": true,
+      "evidence_contract": true,
+      "implementation_design": true,
+      "red_oracle": {
+        "required": true,
+        "expected_failure": "At least one untouched Host or platform boundary oracle demonstrates current duplicate dispatch or field-loss defect before production mutation.",
+        "observation_seam": ".aegis/results/FC-00X-INTERACTION-INTERNALIZATION/red-preflight.json",
+        "stop_if_old_passes": "VERIFICATION_DESIGN_DEFECT"
+      }
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "INT-UNIT-INPUT",
+          "command": "ctest --test-dir <exact-build> -R G4InputRouter|G4MultiPointerFoundation|G4PlatformNormalization|C1CommonIngress|C1CrossPlatformFixtureParity --output-on-failure",
+          "expected_result": "all discovered tests pass with assertions active",
+          "blocking_reason": "identity and platform normalization"
+        },
+        {
+          "id": "INT-UNIT-SESSION",
+          "command": "ctest --test-dir <exact-build> -R G4InteractionSessionManager|G4SelectionSession|G4TransformSession|G4EraserSession|G4EditorHistory|G4SessionConflict|G4SessionLifecycle|G4GestureArbiter|G4MultiContactCoordinator|G4ViewportGesture|C0CanvasInteractionCoordinator|C0ViewportInteractionController --output-on-failure",
+          "expected_result": "all discovered tests pass",
+          "blocking_reason": "existing Session behavior preservation"
+        },
+        {
+          "id": "INT-UNIT-FRAME",
+          "command": "ctest --test-dir <exact-build> -R G3RuntimeAppBinding|FC00XRuntimeIsolation|FC00XFrameCoordinator|G3RenderTargetSwitching|G3PreviewSurface|G3SurfacePresentation|G4CanonicalHandoff|G46EditingOverlay --output-on-failure",
+          "expected_result": "all discovered tests pass",
+          "blocking_reason": "frame/preview/canonical lifecycle"
+        },
+        {
+          "id": "INT-CONTROL-DUI",
+          "command": "ctest --test-dir <exact-build> -R DUIM1RuntimeFacade|DUIM1Control|PX0RuntimeFacadeContract|PX0ControlRouter|PX0DebugSnapshot --output-on-failure",
+          "expected_result": "all discovered targets exist and pass",
+          "blocking_reason": "control/readback owner truth"
+        },
+        {
+          "id": "INT-FC01-REGRESSION",
+          "command": "ctest --test-dir <exact-build> -R FC01CreationSession|FC01CreationControlBinding|FC01SnapCreationDifferential|FC01HostPublicationTruth|FC01SelectedActions --output-on-failure",
+          "expected_result": "existing FC-01 tests pass without changing FC-01 scope",
+          "blocking_reason": "protected downstream compatibility"
+        },
+        {
+          "id": "INT-SCOPE",
+          "command": "git diff --name-only 965612f6a37e102e94c2d2fa1120ff9d9a9e1565..HEAD; git diff --check 965612f6a37e102e94c2d2fa1120ff9d9a9e1565..HEAD",
+          "expected_result": "only authorized paths and diff check zero",
+          "blocking_reason": "scope protection"
+        }
+      ],
+      "builds": [
+        {
+          "id": "WIN",
+          "blocking": true,
+          "command": "python tools/setup_build_environment.py --core --semantic --facts-output out/fc00x-windows-environment.json --status; python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target windows-x64-d3d12 --variant release; cmake --preset g3-windows-release -DCANVAS_BUILD_INK_PLAYGROUND=ON -DAXIOM_BUILD_DEBUG_UI=ON; cmake --build --preset g3-windows-release",
+          "expected_result": "build succeeds or explicit BLOCKED_ENVIRONMENT with complete log"
+        },
+        {
+          "id": "WEB_DEBUG_ON",
+          "blocking": true,
+          "command": "python tools/setup_build_environment.py --core --semantic --target web-wasm32 --facts-output out/fc00x-web-environment.json --status; python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target web-wasm-webgl2 --variant release; cmake --preset g3-web-release -DAXIOM_BUILD_DEBUG_UI=ON; cmake --build --preset g3-web-release",
+          "expected_result": "debug-on Web/WASM build succeeds or explicit BLOCKED_ENVIRONMENT"
+        },
+        {
+          "id": "WEB_DEBUG_OFF",
+          "blocking": true,
+          "command": "cmake --preset g3-web-release -DAXIOM_BUILD_DEBUG_UI=OFF; cmake --build --preset g3-web-release",
+          "expected_result": "debug-off Web/WASM build succeeds without HUD/debug symbol dependency or explicit BLOCKED_ENVIRONMENT"
+        }
+      ],
+      "deferred": [
+        {
+          "id": "ANDROID",
+          "command": "Android build/APK",
+          "reason": "explicitly deferred by task boundary; not blocking"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "reviewer-accessible Windows/Web build artifacts",
+        "human physical observations; remain PHYSICAL_PENDING until observed"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "package-binding-preflight.json",
+        "implementation-design-preflight.json",
+        "red-preflight.json",
+        "o1-input-identity.json",
+        "o2-session-lifecycle.json",
+        "o3-publication-frame.json",
+        "o4-platform-control.json",
+        "o5-host-equivalence.json",
+        "regression-matrix.json",
+        "scope-audit.json",
+        "repository-reconciliation.json",
+        "result.json",
+        "exact pushed result and evidence revision"
+      ],
+      "corroborative": [
+        "Windows/Web build logs",
+        "screenshots/physical observations",
+        "performance traces without invented metrics"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "O0-O5 complete",
+        "all blocking tests discovered and pass with active assertions",
+        "Windows native and Web debug-on/off builds pass or no unresolved required environment blocker",
+        "protected controls unchanged",
+        "reviewer-accessible exact result and evidence commit pushed",
+        "return READY_FOR_CONTROL_REVIEW with PHYSICAL_PENDING where applicable; no P34/Gate PASS claim"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "BLOCKED_AUTHORITY",
+        "BLOCKED_MISSING_INPUT",
+        "BLOCKED_ENVIRONMENT",
+        "BLOCKED_IMPLEMENTATION",
+        "BLOCKED_EVIDENCE",
+        "TASK_PACKAGE_DEFECT",
+        "VERIFICATION_DESIGN_DEFECT",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}

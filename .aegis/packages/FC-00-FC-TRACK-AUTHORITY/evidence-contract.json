@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "task_id": "FC-00-FC-TRACK-AUTHORITY",
+  "provider_run_required": false,
+  "evidence_root": ".aegis/results/FC-00-FC-TRACK-AUTHORITY/",
+  "blocking_artifacts": [
+    "source-identity.json",
+    "authority-append-audit.json",
+    "history-preservation.json",
+    "official-v06-transition.json",
+    "state-qualification.json",
+    "scope-identity.json"
+  ],
+  "evidence_input_refs": "Full GitHub blob URLs at exact pushed P32 result revision, not local-only paths",
+  "reviewer_boundary": "Independent P34 / FC-00 Closure control review, not executor",
+  "nonclaims": [
+    "READY_FOR_CONTROL_REVIEW is not P34 PASS",
+    "Repo-local FC Authority append alone is not FC-00 Closure nor FC-01 authorization"
+  ]
+}

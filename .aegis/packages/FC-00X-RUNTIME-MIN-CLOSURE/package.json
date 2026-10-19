@@ -1,0 +1,80 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-package-v1",
+  "package_id": "FC-00X-RUNTIME-MIN-CLOSURE-P20-v0.2",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P20_VERIFICATION_DESIGN_CORRECTION",
+  "status": "P20_READY_FOR_CONTROL_REVIEW",
+  "purpose": "Repair exact Authority bindings and zero-mutation RED oracle design before any P31/P32 implementation.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "base_lineage_branch": "codex/fc00x-runtime-minimum-closure",
+    "execution_ref": "codex/fc00x-runtime-minimum-closure"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+    "relation": "ancestor"
+  },
+  "starting_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "b5aaff7f3bcf6cc3da99eb12e6500392a84657fa8bca25408ffb5696a3ce1bb0"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "157b0937425cc589a0b306e3a73aba613658fe2fb16091bae1b765f0de2db56e"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "c5fe32f8d3ba288a957c23e6958baf45373faa0f3265b9bdef640c2d7dccaa7d"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "981b3dbfc90720474602dc1fac5ebe04e76541cfd215c75ea99f3915b274fc27"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "d6e843595231611cb694d1051476523a013a8bc23b4262bc165141ee8e5a764a"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE/",
+    "base_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+    "exact_ref_rule": "Use the immutable package commit SHA in the P32 surface_handoff; never pin package.json to its own future SHA.",
+    "fc01_protection": "FC-01 worktree, branch, Authority, Gate, Evidence and historical results remain untouched and are not an input mutation surface."
+  },
+  "preflights": [
+    "RepositoryIdentity",
+    "P20AuthorityBindingPreflight",
+    "P20RedOraclePreflight"
+  ],
+  "terminal_target": "P20_READY_FOR_CONTROL_REVIEW; P31/P32 remain unauthorized until this correction is independently accepted.",
+  "nonclaims": [
+    "No FC-01 P31/P32 or FC-01 DEV/P34 result",
+    "No PX0, G4.6, G4.7, FC-13 or G5 status change",
+    "No Android APK or Android physical evidence in this package",
+    "No public C ABI delivery; docs/api remains implementation input",
+    "No new OperationKind, ObjectKind, FieldId, Protobuf field, or canonical product policy",
+    "No complete Editor composition extraction, dynamic capability registry, Inspector, Sync, background schema or export feature",
+    "P31/P32 are NOT_AUTHORIZED until P20 correction acceptance",
+    "No production source mutation was performed by this correction"
+  ],
+  "verification_design_ref": {
+    "path": "p20-verification-design.json",
+    "sha256": "5bd15f814b3696dc547d840a6bb6d1abe3b4cbaa06c2f08c841e1add75ca56f1"
+  },
+  "red_oracle_ref": {
+    "path": "p20-red-oracle.py",
+    "sha256": "6e6ef4826ca15d843431a3b9026ae90d808791f575a6da4a45ecf452f18b805f"
+  },
+  "authority_binding_oracle_ref": {
+    "path": "p20-authority-binding.py",
+    "sha256": "d501d36f6fc945e3012027c0943edd7445aaaaa5d6f4f58fb3d74e6d8cbcdb7d"
+  }
+}

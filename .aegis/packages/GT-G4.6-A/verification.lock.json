@@ -1,0 +1,31 @@
+{
+  "format": "aegis-verification-lock-v1",
+  "task_id": "GT-G4.6-A",
+  "obligations": [
+    {
+      "id": "G46A-OVERLAY-001",
+      "requirement": "Overlay-only updates cause zero SemanticGeneration mutation and zero shared RuntimeScene mutation.",
+      "oracle": "focused overlay state tests + generation counters"
+    },
+    {
+      "id": "G46A-VIEW-002",
+      "requirement": "Two RenderViewRuntime instances over the same scene maintain independent overlay state.",
+      "oracle": "two-view isolation test"
+    },
+    {
+      "id": "G46A-CHROME-003",
+      "requirement": "Selection chrome visual geometry remains screen-space/DPR stable and hit target is independently larger than the visual handle.",
+      "oracle": "zoom/DPR matrix golden + hit geometry test"
+    },
+    {
+      "id": "G46A-TRANSFORM-004",
+      "requirement": "Move/resize/rotate preview uses transient override only; commit produces exactly one final canonical SetTransforms; cancel produces none.",
+      "oracle": "TransformSession integration test + operation ledger"
+    },
+    {
+      "id": "G46A-HISTORY-005",
+      "requirement": "Existing Undo/Redo and G4/G4.5 regressions remain unchanged.",
+      "oracle": "focused existing interaction/history suites"
+    }
+  ]
+}

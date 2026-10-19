@@ -1,0 +1,186 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "GT-G4.7",
+  "implementation": {
+    "authorized_mutation_scope": [
+      "runtime/text/**",
+      "runtime/scene/**",
+      "runtime/render/**",
+      "runtime/foundation/**",
+      "apps/**",
+      "verification/**",
+      "CMakeLists.txt",
+      "CMakePresets.json",
+      "runtime/**/CMakeLists.txt",
+      "apps/**/CMakeLists.txt",
+      ".github/workflows/**",
+      ".aegis/packages/GT-G4.7/**",
+      ".aegis/results/GT-G4.7/**"
+    ],
+    "required_changes": [
+      "Run repository reconciliation at the exact anchor/descendant and record current RichText semantic, scene, render, resource, POC-04 reference and build seams before production mutation.",
+      "Run Pre-G5 Primitive Inventory first, then execute the frozen G47-I0 Image/Resource primitive closure before G47-A. If the I0 oracle cannot be satisfied, return the explicit frozen blocker.",
+      "Implement G47-I0: explicit ResourceId image provider/resolver, deterministic bundled PNG bytes, SkCodec decode/materialization, missing/ready generation observations, source_rect/content_mode behavior, cold/warm replay and zero canonical mutation on resource transition.",
+      "Materialize a renderer-neutral production RichText layout runtime/service consuming canonical RichText read projection, explicit LayoutContext/Constraint, exact font resource state and the locked text-stack profile.",
+      "Define a derived/discardable TextLayoutSnapshot/equivalent carrying local bounds, paragraph/line fragments, shaped render runs, future-editing geometry seam, dependency/resource observations and revision/generation metadata without Skia/native font handles in stable contracts.",
+      "Implement exact FontResource resolver/materialization behavior using TextStyle.font_resource_id and the pinned deterministic font corpus; prohibit implicit OS/browser fallback, nearest-weight and synthetic style substitution.",
+      "Replace heuristic RichText bounds with layout-derived Scene/Bounds/Spatial contribution. EditRichText must update only affected derived layout/bounds; SetTransforms must reuse local layout; camera/zoom must not relayout; Font Missing\u2192Ready is resource-driven derived invalidation with zero canonical mutation.",
+      "Make the same TextLayoutSnapshot consumable by Direct/NonTiled reference and production Skia text rendering. Production frame rendering must not read SemanticDocument directly.",
+      "Implement EditRichText locality workload cases: insert/delete, split/merge paragraph, inline style, paragraph style, one-among-many, repeated small edits, resource-ready transition, transform-only and camera-only negative controls.",
+      "Build Text Performance Playground 0.1 with deterministic scenarios: text-many-small, text-long, text-style-mixed, text-edit-local, text-font-cold-warm, text-transform, text-camera and structured-grid-proxy.",
+      "Prepare Windows/Web/Android qualification hooks and exact bundled font/resource package, automated zoom/DPR/reference-production capture, scenario selector, HUD/metrics and evidence export.",
+      "Continue through all executable automated/code/qualification-artifact work in one P32 until terminal success or an explicit frozen blocker; do not stop at intermediate implementation checkpoints."
+    ],
+    "forbidden_changes": [
+      "Do not add RichText canonical width/height fields, TextBox ObjectKind, Table semantics, bidi paragraph-direction schema or new collaboration semantics.",
+      "Do not implement TextEditSession, caret/selection interaction, IME composition, EditorProjection, platform text adapters/overlays, Clipboard or ExternalSurface.",
+      "Do not rebuild or replace the locked Skia SDK/text stack.",
+      "Do not expose SkParagraph, SkShaper, SkUnicode, native font handles or backend-specific objects in stable Scene/Public contracts.",
+      "Do not use OS/browser implicit font fallback, nearest-weight or synthetic bold/italic to make tests pass.",
+      "Do not make transform/camera changes trigger local RichText relayout.",
+      "Do not change G4.6 interaction/presentation semantics or close its deferred physical obligations inside G4.7 implementation.",
+      "Do not implement G5 Tile/RenderGroup/RasterCache/Scheduler/ResourceBudget optimization.",
+      "Do not wait for human/device physical observation after qualification artifacts are ready; physical observation belongs to the combined G4 qualification phase."
+    ]
+  },
+  "work_packages": [
+    {
+      "id": "G47-I0",
+      "name": "Image + Resource Primitive Closure",
+      "scope": "ResourceId provider/resolver, deterministic bundled image, SkCodec decode/materialization, source_rect/content_mode, cold/warm replay and derived resource transition"
+    },
+    {
+      "id": "G47-A",
+      "name": "Entry + Text Runtime",
+      "scope": "repo reconciliation, pre-G5 primitive inventory, RichTextLayoutService/equivalent, deterministic layout fixtures"
+    },
+    {
+      "id": "G47-B",
+      "name": "Font + Scene Integration",
+      "scope": "FontResource exact-face policy, text profile, layout-derived bounds/spatial contribution, resource invalidation"
+    },
+    {
+      "id": "G47-C",
+      "name": "Render + Locality",
+      "scope": "Direct/NonTiled oracle, production Skia rendering, EditRichText locality, transform/camera/resource negative controls"
+    },
+    {
+      "id": "G47-D",
+      "name": "Playground + Qualification Readiness",
+      "scope": "deterministic text corpus, structured-grid proxy, metrics/HUD, Windows/Web/Android qualification bundle"
+    }
+  ],
+  "tests": {
+    "required": [
+      {
+        "id": "G47-T1",
+        "command_or_oracle": "affected C++ configure/build + focused CTest",
+        "expected_result": "all affected targets/tests pass",
+        "blocking_reason": "compile/regression"
+      },
+      {
+        "id": "G47-T2",
+        "command_or_oracle": "deterministic layout fixture/replay suite",
+        "expected_result": "reference-equivalent layout digest under fixed inputs",
+        "blocking_reason": "layout correctness"
+      },
+      {
+        "id": "G47-T3",
+        "command_or_oracle": "font resolver/resource-state suite using pinned Roboto/Noto",
+        "expected_result": "exact face or explicit degraded state; no platform fallback; zero canonical mutation on resource transition",
+        "blocking_reason": "font determinism"
+      },
+      {
+        "id": "G47-T4",
+        "command_or_oracle": "Scene/Bounds/Spatial + invalidation suite",
+        "expected_result": "layout-derived bounds and local invalidation; transform/camera negative controls pass",
+        "blocking_reason": "scene correctness/locality"
+      },
+      {
+        "id": "G47-T5",
+        "command_or_oracle": "Direct/NonTiled vs production Skia render-plan and automated zoom/DPR matrix",
+        "expected_result": "reference-equivalent text semantics under frozen visual tolerances",
+        "blocking_reason": "render correctness"
+      },
+      {
+        "id": "G47-T6",
+        "command_or_oracle": "EditRichText locality traces",
+        "expected_result": "unrelated RichText objects do not relayout; affected counts/digests match expectations",
+        "blocking_reason": "G5 workload validity"
+      },
+      {
+        "id": "G47-T7",
+        "command_or_oracle": "Text Performance Playground deterministic replay",
+        "expected_result": "all frozen workload families replay with durable metrics/digests",
+        "blocking_reason": "G5 workload handoff"
+      },
+      {
+        "id": "G47-T8",
+        "command_or_oracle": "qualification bundle self-check for Windows/Web/Android",
+        "expected_result": "build/resource/scenario/HUD/capture/export artifacts are ready; no physical human observation required",
+        "blocking_reason": "combined physical qualification readiness"
+      },
+      {
+        "id": "G47-T9",
+        "command_or_oracle": "G3/G4/G4.5/G4.6 focused regression + git diff --check",
+        "expected_result": "green",
+        "blocking_reason": "upstream preservation"
+      }
+    ]
+  },
+  "hosted_verification": {
+    "required": [
+      "applicable repository CI for affected C++/Skia/text targets",
+      "hosted Windows/Web/Android build/runtime automation where provider capability exists"
+    ],
+    "optional": [
+      "human physical device observation",
+      "combined G4.6/G4.7 physical qualification",
+      "additional Apple portability smoke before G5"
+    ]
+  },
+  "evidence": {
+    "blocking": [
+      "G47-LAYOUT-001 through G47-PREG5-008 required evidence artifacts",
+      "scope audit",
+      "exact result revision",
+      "reviewer-accessible materialized ref",
+      "applicable hosted provider run refs"
+    ],
+    "corroborative": [
+      "human/device visual screenshots/video",
+      "combined physical qualification observations",
+      "final Gate verdict"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Production RichText layout/font/scene/render/locality path is code-complete.",
+      "All frozen automated verification obligations pass.",
+      "Text Performance Playground and deterministic G5 text workload corpus are reviewer-accessible.",
+      "Windows/Web/Android qualification artifacts are ready for physical observation.",
+      "Deferred G4.6 physical obligations remain explicitly open and unclaimed.",
+      "Exact result/evidence is reviewer-accessible.",
+      "terminal status is READY_FOR_COMBINED_G4_PHYSICAL_QUALIFICATION.",
+      "Producer returns to CONTROL_REVIEW without claiming G4.6 Gate PASS, G4.7 Gate PASS, G5 authorization or combined physical PASS."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "NEW_HIGH_IMPACT_FAILURE_MODE",
+      "DEPENDENCY_AUTHORITY_BLOCKER",
+      "BLOCKED_EVIDENCE"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

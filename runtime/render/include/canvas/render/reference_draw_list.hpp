@@ -37,6 +37,7 @@ struct VectorPathReferenceCommand final {
 };
 struct RichTextReferenceCommand final {
     semantic::RichTextContent content;
+    std::shared_ptr<const text::TextLayoutSnapshot> layout;
     bool operator==(const RichTextReferenceCommand&) const = default;
 };
 struct VectorStrokeReferenceCommand final {

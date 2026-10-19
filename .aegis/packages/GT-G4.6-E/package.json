@@ -1,0 +1,37 @@
+{
+  "format": "aegis-execution-package-v1",
+  "task_id": "GT-G4.6-E",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "execution_ref": "codex/g4-6-e-transform-host",
+  "task_anchor": {
+    "revision": "cdf9cf631ce86c7b6b6da4376cb9e25a65f44718",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "72e6c22aa6725a957dc0021e23f3719bc9dae6e298b2541e9da1bf44b2eed063"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "785d2d04c72ed269ab6d786d907f410478a94f048a04efd85fdc764f6fdb4a7b"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "babffb5a12386cd57b9b21d26e4cd148b742a79c27c2e080e38624c0a7879f30"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "64b8b21b8b63eca34c86768c6c7a5d8e0a2751ae6daa5bac5abf32a91f17b338"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "83093519a765a293c192711af12ba827517df796404e2dd15b4afa03994ce29d"
+  }
+}

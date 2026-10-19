@@ -1,0 +1,28 @@
+{
+  "task_id": "GT-DUI-M1",
+  "result_revision": "1faeacd3e469ee4d94f8d755cdf4a772b21295b3",
+  "branch": "codex/dui-m1-canvas-control",
+  "working_tree_before_evidence": "clean",
+  "authorized_roots": [
+    "runtime/control/**",
+    "runtime/foundation/include/canvas/runtime/**",
+    "runtime/ink/**",
+    "runtime/render/**",
+    "apps/ink_playground/**",
+    "debug_ui/**",
+    "CMakeLists.txt",
+    "cmake/AxiomBuildInfo.cmake",
+    "verification/tools/dui_m1_configure.py",
+    "verification/corpus/golden/dui-m1/**",
+    ".aegis/results/GT-DUI-M1/**"
+  ],
+  "forbidden_observed": [
+    "M2 background/export/object-list",
+    "network Sync",
+    "G5 optimization",
+    "SDK lock changes"
+  ],
+  "package_inputs_modified": false,
+  "old_results_modified": false,
+  "git_diff_check": "PASS"
+}

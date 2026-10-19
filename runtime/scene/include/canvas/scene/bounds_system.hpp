@@ -3,6 +3,8 @@
 #include "canvas/foundation/world_geometry.hpp"
 #include "canvas/semantic/object_record.hpp"
 
+namespace canvas::text { struct TextLayoutSnapshot; }
+
 namespace canvas::scene {
 
 struct BoundsResult final {
@@ -12,7 +14,8 @@ struct BoundsResult final {
     bool finite = true;
 };
 
-[[nodiscard]] BoundsResult computeBounds(const semantic::ObjectRecord& record) noexcept;
+[[nodiscard]] BoundsResult computeBounds(const semantic::ObjectRecord& record,
+    const text::TextLayoutSnapshot* textLayout = nullptr) noexcept;
 
 } // namespace canvas::scene
 

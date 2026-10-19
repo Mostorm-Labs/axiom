@@ -1,0 +1,11 @@
+{
+  "engage_logical_px": 6,
+  "release_logical_px": 10,
+  "axes": "independent",
+  "features": ["min-edge", "center", "max-edge"],
+  "excluded_targets": ["selected", "transformed"],
+  "tie_break": ["correction_distance", "ObjectId_bytewise", "target_feature", "source_feature"],
+  "hysteresis": "active target retained through release threshold",
+  "canonical_mutation": "none; guides/candidates are transient",
+  "evidence_test": "G46BViewportConstraints"
+}

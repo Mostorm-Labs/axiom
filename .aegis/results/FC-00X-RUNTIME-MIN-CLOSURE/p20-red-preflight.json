@@ -1,0 +1,11 @@
+{
+  "schema": "fc00x-p20-red-preflight-v1",
+  "source_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+  "command": "python .aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE/p20-red-oracle.py --root . --expect baseline-red",
+  "exit_code": 1,
+  "expected_exit_code": 1,
+  "status": "RED",
+  "stdout": "{\"expect\": \"baseline-red\", \"observations\": {\"FC00X-RED-S1-source-cancel-delivery\": {\"baseline_defect_observed\": true, \"details\": \"notifySourceLost discards ingress result and unregister has no source-scoped cancellation path\"}, \"FC00X-RED-S3-control-readback-truth\": {\"baseline_defect_observed\": true, \"details\": \"snapshot unconditionally reports targetAvailable/writable/busy without owner state\"}}, \"oracle\": \"FC-00X-P20-RED-v1\"}",
+  "stderr": "",
+  "production_mutation_performed": false
+}

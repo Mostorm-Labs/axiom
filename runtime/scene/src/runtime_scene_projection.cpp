@@ -1,6 +1,7 @@
 #include "canvas/scene/runtime_scene_projection.hpp"
 
 #include "canvas/scene/bounds_system.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 
 #include <algorithm>
 #include <sstream>
@@ -142,7 +143,7 @@ const InspectionRecord* RuntimeSceneProjection::find(semantic::ObjectId id) cons
     return it == records.end() ? nullptr : &*it;
 }
 
-foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::SemanticReadView& view) {
+foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::SemanticReadView& view, text::RichTextLayoutService* textService) {
     RuntimeSceneProjection out;
     out.generation = view.generation();
     auto source = view.allObjects();
@@ -151,10 +152,13 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
         if (record.id.isZero() || !semantic::isKnownObjectKind(record.kind)) {
             return foundation::Result<RuntimeSceneProjection>::failure({foundation::ErrorCode::kInvalidRecord, "invalid semantic object"});
         }
-        const auto bounds = computeBounds(record);
+        const auto layout = textService && record.kind == semantic::ObjectKind::kRichText
+            ? textService->resolve(record.id,std::get<semantic::RichTextContent>(record.content)) : nullptr;
+        const auto bounds = computeBounds(record,layout.get());
         out.records.push_back(InspectionRecord{record.id, record.kind, record.kind_version,
             record.placement, record.transform, record.properties, record.content, record.erase_masks,
-            bounds.geometry, bounds.visual, bounds.world, geometryText(record), dependencies(record)});
+            deriveGeometry(record),
+            bounds.geometry, bounds.visual, bounds.world, layout ? layout->digest : geometryText(record), dependencies(record), layout});
     }
     std::sort(out.records.begin(), out.records.end(), [](const auto& a, const auto& b) {
         if (a.placement.order_key != b.placement.order_key) return a.placement.order_key < b.placement.order_key;

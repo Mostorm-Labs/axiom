@@ -1,0 +1,23 @@
+{
+  "task_id": "GT-G4.6-B",
+  "authorized_scope": ["runtime/foundation/**", "runtime/render/**", "runtime/interaction/**", "runtime/scene/**", "apps/ink_playground/**", "debug_ui/**", ".aegis/packages/GT-G4.6-B/**", ".aegis/results/GT-G4.6-B/**"],
+  "included_source_files": [
+    "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+    "runtime/interaction/include/canvas/interaction/viewport_constraints.hpp",
+    "runtime/interaction/src/viewport_constraints.cpp",
+    "runtime/interaction/include/canvas/interaction/viewport_interaction_controller.hpp",
+    "runtime/interaction/src/viewport_interaction_controller.cpp",
+    "runtime/interaction/tests/viewport_constraints_test.cpp",
+    "runtime/interaction/CMakeLists.txt",
+    "apps/ink_playground/common/ink_playground_host.hpp",
+    "apps/ink_playground/common/ink_playground_host.cpp",
+    "apps/ink_playground/platform/windows/main.cpp",
+    "apps/ink_playground/platform/web/bridge.cpp",
+    "apps/ink_playground/tests/ink_playground_test.cpp",
+    "apps/ink_playground/tests/viewport_query_structure_test.cpp",
+    "apps/ink_playground/CMakeLists.txt"
+  ],
+  "excluded": ["build-windows-real/", "build-windows-clang/", "build-windows-dab-qualification/", "evidence/", "imgui.ini", ".aegis/results/GT-G4.5-FINAL-VECTOR-CLOSURE/", ".aegis/results/GT-G4.6-E/"],
+  "forbidden_semantics_checked": ["camera persistence in SemanticDocument", "SetTransforms changes", "document-wide pointer hot-path scan", "G5 layout/minimap/cache/scheduler"],
+  "status": "IN_SCOPE"
+}

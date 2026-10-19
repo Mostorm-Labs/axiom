@@ -1,0 +1,10 @@
+{
+  "schema": "fc00x-s2-frame-coordinator-v1",
+  "obligations": ["FC00X-S2-01", "FC00X-S2-02", "FC00X-S2-03"],
+  "test": "FC00XFrameCoordinator",
+  "result": "PASS",
+  "assertions": ["busy retry", "stale rejection", "canonical/preview role separation", "qualified handoff retirement", "close invalidation", "real DPR/metrics identity"],
+  "related_regressions": ["G3PreviewSurface", "G3SurfacePresentation", "G4CanonicalHandoff"],
+  "provider": "C:/fc00x-runtime-build",
+  "source_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc"
+}

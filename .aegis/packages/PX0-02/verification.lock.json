@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-02",
+  "obligations": [
+    {
+      "id": "PX0-02-V1-structured-snapshot-envelope",
+      "requirement": "The live DebugSnapshot is a bounded structured envelope with Stamp, Coherence, Product, Axiom, Arc, Platform, Telemetry, and Activity domains; the global Capability/CapabilityState array is removed.",
+      "oracle": "PX0DebugSnapshot contract tests compile against the exact envelope, use a dependent-member check to prove DebugSnapshot has no capabilities member, and round-trip the structured snapshot through MutexCopySnapshotChannel.",
+      "acceptance": "No live Capability[] bag remains in snapshot.hpp or platform snapshot construction and the structured snapshot is copyable/default-safe.",
+      "evidence_required": "PX0DebugSnapshot plus exact source diff"
+    },
+    {
+      "id": "PX0-02-V2-section-local-availability",
+      "requirement": "Each owner domain has independent DebugAvailability state and one absent/degraded provider cannot prevent other domains from remaining usable.",
+      "oracle": "Snapshot assembler tests cover null Arc with Product/Axiom/Platform/Telemetry still populated, absent provider -> Unsupported, and Platform surfaceAvailable=false -> Degraded.",
+      "acceptance": "Section availability follows the frozen availability rule and current panels derive their legacy availability from sections rather than a global capability bitset.",
+      "evidence_required": "PX0DebugSnapshot and DUIM1PanelModel"
+    },
+    {
+      "id": "PX0-02-V3-coherence-and-retry",
+      "requirement": "Common capture validates product identity without a global Runtime lock and retries at most once.",
+      "oracle": "Fake RuntimeFacade sequences prove: stable first attempt -> Coherent; first attempt changes then second stabilizes -> Coherent; both attempts change -> MixedGeneration; missing Runtime -> Stale.",
+      "acceptance": "Tests also assert read counts so capture performs no more than two full attempts/four RuntimeState reads per capture.",
+      "evidence_required": "PX0DebugSnapshot"
+    },
+    {
+      "id": "PX0-02-V4-stamp-and-sequence-semantics",
+      "requirement": "Common assembler owns timestamp/snapshot sequencing while preserving the owner sequence used by current control deadlines.",
+      "oracle": "Tests assert snapshotSequence increments per capture, stamp.sequence equals TelemetrySnapshot.sequence when telemetry exists, monotonicTimeNs is populated, frameId prefers telemetry.canonicalFrames then platform.presentCount, and identity fields come from the published Product projection.",
+      "acceptance": "Current Debug UI command deadline behavior is not silently rebased onto an unrelated assembler-local counter.",
+      "evidence_required": "PX0DebugSnapshot"
+    },
+    {
+      "id": "PX0-02-V5-common-platform-assembly",
+      "requirement": "Windows and Web stop assembling DebugSnapshot fields locally and use DebugSnapshotAssembler with owner providers.",
+      "oracle": "Repository structural tests assert Windows buildDebugSnapshot(...) and Web debugSnapshot(...) are absent, DebugSnapshotAssembler is present in both composition roots, Web provides an IArcDiagnostics adapter for the existing preview/input/handoff observations, and no replacement platform-local field-mapping function exists.",
+      "acceptance": "Platform code constructs provider/source objects and calls assembler.capture(); snapshot domain mapping lives only in common debug_ui assembler code.",
+      "evidence_required": "Windows/Web structural pytest contracts plus exact source diff"
+    },
+    {
+      "id": "PX0-02-V6-existing-debug-ui-regression",
+      "requirement": "The current Debug UI remains buildable and preserves current product-control, Surface-control, selection, Brush/Eraser, telemetry, receipt display, input-capture, and active-stroke throttling behavior while reading the structured snapshot.",
+      "oracle": "DUI20DebugUiContracts, DUIM1PanelModel, PX0RuntimeFacadeContract, DUIM1RuntimeFacade, DUIM1ViewControls, Windows/Web structural tests pass; source review confirms controller/windows_host only read structured sections and existing active-stroke throttling/input-capture code remains.",
+      "acceptance": "No layout/workbench redesign is introduced and current control paths remain owner-routed.",
+      "evidence_required": "frozen regression set at exact result revision"
+    },
+    {
+      "id": "PX0-02-V7-activity-transport-only",
+      "requirement": "PX0-02 preserves current last Product/Surface receipt observation through DebugSnapshot.activity without implementing the PX0-03 bounded Activity Log.",
+      "oracle": "Snapshot tests exercise DebugActivitySource passthrough; Windows current last receipts are exposed through that source; no activity_log.hpp/.cpp or request-history buffer is added.",
+      "acceptance": "Existing receipt rows can continue to render, while full activity history/routing remains absent.",
+      "evidence_required": "PX0DebugSnapshot plus exact source diff"
+    },
+    {
+      "id": "PX0-02-V8-no-premature-layers-or-evidence-claims",
+      "requirement": "PX0-02 does not enter PX0-03+ architecture, Preview repair, or physical evidence closure.",
+      "oracle": "Exact diff contains no DebugControlRouter, DebugActivityLog, Workspace/PanelRegistry/Workbench, generic DebugCommand retirement, preview visibility repair, or .aegis/results/GT-DUI-M1 mutation.",
+      "acceptance": "Scope remains structured observation only and no physical/Gate PASS claim is added.",
+      "evidence_required": "exact result diff"
+    }
+  ]
+}

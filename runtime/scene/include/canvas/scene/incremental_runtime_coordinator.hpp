@@ -58,6 +58,12 @@ class IncrementalRuntimeCoordinator final {
     [[nodiscard]] const RuntimeScene& runtimeScene() const noexcept {
         return runtimeScene_;
     }
+    void setTextLayoutService(text::RichTextLayoutService* service) noexcept {
+        textLayoutService_ = service; runtimeScene_.setTextLayoutService(service);
+    }
+    // Derived resource refresh uses the already-published read projection;
+    // it never reads or writes the canonical document or manufactures an Operation.
+    foundation::Result<SceneSyncReceipt> refreshTextResources();
     [[nodiscard]] bool publicationObservationCoherent() const noexcept {
         return publicationObservationCoherent_;
     }
@@ -87,6 +93,7 @@ class IncrementalRuntimeCoordinator final {
 
     SceneBinding& binding_;
     RuntimeScene runtimeScene_;
+    text::RichTextLayoutService* textLayoutService_ = nullptr;
     std::optional<RuntimeCheckpoint> checkpointFailure_;
     std::optional<RuntimeScene::PreparedPublication> pendingPublication_;
     ScenePublicationGate publicationGate_;

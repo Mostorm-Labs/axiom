@@ -1,0 +1,39 @@
+{
+  "schema": "fc00x-scene-resource-composition-repair-v0.11",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "changes": [
+    "Brush preview platform qualification is retained explicitly and canonical-visible retirement handles canonical-first and preview-first feedback order.",
+    "WebSurfaceHost routes canonical submit and generation-matched PresentedFeedback through RuntimeComposition.",
+    "SceneAdapter no longer carries an unused SceneBinding member.",
+    "Release test targets retain assertions so camera verification remains active."
+  ],
+  "tests": {
+    "brush_runtime_pipeline": "PASS",
+    "brush_canonical_first_feedback_order": "PASS",
+    "runtime_composition": "PASS",
+    "web_surface_host": "PASS",
+    "minimal_runtime_host": "PASS",
+    "protected_render_scene_resource_matrix": "13/13 PASS"
+  },
+  "windows": {
+    "compiler": "MSVC 19.51.36246.0",
+    "exe": "out/p32-skia-msvc1951/apps/axiom_canvas_demo/axiom_canvas_demo_windows.exe",
+    "sha256": "D725C6C600CD8088879B4B115252C395C408D5E89323B3B99852262C3A9B7B4C"
+  },
+  "web": {
+    "toolchain": "Emscripten 6.0.6 / LLVM 22.1.8",
+    "skia": ".deps/skia-sdk/web-wasm-webgl2/release",
+    "debug_off": {
+      "js_sha256": "53900934CA61415A057833FD3B4A4669310CF3DE72ABD7399BE5599A51D6E015",
+      "wasm_sha256": "C355E8C2F274603D680682766419F81046866C09E8769B45D8A15F41A1070F38",
+      "html_sha256": "C50DC95CAC085C66F176843EF54F15848C32B2A7A5CBFBC520F2225C74373AD0"
+    },
+    "debug_on": {
+      "js_sha256": "53900934CA61415A057833FD3B4A4669310CF3DE72ABD7399BE5599A51D6E015",
+      "wasm_sha256": "C355E8C2F274603D680682766419F81046866C09E8769B45D8A15F41A1070F38",
+      "html_sha256": "C50DC95CAC085C66F176843EF54F15848C32B2A7A5CBFBC520F2225C74373AD0"
+    }
+  },
+  "physical_status": "PHYSICAL_PENDING",
+  "official_gate_pass_claimed": false
+}

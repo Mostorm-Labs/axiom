@@ -1,0 +1,110 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-verification-lock-v1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "stage": "P20_VERIFICATION_DESIGN_CORRECTION",
+  "status": "P20_CORRECTED_READY_FOR_CONTROL_REVIEW",
+  "trusted_basis": {
+    "repository_revision": "201cc8841a0e6de4cd4b8a3dfc6c337820d35704",
+    "authority_lock": "authority.lock.json",
+    "verification_owner": "Aegis Implementation P31 package, with independent Control Review before P32",
+    "test_cli_rule": "Resolve the exact configured build directory and test target from CTest discovery; never treat an unmatched regex as PASS."
+  },
+  "obligations": [
+    {
+      "id": "FC00X-S0-01",
+      "requirement": "Freeze one-owner Document/View/Runtime composition, narrow Host ports, async capture lifetime, close order and platform execution context before production mutation.",
+      "oracle": "ImplementationDesignPreflight records current Host -> Runtime -> owner flow, target owner/prepare/commit/publication/abort flow, exact affected files, and no unresolved semantic decisions; independent scope reviewer checks the record against current headers and ADRs.",
+      "acceptance": "The preflight has unresolved_semantic_decisions=[], authority_conflict=false, verification_conflict=false, package_scope_conflict=false, and maps every S1-S3 obligation to an oracle.",
+      "evidence_required": [
+        "implementation-design-preflight.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-S1-01",
+      "requirement": "Source loss/unregister delivers a keyed Cancel to the real Session owner and does not cancel another source sharing the same pointerId.",
+      "oracle": "Counting SessionOwner adapter receives normalized Cancel for source A; source B remains live; unregister and sourceLost are both exercised; old-generation events are submitted after cancel.",
+      "acceptance": "RED on the untouched baseline because RuntimeAppBinding discards sourceLost output and unregister has no cancellation delivery; GREEN has exactly one keyed Cancel, B alive, no canonical commit, and next Down starts a fresh generation.",
+      "evidence_required": [
+        "s1-input-session.json",
+        "red-preflight.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-S3-03",
+      "requirement": "Control snapshot/readback reports real availability, writable, busy, permission, resource, revision, receipt and confirmed values; it does not hard-code PASS.",
+      "oracle": "Counting/fake owner drives unavailable, busy, locked, stale, applied and failed states through the binding; compare snapshot and receipt to owner state.",
+      "acceptance": "RED on the untouched baseline because CanvasControlBinding hard-codes targetAvailable/writable/busy; GREEN mirrors owner truth and separates pending draft from confirmed Runtime values.",
+      "evidence_required": [
+        "s3-control-truth.json",
+        "red-preflight.json"
+      ],
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "FC00X-SCOPE-01",
+      "requirement": "Only the authorized runtime/host/test/evidence paths change, and FC-01 worktree and historical controls remain untouched.",
+      "oracle": "Exact diff from 201cc8841a0e6de4cd4b8a3dfc6c337820d35704, protected-path audit, git diff --check, and comparison of FC-01 worktree/status before and after.",
+      "acceptance": "No product feature expansion, public ABI rewrite, package-input mutation, FC-01/PX0/G4 result mutation, or unauthorized path; clean diff check.",
+      "evidence_required": [
+        "scope-audit.json",
+        "repository-reconciliation.json"
+      ],
+      "classification": "BLOCKING"
+    }
+  ],
+  "existing_regression_set": [
+    "G3RuntimeAppBinding",
+    "C1CommonIngress",
+    "G4MultiContactCoordinator",
+    "G4ViewportGesture",
+    "C0CanvasInteractionCoordinator",
+    "C0ViewportInteractionController",
+    "G4PlatformNormalization",
+    "C1CrossPlatformFixtureParity",
+    "G3RenderTargetSwitching",
+    "G3SkiaSurfaceProvider",
+    "G3PreviewSurface",
+    "G3SurfacePresentation",
+    "G4CanonicalHandoff",
+    "G4WindowsPreviewDispatch",
+    "G45BrushRuntimePipeline",
+    "G46EditingOverlay",
+    "G4InkPlaygroundComposition",
+    "G4InkPlaygroundSurface",
+    "G4InkPlaygroundPreview",
+    "G4InkPlaygroundSelection",
+    "G46PlaygroundTransform",
+    "PX0RuntimeFacadeContract",
+    "PX0ControlRouter",
+    "PX0DebugSnapshot",
+    "DUIM1RuntimeFacade",
+    "DUIM1Control"
+  ],
+  "planned_oracle_targets": [
+    "FC00XRuntimeOwnerClosure",
+    "FC00XFrameCoordinator",
+    "FC00XControlTruth",
+    "FC00XRuntimeIsolation"
+  ],
+  "p31_p32_authorized": false,
+  "red_oracle_contract": [
+    {
+      "id": "FC00X-RED-S1-source-cancel-delivery",
+      "mechanism": "read-only source/contract oracle",
+      "expected_exit": 1,
+      "evidence": "p20-red-preflight.json",
+      "post_fix_acceptance": "separate owner-adapter test in future accepted P32 package"
+    },
+    {
+      "id": "FC00X-RED-S3-control-readback-truth",
+      "mechanism": "read-only source/contract oracle",
+      "expected_exit": 1,
+      "evidence": "p20-red-preflight.json",
+      "post_fix_acceptance": "separate degraded-owner test in future accepted P32 package"
+    }
+  ],
+  "design_note": "The remaining S1/S2/S3 implementation obligations are preserved as candidate future P31 inputs, not executable P32 requirements in this correction."
+}

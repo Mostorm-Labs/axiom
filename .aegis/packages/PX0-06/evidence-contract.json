@@ -1,0 +1,34 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-06",
+  "artifacts": [],
+  "review_boundary": "Independent P34 resolves the exact PX0-06 package/result, Windows/Web host-convergence structural evidence, inherited PX0/DUI focused regressions, fresh Windows native build, Web physical-target build, and exact authorized scope.",
+  "hosted_verification_required": false,
+  "blocking_evidence": [
+    "reviewer-resolvable exact result revision/ref",
+    "Windows common Debug UI structural contract",
+    "Windows selection structural contract",
+    "Windows encoding structural contract",
+    "Web Debug UI structural contract",
+    "PX0PanelRegistry",
+    "PX0Workbench",
+    "DUI20DebugUiContracts",
+    "PX0RuntimeFacadeContract",
+    "DUIM1PanelModel",
+    "PX0ControlRouter",
+    "PX0DebugSnapshot",
+    "DUIM1ViewControls",
+    "DUIM1RuntimeFacade",
+    "fresh RF01=ON / POC01=OFF native canvas_debug_ui + Windows application build",
+    "g4-5-web-debug-ui-physical Web application build",
+    "authorized-scope diff and git diff --check"
+  ],
+  "corroborative_evidence": [
+    "manual Windows/Web spot-check",
+    "clean worktree"
+  ],
+  "known_non_blocking_environment_note": "The previously identified unrelated MSVC full-tree runtime/semantic C4702 /WX issue remains outside PX0-06. The frozen Windows evidence uses the accepted clean clang-cl profile.",
+  "structural_runner_note": "If pytest is unavailable and the structural files remain plain Python test_* functions without pytest fixtures/decorators/parametrization, direct Python invocation is an acceptable equivalent oracle; record the runner precisely.",
+  "official_claim_boundary": "P32 may return READY_FOR_CONTROL_REVIEW only. It must not issue PX0-06/PX0/DUI-M1/Preview/physical/Gate PASS.",
+  "materialization_requirement": "The exact implementation result must be pushed to refs/heads/codex/px0-06-host-convergence or an equivalently reviewer-resolvable exact ref before returning READY_FOR_CONTROL_REVIEW."
+}

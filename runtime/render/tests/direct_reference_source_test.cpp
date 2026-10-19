@@ -180,7 +180,8 @@ std::vector<RuntimeSceneRecord> runtimeSourceCorpus() {
             .worldBounds = world[index],
             .referenceGeometryDigest = "fixture-independent-geometry-" + std::to_string(100 + index),
             .directDependencies = {ObjectId::fromUint64(7000U + index),
-                                   ObjectId::fromUint64(8000U + index)}});
+                                   ObjectId::fromUint64(8000U + index)},
+            .textLayout = nullptr});
     }
     return records;
 }

@@ -1,0 +1,25 @@
+{
+  "format": "aegis-execution-skip-v1",
+  "task_id": "GT-G4.7",
+  "status": "NOT_EXECUTED_AFTER_PREFLIGHT_BLOCKER",
+  "skipped": [
+    "G47-A",
+    "G47-B",
+    "G47-C",
+    "G47-D",
+    "G47-T1",
+    "G47-T2",
+    "G47-T3",
+    "G47-T4",
+    "G47-T5",
+    "G47-T6",
+    "G47-T7",
+    "G47-T8",
+    "G47-T9"
+  ],
+  "reason": "Production mutation/build/qualification tests are not run after PackageBindingPreflight/EvidenceContractPreflight failure. Read-only reconciliation/inventory and blocker evidence materialization were executed.",
+  "g47_a_partial_read_only_work": ["repository reconciliation", "pre-G5 primitive inventory"],
+  "g47_i0": "Proposed by targeted readiness; not implemented or admitted as an authorized materialized work package.",
+  "no_fabricated_outputs": true,
+  "next_owner": "P31/Control"
+}

@@ -8,6 +8,8 @@
 #include <span>
 
 class SkCanvas;
+namespace canvas::render { class ImageResourceResolver; }
+namespace canvas::render { class SkiaTextResources; }
 
 namespace canvas::render::internal {
 
@@ -15,7 +17,19 @@ namespace canvas::render::internal {
 // SkiaRenderer/provider production path. The implementation is kept in the
 // render target so there is one validation and nine-command mapping.
 [[nodiscard]] BackendSubmissionResult drawReferencePlanToSkCanvas(
-    SkCanvas& canvas, const FramePlan& plan);
+    SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,
+    SkiaTextResources* textResources = nullptr, bool includeInk = true);
+// Repaint the dedicated ink lane after a transient creation object. Ink is
+// intentionally topmost while a Shape/Connector is being authored.
+void drawInkEntriesToSkCanvas(
+    SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,
+    SkiaTextResources* textResources = nullptr);
+// Reuse the canonical renderer command mapping for a view-owned provisional
+// object. This value never enters Semantic or RuntimeScene storage.
+void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
+                                  const semantic::ObjectRecord& object);
+void drawTransientEntryToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
+                                  const ReferenceTraversalEntry& entry);
 
 void drawDabInstancesToSkCanvas(
     SkCanvas& canvas, std::span<const semantic::DabInstance> dabs,

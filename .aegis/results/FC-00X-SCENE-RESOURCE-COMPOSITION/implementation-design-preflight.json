@@ -1,0 +1,57 @@
+{
+  "schema": "fc00x-scene-composition-implementation-design-preflight-v0.6",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "stage": "P32_IMPLEMENTATION",
+  "repository": "Mostorm-Labs/axiom",
+  "observed_revision": "b3e0209033eb3146a77eae506ee25c45c2ec3876",
+  "task_anchor": "0e9ba85f94d62e6e3939d5d1397b1c681c1b1a2a",
+  "package_ref": "repo:.aegis/packages/FC-00X-SCENE-RESOURCE-COMPOSITION/package.json@e87a0fb3cec8e667fb0df3e8a4c2650c9e437c10",
+  "package_binding": {
+    "status": "PASS",
+    "hashes": {
+      "authority.lock.json": {
+        "expected": "5b734157d844b1ab9bf18b12daef777b2aea393a5d72f387da9ead8954cbb8ac",
+        "actual": "5b734157d844b1ab9bf18b12daef777b2aea393a5d72f387da9ead8954cbb8ac",
+        "match": true
+      },
+      "verification.lock.json": {
+        "expected": "e96ebb7120fa1c12b3c8db539d64bb9186fe354748159160069b82621b656354",
+        "actual": "e96ebb7120fa1c12b3c8db539d64bb9186fe354748159160069b82621b656354",
+        "match": true
+      },
+      "execution-contract.json": {
+        "expected": "2bbed55a17332ae72d1c4853479ce6c5f48ded6fb9d16090d2da4806e8e6710b",
+        "actual": "2bbed55a17332ae72d1c4853479ce6c5f48ded6fb9d16090d2da4806e8e6710b",
+        "match": true
+      },
+      "implementation-context.md": {
+        "expected": "8e5820b3eca6609f989b17434618fd40a9cb6c48bac13384ec70400913517dad",
+        "actual": "8e5820b3eca6609f989b17434618fd40a9cb6c48bac13384ec70400913517dad",
+        "match": true
+      },
+      "evidence-contract.json": {
+        "expected": "328bb876397e2cfd7563a8c0114b610f7187cc41514c42dafe4fcb1cbf22a506",
+        "actual": "328bb876397e2cfd7563a8c0114b610f7187cc41514c42dafe4fcb1cbf22a506",
+        "match": true
+      }
+    },
+    "authority_oracle": true,
+    "composition_red": true
+  },
+  "owner_graph": {
+    "document": "CanvasEditingRuntime and Semantic OperationEngine",
+    "scene": "SceneBinding and IncrementalRuntimeCoordinator",
+    "runtime_scene": "RuntimeSceneProjection through coordinator",
+    "resources": "ResourceManifest bound at 4bef9d6e plus ResourceProvider bytes",
+    "frame": "RuntimeFrameCoordinator plus platform feedback",
+    "host": "Windows/Web host owns OS/GPU/thread facts",
+    "composition": "not implemented because upstream F08 blocker stops before production mutation"
+  },
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "upstream_dependency_conflict": true,
+  "outcome": "BLOCKED_IMPLEMENTATION",
+  "stop_reason": "F08 remains open at accepted starting revision; composition production mutation is not authorized until the upstream frame qualification boundary is repaired and reverified."
+}

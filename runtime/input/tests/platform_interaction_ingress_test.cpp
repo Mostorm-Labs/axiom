@@ -5,6 +5,17 @@
 using namespace canvas::input;
 
 int main() {
+  // Reject the entire mixed-source batch before admitting either Down.
+  {
+    PlatformInteractionIngress mixedIngress;
+    PlatformPointerBatch mixed;
+    PlatformPointerSample a{11, 7, 1, 100}; a.phase = PointerPhase::kDown;
+    auto b = a; b.source = 12;
+    mixed.samples = {a, b};
+    const auto rejected = mixedIngress.submit(mixed);
+    assert(!rejected.accepted && rejected.normalized.samples.empty());
+    assert(mixedIngress.activeCount() == 0U);
+  }
   PlatformInteractionIngress ingress;
   assert(ingress.captureGate().onBatchBoundary() == InputCaptureDecision::kPassThrough);
   assert(ingress.captureGate().onTerminalBoundary() == InputCaptureDecision::kRelease);
@@ -30,10 +41,25 @@ int main() {
   const auto third = ingress.submit(up);
   assert(third.accepted && third.ended == 1 && ingress.activeCount() == 0);
 
+  down.samples.front().sequence = 3;
+  down.samples.front().timestampNs = 350;
   const auto reused = ingress.submit(down);
   assert(reused.normalized.samples.front().key.generation == key.generation + 1);
 
-  const auto lost = ingress.sourceLost(11, 4, 400);
-  assert(lost.accepted && lost.terminalCancel && ingress.activeCount() == 0);
+  // A stale cancellation retains its full generation and must not end the
+  // freshly reused contact.
+  const auto staleCancel = ingress.cancelPointer(key, 4, 400);
+  assert(!staleCancel.accepted && ingress.activeCount() == 1);
+  const auto exactCancel = ingress.cancelPointer(reused.normalized.samples.front().key, 5, 500);
+  assert(exactCancel.accepted && exactCancel.ended == 1 && ingress.activeCount() == 0);
+
+  PlatformPointerBatch stale{};
+  stale.samples.push_back({11, 7, 2, 250, 99, 99, 0.6F, 0.0F, 0.0F, {}, {},
+                           SampleProvenance::kConfirmedCurrent, PointerPhase::kMove});
+  const auto staleResult = ingress.submit(stale);
+  assert(!staleResult.accepted && staleResult.normalized.samples.empty());
+
+  const auto lost = ingress.sourceLost(11, 6, 600);
+  assert(!lost.accepted && !lost.terminalCancel && ingress.activeCount() == 0);
   return 0;
 }

@@ -1,0 +1,77 @@
+{
+  "anchor_ancestor": true,
+  "package_locks": [
+    {
+      "path": "authority.lock.json",
+      "sha256": "bbdd718e108fd048580992350cea4f4c881467fac551a1dc77dbdcde0764e543"
+    },
+    {
+      "path": "verification.lock.json",
+      "sha256": "73542fa569ab478b55c3d8077f50969f0298012e37ad4b06e5658b1b3d53f6f0"
+    },
+    {
+      "path": "execution-contract.json",
+      "sha256": "5b0efb82fa7f1aa9edba09bbbdfb2cb38e73a1fb934dc5b0b2f9e9ce2237ce1f"
+    },
+    {
+      "path": "implementation-context.md",
+      "sha256": "6ed4d40469dd50adef1b913a217f9b5582d637af4a0ea0569f22c7afff2f3fc1"
+    },
+    {
+      "path": "evidence-contract.json",
+      "sha256": "aaeff1a112772f2b4a6c5e65d310fdf193e0d2974cf2c2c8c23b75f9c5d44b63"
+    },
+    {
+      "path": "expected-crosswalk.json",
+      "sha256": "11182d2ce1ec6ab7b070b816ae14cec9358fefbdcc784b5470efdcc4cec262ac"
+    }
+  ],
+  "package_revision": "06bcf8348f7898ddfb3a327a81ba1874857e47e1",
+  "position": "ANCHOR_DESCENDANT_WITHOUT_CURSOR",
+  "red_before_first_root_mutation": true,
+  "red_original_observed_during_preflight": "official pinned CLI exit 2 / INVALID; also reproduced below",
+  "repository": "Mostorm-Labs/axiom",
+  "repository_identity": "https://github.com/Mostorm-Labs/axiom.git",
+  "source_files": {
+    ".aegis/authorities.json": {
+      "archive_matches": true,
+      "git_blob_sha1": "ced6a70072b1d23adb229386772f30443773ba15",
+      "length": 5729,
+      "sha256": "c867ad647febef058d22ec06506ef03e943f900b57b58b356dbc426e7f942525"
+    },
+    ".aegis/evidence.json": {
+      "archive_matches": true,
+      "git_blob_sha1": "e3810158c6cf9e1fab17a41fcb18bd2816cc3456",
+      "length": 37695,
+      "sha256": "de5e20c94f523e7d7d76ab8e19d2b5173c50d5cdbfbc2095ccc2e75621b91b2a"
+    },
+    ".aegis/gates.json": {
+      "archive_matches": true,
+      "git_blob_sha1": "b464ad3ae83df38255b37488be3b768fff14a125",
+      "length": 13680,
+      "sha256": "85d428484ee6f67a898c61db231acd56a2dc959967a99711ee2d955c13c26591"
+    },
+    ".aegis/integrations.json": {
+      "archive_matches": true,
+      "git_blob_sha1": "9f4c8321204b5fe0badcb347ef41c93c856fdd9f",
+      "length": 15582,
+      "sha256": "b7f26b0784e71906734eb32303c7c470bc7f06b927096e6ed1ea001f6cdc29b0"
+    },
+    ".aegis/project.json": {
+      "archive_matches": true,
+      "git_blob_sha1": "917f90742f407033dd60e22c69558f67b96c8c4e",
+      "length": 1285,
+      "sha256": "f36796531d98a0d52b31bc3ecca23fcce910c44b2c456fd54f8b7377fd4b9aeb"
+    },
+    ".aegis/state.json": {
+      "archive_matches": true,
+      "git_blob_sha1": "0a1191c4181beac361a48235c4b2a245dedc01ea",
+      "length": 7033,
+      "sha256": "6728985ce47d9ed18f018ce5395ae8d93874fbe4ecba4191783f39617a54ec2c"
+    }
+  },
+  "source_revision": "6fc1508f1a971abc5a90e068d0cc5f6ae82c064b",
+  "starting_revision": "06bcf8348f7898ddfb3a327a81ba1874857e47e1",
+  "tool_repository": "https://github.com/Mostorm-Labs/aegis.git",
+  "tool_revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba"
+}

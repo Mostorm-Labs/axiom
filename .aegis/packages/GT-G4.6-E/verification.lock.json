@@ -1,0 +1,41 @@
+{
+  "format": "aegis-verification-lock-v1",
+  "task_id": "GT-G4.6-E",
+  "obligations": [
+    {
+      "id": "E-INPUT",
+      "requirement": "Mouse/touch/pen selection pointers reach control-handle begin/move/up/cancel through owner seam.",
+      "oracle": "real host PlatformPointerBatch and production Windows dispatch tests",
+      "acceptance": "handle drag changes real preview/committed object; secondary pointer cannot steal; debug capture and cancellation clear transient state",
+      "evidence_required": "input-and-transform.log"
+    },
+    {
+      "id": "E-MUTATION",
+      "requirement": "Only release commits once; cancel/rejected/no-op drag commits none.",
+      "oracle": "semantic records/generation/operation ledger assertions against real host",
+      "acceptance": "move=0; changed release=1; cancel/rejected=0; failed publication does not reject accepted semantic commit",
+      "evidence_required": "input-and-transform.log"
+    },
+    {
+      "id": "E-RENDER",
+      "requirement": "Object pixels and selection chrome follow the same transform, including zoom/pan and repeated transformations.",
+      "oracle": "Skia RGBA readbacks, independent literal geometry expectations and existing overlay matrix tests",
+      "acceptance": "preview differs; cancel restores exact bytes; release matches preview; nonidentity viewport honors local->world->view",
+      "evidence_required": "input-and-transform.log"
+    },
+    {
+      "id": "E-HISTORY",
+      "requirement": "Successful transform participates in existing EditorHistory.",
+      "oracle": "real transform undo/redo records and raster comparisons",
+      "acceptance": "undo restores exact original transform; redo restores exact committed transform; history blocked while active",
+      "evidence_required": "input-and-transform.log"
+    },
+    {
+      "id": "E-REGRESSION",
+      "requirement": "Preserve upstream brush/input/Arc/Canonical contracts.",
+      "oracle": "focused existing G4/G45/G46/DebugUI tests and diff check",
+      "acceptance": "all focused tests pass; no forbidden files or SDK locks mutated",
+      "evidence_required": "ctest.log"
+    }
+  ]
+}

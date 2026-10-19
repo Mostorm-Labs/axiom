@@ -1,0 +1,28 @@
+{
+  "android_status": "DEFERRED_NOT_BLOCKING",
+  "authority_revision": "057464f9fab2db4b67c032134cce3f5f417a64e0",
+  "base_revision": "02078a36818e7722309aefe679089a48212a424d",
+  "coverage": [
+    "RM-SEMANTIC-TYPES",
+    "RM-OPERATION-16",
+    "RM-CHANGESET",
+    "RM-SNAPSHOT",
+    "RM-COMPATIBILITY",
+    "RM-SCOPE"
+  ],
+  "implementation_revision": "4bef9d6e",
+  "materialized_ref": "601304425870ceb5715ae34a6da3b6ef1dfdd7e5",
+  "physical_status": "PHYSICAL_PENDING",
+  "producer_may_claim_gate_pass": false,
+  "remaining_blockers": [
+    "Independent Control Review",
+    "physical verification not part of this semantic package"
+  ],
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION",
+  "tests": {
+    "headless": "88/88 passed",
+    "protobuf_release": "20/20 passed"
+  },
+  "result_revision": "b5c2a6402354ff1f928220f90dc71274761b1e45"
+}

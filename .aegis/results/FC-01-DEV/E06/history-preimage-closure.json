@@ -1,0 +1,21 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B06",
+  "status": "NOT_IMPLEMENTED",
+  "requirement_ref": ".aegis/packages/FC-01/verification.lock.json@c98110c015f975012f25db5efa66c9679da35630#FC01-B06",
+  "requirement": "Single-Operation style/size/transform/order/lock/delete and conflict-safe Insert/Delete/Transform/Size/Patch/Placement inverse and redo in existing EditorHistory",
+  "oracle": "Independent before/post reference graph including remote child/dependent Connector and conditional no-TOCTOU same-lane interleaving",
+  "acceptance": "Local accepted intent exactly one Operation, fresh Undo/Redo OperationIds, exact preimage/absent fields/closure, later dependency yields Conflict with cursor/store/ledger unchanged; visible locked selectable/unlockable",
+  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "materialized_ref_resolution": "Reviewer resolves this artifact at the pushed result commit; no self/future SHA asserted.",
+  "residual_detection_gap": "Selected actions/conditional History not delivered.",
+  "pass_from_frozen_comparator": false,
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "provider_run_refs": [],
+  "current_source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "qualified_for_current_result": false,
+  "carry_forward_status": "PRIOR_UNQUALIFIED_RUN_NOT_CURRENT_RESULT"
+}

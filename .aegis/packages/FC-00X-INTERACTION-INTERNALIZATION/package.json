@@ -1,0 +1,74 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-package-v1",
+  "package_id": "FC-00X-INTERACTION-INTERNALIZATION-P31-v0.1",
+  "task_id": "FC-00X-INTERACTION-INTERNALIZATION",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "MATERIALIZED_READY_FOR_CONTROL_REVIEW",
+  "purpose": "Internalize existing Windows/Web interaction behind shared Runtime owners for repeatable cross-platform verification without changing product semantics or entering FC-01 implementation.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "base_lineage_branch": "codex/fc00x-runtime-minimum-closure",
+    "execution_ref": "codex/fc00x-interaction-internalization"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "965612f6a37e102e94c2d2fa1120ff9d9a9e1565",
+    "relation": "ancestor"
+  },
+  "starting_revision": "965612f6a37e102e94c2d2fa1120ff9d9a9e1565",
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "ae112fdc35a9289c3cfd11538a31bef28ef7e8a9fd7470e016d6dc1f0acba17a"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "3493e1ddefbf62b2b261f672a2b0d7b95b9198e992fb127db18cd8942f3e62bf"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "5b614f2396ff0bc518a6c265dac41904dcfa5a3a72b21df54b429d04eab49e22"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "96de3744aea7c74f92a6c4eeaec1c89b5f5f18e5b51e50fa85cd497f477a85c5"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "c2fa64170692e97c344e7af9fe2b85047b2f8426a22b83fd30e08dce47a425a9"
+  },
+  "previous_dependency": {
+    "package_ref": ".aegis/packages/FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4/package.json@f2fcc0e3152337cf88caee7ba7afa0306389d6da",
+    "implementation_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+    "result_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+    "materialized_ref": "965612f6a37e102e94c2d2fa1120ff9d9a9e1565",
+    "result_ref": ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/result.json",
+    "review_findings_ref": ".aegis/results/FC-00X-RUNTIME-MIN-CLOSURE/p35-defect-classification.json"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/FC-00X-INTERACTION-INTERNALIZATION/",
+    "exact_ref_rule": "Use immutable P31 package commit SHA in the P32 surface_handoff; never pin package.json to its own future SHA.",
+    "fc01_protection": "FC-01 worktree, branch, Authority, Golden, Gate, Evidence and historical results remain untouched."
+  },
+  "preflights": [
+    "RepositoryIdentity",
+    "PackageBindingPreflight",
+    "EvidenceContractPreflight",
+    "ImplementationDesignPreflight",
+    "FC00X-INT-RED boundary oracle"
+  ],
+  "terminal_target": "PACKAGE_READY_FOR_CONTROL_REVIEW; after acceptance P32 returns READY_FOR_CONTROL_REVIEW or explicit terminal BLOCKED_*",
+  "nonclaims": [
+    "No P32 production implementation",
+    "No FC-01/PX0/G4/G5 status change",
+    "No Gate/P34 PASS",
+    "No Android APK or physical PASS",
+    "No public C ABI"
+  ]
+}

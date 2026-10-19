@@ -1,0 +1,49 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "exact_source_sha": "9ef47bb773c526ef9df0799ee5bb5291b3593fec",
+  "package_ref": ".aegis/packages/FC-01/package.json@c98110c015f975012f25db5efa66c9679da35630",
+  "result_revision": "9ef47bb773c526ef9df0799ee5bb5291b3593fec",
+  "materialized_ref": "refs/tags/fc01-p36-evidence",
+  "required_obligations": {
+    "E01": "PARTIAL_NOT_CLOSED",
+    "E02": "PARTIAL_NOT_CLOSED",
+    "E03": "PARTIAL_NOT_CLOSED",
+    "E04": "PASS_PENDING_CONTROL_REVIEW",
+    "E05": "PARTIAL_NOT_CLOSED",
+    "E06": "PARTIAL_NOT_CLOSED",
+    "E07": "PARTIAL_NOT_CLOSED",
+    "E08": "BLOCKED_ENVIRONMENT_ANDROID_DEFERRED",
+    "E09": "PASS_PENDING_CONTROL_REVIEW",
+    "E10": "PARTIAL_NOT_CLOSED"
+  },
+  "android": {
+    "status": "DEFERRED_BY_USER",
+    "compile": false,
+    "apk_built": false,
+    "physical_claim": false
+  },
+  "provider_run_refs": [
+    "continuation-logs/committed-runs/p36-9ef47bb7/result.json",
+    "continuation-logs/committed-runs/p36-9ef47bb7/windows-four-regressions.log",
+    "continuation-logs/committed-runs/p36-9ef47bb7/windows-full-ctest.log",
+    "continuation-logs/committed-runs/130a15b9-current/result.json",
+    "continuation-logs/committed-runs/130a15b9-current/windows-full-ctest.log",
+    "continuation-logs/committed-runs/130a15b9-current/windows-fc01-focused-ctest.log",
+    "continuation-logs/committed-runs/130a15b9-current/web/playground-build-python313.log"
+  ],
+  "chronology": "Recovery verification only; does not retroactively establish pre-first-mutation design/RED.",
+  "gate_claim": "none",
+  "physical_claim_false": true,
+  "notes": [
+    "Windows focused FC01 matrix 29/29 passed.",
+    "Windows full CTest 661/665 with four named regressions.",
+    "Web playground JS/WASM linked with Emscripten Python 3.13.3.",
+    "Android compile/APK deferred by explicit user instruction.",
+    "P36: four named Windows CTest regressions passed 4/4 on the exact pushed source boundary.",
+    "P36: full Windows CTest passed 665/665.",
+    "P36 does not convert aggregate CTest into complete frozen E01-E10 corpus evidence."
+  ],
+  "materialized_ref_name": "refs/tags/fc01-p36-evidence"
+}

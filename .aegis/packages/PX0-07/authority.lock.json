@@ -1,0 +1,133 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-07",
+  "current": true,
+  "sources": [
+    {
+      "role": "current_px0_design_authority",
+      "provider": "repo",
+      "path": "docs/superpowers/specs/2026-10-10-px0-debug-control-plane-baseline-design.md",
+      "revision": "7e3772d747cf3f7e158fb0917e5169a56065a08b",
+      "content_hash": "git-blob-sha1:b07f9944db86292f94ef01528d9b257f43a12a67",
+      "trusted_sections": [
+        "3 Success criteria",
+        "4 Non-goals",
+        "5 Layer 1 - Workbench information architecture",
+        "5.7 PX0 control-surface contract",
+        "8 Layer 2 - Dataflow and control-plane architecture",
+        "10 Platform and temporary-toolbar convergence",
+        "13 Verification strategy"
+      ]
+    },
+    {
+      "role": "approved_px0_implementation_plan",
+      "provider": "repo",
+      "path": "docs/superpowers/plans/2026-10-10-px0-debug-control-plane-baseline-implementation.md",
+      "revision": "7e3772d747cf3f7e158fb0917e5169a56065a08b",
+      "content_hash": "git-blob-sha1:f9cb1ead967a4a086b7c9de2c27909d9c2090555",
+      "trusted_sections": [
+        "Work Package PX0-07 - Closure / Evidence",
+        "Task 15: Complete extension proof and architecture-boundary tests",
+        "Task 16: Run Windows/Web physical closure and record evidence",
+        "Codex Work Package Split",
+        "Required review points between WPs"
+      ]
+    }
+  ],
+  "trusted_statements": {
+    "objective": "Close the PX0 Debug Control Plane with test-only extension/boundary proof plus exact Windows/Web physical qualification evidence. PX0-07 is closure/evidence only and must not implement new product behavior.",
+    "predecessor": {
+      "task_id": "PX0-06",
+      "accepted_production_revision": "6c734f76fec203e7802fbfa0be660d7148e73ab7",
+      "accepted_evidence_head": "06964a48400d748bf22a8fef3818bd7c428fe388",
+      "p34_closure_ref": "7e3772d747cf3f7e158fb0917e5169a56065a08b",
+      "gate": "PASS_WITH_FINDINGS"
+    },
+    "px0_success_boundary": [
+      "Current useful Brush/Eraser, selection, history, Surface, Arc, telemetry and diagnostics behavior is preserved.",
+      "Product behavior mutates only through product-safe RuntimeFacade contracts.",
+      "Engineering-only mutation routes through explicit debug-control owners.",
+      "Panels consume one bounded immutable structured snapshot assembled in common code.",
+      "DebugUiSessionState remains non-canonical UI-local state.",
+      "A synthetic feature can extend Control and Inspect through stable contribution slots without Workbench/platform-host redesign.",
+      "Windows and Web hosts remain thin presentation/input realizations around common DebugController.",
+      "Deterministic contract tests and Windows/Web physical validation close PX0."
+    ],
+    "extension_proof": {
+      "scope": "test-only",
+      "required_slots": [
+        "Control/Feature",
+        "Inspect/Object or Inspect/Interaction"
+      ],
+      "required_behavior": "Synthetic contributions are accepted, discoverable and renderable through PanelRegistry/Workbench contracts without modifying Workbench core, platform hosts or adding Shape/product semantics."
+    },
+    "architecture_boundary_proof": [
+      "RuntimeFacade is independent of RuntimeDiagnostics.",
+      "DebugPanelContext contains only const DebugSnapshot&, DebugControlRouter&, DebugUiSessionState& and no Runtime/Document/Scene/Skia/owner pointers.",
+      "DebugSnapshot does not require a global Capability[] field.",
+      "No generic canvas::debug_ui::DebugCommand or generic BoundedCommandQueue mutation lane exists; typed owner queues such as canvas::runtime::BoundedAxiomDebugCommandQueue are allowed.",
+      "One unavailable provider does not block independent snapshot sections.",
+      "Fit Selection and Fit Primary Object do not fall back to Fit Content when context is invalid.",
+      "Debug activity storage is bounded.",
+      "Mixed-generation snapshot coherence remains explicit and observable."
+    ],
+    "physical_platform_scope": {
+      "blocking": [
+        "Windows",
+        "Web"
+      ],
+      "non_blocking": [
+        "Android",
+        "iOS"
+      ],
+      "rule": "Physical qualification records actual Available/DisabledByContext/Unsupported platform behavior. It must not report PASS for a control the owner reports Unsupported."
+    },
+    "physical_checklist": [
+      "show/hide",
+      "workspace navigation",
+      "Vector / Marker / Chalk / Membrane",
+      "Object / Partial Eraser",
+      "selection mode",
+      "Undo / Redo",
+      "Pan",
+      "Zoom At",
+      "Fit Content",
+      "Fit Selection",
+      "Fit Primary Object",
+      "Surface Platform / CPU / GPU controls where supported",
+      "ARC diagnostics visibility",
+      "Surface diagnostics visibility",
+      "telemetry visibility",
+      "Activity request/receipt updates",
+      "hidden Debug UI does not consume Canvas input",
+      "Debug-owned pointer/keyboard sequence does not leak to Canvas"
+    ],
+    "platform_expectations": {
+      "windows": "Product controls are exercised through the converged RuntimeFacade path. Surface engineering controls are exercised only when PlatformDebugControl reports them available.",
+      "web": "Product controls are exercised through the converged Web RuntimeFacade path. Engineering controls without bound Web debug owners are recorded Unsupported rather than treated as failures."
+    },
+    "evidence_identity_model": {
+      "qualification_subject_revision": "The exact repository revision after Task 15 test/CMake closure and before the human-readable physical evidence index commit. Windows/Web builds and physical observations are performed against this exact revision.",
+      "evidence_head": "A later evidence-only/docs revision that records physical observations and points back to qualification_subject_revision. This avoids self-referential result-revision churn.",
+      "gate_owner": "Official PX0/P34 verdict remains owned by independent Control Review, never by Task 16 evidence prose."
+    },
+    "preserved_non_goals": [
+      "No Shape authoring.",
+      "No RichText editing/IME/caret implementation.",
+      "No Connector/Snap/Image product behavior.",
+      "No final Product Shell toolbar/context UI.",
+      "No ImGui docking or multi-window debugger.",
+      "No RuntimeScene tree browser or raw SemanticDocument editing.",
+      "No stable Runtime C ABI change.",
+      "No Android/iOS physical parity as a PX0 blocker.",
+      "No PX1 or G5 implementation."
+    ]
+  },
+  "forbidden_interpretations": [
+    "PX0-07 is not permission to fix or redesign production implementation while adding closure tests.",
+    "Synthetic feature contributions are test fixtures only and must not add Shape or successor-feature product behavior.",
+    "Unsupported controls are not physical failures when the approved owner/build intentionally does not implement them.",
+    "Physical evidence may document a failure, but it may not redefine the frozen control contract or issue official Gate PASS.",
+    "The evidence index commit is not the same identity as the qualification subject revision; it must reference the exact subject instead of recursively naming itself."
+  ]
+}

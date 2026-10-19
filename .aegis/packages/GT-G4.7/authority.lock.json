@@ -1,0 +1,140 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.7",
+  "current": true,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "68b925e53b092657f3415c3d3992a451a8515598",
+    "relation": "ancestor"
+  },
+  "trusted_basis": [
+    {
+      "stage": "P14-P18",
+      "url": "https://app.notion.com/p/3e04c57a590c81b9b775e7e18fe8439d?pvs=204",
+      "title": "\ud83d\udd24 G4.7 RichText Rendering Foundation Architecture v0.1",
+      "path": "../../results/GT-G4.7/sources/architecture.json",
+      "page_last_edited_at": "2026-09-19T15:34:59.823Z",
+      "content_sha256": "c60524257d7a14514a07f14b5b913d8065929aa3fc50f90f2512f50644808ed6",
+      "source_kind": "notion_page_snapshot"
+    },
+    {
+      "stage": "Roadmap",
+      "url": "https://app.notion.com/p/3e04c57a590c81a79192f567356d1046?pvs=204",
+      "title": "\ud83e\udded G4.7 RichText Rendering Foundation Implementation Plan v0.1",
+      "path": "../../results/GT-G4.7/sources/roadmap.json",
+      "page_last_edited_at": "2026-09-20T15:45:59.195Z",
+      "content_sha256": "e61b412b5c2d3fd06a825db3ec29ee2d7f48c06105be9260987bc23cb2aae55f",
+      "source_kind": "notion_page_snapshot"
+    },
+    {
+      "stage": "ExecutionOrderAmendment",
+      "url": "https://app.notion.com/p/3f34c57a590c8169af22eabaaef2bf4f?pvs=204",
+      "title": "\ud83d\udd01 G4.6 \u2192 G4.7 Combined Physical Qualification Execution-Order Amendment v0.1",
+      "path": "../../results/GT-G4.7/sources/execution-order-amendment.json",
+      "page_last_edited_at": "2026-10-08T01:40:24.754Z",
+      "content_sha256": "6e2a0f693c4a215e307742d6f1db15ecc8393a1ac5ec3e6d240fa6788b1fc049",
+      "source_kind": "notion_page_snapshot"
+    },
+    {
+      "stage": "RepositoryReality",
+      "ref": "git:68b925e53b092657f3415c3d3992a451a8515598",
+      "title": "post-G4.6 automated/evidence boundary"
+    },
+    {
+      "stage": "TargetedReadiness",
+      "source_kind": "notion_page_snapshot",
+      "path": "../../results/GT-G4.7/sources/targeted-readiness.json",
+      "url": "https://app.notion.com/p/3f34c57a590c816b869ff1181d1de8fb?pvs=204",
+      "title": "\ud83e\uddf1 G4.7 Targeted Implementation Readiness + Compressed P31 Design v0.1",
+      "page_last_edited_at": "2026-10-08T01:43:07.243Z",
+      "content_sha256": "d14c4899513c97e95b22ebb39954fecca0ef049bb1c4fed7174bd55e4ccdac14"
+    }
+  ],
+  "upstream_boundary": {
+    "g4_6_result_revision": "5194d5ccf186e49a45311b39a831d1c9460e043e",
+    "g4_6_status": "PASS_AUTOMATION_WITH_PHYSICAL_BLOCKERS",
+    "g4_6_official_gate_pass_claimed": false,
+    "allowed_g4_7_start": true,
+    "preserved_deferred_physical_obligations": [
+      "G46C-PHYS-002 Windows fixed physical checklist",
+      "G46C-PHYS-002 Web fixed physical checklist",
+      "G46C-PHYS-002 Android fixed physical checklist",
+      "G46C-COEXIST-004 platform Pen/Laser + editing-overlay coexistence observations"
+    ]
+  },
+  "frozen_text_stack": {
+    "sdk_lock": "r1-full-skia-sdk.lock.json",
+    "profile": "r1-full-v1",
+    "internal_stack": [
+      "SkParagraph",
+      "SkShaper",
+      "SkUnicode ICU",
+      "bundled HarfBuzz",
+      "bundled ICU"
+    ],
+    "no_skia_rebuild": true,
+    "stable_contract_renderer_neutral": true
+  },
+  "frozen_font_policy": {
+    "semantic_identity": "TextStyle.font_resource_id",
+    "deterministic_fonts": [
+      {
+        "name": "Roboto Regular",
+        "lock": "deps.lock.json",
+        "sha256": "466989fd178ca6ed13641893b7003e5d6ec36e42c2a816dee71f87b775ea097f"
+      },
+      {
+        "name": "Noto Sans CJK subset",
+        "lock": "deps.lock.json",
+        "sha256": "e7f71fc8aec139bb21cc541067eabb162b87aeeac0ccfcb3c835a20d0cee340a"
+      }
+    ],
+    "forbidden": [
+      "OS/browser implicit fallback",
+      "nearest-weight substitution",
+      "synthetic bold",
+      "synthetic italic"
+    ]
+  },
+  "frozen_layout_policy": {
+    "canonical_width_height_fields_added": false,
+    "textbox_schema_added": false,
+    "layout_input": "explicit runtime LayoutContext/Constraint",
+    "verification_fixed_width_context_allowed": true,
+    "product_shell_state_inference_forbidden": true
+  },
+  "unicode_scope": {
+    "blocking": [
+      "Latin",
+      "numbers/punctuation",
+      "CJK",
+      "mixed Latin+CJK",
+      "combining marks"
+    ],
+    "emoji": "required only where exact glyph exists in pinned corpus; otherwise explicit degraded-resource diagnostics",
+    "deferred": [
+      "new bidi paragraph-direction schema",
+      "full RTL product semantics unless already required by accepted canonical input"
+    ]
+  },
+  "terminal_implementation_state": "READY_FOR_COMBINED_G4_PHYSICAL_QUALIFICATION",
+  "frozen_boundaries": [
+    "G4.7 does not implement TextEditSession, caret/selection interaction, IME composition, platform editor overlays, Clipboard, ExternalSurface, Table semantics or new RichText sizing schema.",
+    "Font Missing/Ready and exact-face materialization are derived resource state and must not create canonical Operations or SemanticGeneration mutation.",
+    "Transform-only and camera-only changes must not trigger local text relayout.",
+    "Direct/NonTiled remains the correctness oracle while production Skia rendering is added.",
+    "G4.7 implementation may complete before physical observation, but G5 remains blocked until combined G4 physical qualification and formal Gate closure."
+  ],
+  "primitive_closure": {
+    "image_resource_i0": {
+      "required": true,
+      "owner": "G47-I0",
+      "canonical_semantics_unchanged": true,
+      "decode_policy": "SkCodec encoded bytes keyed by ResourceId",
+      "missing_ready_is_derived": true
+    }
+  }
+}

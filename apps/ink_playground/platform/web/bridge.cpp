@@ -1,10 +1,13 @@
 #include "ink_playground_host.hpp"
+#include "../common/canvas_runtime_facade_adapter.hpp"
 #include "platform_brush_baseline_observation.hpp"
 #include "canvas/render/webgl_surface_backend.hpp"
 #include "canvas/render/skia_renderer.hpp"
+#include "canvas/runtime/runtime_facade.hpp"
+#include "canvas/runtime/diagnostics.hpp"
 #if AXIOM_WEB_DEBUG_UI
 #include "canvas/debug_ui/controller.hpp"
-#include "canvas/runtime/runtime_facade.hpp"
+#include "canvas/runtime/telemetry.hpp"
 #include "canvas/debug_ui/input_capture.hpp"
 #include "imgui.h"
 #include "include/core/SkImage.h"
@@ -54,88 +57,110 @@ std::unordered_map<Handle, BrushState>& brushes() {
   return values;
 }
 
-#if AXIOM_WEB_DEBUG_UI
-class WebRuntimeFacade final : public canvas::runtime::RuntimeFacade {
+class WebRuntimeFacade final : public canvas::ink_playground::CanvasRuntimeFacadeAdapter,
+                               public canvas::runtime::IAxiomDiagnostics {
  public:
-  explicit WebRuntimeFacade(Host& host) : host_(host) {}
+  explicit WebRuntimeFacade(Host& host)
+      : CanvasRuntimeFacadeAdapter(host, {1U, 1U, 1U, 1U}), host_(host) {}
+  void processCanvasControlsAtSafePoint(std::uint64_t sequence) noexcept {
+    (void)processCanvasControls(sequence);
+  }
+  [[nodiscard]] canvas::runtime::ProductControlReceipt settle(
+      canvas::runtime::ProductControlReceipt receipt,
+      std::uint64_t sequence) noexcept {
+    if (receipt.state != canvas::runtime::ProductControlState::kQueued) return receipt;
+    processCanvasControlsAtSafePoint(sequence);
+    if (receipt.control.has_value()) {
+      if (const auto terminal = canvasControlReceipt(receipt.control->key);
+          terminal.has_value()) {
+        receipt.control = terminal;
+        receipt.state = terminal->state == canvas::runtime::CanvasControlReceiptState::kApplied
+            ? canvas::runtime::ProductControlState::kApplied
+            : canvas::runtime::ProductControlState::kRejected;
+      }
+    }
+    return receipt;
+  }
+  [[nodiscard]] std::uint64_t nextRequestId() noexcept {
+    if (nextRequest_ == 0U) nextRequest_ = 1U;
+    return nextRequest_++;
+  }
   [[nodiscard]] canvas::runtime::RuntimeDiagnosticsSnapshot readDiagnostics() const noexcept override {
     const auto view = host_.viewportGesture();
-    return {1U, host_.semanticGeneration().value(),
-            static_cast<std::uint64_t>(host_.submittedOperationCount()), 1U,
-            static_cast<std::uint32_t>(host_.toolMode()), host_.surface().generation,
-            view.scale, view.translationX, view.translationY,
-            host_.canUndo(), host_.canRedo()};
+    return {{1U, host_.semanticGeneration().value(),
+             static_cast<std::uint64_t>(host_.submittedOperationCount()), host_.cameraGeneration(),
+             host_.surface().generation},
+            {static_cast<std::uint64_t>(host_.submittedOperationCount())},
+            {view.scale, view.translationX, view.translationY, host_.cameraGeneration()},
+            {host_.canUndo(), host_.canRedo()},
+            {static_cast<std::uint32_t>(host_.toolMode()), false, 0U, 0U,
+             host_.snapCandidateCount(), 0U, 0U}};
   }
-  [[nodiscard]] canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
-    const auto diagnostics = readDiagnostics();
-    const auto& profile = host_.selectedBrushProfile();
-    return {diagnostics.runtimeGeneration, diagnostics.documentGeneration,
-            diagnostics.documentRevision, diagnostics.viewGeneration,
-            diagnostics.surfaceGeneration, diagnostics.toolId,
-            profile == "vector-solid-v1" ? 1U : profile == "marker-flat-v1" ? 2U
-            : profile == "chalk-grain-v1" ? 3U : 4U,
-            host_.selectedBrushRevision(),
-            host_.toolMode() == Host::ToolMode::kObjectEraser ? 1U
-            : host_.toolMode() == Host::ToolMode::kPartialEraser ? 2U : 0U,
-            diagnostics.cameraScale, diagnostics.cameraTranslationX,
-            diagnostics.cameraTranslationY, diagnostics.canUndo, diagnostics.canRedo};
-  }
-  [[nodiscard]] canvas::runtime::ProductControlReceipt submitProductControl(
-      const canvas::runtime::ProductControlRequest& request) noexcept override {
-    canvas::runtime::ProductControlReceipt receipt{request.requestId,
-        canvas::runtime::ProductControlState::kRejected, 1U};
-    if (request.runtimeGeneration != 0U && request.runtimeGeneration != 1U) return receipt;
-    if (request.action == canvas::runtime::ProductControlAction::kSetBrush) {
-      static constexpr const char* profiles[] = {
-          "vector-solid-v1", "marker-flat-v1", "chalk-grain-v1", "membrane-v1"};
-      if (request.brushId < 1U || request.brushId > 4U) return receipt;
-      const auto revision = request.brushRevision == 0U
-          ? (request.brushId == 3U ? 4U : 1U) : request.brushRevision;
-      if (host_.selectTool(Host::ToolMode::kBrush) &&
-          host_.selectBrushProfile(profiles[request.brushId - 1U], revision)) {
-        receipt.state = canvas::runtime::ProductControlState::kApplied;
-      }
-      return receipt;
-    }
-    if (request.action == canvas::runtime::ProductControlAction::kSetEraser) {
-      const auto mode = request.eraserId == 1U ? Host::ToolMode::kObjectEraser
-          : request.eraserId == 2U ? Host::ToolMode::kPartialEraser : Host::ToolMode::kBrush;
-      if (request.eraserId != 0U && host_.selectTool(mode)) {
-        receipt.state = canvas::runtime::ProductControlState::kApplied;
-      }
-      return receipt;
-    }
-    if (request.action == canvas::runtime::ProductControlAction::kUndo ||
-        request.action == canvas::runtime::ProductControlAction::kRedo) {
-      const bool applied = request.action == canvas::runtime::ProductControlAction::kUndo
-          ? host_.undo() : host_.redo();
-      receipt.state = applied ? canvas::runtime::ProductControlState::kApplied
-                              : canvas::runtime::ProductControlState::kRejected;
-      return receipt;
-    }
-    if (request.action == canvas::runtime::ProductControlAction::kSetCamera) {
-      canvas::interaction::ViewportNavigationSample navigation{};
-      navigation.anchorX = request.anchorX; navigation.anchorY = request.anchorY;
-      navigation.deltaX = request.deltaX; navigation.deltaY = request.deltaY;
-      navigation.scaleDelta = request.scaleDelta;
-      navigation.kind = request.cameraAction == 2U
-          ? canvas::interaction::ViewportNavigationKind::kBrowserGesture
-          : canvas::interaction::ViewportNavigationKind::kWheelPan;
-      receipt.state = host_.applyViewportNavigation(navigation)
-          ? canvas::runtime::ProductControlState::kApplied
-          : canvas::runtime::ProductControlState::kRejected;
-      return receipt;
-    }
-    receipt.state = canvas::runtime::ProductControlState::kUnsupported;
-    return receipt;
+ private:
+  Host& host_;
+  std::uint64_t nextRequest_ = 1U;
+};
+
+std::unordered_map<Handle, std::unique_ptr<WebRuntimeFacade>>& runtimeFacades() {
+  static std::unordered_map<Handle, std::unique_ptr<WebRuntimeFacade>> values;
+  return values;
+}
+WebRuntimeFacade* runtimeFacade(Handle value) {
+  const auto it = runtimeFacades().find(value);
+  return it == runtimeFacades().end() ? nullptr : it->second.get();
+}
+
+#if AXIOM_WEB_DEBUG_UI
+
+class WebPlatformDiagnostics final : public canvas::runtime::IPlatformDiagnostics {
+ public:
+  explicit WebPlatformDiagnostics(Host& host) : host_(host) {}
+  [[nodiscard]] canvas::runtime::PlatformDiagnosticsSnapshot readPlatformDiagnostics() const noexcept override {
+    const auto* canonical = host_.activeSurfaceProvider();
+    const auto* preview = host_.previewSurfaceProvider();
+    const auto& binding = host_.surface();
+    return {canonical == nullptr ? 0U : canonical->generation(),
+            preview == nullptr ? 0U : preview->generation(),
+            binding.width, binding.height, 1.0F,
+            host_.canonicalFrameCount(), host_.surfaceLostCount(), binding.available,
+            canonical == nullptr ? canvas::runtime::SurfaceMode::kPlatformDefault
+                : canonical->describe().capabilities.gpuAccelerated
+                    ? canvas::runtime::SurfaceMode::kGpuDefault
+                    : canvas::runtime::SurfaceMode::kCpuReference};
   }
  private:
   Host& host_;
 };
 
+class WebTelemetry final : public canvas::runtime::ITelemetry {
+ public:
+  explicit WebTelemetry(const Host& host) : host_(host) {}
+  [[nodiscard]] canvas::runtime::TelemetrySnapshot readTelemetry() const noexcept override {
+    const auto& hud = host_.hud();
+    return {hud.batch, hud.batch, host_.previewPresentCount(),
+            host_.canonicalFrameCount(), hud.inkMs,
+            hud.sampleHz, hud.frameMs, hud.queueAgeMs};
+  }
+ private:
+  const Host& host_;
+};
+
+class WebArcDiagnostics final : public canvas::runtime::IArcDiagnostics {
+ public:
+  explicit WebArcDiagnostics(const Host& host) : host_(host) {}
+  [[nodiscard]] canvas::runtime::ArcDiagnosticsSnapshot readArcDiagnostics() const noexcept override {
+    const auto& hud = host_.hud();
+    return {host_.previewPresentCount(), 0U, hud.batch, hud.pendingHandoffCount,
+            host_.previewActive()};
+  }
+ private:
+  const Host& host_;
+};
+
 struct DebugUiState final {
   std::unique_ptr<canvas::render::WebGlSurfaceProvider> provider;
-  std::unique_ptr<WebRuntimeFacade> runtime;
+  WebRuntimeFacade* runtime = nullptr;
+  std::unique_ptr<canvas::debug_ui::DebugController> controller;
   sk_sp<SkImage> fontTexture;
   ImGuiContext* context = nullptr;
   bool visible = false;
@@ -144,66 +169,27 @@ struct DebugUiState final {
   int height = 0;
   std::uint32_t selectedTool = 4101;
   bool ctrlDown = false;
-  std::uint64_t nextRequestId = 1;
   canvas::debug_ui::InputCaptureGate capture;
+  std::unique_ptr<WebPlatformDiagnostics> platformDiagnostics;
+  std::unique_ptr<WebTelemetry> telemetry;
+  std::unique_ptr<WebArcDiagnostics> arcDiagnostics;
 };
 std::unordered_map<Handle, DebugUiState>& debugUi() {
   static std::unordered_map<Handle, DebugUiState> values;
   return values;
 }
 
-canvas::debug_ui::DebugSnapshot debugSnapshot(Host& target, DebugUiState& state) {
-  canvas::debug_ui::DebugSnapshot snapshot{};
-  const auto runtime = state.runtime->readRuntimeState();
-  snapshot.stamp.sequence = target.hud().batch;
-  snapshot.stamp.snapshotSequence = snapshot.stamp.sequence;
-  snapshot.stamp.frameId = target.canonicalFrameCount();
-  snapshot.stamp.runtimeGeneration = runtime.runtimeGeneration;
-  snapshot.stamp.documentGeneration = runtime.documentGeneration;
-  snapshot.stamp.viewGeneration = runtime.viewGeneration;
-  snapshot.stamp.surfaceGeneration = runtime.surfaceGeneration;
-  snapshot.stamp.generation = runtime.surfaceGeneration;
-  snapshot.canonicalSurfaceGeneration = runtime.surfaceGeneration;
-  snapshot.previewSurfaceGeneration = target.previewSurfaceGeneration();
-  snapshot.canonicalRevision = target.submittedOperationCount();
-  snapshot.previewRevision = target.previewPresentCount();
-  snapshot.inputBatchCount = target.hud().batch;
-  snapshot.handoffCount = target.hud().pendingHandoffCount;
-  snapshot.presentCount = target.canonicalFrameCount();
-  snapshot.surfaceLostCount = target.surfaceLostCount();
-  snapshot.sampleHz = target.hud().sampleHz;
-  snapshot.frameMs = target.hud().frameMs;
-  snapshot.queueAgeMs = target.hud().queueAgeMs;
-  snapshot.surfaceAvailable = target.surface().available;
-  snapshot.arcPresenterActive = target.previewActive();
-  if (target.toolMode() == Host::ToolMode::kObjectEraser) {
-    snapshot.selectedTool = 4105;
-  } else if (target.toolMode() == Host::ToolMode::kPartialEraser) {
-    snapshot.selectedTool = 4106;
-  } else {
-    const auto& profile = target.selectedBrushProfile();
-    snapshot.selectedTool = profile == "vector-solid-v1" ? 4101U
-        : profile == "marker-flat-v1" ? 4102U
-        : profile == "chalk-grain-v1" ? 4103U : 4104U;
-  }
-  snapshot.canUndo = runtime.canUndo;
-  snapshot.canRedo = runtime.canRedo;
-  snapshot.capabilities.fill(canvas::debug_ui::CapabilityState::kUnavailable);
-  snapshot.capabilities[static_cast<unsigned int>(canvas::debug_ui::Capability::kInput)] =
-      canvas::debug_ui::CapabilityState::kAvailable;
-  snapshot.capabilities[static_cast<unsigned int>(canvas::debug_ui::Capability::kCanonicalSurface)] =
-      canvas::debug_ui::CapabilityState::kAvailable;
-  snapshot.capabilities[static_cast<unsigned int>(canvas::debug_ui::Capability::kArcPreviewSurface)] =
-      target.previewSurfaceProvider() == nullptr ? canvas::debug_ui::CapabilityState::kUnavailable
-                                                  : canvas::debug_ui::CapabilityState::kAvailable;
-  snapshot.capabilities[static_cast<unsigned int>(canvas::debug_ui::Capability::kTelemetry)] =
-      canvas::debug_ui::CapabilityState::kAvailable;
-  return snapshot;
-}
-
 bool initializeDebugUi(Handle value, Host& target, int width, int height) {
   auto& state = debugUi()[value];
-  state.runtime = std::make_unique<WebRuntimeFacade>(target);
+  state.runtime = runtimeFacade(value);
+  if (state.runtime == nullptr) return false;
+  state.platformDiagnostics = std::make_unique<WebPlatformDiagnostics>(target);
+  state.telemetry = std::make_unique<WebTelemetry>(target);
+  state.arcDiagnostics = std::make_unique<WebArcDiagnostics>(target);
+  state.controller = std::make_unique<canvas::debug_ui::DebugController>(
+      canvas::debug_ui::DebugControllerContext{
+          state.runtime, state.runtime, state.arcDiagnostics.get(),
+          state.platformDiagnostics.get(), state.telemetry.get(), nullptr, nullptr});
   state.provider = std::make_unique<canvas::render::WebGlSurfaceProvider>(
       canvas::render::WebGlSurfaceConfig{"#debugUi", static_cast<std::uint32_t>(width),
                                          static_cast<std::uint32_t>(height), 0});
@@ -246,10 +232,8 @@ bool renderDebugUi(Handle value) {
   auto& io = ImGui::GetIO();
   io.DeltaTime = 1.0F / 60.0F;
   io.DisplaySize = ImVec2(static_cast<float>(state.width), static_cast<float>(state.height));
-  const auto drawFrame = [&](const canvas::debug_ui::DebugSnapshot& snapshot) {
-    state.selectedTool = snapshot.selectedTool == 0U ? state.selectedTool : snapshot.selectedTool;
-    const bool submitted = canvas::debug_ui::buildImGuiPanels(
-        snapshot, static_cast<int>(state.selectedTool), state.runtime.get(), nullptr, nullptr);
+  const auto drawFrame = [&]() {
+    const bool submitted = state.controller != nullptr && state.controller->buildImGuiFrame();
     ImGui::Render();
     const auto acquired = state.provider->acquire();
     if (acquired.code != canvas::render::SkiaSurfaceAcquireCode::kAcquired) return std::pair<bool, bool>{false, submitted};
@@ -262,14 +246,14 @@ bool renderDebugUi(Handle value) {
     return std::pair<bool, bool>{true, submitted};
   };
   ImGui::NewFrame();
-  const auto first = drawFrame(debugSnapshot(*hostIt->second, state));
+  const auto first = drawFrame();
   if (!first.first) return false;
   // Product controls are committed while building the first frame. Redraw
   // once from the owner snapshot so a brush/eraser click is visible without
   // waiting for a canvas stroke or the next unrelated animation tick.
   if (first.second) {
     ImGui::NewFrame();
-    const auto second = drawFrame(debugSnapshot(*hostIt->second, state));
+    const auto second = drawFrame();
     if (!second.first) return false;
   }
   return true;
@@ -278,18 +262,33 @@ bool renderDebugUi(Handle value) {
 
 bool initBrushes(Handle handle) { (void)handle; return true; }
 
+bool submitCanonicalForWeb(Host& target) {
+  // WebGL submission is not a presentation proof. The browser must provide a
+  // later, generation-matched PresentedFeedback observation before Runtime can
+  // qualify or retire a preview.
+  return target.presentCanonicalFrame(target.canonicalFrameCount() + 1U, 0.0, false);
+}
+
 int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointer,
                         std::uint64_t sequence, std::uint64_t timestampNs,
                         float x, float y, float pressure, int phase, int family,
-                        float contentX, float contentY) {
+                        int pointerTool, float contentX, float contentY) {
   (void)contentX;
   (void)contentY;
   auto* target = host(value);
+  if (auto* facade = runtimeFacade(value); facade != nullptr) {
+    facade->processCanvasControlsAtSafePoint(sequence);
+  }
   const auto brushIt = brushes().find(value);
   if (target == nullptr || brushIt == brushes().end()) return 0;
   canvas::input::PlatformPointerBatch batch;
+  canvas::input::PointerCapabilities capabilities{};
+  capabilities.tool = pointerTool == 2 ? canvas::input::PointerTool::kPen
+      : pointerTool == 3 ? canvas::input::PointerTool::kFinger
+                         : canvas::input::PointerTool::kUnknown;
+  capabilities.pressure = pointerTool == 2;
   batch.samples.push_back({source, pointer, sequence, timestampNs, x, y, pressure,
-                           0.0F, 0.0F, {}, {},
+                           0.0F, 0.0F, {}, capabilities,
                            canvas::input::SampleProvenance::kConfirmedCurrent,
                            phase == 0 ? canvas::input::PointerPhase::kDown
                            : phase == 2 ? canvas::input::PointerPhase::kUp
@@ -300,30 +299,60 @@ int submitPlatformBatch(Handle value, std::uint32_t source, std::uint32_t pointe
   if (phase == 2) {
     state.digest = target->brushDigest();
     state.primitiveCount = target->brushPrimitiveCount();
-    if (!target->presentCanonicalFrame(target->canonicalFrameCount() + 1U, 0.0)) return 0;
-  } else if (phase == 3) {
-    (void)target->cancelBrushSession(pointer);
   }
   return 1;
 }
 }
 
 extern "C" {
+EMSCRIPTEN_KEEPALIVE int axiom_ink_text_scenario(std::uint32_t value,const char* name,std::uint32_t count) {
+  auto* target=host(value);
+  if(!target || !name || !target->configureBundledTextResources() || !target->seedTextScenario(name,count)) return 0;
+  return submitCanonicalForWeb(*target) ? 1 : 0;
+}
+EMSCRIPTEN_KEEPALIVE int axiom_ink_text_action(std::uint32_t value,const char* action) {
+  auto* target=host(value); if(!target || !action) return 0;
+  const std::string_view kind(action);
+  const bool applied=kind=="missing"?target->setTextFontsAvailable(false):
+      kind=="ready"?target->setTextFontsAvailable(true):kind=="transform"?target->transformTextScenario(0):
+      target->applyTextScenarioEdit(0,kind);
+  return applied && submitCanonicalForWeb(*target) ? 1 : 0;
+}
+EMSCRIPTEN_KEEPALIVE const char* axiom_ink_text_metrics(std::uint32_t value) {
+  static std::string json;
+  json=host(value)?host(value)->textQualificationJson():"{}"; return json.c_str();
+}
 EMSCRIPTEN_KEEPALIVE int axiom_ink_platform_batch(
     std::uint32_t value, std::uint32_t source, std::uint32_t pointer,
     std::uint64_t sequence, std::uint64_t timestampNs, float x, float y,
-    float pressure, int phase, int family, float contentX, float contentY) {
+    float pressure, int phase, int family, int pointerTool,
+    float contentX, float contentY) {
   return submitPlatformBatch(value, source, pointer, sequence, timestampNs, x, y,
-                             pressure, phase, family, contentX, contentY);
+                             pressure, phase, family, pointerTool, contentX, contentY);
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_select_brush_profile(
     std::uint32_t value, const char* profile, std::uint32_t revision) {
-  return host(value) != nullptr && profile != nullptr &&
-         host(value)->selectBrushProfile(profile, revision) ? 1 : 0;
+  auto* facade = runtimeFacade(value);
+  if (facade == nullptr || profile == nullptr) return 0;
+  static constexpr const char* profiles[] = {
+      "vector-solid-v1", "marker-flat-v1", "chalk-grain-v1", "membrane-v1"};
+  std::uint32_t brushId = 0;
+  for (std::uint32_t i = 0; i < 4U; ++i) {
+    if (std::string_view(profile) == profiles[i]) { brushId = i + 1U; break; }
+  }
+  if (brushId == 0U) return 0;
+  const auto generation = facade->readRuntimeState().identity.runtimeGeneration;
+  const auto id = facade->nextRequestId();
+  return facade->settle(facade->setBrush(brushId, revision, id, generation, 0xC001U), id).state ==
+      canvas::runtime::ProductControlState::kApplied ? 1 : 0;
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_select_tool(std::uint32_t value, int tool) {
-  if (host(value) == nullptr || tool < 0 || tool > 2) return 0;
-  return host(value)->selectTool(static_cast<Host::ToolMode>(tool)) ? 1 : 0;
+  auto* facade = runtimeFacade(value);
+  if (facade == nullptr || tool < 0 || tool > 2) return 0;
+  const auto generation = facade->readRuntimeState().identity.runtimeGeneration;
+  const auto id = facade->nextRequestId();
+  return facade->settle(facade->setTool(static_cast<std::uint32_t>(tool), id, generation, 0xC001U), id).state ==
+      canvas::runtime::ProductControlState::kApplied ? 1 : 0;
 }
 EMSCRIPTEN_KEEPALIVE int axiom_ink_eraser_begin(std::uint32_t value, std::uint32_t pointer) {
   return host(value) != nullptr && host(value)->eraserBegin(pointer) ? 1 : 0;
@@ -343,6 +372,7 @@ EMSCRIPTEN_KEEPALIVE std::uint32_t axiom_ink_create() {
   while (nextHandle == 0U || hosts().contains(nextHandle)) ++nextHandle;
   const Handle value = nextHandle++;
   hosts().emplace(value, std::make_unique<Host>());
+  runtimeFacades().emplace(value, std::make_unique<WebRuntimeFacade>(*hosts().at(value)));
   if (!initBrushes(value)) { hosts().erase(value); return 0; }
   return value;
 }
@@ -350,6 +380,7 @@ EMSCRIPTEN_KEEPALIVE void axiom_ink_destroy(std::uint32_t value) {
 #if AXIOM_WEB_DEBUG_UI
   destroyDebugUi(value);
 #endif
+  runtimeFacades().erase(value);
   brushes().erase(value);
   hosts().erase(value);
 }
@@ -457,9 +488,13 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_debug_ui_key(std::uint32_t value,
   }
   ImGui::GetIO().AddKeyEvent(imguiKey, isDown);
   if (isDown && state.ctrlDown && imguiKey == ImGuiKey_Z) {
-    (void)state.runtime->undo(state.nextRequestId++, state.runtime->readDiagnostics().runtimeGeneration);
+    const auto id = state.runtime->nextRequestId();
+    (void)state.runtime->settle(
+        state.runtime->undo(id, state.runtime->readRuntimeState().identity.runtimeGeneration, 0xC001U), id);
   } else if (isDown && state.ctrlDown && imguiKey == ImGuiKey_Y) {
-    (void)state.runtime->redo(state.nextRequestId++, state.runtime->readDiagnostics().runtimeGeneration);
+    const auto id = state.runtime->nextRequestId();
+    (void)state.runtime->settle(
+        state.runtime->redo(id, state.runtime->readRuntimeState().identity.runtimeGeneration, 0xC001U), id);
   }
   return renderDebugUi(value) ? 1 : 0;
 }
@@ -694,6 +729,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_ink_bind_surface(
   if (!provider || !provider->ready()) return 0;
   state.renderer = std::make_unique<canvas::render::SkiaRenderer>();
   if (!host(value)->registerSurfaceProvider("webgl-window", std::move(provider))) return 0;
+  host(value)->setPlatformPresentationDeferred(true);
 #endif
   return 1;
 }

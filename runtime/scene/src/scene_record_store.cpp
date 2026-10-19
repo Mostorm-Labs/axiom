@@ -30,6 +30,7 @@ bool isKnownKind(SceneObjectKind kind) {
     case SceneObjectKind::kRichText:
     case SceneObjectKind::kVectorStroke:
     case SceneObjectKind::kDabStroke:
+    case SceneObjectKind::kConnector:
         return true;
     }
     return false;

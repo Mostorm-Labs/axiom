@@ -2,6 +2,8 @@
 #include "canvas/scene/scene_delta.hpp"
 #include "canvas/scene/spatial_delta.hpp"
 #include "canvas/scene/scene_impact.hpp"
+#include "canvas/scene/bounds_system.hpp"
+#include "canvas/text/text_layout.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -12,7 +14,72 @@
 #include <utility>
 
 namespace canvas {
+RuntimeSceneProjection projectRuntimeScene(
+    std::span<const semantic::ObjectRecord> source,
+    semantic::SemanticGeneration generation, text::RichTextLayoutService* textService) {
+    RuntimeSceneProjection projection;
+    projection.generation = generation;
+    projection.records.reserve(source.size());
+    for (const semantic::ObjectRecord& record : source) {
+        projection.records.push_back(RuntimeSceneRecord{
+            .objectId = record.id,
+            .kind = record.kind,
+            .kindVersion = record.kind_version,
+            .placement = record.placement,
+            .transform = record.transform,
+            .properties = record.properties,
+            .content = record.content,
+            .eraseMasks = record.erase_masks,
+            .derivedGeometry = scene::deriveGeometry(record),
+            .textLayout = nullptr,
+        });
+        if (textService != nullptr && record.kind == semantic::ObjectKind::kRichText) {
+            auto& derived = projection.records.back();
+            derived.textLayout = textService->resolve(record.id,std::get<semantic::RichTextContent>(record.content));
+            const auto bounds = computeBounds(record,derived.textLayout.get());
+            derived.geometryBounds=bounds.geometry; derived.visualBounds=bounds.visual; derived.worldBounds=bounds.world;
+            derived.referenceGeometryDigest=derived.textLayout->digest;
+            for(const auto& font:derived.textLayout->fonts) derived.directDependencies.push_back(font.resourceId.value);
+            std::sort(derived.directDependencies.begin(),derived.directDependencies.end());
+            derived.directDependencies.erase(std::unique(derived.directDependencies.begin(),derived.directDependencies.end()),derived.directDependencies.end());
+        }
+    }
+    std::sort(projection.records.begin(), projection.records.end(),
+              [](const RuntimeSceneRecord& left, const RuntimeSceneRecord& right) {
+                  if (left.placement.order_key != right.placement.order_key) {
+                      return left.placement.order_key < right.placement.order_key;
+                  }
+                  return left.objectId < right.objectId;
+              });
+    return projection;
+}
+
 namespace {
+
+// Ink is a presentation-layer overlay.  Its canonical semantic order remains
+// untouched, but scene traversal must keep ink above filled objects for both
+// drawing and hit testing.  The kind is already part of SceneRecord, so this
+// rule does not alter the public record layout or truncate the 32-byte key.
+bool isInkRecord(const SceneRecord& record) noexcept {
+    return record.kind == SceneObjectKind::kVectorStroke ||
+           record.kind == SceneObjectKind::kDabStroke;
+}
+
+bool backToFrontLess(const SceneRecord& left, const SceneRecord& right) noexcept {
+    const bool leftInk = isInkRecord(left);
+    const bool rightInk = isInkRecord(right);
+    if (leftInk != rightInk) return !leftInk;
+    return left.orderKey < right.orderKey ||
+           (left.orderKey == right.orderKey && left.objectId < right.objectId);
+}
+
+bool frontToBackLess(const SceneRecord& left, const SceneRecord& right) noexcept {
+    const bool leftInk = isInkRecord(left);
+    const bool rightInk = isInkRecord(right);
+    if (leftInk != rightInk) return leftInk;
+    return right.orderKey < left.orderKey ||
+           (right.orderKey == left.orderKey && right.objectId < left.objectId);
+}
 
 foundation::Error makeError(foundation::ErrorCode code, const char* message) {
     return foundation::Error{code, message};
@@ -86,6 +153,8 @@ std::uint32_t kindBit(SceneObjectKind kind) {
         return static_cast<std::uint32_t>(HitTestKindMask::kVectorStroke);
     case SceneObjectKind::kDabStroke:
         return static_cast<std::uint32_t>(HitTestKindMask::kDabStroke);
+    case SceneObjectKind::kConnector:
+        return static_cast<std::uint32_t>(HitTestKindMask::kConnector);
     }
     return 0U;
 }
@@ -118,7 +187,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
             }
         }
         return foundation::Result<PreparedPublication>::success(
-            PreparedPublication{projectRuntimeScene(source, post_state.generation())});
+            PreparedPublication{projectRuntimeScene(source, post_state.generation(), _textLayoutService)});
     } catch (const std::bad_alloc&) {
         return foundation::Result<PreparedPublication>::failure(
             makeError(foundation::ErrorCode::kOutOfMemory,
@@ -159,7 +228,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                 continue;
             }
             auto projected = projectRuntimeScene(std::span<const semantic::ObjectRecord>(current, 1),
-                                                 post_state.generation());
+                                                 post_state.generation(), _textLayoutService);
             if (existing == next.records.end()) {
                 next.records.push_back(std::move(projected.records.front()));
             } else {
@@ -404,11 +473,7 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
                 stagedRecords.erase(it);
             }
         }
-        std::sort(stagedRecords.begin(), stagedRecords.end(), [](const SceneRecord& a,
-                                                                 const SceneRecord& b) {
-            return a.orderKey < b.orderKey ||
-                   (a.orderKey == b.orderKey && a.objectId < b.objectId);
-        });
+        std::sort(stagedRecords.begin(), stagedRecords.end(), backToFrontLess);
         if (!stagePublicationSnapshot(stagedRecords)) {
             return foundation::Result<SceneApplyReceipt>::failure(makeError(
                 foundation::ErrorCode::kOutOfMemory, "Unable to stage published Scene snapshot"));
@@ -558,6 +623,16 @@ foundation::Result<SceneQueryResult> Scene::query(const SceneQuery& request) con
                     result.backToFront.push_back(record.objectId);
                 }
             }
+            std::sort(result.backToFront.begin(), result.backToFront.end(),
+                      [&](ObjectId left, ObjectId right) {
+                          const auto leftIt = std::find_if(
+                              _stablePublishedRecords.begin(), _stablePublishedRecords.end(),
+                              [left](const SceneRecord& record) { return record.objectId == left; });
+                          const auto rightIt = std::find_if(
+                              _stablePublishedRecords.begin(), _stablePublishedRecords.end(),
+                              [right](const SceneRecord& record) { return record.objectId == right; });
+                          return backToFrontLess(*leftIt, *rightIt);
+                      });
             result.diagnostics.visibleRecords = result.backToFront.size();
             return foundation::Result<SceneQueryResult>::success(std::move(result));
         } catch (const std::bad_alloc&) {
@@ -591,8 +666,7 @@ foundation::Result<SceneQueryResult> Scene::query(const SceneQuery& request) con
                   [this](ObjectId left, ObjectId right) {
                       const SceneRecord* leftRecord = _records.find(left);
                       const SceneRecord* rightRecord = _records.find(right);
-                      return leftRecord->orderKey < rightRecord->orderKey ||
-                             (leftRecord->orderKey == rightRecord->orderKey && left < right);
+                      return backToFrontLess(*leftRecord, *rightRecord);
                   });
         result.backToFront.erase(std::unique(result.backToFront.begin(), result.backToFront.end()),
                                  result.backToFront.end());
@@ -667,8 +741,7 @@ foundation::Result<HitTestResult> Scene::hitTest(const HitTestRequest& request) 
         std::sort(candidates.begin(), candidates.end(), [this](ObjectId left, ObjectId right) {
             const SceneRecord* leftRecord = _records.find(left);
             const SceneRecord* rightRecord = _records.find(right);
-            return rightRecord->orderKey < leftRecord->orderKey ||
-                   (rightRecord->orderKey == leftRecord->orderKey && right < left);
+            return frontToBackLess(*leftRecord, *rightRecord);
         });
         for (ObjectId objectId : candidates) {
             ++result.diagnostics.preciseTests;

@@ -1,0 +1,5 @@
+In file included from C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\out\p32-web-ui\stable_order_probe.cpp:1:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\foundation\include\canvas/foundation/stable_order_key.hpp:29:35: error: comparison of integers of different signs: 'std::size_t' (aka 'unsigned long') and 'const int' [-Werror,-Wsign-compare]
+   29 |         for (std::size_t i = 0; i < count; ++i) value = (value << 8U) | _bytes[i];
+      |                                 ~ ^ ~~~~~
+1 error generated.

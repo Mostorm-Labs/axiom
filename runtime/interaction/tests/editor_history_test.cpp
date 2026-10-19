@@ -219,7 +219,34 @@ void every_frozen_family_redoes_the_original_typed_operation() {
 }
 } // namespace
 
-int main() {
+void fc01_new_edit_families_retain_exact_typed_inverse() {
+    using namespace canvas::semantic;
+    Submit submit;
+    EditorHistory history(submit);
+    ObjectRecord shape; shape.id = id(800); shape.kind = ObjectKind::kShape;
+    shape.kind_version = 2; shape.content = ShapeContent{3,100,80};
+    shape.placement.order_key = OrderKey{{1}};
+    const std::vector<std::pair<OperationPayload, OperationPayload>> edits{
+        {InsertObjectsOp{{shape}}, DeleteObjectsOp{{shape.id}}},
+        {SetObjectSizeOp{{{shape.id, 200, 160}}}, SetObjectSizeOp{{{shape.id,100,80}}}},
+        {PatchPropertiesOp{{{shape.id,3,PropertyPatchAction::kSet,PropertyValue{0.5F}}}},
+         PatchPropertiesOp{{{shape.id,3,PropertyPatchAction::kClear,{}}}}},
+        {SetPlacementsOp{{{shape.id,{std::nullopt,OrderKey{{2}}}}}},
+         SetPlacementsOp{{{shape.id,shape.placement}}}}
+    };
+    std::uint64_t n=810;
+    for(const auto& [forward,inverse]:edits) {
+        const auto f=operation(n++,forward), i=operation(n++,inverse);
+        assert(history.record(f,{i}));
+        assert(history.undo());
+        assert(submit.last.front().payload == inverse);
+        assert(history.redo());
+        assert(submit.last.front().payload == forward);
+    }
+}
+
+int main(int argc, char**) {
+    if (argc > 1) { fc01_new_edit_families_retain_exact_typed_inverse(); return 0; }
     undo_redo_emits_fresh_typed_compensation_for_transform();
     rejected_compensation_is_retryable_without_cursor_advance();
     mask_history_preserves_typed_payload();

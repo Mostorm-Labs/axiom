@@ -1,0 +1,17 @@
+{
+  "schema": "fc00x-control-regressions-v2",
+  "result": "PASS",
+  "count": 28,
+  "passed": 28,
+  "failed": 0,
+  "command": "ctest --test-dir C:/fc00x-runtime-build --output-on-failure -R FC00XRuntimeIsolation|FC00XFrameCoordinator|G3HeadlessSkia|G3RuntimeAppBinding|G3RenderTargetSwitching|G3SkiaSurfaceProvider|G3PreviewSurface|G3SurfacePresentation|G46EditingOverlay|G4CanonicalHandoff|G45BrushRuntimePipeline|G46PlaygroundTransform|PX0RuntimeFacadeContract|PX0DebugSnapshot|DUIM1RuntimeFacade|DUIM1Control plus inherited input/host regressions",
+  "log": "control-regressions.log",
+  "provider": "C:/fc00x-runtime-build",
+  "source_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+  "log_sha256": "8f89b52cf74ac6273a53949bebde316cc437e1f00d0bf29e4524cfc043ebdff6",
+  "log_bytes": 3346,
+  "verification_status": "PASS: 28/28 corrected frozen matrix",
+  "package_id": "FC-00X-RUNTIME-MIN-CLOSURE-P31-v0.4",
+  "package_commit": "f2fcc0e3152337cf88caee7ba7afa0306389d6da",
+  "legacy_poc06_tests": "EXCLUDED_BY_CORRECTED_P31"
+}

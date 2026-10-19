@@ -1,0 +1,25 @@
+{
+  "schema": "fc00x-environment-blocker-v1",
+  "source_revision": "6334ea64d74be8a56933bcb55c7ea3821ea90fc8",
+  "status": "BLOCKED_ENVIRONMENT",
+  "blockers": [
+    {
+      "id": "LOCKED_SKIA_SDK_UNAVAILABLE",
+      "observed": "AXIOM_SKIA_WINDOWS_SDK_ROOT is unset and no accepted Skia package root was resolvable; G3RuntimeAppBinding CTest target is gated on CANVAS_RENDER_ENABLE_SKIA_HEADLESS."
+    },
+    {
+      "id": "BASELINE_MSVC_WX_FAILURE",
+      "observed": "Minimal CMake graph reaches existing runtime/semantic normalizer.cpp and validator.cpp unreachable-code warnings promoted to errors by per-target /WX; this is outside authorized mutation scope."
+    },
+    {
+      "id": "DEBUG_UI_DEPENDENCY_ABSENT",
+      "observed": "Default graph also lacks .deps/imgui, so Debug UI/host graph cannot configure in this worktree."
+    }
+  ],
+  "not_changed": [
+    "No dependency lock",
+    "No .deps/protobuf",
+    "No Skia rebuild",
+    "No source workaround"
+  ]
+}

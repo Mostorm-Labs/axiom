@@ -1,0 +1,46 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-02",
+  "stage": "P34_GATE_REVIEW",
+  "reviewed_result_revision": "ab51f9f675c0f49bd054f8a9013b3ed59d9f39d8",
+  "materialized_ref": "refs/heads/codex/px0-02-p36-repair",
+  "verdict": "BLOCKED_IMPLEMENTATION",
+  "frozen_requirements": {
+    "passed": [
+      "PX0-02-V1-structured-snapshot-envelope",
+      "PX0-02-V2-section-local-availability-production-behavior",
+      "PX0-02-V4-stamp-and-sequence-semantics-partial",
+      "PX0-02-V5-common-platform-assembly",
+      "PX0-02-V6-existing-debug-ui-regression",
+      "PX0-02-V7-activity-transport-only-production-behavior",
+      "PX0-02-V8-no-premature-layers-or-evidence-claims"
+    ],
+    "failed": [
+      {
+        "id": "PX0-02-V3-coherence-and-retry",
+        "failure": "The repaired PX0DebugSnapshot test still does not exercise first-attempt identity mismatch followed by a stable second attempt. The current RuntimeProbe retry case keeps first.identity == second.identity and asserts reads == 2, so it duplicates the stable-first-attempt case instead of proving the frozen one-retry success path."
+      },
+      {
+        "id": "PX0-02-V2-section-local-availability",
+        "failure": "The repaired PX0DebugSnapshot test passes nullptr for Arc while other providers are present, but it does not explicitly assert arc.availability == Unsupported as required by the frozen absent-provider oracle."
+      }
+    ]
+  },
+  "repository_reality": {
+    "surface_degraded_panel_fix": "PRESENT",
+    "canvas_degraded_panel_behavior": "CORRECT",
+    "activity_receipt_passthrough_assertions": "PRESENT",
+    "snapshot_sequence_assertions": "PRESENT",
+    "frame_fallback_assertion": "PRESENT",
+    "mixed_generation_four_read_assertion": "PRESENT",
+    "production_architecture_blocker": "NONE"
+  },
+  "new_findings": {
+    "blocking_high_impact": [],
+    "non_blocking": [
+      "Existing MSVC C4702 promoted by /WX prevents the unmodified default build profile in some environments; /wd4702 was used only as corroborative build configuration and does not alter PX0-02 runtime semantics."
+    ]
+  },
+  "official_gate_pass_claimed": false,
+  "next_stage": "P36_FIX_REVERIFICATION_V2"
+}

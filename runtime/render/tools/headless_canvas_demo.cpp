@@ -1,5 +1,6 @@
 #include "canvas/render/direct_reference_source.hpp"
 #include "canvas/render/frame_plan.hpp"
+#include "canvas/render/image_resource.hpp"
 #include "canvas/render/render_backend.hpp"
 #include "canvas/render/skia_headless_backend.hpp"
 #include "canvas/render/surface_lifecycle.hpp"
@@ -8,10 +9,12 @@
 #include "canvas/scene/incremental_runtime_coordinator.hpp"
 #include "canvas/scene/scene_binding.hpp"
 #include "canvas/scene/uniform_grid_spatial_index.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 #include "canvas/semantic/indexed_object_store.hpp"
 #include "canvas/semantic/semantic_read_view.hpp"
 #include "canvas/semantic/snapshot.hpp"
 #include "canvas/semantic/snapshot_bootstrap.hpp"
+#include "canvas/runtime/resource_provider.hpp"
 #include "../../scene/src/incremental_runtime_full_materialization_bridge.hpp"
 
 #include <algorithm>
@@ -40,7 +43,7 @@ std::string sha256(const std::vector<std::uint8_t>& input) {
   std::ostringstream out;out<<std::hex<<std::setfill('0');for(const auto value:h)out<<std::setw(8)<<value;return out.str();
 }
 const char* kindName(semantic::ObjectKind kind) { switch (kind) { case semantic::ObjectKind::kShape:return "Shape"; case semantic::ObjectKind::kImage:return "Image"; case semantic::ObjectKind::kVectorPath:return "VectorPath"; case semantic::ObjectKind::kRichText:return "RichText"; case semantic::ObjectKind::kVectorStroke:return "VectorStroke"; case semantic::ObjectKind::kDabStroke:return "DabStroke"; case semantic::ObjectKind::kConnector:return "Connector"; case semantic::ObjectKind::kSticky:return "Sticky"; case semantic::ObjectKind::kGroup:return "Group"; } return "Unknown"; }
-const char* sceneKindName(SceneObjectKind kind) { switch (kind) { case SceneObjectKind::kShape:return "Shape"; case SceneObjectKind::kImage:return "Image"; case SceneObjectKind::kVectorPath:return "VectorPath"; case SceneObjectKind::kRichText:return "RichText"; case SceneObjectKind::kVectorStroke:return "VectorStroke"; case SceneObjectKind::kDabStroke:return "DabStroke"; } return "Unknown"; }
+const char* sceneKindName(SceneObjectKind kind) { switch (kind) { case SceneObjectKind::kShape:return "Shape"; case SceneObjectKind::kImage:return "Image"; case SceneObjectKind::kVectorPath:return "VectorPath"; case SceneObjectKind::kRichText:return "RichText"; case SceneObjectKind::kVectorStroke:return "VectorStroke"; case SceneObjectKind::kDabStroke:return "DabStroke"; case SceneObjectKind::kConnector:return "Connector"; } return "Unknown"; }
 template <typename Range, typename Fn> void jsonArray(std::ostream& out, const Range& range, Fn emit) { out << '['; bool first = true; for (const auto& value : range) { if (!first) out << ','; first = false; emit(out, value); } out << ']'; }
 template <typename Range> void jsonIds(std::ostream& out, const Range& range) { jsonArray(out, range, [](auto& o, const auto& id) { o << lowId(id); }); }
 template <typename Range> void jsonKinds(std::ostream& out, const Range& range) { jsonArray(out, range, [](auto& o, const auto& record) { o << '"' << kindName(record.kind) << '"'; }); }
@@ -56,9 +59,10 @@ class DemoCompiler final : public ISemanticSceneCompiler {
     out.records.reserve(projection.value().records.size());
     for (const auto& s : projection.value().records) {
       SceneObjectKind k=SceneObjectKind::kShape;
-      switch(s.kind){case semantic::ObjectKind::kImage:k=SceneObjectKind::kImage;break;case semantic::ObjectKind::kVectorPath:k=SceneObjectKind::kVectorPath;break;case semantic::ObjectKind::kRichText:k=SceneObjectKind::kRichText;break;case semantic::ObjectKind::kVectorStroke:k=SceneObjectKind::kVectorStroke;break;case semantic::ObjectKind::kDabStroke:k=SceneObjectKind::kDabStroke;break;default:break;}
+      switch(s.kind){case semantic::ObjectKind::kImage:k=SceneObjectKind::kImage;break;case semantic::ObjectKind::kVectorPath:k=SceneObjectKind::kVectorPath;break;case semantic::ObjectKind::kRichText:k=SceneObjectKind::kRichText;break;case semantic::ObjectKind::kVectorStroke:k=SceneObjectKind::kVectorStroke;break;case semantic::ObjectKind::kDabStroke:k=SceneObjectKind::kDabStroke;break;case semantic::ObjectKind::kConnector:k=SceneObjectKind::kConnector;break;default:break;}
       const auto flags=static_cast<SceneRecordFlags>(static_cast<std::uint32_t>(SceneRecordFlags::kVisible)|static_cast<std::uint32_t>(SceneRecordFlags::kHitTestable));
-      out.records.push_back({s.objectId,SceneOrderKey(orderValue(s.placement.order_key)),k,flags,s.worldBounds,ContentRevision(s.kindVersion),RenderPayloadRef{static_cast<std::uint32_t>(lowId(s.objectId)),s.kindVersion},HitGeometryRef{static_cast<std::uint32_t>(lowId(s.objectId)),s.kindVersion}});
+      semantic::ObjectRecord source{}; source.id=s.objectId; source.kind=s.kind; source.kind_version=s.kindVersion; source.placement=s.placement; source.transform=s.transform; source.properties=s.properties; source.content=s.content;
+      out.records.push_back({s.objectId,SceneOrderKey(orderValue(s.placement.order_key)),k,flags,s.worldBounds,ContentRevision(s.kindVersion),RenderPayloadRef{static_cast<std::uint32_t>(lowId(s.objectId)),s.kindVersion},HitGeometryRef{static_cast<std::uint32_t>(lowId(s.objectId)),s.kindVersion},s.transform,scene::deriveGeometry(source)});
     }
     return foundation::Result<CompiledSceneSnapshot>::success(std::move(out));
   }
@@ -66,7 +70,9 @@ class DemoCompiler final : public ISemanticSceneCompiler {
 };
 class RecordingBackend final : public render::IRenderBackend {
  public:
-  explicit RecordingBackend(render::HeadlessRasterConfig config) : backend_(config) {}
+  explicit RecordingBackend(render::HeadlessRasterConfig config) : resolver_(resources_), backend_(config, &resolver_) {
+    resources_.publish(foundation::ObjectId::fromUint64(130U), checkerboardPng());
+  }
   render::BackendSubmissionResult submit(const render::FramePlan& plan) override {
     backend_ids_.clear();
     for (const auto& entry : plan.referenceDrawList.entries) backend_ids_.push_back(entry.record.objectId);
@@ -75,6 +81,19 @@ class RecordingBackend final : public render::IRenderBackend {
   [[nodiscard]] const render::SkiaHeadlessBackend& backend() const noexcept { return backend_; }
   [[nodiscard]] const std::vector<foundation::ObjectId>& backendIds() const noexcept { return backend_ids_; }
  private:
+  static std::vector<std::uint8_t> checkerboardPng() {
+    return {
+      0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0x00,0x00,0x00,0x0d,0x49,0x48,0x44,0x52,
+      0x00,0x00,0x00,0x18,0x00,0x00,0x00,0x18,0x08,0x06,0x00,0x00,0x00,0xe0,0x77,0x3d,
+      0xf8,0x00,0x00,0x00,0x30,0x49,0x44,0x41,0x54,0x78,0xda,0x63,0x60,0xf8,0x8f,0x06,
+      0x1b,0xd0,0x30,0xa5,0xf2,0xa3,0x16,0x10,0xb6,0x80,0xda,0x06,0xa2,0xc3,0x51,0x0b,
+      0x08,0x5b,0x30,0x9a,0x4c,0x47,0xf3,0xc1,0xa8,0x05,0xa3,0xc9,0x74,0x34,0x1f,0x8c,
+      0x5a,0xc0,0xf0,0x1f,0x00,0x76,0xf2,0xec,0xce,0x5a,0x24,0x42,0x67,0x00,0x00,0x00,
+      0x00,0x49,0x45,0x4e,0x44,0xae,0x42,0x60,0x82,
+    };
+  }
+  runtime::MemoryResourceProvider resources_;
+  render::ImageResourceResolver resolver_;
   render::SkiaHeadlessBackend backend_;
   std::vector<foundation::ObjectId> backend_ids_;
 };

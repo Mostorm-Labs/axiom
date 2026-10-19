@@ -29,7 +29,7 @@ ObjectRecord shape(std::uint64_t value, std::uint8_t tag = 1U) {
     record.kind_version = 1U;
     record.placement = Placement{std::nullopt, OrderKey({tag})};
     record.transform = Transform2D{1.0, 0.0, 0.0, 1.0, static_cast<double>(tag), 0.0};
-    record.content = ShapeContent{tag, static_cast<double>(tag), static_cast<double>(tag + 1U)};
+    record.content = ShapeContent{1U, static_cast<double>(tag), static_cast<double>(tag + 1U)};
     return record;
 }
 
@@ -188,7 +188,7 @@ std::vector<FamilyFixture> releasedFamilyFixtures() {
         {operation(AddEraseMasksOp{{EraseMaskAddItem{vector_stroke.id, {mask}}}}, 2012U),
          {vector_stroke}},
         {operation(RemoveEraseMasksOp{{EraseMaskRemoveItem{masked.id, {mask.id}}}}, 2013U), {masked}},
-        {operation(EditRichTextOp{rich_text.id, RichTextDelta{}}, 2014U), {rich_text}},
+        {operation(EditRichTextOp{rich_text.id, RichTextDelta{1U, {SetParagraphStyleStep{std::get<RichTextContent>(rich_text.content).document.paragraphs.front().id, std::get<RichTextContent>(rich_text.content).document.paragraphs.front().style}}}}, 2014U), {rich_text}},
         {operation(SetConnectorContentOp{
                        connector_record.id, std::get<ConnectorContent>(connector_changed.content)},
                    2015U),

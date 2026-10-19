@@ -1,0 +1,56 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "stage": "P33",
+  "package_version": "v0.4",
+  "status": "PASS",
+  "package_materialization_ref": "832750b2c8952a79cec377ecb0731b74e154e915",
+  "resume_cursor": "9c5e3587358ad982ddab56ca2369cd285e330c5d",
+  "result_revision": "1e21856316ea93de3a1782f5cbab3d0291d81ded",
+  "classification": "DESCENDANT_CURSOR",
+  "cursor_relative_changed_paths": [
+    ".aegis/packages/PX0-05/evidence-contract.json",
+    ".aegis/packages/PX0-05/execution-contract.json",
+    ".aegis/packages/PX0-05/implementation-context.md",
+    ".aegis/packages/PX0-05/package.json",
+    ".aegis/results/PX0-05/blocker-v0.3.json",
+    ".aegis/results/PX0-05/evidence-manifest.json",
+    ".aegis/results/PX0-05/p31-v0.4-package-reconciliation.json",
+    ".aegis/results/PX0-05/p33-v0.4-resume-authorization.json",
+    ".aegis/results/PX0-05/p34-review-p33-v0.3.json",
+    ".aegis/results/PX0-05/p35-runtime-contract-test-classification.json",
+    ".aegis/results/PX0-05/result.json",
+    ".aegis/results/PX0-05/scope-audit-v0.3.json",
+    "debug_ui/tests/runtime_contract_test.cpp"
+  ],
+  "cursor_relative_source_paths": [
+    "debug_ui/tests/runtime_contract_test.cpp"
+  ],
+  "package_materialization_paths": [
+    ".aegis/packages/PX0-05/evidence-contract.json",
+    ".aegis/packages/PX0-05/execution-contract.json",
+    ".aegis/packages/PX0-05/implementation-context.md",
+    ".aegis/packages/PX0-05/package.json"
+  ],
+  "evidence_paths": [
+    ".aegis/results/PX0-05/blocker-v0.3.json",
+    ".aegis/results/PX0-05/evidence-manifest.json",
+    ".aegis/results/PX0-05/p31-v0.4-package-reconciliation.json",
+    ".aegis/results/PX0-05/p33-v0.4-resume-authorization.json",
+    ".aegis/results/PX0-05/p34-review-p33-v0.3.json",
+    ".aegis/results/PX0-05/p35-runtime-contract-test-classification.json",
+    ".aegis/results/PX0-05/result.json",
+    ".aegis/results/PX0-05/scope-audit-v0.3.json"
+  ],
+  "authorized_source_scope": [
+    "debug_ui/tests/runtime_contract_test.cpp",
+    ".aegis/results/PX0-05/**"
+  ],
+  "forbidden_source_paths_touched": [],
+  "diff_check": {
+    "command": "git diff --check 9c5e3587358ad982ddab56ca2369cd285e330c5d..1e21856316ea93de3a1782f5cbab3d0291d81ded",
+    "exit_code": 0
+  },
+  "repair_semantics": "ProductControlReceipt.control explicitly initialized to std::nullopt; Runtime/ProductControl semantics unchanged",
+  "preserved_production_result": "9c5e3587358ad982ddab56ca2369cd285e330c5d"
+}

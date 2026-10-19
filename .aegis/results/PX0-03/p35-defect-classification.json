@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-03",
+  "stage": "P35_DEFECT_CLASSIFICATION",
+  "reviewed_result_revision": "9938e1f712015ef7f7a1ff7461d69d9a2e959d5d",
+  "primary_defect": {
+    "type": "IMPLEMENTATION_DEFECT",
+    "owner": "PX0-03 implementation",
+    "failure": "Legacy Debug UI presentation ID 4107 leaks into DebugControlRouter and is interpreted there as Pan, violating the frozen semantic owner-routing boundary."
+  },
+  "secondary_defect": {
+    "type": "TEST_DEFECT",
+    "owner": "PX0-03 implementation",
+    "failure": "PX0ControlRouter passes while omitting multiple explicitly frozen owner-routing, request-context, normalized-state, local-rejection, async-refresh and receipt-query oracles."
+  },
+  "upstream_defects": {
+    "spec_defect": false,
+    "authority_conflict": false,
+    "verification_design_defect": false,
+    "task_package_defect": false
+  },
+  "repair_route": "P36_FIX_REVERIFICATION",
+  "preserve_valid_work": true
+}

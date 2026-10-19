@@ -1,0 +1,20 @@
+{
+  "schema": "fc00x-build-artifacts-v3",
+  "implementation_revision": "246cd1d0b0183d665458846eb775a378d3e6cc07",
+  "windows": {
+    "status": "PASS",
+    "artifact": "out/fc00x-windows-playground-v2/apps/ink_playground/axiom_ink_playground_windows.exe"
+  },
+  "web_debug_on": {
+    "status": "PASS",
+    "artifact": "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.js"
+  },
+  "web_debug_off": {
+    "status": "PASS",
+    "artifact": "out/fc00x-web-debug-off/apps/ink_playground/axiom_ink_playground_web.js"
+  },
+  "android": {
+    "status": "DEFERRED_NOT_BLOCKING"
+  },
+  "physical_status": "PHYSICAL_PENDING"
+}

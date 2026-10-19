@@ -1,0 +1,21 @@
+{
+  "schema": "fc00x-renderer-conflict-repair-v1",
+  "task_id": "FC-00X-RUNTIME-MIN-CLOSURE",
+  "result_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+  "implementation_revision": "6282d0a2f31bb480d51b50f1b6286f41191180fc",
+  "root_cause": "Per-entry saveLayer isolated all ink entries, including standalone/transformed ink and non-pixel group references; kClear then composited against an opaque layer backdrop.",
+  "repair": "Detect real non-ink pixel contributors, exclude GroupReferenceCommand, and conditionally isolate Brush-v2 versus legacy Vector/Dab ink according to transform and scene overlap.",
+  "contracts": {
+    "standalone_legacy_ink_clear": "PASS",
+    "transformed_ink_clear_after_selection_move": "PASS",
+    "shape_preserved_when_ink_erased": "PASS",
+    "group_reference_does_not_force_layer": "PASS"
+  },
+  "verification": {
+    "G3HeadlessSkia": "PASS",
+    "G46PlaygroundTransform": "PASS",
+    "G45BrushRuntimePipeline": "PASS"
+  },
+  "physical_status": "PHYSICAL_PENDING",
+  "gate_claim": "No Gate/P34 PASS claimed"
+}

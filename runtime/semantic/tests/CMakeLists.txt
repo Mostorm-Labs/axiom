@@ -214,7 +214,9 @@ gtest_discover_tests(canvas_semantic_envelope_validation_test)
 # stores, or mutation helpers.
 add_executable(canvas_semantic_payload_structure_test
   payload_structure_test.cpp
-  ../src/validator.cpp)
+  ../src/validator.cpp
+  ../src/resource_manifest.cpp
+  ../src/sha256_internal.cpp)
 target_include_directories(canvas_semantic_payload_structure_test
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 target_link_libraries(canvas_semantic_payload_structure_test
@@ -229,7 +231,9 @@ endif()
 gtest_discover_tests(canvas_semantic_payload_structure_test)
 
 add_executable(canvas_semantic_g1_04_c_geometry_overflow_source_test
-  g1_04_c_geometry_overflow_source_test.cpp)
+  g1_04_c_geometry_overflow_source_test.cpp
+  ../src/resource_manifest.cpp
+  ../src/sha256_internal.cpp)
 target_include_directories(canvas_semantic_g1_04_c_geometry_overflow_source_test
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 target_link_libraries(canvas_semantic_g1_04_c_geometry_overflow_source_test
@@ -245,7 +249,9 @@ gtest_discover_tests(canvas_semantic_g1_04_c_geometry_overflow_source_test)
 
 add_executable(canvas_semantic_leaf_structure_validation_test
   leaf_structure_validation_test.cpp
-  ../src/validator.cpp)
+  ../src/validator.cpp
+  ../src/resource_manifest.cpp
+  ../src/sha256_internal.cpp)
 target_include_directories(canvas_semantic_leaf_structure_validation_test
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 target_link_libraries(canvas_semantic_leaf_structure_validation_test
@@ -258,6 +264,30 @@ else()
 endif()
 
 gtest_discover_tests(canvas_semantic_leaf_structure_validation_test)
+
+add_executable(canvas_semantic_fc01_shape2_validation_test
+  fc01_shape2_validation_test.cpp)
+target_include_directories(canvas_semantic_fc01_shape2_validation_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+target_link_libraries(canvas_semantic_fc01_shape2_validation_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+if(MSVC)
+  target_compile_options(canvas_semantic_fc01_shape2_validation_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_fc01_shape2_validation_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_fc01_shape2_validation_test)
+
+add_executable(canvas_semantic_fc01_shape2_apply_test
+  fc01_shape2_apply_test.cpp)
+target_link_libraries(canvas_semantic_fc01_shape2_apply_test
+  PRIVATE canvas_runtime_semantic GTest::gtest_main)
+if(MSVC)
+  target_compile_options(canvas_semantic_fc01_shape2_apply_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_fc01_shape2_apply_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_fc01_shape2_apply_test)
 
 add_executable(canvas_semantic_a_lane_no_mutation_test
   a_lane_no_mutation_test.cpp)
@@ -618,6 +648,21 @@ else()
   target_compile_options(canvas_semantic_operation_engine_publication_projection_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 gtest_discover_tests(canvas_semantic_operation_engine_publication_projection_test)
+if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
+add_executable(canvas_semantic_operation_engine_axis_publication_truth_test
+  operation_engine_axis_publication_truth_test.cpp)
+target_link_libraries(canvas_semantic_operation_engine_axis_publication_truth_test
+  PRIVATE canvas_runtime_semantic canvas_runtime_render GTest::gtest_main)
+target_include_directories(canvas_semantic_operation_engine_axis_publication_truth_test
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+target_compile_features(canvas_semantic_operation_engine_axis_publication_truth_test PRIVATE cxx_std_20)
+if(MSVC)
+  target_compile_options(canvas_semantic_operation_engine_axis_publication_truth_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_operation_engine_axis_publication_truth_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+add_test(NAME FC01AxisPublicationTruth COMMAND canvas_semantic_operation_engine_axis_publication_truth_test)
+endif()
 
 add_executable(canvas_semantic_stateful_validation_differential_test stateful_validation_differential_test.cpp)
 target_link_libraries(canvas_semantic_stateful_validation_differential_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
@@ -888,3 +933,13 @@ else()
   target_compile_options(canvas_semantic_g1_06_integration_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 gtest_discover_tests(canvas_semantic_g1_06_integration_test TEST_PREFIX "g1_06_integration.")
+
+add_executable(canvas_semantic_resource_manifest_test resource_manifest_test.cpp)
+target_link_libraries(canvas_semantic_resource_manifest_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
+target_compile_features(canvas_semantic_resource_manifest_test PRIVATE cxx_std_20)
+if(MSVC)
+  target_compile_options(canvas_semantic_resource_manifest_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_semantic_resource_manifest_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+gtest_discover_tests(canvas_semantic_resource_manifest_test TEST_PREFIX "resource_manifest.")

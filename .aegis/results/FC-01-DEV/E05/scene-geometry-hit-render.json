@@ -1,0 +1,24 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B05",
+  "status": "PARTIAL_NOT_CLOSED",
+  "requirement_ref": ".aegis/packages/FC-01/verification.lock.json@c98110c015f975012f25db5efa66c9679da35630#FC01-B05",
+  "requirement": "Triangle exact analytic geometry and Line/Arrow Connector/1 hit/bounds/full-vs-incremental Scene/Render parity",
+  "oracle": "Independent analytic point-in-triangle/distance-to-segment/arrowhead, ReferenceLinearIndex/FullScene differential, pinned headless CPU interior/exterior raster probes",
+  "acceptance": "Triangle vertices (W/2,0),(W,H),(0,H), bbox center, fill/stroke/transforms exact; Connector segment/Arrow precise hit selectable; no stale bounds/Scene on accepted edits; AA-only boundary comparison within pinned 1 physical pixel",
+  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "materialized_ref_resolution": "Reviewer resolves this artifact at the pushed result commit; no self/future SHA asserted.",
+  "residual_detection_gap": "Six analytic Scene regressions pass; pinned Skia raster probes cannot execute without locked SDK.",
+  "pass_from_frozen_comparator": false,
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "provider_run_refs": [
+    ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-committed-scene/result.json"
+  ],
+  "headless_raster_status": "BLOCKED_ENVIRONMENT_NOT_EXECUTED",
+  "current_source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "qualified_for_current_result": false,
+  "carry_forward_status": "PRIOR_UNQUALIFIED_RUN_NOT_CURRENT_RESULT"
+}

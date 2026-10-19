@@ -1,0 +1,37 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B03",
+  "requirement_ref": "Create source isolation and one-commit oracle",
+  "invariant_ref": "FC01-B03",
+  "high_impact_failure_mode": "Create source isolation and one-commit oracle",
+  "residual_detection_gap": [
+    "full authored IN-01..12 runner not yet materialized"
+  ],
+  "independent_oracle_ref_and_sha": {
+    "creation_session_test": "out/fc01/runs/i3-i4-focused-final/test.log"
+  },
+  "fixture_ref_sha": {},
+  "result_repository_revision_and_materialized_ref": {
+    "revision": "7b1facc37e7274708ece5d94665a7a18bb41bb83",
+    "materialized_ref": "7b1facc37e7274708ece5d94665a7a18bb41bb83",
+    "branch": "codex/fc-01-creation-tools-p32"
+  },
+  "binary_digest_and_profile": {},
+  "provider_run_identity": {},
+  "expected_observed_result": {
+    "focused_tests": "8/8 passed",
+    "source_loss": "candidate green"
+  },
+  "first_divergence_or_null": null,
+  "pass_from_frozen_comparator": true,
+  "blocking_justification": [
+    "full authored IN-01..12 runner not yet materialized"
+  ],
+  "physical_claim_false": true,
+  "current_source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "qualified_for_current_result": false,
+  "carry_forward_status": "PRIOR_UNQUALIFIED_RUN_NOT_CURRENT_RESULT",
+  "materialized_ref_resolution": "Reviewer resolves this artifact at the pushed result commit; no self/future SHA asserted."
+}

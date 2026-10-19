@@ -1,0 +1,34 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-06",
+  "base_revision": "3d18d030abea60b991fc7436fb8524a44760c979",
+  "result_revision": "57fb2bde",
+  "authorized_paths": [
+    "debug_ui/include/canvas/debug_ui/windows_host.hpp",
+    "debug_ui/src/windows_host.cpp",
+    "apps/ink_playground/platform/windows/main.cpp",
+    "apps/ink_playground/platform/web/bridge.cpp",
+    "apps/ink_playground/platform/web/index.html",
+    "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+    "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py",
+    "apps/ink_playground/tests/windows_debug_ui_encoding_contract_test.py",
+    "apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py"
+  ],
+  "changed_paths": [
+    ".aegis/results/PX0-06/ctest-focused.log",
+    ".aegis/results/PX0-06/red-oracle.log",
+    ".aegis/results/PX0-06/result.json",
+    ".aegis/results/PX0-06/structural-contracts.log",
+    ".aegis/results/PX0-06/web-physical-build.log",
+    ".aegis/results/PX0-06/windows-native-build.log",
+    "apps/ink_playground/platform/web/bridge.cpp",
+    "apps/ink_playground/platform/windows/main.cpp",
+    "apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py",
+    "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+    "debug_ui/include/canvas/debug_ui/windows_host.hpp",
+    "debug_ui/src/windows_host.cpp"
+  ],
+  "unauthorized_paths": [],
+  "diff_check": "PASS",
+  "status": "PASS"
+}

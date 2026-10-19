@@ -1,0 +1,65 @@
+{
+  "status": "QUARANTINED_INCOMPLETE_DRAFT_NOT_DELIVERED",
+  "source_base_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "tracked_patch": ".aegis/results/FC-01-DEV/drafts/i3/tracked-changes.patch",
+  "tracked_patch_sha256": "4c04382c19d5852542ea73ff3e7d6bf281f25ffe69624e6d190c0f302a92ebaf",
+  "tracked_paths": [
+    "apps/ink_playground/CMakeLists.txt",
+    "apps/ink_playground/common/canvas_control_binding.cpp",
+    "apps/ink_playground/common/canvas_runtime_facade_adapter.cpp",
+    "apps/ink_playground/common/canvas_runtime_facade_adapter.hpp",
+    "apps/ink_playground/common/ink_playground_host.cpp",
+    "apps/ink_playground/common/ink_playground_host.hpp",
+    "apps/ink_playground/platform/web/bridge.cpp",
+    "apps/ink_playground/platform/windows/main.cpp",
+    "debug_ui/include/canvas/debug_ui/control_router.hpp",
+    "debug_ui/src/control_router.cpp",
+    "debug_ui/src/panels/control.cpp",
+    "runtime/foundation/include/canvas/runtime/canvas_control_types.hpp",
+    "runtime/interaction/CMakeLists.txt",
+    "verification/fc01/run_dev.py"
+  ],
+  "new_files": [
+    {
+      "original_path": "apps/ink_playground/common/creation_session.hpp",
+      "archive_path": ".aegis/results/FC-01-DEV/drafts/i3/new-files/apps/ink_playground/common/creation_session.hpp.txt",
+      "bytes": 327,
+      "sha256": "828938eea8f9460cb600b21e52aaddcd916f7425b6d181c08c6fbbed92c2d9ae"
+    },
+    {
+      "original_path": "apps/ink_playground/tests/creation_control_binding_test.cpp",
+      "archive_path": ".aegis/results/FC-01-DEV/drafts/i3/new-files/apps/ink_playground/tests/creation_control_binding_test.cpp.txt",
+      "bytes": 1794,
+      "sha256": "dd1665974d4af5a3a1ca648aca39b96a405d0e183513ed75f0e49e6bee1eb6fc"
+    },
+    {
+      "original_path": "apps/ink_playground/tests/creation_session_test.cpp",
+      "archive_path": ".aegis/results/FC-01-DEV/drafts/i3/new-files/apps/ink_playground/tests/creation_session_test.cpp.txt",
+      "bytes": 4358,
+      "sha256": "28b47b17934c57ec4db5f3d9dbe4626a5db8ea7a76c0a730549ce2e460a4c928"
+    },
+    {
+      "original_path": "runtime/interaction/include/canvas/interaction/creation_session.hpp",
+      "archive_path": ".aegis/results/FC-01-DEV/drafts/i3/new-files/runtime/interaction/include/canvas/interaction/creation_session.hpp.txt",
+      "bytes": 2408,
+      "sha256": "8971f19c092f97ff0162e5682938d28ae73fe7fbb38682872d96f25d4735b533"
+    },
+    {
+      "original_path": "runtime/interaction/src/creation_session.cpp",
+      "archive_path": ".aegis/results/FC-01-DEV/drafts/i3/new-files/runtime/interaction/src/creation_session.cpp.txt",
+      "bytes": 6451,
+      "sha256": "adeb5cae555880e060f7d5e68ef6db4785a1687ae9955cb559161309f91021ae"
+    }
+  ],
+  "known_gaps": [
+    "B03 two-source scheduling and pending identity/late ACK not closed",
+    "B04 finite viewport axis-strip candidate query, correct guide/preview output and both threshold profiles not closed",
+    "B07 off-owner/reentrancy fencing and full readback oracle not closed",
+    "I4 selected actions/conditional history unimplemented",
+    "I5 host/publication and I6 ten evidence families incomplete"
+  ],
+  "rejected_evidence": "prior-draft-records/E03/creation-session-red.json has manually entered linker diagnostic 1120; not a captured behavioral RED and must not be used as such",
+  "reapply_rule": "Restore original_path bytes from new-files and git apply tracked-changes.patch only after reconciliation; archived code is not accepted production implementation",
+  "physical_claim": false,
+  "gate_claim": "none"
+}

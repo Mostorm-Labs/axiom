@@ -1,0 +1,215 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-03",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Extend activity.hpp with normalized DebugControlOwner, DebugActivityState, DebugActivityEntry, and a bounded-entry field in DebugActivitySnapshot while preserving PX0-02 latest Product/Surface receipt compatibility fields for the current tabs.",
+        "Create activity_log.hpp/activity_log.cpp. DebugActivityLog default capacity is 64, is bounded, implements DebugActivitySource, assigns monotonic activity sequence values, and exposes snapshot/readActivity/size.",
+        "Create control_router.hpp/control_router.cpp with beginFrame, refreshReceipts, product control helpers, submitAxiom, setCanonicalSurfaceMode, request ID allocation, generation/deadline context, receipt normalization, and activity recording.",
+        "Use RuntimeFacade only for product controls; use AxiomDebugControl only for Axiom engineering actions; use PlatformDebugControl only for Surface engineering actions.",
+        "For the current legacy Pan selector, route CanvasToolKind::kPan through RuntimeFacade::submitCanvasControl using current frame target/deadline context; do not put the legacy 410x presentation IDs into the router.",
+        "Implement local Fit Selection/Fit Primary rejection rules from the current frame snapshot without fallback.",
+        "Add PlatformDebugControl::receipt(requestId) as a read-only source-compatible default Unsupported query; override it in WindowsPlatformDebugControl using the retained BoundedSurfaceModeQueue receipt store.",
+        "Make DebugActivityLog the DebugSnapshot activity source in Windows and Web. After assembler.capture, call router.beginFrame and router.refreshReceipts, then replace only snapshot.activity from activityLog.snapshot before publish/render.",
+        "Create and wire one DebugControlRouter per Windows/Web Debug UI composition. Web may use null Axiom/Platform engineering owners and must record explicit unavailable/unsupported results rather than silently mutating elsewhere.",
+        "Migrate current legacy panel controls for Selection, Undo/Redo, Brush, Eraser, Pan and Surface mode to DebugControlRouter. buildImGuiPanels must not receive RuntimeFacade/AxiomDebugControl/PlatformDebugControl pointers directly after this package.",
+        "Retire debug_ui::DebugCommand/BoundedCommandQueue: delete command.hpp and command.cpp; remove DebugUiContext.commands and DebugController::submit; keep owner-side debug_command_queue.hpp and surface_debug_queue.hpp.",
+        "Add focused control_router_test.cpp and update existing tests/structural contracts only where the intentional router/activity/queue-retirement change requires it."
+      ],
+      "authorized_mutation_scope": [
+        "runtime/foundation/include/canvas/runtime/surface_debug_control.hpp",
+        "debug_ui/include/canvas/debug_ui/activity.hpp",
+        "debug_ui/include/canvas/debug_ui/activity_log.hpp",
+        "debug_ui/src/activity_log.cpp",
+        "debug_ui/include/canvas/debug_ui/control_router.hpp",
+        "debug_ui/src/control_router.cpp",
+        "debug_ui/include/canvas/debug_ui/controller.hpp",
+        "debug_ui/src/controller.cpp",
+        "debug_ui/include/canvas/debug_ui/windows_host.hpp",
+        "debug_ui/src/windows_host.cpp",
+        "debug_ui/include/canvas/debug_ui/command.hpp",
+        "debug_ui/src/command.cpp",
+        "debug_ui/tests/control_router_test.cpp",
+        "debug_ui/tests/debug_ui_test.cpp",
+        "debug_ui/tests/snapshot_assembler_test.cpp",
+        "debug_ui/CMakeLists.txt",
+        "apps/ink_playground/platform/windows/main.cpp",
+        "apps/ink_playground/platform/web/bridge.cpp",
+        "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+        "apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py",
+        "apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py"
+      ],
+      "preserve_unchanged": [
+        "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+        "runtime/foundation/include/canvas/runtime/runtime_state.hpp",
+        "runtime/foundation/include/canvas/runtime/product_control.hpp",
+        "runtime/foundation/include/canvas/runtime/diagnostics.hpp",
+        "runtime/foundation/include/canvas/runtime/telemetry.hpp",
+        "apps/ink_playground/common/canvas_runtime_facade_adapter.hpp",
+        "apps/ink_playground/common/canvas_runtime_facade_adapter.cpp",
+        "debug_ui/include/canvas/debug_ui/snapshot.hpp",
+        "debug_ui/include/canvas/debug_ui/snapshot_assembler.hpp",
+        "debug_ui/src/snapshot_assembler.cpp",
+        "debug_ui/include/canvas/debug_ui/panel_model.hpp",
+        "debug_ui/include/canvas/debug_ui/panels.hpp",
+        "debug_ui/include/canvas/debug_ui/debug_command_queue.hpp",
+        "debug_ui/include/canvas/debug_ui/surface_debug_queue.hpp",
+        ".aegis/results/GT-DUI-M1/**"
+      ],
+      "forbidden_changes": [
+        "Stable Runtime C ABI",
+        "PX0-01 RuntimeFacade/Diagnostics contract semantics",
+        "PX0-02 DebugSnapshot domain/coherence/assembler architecture",
+        "CanvasControlService owner behavior or queue semantics",
+        "Owner-side BoundedAxiomDebugCommandQueue or BoundedSurfaceModeQueue removal",
+        "WorkspaceId, PanelSlot, PanelRegistry, DebugUiSessionState, DebugWorkbench, or six-workspace shell",
+        "Final panel contribution architecture",
+        "New Shape/RichText/Connector/Snap/Image product semantics",
+        "Deferred Windows Preview visibility repair",
+        ".aegis/results/GT-DUI-M1/**",
+        "Any physical/Gate PASS claim",
+        "G5 implementation",
+        "MSVC warning-policy cleanup unrelated to the PX0-03 source/test target"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "current direct panel -> RuntimeFacade/PlatformDebugControl flow and unused generic DebugController command queue",
+        "current Windows/Web activity source/composition and queued engineering owner receipt behavior",
+        "target panel -> DebugControlRouter -> owner flow and DebugActivityLog -> DebugSnapshot activity flow",
+        "exact normalized receipt mapping for Product/Canvas/Axiom/Surface states",
+        "request-id/deadline/generation fencing rules",
+        "pending engineering receipt tracking and refresh lifecycle",
+        "Windows/Web router/log ownership and capture/render ordering",
+        "generic command queue retirement impact",
+        "mapping from every frozen verification obligation to code/test",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "The new PX0ControlRouter target fails against the starting implementation because DebugActivityLog/DebugControlRouter and PlatformDebugControl::receipt do not exist and the legacy command.hpp generic queue is still present.",
+      "observation_seam": "debug_ui/tests/control_router_test.cpp compiled as axiom_debug_ui_control_router_tests"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "PX0-03-T1-red-control-router",
+          "command_or_oracle": "Before production mutation, add control_router_test.cpp and the CMake target, then build axiom_debug_ui_control_router_tests.",
+          "expected_result": "RED specifically on missing router/activity/receipt-query/legacy-command-retirement contract.",
+          "blocking_reason": "Confirms the frozen PX0-03 control-plane boundary is observed before implementation."
+        },
+        {
+          "id": "PX0-03-T2-control-router",
+          "command_or_oracle": "Build and run PX0ControlRouter.",
+          "expected_result": "PASS for bounded log, owner routing, local fit guards, normalized states, request context, queued receipt refresh, and command.hpp absence.",
+          "blocking_reason": "Primary proof for Tasks 6-8."
+        },
+        {
+          "id": "PX0-03-T3-debug-ui-regressions",
+          "command_or_oracle": "Run DUI20DebugUiContracts, PX0DebugSnapshot, DUIM1PanelModel, and PX0RuntimeFacadeContract.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Protects the current structured snapshot/UI contract while routing changes."
+        },
+        {
+          "id": "PX0-03-T4-dui-product-regressions",
+          "command_or_oracle": "Run DUIM1RuntimeFacade and DUIM1ViewControls.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Protects accepted Canvas/product/view behavior while Debug UI moves behind the router."
+        },
+        {
+          "id": "PX0-03-T5-platform-structural-contracts",
+          "command_or_oracle": "python -m pytest apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py -q",
+          "expected_result": "PASS with router/log composition, common activity attachment, same-dispatch redraw/input-capture preservation, and no raw-owner buildImGuiPanels contract.",
+          "blocking_reason": "Protects Windows/Web integration without requiring physical closure."
+        },
+        {
+          "id": "PX0-03-T6-owner-queue-retention",
+          "command_or_oracle": "Inspect exact tree/diff and existing DUI20 coverage to confirm debug_command_queue.hpp and surface_debug_queue.hpp remain while command.hpp/command.cpp are removed.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Retires only the duplicate UI queue, not owner-safe-point queues."
+        },
+        {
+          "id": "PX0-03-T7-scope-and-diff",
+          "command_or_oracle": "git diff --name-only <actual-starting-revision>..HEAD and git diff --check <actual-starting-revision>..HEAD",
+          "expected_result": "Only authorized mutation-scope paths changed and diff check exits 0.",
+          "blocking_reason": "Prevents PX0-04+ UI architecture or unrelated build/Preview work from leaking into PX0-03."
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        {
+          "id": "PX0-03-H1-windows-release-build",
+          "oracle": "If the normal locked Windows build profile is usable, build axiom_ink_playground_windows at the exact result revision.",
+          "classification": "corroborative only; existing MSVC C4702 /WX profile behavior must not cause unrelated source changes or move the PX0-03 finish line"
+        },
+        {
+          "id": "PX0-03-H2-web-build",
+          "oracle": "If the locked Emscripten environment is healthy, build axiom_ink_playground_web at the exact result revision.",
+          "classification": "corroborative only"
+        }
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "exact pushed result_revision on codex/px0-03-control-router-activity",
+        "reviewer-resolvable materialized_ref for that exact result",
+        "rerunnable required test/oracle set bound to the exact source result",
+        "exact authorized-scope diff"
+      ],
+      "corroborative": [
+        "optional Windows/Web hosted build results",
+        "clean git status after commit"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "DebugActivityLog is bounded, normalized, and attached to DebugSnapshot activity on Windows/Web.",
+        "DebugControlRouter owns Debug UI request IDs, frame fencing/deadlines, owner selection, normalization, and asynchronous engineering receipt refresh.",
+        "Current supported panel controls route through DebugControlRouter without raw owner pointer submission.",
+        "PlatformDebugControl queued receipt lookup is observable without changing Surface mutation semantics.",
+        "The generic debug_ui command queue is removed while owner-side safe-point queues remain.",
+        "All frozen PX0/DUI regressions and Windows/Web structural contracts pass.",
+        "No PX0-04+ Workbench architecture, Preview repair, physical evidence claim, or product feature semantics are introduced.",
+        "The exact result is pushed/materialized for independent P34 Control Review."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "EVIDENCE_MATERIALIZATION_FAILURE"
+      ],
+      "status_mapping": {
+        "REPOSITORY_IDENTITY": "BLOCKED_REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE": "BLOCKED_EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT": "BLOCKED_AUTHORITY",
+        "MISSING_REQUIRED_INPUT": "BLOCKED_MISSING_INPUT",
+        "ENVIRONMENT_BLOCKER": "BLOCKED_ENVIRONMENT",
+        "FROZEN_VERIFICATION_FAILURE": "BLOCKED_IMPLEMENTATION",
+        "NEW_HIGH_IMPACT_FAILURE_MODE": "BLOCKED_AUTHORITY",
+        "EVIDENCE_MATERIALIZATION_FAILURE": "BLOCKED_EVIDENCE"
+      }
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}

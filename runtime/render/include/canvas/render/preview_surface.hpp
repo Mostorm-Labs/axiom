@@ -17,16 +17,17 @@ struct PreviewStyleOverride final {
     // Presentation-only tint for the transient Arc layer.  Keep it light
     // enough to distinguish it from canonical ink while remaining visible on
     // the white canvas during fast input.
-    float red = 0.20F;
-    float green = 0.78F;
-    float blue = 0.72F;
-    float alpha = 0.46F;
-    float opacityMultiplier = 0.46F;
+    float red = 1.0F;
+    float green = 0.62F;
+    float blue = 0.04F;
+    float alpha = 0.92F;
+    float opacityMultiplier = 0.92F;
     bool overrideColor = true;
     bool overrideOpacity = true;
     // SkBlendMode::kClear is 0; kSrcOver is 1. Keep the wire value explicit
     // so the amber overlay cannot silently erase its own surface.
     std::uint8_t blendMode = 1U; // SkBlendMode::kSrcOver
+    bool preferCapturedPaint = false;
 };
 
 struct PreviewGeometry final {
@@ -36,12 +37,20 @@ struct PreviewGeometry final {
     std::uint64_t revision = 0;
     SurfaceGeneration surfaceGeneration{};
     CanonicalViewportTransform viewport{};
+    float logicalToPhysicalX = 1.0F;
+    float logicalToPhysicalY = 1.0F;
     // Multiple active BrushSessions share one transparent preview surface.
     // Each contour remains owned by its session so a second contact cannot
     // replace the first contact's retained geometry.
     struct Contour final {
         std::uint64_t session = 0;
         std::uint64_t revision = 0;
+        bool hasPaint = false;
+        float red = 0.0F;
+        float green = 0.0F;
+        float blue = 0.0F;
+        float alpha = 1.0F;
+        float opacity = 1.0F;
         std::vector<ink::reference::StrokeOutlinePoint> outline;
         std::vector<ink::BrushDab> dabs;
     };
@@ -57,6 +66,9 @@ struct SurfaceRenderState final {
     std::uint64_t generation = 0;
     std::uint64_t submissionCount = 0;
     std::uint64_t presentCount = 0;
+    // Set only by the explicit platform acknowledgement seam. A local
+    // provider submission is not sufficient to qualify a deferred preview.
+    std::uint64_t platformQualifiedRevision = 0;
 };
 
 class PreviewSurfaceController final {
@@ -88,6 +100,8 @@ class PreviewSurfaceController final {
     // Rebind retains the latest geometry but makes the new provider generation
     // the only valid target.  The retained preview is dirty until presented.
     [[nodiscard]] bool rebind(std::uint64_t surfaceGeneration) noexcept;
+    void setSurfaceMetrics(const SurfaceMetrics& metrics) noexcept;
+    void retainGeometry(const PreviewGeometry& geometry) noexcept;
     [[nodiscard]] bool renderIfDirty(
         const PreviewStyleOverride& style = {}) noexcept;
     void setPresentationStyle(const PreviewStyleOverride& style) noexcept {

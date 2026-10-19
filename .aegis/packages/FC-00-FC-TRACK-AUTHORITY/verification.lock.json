@@ -1,0 +1,107 @@
+{
+  "schema_version": "0.1",
+  "task_id": "FC-00-FC-TRACK-AUTHORITY",
+  "status": "FROZEN_FROM_P23_CURRENT_PLUS_AEGIS_V06_PROJECT_STATE",
+  "source_refs": [
+    {
+      "ref": "notion://3f64c57a590c815da4f1df83aa0c1255",
+      "url": "https://app.notion.com/p/3f64c57a590c815da4f1df83aa0c1255",
+      "revision": "2026-10-11T21:34:23.927Z",
+      "sha256": "sha256:6454b0f5702cdf352b1f7aa86a66fc8bf598388577720336f7ffc6616184ce9b"
+    },
+    {
+      "ref": "notion://3f64c57a590c81faa2c8ea0097aad6c5",
+      "url": "https://app.notion.com/p/3f64c57a590c81faa2c8ea0097aad6c5",
+      "revision": "2026-10-11T14:04:09.470Z",
+      "sha256": "sha256:7cbc8c47f3dd4a41a36f82f474d37f93bd4006a5f2dd87e48a2b9e3f22f53e96"
+    },
+    {
+      "ref": "notion://3f64c57a590c81da80a8dd8edf6a0b45",
+      "url": "https://app.notion.com/p/3f64c57a590c81da80a8dd8edf6a0b45",
+      "revision": "2026-10-11T21:34:05.830Z",
+      "sha256": "sha256:251ec28e9b24b8e46f31a6137ec5b8b0f224a177e29318947b908b2183a13678"
+    },
+    {
+      "provider": "github",
+      "repository": "Mostorm-Labs/aegis",
+      "revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba"
+    }
+  ],
+  "obligations": [
+    {
+      "id": "FC00-FA-01",
+      "requirement": "Correct pinned Axiom source, Aegis v0.6 tool, P31 package locks and accepted P23/P34 sources",
+      "oracle": "Resolve repository identity before materialization/anchor; check all six lock SHA256 values, trusted source identity, pinned Aegis tool SHA",
+      "acceptance": "All exact refs valid; baseline import P34 PASS",
+      "evidence_required": [
+        "source-identity.json"
+      ]
+    },
+    {
+      "id": "FC00-FA-02",
+      "requirement": "Append exactly one distinct Current FC Authority with frozen fields and preserve prior four",
+      "oracle": "Independent old-vs-new .aegis/authorities.json JSON comparison; exact expected-authority.json match; unique (scope,kind), G4 v0.3 Current dependency",
+      "acceptance": "5 total/4 Current across distinct scopes, old 4 byte-equivalent semantic objects; no supersession of G4",
+      "evidence_required": [
+        "authority-append-audit.json"
+      ]
+    },
+    {
+      "id": "FC00-FA-03",
+      "requirement": "Preserve original 25 formal Gate Decisions/29 bound Integration occurrences and physical deferred status",
+      "oracle": "Old/new Git byte+blob SHA equality for .aegis/project.json, gates.json, evidence.json, integrations.json; verify exact original 29 Bound and historic physical flags",
+      "acceptance": "Four unchanged historic authored manifests; old G4 and original PX0/G4.6/G4.7 Gate claims unchanged",
+      "evidence_required": [
+        "history-preservation.json"
+      ]
+    },
+    {
+      "id": "FC00-FA-04",
+      "requirement": "Official deterministic v0.6->v0.6 compatibility and generated cache consistency",
+      "oracle": "Pinned Aegis CLI validate/check on old baseline; transition-check prior-valid->new-valid; validate, recompute --write, check, repeated recompute/check, SHA256 stable and manifest_digest independently checked",
+      "acceptance": "All mandatory CLI exit0 including transition-check; VALID, STATE_OK, stable official-generated state and no stale/needs_review FC Authority",
+      "evidence_required": [
+        "official-v06-transition.json",
+        "state-qualification.json"
+      ]
+    },
+    {
+      "id": "FC00-FA-05",
+      "requirement": "Scope exact; no FC-00 Closure/P34/FC-01 PASS claimed by P32",
+      "oracle": "Exact Git P31->P32 diff whitelist and remote head/commit; no other source/protected package/history paths changed",
+      "acceptance": "Only .aegis/authorities.json, .aegis/state.json and .aegis/results/FC-00-FC-TRACK-AUTHORITY/**; remote reviewer-resolvable result",
+      "evidence_required": [
+        "scope-identity.json"
+      ]
+    }
+  ],
+  "negative_controls": [
+    {
+      "id": "NEG-DUPLICATE-CURRENT",
+      "mutation": "add duplicate Current (scope,kind)",
+      "expected": "independent identity/official validator rejection"
+    },
+    {
+      "id": "NEG-HISTORICAL-BINDING",
+      "mutation": "change any of 29 Gate Decision Bindings to another valid PASS",
+      "expected": "exact historic authored manifest hash mismatch or transition-check reject"
+    },
+    {
+      "id": "NEG-SUPERSEDED-G4",
+      "mutation": "new FC Authority depends on g4-capability-authority old superseded rather than v0.3",
+      "expected": "expected-authority strict match reject"
+    }
+  ],
+  "blocking": [
+    "FC00-FA-01",
+    "FC00-FA-02",
+    "FC00-FA-03",
+    "FC00-FA-04",
+    "FC00-FA-05"
+  ],
+  "corroborative": [
+    "duplicate hosted CI of same official CLI",
+    "screenshots"
+  ],
+  "hosted_required": false
+}

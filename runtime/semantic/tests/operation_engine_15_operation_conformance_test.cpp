@@ -4,6 +4,7 @@
 #include "canvas/semantic/operation_engine.hpp"
 #include "canvas/semantic/reference_object_store.hpp"
 #include "canvas/semantic/validator.hpp"
+#include "canvas/semantic/normalizer.hpp"
 #include "object_store_mutator.hpp"
 #include <gtest/gtest.h>
 #include <array>
@@ -14,7 +15,7 @@
 #include <vector>
 namespace canvas::semantic { namespace {
 ObjectId id(std::uint64_t v){return ObjectId::fromUint64(v);}
-ObjectRecord shape(std::uint64_t v,std::uint8_t t){ObjectRecord r{};r.id=id(v);r.kind=ObjectKind::kShape;r.kind_version=1U;r.placement=Placement{std::nullopt,OrderKey({t})};r.transform=Transform2D{1,0,0,1,static_cast<double>(t),0};r.content=ShapeContent{t,static_cast<double>(t),static_cast<double>(t+1U)};return r;}
+ObjectRecord shape(std::uint64_t v,std::uint8_t t){ObjectRecord r{};r.id=id(v);r.kind=ObjectKind::kShape;r.kind_version=1U;r.placement=Placement{std::nullopt,OrderKey({t})};r.transform=Transform2D{1,0,0,1,static_cast<double>(t),0};r.content=ShapeContent{1U,static_cast<double>(t),static_cast<double>(t+1U)};return r;}
 ObjectRecord vectorPath(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kVectorPath;r.content=VectorPathContent{VectorPathGeometry{FillRule::kNonZero,{MoveTo{{0,0}},LineTo{{1,1}}}}};return r;}
 ObjectRecord image(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kImage;r.content=ImageContent{ResourceId{id(800)},10,10,std::nullopt,ImageContentMode::kFit,10,10};return r;}
 ObjectRecord stroke(std::uint64_t v){auto r=shape(v,1);r.kind=ObjectKind::kVectorStroke;StrokeRecord s{};s.brush.brush_family_id=1;s.brush.brush_version=1;s.brush.nominal_size=1;s.brush.opacity=1;s.data=VectorStrokeData{{StrokeSample{{0,0},1,{0,0}}}};r.content=VectorStrokeContent{s};return r;}
@@ -33,6 +34,52 @@ template<class Store> void applyInsert(){Store s;AppliedOperationLedger l;Semant
 namespace canvas::semantic {
 TEST(OperationEngine15OperationConformance, AuthorityFirstIndependentTableHasExactlyFifteenKinds){ASSERT_EQ(kExpectedKinds.size(),15U);EXPECT_EQ(kExpectedKinds.front(),"kInsertObjects");EXPECT_EQ(kExpectedKinds.back(),"kSetConnectorContent");}
 TEST(OperationEngine15OperationConformance, AppliedInsertHasExactCanonicalCommitForBothProviders){applyInsert<ReferenceObjectStore>();applyInsert<IndexedObjectStore>();}
+TEST(OperationEngine15OperationConformance, PayloadV2AdmitsDabBrushExceptionAlongsideVectorBrush) {
+    ObjectRecord record;
+    record.id = id(600U);
+    record.kind = ObjectKind::kDabStroke;
+    record.kind_version = 2U;
+    record.placement.order_key = OrderKey({1U});
+    DabBrushStrokeContent content;
+    content.stroke.snapshot.snapshot_version = 2U;
+    content.stroke.snapshot.profile_id = 3U;
+    content.stroke.snapshot.package_revision = 4U;
+    content.stroke.confirmed_samples = {{{10.0, 20.0}, 0.5}};
+    content.stroke.dab_output.dabs = {{{10.0, 20.0}, 8.0, 0.0F, 0.5F}};
+    content.stroke.dab_digest = 123U;
+    record.content = content;
+    auto incoming = op(AddStrokeOp{record}, 6001U);
+    incoming.payload_version = 2U;
+    ASSERT_TRUE(validatePayloadStructure(incoming).ok());
+    EXPECT_TRUE(validateEnvelope(incoming, OperationFieldPresence{true, true}).ok());
+    ReferenceObjectStore store;
+    AppliedOperationLedger ledger;
+    SemanticGenerationState generation;
+    CanonicalCommitClock clock(RuntimeEpoch(42U));
+    const auto result = OperationEngine{}.apply(incoming, ApplySource::kLocalInteraction,
+        store, ledger, generation, clock);
+    EXPECT_EQ(result.disposition, ApplyDisposition::kApplied);
+    EXPECT_EQ(store.allObjects(), std::vector<ObjectRecord>({record}));
+    EXPECT_EQ(generation.current(), SemanticGeneration(1U));
+
+    // A Brush2 record cannot lend its payload-version exception to a Shape
+    // in the same batch. Shape/2 remains Operation payloadVersion=1.
+    incoming.id = OperationId{id(6002U)};
+    auto triangle = shape(601U, 2U);
+    triangle.kind_version = 2U;
+    triangle.content = ShapeContent{3U, 100.0, 80.0};
+    incoming.payload = InsertObjectsOp{{record, triangle}};
+    ReferenceObjectStore emptyStore;
+    AppliedOperationLedger emptyLedger;
+    EXPECT_EQ(OperationEngine{}.prepare(incoming, {emptyStore, emptyLedger}).disposition,
+              PrepareDisposition::kRejected);
+    EXPECT_FALSE(validateEnvelope(incoming, OperationFieldPresence{true, true}).ok());
+    const auto before = store.allObjects();
+    EXPECT_EQ(OperationEngine{}.apply(incoming, ApplySource::kLocalInteraction,
+        store, ledger, generation, clock).disposition, ApplyDisposition::kRejected);
+    EXPECT_EQ(store.allObjects(), before);
+    EXPECT_EQ(generation.current(), SemanticGeneration(1U));
+}
 TEST(OperationEngine15OperationConformance, CollisionAndNegativeFixtureAreSideEffectFree){ReferenceObjectStore s;AppliedOperationLedger l;SemanticGenerationState g;CanonicalCommitClock c(RuntimeEpoch(42));OperationEngine e;auto first=op(InsertObjectsOp{{shape(2,8)}},1002);ASSERT_EQ(e.apply(first,ApplySource::kLocalInteraction,s,l,g,c).disposition,ApplyDisposition::kApplied);auto col=op(DeleteObjectsOp{{id(2)}},1002);auto cr=e.apply(col,ApplySource::kLocalInteraction,s,l,g,c);EXPECT_EQ(cr.disposition,ApplyDisposition::kRejected);EXPECT_EQ(cr.error.issue,StatefulIssue::kOperationIdCollision);auto bad=e.apply(op(SetTransformsOp{{TransformItem{id(99),Transform2D{2,0,0,2,0,0}}}},1003),ApplySource::kLocalInteraction,s,l,g,c);EXPECT_EQ(bad.disposition,ApplyDisposition::kRejected);EXPECT_EQ(bad.error.issue,StatefulIssue::kObjectMissing);EXPECT_EQ(g.current(),SemanticGeneration(1));EXPECT_EQ(c.lastCommittedOrdinal(),CommitOrdinal(1));}
 
 TEST(OperationEngine15OperationConformance, LiteralAuthorityTableDrivesAllFifteenOperationFixtures) {
@@ -140,7 +187,7 @@ TEST(OperationEngine15OperationConformance, PatchPropertiesProducesLiteralSorted
 
 template<class Store> void applyAllFamiliesPositive() {
   const ObjectRecord sh=shape(100,1), vp=vectorPath(101), im=image(102), st=stroke(103), rt=rich(104), co=connector(105);
-  ObjectRecord placed=sh;placed.placement=Placement{std::nullopt,OrderKey({9})};ObjectRecord transformed=sh;transformed.transform=Transform2D{1,0,0,1,8,9};ObjectRecord patched=sh;patched.properties.entries={{1U,PropertyValue{false}},{2U,PropertyValue{true}}};ObjectRecord resized=sh;resized.content=ShapeContent{1,20,30};ObjectRecord geometry=vp;geometry.content=VectorPathContent{VectorPathGeometry{FillRule::kEvenOdd,{MoveTo{{2,3}},LineTo{{4,5}}}}};ObjectRecord imageChanged=im;imageChanged.content=ImageContent{ResourceId{id(801)},44,55,std::nullopt,ImageContentMode::kFill,66,77};ObjectRecord maskAdded=st;const EraseMaskRecord mask{id(701),SweptCircleMask{}};maskAdded.erase_masks={mask};ObjectRecord connectorChanged=co;connectorChanged.content=ConnectorContent{ConnectorEndpoint{FreePointEndpoint{{5,6}}},ConnectorEndpoint{FreePointEndpoint{{7,8}}},ConnectorRouting::kOrthogonal};
+  ObjectRecord placed=sh;placed.placement=Placement{std::nullopt,OrderKey({9})};ObjectRecord transformed=sh;transformed.transform=Transform2D{1,0,0,1,8,9};ObjectRecord patched=sh;patched.properties.entries={{1U,PropertyValue{false}},{2U,PropertyValue{true}}};ObjectRecord resized=sh;resized.content=ShapeContent{1,20,30};ObjectRecord geometry=vp;geometry.content=VectorPathContent{VectorPathGeometry{FillRule::kEvenOdd,{MoveTo{{2,3}},LineTo{{4,5}}}}};ObjectRecord imageChanged=im;imageChanged.content=ImageContent{ResourceId{id(801)},44,55,std::nullopt,ImageContentMode::kFill,66,77};ObjectRecord maskAdded=st;const EraseMaskRecord mask=eraseMask(701);maskAdded.erase_masks={mask};ObjectRecord connectorChanged=co;connectorChanged.content=ConnectorContent{ConnectorEndpoint{FreePointEndpoint{{5,6}}},ConnectorEndpoint{FreePointEndpoint{{7,8}}},ConnectorRouting::kOrthogonal};
   struct Row { Operation op; ObjectId target; SemanticChangeFlags flag; std::vector<FieldId> fields; std::vector<ObjectRecord> expected; };
   const std::vector<Row> rows{
     {op(InsertObjectsOp{{sh}},5001),sh.id,SemanticChangeFlags::kCreated,{}, {sh}},
@@ -156,14 +203,14 @@ template<class Store> void applyAllFamiliesPositive() {
     {op(SplitStrokesOp{{StrokeSplit{st.id,{stroke(106)}}}},5011),st.id,SemanticChangeFlags::kDeleted,{}, {stroke(106)}},
     {op(AddEraseMasksOp{{EraseMaskAddItem{st.id,{mask}}}},5012),st.id,SemanticChangeFlags::kEraseMasks,{}, {maskAdded}},
     {op(RemoveEraseMasksOp{{EraseMaskRemoveItem{st.id,{mask.id}}}},5013),st.id,SemanticChangeFlags::kEraseMasks,{}, {st}},
-    {op(EditRichTextOp{rt.id,RichTextDelta{}},5014),rt.id,SemanticChangeFlags::kContent,{}, {rt}},
+    {op(EditRichTextOp{rt.id,RichTextDelta{1U,{SetParagraphStyleStep{std::get<RichTextContent>(rt.content).document.paragraphs.front().id,std::get<RichTextContent>(rt.content).document.paragraphs.front().style}}}},5014),rt.id,SemanticChangeFlags::kContent,{}, {rt}},
     {op(SetConnectorContentOp{co.id,std::get<ConnectorContent>(connectorChanged.content)},5015),co.id,SemanticChangeFlags::kContent,{}, {connectorChanged}}};
   ASSERT_EQ(rows.size(),kExpectedKinds.size());
   for (std::size_t i=0;i<rows.size();++i) {
     Store s; AppliedOperationLedger l; SemanticGenerationState g; CanonicalCommitClock c(RuntimeEpoch(9)); OperationEngine e;
     if(i==12){ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,maskAdded));}else{for (const auto& r : {sh,vp,im,st,rt,co}) { if (r.id==rows[i].target || i==0) { if (i>0 && i!=2 && i!=9){ ASSERT_TRUE(internal::ObjectStoreMutator::insertFresh(s,r)); } } }}
     auto result=e.apply(rows[i].op,ApplySource::kLocalInteraction,s,l,g,c);
-    ASSERT_EQ(result.disposition,ApplyDisposition::kApplied)<<kExpectedKinds[i]; ASSERT_TRUE(result.commit_record.has_value()); EXPECT_EQ(result.commit_record->operation_id,rows[i].op.id); EXPECT_EQ(result.commit_record->source,ApplySource::kLocalInteraction); EXPECT_EQ(result.commit_record->before_generation,SemanticGeneration(0)); EXPECT_EQ(result.commit_record->after_generation,SemanticGeneration(1)); EXPECT_EQ(result.commit_record->commit_stamp,(CanonicalCommitStamp{RuntimeEpoch(9),CommitOrdinal(1)}));expectChanges(result.commit_record->change_set,i==10?std::vector<ExpectedChange>{{st.id,SemanticChangeFlags::kDeleted,{}},{id(106),SemanticChangeFlags::kCreated,{}}}:std::vector<ExpectedChange>{{rows[i].target,rows[i].flag,rows[i].fields}});EXPECT_EQ(s.allObjects(),rows[i].expected)<<kExpectedKinds[i];EXPECT_EQ(g.current(),SemanticGeneration(1));EXPECT_EQ(c.lastCommittedOrdinal(),CommitOrdinal(1)); ASSERT_TRUE(l.find(rows[i].op.id).has_value());EXPECT_EQ(l.find(rows[i].op.id)->canonical_operation.id,rows[i].op.id);EXPECT_EQ(l.find(rows[i].op.id)->canonical_operation.payload,rows[i].op.payload); if constexpr(std::is_same_v<Store,IndexedObjectStore>){ EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(s)); }
+    ASSERT_EQ(result.disposition,ApplyDisposition::kApplied)<<kExpectedKinds[i]; ASSERT_TRUE(result.commit_record.has_value()); EXPECT_EQ(result.commit_record->operation_id,rows[i].op.id); EXPECT_EQ(result.commit_record->source,ApplySource::kLocalInteraction); EXPECT_EQ(result.commit_record->before_generation,SemanticGeneration(0)); EXPECT_EQ(result.commit_record->after_generation,SemanticGeneration(1)); EXPECT_EQ(result.commit_record->commit_stamp,(CanonicalCommitStamp{RuntimeEpoch(9),CommitOrdinal(1)}));expectChanges(result.commit_record->change_set,i==10?std::vector<ExpectedChange>{{st.id,SemanticChangeFlags::kDeleted,{}},{id(106),SemanticChangeFlags::kCreated,{}}}:std::vector<ExpectedChange>{{rows[i].target,rows[i].flag,rows[i].fields}});EXPECT_EQ(s.allObjects(),rows[i].expected)<<kExpectedKinds[i];EXPECT_EQ(g.current(),SemanticGeneration(1));EXPECT_EQ(c.lastCommittedOrdinal(),CommitOrdinal(1)); ASSERT_TRUE(l.find(rows[i].op.id).has_value());EXPECT_EQ(l.find(rows[i].op.id)->canonical_operation.id,rows[i].op.id);EXPECT_EQ(l.find(rows[i].op.id)->canonical_operation.payload,normalizeOperation(rows[i].op).value.payload); if constexpr(std::is_same_v<Store,IndexedObjectStore>){ EXPECT_TRUE(internal::ObjectStoreMutator::indexMatchesRebuild(s)); }
   }
 }
 TEST(OperationEngine15OperationConformance, AllFifteenFamiliesApplyOnBothProviders){applyAllFamiliesPositive<ReferenceObjectStore>();applyAllFamiliesPositive<IndexedObjectStore>();}

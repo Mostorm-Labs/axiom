@@ -23,7 +23,11 @@ bool PreviewSurfaceController::begin(std::uint64_t documentEpoch,
         return false;
     }
     if (!active_) {
+        const auto sx = geometry_.logicalToPhysicalX;
+        const auto sy = geometry_.logicalToPhysicalY;
         geometry_ = {};
+        geometry_.logicalToPhysicalX = sx;
+        geometry_.logicalToPhysicalY = sy;
         geometry_.documentEpoch = documentEpoch;
         geometry_.session = session;
         geometry_.sessionGeneration = sessionGeneration;
@@ -38,7 +42,7 @@ bool PreviewSurfaceController::begin(std::uint64_t documentEpoch,
                            return contour.session == session;
                        }),
         geometry_.contours.end());
-    geometry_.contours.push_back({session, 0U, {}, {}});
+    geometry_.contours.push_back({session, 0U, false, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, {}, {}});
     defaultSession_ = session;
     state_.generation = surfaceGeneration;
     state_.dirty = true;
@@ -76,6 +80,12 @@ bool PreviewSurfaceController::updateForSession(
     if (contour == geometry_.contours.end()) return false;
     if (delta.revision == contour->revision && !viewportChanged) return true;
     contour->revision = delta.revision;
+    contour->hasPaint = delta.hasPaint;
+    contour->red = delta.red;
+    contour->green = delta.green;
+    contour->blue = delta.blue;
+    contour->alpha = delta.alpha;
+    contour->opacity = delta.opacity;
     contour->outline = delta.outline;
     contour->dabs = delta.dabs;
     geometry_.revision = std::max(geometry_.revision, delta.revision);
@@ -167,8 +177,29 @@ bool PreviewSurfaceController::rebind(std::uint64_t surfaceGeneration) noexcept 
         provider_.generation() != surfaceGeneration) return false;
     geometry_.surfaceGeneration = SurfaceGeneration{surfaceGeneration};
     state_.generation = surfaceGeneration;
+    state_.platformQualifiedRevision = 0U;
     state_.dirty = true;
     return true;
+}
+
+void PreviewSurfaceController::setSurfaceMetrics(const SurfaceMetrics& metrics) noexcept {
+    const auto sx = metrics.physicalWidth / metrics.logicalWidth;
+    const auto sy = metrics.physicalHeight / metrics.logicalHeight;
+    if (geometry_.logicalToPhysicalX == sx && geometry_.logicalToPhysicalY == sy) return;
+    geometry_.logicalToPhysicalX = sx;
+    geometry_.logicalToPhysicalY = sy;
+    if (active_) state_.dirty = true;
+}
+
+void PreviewSurfaceController::retainGeometry(const PreviewGeometry& geometry) noexcept {
+    geometry_ = geometry;
+    geometry_.surfaceGeneration = SurfaceGeneration{provider_.generation()};
+    defaultSession_ = geometry_.session;
+    active_ = !geometry_.contours.empty();
+    state_.generation = provider_.generation();
+    state_.contentRevision = geometry_.revision;
+    state_.platformQualifiedRevision = 0U;
+    state_.dirty = active_;
 }
 
 bool PreviewSurfaceController::renderIfDirty(const PreviewStyleOverride& style) noexcept {
@@ -185,6 +216,7 @@ bool PreviewSurfaceController::renderIfDirty(const PreviewStyleOverride& style) 
     ++state_.submissionCount;
     state_.presentCount = provider_.presentCount();
     state_.submittedRevision = state_.contentRevision;
+    state_.platformQualifiedRevision = 0;
     state_.dirty = false;
     return true;
 }
@@ -197,6 +229,7 @@ bool PreviewSurfaceController::markPresented(std::uint64_t contentRevision,
         return false;
     }
     state_.submittedRevision = contentRevision;
+    state_.platformQualifiedRevision = contentRevision;
     state_.generation = surfaceGeneration;
     state_.presentCount = presentCount;
     state_.submissionCount += 1U;
@@ -220,6 +253,7 @@ bool PreviewSurfaceController::clearAfterCanonicalVisible(
     active_ = false;
     state_.dirty = false;
     state_.submittedRevision = state_.contentRevision;
+    state_.platformQualifiedRevision = 0;
     return true;
 }
 

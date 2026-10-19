@@ -1,0 +1,47 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B09",
+  "status": "PASS_PENDING_CONTROL_REVIEW",
+  "requirement_ref": "verification.lock.json#FC01-B09",
+  "oracle": "independent Axis recorder/provider status + host LocalOperationSink + PresentationTracker",
+  "acceptance": {
+    "five_presets_one_commit_each": true,
+    "applied_presented_local_durable_cloud_synced_separate": true,
+    "remote_restore_already_applied_collision_invalid_no_echo": true,
+    "cancel_and_100_move_no_echo": true,
+    "selected_size_style_transform_order_lock_delete": true,
+    "undo_redo_fresh_source_stamps": true,
+    "render_failure_does_not_rollback_applied": true,
+    "owner_thread_rejection": true,
+    "publication_callback_reentry_rejection": true,
+    "nested_pointer_and_fixture_rejection": true
+  },
+  "provider_run_refs": {
+    "host": "continuation-logs/blocker-closure/e09-host-exact-source.log",
+    "semantic": "continuation-logs/blocker-closure/e09-semantic-exact-source.log",
+    "windows_ctest": "continuation-logs/committed-runs/fc3d448e-windows-qualified/test.log"
+  },
+  "logs": {
+    "continuation-logs/blocker-closure/e09-host-exact-source.log": {
+      "bytes": 997,
+      "sha256": "b070a57a05d1b44f595e082c47acc33bde5f9514b704e6ad358373ba349723ef"
+    },
+    "continuation-logs/blocker-closure/e09-semantic-exact-source.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "continuation-logs/blocker-closure/e09-nested-ingress-green.log": {
+      "bytes": 997,
+      "sha256": "b070a57a05d1b44f595e082c47acc33bde5f9514b704e6ad358373ba349723ef"
+    }
+  },
+  "source_subject_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "pass_from_frozen_comparator": true,
+  "materialized_ref_resolution": "Reviewer resolves this artifact at the pushed result commit; no self/future SHA asserted.",
+  "current_source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "qualified_for_current_result": false
+}

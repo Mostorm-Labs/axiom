@@ -74,7 +74,9 @@ int main() {
         {canvas::semantic::ObjectId::fromUint64(1), canvas::semantic::ObjectKind::kShape, 1, std::nullopt, {1}, 1.0, "1:1,0,0,1,1,0:shape:1:10:20", {0,0,10,20}, {0,0,10,20}, {1,0,11,20}, {}},
         {canvas::semantic::ObjectId::fromUint64(2), canvas::semantic::ObjectKind::kImage, 1, std::nullopt, {2}, 2.0, "2:1,0,0,1,2,0:image:90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,:0:0:11:12", {0,0,11,12}, {0,0,11,12}, {2,0,13,12}, {canvas::semantic::ObjectId::fromUint64(90)}},
         {canvas::semantic::ObjectId::fromUint64(3), canvas::semantic::ObjectKind::kVectorPath, 1, std::nullopt, {3}, 3.0, "3:1,0,0,1,3,0:path:2:2:M:1,2:L:3,4", {1,2,3,4}, {1,2,3,4}, {4,2,6,4}, {}},
-        {canvas::semantic::ObjectId::fromUint64(4), canvas::semantic::ObjectKind::kRichText, 1, std::nullopt, {4}, 4.0, "4:1,0,0,1,4,0:text:1:hello", {0,0,2.5F,1}, {0,0,2.5F,1}, {4,0,6.5F,1}, {}},
+        // No layout service or exact font is supplied by this dependency-free
+        // compiler fixture, so RichText must not invent glyph bounds.
+        {canvas::semantic::ObjectId::fromUint64(4), canvas::semantic::ObjectKind::kRichText, 1, std::nullopt, {4}, 4.0, "4:1,0,0,1,4,0:text:1:hello", {}, {}, {4,0,4,0}, {}},
         {canvas::semantic::ObjectId::fromUint64(5), canvas::semantic::ObjectKind::kVectorStroke, 1, std::nullopt, {5}, 5.0, "5:1,0,0,1,5,0:vstroke:7:brush:0:0:0,0,0,0:0:0:1:0:::0:0:0:0:0:1,2,0,0,0", {1,2,1,2}, {1,2,1,2}, {6,2,6,2}, {}},
         {canvas::semantic::ObjectId::fromUint64(6), canvas::semantic::ObjectKind::kDabStroke, 1, std::nullopt, {6}, 6.0, "6:1,0,0,1,6,0:dstroke:8:brush:0:0:0,0,0,0:0:0:1:0:::0:0:0:0:0:2,3,4,0,0", {0,1,4,5}, {0,1,4,5}, {6,1,10,5}, {}},
         {canvas::semantic::ObjectId::fromUint64(7), canvas::semantic::ObjectKind::kConnector, 1, std::nullopt, {7}, 7.0, "7:1,0,0,1,7,0:connector:1:free:1,2:attached:1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,:auto:", {1,2,1,2}, {1,2,1,2}, {8,2,8,2}, {canvas::semantic::ObjectId::fromUint64(1)}},

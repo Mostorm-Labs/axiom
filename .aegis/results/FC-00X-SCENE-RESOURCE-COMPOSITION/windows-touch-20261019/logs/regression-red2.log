@@ -1,0 +1,24 @@
+Test project C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/p32-touch/build
+    Start 106: C1CommonIngress
+1/2 Test #106: C1CommonIngress ..................Exit code 0xc0000409***Exception:   2.74 sec
+Assertion failed: !rejected.accepted && rejected.normalized.samples.empty(), file C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\input\tests\platform_interaction_ingress_test.cpp, line 16
+
+    Start 152: FC00XWindowsTouchIngress
+2/2 Test #152: FC00XWindowsTouchIngress .........***Failed    0.07 sec
+SkIcuLoader: datafile missing: C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\out\p32-touch\build\apps\minimal_runtime_host\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\out\p32-touch\build\apps\minimal_runtime_host\icudtl.dat.
+WM_POINTERDOWN -> Runtime: expected=1 actual=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+PASS single/history/promotion/one-coordinate-map objects=1 operations=1 trace=4 viewport=0 scale=1.000000
+Assertion failed: runtime.platformKey(reusedKey.source, 7U) == reusedKey, file C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\apps\minimal_runtime_host\tests\windows_touch_pipeline_test.cpp, line 142
+
+
+0% tests passed, 2 tests failed out of 2
+
+Total Test time (real) =   2.93 sec
+
+The following tests FAILED:
+	106 - C1CommonIngress (Exit code 0xc0000409)
+	152 - FC00XWindowsTouchIngress (Failed)
+Errors while running CTest

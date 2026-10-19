@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-00",
+  "obligations": [
+    {
+      "id": "PX0-00-V1-repository-identity-and-ancestry",
+      "requirement": "Execution occurs in Mostorm-Labs/axiom on a revision descending from the approved PX0 control revision.",
+      "oracle": "Resolve repository identity first, record the actual starting revision, and run git merge-base --is-ancestor a077aff9ec7c64cd587a0c2643d283e135bba8dd <actual-starting-revision>.",
+      "acceptance": "Repository is github:Mostorm-Labs/axiom, actual starting revision is recorded, and the ancestry check exits 0.",
+      "evidence_required": "docs/engineering/px0-debug-control-plane-baseline-reconciliation.md"
+    },
+    {
+      "id": "PX0-00-V2-implementation-reality-inventory",
+      "requirement": "The current RuntimeFacade, Debug UI, Windows host, Web bridge, and relevant G4.7 integration reality are inspected at the actual starting revision.",
+      "oracle": "Inspect every path listed in implementation-context.md and record exact symbol/path findings, including the four required answers in authority.lock.json.",
+      "acceptance": "Every required path is classified present/missing and each required answer is supported by an exact file/symbol observation rather than assumption.",
+      "evidence_required": "docs/engineering/px0-debug-control-plane-baseline-reconciliation.md"
+    },
+    {
+      "id": "PX0-00-V3-authority-consistency",
+      "requirement": "Implementation reality does not materially invalidate the approved PX0 design or plan before code mutation begins.",
+      "oracle": "Compare observed implementation reality with the frozen trusted statements and PX0-00/PX0-01 boundaries. Classify material conflicts explicitly.",
+      "acceptance": "Record status READY only if no material conflict exists; otherwise record a BLOCKED_* status with the exact conflicting authority statement, file/symbol, and revision.",
+      "evidence_required": "docs/engineering/px0-debug-control-plane-baseline-reconciliation.md"
+    },
+    {
+      "id": "PX0-00-V4-mutation-scope",
+      "requirement": "P32 PX0-00 changes no runtime, app, debug-ui, test, build, or package source files.",
+      "oracle": "After recording actual_starting_revision and committing the reconciliation record, git diff --name-only <actual_starting_revision>..HEAD contains exactly docs/engineering/px0-debug-control-plane-baseline-reconciliation.md, and git diff --check exits 0.",
+      "acceptance": "Exactly one authorized document path changed and diff check passes.",
+      "evidence_required": "exact result revision and reviewer-resolvable materialized ref"
+    },
+    {
+      "id": "PX0-00-V5-reconciliation-record-completeness",
+      "requirement": "The durable reconciliation record is sufficient to authorize or block PX0-01 without rediscovery.",
+      "oracle": "Inspect the record for repository identity, execution ref, actual starting revision, task-anchor result, inspected path inventory, required answers, authority conflict analysis, final status, and recommended next action.",
+      "acceptance": "All required fields are present and internally consistent; READY points to PX0-01 only, while BLOCKED_* points back to CONTROL_REVIEW.",
+      "evidence_required": "docs/engineering/px0-debug-control-plane-baseline-reconciliation.md"
+    }
+  ]
+}

@@ -10,6 +10,9 @@ struct TelemetrySnapshot final {
   std::uint64_t previewFrames = 0;
   std::uint64_t canonicalFrames = 0;
   double inputToPreviewMs = 0.0;
+  double sampleHz = 0.0;
+  double frameMs = 0.0;
+  double queueAgeMs = 0.0;
 };
 
 class TelemetryProvider {

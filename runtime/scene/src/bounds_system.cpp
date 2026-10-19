@@ -1,6 +1,8 @@
 #include "canvas/scene/bounds_system.hpp"
 
 #include "canvas/scene/reference_geometry.hpp"
+#include "canvas/scene/derived_geometry.hpp"
+#include "canvas/text/text_layout.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -11,7 +13,7 @@
 namespace canvas::scene {
 namespace {
 foundation::WorldRect shapeRect(const semantic::ObjectRecord& record) noexcept {
-    return std::visit([](const auto& content) -> foundation::WorldRect {
+    return std::visit([&record](const auto& content) -> foundation::WorldRect {
         using T = std::decay_t<decltype(content)>;
         if constexpr (std::is_same_v<T, semantic::ShapeContent>) {
             return {0.0F, 0.0F, static_cast<float>(content.width), static_cast<float>(content.height)};
@@ -36,12 +38,9 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record) noexcept {
             geometry.kind = ReferenceGeometry::Kind::kPath;
             return geometryBounds(geometry);
         } else if constexpr (std::is_same_v<T, semantic::RichTextContent>) {
-            double width = 0.0; double height = 0.0;
-            for (const auto& paragraph : content.document.paragraphs) {
-                height += paragraph.style.line_height > 0.0 ? paragraph.style.line_height : 1.0;
-                for (const auto& run : paragraph.runs) width += run.text.size() * (run.style.font_size > 0.0 ? run.style.font_size * 0.5 : 0.5);
-            }
-            return {0.0F, 0.0F, static_cast<float>(width), static_cast<float>(height)};
+            // Without an admitted layout/resource context, text contributes no
+            // fabricated geometry. Application/Scene supplies the derived snapshot.
+            return {};
         } else if constexpr (std::is_same_v<T, semantic::VectorStrokeContent>) {
             const auto* data = std::get_if<semantic::VectorStrokeData>(&content.stroke.data);
             if (data == nullptr || data->samples.empty()) return {};
@@ -108,7 +107,10 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record) noexcept {
                         }
                     }
                 }
-            }; add(content.start); add(content.end); return result;
+            }; add(content.start); add(content.end);
+            bool arrow=false; for(const auto& entry:record.properties.entries) if(entry.field_id==0x201U) if(const auto* v=std::get_if<semantic::ConnectorDecorationValue>(&entry.value)) arrow=*v==semantic::ConnectorDecorationValue::kArrow;
+            if(arrow && have) { const auto start=std::get_if<semantic::FreePointEndpoint>(&content.start.value); const auto end=std::get_if<semantic::FreePointEndpoint>(&content.end.value); if(start&&end) { const ConnectorGeometry g{{static_cast<float>(start->point.x),static_cast<float>(start->point.y)},{static_cast<float>(end->point.x),static_cast<float>(end->point.y)},true}; const auto h=arrowHead(g); result=foundation::unionRects(result,{h.left.x,h.left.y,h.left.x,h.left.y}); result=foundation::unionRects(result,{h.right.x,h.right.y,h.right.x,h.right.y}); } }
+            return result;
         } else { return {}; }
     }, record.content);
 }
@@ -116,10 +118,11 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record) noexcept {
 bool finiteRect(const foundation::WorldRect& r) noexcept { return r.isFiniteAndOrdered(); }
 } // namespace
 
-BoundsResult computeBounds(const semantic::ObjectRecord& record) noexcept {
+BoundsResult computeBounds(const semantic::ObjectRecord& record, const text::TextLayoutSnapshot* textLayout) noexcept {
     BoundsResult result;
     if (record.kind == semantic::ObjectKind::kGroup) { result.geometry = {}; result.visual = {}; result.world = {}; return result; }
-    result.geometry = shapeRect(record);
+    result.geometry = record.kind == semantic::ObjectKind::kRichText && textLayout != nullptr
+        ? textLayout->localBounds : shapeRect(record);
     const float stroke = [&] {
         for (const auto& entry : record.properties.entries) {
             if (entry.field_id == 0x101U) {

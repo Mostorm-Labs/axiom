@@ -1,5 +1,6 @@
 #include "canvas/scene/bounds_system.hpp"
 #include "canvas/foundation/object_id.hpp"
+#include "canvas/text/text_layout.hpp"
 
 #include <cassert>
 #include <cmath>
@@ -84,7 +85,10 @@ int main() {
     record.content = semantic::RichTextContent{semantic::RichTextDocument{
         {semantic::Paragraph{.style = semantic::ParagraphStyle{.line_height = 12.0},
                              .runs = {semantic::TextRun{.text = "abcd", .style = semantic::TextStyle{.font_size = 10.0}}}}}}};
-    const auto text = scene::computeBounds(record);
+    assert(scene::computeBounds(record).geometry == foundation::WorldRect{});
+    text::TextLayoutSnapshot derived;
+    derived.localBounds={0.0F,0.0F,20.0F,12.0F};
+    const auto text = scene::computeBounds(record,&derived);
     assert(text.finite);
     assert((text.geometry == foundation::WorldRect{0.0F, 0.0F, 20.0F, 12.0F}));
     assert((text.visual == foundation::WorldRect{0.0F, 0.0F, 20.0F, 12.0F}));

@@ -1,0 +1,13 @@
+{
+  "task_id": "FC-01",
+  "slice": "FC01-I3",
+  "profile": "creation-session-red",
+  "source_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "working_tree_dirty": true,
+  "test": "apps/ink_playground/tests/creation_session_test.cpp",
+  "build_exit_code": 1120,
+  "run_exit_code": null,
+  "failure": "CreationSession begin/move/finish/cancel unresolved at link; behavior test did not run because production implementation is absent",
+  "expected_red": true,
+  "production_mutation_before_run": false
+}

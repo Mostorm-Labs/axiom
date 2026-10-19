@@ -1,0 +1,40 @@
+[
+  {
+    "name": "stable-order",
+    "command": [
+      "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\.deps\\emsdk\\upstream\\emscripten\\em++.exe",
+      "-std=c++20",
+      "-fexceptions",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "-fsyntax-only",
+      "-IC:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\foundation\\include",
+      "-IC:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\semantic\\include",
+      "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web-ui\\stable_order_probe.cpp"
+    ],
+    "exit_code": 0,
+    "expected": "Strict compiler accepts fixed source without either local exception",
+    "result": "PASS"
+  },
+  {
+    "name": "apply-plan",
+    "command": [
+      "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\.deps\\emsdk\\upstream\\emscripten\\em++.exe",
+      "-std=c++20",
+      "-fexceptions",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "-fsyntax-only",
+      "-IC:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\foundation\\include",
+      "-IC:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\semantic\\include",
+      "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\semantic\\src\\apply_plan.cpp"
+    ],
+    "exit_code": 0,
+    "expected": "Strict compiler accepts fixed source without either local exception",
+    "result": "PASS"
+  }
+]

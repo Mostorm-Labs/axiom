@@ -1,0 +1,264 @@
+{
+  "status": "FAIL",
+  "results": [],
+  "error": "Error: active preview has no pixels",
+  "stack": "Error: active preview has no pixels\n    at assert (http://127.0.0.1:8765/axiom_canvas_demo/tests/web_minimal_runtime_test.html:6:56)\n    at stroke (http://127.0.0.1:8765/axiom_canvas_demo/tests/web_minimal_runtime_test.html:42:7)\n    at async http://127.0.0.1:8765/axiom_canvas_demo/tests/web_minimal_runtime_test.html:49:7\n    at async test (http://127.0.0.1:8765/axiom_canvas_demo/tests/web_minimal_runtime_test.html:47:44)\n    at async frame.addEventListener.once (http://127.0.0.1:8765/axiom_canvas_demo/tests/web_minimal_runtime_test.html:48:5)",
+  "diagnostic": [
+    {
+      "step": "failure",
+      "state": {
+        "owner": "RuntimeComposition",
+        "revision": "621388791a809ec19d721b5a67b14f3d6afa72aa",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 0,
+        "operations": 0,
+        "pointerSamples": 2,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 1,
+        "retries": 0,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 2,
+        "metricsGeneration": 2,
+        "width": 1000,
+        "height": 640,
+        "logicalWidth": 1000,
+        "logicalHeight": 640,
+        "dpr": 1,
+        "controlState": 9,
+        "tool": 0,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 3,
+          "pointer": 1,
+          "generation": 1
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "pointer",
+            "source": 3,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "1600000000",
+            "x": 40,
+            "y": 81.5,
+            "pressure": 0.5,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 3,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "1616000000",
+            "x": 110,
+            "y": 81.5,
+            "pressure": 0.5,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "resize"
+          }
+        ]
+      },
+      "canonical": {
+        "alpha": 640000,
+        "dark": 0,
+        "error": 0
+      },
+      "preview": {
+        "alpha": 0,
+        "dark": 0,
+        "error": 0
+      }
+    },
+    {
+      "step": "pen-input",
+      "phase": 0,
+      "ok": 1
+    },
+    {
+      "step": "pen-input",
+      "phase": 1,
+      "ok": 1
+    },
+    {
+      "step": "pen-input",
+      "phase": 1,
+      "ok": 1
+    },
+    {
+      "step": "pen-preview",
+      "state": {
+        "owner": "RuntimeComposition",
+        "revision": "621388791a809ec19d721b5a67b14f3d6afa72aa",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 0,
+        "operations": 0,
+        "pointerSamples": 5,
+        "rejectedInputs": 0,
+        "activePointers": 1,
+        "presentedFrames": 2,
+        "retries": 0,
+        "pendingFrame": false,
+        "previewActive": true,
+        "surfaceGeneration": 2,
+        "metricsGeneration": 2,
+        "width": 1000,
+        "height": 640,
+        "logicalWidth": 1000,
+        "logicalHeight": 640,
+        "dpr": 1,
+        "controlState": 9,
+        "tool": 0,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 2,
+          "pointer": 999,
+          "generation": 1
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "pointer",
+            "source": 3,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "1600000000",
+            "x": 40,
+            "y": 81.5,
+            "pressure": 0.5,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 3,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "1616000000",
+            "x": 110,
+            "y": 81.5,
+            "pressure": 0.5,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "resize"
+          }
+        ]
+      },
+      "preview": {
+        "alpha": 0,
+        "dark": 0,
+        "error": 1280
+      }
+    },
+    {
+      "error": "Error: RuntimeFacade control not applied: 0",
+      "state": {
+        "owner": "RuntimeComposition",
+        "revision": "621388791a809ec19d721b5a67b14f3d6afa72aa",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 0,
+        "operations": 0,
+        "pointerSamples": 5,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 3,
+        "retries": 0,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 2,
+        "metricsGeneration": 2,
+        "width": 1000,
+        "height": 640,
+        "logicalWidth": 1000,
+        "logicalHeight": 640,
+        "dpr": 1,
+        "controlState": 0,
+        "tool": 0,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 2,
+          "pointer": 999,
+          "generation": 1
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "pointer",
+            "source": 3,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "1600000000",
+            "x": 40,
+            "y": 81.5,
+            "pressure": 0.5,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 3,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "1616000000",
+            "x": 110,
+            "y": 81.5,
+            "pressure": 0.5,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "resize"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          }
+        ]
+      }
+    }
+  ]
+}

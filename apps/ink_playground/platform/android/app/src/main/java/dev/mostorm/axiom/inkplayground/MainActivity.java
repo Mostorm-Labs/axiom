@@ -58,6 +58,20 @@ public final class MainActivity extends Activity {
         root.addView(surfaceStack, new LinearLayout.LayoutParams(-1, 0, 1f));
         root.addView(brushSelector, new LinearLayout.LayoutParams(-1, 128));
         root.addView(policy, new LinearLayout.LayoutParams(-1, -2));
+        Spinner textScenario = new Spinner(this);
+        String[] scenarios = {"text-many-small", "text-long", "text-style-mixed", "text-edit-local",
+                "text-font-cold-warm", "text-transform", "text-camera", "structured-grid-proxy"};
+        textScenario.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, scenarios));
+        Button loadText = new Button(this); loadText.setText("Load G4.7 text scenario");
+        loadText.setOnClickListener(v -> view.loadTextScenario((String) textScenario.getSelectedItem()));
+        Spinner textAction = new Spinner(this);
+        String[] actions = {"insert", "delete", "split", "merge", "inline-style", "paragraph-style", "transform", "missing", "ready", "camera"};
+        textAction.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, actions));
+        Button applyText = new Button(this); applyText.setText("Apply text action");
+        applyText.setOnClickListener(v -> view.applyTextAction((String) textAction.getSelectedItem()));
+        Button exportText = new Button(this); exportText.setText("Export text capture/metrics");
+        exportText.setOnClickListener(v -> view.exportTextEvidence());
+        root.addView(textScenario); root.addView(loadText); root.addView(textAction); root.addView(applyText); root.addView(exportText);
         setContentView(root);
     }
 

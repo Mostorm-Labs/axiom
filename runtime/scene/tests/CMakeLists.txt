@@ -70,6 +70,9 @@ target_link_libraries(canvas_g2_a2_bounds_system_test PRIVATE canvas_runtime_sce
 target_compile_features(canvas_g2_a2_bounds_system_test PRIVATE cxx_std_20)
 add_test(NAME canvas_g2_a2_bounds_system COMMAND canvas_g2_a2_bounds_system_test)
 
+add_executable(axiom_rich_text_layout_red_test rich_text_layout_red_test.cpp)
+target_link_libraries(axiom_rich_text_layout_red_test PRIVATE canvas_runtime_scene)
+
 add_executable(canvas_g2_a2_reference_geometry_test reference_geometry_test.cpp)
 target_link_libraries(canvas_g2_a2_reference_geometry_test PRIVATE canvas_runtime_scene)
 target_compile_features(canvas_g2_a2_reference_geometry_test PRIVATE cxx_std_20)
@@ -246,3 +249,11 @@ add_test(
     NAME canvas_rf01_public_abi_manifest
     COMMAND ${Python3_EXECUTABLE} ${PROJECT_SOURCE_DIR}/tools/check_runtime_abi_manifest.py
             --root ${PROJECT_SOURCE_DIR})
+
+add_executable(canvas_fc01_derived_geometry_test derived_geometry_test.cpp)
+target_link_libraries(canvas_fc01_derived_geometry_test PRIVATE canvas_runtime_scene)
+target_compile_features(canvas_fc01_derived_geometry_test PRIVATE cxx_std_20)
+if(MSVC)
+  target_compile_options(canvas_fc01_derived_geometry_test PRIVATE /W4 /permissive- /WX /EHsc)
+endif()
+add_test(NAME canvas_fc01_derived_geometry COMMAND canvas_fc01_derived_geometry_test)

@@ -1,0 +1,296 @@
+{
+  "recorded_at": "2026-10-19T06:39:38.405674+00:00",
+  "result_revision": "e42c907f827e33864d80a47ba7f9d5938ba14e3a",
+  "start_revision": "f4254a0d75c88267685831d4c234972014759b4c",
+  "materialized_ref": "The evidence commit containing this directory; returned as exact SHA in the task result.",
+  "branch": "codex/p32-windows-minimal-touch",
+  "changed_source_files": [
+    "apps/axiom_canvas_demo/platform/web/index.html",
+    "apps/axiom_canvas_demo/platform/web/web_debug_ui.inl",
+    "apps/axiom_canvas_demo/tests/web_minimal_runtime_test.html",
+    "runtime/foundation/include/canvas/foundation/stable_order_key.hpp",
+    "runtime/semantic/src/apply_plan.cpp",
+    "runtime/semantic/tests/apply_plan_test.cpp"
+  ],
+  "status": "UI_WIDTH_AND_STRICT_COMPILER_REPAIR_AUTOMATION_PASS",
+  "human_feedback": {
+    "quote": "这一轮验证中，整体功能是可以的，只是debug ui的宽度非常大，几乎占据了浏览器画面的4/5，需要修复下，然后就是你报的这个clang诊断阻塞需要修复下",
+    "scope": "Overall repaired Web functional observation; known UI width defect. No per-item matrix acceptance inferred.",
+    "repaired_width_physical_observation": "PHYSICAL_PENDING"
+  },
+  "checks": [
+    {
+      "name": "debug-ui-width",
+      "expected": "Bound at 410 CSS px with matching 410 px backing and viewport; fit narrow stage",
+      "actual": [
+        {
+          "stageWidth": 1200,
+          "panelWidth": 410,
+          "backingWidth": 410
+        },
+        {
+          "stageWidth": 800,
+          "panelWidth": 410,
+          "backingWidth": 410
+        },
+        {
+          "stageWidth": 360,
+          "panelWidth": 344,
+          "backingWidth": 410
+        }
+      ],
+      "result": "PASS"
+    },
+    {
+      "name": "strict-web-debug-on",
+      "expected": "Full target builds with both old local diagnostic exceptions removed",
+      "actual": "Build exit 0; audit covers every compilation command",
+      "result": "PASS"
+    },
+    {
+      "name": "strict-web-debug-off",
+      "expected": "Build exit 0; no Debug UI/Playground library",
+      "actual": {
+        "variant": "off",
+        "source_revision": "e42c907f827e33864d80a47ba7f9d5938ba14e3a",
+        "source_dirty": 0,
+        "debug_ui_linked": false,
+        "playground_linked": false,
+        "own_bridge_werror": true,
+        "files": [
+          {
+            "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo_off\\index.html",
+            "bytes": 1486,
+            "sha256": "63dc9f654f4385c5e649851563c57b59ff3cbec112786cda6469ceb97511cdca"
+          },
+          {
+            "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo_off\\host.js",
+            "bytes": 14024,
+            "sha256": "b826236fb489411f9fbc32790141dfe3e16c5658c2792b5b0cb0d8798d6934ed"
+          },
+          {
+            "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo_off\\axiom_canvas_demo_web.js",
+            "bytes": 121119,
+            "sha256": "99423e06ea80e6d6a48acc7b8638345296710e23716e27ede63008020f38f10d"
+          },
+          {
+            "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo_off\\axiom_canvas_demo_web.wasm",
+            "bytes": 9136505,
+            "sha256": "945884ed6cf74d27392954d723efde243590a96c35903a424e64f34b84550300"
+          }
+        ]
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "web-regressions",
+      "expected": "All 13 fixture cases hold for ON/OFF",
+      "actual": {
+        "on": [
+          {
+            "name": "DOM Down/Move/Up renders preview and canonical",
+            "result": "PASS"
+          },
+          {
+            "name": "ten strokes retain sampling and independent commits",
+            "result": "PASS"
+          },
+          {
+            "name": "Facade Shape presets and return to Ink",
+            "result": "PASS"
+          },
+          {
+            "name": "Facade Undo and Redo read back",
+            "result": "PASS"
+          },
+          {
+            "name": "cancel, identity reuse and stale generation rejection",
+            "result": "PASS"
+          },
+          {
+            "name": "frozen AutoIntent: within 250 ms zoom; later MultiInk",
+            "result": "PASS"
+          },
+          {
+            "name": "resize cancels active input and preserves canonical",
+            "result": "PASS"
+          },
+          {
+            "name": "Debug UI sibling uses Facade and cannot penetrate canvas",
+            "result": "PASS"
+          },
+          {
+            "name": "idle does not continuously submit canonical frames",
+            "result": "PASS"
+          },
+          {
+            "name": "capture/focus loss cancel input and the next stroke works",
+            "result": "PASS"
+          },
+          {
+            "name": "failed Down permits tool switch and next drawing",
+            "result": "PASS"
+          },
+          {
+            "name": "surface loss/rebind preserves canonical and permits drawing",
+            "result": "PASS"
+          },
+          {
+            "name": "mouse/pen sources, coalesced history and tool controls use the same owner",
+            "result": "PASS"
+          }
+        ],
+        "off": [
+          {
+            "name": "DOM Down/Move/Up renders preview and canonical",
+            "result": "PASS"
+          },
+          {
+            "name": "ten strokes retain sampling and independent commits",
+            "result": "PASS"
+          },
+          {
+            "name": "Facade Shape presets and return to Ink",
+            "result": "PASS"
+          },
+          {
+            "name": "Facade Undo and Redo read back",
+            "result": "PASS"
+          },
+          {
+            "name": "cancel, identity reuse and stale generation rejection",
+            "result": "PASS"
+          },
+          {
+            "name": "frozen AutoIntent: within 250 ms zoom; later MultiInk",
+            "result": "PASS"
+          },
+          {
+            "name": "resize cancels active input and preserves canonical",
+            "result": "PASS"
+          },
+          {
+            "name": "Debug UI sibling uses Facade and cannot penetrate canvas",
+            "result": "PASS"
+          },
+          {
+            "name": "idle does not continuously submit canonical frames",
+            "result": "PASS"
+          },
+          {
+            "name": "capture/focus loss cancel input and the next stroke works",
+            "result": "PASS"
+          },
+          {
+            "name": "failed Down permits tool switch and next drawing",
+            "result": "PASS"
+          },
+          {
+            "name": "surface loss/rebind preserves canonical and permits drawing",
+            "result": "PASS"
+          },
+          {
+            "name": "mouse/pen sources, coalesced history and tool controls use the same owner",
+            "result": "PASS"
+          }
+        ]
+      },
+      "result": "PASS"
+    },
+    {
+      "name": "native-regressions",
+      "expected": "Rebuilt MSVC 19.51 /WX native runtime/semantic tests pass",
+      "actual": {
+        "count": 79,
+        "failures": 0
+      },
+      "result": "PASS"
+    }
+  ],
+  "diagnostic_reds": [
+    "ui-width-red-result.json",
+    "clang-red.json",
+    "resource-red.log"
+  ],
+  "artifacts": {
+    "on": {
+      "variant": "on",
+      "source_revision": "e42c907f827e33864d80a47ba7f9d5938ba14e3a",
+      "source_dirty": 0,
+      "debug_ui_linked": true,
+      "playground_linked": false,
+      "own_bridge_werror": true,
+      "files": [
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\index.html",
+          "bytes": 1486,
+          "sha256": "63dc9f654f4385c5e649851563c57b59ff3cbec112786cda6469ceb97511cdca"
+        },
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\host.js",
+          "bytes": 14024,
+          "sha256": "b826236fb489411f9fbc32790141dfe3e16c5658c2792b5b0cb0d8798d6934ed"
+        },
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.js",
+          "bytes": 122386,
+          "sha256": "8db42820e66bcfee5afc39698a3c12697f7c44fb93b14185e9c0b65e0023e208"
+        },
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.wasm",
+          "bytes": 9576150,
+          "sha256": "f9b455d7ffa8ddd12216f2af2c7ee571f13681f58ee010c695dd7294b0835de6"
+        }
+      ]
+    },
+    "off": {
+      "variant": "off",
+      "source_revision": "e42c907f827e33864d80a47ba7f9d5938ba14e3a",
+      "source_dirty": 0,
+      "debug_ui_linked": false,
+      "playground_linked": false,
+      "own_bridge_werror": true,
+      "files": [
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo_off\\index.html",
+          "bytes": 1486,
+          "sha256": "63dc9f654f4385c5e649851563c57b59ff3cbec112786cda6469ceb97511cdca"
+        },
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo_off\\host.js",
+          "bytes": 14024,
+          "sha256": "b826236fb489411f9fbc32790141dfe3e16c5658c2792b5b0cb0d8798d6934ed"
+        },
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo_off\\axiom_canvas_demo_web.js",
+          "bytes": 121119,
+          "sha256": "99423e06ea80e6d6a48acc7b8638345296710e23716e27ede63008020f38f10d"
+        },
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo_off\\axiom_canvas_demo_web.wasm",
+          "bytes": 9136505,
+          "sha256": "945884ed6cf74d27392954d723efde243590a96c35903a424e64f34b84550300"
+        }
+      ]
+    }
+  },
+  "native_host_artifact": {
+    "built_with": "MSVC 19.51.36260 x64",
+    "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-touch\\build\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe",
+    "physical_status": "No new Windows physical observation claimed",
+    "sha256": "7762b54092bf95cf8bcaccb4c6e7ef39e6919bf92e566261a8fc10640d219d59",
+    "bytes": 10988544,
+    "source_revision": "e42c907f827e33864d80a47ba7f9d5938ba14e3a",
+    "launched_this_turn": false,
+    "embedded_source_revision_verified": true
+  },
+  "remaining_blockers": [],
+  "next_narrow_fix": "Only if physical recheck finds a reproducible issue.",
+  "physical_limits": "Synthetic DOM capture stubs do not prove physical capture; new width observation is pending.",
+  "claims_excluded": [
+    "Gate PASS",
+    "PHYS PASS",
+    "independent Control Review",
+    "complete per-item manual acceptance"
+  ]
+}

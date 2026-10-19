@@ -1,0 +1,75 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "GT-G4.6-B",
+  "current": true,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "trusted_basis": [
+    {
+      "stage": "P14-P18",
+      "url": "https://app.notion.com/p/3e04c57a590c811cbda0f366fcf2c126",
+      "title": "G4.6 Canvas Interaction Presentation Architecture v0.1"
+    },
+    {
+      "stage": "Roadmap",
+      "url": "https://app.notion.com/p/3e04c57a590c81a0a7c9fcdb11e1b089",
+      "title": "G4.6 Implementation Plan v0.1"
+    },
+    {
+      "stage": "RepositoryReality",
+      "ref": "git:cc985b174cafc5d5dd743bd66701cfe117278de8"
+    }
+  ],
+  "dependency": {
+    "required_predecessor": "GT-G4.6-A accepted result",
+    "anchor_relation": "execution start must descend from canonical main anchor and include accepted A result"
+  },
+  "viewport_fit_policy": {
+    "padding_logical_px": 32,
+    "min_zoom": 0.05,
+    "max_zoom": 32,
+    "targets": [
+      "Document",
+      "Selection",
+      "Object",
+      "WorldRect"
+    ],
+    "empty_target": "reject_without_camera_change",
+    "degenerate_extent": "fit using epsilon extent then clamp to max_zoom",
+    "rotation": "preserve current camera rotation and fit projected bounds in camera-aligned view",
+    "dpr": "DPR changes physical pixels only; logical viewport/world fit semantics remain unchanged"
+  },
+  "snap_policy": {
+    "engage_logical_px": 6,
+    "release_logical_px": 10,
+    "axes": "resolve X and Y independently",
+    "features": [
+      "min-edge",
+      "center",
+      "max-edge"
+    ],
+    "selected_objects": "excluded from candidate targets",
+    "rotated_geometry": "derive projected view-space extrema/center from current transformed visual bounds",
+    "tie_break": [
+      "smallest absolute correction",
+      "target ObjectId bytewise order",
+      "target feature enum order",
+      "source feature enum order"
+    ],
+    "hysteresis": "retain active target until release threshold is exceeded",
+    "canonical_effect": "guide/highlight are transient; only final resolved transform may commit through existing TransformSession"
+  },
+  "frozen_statements": [
+    "Viewport/camera is per-view transient state; pan/zoom/fit never creates canonical operations or shared RuntimeScene rebuild.",
+    "Snap/Guide is transient interaction/presentation and uses existing scene/spatial query seam rather than document-wide scans.",
+    "Camera and snap policies are editor configuration, not canonical schema."
+  ],
+  "forbidden_authority_expansion": [
+    "No diagram/layout engine.",
+    "No equal-spacing/distribution baseline in G4.6.",
+    "No camera semantic persistence.",
+    "No G5 optimization implementation."
+  ]
+}

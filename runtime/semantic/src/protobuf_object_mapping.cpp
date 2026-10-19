@@ -6,9 +6,11 @@
 #include "auditoryworks/axiom/v1/connector.pb.h"
 #include "auditoryworks/axiom/v1/erase_mask.pb.h"
 #include "auditoryworks/axiom/v1/object.pb.h"
+#include "auditoryworks/axiom/v1/operation.pb.h"
 #include "auditoryworks/axiom/v1/paint.pb.h"
 #include "auditoryworks/axiom/v1/property.pb.h"
 #include "auditoryworks/axiom/v1/rich_text.pb.h"
+#include "auditoryworks/axiom/v1/snapshot.pb.h"
 #include "auditoryworks/axiom/v1/vector_path.pb.h"
 
 #include <algorithm>
@@ -30,6 +32,88 @@ void setVec(const Vec2& source, p::Vec2* destination) { destination->set_x(sourc
 bool getVec(const p::Vec2& source, Vec2& destination) { if (!source.has_x() || !source.has_y()) return false; destination={source.x(),source.y()}; return true; }
 void setColor(const ColorValue& source, p::ColorValue* destination) { destination->set_r(source.r);destination->set_g(source.g);destination->set_b(source.b);destination->set_a(source.a); }
 bool getColor(const p::ColorValue& source, ColorValue& destination) { if(!source.has_r()||!source.has_g()||!source.has_b()||!source.has_a())return false; destination={source.r(),source.g(),source.b(),source.a()}; return true; }
+
+bool mapToProtobufResourceManifestEntry(const ResourceManifestEntry& source, p::ResourceManifestEntry& destination) {
+    if (source.resource_id.value.isZero() || !validateResourceManifestEntry(source)) return false;
+    setId(source.resource_id.value, destination.mutable_resource_id());
+    destination.set_resource_kind(static_cast<std::uint32_t>(source.resource_kind));
+    destination.set_resource_revision(source.resource_revision);
+    destination.set_content_hash(source.content_hash);
+    destination.set_byte_length(source.byte_length);
+    destination.set_decode_version(source.decode_version);
+    destination.set_layout_version(source.layout_version);
+    destination.set_metadata(std::string(reinterpret_cast<const char*>(source.metadata.data()), source.metadata.size()));
+    return true;
+}
+
+bool mapFromProtobufResourceManifestEntry(const p::ResourceManifestEntry& source, ResourceManifestEntry& destination) {
+    ObjectId id;
+    if (!source.has_resource_id() || !getId(source.resource_id(), id) || id.isZero() ||
+        !source.has_resource_kind() || !source.has_resource_revision() || !source.has_content_hash() ||
+        !source.has_byte_length() || !source.has_decode_version() || !source.has_layout_version() ||
+        !source.has_metadata()) return false;
+    destination.resource_id = ResourceId{id};
+    destination.resource_kind = static_cast<ResourceKind>(source.resource_kind());
+    destination.resource_revision = source.resource_revision();
+    destination.content_hash = source.content_hash();
+    destination.byte_length = source.byte_length();
+    destination.decode_version = source.decode_version();
+    destination.layout_version = source.layout_version();
+    const auto metadata = source.metadata();
+    destination.metadata.assign(metadata.begin(), metadata.end());
+    return validateResourceManifestEntry(destination);
+}
+
+bool mapToProtobufResourceManifest(const ResourceManifest& source, p::ResourceManifest& destination) {
+    if (!validateResourceManifest(source)) return false;
+    destination.set_schema_version(source.schema_version);
+    destination.set_manifest_revision(source.manifest_revision);
+    for (const auto& entry : source.entries) {
+        if (!mapToProtobufResourceManifestEntry(entry, *destination.add_entries())) return false;
+    }
+    for (const auto& tombstone : source.retired_entries) {
+        if (tombstone.resource_id.value.isZero() || tombstone.removal_operation_id.isZero() ||
+            tombstone.lineage_token.size() != 32U || !validateResourceManifestEntry(tombstone.preimage)) return false;
+        auto* out = destination.add_retired_entries();
+        setId(tombstone.resource_id.value, out->mutable_resource_id());
+        out->set_retired_revision(tombstone.retired_revision);
+        out->set_last_content_hash(tombstone.last_content_hash);
+        setId(tombstone.removal_operation_id.value(), out->mutable_removal_operation_id());
+        if (!mapToProtobufResourceManifestEntry(tombstone.preimage, *out->mutable_preimage())) return false;
+        out->set_lineage_token(std::string(reinterpret_cast<const char*>(tombstone.lineage_token.data()), tombstone.lineage_token.size()));
+    }
+    return true;
+}
+
+bool mapFromProtobufResourceManifest(const p::ResourceManifest& source, ResourceManifest& destination) {
+    if (!source.has_schema_version() || !source.has_manifest_revision()) return false;
+    destination = ResourceManifest{};
+    destination.schema_version = source.schema_version();
+    destination.manifest_revision = source.manifest_revision();
+    for (const auto& wire : source.entries()) {
+        ResourceManifestEntry entry;
+        if (!mapFromProtobufResourceManifestEntry(wire, entry)) return false;
+        destination.entries.push_back(std::move(entry));
+    }
+    for (const auto& wire : source.retired_entries()) {
+        ResourceManifestTombstone tombstone;
+        ObjectId id;
+        ObjectId removal;
+        if (!wire.has_resource_id() || !getId(wire.resource_id(), id) || id.isZero() ||
+            !wire.has_retired_revision() || !wire.has_last_content_hash() ||
+            !wire.has_removal_operation_id() || !getId(wire.removal_operation_id(), removal) || removal.isZero() ||
+            !wire.has_preimage() || !wire.has_lineage_token()) return false;
+        tombstone.resource_id = ResourceId{id};
+        tombstone.retired_revision = wire.retired_revision();
+        tombstone.last_content_hash = wire.last_content_hash();
+        tombstone.removal_operation_id = OperationId{removal};
+        if (!mapFromProtobufResourceManifestEntry(wire.preimage(), tombstone.preimage)) return false;
+        const auto token = wire.lineage_token();
+        tombstone.lineage_token.assign(token.begin(), token.end());
+        destination.retired_entries.push_back(std::move(tombstone));
+    }
+    return normalizeResourceManifest(destination);
+}
 
 void setGeometry(const VectorPathGeometry& source, p::VectorPathGeometry* destination) {
     destination->set_fill_rule(static_cast<p::FillRule>(source.fill_rule));
@@ -162,6 +246,107 @@ bool fromProtobufObjectRecord(const p::ObjectRecord& source, ObjectRecord& desti
     destination.erase_masks.clear();
     for(const auto& item:source.erase_masks()){EraseMaskRecord mask;if(!item.has_mask_id()||!getId(item.mask_id(),mask.id)||!item.has_geometry())return false;switch(item.geometry().geometry_case()){case p::EraseMaskGeometry::kSweptCircle:{SweptCircleMask geometry;for(const auto& segment:item.geometry().swept_circle().segments()){if(!segment.has_p0()||!segment.has_p1()||!segment.has_control1()||!segment.has_control2()||!segment.p0().has_position()||!segment.p0().has_radius()||!segment.p1().has_position()||!segment.p1().has_radius())return false;EraseCubicSegment out;if(!getVec(segment.p0().position(),out.p0.position)||!getVec(segment.p1().position(),out.p1.position)||!getVec(segment.control1(),out.control1)||!getVec(segment.control2(),out.control2))return false;out.p0.radius=segment.p0().radius();out.p1.radius=segment.p1().radius();geometry.segments.push_back(std::move(out));}mask.geometry=std::move(geometry);break;}case p::EraseMaskGeometry::kFilledPath:{if(!item.geometry().filled_path().has_path())return false;VectorPathGeometry g;if(!getGeometry(item.geometry().filled_path().path(),g))return false;mask.geometry=FilledPathMask{std::move(g)};break;}default:return false;}destination.erase_masks.push_back(std::move(mask));}
     return true;
+}
+
+bool toProtobufOperation(const Operation& source, p::Operation& destination) {
+    setId(source.id.value(), destination.mutable_operation_id());
+    setId(source.document_id.value(), destination.mutable_document_id());
+    destination.set_schema_version(source.schema_version);
+    destination.set_payload_version(source.payload_version);
+    auto* payload = destination.mutable_payload();
+    return std::visit([&](const auto& value) -> bool {
+        using T = std::decay_t<decltype(value)>;
+        if constexpr (std::is_same_v<T, InsertObjectsOp> || std::is_same_v<T, RestoreObjectsOp>) {
+            for (const auto& object : value.objects) {
+                auto* out = [&] { if constexpr(std::is_same_v<T, InsertObjectsOp>) return payload->mutable_insert_objects()->add_objects(); else return payload->mutable_restore_objects()->add_objects(); }();
+                if (!toProtobufObjectRecord(object, *out)) return false;
+            }
+        } else if constexpr (std::is_same_v<T, DeleteObjectsOp>) {
+            for (const auto& id : value.object_ids) setId(id, payload->mutable_delete_objects()->add_object_ids());
+        } else if constexpr (std::is_same_v<T, SetPlacementsOp>) {
+            for (const auto& item : value.items) {
+                auto* out = payload->mutable_set_placements()->add_items(); setId(item.object_id,out->mutable_object_id());
+                if(item.placement.parent_id) setId(*item.placement.parent_id,out->mutable_placement()->mutable_parent_id());
+                const auto& key=item.placement.order_key.bytes(); out->mutable_placement()->mutable_order_key()->set_value(std::string(reinterpret_cast<const char*>(key.data()),key.size()));
+            }
+        } else if constexpr (std::is_same_v<T, SetTransformsOp>) {
+            for (const auto& item : value.items) {
+                auto* out = payload->mutable_set_transforms()->add_items(); setId(item.object_id,out->mutable_object_id());
+                auto* t=out->mutable_transform(); t->set_a(item.transform.a);t->set_b(item.transform.b);t->set_c(item.transform.c);t->set_d(item.transform.d);t->set_tx(item.transform.tx);t->set_ty(item.transform.ty);
+            }
+        } else if constexpr (std::is_same_v<T, PatchPropertiesOp>) {
+            for (const auto& item : value.patches) {
+                auto* out=payload->mutable_patch_properties()->add_patches();setId(item.object_id,out->mutable_object_id());out->set_field_id(item.field_id);out->set_action(static_cast<p::PropertyPatchAction>(item.action));
+                if(const auto* property=std::get_if<PropertyValue>(&item.value)) if(!setProperty(*property,out->mutable_value())) return false;
+            }
+        } else if constexpr (std::is_same_v<T, SetObjectSizeOp>) {
+            for(const auto& item:value.items) {auto* out=payload->mutable_set_object_size()->add_items();setId(item.object_id,out->mutable_object_id());out->set_width(item.width);out->set_height(item.height);}
+        } else if constexpr (std::is_same_v<T, SetVectorPathGeometryOp>) {
+            auto* out=payload->mutable_set_vector_path_geometry();setId(value.object_id,out->mutable_object_id());setGeometry(value.geometry,out->mutable_geometry());
+        } else if constexpr (std::is_same_v<T, SetImageContentOp>) {
+            auto* out=payload->mutable_set_image_content();setId(value.object_id,out->mutable_object_id());
+            ObjectRecord record{};record.id=value.object_id;record.kind=ObjectKind::kImage;record.kind_version=1;record.placement.order_key=OrderKey({1});record.content=value.content;
+            p::ObjectRecord mapped; if(!toProtobufObjectRecord(record,mapped)) return false;*out->mutable_content()=mapped.content().image();
+        } else if constexpr (std::is_same_v<T, AddStrokeOp>) {
+            if (!toProtobufObjectRecord(value.object, *payload->mutable_add_stroke()->mutable_object())) return false;
+        } else if constexpr (std::is_same_v<T, SplitStrokesOp>) {
+            for(const auto& item:value.splits) {auto* out=payload->mutable_split_strokes()->add_splits();setId(item.source_stroke_id,out->mutable_source_stroke_id());for(const auto& record:item.replacements) if(!toProtobufObjectRecord(record,*out->add_replacements()))return false;}
+        } else if constexpr (std::is_same_v<T, AddEraseMasksOp>) {
+            for(const auto& item:value.items) {
+                auto* out=payload->mutable_add_erase_masks()->add_items();setId(item.object_id,out->mutable_object_id());
+                ObjectRecord record{};record.id=item.object_id;record.kind=ObjectKind::kShape;record.kind_version=1;record.placement.order_key=OrderKey({1});record.content=ShapeContent{1,1,1};record.erase_masks=item.masks;
+                p::ObjectRecord mapped;if(!toProtobufObjectRecord(record,mapped))return false;for(const auto& mask:mapped.erase_masks())*out->add_masks()=mask;
+            }
+        } else if constexpr (std::is_same_v<T, RemoveEraseMasksOp>) {
+            for(const auto& item:value.items) {auto* out=payload->mutable_remove_erase_masks()->add_items();setId(item.object_id,out->mutable_object_id());for(const auto& id:item.mask_ids)setId(id,out->add_mask_ids());}
+        } else if constexpr (std::is_same_v<T, EditRichTextOp>) {
+            auto* out=payload->mutable_edit_rich_text();setId(value.object_id,out->mutable_object_id());auto* delta=out->mutable_delta();delta->set_delta_version(value.delta.delta_version);
+            for(const auto& step:value.delta.steps) std::visit([&](const auto& v){using S=std::decay_t<decltype(v)>;auto* x=delta->add_steps();
+                if constexpr(std::is_same_v<S,InsertTextStep>){auto* y=x->mutable_insert_text();setId(v.paragraph_id,y->mutable_paragraph_id());y->set_scalar_offset(v.scalar_offset);y->set_text(v.text);setTextStyle(v.style,y->mutable_style());}
+                else if constexpr(std::is_same_v<S,DeleteTextStep>){auto* y=x->mutable_delete_text();setId(v.paragraph_id,y->mutable_paragraph_id());y->set_start_scalar(v.start_scalar);y->set_scalar_count(v.scalar_count);}
+                else if constexpr(std::is_same_v<S,SplitParagraphStep>){auto* y=x->mutable_split_paragraph();setId(v.paragraph_id,y->mutable_paragraph_id());y->set_scalar_offset(v.scalar_offset);setId(v.new_paragraph_id,y->mutable_new_paragraph_id());}
+                else if constexpr(std::is_same_v<S,MergeParagraphStep>){auto* y=x->mutable_merge_paragraph();setId(v.first_paragraph_id,y->mutable_first_paragraph_id());setId(v.second_paragraph_id,y->mutable_second_paragraph_id());}
+                else if constexpr(std::is_same_v<S,SetInlineStyleStep>){auto* y=x->mutable_set_inline_style();setId(v.paragraph_id,y->mutable_paragraph_id());y->set_start_scalar(v.start_scalar);y->set_scalar_count(v.scalar_count);setTextStyle(v.style,y->mutable_style());}
+                else {auto* y=x->mutable_set_paragraph_style();setId(v.paragraph_id,y->mutable_paragraph_id());setParagraphStyle(v.style,y->mutable_style());}
+            },step);
+        } else if constexpr (std::is_same_v<T, SetConnectorContentOp>) {
+            auto* out=payload->mutable_set_connector_content();setId(value.object_id,out->mutable_object_id());setEndpoint(value.content.start,out->mutable_content()->mutable_start());setEndpoint(value.content.end,out->mutable_content()->mutable_end());out->mutable_content()->set_routing(static_cast<p::ConnectorRouting>(value.content.routing));
+        } else if constexpr (std::is_same_v<T, UpdateResourceManifestOp>) {
+            auto* out = payload->mutable_update_resource_manifest();
+            out->set_expected_manifest_revision(value.expected_manifest_revision);
+            for (const auto& entry : value.upserts) {
+                if (!mapToProtobufResourceManifestEntry(entry, *out->add_upserts())) return false;
+            }
+            for (const auto& id : value.removes) setId(id.value, out->add_removes());
+            for (const auto& expectation : value.expectations) {
+                auto* item = out->add_expectations();
+                setId(expectation.resource_id.value, item->mutable_resource_id());
+                item->set_state(static_cast<std::uint32_t>(expectation.state));
+                item->set_revision(expectation.revision);
+            }
+            for (const auto& reactivation : value.reactivations) {
+                auto* item = out->add_reactivations();
+                if (!mapToProtobufResourceManifestEntry(reactivation.entry, *item->mutable_entry()) ||
+                    !mapToProtobufResourceManifestEntry(reactivation.expected_preimage, *item->mutable_expected_preimage())) return false;
+                setId(reactivation.expected_removal_operation_id.value(), item->mutable_expected_removal_operation_id());
+                item->set_expected_lineage_token(std::string(reinterpret_cast<const char*>(reactivation.expected_lineage_token.data()), reactivation.expected_lineage_token.size()));
+            }
+        }
+        return true;
+    }, source.payload);
+}
+
+bool toProtobufResourceManifestEntry(const ResourceManifestEntry& source, p::ResourceManifestEntry& destination) {
+    return mapToProtobufResourceManifestEntry(source, destination);
+}
+bool fromProtobufResourceManifestEntry(const p::ResourceManifestEntry& source, ResourceManifestEntry& destination) {
+    return mapFromProtobufResourceManifestEntry(source, destination);
+}
+bool toProtobufResourceManifest(const ResourceManifest& source, p::ResourceManifest& destination) {
+    return mapToProtobufResourceManifest(source, destination);
+}
+bool fromProtobufResourceManifest(const p::ResourceManifest& source, ResourceManifest& destination) {
+    return mapFromProtobufResourceManifest(source, destination);
 }
 
 bool roundTripProtobufObjectRecord(const ObjectRecord& source, ObjectRecord& destination) {

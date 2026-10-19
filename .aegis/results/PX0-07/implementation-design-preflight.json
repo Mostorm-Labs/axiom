@@ -1,0 +1,24 @@
+{
+  "task_id": "PX0-07",
+  "qualification_subject_revision": "c4abfc26e8b530bf105906a2a0a50451c1faf6df",
+  "classification": "IMPLEMENTATION_DESIGN_PREFLIGHT",
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "unresolved_semantic_decisions": [],
+  "current_flow": "PanelRegistry contributions are discovered by workspace/slot/order and rendered through DebugPanelContext; existing boundary tests cover runtime, snapshot, router, workbench and UI paths.",
+  "target_flow": "Add only a test-local Inspect/Object contribution and assert registry discovery plus render output while leaving production Workbench, PanelRegistry and hosts unchanged.",
+  "affected_files": ["debug_ui/tests/workbench_state_test.cpp"],
+  "obligation_mapping": {
+    "PX0-07-V1": "workbench_state_test.cpp synthetic Control/Feature and Inspect/Object contributions",
+    "PX0-07-V2": "existing PX0/DUI tests plus source audit",
+    "PX0-07-V3": "native DUI/PX0 CTest",
+    "PX0-07-V4": "four structural contract scripts",
+    "PX0-07-V5": "Windows physical matrix pending real GUI observation",
+    "PX0-07-V6": "Web physical matrix pending served browser observation",
+    "PX0-07-V7": "README and result/evidence metadata",
+    "PX0-07-V8": "scope audit and diff check"
+  },
+  "preserved_completed_work": ["RuntimeFacade/diagnostics separation", "snapshot/router/workbench boundary coverage", "typed Axiom debug queue ownership"],
+  "next_action": "Complete automated verification, materialize subject/evidence identities, then await real Windows/Web physical observations."
+}

@@ -1,0 +1,59 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B08",
+  "status": "BLOCKED_ENVIRONMENT_ANDROID_DEFERRED",
+  "requirement_ref": ".aegis/packages/FC-01/verification.lock.json@c98110c015f975012f25db5efa66c9679da35630#FC01-B08",
+  "requirement": "FC-01 changed Windows, Web/WASM and Android native host/bridge surfaces compile/link and satisfy common logical pointer/epoch/capture/camera semantics",
+  "oracle": "Exact target build+link with native/TS/WASM/JNI deterministic host samples, independent viewport math and precision tokens; platform-native physical-only risks logged separately",
+  "acceptance": "All applicable supported changed host variants built and deterministic input/target/epoch scenarios match; missing required toolchain explicitly BLOCKED_ENVIRONMENT, never reported green by mock/native substitute",
+  "source_subject_revision": "fc3d448ef783cf7919576130597f8fa6ce79fa27",
+  "materialized_ref_resolution": "Reviewer resolves this artifact at the pushed result commit; no self/future SHA asserted.",
+  "residual_detection_gap": "Android native build/APK was explicitly deferred by the user; no Android claim is made. Windows native and Web/WASM source-qualified builds completed successfully; deterministic host simulation and physical device observation remain separate evidence.",
+  "pass_from_frozen_comparator": false,
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "provider_run_refs": [
+    "continuation-logs/committed-runs/fc3d448e-windows-qualified/result.json",
+    "continuation-logs/committed-runs/fc3d448e-web-qualified/result.json"
+  ],
+  "environment_blockers": [
+    {
+      "class": "BLOCKED_ENVIRONMENT",
+      "frozen_obligations": [
+        "FC01-B05",
+        "FC01-B08"
+      ],
+      "reason": "The locked r1-full-v1 windows-x64-d3d12 release SDK did not materialize. Official strict installer with socket timeout returns URLError/WinError 10060; curl returns 35 (connection reset); incomplete archives cannot satisfy size/SHA/manifest checks.",
+      "sdk_id": "29ebc4ef2655e182c7da5996c2a0b23cb07214f1efcacc2bf149dd7c841c99fa",
+      "evidence_refs": [
+        "continuation-logs/sdk-investigation/final-locked-fetch/result.json",
+        "continuation-logs/sdk-investigation/final-locked-fetch/fetch.log",
+        "continuation-logs/sdk-investigation/curl-fetch/result.json",
+        "continuation-logs/sdk-investigation/curl-fetch/download.log"
+      ],
+      "required_next_action": "Resolve the published SDK transport/store path; consume and verify the locked package. Do not rebuild Skia/Protobuf or alter locks."
+    }
+  ],
+  "host_results": {
+    "windows": {
+      "build_exit_code": 0,
+      "ctest_exit_code": 0,
+      "full_ctest_tests": 664,
+      "full_ctest_failed": 0
+    },
+    "web_wasm": {
+      "build_exit_code": 0,
+      "target": "axiom_ink_playground_web",
+      "wasm_linked": true
+    },
+    "android": {
+      "status": "DEFERRED_BY_USER",
+      "build_executed": false,
+      "apk_generated": false
+    }
+  },
+  "current_source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "qualified_for_current_result": false
+}

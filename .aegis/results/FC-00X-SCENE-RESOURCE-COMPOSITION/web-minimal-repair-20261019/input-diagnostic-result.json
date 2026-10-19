@@ -1,0 +1,1293 @@
+{
+  "status": "DIAGNOSTIC",
+  "results": [
+    {
+      "step": "before",
+      "observation": {
+        "schema_version": "platform-brush-baseline-v1",
+        "fixture_digest": "1fe528f202cbd05ec6900f049c1c4a4e9d8fe7bcb0769a8c8b27e7b3986523ff",
+        "platform": "web",
+        "reality": "HOSTED",
+        "artifact_identity": "web-drawing-failure-diagnostic",
+        "runtime_identity": {
+          "semantic_generation": 0,
+          "scene_revision": 0,
+          "surface_generation": 2,
+          "canonical_commit_ordinal": 0
+        },
+        "input": {
+          "normalized_samples": [],
+          "pointer_identity": [],
+          "phase_lifecycle": [],
+          "viewport_claim": [],
+          "content_coordinates": [],
+          "interaction_decisions": []
+        },
+        "brush": {
+          "profile_id": "vector-solid-v1",
+          "package_id": "00000000000000000000000000000042",
+          "package_revision": 1,
+          "package_digest": "",
+          "resolved_state_digest": "0",
+          "preview_outline_digest": "0",
+          "sealed_outline_digest": "0",
+          "replay_digest": "0"
+        },
+        "render_path": {
+          "input_boundary": "PointerEvent.coalescedEvents\u2192WASM\u2192PlatformPointerBatch",
+          "runtime_boundary": "C++ InkPlaygroundHost",
+          "renderer": "Skia Ganesh",
+          "surface_type": "WebGL2 canvas framebuffer",
+          "submission_count": 0,
+          "readback_count": 0,
+          "cpu_copy_count": 0,
+          "present_count": 0,
+          "viewport_transform_applied": "true"
+        },
+        "preview_surface": {
+          "canonical_surface_generation": 2,
+          "preview_surface_generation": 1,
+          "preview_content_revision": 0,
+          "preview_submitted_revision": 0,
+          "preview_dirty": false,
+          "preview_submission_count": 0,
+          "preview_present_count": 0,
+          "canonical_provider": "unknown",
+          "preview_provider": "unknown",
+          "geometry_source": "BrushPreviewDelta.outline",
+          "preview_style": {
+            "color": [
+              1,
+              0.85,
+              0,
+              0.55
+            ],
+            "blend": "src_over"
+          },
+          "resize_events": 1,
+          "surface_lost_events": 0,
+          "rebind_events": 0
+        },
+        "classification": "BLOCKED_EVIDENCE",
+        "diagnostics": [
+          "Observation is not the complete fixed platform-brush-baseline-v1 corpus or lacks artifact identity."
+        ]
+      },
+      "ink": {
+        "visible": 0,
+        "dark": 0,
+        "glError": 0
+      },
+      "preview": {
+        "visible": 0,
+        "dark": 0,
+        "glError": 0
+      }
+    },
+    {
+      "step": "wasm",
+      "phase": 0,
+      "accepted": 1,
+      "rendered": 1,
+      "observation": {
+        "schema_version": "platform-brush-baseline-v1",
+        "fixture_digest": "1fe528f202cbd05ec6900f049c1c4a4e9d8fe7bcb0769a8c8b27e7b3986523ff",
+        "platform": "web",
+        "reality": "HOSTED",
+        "artifact_identity": "web-drawing-failure-diagnostic",
+        "runtime_identity": {
+          "semantic_generation": 0,
+          "scene_revision": 0,
+          "surface_generation": 2,
+          "canonical_commit_ordinal": 0
+        },
+        "input": {
+          "normalized_samples": [
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 1,
+              "x": 30,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "down",
+              "disposition": "pending",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 0
+            }
+          ],
+          "pointer_identity": [
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            }
+          ],
+          "phase_lifecycle": [
+            "down"
+          ],
+          "viewport_claim": [
+            {
+              "sequence": 1,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            }
+          ],
+          "content_coordinates": [
+            {
+              "sequence": 1,
+              "x": 30,
+              "y": 80
+            }
+          ],
+          "interaction_decisions": [
+            {
+              "sequence": 1,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "down",
+              "disposition": "pending",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 0
+            }
+          ]
+        },
+        "brush": {
+          "profile_id": "vector-solid-v1",
+          "package_id": "00000000000000000000000000000042",
+          "package_revision": 1,
+          "package_digest": "4e40dcf775e24bcd4dd26d4458f53a5d187a24061a1b3b37310b8c0c0f8590d0",
+          "resolved_state_digest": "8696605301869159659",
+          "preview_outline_digest": "15564709040730902937",
+          "sealed_outline_digest": "0",
+          "replay_digest": "0"
+        },
+        "render_path": {
+          "input_boundary": "PointerEvent.coalescedEvents\u2192WASM\u2192PlatformPointerBatch",
+          "runtime_boundary": "C++ InkPlaygroundHost",
+          "renderer": "Skia Ganesh",
+          "surface_type": "WebGL2 canvas framebuffer",
+          "submission_count": 0,
+          "readback_count": 0,
+          "cpu_copy_count": 0,
+          "present_count": 0,
+          "viewport_transform_applied": "true"
+        },
+        "preview_surface": {
+          "canonical_surface_generation": 2,
+          "preview_surface_generation": 1,
+          "preview_content_revision": 1,
+          "preview_submitted_revision": 1,
+          "preview_dirty": false,
+          "preview_submission_count": 1,
+          "preview_present_count": 1,
+          "canonical_provider": "unknown",
+          "preview_provider": "unknown",
+          "geometry_source": "BrushPreviewDelta.outline",
+          "preview_style": {
+            "color": [
+              1,
+              0.85,
+              0,
+              0.55
+            ],
+            "blend": "src_over"
+          },
+          "resize_events": 1,
+          "surface_lost_events": 0,
+          "rebind_events": 0
+        },
+        "classification": "BLOCKED_EVIDENCE",
+        "diagnostics": [
+          "Observation is not the complete fixed platform-brush-baseline-v1 corpus or lacks artifact identity."
+        ]
+      },
+      "ink": {
+        "visible": 0,
+        "dark": 0,
+        "glError": 0
+      },
+      "preview": {
+        "visible": 0,
+        "dark": 0,
+        "glError": 0
+      }
+    },
+    {
+      "step": "wasm",
+      "phase": 1,
+      "accepted": 1,
+      "rendered": 1,
+      "observation": {
+        "schema_version": "platform-brush-baseline-v1",
+        "fixture_digest": "1fe528f202cbd05ec6900f049c1c4a4e9d8fe7bcb0769a8c8b27e7b3986523ff",
+        "platform": "web",
+        "reality": "HOSTED",
+        "artifact_identity": "web-drawing-failure-diagnostic",
+        "runtime_identity": {
+          "semantic_generation": 0,
+          "scene_revision": 0,
+          "surface_generation": 2,
+          "canonical_commit_ordinal": 0
+        },
+        "input": {
+          "normalized_samples": [
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 1,
+              "x": 30,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "down",
+              "disposition": "pending",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 0
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 2,
+              "x": 90,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 16000000
+            }
+          ],
+          "pointer_identity": [
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            }
+          ],
+          "phase_lifecycle": [
+            "down",
+            "move"
+          ],
+          "viewport_claim": [
+            {
+              "sequence": 1,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            },
+            {
+              "sequence": 2,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            }
+          ],
+          "content_coordinates": [
+            {
+              "sequence": 1,
+              "x": 30,
+              "y": 80
+            },
+            {
+              "sequence": 2,
+              "x": 90,
+              "y": 80
+            }
+          ],
+          "interaction_decisions": [
+            {
+              "sequence": 1,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "down",
+              "disposition": "pending",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 0
+            },
+            {
+              "sequence": 2,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 16000000
+            }
+          ]
+        },
+        "brush": {
+          "profile_id": "vector-solid-v1",
+          "package_id": "00000000000000000000000000000042",
+          "package_revision": 1,
+          "package_digest": "4e40dcf775e24bcd4dd26d4458f53a5d187a24061a1b3b37310b8c0c0f8590d0",
+          "resolved_state_digest": "8696605301869159659",
+          "preview_outline_digest": "5287594456944701480",
+          "sealed_outline_digest": "0",
+          "replay_digest": "0"
+        },
+        "render_path": {
+          "input_boundary": "PointerEvent.coalescedEvents\u2192WASM\u2192PlatformPointerBatch",
+          "runtime_boundary": "C++ InkPlaygroundHost",
+          "renderer": "Skia Ganesh",
+          "surface_type": "WebGL2 canvas framebuffer",
+          "submission_count": 0,
+          "readback_count": 0,
+          "cpu_copy_count": 0,
+          "present_count": 0,
+          "viewport_transform_applied": "true"
+        },
+        "preview_surface": {
+          "canonical_surface_generation": 2,
+          "preview_surface_generation": 1,
+          "preview_content_revision": 2,
+          "preview_submitted_revision": 2,
+          "preview_dirty": false,
+          "preview_submission_count": 2,
+          "preview_present_count": 2,
+          "canonical_provider": "unknown",
+          "preview_provider": "unknown",
+          "geometry_source": "BrushPreviewDelta.outline",
+          "preview_style": {
+            "color": [
+              1,
+              0.85,
+              0,
+              0.55
+            ],
+            "blend": "src_over"
+          },
+          "resize_events": 1,
+          "surface_lost_events": 0,
+          "rebind_events": 0
+        },
+        "classification": "BLOCKED_EVIDENCE",
+        "diagnostics": [
+          "Observation is not the complete fixed platform-brush-baseline-v1 corpus or lacks artifact identity."
+        ]
+      },
+      "ink": {
+        "visible": 0,
+        "dark": 0,
+        "glError": 0
+      },
+      "preview": {
+        "visible": 0,
+        "dark": 0,
+        "glError": 0
+      }
+    },
+    {
+      "step": "wasm",
+      "phase": 1,
+      "accepted": 1,
+      "rendered": 1,
+      "observation": {
+        "schema_version": "platform-brush-baseline-v1",
+        "fixture_digest": "1fe528f202cbd05ec6900f049c1c4a4e9d8fe7bcb0769a8c8b27e7b3986523ff",
+        "platform": "web",
+        "reality": "HOSTED",
+        "artifact_identity": "web-drawing-failure-diagnostic",
+        "runtime_identity": {
+          "semantic_generation": 0,
+          "scene_revision": 0,
+          "surface_generation": 2,
+          "canonical_commit_ordinal": 0
+        },
+        "input": {
+          "normalized_samples": [
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 1,
+              "x": 30,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "down",
+              "disposition": "pending",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 0
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 2,
+              "x": 90,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 16000000
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 3,
+              "x": 140,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 32000000
+            }
+          ],
+          "pointer_identity": [
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            }
+          ],
+          "phase_lifecycle": [
+            "down",
+            "move",
+            "move"
+          ],
+          "viewport_claim": [
+            {
+              "sequence": 1,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            },
+            {
+              "sequence": 2,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            },
+            {
+              "sequence": 3,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            }
+          ],
+          "content_coordinates": [
+            {
+              "sequence": 1,
+              "x": 30,
+              "y": 80
+            },
+            {
+              "sequence": 2,
+              "x": 90,
+              "y": 80
+            },
+            {
+              "sequence": 3,
+              "x": 140,
+              "y": 80
+            }
+          ],
+          "interaction_decisions": [
+            {
+              "sequence": 1,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "down",
+              "disposition": "pending",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 0
+            },
+            {
+              "sequence": 2,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 16000000
+            },
+            {
+              "sequence": 3,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 32000000
+            }
+          ]
+        },
+        "brush": {
+          "profile_id": "vector-solid-v1",
+          "package_id": "00000000000000000000000000000042",
+          "package_revision": 1,
+          "package_digest": "4e40dcf775e24bcd4dd26d4458f53a5d187a24061a1b3b37310b8c0c0f8590d0",
+          "resolved_state_digest": "8696605301869159659",
+          "preview_outline_digest": "8694597561875674472",
+          "sealed_outline_digest": "0",
+          "replay_digest": "0"
+        },
+        "render_path": {
+          "input_boundary": "PointerEvent.coalescedEvents\u2192WASM\u2192PlatformPointerBatch",
+          "runtime_boundary": "C++ InkPlaygroundHost",
+          "renderer": "Skia Ganesh",
+          "surface_type": "WebGL2 canvas framebuffer",
+          "submission_count": 0,
+          "readback_count": 0,
+          "cpu_copy_count": 0,
+          "present_count": 0,
+          "viewport_transform_applied": "true"
+        },
+        "preview_surface": {
+          "canonical_surface_generation": 2,
+          "preview_surface_generation": 1,
+          "preview_content_revision": 3,
+          "preview_submitted_revision": 3,
+          "preview_dirty": false,
+          "preview_submission_count": 3,
+          "preview_present_count": 3,
+          "canonical_provider": "unknown",
+          "preview_provider": "unknown",
+          "geometry_source": "BrushPreviewDelta.outline",
+          "preview_style": {
+            "color": [
+              1,
+              0.85,
+              0,
+              0.55
+            ],
+            "blend": "src_over"
+          },
+          "resize_events": 1,
+          "surface_lost_events": 0,
+          "rebind_events": 0
+        },
+        "classification": "BLOCKED_EVIDENCE",
+        "diagnostics": [
+          "Observation is not the complete fixed platform-brush-baseline-v1 corpus or lacks artifact identity."
+        ]
+      },
+      "ink": {
+        "visible": 0,
+        "dark": 0,
+        "glError": 0
+      },
+      "preview": {
+        "visible": 0,
+        "dark": 0,
+        "glError": 0
+      }
+    },
+    {
+      "step": "wasm",
+      "phase": 2,
+      "accepted": 1,
+      "rendered": 1,
+      "observation": {
+        "schema_version": "platform-brush-baseline-v1",
+        "fixture_digest": "1fe528f202cbd05ec6900f049c1c4a4e9d8fe7bcb0769a8c8b27e7b3986523ff",
+        "platform": "web",
+        "reality": "HOSTED",
+        "artifact_identity": "web-drawing-failure-diagnostic",
+        "runtime_identity": {
+          "semantic_generation": 1,
+          "scene_revision": 1,
+          "surface_generation": 2,
+          "canonical_commit_ordinal": 1
+        },
+        "input": {
+          "normalized_samples": [
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 1,
+              "x": 30,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "down",
+              "disposition": "pending",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 0
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 2,
+              "x": 90,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 16000000
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 3,
+              "x": 140,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 32000000
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 4,
+              "x": 180,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "up",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 48000000
+            }
+          ],
+          "pointer_identity": [
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            }
+          ],
+          "phase_lifecycle": [
+            "down",
+            "move",
+            "move",
+            "up"
+          ],
+          "viewport_claim": [
+            {
+              "sequence": 1,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            },
+            {
+              "sequence": 2,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            },
+            {
+              "sequence": 3,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            },
+            {
+              "sequence": 4,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            }
+          ],
+          "content_coordinates": [
+            {
+              "sequence": 1,
+              "x": 30,
+              "y": 80
+            },
+            {
+              "sequence": 2,
+              "x": 90,
+              "y": 80
+            },
+            {
+              "sequence": 3,
+              "x": 140,
+              "y": 80
+            },
+            {
+              "sequence": 4,
+              "x": 180,
+              "y": 80
+            }
+          ],
+          "interaction_decisions": [
+            {
+              "sequence": 1,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "down",
+              "disposition": "pending",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 0
+            },
+            {
+              "sequence": 2,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 16000000
+            },
+            {
+              "sequence": 3,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 32000000
+            },
+            {
+              "sequence": 4,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "up",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 48000000
+            }
+          ]
+        },
+        "brush": {
+          "profile_id": "vector-solid-v1",
+          "package_id": "00000000000000000000000000000042",
+          "package_revision": 1,
+          "package_digest": "4e40dcf775e24bcd4dd26d4458f53a5d187a24061a1b3b37310b8c0c0f8590d0",
+          "resolved_state_digest": "8696605301869159659",
+          "preview_outline_digest": "10579726174329909851",
+          "sealed_outline_digest": "17456006316727089537",
+          "replay_digest": "17456006316727089537"
+        },
+        "render_path": {
+          "input_boundary": "PointerEvent.coalescedEvents\u2192WASM\u2192PlatformPointerBatch",
+          "runtime_boundary": "C++ InkPlaygroundHost",
+          "renderer": "Skia Ganesh",
+          "surface_type": "WebGL2 canvas framebuffer",
+          "submission_count": 0,
+          "readback_count": 0,
+          "cpu_copy_count": 0,
+          "present_count": 0,
+          "viewport_transform_applied": "true"
+        },
+        "preview_surface": {
+          "canonical_surface_generation": 2,
+          "preview_surface_generation": 1,
+          "preview_content_revision": 4,
+          "preview_submitted_revision": 4,
+          "preview_dirty": false,
+          "preview_submission_count": 4,
+          "preview_present_count": 4,
+          "canonical_provider": "unknown",
+          "preview_provider": "unknown",
+          "geometry_source": "BrushPreviewDelta.outline",
+          "preview_style": {
+            "color": [
+              1,
+              0.85,
+              0,
+              0.55
+            ],
+            "blend": "src_over"
+          },
+          "resize_events": 1,
+          "surface_lost_events": 0,
+          "rebind_events": 0
+        },
+        "classification": "BLOCKED_EVIDENCE",
+        "diagnostics": [
+          "Observation is not the complete fixed platform-brush-baseline-v1 corpus or lacks artifact identity."
+        ]
+      },
+      "ink": {
+        "visible": 0,
+        "dark": 0,
+        "glError": 0
+      },
+      "preview": {
+        "visible": 0,
+        "dark": 0,
+        "glError": 0
+      }
+    },
+    {
+      "step": "dom",
+      "forwarded": [
+        {
+          "source": 1,
+          "pointer": 501,
+          "sequence": "1",
+          "timestamp": "91000000",
+          "x": 29.941520467836256,
+          "y": 159.55678670360112,
+          "phase": 0,
+          "accepted": 1
+        },
+        {
+          "source": 1,
+          "pointer": 501,
+          "sequence": "2",
+          "timestamp": "116000000",
+          "x": 99.80506822612085,
+          "y": 159.55678670360112,
+          "phase": 1,
+          "accepted": 1
+        },
+        {
+          "source": 1,
+          "pointer": 501,
+          "sequence": "3",
+          "timestamp": "141000000",
+          "x": 179.64912280701753,
+          "y": 159.55678670360112,
+          "phase": 2,
+          "accepted": 1
+        }
+      ],
+      "errors": [],
+      "observation": {
+        "schema_version": "platform-brush-baseline-v1",
+        "fixture_digest": "1fe528f202cbd05ec6900f049c1c4a4e9d8fe7bcb0769a8c8b27e7b3986523ff",
+        "platform": "web",
+        "reality": "HOSTED",
+        "artifact_identity": "web-drawing-failure-diagnostic",
+        "runtime_identity": {
+          "semantic_generation": 2,
+          "scene_revision": 2,
+          "surface_generation": 2,
+          "canonical_commit_ordinal": 2
+        },
+        "input": {
+          "normalized_samples": [
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 1,
+              "x": 30,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "down",
+              "disposition": "pending",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 0
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 2,
+              "x": 90,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 16000000
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 3,
+              "x": 140,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 32000000
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1,
+              "sequence": 4,
+              "x": 180,
+              "y": 80,
+              "pressure": 0.5,
+              "phase": "up",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 48000000
+            },
+            {
+              "source": "ink",
+              "pointer": 501,
+              "generation": 1,
+              "sequence": 1,
+              "x": 29.941521,
+              "y": 159.556793,
+              "pressure": 0.5,
+              "phase": "down",
+              "disposition": "pending",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 91000000,
+              "down_time_delta_ns": 0
+            },
+            {
+              "source": "ink",
+              "pointer": 501,
+              "generation": 1,
+              "sequence": 2,
+              "x": 99.805069,
+              "y": 159.556793,
+              "pressure": 0.5,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 91000000,
+              "down_time_delta_ns": 25000000
+            },
+            {
+              "source": "ink",
+              "pointer": 501,
+              "generation": 1,
+              "sequence": 3,
+              "x": 179.649124,
+              "y": 159.556793,
+              "pressure": 0.5,
+              "phase": "up",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 91000000,
+              "down_time_delta_ns": 50000000
+            }
+          ],
+          "pointer_identity": [
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            },
+            {
+              "source": "ink",
+              "pointer": 101,
+              "generation": 1
+            },
+            {
+              "source": "ink",
+              "pointer": 501,
+              "generation": 1
+            },
+            {
+              "source": "ink",
+              "pointer": 501,
+              "generation": 1
+            },
+            {
+              "source": "ink",
+              "pointer": 501,
+              "generation": 1
+            }
+          ],
+          "phase_lifecycle": [
+            "down",
+            "move",
+            "move",
+            "up",
+            "down",
+            "move",
+            "up"
+          ],
+          "viewport_claim": [
+            {
+              "sequence": 1,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            },
+            {
+              "sequence": 2,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            },
+            {
+              "sequence": 3,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            },
+            {
+              "sequence": 4,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            },
+            {
+              "sequence": 1,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            },
+            {
+              "sequence": 2,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            },
+            {
+              "sequence": 3,
+              "claimed": false,
+              "scale": 1,
+              "translation_x": 0,
+              "translation_y": 0
+            }
+          ],
+          "content_coordinates": [
+            {
+              "sequence": 1,
+              "x": 30,
+              "y": 80
+            },
+            {
+              "sequence": 2,
+              "x": 90,
+              "y": 80
+            },
+            {
+              "sequence": 3,
+              "x": 140,
+              "y": 80
+            },
+            {
+              "sequence": 4,
+              "x": 180,
+              "y": 80
+            },
+            {
+              "sequence": 1,
+              "x": 29.941521,
+              "y": 159.556793
+            },
+            {
+              "sequence": 2,
+              "x": 99.805069,
+              "y": 159.556793
+            },
+            {
+              "sequence": 3,
+              "x": 179.649124,
+              "y": 159.556793
+            }
+          ],
+          "interaction_decisions": [
+            {
+              "sequence": 1,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "down",
+              "disposition": "pending",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 0
+            },
+            {
+              "sequence": 2,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 16000000
+            },
+            {
+              "sequence": 3,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 32000000
+            },
+            {
+              "sequence": 4,
+              "pointer": 101,
+              "generation": 1,
+              "phase": "up",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 1016000000,
+              "down_time_delta_ns": 48000000
+            },
+            {
+              "sequence": 1,
+              "pointer": 501,
+              "generation": 1,
+              "phase": "down",
+              "disposition": "pending",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 91000000,
+              "down_time_delta_ns": 0
+            },
+            {
+              "sequence": 2,
+              "pointer": 501,
+              "generation": 1,
+              "phase": "move",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 91000000,
+              "down_time_delta_ns": 25000000
+            },
+            {
+              "sequence": 3,
+              "pointer": 501,
+              "generation": 1,
+              "phase": "up",
+              "disposition": "ink",
+              "viewport_claimed": false,
+              "down_timestamp_ns": 91000000,
+              "down_time_delta_ns": 50000000
+            }
+          ]
+        },
+        "brush": {
+          "profile_id": "vector-solid-v1",
+          "package_id": "00000000000000000000000000000042",
+          "package_revision": 1,
+          "package_digest": "4e40dcf775e24bcd4dd26d4458f53a5d187a24061a1b3b37310b8c0c0f8590d0",
+          "resolved_state_digest": "17598290126843169560",
+          "preview_outline_digest": "2016865407149386517",
+          "sealed_outline_digest": "2157317168365910541",
+          "replay_digest": "2157317168365910541"
+        },
+        "render_path": {
+          "input_boundary": "PointerEvent.coalescedEvents\u2192WASM\u2192PlatformPointerBatch",
+          "runtime_boundary": "C++ InkPlaygroundHost",
+          "renderer": "Skia Ganesh",
+          "surface_type": "WebGL2 canvas framebuffer",
+          "submission_count": 0,
+          "readback_count": 0,
+          "cpu_copy_count": 0,
+          "present_count": 0,
+          "viewport_transform_applied": "true"
+        },
+        "preview_surface": {
+          "canonical_surface_generation": 2,
+          "preview_surface_generation": 1,
+          "preview_content_revision": 3,
+          "preview_submitted_revision": 3,
+          "preview_dirty": false,
+          "preview_submission_count": 5,
+          "preview_present_count": 5,
+          "canonical_provider": "unknown",
+          "preview_provider": "unknown",
+          "geometry_source": "BrushPreviewDelta.outline",
+          "preview_style": {
+            "color": [
+              1,
+              0.85,
+              0,
+              0.55
+            ],
+            "blend": "src_over"
+          },
+          "resize_events": 1,
+          "surface_lost_events": 0,
+          "rebind_events": 0
+        },
+        "classification": "BLOCKED_EVIDENCE",
+        "diagnostics": [
+          "Observation is not the complete fixed platform-brush-baseline-v1 corpus or lacks artifact identity."
+        ]
+      },
+      "ink": {
+        "visible": 0,
+        "dark": 0,
+        "glError": 0
+      },
+      "preview": {
+        "visible": 0,
+        "dark": 0,
+        "glError": 0
+      },
+      "hud": "{\"pointCount\":3,\"coalescedBatch\":1,\"evidence\":\"pending\",\"viewportScale\":\"1.00\",\"viewportTranslationX\":\"0.00\",\"viewportTranslationY\":\"0.00\",\"surface\":\"skia-webgl2\",\"brushProfile\":\"vector-solid-v1\",\"tool\":\"brush\"}"
+    }
+  ]
+}

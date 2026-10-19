@@ -1,0 +1,46 @@
+{
+  "format": "g47-font-resolution-v1",
+  "exact_faces": true,
+  "fallback": false,
+  "synthetic_styles": false,
+  "resources": [
+    {
+      "name": "Roboto Regular",
+      "sha256": "466989fd178ca6ed13641893b7003e5d6ec36e42c2a816dee71f87b775ea097f",
+      "collection_index": 0
+    },
+    {
+      "name": "Noto Sans CJK subset",
+      "sha256": "e7f71fc8aec139bb21cc541067eabb162b87aeeac0ccfcb3c835a20d0cee340a",
+      "collection_index": 0
+    }
+  ],
+  "oracles": [
+    "G47TextLayout",
+    "G47TextHost"
+  ],
+  "mixed_diagnostics": 0,
+  "workload_state_diagnostics": {
+    "text-many-small": 0,
+    "text-long": 0,
+    "text-style-mixed": 0,
+    "text-edit-local": 0,
+    "text-font-cold-warm": 0,
+    "text-transform": 0,
+    "text-camera": 0,
+    "structured-grid-proxy": 0
+  },
+  "edge_oracles": {
+    "log": "font-edge-ctest.log",
+    "corrupt_identity": "font-integrity-failed",
+    "undecodable_exact_bytes": "font-exact-face-unavailable",
+    "emoji_U1F9EA": "font-glyph-unavailable",
+    "noto_exact_weights": [
+      100,
+      450,
+      900
+    ],
+    "outside_axis_weight": 1000,
+    "implicit_substitution": false
+  }
+}

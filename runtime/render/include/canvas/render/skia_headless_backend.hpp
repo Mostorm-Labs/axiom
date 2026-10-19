@@ -1,6 +1,7 @@
 #pragma once
 
 #include "canvas/render/render_backend.hpp"
+#include "canvas/render/skia_text_resources.hpp"
 
 #include <cstdint>
 #include <optional>
@@ -8,10 +9,14 @@
 #include <vector>
 
 namespace canvas::render {
+class ImageResourceResolver;
 
 struct HeadlessRasterConfig final {
     std::uint32_t width = 256U;
     std::uint32_t height = 256U;
+    // RGBA8 background for the oracle. Transparent remains the historical
+    // fixture default; opaque qualification matches a canonical surface.
+    std::uint32_t backgroundRgba = 0U;
 
     bool operator==(const HeadlessRasterConfig&) const = default;
 };
@@ -40,7 +45,7 @@ struct HeadlessRasterObservation final {
 
 class SkiaHeadlessBackend final : public IRenderBackend {
   public:
-    explicit SkiaHeadlessBackend(HeadlessRasterConfig config);
+    explicit SkiaHeadlessBackend(HeadlessRasterConfig config, ImageResourceResolver* images = nullptr);
 
     [[nodiscard]] BackendSubmissionResult submit(const FramePlan& plan) override;
     [[nodiscard]] const std::optional<HeadlessRasterObservation>& observation() const noexcept {
@@ -50,6 +55,8 @@ class SkiaHeadlessBackend final : public IRenderBackend {
 
   private:
     HeadlessRasterConfig _config;
+    ImageResourceResolver* _images = nullptr;
+    SkiaTextResources _textResources;
     std::optional<HeadlessRasterObservation> _observation;
     HeadlessSubmissionIssue _lastIssue = HeadlessSubmissionIssue::kNone;
 };

@@ -97,6 +97,7 @@ std::optional<PreparedChangeSet> prepareChangeSet(const PreparedApplyPlan& plan)
         }
     }
     normalize(prepared.changes);
+    prepared.resource_changes = plan.resource_changes;
     return prepared;
 }
 
@@ -104,7 +105,7 @@ ChangeSet finalizeChangeSet(
     PreparedChangeSet prepared,
     SemanticGeneration before,
     SemanticGeneration after) {
-    return ChangeSet(before, after, std::move(prepared.changes));
+    return ChangeSet::fromChanges(before, after, std::move(prepared.changes), std::move(prepared.resource_changes));
 }
 
 } // namespace canvas::semantic::internal

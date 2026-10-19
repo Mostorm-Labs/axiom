@@ -1,0 +1,120 @@
+{
+  "id": "FC01-RED-01",
+  "baseline": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+  "runs": [
+    {
+      "profile": "baseline",
+      "source_revision": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+      "source_base_revision": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+      "source_is_working_tree": false,
+      "uncommitted_source_changes": false,
+      "command": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.exe",
+        "/nologo",
+        "/std:c++20",
+        "/EHsc",
+        "/W4",
+        "/WX",
+        "/UNDEBUG",
+        "/IC:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\out\\fc01\\closure-committed-source-loss\\baseline\\runtime\\input\\include",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\verification\\fc01\\red_source_loss_test.cpp",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\out\\fc01\\closure-committed-source-loss\\baseline\\runtime\\input\\src\\active_pointer_registry.cpp",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\out\\fc01\\closure-committed-source-loss\\baseline\\runtime\\input\\src\\platform_interaction_ingress.cpp",
+        "/Fe:C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\out\\fc01\\closure-committed-source-loss\\baseline-build\\source-loss.exe"
+      ],
+      "build_exit_code": 0,
+      "run_exit_code": 3221226505,
+      "binary_sha256": "4643ba07e67b1f69084a2eee4121954522dda2a7b76420838a3a3250792e50db",
+      "source_sha256": "1d321723e6993a822e930ff7635d4fe3b0699dfc66694554ca674866ad9fde3f",
+      "oracle_sha256": "7802bff819e2e0ee34ca4b97e21774e7088f7674629a207966269b50ef0df518"
+    },
+    {
+      "profile": "candidate",
+      "source_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+      "source_base_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+      "source_is_working_tree": true,
+      "uncommitted_source_changes": false,
+      "command": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.exe",
+        "/nologo",
+        "/std:c++20",
+        "/EHsc",
+        "/W4",
+        "/WX",
+        "/UNDEBUG",
+        "/IC:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\runtime\\input\\include",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\verification\\fc01\\red_source_loss_test.cpp",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\runtime\\input\\src\\active_pointer_registry.cpp",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\runtime\\input\\src\\platform_interaction_ingress.cpp",
+        "/Fe:C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\out\\fc01\\closure-committed-source-loss\\candidate-build\\source-loss.exe"
+      ],
+      "build_exit_code": 0,
+      "run_exit_code": 0,
+      "binary_sha256": "3b84f96efd3f32114dee84978777ac6a24515c04d6f8092adab4c436996a1fde",
+      "source_sha256": "f64fbc3c112ca49e0aa8434761ad4e8a07c5a4542718de639c9b3ddff97306d4",
+      "oracle_sha256": "7802bff819e2e0ee34ca4b97e21774e7088f7674629a207966269b50ef0df518"
+    }
+  ],
+  "regressions": [
+    {
+      "test": "platform_interaction_ingress_test",
+      "command": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.exe",
+        "/nologo",
+        "/std:c++20",
+        "/EHsc",
+        "/W4",
+        "/WX",
+        "/UNDEBUG",
+        "/IC:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\runtime\\input\\include",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\runtime\\input\\tests\\platform_interaction_ingress_test.cpp",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\runtime\\input\\src\\active_pointer_registry.cpp",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\runtime\\input\\src\\platform_interaction_ingress.cpp",
+        "/Fe:C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\out\\fc01\\closure-committed-source-loss\\regression-build\\platform_interaction_ingress_test.exe"
+      ],
+      "build_exit_code": 0,
+      "run_exit_code": 0,
+      "binary_sha256": "070850cadc0161bc73302a68c2115217517ead56990c93bf512964d83f00b411"
+    },
+    {
+      "test": "c1_platform_fixture_test",
+      "command": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.exe",
+        "/nologo",
+        "/std:c++20",
+        "/EHsc",
+        "/W4",
+        "/WX",
+        "/UNDEBUG",
+        "/IC:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\runtime\\input\\include",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\runtime\\input\\tests\\c1_platform_fixture_test.cpp",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\runtime\\input\\src\\active_pointer_registry.cpp",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\runtime\\input\\src\\platform_interaction_ingress.cpp",
+        "/Fe:C:\\Users\\Chado\\.codex\\worktrees\\fc-01-creation-tools-p32\\canvas\\out\\fc01\\closure-committed-source-loss\\regression-build\\c1_platform_fixture_test.exe"
+      ],
+      "build_exit_code": 0,
+      "run_exit_code": 0,
+      "binary_sha256": "0b65609a1dcc829ced15543839f7ce622ee76a5a56fbae57ef98c2411e220933"
+    }
+  ],
+  "provider": {
+    "kind": "local-windows-native",
+    "compiler": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.exe",
+    "compiler_sha256": "88c8344236a27a6e727e0a8edc49aaa2690bdc7a9464b9d18cc7abe70a9f1c0d",
+    "version_command": [
+      "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.exe",
+      "/Bv"
+    ],
+    "version_exit_code": 2,
+    "vcvars": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Auxiliary\\Build\\vcvars64.bat",
+    "vcvars_sha256": "6b516d8fcf543c14b2d861e1f45661e0029230fe0dc48e86ce78522801822209",
+    "windows_sdk_version": "10.0.26100.0\\"
+  },
+  "expected_baseline_red": true,
+  "candidate_green": true,
+  "candidate_expected": "GREEN",
+  "candidate_expected_red_observed": false,
+  "full_FC01_B03_closed": false,
+  "red_before_first_production_mutation_proven": false,
+  "physical_claim": false
+}

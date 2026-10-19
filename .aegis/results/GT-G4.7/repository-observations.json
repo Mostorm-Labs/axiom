@@ -1,0 +1,109 @@
+{
+  "format": "aegis-repository-observations-v1",
+  "task_id": "GT-G4.7",
+  "observation_kind": "read_only_inspection_not_execution_or_acceptance",
+  "raw_worktree_bytes_sha256_note": "Observed file bytes include checkout line endings. These hashes do not replace missing P31 accepted bindings.",
+  "files": {
+    "runtime/scene/src/bounds_system.cpp": {
+      "sha256": "cffa72a35c6a5725cb52c5a6d4498af96b5222b4b53ffd50b3f96c4caf725d2d",
+      "git_blob": "dc9ad7aa9fff7c29ed09050e012bbda1584b2202"
+    },
+    "runtime/render/src/skia_headless_backend.cpp": {
+      "sha256": "4418e8f9a25591d44a36e3a92e3b8d68ca23d758a5518a2ed248cfb9b7a4e2f0",
+      "git_blob": "9644cb3dc8180b102a2c24961919179c2ccc1f1e"
+    },
+    "runtime/render/src/skia_scene_renderer.cpp": {
+      "sha256": "2b9ce1ae6633d08a44a59b1f1762853c696cbb904d3e5c10e555ce5122b7afe1",
+      "git_blob": "24dbf7b6bd8bc43ecbbe226de558b0aa012c910c"
+    },
+    "runtime/render/src/skia_renderer.cpp": {
+      "sha256": "dcde006d85ba747f90c2da6825f62d02fe11503dd7853768ec8bfafca3921480",
+      "git_blob": "b5a3539b460bea10e7026922ab8b59b0d8118c36"
+    },
+    "runtime/scene/src/runtime_scene_projection.cpp": {
+      "sha256": "6e08a6aa549948af8b6bcffe14f3bd70344cc8ea1c7f30ad66c209f6331be824",
+      "git_blob": "bbd33dc84e65d95c9a8e34706994e2937326717a"
+    },
+    "runtime/render/src/direct_reference_source.cpp": {
+      "sha256": "7c0cab0d4d6a89f862acba6aec75c581f52611779560cf063239df6be4674920",
+      "git_blob": "6d63c735fad55af2075821eb60e6d516dc0827f1"
+    },
+    "runtime/render/include/canvas/render/reference_draw_list.hpp": {
+      "sha256": "40bbbe6598365cd356747cb22619ad1a82d39fa2359aaa7dee46c62d0465d993",
+      "git_blob": "11e5fb4ddc38e819898c5ddf767f9773d1e02525"
+    },
+    "runtime/semantic/include/canvas/semantic/object_content.hpp": {
+      "sha256": "69f4321dc2d7663808a414958df324c67696f89d17ce858503e3a4403a01c0e9",
+      "git_blob": "6e5f2ca4935a2669001a1f61de9227e26430b4d0"
+    },
+    "pocs/shared_engine/platform/skia/skia_scene_renderer.cpp": {
+      "sha256": "7cc636c2e79d1812247e0108eeae0b06aa6890863e52445f0f94fb3548be566a",
+      "git_blob": "dfef2207345dfc29d183f9117e772209ec1a74f6"
+    },
+    "pocs/rich_text/platform/skia/skparagraph_layout.cpp": {
+      "sha256": "62b8145f7094c20536a658fc7e8439323f9cfb07a7af4443c60b36cc4ecab32f",
+      "git_blob": "f36654218aa0b46ad6585348ce9c2f38bddd0066"
+    },
+    "runtime/render/src/editing_overlay.cpp": {
+      "sha256": "ae4440c571452ae049cd93f76a1025ae80e303ffe1e9c12c63b177e49f961a29",
+      "git_blob": "f6549cab2166556e082c498ac545c8cfcff0b1b8"
+    },
+    "runtime/interaction/src/transform_session.cpp": {
+      "sha256": "47cca58c51fbb2d894c5e187e1d10653aa0e6d78b7cc9394012a79f642234dcf",
+      "git_blob": "b5ba06271a835a12b80f1da07befa6d415dc7a7d"
+    },
+    "runtime/interaction/src/selection_session.cpp": {
+      "sha256": "ce6c9ba21164c71224d1cef651589354e38fb41a0ed6f0624c43d636ab279482",
+      "git_blob": "280b337d3e4dcbec944d23d0ade7569ba3047ff3"
+    },
+    "runtime/interaction/src/viewport_interaction_controller.cpp": {
+      "sha256": "945f7e85c1b6522cae4315d698638b4221211720a1dbf44700d6434a3f49e125",
+      "git_blob": "a4aa4f9bb37211705d8dd8476e8727017e6875a6"
+    },
+    "runtime/ink/src/brush_session.cpp": {
+      "sha256": "c63c34e2be35cf5ac23d31b6bc77bd3022e1c766fea7ac524f2b6a9800460087",
+      "git_blob": "443762db6c0ae6f8803056e2d366a1f6e9fe9411"
+    },
+    "runtime/ink/src/arc_preview_bridge.cpp": {
+      "sha256": "5e3510ad0a57821e47e4d0d89647570f0b946d5b7c3cce5f1c671abb9ff4a555",
+      "git_blob": "a1cacea3e3f77d06feba8097454cd7c28853cd17"
+    },
+    "runtime/input/src/input_router.cpp": {
+      "sha256": "28e4e7101dc0910bfe375a1c4f0e2421953e025875b2167e51b56002eb9dd5a1",
+      "git_blob": "28de4fa55c52de6af79a7a5d16c5f68aec372ff3"
+    },
+    "runtime/foundation/include/canvas/runtime/runtime_facade.hpp": {
+      "sha256": "d94986acf9e15c027d6e2f67b6e2bd2da849fb345e16350ccb2fc728c11c18cf",
+      "git_blob": "d38fbcc38e9cb65ff0e86fce8ec3c6bfc8769f51"
+    },
+    "r1-full-skia-sdk.lock.json": {
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75",
+      "git_blob": "5bba899a4615115d458cfb1edcb03c8fa2a42f54"
+    },
+    "deps.lock.json": {
+      "sha256": "11f19f907af2b489951773d4ccec6e766123b1e0b7b11faa4ce6d9f443906e4b",
+      "git_blob": "6196b7cd367db056f44f75aa182bb1350f386455"
+    },
+    "semantic-sdk.lock.json": {
+      "sha256": "ecd34889a3d7e2b7630c8470c620ae39a30c971cadfb779301d89c0f4761b8ba",
+      "git_blob": "1aa9a0eddc8c7a917287276b466da23c4f9ef589"
+    }
+  },
+  "package_files": {
+    "authority.lock.json": "43510200854bdd9521b70cec01bca90afa50e99ae74fe21c232c4bba31edb32c",
+    "evidence-contract.json": "385601bd43c83e2f7f3acb82f410b0269b853c243d2bee576237d8cc727c8330",
+    "execution-contract.json": "f722b37f3f535067409eb2c5c1a5afcead763f307053e86c13dc088466aa1204",
+    "implementation-context.md": "6e5e013be0e5bbaf8141ec45d9eeacf9934a4c3cea46fb352723fd2354bf0ca0",
+    "package.json": "a099eb08ec6316c21df29395e064b9d7f66e722a8c8d28cdd321b16602cdd965",
+    "verification.lock.json": "1d7b2d2a1eb51438a9c101b679a325d56aeb08b0f8fc6daf649c716859340fb8"
+  },
+  "source_snapshots": {
+    "architecture.json": "8a021e97318d18b13c30eacf8d226e16726e305dc9ee1e2d75380e57fe3d9add",
+    "execution-order-amendment.json": "e00362bb0e0e71113b42f6e4646b6742682af91e55fe314e37b9da91d8ee6121",
+    "p31-package-page.json": "ac8cd02d6569cf97314cba9c40f5834a6523713eb0bc0cfdace73d0196d6313c",
+    "roadmap.json": "874faa2740fef93276be414516bcd9f50c5597d1d51a481e5b812dfa54853381",
+    "targeted-readiness.json": "9bef1a4d2ce04e15a71d8c09e5c35a42a710ebfdf64b472100b1dad05d0b6fe0"
+  },
+  "head": "9136623c3016bc56e047f39e32e8afc4c94f9cc0",
+  "tracked_diff": []
+}

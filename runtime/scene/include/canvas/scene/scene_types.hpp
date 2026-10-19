@@ -9,13 +9,17 @@
 #include "canvas/semantic/change_set.hpp"
 #include "canvas/semantic/semantic_generation.hpp"
 #include "canvas/semantic/semantic_read_view.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 
 #include <algorithm>
 #include <cstdint>
 #include <optional>
+#include <memory>
 #include <span>
 #include <string>
 #include <vector>
+
+namespace canvas::text { struct TextLayoutSnapshot; class RichTextLayoutService; }
 
 namespace canvas {
 
@@ -51,6 +55,7 @@ enum class SceneObjectKind : std::uint8_t {
     kRichText = 4,
     kVectorStroke = 5,
     kDabStroke = 6,
+    kConnector = 7,
 };
 
 // Renderer-neutral projection consumed by Scene Core and inspection tooling.
@@ -65,11 +70,13 @@ struct RuntimeSceneRecord final {
     semantic::PropertyBag properties{};
     semantic::ObjectContent content{};
     std::vector<semantic::EraseMaskRecord> eraseMasks;
+    scene::DerivedGeometry derivedGeometry{};
     foundation::WorldRect geometryBounds{};
     foundation::WorldRect visualBounds{};
     foundation::WorldRect worldBounds{};
     std::string referenceGeometryDigest{};
     std::vector<semantic::ObjectId> directDependencies{};
+    std::shared_ptr<const text::TextLayoutSnapshot> textLayout;
 
     bool operator==(const RuntimeSceneRecord&) const = default;
 };
@@ -93,6 +100,7 @@ struct RuntimeSceneProjection final {
 class RuntimeScene final {
   public:
     RuntimeScene() = default;
+    void setTextLayoutService(text::RichTextLayoutService* service) noexcept { _textLayoutService = service; }
 
     [[nodiscard]] semantic::SemanticGeneration generation() const noexcept {
         return _publicationGate != nullptr && _publicationGate->transactionActive
@@ -140,35 +148,12 @@ class RuntimeScene final {
     RuntimeSceneProjection _projection;
     RuntimeSceneProjection _stableProjection;
     ScenePublicationGate* _publicationGate = nullptr;
+    text::RichTextLayoutService* _textLayoutService = nullptr;
 };
 
-[[nodiscard]] inline RuntimeSceneProjection projectRuntimeScene(
+[[nodiscard]] RuntimeSceneProjection projectRuntimeScene(
     std::span<const semantic::ObjectRecord> source,
-    semantic::SemanticGeneration generation = {}) {
-    RuntimeSceneProjection projection;
-    projection.generation = generation;
-    projection.records.reserve(source.size());
-    for (const semantic::ObjectRecord& record : source) {
-        projection.records.push_back(RuntimeSceneRecord{
-            .objectId = record.id,
-            .kind = record.kind,
-            .kindVersion = record.kind_version,
-            .placement = record.placement,
-            .transform = record.transform,
-            .properties = record.properties,
-            .content = record.content,
-            .eraseMasks = record.erase_masks,
-        });
-    }
-    std::sort(projection.records.begin(), projection.records.end(),
-              [](const RuntimeSceneRecord& left, const RuntimeSceneRecord& right) {
-                  if (left.placement.order_key != right.placement.order_key) {
-                      return left.placement.order_key < right.placement.order_key;
-                  }
-                  return left.objectId < right.objectId;
-              });
-    return projection;
-}
+    semantic::SemanticGeneration generation = {}, text::RichTextLayoutService* textService = nullptr);
 
 enum class SceneRecordFlags : std::uint32_t {
     kNone = 0,
@@ -215,6 +200,9 @@ struct SceneRecord final {
     ContentRevision contentRevision;
     RenderPayloadRef renderPayload;
     HitGeometryRef hitGeometry;
+    semantic::Transform2D localTransform{};
+    scene::DerivedGeometry derivedGeometry{};
+    semantic::PropertyBag properties{};
 
     bool operator==(const SceneRecord&) const = default;
 };

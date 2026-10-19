@@ -1,0 +1,120 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-06",
+  "current": true,
+  "sources": [
+    {
+      "role": "current_px0_design_authority",
+      "provider": "repo",
+      "path": "docs/superpowers/specs/2026-10-10-px0-debug-control-plane-baseline-design.md",
+      "revision": "9d771820f25b98b6922663eed53f58abc0088a8c",
+      "content_hash": "git-blob-sha1:b07f9944db86292f94ef01528d9b257f43a12a67",
+      "trusted_sections": [
+        "3 Success criteria",
+        "4 Non-goals",
+        "8.3 DebugController",
+        "8.4 Platform hosts become thin",
+        "10 Platform and temporary-toolbar convergence"
+      ]
+    },
+    {
+      "role": "approved_px0_implementation_plan",
+      "provider": "repo",
+      "path": "docs/superpowers/plans/2026-10-10-px0-debug-control-plane-baseline-implementation.md",
+      "revision": "9d771820f25b98b6922663eed53f58abc0088a8c",
+      "content_hash": "git-blob-sha1:f9cb1ead967a4a086b7c9de2c27909d9c2090555",
+      "trusted_sections": [
+        "Work Package PX0-06 - Host Convergence + Temporary Toolbar Cleanup",
+        "Task 13: Make WindowsDebugUiHost a thin presentation/input host",
+        "Task 14: Converge Web on the common controller and RuntimeFacade path"
+      ]
+    }
+  ],
+  "trusted_statements": {
+    "objective": "Converge Windows and Web Debug UI composition onto the common DebugController boundary, remove platform-local snapshot/router/activity composition from hosts, and route temporary product toolbar mutations through RuntimeFacade without removing the temporary toolbar presentation.",
+    "predecessor": {
+      "task_id": "PX0-05",
+      "accepted_code_revision": "1e21856316ea93de3a1782f5cbab3d0291d81ded",
+      "accepted_evidence_head": "b855df91de34ef66ec876885c2c665ca9f820af7",
+      "p34_closure_ref": "9d771820f25b98b6922663eed53f58abc0088a8c",
+      "gate": "PASS_WITH_FINDINGS"
+    },
+    "host_contract": {
+      "common_controller": "DebugController owns snapshot assembly, router, bounded activity, registry, UI session and Workbench frame orchestration.",
+      "platform_hosts_own_only": [
+        "overlay/canvas/window lifetime",
+        "ImGui platform input",
+        "Debug UI Skia surface",
+        "show/hide",
+        "resize/reposition",
+        "render scheduling",
+        "invocation of DebugController frame"
+      ],
+      "platform_hosts_must_not_own": [
+        "DebugSnapshotAssembler",
+        "DebugControlRouter",
+        "DebugActivityLog",
+        "platform-local snapshot mapping",
+        "Brush/feature semantics",
+        "Runtime generation schema interpretation"
+      ]
+    },
+    "windows_contract": {
+      "host_setter": "WindowsDebugUiHost exposes setController(DebugController*) and retains shared InputCaptureGate binding.",
+      "remove_host_setters": [
+        "setRuntimeFacade",
+        "setDiagnostics",
+        "setArcDiagnostics",
+        "setPlatformDiagnostics",
+        "setTelemetry",
+        "setAxiomDebugControl",
+        "setPlatformDebugControl",
+        "setControlRouter",
+        "setSnapshotRefresh"
+      ],
+      "render_rule": "Between ImGui::NewFrame and ImGui::Render, WindowsDebugUiHost invokes DebugController::buildImGuiFrame. If a control submission requests immediate presentation refresh, one additional common-controller frame may be built in the same dispatch; no platform-local snapshot reconstruction is allowed.",
+      "composition_root": "Windows main owns RuntimeFacade/diagnostic/debug-control providers plus one DebugController and passes only the controller plus InputCaptureGate to WindowsDebugUiHost.",
+      "toolbar_rule": "Windows native temporary toolbar remains visible, but product mutations must enter RuntimeFacade typed product controls. The toolbar adapter must not call InkPlaygroundHost product mutation methods directly and RuntimeFacade must not call back into the toolbar adapter recursively."
+    },
+    "web_contract": {
+      "controller_ownership": "Web DebugUiState owns/uses one common DebugController for Debug UI frame construction.",
+      "remove_local_composition": [
+        "captureDebugSnapshot",
+        "DebugSnapshotAssembler",
+        "DebugActivityLog",
+        "DebugControlRouter",
+        "buildImGuiPanels call"
+      ],
+      "render_rule": "Web keeps canvas/context/provider/input realization and invokes DebugController::buildImGuiFrame between ImGui::NewFrame and ImGui::Render. One same-dispatch second frame is allowed after a submitted control so resolved owner readback becomes visible.",
+      "toolbar_rule": "Existing exported temporary tool/brush functions remain source-compatible where practical, but mutation must enter the same Web RuntimeFacade adapter used by the controller; direct Host::selectTool/selectBrushProfile product mutation from exported toolbar functions is forbidden."
+    },
+    "temporary_toolbar_boundary": {
+      "preserve": "Windows native toolbar and Web HTML toolbar remain visible for qualification.",
+      "retirement_owner": "Final temporary toolbar retirement belongs to PX7 Product UI Projection or separately authorized successor work.",
+      "qualification_harness": "Existing G4.7 text qualification menus/actions remain qualification harness behavior and are not converted into new RuntimeFacade product semantics in PX0-06."
+    },
+    "input_invariants": [
+      "Existing Debug/Canvas InputCaptureGate sequence latching remains intact.",
+      "Hidden Debug UI must not consume Canvas input.",
+      "Debug-owned pointer/keyboard terminal/cancel transitions must not leak into Canvas input.",
+      "Windows active-stroke overlay rasterization gating remains intact."
+    ],
+    "preserved_boundaries": [
+      "PX0-01 RuntimeFacade/Diagnostics ownership split",
+      "PX0-02 common structured DebugSnapshot",
+      "PX0-03 DebugControlRouter/activity semantics",
+      "PX0-04 DebugController/Workbench/PanelRegistry architecture",
+      "PX0-05 final capability panel migration",
+      "stable Runtime C ABI",
+      "DUI-M1 PHYSICAL_PENDING status"
+    ]
+  },
+  "forbidden_interpretations": [
+    "PX0-06 does not remove all temporary product toolbar presentation.",
+    "PX0-06 does not redesign Product Shell UI.",
+    "PX0-06 does not add Shape, RichText editing, Connector, Snap or Image behavior.",
+    "PX0-06 does not change RuntimeFacade semantics, Runtime/foundation contracts, snapshot schema, router state mapping, Workbench/PanelRegistry architecture or panel capability inventory.",
+    "PX0-06 does not route G4.7 qualification-only text menus through new product contracts.",
+    "PX0-06 does not perform PX0-07 physical qualification or issue PX0/DUI-M1/physical/Gate PASS."
+  ]
+}

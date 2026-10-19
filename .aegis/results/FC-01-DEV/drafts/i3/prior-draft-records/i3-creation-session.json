@@ -1,0 +1,48 @@
+{
+  "task_id": "FC-01",
+  "slice": "FC01-I3",
+  "status": "PARTIAL_NOT_CLOSED",
+  "source_worktree_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "oracles": [
+    "FC01-B03",
+    "FC01-B04",
+    "FC01-B07"
+  ],
+  "behavior_red": {
+    "ref": "E03/creation-session-red.json",
+    "status": "OBSERVED",
+    "exit_code": 8,
+    "log": "out/fc01/runs/i3-behavior-red/test.log",
+    "log_sha256": "70d14a219862ced1200725fd1d607c1f2ef170136a92289f8a41b3c7db885dfc",
+    "failure": "invalid Up left CreationSession active (ghost session)"
+  },
+  "behavior_green": {
+    "status": "FOCUSED_PASS",
+    "exit_code": 0,
+    "runner": "out/fc01/runs/i3-session-green3/result.json",
+    "runner_sha256": "c5af577f9ff2e1b4a606e55723aa9a9bbf4d8c0fc51c8ff989848e249ab0669d",
+    "scope": [
+      "invalid extent clears session",
+      "nonfinite move clears session",
+      "visible-target snap does not use viewport midpoint"
+    ]
+  },
+  "common_owner_migration": {
+    "status": "BUILD_PASS",
+    "owner": "runtime/interaction/CreationSession",
+    "build": "out/fc01/runs/i3-common-owner-build/result.json"
+  },
+  "runtime_facade_queue": {
+    "status": "OWNER_SAFE_POINT_IMPLEMENTED",
+    "regression": "out/fc01/runs/control-service-queue3/result.json"
+  },
+  "remaining": [
+    "full B03/B04/B07 independent oracle not executed",
+    "creation guide is not yet published to per-view EditingOverlay",
+    "two-source/two-view creation scheduling not yet closed",
+    "I4/I5/I6 not complete",
+    "Skia Windows SDK strict fetch timed out with incomplete archives; no manifest or host link evidence"
+  ],
+  "physical_claim": false,
+  "gate_claim": "none"
+}

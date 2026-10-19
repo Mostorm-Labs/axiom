@@ -12,6 +12,11 @@ class TransientSceneOverride final {
   bool set(foundation::ObjectId id, semantic::Transform2D transform);
   void clear() noexcept;
   [[nodiscard]] std::size_t size() const noexcept { return values_.size(); }
+  [[nodiscard]] bool empty() const noexcept { return values_.empty(); }
+  [[nodiscard]] const semantic::Transform2D* find(foundation::ObjectId id) const noexcept {
+    const auto it = values_.find(id);
+    return it == values_.end() ? nullptr : &it->second;
+  }
  private: friend class TransformSession; std::unordered_map<foundation::ObjectId, semantic::Transform2D, foundation::ObjectIdHash> values_;
 };
 enum class TransformConflict { kNone, kCancel, kReResolve };
@@ -22,6 +27,8 @@ class TransformSession final {
   bool preview(std::span<const std::pair<foundation::ObjectId, semantic::Transform2D>> values);
   bool commit(); void cancel() noexcept;
   TransformConflict onChangeSet(const semantic::ChangeSet& changes) noexcept;
+  [[nodiscard]] bool active() const noexcept { return active_ && !cancelled_; }
+  [[nodiscard]] std::size_t transientValueCount() const noexcept { return override_.size(); }
  private: TransformSubmitPort& submit_; TransientSceneOverride& override_; semantic::SetTransformsOp pending_; bool active_=false; bool cancelled_=false;
 };
 }

@@ -1,0 +1,45 @@
+{
+  "recorded_at": "2026-10-19T06:41:40.056153+00:00",
+  "source_revision": "e42c907f827e33864d80a47ba7f9d5938ba14e3a",
+  "prior_evidence_ref": "b3a46ecdb282f92eabfe6e42c4773d905cfca0c8",
+  "status": "USER_REPORTED_WEB_VERIFICATION_PASS",
+  "observer": "human user",
+  "statement": "web端测试也通过",
+  "context": "Follow-up to the compact Web Debug UI and strict Clang repair; correct Minimal Web page was opened at this source revision.",
+  "result": "PASS",
+  "result_scope": "User-reported overall Web retest; no new defect reported after the width/compiler repair.",
+  "individual_matrix_results": "No item-by-item observations supplied; prior detailed unobserved items are not automatically promoted to PASS.",
+  "artifacts": {
+    "variant": "on",
+    "source_revision": "e42c907f827e33864d80a47ba7f9d5938ba14e3a",
+    "source_dirty": 0,
+    "debug_ui_linked": true,
+    "playground_linked": false,
+    "own_bridge_werror": true,
+    "files": [
+      {
+        "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\index.html",
+        "bytes": 1486,
+        "sha256": "63dc9f654f4385c5e649851563c57b59ff3cbec112786cda6469ceb97511cdca"
+      },
+      {
+        "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\host.js",
+        "bytes": 14024,
+        "sha256": "b826236fb489411f9fbc32790141dfe3e16c5658c2792b5b0cb0d8798d6934ed"
+      },
+      {
+        "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.js",
+        "bytes": 122386,
+        "sha256": "8db42820e66bcfee5afc39698a3c12697f7c44fb93b14185e9c0b65e0023e208"
+      },
+      {
+        "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.wasm",
+        "bytes": 9576150,
+        "sha256": "f9b455d7ffa8ddd12216f2af2c7ee571f13681f58ee010c695dd7294b0835de6"
+      }
+    ]
+  },
+  "production_changes": [],
+  "formal_gate_or_phys_status_changed": false,
+  "next_narrow_fix": "None identified by this feedback."
+}

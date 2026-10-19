@@ -1,0 +1,7 @@
+{
+  "failure_order": "validate -> normalize -> fences -> stage -> atomic apply -> generation/ledger/ChangeSet -> publish",
+  "owner_graph": "SemanticSnapshot/Manifest -> OperationEngine/atomic apply -> ChangeSet/SemanticReadView -> SnapshotCodec/Bootstrap",
+  "status": "PASS",
+  "task_id": "FC-00X-RESOURCE-MANIFEST-IMPLEMENTATION",
+  "unresolved_semantic_decisions": []
+}

@@ -1,0 +1,198 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-02",
+  "execution_closure_contract": {
+    "implementation": {
+      "required_changes": [
+        "Replace the flat DebugSnapshot with Stamp/Coherence/Product/Axiom/Arc/Platform/Telemetry/Activity domains and remove Capability/CapabilityState from the live snapshot.",
+        "Add DebugAvailability, SnapshotCoherence, and DiagnosticSection<T> contracts.",
+        "Add documentRevision to DebugSnapshotStamp so the frozen product identity can be represented without consulting platform-local fields.",
+        "Create activity.hpp with a minimal bounded DebugActivitySnapshot plus read-only DebugActivitySource that preserves existing last ProductControlReceipt and SurfaceModeReceipt observation; do not implement DebugActivityLog/history.",
+        "Create DebugSnapshotAssembler and DebugSnapshotSources. Sources are RuntimeFacade, IAxiomDiagnostics, IArcDiagnostics, IPlatformDiagnostics, ITelemetry, and optional DebugActivitySource.",
+        "Implement best-effort coherence capture with no global Runtime lock and at most one full retry.",
+        "Use assembler-local snapshotSequence while preserving TelemetrySnapshot.sequence as stamp.sequence when available; populate common monotonic time/frame/identity stamp fields according to authority.lock.json.",
+        "Adapt current panels/controller/PanelModel/windows_host reads to structured sections without changing the tab/workbench architecture or owner mutation paths.",
+        "Remove Windows buildDebugSnapshot(...) semantic assembly and replace all capture/publish sites with common assembler.capture().",
+        "Remove Web debugSnapshot(...) semantic assembly, add only the missing Web Arc diagnostics adapter needed to preserve existing preview/input/handoff observations, and compose the common assembler from existing WebRuntimeFacade/WebPlatformDiagnostics/WebTelemetry plus that Arc provider.",
+        "Add focused PX0DebugSnapshot tests and update existing Debug UI/PanelModel/structural tests for the intentional snapshot-shape change."
+      ],
+      "authorized_mutation_scope": [
+        "debug_ui/include/canvas/debug_ui/snapshot.hpp",
+        "debug_ui/src/snapshot.cpp",
+        "debug_ui/include/canvas/debug_ui/activity.hpp",
+        "debug_ui/include/canvas/debug_ui/snapshot_assembler.hpp",
+        "debug_ui/src/snapshot_assembler.cpp",
+        "debug_ui/include/canvas/debug_ui/panels.hpp",
+        "debug_ui/include/canvas/debug_ui/controller.hpp",
+        "debug_ui/src/controller.cpp",
+        "debug_ui/src/panel_model.cpp",
+        "debug_ui/src/windows_host.cpp",
+        "debug_ui/tests/snapshot_assembler_test.cpp",
+        "debug_ui/tests/debug_ui_test.cpp",
+        "debug_ui/tests/dui_m1_panel_model_test.cpp",
+        "debug_ui/CMakeLists.txt",
+        "apps/ink_playground/platform/windows/main.cpp",
+        "apps/ink_playground/platform/web/bridge.cpp",
+        "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+        "apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py"
+      ],
+      "preserve_unchanged": [
+        "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+        "runtime/foundation/include/canvas/runtime/runtime_state.hpp",
+        "runtime/foundation/include/canvas/runtime/product_control.hpp",
+        "runtime/foundation/include/canvas/runtime/diagnostics.hpp",
+        "runtime/foundation/include/canvas/runtime/feature_diagnostics.hpp",
+        "runtime/foundation/include/canvas/runtime/telemetry.hpp",
+        "apps/ink_playground/common/canvas_runtime_facade_adapter.hpp",
+        "apps/ink_playground/common/canvas_runtime_facade_adapter.cpp",
+        "debug_ui/include/canvas/debug_ui/panel_model.hpp",
+        "debug_ui/include/canvas/debug_ui/command.hpp",
+        "debug_ui/src/command.cpp",
+        "debug_ui/include/canvas/debug_ui/windows_host.hpp",
+        ".aegis/results/GT-DUI-M1/**"
+      ],
+      "forbidden_changes": [
+        "Stable Runtime C ABI or PX0-01 RuntimeFacade/Diagnostics semantics",
+        "CanvasControlService behavior or product-control routing",
+        "DebugControlRouter or control-owner routing redesign",
+        "DebugActivityLog or bounded activity history implementation",
+        "Generic debug_ui::DebugCommand retirement",
+        "WorkspaceId/PanelRegistry/Workbench architecture",
+        "ImGui layout redesign or six-workspace UI implementation",
+        "WindowsDebugUiHost setter/API thinning reserved for PX0-06",
+        "Shape/RichText/Connector/Snap/Image product semantics",
+        "Deferred Windows preview visibility repair",
+        ".aegis/results/GT-DUI-M1/** or any physical/Gate PASS claim",
+        "G5 implementation"
+      ]
+    },
+    "implementation_design_preflight": {
+      "required": true,
+      "record": [
+        "current flat DebugSnapshot field/capability flow from Windows buildDebugSnapshot and Web debugSnapshot into controller/panel_model/windows_host",
+        "target owner-provider -> common DebugSnapshotAssembler -> structured DebugSnapshot flow",
+        "exact mapping from every currently displayed flat field to Product/Axiom/Arc/Platform/Telemetry/Activity domain",
+        "coherence attempt/retry/read-count behavior",
+        "Windows/Web provider lifetimes and assembler ownership",
+        "mapping from each frozen verification obligation to implementation/test",
+        "unresolved_semantic_decisions"
+      ],
+      "continue_only_if": {
+        "unresolved_semantic_decisions": [],
+        "authority_conflict": false,
+        "verification_conflict": false,
+        "package_scope_conflict": false
+      }
+    },
+    "oracle_precondition": {
+      "red_required": true,
+      "expected_failure": "The new PX0DebugSnapshot contract test fails against the starting implementation because DebugSnapshot still has the global Capability[] bag and DebugSnapshotAssembler/DebugAvailability/SnapshotCoherence do not exist.",
+      "observation_seam": "debug_ui/tests/snapshot_assembler_test.cpp compiled as axiom_debug_ui_snapshot_tests"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "PX0-02-T1-red-snapshot-contract",
+          "command_or_oracle": "Before production mutation, add the focused snapshot_assembler_test.cpp/CMake target and build axiom_debug_ui_snapshot_tests.",
+          "expected_result": "RED specifically on the frozen structured-snapshot/assembler contract.",
+          "blocking_reason": "Confirms the old flat/capability design is observed through the intended oracle before implementation."
+        },
+        {
+          "id": "PX0-02-T2-snapshot-contract",
+          "command_or_oracle": "Build and run PX0DebugSnapshot.",
+          "expected_result": "PASS including envelope, availability, activity passthrough, stamp semantics, coherence/retry/read-count, and MutexCopySnapshotChannel tests.",
+          "blocking_reason": "Primary proof of the new common observation contract."
+        },
+        {
+          "id": "PX0-02-T3-debug-ui-regressions",
+          "command_or_oracle": "Run DUI20DebugUiContracts, DUIM1PanelModel, and PX0RuntimeFacadeContract.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Protects current Debug UI behavior and the PX0-01 contract boundary while snapshot shape changes."
+        },
+        {
+          "id": "PX0-02-T4-dui-product-regressions",
+          "command_or_oracle": "Run DUIM1RuntimeFacade and DUIM1ViewControls.",
+          "expected_result": "PASS.",
+          "blocking_reason": "Protects the accepted common product-control/camera lane while observation changes."
+        },
+        {
+          "id": "PX0-02-T5-platform-structural-contracts",
+          "command_or_oracle": "python -m pytest apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py -q",
+          "expected_result": "PASS with assertions that Windows buildDebugSnapshot and Web debugSnapshot are absent and both use DebugSnapshotAssembler.",
+          "blocking_reason": "Proves common snapshot ownership without requiring physical hosted closure."
+        },
+        {
+          "id": "PX0-02-T6-scope-and-latency-audit",
+          "command_or_oracle": "Inspect exact diff for active-stroke/input-capture preservation, run git diff --name-only <actual-starting-revision>..HEAD and git diff --check <actual-starting-revision>..HEAD.",
+          "expected_result": "Only authorized paths changed; Windows active-pointer Debug UI throttling/input-capture logic remains; diff check exits 0.",
+          "blocking_reason": "Prevents observation refactor from leaking into hot-path/UI-host/product semantics."
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        {
+          "id": "PX0-02-H1-windows-release-build",
+          "oracle": "If the locked Windows Skia/Arc environment is available, build axiom_ink_playground_windows at the exact result revision.",
+          "classification": "corroborative; physical/host closure remains PX0-07"
+        },
+        {
+          "id": "PX0-02-H2-web-build",
+          "oracle": "If the locked Emscripten environment is healthy, build axiom_ink_playground_web at the exact result revision.",
+          "classification": "corroborative; known environment problems do not move the PX0-02 finish line"
+        }
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "exact pushed result_revision on codex/px0-02-structured-snapshot-assembler",
+        "reviewer-resolvable materialized_ref for that exact result",
+        "rerunnable frozen test/oracle set bound to the exact source result",
+        "exact authorized-scope diff"
+      ],
+      "corroborative": [
+        "optional Windows/Web hosted build results",
+        "git status --short clean after commit"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "Structured DebugSnapshot domains and section-local availability replace the flat/global capability model.",
+        "DebugSnapshotAssembler owns common Windows/Web provider aggregation and coherence validation.",
+        "Windows buildDebugSnapshot and Web debugSnapshot semantic assemblers are removed.",
+        "Current receipt display is preserved through Activity transport without implementing PX0-03 history.",
+        "Current Debug UI/PanelModel/product-control regressions pass.",
+        "No PX0-03+ architecture, preview repair, or physical evidence claim is included.",
+        "The exact result is pushed/materialized for independent Control Review."
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "EVIDENCE_MATERIALIZATION_FAILURE"
+      ],
+      "status_mapping": {
+        "REPOSITORY_IDENTITY": "BLOCKED_REPOSITORY_IDENTITY",
+        "EXECUTION_DIVERGENCE": "BLOCKED_EXECUTION_DIVERGENCE",
+        "AUTHORITY_CONFLICT": "BLOCKED_AUTHORITY",
+        "MISSING_REQUIRED_INPUT": "BLOCKED_MISSING_INPUT",
+        "ENVIRONMENT_BLOCKER": "BLOCKED_ENVIRONMENT",
+        "FROZEN_VERIFICATION_FAILURE": "BLOCKED_IMPLEMENTATION",
+        "NEW_HIGH_IMPACT_FAILURE_MODE": "BLOCKED_AUTHORITY",
+        "EVIDENCE_MATERIALIZATION_FAILURE": "BLOCKED_EVIDENCE"
+      }
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "official_gate_pass_forbidden": true
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "command": "ctest",
+  "arguments": [
+    "--test-dir",
+    "out/p32-touch/build",
+    "-R",
+    "^(G4InputRouter|G4MultiPointerFoundation|G4PlatformNormalization|C1CommonIngress|C1CrossPlatformFixtureParity|G4InteractionSessionManager|G4SelectionSession|G4TransformSession|G46TransformHandleDrag|G4EraserSession|G4SessionConflict|G4SessionLifecycle|G4MultiContactCoordinator|G4ViewportGesture|C0ViewportInteractionController|G3RuntimeAppBinding|FC00XRuntimeIsolation|G3HeadlessSkia|FC00XFrameCoordinator|G3RenderTargetSwitching|G3SkiaSurfaceProvider|G3PreviewSurface|G3SurfacePresentation|G3FrameState|G46EditingOverlay|G4CanonicalHandoff|FC00XBrushBatchEvaluation|FC00XBrushPressureCapability|FC00XBrushBatchSemantics|FC00XCanonicalBusyPreviewProgress|FC00XPreviewBusyCanonicalProgress|FC00XBusyCanonicalPendingFeedback|FC00XFatalProviderFailure|FC00XRuntimeComposition|FC00XRuntimeFacade|FC00XWindowsTouchIngress|FC00XWindowsMouseHistory|FC00XWindowsPreviewOrigin|FC00XPreviewCanonicalCoordinates|FC00XS2WindowsSurfaceBinding|FC00XMinimalRuntimeHost|FC00XMinimalPresentationCache|DUIWindowsHostInputDispatch|PX0Workbench|PX0RuntimeFacadeContract|DUIM1PanelModel|PX0ControlRouter|PX0DebugSnapshot|G3WebSurfaceHost)$",
+    "--output-on-failure",
+    "--output-junit",
+    "out/p32-web/native-final-tests.xml"
+  ]
+}

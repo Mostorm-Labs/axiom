@@ -1,0 +1,15 @@
+Test project D:/axbuild/fc01-windows-host-final
+    Start 601: G3HeadlessCanvasDemo
+1/2 Test #601: G3HeadlessCanvasDemo .............Exit code 0xc0000409***Exception:   3.41 sec
+Assertion failed: sha256(first / "render.rgba") == "fff3316ca7bb6314d39df56a731b770ff8d4fd6b03355171c56c8e3a03f6bc82", file C:\Users\Chado\.codex\worktrees\fc-01-creation-tools-p32\canvas\runtime\render\tests\headless_canvas_demo_test.cpp, line 247
+
+    Start 602: G3HeadlessSkia
+2/2 Test #602: G3HeadlessSkia ...................   Passed    0.02 sec
+
+50% tests passed, 1 tests failed out of 2
+
+Total Test time (real) =   3.54 sec
+
+The following tests FAILED:
+	601 - G3HeadlessCanvasDemo (Exit code 0xc0000409)
+Errors while running CTest

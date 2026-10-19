@@ -1,0 +1,160 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-03",
+  "stage": "P36_FIX_REVERIFICATION",
+  "authorized": true,
+  "surface": "CODE_REVERIFY",
+  "executor": "codex",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "origin_package": {
+    "path": ".aegis/packages/PX0-03/package.json",
+    "materialization_ref": "a4726b21fa0b8421dae3e260636962b07491fa69"
+  },
+  "exact_cursor": "9938e1f712015ef7f7a1ff7461d69d9a2e959d5d",
+  "repair_class": [
+    "IMPLEMENTATION_DEFECT",
+    "TEST_DEFECT"
+  ],
+  "preserve": [
+    "All valid PX0-03 DebugActivityLog implementation at the exact cursor.",
+    "All valid DebugControlRouter request ID, generation/deadline, normalization and async receipt-refresh implementation except the legacy 4107 presentation leak.",
+    "PlatformDebugControl::receipt default and Windows queue-backed override.",
+    "Windows/Web DebugActivityLog + DebugControlRouter composition and snapshot activity integration.",
+    "Removal of generic debug_ui command.hpp/command.cpp.",
+    "Owner-side debug_command_queue.hpp and surface_debug_queue.hpp.",
+    "PX0-01 RuntimeFacade/Diagnostics and PX0-02 structured DebugSnapshot/Assembler contracts.",
+    "Current fixed-tab Debug UI layout, input-capture behavior and same-dispatch redraw behavior.",
+    "DUI-M1 PHYSICAL_PENDING/BLOCKED_EVIDENCE state."
+  ],
+  "scope": {
+    "required_production_repair": [
+      "Remove every legacy 410x presentation identifier from DebugControlRouter implementation and API semantics.",
+      "Change the current Pan route so controller.cpp converts the legacy UI presentation item to canvas::runtime::CanvasToolKind::kPan before the router boundary.",
+      "Make DebugControlRouter::setTool accept semantic CanvasToolKind or an equivalently typed semantic value and submit a typed CanvasControl request through RuntimeFacade for the current Pan path.",
+      "Do not add any platform-specific brush profile string, legacy tool ID, or presentation mapping to the router."
+    ],
+    "required_frozen_oracle_completion": [
+      {
+        "id": "V1-bounded-log",
+        "assertions": [
+          "Default capacity is 64.",
+          "With capacity 2 and at least three transitions, size is 2 and the two newest request IDs and states are retained.",
+          "DebugActivityLog::snapshot() and readActivity() expose the same bounded entry sequence."
+        ]
+      },
+      {
+        "id": "V2-owner-routing",
+        "assertions": [
+          "setBrush touches RuntimeFacade product lane only.",
+          "setEraser touches RuntimeFacade product lane only.",
+          "setSelectionMode touches RuntimeFacade product lane only.",
+          "undo and redo touch RuntimeFacade product lane only.",
+          "panBy, zoomAt and fitToContent touch RuntimeFacade product lane only.",
+          "setTool(CanvasToolKind::kPan) touches RuntimeFacade CanvasControl lane only and never an engineering owner.",
+          "submitAxiom touches AxiomDebugControl only.",
+          "setCanonicalSurfaceMode touches PlatformDebugControl only.",
+          "Owner call counters prove non-owners were not invoked."
+        ]
+      },
+      {
+        "id": "V3-context-fencing-and-local-rejection",
+        "assertions": [
+          "Router-generated request IDs are non-zero and monotonically increasing across owner classes.",
+          "Axiom request expectedRuntimeGeneration and expectedDocumentGeneration equal beginFrame snapshot identity.",
+          "Axiom deadlineSequence equals snapshot.stamp.sequence + 120.",
+          "Surface expectedGeneration uses platform.canonicalSurfaceGeneration when available.",
+          "Surface deadlineSequence equals snapshot.stamp.sequence + 120.",
+          "Fit Selection with selectedObjectCount == 0 returns Rejected and causes zero additional RuntimeFacade mutation calls.",
+          "Fit Primary Object with primaryObject == 0 returns Rejected and causes zero additional RuntimeFacade mutation calls.",
+          "Valid Fit Selection and Fit Primary Object still route through RuntimeFacade."
+        ]
+      },
+      {
+        "id": "V4-normalized-states",
+        "assertions": [
+          "Exercise owner receipts through the public router/log path and verify normalized Pending, Applied, Rejected, Unsupported, Unavailable, StaleGeneration, Expired, QueueFull and Failed states.",
+          "At minimum distinguish Product/Canvas/Axiom/Surface representative mappings so StaleGeneration, Expired and QueueFull are not collapsed into Rejected/Failed, and Destroyed/TargetDestroyed/Busy map to Unavailable according to the frozen contract."
+        ]
+      },
+      {
+        "id": "V5-async-refresh",
+        "assertions": [
+          "Queued Axiom and Surface admissions record Pending.",
+          "A refresh while owners still return Queued does not invent a terminal transition.",
+          "When the owners later return Applied, one terminal Applied transition per outstanding request is appended.",
+          "A subsequent refresh after terminal resolution appends no duplicate transition and proves the request is no longer tracked.",
+          "refreshReceipts does not call RuntimeFacade product/canvas/readRuntimeState paths."
+        ]
+      },
+      {
+        "id": "V6-platform-receipt-query",
+        "assertions": [
+          "A PlatformDebugControl implementation that does not override receipt(requestId) returns Unsupported by default.",
+          "Windows structural/source oracle proves WindowsPlatformDebugControl::receipt uses the retained BoundedSurfaceModeQueue receipt store."
+        ]
+      },
+      {
+        "id": "V8-current-panel-routing",
+        "assertions": [
+          "controller.cpp contains the legacy presentation mapping, but passes CanvasToolKind::kPan to the router.",
+          "control_router.cpp/control_router.hpp contain no literal 4107 and no 410x presentation branching.",
+          "Selection, Undo/Redo, Brush, Eraser, Pan and Surface current panel actions still route through DebugControlRouter."
+        ]
+      }
+    ],
+    "allowed_paths": [
+      "debug_ui/include/canvas/debug_ui/control_router.hpp",
+      "debug_ui/src/control_router.cpp",
+      "debug_ui/src/controller.cpp",
+      "debug_ui/tests/control_router_test.cpp",
+      "apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py",
+      ".aegis/results/PX0-03/**"
+    ],
+    "forbidden": [
+      "Any DebugActivityLog production redesign.",
+      "Any DebugSnapshot or DebugSnapshotAssembler schema/coherence change.",
+      "runtime/foundation/** changes.",
+      "apps/ink_playground/platform/** production changes.",
+      "WindowsDebugUiHost/API thinning.",
+      "Any generic command queue restoration.",
+      "Any owner-side debug_command_queue.hpp or surface_debug_queue.hpp change.",
+      "WorkspaceId/PanelSlot/PanelRegistry/DebugUiSessionState/Workbench.",
+      "Shape/RichText/Connector/Snap/Image product semantics.",
+      "Preview repair.",
+      ".aegis/results/GT-DUI-M1/**.",
+      "PX0-04 implementation.",
+      "MSVC warning-policy cleanup.",
+      "Any physical/Gate PASS claim."
+    ]
+  },
+  "required_reverification": [
+    "PX0ControlRouter",
+    "DUI20DebugUiContracts",
+    "PX0DebugSnapshot",
+    "DUIM1PanelModel",
+    "PX0RuntimeFacadeContract",
+    "DUIM1RuntimeFacade",
+    "DUIM1ViewControls",
+    "python -m pytest apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py -q",
+    "exact tree check: debug_ui command.hpp/command.cpp remain absent while owner-side debug_command_queue.hpp/surface_debug_queue.hpp remain present",
+    "git diff --check",
+    "authorized-scope diff from exact_cursor"
+  ],
+  "optional_corroboration": [
+    "Normal-profile Windows application build if the existing C4702 /WX environment permits it; this does not move the P36 finish line."
+  ],
+  "terminal_success": [
+    "DebugControlRouter contains no legacy 410x presentation identity and Pan enters it as CanvasToolKind::kPan semantic intent.",
+    "PX0ControlRouter explicitly closes every frozen oracle listed in required_frozen_oracle_completion.",
+    "All frozen PX0/DUI and Windows/Web structural regressions pass.",
+    "Only allowed repair paths changed from the exact cursor.",
+    "No PX0-04+, Preview, physical qualification or unrelated Runtime/platform production work is included.",
+    "The repaired exact result is committed and pushed to a reviewer-resolvable ref.",
+    "Return READY_FOR_CONTROL_REVIEW without claiming PX0-03/P34/PX0/DUI-M1/Preview/physical/Gate PASS."
+  ],
+  "official_gate_pass_forbidden": true,
+  "next_surface": "CODE_REVERIFY"
+}

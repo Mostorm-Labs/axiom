@@ -1,0 +1,11 @@
+{
+  "task_id": "GT-G4.6-A",
+  "matrix": [
+    {"zoom": 1.0, "dpr": 1.0, "visual_radius": 6.0, "hit_radius": 12.0},
+    {"zoom": 4.0, "dpr": 1.0, "visual_radius": 6.0, "hit_radius": 12.0},
+    {"zoom": 1.0, "dpr": 2.0, "visual_radius": 6.0, "hit_radius": 12.0}
+  ],
+  "invariants": ["visual size stable in logical screen space", "hit slop independently larger", "oriented corners follow camera/object transform"],
+  "test": "G46EditingOverlay",
+  "status": "PASS"
+}

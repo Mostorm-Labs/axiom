@@ -1,0 +1,254 @@
+[
+  {
+    "id": "A1",
+    "name": "Single-finger continuous Ink",
+    "expected": "Preview follows the finger.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "A2",
+    "name": "Release Ink",
+    "expected": "Canonical and preview positions agree.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "A3",
+    "name": "Ten consecutive strokes",
+    "expected": "Sampling and visual continuity do not degrade.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "A4",
+    "name": "Rectangle/Ellipse/Triangle/Line/Arrow",
+    "expected": "Each selected primitive previews and commits.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "A5",
+    "name": "Ink after Shape",
+    "expected": "Ink stays above Shape.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "A6",
+    "name": "Repeated Arrow/Line/Shape",
+    "expected": "Each consecutive action commits independently.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "A7",
+    "name": "Partial eraser",
+    "expected": "Only Ink is erased; Shapes remain unchanged.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "A8",
+    "name": "Undo/Redo/selection/move/scale/alignment/cancel",
+    "expected": "Each enabled action has the expected visible result.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "B1",
+    "name": "Two-finger pan",
+    "expected": "Within the frozen Pending window, navigation pans without Ink.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "B2",
+    "name": "Two-finger zoom",
+    "expected": "Second finger joins Pending within 250 ms; zoom without Ink.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "B3",
+    "name": "Slow second contact",
+    "expected": "Within 250 ms navigation; after 250 ms second Ink, according to existing AutoIntent/slop rules.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "B4",
+    "name": "Fast second contact",
+    "expected": "Both Down events reach Runtime.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "B5",
+    "name": "One finger lifted",
+    "expected": "Remaining contact follows the frozen navigation/MultiInk continuation policy.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "B6",
+    "name": "Navigation capture/focus/window loss",
+    "expected": "All affected sessions cancel without residual pointer state.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "B7",
+    "name": "Ink after navigation",
+    "expected": "A new single-finger stroke previews and commits.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "B8",
+    "name": "Frozen MultiInk",
+    "expected": "Late second contact (>250 ms) writes a second Ink stroke.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "B9",
+    "name": "Identity reuse",
+    "expected": "Old source/pointer/generation events cannot affect the new gesture.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "B10",
+    "name": "Touch Debug UI",
+    "expected": "UI touch operates controls without canvas penetration.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "C1",
+    "name": "Ink / Shape tools",
+    "expected": "Enabled tool controls apply and read back through RuntimeFacade.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "C2",
+    "name": "Brush / Marker presets",
+    "expected": "Enabled presets apply and read back through RuntimeFacade.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "C3",
+    "name": "Color / width / opacity",
+    "expected": "Enabled options apply and read back through RuntimeFacade.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "C4",
+    "name": "Undo / Redo",
+    "expected": "Controls operate through RuntimeFacade.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "C5",
+    "name": "Eraser modes",
+    "expected": "Enabled modes apply through RuntimeFacade.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "C6",
+    "name": "Selection / move / scale",
+    "expected": "Enabled operations apply through RuntimeFacade.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "C7",
+    "name": "Viewport status",
+    "expected": "Facade state agrees with observed viewport.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "C8",
+    "name": "Frame / retry status",
+    "expected": "Enabled diagnostics show current owner state.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "C9",
+    "name": "Provider / resource / lifecycle",
+    "expected": "Enabled diagnostics show current owner state; unavailable sections remain unavailable.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "C10",
+    "name": "Debug UI toggle",
+    "expected": "Button/F12 toggles the sibling UI; drawing still works after closing it.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "D1",
+    "name": "Resize",
+    "expected": "Drawing works at several window dimensions.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "D2",
+    "name": "Maximize / restore / minimize",
+    "expected": "Canonical persists and preview/drawing recover.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "D3",
+    "name": "Multiple monitors / DPI",
+    "expected": "Pointer, preview and canonical coordinates stay aligned.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "D4",
+    "name": "Preview / canonical offset",
+    "expected": "No positional handoff offset.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "D5",
+    "name": "Idle",
+    "expected": "No unexpected sustained redraw.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "D6",
+    "name": "Capture loss recovery",
+    "expected": "Next stroke succeeds.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "D7",
+    "name": "Brush handoff retirement",
+    "expected": "Committed handoff overlay retires.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  },
+  {
+    "id": "D8",
+    "name": "WebGL loss / hidden / unavailable surface",
+    "expected": "Retry/rebind preserves canonical and does not fabricate completion.",
+    "actual": "Not manually observed on the repaired Web consumer.",
+    "result": "PHYSICAL_PENDING"
+  }
+]

@@ -1,0 +1,65 @@
+add_library(canvas_runtime_composition STATIC
+    src/resource_binding.cpp
+    src/scene_adapter.cpp
+    src/runtime_composition.cpp
+    src/canvas_runtime_facade.cpp)
+target_include_directories(canvas_runtime_composition PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
+target_link_libraries(canvas_runtime_composition PUBLIC
+    canvas_runtime_editor canvas_runtime_scene canvas_runtime_render
+    canvas_runtime_control
+    canvas_runtime_text canvas_runtime_foundation)
+target_compile_features(canvas_runtime_composition PUBLIC cxx_std_20)
+# The composition library itself must emit the qualification-only execution
+# seam so white-box tests link against the same declaration shape. Ordinary
+# consumers compile without this definition and only see RuntimeFacade.
+target_compile_definitions(canvas_runtime_composition PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+if(MSVC)
+  target_compile_options(canvas_runtime_composition PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(canvas_runtime_composition PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
+if(BUILD_TESTING)
+  add_executable(axiom_brush_batch_frame_retry_tests
+      tests/brush_batch_frame_retry_test.cpp)
+  target_link_libraries(axiom_brush_batch_frame_retry_tests PRIVATE canvas_runtime_composition)
+  target_compile_definitions(axiom_brush_batch_frame_retry_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+  target_compile_features(axiom_brush_batch_frame_retry_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_brush_batch_frame_retry_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  else()
+    target_compile_options(axiom_brush_batch_frame_retry_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+  endif()
+  add_test(NAME FC00XBrushBatchEvaluation COMMAND axiom_brush_batch_frame_retry_tests batch)
+  add_test(NAME FC00XBrushPressureCapability COMMAND axiom_brush_batch_frame_retry_tests pressure)
+  add_test(NAME FC00XBrushBatchSemantics COMMAND axiom_brush_batch_frame_retry_tests semantics)
+  add_test(NAME FC00XCanonicalBusyPreviewProgress COMMAND axiom_brush_batch_frame_retry_tests canonical-busy)
+  add_test(NAME FC00XPreviewBusyCanonicalProgress COMMAND axiom_brush_batch_frame_retry_tests preview-busy)
+  add_test(NAME FC00XBusyCanonicalPendingFeedback COMMAND axiom_brush_batch_frame_retry_tests pending-feedback)
+  add_test(NAME FC00XFatalProviderFailure COMMAND axiom_brush_batch_frame_retry_tests fatal)
+  add_executable(axiom_fc00x_runtime_composition_tests
+      tests/runtime_composition_test.cpp)
+  target_link_libraries(axiom_fc00x_runtime_composition_tests PRIVATE canvas_runtime_composition)
+  target_compile_definitions(axiom_fc00x_runtime_composition_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+  target_compile_features(axiom_fc00x_runtime_composition_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_fc00x_runtime_composition_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  else()
+    target_compile_options(axiom_fc00x_runtime_composition_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+  endif()
+  add_test(NAME FC00XRuntimeComposition COMMAND axiom_fc00x_runtime_composition_tests)
+
+  add_executable(axiom_fc00x_runtime_facade_tests
+      tests/canvas_runtime_facade_test.cpp)
+  target_link_libraries(axiom_fc00x_runtime_facade_tests PRIVATE canvas_runtime_composition)
+  target_compile_definitions(axiom_fc00x_runtime_facade_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+  target_compile_features(axiom_fc00x_runtime_facade_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_fc00x_runtime_facade_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  else()
+    target_compile_options(axiom_fc00x_runtime_facade_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+  endif()
+  add_test(NAME FC00XRuntimeFacade COMMAND axiom_fc00x_runtime_facade_tests)
+endif()

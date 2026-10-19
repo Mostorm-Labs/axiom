@@ -1,0 +1,118 @@
+{
+  "baseline_revision": "f1d72f22ad20209c8ccdbdd7474d86c651434914",
+  "result_revision": "b68e8f9f2c1bca65277f832dd78193f4ae0e2c0f",
+  "repository": "github:Mostorm-Labs/axiom",
+  "execution_branch": "codex/p32-windows-minimal-touch",
+  "result_ref": "https://github.com/Mostorm-Labs/axiom/commit/b68e8f9f2c1bca65277f832dd78193f4ae0e2c0f",
+  "evidence_materialization": "Containing evidence commit; exact ref returned in chat after push.",
+  "status": "WINDOWS_MSVC_AUTOMATION_VERIFIED_PHYSICAL_PENDING",
+  "captured_at": "2026-10-19T12:27:26.540273+08:00",
+  "launch": {
+    "source_revision": "b68e8f9f2c1bca65277f832dd78193f4ae0e2c0f",
+    "exe_path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-touch\\build\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe",
+    "exe_sha256": "6f9d85b1cbcc276b8821721d5269d2f4fcee325f9cddef15b3e202f8cf1e7bdb",
+    "pid": 15820,
+    "process_path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-touch\\build\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe",
+    "process_sha256": "6f9d85b1cbcc276b8821721d5269d2f4fcee325f9cddef15b3e202f8cf1e7bdb",
+    "wait_for_input_idle": true,
+    "debug_ui_compiled": true,
+    "debug_ui_visible": "not_observed_pending_user_F12",
+    "log_path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-touch\\native-input.log",
+    "launched_at": "2026-10-19T12:24:42.6218798+08:00"
+  },
+  "source_files": [
+    "apps/minimal_runtime_host/CMakeLists.txt",
+    "apps/minimal_runtime_host/tests/windows_surface_binding_test.cpp",
+    "apps/minimal_runtime_host/tests/windows_touch_pipeline_test.cpp",
+    "apps/minimal_runtime_host/windows_main.cpp",
+    "apps/minimal_runtime_host/windows_pointer_input.inl",
+    "runtime/composition/CMakeLists.txt",
+    "runtime/composition/include/canvas/runtime/runtime_composition.hpp",
+    "runtime/composition/src/runtime_composition.cpp",
+    "runtime/composition/tests/brush_batch_frame_retry_test.cpp",
+    "runtime/input/src/platform_interaction_ingress.cpp",
+    "runtime/input/tests/platform_interaction_ingress_test.cpp",
+    "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "runtime/render/src/skia_headless_backend.cpp"
+  ],
+  "runtime_assets": {
+    "icudtl.dat": "9f48c7f9c7c94d516a14870707e910ab94d75ae640ff6842c4af53276cd26ebe"
+  },
+  "tests": {
+    "junit": "logs/selected-tests.xml",
+    "per_test_results": "test-results.md",
+    "commands": "facts/selected-commands.json",
+    "physical_matrix": "manual-matrix.md"
+  },
+  "clang": {
+    "unfiltered": "FAIL_PREEXISTING_OUT_OF_SCOPE",
+    "location": "runtime/foundation/include/canvas/foundation/stable_order_key.hpp:29",
+    "raw_evidence": "logs/clang-unfiltered-fail.log",
+    "changed_translation_units_with_exact_unchanged_header_filter": "PASS",
+    "full_unfiltered_clang_pass_claimed": false
+  },
+  "diagnostic_history": [
+    {
+      "id": "Windows pointer 入口",
+      "observed": "expected=1 actual=0",
+      "observed_status": "FAIL",
+      "regression_status": "PASS",
+      "red_log": "logs/touch-red.log"
+    },
+    {
+      "id": "混合 source batch",
+      "observed": "接纳了混合 batch 的 Down",
+      "observed_status": "FAIL",
+      "regression_status": "PASS",
+      "red_log": "logs/regression-red2.log"
+    },
+    {
+      "id": "旧 generation/native cancel",
+      "observed": "旧取消结束了复用后的 pointer",
+      "observed_status": "FAIL",
+      "regression_status": "PASS",
+      "red_log": "logs/regression-red2.log"
+    },
+    {
+      "id": "取消后的相机基线",
+      "observed": "新手势 scale 跳变",
+      "observed_status": "FAIL",
+      "regression_status": "PASS",
+      "red_log": "logs/regression2.log"
+    },
+    {
+      "id": "缺失设备压力",
+      "observed": "missing-pressure policy expected=.5 actual=0",
+      "observed_status": "FAIL",
+      "regression_status": "PASS",
+      "red_log": "logs/pressure-red.log"
+    },
+    {
+      "id": "失败鼠标 Down/capture",
+      "observed": "GetCapture 仍是 owner",
+      "observed_status": "FAIL",
+      "regression_status": "PASS",
+      "red_log": "logs/mouse-capture-red.log"
+    },
+    {
+      "id": "真实 192 DPI 启动",
+      "observed": "首帧持续 invalid transform or clip",
+      "observed_status": "FAIL",
+      "regression_status": "PASS",
+      "red_log": "logs/native-stderr-first-fail.log"
+    },
+    {
+      "id": "D3D12 fractional clip oracle",
+      "observed": "progressed=0 canonical=0",
+      "observed_status": "FAIL",
+      "regression_status": "PASS",
+      "red_log": "logs/fractional-red.log"
+    }
+  ],
+  "remaining_blockers": [
+    "用户尚未逐项完成人工触摸/视觉矩阵，保持 PHYSICAL_PENDING。",
+    "原始 Clang /WX 被未改动的 foundation header 告警阻断；未扩大修复范围。"
+  ],
+  "needs_next_windows_input_narrow_fix": "尚无自动回归失败；由人工矩阵决定。",
+  "gate_or_phys_pass_claimed": false
+}

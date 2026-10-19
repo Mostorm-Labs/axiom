@@ -1,0 +1,4 @@
+PASS E04 indexed viewport/linear target ids, five presets, preview/guide/final matrix cases=360
+[axiom] present begin frame=1 objects=1 scene_records=1
+diagnostic equal id=1 kind=1 version=1 placement=1 transform=1 content=1 propcount=2/3 foundprops=256,257, previewprops=3,256,257, properties=0 masks=1
+Assertion failed: found!=objects.end() && *found==preview.record, file C:\Users\Chado\.codex\worktrees\fc-01-creation-tools-p32\canvas\apps\ink_playground\tests\fc01_snap_creation_differential_test.cpp, line 357

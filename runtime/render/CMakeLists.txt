@@ -7,10 +7,12 @@ add_library(canvas_runtime_render STATIC
     src/visibility_resolver.cpp
     src/direct_reference_source.cpp
     src/frame_plan.cpp
+    src/editing_overlay.cpp
     src/render_backend.cpp
     src/surface_lifecycle.cpp
     src/render_target.cpp
     src/runtime_app_binding.cpp
+    src/runtime_frame_coordinator.cpp
     src/presentation_tracker.cpp
     src/canonical_handoff.cpp
     src/preview_surface.cpp)
@@ -82,17 +84,21 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
     add_dependencies(canvas_runtime_render canvas_chalk_texture_assets)
     target_include_directories(canvas_runtime_render PRIVATE "${CANVAS_CHALK_GENERATED_DIR}")
     target_sources(canvas_runtime_render PRIVATE src/skia_headless_backend.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/image_resource.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_text_resources.cpp)
     target_sources(canvas_runtime_render PRIVATE src/brush_outline_skia_path.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_scene_renderer.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_renderer.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_brush_renderer.cpp)
-    target_link_libraries(canvas_runtime_render PRIVATE CanvasSkia::Skia)
+    target_link_libraries(canvas_runtime_render PRIVATE CanvasSkia::Skia CanvasSkia::Paragraph)
     target_compile_definitions(canvas_runtime_render PUBLIC CANVAS_RENDER_HAS_SKIA=1)
 endif()
 target_include_directories(canvas_runtime_render PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/runtime/scene/include
+    ${PROJECT_SOURCE_DIR}/runtime/text/include)
 target_link_libraries(canvas_runtime_render PUBLIC
     canvas_runtime_foundation canvas_runtime_semantic canvas_runtime_scene
     canvas_runtime_ink canvas_runtime_input)
@@ -100,6 +106,7 @@ target_compile_features(canvas_runtime_render PUBLIC cxx_std_20)
 
 if(MSVC)
     target_compile_options(canvas_runtime_render PRIVATE /W4 /permissive- /WX /EHsc)
+    target_compile_options(canvas_runtime_render PRIVATE /wd4702)
 else()
     target_compile_options(canvas_runtime_render PRIVATE -Wall -Wextra -Wpedantic -Werror)
     if(EMSCRIPTEN)
@@ -109,6 +116,33 @@ else()
 endif()
 
 if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_image_resource_tests tests/image_resource_test.cpp)
+    target_link_libraries(axiom_image_resource_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_image_resource_tests PRIVATE cxx_std_20)
+    target_compile_definitions(axiom_image_resource_tests PRIVATE
+      G47_IMAGE_FIXTURE="${PROJECT_SOURCE_DIR}/verification/fixtures/g47/image-stripes.png")
+    if(MSVC)
+      target_compile_options(axiom_image_resource_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_image_resource_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+    endif()
+    add_test(NAME G47ImageResource COMMAND axiom_image_resource_tests)
+    add_executable(axiom_text_pipeline_tests tests/text_pipeline_test.cpp)
+    target_link_libraries(axiom_text_pipeline_tests PRIVATE canvas_runtime_render)
+    target_include_directories(axiom_text_pipeline_tests PRIVATE ${PROJECT_SOURCE_DIR}/runtime/scene/tests)
+    target_compile_definitions(axiom_text_pipeline_tests PRIVATE G47_LATIN_FONT="${CanvasSkia_FONT_PATH}")
+    if(MSVC)
+      target_compile_options(axiom_text_pipeline_tests PRIVATE /UNDEBUG)
+    else()
+      target_compile_options(axiom_text_pipeline_tests PRIVATE -UNDEBUG)
+    endif()
+    if(WIN32 AND CanvasSkia_ICU_DATA_PATH)
+      add_custom_command(TARGET axiom_text_pipeline_tests POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CanvasSkia_ICU_DATA_PATH}"
+          "$<TARGET_FILE_DIR:axiom_text_pipeline_tests>/icudtl.dat")
+    endif()
+    add_test(NAME G47TextPipeline COMMAND axiom_text_pipeline_tests)
+
     add_executable(axiom_render_brush_outline_skia_path_tests
         tests/brush_outline_skia_path_test.cpp)
     target_link_libraries(axiom_render_brush_outline_skia_path_tests
@@ -209,6 +243,17 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
       target_compile_options(axiom_runtime_app_binding_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
     endif()
     add_test(NAME G3RuntimeAppBinding COMMAND axiom_runtime_app_binding_tests)
+
+    add_executable(axiom_runtime_isolation_tests
+        tests/runtime_isolation_test.cpp)
+    target_link_libraries(axiom_runtime_isolation_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_runtime_isolation_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_runtime_isolation_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_runtime_isolation_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME FC00XRuntimeIsolation COMMAND axiom_runtime_isolation_tests)
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
@@ -241,9 +286,21 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEA
             PRIVATE -Wall -Wextra -Wpedantic -Werror)
     endif()
     add_test(NAME G3HeadlessSkia COMMAND axiom_render_headless_skia_tests)
+    add_test(NAME FC01TriangleConnectorRaster COMMAND axiom_render_headless_skia_tests fc01)
 endif()
 
 if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
+    add_executable(axiom_runtime_frame_coordinator_tests
+        tests/runtime_frame_coordinator_test.cpp)
+    target_link_libraries(axiom_runtime_frame_coordinator_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_runtime_frame_coordinator_tests PRIVATE cxx_std_20)
+    if(MSVC)
+      target_compile_options(axiom_runtime_frame_coordinator_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+      target_compile_options(axiom_runtime_frame_coordinator_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+    endif()
+    add_test(NAME FC00XFrameCoordinator COMMAND axiom_runtime_frame_coordinator_tests)
+
     add_executable(axiom_render_target_tests tests/render_target_test.cpp)
     target_link_libraries(axiom_render_target_tests PRIVATE canvas_runtime_render)
     target_compile_features(axiom_render_target_tests PRIVATE cxx_std_20)
@@ -309,13 +366,24 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
 
     if(MSVC)
         target_compile_options(axiom_render_frame_state_tests
-            PRIVATE /W4 /permissive- /WX /EHsc)
+            PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
     else()
         target_compile_options(axiom_render_frame_state_tests
-            PRIVATE -Wall -Wextra -Wpedantic -Werror)
+            PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
     endif()
 
     add_test(NAME G3FrameState COMMAND axiom_render_frame_state_tests)
+
+    add_executable(axiom_render_editing_overlay_tests
+        tests/editing_overlay_test.cpp)
+    target_link_libraries(axiom_render_editing_overlay_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_render_editing_overlay_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_render_editing_overlay_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_render_editing_overlay_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    endif()
+    add_test(NAME G46EditingOverlay COMMAND axiom_render_editing_overlay_tests)
 
     add_executable(axiom_render_visibility_tests
         tests/visibility_resolver_test.cpp)

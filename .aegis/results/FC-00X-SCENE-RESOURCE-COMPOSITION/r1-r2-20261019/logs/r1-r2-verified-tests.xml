@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="25"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="2"
+	timestamp="2026-10-19T02:01:15"
+	>
+	<testcase name="DUIM1Control" classname="DUIM1Control" time="0.0233468" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="F08FrameQualificationBoundary" classname="F08FrameQualificationBoundary" time="0.0915407" status="run">
+		<properties/>
+		<system-out>F08 GREEN
+</system-out>
+	</testcase>
+	<testcase name="G4InteractionSessionManager" classname="G4InteractionSessionManager" time="0.024346" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4SelectionSession" classname="G4SelectionSession" time="0.0235143" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4TransformSession" classname="G4TransformSession" time="0.0242749" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G46TransformHandleDrag" classname="G46TransformHandleDrag" time="0.0228565" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4EraserSession" classname="G4EraserSession" time="0.0259531" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3RuntimeAppBinding" classname="G3RuntimeAppBinding" time="0.0740231" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC00XRuntimeIsolation" classname="FC00XRuntimeIsolation" time="0.0741398" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC00XFrameCoordinator" classname="FC00XFrameCoordinator" time="0.0572722" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3RenderTargetSwitching" classname="G3RenderTargetSwitching" time="0.0534223" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3SkiaSurfaceProvider" classname="G3SkiaSurfaceProvider" time="0.102294" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3PreviewSurface" classname="G3PreviewSurface" time="0.0830147" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3SurfacePresentation" classname="G3SurfacePresentation" time="0.0895935" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3FrameState" classname="G3FrameState" time="0.0618722" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4CanonicalHandoff" classname="G4CanonicalHandoff" time="0.0859839" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC00XRuntimeComposition" classname="FC00XRuntimeComposition" time="0.155537" status="run">
+		<properties/>
+		<system-out>SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\p32-f08-msvc1951\runtime\composition\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\p32-f08-msvc1951\runtime\composition\icudtl.dat.
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=3 objects=0 scene_records=0
+[axiom] present begin frame=4 objects=0 scene_records=0
+[axiom] present begin frame=5 objects=0 scene_records=0
+[axiom] present begin frame=...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC00XRuntimeFacade" classname="FC00XRuntimeFacade" time="0.164861" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC00XS2WindowsSurfaceBinding" classname="FC00XS2WindowsSurfaceBinding" time="0.325306" status="run">
+		<properties/>
+		<system-out>SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\p32-f08-msvc1951\apps\minimal_runtime_host\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\p32-f08-msvc1951\apps\minimal_runtime_host\icudtl.dat.
+[d3d12] resize owner=1 old=0x0 new=256x256 gen=0\n[d3d12] resize ready owner=1 gen=1\n[d3d12] resize owner=0 old=0x0 new=256x256 gen=0\n[d3d12] resize ready owner=0 gen=1\n[d3d12] resize owner=1 old=256x256 new=320x240 gen=1\n[d3d12] resize ready owner=1 gen=2\n[d3d12] resize owner=1 old=320x240 new=320x240 gen=2\n[d3d12] resize ready owner=1 gen=3\n[d3d12] resize owner=0 old=256x256 new=320x240 gen=1\n[d3d12] resize ready owner=0 gen=2\n[d3d12] resize owner=1 old=0x0 new=320x240 gen=0\n[d3d12] resize ready owner=1 gen=1\n[axiom] present begin frame=1 objects=0 scene_records=0
+S2 native D3D12 pair: prepared adopt, metrics-only reuse, destructive failure, Lost/recovery, replac...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC00XMinimalRuntimeHost" classname="FC00XMinimalRuntimeHost" time="0.12514" status="run">
+		<properties/>
+		<system-out>SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\p32-f08-msvc1951\apps\minimal_runtime_host\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\p32-f08-msvc1951\apps\minimal_runtime_host\icudtl.dat.
+[axiom] present begin frame=7 objects=1 scene_records=1
+[axiom] present begin frame=8 objects=1 scene_records=1
+</system-out>
+	</testcase>
+	<testcase name="FC00XMinimalPresentationCache" classname="FC00XMinimalPresentationCache" time="0.0234516" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="PX0Workbench" classname="PX0Workbench" time="0.0397875" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="DUIM1PanelModel" classname="DUIM1PanelModel" time="0.0224986" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="PX0ControlRouter" classname="PX0ControlRouter" time="0.111116" status="run">
+		<properties/>
+		<system-out>SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\p32-f08-msvc1951\debug_ui\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\p32-f08-msvc1951\debug_ui\icudtl.dat.
+</system-out>
+	</testcase>
+	<testcase name="G3WebSurfaceHost" classname="G3WebSurfaceHost" time="0.086169" status="run">
+		<properties/>
+		<system-out>SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\p32-f08-msvc1951\apps\axiom_canvas_demo\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\p32-f08-msvc1951\apps\axiom_canvas_demo\icudtl.dat.
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=3 objects=0 scene_records=0
+[axiom] present begin frame=4 objects=0 scene_records=0
+[axiom] present begin frame=5 objects=0 scene_records=0
+[axiom] present be...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

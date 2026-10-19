@@ -1,0 +1,662 @@
+{
+  "source_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+  "working_tree_changes": [],
+  "probe_sha256": "29915e04f88e29cc909abd75ec0c36d5afe294837b7bbe685f017e66dabdc00b",
+  "frozen_manifest_sha256": "f1b8d1fc9f8398bd06db15bd681cfca9f8dd65b52ace74ef2ada451e81c22ecc",
+  "cases": [
+    {
+      "id": "SH2-G15-ShapeContent",
+      "root_type": "ShapeContent",
+      "basis": "frozen manifest raw bytes/hash",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G15-ShapeContent.bin"
+      ],
+      "input_sha256": "c882e59071d419f7db2d7209bb674979beca61dea5cb39a7bc6fd272a8f334c1",
+      "bytes": 20,
+      "expected_accepted": true,
+      "actual": {
+        "accepted": true,
+        "canonicality": "NON_CANONICAL_INPUT",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0803110000000000005940190000000000005440",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G15-ObjectRecord",
+      "root_type": "ObjectRecord",
+      "basis": "frozen manifest raw bytes/hash",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ObjectRecord",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G15-ObjectRecord.bin"
+      ],
+      "input_sha256": "b375c7c0c6731ecbbc5137809b212e46af967d3856f35bbb228e85a74d900afc",
+      "bytes": 113,
+      "expected_accepted": true,
+      "actual": {
+        "accepted": true,
+        "canonicality": "NON_CANONICAL_INPUT",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0a120a100000000000000000000000000000000110011802220512030a01802a3609000000000000f03f11000000000000000019000000000000000021000000000000f03f29000000000000000031000000000000000032003a160a140803110000000000005940190000000000005440",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G15-Operation",
+      "root_type": "Operation",
+      "basis": "frozen manifest raw bytes/hash",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "Operation",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G15-Operation.bin"
+      ],
+      "input_sha256": "64232960c062798d18919528a0468a2eac70384650a4320171b8c49d48ddbb24",
+      "bytes": 163,
+      "expected_accepted": true,
+      "actual": {
+        "accepted": true,
+        "canonicality": "NON_CANONICAL_INPUT",
+        "stage": "CANONICAL_ENCODE",
+        "category": "",
+        "canonicalHex": "0a120a100000000000000000000000000000000212120a1000000000000000000000000000000003180120012a750a730a710a120a100000000000000000000000000000000110011802220512030a01802a3609000000000000f03f11000000000000000019000000000000000021000000000000f03f29000000000000000031000000000000000032003a160a140803110000000000005940190000000000005440",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G11-missing-1",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G11 required scalar presence",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G11-missing-1.bin"
+      ],
+      "input_sha256": "9e71f7e1a1482b6fb27bf95fd03dc9d2a40afc162fd878d63fed8103e2eb20de",
+      "bytes": 18,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G11-missing-2",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G11 required scalar presence",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G11-missing-2.bin"
+      ],
+      "input_sha256": "a90e0e89251057d18b858bfdbab1f6b53a7c324e000161294fa65f3bb6647197",
+      "bytes": 11,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G11-missing-3",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G11 required scalar presence",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G11-missing-3.bin"
+      ],
+      "input_sha256": "9c054254cd99e80765fefb6935043d0bca8464392b9f90c73333a4dbede64313",
+      "bytes": 11,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G25-duplicate-1",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G25 duplicate singular",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G25-duplicate-1.bin"
+      ],
+      "input_sha256": "76606e724f24784ef3f88e31decbea8cef2b3f1967e5ff8761b0559edf12f121",
+      "bytes": 22,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "WIRE_PREFLIGHT",
+        "category": "MALFORMED_WIRE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G25-duplicate-2",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G25 duplicate singular",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G25-duplicate-2.bin"
+      ],
+      "input_sha256": "34b628807b550ef3080b02780c3c7a9d77777efa32fe87f4d2b59658635442ba",
+      "bytes": 29,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "WIRE_PREFLIGHT",
+        "category": "MALFORMED_WIRE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G25-duplicate-3",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G25 duplicate singular",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G25-duplicate-3.bin"
+      ],
+      "input_sha256": "a4ab154c6a659b72a282385b818f78656c17f6de3d9f7e79bdc541a9a8ab2c0c",
+      "bytes": 29,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "WIRE_PREFLIGHT",
+        "category": "MALFORMED_WIRE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G25-unknown",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G25 unknown field",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G25-unknown.bin"
+      ],
+      "input_sha256": "7e98ffbab861cbc3c007d4bf7e9fa917a4d884195354ae38ed25fbb0d285b7c1",
+      "bytes": 22,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "WIRE_PREFLIGHT",
+        "category": "MALFORMED_WIRE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G25-truncated",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G25 malformed wire",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G25-truncated.bin"
+      ],
+      "input_sha256": "e8396e1945c8a5b0140d88d3d418b2baf854fad8f92f2ae4aa9ca4daa92c0712",
+      "bytes": 19,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "WIRE_PREFLIGHT",
+        "category": "MALFORMED_WIRE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G09-G10-2-zero",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G09/G10 positive finite extent",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G09-G10-2-zero.bin"
+      ],
+      "input_sha256": "48a90988c5e92e0c08dbe32fed894b33cb07436429a2a9b5d6287074d7efa71c",
+      "bytes": 20,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G09-G10-2-negative",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G09/G10 positive finite extent",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G09-G10-2-negative.bin"
+      ],
+      "input_sha256": "843fd91ef8b5d6488798b3b54f1bb5a60854421754e4bbb07216c6c91d8a3148",
+      "bytes": 20,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G09-G10-2-negative-zero",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G09/G10 positive finite extent",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G09-G10-2-negative-zero.bin"
+      ],
+      "input_sha256": "40b419939c0a3b2b289675cf338654b8930c07efea1fb3b2e0b305c5fa45088b",
+      "bytes": 20,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G09-G10-2-nan",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G09/G10 positive finite extent",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G09-G10-2-nan.bin"
+      ],
+      "input_sha256": "8b193fe248fc5414263c6a1b7084cd1c2cf379ad627bdb003e73cab1a7e6ea2f",
+      "bytes": 20,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G09-G10-2-infinity",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G09/G10 positive finite extent",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G09-G10-2-infinity.bin"
+      ],
+      "input_sha256": "4cc5f5ba49d89fd3a6f0e7918a6f312c53c51e6c00daae5d18bf30db57b4e2a1",
+      "bytes": 20,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G09-G10-3-zero",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G09/G10 positive finite extent",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G09-G10-3-zero.bin"
+      ],
+      "input_sha256": "b3e897c3f280212445f8c67aa0458f8cf95ef0b7d7384f1880f221ff6dbb8c29",
+      "bytes": 20,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G09-G10-3-negative",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G09/G10 positive finite extent",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G09-G10-3-negative.bin"
+      ],
+      "input_sha256": "9e71f39f842f3e48d703557bb3c0c5663bb3841bbbdb8b455bc4072cd12beafd",
+      "bytes": 20,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G09-G10-3-negative-zero",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G09/G10 positive finite extent",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G09-G10-3-negative-zero.bin"
+      ],
+      "input_sha256": "43842950078e72f3813aad26571d139bcac36bce229519f3a4ffb3e754aae046",
+      "bytes": 20,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G09-G10-3-nan",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G09/G10 positive finite extent",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G09-G10-3-nan.bin"
+      ],
+      "input_sha256": "827a5f2e3f18d387e3e3a4e54ffb1bbe619b962398e627f51437c8f98e9ced2d",
+      "bytes": 20,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G09-G10-3-infinity",
+      "root_type": "ShapeContent",
+      "basis": "SH2-G09/G10 positive finite extent",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ShapeContent",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G09-G10-3-infinity.bin"
+      ],
+      "input_sha256": "295f4cfd45d6e47ef07dc72d71745db17b5254d027bbc4585e83bc9949433380",
+      "bytes": 20,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G06-G08-version-1",
+      "root_type": "ObjectRecord",
+      "basis": "Shape1/kind3 and unknown Shape3 reject",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ObjectRecord",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G06-G08-version-1.bin"
+      ],
+      "input_sha256": "76bc820b9768c1aa5eca388c6517a5f4233dfe2c097fba1ab4516e4554a59a5e",
+      "bytes": 113,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-G06-G08-version-3",
+      "root_type": "ObjectRecord",
+      "basis": "Shape1/kind3 and unknown Shape3 reject",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "ObjectRecord",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-G06-G08-version-3.bin"
+      ],
+      "input_sha256": "766ace6e5da3b184c30ddf0a3dc0a1ebc7992b3731874d29c0953afc87ea1b45",
+      "bytes": 113,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_SEMANTIC_VALUE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-envelope-3-v2",
+      "root_type": "Operation",
+      "basis": "FC01-B01 Operation/payload remain v1",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "Operation",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-envelope-3-v2.bin"
+      ],
+      "input_sha256": "eea32aca5cd5257b7190c1897cb2476445c4e15ad7474f8fa44080deebe80049",
+      "bytes": 163,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_ENVELOPE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    },
+    {
+      "id": "SH2-envelope-4-v2",
+      "root_type": "Operation",
+      "basis": "FC01-B01 Operation/payload remain v1",
+      "command": [
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\build\\runtime\\semantic\\tools\\canvas_semantic_golden_probe.exe",
+        "--root-type",
+        "Operation",
+        "--input",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01-closeout\\committed-wire\\SH2-envelope-4-v2.bin"
+      ],
+      "input_sha256": "55b5e18d19e307d24bef16c87338235fb8a56f22a343a32b7d512534dcc77bb7",
+      "bytes": 163,
+      "expected_accepted": false,
+      "actual": {
+        "accepted": false,
+        "canonicality": "CANONICAL",
+        "stage": "VALIDATE",
+        "category": "INVALID_ENVELOPE",
+        "canonicalHex": "",
+        "semanticProjection": null
+      },
+      "exit_code": 0,
+      "stderr": "",
+      "result": "PASS"
+    }
+  ],
+  "status": "PASS",
+  "full_SH2_G01_to_G25_claim": false,
+  "physical_claim": false,
+  "gate_claim": null
+}

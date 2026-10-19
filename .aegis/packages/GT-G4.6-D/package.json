@@ -1,0 +1,26 @@
+{
+  "format": "aegis-execution-package-v1",
+  "task_id": "GT-G4.6-D",
+  "title": "G4.6 Debug UI Control Surface + Selection Host Integration",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "execution_ref": "codex/g4-6-d-debug-ui-selection",
+  "task_anchor": {
+    "revision": "38c3f0b3b7b635abec8e41bc578131b6c47117b3",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "predecessor_requirements": [
+    "GT-G4.6-A implementation result is in ancestry; this package must preserve its accepted presentation seams"
+  ],
+  "authority_lock_ref": { "path": "authority.lock.json" },
+  "verification_lock_ref": { "path": "verification.lock.json" },
+  "execution_contract_ref": { "path": "execution-contract.json" },
+  "evidence_contract_ref": { "path": "evidence-contract.json" }
+}

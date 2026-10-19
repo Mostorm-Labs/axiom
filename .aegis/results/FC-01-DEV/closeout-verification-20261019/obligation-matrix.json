@@ -1,0 +1,180 @@
+[
+  {
+    "id": "E01",
+    "obligation_id": "FC01-B01",
+    "status": "PARTIAL_CURRENT_BOUND",
+    "requirement": "Admit only exact Shape/1 Rectangle/Ellipse and Shape/2 Triangle tuple, preserve V1 SH-G06 REJECT, canonical Operation1/payload1/Brush2 exception, byte presence and whole-batch reject",
+    "expected": "All required SH2 positive/negative cases exact, raw ShapeContent 20B/ObjectRecord 113B/InsertOperation 163B SHA256 match, old SH-G06 and Brush2 negatives preserved, no fallback or partial commit",
+    "actual": "Exact three frozen wire vectors, strict malformed/presence negatives, version/extent/oneof atomic admission on reference/indexed stores, all ApplySource lanes.",
+    "independent_oracle": "Independently authored strict wire parser/manual tuple reference vs production codec and typed semantic entry; immutable decoded-hex SH2-G15 and historical V1 expected; check ledger/store/generation zero on reject",
+    "evidence_refs": [
+      "wire/result.json",
+      "native/ctest.xml"
+    ],
+    "remaining_detection_gap": "Complete cross-family SH2-G01..25 and historical SH-G01..18 execution mapping remains partial; 25 wire checks are not the 25 full SH2 scenarios.",
+    "full_obligation_closed_claim": false,
+    "result_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+    "physical_claim": false,
+    "gate_claim": null
+  },
+  {
+    "id": "E02",
+    "obligation_id": "FC01-B02",
+    "status": "PARTIAL_CURRENT_BOUND",
+    "requirement": "All typed/wire/restore/replay/remote paths share A+B validation and idempotent one-operation atomic apply; Triangle Snapshot2 requires explicit reader capability and old writers refuse lossy access",
+    "expected": "Exact allowed entry behavior; same-id same-payload AlreadyApplied no second generation/ChangeSet, same-id altered payload collision; Snapshot1 Triangle REJECT, capable Snapshot2 roundtrip, incompatible session refusal, failed Replay never READY",
+    "actual": "Snapshot1 Triangle rejection, Snapshot2 capability roundtrip, legacy snapshot preservation, typed/restore/replay/remote negatives, idempotency/collision and atomicity.",
+    "independent_oracle": "Independent ReferenceObjectStore+ledger reducer, capability profile table, replay Loading private-state observer and mixed valid/invalid batch; compare before/after",
+    "evidence_refs": [
+      "native/ctest.xml"
+    ],
+    "remaining_detection_gap": "No source-qualified live mixed-writer/reader session-admission scenario. Snapshot reader refusal alone does not prove live host/collaboration admission. Need an existing authorized integration owner/seam; no new peer registry invented.",
+    "full_obligation_closed_claim": false,
+    "result_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+    "physical_claim": false,
+    "gate_claim": null
+  },
+  {
+    "id": "E03",
+    "obligation_id": "FC01-B03",
+    "status": "BEHAVIOR_GREEN_HISTORICAL_ORDER_BLOCKED",
+    "requirement": "One confirmed Create gesture maps to at most one Insert, pre-submit cancel makes zero Operation and sourceLost(A) does not cancel B",
+    "expected": "Baseline RED-01 fails expected B-alive oracle before code edits; candidate isolates A/B, duplicate Up/late ACK/tool switch and invalid-extents produce exact 0/1 unique commits with no ghost sessions",
+    "actual": "Anchored source-loss oracle RED and current candidate GREEN, source/pointer reuse, Create terminal/preview and continuous Arrow/Line cases.",
+    "independent_oracle": "Deterministic two-source PointerKey/session schedule with independent ledger+object counts; pre-change RED-01 proves old sourceLost global-cancel known defect",
+    "evidence_refs": [
+      "source-loss/result.json",
+      "native/ctest.xml"
+    ],
+    "remaining_detection_gap": "Original first-production-mutation-before-RED chronology cannot be repaired retrospectively. Existing corrected-order recovery is preserved, not relabelled as original pre-change proof.",
+    "full_obligation_closed_claim": false,
+    "result_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+    "physical_claim": false,
+    "gate_claim": null
+  },
+  {
+    "id": "E04",
+    "obligation_id": "FC01-B04",
+    "status": "CURRENT_COMPARATOR_PASS_REVIEW_REQUIRED",
+    "requirement": "Far-axis visible Shape center/edge Snap uses deterministic finite-viewport candidates, logical-pixel latch/release and per-view transient preview with zero canonical side effects",
+    "expected": "Distant orthogonal candidates found, ties deterministic, hidden/invalid excluded, identical preview/Up or explicit rejection, no semantic generation/tile/Axis updates from Move/Cancel",
+    "actual": "Independent indexed/linear viewport candidate comparison and 360 camera/preset/preview/final cases, DPR thresholds, stale target fences and 100-Move negative.",
+    "independent_oracle": "Independent exhaustive viewport-limited reference candidate selector plus analytic world/logical camera projections; compare indexed query, preview/final geometry and 100-Move negative",
+    "evidence_refs": [
+      "native/ctest.xml"
+    ],
+    "remaining_detection_gap": null,
+    "full_obligation_closed_claim": false,
+    "result_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+    "physical_claim": false,
+    "gate_claim": null
+  },
+  {
+    "id": "E05",
+    "obligation_id": "FC01-B05",
+    "status": "PARTIAL_CURRENT_BOUND",
+    "requirement": "Triangle exact analytic geometry and Line/Arrow Connector/1 hit/bounds/full-vs-incremental Scene/Render parity",
+    "expected": "Triangle vertices (W/2,0),(W,H),(0,H), bbox center, fill/stroke/transforms exact; Connector segment/Arrow precise hit selectable; no stale bounds/Scene on accepted edits; AA-only boundary comparison within pinned 1 physical pixel",
+    "actual": "2100 independent scanline/affine Triangle hit probes, exact vertices/resized/None geometry, existing Line/Arrow probes, CPU Skia style probes and Scene regression.",
+    "independent_oracle": "Independent analytic point-in-triangle/distance-to-segment/arrowhead, ReferenceLinearIndex/FullScene differential, pinned headless CPU interior/exterior raster probes",
+    "evidence_refs": [
+      "native/ctest.xml"
+    ],
+    "remaining_detection_gap": "Full Triangle/Connector edit-specific Full-vs-Incremental and pinned render camera/DPR/AA-boundary matrices are not completely enumerated by these tests.",
+    "full_obligation_closed_claim": false,
+    "result_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+    "physical_claim": false,
+    "gate_claim": null
+  },
+  {
+    "id": "E06",
+    "obligation_id": "FC01-B06",
+    "status": "CURRENT_COMPARATOR_PASS_REVIEW_REQUIRED",
+    "requirement": "Single-Operation style/size/transform/order/lock/delete and conflict-safe Insert/Delete/Transform/Size/Patch/Placement inverse and redo in existing EditorHistory",
+    "expected": "Local accepted intent exactly one Operation, fresh Undo/Redo OperationIds, exact preimage/absent fields/closure, later dependency yields Conflict with cursor/store/ledger unchanged; visible locked selectable/unlockable",
+    "actual": "33 selected-action graphs across five presets compare full preimage/postimage, fresh Undo/Redo identities; remote child/dependent Connector/same-aspect conflicts preserve objects, counts and cursor.",
+    "independent_oracle": "Independent before/post reference graph including remote child/dependent Connector and conditional no-TOCTOU same-lane interleaving",
+    "evidence_refs": [
+      "native/ctest.xml"
+    ],
+    "remaining_detection_gap": null,
+    "full_obligation_closed_claim": false,
+    "result_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+    "physical_claim": false,
+    "gate_claim": null
+  },
+  {
+    "id": "E07",
+    "obligation_id": "FC01-B07",
+    "status": "PARTIAL_CURRENT_BOUND",
+    "requirement": "Five distinct typed CreationPresets and selected-object controls share Facade/Debug Product truth through queued owner-safe-point and revisioned snapshot",
+    "expected": "0 off-owner Apply, stale generation/control rejection, control queued not semantic applied, two views independent tool/session, no ID truncation or duplicate Debug path, clear unsupported reasons",
+    "actual": "Queued owner execution, stale selection/generation rejection, interleaved remote style merge, full 128-bit ID readback, shared RuntimeFacade/Debug UI and composition view/feedback fences.",
+    "independent_oracle": "Forced owner-phase serialized scheduler with off-owner/reentrant negative, stale CanvasTarget/Binding, independent semantic ledger and coherent full 128-bit ID readback",
+    "evidence_refs": [
+      "native/ctest.xml",
+      "web/on/browser-result.json"
+    ],
+    "remaining_detection_gap": "Full frozen owner-phase/control/readback/two-view schedule still requires a complete requirement-to-independent-oracle mapping; the browser/control subset is not asserted as the whole matrix.",
+    "full_obligation_closed_claim": false,
+    "result_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+    "physical_claim": false,
+    "gate_claim": null
+  },
+  {
+    "id": "E08",
+    "obligation_id": "FC01-B08",
+    "status": "WINDOWS_WEB_CURRENT_PASS_ANDROID_DEFERRED",
+    "requirement": "FC-01 changed Windows, Web/WASM and Android native host/bridge surfaces compile/link and satisfy common logical pointer/epoch/capture/camera semantics",
+    "expected": "All applicable supported changed host variants built and deterministic input/target/epoch scenarios match; missing required toolchain explicitly BLOCKED_ENVIRONMENT, never reported green by mock/native substitute",
+    "actual": "Real native D3D12 build/startup identity plus Web WASM builds ON/full and OFF/off; real Chrome scripted regression passes in both variants.",
+    "independent_oracle": "Exact target build+link with native/TS/WASM/JNI deterministic host samples, independent viewport math and precision tokens; platform-native physical-only risks logged separately",
+    "evidence_refs": [
+      "native-startup/native-startup.json",
+      "web/on/artifacts.json",
+      "web/off/artifacts.json",
+      "web/on/browser-result.json",
+      "web/off/browser-result.json"
+    ],
+    "remaining_detection_gap": "Android stays BLOCKED_ENVIRONMENT_ANDROID_DEFERRED under prior user direction. No Android run, waiver, physical acceptance or full-profile closure added.",
+    "full_obligation_closed_claim": false,
+    "result_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+    "physical_claim": false,
+    "gate_claim": null
+  },
+  {
+    "id": "E09",
+    "obligation_id": "FC01-B09",
+    "status": "CURRENT_COMPARATOR_PASS_REVIEW_REQUIRED",
+    "requirement": "Canonical Applied publishes one Scene/Axis event by source, remote operations do not echo; Presented and Axis durability status never guessed from control success",
+    "expected": "0 publication for Preview/reject/AlreadyApplied, 0 remote Outbox echo, genuine current qualified Presented only, Axis pending/failed honest, Render/Axis failures do not rollback Applied",
+    "actual": "Local/Remote/Replay/AlreadyApplied/Rejected NoEcho, separate Applied/Presented/Axis states, approximate/duplicate feedback rejection, simulated exact qualified feedback, failed Axis and render retain Applied.",
+    "independent_oracle": "Independent local/remote publication recorder, qualified present feedback current-surface token and Axis provider/frontier state simulator",
+    "evidence_refs": [
+      "native/ctest.xml"
+    ],
+    "remaining_detection_gap": null,
+    "full_obligation_closed_claim": false,
+    "result_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+    "physical_claim": false,
+    "gate_claim": null
+  },
+  {
+    "id": "E10",
+    "obligation_id": "FC01-B10",
+    "status": "CURRENT_SCOPE_AUDIT_PASS_OVERALL_CLOSURE_BLOCKED",
+    "requirement": "Exact accepted Authority, P31 bindings, source subject, original negative cohorts and narrow code scope/regression preserved",
+    "expected": "Subject descends accepted FC-00 and reviewed control commit; all package refs hash-match, CI/provider subject exact, zero unauthorized Proto/old Authority/Golden/Gate changes and applicable tests pass",
+    "actual": "Exact five package bindings, trusted ancestry, current source/binary hashes, no new Authority/Golden/schema/history/Android changes, targeted regressions.",
+    "independent_oracle": "Independent Git ancestry/ref/content digest/diff audit and affected G1/G2/G3/G4/Ink/Selection/Viewport/History regression plus old V1/Brush2/Connector controls",
+    "evidence_refs": [
+      "scope-audit.json",
+      "native/result.json"
+    ],
+    "remaining_detection_gap": "Whole FC01 terminal success depends on unresolved E01/E02/E03/E05/E07/E08. This delta audit is not acceptance of every historical/inherited change.",
+    "full_obligation_closed_claim": false,
+    "result_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+    "physical_claim": false,
+    "gate_claim": null
+  }
+]

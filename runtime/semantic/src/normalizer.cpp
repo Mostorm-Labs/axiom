@@ -90,7 +90,6 @@ bool normalizePropertyValue(PropertyValue& value) {
                     },
                     item);
             }
-            return false;
         },
         value);
 }
@@ -478,6 +477,17 @@ bool normalizeOperationPayload(OperationPayload& payload) {
             } else if constexpr (std::is_same_v<Item, EditRichTextOp>) {
                 if (!validObjectId(value.object_id)) return false;
                 return normalizeRichTextDelta(value.delta);
+            } else if constexpr (std::is_same_v<Item, UpdateResourceManifestOp>) {
+                if (value.expected_manifest_revision == 0 && value.upserts.empty() && value.removes.empty() && value.reactivations.empty()) return false;
+                for (auto& entry : value.upserts) if (!normalizeResourceManifestEntry(entry)) return false;
+                std::sort(value.upserts.begin(), value.upserts.end(), [](const auto& a, const auto& b) { return a.resource_id.value < b.resource_id.value; });
+                std::sort(value.removes.begin(), value.removes.end(), [](const auto& a, const auto& b) { return a.value < b.value; });
+                std::sort(value.reactivations.begin(), value.reactivations.end(), [](const auto& a, const auto& b) { return a.entry.resource_id.value < b.entry.resource_id.value; });
+                std::sort(value.expectations.begin(), value.expectations.end(), [](const auto& a, const auto& b) { return a.resource_id.value < b.resource_id.value; });
+                for (std::size_t i = 1; i < value.upserts.size(); ++i) if (value.upserts[i-1].resource_id == value.upserts[i].resource_id) return false;
+                for (std::size_t i = 1; i < value.removes.size(); ++i) if (value.removes[i-1] == value.removes[i]) return false;
+                for (std::size_t i = 1; i < value.reactivations.size(); ++i) if (value.reactivations[i-1].entry.resource_id == value.reactivations[i].entry.resource_id) return false;
+                return true;
             } else {
                 if (!validObjectId(value.object_id)) return false;
                 return normalizeConnector(value.content);

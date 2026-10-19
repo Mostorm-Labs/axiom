@@ -133,7 +133,12 @@ ReferenceDrawList distinguishableDrawList(const FrameState& frame) {
             break;
         case ObjectKind::kImage: command = ImageReferenceCommand{std::get<ImageContent>(record.content)}; break;
         case ObjectKind::kVectorPath: command = VectorPathReferenceCommand{std::get<VectorPathContent>(record.content)}; break;
-        case ObjectKind::kRichText: command = RichTextReferenceCommand{std::get<RichTextContent>(record.content)}; break;
+        case ObjectKind::kRichText:
+            command = RichTextReferenceCommand{
+                .content = std::get<RichTextContent>(record.content),
+                .layout = nullptr,
+            };
+            break;
         case ObjectKind::kVectorStroke: command = VectorStrokeReferenceCommand{std::get<VectorStrokeContent>(record.content)}; break;
         case ObjectKind::kDabStroke: command = DabStrokeReferenceCommand{std::get<DabStrokeContent>(record.content)}; break;
         case ObjectKind::kConnector: command = ConnectorReferenceCommand{std::get<ConnectorContent>(record.content)}; break;

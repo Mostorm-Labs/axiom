@@ -1,0 +1,47 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "stage": "P31_TASK_PACKAGE_RECONCILIATION",
+  "package_id": "PX0-05-P31-v0.4",
+  "prior_package_id": "PX0-05-P31-v0.3",
+  "source_p34_materialization_ref": "6f703b60cbcc7ea3587b946d5c2962bf1e8db59b",
+  "accepted_resume_cursor": {
+    "execution_ref": "codex/px0-05-existing-capability-migration",
+    "revision": "9c5e3587358ad982ddab56ca2369cd285e330c5d"
+  },
+  "defect_classification": {
+    "type": "TASK_PACKAGE_DEFECT",
+    "issue": "PX0RuntimeFacadeContract was frozen as blocking evidence while debug_ui/tests/runtime_contract_test.cpp, whose pre-existing aggregate initializer fails under /WX, was outside authorized mutation scope."
+  },
+  "correction": {
+    "newly_authorized_source": [
+      "debug_ui/tests/runtime_contract_test.cpp"
+    ],
+    "only_allowed_source_repair": "Fully initialize ProductControlReceipt including the existing optional control field in RuntimeProbe::submitProductControl; preserve control as empty/nullopt for the non-canvas product receipt.",
+    "production_semantics_changed": false,
+    "warning_policy_changed": false,
+    "runtime_api_changed": false
+  },
+  "preserved_work": [
+    "all PX0-05 production implementation bytes at 9c5e3587358ad982ddab56ca2369cd285e330c5d",
+    "migrated Windows selection structural oracle",
+    "v0.3 owner-presence, camera draft, Surface/Axiom, Unsupported-placeholder and workspace migration work"
+  ],
+  "reverification": [
+    "PX0RuntimeFacadeContract",
+    "PX0PanelRegistry",
+    "PX0Workbench",
+    "DUI20DebugUiContracts",
+    "DUIM1PanelModel",
+    "PX0ControlRouter",
+    "PX0DebugSnapshot",
+    "DUIM1ViewControls",
+    "DUIM1RuntimeFacade",
+    "Windows/Web structural contracts",
+    "fresh RF01=ON / POC01=OFF locked native canvas_debug_ui + Windows app build",
+    "cursor-relative scope audit",
+    "git diff --check"
+  ],
+  "next_stage": "P33_RESUME_INTERRUPTED_WORK",
+  "official_gate_pass_claimed": false
+}

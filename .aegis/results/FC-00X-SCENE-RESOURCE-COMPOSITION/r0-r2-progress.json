@@ -1,0 +1,40 @@
+{
+  "schema": "fc00x-scene-resource-composition-progress-v0.1",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "observed_revision_before_commit": "1df43ee3d35fac7a2893458643dec714a3f8762d",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "IN_PROGRESS",
+  "r0": {
+    "implementation_design_preflight": "PASS_RECONCILED_AFTER_F08",
+    "package_binding": "PASS",
+    "authority_binding": "PASS",
+    "composition_red": "PASS_EXPECTED_RED",
+    "f08": "PASS_REPAIRED_DESCENDANT"
+  },
+  "r1": {
+    "status": "IMPLEMENTED",
+    "source": "runtime/composition/include/canvas/runtime/scene_adapter.hpp",
+    "owner": "existing SceneBinding + IncrementalRuntimeCoordinator",
+    "publication": "existing atomic publication gate"
+  },
+  "r2": {
+    "status": "IMPLEMENTED",
+    "source": "runtime/composition/include/canvas/runtime/resource_binding.hpp",
+    "model": "pull-plus-notify",
+    "trusted_metadata": "accepted semantic ResourceManifest",
+    "provider_bytes_authorize_themselves": false,
+    "receipt_states": ["missing", "bytes_validated", "failed", "provider_replaced"]
+  },
+  "tests": {
+    "FC00XRuntimeComposition": "PASS",
+    "FC00XMinimalRuntimeHost": "PASS",
+    "FC00XFrameCoordinator": "PASS",
+    "G3SurfacePresentation": "PASS",
+    "G3WindowsSurfaceAdapter": "PASS",
+    "G3WebSurfaceHost": "PASS"
+  },
+  "remaining": ["R3 lifecycle/isolation", "R4 Windows/Web Minimal consumers", "full protected regression matrix", "durable final evidence"],
+  "official_gate_pass_claimed": false,
+  "physical_status": "PHYSICAL_PENDING",
+  "android_status": "DEFERRED_NOT_BLOCKING"
+}

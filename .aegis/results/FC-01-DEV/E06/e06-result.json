@@ -1,0 +1,38 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B06",
+  "requirement_ref": "Selected actions and conditional history",
+  "invariant_ref": "FC01-B06",
+  "high_impact_failure_mode": "Selected actions and conditional history",
+  "residual_detection_gap": [
+    "complete delete closure, multi-selection, placement/style matrix incomplete"
+  ],
+  "independent_oracle_ref_and_sha": {
+    "focused_tests": "out/fc01/runs/i3-i4-focused-final/test.log"
+  },
+  "fixture_ref_sha": {},
+  "result_repository_revision_and_materialized_ref": {
+    "revision": "7b1facc37e7274708ece5d94665a7a18bb41bb83",
+    "materialized_ref": "7b1facc37e7274708ece5d94665a7a18bb41bb83",
+    "branch": "codex/fc-01-creation-tools-p32"
+  },
+  "binary_digest_and_profile": {},
+  "provider_run_identity": {},
+  "expected_observed_result": {
+    "creation_insert_undo_redo": "passed",
+    "remote_size_conflict": "passed",
+    "lock_control": "RED observed"
+  },
+  "first_divergence_or_null": null,
+  "pass_from_frozen_comparator": true,
+  "blocking_justification": [
+    "complete delete closure, multi-selection, placement/style matrix incomplete"
+  ],
+  "physical_claim_false": true,
+  "current_source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "qualified_for_current_result": false,
+  "carry_forward_status": "PRIOR_UNQUALIFIED_RUN_NOT_CURRENT_RESULT",
+  "materialized_ref_resolution": "Reviewer resolves this artifact at the pushed result commit; no self/future SHA asserted."
+}

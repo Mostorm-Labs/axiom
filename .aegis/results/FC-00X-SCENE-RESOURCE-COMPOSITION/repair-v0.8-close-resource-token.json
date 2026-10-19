@@ -1,0 +1,22 @@
+{
+  "schema": "fc00x-scene-composition-repair-v0.8",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "source_revision": "7019bd5fe41ad57659b35427f3f5d09b6ec7bced",
+  "fixed": [
+    "closed Runtime rejects undo/redo and all shared local history mutation entry points",
+    "closed Runtime rejects remote/restore external operations and batch semantic submission",
+    "resource completion can use an original ResourceBindingToken and rejects stale lifetime/binding completions",
+    "manifest rebind clears stale notifications and receipts so a valid notification for the new binding is not coalesced away"
+  ],
+  "verification": {
+    "FC00XRuntimeComposition": "PASS",
+    "diff_check": "PASS"
+  },
+  "remaining_blockers": [
+    "Scene public adapter is not yet the sole production consumer",
+    "resource bytes are not yet wired through image/text producers and downstream refresh",
+    "Windows/Web Minimal demos still need sustained real editing loops",
+    "Brush canonical handoff retirement remains open"
+  ],
+  "official_gate_pass_claimed": false
+}

@@ -1,0 +1,47 @@
+{
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "stage": "P32_IMPLEMENTATION",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "starting_revision": "744139e7de54af320a280f25e9f2c21539e85612",
+  "result_revision": "fea049792a26a8b5ff4f5cc0177d4eaba7e5aaae",
+  "branch": "codex/fc00x-scene-resource-composition-p32-f08-resume",
+  "materialized_ref": "fea049792a26a8b5ff4f5cc0177d4eaba7e5aaae",
+  "fixed_findings": [
+    "Web platform frame A/B mappings are retained by original platform frame identity; late or replaced feedback cannot acknowledge a newer Runtime frame.",
+    "Successful direct, metrics, and prepared-provider restore commits refresh the CanvasTargetKey and destroy the old control target, fencing queued requests.",
+    "RuntimeComposition owns preview capture/render/acknowledge sequencing through serviceFrameOpportunity and finishFrameOpportunity; Windows/Web consumers consume the opportunity and return platform presentation facts."
+  ],
+  "red_evidence": {
+    "web_ab_mapping": "old implementation accepted late A and cleared B; corrected regression is in apps/axiom_canvas_demo/tests/web_surface_host_test.cpp",
+    "restore_target": "old implementation applied queued old-target request after restore; corrected regression is in runtime/composition/tests/runtime_composition_test.cpp"
+  },
+  "tests": {
+    "command": "ctest --test-dir out/f1-f15-msvc2 -R \"DUIM1Control|FC00XRuntimeComposition|FC00XRuntimeFacade|FC00XMinimalRuntimeHost|FC00XMinimalPresentationCache|PX0Workbench|DUIM1PanelModel|PX0ControlRouter|G3WebSurfaceHost\" --output-on-failure",
+    "result": "7/7 PASS",
+    "direct_web_surface_exe": "PASS",
+    "direct_runtime_composition_exe": "PASS",
+    "debug_ui_control_exe": "PASS"
+  },
+  "builds": {
+    "windows_debug_on": {
+      "path": "out/f1-f15-msvc2/apps/minimal_runtime_host/axiom_minimal_runtime_host_windows.exe",
+      "sha256": "976c8fc0799cc9300bf6a631b2f9429137c2bf97170d759c5fabe26f5255c647"
+    },
+    "windows_debug_off": {
+      "path": "out/f1-f15-msvc-off/apps/minimal_runtime_host/axiom_minimal_runtime_host_windows.exe",
+      "sha256": "fd648187298e52e69a359c997f4fb9d37231b9e75cf04391ddb9270a1ed737ba"
+    }
+  },
+  "scope": {
+    "git_diff_check": "PASS",
+    "authority_golden_gate_phys_modified": false,
+    "android": "DEFERRED",
+    "manual_physical_observation": "PHYSICAL_PENDING",
+    "untracked_preserved": ["imgui.ini"]
+  },
+  "remaining_blockers": [
+    "No browser/WASM physical observation was performed; the configured Web launcher remains an environment concern recorded by prior review.",
+    "No manual Windows UI observation was performed."
+  ],
+  "official_gate_pass_claimed": false
+}

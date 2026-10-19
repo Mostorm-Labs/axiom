@@ -1,0 +1,25 @@
+Running main() from C:\Users\Chado\.codex\worktrees\fc-01-creation-tools-p32\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 8 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 8 tests from FC01Shape2Apply
+[ RUN      ] FC01Shape2Apply.TypedInsertUsesUniversalTupleValidation
+[       OK ] FC01Shape2Apply.TypedInsertUsesUniversalTupleValidation (4 ms)
+[ RUN      ] FC01Shape2Apply.TypedIngressChecksEnvelopeBeforeMutation
+[       OK ] FC01Shape2Apply.TypedIngressChecksEnvelopeBeforeMutation (0 ms)
+[ RUN      ] FC01Shape2Apply.TypedIngressNormalizesBeforeIdempotency
+[       OK ] FC01Shape2Apply.TypedIngressNormalizesBeforeIdempotency (0 ms)
+[ RUN      ] FC01Shape2Apply.MixedBatchRejectsAtomicallyAndFailedReplayNeverReady
+[       OK ] FC01Shape2Apply.MixedBatchRejectsAtomicallyAndFailedReplayNeverReady (0 ms)
+[ RUN      ] FC01Shape2Apply.SnapshotTriangleRequiresExplicitReaderCapability
+[       OK ] FC01Shape2Apply.SnapshotTriangleRequiresExplicitReaderCapability (0 ms)
+[ RUN      ] FC01Shape2Apply.CapableSnapshotRoundTripAndLegacyWriterRefusal
+[       OK ] FC01Shape2Apply.CapableSnapshotRoundTripAndLegacyWriterRefusal (2 ms)
+[ RUN      ] FC01Shape2Apply.FrozenIndependentOperationGoldenMatchesProductionEncoding
+[       OK ] FC01Shape2Apply.FrozenIndependentOperationGoldenMatchesProductionEncoding (0 ms)
+[ RUN      ] FC01Shape2Apply.GoldenRootsAndNestedUnknownWireFailClosed
+[       OK ] FC01Shape2Apply.GoldenRootsAndNestedUnknownWireFailClosed (0 ms)
+[----------] 8 tests from FC01Shape2Apply (8 ms total)
+
+[----------] Global test environment tear-down
+[==========] 8 tests from 1 test suite ran. (38 ms total)
+[  PASSED  ] 8 tests.

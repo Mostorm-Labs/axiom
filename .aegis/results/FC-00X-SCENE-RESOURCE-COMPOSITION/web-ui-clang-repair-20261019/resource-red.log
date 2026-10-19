@@ -1,0 +1,104 @@
+Running main() from C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = ApplyPlan.ResourceRemovalChecksEverySupportedContentReference
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ApplyPlan
+[ RUN      ] ApplyPlan.ResourceRemovalChecksEverySupportedContentReference
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(524): error: Expected equality of these values:
+  result.disposition
+    Which is: 1-byte object <00>
+  PrepareDisposition::kRejected
+    Which is: 1-byte object <02>
+Google Test trace:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(498): 4
+
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(525): error: Expected equality of these values:
+  result.error.issue
+    Which is: 1-byte object <00>
+  StatefulIssue::kInvalidReference
+    Which is: 1-byte object <05>
+Google Test trace:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(498): 4
+
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(526): error: Value of: result.plan.has_value()
+  Actual: true
+Expected: false
+Google Test trace:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(498): 4
+
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(524): error: Expected equality of these values:
+  result.disposition
+    Which is: 1-byte object <00>
+  PrepareDisposition::kRejected
+    Which is: 1-byte object <02>
+Google Test trace:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(498): 5
+
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(525): error: Expected equality of these values:
+  result.error.issue
+    Which is: 1-byte object <00>
+  StatefulIssue::kInvalidReference
+    Which is: 1-byte object <05>
+Google Test trace:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(498): 5
+
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(526): error: Value of: result.plan.has_value()
+  Actual: true
+Expected: false
+Google Test trace:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(498): 5
+
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(524): error: Expected equality of these values:
+  result.disposition
+    Which is: 1-byte object <00>
+  PrepareDisposition::kRejected
+    Which is: 1-byte object <02>
+Google Test trace:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(498): 9
+
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(525): error: Expected equality of these values:
+  result.error.issue
+    Which is: 1-byte object <00>
+  StatefulIssue::kInvalidReference
+    Which is: 1-byte object <05>
+Google Test trace:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(498): 9
+
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(526): error: Value of: result.plan.has_value()
+  Actual: true
+Expected: false
+Google Test trace:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(498): 9
+
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(524): error: Expected equality of these values:
+  result.disposition
+    Which is: 1-byte object <00>
+  PrepareDisposition::kRejected
+    Which is: 1-byte object <02>
+Google Test trace:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(498): 10
+
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(525): error: Expected equality of these values:
+  result.error.issue
+    Which is: 1-byte object <00>
+  StatefulIssue::kInvalidReference
+    Which is: 1-byte object <05>
+Google Test trace:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(498): 10
+
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(526): error: Value of: result.plan.has_value()
+  Actual: true
+Expected: false
+Google Test trace:
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\semantic\tests\apply_plan_test.cpp(498): 10
+
+[  FAILED  ] ApplyPlan.ResourceRemovalChecksEverySupportedContentReference (0 ms)
+[----------] 1 test from ApplyPlan (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (1 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] ApplyPlan.ResourceRemovalChecksEverySupportedContentReference
+
+ 1 FAILED TEST

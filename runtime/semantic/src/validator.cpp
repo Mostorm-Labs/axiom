@@ -101,6 +101,13 @@ bool validShape(const ShapeContent& value) noexcept {
            std::isfinite(value.height) && value.height > 0.0;
 }
 
+bool validShapeForVersion(const ShapeContent& value, std::uint32_t version) noexcept {
+    if (version == 1U) return validShape(value);
+    if (!std::isfinite(value.width) || value.width <= 0.0 ||
+        !std::isfinite(value.height) || value.height <= 0.0) return false;
+    return version == 2U && value.shape_kind == 3U;
+}
+
 bool validImage(const ImageContent& value) noexcept {
     if (!validId(value.resource_id.value) || !std::isfinite(value.intrinsic_width) ||
         value.intrinsic_width <= 0.0 || !std::isfinite(value.intrinsic_height) ||
@@ -420,9 +427,13 @@ bool validRichTextStep(const RichTextStep& step) noexcept {
                                  std::is_same_v<Step, SetInlineStyleStep> ||
                                  std::is_same_v<Step, SetParagraphStyleStep>) {
                 if (!validId(value.paragraph_id)) return false;
-                if constexpr (std::is_same_v<Step, SetInlineStyleStep>) return validTextStyle(value.style);
-                if constexpr (std::is_same_v<Step, SetParagraphStyleStep>) return validParagraphStyle(value.style);
-                return true;
+                if constexpr (std::is_same_v<Step, SetInlineStyleStep>) {
+                    return validTextStyle(value.style);
+                } else if constexpr (std::is_same_v<Step, SetParagraphStyleStep>) {
+                    return validParagraphStyle(value.style);
+                } else {
+                    return true;
+                }
             } else if constexpr (std::is_same_v<Step, SplitParagraphStep>) {
                 return validId(value.paragraph_id) && validId(value.new_paragraph_id);
             } else {
@@ -530,6 +541,9 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
     if (object.kind == ObjectKind::kDabStroke && object.kind_version == 2U) {
         return std::holds_alternative<DabBrushStrokeContent>(object.content);
     }
+    if (object.kind == ObjectKind::kShape && object.kind_version == 2U) {
+        return std::holds_alternative<ShapeContent>(object.content);
+    }
     if (object.kind_version != 1U) return false;
     switch (object.kind) {
         case ObjectKind::kShape:
@@ -579,7 +593,7 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
         if (!validVectorPath(path->geometry)) return false;
     }
     if (const auto* shape = std::get_if<ShapeContent>(&object.content)) {
-        if (!validShape(*shape)) return false;
+        if (!validShapeForVersion(*shape, object.kind_version)) return false;
     }
     if (const auto* image = std::get_if<ImageContent>(&object.content)) {
         if (!validImage(*image)) return false;
@@ -675,16 +689,22 @@ ValidationResult validateEnvelope(
         return {ValidationIssue::kInvalidId};
     }
     const auto isNewBrush = [](const ObjectRecord& object) noexcept {
-        return object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U &&
-               std::holds_alternative<BrushStrokeContent>(object.content);
+        return (object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U &&
+                std::holds_alternative<BrushStrokeContent>(object.content)) ||
+               (object.kind == ObjectKind::kDabStroke && object.kind_version == 2U &&
+                std::holds_alternative<DabBrushStrokeContent>(object.content));
     };
     bool containsNewBrush = false;
     bool containsLegacyStroke = false;
+    bool containsOther = false;
     const auto classify = [&](const ObjectRecord& object) noexcept {
-        containsNewBrush |= isNewBrush(object);
-        containsLegacyStroke |= object.kind == ObjectKind::kVectorStroke &&
-                                object.kind_version == 1U &&
-                                std::holds_alternative<VectorStrokeContent>(object.content);
+        const bool newBrush = isNewBrush(object);
+        const bool legacyStroke = object.kind == ObjectKind::kVectorStroke &&
+                                  object.kind_version == 1U &&
+                                  std::holds_alternative<VectorStrokeContent>(object.content);
+        containsNewBrush |= newBrush;
+        containsLegacyStroke |= legacyStroke;
+        containsOther |= !newBrush && !legacyStroke;
     };
     std::visit([&](const auto& payload) {
         using Payload = std::decay_t<decltype(payload)>;
@@ -699,7 +719,9 @@ ValidationResult validateEnvelope(
         }
     }, operation.payload);
     if (!presence.schema_version || !presence.payload_version || operation.schema_version != 1U ||
-        (operation.payload_version != 1U && !(containsNewBrush && !containsLegacyStroke && operation.payload_version == 2U))) {
+        (operation.payload_version != 1U &&
+         !(containsNewBrush && !containsLegacyStroke && !containsOther &&
+           operation.payload_version == 2U))) {
         return {ValidationIssue::kUnsupportedVersion};
     }
     return {};
@@ -779,6 +801,12 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
                 if constexpr (std::is_same_v<Payload, SetConnectorContentOp>) {
                     if (!validConnector(payload.content)) return {ValidationIssue::kInvalidLeaf};
                 }
+            } else if constexpr (std::is_same_v<Payload, UpdateResourceManifestOp>) {
+                if (payload.upserts.empty() && payload.removes.empty() && payload.reactivations.empty()) return invalidCollection();
+                if (payload.upserts.size() > kMaxKeyedBatchItems || payload.removes.size() > kMaxKeyedBatchItems || payload.reactivations.size() > kMaxKeyedBatchItems) return invalidCollection();
+                for (const auto& entry : payload.upserts) if (!validateResourceManifestEntry(entry)) return {ValidationIssue::kInvalidLeaf};
+                for (const auto& id : payload.removes) if (!validId(id.value)) return invalidCollection();
+                // Continue to the common success return below.
             } else if constexpr (std::is_same_v<Payload, AddStrokeOp>) {
                 if (!internal::validateObjectRecord(payload.object)) return invalidObjectKind();
             } else if constexpr (std::is_same_v<Payload, SplitStrokesOp>) {

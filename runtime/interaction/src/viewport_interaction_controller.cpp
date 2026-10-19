@@ -14,6 +14,7 @@ bool ViewportInteractionController::updateGesture(
   state_.scale = relative.scale * committed_.scale;
   state_.translationX = relative.scale * committed_.translationX + relative.translationX;
   state_.translationY = relative.scale * committed_.translationY + relative.translationY;
+  ++cameraGeneration_;
   return true;
 }
 
@@ -29,6 +30,7 @@ bool ViewportInteractionController::applyNavigation(
       state_.translationX -= sample.deltaX;
       state_.translationY -= sample.deltaY;
       committed_ = state_;
+      ++cameraGeneration_;
       return true;
     case ViewportNavigationKind::kCtrlWheelZoom: {
       const float factor = std::exp(-sample.deltaY * 0.01F);
@@ -38,6 +40,7 @@ bool ViewportInteractionController::applyNavigation(
       state_.translationY = sample.anchorY - ratio * (sample.anchorY - state_.translationY);
       state_.scale = next;
       committed_ = state_;
+      ++cameraGeneration_;
       return true;
     }
     case ViewportNavigationKind::kBrowserGesture: {
@@ -48,10 +51,29 @@ bool ViewportInteractionController::applyNavigation(
       state_.translationY = sample.anchorY - ratio * (sample.anchorY - state_.translationY);
       state_.scale = next;
       committed_ = state_;
+      ++cameraGeneration_;
       return true;
     }
   }
   return false;
+}
+
+bool ViewportInteractionController::setCamera(float zoom, float translationX,
+                                               float translationY) noexcept {
+  if (!std::isfinite(zoom) || !std::isfinite(translationX) ||
+      !std::isfinite(translationY) || zoom <= 0.0F) {
+    return false;
+  }
+  if (state_.scale == zoom && state_.translationX == translationX &&
+      state_.translationY == translationY) {
+    return true;
+  }
+  state_.scale = zoom;
+  state_.translationX = translationX;
+  state_.translationY = translationY;
+  committed_ = state_;
+  ++cameraGeneration_;
+  return true;
 }
 
 std::pair<float, float> ViewportInteractionController::viewToContent(
@@ -67,6 +89,7 @@ void ViewportInteractionController::reset() noexcept {
   committed_ = {};
   state_.scale = 1.0F;
   committed_.scale = 1.0F;
+  cameraGeneration_ = 1;
 }
 
 }  // namespace canvas::interaction

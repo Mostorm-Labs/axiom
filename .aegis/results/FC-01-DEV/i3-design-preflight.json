@@ -1,0 +1,37 @@
+{
+  "task_id": "FC-01",
+  "slice": "FC01-I3",
+  "status": "PRE_MUTATION_RECORDED",
+  "current_flow": {
+    "input": "PlatformPointerBatch -> InputRouter -> InkPlaygroundHost::acceptPlatformBatch",
+    "canonical_owner": "InkPlaygroundHost -> OperationEngine -> SceneCoordinator",
+    "control_owner": "CanvasRuntimeFacadeAdapter -> CanvasControlService -> CanvasControlBinding",
+    "presentation": "RenderViewRuntime::EditingOverlay and existing preview surface"
+  },
+  "target_flow": {
+    "down": "typed CreationPreset/style captured by one CreationSession and one PointerKey",
+    "move": "CreationSession produces per-view transient preview/guide only; canonical generation remains unchanged",
+    "up": "owner-safe-point validates one pending identity and submits exactly one InsertObjects operation",
+    "cancel": "clear session/overlay and submit zero operations",
+    "publication": "host publishes the current preview/guide through the existing per-view transient seam",
+    "abort": "wrong source, stale target, nonfinite or zero extent rejects and clears without mutation"
+  },
+  "affected_files": [
+    "runtime/foundation/include/canvas/runtime/canvas_control_types.hpp",
+    "runtime/interaction/include/canvas/interaction/creation_session.hpp",
+    "runtime/interaction/src/creation_session.cpp",
+    "apps/ink_playground/common/ink_playground_host.hpp",
+    "apps/ink_playground/common/ink_playground_host.cpp",
+    "apps/ink_playground/common/canvas_control_binding.cpp",
+    "apps/ink_playground/common/canvas_runtime_facade_adapter.cpp",
+    "debug_ui/**",
+    "verification/fc01/**"
+  ],
+  "oracle_mapping": ["FC01-B03", "FC01-B04", "FC01-B07"],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "physical_claim": false,
+  "gate_claim": "none"
+}

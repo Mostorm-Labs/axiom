@@ -1,0 +1,83 @@
+{
+  "schema_version": "0.1",
+  "package_id": "FC-00-LEGACY-IMPORT-P31-v0.1",
+  "task_id": "FC-00-LEGACY-IMPORT",
+  "status": "CURRENT_EXECUTABLE_P31_PACKAGE_ONLY",
+  "purpose": "One-time source-traceable first canonical v0.6 import of Axiom legacy pseudo-v0.6 Project State with 25 Gate/29 Integration identity equivalence and independent P34-bound verification.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "canonical_branch": "main",
+    "execution_ref": "codex/fc-00-legacy-import-p31"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "6fc1508f1a971abc5a90e068d0cc5f6ae82c064b",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "bbdd718e108fd048580992350cea4f4c881467fac551a1dc77dbdcde0764e543"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "73542fa569ab478b55c3d8077f50969f0298012e37ad4b06e5658b1b3d53f6f0"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "5b0efb82fa7f1aa9edba09bbbdfb2cb38e73a1fb934dc5b0b2f9e9ce2237ce1f"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "6ed4d40469dd50adef1b913a217f9b5582d637af4a0ea0569f22c7afff2f3fc1"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "aaeff1a112772f2b4a6c5e65d310fdf193e0d2974cf2c2c8c23b75f9c5d44b63"
+  },
+  "expected_crosswalk_ref": {
+    "path": "expected-crosswalk.json",
+    "sha256": "11182d2ce1ec6ab7b070b816ae14cec9358fefbdcc784b5470efdcc4cec262ac"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/FC-00-LEGACY-IMPORT/",
+    "base_revision": "6fc1508f1a971abc5a90e068d0cc5f6ae82c064b",
+    "execution_branch_ref": "refs/heads/codex/fc-00-legacy-import-p31",
+    "package_subject_revision": "resolve immutable materialized commit from GitHub ref; package cannot contain its own commit SHA"
+  },
+  "dependencies": [
+    {
+      "scope": "compatibility",
+      "authority_ref": "https://app.notion.com/p/3f64c57a590c8178bb0ce21304969491",
+      "revision": "2026-10-11T14:03:31.165Z",
+      "status": "ACCEPTED_SCOPE_LIMITED"
+    },
+    {
+      "scope": "verification",
+      "verification_ref": "https://app.notion.com/p/3f64c57a590c8174b2bec34724a8131d",
+      "revision": "2026-10-11T14:04:18.756Z",
+      "status": "P23_ACCEPTED_AS_BASIS"
+    },
+    {
+      "scope": "crosswalk",
+      "ref": "https://app.notion.com/p/3f64c57a590c81b2b4d6c8312fa945a9",
+      "revision": "2026-10-11T14:04:20.277Z",
+      "status": "ACCEPTED_AS_IDENTITY_FIXTURE"
+    },
+    {
+      "scope": "official_generator",
+      "repository": "Mostorm-Labs/aegis",
+      "revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba"
+    }
+  ],
+  "handoff": {
+    "preferred_executor": "codex",
+    "next_surface": "CODE_EXECUTION",
+    "stage": "P32",
+    "next_action": "Resolve repository identity and exact P31 materialization, verify six lock/fixture hashes, run implementation and RED preflights, execute full frozen closure to exact reviewed result ref or terminal blocker; never issue P34 PASS."
+  }
+}

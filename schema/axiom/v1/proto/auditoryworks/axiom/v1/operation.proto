@@ -9,6 +9,7 @@ import "auditoryworks/axiom/v1/erase_mask.proto";
 import "auditoryworks/axiom/v1/rich_text.proto";
 import "auditoryworks/axiom/v1/connector.proto";
 import "auditoryworks/axiom/v1/object.proto";
+import "auditoryworks/axiom/v1/snapshot.proto";
 
 message InsertObjectsOp { repeated ObjectRecord objects = 1; }
 message DeleteObjectsOp { repeated Id128 object_ids = 1; }
@@ -34,6 +35,10 @@ message RemoveEraseMasksOp { repeated EraseMaskRemoveItem items = 1; }
 message EditRichTextOp { Id128 object_id = 1; RichTextDelta delta = 2; }
 message SetConnectorContentOp { Id128 object_id = 1; ConnectorContent content = 2; }
 
+message ResourceExpectation { Id128 resource_id = 1; uint32 state = 2; uint64 revision = 3; }
+message ReactivateResource { ResourceManifestEntry entry = 1; Id128 expected_removal_operation_id = 2; ResourceManifestEntry expected_preimage = 3; bytes expected_lineage_token = 4; }
+message UpdateResourceManifestOp { repeated ResourceManifestEntry upserts = 1; repeated Id128 removes = 2; repeated ResourceExpectation expectations = 3; repeated ReactivateResource reactivations = 4; uint64 expected_manifest_revision = 5; }
+
 message OperationPayload {
   oneof payload {
     InsertObjectsOp insert_objects = 1;
@@ -51,6 +56,7 @@ message OperationPayload {
     RemoveEraseMasksOp remove_erase_masks = 13;
     EditRichTextOp edit_rich_text = 14;
     SetConnectorContentOp set_connector_content = 15;
+    UpdateResourceManifestOp update_resource_manifest = 16;
   }
 }
 message Operation {

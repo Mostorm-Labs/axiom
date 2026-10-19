@@ -1,0 +1,303 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-verification-lock-v1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "gate_scope": "development_only",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "FROZEN_FROM_ACCEPTED_P20_AND_CONTROL_REVIEW",
+  "trusted_source": {
+    "p20_page_id": "3f74c57a590c81268d2fc9bea7860064",
+    "p20_snapshot_path": ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/sources/1-3f74c57a590c81268d2fc9bea7860064.json",
+    "p20_snapshot_sha256": "f7189f0fc6e9e520a23712ad8aded27c918dbb572737470465d7c3024d6afb20",
+    "source_revision": "62a99c439e39636088c55e43cf7d76963bfe20eb",
+    "independent_review_page": "https://app.notion.com/p/3f74c57a590c8123ba7fcf4ddb4c951f"
+  },
+  "golden_input_lock": {
+    "source_revision": "62a99c439e39636088c55e43cf7d76963bfe20eb",
+    "case_ids": "SH2-G01..SH2-G25",
+    "review_classification": "INDEPENDENT_EXPECTED_INPUTS_ACCEPTED_NOT_EXECUTED",
+    "authored": {
+      "path": "verification/corpus/semantic/shape2-triangle/v1/authoring/cases.json",
+      "git_blob_sha1": "5ec1abc2e168f4c9ae5752e1474343290c69f728"
+    },
+    "expected": {
+      "path": "verification/corpus/semantic/shape2-triangle/v1/authoring/expected.json",
+      "git_blob_sha1": "2ddaabad36fe5bea3a3b80deb1f2eaadca4d56f8"
+    },
+    "manifest": {
+      "path": "verification/corpus/semantic/shape2-triangle/v1/manifest.json",
+      "git_blob_sha1": "f2e5ebdd5319f7695b944815da7c651a5c0f23b2",
+      "historical_authoring_status": "PENDING_INDEPENDENT_REVIEW",
+      "resolved_by_control_review": true
+    },
+    "vectors": [
+      {
+        "id": "SH2-G15-ShapeContent",
+        "path": "verification/corpus/semantic/shape2-triangle/v1/wire/SH2-G15-shapecontent.hex",
+        "git_blob_sha1": "8c18206d003f13d7bd408701031300bdbe583c00",
+        "raw_bytes": 20,
+        "raw_sha256": "c882e59071d419f7db2d7209bb674979beca61dea5cb39a7bc6fd272a8f334c1"
+      },
+      {
+        "id": "SH2-G15-ObjectRecord",
+        "path": "verification/corpus/semantic/shape2-triangle/v1/wire/SH2-G15-objectrecord.hex",
+        "git_blob_sha1": "12b2f159f397cc9c4a4a2737751fe779c2c6dcc4",
+        "raw_bytes": 113,
+        "raw_sha256": "b375c7c0c6731ecbbc5137809b212e46af967d3856f35bbb228e85a74d900afc"
+      },
+      {
+        "id": "SH2-G15-InsertOperation",
+        "path": "verification/corpus/semantic/shape2-triangle/v1/wire/SH2-G15-insertoperation.hex",
+        "git_blob_sha1": "fb8a4356516d044fb1314959d64a8df38e6454ec",
+        "raw_bytes": 163,
+        "raw_sha256": "64232960c062798d18919528a0468a2eac70384650a4320171b8c49d48ddbb24"
+      }
+    ],
+    "old_v1_semantic_source": {
+      "source_ref": "notion://3c44c57a590c81c0ab80d6a8d6aa0778",
+      "source_snapshot_sha256": "60d41140f29052b647a6682af417d544f39733534b93cd181e30fa38de504b5a",
+      "expected_ids": "SH-G01..SH-G18",
+      "must_preserve": "SH-G06 REJECT"
+    },
+    "old_suite_status": "verification/corpus/semantic/v1/suites/shape-kind-v1.json is candidate vectors=[]; DO_NOT_CLAIM_EXECUTED"
+  },
+  "obligations": [
+    {
+      "id": "FC01-B01",
+      "requirement": "Admit only exact Shape/1 Rectangle/Ellipse and Shape/2 Triangle tuple, preserve V1 SH-G06 REJECT, canonical Operation1/payload1/Brush2 exception, byte presence and whole-batch reject",
+      "oracle": "Independently authored strict wire parser/manual tuple reference vs production codec and typed semantic entry; immutable decoded-hex SH2-G15 and historical V1 expected; check ledger/store/generation zero on reject",
+      "acceptance": "All required SH2 positive/negative cases exact, raw ShapeContent 20B/ObjectRecord 113B/InsertOperation 163B SHA256 match, old SH-G06 and Brush2 negatives preserved, no fallback or partial commit",
+      "evidence_required": [
+        "E01/semantic-shape2-corpus-results.json"
+      ],
+      "failure_mode": "Unrecognized/wrong-version semantic data is accepted or old V1 truth changes",
+      "existing_independent_coverage": "G1 codec/negative baseline does not cover Shape2",
+      "classification": "BLOCKING",
+      "origin": "FC-01 P20",
+      "required_evidence_root": ".aegis/results/FC-01-DEV/"
+    },
+    {
+      "id": "FC01-B02",
+      "requirement": "All typed/wire/restore/replay/remote paths share A+B validation and idempotent one-operation atomic apply; Triangle Snapshot2 requires explicit reader capability and old writers refuse lossy access",
+      "oracle": "Independent ReferenceObjectStore+ledger reducer, capability profile table, replay Loading private-state observer and mixed valid/invalid batch; compare before/after",
+      "acceptance": "Exact allowed entry behavior; same-id same-payload AlreadyApplied no second generation/ChangeSet, same-id altered payload collision; Snapshot1 Triangle REJECT, capable Snapshot2 roundtrip, incompatible session refusal, failed Replay never READY",
+      "evidence_required": [
+        "E02/ingress-snapshot-replay-compat.json"
+      ],
+      "failure_mode": "Typed ingress bypass, partial mutation, old-client loss or replay partial READY",
+      "classification": "BLOCKING",
+      "origin": "FC-01 P20",
+      "required_evidence_root": ".aegis/results/FC-01-DEV/"
+    },
+    {
+      "id": "FC01-B03",
+      "requirement": "One confirmed Create gesture maps to at most one Insert, pre-submit cancel makes zero Operation and sourceLost(A) does not cancel B",
+      "oracle": "Deterministic two-source PointerKey/session schedule with independent ledger+object counts; pre-change RED-01 proves old sourceLost global-cancel known defect",
+      "acceptance": "Baseline RED-01 fails expected B-alive oracle before code edits; candidate isolates A/B, duplicate Up/late ACK/tool switch and invalid-extents produce exact 0/1 unique commits with no ghost sessions",
+      "evidence_required": [
+        "E03/interaction-create-red-and-green.json"
+      ],
+      "failure_mode": "Wrong pointer ownership, spurious cancel, duplicate mutation or missing Up",
+      "classification": "BLOCKING",
+      "origin": "FC-01 P20",
+      "required_evidence_root": ".aegis/results/FC-01-DEV/"
+    },
+    {
+      "id": "FC01-B04",
+      "requirement": "Far-axis visible Shape center/edge Snap uses deterministic finite-viewport candidates, logical-pixel latch/release and per-view transient preview with zero canonical side effects",
+      "oracle": "Independent exhaustive viewport-limited reference candidate selector plus analytic world/logical camera projections; compare indexed query, preview/final geometry and 100-Move negative",
+      "acceptance": "Distant orthogonal candidates found, ties deterministic, hidden/invalid excluded, identical preview/Up or explicit rejection, no semantic generation/tile/Axis updates from Move/Cancel",
+      "evidence_required": [
+        "E04/snap-guide-independent-differential.json"
+      ],
+      "failure_mode": "Snap misses candidate, nondeterministic/hide-jump, transient data persisted",
+      "classification": "BLOCKING",
+      "origin": "FC-01 P20",
+      "required_evidence_root": ".aegis/results/FC-01-DEV/"
+    },
+    {
+      "id": "FC01-B05",
+      "requirement": "Triangle exact analytic geometry and Line/Arrow Connector/1 hit/bounds/full-vs-incremental Scene/Render parity",
+      "oracle": "Independent analytic point-in-triangle/distance-to-segment/arrowhead, ReferenceLinearIndex/FullScene differential, pinned headless CPU interior/exterior raster probes",
+      "acceptance": "Triangle vertices (W/2,0),(W,H),(0,H), bbox center, fill/stroke/transforms exact; Connector segment/Arrow precise hit selectable; no stale bounds/Scene on accepted edits; AA-only boundary comparison within pinned 1 physical pixel",
+      "evidence_required": [
+        "E05/scene-geometry-hit-render.json"
+      ],
+      "failure_mode": "Wrong visible object geometry, incorrect selection or stale Scene",
+      "classification": "BLOCKING",
+      "origin": "FC-01 P20",
+      "required_evidence_root": ".aegis/results/FC-01-DEV/"
+    },
+    {
+      "id": "FC01-B06",
+      "requirement": "Single-Operation style/size/transform/order/lock/delete and conflict-safe Insert/Delete/Transform/Size/Patch/Placement inverse and redo in existing EditorHistory",
+      "oracle": "Independent before/post reference graph including remote child/dependent Connector and conditional no-TOCTOU same-lane interleaving",
+      "acceptance": "Local accepted intent exactly one Operation, fresh Undo/Redo OperationIds, exact preimage/absent fields/closure, later dependency yields Conflict with cursor/store/ledger unchanged; visible locked selectable/unlockable",
+      "evidence_required": [
+        "E06/history-preimage-closure.json"
+      ],
+      "failure_mode": "Unrelated remote data cascade-deleted or History cursor lies",
+      "classification": "BLOCKING",
+      "origin": "FC-01 P20",
+      "required_evidence_root": ".aegis/results/FC-01-DEV/"
+    },
+    {
+      "id": "FC01-B07",
+      "requirement": "Five distinct typed CreationPresets and selected-object controls share Facade/Debug Product truth through queued owner-safe-point and revisioned snapshot",
+      "oracle": "Forced owner-phase serialized scheduler with off-owner/reentrant negative, stale CanvasTarget/Binding, independent semantic ledger and coherent full 128-bit ID readback",
+      "acceptance": "0 off-owner Apply, stale generation/control rejection, control queued not semantic applied, two views independent tool/session, no ID truncation or duplicate Debug path, clear unsupported reasons",
+      "evidence_required": [
+        "E07/facade-owner-queue-readback.json"
+      ],
+      "failure_mode": "Wrong tool/owner, stale commands or fabricated Applied receipt",
+      "classification": "BLOCKING",
+      "origin": "FC-01 P20",
+      "required_evidence_root": ".aegis/results/FC-01-DEV/"
+    },
+    {
+      "id": "FC01-B08",
+      "requirement": "FC-01 changed Windows, Web/WASM and Android native host/bridge surfaces compile/link and satisfy common logical pointer/epoch/capture/camera semantics",
+      "oracle": "Exact target build+link with native/TS/WASM/JNI deterministic host samples, independent viewport math and precision tokens; platform-native physical-only risks logged separately",
+      "acceptance": "All applicable supported changed host variants built and deterministic input/target/epoch scenarios match; missing required toolchain explicitly BLOCKED_ENVIRONMENT, never reported green by mock/native substitute",
+      "evidence_required": [
+        "E08/host-profile-build-and-simulation.json"
+      ],
+      "failure_mode": "Platform ABI/input mapping breaks or loses commit under lifecycle",
+      "classification": "BLOCKING",
+      "origin": "FC-01 P20",
+      "required_evidence_root": ".aegis/results/FC-01-DEV/"
+    },
+    {
+      "id": "FC01-B09",
+      "requirement": "Canonical Applied publishes one Scene/Axis event by source, remote operations do not echo; Presented and Axis durability status never guessed from control success",
+      "oracle": "Independent local/remote publication recorder, qualified present feedback current-surface token and Axis provider/frontier state simulator",
+      "acceptance": "0 publication for Preview/reject/AlreadyApplied, 0 remote Outbox echo, genuine current qualified Presented only, Axis pending/failed honest, Render/Axis failures do not rollback Applied",
+      "evidence_required": [
+        "E09/publication-presentation-axis-truth.json"
+      ],
+      "failure_mode": "Echo storm, false Saved or stale frame presented",
+      "classification": "BLOCKING",
+      "origin": "FC-01 P20",
+      "required_evidence_root": ".aegis/results/FC-01-DEV/"
+    },
+    {
+      "id": "FC01-B10",
+      "requirement": "Exact accepted Authority, P31 bindings, source subject, original negative cohorts and narrow code scope/regression preserved",
+      "oracle": "Independent Git ancestry/ref/content digest/diff audit and affected G1/G2/G3/G4/Ink/Selection/Viewport/History regression plus old V1/Brush2/Connector controls",
+      "acceptance": "Subject descends accepted FC-00 and reviewed control commit; all package refs hash-match, CI/provider subject exact, zero unauthorized Proto/old Authority/Golden/Gate changes and applicable tests pass",
+      "evidence_required": [
+        "E10/subject-authority-scope-regression.json"
+      ],
+      "failure_mode": "Wrong source/proof identity or old functionality regression",
+      "classification": "BLOCKING",
+      "origin": "FC-01 P20",
+      "required_evidence_root": ".aegis/results/FC-01-DEV/"
+    }
+  ],
+  "blocking_obligations": [
+    "FC01-B01",
+    "FC01-B02",
+    "FC01-B03",
+    "FC01-B04",
+    "FC01-B05",
+    "FC01-B06",
+    "FC01-B07",
+    "FC01-B08",
+    "FC01-B09",
+    "FC01-B10"
+  ],
+  "red_preflight": [
+    {
+      "id": "FC01-RED-01",
+      "required": true,
+      "baseline_revision": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+      "oracle": "sourceLost(A) must preserve live source B; anchored implementation wrongly globally cancelAll",
+      "expected_prechange": "RED",
+      "on_false_green": "VERIFICATION_DESIGN_DEFECT",
+      "observable": "PlatformInteractionIngress InputRegistry B live + B valid terminal; no mistaken global cancel"
+    },
+    {
+      "id": "FC01-RED-02",
+      "required_when_old_seam_exists": true,
+      "expected_prechange": "Old EditorHistory lacks complete FC01 inverse set",
+      "if_unavailable": "PRECHANGE_SEAM_UNAVAILABLE",
+      "on_false_green": "VERIFICATION_DESIGN_DEFECT"
+    },
+    {
+      "id": "FC01-RED-03",
+      "required_when_old_seam_exists": true,
+      "expected_prechange": "Old Shape2 positive tuple not admitted",
+      "if_unavailable": "PRECHANGE_SEAM_UNAVAILABLE",
+      "on_false_green": "VERIFICATION_DESIGN_DEFECT"
+    }
+  ],
+  "test_profiles": {
+    "snap_and_hit": [
+      {
+        "id": "P-A",
+        "enter_logical_px": 6,
+        "release_logical_px": 10,
+        "connector_hit_slop_logical_px": 8
+      },
+      {
+        "id": "P-B",
+        "enter_logical_px": 3,
+        "release_logical_px": 5,
+        "connector_hit_slop_logical_px": 4
+      }
+    ],
+    "semantic_ids": "full 128-bit equality",
+    "camera": {
+      "zoom": [
+        0.5,
+        1,
+        2
+      ],
+      "dpr": [
+        1,
+        2,
+        3
+      ],
+      "rotation": [
+        "0",
+        "nonzero"
+      ]
+    },
+    "render": "pinned headless CPU Skia; exact interior/exterior probes; boundary-only maximum one headless physical pixel",
+    "status": "TEST_FIXTURE_INPUTS_NOT_SHIPPING_DEFAULTS"
+  },
+  "scripted_runner_contract": {
+    "path": "verification/fc01/run_dev.py",
+    "materialization_state": "MISSING_AT_ANCHOR; P32_MUST_IMPLEMENT",
+    "manifest_path": "verification/corpus/fc01/v1/scenarios.json",
+    "shape2_path": "verification/corpus/semantic/shape2-triangle/v1/manifest.json",
+    "profiles": [
+      "core",
+      "windows-host",
+      "web-wasm",
+      "android-native"
+    ],
+    "exact_subject_required": true
+  },
+  "regression_negative_controls": [
+    "old_SH-G06_REJECT",
+    "old_V1_shape_positive",
+    "Brush_v2_payload2_exact_exception",
+    "Shape2_Operation_payload2_REJECT",
+    "Connector_AttachedEndpoint_to_Triangle_REJECT",
+    "Snapshot1_Triangle_REJECT",
+    "unsupported_old_reader_fail_closed",
+    "cancel_before_Up_no_submission"
+  ],
+  "physical_boundary": {
+    "original_px0_windows": 23,
+    "original_px0_web": 23,
+    "g46c": "UNCHANGED",
+    "g47": "UNCHANGED",
+    "fc13": "DEFERRED_NOT_WAIVED",
+    "human_device_video": "NOT_FC01_DEV_BLOCKING",
+    "no_new_performance_gate": true
+  },
+  "reviewer_contract": "P34 independently evaluates exact E01-E10 at subject; execution producer returns IDs/artifacts, never self-issues Gate PASS"
+}

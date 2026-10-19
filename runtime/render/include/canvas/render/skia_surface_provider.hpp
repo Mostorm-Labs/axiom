@@ -65,6 +65,13 @@ class SkiaSurfaceProvider {
     // dimensions. Profile switches use this to align a prepared provider
     // with the next logical SurfaceLifecycle generation.
     [[nodiscard]] virtual BackendSubmissionResult advanceGeneration() noexcept = 0;
+    // Candidates keep native visuals detached until the owner has prepared
+    // both roles. Activation is part of preparation and may fail; publishing
+    // the accepted binding happens only after both activations succeed.
+    [[nodiscard]] virtual BackendSubmissionResult activateBinding() noexcept {
+        return BackendSubmissionResult::accepted();
+    }
+    virtual void deactivateBinding() noexcept { setOverlayVisible(false); }
     [[nodiscard]] virtual std::uint64_t readbackCount() const noexcept = 0;
     [[nodiscard]] virtual std::uint64_t cpuCopyCount() const noexcept = 0;
     [[nodiscard]] virtual std::uint64_t presentCount() const noexcept = 0;

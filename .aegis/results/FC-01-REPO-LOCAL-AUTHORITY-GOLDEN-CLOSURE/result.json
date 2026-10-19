@@ -1,0 +1,37 @@
+{
+  "task_id": "FC-01",
+  "stage": "REPO_LOCAL_AUTHORITY_GOLDEN_CLOSURE",
+  "base_branch": "codex/fc-00-fc-track-authority-p31",
+  "execution_branch": "control/fc-01-authority-golden-reconciliation",
+  "starting_revision": "19ec3483240ab03152678b3ea7fb9f568da39852",
+  "result_revision": "19ec3483240ab03152678b3ea7fb9f568da39852",
+  "candidate_revision": "19ec3483240ab03152678b3ea7fb9f568da39852",
+  "evidence_materialization_revision": "control/fc-01-authority-golden-reconciliation (final pushed branch head)",
+  "materialized_ref": "https://github.com/Mostorm-Labs/axiom/tree/control/fc-01-authority-golden-reconciliation/.aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE",
+  "pr_number": 146,
+  "aegis_tool_revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba",
+  "validate": "PASS (base and head; exit 0)",
+  "transition_check": "PASS (exit 0)",
+  "recompute": "PASS (two runs; exit 0)",
+  "check": "PASS (two runs; exit 0)",
+  "second_recompute_stable": true,
+  "authority_diff_review": "PASS: expected FC v0.1 supersession, v0.2 Current, independent Shape/2 Current; one Current per scope/kind; dependencies resolve",
+  "historical_gate_preservation": "PASS: gates 25, integrations 29, evidence 34 byte-identical to FC-00 Base",
+  "golden_fixture_validation": "PASS: SH2-G01..25, SH2-G24 NO_SUBMISSION, SH-G06 REJECT, descriptor and wire hashes verified",
+  "golden_independent_acceptance": "PENDING_CONTROL_REVIEW",
+  "changed_files": [
+    ".aegis/state.json",
+    ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/"
+  ],
+  "evidence_input_refs": [
+    ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/official-cli-final.json",
+    ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/qualification-report.json",
+    ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/descriptor-audit.json",
+    ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/case-source-map.json",
+    ".aegis/results/FC-01-REPO-LOCAL-AUTHORITY-GOLDEN-CLOSURE/qualify_control.py"
+  ],
+  "remaining_blockers": [
+    "Independent Control Review must accept the Authority/Golden evidence; producer must not self-declare that acceptance."
+  ],
+  "status": "READY_FOR_CONTROL_REVIEW"
+}

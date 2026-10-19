@@ -1,0 +1,80 @@
+
+class HookProvider final : public render::SkiaSurfaceProvider {
+ public:
+  render::RasterSkiaSurfaceProvider actual;
+  std::function<void()> onResize;
+  bool rejectActivation = false;
+  render::RenderTargetInfo describe() const noexcept override { return actual.describe(); }
+  render::SkiaSurfaceAcquireResult acquire() noexcept override { return actual.acquire(); }
+  void release() noexcept override { actual.release(); }
+  render::BackendSubmissionResult resize(std::uint32_t w,std::uint32_t h) noexcept override {
+    if(onResize) { auto f=std::move(onResize); f(); } return actual.resize(w,h);
+  }
+  render::BackendSubmissionResult lose() noexcept override { return actual.lose(); }
+  render::BackendSubmissionResult present() noexcept override { return actual.present(); }
+  render::BackendSubmissionResult readbackRgba(std::span<std::uint8_t> d) noexcept override { return actual.readbackRgba(d); }
+  render::BackendSubmissionResult advanceGeneration() noexcept override { return actual.advanceGeneration(); }
+  render::BackendSubmissionResult activateBinding() noexcept override {
+    return rejectActivation ? render::BackendSubmissionResult::rejected("activation fault") : render::BackendSubmissionResult::accepted();
+  }
+  std::uint64_t generation() const noexcept override { return actual.generation(); }
+  std::uint64_t readbackCount() const noexcept override { return actual.readbackCount(); }
+  std::uint64_t cpuCopyCount() const noexcept override { return actual.cpuCopyCount(); }
+  std::uint64_t presentCount() const noexcept override { return actual.presentCount(); }
+};
+void acceptedMetrics() {
+  web_demo::WebSurfaceHost h({render::ViewId{301},render::SurfaceGeneration{1},render::MetricsGeneration{1},{100,80,200,160,2,1}});
+  auto r=h.composition().surfaceSnapshot();auto p=h.lifecycle().current();
+  assert(r.logicalWidth==p.metrics.logicalWidth&&r.devicePixelRatio==p.metrics.devicePixelRatio);
+  assert(h.bindMetrics({100,80,200,160,2,1.25F})==web_demo::WebSurfaceDisposition::kRebound);
+  const auto m=h.composition().surfaceSnapshot();
+  assert(m.surfaceGeneration==r.surfaceGeneration&&m.metricsGeneration==r.metricsGeneration+1);
+  assert(h.bindMetrics({100,80,200,160,2,1.25F})==web_demo::WebSurfaceDisposition::kRebound);
+  assert(m.metricsGeneration==h.composition().surfaceSnapshot().metricsGeneration);
+  std::puts("PASS accepted full metrics: logical100x80/physical200x160/DPR2; metrics-only and idempotence");
+}
+void activationFailure() {
+  runtime::RuntimeComposition c;assert(c.open()&&c.bindSurface(128,128));
+  auto p=std::make_unique<HookProvider>();assert(p->resize(128,128).code==render::BackendSubmissionCode::kAccepted);
+  p->rejectActivation=true;
+  assert(c.registerPreviewSurfaceProvider("activation-fault",std::move(p)));
+  assert(!c.resizeSurface(128,128)&&c.state()==runtime::RuntimeCompositionState::kLost);
+  assert(!c.surfaceSnapshot().available&&!c.canonicalProviderAvailable()&&!c.previewProviderAvailable());
+  assert(c.rebindSurface()&&c.state()==runtime::RuntimeCompositionState::kReady);
+  runtime::RuntimeFrameOpportunity out;assert(c.serviceFrameOpportunity(true,out)&&out.canonicalFrame);
+  std::puts("PASS second-role activation failure -> uniform Lost -> successful recovery");
+}
+int remainingOracleFailures = 0;
+void canonicalCrossInstanceObservation() {
+  runtime::RuntimeComposition a(render::ViewId{1}),b(render::ViewId{1});
+  for(auto* c:{&a,&b}) {
+    assert(c->open()&&c->bindSurface(128,128)&&c->registerSource(1)&&c->setPlatformPresentationDeferred(true));
+    assert(c->submit(pointer(1,input::PointerPhase::kDown,20,20)));
+    assert(c->submit(pointer(2,input::PointerPhase::kMove,80,80)));
+    assert(c->submit(pointer(3,input::PointerPhase::kUp,80,80)));
+  }
+  runtime::RuntimeFrameOpportunity fa,fb;assert(a.serviceFrameOpportunity(false,fa)&&b.serviceFrameOpportunity(false,fb));
+  assert(fa.canonicalFrame&&fb.canonicalFrame&&fb.previewWork&&fb.pendingCanonicalHandoff==1);
+  assert(b.finishFrameOpportunity({fb.previewWork,true}));
+  const bool previewBefore=b.previewActive();
+  auto f=*fa.canonicalFrame;
+  const bool accepted=b.receivePlatformPresented({f.viewId,f.frameId,f.surfaceGeneration,f.metricsGeneration,render::PresentOutcome::kPresented,render::PresentEvidenceKind::kPlatformQualified,std::nullopt});
+  std::printf("OBSERVED canonical cross-instance: equalIdentity=%d acceptedAinB=%d BsubmittedAfter=%d previewBefore=%d previewAfter=%d pendingBefore=%llu\n",fa.canonicalFrame==fb.canonicalFrame,accepted,b.lastSubmittedCanonicalFrame().has_value(),previewBefore,b.previewActive(),fb.pendingCanonicalHandoff);
+  if(accepted || !b.previewActive()) ++remainingOracleFailures;
+}
+void reentrantCloseThenResizeObservation() {
+  runtime::RuntimeComposition c;assert(c.open()&&c.bindSurface(128,128));
+  auto p=std::make_unique<HookProvider>();auto* raw=p.get();
+  assert(p->resize(128,128).code==render::BackendSubmissionCode::kAccepted);
+  assert(c.registerSurfaceProvider("hook",std::move(p))&&c.resizeSurface(128,128));
+  raw->onResize=[&]{
+    assert(c.close());
+    std::printf("OBSERVED reentrant after close state=%u\n",unsigned(c.state()));
+    const bool resized=c.resizeSurface(500,500);
+    std::printf("OBSERVED reentrant resize after close accepted=%d state=%u\n",resized,unsigned(c.state()));
+  };
+  const bool result=c.resizeSurface(256,256);
+  std::printf("OBSERVED outer after close+resize: result=%d state=%u closedEnum=%u available=%d\n",result,unsigned(c.state()),unsigned(runtime::RuntimeCompositionState::kClosed),c.surfaceSnapshot().available);
+  if(c.state()!=runtime::RuntimeCompositionState::kClosed) ++remainingOracleFailures;
+}
+

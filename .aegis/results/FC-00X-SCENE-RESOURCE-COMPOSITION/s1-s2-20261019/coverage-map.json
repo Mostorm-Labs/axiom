@@ -1,0 +1,90 @@
+{
+  "matrix": [
+    {
+      "id": 1,
+      "behavior": "Initial/prepared single bind; registration cannot promote Ready",
+      "oracle": "preBind; FC00XS2WindowsSurfaceBinding",
+      "coverage": "AUTOMATED_PASS",
+      "limits": "Client/window/canvas manual observation pending"
+    },
+    {
+      "id": 2,
+      "behavior": "DPR 1/1.25/2; full metrics preserved",
+      "oracle": "brushPixelsAndMetricsFenceUseTheAcceptedLogicalSpace; metricsComposition; G3WebSurfaceHost",
+      "coverage": "AUTOMATED_PASS",
+      "limits": "Monitor/browser zoom pending"
+    },
+    {
+      "id": 3,
+      "behavior": "Metrics-only resource reuse; metrics fencing; logical coordinates",
+      "oracle": "brushPixelsAndMetricsFenceUseTheAcceptedLogicalSpace; logicalInputMatchesCanonicalAndPreviewPixels; native D3D12 test",
+      "coverage": "AUTOMATED_PASS",
+      "limits": "Manual DPI switch pending"
+    },
+    {
+      "id": 4,
+      "behavior": "Paired physical resize and consecutive resize",
+      "oracle": "invalidMetricsAndWrongThreadKeepAcceptedResources; stagedProvidersAndDualRoleFailure; native D3D12 test",
+      "coverage": "AUTOMATED_PASS",
+      "limits": "Maximize/restore pending"
+    },
+    {
+      "id": 5,
+      "behavior": "First/second prepare failure retains old pair or uniformly Lost",
+      "oracle": "failedCandidatesKeepAcceptedBindingAndReentrantCloseAborts; stagedProvidersAndDualRoleFailure; native D3D12 destructive resize + injected Preview failure",
+      "coverage": "AUTOMATED_PASS",
+      "limits": "Native automated resource test executed; visual device-removal pending"
+    },
+    {
+      "id": 6,
+      "behavior": "Replacement/restore fences control/resource/frame; fresh works",
+      "oracle": "bindingChangeInvalidatesControlAndResourceResults; bindingReplacementKeepsPendingBrushHandoff; G3WebSurfaceHost; native D3D12 test",
+      "coverage": "AUTOMATED_PASS",
+      "limits": "Real WebGL context loss/recovery pending"
+    },
+    {
+      "id": 7,
+      "behavior": "Prepare interrupted by resize/lost/close aborts old candidate",
+      "oracle": "failedCandidatesKeepAcceptedBindingAndReentrantCloseAborts",
+      "coverage": "AUTOMATED_PASS",
+      "limits": "Rapid native event observation pending"
+    },
+    {
+      "id": 8,
+      "behavior": "Public create/select/move; canonical/brush/chrome pixels in logical space",
+      "oracle": "logicalInputMatchesCanonicalAndPreviewPixels; brushPixelsAndMetricsFenceUseTheAcceptedLogicalSpace; G4SelectionSession/G4TransformSession/G4EraserSession",
+      "coverage": "AUTOMATED_PASS",
+      "limits": "Advanced pen/multi-touch/history excluded"
+    },
+    {
+      "id": 9,
+      "behavior": "Same-view separate instances; old/new/retry/duplicate/close/recreate",
+      "oracle": "instanceA/instanceB/recreated/delayedPreview; pending brush replacement both callback orders",
+      "coverage": "AUTOMATED_PASS",
+      "limits": "Instance/work allocation exhaustion guards source-inspected; not driven through 2^64 allocations"
+    },
+    {
+      "id": 10,
+      "behavior": "Idempotence; malformed metrics; owner; generation exhaustion",
+      "oracle": "invalidMetricsAndWrongThreadKeepAcceptedResources; G3RuntimeAppBinding max-1 preflight; ResourceBindingSnapshot saturation; native D3D12 owner destruction",
+      "coverage": "AUTOMATED_PASS",
+      "limits": "GPU release timing not visually qualified; no sanitizer stress"
+    }
+  ],
+  "junit": "logs/s2-exact-tests.xml",
+  "fixed_ten_tests": [
+    "DUIM1Control",
+    "F08FrameQualificationBoundary",
+    "FC00XRuntimeComposition",
+    "FC00XRuntimeFacade",
+    "FC00XMinimalRuntimeHost",
+    "FC00XMinimalPresentationCache",
+    "PX0Workbench",
+    "DUIM1PanelModel",
+    "PX0ControlRouter",
+    "G3WebSurfaceHost"
+  ],
+  "physical": "PHYSICAL_PENDING",
+  "android": "DEFERRED_NOT_BLOCKING",
+  "oracle_source": "runtime/composition/tests/runtime_composition_test.cpp"
+}

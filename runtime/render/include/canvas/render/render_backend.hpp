@@ -11,6 +11,7 @@ namespace canvas::render {
 enum class BackendSubmissionCode : std::uint8_t {
     kAccepted,
     kRejected,
+    kRetry,
 };
 
 struct BackendSubmissionResult final {
@@ -23,6 +24,10 @@ struct BackendSubmissionResult final {
 
     [[nodiscard]] static BackendSubmissionResult rejected(std::string message) {
         return BackendSubmissionResult{BackendSubmissionCode::kRejected, std::move(message)};
+    }
+
+    [[nodiscard]] static BackendSubmissionResult retry(std::string message) {
+        return BackendSubmissionResult{BackendSubmissionCode::kRetry, std::move(message)};
     }
 
     bool operator==(const BackendSubmissionResult&) const = default;

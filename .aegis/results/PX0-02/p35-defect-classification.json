@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-02",
+  "stage": "P35_DEFECT_CLASSIFICATION",
+  "reviewed_result_revision": "0941891536952bf944ebf9c5c4593c6ae4e9feb6",
+  "primary_defect": {
+    "type": "IMPLEMENTATION_DEFECT",
+    "owner": "PX0-02 implementation",
+    "failure": "Surface legacy panel availability incorrectly requires Platform Available and rejects Platform Degraded."
+  },
+  "secondary_defect": {
+    "type": "TEST_DEFECT",
+    "owner": "PX0-02 implementation",
+    "failure": "The frozen PX0DebugSnapshot oracle is incomplete for the already-declared retry, degraded/unsupported-provider, stamp fallback, and activity-passthrough cases."
+  },
+  "upstream_defects": {
+    "spec_defect": false,
+    "authority_conflict": false,
+    "verification_design_defect": false,
+    "task_package_defect": false
+  },
+  "repair_route": "P36_FIX_REVERIFICATION",
+  "preserve_valid_work": true
+}

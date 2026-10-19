@@ -1,0 +1,10 @@
+ImplementationDesignPreflight
+
+Baseline: ae1a2e79b1f4e2eb36f81655f6819cc4a8a8173a
+Scope: S1 runtime instance/lifetime work-token fencing; S2 complete SurfaceMetrics and lifecycle transaction.
+Owner: RuntimeComposition owns accepted binding, work identity, control target publication and lifecycle state. CanvasEditingRuntime/SurfaceProviderRegistry perform provider preparation and render state transitions. Platform hosts provide native metrics/providers and return Runtime-issued completion identities.
+Prepare/commit/abort: validate owner/state/metrics/generation before provider side effects; prepare canonical and preview candidates; commit accepted snapshot, control target, resource/frame fences together; on preexisting resource survival failure retain prior binding; on destructive provider failure transition consistently to Lost and invalidate old work; abort stale candidates on resize/lost/close.
+Key existing source paths: runtime/composition/include/canvas/runtime/runtime_composition.hpp; runtime/composition/src/runtime_composition.cpp; runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp; runtime/interaction/src/canvas_editing_runtime.cpp; runtime/render/src/render_target.cpp; runtime/render/src/surface_lifecycle.cpp; runtime/render/src/runtime_app_binding.cpp; apps/axiom_canvas_demo/platform/web/web_surface_host.cpp.
+Tests/oracles: v5 boundary_probe.cpp/output.log for cross-instance token collision and metrics divergence; runtime composition and WebSurfaceHost tests; SurfaceLifecycle/SurfaceProviderRegistry/RuntimeAppBinding tests; new real Raster provider probes for dual-role failure and accepted full metrics.
+Semantic conflict check: no schema/operation/authority conflict found in reviewed handoff/analysis. The prior S2 prototype was withdrawn because it altered initial provider-generation behavior; this implementation must preserve prepared-provider identity and existing lifecycle tests while accepting full metrics.
+Remaining risk: native D3D12/WebGL resource destruction may be destructive on resize failure; failure must publish Lost rather than claim rollback.

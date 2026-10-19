@@ -1,0 +1,62 @@
+PASS public-only: 300 pumps -> real Rectangle create/select/readback; wrong-thread resize/register/lost/close rejected
+PASS diagnostic: 20 owner pumps -> 0 provider presents
+PASS same-opportunity: new resource demand is rendered without another timer
+PASS mapping: platformA=101/runtimeA=1 platformB=102/runtimeB=2 lateA_result=8 B_cleared=0
+PASS mapping B-first, duplicate, unknown and late-A cannot acknowledge B
+PASS Lost replacement/restore target fencing: surface=3 oldAttachment=2 newAttachment=4 oldRequestState=5
+frame opportunity: deferred=0 canonicalContentSerial=2 returnedFrame=2
+frame opportunity: deferred=1 canonicalContentSerial=1 returnedFrame=1
+PASS actual Tools panel text: active Ellipse -> disabled (last preset: Ellipse)
+PASS restore target: metrics=0 old=2 new=4 oldReceipt=5 freshApplied=1
+PASS restore target: metrics=1 old=2 new=4 oldReceipt=5 freshApplied=1
+PASS obsolete preview recovery: resize=0 oldRevision=2 newRevision=3 oldGeneration=1 newGeneration=1 dirtyAfterAck=0 changedPixels=1
+PASS obsolete preview recovery: resize=1 oldRevision=2 newRevision=2 oldGeneration=1 newGeneration=2 dirtyAfterAck=0 changedPixels=1
+PASS mapping full: rejected9 preserves runtime=8; accepted8 completes; rejected feedback isolated; submit9 works after cleanup
+PASS plain presentation failure retry, duplicate no-op, and restored-generation recovery
+PASS delayed A completion isolation: resize=0 A=(2,1) B=(3,1) qualifiedBefore=0 acceptedA=0 qualifiedAfter=0 dirtyB=1
+PASS delayed A completion isolation: resize=1 A=(2,1) B=(2,2) qualifiedBefore=0 acceptedA=0 qualifiedAfter=0 dirtyB=1
+OBSERVED cross-instance completion: viewA=11 viewB=22 workA=1 workB=1 equalToken=0 acceptedAinB=0 qualifiedBefore=0 qualifiedAfter=0 dirtyB=1
+PASS accepted full metrics: logical100x80/physical200x160/DPR2; metrics-only and idempotence
+PASS second-role activation failure -> uniform Lost -> successful recovery
+OBSERVED canonical cross-instance: equalIdentity=1 acceptedAinB=0 BsubmittedAfter=1 previewBefore=1 previewAfter=1 pendingBefore=1
+OBSERVED reentrant after close state=7
+OBSERVED reentrant resize after close accepted=0 state=7
+OBSERVED outer after close+resize: result=0 state=7 closedEnum=7 available=0
+independent residual oracle failures=0
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\r1-r2-review-probe\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc00x-scene-resource-composition-p32-f08-resume\out\r1-r2-review-probe\icudtl.dat.
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=3 objects=0 scene_records=0
+[axiom] present begin frame=4 objects=0 scene_records=0
+[axiom] present begin frame=5 objects=0 scene_records=0
+[axiom] present begin frame=6 objects=0 scene_records=0
+[axiom] present begin frame=7 objects=0 scene_records=0
+[axiom] present begin frame=8 objects=0 scene_records=0
+[axiom] present begin frame=9 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1

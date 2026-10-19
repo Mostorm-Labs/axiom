@@ -96,7 +96,10 @@ StatefulResult requireKindVersion(
                           std::holds_alternative<BrushStrokeContent>(record.content);
     const bool dab_v2 = kind == ObjectKind::kDabStroke && kind_version == 2U &&
                         std::holds_alternative<DabBrushStrokeContent>(record.content);
-    if (record.kind != kind || record.kind_version != kind_version || (!brush_v2 && !dab_v2 && kind_version != 1U)) {
+    const bool shape_v2 = kind == ObjectKind::kShape && kind_version == 2U &&
+                          std::holds_alternative<ShapeContent>(record.content);
+    if (record.kind != kind || record.kind_version != kind_version ||
+        (!brush_v2 && !dab_v2 && !shape_v2 && kind_version != 1U)) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
     return StatefulResult{};
@@ -104,7 +107,9 @@ StatefulResult requireKindVersion(
 
 StatefulResult requirePropertyApplicability(
     const ObjectRecord& record, std::uint32_t field_id, const PropertyValue* value) {
-    if (!isKnownObjectKind(record.kind) || record.kind_version != 1U) {
+    const bool shape_v2 = record.kind == ObjectKind::kShape && record.kind_version == 2U &&
+                          std::holds_alternative<ShapeContent>(record.content);
+    if (!isKnownObjectKind(record.kind) || (record.kind_version != 1U && !shape_v2)) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
     if (!supportsField(record.kind, field_id)) {
@@ -118,6 +123,8 @@ StatefulResult requirePropertyApplicability(
 StatefulResult validateRecordStateForOperation(const ObjectRecord& record, StateRule rule) {
     if (!isKnownObjectKind(record.kind) ||
         (record.kind_version != 1U &&
+         !(record.kind == ObjectKind::kShape && record.kind_version == 2U &&
+           std::holds_alternative<ShapeContent>(record.content)) &&
          !(record.kind == ObjectKind::kVectorStroke && record.kind_version == 2U &&
            std::holds_alternative<BrushStrokeContent>(record.content)) &&
          !(record.kind == ObjectKind::kDabStroke && record.kind_version == 2U &&

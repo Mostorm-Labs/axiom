@@ -1,0 +1,120 @@
+{
+  "id": "FC01-RED-01",
+  "baseline": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+  "runs": [
+    {
+      "profile": "baseline",
+      "source_revision": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+      "source_base_revision": "2942c63b375366ed977b834aa0a48fe2fb551c6e",
+      "source_is_working_tree": false,
+      "uncommitted_source_changes": false,
+      "command": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\cl.exe",
+        "/nologo",
+        "/std:c++20",
+        "/EHsc",
+        "/W4",
+        "/WX",
+        "/UNDEBUG",
+        "/IC:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01\\closeout-committed-e75b49c9\\baseline\\runtime\\input\\include",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\verification\\fc01\\red_source_loss_test.cpp",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01\\closeout-committed-e75b49c9\\baseline\\runtime\\input\\src\\active_pointer_registry.cpp",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01\\closeout-committed-e75b49c9\\baseline\\runtime\\input\\src\\platform_interaction_ingress.cpp",
+        "/Fe:C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01\\closeout-committed-e75b49c9\\baseline-build\\source-loss.exe"
+      ],
+      "build_exit_code": 0,
+      "run_exit_code": 3221226505,
+      "binary_sha256": "dd032065b0d3a2b723cacad8d11e30116769406e2fdf6aa86c1e0ed543f35be2",
+      "source_sha256": "1d321723e6993a822e930ff7635d4fe3b0699dfc66694554ca674866ad9fde3f",
+      "oracle_sha256": "7802bff819e2e0ee34ca4b97e21774e7088f7674629a207966269b50ef0df518"
+    },
+    {
+      "profile": "candidate",
+      "source_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+      "source_base_revision": "e75b49c9eb14809d4ae584986fd9c9439dd78803",
+      "source_is_working_tree": true,
+      "uncommitted_source_changes": false,
+      "command": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\cl.exe",
+        "/nologo",
+        "/std:c++20",
+        "/EHsc",
+        "/W4",
+        "/WX",
+        "/UNDEBUG",
+        "/IC:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\input\\include",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\verification\\fc01\\red_source_loss_test.cpp",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\input\\src\\active_pointer_registry.cpp",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\input\\src\\platform_interaction_ingress.cpp",
+        "/Fe:C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01\\closeout-committed-e75b49c9\\candidate-build\\source-loss.exe"
+      ],
+      "build_exit_code": 0,
+      "run_exit_code": 0,
+      "binary_sha256": "707d54fbcdb1f5913d5dc43da2fcfcdf0e1d43a6d0c6bca90c7c4c5fe09b86fc",
+      "source_sha256": "d455e76079cf3f9707007586d26b6dd9d11cadb7338fe856810023518f5b55d6",
+      "oracle_sha256": "7802bff819e2e0ee34ca4b97e21774e7088f7674629a207966269b50ef0df518"
+    }
+  ],
+  "regressions": [
+    {
+      "test": "platform_interaction_ingress_test",
+      "command": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\cl.exe",
+        "/nologo",
+        "/std:c++20",
+        "/EHsc",
+        "/W4",
+        "/WX",
+        "/UNDEBUG",
+        "/IC:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\input\\include",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\input\\tests\\platform_interaction_ingress_test.cpp",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\input\\src\\active_pointer_registry.cpp",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\input\\src\\platform_interaction_ingress.cpp",
+        "/Fe:C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01\\closeout-committed-e75b49c9\\regression-build\\platform_interaction_ingress_test.exe"
+      ],
+      "build_exit_code": 0,
+      "run_exit_code": 0,
+      "binary_sha256": "c3b84e1fb71d4147beb57495deb8423ee4eda26492c70ac77023430f76426241"
+    },
+    {
+      "test": "c1_platform_fixture_test",
+      "command": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\cl.exe",
+        "/nologo",
+        "/std:c++20",
+        "/EHsc",
+        "/W4",
+        "/WX",
+        "/UNDEBUG",
+        "/IC:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\input\\include",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\input\\tests\\c1_platform_fixture_test.cpp",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\input\\src\\active_pointer_registry.cpp",
+        "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\input\\src\\platform_interaction_ingress.cpp",
+        "/Fe:C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\fc01\\closeout-committed-e75b49c9\\regression-build\\c1_platform_fixture_test.exe"
+      ],
+      "build_exit_code": 0,
+      "run_exit_code": 0,
+      "binary_sha256": "850b8f548723f4359c76cd83aa47dd3f014e6bebe4fec16de2fe048901d2f9b4"
+    }
+  ],
+  "provider": {
+    "kind": "local-windows-native",
+    "compiler": "C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\cl.exe",
+    "compiler_sha256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57",
+    "version_command": [
+      "C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Tools\\MSVC\\14.51.36231\\bin\\HostX64\\x64\\cl.exe",
+      "/Bv"
+    ],
+    "version_exit_code": 2,
+    "vcvars": "C:\\Program Files (x86)\\Microsoft Visual Studio\\18\\BuildTools\\VC\\Auxiliary\\Build\\vcvars64.bat",
+    "vcvars_sha256": "6b516d8fcf543c14b2d861e1f45661e0029230fe0dc48e86ce78522801822209",
+    "windows_sdk_version": "10.0.26100.0\\"
+  },
+  "expected_baseline_red": true,
+  "candidate_green": true,
+  "candidate_expected": "GREEN",
+  "candidate_expected_red_observed": false,
+  "full_FC01_B03_closed": false,
+  "red_before_first_production_mutation_proven": false,
+  "physical_claim": false
+}

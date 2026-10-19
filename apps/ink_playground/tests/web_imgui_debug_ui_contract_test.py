@@ -22,8 +22,8 @@ def test_web_debug_ui_has_independent_imgui_surface_and_toggle():
     assert "_axiom_ink_debug_ui_pointer" in page
     assert "_axiom_ink_debug_ui_key" in page
     assert "ImGui::CreateContext" in bridge
-    assert "buildImGuiPanels" in bridge
-    assert "snapshot.selectedTool" in bridge
+    assert "DebugController" in bridge
+    assert "buildImGuiPanels" not in bridge
     assert "axiom_ink_playground_web.js?v=web-debug-ui-physical" in page
     assert "axiom_ink_selected_tool" in bridge
     assert "_axiom_ink_selected_tool" in page
@@ -36,6 +36,9 @@ def test_web_debug_ui_has_independent_imgui_surface_and_toggle():
     assert "AddMousePosEvent" in bridge
     assert "AddMouseButtonEvent" in bridge
     assert "InputCaptureGate" in bridge
+    assert "DebugSnapshotAssembler" not in bridge
+    assert "captureDebugSnapshot" not in bridge
+    assert "debugSnapshot(" not in bridge
     assert "canvas_debug_ui" in app_cmake
     assert "CanvasSkia::Skia" in debug_cmake
     assert "CANVAS_DEBUG_UI_HAS_SKIA" in debug_cmake
@@ -74,3 +77,20 @@ def test_web_debug_ui_requests_host_render_after_product_control_input():
     pointerup_handler = page.split('debugCanvas.addEventListener("pointerup"', 1)[1].split(
         'debugCanvas.addEventListener("pointercancel"', 1)[0]
     assert "requestRender();" in pointerup_handler
+
+
+def test_web_debug_ui_owns_common_activity_log_and_router():
+    bridge = BRIDGE.read_text(encoding="utf-8")
+    assert "DebugActivityLog activityLog" not in bridge
+    assert "DebugControlRouter" not in bridge
+    assert "DebugControllerContext" in bridge
+    assert "state.controller->buildImGuiFrame()" in bridge
+    assert "buildImGuiPanels" not in bridge
+
+
+def test_web_toolbar_exports_use_runtime_facade_product_path():
+    bridge = BRIDGE.read_text(encoding="utf-8")
+    assert "facade->setBrush" in bridge
+    assert "facade->setTool" in bridge
+    assert "host(value)->selectBrushProfile" not in bridge
+    assert "host(value)->selectTool" not in bridge

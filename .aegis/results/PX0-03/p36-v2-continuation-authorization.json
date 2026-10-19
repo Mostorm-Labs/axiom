@@ -1,0 +1,112 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-03",
+  "stage": "P36_FIX_REVERIFICATION",
+  "authorization_revision": "v2",
+  "authorized": true,
+  "surface": "CODE_REVERIFY",
+  "executor": "codex",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "origin_package": {
+    "path": ".aegis/packages/PX0-03/package.json",
+    "materialization_ref": "a4726b21fa0b8421dae3e260636962b07491fa69"
+  },
+  "prior_p36": {
+    "production_result_revision": "5c64fc5844420d783f9bf0377d9202e7d263aef8",
+    "evidence_head": "007b541f5ab365cccd2938a7145afa10be9e37ca",
+    "materialized_ref": "refs/heads/codex/px0-03-p36-router-oracle-repair"
+  },
+  "exact_cursor": "007b541f5ab365cccd2938a7145afa10be9e37ca",
+  "repair_class": "TEST_DEFECT",
+  "preserve": [
+    "All PX0-03 production code at 5c64fc5844420d783f9bf0377d9202e7d263aef8.",
+    "Semantic CanvasToolKind router boundary and controller-only 4107 presentation mapping.",
+    "DebugActivityLog production implementation.",
+    "DebugControlRouter production implementation and owner routing.",
+    "PlatformDebugControl receipt behavior and Windows retained-queue implementation.",
+    "Windows/Web router/activity composition.",
+    "Generic debug_ui command queue retirement.",
+    "Owner-side debug_command_queue.hpp and surface_debug_queue.hpp.",
+    "PX0-01/PX0-02 frozen contracts and DUI-M1 PHYSICAL_PENDING/BLOCKED_EVIDENCE status."
+  ],
+  "scope": {
+    "required_test_only_repair": [
+      {
+        "id": "default-capacity-64",
+        "requirement": "Explicitly prove DebugActivityLog default capacity is 64 by constructing the default log, recording at least 65 transitions, asserting size == 64, and verifying the oldest retained request is the second inserted request while the newest is the 65th."
+      },
+      {
+        "id": "bounded-state-and-readback-parity",
+        "requirement": "For a capacity-2 log with at least three transitions, assert the retained two request IDs and their DebugActivityState values, and assert snapshot() and readActivity() return the same bounded entry sequence including IDs and states."
+      },
+      {
+        "id": "owner-non-interference",
+        "requirement": "Around representative product, Axiom and Surface submissions, freeze and assert all non-owner call counters remain unchanged. Product controls may touch RuntimeFacade only; submitAxiom may touch AxiomDebugControl only; setCanonicalSurfaceMode may touch PlatformDebugControl only; semantic Pan may touch RuntimeFacade CanvasControl only."
+      },
+      {
+        "id": "cross-owner-request-id-monotonicity",
+        "requirement": "Capture request IDs from representative Product, CanvasControl/Pan, Axiom and Surface submissions and assert every ID is non-zero and strictly increases across owner classes in router allocation order."
+      },
+      {
+        "id": "exact-terminal-transition-count",
+        "requirement": "After admitting one queued Axiom request and one queued Surface request, a refresh while both remain Queued must append zero entries; after both become Applied, the next refresh must append exactly two terminal entries, one for each request, and a later refresh must append zero duplicates."
+      },
+      {
+        "id": "refresh-no-runtime-calls",
+        "requirement": "Instrument RuntimeProbe with product, canvas and readRuntimeState counters. Snapshot those counters immediately before queued and terminal refreshReceipts calls and assert all remain unchanged after each refresh."
+      }
+    ],
+    "allowed_paths": [
+      "debug_ui/tests/control_router_test.cpp",
+      ".aegis/results/PX0-03/**"
+    ],
+    "forbidden": [
+      "Any production code change.",
+      "debug_ui/include/canvas/debug_ui/control_router.hpp",
+      "debug_ui/src/control_router.cpp",
+      "debug_ui/src/controller.cpp",
+      "debug_ui/include/canvas/debug_ui/activity.hpp",
+      "debug_ui/include/canvas/debug_ui/activity_log.hpp",
+      "debug_ui/src/activity_log.cpp",
+      "runtime/foundation/**",
+      "apps/ink_playground/platform/**",
+      "apps/ink_playground/tests/**",
+      "DebugSnapshot or DebugSnapshotAssembler changes.",
+      "Generic command queue restoration.",
+      "Owner-side queue changes.",
+      "WorkspaceId/PanelSlot/PanelRegistry/DebugUiSessionState/Workbench.",
+      "Shape/RichText/Connector/Snap/Image semantics.",
+      "Preview repair.",
+      ".aegis/results/GT-DUI-M1/**",
+      "PX0-04 implementation.",
+      "MSVC warning-policy cleanup.",
+      "Any physical/Gate PASS claim."
+    ]
+  },
+  "required_reverification": [
+    "PX0ControlRouter",
+    "DUI20DebugUiContracts",
+    "PX0DebugSnapshot",
+    "DUIM1PanelModel",
+    "PX0RuntimeFacadeContract",
+    "DUIM1RuntimeFacade",
+    "DUIM1ViewControls",
+    "python -m pytest apps/ink_playground/tests/windows_imgui_skia_debug_ui_contract_test.py apps/ink_playground/tests/windows_debug_ui_selection_contract_test.py apps/ink_playground/tests/web_imgui_debug_ui_contract_test.py -q",
+    "exact tree check: debug_ui command.hpp/command.cpp remain absent while debug_command_queue.hpp/surface_debug_queue.hpp remain present",
+    "git diff --check",
+    "authorized-scope diff from exact_cursor"
+  ],
+  "terminal_success": [
+    "All six required test-only oracle repairs are explicit in control_router_test.cpp and pass.",
+    "No production source file changes from exact_cursor.",
+    "All frozen PX0/DUI and Windows/Web structural regressions pass.",
+    "Only debug_ui/tests/control_router_test.cpp and PX0-03 result metadata change from exact_cursor.",
+    "The exact repaired result is committed and pushed to a reviewer-resolvable ref.",
+    "Return READY_FOR_CONTROL_REVIEW without claiming PX0-03/P34/PX0/DUI-M1/Preview/physical/Gate PASS."
+  ],
+  "official_gate_pass_forbidden": true,
+  "next_surface": "CODE_REVERIFY"
+}

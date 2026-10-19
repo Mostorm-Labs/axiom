@@ -1,0 +1,35 @@
+{
+  "task_id": "FC-01",
+  "slice": "FC01-I2",
+  "before_mutation_revision": "b992dedca2340f24c53a3a438bca37df6ac4e379",
+  "owner": "existing RuntimeScene/Scene compiler, DirectRenderScene and Skia headless reference path",
+  "prepare": "Derive triangle local closed vertices and connector segment/arrow geometry from semantic records during full/incremental Scene projection; retain canonical ShapeContent/ConnectorContent unchanged.",
+  "commit": "Existing SceneBinding/IncrementalRuntimeCoordinator publication; derived geometry and SceneRecord mask update occur in prepared full/delta records before participant commit.",
+  "publication": "RuntimeScene and render draw list consume one derived interpretation; hit uses same analytic helpers; no canonical mutation from hit/render.",
+  "abort": "Invalid/nonfinite dimensions/endpoints or missing content rejects derived record/precise hit; no Scene revision advance.",
+  "geometry_rules": {
+    "triangle": "(W/2,0),(W,H),(0,H),closed; bbox center not centroid",
+    "connector": "FreePoint/FreePoint straight; oriented segment; Arrow end decoration from field 0x201; no attached target/routing extension"
+  },
+  "affected_files": [
+    "runtime/scene/include/canvas/scene/derived_geometry.hpp",
+    "runtime/scene/src/derived_geometry.cpp",
+    "runtime/scene/tests/derived_geometry_test.cpp",
+    "runtime/scene/include/canvas/scene/scene_query.hpp",
+    "runtime/scene/src/scene.cpp",
+    "runtime/scene/include/canvas/scene/scene_types.hpp",
+    "runtime/scene/src/direct_render_scene.cpp",
+    "runtime/scene/src/runtime_scene_projection.cpp"
+  ],
+  "oracles": [
+    "FC01-B05",
+    "SH2-G01..04",
+    "existing full/incremental equivalence"
+  ],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "physical_claim": false,
+  "gate_claim": "none"
+}

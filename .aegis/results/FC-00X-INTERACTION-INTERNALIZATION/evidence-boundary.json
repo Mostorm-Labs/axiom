@@ -1,0 +1,41 @@
+{
+  "schema": "fc00x-evidence-boundary-v2",
+  "task_id": "FC-00X-INTERACTION-INTERNALIZATION",
+  "blocking_artifacts": [
+    "package-binding-preflight.json",
+    "implementation-design-preflight.json",
+    "red-preflight.json",
+    "red-baseline.stdout.json",
+    "o1-input-identity.json",
+    "o2-session-lifecycle.json",
+    "o3-publication-frame.json",
+    "o4-platform-control.json",
+    "o5-host-equivalence.json",
+    "regression-matrix.json",
+    "scope-audit.json",
+    "repository-reconciliation.json",
+    "environment-blocker.json",
+    "build-artifacts.json",
+    "windows-ctest.log",
+    "contract-runner.log",
+    "windows-environment.json",
+    "web-environment.json",
+    "windows-ctest.log",
+    "contract-runner.log",
+    "windows-environment.json",
+    "web-environment.json",
+    "windows-ctest.log",
+    "contract-runner.log",
+    "windows-environment.json",
+    "web-environment.json"
+  ],
+  "corroborative": [
+    "out/fc00x-windows-ctest-final.log",
+    "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.js",
+    "out/g3-web-release/apps/ink_playground/axiom_ink_playground_web.wasm"
+  ],
+  "physical_status": "PHYSICAL_PENDING",
+  "android_status": "DEFERRED_NOT_BLOCKING",
+  "result_revision": "890f09718b98258d736b232e7d02a0634aaf6fb3",
+  "materialized_ref": "refs/heads/codex/fc00x-interaction-internalization-p31"
+}

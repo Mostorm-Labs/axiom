@@ -1,0 +1,23 @@
+{
+  "schema_id": "fc01-dev-evidence-v0.1",
+  "task_id": "FC-01",
+  "gate_id": "FC-01-DEV",
+  "obligation_id": "FC01-B02",
+  "status": "PARTIAL_NOT_CLOSED",
+  "requirement_ref": ".aegis/packages/FC-01/verification.lock.json@c98110c015f975012f25db5efa66c9679da35630#FC01-B02",
+  "requirement": "All typed/wire/restore/replay/remote paths share A+B validation and idempotent one-operation atomic apply; Triangle Snapshot2 requires explicit reader capability and old writers refuse lossy access",
+  "oracle": "Independent ReferenceObjectStore+ledger reducer, capability profile table, replay Loading private-state observer and mixed valid/invalid batch; compare before/after",
+  "acceptance": "Exact allowed entry behavior; same-id same-payload AlreadyApplied no second generation/ChangeSet, same-id altered payload collision; Snapshot1 Triangle REJECT, capable Snapshot2 roundtrip, incompatible session refusal, failed Replay never READY",
+  "source_subject_revision": "8854b09398b8adcedd2fd94a8c6641b07e8960d0",
+  "materialized_ref_resolution": "Reviewer resolves this artifact at the pushed result commit; no self/future SHA asserted.",
+  "residual_detection_gap": "Typed admission/capability/snapshot/replay native tests pass; live host/collaboration and complete ingress coverage remain.",
+  "pass_from_frozen_comparator": false,
+  "physical_claim_false": true,
+  "gate_claim": "none",
+  "provider_run_refs": [
+    ".aegis/results/FC-01-DEV/continuation-logs/committed-runs/closure-vs18-core/result.json"
+  ],
+  "current_source_revision": "130a15b9dc286f654138cf4891f02304259f88af",
+  "qualified_for_current_result": false,
+  "carry_forward_status": "PRIOR_UNQUALIFIED_RUN_NOT_CURRENT_RESULT"
+}

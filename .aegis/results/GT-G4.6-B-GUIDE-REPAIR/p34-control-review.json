@@ -1,0 +1,83 @@
+{
+  "schema_version": "aegis-control-review-v1",
+  "task_id": "GT-G4.6-B-GUIDE-REPAIR",
+  "stage": "P34_CONTROL_REVIEW",
+  "review_surface": "CONTROL_REVIEW",
+  "repository": "Mostorm-Labs/axiom",
+  "package_ref": ".aegis/packages/GT-G4.6-B-GUIDE-REPAIR/package.json",
+  "package_materialization_ref": "c3ada84107fdd55b81ad8f41a2ebc57fed9095cc",
+  "reviewed_branch": "codex/g4-6-b-guide-repair",
+  "reviewed_head": "4d54c7b0533a0726a0962b39f3db9c66d3927afe",
+  "implementation_revision": "98299e93e0334dc63077f1ae490cffcc8fb5bce5",
+  "materialized_ref": "https://github.com/Mostorm-Labs/axiom/tree/codex/g4-6-b-guide-repair",
+  "anchor": "d1c9547744762cf5688862555b4d0893d269514f",
+  "frozen_requirement_audit": {
+    "status": "PASS",
+    "G46B_GUIDE_001": "PASS: SnapResolution exposes deterministic active X/Y guide geometry from selected target features; no threshold/candidate/correction changes found",
+    "G46B_GUIDE_002": "PASS: EditingOverlay stores screen-space transient guides and clears on release/cancel/deselect/stale lifecycle",
+    "G46B_GUIDE_003": "PASS: common SkiaRenderer draws guide geometry on the existing canonical overlay path; no platform-specific duplicate renderer",
+    "G46B_GUIDE_004": "PASS: existing B/G4/G4.5 regression behavior preserved by independent matrix"
+  },
+  "frozen_evidence_audit": {
+    "status": "PASS",
+    "package_locks": "PASS: package, authority, verification, execution, evidence locks resolved from reviewed branch",
+    "exact_result": "PASS: result revision 98299e93e0334dc63077f1ae490cffcc8fb5bce5 is ancestor of reviewed head and result.json bytes independently hashed",
+    "focused_ctest": "PASS: independent raw rerun 10/10 (G46BViewportConstraints, G46EditingOverlay, G46PlaygroundTransform, G3SkiaSurfaceProvider, G3PreviewSurface, G3SurfacePresentation, G3FrameState, DUI20DebugUiContracts, G46BViewportFitHost, G45BrushRuntimePipeline)",
+    "qualification_bundle": "PASS: prior frozen matrix independently completed 11/11 including G46CQualificationBundle (100K workload)",
+    "affected_target_build": "PASS: independent MSBuild of Windows host and guide/transform targets",
+    "scope_audit": "PASS: independent diff scope review and git diff check",
+    "physical_corroboration": "PASS_WITH_FINDINGS: user-reported Windows physical guide test corroborates behavior but is not sole oracle",
+    "applicable_ci": "No guide repair PR and no GitHub runs returned for this branch at review. Package freezes affected build/focused evidence and applicable CI, not a new hosted matrix prerequisite; local independent build and exact 11-test regression matrix satisfy this repair closure."
+  },
+  "repository_reality_audit": {
+    "status": "PASS",
+    "identity": "PASS: origin resolves github/Mostorm-Labs/axiom",
+    "branch_head": "PASS: local and origin/codex/g4-6-b-guide-repair both resolve 4d54c7b0533a0726a0962b39f3db9c66d3927afe",
+    "anchor_ancestry": "PASS",
+    "authorized_scope": "PASS: changed production files remain within package scope",
+    "forbidden_semantics": "PASS: no BrushEngine/InputRouter/Arc/UndoRedo/G4.6-C semantics changes",
+    "common_renderer_ownership": "PASS: guide drawing is only in runtime/render/src/skia_renderer.cpp"
+  },
+  "findings": [
+    {
+      "id": "B-RESULT-HASH-MANIFEST-STALE",
+      "classification": "NON_BLOCKING_FINDING",
+      "description": "Producer artifact-sha256.json records an older SHA-256 for result.json after the final result identity binding commit. Exact current result bytes and SHA-256 were independently resolved at review; this stale auxiliary manifest does not leave the frozen guide obligations without coverage.",
+      "failure_mode": "Audit tooling that trusts the stale auxiliary hash could report a false mismatch",
+      "impact": "review/audit noise only; no runtime or guide correctness impact",
+      "coverage": "Independent SHA-256 of exact published result bytes and repository head",
+      "action": "Refresh manifest in successor housekeeping if desired"
+    },
+    {
+      "id": "B-INHERITED-PACKAGE-MATERIALIZATION",
+      "classification": "NON_BLOCKING_FINDING",
+      "description": "Producer package_materialization_ref labels the original G4.6 P31 materialization (68a6c437), which does not contain the guide repair package. Independent review resolved the guide repair package from its actual origin c3ada84107fdd55b81ad8f41a2ebc57fed9095cc and exact published evidence head 4d54c7b0533a0726a0962b39f3db9c66d3927afe. Original ref remains inherited upstream authority only.",
+      "action": "Use actual guide package origin and exact reviewed head for successor bindings"
+    },
+    {
+      "id": "B-OPTIONAL-RASTER-HARDENING",
+      "classification": "NON_BLOCKING_FINDING",
+      "description": "There is no direct automated guide pixel assertion or host multi-object guide clearing test. Frozen common renderer ownership is independently supported by the exact drawLine implementation, guide geometry/storage tests, full transform lifecycle pixel regressions, affected target build, and user physical test corroboration. Additional direct raster/guide lifecycle tests improve confidence but no uncovered high-impact failure was found.",
+      "action": "Optional successor hardening; current frozen obligations remain closed"
+    }
+  ],
+  "verdict": "PASS_WITH_FINDINGS",
+  "accepted_capability": "PASS_G4_6_B_GUIDE_REPAIR",
+  "official_g4_6_gate_pass": false,
+  "official_p34_overall_pass": false,
+  "next_stage": "Bind accepted B result into G4.6-C qualification and continue C evidence",
+  "reviewed_at_utc": "2026-10-07T15:15:10.7189237Z",
+  "review_evidence_hashes": {
+    ".aegis/packages/GT-G4.6-B-GUIDE-REPAIR/authority.lock.json": "A421F19BBCF41961ACEEE3881768EABFFAFA43EE7AED0331C18E753E0800692B",
+    ".aegis/packages/GT-G4.6-B-GUIDE-REPAIR/execution-contract.json": "8A3426A24BDE096B71E355B253639264EEB072FE7279C94AC0405B87BD0F083D",
+    ".aegis/results/GT-G4.6-B-GUIDE-REPAIR/result.json": "CA3F323E551F58576800AF8FB84A552FC5F1719795AB9FE492319A5D05AE1191",
+    ".aegis/packages/GT-G4.6-B-GUIDE-REPAIR/package.json": "5D31DDE683F78335B0C0F525CB5A3ED60080EFC1BAB37DEB62D7343029681FF7",
+    ".aegis/packages/GT-G4.6-B-GUIDE-REPAIR/verification.lock.json": "94C210FCDF0B8A91DD563825DBD29BB553C33CE15B93612AF2ECC5C023262277",
+    ".aegis/packages/GT-G4.6-B-GUIDE-REPAIR/evidence-contract.json": "674059351EE8B408C5AE29AAE70DF345721802926C7C9CE9B536DEE17A04140C"
+  },
+  "inherited_origin_package_materialization_ref": "68a6c4370efa589e58a33540b745d8c851ef711f",
+  "independent_raw_evidence_refs": [
+    ".aegis/results/GT-G4.6-B-GUIDE-REPAIR/p34-build-raw.log",
+    ".aegis/results/GT-G4.6-B-GUIDE-REPAIR/p34-ctest-raw.log"
+  ]
+}

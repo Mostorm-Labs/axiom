@@ -1,0 +1,15 @@
+{
+  "schema": "fc00x-o2-session-lifecycle-v2",
+  "status": "PASS_FOCUSED_AND_HOST_MATRIX",
+  "dispatch_boundary": "InteractionDispatchRuntime forwards Brush/Eraser/Creation/Selection/Pan",
+  "tests": [
+    "G4InteractionSessionManager PASS",
+    "G4SelectionSession PASS",
+    "G4TransformSession PASS",
+    "G4EraserSession PASS",
+    "G4SessionLifecycle PASS",
+    "G46PlaygroundTransform PASS",
+    "FC00XMinimalRuntimeHost PASS"
+  ],
+  "notes": "Rejected selection commit is treated as accepted input no-op, preserving pre-dispatch Host boundary."
+}

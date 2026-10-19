@@ -1,0 +1,98 @@
+{
+  "schema_version": "0.1",
+  "task_id": "PX0-05",
+  "stage": "P33",
+  "status": "BLOCKED_IMPLEMENTATION",
+  "result_revision": "9c5e3587358ad982ddab56ca2369cd285e330c5d",
+  "materialization": {
+    "requirement": "reviewer-resolvable exact pushed ref",
+    "ref": "refs/heads/codex/px0-05-existing-capability-migration",
+    "evidence_commit_rule": "resolve materialized_ref as the evidence-only commit containing this result.json; result_revision remains the code commit"
+  },
+  "repository": "github:Mostorm-Labs/axiom",
+  "package_id": "PX0-05-P31-v0.3",
+  "package_ref": "repo:.aegis/packages/PX0-05/package.json@361d2c0d7a29f0a549c87d688d5d0aa6b33f5c03",
+  "p33_authorization_ref": "repo:.aegis/results/PX0-05/p33-resume-authorization.json@361d2c0d7a29f0a549c87d688d5d0aa6b33f5c03",
+  "task_anchor": "4a35e8fc041e90040d05fe8e8d55766fa8014806",
+  "execution_ref": "codex/px0-05-existing-capability-migration",
+  "starting_revision": "361d2c0d7a29f0a549c87d688d5d0aa6b33f5c03",
+  "classification": "ANCHOR_DESCENDANT_WITHOUT_CURSOR",
+  "preserved_valid_work": true,
+  "implementation": [
+    "explicit built-in contributions across six Workbench workspaces",
+    "legacy tab body removed",
+    "snapshot-backed persistent state and Router-only submissions",
+    "UI-local camera drafts and owner-presence gating",
+    "Unsupported placeholders preserve frozen boundaries",
+    "obsolete first Windows selection structural oracle migrated; pointer and terminal-clear tests unchanged"
+  ],
+  "verification": {
+    "structural": {
+      "runner": "direct importlib Python runner executes every plain test_* callable in the three frozen test files; no pytest fixtures/decorators/parametrization",
+      "total": 34,
+      "failed": 0,
+      "log": "structural-contracts-v0.3.log"
+    },
+    "focused_ctest": {
+      "passed": [
+        "PX0PanelRegistry",
+        "PX0Workbench",
+        "DUI20DebugUiContracts",
+        "DUIM1PanelModel",
+        "PX0ControlRouter",
+        "PX0DebugSnapshot",
+        "DUIM1ViewControls",
+        "DUIM1RuntimeFacade"
+      ],
+      "log": "ctest-focused-v0.3.log"
+    },
+    "native_build": {
+      "targets": [
+        "canvas_debug_ui",
+        "axiom_ink_playground_windows"
+      ],
+      "exit_code": 0,
+      "fresh_tree": "out/px0-05-native-v0.3",
+      "required_cache_values": {
+        "CANVAS_BUILD_POC01": "OFF",
+        "CANVAS_BUILD_RF01": "ON",
+        "CANVAS_BUILD_RENDER": "ON",
+        "CANVAS_BUILD_INK_PLAYGROUND": "ON",
+        "CANVAS_BUILD_ARC": "ON",
+        "AXIOM_BUILD_DEBUG_UI": "ON",
+        "AXIOM_DEBUG_UI_PROFILE": "controller",
+        "CANVAS_RENDER_ENABLE_SKIA_HEADLESS": "ON",
+        "CANVAS_RENDER_BUILD_TESTS": "ON",
+        "CANVAS_RF01_BUILD_TESTS": "ON",
+        "CANVAS_BUILD_SEMANTIC": "OFF",
+        "CANVAS_SEMANTIC_ENABLE_PROTOBUF": "OFF"
+      },
+      "configure_log": "configure-native-v0.3.log",
+      "build_log": "build-native-v0.3.log",
+      "skia_sdk_root": "D:/GitRepos/mostorm-labs/canvas/.deps/skia-sdk/windows-x64-d3d12/release",
+      "compiler": "locked clang-cl 22.1.8"
+    },
+    "blocked": [
+      "PX0RuntimeFacadeContract: inherited runtime_contract_test.cpp line 21 missing ProductControlReceipt::control initializer under clang-cl /WX"
+    ],
+    "scope": "scope-audit-v0.3.json",
+    "diff_check": "git diff --check exits 0",
+    "full_suite": "not executed because one frozen test cannot compile; package-frozen available subset recorded without claiming complete suite PASS",
+    "optional_web_build": "NOT_RUN (corroborative)",
+    "manual_visual": "NOT_RUN; no physical PASS claimed"
+  },
+  "artifacts": [
+    {
+      "type": "Windows exe",
+      "local_path": "C:\\Users\\Chado\\.codex\\worktrees\\px0-05-existing-capability-migration-clean\\out\\px0-05-native-v0.3\\apps\\ink_playground\\axiom_ink_playground_windows.exe",
+      "sha256": "646db5cbe45ec4e07247748bb6a4f8e604e17c6812bc45440061ece87be63a05",
+      "size": 11290112,
+      "classification": "local build output; native-build log is durable proof, no binary publication required by PX0-05"
+    }
+  ],
+  "blocker_ref": "blocker-v0.3.json",
+  "continue_execution": false,
+  "return_surface": "CONTROL_REVIEW",
+  "official_gate_pass_claimed": false,
+  "requested_owner_action": "Control classify the pre-existing frozen test-artifact compile defect and authorize the narrow runtime_contract_test.cpp repair before reverification. No source or warning-policy workaround was applied."
+}

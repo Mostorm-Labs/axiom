@@ -46,6 +46,9 @@ class PlatformDebugControl {
   // Owner safe-point application hook. It is intentionally separate from UI
   // admission so a platform callback never performs a heavy rebind.
   virtual void processPendingSurfaceModes() noexcept {}
+  [[nodiscard]] virtual SurfaceModeReceipt receipt(std::uint64_t requestId) const noexcept {
+    return SurfaceModeReceipt{requestId, SurfaceControlState::kUnsupported};
+  }
   [[nodiscard]] virtual SurfaceModeReceipt requestSurfaceMode(
       const SurfaceModeRequest& request) noexcept = 0;
 };

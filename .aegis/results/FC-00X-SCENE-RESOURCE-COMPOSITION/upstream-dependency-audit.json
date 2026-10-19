@@ -1,0 +1,29 @@
+{
+  "schema": "fc00x-scene-upstream-dependency-audit-v0.6",
+  "task_id": "FC-00X-SCENE-RESOURCE-COMPOSITION",
+  "observed_revision": "b3e0209033eb3146a77eae506ee25c45c2ec3876",
+  "source_review": "D:/axreview/fc00x-20261016/post-246cd1d0-review/review.txt",
+  "classification": "BLOCKED_IMPLEMENTATION",
+  "audit": {
+    "F01": "CURRENT_REVISION_AUDIT_PENDING",
+    "F02": "CURRENT_REVISION_AUDIT_PENDING",
+    "F03": "CURRENT_REVISION_AUDIT_PENDING",
+    "F04": "CURRENT_REVISION_AUDIT_PENDING",
+    "F05": "CURRENT_REVISION_AUDIT_PENDING",
+    "F06": "CURRENT_REVISION_AUDIT_PENDING",
+    "F07": "CURRENT_REVISION_AUDIT_PENDING"
+  },
+  "F08": {
+    "status": "FAIL",
+    "failure_mode": "Runtime promotes renderer/provider accepted submission to PlatformQualified and Windows participates in retirePreview eligibility",
+    "impact": "Preview retirement can be reported as physically qualified without platform execution evidence, allowing stale or not-yet-visible content handoff",
+    "evidence": [
+      "runtime/interaction/src/canvas_editing_runtime.cpp:2809-2814",
+      "runtime/render/src/skia_surface_provider.cpp:present returns accepted after incrementing present count",
+      "apps/ink_playground/platform/windows/main.cpp:899-901 passes host-owned retirePreview condition"
+    ],
+    "independent_coverage": "Existing RuntimeFrameCoordinator unit tests cover identity/stale/retry mechanics but do not prove production platform feedback ownership",
+    "why_frozen_evidence_missed": "Prior O3 focused tests accepted the synthetic provider feedback path and did not audit the Windows call-site ownership boundary",
+    "required_fix": "Repair upstream interaction/frame/platform boundary, then rerun F08 evidence and protected frame regressions before resuming this package."
+  }
+}

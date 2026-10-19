@@ -1,0 +1,34 @@
+{
+  "task_id": "GT-G4.6-B",
+  "terminal_state": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+  "materialized_ref": "https://github.com/Mostorm-Labs/axiom/pull/143",
+  "package_materialization_ref": "68a6c4370efa589e58a33540b745d8c851ef711f",
+  "execution_ref": "codex/g4-6-b-view-constraint",
+  "implementation": {
+    "viewport_fit": true,
+    "snap_resolver": true,
+    "camera_generation": true,
+    "runtime_facade_camera_routing": true,
+    "scene_spatial_query_seam": true,
+    "scene_spatial_query_repair": "Scene::query(WorldRect) -> ObjectId candidates -> RuntimeScene::find",
+    "canonical_semantics_unchanged": true
+  },
+  "verification": {
+    "affected_targets_build": "PASS",
+    "focused_ctest": "18/18 passed",
+    "query_structure_red_green": "PASS",
+    "git_diff_check": "PASS",
+    "hosted_required_checks": "9/9 passed",
+    "hosted_head": "d9423fe90cfb6109fcb3914e69b4c27c01b646b4",
+    "provider_runs": [37596639205, 37596639249, 37596639175, 37596639188]
+  },
+  "predecessor": {
+    "task_id": "GT-G4.6-A",
+    "accepted_capability": "PASS_WITH_FINDINGS",
+    "reviewed_head": "38c3f0b3b7b635abec8e41bc578131b6c47117b3",
+    "control_review_ref": ".aegis/results/GT-G4.6-B/a-predecessor-control-review.json"
+  },
+  "control_review_ref": ".aegis/results/GT-G4.6-B/p34-control-review.json",
+  "producer_may_claim_gate_pass": false
+}

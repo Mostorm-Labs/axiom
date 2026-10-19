@@ -1,0 +1,121 @@
+{
+  "schema_version": "0.1",
+  "task_id": "FC-00-LEGACY-IMPORT",
+  "status": "P20_ACCEPTED_FOR_P31",
+  "source": {
+    "provider": "notion",
+    "id": "3f64c57a590c8174b2bec34724a8131d",
+    "url": "https://app.notion.com/p/3f64c57a590c8174b2bec34724a8131d",
+    "revision": "2026-10-11T14:04:18.756Z",
+    "content_hash": "sha256:767b316090a60c0daae32ff50333325c9f31df15dcc379c5d7d4d407d81a7d5a"
+  },
+  "subject": {
+    "repository": "Mostorm-Labs/axiom",
+    "revision": "6fc1508f1a971abc5a90e068d0cc5f6ae82c064b",
+    "official_aegis_repository": "Mostorm-Labs/aegis",
+    "official_aegis_revision": "00d3690ca2cdde15b3f919c54ccc8ef6290f55ba",
+    "expected_crosswalk": "expected-crosswalk.json"
+  },
+  "independent_oracle_contract": {
+    "reference_source": "six raw legacy input files bound to source commit SHA and Git blob IDs",
+    "reviewed_fixture": "expected-crosswalk.json (must predate P32 and must not be regenerated from P32 importer)",
+    "comparison": "parse source and target independently; compare source facts against accepted fixed old/new map; do not invoke converter for expected outputs",
+    "critical_mutations": [
+      "different-valid-PASS-binding",
+      "readiness-promoted-PASS",
+      "changed-integrated-occurrence",
+      "different-source-blob"
+    ],
+    "source_transition": "legacy pseudo-v0.6 -> canonical v0.6 special import; ordinary v0.6 transition-check is forbidden as sufficient proof"
+  },
+  "obligations": [
+    {
+      "id": "FC00-LI-01",
+      "requirement": "Use exactly original Git-anchored pseudo-v0.6 source, six specified immutable blob identities and Aegis official validator SHA.",
+      "oracle": "Resolve original Axiom commit and six raw Git blobs, verify commit/sha/source archive; check pinned Aegis tool revision before importer mutation.",
+      "acceptance": "6/6 blob identities exact; source and pinned tool repos resolved; no altered source accepted.",
+      "evidence_required": [
+        "source-identity.json",
+        "immutable Git source/archive"
+      ]
+    },
+    {
+      "id": "FC00-LI-02",
+      "requirement": "Preserve exactly 25 historical formal Gate decisions with original IDs, verdicts, evidence and Gate authority/stage facts by one-to-one first-import translation.",
+      "oracle": "Independent oracle parses old raw gates.json and new v0.6 gates.json, compares 25 entries to frozen crosswalk Gate id/legacy id/canonical id/verdict/evidence/authority/stage; does not call importer mapping code.",
+      "acceptance": "25/25 bijective, 0 invented/dropped/cross-bound Gate Decisions, 0 verdict or evidence change.",
+      "evidence_required": [
+        "expected-crosswalk.json",
+        "legacy-import-equivalence.json"
+      ]
+    },
+    {
+      "id": "FC00-LI-03",
+      "requirement": "Preserve exactly 29 historical Integration occurrence identities and their original Bound decision semantics.",
+      "oracle": "Independent oracle checks each old id/kind/ref/target_ref/status/integrated_revision/evidence_ids and old/new Binding exact mapping. Wrong but existent PASS-to-PASS rebind must be rejected.",
+      "acceptance": "29/29 preserved; 27 integrated and 2 closed_unmerged remain; all 29 bound to mapped original; 0 absent; exact original lineage retained.",
+      "evidence_required": [
+        "expected-crosswalk.json",
+        "legacy-import-equivalence.json",
+        "negative-oracle.json"
+      ]
+    },
+    {
+      "id": "FC00-LI-04",
+      "requirement": "Separate historical readiness and preserve 34 Evidence and four historical Authority identities/statuses without false Gate claims.",
+      "oracle": "Inspect exact original 2 READY_FOR_P31 raw Gate objects in immutable legacy archive, ensure no corresponding new official Gate Decision; compare 34 Evidence legacy kind->type and four Authorities including G4 old/new supersession.",
+      "acceptance": "2/2 readiness archived, 0 promoted; 34/34 evidence and 4/4 authorities reconciled; no new physical/pressure PASS.",
+      "evidence_required": [
+        "legacy-import-equivalence.json",
+        "source-identity.json",
+        "negative-oracle.json"
+      ]
+    },
+    {
+      "id": "FC00-LI-05",
+      "requirement": "Normalize to official v0.6 manifest and stable computed state, not the old manual state schema.",
+      "oracle": "Pinned Aegis CLI must run validate, recompute --write, check, repeat recompute --write and check; verify identical state.json sha256.",
+      "acceptance": "CLI exit 0 with VALID, STATE_WRITTEN, STATE_OK; deterministic identical repeated output; canonical v0.6 schema.",
+      "evidence_required": [
+        "official-v06-cli.json",
+        "pinned CLI stdout/stderr"
+      ]
+    },
+    {
+      "id": "FC00-LI-06",
+      "requirement": "Prove independent oracle rejects material invalid migrations, with non-vacuous old-source RED check.",
+      "oracle": "RED original official validate must exit 2 with INVALID; injected wrong-but-valid PASS binding, readiness forged PASS, changed integrated occurrence/status, swapped raw input identity must each fail independent oracle.",
+      "acceptance": "Every frozen material negative fails for its intended invariant and honest exit/status is recorded.",
+      "evidence_required": [
+        "negative-oracle.json"
+      ]
+    },
+    {
+      "id": "FC00-LI-07",
+      "requirement": "Constrain changes to approved control-plane import/testing/evidence, preserving historic P34, PX0 and product source.",
+      "oracle": "Git diff of anchor to exact P32 materialized result; independent path whitelist and original Gate/PX0/G4.6/G4.7 status comparison; git diff --check; reviewer resolves remote ref.",
+      "acceptance": "No unauthorized source/host/semantic changes or historic Gate verdict changes; exact reviewer-accessible result revision/ref.",
+      "evidence_required": [
+        "scope-identity.json",
+        "exact remote result ref"
+      ]
+    }
+  ],
+  "evidence_classification": {
+    "blocking": [
+      "FC00-LI-01",
+      "FC00-LI-02",
+      "FC00-LI-03",
+      "FC00-LI-04",
+      "FC00-LI-05",
+      "FC00-LI-06",
+      "FC00-LI-07"
+    ],
+    "corroborative": [
+      "extra repeated same-oracle CI runs",
+      "screenshots",
+      "optional hosted logs if not independently needed"
+    ]
+  },
+  "frozen_gate_owner": "Independent Aegis P34 Control Review; no executor/P32 PASS."
+}

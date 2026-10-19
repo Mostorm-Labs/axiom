@@ -1,0 +1,41 @@
+[
+  {
+    "name": "stable-order",
+    "command": [
+      "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\.deps\\emsdk\\upstream\\emscripten\\em++.exe",
+      "-std=c++20",
+      "-fexceptions",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "-fsyntax-only",
+      "-IC:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\foundation\\include",
+      "-IC:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\semantic\\include",
+      "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web-ui\\stable_order_probe.cpp"
+    ],
+    "exit_code": 1,
+    "expected": "Compiler rejects original source at the known diagnostic",
+    "result": "EXPECTED_RED"
+  },
+  {
+    "name": "apply-plan",
+    "command": [
+      "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\.deps\\emsdk\\upstream\\emscripten\\em++.exe",
+      "-std=c++20",
+      "-fexceptions",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "-fsyntax-only",
+      "-IC:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\foundation\\include",
+      "-IC:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\semantic\\include",
+      "-Wno-error=sign-compare",
+      "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\runtime\\semantic\\src\\apply_plan.cpp"
+    ],
+    "exit_code": 1,
+    "expected": "Compiler rejects original source at the known diagnostic",
+    "result": "EXPECTED_RED"
+  }
+]
