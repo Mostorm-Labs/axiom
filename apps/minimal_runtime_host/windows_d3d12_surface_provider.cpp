@@ -268,6 +268,7 @@ void WindowsD3D12SurfaceProvider::setOverlayVisible(bool visible) noexcept {
     return;
   }
   if (!overlay_) return;
+  if (visible) repositionOverlay();
   if (impl_ && impl_->visual && impl_->composition) {
     // Keep the visual content stable across pointer-up/pointer-down cycles.
     // Detaching and reattaching a D3D12 swap chain while the compositor is
@@ -447,6 +448,10 @@ bool WindowsD3D12SurfaceProvider::ensureOverlay() noexcept {
       FAILED(impl_->visual->SetContent(impl_->swapChain.Get())) ||
       FAILED(impl_->target->SetRoot(impl_->visual.Get())) ||
       FAILED(impl_->composition->Commit())) return false;
+  // The popup is created during activation, after resize's placement pass.
+  // Its client origin must match the owner-attached canonical visual before
+  // its first preview can become visible.
+  repositionOverlay();
   return true;
 }
 void WindowsD3D12SurfaceProvider::destroyGpuSurface() noexcept {

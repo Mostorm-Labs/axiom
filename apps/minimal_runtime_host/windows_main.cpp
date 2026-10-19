@@ -26,6 +26,7 @@ using canvas::minimal_runtime_host::MinimalRuntimeHost;
 constexpr wchar_t kWindowClass[] = L"AxiomMinimalRuntimeHost";
 constexpr UINT_PTR kTimer = 1U;
 constexpr UINT kTimerMs = 16U;
+constexpr UINT kOverlaySyncMessage = WM_APP + 1U;
 
 using canvas::minimal_runtime_host::MinimalRuntimeFacade;
 
@@ -41,6 +42,8 @@ struct State final {
   std::uint64_t timestamp = 0;
   std::uint64_t lastPresentedFrame = 0;
   bool releasingPointerUp = false;
+  std::optional<MOUSEMOVEPOINT> lastMousePoint;
+  canvas::minimal_runtime_host::WindowsD3D12SurfaceProvider* previewProvider = nullptr;
   canvas::minimal_runtime_host::WindowsPresentationCache presentationCache;
   canvas::runtime::RuntimeFrameOpportunity frameOpportunity{};
 };
@@ -154,8 +157,77 @@ void sendPointer(State& state, LPARAM lParam, canvas::input::PointerPhase phase)
   const auto x = static_cast<float>(GET_X_LPARAM(lParam)) * surface.logicalWidth / surface.width;
   const auto y = static_cast<float>(GET_Y_LPARAM(lParam)) * surface.logicalHeight / surface.height;
   canvas::input::PlatformPointerBatch batch;
-  batch.samples.push_back({1U, 1U, ++state.sequence, ++state.timestamp, x, y, 0.5F, 0.0F, 0.0F,
-                           {}, {}, canvas::input::SampleProvenance::kConfirmedCurrent, phase});
+  const auto messageTime = static_cast<DWORD>(GetMessageTime());
+  const auto append = [&](float sampleX, float sampleY, DWORD time,
+                          canvas::input::PointerPhase samplePhase,
+                          canvas::input::SampleProvenance provenance) {
+    // Match Windows' millisecond clock, including its 32-bit wrap, rather
+    // than treating a callback counter as elapsed nanoseconds.
+    const auto now = GetTickCount64();
+    const auto age = static_cast<DWORD>(static_cast<DWORD>(now) - time);
+    const auto sampledAt = now >= age ? (now - age) * 1'000'000U : 0U;
+    state.timestamp = (std::max)(state.timestamp + 1U, sampledAt);
+    batch.samples.push_back({1U, 1U, ++state.sequence, state.timestamp,
+        sampleX, sampleY, 0.5F, 0.0F, 0.0F, {}, {}, provenance, samplePhase});
+  };
+  POINT screen{GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+  const bool screenAvailable = ClientToScreen(state.window, &screen) != FALSE;
+  bool currentIncluded = false;
+  if (phase == canvas::input::PointerPhase::kDown) {
+    state.lastMousePoint.reset();
+  } else if (screenAvailable && state.lastMousePoint.has_value()) {
+    // WM_MOUSEMOVE coalesces while the UI thread draws. Recover the actual
+    // OS observations instead of connecting only the surviving messages.
+    std::array<MOUSEMOVEPOINT, 64> history{};
+    MOUSEMOVEPOINT query{screen.x & 0xFFFF, screen.y & 0xFFFF, messageTime, 0U};
+    const int count = GetMouseMovePointsEx(sizeof(MOUSEMOVEPOINT), &query,
+        history.data(), static_cast<int>(history.size()), GMMP_USE_DISPLAY_POINTS);
+    if (count > 0) {
+      const auto signedPoint = [](MOUSEMOVEPOINT point) {
+        point.x = static_cast<short>(point.x);
+        point.y = static_cast<short>(point.y);
+        return point;
+      };
+      // Locate the last delivered observation before reversing the native
+      // newest-first history. This also preserves distinct same-ms samples.
+      int end = count;
+      for (int i = 0; i < count; ++i) {
+        const auto point = signedPoint(history[static_cast<std::size_t>(i)]);
+        if (point.time == state.lastMousePoint->time &&
+            point.x == state.lastMousePoint->x && point.y == state.lastMousePoint->y) {
+          end = i;
+          break;
+        }
+      }
+      for (int i = end - 1; i >= 0; --i) {
+        const auto point = signedPoint(history[static_cast<std::size_t>(i)]);
+        if (static_cast<LONG>(point.time - messageTime) > 0 ||
+            (end == count && static_cast<LONG>(point.time - state.lastMousePoint->time) <= 0))
+          continue;
+        const bool isCurrent = point.time == messageTime &&
+            point.x == screen.x && point.y == screen.y;
+        // Up is a single terminal observation. Its preceding history is Move.
+        if (isCurrent && phase == canvas::input::PointerPhase::kUp) continue;
+        POINT client{point.x, point.y};
+        if (!ScreenToClient(state.window, &client)) continue;
+        append(static_cast<float>(client.x) * surface.logicalWidth / surface.width,
+               static_cast<float>(client.y) * surface.logicalHeight / surface.height,
+               point.time, canvas::input::PointerPhase::kMove,
+               isCurrent ? canvas::input::SampleProvenance::kConfirmedCurrent
+                         : canvas::input::SampleProvenance::kCoalescedHistory);
+        currentIncluded = currentIncluded || isCurrent;
+      }
+    }
+  }
+  if (!currentIncluded && (phase != canvas::input::PointerPhase::kMove ||
+      !state.lastMousePoint || state.lastMousePoint->time != messageTime ||
+      state.lastMousePoint->x != screen.x || state.lastMousePoint->y != screen.y)) {
+    append(x, y, messageTime, phase, canvas::input::SampleProvenance::kConfirmedCurrent);
+  }
+  if (screenAvailable) state.lastMousePoint = MOUSEMOVEPOINT{screen.x, screen.y, messageTime, 0U};
+  if (phase == canvas::input::PointerPhase::kUp || phase == canvas::input::PointerPhase::kCancel)
+    state.lastMousePoint.reset();
+  if (batch.samples.empty()) return;
   (void)state.host->submit(batch);
   InvalidateRect(state.window, nullptr, FALSE);
 }
@@ -173,6 +245,18 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
   if (state->debugUi && state->debugUi->handleMessage(window, message, wParam, lParam)) return 0;
 #endif
   switch (message) {
+    case WM_MOVE:
+    case WM_WINDOWPOSCHANGED: {
+      const auto result = DefWindowProcW(window, message, wParam, lParam);
+      PostMessageW(window, kOverlaySyncMessage, 0U, 0U);
+      return result;
+    }
+    case kOverlaySyncMessage:
+      if (state->previewProvider) state->previewProvider->reposition();
+#if AXIOM_MINIMAL_HAS_DEBUG_UI
+      if (state->debugUi) state->debugUi->reposition();
+#endif
+      return 0;
     case WM_TIMER: {
       const bool frameReady = state->host->composition().serviceFrameOpportunity(
           false, state->frameOpportunity);
@@ -225,6 +309,7 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       return 0;
     case WM_CAPTURECHANGED:
       if (!state->releasingPointerUp) {
+        state->lastMousePoint.reset();
         (void)state->host->unregisterSource(1U, ++state->sequence, ++state->timestamp);
         (void)state->host->registerSource(1U);
       }
@@ -266,6 +351,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
           std::move(canonicalProvider))) return 1;
   auto previewProvider = std::make_unique<canvas::minimal_runtime_host::WindowsD3D12SurfaceProvider>(
       state.window, false);
+  state.previewProvider = previewProvider.get();
   previewProvider->setOverlayOffset(0, 0);
   if (previewProvider->resize(width, height).code != canvas::render::BackendSubmissionCode::kAccepted ||
       !state.host->composition().registerPreviewSurfaceProvider("windows-d3d12-preview",

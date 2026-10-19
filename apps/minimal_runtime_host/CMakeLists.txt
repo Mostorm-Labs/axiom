@@ -35,7 +35,6 @@ if(WIN32)
   if(MSVC)
     target_compile_options(axiom_minimal_windows_surface PRIVATE /W4 /permissive- /WX /EHsc /wd4201 /wd4244 /wd4267)
   endif()
-
   add_executable(axiom_minimal_runtime_host_windows WIN32
     windows_main.cpp)
   target_link_libraries(axiom_minimal_runtime_host_windows PRIVATE
@@ -46,6 +45,7 @@ if(WIN32)
   else()
     target_compile_definitions(axiom_minimal_runtime_host_windows PRIVATE AXIOM_MINIMAL_HAS_DEBUG_UI=0)
   endif()
+
   if(TARGET CanvasSkia::Skia)
     target_link_libraries(axiom_minimal_runtime_host_windows PRIVATE CanvasSkia::Skia)
   endif()
@@ -66,6 +66,23 @@ endif()
 
 if(BUILD_TESTING)
   if(WIN32)
+    add_executable(axiom_minimal_windows_input_pipeline_tests
+      tests/windows_input_pipeline_test.cpp)
+    target_link_libraries(axiom_minimal_windows_input_pipeline_tests PRIVATE
+      axiom_minimal_runtime_host axiom_minimal_windows_surface user32 gdi32 libcpmt)
+    target_compile_features(axiom_minimal_windows_input_pipeline_tests PRIVATE cxx_std_20)
+    target_compile_definitions(axiom_minimal_windows_input_pipeline_tests PRIVATE
+      NOMINMAX AXIOM_MINIMAL_HAS_DEBUG_UI=0 AXIOM_RUNTIME_QUALIFICATION=1)
+    if(MSVC)
+      target_compile_options(axiom_minimal_windows_input_pipeline_tests PRIVATE
+        /W4 /permissive- /WX /EHsc /UNDEBUG /wd4201 /wd4244 /wd4267)
+    endif()
+    add_test(NAME FC00XWindowsMouseHistory
+      COMMAND axiom_minimal_windows_input_pipeline_tests history)
+    add_test(NAME FC00XWindowsPreviewOrigin
+      COMMAND axiom_minimal_windows_input_pipeline_tests origin)
+    add_test(NAME FC00XPreviewCanonicalCoordinates
+      COMMAND axiom_minimal_windows_input_pipeline_tests coordinates)
     add_executable(axiom_minimal_windows_surface_binding_tests
       tests/windows_surface_binding_test.cpp)
     target_link_libraries(axiom_minimal_windows_surface_binding_tests PRIVATE
