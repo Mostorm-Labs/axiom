@@ -6,6 +6,7 @@
 #include <cassert>
 #include <thread>
 #include <limits>
+#include <iostream>
 
 using namespace canvas::ink_playground;
 using namespace canvas::runtime;
@@ -74,7 +75,7 @@ void arrow_then_second_creation_remains_usable() {
   select(CanvasCreationPreset::kArrow, 1U);
   draw(71U, 20.0F, 30.0F, 120.0F, 30.0F);
   assert(host.semanticObjectCount() == 1U);
-  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(host.presentCanonicalFrame(host.nextCanonicalFrameId(), 0.0));
   select(CanvasCreationPreset::kRectangle, 2U);
   draw(72U, 40.0F, 60.0F, 160.0F, 140.0F);
   assert(host.semanticObjectCount() == 2U &&
@@ -112,7 +113,7 @@ void arrow_then_arrow_remains_usable() {
   selectArrow(1U);
   draw(81U, 20.0F, 30.0F, 120.0F, 30.0F);
   assert(host.semanticObjectCount() == 1U);
-  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(host.presentCanonicalFrame(host.nextCanonicalFrameId(), 0.0));
   // The product keeps the selected creation preset active after a commit;
   // a second gesture must therefore work without another control request.
   draw(82U, 40.0F, 60.0F, 160.0F, 60.0F);
@@ -143,7 +144,7 @@ void arrow_then_arrow_reuses_platform_pointer() {
   };
   draw(1U, 30.0F);
   assert(host.semanticObjectCount() == 1U);
-  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(host.presentCanonicalFrame(host.nextCanonicalFrameId(), 0.0));
   draw(4U, 60.0F);
   assert(host.semanticObjectCount() == 2U &&
          "a stable Windows mouse pointer must be reusable for Arrow creation");
@@ -172,7 +173,7 @@ void line_then_line_reuses_platform_pointer() {
   };
   draw(1U, 30.0F);
   assert(host.semanticObjectCount() == 1U);
-  assert(host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0));
+  assert(host.presentCanonicalFrame(host.nextCanonicalFrameId(), 0.0));
   draw(4U, 60.0F);
   assert(host.semanticObjectCount() == 2U &&
          "Line must remain reusable for a second connector gesture");
@@ -190,7 +191,7 @@ void create_move_changes_real_pixels_without_canonical_mutation() {
   const PointerKey key{11U, 42U, 1U};
   assert(host.creationPointer(key, PointerPhase::kDown, 20, 20));
   assert(host.creationPointer(key, PointerPhase::kMove, 120, 100));
-  assert(host.presentTransientOverlayFrame(2U));
+  assert(host.presentTransientOverlayFrame(host.nextCanonicalFrameId()));
   assert(host.previewSurfaceProvider()->readbackRgba(preview).code ==
          canvas::render::BackendSubmissionCode::kAccepted);
   assert(preview != std::vector<std::uint8_t>(preview.size(), 0U) &&
@@ -277,13 +278,15 @@ void queued_width_patch_preserves_remote_style() {
   using namespace canvas::semantic;
   const auto id = host.selectedPrimaryObject();
   const SolidStroke remote{{.9F,.1F,.2F,1},2,StrokeCap::kRound,RoundJoin{},DashPattern{{3,4},1}};
-  assert(canvas::ink_playground::InkPlaygroundHistoryTestAccess::applyRemote(host,
-      PatchPropertiesOp{{{id,0x101,PropertyPatchAction::kSet,
-          PropertyValue{StrokeStyleValue{remote}}}}}));
   CanvasControlRequest request{}; request.clientId=1; request.requestId=1; request.target=target;
   request.payload.kind=CanvasControlPayloadKind::kSelectedAppearance;
   request.payload.appearance=draft; request.payload.appearance.strokeWidth=9;
   assert(service.enqueue(request).state == CanvasControlReceiptState::kQueued);
+  // The queue captures its base at enqueue. Interleave the remote edit after
+  // that capture, so unchanged fields can be merged at the owner safe point.
+  assert(canvas::ink_playground::InkPlaygroundHistoryTestAccess::applyRemote(host,
+      PatchPropertiesOp{{{id,0x101,PropertyPatchAction::kSet,
+          PropertyValue{StrokeStyleValue{remote}}}}}));
   assert(service.processPending(1) == 1);
   const auto actual = host.selectedObjectRecord(); assert(actual.has_value());
   const auto entry = std::find_if(actual->properties.entries.begin(), actual->properties.entries.end(),
@@ -315,9 +318,13 @@ void queued_selected_size_keeps_original_target() {
   assert(service.enqueue(request).state == CanvasControlReceiptState::kQueued);
   assert(host.selectAtViewPoint(190,45));
   const auto second = host.selectedPrimaryObject(); assert(first != second);
-  assert(service.processPending(1) == 1);
+  const auto before = canvas::ink_playground::InkPlaygroundHistoryTestAccess::objects(host);
+  const auto operations = host.submittedOperationCount();
+  assert(service.processPending(1) == 0); // Rejected before reaching Apply.
   const auto receipt = service.receipt({9,1}); assert(receipt.has_value());
   assert(receipt->state == CanvasControlReceiptState::kStaleTarget);
+  assert(canvas::ink_playground::InkPlaygroundHistoryTestAccess::objects(host) == before);
+  assert(host.submittedOperationCount() == operations);
 }
 
 struct Facade final : CanvasRuntimeFacadeAdapter {
@@ -347,11 +354,13 @@ int main(int argc, char** argv) {
   else if(argc>1 && std::string_view(argv[1])=="width-style") queued_width_patch_preserves_remote_style();
   else if(argc>1 && std::string_view(argv[1])=="failed-down") failed_brush_down_rolls_back_session();
   else if(argc>1 && std::string_view(argv[1])=="target-capture") queued_selected_size_keeps_original_target();
-  else if(argc>1) queue_never_applies_off_owner();
+  else if(argc>1 && std::string_view(argv[1])=="owner") queue_never_applies_off_owner();
   else if (argc > 1 && std::string_view(argv[1]) == "arrow") arrow_then_second_creation_remains_usable();
   else if (argc > 1 && std::string_view(argv[1]) == "arrow-arrow") arrow_then_arrow_remains_usable();
   else if (argc > 1 && std::string_view(argv[1]) == "arrow-arrow-pointer") arrow_then_arrow_reuses_platform_pointer();
   else if (argc > 1 && std::string_view(argv[1]) == "line-line-pointer") line_then_line_reuses_platform_pointer();
-  else one_gesture_one_operation();
+  else if(argc==1) one_gesture_one_operation();
+  else return 64;
+  std::cout << "PASS FC01 control scenario: " << (argc > 1 ? argv[1] : "one-gesture") << '\n';
   return 0;
 }

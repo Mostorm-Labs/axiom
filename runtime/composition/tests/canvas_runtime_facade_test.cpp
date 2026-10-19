@@ -120,5 +120,35 @@ int main() {
   assert(stale.state == canvas::runtime::ProductControlState::kRejected);
   assert(stale.control.has_value());
   assert(stale.control->state == canvas::runtime::CanvasControlReceiptState::kStaleTarget);
+
+  // Full-ID readback must distinguish objects with identical low 64 bits.
+  canvas::interaction::CanvasEditingRuntime identityRuntime;
+  assert(identityRuntime.bindSurface(256U, 256U));
+  canvas::runtime::CanvasRuntimeFacade identityFacade(identityRuntime, {7U, 2U, 3U, 4U});
+  canvas::semantic::ObjectRecord first{};
+  first.id = canvas::foundation::ObjectId::fromUint64(9U);
+  first.id.bytes[0] = 0xA5U;
+  first.kind = canvas::semantic::ObjectKind::kShape;
+  first.kind_version = 1U;
+  first.placement.order_key = canvas::semantic::OrderKey{{0x40U}};
+  first.content = canvas::semantic::ShapeContent{1U, 40.0, 40.0};
+  auto second = first;
+  second.id.bytes[0] = 0x5AU;
+  second.placement.order_key = canvas::semantic::OrderKey{{0x80U}};
+  second.transform.tx = 100.0;
+  const canvas::semantic::Operation seed{
+      canvas::semantic::OperationId{canvas::foundation::ObjectId::fromUint64(500U)},
+      canvas::semantic::DocumentId{canvas::foundation::ObjectId::fromUint64(1U)},
+      1U, 1U, canvas::semantic::InsertObjectsOp{{first, second}}};
+  assert(identityRuntime.applyExternalOperation(seed, canvas::semantic::ApplySource::kRemoteSync).disposition ==
+         canvas::semantic::ApplyDisposition::kApplied);
+  assert(identityRuntime.setSelectionMode(true));
+  assert(identityRuntime.selectAtViewPoint(20, 20));
+  const auto firstReadback = identityFacade.readCanvasControlSnapshot(identityFacade.target());
+  assert(firstReadback.selectedObject == first.id);
+  assert(identityRuntime.selectAtViewPoint(120, 20));
+  const auto secondReadback = identityFacade.readCanvasControlSnapshot(identityFacade.target());
+  assert(secondReadback.selectedObject == second.id);
+  assert(firstReadback.selectedObject != secondReadback.selectedObject);
   return 0;
 }

@@ -111,6 +111,7 @@ if(BUILD_TESTING)
         target_compile_options(axiom_editor_history_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
     endif()
     add_test(NAME G4EditorHistory COMMAND axiom_editor_history_tests)
+    add_test(NAME FC01EditorHistoryInverseFamilies COMMAND axiom_editor_history_tests fc01)
 
     add_executable(axiom_session_conflict_tests tests/session_conflict_test.cpp)
     target_link_libraries(axiom_session_conflict_tests PRIVATE canvas_runtime_interaction)

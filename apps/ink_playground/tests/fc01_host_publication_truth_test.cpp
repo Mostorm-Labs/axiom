@@ -63,6 +63,22 @@ semantic::ObjectRecord shape(std::uint64_t id) {
   r.content=semantic::ShapeContent{1,20,20};return r;
 }
 
+// Deterministic platform-feedback adapter, not an observed OS present. Local
+// submit alone must not claim Presented; approximate/old identities reject.
+void qualifyCurrentSubmittedFrame(Host& host) {
+  const auto identity = host.lastSubmittedCanonicalFrame();
+  assert(identity);
+  render::PresentedFeedback feedback{identity->viewId, identity->frameId,
+      identity->surfaceGeneration, identity->metricsGeneration,
+      render::PresentOutcome::kPresented, render::PresentEvidenceKind::kApproximate, std::nullopt};
+  const auto before = host.operationOutcome().presentedGeneration;
+  assert(!host.receivePlatformPresented(feedback));
+  assert(host.operationOutcome().presentedGeneration == before);
+  feedback.evidence = render::PresentEvidenceKind::kPlatformQualified;
+  assert(host.receivePlatformPresented(feedback));
+  assert(!host.receivePlatformPresented(feedback));
+}
+
 void five_presets_publish_exactly_once_and_four_domains_remain_separate() {
   for(const auto preset:{ink_playground::CreationPreset::kRectangle,ink_playground::CreationPreset::kEllipse,
       ink_playground::CreationPreset::kTriangle,ink_playground::CreationPreset::kLine,ink_playground::CreationPreset::kArrow}) {
@@ -83,7 +99,9 @@ void five_presets_publish_exactly_once_and_four_domains_remain_separate() {
     assert(outcome.axis.localDurable==Progress::kPending && outcome.axis.cloudSynced==Progress::kPending);
     assert(axis.localFrontier.ordinal.value()==0 && axis.cloudFrontier.ordinal.value()==0);
     const auto gen=host.semanticGeneration();
-    assert(host.presentCanonicalFrame(1,0,false));
+    assert(host.presentCanonicalFrame(host.nextCanonicalFrameId(),0,false));
+    assert(host.operationOutcome().presentedGeneration.value()==0);
+    qualifyCurrentSubmittedFrame(host);
     outcome=host.operationOutcome();
     assert(outcome.presentedGeneration==gen);
     assert(outcome.axis.localDurable==Progress::kPending);
@@ -99,7 +117,8 @@ void five_presets_publish_exactly_once_and_four_domains_remain_separate() {
     assert(axis.events.size()==1);
     // Duplicate Up and rendering never republish the accepted operation.
     assert(host.creationPointer({11,42,1},input::PointerPhase::kUp,100,80));
-    assert(host.presentCanonicalFrame(2,0,false));
+    assert(host.presentCanonicalFrame(host.nextCanonicalFrameId(),0,false));
+    qualifyCurrentSubmittedFrame(host);
     assert(axis.events.size()==1 && host.semanticGeneration()==gen);
     ink_playground::CanvasControlBinding binding(host,{1,1,1,1});
     const auto snapshot=binding.snapshot({1,1,1,1});
@@ -136,7 +155,7 @@ void remote_replay_reject_duplicate_and_cancel_have_no_local_outbox() {
   assert(host.selectCreationPreset(ink_playground::CreationPreset::kTriangle));
   const auto cancelGen=host.semanticGeneration();
   assert(host.creationPointer({11,44,1},input::PointerPhase::kDown,20,20));
-  for(unsigned i=0;i<100;++i)assert(host.creationPointer({11,44,1},input::PointerPhase::kMove,60+i,80));
+  for(unsigned i=0;i<100;++i)assert(host.creationPointer({11,44,1},input::PointerPhase::kMove,60.0F+static_cast<float>(i),80));
   assert(host.creationPointer({11,44,1},input::PointerPhase::kCancel,160,80));
   assert(host.semanticGeneration()==cancelGen && axis.events.empty());
   std::cout<<"PASS E09 real host Remote/Replay/AlreadyApplied/Rejected/100 Move/Cancel no-echo\n";
@@ -169,7 +188,9 @@ void publication_callback_cannot_reenter_apply_and_old_surface_is_not_presented(
   create(host,ink_playground::CreationPreset::kRectangle);
   assert(sink.nested.disposition==semantic::ApplyDisposition::kRejected && host.semanticObjectCount()==1);
   assert(!sink.nestedFixture && !sink.nestedPointer && !host.creationActive());
-  assert(host.presentCanonicalFrame(1,0,false));
+  assert(host.presentCanonicalFrame(host.nextCanonicalFrameId(),0,false));
+  assert(host.operationOutcome().presentedGeneration.value()==0);
+  qualifyCurrentSubmittedFrame(host);
   assert(host.operationOutcome().presentedGeneration==host.semanticGeneration());
   assert(host.resizeSurface(300,256));
   assert(host.operationOutcome().presentedGeneration.value()==0);
@@ -204,8 +225,9 @@ void edits_history_and_failures_preserve_committed_truth() {
   assert(Access::objects(host)==beforeDelete);
   verifyIntent([&]{return host.redo();},semantic::OperationKind::kDeleteObjects);
   // Lost render target cannot make the semantic compensation disappear.
-  assert(host.loseSurface());axis.failDelivery=true;
+  axis.failDelivery=true;
   verifyIntent([&]{return host.undo();},semantic::OperationKind::kRestoreObjects);
+  assert(host.loseSurface());
   assert(!host.presentCanonicalFrame(1,0,false));
   const auto committed=host.semanticGeneration();
   assert(host.operationOutcome().axis.localDurable==Progress::kFailed);

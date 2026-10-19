@@ -186,7 +186,9 @@ TEST(G106Snapshot, ProtobufOffContractOrRoundTrip) {
 TEST(G106Snapshot, RejectsInvalidEnvelopeAndDuplicateIds) {
 #if defined(CANVAS_SEMANTIC_PROTOBUF)
     auto snapshot = minimal();
-    snapshot.schema_version = 3U;
+    // Snapshot/3 is now a supported manifest envelope. Keep this negative
+    // about an unknown version, independently of its required manifest fields.
+    snapshot.schema_version = 0xFFFFFFFFU;
     EXPECT_EQ(SnapshotCodec::encode(snapshot).error, SemanticError::kUnsupportedVersion);
     snapshot = minimal();
     snapshot.document_id = DocumentId{};

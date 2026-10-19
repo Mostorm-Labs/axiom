@@ -7,6 +7,8 @@
 
 #include <gtest/gtest.h>
 
+#include <limits>
+
 namespace canvas::semantic {
 namespace {
 
@@ -205,6 +207,134 @@ TEST(FC01Shape2Apply, GoldenRootsAndNestedUnknownWireFailClosed) {
     auto duplicate = shapeBytes;
     duplicate.insert(duplicate.end(), {0x08U, 0x03U});
     EXPECT_FALSE(SemanticCodec::observeGoldenFixture("ShapeContent", duplicate, true).accepted);
+}
+
+// Expectations are the frozen SH2-G06..12/G18/G21 negatives, not values
+// captured from the candidate. Exercise commit admission, including its ledger,
+// rather than relying only on a successful structural-validator call.
+template <typename Store>
+void expectAtomicReject(const Operation& operation) {
+    for (const auto source : {ApplySource::kLocalInteraction, ApplySource::kRemoteSync,
+                              ApplySource::kRestoreReplay, ApplySource::kUndoRedo}) {
+        Store objects;
+        AppliedOperationLedger ledger;
+        SemanticGenerationState generation;
+        CanonicalCommitClock clock(RuntimeEpoch(1U));
+        const auto result = OperationEngine{}.apply(operation, source, objects, ledger, generation, clock);
+        EXPECT_EQ(result.disposition, ApplyDisposition::kRejected);
+        EXPECT_FALSE(result.commit_record.has_value());
+        EXPECT_TRUE(objects.allObjects().empty());
+        EXPECT_FALSE(ledger.find(operation.id).has_value());
+        EXPECT_EQ(generation.current().value(), 0U);
+        EXPECT_EQ(clock.lastCommittedOrdinal().value(), 0U);
+    }
+}
+
+TEST(FC01Shape2Closeout, FrozenNegativeTupleAndExtentMatrixIsAtomic) {
+    std::vector<ObjectRecord> invalid;
+    for (const auto tuple : {std::pair{1U, 3U}, {2U, 0U}, {2U, 1U},
+                             {2U, 2U}, {2U, 4U}, {3U, 3U}}) {
+        invalid.push_back(shape(tuple.first, tuple.second, 2U));
+    }
+    for (const auto extent : {0.0, -1.0, -0.0, std::numeric_limits<double>::infinity(),
+                              -std::numeric_limits<double>::infinity(),
+                              std::numeric_limits<double>::quiet_NaN()}) {
+        for (const bool width : {true, false}) {
+            auto object = shape(2U, 3U, 2U);
+            auto& content = std::get<ShapeContent>(object.content);
+            if (width) content.width = extent;
+            else content.height = extent;
+            invalid.push_back(object);
+        }
+    }
+    auto wrongContent = shape(2U, 3U, 2U);
+    wrongContent.content = ConnectorContent{};
+    invalid.push_back(wrongContent);
+    auto wrongKind = shape(2U, 3U, 2U);
+    wrongKind.kind = ObjectKind::kConnector;
+    invalid.push_back(wrongKind);
+    for (const auto& object : invalid) {
+        auto operation = insert(shape(2U, 3U, 1U), 10U);
+        operation.payload = InsertObjectsOp{{shape(2U, 3U, 1U), object}};
+        expectAtomicReject<ReferenceObjectStore>(operation);
+        expectAtomicReject<IndexedObjectStore>(operation);
+        operation.payload = RestoreObjectsOp{{shape(2U, 3U, 1U), object}};
+        expectAtomicReject<ReferenceObjectStore>(operation);
+        expectAtomicReject<IndexedObjectStore>(operation);
+    }
+}
+
+TEST(FC01Shape2Closeout, AlteredPayloadCollisionPreservesOriginalCommit) {
+    IndexedObjectStore objects;
+    AppliedOperationLedger ledger;
+    SemanticGenerationState generation;
+    CanonicalCommitClock clock(RuntimeEpoch(1U));
+    OperationEngine engine;
+    auto operation = insert(shape(2U, 3U, 1U), 10U);
+    ASSERT_EQ(engine.apply(operation, ApplySource::kLocalInteraction, objects, ledger,
+                           generation, clock).disposition, ApplyDisposition::kApplied);
+    const auto before = objects.allObjects();
+    const auto original = ledger.find(operation.id);
+    ASSERT_TRUE(original.has_value());
+    std::get<ShapeContent>(std::get<InsertObjectsOp>(operation.payload).objects.front().content).width = 200.0;
+    const auto result = engine.apply(operation, ApplySource::kRemoteSync, objects, ledger, generation, clock);
+    EXPECT_EQ(result.disposition, ApplyDisposition::kRejected);
+    EXPECT_FALSE(result.commit_record.has_value());
+    EXPECT_EQ(objects.allObjects(), before);
+    ASSERT_TRUE(ledger.find(operation.id).has_value());
+    EXPECT_EQ(ledger.find(operation.id)->canonical_operation.id, original->canonical_operation.id);
+    EXPECT_EQ(ledger.find(operation.id)->canonical_operation.payload, original->canonical_operation.payload);
+    EXPECT_EQ(generation.current().value(), 1U);
+    EXPECT_EQ(clock.lastCommittedOrdinal().value(), 1U);
+}
+
+TEST(FC01Shape2Closeout, LegacySnapshotRemainsV1AndTriangleCannotBeDowngraded) {
+    const SemanticSnapshot legacy{DocumentId{id(1000U)}, 1U,
+                                   {shape(1U, 1U, 1U), shape(1U, 2U, 2U)}};
+    const auto oldReader = SnapshotCodec::encode(legacy);
+    const auto newReader = SnapshotCodec::encode(legacy, SnapshotCapability::kShape2Triangle);
+    ASSERT_TRUE(oldReader.ok());
+    ASSERT_TRUE(newReader.ok());
+    EXPECT_EQ(oldReader.bytes, newReader.bytes);
+    const auto decoded = SnapshotCodec::decode(oldReader.bytes, SnapshotCapability::kShape2Triangle);
+    ASSERT_TRUE(decoded.ok());
+    EXPECT_EQ(*decoded.snapshot, legacy);
+    auto invalid = legacy;
+    invalid.objects.push_back(shape(2U, 3U, 3U));
+    EXPECT_FALSE(SnapshotCodec::encode(invalid, SnapshotCapability::kShape2Triangle).ok());
+    ReferenceObjectStore objects;
+    SemanticGenerationState generation;
+    DocumentRuntimeState state = DocumentRuntimeState::kLoading;
+    EXPECT_FALSE(SnapshotBootstrapper::restore(invalid, SnapshotCapability::kShape2Triangle,
+                                              state, objects, generation).restored);
+    EXPECT_EQ(state, DocumentRuntimeState::kFailed);
+    EXPECT_TRUE(objects.allObjects().empty());
+    EXPECT_EQ(generation.current().value(), 0U);
+}
+
+TEST(FC01Shape2Closeout, AttachedConnectorCannotTargetTriangle) {
+    IndexedObjectStore objects;
+    AppliedOperationLedger ledger;
+    SemanticGenerationState generation;
+    CanonicalCommitClock clock(RuntimeEpoch(1U));
+    OperationEngine engine;
+    ASSERT_EQ(engine.apply(insert(shape(2U, 3U, 1U), 10U), ApplySource::kLocalInteraction,
+                           objects, ledger, generation, clock).disposition, ApplyDisposition::kApplied);
+    auto connector = shape(1U, 1U, 2U);
+    connector.kind = ObjectKind::kConnector;
+    ConnectorContent content;
+    content.start.value = AttachedEndpoint{id(1U), AutoPerimeterAnchor{}};
+    content.end.value = FreePointEndpoint{{200.0, 100.0}};
+    content.routing = ConnectorRouting::kStraight;
+    connector.content = content;
+    const auto before = objects.allObjects();
+    const auto rejected = engine.apply(insert(connector, 11U), ApplySource::kRemoteSync,
+                                        objects, ledger, generation, clock);
+    EXPECT_EQ(rejected.disposition, ApplyDisposition::kRejected);
+    EXPECT_EQ(objects.allObjects(), before);
+    EXPECT_FALSE(ledger.find(OperationId{id(11U)}).has_value());
+    EXPECT_EQ(generation.current().value(), 1U);
+    EXPECT_EQ(clock.lastCommittedOrdinal().value(), 1U);
 }
 
 }  // namespace

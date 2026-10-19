@@ -61,5 +61,15 @@ class InkPlaygroundHistoryTestAccess final {
     return host.applyExternalOperation(op,semantic::ApplySource::kRemoteSync).disposition ==
         semantic::ApplyDisposition::kApplied;
   }
+  // Existing Group semantics are fixture data for the frozen remote-child
+  // History conflict. This does not expose a product Group creation command.
+  static bool insertHistoryFixture(InkPlaygroundHost& host, semantic::ObjectRecord object) {
+    const auto id = object.id;
+    const auto forward = host.allocateOperationId();
+    const auto inverse = host.allocateOperationId();
+    return host.applyLocalHistoryOperation(
+        {forward, host.documentId_, 1, 1, semantic::InsertObjectsOp{{std::move(object)}}},
+        {inverse, host.documentId_, 1, 1, semantic::DeleteObjectsOp{{id}}});
+  }
 };
 }  // namespace canvas::ink_playground

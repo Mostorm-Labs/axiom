@@ -19,11 +19,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--label", default="source-loss")
     parser.add_argument("--expect-candidate-red", action="store_true")
+    parser.add_argument("--vcvars", type=Path, default=VCVARS,
+                        help="Explicit native MSVC environment; use the locked SDK ABI toolchain")
     args = parser.parse_args()
     output = ROOT / "out/fc01" / args.label
     output.mkdir(parents=True, exist_ok=True)
     environment = subprocess.run(
-        f'call "{VCVARS}" >nul && set', shell=True, capture_output=True,
+        f'call "{args.vcvars}" >nul && set', shell=True, capture_output=True,
         text=True, check=True,
     )
     import os
@@ -100,7 +102,7 @@ def main() -> int:
               "provider": {"kind": "local-windows-native", "compiler": compiler,
                            "compiler_sha256": sha(Path(compiler)),
                            "version_command": [compiler, "/Bv"], "version_exit_code": compiler_version.returncode,
-                           "vcvars": str(VCVARS), "vcvars_sha256": sha(VCVARS),
+                           "vcvars": str(args.vcvars), "vcvars_sha256": sha(args.vcvars),
                            "windows_sdk_version": env.get("WINDOWSSDKVERSION")},
               "expected_baseline_red": rows[0]["run_exit_code"] != 0 and
                  b"Assertion failed: ingress.activeCount() == 1" in baseline_log,
