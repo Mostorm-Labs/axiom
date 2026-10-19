@@ -1,0 +1,26 @@
+Test project C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/fc01-closeout/build
+    Start 380: FC02WindowsTextToolEntry
+1/4 Test #380: FC02WindowsTextToolEntry .........   Passed    0.67 sec
+    Start 381: FC02WindowsTextToolFocus
+2/4 Test #381: FC02WindowsTextToolFocus .........***Failed    0.28 sec
+after Text widget: tool=4 phase=0 objects=0
+after canvas click: tool=4 phase=1 canvas_focus=0 objects=0
+Assertion failed: GetFocus() == owner, file C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\apps\minimal_runtime_host\tests\windows_text_tool_entry_test.cpp, line 125
+
+    Start 382: FC02WindowsTextToolTouchFocus
+3/4 Test #382: FC02WindowsTextToolTouchFocus ....***Failed    0.28 sec
+after Text widget: tool=4 phase=0 objects=0
+after canvas click: tool=4 phase=1 canvas_focus=0 objects=0
+Assertion failed: GetFocus() == owner, file C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\apps\minimal_runtime_host\tests\windows_text_tool_entry_test.cpp, line 125
+
+    Start 383: FC02WindowsTextToolAfterInk
+4/4 Test #383: FC02WindowsTextToolAfterInk ......   Passed    0.39 sec
+
+50% tests passed, 2 tests failed out of 4
+
+Total Test time (real) =   2.05 sec
+
+The following tests FAILED:
+	381 - FC02WindowsTextToolFocus (Failed)
+	382 - FC02WindowsTextToolTouchFocus (Failed)
+Errors while running CTest

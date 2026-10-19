@@ -65,6 +65,7 @@ struct State final {
   std::uint64_t sequence = 0;
   std::uint64_t timestamp = 0;
   std::uint64_t lastPresentedFrame = 0;
+  std::uint64_t lastDebugActivitySequence = 0;
   bool releasingPointerUp = false;
   std::optional<MOUSEMOVEPOINT> lastMousePoint;
   std::optional<canvas::input::PointerKey> mouseKey;
@@ -338,6 +339,21 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
         logInput(*state, "facade-control", true, {});
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
       if (state->debugUi) state->debugUi->refresh();
+      if (state->inputLog && state->controller) {
+        for (const auto& entry : state->controller->snapshot().activity.entries) {
+          if (entry.sequence <= state->lastDebugActivitySequence) continue;
+          const auto control = entry.productReceipt ? entry.productReceipt->control : std::nullopt;
+          std::fprintf(state->inputLog.get(),
+              "debug_control sequence=%llu request=%llu action=%s state=%u control_state=%d error=%d detail=%s\n",
+              static_cast<unsigned long long>(entry.sequence),
+              static_cast<unsigned long long>(entry.requestId), entry.action.c_str(),
+              static_cast<unsigned>(entry.state), control ? static_cast<int>(control->state) : -1,
+              control ? static_cast<int>(control->error) : -1, control ? control->detail.c_str() : "");
+          state->lastDebugActivitySequence = entry.sequence;
+          logInput(*state, "debug-control-readback",
+              entry.state == canvas::debug_ui::DebugActivityState::kApplied, {});
+        }
+      }
 #endif
       if (needsCanvasPaint) InvalidateRect(window, nullptr, FALSE);
       return 0;
@@ -383,6 +399,9 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       return 0;
     case WM_LBUTTONDOWN:
       if (isPromotedPointerMouse()) return 0;
+      // The owned Debug UI popup can retain keyboard focus after a tool click.
+      // Canvas pointer entry must also restore the native text/IME destination.
+      if (GetFocus() != window) SetFocus(window);
       SetCapture(window);
       sendPointer(*state, lParam, canvas::input::PointerPhase::kDown);
       if (!state->mouseKey) releaseHostMouseCapture(*state);

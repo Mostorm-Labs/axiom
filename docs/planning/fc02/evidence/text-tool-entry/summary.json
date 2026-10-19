@@ -1,0 +1,111 @@
+{
+  "task": "FC02-WINDOWS-TEXT-TOOL-ENTRY",
+  "baseline_revision": "2959c92df1d6b5e0560e9fa8343d4a82b46181b1",
+  "execution_ref": "refs/heads/codex/fc02-runtime-boundary-design",
+  "recorded_at_utc": "2026-10-19T17:24:28.684319+00:00",
+  "user_failure": "FAIL; preserved separately from new manual retest",
+  "confirmed_cause": "Debug popup retains keyboard focus; Windows canvas mouse/touch Down did not restore owner focus. Runtime enters Text/Editing but WM_CHAR/IME does not reach it.",
+  "tool_reversion": "Not reproduced by isolated widget/host tests, including 10 prior Ink strokes. Old log lacks control payload/readback. New diagnostics record control receipts and tool/text/focus state; actual user case must be retested.",
+  "change_scope": [
+    "Windows canvas mouse/touch/pen Down focus wiring",
+    "Windows input/control diagnostics",
+    "isolated native entry regressions and evidence"
+  ],
+  "tests": [
+    {
+      "name": "FC02WindowsTextToolEntry",
+      "expected": "Actual Text widget through Router/Facade plus host click retains Text/Editing without Ink",
+      "red": "PASS",
+      "actual": "Text=4 / Editing=1 / objects=0",
+      "result": "PASS"
+    },
+    {
+      "name": "FC02WindowsTextToolFocus",
+      "expected": "Mouse click restores keyboard HWND; actual focus-routed A你好 input reaches Runtime; Enter finishes and next click creates only empty draft",
+      "red": "FAIL: canvas_focus=0",
+      "actual": "canvas_focus=1; projection and object count assertions passed",
+      "result": "PASS",
+      "input_type": "synthetic hidden-window fixture"
+    },
+    {
+      "name": "FC02WindowsTextToolTouchFocus",
+      "expected": "Touch same focus/input lifecycle without global mouse capture",
+      "red": "FAIL: canvas_focus=0",
+      "actual": "canvas_focus=1; text/capture assertions passed",
+      "result": "PASS",
+      "input_type": "synthetic POINTER_INFO seam"
+    },
+    {
+      "name": "FC02WindowsTextToolAfterInk",
+      "expected": "After 10 Ink objects, Text remains selected; text input/finish/recreate works",
+      "red": "PASS for tool/session; typing/finish/recreate added as follow-up regression",
+      "actual": "Text=4 / Editing=1 / 10 prior objects, one new text object after typing",
+      "result": "PASS"
+    },
+    {
+      "name": "scoped CTest",
+      "expected": "Existing 226 tests and 4 entry tests pass",
+      "actual": 230,
+      "skipped": 0,
+      "result": "PASS"
+    },
+    {
+      "name": "Python schema/boundary/font",
+      "expected": "Use emitted AXIOM_PROTOC; all 16 tests run",
+      "actual": 16,
+      "skipped": 0,
+      "result": "PASS"
+    },
+    {
+      "name": "strict Clang syntax-only",
+      "expected": "Changed native translation units and included inl compile under /W4 /WX -Wextra -Wpedantic -Werror",
+      "actual": 2,
+      "result": "PASS"
+    },
+    {
+      "name": "Windows D3D12 Minimal Host build",
+      "expected": "VS 2026 / MSVC 19.51 x64 /WX, accepted static SDKs, full Debug UI",
+      "result": "PASS"
+    },
+    {
+      "name": "user W1 on baseline2959",
+      "expected": "Select Text then canvas click starts typing",
+      "actual": "User reports brush/cannot type; original log retained",
+      "result": "FAIL"
+    },
+    {
+      "name": "user W1 fixed build retest",
+      "expected": "Select Text, click blank canvas, type/confirm Chinese, Enter, repeat after Ink",
+      "result": "PHYSICAL_PENDING"
+    }
+  ],
+  "sdk": {
+    "semantic": "accepted SDK Store offline resolution; no network or dependency source rebuild",
+    "skia": "accepted r1-full-skia-sdk.lock.json consumer cache"
+  },
+  "compiler": {
+    "msvc_full_version": 195136260,
+    "strict_clang": "22.1.8",
+    "crt": "static-release"
+  },
+  "physical_limits": [
+    "No physical IME, candidate window or touch PASS from synthetic tests",
+    "Original failure remains FAIL until actual new user observation",
+    "No independent Control Review/Gate/PHYS claim"
+  ],
+  "artifacts_binding": "Exact clean source revision, exe SHA-256/path/PID/startup and manual log are materialized after commit in out/fc02-text-entry/physical/session.json",
+  "evidence_sha256": {
+    "build-all.log": "34939e01760a53a1466dec6ea208a02eac0c34d0ed5ddedb37ff48c9964984c7",
+    "clang-results.json": "4cb0ef1509315b8463d0363363aaaa64fcaef391ec3a085814a6ba0cca511832",
+    "clang.log": "b4a70637a2e35870ae4c04e45071abf11f10dd9ec5fd0c8a806b5b411e06fefa",
+    "ctest-names.txt": "74d1bd835d204316384412d7f8419d9e556b65dc9947f2ef92ed8a77770db0f5",
+    "ctest.log": "7f79bd9ac60fb831a6621af514429685aa82a3aa3d361260606ed8ac98f1468d",
+    "device.json": "7cbc019daca736965d1d2d7aca001cfbef3a5f5a2682d2ddbcf38912cbbf634a",
+    "green.log": "d4f5e9d4b46cd234190c004b8173c4c68450a3ba4c38a46f4c299d1d8a7c1227",
+    "python-tests.log": "d9ec7708515644ea5c96b491ccf3747aeb28643ad22f14ef0317cac56cf3c104",
+    "red-touch.log": "d9fda37d670d38623e09f22e2db103284bd505d019c0d346053aa6105b401848",
+    "red.log": "fb21ea04c246373a3e4bd73c1b210bb0c168d86b8627a90070f2a0e261879d2a",
+    "user-failure.json": "cac5caaf83d14d5c36fa605d48f176ba22609c811094e1fcece1e9c9a0d1496c",
+    "user-failure.log": "96985fb73628336d86535af283d0a8c44b6b3d595b145d2e4df6f35234586e42"
+  }
+}

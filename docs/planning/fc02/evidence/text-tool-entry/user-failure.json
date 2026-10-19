@@ -1,0 +1,13 @@
+{
+  "result": "FAIL",
+  "source_revision": "2959c92df1d6b5e0560e9fa8343d4a82b46181b1",
+  "user_report": "Selecting Text tool then clicking canvas draws ink; typing cannot begin.",
+  "expected": "Text tool remains selected; canvas click opens Text editing; keyboard/IME reaches the editor.",
+  "observed": "User report plus host log: final mouse source=1 pointer=1 generation=9 creates object 9 / operation 9; no text input receipts. Existing log does not identify control payloads or active tool, so it alone cannot prove which control applied.",
+  "exe_sha256": "da97cf44efe98e088ca52b08839bb4364edcf6a2a58c6118ffe95abf8f90d44e",
+  "pid": 23508,
+  "log_sha256": "96985fb73628336d86535af283d0a8c44b6b3d595b145d2e4df6f35234586e42",
+  "physical_retest": "PHYSICAL_PENDING",
+  "original_log_sha256": "3d0ed9dd21079136bf0aad5d148cac7c2f4f807b98c28f19496bd707018abecd",
+  "evidence_log_encoding": "UTF-8; normalized LF; original native log remains unmodified in out/fc02-font/physical/windows-2959c92d/manual-input.log"
+}
