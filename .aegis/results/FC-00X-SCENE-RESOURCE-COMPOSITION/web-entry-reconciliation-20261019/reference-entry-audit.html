@@ -1,0 +1,35 @@
+<!doctype html><meta charset="utf-8"><title>P32 Web entry audit</title>
+<iframe id="page" src="/axiom_canvas_demo/"></iframe><pre id="result">PENDING</pre>
+<script type="module">
+const frame = document.getElementById('page');
+frame.addEventListener('load', async () => {
+  const errors = [];
+  try {
+    const win = frame.contentWindow;
+    win.addEventListener('error', event => { errors.push({message: event.message, line: event.lineno}); event.preventDefault(); });
+    const host = await win.axiomG310Ready;
+    const canvas = frame.contentDocument.getElementById('axiom-canvas');
+    // DOM regression only: synthetic events cannot acquire native capture.
+    canvas.setPointerCapture = () => {};
+    canvas.releasePointerCapture = () => {};
+    const rect = canvas.getBoundingClientRect();
+    const before = host.observation();
+    for (const [type, x] of [['pointerdown', 20], ['pointermove', 80], ['pointerup', 140]]) {
+      canvas.dispatchEvent(new win.PointerEvent(type, {pointerId: 7, pointerType: 'touch',
+        bubbles: true, clientX: rect.left + x, clientY: rect.top + 30,
+        pressure: .5, buttons: type === 'pointerup' ? 0 : 1}));
+    }
+    const after = host.observation();
+    document.getElementById('result').textContent = JSON.stringify({
+      status: errors.length || after.pointerSamples - before.pointerSamples !== 3 ? 'FAIL' : 'PASS',
+      scope: 'Correct P32 RuntimeComposition Web reference; synthetic DOM input, no physical capture evidence',
+      title: frame.contentDocument.title, beforeSamples: before.pointerSamples,
+      afterSamples: after.pointerSamples, errors,
+      minimalControlsPresent: !!frame.contentDocument.getElementById('debugUi'),
+      presentedFrames: after.presentedFrames
+    });
+  } catch (error) {
+    document.getElementById('result').textContent = JSON.stringify({status: 'FAIL', error: String(error), errors});
+  }
+}, {once: true});
+</script>

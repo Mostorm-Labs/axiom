@@ -1,0 +1,90 @@
+{
+  "source_revision": "f3df28791cf00535f9035eb0ebbb1f5f1964f8d5",
+  "scope": "Entry/owner reconciliation and diagnostic RED only; no product fix",
+  "status": "WEB_MINIMAL_CONSUMER_NOT_READY",
+  "checks": [
+    {
+      "name": "selected-browser-entry",
+      "expected": "P32 Web Minimal consumer using RuntimeComposition",
+      "actual": "Opened /ink_playground/, a qualification consumer using InkPlaygroundHost directly",
+      "result": "FAIL"
+    },
+    {
+      "name": "user-reported-drawing",
+      "expected": "Drawing visible on the requested Web consumer",
+      "actual": "User: 什么都画不上去，只有debug ui可以打开; observed on the mistakenly selected Playground page",
+      "result": "FAIL"
+    },
+    {
+      "name": "correct-web-composition-owner",
+      "expected": "One existing RuntimeComposition, no Playground core dependency",
+      "actual": "axiom_canvas_demo_web -> axiom_canvas_demo_common -> RuntimeComposition; WebSurfaceHost owns composition and exposes facade()",
+      "result": "PASS"
+    },
+    {
+      "name": "web-debug-on-controls",
+      "expected": "Usable controls through RuntimeFacade for the requested Minimal workflow",
+      "actual": "Web reference HTML contains only 320x180 canvases; Web executable target has no optional canvas_debug_ui linkage or facade control bindings",
+      "result": "FAIL"
+    },
+    {
+      "name": "correct-reference-pointer-js-wasm",
+      "expected": "Three Down/Move/Up samples enter Runtime",
+      "actual": {
+        "status": "FAIL",
+        "scope": "Correct P32 RuntimeComposition Web reference; synthetic DOM input, no physical capture evidence",
+        "title": "Axiom G3-10 Web Reference Host",
+        "beforeSamples": 0,
+        "afterSamples": 0,
+        "errors": [
+          {
+            "message": "Uncaught TypeError: Cannot convert 68300000 to a BigInt",
+            "line": 68
+          },
+          {
+            "message": "Uncaught TypeError: Cannot convert 68300000 to a BigInt",
+            "line": 68
+          },
+          {
+            "message": "Uncaught TypeError: Cannot convert 68300000 to a BigInt",
+            "line": 68
+          }
+        ],
+        "minimalControlsPresent": false,
+        "presentedFrames": 0
+      },
+      "result": "FAIL"
+    },
+    {
+      "name": "product-source-preservation",
+      "expected": "Identify the right consumer before changing product code",
+      "actual": "No apps/runtime/debug_ui source changes from f3df2879; product code also unchanged from the built bd3eaf8a snapshot",
+      "result": "PASS"
+    },
+    {
+      "name": "correct-minimal-human-interactions",
+      "expected": "Physical matrix executed against correct Minimal Web consumer",
+      "actual": "Not observed; entry is not ready for the complete requested workflow",
+      "result": "PHYSICAL_PENDING"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\ink_playground\\axiom_ink_playground_web.wasm",
+      "sha256": "d70608bdf1452e493c5d5de1ec0787e5e129f4f39a40927ae7ae52bb7c734815"
+    },
+    {
+      "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.wasm",
+      "sha256": "b49bebbb4561b46f22780d6f118506ef8dc2192976b5ac62086ad5c3d4055dc3"
+    }
+  ],
+  "previous_results": {
+    "materialized_ref": "f3df28791cf00535f9035eb0ebbb1f5f1964f8d5",
+    "startup_pass_scope": "Only the legacy Ink Playground page; not Minimal Web functional evidence",
+    "eight_source_contract_cases": "Playground source checks; not Minimal Web interaction coverage",
+    "G3WebSurfaceHost": "Native WebSurfaceHost contract test; not browser drawing/UI equivalence"
+  },
+  "protected_history_modified": false,
+  "official_gate_or_phys_status_changed": false,
+  "next_repair_scope": "Existing apps/axiom_canvas_demo/platform/web consumer, its optional Debug UI/facade wiring and relevant tests; no legacy Playground repair or Runtime gesture redesign"
+}
