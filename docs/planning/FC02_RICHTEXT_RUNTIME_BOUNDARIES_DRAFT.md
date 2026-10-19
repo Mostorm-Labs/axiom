@@ -12,6 +12,9 @@ switch or controlled page exit. See [the product and semantic design](FC02_PRODU
 The [semantic contract](FC02_SEMANTIC_CONTRACT.md) now selects versioned layout,
 explicit migration, guarded exact-state undo and combined Snapshot3 admission.
 Detailed APIs must consume that contract and its identified persistence blockers.
+The [Runtime input contract](FC02_RUNTIME_INPUT_CONTRACT.md) now gives concrete
+session/projection/geometry identities, proposed facade members, owner ordering,
+exit barriers and a compilable FakeIME protocol model. It is not production wiring.
 This updates the earlier uniform-width and cancel-on-exit
 candidate assumptions below; it does not change published semantic authority.
 
@@ -189,4 +192,6 @@ fields or copying POC-04 `TextTransaction`/UTF-16 canonical positions.
    terminal-event differences, focus/tool changes, Debug UI isolation, history and
    render retry. Track automated and human observations separately.
 
-This is the starting design, not an FC-02 implementation or acceptance claim.
+The detailed interface pass is now captured in the Runtime input contract. Its
+FakeIME model exercises protocol ordering; actual Facade/Semantic/History and
+platform integration remain implementation work, not an acceptance claim.

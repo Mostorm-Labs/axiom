@@ -233,5 +233,7 @@ lifecycle 通知直接解释成“将最后一帧合成预览写入文档”；�
 | Triangle、Ink、Shape、新文本与字体资源同文档保存/恢复 | 新能力集完整准入；旧格式原样保留；不能只单测纯文本 Snapshot |
 | zoom/DPI/resize 与字体资源变化 | 坐标只映射一次；canonical 宽度不变；正确重排/失效 |
 
-下一步交接物是受后续合同约束的 Runtime 接口设计；尚未启动生产实现。Snapshot3 现有
+Runtime 接口设计与可执行 FakeIME 协议原型已见
+[输入合同](FC02_RUNTIME_INPUT_CONTRACT.md)；下一步接入真实语义、History 与 Facade，
+尚未启动生产实现。Snapshot3 现有
 digest 投影与绑定合同的差异已明确记录，持久化写入前必须在原边界解决，不能静默改算法。
