@@ -1,0 +1,40 @@
+[0/2] Re-checking globbed directories...
+[1/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/sha256_internal.cpp.o
+[2/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/resource_manifest.cpp.o
+[3/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/change_set.cpp.o
+[4/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/applied_operation_ledger.cpp.o
+[5/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/idempotency.cpp.o
+[6/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/object_index.cpp.o
+[7/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/indexed_object_store.cpp.o
+[8/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/semantic_types.cpp.o
+[9/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/reference_object_store.cpp.o
+[10/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/operation_state_validator.cpp.o
+[11/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/operation_fingerprint.cpp.o
+[12/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/connector_validation.cpp.o
+[13/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/staged_object_view.cpp.o
+[14/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/hierarchy_validation.cpp.o
+[15/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/stateful_validation.cpp.o
+[16/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/normalizer.cpp.o
+[17/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/hierarchy_capability_validation.cpp.o
+[18/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/delete_closure.cpp.o
+[19/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/validator.cpp.o
+[20/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/rich_text_state_plan.cpp.o
+[21/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/restore_planner.cpp.o
+[22/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/brush_engine_codec.cpp.o
+[23/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/operation_specific_validation.cpp.o
+[24/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/snapshot_bootstrap.cpp.o
+[25/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/snapshot.cpp.o
+[26/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o
+[27/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/replay.cpp.o
+[28/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/change_set_builder.cpp.o
+[29/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/apply_plan.cpp.o
+FAILED: [code=1] runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/apply_plan.cpp.o 
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\.deps\emsdk\upstream\emscripten\em++.exe -DCANVAS_SEMANTIC_PROTOBUF=1 -IC:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/runtime/semantic/include -IC:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/p32-web/build/runtime/semantic/generated -IC:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/runtime/foundation/include -isystem C:/Users/NearHub/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include -fexceptions -include C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/p32-web/unchanged-foundation-diagnostic.hpp -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/apply_plan.cpp.o -MF runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\apply_plan.cpp.o.d -o runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/apply_plan.cpp.o -c C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/runtime/semantic/src/apply_plan.cpp
+C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/runtime/semantic/src/apply_plan.cpp:22:9: error: add explicit braces to avoid dangling else [-Werror,-Wdangling-else]
+   22 |         else if constexpr (std::is_same_v<T, VectorStrokeContent> || std::is_same_v<T, DabStrokeContent>) found = content.stroke.brush.texture_resource_id && *content.stroke.brush.texture_resource_id == resource;
+      |         ^
+1 error generated.
+[30/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/atomic_apply.cpp.o
+[31/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/protobuf_object_mapping.cpp.o
+[32/196] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/operation_engine.cpp.o
+ninja: build stopped: subcommand failed.

@@ -1,0 +1,345 @@
+{
+  "recorded_at": "2026-10-19T06:20:32.534052+00:00",
+  "status": "AUTOMATED_FUNCTIONAL_CHECKS_PASS_PHYSICAL_PENDING",
+  "result_revision": "b5ae620fffdd4fdcdd17cc2c15268f263e1e5c78",
+  "materialized_ref": "The evidence commit containing this result; resolve with git log -1 --format=%H -- .aegis/results/FC-00X-SCENE-RESOURCE-COMPOSITION/web-minimal-repair-20261019",
+  "branch": "codex/p32-windows-minimal-touch",
+  "upstream_baseline": "f1d72f22ad20209c8ccdbdd7474d86c651434914",
+  "start_revision": "621388791a809ec19d721b5a67b14f3d6afa72aa",
+  "changed_source_files": [
+    "apps/axiom_canvas_demo/CMakeLists.txt",
+    "apps/axiom_canvas_demo/platform/web/bridge.cpp",
+    "apps/axiom_canvas_demo/platform/web/host.js",
+    "apps/axiom_canvas_demo/platform/web/index.html",
+    "apps/axiom_canvas_demo/platform/web/web_debug_ui.inl",
+    "apps/axiom_canvas_demo/tests/web_minimal_runtime_test.html"
+  ],
+  "consumer": {
+    "target": "axiom_canvas_demo_web",
+    "owner": "WebSurfaceHost -> RuntimeComposition",
+    "url": "http://127.0.0.1:8765/axiom_canvas_demo/?revision=b5ae620fffdd4fdcdd17cc2c15268f263e1e5c78",
+    "debug_ui": "ON/full, shared DebugController borrowing composition-owned RuntimeFacade",
+    "playground_core_linked": false
+  },
+  "checks": [
+    {
+      "id": "WEB-01",
+      "name": "DOM Down/Move/Up renders preview and canonical",
+      "expected": "Three DOM samples commit exactly one object; preview and canonical contain pixels; preview handoff retires.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    },
+    {
+      "id": "WEB-02",
+      "name": "ten strokes retain sampling and independent commits",
+      "expected": "Ten subsequent strokes create ten independent objects without loss or duplicate commits.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    },
+    {
+      "id": "WEB-03",
+      "name": "Facade Shape presets and return to Ink",
+      "expected": "Five creation presets (Rectangle/Ellipse/Triangle/Line/Arrow) commit; next Ink commits.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    },
+    {
+      "id": "WEB-04",
+      "name": "Facade Undo and Redo read back",
+      "expected": "Undo removes one object and Redo restores it; Facade receipt reads Applied.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    },
+    {
+      "id": "WEB-05",
+      "name": "cancel, identity reuse and stale generation rejection",
+      "expected": "Cancel creates no object; reused ID advances generation; stale generation cancel is rejected.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    },
+    {
+      "id": "WEB-06",
+      "name": "frozen AutoIntent: within 250 ms zoom; later MultiInk",
+      "expected": "Second contact at +100 ms zooms with no Ink; at +300 ms two contacts commit two Ink objects.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    },
+    {
+      "id": "WEB-07",
+      "name": "resize cancels active input and preserves canonical",
+      "expected": "Resize cancels the active contact, preserves objects; 501.5x347.5 at DPR 2 is exactly 1003x695 pixels; next Ink works.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    },
+    {
+      "id": "WEB-08",
+      "name": "Debug UI sibling uses Facade and cannot penetrate canvas",
+      "expected": "ON shows Debug UI pixels and UI pointer does not reach canvas; OFF hides the toggle and omits the debug library.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    },
+    {
+      "id": "WEB-09",
+      "name": "idle does not continuously submit canonical frames",
+      "expected": "After flush, four further animation frames do not increment canonical presented-frame count.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    },
+    {
+      "id": "WEB-10",
+      "name": "capture/focus loss cancel input and the next stroke works",
+      "expected": "Lost capture and blur cancel without commit; next complete stroke succeeds.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    },
+    {
+      "id": "WEB-11",
+      "name": "failed Down permits tool switch and next drawing",
+      "expected": "A fixture capture failure on Down leaves no persistent error; tool switch and next Ink work.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    },
+    {
+      "id": "WEB-12",
+      "name": "surface loss/rebind preserves canonical and permits drawing",
+      "expected": "Composition surface loss cancels input; rebind preserves canonical pixels and permits next Ink.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    },
+    {
+      "id": "WEB-13",
+      "name": "mouse/pen sources, coalesced history and tool controls use the same owner",
+      "expected": "Ink size/opacity, preset and Select return through Facade; mouse/pen strokes commit and coalesced pen history is retained.",
+      "actual": "All named fixture assertions hold in both actual generated WASM variants.",
+      "result": "PASS",
+      "evidence": [
+        "repair-on-final-result.json",
+        "repair-off-final-result.json"
+      ],
+      "limit": "Synthetic DOM/capture fixture; not physical touch evidence."
+    }
+  ],
+  "native": {
+    "result": "PASS",
+    "count": 49,
+    "evidence": "native-final-tests.xml",
+    "scope": "Existing native Runtime/Windows regression binaries plus G3WebSurfaceHost; Runtime/native sources unchanged."
+  },
+  "on_final_state": {
+    "owner": "RuntimeComposition",
+    "revision": "b5ae620fffdd4fdcdd17cc2c15268f263e1e5c78",
+    "dirty": 0,
+    "debugUiEnabled": true,
+    "state": 2,
+    "objects": 26,
+    "operations": 28,
+    "pointerSamples": 96,
+    "rejectedInputs": 0,
+    "activePointers": 0,
+    "presentedFrames": 47,
+    "retries": 87,
+    "pendingFrame": false,
+    "previewActive": false,
+    "surfaceGeneration": 3,
+    "metricsGeneration": 3,
+    "width": 1003,
+    "height": 695,
+    "logicalWidth": 501.5,
+    "logicalHeight": 347.5,
+    "dpr": 2,
+    "controlState": 1,
+    "tool": 0,
+    "creationMode": false,
+    "creationPreset": 4,
+    "size": 9,
+    "opacity": 0.6,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "lastPointer": {
+      "source": 2,
+      "pointer": 111,
+      "generation": 1
+    },
+    "error": "",
+    "failure": ""
+  },
+  "off_final_state": {
+    "owner": "RuntimeComposition",
+    "revision": "b5ae620fffdd4fdcdd17cc2c15268f263e1e5c78",
+    "dirty": 0,
+    "debugUiEnabled": false,
+    "state": 2,
+    "objects": 26,
+    "operations": 28,
+    "pointerSamples": 96,
+    "rejectedInputs": 0,
+    "activePointers": 0,
+    "presentedFrames": 44,
+    "retries": 86,
+    "pendingFrame": false,
+    "previewActive": false,
+    "surfaceGeneration": 3,
+    "metricsGeneration": 3,
+    "width": 1003,
+    "height": 695,
+    "logicalWidth": 501.5,
+    "logicalHeight": 347.5,
+    "dpr": 2,
+    "controlState": 1,
+    "tool": 0,
+    "creationMode": false,
+    "creationPreset": 4,
+    "size": 9,
+    "opacity": 0.6,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "lastPointer": {
+      "source": 2,
+      "pointer": 111,
+      "generation": 1
+    },
+    "error": "",
+    "failure": ""
+  },
+  "artifacts": {
+    "on": {
+      "variant": "on",
+      "source_revision": "b5ae620fffdd4fdcdd17cc2c15268f263e1e5c78",
+      "source_dirty": 0,
+      "debug_ui_linked": true,
+      "playground_linked": false,
+      "own_bridge_werror": true,
+      "files": [
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\index.html",
+          "bytes": 1486,
+          "sha256": "2b73795372e74b5d8daa37e8343efa10a79262dad36a7bc72008828de8f48db2"
+        },
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\host.js",
+          "bytes": 14024,
+          "sha256": "b826236fb489411f9fbc32790141dfe3e16c5658c2792b5b0cb0d8798d6934ed"
+        },
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.js",
+          "bytes": 122386,
+          "sha256": "8db42820e66bcfee5afc39698a3c12697f7c44fb93b14185e9c0b65e0023e208"
+        },
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.wasm",
+          "bytes": 9575990,
+          "sha256": "94d4a8ba2898d10135d1c568c785639217910386b6e518b91111c4e7a1edff7a"
+        }
+      ]
+    },
+    "off": {
+      "variant": "off",
+      "source_revision": "b5ae620fffdd4fdcdd17cc2c15268f263e1e5c78",
+      "source_dirty": 0,
+      "debug_ui_linked": false,
+      "playground_linked": false,
+      "own_bridge_werror": true,
+      "files": [
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo_off\\index.html",
+          "bytes": 1486,
+          "sha256": "2b73795372e74b5d8daa37e8343efa10a79262dad36a7bc72008828de8f48db2"
+        },
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo_off\\host.js",
+          "bytes": 14024,
+          "sha256": "b826236fb489411f9fbc32790141dfe3e16c5658c2792b5b0cb0d8798d6934ed"
+        },
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo_off\\axiom_canvas_demo_web.js",
+          "bytes": 121119,
+          "sha256": "99423e06ea80e6d6a48acc7b8638345296710e23716e27ede63008020f38f10d"
+        },
+        {
+          "path": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\out\\p32-web\\build\\apps\\axiom_canvas_demo_off\\axiom_canvas_demo_web.wasm",
+          "bytes": 9136345,
+          "sha256": "1165f10491c7318844b2afbdc9d2a130036256707af808937ff0f38512ab068b"
+        }
+      ]
+    }
+  },
+  "physical_matrix": "manual-matrix.json",
+  "remaining_blockers": [
+    "Repaired Web consumer has not been physically observed; all Web manual items remain PHYSICAL_PENDING.",
+    "Unfiltered strict Emscripten build remains FAIL on two unchanged baseline diagnostics; functional builds use the exact local exceptions recorded here."
+  ],
+  "next_narrow_fix": "Only if physical testing finds a reproducible defect, or separately authorized baseline strict-diagnostic cleanup.",
+  "claims_excluded": [
+    "Gate PASS",
+    "PHYS PASS",
+    "independent Control Review",
+    "monitor scanout observation",
+    "rotation support"
+  ]
+}

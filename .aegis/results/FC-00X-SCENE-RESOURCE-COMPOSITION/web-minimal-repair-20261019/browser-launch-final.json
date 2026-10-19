@@ -1,0 +1,21 @@
+{
+  "launch_method": "Direct Chrome CLI, existing visible browser session reused",
+  "chrome_version": "155.0.8059.84",
+  "physical_observation": "PHYSICAL_PENDING",
+  "chrome_exe_sha256": "6aa5d599bbc3a0b3842af9f44b18fd29989eb3cc21b4b3ec7489e12f36e9962e",
+  "recorded_at": "2026-10-19T14:18:47.7139882+08:00",
+  "url": "http://127.0.0.1:8765/axiom_canvas_demo/?revision=b5ae620fffdd4fdcdd17cc2c15268f263e1e5c78",
+  "chrome_processes": {
+    "ProcessId": 10868,
+    "ParentProcessId": 12432,
+    "ExecutablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "CommandLine": "\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" --single-argument https://auth.openai.com/oauth/authorize?response_type=code&client_id=app_EMoamEEZ73f0CkXaXp7hrann&redirect_uri=http%3A%2F%2F127.0.0.1%3A1455%2Fauth%2Fcallback&code_challenge=Q8aCGrmTbeL-TBGF2cCq8_iviGNIqqOUDrTR9R8FMpo&code_challenge_method=S256&state=JzgjPncDobRxbL9uLVP0BXX_WgkhvvN8P5pttG6gaR0&scope=openid+profile+email+offline_access+api.connectors.read+api.connectors.invoke&id_token_add_organizations=true&codex_cli_simplified_flow=true&originator=Codex+Desktop&codex_app_version=26.1002.52244&source_surface_stable_id=2eb28041-dc54-4f18-bcb4-67948bc5b3be&codex_origin_stable_id=2eb28041-dc54-4f18-bcb4-67948bc5b3be"
+  },
+  "tab_renderer_pid": "Not observed; existing Chrome process reuse does not identify a tab renderer PID",
+  "server_process": {
+    "ProcessId": 9924,
+    "ParentProcessId": 13872,
+    "ExecutablePath": "C:\\Users\\NearHub\\AppData\\Local\\Programs\\Python\\Python312\\pythonw.exe",
+    "CommandLine": "\"C:\\Users\\NearHub\\AppData\\Local\\Programs\\Python\\Python312\\pythonw.exe\" out/p32-web/serve.py"
+  }
+}
