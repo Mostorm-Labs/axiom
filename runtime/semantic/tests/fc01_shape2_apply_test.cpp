@@ -133,7 +133,10 @@ TEST(FC01Shape2Apply, MixedBatchRejectsAtomicallyAndFailedReplayNeverReady) {
 }
 
 TEST(FC01Shape2Apply, SnapshotTriangleRequiresExplicitReaderCapability) {
-    SemanticSnapshot snapshot{DocumentId{id(1000U)}, 2U, {shape(2U, 3U, 1U)}};
+    SemanticSnapshot snapshot{};
+    snapshot.document_id = DocumentId{id(1000U)};
+    snapshot.schema_version = 2U;
+    snapshot.objects = {shape(2U, 3U, 1U)};
     ReferenceObjectStore objects;
     SemanticGenerationState generation;
     DocumentRuntimeState state = DocumentRuntimeState::kLoading;
@@ -146,7 +149,10 @@ TEST(FC01Shape2Apply, SnapshotTriangleRequiresExplicitReaderCapability) {
 
 
 TEST(FC01Shape2Apply, CapableSnapshotRoundTripAndLegacyWriterRefusal) {
-    const SemanticSnapshot snapshot{DocumentId{id(1000U)}, 2U, {shape(2U, 3U, 1U)}};
+    SemanticSnapshot snapshot{};
+    snapshot.document_id = DocumentId{id(1000U)};
+    snapshot.schema_version = 2U;
+    snapshot.objects = {shape(2U, 3U, 1U)};
     EXPECT_FALSE(SnapshotCodec::encode(snapshot).ok());
     const auto encoded = SnapshotCodec::encode(snapshot, SnapshotCapability::kShape2Triangle);
     ASSERT_TRUE(encoded.ok());
@@ -232,7 +238,7 @@ void expectAtomicReject(const Operation& operation) {
 
 TEST(FC01Shape2Closeout, FrozenNegativeTupleAndExtentMatrixIsAtomic) {
     std::vector<ObjectRecord> invalid;
-    for (const auto tuple : {std::pair{1U, 3U}, {2U, 0U}, {2U, 1U},
+    for (const auto& tuple : {std::pair{1U, 3U}, {2U, 0U}, {2U, 1U},
                              {2U, 2U}, {2U, 4U}, {3U, 3U}}) {
         invalid.push_back(shape(tuple.first, tuple.second, 2U));
     }
@@ -289,8 +295,10 @@ TEST(FC01Shape2Closeout, AlteredPayloadCollisionPreservesOriginalCommit) {
 }
 
 TEST(FC01Shape2Closeout, LegacySnapshotRemainsV1AndTriangleCannotBeDowngraded) {
-    const SemanticSnapshot legacy{DocumentId{id(1000U)}, 1U,
-                                   {shape(1U, 1U, 1U), shape(1U, 2U, 2U)}};
+    SemanticSnapshot legacy{};
+    legacy.document_id = DocumentId{id(1000U)};
+    legacy.schema_version = 1U;
+    legacy.objects = {shape(1U, 1U, 1U), shape(1U, 2U, 2U)};
     const auto oldReader = SnapshotCodec::encode(legacy);
     const auto newReader = SnapshotCodec::encode(legacy, SnapshotCapability::kShape2Triangle);
     ASSERT_TRUE(oldReader.ok());

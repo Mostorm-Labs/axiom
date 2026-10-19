@@ -214,7 +214,9 @@ gtest_discover_tests(canvas_semantic_envelope_validation_test)
 # stores, or mutation helpers.
 add_executable(canvas_semantic_payload_structure_test
   payload_structure_test.cpp
-  ../src/validator.cpp)
+  ../src/validator.cpp
+  ../src/resource_manifest.cpp
+  ../src/sha256_internal.cpp)
 target_include_directories(canvas_semantic_payload_structure_test
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 target_link_libraries(canvas_semantic_payload_structure_test
@@ -229,7 +231,9 @@ endif()
 gtest_discover_tests(canvas_semantic_payload_structure_test)
 
 add_executable(canvas_semantic_g1_04_c_geometry_overflow_source_test
-  g1_04_c_geometry_overflow_source_test.cpp)
+  g1_04_c_geometry_overflow_source_test.cpp
+  ../src/resource_manifest.cpp
+  ../src/sha256_internal.cpp)
 target_include_directories(canvas_semantic_g1_04_c_geometry_overflow_source_test
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 target_link_libraries(canvas_semantic_g1_04_c_geometry_overflow_source_test
@@ -245,7 +249,9 @@ gtest_discover_tests(canvas_semantic_g1_04_c_geometry_overflow_source_test)
 
 add_executable(canvas_semantic_leaf_structure_validation_test
   leaf_structure_validation_test.cpp
-  ../src/validator.cpp)
+  ../src/validator.cpp
+  ../src/resource_manifest.cpp
+  ../src/sha256_internal.cpp)
 target_include_directories(canvas_semantic_leaf_structure_validation_test
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 target_link_libraries(canvas_semantic_leaf_structure_validation_test

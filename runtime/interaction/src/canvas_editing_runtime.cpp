@@ -1398,8 +1398,12 @@ bool CanvasEditingRuntime::setSelectedOrder(bool front) noexcept {
     std::vector<std::uint8_t> key;
     bool bounded=false;
     for(const auto byte:bytes) {
-      if(byte>0) { key.push_back(static_cast<std::uint8_t>(byte/2));
-        if(key.back()==0) key.push_back(128); bounded=true;break; }
+      if(byte>0) {
+        key.push_back(static_cast<std::uint8_t>(byte/2));
+        if(key.back()==0) key.push_back(128);
+        bounded=true;
+        break;
+      }
       key.push_back(0);
     }
     if(!bounded || key.size()>semantic::OrderKey::kMaxSize) return false;

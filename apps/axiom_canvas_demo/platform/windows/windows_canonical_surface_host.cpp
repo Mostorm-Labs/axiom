@@ -309,7 +309,7 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
     const int width = static_cast<int>(surfaceInfo.width);
     const int height = static_cast<int>(surfaceInfo.height);
     if (StretchDIBits(dc, 0, 0, width, height, 0, 0, width, height,
-                      rgba.data(), &bitmap, DIB_RGB_COLORS, SRCCOPY) == GDI_ERROR) {
+                      rgba.data(), &bitmap, DIB_RGB_COLORS, SRCCOPY) == static_cast<int>(GDI_ERROR)) {
         *error = "Windows canonical DIB presentation failed";
         return false;
     }
@@ -337,7 +337,7 @@ bool WindowsCanonicalSurfaceHost::paintCanonical(HDC dc, std::string* error) {
             std::swap(canonical[i], canonical[i + 2U]);
         }
         if (StretchDIBits(dc, 0, 0, width, height, 0, 0, width, height,
-                          canonical.data(), &bitmap, DIB_RGB_COLORS, SRCCOPY) == GDI_ERROR) {
+                          canonical.data(), &bitmap, DIB_RGB_COLORS, SRCCOPY) == static_cast<int>(GDI_ERROR)) {
             *error = "Windows canonical redraw after preview retirement failed";
             return false;
         }

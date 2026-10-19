@@ -13,7 +13,14 @@ else()
   target_compile_options(axiom_minimal_runtime_host PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 
-if(WIN32)
+if(WIN32 AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH))
+  # Imported package targets are directory-scoped. Resolve the accepted SDK in
+  # this consumer too; a sibling Render directory does not make them visible.
+  if(NOT TARGET CanvasSkia::Skia)
+    find_package(CanvasSkia CONFIG REQUIRED
+      PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia"
+      NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
+  endif()
   add_library(axiom_minimal_windows_surface STATIC
     windows_d3d12_surface_provider.cpp)
   target_include_directories(axiom_minimal_windows_surface PUBLIC
@@ -74,7 +81,7 @@ if(WIN32)
 endif()
 
 if(BUILD_TESTING)
-  if(WIN32)
+  if(WIN32 AND TARGET axiom_minimal_windows_surface)
     add_executable(axiom_minimal_windows_touch_pipeline_tests
       tests/windows_touch_pipeline_test.cpp)
     target_link_libraries(axiom_minimal_windows_touch_pipeline_tests PRIVATE
