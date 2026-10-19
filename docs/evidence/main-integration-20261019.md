@@ -1,7 +1,9 @@
 # Main integration preflight, 2026-10-19
 
-Integration is incomplete. Main has not been changed. This is a build/integration
-record, not an FC-01 Gate, independent Control Review, PHYS or Android acceptance.
+The initial preflight below preceded schema alignment and merge. Integration was
+incomplete and main had not been changed at that point; see the follow-up at the
+end. This is a build/integration record, not an FC-01 Gate, independent Control
+Review, PHYS or Android acceptance.
 
 ## Scope and source
 
@@ -93,3 +95,33 @@ ctest --test-dir out/fc01-closeout/build --output-on-failure -R '^FC00X(Windows|
 Logs and the full descriptor delta are in the local `out/fc02-transition/`.
 No new human touch/IME observation was made. Historical Gate/PHYS/Android records,
 Authority, Golden and SDK locks were not modified by this preflight repair.
+
+## Schema alignment follow-up
+
+The user subsequently authorized schema-check alignment followed by merge and an
+FC-02 design branch, explicitly deferring legacy test wiring and Android compile
+repairs. Those known failures remain FAIL/deferred; they are not reclassified as
+passing or physically pending. No check was disabled to make the merge possible.
+
+Added `descriptor.current.pb` and its hash for the existing complete proto tree;
+the original `descriptor.lock.*`, historical reconciliation and Golden artifacts
+remain byte-identical. Current reproducibility checks now use the current lock,
+while both artifact hashes and historical reconciliation are still validated.
+The Windows protoc caller also uses portable slash-separated proto file names.
+
+Verification with the locked SDK's `libprotoc 36.0`:
+
+```powershell
+python verification/tools/validate_semantic_contract.py --root . --protoc $env:AXIOM_PROTOC
+python -m unittest verification.tests.test_current_semantic_descriptor verification.tests.test_semantic_contract -v
+```
+
+Result: current and historical contract validation succeeded; 9/9 tests passed,
+including real protoc rejection of an unlocked schema mutation, corruption of
+either descriptor, and preservation of every historical field/enum. A second
+complete generation matched the current artifact exactly. Current SHA-256 remains
+`ecf2265cde5f4698eaaadaf1d31b8fde417b2c57cd66923c531a1281780fd3b3`.
+
+This follow-up changes the schema verification baseline only. It does not repair
+the deferred Web/Playground harness or Android implementation, or assert full CI
+success. The merge is authorized with those known residuals.

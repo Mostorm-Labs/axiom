@@ -33,6 +33,15 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def validate_descriptor_hash(root: Path, name: str) -> str:
+    directory = root / "schema/axiom/v1/descriptor"
+    expected = (directory / f"{name}.sha256").read_text().strip()
+    actual = sha256(directory / f"{name}.pb")
+    if expected != actual:
+        raise SystemExit(f"{name} hash mismatch: {actual} != {expected}")
+    return actual
+
+
 def resolve_pinned_protoc(root: Path, requested: Path | None = None) -> Path:
     candidates = []
     if requested is not None:
@@ -144,10 +153,10 @@ def main() -> int:
     args = parser.parse_args()
     root = args.root.resolve()
     proto_root = root / "schema/axiom/v1/proto"
-    expected = (root / "schema/axiom/v1/descriptor/descriptor.lock.sha256").read_text().strip()
-    actual = sha256(root / "schema/axiom/v1/descriptor/descriptor.lock.pb")
-    if expected != actual:
-        raise SystemExit(f"descriptor hash mismatch: {actual} != {expected}")
+    # Keep historical G1 reconciliation/corpus inputs intact. Current proto
+    # reproducibility has its own lock, including the resource-manifest release.
+    historical = validate_descriptor_hash(root, "descriptor.lock")
+    actual = validate_descriptor_hash(root, "descriptor.current")
     seed = json.loads((root / "verification/corpus/semantic/v1/suites/seed-v0.1.json").read_text())
     cases = seed.get("cases", [])
     expected_ids = [f"g1-seed-v0.1-{index:03d}" for index in range(60)]
@@ -157,10 +166,10 @@ def main() -> int:
     with tempfile.TemporaryDirectory() as directory:
         generated = Path(directory) / "descriptor.pb"
         sources = sorted(proto_root.rglob("*.proto"))
-        command = [str(protoc), f"--proto_path={proto_root}", "--include_imports", f"--descriptor_set_out={generated}", *[str(path.relative_to(proto_root)) for path in sources]]
+        command = [str(protoc), f"--proto_path={proto_root}", "--include_imports", f"--descriptor_set_out={generated}", *[path.relative_to(proto_root).as_posix() for path in sources]]
         subprocess.run(command, cwd=proto_root, check=True)
         if sha256(generated) != actual:
-            raise SystemExit("descriptor is not reproducible")
+            raise SystemExit("current descriptor is not reproducible")
     g1_02r = validate_g1_02r(root)
     if (
         g1_02r["descriptor"]["unmappedChanges"]
@@ -172,7 +181,7 @@ def main() -> int:
     ):
         raise SystemExit("GT-G1-02R semantic machine-refreeze contract is invalid")
     print(
-        f"semantic contract: descriptor={actual}; seed_cases={len(cases)}; "
+        f"semantic contract: current_descriptor={actual}; historical_descriptor={historical}; seed_cases={len(cases)}; "
         f"g1_02r_cases={g1_02r['leafCorpus']['caseCount']}"
     )
     return 0
