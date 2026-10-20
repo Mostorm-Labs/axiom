@@ -1,192 +1,266 @@
 {
-  "boundary": "Git staged file bytes; each index entry verified before evidence commit",
+  "boundary": "Git HEAD blob raw bytes",
   "result": "PASS",
   "indexed_files": 37,
   "checks": [
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/artifacts.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 4044,
+      "actual_sha256": "f1fbc75a3a2d137237bf5662b268b9a3d993b093dd13566bf0c709abd14ef135"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/baseline-manual-input.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 740554,
+      "actual_sha256": "631a1ebf2e51c34dc04f6afbb623ff34b5f3502592136888aff04454fe9e0718"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/baseline-session.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 1259,
+      "actual_sha256": "c975b6e4c090ea691bd280ff243b750e2992dc44a90faf357d2545993843fe37"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/build-command.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 3097,
+      "actual_sha256": "6c1b0fc6aa2bcc871eebfc3d29ad3e15194329c0203db9b6df931ad5b2aa1e54"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/build-environment.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 4695,
+      "actual_sha256": "ae1d6ffe83226cc8d09be4c7ca4dd1b7258b33d3d9b2af43f4afde0396de09de"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/build.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 5942,
+      "actual_sha256": "7bbcde900d09567c29f2114576dcd0eb40c8c320ddae51d1d203b5e0763d1f00"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/caret-green-command.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 1582,
+      "actual_sha256": "7c32dbc2ff5463daf426b9972ba718561dde1a007a57b1ef5df65769c9e089a0"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/caret-green.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 932,
+      "actual_sha256": "2f48b2499cb5ad4b7730e08ebbe6bd7eb2be4662503ca8de6b82edf6efc4e339"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/caret-manual-input.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 368681,
+      "actual_sha256": "2d76485d3a25efc545b0a69ae7b8aeb8c810c547ff617ff34a025b9cab9fdf08"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/caret-red-command.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 1580,
+      "actual_sha256": "754f1c96b09dc8af64d578b401c7a46901ccf44dba506753ce162754cba3ee6a"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/caret-red.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 1430,
+      "actual_sha256": "5b36755cac42ef0317ed3487587a11a6b7c15694c85f9eefe001f8d1bf74b7ed"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/caret-session.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 966,
+      "actual_sha256": "d8e8ad380050b209eab948def1c25201c8df521bd807ef8781db311dd42074e1"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/configure-command.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 2874,
+      "actual_sha256": "5b0334f58fdbe12e67d053fa10cae8dfa6ca8821830e352149901253532ab116"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/configure-environment-failure.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 735,
+      "actual_sha256": "b18523e23272042f73e1bda754eef352864c054d3ebe860f43dddd51618dd510"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/ctest-command.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 1862,
+      "actual_sha256": "dc442549cd38e502b7319ec1d6c7a157d43131d2349ee2c815341b97b0237e14"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/ctest.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 54854,
+      "actual_sha256": "eb3bd349330a7bdad93c2d4c4575290d996a53903779daaa1c7ff60161a867ae"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/ctest.xml",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 215742,
+      "actual_sha256": "1f61b0b31d0c3801b3efbf59a2e1551ec1ba0f47b34751491736c1f529e85e0e"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/device.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 1280,
+      "actual_sha256": "f8459479e3ce754e740275d3f6e03ffce43c79368dfc49f733cb3c7711c4f07f"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/native.py",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 3771,
+      "actual_sha256": "fbe260bd7b1f25faab0598406381ace211cd8f0cef0e7ba2880a4c061ed7fada"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/python-command.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 1675,
+      "actual_sha256": "72abd20cd655b8c9f297b8ae5e3f4f0dfd4a9997f2e5bdf0d0f9ef76726a2d23"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/python.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 3000,
+      "actual_sha256": "4172b14b11e0bb150ba7fce73acd7413dcff86cdca6b75dda3ac7bae531694f3"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/semantic-offline.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 4871,
+      "actual_sha256": "9c821a815ad2d80ac7f6bfe1252a01beeb0dac1ffe3c43b17353211d17508ce4"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/semantic-web-offline.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 4722,
+      "actual_sha256": "a33f53c749c4683fa04127468bc30af298b2f46779e7b091649cadc3f072a35d"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/skia-native.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 148,
+      "actual_sha256": "42a3b79b6ca4a6cb057fe01d95d7f1993671725efb92073e4540702ffaacadf7"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/skia-native.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 295,
+      "actual_sha256": "752da013bb62d2000f2f1ae1371b68adb9e0dd0bf48d540f7d213324ffd6cad4"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/skia-web.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 147,
+      "actual_sha256": "a13ac3ffc74a091ce15e708d752628f019d513c5451125290bd5178d1b9ea5fd"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/skia-web.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 292,
+      "actual_sha256": "23336628368c8e870ba8507cfc9390ffc14bd1ec1c9f3ed9074fe58eee3740cb"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/source-files.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 1674,
+      "actual_sha256": "44378d15f1cc84de64e5b3220dc386a395f4550a7dd4233b4952f1dc30ea4278"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/strict-clang.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 19325,
+      "actual_sha256": "12b4b1eab409c6e3663776251c3e180b9f88f6f9adc5f1b0124300d7c65b6137"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/strict.py",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 2526,
+      "actual_sha256": "c29670c7d23a0723cbc61eb07f671c0712a308468ff4eda3c115858061abcd4d"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/summary.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 2585,
+      "actual_sha256": "6a0843c3b3d213b68e24b7a6ffa2033603ce1c2cd6e728aad878fe4763cb348e"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/user-observations-1959a2c2.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 2565,
+      "actual_sha256": "f32a6547818576056e2a81772d4a45a983785a3ff7dc67f7410e1040927847df"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/user-observations.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 2294,
+      "actual_sha256": "78979ce43361f2a90e924a8f1a386818821b88fee55d45cafcd0f71532529fd0"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/web-build.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 1823,
+      "actual_sha256": "0753f9dff0f296edc5bbea16b88450f60439470b25faf232ed4a020c385ff3dd"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/web-configure.log",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 4532,
+      "actual_sha256": "93e118ecddcb563028b150fb017307c6fe931cfcd46067dc315605616f9341b6"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/web-environment.json",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 4581,
+      "actual_sha256": "141bc6504ea674b58b82f0377340556325ae69f0ec0a992599bcfc209ef1b054"
     },
     {
       "path": "docs/planning/fc02/evidence/windows-ime-resume-20261020/web.py",
       "bytes_match": true,
-      "sha256_match": true
+      "sha256_match": true,
+      "actual_bytes": 2049,
+      "actual_sha256": "c2d89a1704296fa628150fbd2acd54cbc8a31ecf3f85d5cec5d519d9424b3521"
     }
   ]
 }
