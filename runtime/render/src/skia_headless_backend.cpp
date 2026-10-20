@@ -357,6 +357,32 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
     std::visit([&](const auto& command) {
         using T = std::decay_t<decltype(command)>;
         if constexpr (std::is_same_v<T, ShapeReferenceCommand>) {
+            const auto drawLabel = [&] {
+                if (textResources == nullptr ||
+                    !command.content.label || !command.labelLayout) return;
+                canvas.save();
+                if (command.content.shape_kind == 2U) {
+                    SkPathBuilder ovalPath;
+                    ovalPath.addOval(SkRect::MakeXYWH(
+                        0.0F, 0.0F, skScalar(command.content.width),
+                        skScalar(command.content.height)));
+                    canvas.clipPath(ovalPath.detach());
+                } else if (command.content.shape_kind == 3U) {
+                    SkPathBuilder labelPath;
+                    labelPath.moveTo(skScalar(command.content.width * 0.5), 0.0F);
+                    labelPath.lineTo(skScalar(command.content.width),
+                                     skScalar(command.content.height));
+                    labelPath.lineTo(0.0F, skScalar(command.content.height));
+                    labelPath.close();
+                    canvas.clipPath(labelPath.detach());
+                } else {
+                    canvas.clipRect(SkRect::MakeXYWH(
+                        0.0F, 0.0F, skScalar(command.content.width),
+                        skScalar(command.content.height)));
+                }
+                textResources->draw(canvas, *command.labelLayout);
+                canvas.restore();
+            };
             const auto fill = propertyColor(record, 0x00000100U, {1.0F, 0.0F, 0.0F, 1.0F});
             if (command.content.shape_kind == 3U) {
                 SkPathBuilder path;
@@ -420,6 +446,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             } else if (fill.a > 0.0F) {
                 drawSolidRect(canvas, record.visualBounds, fill);
             }
+            drawLabel();
         } else if constexpr (std::is_same_v<T, ImageReferenceCommand>) {
             if (images == nullptr) return;
             const auto decoded = images->resolve(command.content.resource_id);

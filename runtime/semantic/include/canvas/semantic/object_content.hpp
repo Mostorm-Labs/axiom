@@ -12,14 +12,6 @@
 
 namespace canvas::semantic {
 
-struct ShapeContent final {
-    std::uint32_t shape_kind = 0;
-    double width = 0.0;
-    double height = 0.0;
-
-    bool operator==(const ShapeContent&) const = default;
-};
-
 enum class ImageContentMode : std::uint8_t {
     kInvalid = 0,
     kFit = 1,
@@ -218,6 +210,18 @@ struct RichTextContent final {
     std::optional<RichTextLayout> layout = std::nullopt;
 
     bool operator==(const RichTextContent&) const = default;
+};
+
+// Shape remains a hierarchy leaf.  Version 3 optionally embeds a RichText
+// label in the same canonical object; it is never materialized as a child
+// object or a second text owner.
+struct ShapeContent final {
+    std::uint32_t shape_kind = 0;
+    double width = 0.0;
+    double height = 0.0;
+    std::optional<RichTextContent> label;
+
+    bool operator==(const ShapeContent&) const = default;
 };
 
 struct InsertTextStep final {

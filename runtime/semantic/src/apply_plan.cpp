@@ -19,6 +19,12 @@ bool referencesResource(const ObjectRecord& object, const ResourceId& resource) 
         using T = std::decay_t<decltype(content)>;
         if constexpr (std::is_same_v<T, ImageContent>) {
             found = content.resource_id == resource;
+        } else if constexpr (std::is_same_v<T, ShapeContent>) {
+            if (content.label) {
+                for (const auto& paragraph : content.label->document.paragraphs)
+                    for (const auto& run : paragraph.runs)
+                        if (run.style.font_resource_id && *run.style.font_resource_id == resource) found = true;
+            }
         } else if constexpr (std::is_same_v<T, RichTextContent>) {
             for (const auto& paragraph : content.document.paragraphs) {
                 for (const auto& run : paragraph.runs) {
@@ -117,9 +123,13 @@ PrepareResult prepareApplyPlan(const Operation& operation, const StatefulValidat
     }, operation.payload);
     if (!status.ok()) return rejected(status);
     const auto validateTextReferences=[&](const ObjectRecord& object) {
-        if(object.kind!=ObjectKind::kRichText || object.kind_version<2U) return true;
+        const RichTextContent* content = nullptr;
+        if (object.kind == ObjectKind::kRichText && object.kind_version >= 2U)
+            content = std::get_if<RichTextContent>(&object.content);
+        else if (const auto* shape = std::get_if<ShapeContent>(&object.content); shape && shape->label)
+            content = &*shape->label;
+        if (!content) return true;
         if(!context.manifest || !validateResourceManifest(*context.manifest)) return false;
-        const auto* content=std::get_if<RichTextContent>(&object.content);if(!content)return false;
         for(const auto& paragraph:content->document.paragraphs) for(const auto& run:paragraph.runs) {
             if(!run.style.font_resource_id)return false;
             const auto found=std::find_if(context.manifest->entries.begin(),context.manifest->entries.end(),[&](const auto& entry){return entry.resource_id==*run.style.font_resource_id && entry.resource_kind==ResourceKind::kFont;});

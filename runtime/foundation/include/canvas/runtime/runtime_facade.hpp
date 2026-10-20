@@ -15,6 +15,9 @@ class RuntimeFacade {
   [[nodiscard]] virtual TextReceipt submitTextIntent(const TextIntent&) { return {}; }
   [[nodiscard]] virtual TextReceipt submitTextInput(const TextInputEvent&) { return {}; }
   [[nodiscard]] virtual TextEditorSnapshot readTextEditor() const { return {}; }
+  [[nodiscard]] virtual FontCatalogSnapshot readFontCatalog() const { return {}; }
+  [[nodiscard]] virtual std::optional<FontCatalogEntry> readFontResourceStatus(
+      foundation::ObjectId) const { return std::nullopt; }
   [[nodiscard]] virtual TextGeometrySnapshot readTextGeometry(const std::optional<TextGeometryToken>& = std::nullopt) const { return {}; }
   [[nodiscard]] virtual std::optional<TextReceipt> textInputReceipt(const TextSessionToken&,std::uint64_t) const { return std::nullopt; }
   [[nodiscard]] virtual std::optional<TextReceipt> textIntentReceipt(std::uint64_t,std::uint64_t) const { return std::nullopt; }

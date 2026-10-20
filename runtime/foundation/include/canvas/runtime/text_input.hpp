@@ -76,6 +76,26 @@ struct TextFormatPatch final {
     bool operator==(const TextFormatPatch&) const = default;
 };
 struct TextFontOption final { foundation::ObjectId id{}; std::string name; };
+enum class FontResourceStatus : std::uint8_t {
+    kMissing, kBytesValidated, kDecodeReady, kLayoutReady, kFailed,
+    kEvicted, kRetryable, kProviderReplaced,
+};
+struct FontCatalogEntry final {
+    foundation::ObjectId id{};
+    std::string family;
+    std::uint64_t revision = 0;
+    std::string contentHash;
+    std::size_t byteLength = 0;
+    FontResourceStatus status = FontResourceStatus::kMissing;
+    std::string diagnostic;
+    bool operator==(const FontCatalogEntry&) const = default;
+};
+struct FontCatalogSnapshot final {
+    std::uint64_t manifestRevision = 0;
+    std::uint64_t bindingGeneration = 0;
+    std::vector<FontCatalogEntry> entries;
+    bool operator==(const FontCatalogSnapshot&) const = default;
+};
 struct TextIntent final {
     CanvasTargetKey target{};
     std::uint64_t clientId = 0, requestId = 0;

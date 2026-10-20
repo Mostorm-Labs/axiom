@@ -18,6 +18,8 @@
 
 namespace canvas::runtime {
 
+class RuntimeComposition;
+
 // Shared product-control owner used by Minimal, Playground, Windows and Web.
 // It owns one CanvasControlService queue and binds it to an existing
 // CanvasEditingRuntime; it never creates a second document or history owner.
@@ -25,18 +27,22 @@ class CanvasRuntimeFacade : public RuntimeFacade {
  public:
 #if defined(AXIOM_RUNTIME_QUALIFICATION)
   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
-                      CanvasTargetKey target,std::uint64_t runtimeInstance = 1) noexcept;
+                      CanvasTargetKey target,std::uint64_t runtimeInstance = 1,
+                      RuntimeComposition* composition = nullptr) noexcept;
 #else
  private:
   friend class RuntimeComposition;
   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
-                      CanvasTargetKey target,std::uint64_t runtimeInstance = 1) noexcept;
+                      CanvasTargetKey target,std::uint64_t runtimeInstance = 1,
+                      RuntimeComposition* composition = nullptr) noexcept;
  public:
 #endif
   ~CanvasRuntimeFacade() override;
   [[nodiscard]] TextReceipt submitTextIntent(const TextIntent&) override;
   [[nodiscard]] TextReceipt submitTextInput(const TextInputEvent&) override;
   [[nodiscard]] TextEditorSnapshot readTextEditor() const override;
+  [[nodiscard]] FontCatalogSnapshot readFontCatalog() const override;
+  [[nodiscard]] std::optional<FontCatalogEntry> readFontResourceStatus(foundation::ObjectId) const override;
   [[nodiscard]] TextGeometrySnapshot readTextGeometry(const std::optional<TextGeometryToken>& expected = std::nullopt) const override;
   [[nodiscard]] std::optional<TextReceipt> textInputReceipt(const TextSessionToken&,std::uint64_t) const override;
   [[nodiscard]] std::optional<TextReceipt> textIntentReceipt(std::uint64_t,std::uint64_t) const override;
@@ -101,6 +107,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   void refreshTarget() const noexcept;
 
   interaction::CanvasEditingRuntime& runtime_;
+  RuntimeComposition* composition_ = nullptr;
   mutable std::unique_ptr<Binding> binding_;
   mutable std::unique_ptr<CanvasControlService> service_;
   const std::thread::id ownerThread_ = std::this_thread::get_id();

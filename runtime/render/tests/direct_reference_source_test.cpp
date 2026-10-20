@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdint>
+#include <cstdlib>
 #include <iostream>
 #include <vector>
 
@@ -388,9 +389,9 @@ void replayIsByteAndDigestStable() {
     assert(identityResult.value().digest != first.value().digest);
     const auto changedPlan = [&](const ObjectRecord& record) {
         ReferenceObjectStore changedStore;
-        assert(ObjectStoreMutator::insertFresh(changedStore, record));
+        if (!ObjectStoreMutator::insertFresh(changedStore, record)) std::abort();
         RuntimeScene changedScene;
-        assert(changedScene.replace(SemanticReadView(changedStore, SemanticGeneration{7})));
+        if (!changedScene.replace(SemanticReadView(changedStore, SemanticGeneration{7}))) std::abort();
         return DirectReferenceSource::build(input, visibility, changedScene);
     };
     auto contentMutation = fixtureRecord(100U, ObjectKind::kShape, 20U);
@@ -446,6 +447,40 @@ void visibleDrivenLocality() {
     std::cout << "{\"total_scene_records\":100000,\"visible_ids\":500,\"find_lookups\":500,\"record_iterations\":0,\"semantic_iterations\":0}\n";
 }
 
+void shapeLabelChangesCanonicalReferenceBytes() {
+    auto record = fixtureRecord(100U, ObjectKind::kShape, 20U);
+    record.kind_version = 3U;
+    canvas::semantic::RichTextContent label;
+    canvas::semantic::Paragraph paragraph;
+    paragraph.id = ObjectId::fromUint64(6100U);
+    paragraph.style.alignment = canvas::semantic::ParagraphAlignment::kLeft;
+    paragraph.runs = {{"before", canvas::semantic::TextStyle{}}};
+    label.document.paragraphs = {paragraph};
+    record.content = canvas::semantic::ShapeContent{1U, 100.0, 40.0, label};
+    ReferenceObjectStore store;
+    assert(ObjectStoreMutator::insertFresh(store, record));
+    RuntimeScene scene;
+    assert(scene.replace(SemanticReadView(store, SemanticGeneration{7})));
+    const auto input = frame();
+    VisibilityResult visibility{.sceneGeneration = SemanticGeneration{7},
+                                .sceneReadToken = SceneRevision{7},
+                                .queryWorldRect = input.worldViewport,
+                                .visibleRecords = 1,
+                                .backToFront = {ObjectId::fromUint64(100U)}};
+    const auto before = DirectReferenceSource::build(input, visibility, scene);
+    assert(before.hasValue());
+    auto changed = record;
+    std::get<canvas::semantic::ShapeContent>(changed.content).label->document.paragraphs[0].runs[0].text = "after";
+    ReferenceObjectStore changedStore;
+    assert(ObjectStoreMutator::insertFresh(changedStore, changed));
+    RuntimeScene changedScene;
+    assert(changedScene.replace(SemanticReadView(changedStore, SemanticGeneration{7})));
+    const auto after = DirectReferenceSource::build(input, visibility, changedScene);
+    assert(after.hasValue());
+    assert(before.value().canonicalBytes != after.value().canonicalBytes);
+    std::cout << "PASS Shape label changes canonical reference bytes\n";
+}
+
 } // namespace
 
 int main() {
@@ -453,5 +488,6 @@ int main() {
     rejectsIdentityMismatchAndMissingRecord();
     replayIsByteAndDigestStable();
     visibleDrivenLocality();
+    shapeLabelChangesCanonicalReferenceBytes();
     return 0;
 }

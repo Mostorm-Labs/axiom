@@ -342,12 +342,19 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::refreshTextR
     CompiledSceneDelta delta{binding_._scene.revision(),SceneRevision(binding_._scene.revision().value()+1),{},std::nullopt};
     const auto published=binding_._scene.read();
     for(auto& record:next.records) {
-        if(record.kind!=semantic::ObjectKind::kRichText) continue;
-        auto layout=textLayoutService_->resolve(record.objectId,std::get<semantic::RichTextContent>(record.content));
+        const semantic::RichTextContent* textContent = nullptr;
+        if (record.kind == semantic::ObjectKind::kRichText)
+            textContent = std::get_if<semantic::RichTextContent>(&record.content);
+        else if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+                 shape != nullptr && shape->label.has_value())
+            textContent = &*shape->label;
+        if (textContent == nullptr) continue;
+        auto layout=textLayoutService_->resolve(record.objectId,*textContent);
         if(record.textLayout && record.textLayout->digest==layout->digest) continue;
         semantic::ObjectRecord source{}; source.id=record.objectId; source.kind=record.kind;
         source.transform=record.transform; source.properties=record.properties; source.content=record.content;
-        const auto bounds=computeBounds(source,layout.get());
+        const auto bounds=record.kind == semantic::ObjectKind::kRichText
+            ? computeBounds(source,layout.get()) : computeBounds(source,nullptr);
         if(!bounds.finite) return foundation::Result<SceneSyncReceipt>::failure(
             {foundation::ErrorCode::kInvalidRecord,"Resource-derived text bounds are non-finite"});
         record.textLayout=std::move(layout); record.geometryBounds=bounds.geometry;

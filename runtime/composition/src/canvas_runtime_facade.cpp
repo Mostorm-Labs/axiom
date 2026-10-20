@@ -1,4 +1,5 @@
 #include "canvas/runtime/canvas_runtime_facade.hpp"
+#include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/interaction/text_edit_session.hpp"
 #include "canvas/semantic/property_value.hpp"
 
@@ -205,13 +206,55 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
 
 
 CanvasRuntimeFacade::CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
-                                         CanvasTargetKey target,std::uint64_t runtimeInstance) noexcept
-    : runtime_(runtime), binding_(std::make_unique<Binding>(runtime)),
+                                         CanvasTargetKey target,std::uint64_t runtimeInstance,
+                                         RuntimeComposition* composition) noexcept
+    : runtime_(runtime), composition_(composition), binding_(std::make_unique<Binding>(runtime)),
       service_(std::make_unique<CanvasControlService>(*binding_)) {
   binding_->setTarget(target);
   if(runtime_.interaction_ && runtime_.interaction_->textSession())runtime_.interaction_->textSession()->configure(runtimeInstance,target.viewId);
 }
 CanvasRuntimeFacade::~CanvasRuntimeFacade() = default;
+FontCatalogSnapshot CanvasRuntimeFacade::readFontCatalog() const {
+  FontCatalogSnapshot out{};
+  const auto* manifest = runtime_.textManifest();
+  if (manifest == nullptr) return out;
+  out.manifestRevision = manifest->manifest_revision;
+  if (composition_ != nullptr) out.bindingGeneration = composition_->resources().lifetimeGeneration;
+  for (const auto& entry : manifest->entries) {
+    if (entry.resource_kind != semantic::ResourceKind::kFont) continue;
+    FontCatalogEntry item{};
+    item.id = entry.resource_id.value;
+    item.family = runtime_.textFontName(item.id);
+    item.revision = entry.resource_revision;
+    item.contentHash = entry.content_hash;
+    if (composition_ != nullptr) {
+      const auto receipt = composition_->resourceReceipt(item.id);
+      if (receipt.has_value()) {
+        item.byteLength = receipt->byteLength;
+        switch (receipt->state) {
+          case ResourceBindingState::kBytesValidated: item.status = FontResourceStatus::kBytesValidated; break;
+          case ResourceBindingState::kDecodeReady: item.status = FontResourceStatus::kDecodeReady; break;
+          case ResourceBindingState::kLayoutReady: item.status = FontResourceStatus::kLayoutReady; break;
+          case ResourceBindingState::kFailed: item.status = FontResourceStatus::kFailed; break;
+          case ResourceBindingState::kEvicted: item.status = FontResourceStatus::kEvicted; break;
+          case ResourceBindingState::kRetryable: item.status = FontResourceStatus::kRetryable; break;
+          case ResourceBindingState::kProviderReplaced: item.status = FontResourceStatus::kProviderReplaced; break;
+          case ResourceBindingState::kMissing: item.status = FontResourceStatus::kMissing; break;
+        }
+      }
+    }
+    if (item.family.empty()) item.diagnostic = "font family unavailable";
+    out.entries.push_back(std::move(item));
+  }
+  return out;
+}
+std::optional<FontCatalogEntry> CanvasRuntimeFacade::readFontResourceStatus(
+    foundation::ObjectId id) const {
+  const auto catalog = readFontCatalog();
+  const auto it = std::find_if(catalog.entries.begin(), catalog.entries.end(),
+                               [&](const auto& entry) { return entry.id == id; });
+  return it == catalog.entries.end() ? std::nullopt : std::optional<FontCatalogEntry>(*it);
+}
 bool CanvasRuntimeFacade::ownerThread() const noexcept {
   return std::this_thread::get_id() == ownerThread_;
 }

@@ -51,9 +51,10 @@ bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reade
     if(bits>7U) return false;
     bool triangle=false,text=false,formatting=false;
     for(const auto& object:snapshot.objects) {
-        if(object.kind==ObjectKind::kShape && object.kind_version==2) {
+        if(object.kind==ObjectKind::kShape && (object.kind_version==2 || object.kind_version==3)) {
             const auto* shape=std::get_if<ShapeContent>(&object.content);
             triangle=triangle || (shape && shape->shape_kind==3);
+            text = text || (shape && shape->label.has_value());
         }
         text=text || (object.kind==ObjectKind::kRichText && object.kind_version>=2);
         formatting=formatting || (object.kind==ObjectKind::kRichText && object.kind_version==3);
@@ -66,6 +67,8 @@ bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reade
     if(!caps.ParseFromArray(snapshot.capability_requirements.data(),static_cast<int>(snapshot.capability_requirements.size())))return false;
     std::vector<std::string> expected{"resource-manifest-v1"};
     if(text)expected.push_back("richtext-fixed-width-v2");if(formatting)expected.push_back("richtext-formatting-v3");if(triangle)expected.push_back("shape2-triangle-v1");
+    bool label = false; for (const auto& object : snapshot.objects) if (object.kind == ObjectKind::kShape && object.kind_version == 3U) { const auto* shape = std::get_if<ShapeContent>(&object.content); label = label || (shape && shape->label.has_value()); }
+    if (label) expected.push_back("shape-richtext-label-v1");
     if(caps.required_ids_size()!=static_cast<int>(expected.size()))return false;
     for(int i=0;i<caps.required_ids_size();++i)if(caps.required_ids(i)!=expected[static_cast<std::size_t>(i)])return false;
     const auto canonical=internal::canonicalEncodeProto(caps);
@@ -76,8 +79,10 @@ bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reade
     const auto encoded=internal::canonicalEncodeProto(frontier);
     if(!encoded.ok() || encoded.bytes!=snapshot.recovery_frontier)return false;
     for(const auto& object:snapshot.objects) {
-        if(object.kind!=ObjectKind::kRichText || object.kind_version<2) continue;
-        const auto* rich=std::get_if<RichTextContent>(&object.content);if(!rich)return false;
+        const RichTextContent* rich = nullptr;
+        if (object.kind == ObjectKind::kRichText && object.kind_version >= 2) rich = std::get_if<RichTextContent>(&object.content);
+        else if (object.kind == ObjectKind::kShape && object.kind_version == 3) { const auto* shape = std::get_if<ShapeContent>(&object.content); if (shape && shape->label) rich = &*shape->label; }
+        if (!rich) continue;
         for(const auto& paragraph:rich->document.paragraphs) for(const auto& run:paragraph.runs) {
             if(!run.style.font_resource_id)return false;
             const auto found=std::find_if(snapshot.manifest.entries.begin(),snapshot.manifest.entries.end(),[&](const auto& e){return e.resource_id==*run.style.font_resource_id && e.resource_kind==ResourceKind::kFont;});

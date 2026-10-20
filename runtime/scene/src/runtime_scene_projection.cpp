@@ -25,12 +25,50 @@ void encodeBrush(std::ostringstream& out, const semantic::BrushDescriptor& brush
 std::string geometryText(const semantic::ObjectRecord& r) {
     std::ostringstream out;
     out.precision(17);
+    const auto encodeId = [&out](const semantic::ObjectId& id) {
+        for (const auto byte : id.bytes) out << static_cast<unsigned>(byte) << ',';
+    };
+    const auto encodeColor = [&out](const semantic::ColorValue& color) {
+        out << color.r << ',' << color.g << ',' << color.b << ',' << color.a;
+    };
+    const auto encodeLabel = [&](const semantic::RichTextContent& label) {
+        out << ":label:";
+        if (label.layout) out << "layout:" << label.layout->wrap_width;
+        else out << "layout:none";
+        out << ":paragraphs:" << label.document.paragraphs.size();
+        for (const auto& paragraph : label.document.paragraphs) {
+            out << ":paragraph:";
+            encodeId(paragraph.id);
+            out << ':' << static_cast<unsigned>(paragraph.style.alignment)
+                << ':' << paragraph.style.line_height
+                << ':' << paragraph.style.spacing_before
+                << ':' << paragraph.style.spacing_after
+                << ':' << paragraph.style.bulleted
+                << ":runs:" << paragraph.runs.size();
+            for (const auto& run : paragraph.runs) {
+                out << ":run:" << run.text << ':';
+                if (run.style.font_resource_id) {
+                    out << "font:";
+                    encodeId(run.style.font_resource_id->value);
+                } else {
+                    out << "font:none";
+                }
+                out << ':' << run.style.font_size
+                    << ':' << run.style.weight
+                    << ':' << run.style.italic
+                    << ':' << run.style.underline
+                    << ':' << run.style.strikethrough << ":color:";
+                encodeColor(run.style.color);
+            }
+        }
+    };
     out << static_cast<unsigned>(r.kind) << ':' << r.transform.a << ',' << r.transform.b << ','
         << r.transform.c << ',' << r.transform.d << ',' << r.transform.tx << ',' << r.transform.ty;
     std::visit([&](const auto& c) {
         using T = std::decay_t<decltype(c)>;
         if constexpr (std::is_same_v<T, semantic::ShapeContent>) {
             out << ":shape:" << c.shape_kind << ':' << c.width << ':' << c.height;
+            if (c.label) encodeLabel(*c.label);
         } else if constexpr (std::is_same_v<T, semantic::ImageContent>) {
             out << ":image:";
             for (const auto byte : c.resource_id.value.bytes) out << static_cast<unsigned>(byte) << ',';
@@ -125,6 +163,11 @@ std::vector<semantic::ObjectId> dependencies(const semantic::ObjectRecord& r) {
         for (const auto& paragraph : text->document.paragraphs) for (const auto& run : paragraph.runs)
             if (run.style.font_resource_id) result.push_back(run.style.font_resource_id->value);
     }
+    if (const auto* shape = std::get_if<semantic::ShapeContent>(&r.content); shape && shape->label) {
+        for (const auto& paragraph : shape->label->document.paragraphs)
+            for (const auto& run : paragraph.runs)
+                if (run.style.font_resource_id) result.push_back(run.style.font_resource_id->value);
+    }
     if (const auto* connector = std::get_if<semantic::ConnectorContent>(&r.content)) {
         for (const auto* endpoint : {&connector->start, &connector->end}) {
             if (const auto* attached = std::get_if<semantic::AttachedEndpoint>(&endpoint->value)) {
@@ -152,8 +195,12 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
         if (record.id.isZero() || !semantic::isKnownObjectKind(record.kind)) {
             return foundation::Result<RuntimeSceneProjection>::failure({foundation::ErrorCode::kInvalidRecord, "invalid semantic object"});
         }
+        const semantic::RichTextContent* label = nullptr;
+        if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+            shape != nullptr && shape->label.has_value()) label = &*shape->label;
         const auto layout = textService && record.kind == semantic::ObjectKind::kRichText
-            ? textService->resolve(record.id,std::get<semantic::RichTextContent>(record.content)) : nullptr;
+            ? textService->resolve(record.id,std::get<semantic::RichTextContent>(record.content))
+            : textService && label != nullptr ? textService->resolve(record.id, *label) : nullptr;
         const auto bounds = computeBounds(record,layout.get());
         out.records.push_back(InspectionRecord{record.id, record.kind, record.kind_version,
             record.placement, record.transform, record.properties, record.content, record.erase_masks,

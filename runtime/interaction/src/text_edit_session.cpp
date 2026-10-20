@@ -172,6 +172,31 @@ runtime::TextReceipt TextEditSession::outcome(runtime::TextStatus status,
 semantic::ObjectId TextEditSession::identity() {
     return owner_.allocateTextIdentity();
 }
+const semantic::RichTextContent* TextEditSession::richContent(
+    const semantic::ObjectRecord& record) const noexcept {
+    if (record.kind == semantic::ObjectKind::kRichText)
+        return std::get_if<semantic::RichTextContent>(&record.content);
+    if (shapeLabelTarget(record)) {
+        const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+        return shape && shape->label ? &*shape->label : nullptr;
+    }
+    return nullptr;
+}
+semantic::RichTextContent* TextEditSession::richContent(
+    semantic::ObjectRecord& record) const noexcept {
+    if (record.kind == semantic::ObjectKind::kRichText)
+        return std::get_if<semantic::RichTextContent>(&record.content);
+    if (shapeLabelTarget(record)) {
+        auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+        return shape && shape->label ? &*shape->label : nullptr;
+    }
+    return nullptr;
+}
+bool TextEditSession::shapeLabelTarget(const semantic::ObjectRecord& record) const noexcept {
+    return record.kind == semantic::ObjectKind::kShape && record.kind_version == 3U &&
+           std::holds_alternative<semantic::ShapeContent>(record.content) &&
+           std::get<semantic::ShapeContent>(record.content).label.has_value();
+}
 
 void TextEditSession::end() noexcept {
     if (state_.phase != TextPhase::kClosed)
@@ -197,7 +222,7 @@ void TextEditSession::refresh() {
     if (!base_)
         return;
     const auto* current = owner_.textRecord(base_->id);
-    if (!current || current->kind != ObjectKind::kRichText) {
+    if (!current || richContent(*current) == nullptr) {
         detach();
         return;
     }
@@ -216,7 +241,7 @@ void TextEditSession::refresh() {
         }
         ++state_.token.projection;
         base_ = *current;
-        const auto& content = std::get<RichTextContent>(current->content);
+        const auto& content = *richContent(*current);
         if (!project(content, state_.projection)) {
             detach();
             return;
@@ -232,7 +257,7 @@ runtime::TextEditorSnapshot TextEditSession::read() {
     auto out=state_;
     auto selectedStyle=style_; auto paragraph=paragraphStyle_;
     if(base_ && !typingStyle_) {
-        const auto& content=std::get<RichTextContent>(base_->content);
+        const auto& content=*richContent(*base_);
         if(const auto pos=locate(content,state_.selection.start)) {
             const auto& p=content.document.paragraphs[pos->paragraph];paragraph=p.style;
             std::uint32_t offset=0;
@@ -251,7 +276,7 @@ runtime::TextEditorSnapshot TextEditSession::read() {
     // Non-empty selections report an effect when any intersecting character
     // (or paragraph for bullets) enables it. Endpoints are end-exclusive.
     if (base_ && state_.selection.length) {
-        const auto& content = std::get<RichTextContent>(base_->content);
+        const auto& content = *richContent(*base_);
         const auto first = locate(content, state_.selection.start);
         const auto last = locate(content, static_cast<std::size_t>(state_.selection.start) +
                                           state_.selection.length);
@@ -349,7 +374,9 @@ runtime::TextStatus TextEditSession::applyDelta(RichTextDelta delta) {
         prepared.plan->replacements.size() != 1)
         return TextStatus::kRejected;
     const auto& post = prepared.plan->replacements.front();
-    const RichTextState before{base_->kind_version, std::get<RichTextContent>(base_->content)};
+    const auto* beforeContent = richContent(*base_);
+    if (beforeContent == nullptr) return TextStatus::kRejected;
+    const RichTextState before{base_->kind_version, *beforeContent};
     const Operation inverse{owner_.allocateTextOperation(),
                             owner_.textDocument(),
                             1,
@@ -359,14 +386,15 @@ runtime::TextStatus TextEditSession::applyDelta(RichTextDelta delta) {
                                             {RestoreRichTextStateStep{before}},
                                             richTextStateDigest(owner_.textDocument(), post)}}};
     std::u16string confirmed;
-    if (!project(std::get<RichTextContent>(post.content), confirmed))
+    const auto* postContent = richContent(post);
+    if (postContent == nullptr || !project(*postContent, confirmed))
         return TextStatus::kRejected;
     Applying guard(applying_);
     if (!owner_.applyTextOperation(forward, inverse))
         return TextStatus::kRejected;
     lastOperation_ = forward.id.value();
     base_ = *owner_.textRecord(base_->id);
-    const auto& content = std::get<RichTextContent>(base_->content);
+    const auto& content = *richContent(*base_);
     state_.width = content.layout ? content.layout->wrap_width : 128;
     state_.projection = std::move(confirmed);
     ++state_.token.projection;
@@ -435,7 +463,7 @@ runtime::TextStatus TextEditSession::replace(TextRange range, const std::u16stri
         ++state_.token.projection;
         return TextStatus::kApplied;
     }
-    const auto& content = std::get<RichTextContent>(base_->content);
+    const auto& content = *richContent(*base_);
     if (content.document.paragraphs.empty()) {
         auto restored = content;
         std::size_t start = 0;
@@ -547,7 +575,9 @@ runtime::TextStatus TextEditSession::format(const TextFormatPatch& patch) {
     if(patch.alignment)newParagraph.alignment=static_cast<ParagraphAlignment>(*patch.alignment);
     if(patch.bulleted)newParagraph.bulleted=*patch.bulleted;
     if(!base_){style_=newStyle;paragraphStyle_=newParagraph;typingStyle_=true;++state_.token.projection;return TextStatus::kObserved;}
-    auto content=std::get<RichTextContent>(base_->content);
+    const auto* currentContent = richContent(*base_);
+    if (currentContent == nullptr) return TextStatus::kRejected;
+    auto content=*currentContent;
     const auto first=locate(content,state_.selection.start),last=locate(content,static_cast<std::size_t>(state_.selection.start)+state_.selection.length);
     if(!first || !last)return TextStatus::kRejected;
     for(std::size_t index=first->paragraph;index<=last->paragraph;++index) {
@@ -576,7 +606,9 @@ runtime::TextStatus TextEditSession::format(const TextFormatPatch& patch) {
     auto version=base_->kind_version;
     if(patch.strikethrough.value_or(false) || patch.bulleted.value_or(false))version=3;
     if(version==3 && !content.layout)content.layout=RichTextLayout{state_.width};
-    const auto unchanged=content==std::get<RichTextContent>(base_->content) && version==base_->kind_version;
+    const auto* baseContent = richContent(*base_);
+    if (baseContent == nullptr) return TextStatus::kRejected;
+    const auto unchanged=content==*baseContent && version==base_->kind_version;
     const auto status=unchanged?TextStatus::kObserved:applyDelta({3,{RestoreRichTextStateStep{{version,std::move(content)}}},{}});
     if(status==TextStatus::kApplied || status==TextStatus::kObserved) {
         style_=newStyle;paragraphStyle_=newParagraph;typingStyle_=!state_.selection.length;
@@ -603,13 +635,13 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
         std::optional<ObjectRecord> existing;
         if (request.kind == TextIntentKind::kEdit) {
             const auto* value = owner_.textRecord(request.object);
-            if (!value || value->kind != ObjectKind::kRichText || !owner_.textWritable(value->id))
+            if (!value || richContent(*value) == nullptr || !owner_.textWritable(value->id))
                 return outcome(TextStatus::kRejected, request.requestId);
             existing = *value;
         }
         if (existing)
             for (const auto& paragraph :
-                 std::get<RichTextContent>(existing->content).document.paragraphs)
+                 richContent(*existing)->document.paragraphs)
                 for (const auto& run : paragraph.runs) {
                     if (!run.style.font_resource_id ||
                         std::none_of(manifest->entries.begin(),
@@ -641,7 +673,7 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
         typingStyle_=false;paragraphStyle_={ParagraphAlignment::kLeft,1,0,0};
         style_ = {font->resource_id, 16, 400, false, false, {0, 0, 0, 1}};
         if (existing) {
-            const auto& content = std::get<RichTextContent>(existing->content);
+            const auto& content = *richContent(*existing);
             if (!project(content, state_.projection)) {
                 end();
                 return outcome(TextStatus::kUnsupported, request.requestId);
@@ -871,11 +903,12 @@ runtime::TextReceipt TextEditSession::input(const TextInputEvent& event) {
 std::optional<semantic::ObjectRecord> TextEditSession::presentation() {
     refresh();if(state_.phase==TextPhase::kClosed)return std::nullopt;
     auto object=base_?*base_:draft_;
-    const auto* original=base_?std::get_if<RichTextContent>(&base_->content):nullptr;
+    const auto* original=base_?richContent(*base_):nullptr;
     if(original && !state_.composition && !original->document.paragraphs.empty()){
         // Empty paragraphs still need the admitted font for a real caret metric.
-        auto& content=std::get<RichTextContent>(object.content);
-        for(auto& p:content.document.paragraphs)if(p.runs.empty())p.runs.push_back({"",style_});
+        auto* content=richContent(object);
+        if (!content) return std::nullopt;
+        for(auto& p:content->document.paragraphs)if(p.runs.empty())p.runs.push_back({"",style_});
         return object;
     }
     std::u16string visible=state_.projection;std::vector<TextStyle> styles;
@@ -894,6 +927,10 @@ std::optional<semantic::ObjectRecord> TextEditSession::presentation() {
         if(p.runs.empty())p.runs.push_back({"",style_});content.document.paragraphs.push_back(std::move(p));++index;
         if(end==std::u16string::npos)break;start=end+1;
     }while(start<=visible.size());
-    object.content=std::move(content);return object;
+    if (shapeLabelTarget(object))
+        std::get<semantic::ShapeContent>(object.content).label = std::move(content);
+    else
+        object.content=std::move(content);
+    return object;
 }
 } // namespace canvas::interaction

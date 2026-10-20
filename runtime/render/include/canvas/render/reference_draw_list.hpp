@@ -25,6 +25,7 @@ struct WorldToViewAffine final {
 
 struct ShapeReferenceCommand final {
     semantic::ShapeContent content;
+    std::shared_ptr<const text::TextLayoutSnapshot> labelLayout = nullptr;
     bool operator==(const ShapeReferenceCommand&) const = default;
 };
 struct ImageReferenceCommand final {

@@ -50,11 +50,12 @@ CanvasEditingRuntime::textHit(const semantic::ObjectRecord& record, float x, flo
     if (!std::isfinite(det) || std::abs(det) < 1e-12)
         return {};
     const double dx = point.first - t.tx, dy = point.second - t.ty;
+    const auto* content = std::get_if<semantic::RichTextContent>(&record.content);
+    if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+        shape != nullptr && shape->label.has_value()) content = &*shape->label;
+    if (content == nullptr) return {};
     const auto geometry = textLayoutService_->editingGeometry(
-        record.id,
-        std::get<semantic::RichTextContent>(record.content),
-        0,
-        0,
+        record.id, *content, 0, 0,
         foundation::WorldPoint{static_cast<float>((t.d * dx - t.c * dy) / det),
                                static_cast<float>((t.a * dy - t.b * dx) / det)});
     return geometry.available ? geometry.hit : std::nullopt;
@@ -68,10 +69,12 @@ semantic::ObjectId CanvasEditingRuntime::hitTextAtView(float x, float y) {
     });
     const auto point = viewToContent(x, y);
     for (const auto& o : objects) {
-        if (o.kind != semantic::ObjectKind::kRichText || !textWritable(o.id))
-            continue;
-        const auto layout =
-            textLayoutService_->resolve(o.id, std::get<semantic::RichTextContent>(o.content));
+        if (!textWritable(o.id)) continue;
+        const auto* content = std::get_if<semantic::RichTextContent>(&o.content);
+        if (const auto* shape = std::get_if<semantic::ShapeContent>(&o.content);
+            shape != nullptr && shape->label.has_value()) content = &*shape->label;
+        if (content == nullptr) continue;
+        const auto layout = textLayoutService_->resolve(o.id, *content);
         if (!layout->diagnostics.empty())
             continue;
         const auto bounds = canvas::scene::computeBounds(o, layout.get()).world;
@@ -98,8 +101,11 @@ CanvasEditingRuntime::textGeometry(const runtime::CanvasTargetKey& target) {
                                              : static_cast<std::uint32_t>(state.preedit.size()))
             : state.selection.start;
     const auto length = state.composition ? 0 : state.selection.length;
-    const auto geometry = textLayoutService_->editingGeometry(
-        record->id, std::get<semantic::RichTextContent>(record->content), start, length);
+    const auto* content = std::get_if<semantic::RichTextContent>(&record->content);
+    if (const auto* shape = std::get_if<semantic::ShapeContent>(&record->content);
+        shape != nullptr && shape->label.has_value()) content = &*shape->label;
+    if (content == nullptr) return out;
+    const auto geometry = textLayoutService_->editingGeometry(record->id, *content, start, length);
     out.available = geometry.available;
     out.diagnostics = geometry.diagnostics;
     out.token = {state.token,

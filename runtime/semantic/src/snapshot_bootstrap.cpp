@@ -23,7 +23,7 @@ bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability ca
         return schema_version==3U && (static_cast<unsigned>(capability)&6U)==6U;
     if (object.kind == ObjectKind::kRichText && object.kind_version == 2U)
         return schema_version==3U && (static_cast<unsigned>(capability)&2U)!=0U;
-    if (object.kind != ObjectKind::kShape || object.kind_version != 2U) return true;
+    if (object.kind != ObjectKind::kShape || (object.kind_version != 2U && object.kind_version != 3U)) return true;
     const auto* shape = std::get_if<ShapeContent>(&object.content);
     return shape == nullptr || shape->shape_kind != 3U ||
            ((schema_version == 2U || schema_version == 3U) && (static_cast<unsigned>(capability)&1U)!=0U);

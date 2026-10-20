@@ -83,18 +83,36 @@ StatefulResult validateEditRichTextStateForDocument(const EditRichTextOp& op,con
     if(!current) return fail(StatefulIssue::kObjectMissing);
     const auto target=validateRecordStateForOperation(*current,StateRule::kRichTextTarget);
     if(!target.ok())return target;
+    const RichTextContent* currentContent = nullptr;
+    bool embeddedShapeLabel = false;
+    if (current->kind == ObjectKind::kRichText) {
+        currentContent = std::get_if<RichTextContent>(&current->content);
+    } else if (current->kind == ObjectKind::kShape && current->kind_version == 3U) {
+        const auto* shape = std::get_if<ShapeContent>(&current->content);
+        if (shape != nullptr && shape->label.has_value()) {
+            currentContent = &*shape->label;
+            embeddedShapeLabel = true;
+        }
+    }
+    if (currentContent == nullptr) return fail(StatefulIssue::kInvalidApplicability);
     if(!internal::validateObjectRecord(*current)) return fail(StatefulIssue::kInvalidKindVersion);
-    if(op.delta.delta_version==1 && current->kind_version!=1) return fail(StatefulIssue::kInvalidKindVersion);
-    if(op.delta.delta_version<3 && current->kind_version==3)return fail(StatefulIssue::kInvalidKindVersion);
+    if(op.delta.delta_version==1 && (!embeddedShapeLabel && current->kind_version!=1)) return fail(StatefulIssue::kInvalidKindVersion);
+    if(op.delta.delta_version<3 && (embeddedShapeLabel || current->kind_version==3)) return fail(StatefulIssue::kInvalidKindVersion);
     if(op.delta.delta_version>=2 && (op.delta.expected_state_digest.size()!=32 ||
        richTextStateDigest(document,*current)!=op.delta.expected_state_digest)) return fail(StatefulIssue::kTextStateInvalid);
     RichTextContent next;
-    const auto status=internal::prepareRichTextDeltaState(std::get<RichTextContent>(current->content),op.delta,&next);
+    const auto status=internal::prepareRichTextDeltaState(*currentContent,op.delta,&next);
     if(!status.ok()) return status;
-    auto result=*current;result.content=std::move(next);
-    for(const auto& step:op.delta.steps) {
-        if(const auto* layout=std::get_if<SetRichTextLayoutStep>(&step)) result.kind_version=layout->target_kind_version;
-        if(const auto* restore=std::get_if<RestoreRichTextStateStep>(&step)) result.kind_version=restore->state.kind_version;
+    auto result=*current;
+    if (embeddedShapeLabel) {
+        auto& shape = std::get<ShapeContent>(result.content);
+        shape.label = std::move(next);
+    } else {
+        result.content=std::move(next);
+        for(const auto& step:op.delta.steps) {
+            if(const auto* layout=std::get_if<SetRichTextLayoutStep>(&step)) result.kind_version=layout->target_kind_version;
+            if(const auto* restore=std::get_if<RestoreRichTextStateStep>(&step)) result.kind_version=restore->state.kind_version;
+        }
     }
     if(!internal::validateObjectRecord(result)) return fail(StatefulIssue::kTextStateInvalid);
     out->replacements={std::move(result)};return {};

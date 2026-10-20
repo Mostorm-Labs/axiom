@@ -37,7 +37,7 @@ RuntimeComposition::RuntimeComposition(render::ViewId viewId)
   imageResolver_ = std::make_unique<canvas::render::ImageResourceResolver>(*provider_);
 #endif
   controlFacade_ = std::make_unique<CanvasRuntimeFacade>(
-      *runtime_, CanvasTargetKey{1U, viewId.value(), 1U, 1U},runtimeInstanceId_);
+      *runtime_, CanvasTargetKey{1U, viewId.value(), 1U, 1U},runtimeInstanceId_, this);
 #if defined(CANVAS_RENDER_HAS_SKIA)
   runtime_->bindResourceServices(imageResolver_.get(), textLayoutService_.get());
 #else

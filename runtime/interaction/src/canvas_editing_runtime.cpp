@@ -3127,14 +3127,42 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   }
 
   const auto textState=interaction_->textSession()?interaction_->textSession()->read():runtime::TextEditorSnapshot{};
-  if(interaction_->textSession() && textLayoutService_){if(const auto object=interaction_->textSession()->presentation()){
-    const auto& content=std::get<semantic::RichTextContent>(object->content);const auto layout=textLayoutService_->resolve(object->id,content);
-    if(layout->diagnostics.empty()){
-      render::ReferenceTraversalEntry entry{};entry.record.objectId=object->id;entry.record.kind=semantic::ObjectKind::kRichText;entry.record.kindVersion=object->kind_version;entry.record.transform=object->transform;entry.record.content=content;entry.record.textLayout=layout;entry.record.placement.order_key=semantic::OrderKey({255});
-      const auto bounds=canvas::scene::computeBounds(*object,layout.get());entry.record.geometryBounds=bounds.geometry;entry.record.visualBounds=bounds.visual;entry.record.worldBounds=bounds.world;entry.command=render::RichTextReferenceCommand{content,layout};
-      auto& entries=references.value().entries;const auto existing=std::find_if(entries.begin(),entries.end(),[&](const auto& value){return value.record.objectId==object->id;});if(existing!=entries.end())*existing=std::move(entry);else entries.push_back(std::move(entry));references.value().canonicalBytes.clear();references.value().digest.clear();
+  if (interaction_->textSession() && textLayoutService_) {
+    if (const auto object = interaction_->textSession()->presentation()) {
+      const semantic::RichTextContent* content = std::get_if<semantic::RichTextContent>(&object->content);
+      const semantic::ShapeContent* shape = std::get_if<semantic::ShapeContent>(&object->content);
+      if (shape != nullptr && shape->label.has_value()) content = &*shape->label;
+      if (content != nullptr) {
+        const auto layout = textLayoutService_->resolve(object->id, *content);
+        if (layout->diagnostics.empty()) {
+          render::ReferenceTraversalEntry entry{};
+          entry.record.objectId = object->id;
+          entry.record.kind = object->kind;
+          entry.record.kindVersion = object->kind_version;
+          entry.record.transform = object->transform;
+          entry.record.content = object->content;
+          entry.record.textLayout = layout;
+          entry.record.placement.order_key = semantic::OrderKey({255});
+          const auto bounds = canvas::scene::computeBounds(
+              *object, object->kind == semantic::ObjectKind::kRichText ? layout.get() : nullptr);
+          entry.record.geometryBounds = bounds.geometry;
+          entry.record.visualBounds = bounds.visual;
+          entry.record.worldBounds = bounds.world;
+          if (shape != nullptr && shape->label.has_value())
+            entry.command = render::ShapeReferenceCommand{*shape, layout};
+          else
+            entry.command = render::RichTextReferenceCommand{*content, layout};
+          auto& entries = references.value().entries;
+          const auto existing = std::find_if(entries.begin(), entries.end(),
+              [&](const auto& value) { return value.record.objectId == object->id; });
+          if (existing != entries.end()) *existing = std::move(entry);
+          else entries.push_back(std::move(entry));
+          references.value().canonicalBytes.clear();
+          references.value().digest.clear();
+        }
+      }
     }
-  }}
+  }
   const auto plan = render::FramePlanBuilder::build(frame, references.value());
   if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
   if (selectionMode_) (void)renderSelectionOverlay();

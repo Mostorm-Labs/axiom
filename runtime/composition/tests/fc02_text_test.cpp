@@ -141,7 +141,7 @@ ResourceManifest fontManifest() {
     m.entries.push_back({ResourceId{id(90)},
                          ResourceKind::kFont,
                          1,
-                         "sha256:" + std::string(64, '0'),
+                         "sha256:4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a",
                          1,
                          1,
                          1,
@@ -166,6 +166,14 @@ ObjectRecord textObject(bool fixed = true) {
     object.kind_version = fixed ? 2U : 1U;
     object.placement.order_key = OrderKey({1});
     object.content = content;
+    return object;
+}
+ObjectRecord shapeLabelObject() {
+    auto object = textObject();
+    object.id = id(35);
+    object.kind = ObjectKind::kShape;
+    object.kind_version = 3U;
+    object.content = ShapeContent{1U, 200.0, 80.0, std::get<RichTextContent>(object.content)};
     return object;
 }
 struct Engine {
@@ -245,6 +253,40 @@ TEST(FC02Semantic, ExactRestorePreservesRunBoundariesAndUnrelatedTransform) {
     EXPECT_EQ(e.objects.find(before.id)->content, before.content);
     EXPECT_EQ(e.objects.find(before.id)->transform, transform);
 }
+TEST(FC02Semantic, ShapeLabelUsesRichTextOperationWithoutCreatingChildObject) {
+    Engine e;
+    const auto object = shapeLabelObject();
+    ASSERT_EQ(e.apply(e.op(InsertObjectsOp{{object}})).disposition, ApplyDisposition::kApplied);
+    const auto style = std::get<ShapeContent>(e.objects.find(object.id)->content).label->document.paragraphs[0].runs[0].style;
+    const auto forward = e.op(EditRichTextOp{
+        object.id,
+        {3, {InsertTextStep{id(31), 1, "X", style}},
+         richTextStateDigest(DocumentId{id(100)}, *e.objects.find(object.id))}});
+    ASSERT_EQ(e.apply(forward).disposition, ApplyDisposition::kApplied);
+    ASSERT_EQ(e.objects.size(), 1U);
+    const auto* updated = e.objects.find(object.id);
+    ASSERT_NE(updated, nullptr);
+    ASSERT_EQ(updated->kind, ObjectKind::kShape);
+    ASSERT_EQ(updated->kind_version, 3U);
+    ASSERT_TRUE(std::get<ShapeContent>(updated->content).label.has_value());
+    EXPECT_EQ(std::get<ShapeContent>(updated->content).label->document.paragraphs[0].runs[0].text, "AXB");
+}
+
+TEST(FC02Semantic, LegacyShapeVersionsRejectEmbeddedLabels) {
+    Engine e;
+    auto object = shapeLabelObject();
+    object.kind_version = 1U;
+    object.content = ShapeContent{1U, 200.0, 80.0,
+                                  std::get<ShapeContent>(object.content).label};
+    EXPECT_EQ(e.apply(e.op(InsertObjectsOp{{object}})).disposition,
+              ApplyDisposition::kRejected);
+    object.kind_version = 2U;
+    object.content = ShapeContent{3U, 200.0, 80.0,
+                                  std::get<ShapeContent>(object.content).label};
+    EXPECT_EQ(e.apply(e.op(InsertObjectsOp{{object}})).disposition,
+              ApplyDisposition::kRejected);
+}
+
 TEST(FC02Semantic, GuardAndInvalidSecondStepRejectAtomically) {
     Engine e;
     auto object = textObject();
@@ -419,6 +461,59 @@ struct RealHost {
         return composition.qualificationRuntime().submittedOperationCount();
     }
 };
+
+TEST(FC02Facade, ShapeLabelCanEnterTextSessionThroughFacade) {
+    using namespace canvas::runtime;
+    RealHost h;
+    const auto object = shapeLabelObject();
+    Operation seed{OperationId{id(700)}, DocumentId{id(1)}, 1, 1,
+                    InsertObjectsOp{{object}}};
+    const auto seeded = h.composition.applyExternalOperation(seed, ApplySource::kRemoteSync);
+    ASSERT_EQ(seeded.disposition, ApplyDisposition::kApplied)
+        << "issue=" << static_cast<int>(seeded.error.issue);
+    TextIntent request;
+    request.target = h.facade.mountedCanvasTargets().front();
+    request.clientId = 7;
+    request.requestId = 1;
+    request.kind = TextIntentKind::kEdit;
+    request.object = object.id;
+    ASSERT_EQ(h.facade.submitTextIntent(request).status, TextStatus::kQueued);
+    ASSERT_TRUE(h.composition.ownerPump());
+    const auto receipt = h.facade.textIntentReceipt(request.clientId, request.requestId);
+    ASSERT_TRUE(receipt.has_value());
+    EXPECT_EQ(receipt->status, TextStatus::kApplied);
+    EXPECT_EQ(h.facade.readTextEditor().token.object, object.id);
+    EXPECT_EQ(h.facade.readTextEditor().projection, u"AB");
+}
+
+TEST(FC02Facade, FontCatalogIsReadOnlyAndTracksAdmittedResourceState) {
+    using namespace canvas::runtime;
+    RealHost h;
+    const auto before = h.facade.readFontCatalog();
+    ASSERT_EQ(before.entries.size(), 1U);
+    ASSERT_EQ(before.entries.front().id, id(90));
+    EXPECT_EQ(before.entries.front().status, FontResourceStatus::kMissing);
+
+    auto invalid = fontManifest();
+    invalid.entries.front().content_hash = "sha256:invalid";
+    EXPECT_FALSE(h.composition.bindManifest(invalid, 2U));
+    EXPECT_EQ(h.facade.readFontCatalog(), before);
+
+    ASSERT_TRUE(h.composition.publishResource(id(90), {0x01U}));
+    ASSERT_TRUE(h.composition.ownerPump());
+    const auto ready = h.facade.readFontResourceStatus(id(90));
+    ASSERT_TRUE(ready.has_value());
+    EXPECT_EQ(ready->status, FontResourceStatus::kBytesValidated);
+    EXPECT_EQ(ready->byteLength, 1U);
+    EXPECT_EQ(ready->contentHash, before.entries.front().contentHash);
+
+    auto removed = fontManifest();
+    removed.entries.clear();
+    removed.manifest_revision = 2U;
+    ASSERT_TRUE(h.composition.bindManifest(removed, 2U));
+    EXPECT_FALSE(h.facade.readFontResourceStatus(id(90)).has_value());
+}
+
 TEST(FC02Facade, FakeImeCommitsThroughRealHistoryAndCanonicalStore) {
     using namespace canvas::runtime;
     RealHost h;
