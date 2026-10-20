@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <atomic>
+#include <chrono>
 #include <limits>
 #include <string>
 
@@ -382,6 +383,7 @@ bool RuntimeComposition::serviceFrameOpportunity(
   // Consume controls and resource notifications first. Their application may
   // create a new canonical demand during this same frame opportunity.
   if (!ownerPump()) return false;
+  runtime_->updateTextCaretPresentation(std::chrono::steady_clock::now());
   const bool shouldCanonical = forceCanonical || runtime_->canonicalPresentationDirty();
   if (nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
   if (shouldCanonical) {

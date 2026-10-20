@@ -5,6 +5,34 @@
 #include <algorithm>
 #include <cmath>
 namespace canvas::interaction {
+void CanvasEditingRuntime::updateTextCaretPresentation(
+    std::chrono::steady_clock::time_point now) noexcept {
+    const auto state = interaction_->textSession()
+                           ? interaction_->textSession()->read()
+                           : runtime::TextEditorSnapshot{};
+    const bool active = state.phase != runtime::TextPhase::kClosed;
+    const bool changed = state.token != caretToken_ || state.selection != caretSelection_ ||
+                         state.preeditSelection != caretPreeditSelection_ ||
+                         state.phase != caretPhase_ ||
+                         state.nextInputSequence != caretInputSequence_;
+    const bool wasActive = caretPhase_ != runtime::TextPhase::kClosed;
+    if (changed) {
+        caretToken_ = state.token;
+        caretSelection_ = state.selection;
+        caretPreeditSelection_ = state.preeditSelection;
+        caretPhase_ = state.phase;
+        caretInputSequence_ = state.nextInputSequence;
+        caretBlinkStart_ = now;
+    }
+    // Use elapsed monotonic time, not host frame counts. Input restores a
+    // visible caret immediately; idle owner pumps only redraw at a phase edge.
+    const auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+        now - caretBlinkStart_).count();
+    const bool visible = active && (elapsed / 500) % 2 == 0;
+    if (visible != textCaretVisible_ || (changed && (active || wasActive)))
+        canonicalPresentationDirty_ = true;
+    textCaretVisible_ = visible;
+}
 std::vector<std::uint32_t> CanvasEditingRuntime::textGraphemes(const std::u16string& text) const {
     return textLayoutService_ ? textLayoutService_->graphemeBoundaries(text)
                               : std::vector<std::uint32_t>{};

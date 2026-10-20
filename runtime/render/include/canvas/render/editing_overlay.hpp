@@ -90,6 +90,7 @@ class EditingOverlay final {
 
     std::vector<std::array<float,8>> textSelection;
     std::optional<std::array<float,8>> textCaret;
+    bool textCaretVisible = true;
     [[nodiscard]] foundation::ObjectId selectedObject() const noexcept {
         return input_.selectedObject;
     }

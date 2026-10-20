@@ -43,6 +43,7 @@ namespace canvas::runtime { class CanvasRuntimeFacade; }
 
 #include <cstddef>
 #include <cstdint>
+#include <chrono>
 #include <limits>
 #include <string>
 #include <string_view>
@@ -256,6 +257,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] const render::EditingOverlay* selectionOverlay() const noexcept {
     return selectionView_ == nullptr ? nullptr : &selectionView_->editingOverlay();
   }
+  // View-only animation, advanced by the Composition frame opportunity.
+  // Layout geometry and canonical text remain independent of the blink phase.
+  void updateTextCaretPresentation(std::chrono::steady_clock::time_point now) noexcept;
   bool setTextTool(bool value) noexcept { textTool_=value;return true; }
   bool textTool() const noexcept {return textTool_;}
   [[nodiscard]] bool selectBrushProfile(std::string_view profileId,
@@ -681,6 +685,13 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::uint64_t nextHistoryOperationOrdinal_ = (std::uint64_t{1} << 63U);
     std::uint64_t nextTextIdentity_ = 1;
   bool textTool_=false;
+  runtime::TextSessionToken caretToken_{};
+  runtime::TextRange caretSelection_{};
+  std::optional<runtime::TextRange> caretPreeditSelection_;
+  runtime::TextPhase caretPhase_ = runtime::TextPhase::kClosed;
+  std::uint64_t caretInputSequence_ = 0;
+  std::chrono::steady_clock::time_point caretBlinkStart_{};
+  bool textCaretVisible_ = true;
   input::PointerKey textSelectionPointer_{};
   std::uint32_t textSelectionAnchor_=0;
   std::unordered_set<input::PointerKey,input::PointerKeyHash> textPointerKeys_;

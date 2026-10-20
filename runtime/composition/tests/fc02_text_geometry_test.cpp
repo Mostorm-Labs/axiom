@@ -5,6 +5,8 @@
 #include <fstream>
 #include <gtest/gtest.h>
 #include <iterator>
+#include <chrono>
+#include <thread>
 using namespace canvas;
 namespace {
 struct Host {
@@ -101,6 +103,45 @@ TEST(FC02Geometry, RealFontCaretPreeditFrameAndStaleGeometry) {
     EXPECT_EQ(h.facade.readTextEditor().token, composed.token.session);
     EXPECT_EQ(h.intent(runtime::TextIntentKind::kEscape).status, runtime::TextStatus::kObserved);
     EXPECT_EQ(h.runtime.semanticObjectCount(), 0U);
+}
+TEST(FC02Geometry, IdleCaretBlinksWithoutEditingOrContinuousRedraw) {
+    Host h(true);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kCreate).status, runtime::TextStatus::kApplied);
+    const auto token = h.facade.readTextEditor().token;
+    runtime::RuntimeFrameOpportunity frame;
+    ASSERT_TRUE(h.runtime.serviceFrameOpportunity(false, frame));
+    std::vector<std::uint8_t> pixels(256 * 256 * 4);
+    const auto darkPixels = [&] {
+        EXPECT_TRUE(h.runtime.readCanonicalRgba(pixels));
+        std::size_t count = 0;
+        for (std::size_t i = 0; i < pixels.size(); i += 4)
+            if (pixels[i] < 200 && pixels[i + 1] < 200 && pixels[i + 2] < 200)
+                ++count;
+        return count;
+    };
+    ASSERT_GT(darkPixels(), 0U) << "The empty editor must initially show its actual shaped caret";
+    bool hidden = false, restored = false;
+    std::size_t redraws = 0;
+    const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(2);
+    while (std::chrono::steady_clock::now() < deadline && !restored) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        ASSERT_TRUE(h.runtime.serviceFrameOpportunity(false, frame));
+        if (!frame.canonicalRequested) continue;
+        ++redraws;
+        const auto count = darkPixels();
+        if (count == 0) hidden = true;
+        if (hidden && count > 0) restored = true;
+    }
+    EXPECT_TRUE(hidden) << "Idle caret never disappeared; Runtime must schedule its blink frame";
+    EXPECT_TRUE(restored) << "Caret must reappear without input";
+    EXPECT_LE(redraws, 6U) << "Caret animation must not redraw the canvas every owner pump";
+    EXPECT_EQ(h.facade.readTextEditor().token, token);
+    EXPECT_EQ(h.facade.readTextEditor().phase, runtime::TextPhase::kEditing);
+    EXPECT_EQ(h.runtime.semanticObjectCount(), 0U);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), 0U);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status, runtime::TextStatus::kApplied);
+    ASSERT_TRUE(h.runtime.serviceFrameOpportunity(false, frame));
+    EXPECT_EQ(darkPixels(), 0U);
 }
 TEST(FC02Geometry, SharedGraphemeDeletionAndNativeCompletionFailure) {
     Host h;

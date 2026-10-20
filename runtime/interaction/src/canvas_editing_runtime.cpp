@@ -3157,6 +3157,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
     const auto geometry=textGeometry({1,viewId_.value(),surface_.metricsGeneration,surface_.generation});
     if(geometry.available){selectionView_->editingOverlay().textCaret=geometry.caret;selectionView_->editingOverlay().textSelection=geometry.selection;}
+    selectionView_->editingOverlay().textCaretVisible = textCaretVisible_;
   }
   const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value(),
                                                   selectionOverlay());
