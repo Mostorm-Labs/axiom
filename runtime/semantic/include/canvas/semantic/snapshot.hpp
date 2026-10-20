@@ -17,6 +17,8 @@ enum class SnapshotCapability : std::uint8_t {
     // Explicit capability bits; 0/1 retain their released identities.
     kRichTextFixedWidthV2 = 2,
     kShape2TriangleAndRichTextFixedWidthV2 = 3,
+    kRichTextFormattingV3 = 6,
+    kShape2TriangleAndRichTextFormattingV3 = 7,
 };
 
 struct SemanticSnapshot final {

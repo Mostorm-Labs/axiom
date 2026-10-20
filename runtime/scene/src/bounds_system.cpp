@@ -123,6 +123,10 @@ BoundsResult computeBounds(const semantic::ObjectRecord& record, const text::Tex
     if (record.kind == semantic::ObjectKind::kGroup) { result.geometry = {}; result.visual = {}; result.world = {}; return result; }
     result.geometry = record.kind == semantic::ObjectKind::kRichText && textLayout != nullptr
         ? textLayout->localBounds : shapeRect(record);
+    if(record.kind==semantic::ObjectKind::kRichText && textLayout) {
+        const auto& content=std::get<semantic::RichTextContent>(record.content);
+        if(content.layout)result.geometry=foundation::unionRects(result.geometry,{0,0,static_cast<float>(content.layout->wrap_width),textLayout->localBounds.bottom});
+    }
     const float stroke = [&] {
         for (const auto& entry : record.properties.entries) {
             if (entry.field_id == 0x101U) {

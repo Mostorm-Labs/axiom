@@ -511,7 +511,7 @@ bool allowsField(const std::string& root_type, std::uint32_t field) {
     if (root_type == "Placement") return field == 1U || field == 2U;
     if (root_type == "DashPattern") return field == 1U || field == 2U;
     if (root_type == "DocumentSnapshot") return field >= 1U && field <= 10U;
-    if (root_type == "ParagraphStyle") return field >= 1U && field <= 4U;
+    if (root_type == "ParagraphStyle") return field >= 1U && field <= 5U;
     if (root_type == "RichTextDocument") return field == 1U;
     if (root_type == "RichTextDelta") return field >= 1U && field <= 3U;
     if (root_type == "RichTextStep") return field >= 1U && field <= 8U;
@@ -530,7 +530,7 @@ bool hasExpectedWireType(const std::string& root_type, std::uint32_t field, std:
     if (root_type == "Placement") return type == 2U;
     if (root_type == "DashPattern") return (field == 1U && type == 2U) || (field == 2U && type == 1U);
     if (root_type == "DocumentSnapshot") return (field == 1U && type == 2U) || (field == 2U && type == 0U) || (field == 3U && type == 2U) || (field == 4U && type == 2U) || (field == 5U && type == 0U) || (field == 6U && type == 2U) || (field == 7U && type == 0U) || (field >= 8U && field <= 10U && type == 2U);
-    if (root_type == "ParagraphStyle") return (field == 1U && type == 0U) || (field >= 2U && type == 1U);
+    if (root_type == "ParagraphStyle") return ((field == 1U || field == 5U) && type == 0U) || (field >= 2U && field <= 4U && type == 1U);
     if (root_type == "RichTextDocument") return field == 1U && type == 2U;
     if (root_type == "RichTextDelta") return (field == 1U && type == 0U) || ((field == 2U || field == 3U) && type == 2U);
     if (root_type == "RichTextStep") return type == 2U;
@@ -831,6 +831,8 @@ bool mapTextStyle(const auditoryworks::axiom::v1::TextStyle& source, canvas::sem
     destination.weight = source.weight();
     destination.italic = source.italic();
     destination.underline = source.underline();
+    if(source.has_strikethrough() && !source.strikethrough())return false;
+    destination.strikethrough = source.strikethrough();
     if (source.has_color()) destination.color = {source.color().r(), source.color().g(), source.color().b(), source.color().a()};
     return true;
 }
@@ -840,6 +842,8 @@ bool mapParagraphStyle(const auditoryworks::axiom::v1::ParagraphStyle& source, c
     destination.line_height = source.line_height();
     destination.spacing_before = source.spacing_before();
     destination.spacing_after = source.spacing_after();
+    if(source.has_bulleted() && !source.bulleted())return false;
+    destination.bulleted = source.bulleted();
     return true;
 }
 

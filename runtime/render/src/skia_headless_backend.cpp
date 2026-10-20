@@ -453,6 +453,10 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(propertyColor(record, 0x00000100U, {0.0F, 0.0F, 1.0F, 1.0F}))); drawPath(canvas, command.content.geometry, paint);
         } else if constexpr (std::is_same_v<T, RichTextReferenceCommand>) {
             if(command.layout && textResources) textResources->draw(canvas,*command.layout);
+            if(!legacyHeadlessGolden && command.content.layout && command.layout) {
+                SkPaint border;border.setAntiAlias(true);border.setStyle(SkPaint::kStroke_Style);border.setStrokeWidth(0);border.setColor(SK_ColorBLACK);
+                canvas.drawRect(SkRect::MakeLTRB(1,1,static_cast<float>(command.content.layout->wrap_width)-1,command.layout->localBounds.bottom-1),border);
+            }
         } else if constexpr (std::is_same_v<T, VectorStrokeReferenceCommand>) {
             const auto& stroke = command.content.stroke;
             const auto* data = std::get_if<semantic::VectorStrokeData>(&stroke.data);

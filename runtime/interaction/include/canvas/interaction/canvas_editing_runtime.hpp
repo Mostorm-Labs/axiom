@@ -588,6 +588,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::uint64_t textGeneration() const noexcept override { return semanticGeneration_.current().value(); }
   const semantic::ObjectRecord* textRecord(semantic::ObjectId id) const noexcept override { return semanticObjects_.find(id); }
   std::vector<semantic::ObjectRecord> textObjects() const override { return semanticObjects_.allObjects(); }
+  std::string textFontName(semantic::ObjectId) const override;
   const semantic::ResourceManifest* textManifest() const noexcept override { return resourceManifestPort_; }
   semantic::ObjectId allocateTextIdentity() override;
   semantic::OperationId allocateTextOperation() override { return allocateOperationId(); }

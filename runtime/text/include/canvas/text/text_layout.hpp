@@ -37,6 +37,7 @@ struct FontObservation final {
     std::uint32_t weight = 0;
     bool italic = false;
     std::shared_ptr<const std::vector<std::uint8_t>> bytes;
+    bool syntheticStyle = false;
 };
 struct GlyphPosition final {
     float x = 0, y = 0;
@@ -63,6 +64,11 @@ struct ParagraphFragment final {
     foundation::ObjectId paragraphId{};
     foundation::WorldRect bounds{};
     std::string digest;
+    bool bulleted = false;
+    float indent = 0;
+    // The shaping origin is distinct from bounds.top: glyph ink may extend
+    // above the paragraph's first layout line.
+    float originY = 0;
 };
 struct TextDecoration final {
     foundation::WorldRect bounds{};
@@ -104,6 +110,7 @@ class RichTextLayoutService final {
     RichTextLayoutService& operator=(const RichTextLayoutService&) = delete;
     void registerFont(FontResourceDescriptor);
     void clearFonts() noexcept;
+    [[nodiscard]] std::string fontFamilyName(foundation::ObjectId);
     void setContext(LayoutContext);
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
     resolve(foundation::ObjectId, const semantic::RichTextContent&);

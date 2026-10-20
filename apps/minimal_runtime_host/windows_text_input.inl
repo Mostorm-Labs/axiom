@@ -265,6 +265,10 @@ std::optional<LRESULT> windowsTextMessage(State& state, UINT message, WPARAM key
     const auto snapshot = state.facade->readTextEditor();
     const bool active = snapshot.phase != TextPhase::kClosed;
     if (message == WM_LBUTTONDBLCLK) {
+        const auto targets=state.facade->mountedCanvasTargets();
+        if(targets.empty())return 0;
+        const auto tool=state.facade->readCanvasControlSnapshot(targets.front()).tool;
+        if(tool!=CanvasToolKind::kText && tool!=CanvasToolKind::kSelect)return 0;
         if (active) {
             textIntent(state, TextIntentKind::kFinish);
             if (snapshot.composition)

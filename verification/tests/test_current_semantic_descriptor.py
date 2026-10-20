@@ -62,6 +62,8 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
         })
         self.assertEqual(extra_fields, {
             ("operation.proto", "OperationPayload"): {16},
+            ("rich_text.proto", "TextStyle"): {7},
+            ("rich_text.proto", "ParagraphStyle"): {5},
             ("rich_text.proto", "RichTextContent"): {2},
             ("rich_text.proto", "RichTextStep"): {7, 8},
             ("rich_text.proto", "RichTextDelta"): {3},

@@ -714,3 +714,10 @@ TEST(FC02Facade, ForcedCloseRejectsQueuedInputAndLateCallbacks) {
     EXPECT_EQ(h.operations(), 0U);
 }
 } // namespace
+
+TEST(FC02Formatting, VersionThreeObjectHasExplicitConsumerSupport) {
+    Engine e; auto object=textObject(); object.kind_version=3;
+    const auto bytes=SemanticCodec::encodeProtobufOperation(e.op(InsertObjectsOp{{object}}));
+    ASSERT_TRUE(bytes.ok());
+    ASSERT_EQ(e.apply(e.op(InsertObjectsOp{{object}})).disposition,ApplyDisposition::kApplied);
+}

@@ -117,7 +117,7 @@ PrepareResult prepareApplyPlan(const Operation& operation, const StatefulValidat
     }, operation.payload);
     if (!status.ok()) return rejected(status);
     const auto validateTextReferences=[&](const ObjectRecord& object) {
-        if(object.kind!=ObjectKind::kRichText || object.kind_version!=2U) return true;
+        if(object.kind!=ObjectKind::kRichText || object.kind_version<2U) return true;
         if(!context.manifest || !validateResourceManifest(*context.manifest)) return false;
         const auto* content=std::get_if<RichTextContent>(&object.content);if(!content)return false;
         for(const auto& paragraph:content->document.paragraphs) for(const auto& run:paragraph.runs) {

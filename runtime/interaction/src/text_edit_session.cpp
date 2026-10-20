@@ -222,13 +222,77 @@ void TextEditSession::refresh() {
             return;
         }
         state_.width = content.layout ? content.layout->wrap_width : 128;
+        typingStyle_=false;
         state_.selection = {};
         state_.replacement = {};
     }
 }
 runtime::TextEditorSnapshot TextEditSession::read() {
     refresh();
-    return state_;
+    auto out=state_;
+    auto selectedStyle=style_; auto paragraph=paragraphStyle_;
+    if(base_ && !typingStyle_) {
+        const auto& content=std::get<RichTextContent>(base_->content);
+        if(const auto pos=locate(content,state_.selection.start)) {
+            const auto& p=content.document.paragraphs[pos->paragraph];paragraph=p.style;
+            std::uint32_t offset=0;
+            for(const auto& r:p.runs) {
+                Paragraph one;one.runs={r};const auto count=scalarCount(one);
+                if(pos->scalar<offset+count || (!state_.selection.length && pos->scalar==offset+count)){selectedStyle=r.style;break;}offset+=count;
+            }
+        }
+    }
+    out.format.color=std::array<float,4>{selectedStyle.color.r,selectedStyle.color.g,selectedStyle.color.b,selectedStyle.color.a};
+    out.format.fontSize=selectedStyle.font_size;
+    if(selectedStyle.font_resource_id)out.format.font=selectedStyle.font_resource_id->value;
+    out.format.bold=selectedStyle.weight>=700;out.format.italic=selectedStyle.italic;
+    out.format.underline=selectedStyle.underline;out.format.strikethrough=selectedStyle.strikethrough;
+    out.format.alignment=static_cast<std::uint32_t>(paragraph.alignment);out.format.bulleted=paragraph.bulleted;
+    // Non-empty selections report an effect when any intersecting character
+    // (or paragraph for bullets) enables it. Endpoints are end-exclusive.
+    if (base_ && state_.selection.length) {
+        const auto& content = std::get<RichTextContent>(base_->content);
+        const auto first = locate(content, state_.selection.start);
+        const auto last = locate(content, static_cast<std::size_t>(state_.selection.start) +
+                                          state_.selection.length);
+        if (first && last) {
+            bool bold = false, italic = false, underline = false, strike = false, bullet = false;
+            for (auto index = first->paragraph; index <= last->paragraph; ++index) {
+                if (index > first->paragraph && index == last->paragraph && last->scalar == 0)
+                    break;
+                const auto& p = content.document.paragraphs[index];
+                bullet = bullet || p.style.bulleted;
+                const auto begin = index == first->paragraph ? first->scalar : 0U;
+                const auto end = index == last->paragraph ? last->scalar : scalarCount(p);
+                std::uint32_t offset = 0;
+                for (const auto& run : p.runs) {
+                    Paragraph one;
+                    one.runs = {run};
+                    const auto next = offset + scalarCount(one);
+                    if (offset < end && next > begin) {
+                        bold = bold || run.style.weight >= 700;
+                        italic = italic || run.style.italic;
+                        underline = underline || run.style.underline;
+                        strike = strike || run.style.strikethrough;
+                    }
+                    offset = next;
+                }
+            }
+            out.format.bold = bold;
+            out.format.italic = italic;
+            out.format.underline = underline;
+            out.format.strikethrough = strike;
+            out.format.bulleted = bullet;
+        }
+    }
+
+    if(const auto* manifest=owner_.textManifest())for(const auto& f:manifest->entries) {
+        if(f.resource_kind!=ResourceKind::kFont)continue;
+        std::string name=owner_.textFontName(f.resource_id.value);
+        if(name.empty())name="Font "+f.content_hash.substr(7,8);
+        out.fonts.push_back({f.resource_id.value,std::move(name)});
+    }
+    return out;
 }
 std::optional<runtime::TextReceipt> TextEditSession::receipt(const TextSessionToken& token,
                                                              std::uint64_t sequence) const {
@@ -270,7 +334,10 @@ runtime::TextStatus TextEditSession::applyDelta(RichTextDelta delta) {
     if (state_.token.projection == std::numeric_limits<std::uint64_t>::max() || !base_ ||
         !owner_.textWritable(base_->id))
         return TextStatus::kRejected;
-    delta.delta_version = 2;
+    bool v3=base_->kind_version==3;
+    for(const auto& step:delta.steps)if(const auto* restore=std::get_if<RestoreRichTextStateStep>(&step))v3=v3 || restore->state.kind_version==3;
+    delta.delta_version = v3?3:2;
+    const auto deltaVersion=delta.delta_version;
     delta.expected_state_digest = richTextStateDigest(owner_.textDocument(), *base_);
     const Operation forward{owner_.allocateTextOperation(),
                             owner_.textDocument(),
@@ -288,7 +355,7 @@ runtime::TextStatus TextEditSession::applyDelta(RichTextDelta delta) {
                             1,
                             1,
                             EditRichTextOp{base_->id,
-                                           {2,
+                                           {deltaVersion,
                                             {RestoreRichTextStateStep{before}},
                                             richTextStateDigest(owner_.textDocument(), post)}}};
     std::u16string confirmed;
@@ -330,7 +397,7 @@ runtime::TextStatus TextEditSession::replace(TextRange range, const std::u16stri
             const auto end = projected.find(u'\n', start);
             const auto part =
                 projected.substr(start, end == std::u16string::npos ? end : end - start);
-            Paragraph p{identity(), {ParagraphAlignment::kLeft, 1, 0, 0}, {}};
+            Paragraph p{identity(), paragraphStyle_, {}};
             if (!part.empty())
                 p.runs.push_back({*utf8(part), style_});
             content.document.paragraphs.push_back(std::move(p));
@@ -340,6 +407,7 @@ runtime::TextStatus TextEditSession::replace(TextRange range, const std::u16stri
         } while (start <= projected.size());
         auto object = draft_;
         object.content = std::move(content);
+        if(style_.strikethrough || paragraphStyle_.bulleted)object.kind_version=3;
         std::vector<std::uint8_t> order;
         for (const auto& existing : owner_.textObjects())
             if (!existing.placement.parent_id &&
@@ -375,7 +443,7 @@ runtime::TextStatus TextEditSession::replace(TextRange range, const std::u16stri
             const auto end = projected.find(u'\n', start);
             const auto part =
                 projected.substr(start, end == std::u16string::npos ? end : end - start);
-            Paragraph paragraph{identity(), {ParagraphAlignment::kLeft, 1, 0, 0}, {}};
+            Paragraph paragraph{identity(), paragraphStyle_, {}};
             if (!part.empty())
                 paragraph.runs.push_back({*utf8(part), style_});
             restored.document.paragraphs.push_back(std::move(paragraph));
@@ -398,6 +466,7 @@ runtime::TextStatus TextEditSession::replace(TextRange range, const std::u16stri
     auto insertionStyle = style_;
     std::uint32_t consumed = 0;
     for (const auto& run : content.document.paragraphs[first->paragraph].runs) {
+        if(typingStyle_)break;
         std::uint32_t count = 0;
         for (const auto c : run.text)
             if ((static_cast<unsigned char>(c) & 0xC0) != 0x80)
@@ -454,6 +523,66 @@ runtime::TextStatus TextEditSession::replace(TextRange range, const std::u16stri
         state_.selection = {static_cast<std::uint32_t>(range.start + text.size()), 0};
     return result;
 }
+runtime::TextStatus TextEditSession::format(const TextFormatPatch& patch) {
+    if(state_.composition || state_.phase!=TextPhase::kEditing)return TextStatus::kBusy;
+    if(!owner_.textReady() || (base_ && !owner_.textWritable(base_->id)))return TextStatus::kRejected;
+    if(patch.fontSize && (!std::isfinite(*patch.fontSize) || *patch.fontSize<=0 || *patch.fontSize>65536))return TextStatus::kRejected;
+    if(patch.color)for(const auto c:*patch.color)if(!std::isfinite(c) || c<0 || c>1)return TextStatus::kRejected;
+    if(patch.alignment && (*patch.alignment<1 || *patch.alignment>3))return TextStatus::kRejected;
+    if(patch.font) {
+        const auto* manifest=owner_.textManifest();
+        if(!manifest || std::none_of(manifest->entries.begin(),manifest->entries.end(),[&](const auto& e){return e.resource_kind==ResourceKind::kFont && e.resource_id.value==*patch.font;}))return TextStatus::kRejected;
+    }
+    const auto apply=[&](TextStyle& style) {
+        if(patch.color){const auto& c=*patch.color;style.color={c[0],c[1],c[2],c[3]};}
+        if(patch.fontSize)style.font_size=*patch.fontSize;
+        if(patch.font)style.font_resource_id=ResourceId{*patch.font};
+        if(patch.bold)style.weight=*patch.bold?700:400;
+        if(patch.italic)style.italic=*patch.italic;
+        if(patch.underline)style.underline=*patch.underline;
+        if(patch.strikethrough)style.strikethrough=*patch.strikethrough;
+    };
+    auto newStyle=style_;apply(newStyle);
+    auto newParagraph=paragraphStyle_;
+    if(patch.alignment)newParagraph.alignment=static_cast<ParagraphAlignment>(*patch.alignment);
+    if(patch.bulleted)newParagraph.bulleted=*patch.bulleted;
+    if(!base_){style_=newStyle;paragraphStyle_=newParagraph;typingStyle_=true;++state_.token.projection;return TextStatus::kObserved;}
+    auto content=std::get<RichTextContent>(base_->content);
+    const auto first=locate(content,state_.selection.start),last=locate(content,static_cast<std::size_t>(state_.selection.start)+state_.selection.length);
+    if(!first || !last)return TextStatus::kRejected;
+    for(std::size_t index=first->paragraph;index<=last->paragraph;++index) {
+        // An endpoint at the start of the next paragraph does not select it.
+        if(state_.selection.length && index>first->paragraph && index==last->paragraph && last->scalar==0)break;
+        auto& p=content.document.paragraphs[index];
+        if(patch.alignment)p.style.alignment=static_cast<ParagraphAlignment>(*patch.alignment);
+        if(patch.bulleted)p.style.bulleted=*patch.bulleted;
+        if(!state_.selection.length)continue;
+        const auto begin=index==first->paragraph?first->scalar:0;
+        const auto end=index==last->paragraph?last->scalar:scalarCount(p);
+        std::vector<TextRun> runs;std::uint32_t scalar=0;
+        for(const auto& r:p.runs) {
+            std::u16string text;if(!utf16(r.text,text))return TextStatus::kRejected;
+            for(std::size_t offset=0;offset<text.size();++scalar) {
+                auto next=offset+1;if(text[offset]>=0xD800 && text[offset]<=0xDBFF)++next;
+                auto style=r.style;if(scalar>=begin && scalar<end)apply(style);
+                const auto encoded=utf8(text.substr(offset,next-offset));if(!encoded)return TextStatus::kRejected;
+                if(!runs.empty() && runs.back().style==style)runs.back().text+=*encoded;else runs.push_back({*encoded,style});
+                offset=next;
+            }
+            if(r.text.empty())runs.push_back(r);
+        }
+        p.runs=std::move(runs);
+    }
+    auto version=base_->kind_version;
+    if(patch.strikethrough.value_or(false) || patch.bulleted.value_or(false))version=3;
+    if(version==3 && !content.layout)content.layout=RichTextLayout{state_.width};
+    const auto unchanged=content==std::get<RichTextContent>(base_->content) && version==base_->kind_version;
+    const auto status=unchanged?TextStatus::kObserved:applyDelta({3,{RestoreRichTextStateStep{{version,std::move(content)}}},{}});
+    if(status==TextStatus::kApplied || status==TextStatus::kObserved) {
+        style_=newStyle;paragraphStyle_=newParagraph;typingStyle_=!state_.selection.length;
+    }
+    return status;
+}
 runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
     refresh();
     lastOperation_ = {};
@@ -509,6 +638,7 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
         failed_.reset();
         lastComposition_ = acknowledged_ = 0;
         base_ = existing;
+        typingStyle_=false;paragraphStyle_={ParagraphAlignment::kLeft,1,0,0};
         style_ = {font->resource_id, 16, 400, false, false, {0, 0, 0, 1}};
         if (existing) {
             const auto& content = std::get<RichTextContent>(existing->content);
@@ -537,6 +667,7 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
     if (state_.phase == TextPhase::kClosed || request.token != state_.token)
         return outcome(TextStatus::kStale, request.requestId);
     switch (request.kind) {
+    case TextIntentKind::kFormat:return outcome(format(request.format),request.requestId);
     case TextIntentKind::kCompleteComposition:return outcome(finish(true),request.requestId);
     case TextIntentKind::kFinish:
         return outcome(finish(), request.requestId);
@@ -570,7 +701,7 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
             return outcome(TextStatus::kObserved, request.requestId);
         }
         return outcome(
-            applyDelta({2, {SetRichTextLayoutStep{2, RichTextLayout{request.width}}}, {}}),
+            applyDelta({2, {SetRichTextLayoutStep{base_->kind_version==3?3U:2U, RichTextLayout{request.width}}}, {}}),
             request.requestId);
     case TextIntentKind::kRetry:
         if (!failed_)
@@ -591,7 +722,7 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
         }
     case TextIntentKind::kSelectAll:
         if(state_.composition)return outcome(TextStatus::kBusy,request.requestId);
-        state_.selection={0,static_cast<std::uint32_t>(state_.projection.size())};return outcome(TextStatus::kObserved,request.requestId);
+        typingStyle_=false;state_.selection={0,static_cast<std::uint32_t>(state_.projection.size())};return outcome(TextStatus::kObserved,request.requestId);
     case TextIntentKind::kBackspace: case TextIntentKind::kDelete: case TextIntentKind::kLeft: case TextIntentKind::kRight: {
         if(state_.composition)return outcome(TextStatus::kBusy,request.requestId);
         auto range=state_.selection;auto breaks=owner_.textGraphemes(state_.projection);
@@ -720,6 +851,7 @@ runtime::TextReceipt TextEditSession::input(const TextInputEvent& event) {
         case TextInputKind::kSelection:
             if (!event.composition) {
                 state_.selection = event.range;
+                typingStyle_=false;
                 status = TextStatus::kObserved;
             }
             break;
@@ -755,7 +887,7 @@ std::optional<semantic::ObjectRecord> TextEditSession::presentation() {
     do {const auto end=visible.find(u'\n',start),stop=end==std::u16string::npos?visible.size():end;
         Paragraph p;auto transient=object.id;transient.bytes[12]^=0x80;transient.bytes[10]=static_cast<std::uint8_t>(index);transient.bytes[11]=static_cast<std::uint8_t>(index>>8U);
         p.id=original && index<original->document.paragraphs.size()?original->document.paragraphs[index].id:transient;
-        p.style=original && index<original->document.paragraphs.size()?original->document.paragraphs[index].style:ParagraphStyle{ParagraphAlignment::kLeft,1,0,0};
+        p.style=original && index<original->document.paragraphs.size()?original->document.paragraphs[index].style:paragraphStyle_;
         for(auto offset=start;offset<stop;){auto next=offset+1;while(next<stop && styles[next]==styles[offset])++next;
             if(next<stop && visible[next]>=0xDC00 && visible[next]<=0xDFFF)++next;
             const auto value=utf8(visible.substr(offset,next-offset));if(!value)return std::nullopt;p.runs.push_back({*value,styles[offset]});offset=next;}

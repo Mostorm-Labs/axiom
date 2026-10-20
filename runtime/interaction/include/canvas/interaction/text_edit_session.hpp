@@ -18,6 +18,7 @@ class TextEditPort {
     virtual const semantic::ObjectRecord* textRecord(semantic::ObjectId) const noexcept = 0;
     virtual std::vector<semantic::ObjectRecord> textObjects() const = 0;
     virtual const semantic::ResourceManifest* textManifest() const noexcept = 0;
+    virtual std::string textFontName(semantic::ObjectId) const = 0;
     virtual semantic::ObjectId allocateTextIdentity() = 0;
     virtual semantic::OperationId allocateTextOperation() = 0;
     virtual semantic::PrepareResult prepareTextOperation(const semantic::Operation&) const = 0;
@@ -46,6 +47,7 @@ class TextEditSession final {
     void end() noexcept;
     [[nodiscard]] runtime::TextReceipt outcome(runtime::TextStatus, std::uint64_t = 0) const;
     [[nodiscard]] runtime::TextStatus replace(runtime::TextRange, const std::u16string&);
+    [[nodiscard]] runtime::TextStatus format(const runtime::TextFormatPatch&);
     [[nodiscard]] runtime::TextStatus applyDelta(semantic::RichTextDelta);
     [[nodiscard]] semantic::ObjectId identity();
     TextEditPort& owner_;
@@ -53,6 +55,8 @@ class TextEditSession final {
     runtime::TextEditorSnapshot state_{};
     std::optional<semantic::ObjectRecord> base_;
     semantic::TextStyle style_{};
+    semantic::ParagraphStyle paragraphStyle_{semantic::ParagraphAlignment::kLeft,1,0,0};
+    bool typingStyle_ = false;
     semantic::ObjectRecord draft_{};
     std::deque<std::pair<runtime::TextInputEvent, runtime::TextReceipt>> journal_;
     std::optional<runtime::TextInputEvent> terminal_, failed_;

@@ -33,6 +33,9 @@ void CanvasEditingRuntime::updateTextCaretPresentation(
         canonicalPresentationDirty_ = true;
     textCaretVisible_ = visible;
 }
+std::string CanvasEditingRuntime::textFontName(semantic::ObjectId id) const {
+    return textLayoutService_ ? textLayoutService_->fontFamilyName(id) : std::string{};
+}
 std::vector<std::uint32_t> CanvasEditingRuntime::textGraphemes(const std::u16string& text) const {
     return textLayoutService_ ? textLayoutService_->graphemeBoundaries(text)
                               : std::vector<std::uint32_t>{};

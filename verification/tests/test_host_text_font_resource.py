@@ -72,5 +72,28 @@ class HostTextFontResource(unittest.TestCase):
         self.assertNotIn(0x10FFFD, points)
 
 
+class ImportedFontCatalog(unittest.TestCase):
+    def test_catalog_bytes_licenses_and_ids_are_exact(self):
+        root = ROOT / "assets/fonts/imported"
+        catalog = json.loads((root / "catalog.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(catalog["fonts"]), 11)
+        identities = set()
+        families = set()
+        for entry in catalog["fonts"]:
+            with self.subTest(family=entry["family"]):
+                data = (root / entry["file"]).read_bytes()
+                self.assertEqual(hashlib.sha256(data).hexdigest(), entry["sha256"])
+                self.assertEqual(len(data), entry["bytes"])
+                self.assertIn(b"cmap", tables(data))
+                license_text = (root / entry["license_file"]).read_text(encoding="utf-8-sig")
+                self.assertIn("LICENSE", license_text.upper())
+                self.assertNotIn(entry["resource_id_uint64"], identities)
+                self.assertNotIn(entry["family"], families)
+                identities.add(entry["resource_id_uint64"])
+                families.add(entry["family"])
+        self.assertNotIn(0xFC0202, identities)
+        self.assertRegex(catalog["source_archive_sha256"], r"^[0-9a-f]{64}$")
+
+
 if __name__ == "__main__":
     unittest.main()

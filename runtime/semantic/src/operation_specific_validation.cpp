@@ -85,7 +85,8 @@ StatefulResult validateEditRichTextStateForDocument(const EditRichTextOp& op,con
     if(!target.ok())return target;
     if(!internal::validateObjectRecord(*current)) return fail(StatefulIssue::kInvalidKindVersion);
     if(op.delta.delta_version==1 && current->kind_version!=1) return fail(StatefulIssue::kInvalidKindVersion);
-    if(op.delta.delta_version==2 && (op.delta.expected_state_digest.size()!=32 ||
+    if(op.delta.delta_version<3 && current->kind_version==3)return fail(StatefulIssue::kInvalidKindVersion);
+    if(op.delta.delta_version>=2 && (op.delta.expected_state_digest.size()!=32 ||
        richTextStateDigest(document,*current)!=op.delta.expected_state_digest)) return fail(StatefulIssue::kTextStateInvalid);
     RichTextContent next;
     const auto status=internal::prepareRichTextDeltaState(std::get<RichTextContent>(current->content),op.delta,&next);

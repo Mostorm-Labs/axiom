@@ -165,6 +165,7 @@ struct TextStyle final {
     bool italic = false;
     bool underline = false;
     ColorValue color{};
+    bool strikethrough = false;
 
     bool operator==(const TextStyle&) const = default;
 };
@@ -182,6 +183,7 @@ struct ParagraphStyle final {
     double line_height = 0.0;
     double spacing_before = 0.0;
     double spacing_after = 0.0;
+    bool bulleted = false;
 
     bool operator==(const ParagraphStyle&) const = default;
 };

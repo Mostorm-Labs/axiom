@@ -30,6 +30,7 @@ class DebugControlRouter final {
   canvas::runtime::ProductControlReceipt setEraser(std::uint32_t eraserId) noexcept;
   canvas::runtime::TextEditorSnapshot textEditor() const;
   canvas::runtime::TextReceipt setTextWidth(double);
+  canvas::runtime::TextReceipt setTextFormat(const canvas::runtime::TextFormatPatch&);
   canvas::runtime::ProductControlReceipt setSelectionMode(bool enabled) noexcept;
   canvas::runtime::ProductControlReceipt undo() noexcept;
   canvas::runtime::ProductControlReceipt redo() noexcept;

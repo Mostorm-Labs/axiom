@@ -10,9 +10,13 @@ namespace canvas::semantic {
 [[nodiscard]] std::vector<std::uint8_t> richTextStateDigest(DocumentId, const ObjectRecord&);
 [[nodiscard]] inline bool validRichTextLayoutState(std::uint32_t version,
                                                    const RichTextContent& content) noexcept {
+    for (const auto& p : content.document.paragraphs) {
+        if (version < 3 && p.style.bulleted) return false;
+        for (const auto& r : p.runs) if (version < 3 && r.style.strikethrough) return false;
+    }
     if (version == 1)
         return !content.layout;
-    if (version != 2 || !content.layout)
+    if ((version != 2 && version != 3) || !content.layout)
         return false;
     const auto width = content.layout->wrap_width;
     return std::isfinite(width) &&

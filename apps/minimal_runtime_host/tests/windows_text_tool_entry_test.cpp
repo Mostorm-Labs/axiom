@@ -71,6 +71,44 @@ int main(int argc, char** argv) {
     assert(composition.bindSurface(800, 600));
     assert(state.host->registerSource(1));
     assert(minimal_runtime_host::bindHostTextFont(composition, "axiom-font.otf"));
+    if (mode == "ink-double-click") {
+        runtime::TextIntent create;
+        create.clientId = 0xFA02;
+        create.requestId = 1;
+        create.target = state.facade->mountedCanvasTargets().front();
+        create.kind = runtime::TextIntentKind::kCreate;
+        create.viewX = 450;
+        create.viewY = 100;
+        assert(state.facade->submitTextIntent(create).status == runtime::TextStatus::kQueued);
+        assert(composition.ownerPump());
+        SendMessageW(owner, WM_CHAR, 'A', 0);
+        SendMessageW(owner, WM_CHAR, 'B', 0);
+        pumpWindowsText(state);
+        textIntent(state, runtime::TextIntentKind::kFinish);
+        pumpWindowsText(state);
+        runtime::CanvasControlRequest ink;
+        ink.clientId = 0xFA02;
+        ink.requestId = 2;
+        ink.target = state.facade->mountedCanvasTargets().front();
+        ink.payload.kind = runtime::CanvasControlPayloadKind::kSelectTool;
+        ink.payload.tool = runtime::CanvasToolKind::kInk;
+        assert(state.facade->submitCanvasControl(ink).state == runtime::ProductControlState::kQueued);
+        assert(composition.ownerPump());
+        SendMessageW(owner, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(452, 103));
+        SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(452, 103));
+        SendMessageW(owner, WM_LBUTTONDBLCLK, MK_LBUTTON, MAKELPARAM(452, 103));
+        SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(452, 103));
+        pumpWindowsText(state);
+        std::printf("Ink double-click: text_phase=%u objects=%zu\n",
+                    static_cast<unsigned>(state.facade->readTextEditor().phase),
+                    composition.semanticObjectCount());
+        std::fflush(stdout);
+        assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+        assert(state.facade->readCanvasControlSnapshot(ink.target).tool == runtime::CanvasToolKind::kInk);
+        DestroyWindow(owner);
+        UnregisterClassW(klass.lpszClassName, instance);
+        return 0;
+    }
     if (mode == "after-ink") {
         for (int i = 0; i < 10; ++i) {
             SendMessageW(owner, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(450, 100));
@@ -158,11 +196,78 @@ int main(int argc, char** argv) {
     if (checkFocus) {
         assert(state.facade->readTextEditor().projection == u"A\u4f60\u597d");
         assert(composition.semanticObjectCount() == objectsBefore + 1);
+        if (mode == "format") {
+            textIntent(state, runtime::TextIntentKind::kSelectAll);
+            pumpWindowsText(state);
+            const auto readFlag = [&](std::string_view name) {
+                const auto f = state.facade->readTextEditor().format;
+                if (name == "Bold") return f.bold.value_or(false);
+                if (name == "Italic") return f.italic.value_or(false);
+                if (name == "Underline") return f.underline.value_or(false);
+                if (name == "Strike") return f.strikethrough.value_or(false);
+                return f.bulleted.value_or(false);
+            };
+            for (const char* label : {"Bold", "Italic", "Underline", "Strike", "Bulleted list"}) {
+                for (const bool enabled : {true, false, true}) {
+                    SetFocus(state.debugUi->nativeWindow());
+                    ImGui::NewFrame();
+                    g.NavActivateId = g.NavActivateDownId = content->GetID(label);
+                    g.NavInputSource = ImGuiInputSource_Keyboard;
+                    (void)state.controller->buildImGuiFrame();
+                    ImGui::Render();
+                    assert(composition.ownerPump());
+                    for (int frame = 0; frame < 3; ++frame) {
+                        ImGui::NewFrame();
+                        (void)state.controller->buildImGuiFrame();
+                        ImGui::Render();
+                        assert(readFlag(label) == enabled);
+                        assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);
+                    }
+                    std::printf("format %s=%d selection=%u\n", label, enabled,
+                                state.facade->readTextEditor().selection.length);
+                }
+            }
+            state.debugUi->shutdown();
+            DestroyWindow(owner);
+            UnregisterClassW(klass.lpszClassName, instance);
+            std::puts("PASS: five real format widgets keep Runtime readback across frames");
+            return 0;
+        }
         SendMessageW(GetFocus(), WM_KEYDOWN, VK_RETURN, 0);
         pumpWindowsText(state);
         assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
         assert(state.facade->readCanvasControlSnapshot(state.facade->mountedCanvasTargets().front())
                    .tool == runtime::CanvasToolKind::kText);
+        if (mode == "reedit") {
+            const auto originalObject = state.facade->readTextEditor().token.object;
+            for (int attempt = 0; attempt < 3; ++attempt) {
+                // The first Down creates an empty Text draft. The subsequent
+                // Win32 double-click must replace it with the existing text.
+                SetFocus(state.debugUi->nativeWindow());
+                SendMessageW(owner, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(554, 207));
+                SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(554, 207));
+                SendMessageW(owner, WM_LBUTTONDBLCLK, MK_LBUTTON, MAKELPARAM(554, 207));
+                SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(554, 207));
+                pumpWindowsText(state);
+                const auto editing = state.facade->readTextEditor();
+                std::printf("reedit %d: phase=%u object_match=%d projection_units=%zu\n",
+                            attempt, static_cast<unsigned>(editing.phase),
+                            editing.token.object == originalObject, editing.projection.size());
+                std::fflush(stdout);
+                assert(editing.phase == runtime::TextPhase::kEditing);
+                assert(editing.token.object == originalObject);
+                assert(editing.projection == u"A\u4f60\u597d");
+                assert(GetFocus() == owner);
+                SetFocus(state.debugUi->nativeWindow());
+                pumpWindowsText(state);
+                assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);
+                assert(state.facade->readTextEditor().token == editing.token);
+                textIntent(state, runtime::TextIntentKind::kFinish);
+                pumpWindowsText(state);
+                assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+                assert(composition.semanticObjectCount() == objectsBefore + 1);
+            }
+        }
         SendMessageW(owner, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(550, 300));
         SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(550, 300));
         assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);

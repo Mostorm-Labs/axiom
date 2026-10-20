@@ -19,6 +19,8 @@ bool supportedSnapshotVersion(std::uint32_t version) noexcept {
 }
 
 bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability capability, const ObjectRecord& object) noexcept {
+    if (object.kind == ObjectKind::kRichText && object.kind_version == 3U)
+        return schema_version==3U && (static_cast<unsigned>(capability)&6U)==6U;
     if (object.kind == ObjectKind::kRichText && object.kind_version == 2U)
         return schema_version==3U && (static_cast<unsigned>(capability)&2U)!=0U;
     if (object.kind != ObjectKind::kShape || object.kind_version != 2U) return true;

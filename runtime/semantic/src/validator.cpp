@@ -451,13 +451,21 @@ bool validRichTextStep(const RichTextStep& step) noexcept {
 }
 
 bool validRichTextDelta(const RichTextDelta& delta) noexcept {
-    if ((delta.delta_version != 1U && delta.delta_version != 2U) || delta.steps.empty()) return false;
+    if ((delta.delta_version != 1U && delta.delta_version != 2U && delta.delta_version != 3U) || delta.steps.empty()) return false;
     if (delta.delta_version == 1U ? !delta.expected_state_digest.empty() : delta.expected_state_digest.size()!=32U) return false;
     std::size_t inserted_bytes = 0U;
     for (const auto& step : delta.steps) {
         if ((std::holds_alternative<SetRichTextLayoutStep>(step) || std::holds_alternative<RestoreRichTextStateStep>(step)) &&
-            (delta.delta_version!=2U || delta.steps.size()!=1U)) return false;
+            (delta.delta_version<2U || delta.steps.size()!=1U)) return false;
         if (!validRichTextStep(step)) return false;
+        if(delta.delta_version<3U && !std::visit([](const auto& v) {
+            using T=std::decay_t<decltype(v)>;
+            if constexpr(std::is_same_v<T,InsertTextStep> || std::is_same_v<T,SetInlineStyleStep>)return !v.style.strikethrough;
+            else if constexpr(std::is_same_v<T,SetParagraphStyleStep>)return !v.style.bulleted;
+            else if constexpr(std::is_same_v<T,RestoreRichTextStateStep>)return v.state.kind_version<3U;
+            else if constexpr(std::is_same_v<T,SetRichTextLayoutStep>)return v.target_kind_version<3U;
+            else return true;
+        },step))return false;
         if (const auto* insert = std::get_if<InsertTextStep>(&step)) {
             if (insert->text.size() > kMaxRichTextInsertBytes - inserted_bytes) return false;
             inserted_bytes += insert->text.size();
@@ -554,7 +562,7 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
     if (object.kind == ObjectKind::kShape && object.kind_version == 2U) {
         return std::holds_alternative<ShapeContent>(object.content);
     }
-    if (object.kind == ObjectKind::kRichText && object.kind_version == 2U) {
+    if (object.kind == ObjectKind::kRichText && (object.kind_version == 2U || object.kind_version == 3U)) {
         return std::holds_alternative<RichTextContent>(object.content);
     }
     if (object.kind_version != 1U) return false;

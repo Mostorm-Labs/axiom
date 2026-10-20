@@ -64,8 +64,18 @@ enum class TextIntentKind : std::uint8_t {
     kRight,
     kSelectAll,
     kEditAtPoint,
-    kCompleteComposition
+    kCompleteComposition,
+    kFormat
 };
+struct TextFormatPatch final {
+    std::optional<std::array<float,4>> color;
+    std::optional<double> fontSize;
+    std::optional<foundation::ObjectId> font;
+    std::optional<bool> bold, italic, underline, strikethrough, bulleted;
+    std::optional<std::uint32_t> alignment;
+    bool operator==(const TextFormatPatch&) const = default;
+};
+struct TextFontOption final { foundation::ObjectId id{}; std::string name; };
 struct TextIntent final {
     CanvasTargetKey target{};
     std::uint64_t clientId = 0, requestId = 0;
@@ -74,6 +84,7 @@ struct TextIntent final {
     foundation::ObjectId object{};
     float viewX = 0, viewY = 0;
     double width = 320;
+    TextFormatPatch format{};
     bool operator==(const TextIntent&) const = default;
 };
 struct TextReceipt final {
@@ -93,6 +104,9 @@ struct TextEditorSnapshot final {
     std::size_t projectionLimit = 65536;
     double width = 320;
     TextStatus exitStatus = TextStatus::kObserved;
+    TextFormatPatch format{};
+    std::vector<TextFontOption> fonts;
+    bool mixedFormat = false;
 };
 struct TextGeometryToken final {
     TextSessionToken session{};

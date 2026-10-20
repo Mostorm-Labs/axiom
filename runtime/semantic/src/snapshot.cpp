@@ -48,22 +48,24 @@ std::array<std::uint8_t, 32> snapshotDigest(const auditoryworks::axiom::v1::Docu
 
 bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reader) {
     const auto bits=static_cast<unsigned>(reader);
-    if(bits>3U) return false;
-    bool triangle=false,text=false;
+    if(bits>7U) return false;
+    bool triangle=false,text=false,formatting=false;
     for(const auto& object:snapshot.objects) {
         if(object.kind==ObjectKind::kShape && object.kind_version==2) {
             const auto* shape=std::get_if<ShapeContent>(&object.content);
             triangle=triangle || (shape && shape->shape_kind==3);
         }
-        text=text || (object.kind==ObjectKind::kRichText && object.kind_version==2);
+        text=text || (object.kind==ObjectKind::kRichText && object.kind_version>=2);
+        formatting=formatting || (object.kind==ObjectKind::kRichText && object.kind_version==3);
     }
     if((triangle && (bits&1U)==0) || (text && ((bits&2U)==0 || snapshot.schema_version<3))) return false;
+    if(formatting && (bits&4U)==0)return false;
     if(snapshot.schema_version<3) return true;
     if(snapshot.capability_requirements.size()>1024 || snapshot.recovery_frontier.size()>32)return false;
     auditoryworks::axiom::v1::CapabilityRequirementsV1 caps;
     if(!caps.ParseFromArray(snapshot.capability_requirements.data(),static_cast<int>(snapshot.capability_requirements.size())))return false;
     std::vector<std::string> expected{"resource-manifest-v1"};
-    if(text)expected.push_back("richtext-fixed-width-v2");if(triangle)expected.push_back("shape2-triangle-v1");
+    if(text)expected.push_back("richtext-fixed-width-v2");if(formatting)expected.push_back("richtext-formatting-v3");if(triangle)expected.push_back("shape2-triangle-v1");
     if(caps.required_ids_size()!=static_cast<int>(expected.size()))return false;
     for(int i=0;i<caps.required_ids_size();++i)if(caps.required_ids(i)!=expected[static_cast<std::size_t>(i)])return false;
     const auto canonical=internal::canonicalEncodeProto(caps);
@@ -74,7 +76,7 @@ bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reade
     const auto encoded=internal::canonicalEncodeProto(frontier);
     if(!encoded.ok() || encoded.bytes!=snapshot.recovery_frontier)return false;
     for(const auto& object:snapshot.objects) {
-        if(object.kind!=ObjectKind::kRichText || object.kind_version!=2) continue;
+        if(object.kind!=ObjectKind::kRichText || object.kind_version<2) continue;
         const auto* rich=std::get_if<RichTextContent>(&object.content);if(!rich)return false;
         for(const auto& paragraph:rich->document.paragraphs) for(const auto& run:paragraph.runs) {
             if(!run.style.font_resource_id)return false;
@@ -90,6 +92,8 @@ bool supportedSnapshotVersion(std::uint32_t version) noexcept {
 }
 
 bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability capability, const ObjectRecord& object) noexcept {
+    if (object.kind == ObjectKind::kRichText && object.kind_version == 3U)
+        return schema_version==3U && (static_cast<unsigned>(capability)&6U)==6U;
     if (object.kind == ObjectKind::kRichText && object.kind_version == 2U)
         return schema_version==3U && (static_cast<unsigned>(capability)&2U)!=0U;
     if (object.kind != ObjectKind::kShape || object.kind_version != 2U) return true;

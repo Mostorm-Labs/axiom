@@ -219,8 +219,9 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
             else
                 count += service_->processPending(sequence, key);
         } else if (auto* intent = std::get_if<TextIntent>(&item)) {
-            if(intent->kind==TextIntentKind::kEditAtPoint){intent->object=runtime_.hitTextAtView(intent->viewX,intent->viewY);intent->kind=TextIntentKind::kEdit;}
-            const auto result = !isTargetCurrent(intent->target)
+            const bool editAllowed=intent->kind!=TextIntentKind::kEditAtPoint || runtime_.textTool() || runtime_.selectionMode();
+            if(intent->kind==TextIntentKind::kEditAtPoint && editAllowed){intent->object=runtime_.hitTextAtView(intent->viewX,intent->viewY);intent->kind=TextIntentKind::kEdit;}
+            const auto result = !editAllowed ? receipt(TextStatus::kRejected,intent->requestId) : !isTargetCurrent(intent->target)
                                     ? receipt(TextStatus::kStale, intent->requestId)
                                 : text ? text->intent(*intent)
                                        : receipt(TextStatus::kUnsupported, intent->requestId);

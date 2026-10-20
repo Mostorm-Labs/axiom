@@ -109,6 +109,7 @@ if(EMSCRIPTEN)
     configure_file(${AXIOM_HOST_FONT_ROOT}/NOTICE.txt ${CMAKE_CURRENT_BINARY_DIR}/axiom-font.NOTICE.txt COPYONLY)
     target_link_options(axiom_canvas_demo_web PRIVATE
         "SHELL:--preload-file \"${AXIOM_HOST_FONT_PATH}@/axiom-font.otf\""
+        "SHELL:--preload-file \"${AXIOM_HOST_FONT_CATALOG_ROOT}@/fonts\""
         "SHELL:--preload-file \"${AXIOM_HOST_FONT_ROOT}/LICENSE.txt@/axiom-font.LICENSE.txt\""
         "SHELL:--preload-file \"${AXIOM_HOST_FONT_ROOT}/NOTICE.txt@/axiom-font.NOTICE.txt\""
         "-sMODULARIZE=1" "-sEXPORT_ES6=1" "-sEXPORT_NAME=createAxiomCanvasModule"
