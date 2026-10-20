@@ -1,0 +1,62 @@
+{
+  "recorded_utc": "2026-10-20T02:42:34.9076747Z",
+  "source_revision": "802a064dcb6f543112137c813d7078fef6efe7e5",
+  "session": "out/fc02-resume/physical/session.json",
+  "user_response": "三项均正常，中文可见，但是emoji不可见，以及输入光标不会闪烁",
+  "original_failure": "docs/planning/fc02/evidence/text-tool-entry/user-failure.json remains FAIL",
+  "cases": [
+    {
+      "id": "W1R1",
+      "expected": "Text tool creates editing session and accepts confirmed Chinese",
+      "actual": "三项均正常，中文可见",
+      "result": "PASS",
+      "basis": "Human user response in this chat; not inferred from synthetic tests"
+    },
+    {
+      "id": "W1R2",
+      "expected": "Enter ends editing; next click creates another text session",
+      "actual": "三项均正常",
+      "result": "PASS",
+      "basis": "Human user response"
+    },
+    {
+      "id": "W1R3",
+      "expected": "10 Ink strokes then Text entry works",
+      "actual": "三项均正常",
+      "result": "PASS",
+      "basis": "Human user response"
+    },
+    {
+      "id": "W-EMOJI",
+      "expected": "Locked CJK font coverage does not promise emoji",
+      "actual": "emoji不可见",
+      "result": "KNOWN_LIMITATION",
+      "basis": "User observation; docs/planning/FC02_CJK_FONT_VALIDATION.md excludes arbitrary Unicode/emoji"
+    },
+    {
+      "id": "W-CARET",
+      "expected": "Idle insertion caret visibly blinks",
+      "actual": "输入光标不会闪烁",
+      "result": "FAIL",
+      "basis": "Human observation at baseline 802a064d; new automated RED/GREEN separate"
+    },
+    {
+      "id": "W-CARET-RETEST",
+      "expected": "Caret blinks after revision 1959a2c2",
+      "actual": "Not yet observed",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "W-REMAINING",
+      "expected": "Candidate position, focus/IME completion, width/History, touch, DPI/multi-monitor",
+      "actual": "No specific human result yet",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "B-ALL",
+      "expected": "Actual Chrome synthetic and user IME checks",
+      "actual": "Not run; server/Chrome launcher rejected by automatic approval review",
+      "result": "BLOCKED_ENVIRONMENT"
+    }
+  ]
+}
