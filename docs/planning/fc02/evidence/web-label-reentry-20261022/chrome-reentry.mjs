@@ -105,7 +105,8 @@ try {
       const reopened=await snapshot(),samples=[];
       for(let i=0;i<9;i++){
         const image=await call('Page.captureScreenshot',{format:'png',clip:{x:origin.x+end.x-3,y:origin.y+g[1]-2,width:8,height:g[5]-g[1]+4,scale:1}});
-        samples.push({frame:(await observation()).presentedFrames,hash:createHash('sha256').update(image.data).digest('hex')});
+        const sample=await evaluate('({frame:axiomMinimalHost.observation().presentedFrames,time:performance.now()})');
+        samples.push({...sample,hash:createHash('sha256').update(image.data).digest('hex')});
         await pause(155);
       }
       await click(end.x-35,end.y);await flush();const middle=await snapshot();
@@ -116,7 +117,7 @@ try {
       await click(end.x-35,end.y);await flush();const afterOutsideClick=await snapshot();
       await evaluate('axiomMinimalHost.textInput.finish()');await flush();const idleStart=(await observation()).presentedFrames;await pause(750);
       const idleEnd=(await observation()).presentedFrames;
-      const checks={noIdleFramesAfterFinish:idleStart===idleEnd,compositionEnded:typed.composition==='0',boundedBlinkFrames:samples.at(-1).frame-samples[0].frame<=5,enterClosed:ended.phase===0,reopened:reopened.phase===1,reopenedAtHit:reopened.selection[0]>=label.length-1,
+      const checks={noIdleFramesAfterFinish:idleStart===idleEnd,compositionEnded:typed.composition==='0',boundedBlinkFrames:samples.at(-1).frame-samples[0].frame<=Math.ceil((samples.at(-1).time-samples[0].time)/500)+1,enterClosed:ended.phase===0,reopened:reopened.phase===1,reopenedAtHit:reopened.selection[0]>=label.length-1,
         idleBlink:new Set(samples.map(s=>s.hash)).size>1,clickMiddle:middle.phase===1&&middle.selection[0]>0&&middle.selection[0]<label.length,
         clickEnd:clicked.phase===1&&clicked.selection[0]===label.length,inserted:String.fromCharCode(...inserted.projection)===label+'!',
         outsideClosed:outside.phase===0,reopenAfterOutside:afterOutside.phase===1,clickAfterOutside:afterOutsideClick.phase===1};
