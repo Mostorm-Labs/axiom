@@ -1,0 +1,57 @@
+Running main() from C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = FC02ShapeLabel.*
+[==========] Running 17 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 17 tests from FC02ShapeLabel
+[ RUN      ] FC02ShapeLabel.EmptyCaretStartsInsideAllThreeShapeCenters
+[       OK ] FC02ShapeLabel.EmptyCaretStartsInsideAllThreeShapeCenters (1653 ms)
+[ RUN      ] FC02ShapeLabel.RealDownBeforeSecondDoubleClickDoesNotCreateOrBlockEditor
+[       OK ] FC02ShapeLabel.RealDownBeforeSecondDoubleClickDoesNotCreateOrBlockEditor (511 ms)
+[ RUN      ] FC02ShapeLabel.FirstShapeLabelTextDefaultsToCenteredParagraph
+[       OK ] FC02ShapeLabel.FirstShapeLabelTextDefaultsToCenteredParagraph (519 ms)
+[ RUN      ] FC02ShapeLabel.TriangleAndEllipseUseInteriorLayoutGeometry
+[       OK ] FC02ShapeLabel.TriangleAndEllipseUseInteriorLayoutGeometry (168 ms)
+[ RUN      ] FC02ShapeLabel.FixedTypographyPaddingEllipsisAndPlaceholderAreDerived
+[       OK ] FC02ShapeLabel.FixedTypographyPaddingEllipsisAndPlaceholderAreDerived (170 ms)
+[ RUN      ] FC02ShapeLabel.TypingLongLabelExpandsUpwardFromTheBottomEdge
+[       OK ] FC02ShapeLabel.TypingLongLabelExpandsUpwardFromTheBottomEdge (3373 ms)
+[ RUN      ] FC02ShapeLabel.EmptyPromptAppearsOnlyWhileShapeIsSelected
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.EmptyPromptAppearsOnlyWhileShapeIsSelected (544 ms)
+[ RUN      ] FC02ShapeLabel.ExistingTextCaretFollowsTheRenderedLabelLine
+[       OK ] FC02ShapeLabel.ExistingTextCaretFollowsTheRenderedLabelLine (544 ms)
+[ RUN      ] FC02ShapeLabel.CompositionPreeditChangesRenderedShapePixelsBeforeCommit
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.CompositionPreeditChangesRenderedShapePixelsBeforeCommit (546 ms)
+[ RUN      ] FC02ShapeLabel.PreeditOverflowGrowsThePresentationWithoutCommittingTheShape
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.PreeditOverflowGrowsThePresentationWithoutCommittingTheShape (574 ms)
+[ RUN      ] FC02ShapeLabel.ExpandAffordanceUsesUndoableRuntimeSizeOperation
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.ExpandAffordanceUsesUndoableRuntimeSizeOperation (597 ms)
+[ RUN      ] FC02ShapeLabel.ExpandButtonRemainsClickableOutsideTheEllipseContour
+[       OK ] FC02ShapeLabel.ExpandButtonRemainsClickableOutsideTheEllipseContour (773 ms)
+[ RUN      ] FC02ShapeLabel.ShrinkPreviewAndCommittedLabelKeepTheSameFontPixels
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.ShrinkPreviewAndCommittedLabelKeepTheSameFontPixels (588 ms)
+[ RUN      ] FC02ShapeLabel.SelectedShapeEditorRetiresItsPreviousOpaqueSelectionPreview
+[axiom] present begin frame=4 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.SelectedShapeEditorRetiresItsPreviousOpaqueSelectionPreview (570 ms)
+[ RUN      ] FC02ShapeLabel.RuntimeFacadeFormatsSelectedShapeLabelWithoutAnEditorSession
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.RuntimeFacadeFormatsSelectedShapeLabelWithoutAnEditorSession (591 ms)
+[ RUN      ] FC02ShapeLabel.WholeLabelFormattingPreservesEditorAndRejectsStaleTargets
+[       OK ] FC02ShapeLabel.WholeLabelFormattingPreservesEditorAndRejectsStaleTargets (655 ms)
+[ RUN      ] FC02ShapeLabel.EmptyLabelCanBeFormattedAndLostWritesAreRejected
+[       OK ] FC02ShapeLabel.EmptyLabelCanBeFormattedAndLostWritesAreRejected (596 ms)
+[----------] 17 tests from FC02ShapeLabel (12982 ms total)
+
+[----------] Global test environment tear-down
+[==========] 17 tests from 1 test suite ran. (12982 ms total)
+[  PASSED  ] 17 tests.

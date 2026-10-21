@@ -1,0 +1,50 @@
+[
+  {
+    "requirement": "Selected/editing overflow Shape only: affordance painting and pointer hit",
+    "sources": [
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/src/canvas_text_geometry.cpp",
+      "runtime/render/src/skia_headless_backend.cpp"
+    ],
+    "oracles": [
+      "FC02ShapeLabel.UnselectedOverflowHasNoExpandPixelsOrExpandHit (canonical and transient pixels, no hidden expand)",
+      "FC02ShapeLabel.ExpandAffordanceUsesUndoableRuntimeSizeOperation",
+      "FC02ShapeLabel.ExpandButtonRemainsClickableOutsideTheEllipseContour",
+      "web/editing-growth-clean.json"
+    ]
+  },
+  {
+    "requirement": "Web reentry and clicked glyph caret; in-editor pointer does not blur/finish",
+    "sources": [
+      "apps/axiom_canvas_demo/platform/web/text_input.js",
+      "runtime/composition/src/canvas_runtime_text.cpp"
+    ],
+    "oracles": [
+      "FC02ShapeLabel.ReenterUsesTheClickedGlyphAndPointerCanMoveCaret",
+      "web/editing-web-clean.json (rectangle, ellipse, triangle; actual CDP double-click/middle/end click/insertText)"
+    ]
+  },
+  {
+    "requirement": "Outside click finishes; no extra object, draft or Operation; native terminal required for composition",
+    "sources": [
+      "runtime/interaction/src/canvas_text_geometry.cpp",
+      "runtime/interaction/src/text_edit_session.cpp (existing finish protocol)"
+    ],
+    "oracles": [
+      "FC02ShapeLabel.OutsideDownFinishesWithoutCreatingAnotherDraft",
+      "FC02Facade.TextOwnershipConsumesPointerLifecycleWithoutStartingInk",
+      "web/editing-web-clean.json composition checks"
+    ]
+  },
+  {
+    "requirement": "Preserve existing growth, typography, layout, input, History, lifecycle and UI behavior",
+    "oracles": [
+      "native/ctest.xml (233 entries, including all 64 FC02 GTests)",
+      "native/python.log (17)",
+      "native/editing-strict.json (7 TUs, no lowered diagnostics)",
+      "web/editing-growth-clean.json",
+      "web/web_fc02_text_test.json (7 groups)",
+      "web/web_minimal_runtime_test.json (13 groups)"
+    ]
+  }
+]

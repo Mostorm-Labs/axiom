@@ -1,0 +1,30 @@
+{
+  "baseline_revision": "2fbba9a8e394362918335b07b9de590c0d8855b8",
+  "source": "Direct user messages and attached images",
+  "reports": [
+    {
+      "id": "expand-visibility",
+      "kind": "requirement",
+      "text": "这个扩展的加号按钮，期望只在对象被选中的时候显示",
+      "pre_fix_actual": "Overflow button painted and hit on unselected Shapes",
+      "post_fix_physical": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "web-reentry",
+      "kind": "user_failure",
+      "text": "Enter退出后再次双击，光标只在最前面，无法定位其他文本位置；补充：该问题Web存在，Windows正常",
+      "platforms": {
+        "web": "FAIL",
+        "windows": "PASS (user report on baseline; not new-build acceptance)"
+      },
+      "probe_actual": "Reentry phase=Editing but selection=0; next canvas click blurs carrier and closes session",
+      "post_fix_physical": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "outside-finish",
+      "kind": "requirement",
+      "text": "编辑后不按Enter，鼠标点击非对象空白区域也能完成编辑并提交",
+      "post_fix_physical": "PHYSICAL_PENDING"
+    }
+  ]
+}
