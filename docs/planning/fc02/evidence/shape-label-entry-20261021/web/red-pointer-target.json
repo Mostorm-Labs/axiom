@@ -1,0 +1,266 @@
+{
+  "url": "http://127.0.0.1:4173/index.html?rev=shape-label-red-target",
+  "browser": "Chrome/155.0.8059.84",
+  "mode": "Headless Chrome SwiftShader; CDP mouse/insertText; no physical input",
+  "cases": [
+    {
+      "preset": 0,
+      "drawn": {
+        "owner": "RuntimeComposition",
+        "revision": "28e729b2a0a2fc701d32b7f48dc1dbedb81d155b",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 1,
+        "operations": 1,
+        "pointerSamples": 3,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 4,
+        "retries": 3,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 1,
+        "metricsGeneration": 1,
+        "width": 1100,
+        "height": 811,
+        "logicalWidth": 1100,
+        "logicalHeight": 811,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 0,
+        "creationMode": true,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 1,
+          "generation": 1
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "1982000000",
+            "x": 100,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "1986000000",
+            "x": 300,
+            "y": 190,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 2,
+            "timestampNs": "1997900001",
+            "x": 300,
+            "y": 190,
+            "pressure": 0,
+            "history": false
+          }
+        ]
+      },
+      "result": "RUNNING",
+      "edit": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            200,
+            145,
+            201,
+            145,
+            201,
+            165,
+            200,
+            165
+          ],
+          "diagnostics": [],
+          "layout": "930983ba977794ffa57cf523e05d6aeca9ebf22f09a9ab8752e9c0397b0bf9ac:0:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "token": {
+          "adapter": "1",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "010000000000000000000000000000f2",
+          "projection": "1",
+          "runtime": "1",
+          "session": "1",
+          "view": "301"
+        },
+        "width": 320
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 100,
+          "y": 157
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 300,
+          "y": 247
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 1,
+          "x": 300,
+          "y": 247
+        },
+        {
+          "type": "click",
+          "target": "textTool",
+          "detail": 0,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 1,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-ime",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-ime",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-ime",
+          "detail": 2,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "dblclick",
+          "target": "axiom-ime",
+          "detail": 2,
+          "x": 200,
+          "y": 202
+        }
+      ],
+      "target": {
+        "id": "axiom-ime",
+        "active": "axiom-ime"
+      }
+    }
+  ],
+  "initial": {
+    "owner": "RuntimeComposition",
+    "revision": "28e729b2a0a2fc701d32b7f48dc1dbedb81d155b",
+    "dirty": 1,
+    "debugUiEnabled": true,
+    "state": 2,
+    "objects": 0,
+    "operations": 0,
+    "pointerSamples": 0,
+    "rejectedInputs": 0,
+    "activePointers": 0,
+    "presentedFrames": 1,
+    "retries": 0,
+    "pendingFrame": false,
+    "previewActive": false,
+    "surfaceGeneration": 1,
+    "metricsGeneration": 1,
+    "width": 1100,
+    "height": 811,
+    "logicalWidth": 1100,
+    "logicalHeight": 811,
+    "dpr": 1,
+    "controlState": 9,
+    "tool": 0,
+    "creationMode": false,
+    "creationPreset": 0,
+    "size": 16,
+    "opacity": 1,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "lastPointer": {
+      "source": 0,
+      "pointer": 0,
+      "generation": 0
+    },
+    "error": "",
+    "failure": "",
+    "trace": []
+  },
+  "result": "FAIL",
+  "error": "AssertionError [ERR_ASSERTION]: label uses Shape width: 320\n    at file:///C:/Users/Chado/.codex/worktrees/fc02-runtime-boundary-resume/canvas/docs/planning/fc02/evidence/shape-label-entry-20261021/chrome-shape-entry.mjs:107:12",
+  "errors": []
+}

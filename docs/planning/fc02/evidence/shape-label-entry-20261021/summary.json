@@ -1,0 +1,107 @@
+{
+  "recorded_utc": "2026-10-21T04:54:00.828416+00:00",
+  "status": "IMPLEMENTED_AUTOMATED_VERIFIED_PHYSICAL_PENDING",
+  "repository": "https://github.com/Mostorm-Labs/axiom.git",
+  "branch": "codex/fc02-windows-ime-resume",
+  "baseline_revision": "28e729b2a0a2fc701d32b7f48dc1dbedb81d155b",
+  "result_revision": "d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3",
+  "materialized_ref_resolution": "git log -1 --format=%H -- docs/planning/fc02/evidence/shape-label-entry-20261021/summary.json (commit containing this evidence)",
+  "implementation": [
+    "Unlabeled Shape/1 and /2 enter Runtime label session using Text/Select double-click",
+    "First confirmed nonempty text upgrades same Shape to /3 via guarded delta3; Undo restores exact original absent label",
+    "Shape-local geometry covers rectangle, ellipse, triangle and transforms; shape rendering retained during edit",
+    "Web carrier excludes pointer hit-testing; canvas focus restored before label edit and native carrier refocused",
+    "Ink, locked objects, Lost/Closed, invalid guards and legacy deltas reject label-entry/mutation as covered"
+  ],
+  "validation": {
+    "native_ctest": {
+      "status": "PASS",
+      "passed": 233,
+      "skipped": 0,
+      "evidence": "native/ctest.xml",
+      "build_revision": "d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3"
+    },
+    "python": {
+      "status": "PASS",
+      "passed": 17,
+      "skipped": 0,
+      "evidence": "native/python.log"
+    },
+    "strict_clang": {
+      "status": "PASS",
+      "translation_units": 9,
+      "evidence": "native/strict-clang.json",
+      "note": "Precommit run; recorded per-file hashes match committed source; no relaxed warning flags"
+    },
+    "chrome_shape_entry": {
+      "status": "PASS",
+      "shape_variants": 3,
+      "ink_protection": "PASS",
+      "evidence": "web/shape-entry.json",
+      "revision": "d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3",
+      "dirty": 0
+    },
+    "chrome_regressions": {
+      "status": "PASS",
+      "text_groups": 7,
+      "minimal_groups": 13,
+      "dpr": 2,
+      "synthetic_input": true
+    },
+    "windows_build": {
+      "status": "PASS",
+      "compiler": "VS 2026 MSVC 19.51.36246",
+      "configuration": "Release /MT /WX, D3D12, Debug UI full"
+    },
+    "web_build": {
+      "status": "PASS",
+      "configuration": "Release, locked Emscripten / WebGL2 Skia / Semantic SDK, Debug UI full"
+    },
+    "physical": {
+      "status": "PHYSICAL_PENDING",
+      "evidence": "manual-checklist.json"
+    }
+  },
+  "red_green": {
+    "native": [
+      "native/red.log",
+      "native/green.log",
+      "native/ctest.xml"
+    ],
+    "web": [
+      "web/red-pointer-target.json",
+      "web/red-focus.json",
+      "web/shape-entry.json"
+    ],
+    "note": "RED/early GREEN precommit captures identify baseline revision and dirty=1; final runs identify committed revision and dirty=0"
+  },
+  "reproduction": {
+    "note": "Helper scripts are snapshots of out/fc02-resume helpers; restore them there before running. Exact expanded commands and SDK facts are in build-facts/. Re-resolve paths on a different machine.",
+    "native_configure": "python out/fc02-resume/native.py configure",
+    "native_build": "python out/fc02-resume/native.py build",
+    "ctest": "ctest --test-dir \"C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\build\" --tests-from-file \"C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\docs\\planning\\fc02\\evidence\\shape-label-entry-20261021\\native\\ctest-names.txt\" --output-on-failure --timeout 60 -j 4",
+    "python": "python out/fc02-resume/native.py python (imports emitted SDK environment)",
+    "web_configure": "python out/fc02-resume/web.py",
+    "web_build": "python out/fc02-resume/web.py build",
+    "chrome": "node --experimental-websocket docs/planning/fc02/evidence/shape-label-entry-20261021/chrome-shape-entry.mjs http://127.0.0.1:4173/index.html?rev=d2c9d79f out/fc02-resume/shape-web-clean.json",
+    "existing_chrome": "node --experimental-websocket docs/planning/fc02/evidence/host-geometry/chrome-test.mjs web_fc02_text_test web_minimal_runtime_test (same build served on 8769)"
+  },
+  "artifact_evidence": "artifacts.json",
+  "source_files": "changed-files.json",
+  "remaining_blockers": [
+    "Actual Windows/Web user observation for this revision remains PHYSICAL_PENDING"
+  ],
+  "preserved": [
+    "Historical FAIL evidence",
+    "Untracked imgui.ini",
+    "Main worktree",
+    "SDK locks",
+    "Authority/Golden/Gate/PHYS/Android state"
+  ],
+  "no_claims": [
+    "FC-02 completion",
+    "Independent Control Review",
+    "Gate PASS",
+    "PHYS PASS"
+  ]
+}

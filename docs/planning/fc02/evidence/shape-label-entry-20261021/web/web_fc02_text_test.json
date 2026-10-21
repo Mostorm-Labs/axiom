@@ -1,0 +1,5236 @@
+{
+  "diagnostic": {
+    "type": "object",
+    "value": {
+      "observation": {
+        "owner": "RuntimeComposition",
+        "revision": "d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3",
+        "dirty": 0,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 3,
+        "operations": 13,
+        "pointerSamples": 7,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 31,
+        "retries": 18,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 3,
+        "metricsGeneration": 3,
+        "width": 1600,
+        "height": 960,
+        "logicalWidth": 800,
+        "logicalHeight": 480,
+        "dpr": 2,
+        "controlState": 1,
+        "tool": 0,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 51,
+          "generation": 3
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 51,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "2555400001",
+            "x": 80,
+            "y": 80,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 51,
+            "generation": "1",
+            "phase": 2,
+            "timestampNs": "2558300000",
+            "x": 80,
+            "y": 80,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "resize"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "resize"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 51,
+            "generation": "2",
+            "phase": 0,
+            "timestampNs": "4357000000",
+            "x": 200,
+            "y": 180,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 51,
+            "generation": "2",
+            "phase": 2,
+            "timestampNs": "4357300000",
+            "x": 200,
+            "y": 180,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 51,
+            "generation": "3",
+            "phase": 0,
+            "timestampNs": "4592000000",
+            "x": 300,
+            "y": 180,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 51,
+            "generation": "3",
+            "phase": 1,
+            "timestampNs": "4597500000",
+            "x": 350,
+            "y": 180,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 51,
+            "generation": "3",
+            "phase": 2,
+            "timestampNs": "4597700000",
+            "x": 380,
+            "y": 180,
+            "pressure": 0,
+            "history": false
+          }
+        ]
+      },
+      "width": 1600,
+      "height": 960,
+      "status": "对象 3 · 操作 13 · 缩放 1.00 · 帧 31"
+    }
+  },
+  "browser": "Chrome/155.0.8059.84",
+  "mode": "Chrome headless SwiftShader, synthetic DOM events",
+  "page": "web_fc02_text_test",
+  "result": "{\"result\":\"PASS\",\"mode\":\"headless Chrome; synthetic DOM IME; no physical IME claim\",\"results\":[{\"name\":\"Text toolbar / empty draft has no canonical object\",\"result\":\"PASS\",\"snapshot\":{\"composition\":\"0\",\"effect\":\"0\",\"exit\":2,\"geometry\":{\"available\":true,\"camera\":\"1\",\"caret\":[80,80,81,80,81,100,80,100],\"diagnostics\":[],\"layout\":\"930983ba977794ffa57cf523e05d6aeca9ebf22f09a9ab8752e9c0397b0bf9ac:0:0\"},\"phase\":1,\"preedit\":[],\"projection\":[],\"replacement\":[0,0],\"selection\":[0,0],\"sequence\":\"1\",\"token\":{\"adapter\":\"1\",\"attachment\":\"1\",\"document\":\"01000000000000000000000000000000\",\"object\":\"010000000000000000000000000000f2\",\"projection\":\"1\",\"runtime\":\"1\",\"session\":\"1\",\"view\":\"301\"},\"width\":320},\"runtime\":{\"owner\":\"RuntimeComposition\",\"revision\":\"d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3\",\"dirty\":0,\"debugUiEnabled\":true,\"state\":2,\"objects\":0,\"operations\":0,\"pointerSamples\":2,\"rejectedInputs\":0,\"activePointers\":0,\"presentedFrames\":3,\"retries\":2,\"pendingFrame\":false,\"previewActive\":false,\"surfaceGeneration\":1,\"metricsGeneration\":1,\"width\":2000,\"height\":1262,\"logicalWidth\":1000,\"logicalHeight\":631,\"dpr\":2,\"controlState\":9,\"tool\":4,\"creationMode\":false,\"creationPreset\":0,\"size\":16,\"opacity\":1,\"camera\":{\"scale\":1,\"x\":0,\"y\":0},\"lastPointer\":{\"source\":1,\"pointer\":51,\"generation\":1},\"error\":\"\",\"failure\":\"\",\"trace\":[{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":0,\"timestampNs\":\"2555400001\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":2,\"timestampNs\":\"2558300000\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false}]}},{\"name\":\"synthetic native preedit / terminal dedup / actual Runtime commit\",\"result\":\"PASS\",\"snapshot\":{\"composition\":\"0\",\"effect\":\"0\",\"exit\":2,\"geometry\":{\"available\":true,\"camera\":\"1\",\"caret\":[133.45999145507812,80,134.45999145507812,80,134.45999145507812,96,133.45999145507812,96],\"diagnostics\":[],\"layout\":\"1e03c8afdb58d45a28db58069e6573dcbd68443bdce42c511259abeff1da0596:6:0\"},\"phase\":1,\"preedit\":[],\"projection\":[67,97,110,118,97,115],\"replacement\":[0,0],\"selection\":[6,0],\"sequence\":\"4\",\"token\":{\"adapter\":\"1\",\"attachment\":\"1\",\"document\":\"01000000000000000000000000000000\",\"object\":\"010000000000000000000000000000f2\",\"projection\":\"2\",\"runtime\":\"1\",\"session\":\"1\",\"view\":\"301\"},\"width\":320},\"runtime\":{\"owner\":\"RuntimeComposition\",\"revision\":\"d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3\",\"dirty\":0,\"debugUiEnabled\":true,\"state\":2,\"objects\":1,\"operations\":1,\"pointerSamples\":2,\"rejectedInputs\":0,\"activePointers\":0,\"presentedFrames\":5,\"retries\":4,\"pendingFrame\":false,\"previewActive\":false,\"surfaceGeneration\":1,\"metricsGeneration\":1,\"width\":2000,\"height\":1262,\"logicalWidth\":1000,\"logicalHeight\":631,\"dpr\":2,\"controlState\":9,\"tool\":4,\"creationMode\":false,\"creationPreset\":0,\"size\":16,\"opacity\":1,\"camera\":{\"scale\":1,\"x\":0,\"y\":0},\"lastPointer\":{\"source\":1,\"pointer\":51,\"generation\":1},\"error\":\"\",\"failure\":\"\",\"trace\":[{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":0,\"timestampNs\":\"2555400001\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":2,\"timestampNs\":\"2558300000\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false}]}},{\"name\":\"Chinese preedit and canonical render from pinned application font\",\"result\":\"PASS\",\"snapshot\":{\"composition\":\"0\",\"effect\":\"0\",\"exit\":2,\"geometry\":{\"available\":true,\"camera\":\"1\",\"caret\":[133.45999145507812,80,134.45999145507812,80,134.45999145507812,96,133.45999145507812,96],\"diagnostics\":[],\"layout\":\"1e03c8afdb58d45a28db58069e6573dcbd68443bdce42c511259abeff1da0596:6:0\"},\"phase\":1,\"preedit\":[],\"projection\":[67,97,110,118,97,115],\"replacement\":[6,0],\"selection\":[6,0],\"sequence\":\"8\",\"token\":{\"adapter\":\"1\",\"attachment\":\"1\",\"document\":\"01000000000000000000000000000000\",\"object\":\"010000000000000000000000000000f2\",\"projection\":\"4\",\"runtime\":\"1\",\"session\":\"1\",\"view\":\"301\"},\"width\":320},\"runtime\":{\"owner\":\"RuntimeComposition\",\"revision\":\"d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3\",\"dirty\":0,\"debugUiEnabled\":true,\"state\":2,\"objects\":1,\"operations\":3,\"pointerSamples\":2,\"rejectedInputs\":0,\"activePointers\":0,\"presentedFrames\":9,\"retries\":6,\"pendingFrame\":false,\"previewActive\":false,\"surfaceGeneration\":1,\"metricsGeneration\":1,\"width\":2000,\"height\":1262,\"logicalWidth\":1000,\"logicalHeight\":631,\"dpr\":2,\"controlState\":9,\"tool\":4,\"creationMode\":false,\"creationPreset\":0,\"size\":16,\"opacity\":1,\"camera\":{\"scale\":1,\"x\":0,\"y\":0},\"lastPointer\":{\"source\":1,\"pointer\":51,\"generation\":1},\"error\":\"\",\"failure\":\"\",\"trace\":[{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":0,\"timestampNs\":\"2555400001\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":2,\"timestampNs\":\"2558300000\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false}]}},{\"name\":\"Debug focus completes composition and retains editor / width persistence\",\"result\":\"PASS\",\"snapshot\":{\"composition\":\"0\",\"effect\":\"0\",\"exit\":3,\"geometry\":{\"available\":true,\"camera\":\"1\",\"caret\":[146.76998901367188,80,147.76998901367188,80,147.76998901367188,96,146.76998901367188,96],\"diagnostics\":[],\"layout\":\"74131acd3dbecee2cd78c26c887a93f8043125cfd7dfab930cc19c9ec2f1aaa5:8:0\"},\"phase\":1,\"preedit\":[],\"projection\":[67,97,110,118,97,115,32,65],\"replacement\":[6,0],\"selection\":[8,0],\"sequence\":\"11\",\"token\":{\"adapter\":\"1\",\"attachment\":\"1\",\"document\":\"01000000000000000000000000000000\",\"object\":\"010000000000000000000000000000f2\",\"projection\":\"6\",\"runtime\":\"1\",\"session\":\"1\",\"view\":\"301\"},\"width\":120},\"runtime\":{\"owner\":\"RuntimeComposition\",\"revision\":\"d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3\",\"dirty\":0,\"debugUiEnabled\":true,\"state\":2,\"objects\":1,\"operations\":5,\"pointerSamples\":2,\"rejectedInputs\":0,\"activePointers\":0,\"presentedFrames\":14,\"retries\":7,\"pendingFrame\":false,\"previewActive\":false,\"surfaceGeneration\":1,\"metricsGeneration\":1,\"width\":2000,\"height\":1262,\"logicalWidth\":1000,\"logicalHeight\":631,\"dpr\":2,\"controlState\":9,\"tool\":4,\"creationMode\":false,\"creationPreset\":0,\"size\":16,\"opacity\":1,\"camera\":{\"scale\":1,\"x\":0,\"y\":0},\"lastPointer\":{\"source\":1,\"pointer\":51,\"generation\":1},\"error\":\"\",\"failure\":\"\",\"trace\":[{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":0,\"timestampNs\":\"2555400001\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":2,\"timestampNs\":\"2558300000\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false}]}},{\"name\":\"Ctrl+Enter paragraph / Enter finishes / resize keeps text\",\"result\":\"PASS\",\"snapshot\":{\"composition\":\"0\",\"effect\":\"0\",\"exit\":3,\"geometry\":{\"available\":false,\"camera\":\"0\",\"caret\":[0,0,0,0,0,0,0,0],\"diagnostics\":[],\"layout\":\"\"},\"phase\":0,\"preedit\":[],\"projection\":[67,97,110,118,97,115,32,65,10,66],\"replacement\":[6,0],\"selection\":[10,0],\"sequence\":\"12\",\"token\":{\"adapter\":\"1\",\"attachment\":\"1\",\"document\":\"01000000000000000000000000000000\",\"object\":\"010000000000000000000000000000f2\",\"projection\":\"8\",\"runtime\":\"1\",\"session\":\"1\",\"view\":\"301\"},\"width\":120},\"runtime\":{\"owner\":\"RuntimeComposition\",\"revision\":\"d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3\",\"dirty\":0,\"debugUiEnabled\":true,\"state\":2,\"objects\":1,\"operations\":7,\"pointerSamples\":2,\"rejectedInputs\":0,\"activePointers\":0,\"presentedFrames\":18,\"retries\":11,\"pendingFrame\":false,\"previewActive\":false,\"surfaceGeneration\":3,\"metricsGeneration\":3,\"width\":1600,\"height\":960,\"logicalWidth\":800,\"logicalHeight\":480,\"dpr\":2,\"controlState\":9,\"tool\":4,\"creationMode\":false,\"creationPreset\":0,\"size\":16,\"opacity\":1,\"camera\":{\"scale\":1,\"x\":0,\"y\":0},\"lastPointer\":{\"source\":1,\"pointer\":51,\"generation\":1},\"error\":\"\",\"failure\":\"\",\"trace\":[{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":0,\"timestampNs\":\"2555400001\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":2,\"timestampNs\":\"2558300000\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false},{\"kind\":\"cancel-all\",\"reason\":\"resize\"},{\"kind\":\"cancel-all\",\"reason\":\"resize\"}]}},{\"name\":\"double click existing / grapheme deletion / missing glyph diagnostic\",\"result\":\"PASS\",\"snapshot\":{\"composition\":\"0\",\"effect\":\"0\",\"exit\":2,\"geometry\":{\"available\":false,\"camera\":\"1\",\"caret\":[0,0,0,0,0,0,0,0],\"diagnostics\":[\"font-glyph-unavailable\"],\"layout\":\"27787614d9cf57dfca95908cdc3a0459c66e0272d2d28d880ab0a58bac024aef:2:0\"},\"phase\":1,\"preedit\":[],\"projection\":[56319,57341],\"replacement\":[0,0],\"selection\":[2,0],\"sequence\":\"3\",\"token\":{\"adapter\":\"2\",\"attachment\":\"1\",\"document\":\"01000000000000000000000000000000\",\"object\":\"010000000000000000000000000000f2\",\"projection\":\"4\",\"runtime\":\"1\",\"session\":\"2\",\"view\":\"301\"},\"width\":120},\"runtime\":{\"owner\":\"RuntimeComposition\",\"revision\":\"d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3\",\"dirty\":0,\"debugUiEnabled\":true,\"state\":2,\"objects\":1,\"operations\":10,\"pointerSamples\":2,\"rejectedInputs\":0,\"activePointers\":0,\"presentedFrames\":23,\"retries\":15,\"pendingFrame\":false,\"previewActive\":false,\"surfaceGeneration\":3,\"metricsGeneration\":3,\"width\":1600,\"height\":960,\"logicalWidth\":800,\"logicalHeight\":480,\"dpr\":2,\"controlState\":9,\"tool\":4,\"creationMode\":false,\"creationPreset\":0,\"size\":16,\"opacity\":1,\"camera\":{\"scale\":1,\"x\":0,\"y\":0},\"lastPointer\":{\"source\":1,\"pointer\":51,\"generation\":1},\"error\":\"\",\"failure\":\"\",\"trace\":[{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":0,\"timestampNs\":\"2555400001\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":2,\"timestampNs\":\"2558300000\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false},{\"kind\":\"cancel-all\",\"reason\":\"resize\"},{\"kind\":\"cancel-all\",\"reason\":\"resize\"}]}},{\"name\":\"tool switch waits for actual native terminal / Ink remains usable\",\"result\":\"PASS\",\"snapshot\":{\"composition\":\"0\",\"effect\":\"0\",\"exit\":3,\"geometry\":{\"available\":false,\"camera\":\"0\",\"caret\":[0,0,0,0,0,0,0,0],\"diagnostics\":[],\"layout\":\"\"},\"phase\":0,\"preedit\":[],\"projection\":[88],\"replacement\":[0,0],\"selection\":[1,0],\"sequence\":\"4\",\"token\":{\"adapter\":\"3\",\"attachment\":\"1\",\"document\":\"01000000000000000000000000000000\",\"object\":\"040000000000000000000000000000f2\",\"projection\":\"2\",\"runtime\":\"1\",\"session\":\"3\",\"view\":\"301\"},\"width\":320},\"runtime\":{\"owner\":\"RuntimeComposition\",\"revision\":\"d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3\",\"dirty\":0,\"debugUiEnabled\":true,\"state\":2,\"objects\":3,\"operations\":13,\"pointerSamples\":7,\"rejectedInputs\":0,\"activePointers\":0,\"presentedFrames\":31,\"retries\":18,\"pendingFrame\":false,\"previewActive\":false,\"surfaceGeneration\":3,\"metricsGeneration\":3,\"width\":1600,\"height\":960,\"logicalWidth\":800,\"logicalHeight\":480,\"dpr\":2,\"controlState\":1,\"tool\":0,\"creationMode\":false,\"creationPreset\":0,\"size\":16,\"opacity\":1,\"camera\":{\"scale\":1,\"x\":0,\"y\":0},\"lastPointer\":{\"source\":1,\"pointer\":51,\"generation\":3},\"error\":\"\",\"failure\":\"\",\"trace\":[{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":0,\"timestampNs\":\"2555400001\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"1\",\"phase\":2,\"timestampNs\":\"2558300000\",\"x\":80,\"y\":80,\"pressure\":0,\"history\":false},{\"kind\":\"cancel-all\",\"reason\":\"resize\"},{\"kind\":\"cancel-all\",\"reason\":\"resize\"},{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"2\",\"phase\":0,\"timestampNs\":\"4357000000\",\"x\":200,\"y\":180,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"2\",\"phase\":2,\"timestampNs\":\"4357300000\",\"x\":200,\"y\":180,\"pressure\":0,\"history\":false},{\"kind\":\"cancel-all\",\"reason\":\"facade-control\"},{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"3\",\"phase\":0,\"timestampNs\":\"4592000000\",\"x\":300,\"y\":180,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"3\",\"phase\":1,\"timestampNs\":\"4597500000\",\"x\":350,\"y\":180,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":51,\"generation\":\"3\",\"phase\":2,\"timestampNs\":\"4597700000\",\"x\":380,\"y\":180,\"pressure\":0,\"history\":false}]}}]}",
+  "events": [
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "network",
+          "level": "error",
+          "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+          "timestamp": 1792558154147.698,
+          "url": "http://127.0.0.1:8769/favicon.ico",
+          "networkRequestId": "227860.9"
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558155006.182,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643512
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399001
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 8658076
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 18,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558155006.418,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643529
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399001
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 8658076
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 18,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1792558155007.163,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "emscriptenWebGLGet",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 82090
+              },
+              {
+                "functionName": "_emscripten_glGetFloatv",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 83380
+              },
+              {
+                "functionName": "$func1534",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 697155
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5648683
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399001
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 8658076
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 18,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558155045.561,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643512
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399141
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 8658076
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 18,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558155045.704,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643529
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399141
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 8658076
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 18,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1792558155045.826,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "emscriptenWebGLGet",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 82090
+              },
+              {
+                "functionName": "_emscripten_glGetFloatv",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 83380
+              },
+              {
+                "functionName": "$func1534",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 697155
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5648683
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399141
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 8658076
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 18,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558156204.369,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643512
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 8666825
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 18,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558156204.469,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643529
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 8666825
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 18,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1792558156204.561,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "emscriptenWebGLGet",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 82090
+              },
+              {
+                "functionName": "_emscripten_glGetFloatv",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 83380
+              },
+              {
+                "functionName": "$func1534",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 697155
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5648683
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 8666825
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 18,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=1 objects=0 scene_records=0"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558156212.768,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "[.WebGL-0x5b2401b24c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+          "timestamp": 1792558156233.174,
+          "url": "http://127.0.0.1:8769/index.html"
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "[.WebGL-0x5b24001db400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+          "timestamp": 1792558156233.369,
+          "url": "http://127.0.0.1:8769/index.html"
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "[.WebGL-0x5b24001d2a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+          "timestamp": 1792558156233.465,
+          "url": "http://127.0.0.1:8769/index.html"
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "[.WebGL-0x5b2401b24c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)",
+          "timestamp": 1792558156295.244,
+          "url": "http://127.0.0.1:8769/index.html"
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=2 objects=0 scene_records=0"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558156296.398,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=3 objects=0 scene_records=0"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558156352.823,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=4 objects=0 scene_records=0"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558156597.998,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: samplerParameter: EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1792558156619.675,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glSamplerParameterf",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 93854
+              },
+              {
+                "functionName": "$func8272",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5941818
+              },
+              {
+                "functionName": "$func2236",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1182298
+              },
+              {
+                "functionName": "$func8128",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5892682
+              },
+              {
+                "functionName": "$func5123",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3237192
+              },
+              {
+                "functionName": "$func8784",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 6167575
+              },
+              {
+                "functionName": "$func4842",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3071785
+              },
+              {
+                "functionName": "$func9444",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 6335800
+              },
+              {
+                "functionName": "$func5152",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3248478
+              },
+              {
+                "functionName": "$func1986",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1018662
+              },
+              {
+                "functionName": "$func7664",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5610112
+              },
+              {
+                "functionName": "$func1568",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 729755
+              },
+              {
+                "functionName": "$Wd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7150956
+              },
+              {
+                "functionName": "tick",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 51,
+                "columnNumber": 30
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=5 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558156705.573,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=6 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558156786.482,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=7 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558156862.301,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=8 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558156902.808,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=9 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558156952.298,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=10 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157003.82,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=11 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157055.296,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=12 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157103.359,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=13 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157169.691,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=14 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157219.99,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=15 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157287.39,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=16 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157352.726,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=17 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157403.211,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558157482.28,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643512
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399001
+              },
+              {
+                "functionName": "$Pd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7507048
+              },
+              {
+                "functionName": "resize",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 146,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "",
+                "scriptId": "3",
+                "url": "http://127.0.0.1:8769/tests/web_fc02_text_test.html",
+                "lineNumber": 46,
+                "columnNumber": 14
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558157482.419,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643529
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399001
+              },
+              {
+                "functionName": "$Pd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7507048
+              },
+              {
+                "functionName": "resize",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 146,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "",
+                "scriptId": "3",
+                "url": "http://127.0.0.1:8769/tests/web_fc02_text_test.html",
+                "lineNumber": 46,
+                "columnNumber": 14
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1792558157482.559,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "emscriptenWebGLGet",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 82090
+              },
+              {
+                "functionName": "_emscripten_glGetFloatv",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 83380
+              },
+              {
+                "functionName": "$func1534",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 697155
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5648683
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399001
+              },
+              {
+                "functionName": "$Pd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7507048
+              },
+              {
+                "functionName": "resize",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 146,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "",
+                "scriptId": "3",
+                "url": "http://127.0.0.1:8769/tests/web_fc02_text_test.html",
+                "lineNumber": 46,
+                "columnNumber": 14
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558157520.181,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643512
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399141
+              },
+              {
+                "functionName": "$Pd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7507048
+              },
+              {
+                "functionName": "resize",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 146,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "",
+                "scriptId": "3",
+                "url": "http://127.0.0.1:8769/tests/web_fc02_text_test.html",
+                "lineNumber": 46,
+                "columnNumber": 14
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558157520.369,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643529
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399141
+              },
+              {
+                "functionName": "$Pd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7507048
+              },
+              {
+                "functionName": "resize",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 146,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "",
+                "scriptId": "3",
+                "url": "http://127.0.0.1:8769/tests/web_fc02_text_test.html",
+                "lineNumber": 46,
+                "columnNumber": 14
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1792558157520.577,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "emscriptenWebGLGet",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 82090
+              },
+              {
+                "functionName": "_emscripten_glGetFloatv",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 83380
+              },
+              {
+                "functionName": "$func1534",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 697155
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5648683
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399141
+              },
+              {
+                "functionName": "$Pd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7507048
+              },
+              {
+                "functionName": "resize",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 146,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "",
+                "scriptId": "3",
+                "url": "http://127.0.0.1:8769/tests/web_fc02_text_test.html",
+                "lineNumber": 46,
+                "columnNumber": 14
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558157554.393,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643512
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399001
+              },
+              {
+                "functionName": "$Pd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7507048
+              },
+              {
+                "functionName": "resize",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 146,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 156,
+                "columnNumber": 10
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558157554.517,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643529
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399001
+              },
+              {
+                "functionName": "$Pd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7507048
+              },
+              {
+                "functionName": "resize",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 146,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 156,
+                "columnNumber": 10
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1792558157554.636,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "emscriptenWebGLGet",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 82090
+              },
+              {
+                "functionName": "_emscripten_glGetFloatv",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 83380
+              },
+              {
+                "functionName": "$func1534",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 697155
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5648683
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399001
+              },
+              {
+                "functionName": "$Pd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7507048
+              },
+              {
+                "functionName": "resize",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 146,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 156,
+                "columnNumber": 10
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558157588.381,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643512
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399141
+              },
+              {
+                "functionName": "$Pd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7507048
+              },
+              {
+                "functionName": "resize",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 146,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 156,
+                "columnNumber": 10
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1792558157588.526,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 88384
+              },
+              {
+                "functionName": "$func2660",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1435232
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5643529
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399141
+              },
+              {
+                "functionName": "$Pd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7507048
+              },
+              {
+                "functionName": "resize",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 146,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 156,
+                "columnNumber": 10
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1792558157588.641,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "emscriptenWebGLGet",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 82090
+              },
+              {
+                "functionName": "_emscripten_glGetFloatv",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 83380
+              },
+              {
+                "functionName": "$func1534",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 697155
+              },
+              {
+                "functionName": "$func7688",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5648683
+              },
+              {
+                "functionName": "$func5020",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3170555
+              },
+              {
+                "functionName": "$func6323",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 4399141
+              },
+              {
+                "functionName": "$Pd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7507048
+              },
+              {
+                "functionName": "resize",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 146,
+                "columnNumber": 22
+              },
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 156,
+                "columnNumber": 10
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=18 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157590.83,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: samplerParameter: EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1792558157643.682,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glSamplerParameterf",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 93854
+              },
+              {
+                "functionName": "$func8272",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5941818
+              },
+              {
+                "functionName": "$func2236",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1182298
+              },
+              {
+                "functionName": "$func8128",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5892682
+              },
+              {
+                "functionName": "$func5123",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3237192
+              },
+              {
+                "functionName": "$func8784",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 6167575
+              },
+              {
+                "functionName": "$func4842",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3071785
+              },
+              {
+                "functionName": "$func9444",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 6335800
+              },
+              {
+                "functionName": "$func5152",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3248478
+              },
+              {
+                "functionName": "$func1986",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1018662
+              },
+              {
+                "functionName": "$func7664",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5610112
+              },
+              {
+                "functionName": "$func1568",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 729755
+              },
+              {
+                "functionName": "$Wd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7150956
+              },
+              {
+                "functionName": "tick",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 51,
+                "columnNumber": 30
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=19 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157736.259,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=20 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157804.763,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=21 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157853.708,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=22 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157904.103,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=23 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558157955.39,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=24 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558158003.447,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=25 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558158054.087,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=26 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558158107.576,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=27 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558158155.897,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=28 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558158204.73,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=29 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558158258.705,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=30 objects=2 scene_records=2"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558158304.768,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] finish begin pointer=1 objects=2 scene_gen=12"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558158378.867,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func5377",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 3460657
+            },
+            {
+              "functionName": "$func9984",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 6504821
+            },
+            {
+              "functionName": "$func2787",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 1512285
+            },
+            {
+              "functionName": "$Vd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7238934
+            },
+            {
+              "functionName": "forward",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 102,
+              "columnNumber": 30
+            },
+            {
+              "functionName": "",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 133,
+              "columnNumber": 48
+            },
+            {
+              "functionName": "pointer",
+              "scriptId": "3",
+              "url": "http://127.0.0.1:8769/tests/web_fc02_text_test.html",
+              "lineNumber": 15,
+              "columnNumber": 75
+            },
+            {
+              "functionName": "",
+              "scriptId": "3",
+              "url": "http://127.0.0.1:8769/tests/web_fc02_text_test.html",
+              "lineNumber": 57,
+              "columnNumber": 65
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] scene apply pointer=1 ok=1 objects=3 scene_gen=13"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558158380.37,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func5377",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 3467522
+            },
+            {
+              "functionName": "$func9984",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 6504821
+            },
+            {
+              "functionName": "$func2787",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 1512285
+            },
+            {
+              "functionName": "$Vd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7238934
+            },
+            {
+              "functionName": "forward",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 102,
+              "columnNumber": 30
+            },
+            {
+              "functionName": "",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 133,
+              "columnNumber": 48
+            },
+            {
+              "functionName": "pointer",
+              "scriptId": "3",
+              "url": "http://127.0.0.1:8769/tests/web_fc02_text_test.html",
+              "lineNumber": 15,
+              "columnNumber": 75
+            },
+            {
+              "functionName": "",
+              "scriptId": "3",
+              "url": "http://127.0.0.1:8769/tests/web_fc02_text_test.html",
+              "lineNumber": 57,
+              "columnNumber": 65
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=31 objects=3 scene_records=3"
+          }
+        ],
+        "executionContextId": 3,
+        "timestamp": 1792558158387.225,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 18686
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 17958
+            },
+            {
+              "functionName": "write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 45832
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108417
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "7",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+              "lineNumber": 0,
+              "columnNumber": 108865
+            },
+            {
+              "functionName": "$func13008",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7521224
+            },
+            {
+              "functionName": "$func6582",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 4534962
+            },
+            {
+              "functionName": "$func869",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 323371
+            },
+            {
+              "functionName": "$func1568",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 721093
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "8",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+              "lineNumber": 0,
+              "columnNumber": 7150956
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "4",
+              "url": "http://127.0.0.1:8769/host.js",
+              "lineNumber": 51,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: samplerParameter: EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1792558158465.584,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glSamplerParameterf",
+                "scriptId": "7",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js",
+                "lineNumber": 0,
+                "columnNumber": 93854
+              },
+              {
+                "functionName": "$func8272",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5941818
+              },
+              {
+                "functionName": "$func2236",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1182298
+              },
+              {
+                "functionName": "$func8128",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5892682
+              },
+              {
+                "functionName": "$func8726",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 6144774
+              },
+              {
+                "functionName": "$func4842",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3071785
+              },
+              {
+                "functionName": "$func9444",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 6335800
+              },
+              {
+                "functionName": "$func5152",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 3248478
+              },
+              {
+                "functionName": "$func1986",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 1018662
+              },
+              {
+                "functionName": "$func7664",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5610112
+              },
+              {
+                "functionName": "$func7456",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 5451879
+              },
+              {
+                "functionName": "$Wd",
+                "scriptId": "8",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm",
+                "lineNumber": 0,
+                "columnNumber": 7152081
+              },
+              {
+                "functionName": "tick",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:8769/host.js",
+                "lineNumber": 51,
+                "columnNumber": 30
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

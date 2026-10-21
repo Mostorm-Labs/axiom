@@ -1,0 +1,2623 @@
+{
+  "url": "http://127.0.0.1:4173/index.html?rev=d2c9d79f",
+  "browser": "Chrome/155.0.8059.84",
+  "mode": "Headless Chrome SwiftShader; CDP mouse/insertText; no physical input",
+  "cases": [
+    {
+      "preset": 0,
+      "drawn": {
+        "owner": "RuntimeComposition",
+        "revision": "d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3",
+        "dirty": 0,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 1,
+        "operations": 1,
+        "pointerSamples": 3,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 4,
+        "retries": 3,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 1,
+        "metricsGeneration": 1,
+        "width": 1100,
+        "height": 811,
+        "logicalWidth": 1100,
+        "logicalHeight": 811,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 0,
+        "creationMode": true,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 1,
+          "generation": 1
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "2639800000",
+            "x": 100,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "2643600000",
+            "x": 300,
+            "y": 190,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 2,
+            "timestampNs": "2653500000",
+            "x": 300,
+            "y": 190,
+            "pressure": 0,
+            "history": false
+          }
+        ]
+      },
+      "result": "PASS",
+      "edit": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            100,
+            100,
+            101,
+            100,
+            101,
+            120,
+            100,
+            120
+          ],
+          "diagnostics": [],
+          "layout": "d29056054ea766bc70ef038c2771f605ab13458c4be760e5a42460c829319ad7:0:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "token": {
+          "adapter": "3",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "01000000000001000000000000000000",
+          "projection": "1",
+          "runtime": "1",
+          "session": "3",
+          "view": "301"
+        },
+        "width": 200
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 100,
+          "y": 157
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 300,
+          "y": 247
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 1,
+          "x": 300,
+          "y": 247
+        },
+        {
+          "type": "click",
+          "target": "textTool",
+          "detail": 0,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 1,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "dblclick",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 200,
+          "y": 202
+        }
+      ],
+      "target": {
+        "id": "axiom-canvas",
+        "active": "axiom-ime"
+      },
+      "typed": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            195.08999633789062,
+            100,
+            196.08999633789062,
+            100,
+            196.08999633789062,
+            116,
+            195.08999633789062,
+            116
+          ],
+          "diagnostics": [],
+          "layout": "6f0de5c21f5003bd9795a35d07b5e9983615e9f9ad74d391acf29de3db3ccab4:10:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [
+          20320,
+          22909,
+          32,
+          83,
+          104,
+          97,
+          112,
+          101,
+          32,
+          48
+        ],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          10,
+          0
+        ],
+        "sequence": "2",
+        "token": {
+          "adapter": "3",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "01000000000001000000000000000000",
+          "projection": "2",
+          "runtime": "1",
+          "session": "3",
+          "view": "301"
+        },
+        "width": 200
+      },
+      "undone": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            100,
+            100,
+            101,
+            100,
+            101,
+            120,
+            100,
+            120
+          ],
+          "diagnostics": [],
+          "layout": "d29056054ea766bc70ef038c2771f605ab13458c4be760e5a42460c829319ad7:0:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "token": {
+          "adapter": "6",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "01000000000001000000000000000000",
+          "projection": "1",
+          "runtime": "1",
+          "session": "6",
+          "view": "301"
+        },
+        "width": 200
+      },
+      "redone": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            100,
+            100,
+            101,
+            100,
+            101,
+            116,
+            100,
+            116
+          ],
+          "diagnostics": [],
+          "layout": "6f0de5c21f5003bd9795a35d07b5e9983615e9f9ad74d391acf29de3db3ccab4:0:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [
+          20320,
+          22909,
+          32,
+          83,
+          104,
+          97,
+          112,
+          101,
+          32,
+          48
+        ],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "token": {
+          "adapter": "7",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "01000000000001000000000000000000",
+          "projection": "1",
+          "runtime": "1",
+          "session": "7",
+          "view": "301"
+        },
+        "width": 200
+      }
+    },
+    {
+      "preset": 1,
+      "drawn": {
+        "owner": "RuntimeComposition",
+        "revision": "d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3",
+        "dirty": 0,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 2,
+        "operations": 5,
+        "pointerSamples": 18,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 21,
+        "retries": 17,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 1,
+        "metricsGeneration": 1,
+        "width": 1100,
+        "height": 811,
+        "logicalWidth": 1100,
+        "logicalHeight": 811,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 0,
+        "creationMode": true,
+        "creationPreset": 1,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 1,
+          "generation": 8
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "2639800000",
+            "x": 100,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "2643600000",
+            "x": 300,
+            "y": 190,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 2,
+            "timestampNs": "2653500000",
+            "x": 300,
+            "y": 190,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 0,
+            "timestampNs": "2893400001",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 2,
+            "timestampNs": "2894800000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 0,
+            "timestampNs": "3121900001",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 2,
+            "timestampNs": "3151600000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 0,
+            "timestampNs": "3623900001",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 2,
+            "timestampNs": "3626200000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 0,
+            "timestampNs": "3688900001",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 2,
+            "timestampNs": "3691500000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "6",
+            "phase": 0,
+            "timestampNs": "3987000000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "6",
+            "phase": 2,
+            "timestampNs": "4067000000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "7",
+            "phase": 0,
+            "timestampNs": "4144300000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "7",
+            "phase": 2,
+            "timestampNs": "4148800000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "8",
+            "phase": 0,
+            "timestampNs": "4390200000",
+            "x": 420,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "8",
+            "phase": 1,
+            "timestampNs": "4391600000",
+            "x": 620,
+            "y": 190,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "8",
+            "phase": 2,
+            "timestampNs": "4405900001",
+            "x": 620,
+            "y": 190,
+            "pressure": 0,
+            "history": false
+          }
+        ]
+      },
+      "result": "PASS",
+      "edit": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            420,
+            100,
+            421,
+            100,
+            421,
+            120,
+            420,
+            120
+          ],
+          "diagnostics": [],
+          "layout": "7c2bc4592e82cc6b2f27d7ed718d110e59a44aa4bd208d0d5c0b0f8bde93c5a8:0:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "token": {
+          "adapter": "10",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "02000000000001000000000000000000",
+          "projection": "1",
+          "runtime": "1",
+          "session": "10",
+          "view": "301"
+        },
+        "width": 200
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 1,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "dblclick",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 1,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "dblclick",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 200,
+          "y": 202
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 420,
+          "y": 157
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 620,
+          "y": 247
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 1,
+          "x": 620,
+          "y": 247
+        },
+        {
+          "type": "click",
+          "target": "textTool",
+          "detail": 0,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 1,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "dblclick",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 520,
+          "y": 202
+        }
+      ],
+      "target": {
+        "id": "axiom-canvas",
+        "active": "axiom-ime"
+      },
+      "typed": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            515.0899658203125,
+            100,
+            516.0899658203125,
+            100,
+            516.0899658203125,
+            116,
+            515.0899658203125,
+            116
+          ],
+          "diagnostics": [],
+          "layout": "d97b8dd165656cdd76629976b611bd95714f05caf0ff5a561dce95846e2c257e:10:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [
+          20320,
+          22909,
+          32,
+          83,
+          104,
+          97,
+          112,
+          101,
+          32,
+          49
+        ],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          10,
+          0
+        ],
+        "sequence": "2",
+        "token": {
+          "adapter": "10",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "02000000000001000000000000000000",
+          "projection": "2",
+          "runtime": "1",
+          "session": "10",
+          "view": "301"
+        },
+        "width": 200
+      },
+      "undone": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            420,
+            100,
+            421,
+            100,
+            421,
+            120,
+            420,
+            120
+          ],
+          "diagnostics": [],
+          "layout": "7c2bc4592e82cc6b2f27d7ed718d110e59a44aa4bd208d0d5c0b0f8bde93c5a8:0:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "token": {
+          "adapter": "13",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "02000000000001000000000000000000",
+          "projection": "1",
+          "runtime": "1",
+          "session": "13",
+          "view": "301"
+        },
+        "width": 200
+      },
+      "redone": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            420,
+            100,
+            421,
+            100,
+            421,
+            116,
+            420,
+            116
+          ],
+          "diagnostics": [],
+          "layout": "d97b8dd165656cdd76629976b611bd95714f05caf0ff5a561dce95846e2c257e:0:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [
+          20320,
+          22909,
+          32,
+          83,
+          104,
+          97,
+          112,
+          101,
+          32,
+          49
+        ],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "token": {
+          "adapter": "14",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "02000000000001000000000000000000",
+          "projection": "1",
+          "runtime": "1",
+          "session": "14",
+          "view": "301"
+        },
+        "width": 200
+      }
+    },
+    {
+      "preset": 2,
+      "drawn": {
+        "owner": "RuntimeComposition",
+        "revision": "d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3",
+        "dirty": 0,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 3,
+        "operations": 9,
+        "pointerSamples": 33,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 38,
+        "retries": 29,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 1,
+        "metricsGeneration": 1,
+        "width": 1100,
+        "height": 811,
+        "logicalWidth": 1100,
+        "logicalHeight": 811,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 0,
+        "creationMode": true,
+        "creationPreset": 2,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 1,
+          "generation": 15
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "2639800000",
+            "x": 100,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "2643600000",
+            "x": 300,
+            "y": 190,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 2,
+            "timestampNs": "2653500000",
+            "x": 300,
+            "y": 190,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 0,
+            "timestampNs": "2893400001",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 2,
+            "timestampNs": "2894800000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 0,
+            "timestampNs": "3121900001",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 2,
+            "timestampNs": "3151600000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 0,
+            "timestampNs": "3623900001",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 2,
+            "timestampNs": "3626200000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 0,
+            "timestampNs": "3688900001",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 2,
+            "timestampNs": "3691500000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "6",
+            "phase": 0,
+            "timestampNs": "3987000000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "6",
+            "phase": 2,
+            "timestampNs": "4067000000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "7",
+            "phase": 0,
+            "timestampNs": "4144300000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "7",
+            "phase": 2,
+            "timestampNs": "4148800000",
+            "x": 200,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "8",
+            "phase": 0,
+            "timestampNs": "4390200000",
+            "x": 420,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "8",
+            "phase": 1,
+            "timestampNs": "4391600000",
+            "x": 620,
+            "y": 190,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "8",
+            "phase": 2,
+            "timestampNs": "4405900001",
+            "x": 620,
+            "y": 190,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "9",
+            "phase": 0,
+            "timestampNs": "4757800000",
+            "x": 520,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "9",
+            "phase": 2,
+            "timestampNs": "4772300000",
+            "x": 520,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "10",
+            "phase": 0,
+            "timestampNs": "4843200000",
+            "x": 520,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "10",
+            "phase": 2,
+            "timestampNs": "4846600000",
+            "x": 520,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "11",
+            "phase": 0,
+            "timestampNs": "5226500000",
+            "x": 520,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "11",
+            "phase": 2,
+            "timestampNs": "5228900001",
+            "x": 520,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "12",
+            "phase": 0,
+            "timestampNs": "5293500000",
+            "x": 520,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "12",
+            "phase": 2,
+            "timestampNs": "5297200000",
+            "x": 520,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "13",
+            "phase": 0,
+            "timestampNs": "5589700000",
+            "x": 520,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "13",
+            "phase": 2,
+            "timestampNs": "5655600000",
+            "x": 520,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "14",
+            "phase": 0,
+            "timestampNs": "5725300000",
+            "x": 520,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "14",
+            "phase": 2,
+            "timestampNs": "5730200000",
+            "x": 520,
+            "y": 145,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "15",
+            "phase": 0,
+            "timestampNs": "5975200000",
+            "x": 100,
+            "y": 300,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "15",
+            "phase": 1,
+            "timestampNs": "5977800000",
+            "x": 300,
+            "y": 390,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "15",
+            "phase": 2,
+            "timestampNs": "5988700000",
+            "x": 300,
+            "y": 390,
+            "pressure": 0,
+            "history": false
+          }
+        ]
+      },
+      "result": "PASS",
+      "edit": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            100,
+            300,
+            101,
+            300,
+            101,
+            320,
+            100,
+            320
+          ],
+          "diagnostics": [],
+          "layout": "773595967fca08c390385c13034a16b0e7b7699ac09dea9d015d2725f6350e0d:0:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "token": {
+          "adapter": "17",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "03000000000001000000000000000000",
+          "projection": "1",
+          "runtime": "1",
+          "session": "17",
+          "view": "301"
+        },
+        "width": 200
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 1,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "dblclick",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 1,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "dblclick",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 520,
+          "y": 202
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 100,
+          "y": 357
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 300,
+          "y": 447
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 1,
+          "x": 300,
+          "y": 447
+        },
+        {
+          "type": "click",
+          "target": "textTool",
+          "detail": 0,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 402
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 402
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 1,
+          "x": 200,
+          "y": 402
+        },
+        {
+          "type": "pointerdown",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 402
+        },
+        {
+          "type": "pointerup",
+          "target": "axiom-canvas",
+          "detail": 0,
+          "x": 200,
+          "y": 402
+        },
+        {
+          "type": "click",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 200,
+          "y": 402
+        },
+        {
+          "type": "dblclick",
+          "target": "axiom-canvas",
+          "detail": 2,
+          "x": 200,
+          "y": 402
+        }
+      ],
+      "target": {
+        "id": "axiom-canvas",
+        "active": "axiom-ime"
+      },
+      "typed": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            195.08999633789062,
+            300,
+            196.08999633789062,
+            300,
+            196.08999633789062,
+            316,
+            195.08999633789062,
+            316
+          ],
+          "diagnostics": [],
+          "layout": "d2e8659f421b0429ba48175cf70743a3626bebf0959f49935e6162318a0fc4af:10:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [
+          20320,
+          22909,
+          32,
+          83,
+          104,
+          97,
+          112,
+          101,
+          32,
+          50
+        ],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          10,
+          0
+        ],
+        "sequence": "2",
+        "token": {
+          "adapter": "17",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "03000000000001000000000000000000",
+          "projection": "2",
+          "runtime": "1",
+          "session": "17",
+          "view": "301"
+        },
+        "width": 200
+      },
+      "undone": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            100,
+            300,
+            101,
+            300,
+            101,
+            320,
+            100,
+            320
+          ],
+          "diagnostics": [],
+          "layout": "773595967fca08c390385c13034a16b0e7b7699ac09dea9d015d2725f6350e0d:0:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "token": {
+          "adapter": "20",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "03000000000001000000000000000000",
+          "projection": "1",
+          "runtime": "1",
+          "session": "20",
+          "view": "301"
+        },
+        "width": 200
+      },
+      "redone": {
+        "composition": "0",
+        "effect": "0",
+        "exit": 2,
+        "geometry": {
+          "available": true,
+          "camera": "1",
+          "caret": [
+            100,
+            300,
+            101,
+            300,
+            101,
+            316,
+            100,
+            316
+          ],
+          "diagnostics": [],
+          "layout": "d2e8659f421b0429ba48175cf70743a3626bebf0959f49935e6162318a0fc4af:0:0"
+        },
+        "phase": 1,
+        "preedit": [],
+        "projection": [
+          20320,
+          22909,
+          32,
+          83,
+          104,
+          97,
+          112,
+          101,
+          32,
+          50
+        ],
+        "replacement": [
+          0,
+          0
+        ],
+        "selection": [
+          0,
+          0
+        ],
+        "sequence": "1",
+        "token": {
+          "adapter": "21",
+          "attachment": "1",
+          "document": "01000000000000000000000000000000",
+          "object": "03000000000001000000000000000000",
+          "projection": "1",
+          "runtime": "1",
+          "session": "21",
+          "view": "301"
+        },
+        "width": 200
+      }
+    }
+  ],
+  "initial": {
+    "owner": "RuntimeComposition",
+    "revision": "d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3",
+    "dirty": 0,
+    "debugUiEnabled": true,
+    "state": 2,
+    "objects": 0,
+    "operations": 0,
+    "pointerSamples": 0,
+    "rejectedInputs": 0,
+    "activePointers": 0,
+    "presentedFrames": 1,
+    "retries": 0,
+    "pendingFrame": false,
+    "previewActive": false,
+    "surfaceGeneration": 1,
+    "metricsGeneration": 1,
+    "width": 1100,
+    "height": 811,
+    "logicalWidth": 1100,
+    "logicalHeight": 811,
+    "dpr": 1,
+    "controlState": 9,
+    "tool": 0,
+    "creationMode": false,
+    "creationPreset": 0,
+    "size": 16,
+    "opacity": 1,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "lastPointer": {
+      "source": 0,
+      "pointer": 0,
+      "generation": 0
+    },
+    "error": "",
+    "failure": "",
+    "trace": []
+  },
+  "inkDoubleClick": "PASS",
+  "final": {
+    "owner": "RuntimeComposition",
+    "revision": "d2c9d79f056ee0d9321dbcb860bc60fcb1bf8fb3",
+    "dirty": 0,
+    "debugUiEnabled": true,
+    "state": 2,
+    "objects": 5,
+    "operations": 14,
+    "pointerSamples": 49,
+    "rejectedInputs": 0,
+    "activePointers": 0,
+    "presentedFrames": 55,
+    "retries": 48,
+    "pendingFrame": false,
+    "previewActive": false,
+    "surfaceGeneration": 1,
+    "metricsGeneration": 1,
+    "width": 1100,
+    "height": 811,
+    "logicalWidth": 1100,
+    "logicalHeight": 811,
+    "dpr": 1,
+    "controlState": 1,
+    "tool": 0,
+    "creationMode": false,
+    "creationPreset": 2,
+    "size": 16,
+    "opacity": 1,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "lastPointer": {
+      "source": 1,
+      "pointer": 1,
+      "generation": 23
+    },
+    "error": "",
+    "failure": "",
+    "trace": [
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "1",
+        "phase": 0,
+        "timestampNs": "2639800000",
+        "x": 100,
+        "y": 100,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "1",
+        "phase": 1,
+        "timestampNs": "2643600000",
+        "x": 300,
+        "y": 190,
+        "pressure": 0,
+        "history": true
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "1",
+        "phase": 2,
+        "timestampNs": "2653500000",
+        "x": 300,
+        "y": 190,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "2",
+        "phase": 0,
+        "timestampNs": "2893400001",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "2",
+        "phase": 2,
+        "timestampNs": "2894800000",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "3",
+        "phase": 0,
+        "timestampNs": "3121900001",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "3",
+        "phase": 2,
+        "timestampNs": "3151600000",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "4",
+        "phase": 0,
+        "timestampNs": "3623900001",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "4",
+        "phase": 2,
+        "timestampNs": "3626200000",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "5",
+        "phase": 0,
+        "timestampNs": "3688900001",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "5",
+        "phase": 2,
+        "timestampNs": "3691500000",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "6",
+        "phase": 0,
+        "timestampNs": "3987000000",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "6",
+        "phase": 2,
+        "timestampNs": "4067000000",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "7",
+        "phase": 0,
+        "timestampNs": "4144300000",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "7",
+        "phase": 2,
+        "timestampNs": "4148800000",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "8",
+        "phase": 0,
+        "timestampNs": "4390200000",
+        "x": 420,
+        "y": 100,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "8",
+        "phase": 1,
+        "timestampNs": "4391600000",
+        "x": 620,
+        "y": 190,
+        "pressure": 0,
+        "history": true
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "8",
+        "phase": 2,
+        "timestampNs": "4405900001",
+        "x": 620,
+        "y": 190,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "9",
+        "phase": 0,
+        "timestampNs": "4757800000",
+        "x": 520,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "9",
+        "phase": 2,
+        "timestampNs": "4772300000",
+        "x": 520,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "10",
+        "phase": 0,
+        "timestampNs": "4843200000",
+        "x": 520,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "10",
+        "phase": 2,
+        "timestampNs": "4846600000",
+        "x": 520,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "11",
+        "phase": 0,
+        "timestampNs": "5226500000",
+        "x": 520,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "11",
+        "phase": 2,
+        "timestampNs": "5228900001",
+        "x": 520,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "12",
+        "phase": 0,
+        "timestampNs": "5293500000",
+        "x": 520,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "12",
+        "phase": 2,
+        "timestampNs": "5297200000",
+        "x": 520,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "13",
+        "phase": 0,
+        "timestampNs": "5589700000",
+        "x": 520,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "13",
+        "phase": 2,
+        "timestampNs": "5655600000",
+        "x": 520,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "14",
+        "phase": 0,
+        "timestampNs": "5725300000",
+        "x": 520,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "14",
+        "phase": 2,
+        "timestampNs": "5730200000",
+        "x": 520,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "15",
+        "phase": 0,
+        "timestampNs": "5975200000",
+        "x": 100,
+        "y": 300,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "15",
+        "phase": 1,
+        "timestampNs": "5977800000",
+        "x": 300,
+        "y": 390,
+        "pressure": 0,
+        "history": true
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "15",
+        "phase": 2,
+        "timestampNs": "5988700000",
+        "x": 300,
+        "y": 390,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "16",
+        "phase": 0,
+        "timestampNs": "6311400001",
+        "x": 200,
+        "y": 345,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "16",
+        "phase": 2,
+        "timestampNs": "6312400001",
+        "x": 200,
+        "y": 345,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "17",
+        "phase": 0,
+        "timestampNs": "6385800000",
+        "x": 200,
+        "y": 345,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "17",
+        "phase": 2,
+        "timestampNs": "6388000000",
+        "x": 200,
+        "y": 345,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "18",
+        "phase": 0,
+        "timestampNs": "6749500000",
+        "x": 200,
+        "y": 345,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "18",
+        "phase": 2,
+        "timestampNs": "6753900001",
+        "x": 200,
+        "y": 345,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "19",
+        "phase": 0,
+        "timestampNs": "6816500000",
+        "x": 200,
+        "y": 345,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "19",
+        "phase": 2,
+        "timestampNs": "6819000000",
+        "x": 200,
+        "y": 345,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "20",
+        "phase": 0,
+        "timestampNs": "7124800000",
+        "x": 200,
+        "y": 345,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "20",
+        "phase": 2,
+        "timestampNs": "7155700000",
+        "x": 200,
+        "y": 345,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "21",
+        "phase": 0,
+        "timestampNs": "7223400001",
+        "x": 200,
+        "y": 345,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "21",
+        "phase": 2,
+        "timestampNs": "7228500000",
+        "x": 200,
+        "y": 345,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "22",
+        "phase": 0,
+        "timestampNs": "7625900001",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "22",
+        "phase": 2,
+        "timestampNs": "7631300000",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "23",
+        "phase": 0,
+        "timestampNs": "7698700000",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      },
+      {
+        "kind": "pointer",
+        "source": 1,
+        "pointer": 1,
+        "generation": "23",
+        "phase": 2,
+        "timestampNs": "7711800000",
+        "x": 200,
+        "y": 145,
+        "pressure": 0,
+        "history": false
+      }
+    ]
+  },
+  "result": "PASS",
+  "errors": []
+}
