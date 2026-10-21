@@ -39,7 +39,7 @@
     "Evidence text copies normalize line endings and trailing whitespace; raw out logs retained"
   ],
   "original_failure": "FAIL retained in user-report.json",
-  "new_build_manual": "PHYSICAL_PENDING",
+  "new_build_manual": "THREE_REENTRY_CHECKS_PASS_OTHER_ITEMS_PHYSICAL_PENDING",
   "limitations": [
     "No computer use",
     "No physical native IME/candidate/touch acceptance this round",
@@ -61,5 +61,6 @@
   ],
   "test_oracle_revision_note": "The measured elapsed-time screenshot bound is an evidence/test-only follow-up in the materialized revision; Web product remains exact result_revision above.",
   "build_facts": "build-facts",
-  "sdk_status_capture": "Merged stdout/stderr stored under build-facts; each offline command exited zero and reports Network: not used"
+  "sdk_status_capture": "Merged stdout/stderr stored under build-facts; each offline command exited zero and reports Network: not used",
+  "human_retest": "human-retest.json"
 }

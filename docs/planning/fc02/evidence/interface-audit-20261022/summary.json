@@ -1,0 +1,98 @@
+{
+  "recorded_local_date": "2026-10-22",
+  "status": "SELF_AUDIT_IMPLEMENTATION_GAPS_REPRODUCED",
+  "scope": "FC02 public Runtime consumer completeness, existing Host boundaries and Windows/Web parity; no production mutation",
+  "source_head": "ae6653bdfae6cecf6fe6909806dede73886bdb4c",
+  "web_product_revision": "f0ccfd3ae981a3c1fce6caebb47fb95e0bb84e45",
+  "web_dirty": 0,
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/fc02-windows-ime-resume",
+  "findings": [
+    {
+      "id": "A1",
+      "kind": "IMPLEMENTATION",
+      "state": "REPRODUCED",
+      "issue": "MinimalRuntimeFacade omits font catalog and resource-status overrides",
+      "evidence": "native-result.json"
+    },
+    {
+      "id": "A2",
+      "kind": "IMPLEMENTATION",
+      "state": "REPRODUCED",
+      "issue": "Web typed formatting intent and readback missing from JS/WASM consumer",
+      "evidence": "web-result.json"
+    },
+    {
+      "id": "A3",
+      "kind": "IMPLEMENTATION",
+      "state": "REPRODUCED",
+      "issue": "Web IME preedit caret selection dropped at bridge; Windows/common Runtime support it",
+      "evidence": [
+        "web-result.json",
+        "native-result.json"
+      ]
+    },
+    {
+      "id": "A4",
+      "kind": "IMPLEMENTATION",
+      "state": "REPRODUCED",
+      "issue": "Web converts invalid zero width to default while Runtime rejects it",
+      "evidence": [
+        "web-result.json",
+        "native-result.json"
+      ]
+    },
+    {
+      "id": "C1",
+      "kind": "NON_BLOCKING_HEADER_CLEANUP",
+      "state": "SOURCE_CONFIRMED_NO_RUNTIME_FAILURE_PROVEN",
+      "issue": "Host headers include concrete facade; Composition publicly exports semantic/src"
+    }
+  ],
+  "human_pass": "../web-label-reentry-20261022/human-retest.json",
+  "manual_remaining": [
+    "Native composition caret/candidate windows and result/cancel sequences",
+    "Tool/focus/controlled-close failure with native composition",
+    "Touch creation/selection and Debug UI isolation",
+    "DPI/multiple displays/resize/minimize/restore"
+  ],
+  "protected_scope": [
+    "Shared Semantic text/history and TextLayout ownership retained",
+    "No new registry/module/ABI",
+    "No code or SDK/Authority/Golden/historical Gate/PHYS modification"
+  ],
+  "prior_regression_results": {
+    "source": "../web-label-reentry-20261022/summary.json",
+    "ctest": 233,
+    "python": 17,
+    "browser_reentry": 6,
+    "browser_text": 7,
+    "browser_minimal": 13,
+    "note": "Prior verified runs retained; not rerun or relabelled as new audit coverage"
+  },
+  "limitations": [
+    "Source review and synthetic probes are not independent Control Review or physical IME qualification",
+    "No exhaustive cross-platform equivalence claim",
+    "Earlier review reports and FAIL retained"
+  ],
+  "harness_notes": [
+    "Temporary native probe invocation issues (MSVC /TP library parsing, Python locale log decoding) fixed in the probe runner, not in production",
+    "Initial temporary native probe omitted ICU data; no geometry conclusion taken from that run; final native result uses the locked ICU asset"
+  ],
+  "report": "README.md",
+  "independent_review_or_gate_claim": false,
+  "fresh_validation": {
+    "native_runner": "EXIT_0; expected gap reproduced plus three underlying Runtime positive/rejection controls",
+    "native_checks": "native-checks.json",
+    "browser_probe": "EXPECTED_GAPS_REPRODUCED",
+    "browser": "Chrome/155.0.8059.84",
+    "browser_exceptions": 0,
+    "expected_gap_result_is_not_product_pass": true
+  },
+  "web_artifacts": "../web-label-reentry-20261022/artifacts.json",
+  "native_probe_artifact": {
+    "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\interface-audit\\probe-native.exe",
+    "sha256": "1dafd1a07066d5eb3d6d3cda38f51d79ec085fd0e86c8ed9b3fe7dfee158dff1",
+    "purpose": "diagnostic executable only; not user Minimal Host"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "recorded_local_date": "2026-10-22",
+  "source": "Direct human reply in this conversation",
+  "reply": "这三项都通过了",
+  "product_revision": "f0ccfd3ae981a3c1fce6caebb47fb95e0bb84e45",
+  "url": "http://127.0.0.1:4174/index.html?rev=f0ccfd3a",
+  "scenario": "Select tool, triangle, Chinese input method selected, numeric text; Enter then reenter",
+  "checks": [
+    {
+      "name": "Nearest-glyph reentry and blinking caret",
+      "result": "PASS"
+    },
+    {
+      "name": "Inside click repositions caret without finishing",
+      "result": "PASS"
+    },
+    {
+      "name": "Outside click finishes and preserves text",
+      "result": "PASS"
+    }
+  ],
+  "scope": "User-observed scenario only; not all shape/DPR/native-IME scenarios or overall FC02 acceptance",
+  "historical_failure": "user-report.json remains FAIL; this new observation closes those specific symptoms on the new product revision"
+}

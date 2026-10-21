@@ -4,8 +4,10 @@
     {
       "name": "Select / triangle / Chinese IME digits / reentry",
       "expected": "Enter then double-click nearest glyph; caret blinks, inside click repositions, outside click finishes and preserves text",
-      "actual": "Not observed yet on f0ccfd3a",
-      "result": "PHYSICAL_PENDING"
+      "actual": "User confirmed all three checks passed on f0ccfd3a; scope: Select / triangle / numeric text",
+      "result": "PASS",
+      "previous_result": "PHYSICAL_PENDING",
+      "observation": "human-retest.json"
     },
     {
       "name": "Native IME preedit and candidates",
