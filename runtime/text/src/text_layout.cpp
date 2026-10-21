@@ -343,19 +343,24 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolve(
     if(!std::isfinite(context.width) || context.width<=0) out->diagnostics.push_back("invalid-layout-context");
     else {
         float y=0; bool have=false;
+        std::size_t remainingLines = context.maxLines;
         for(const auto& p:content.document.paragraphs) {
+            if (context.maxLines && remainingLines == 0) { out->overflow = true; break; }
+            auto paragraphContext = context;
+            if (context.maxLines) paragraphContext.maxLines = remainingLines;
             Encoding paragraphKey; encodeParagraph(paragraphKey,p); state.dependencies(paragraphKey,p);
             paragraphKey.number<std::uint8_t>(content.layout.has_value());
             paragraphKey.number(context.width); paragraphKey.number(context.revision);
-            paragraphKey.number(context.height); paragraphKey.number<std::uint64_t>(context.maxLines);
+            paragraphKey.number(context.height); paragraphKey.number<std::uint64_t>(paragraphContext.maxLines);
             const auto hash=paragraphKey.digest(); auto& cached=state.paragraphs[{id,p.id}];
             if(cached.key!=hash || !cached.snapshot) {
-                cached={hash,state.layoutParagraph(p,context,content.layout.has_value())}; ++state.counters.paragraphLayouts;
+                cached={hash,state.layoutParagraph(p,paragraphContext,content.layout.has_value())}; ++state.counters.paragraphLayouts;
 #ifdef CANVAS_TEXT_HAS_SKIA
                 state.shaped[{id,p.id}]=state.lastShaped;
 #endif
             } else ++state.counters.paragraphCacheHits;
             const auto& fragment=*cached.snapshot;
+            if (context.maxLines) remainingLines -= std::min(remainingLines, fragment.lines.size());
             out->overflow = out->overflow || fragment.overflow;
             y+=static_cast<float>(p.style.spacing_before);
             const auto fontOffset=out->fonts.size(); out->fonts.insert(out->fonts.end(),fragment.fonts.begin(),fragment.fonts.end());
@@ -394,6 +399,27 @@ float basisX(const semantic::Transform2D& transform) {
 }
 float basisY(const semantic::Transform2D& transform) {
     return std::max(0.001F, std::hypot(static_cast<float>(transform.c), static_cast<float>(transform.d)));
+}
+// Use the same inscribed region for wrapping, paint and input geometry.
+// The triangle's lower half provides room around its visual center.
+foundation::WorldRect shapeLabelViewport(unsigned kind, float width, float height) {
+    constexpr float padding = 8.0F;
+    if (kind == 2U) {
+        constexpr float diagonal = 0.70710678F;
+        const float halfWidth = std::max(0.0F, width * 0.5F - padding) * diagonal;
+        const float halfHeight = std::max(0.0F, height * 0.5F - padding) * diagonal;
+        return {width * 0.5F - halfWidth, height * 0.5F - halfHeight,
+                width * 0.5F + halfWidth, height * 0.5F + halfHeight};
+    }
+    if (kind == 3U) {
+        const float halfWidth = std::max(0.0F, width * 0.25F - padding);
+        const float halfHeight = std::max(0.0F, height * 0.25F - padding);
+        return {width * 0.5F - halfWidth, height * 0.75F - halfHeight,
+                width * 0.5F + halfWidth, height * 0.75F + halfHeight};
+    }
+    return {std::min(padding, width * 0.5F), std::min(padding, height * 0.5F),
+            std::max(width - padding, width * 0.5F),
+            std::max(height - padding, height * 0.5F)};
 }
 void offsetSnapshot(TextLayoutSnapshot& snapshot, float x, float y) {
     snapshot.localBounds.left += x; snapshot.localBounds.right += x;
@@ -439,8 +465,9 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShapeLab
         paragraph.runs = {{"Type text...", style}};
         display.document.paragraphs = {std::move(paragraph)};
     }
-    const float viewportWidth = std::max(1.0F, width - 2 * padding);
-    const float viewportHeight = std::max(1.0F, height - 2 * padding);
+    const auto viewport = shapeLabelViewport(shape.shape_kind, width, height);
+    const float viewportWidth = std::max(1.0F, viewport.right - viewport.left);
+    const float viewportHeight = std::max(1.0F, viewport.bottom - viewport.top);
     display.layout = semantic::RichTextLayout{viewportWidth};
     const auto previous = impl_->context;
     impl_->context.width = viewportWidth;
@@ -459,11 +486,11 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShapeLab
     result->placeholder = placeholder;
     result->labelScaleX = 1.0F / sx;
     result->labelScaleY = 1.0F / sy;
-    result->labelViewport = {padding, padding, width - padding, height - padding};
+    result->labelViewport = viewport;
     result->expandButton = {width - 24.0F, height - 24.0F, width - padding, height - padding};
     result->overflow = result->overflow || base->localBounds.bottom > viewportHeight + 0.5F;
-    result->labelOffsetX = padding;
-    result->labelOffsetY = padding + std::max(0.0F, (viewportHeight - base->localBounds.bottom) * 0.5F);
+    result->labelOffsetX = viewport.left;
+    result->labelOffsetY = viewport.top + std::max(0.0F, (viewportHeight - base->localBounds.bottom) * 0.5F);
     offsetSnapshot(*result, result->labelOffsetX, result->labelOffsetY);
     result->digest = snapshotDigest(*result);
     return result;
@@ -484,9 +511,10 @@ EditingGeometry RichTextLayoutService::shapeEditingGeometry(
     if (!shape) return {};
     const semantic::RichTextContent empty{};
     const auto& canonical = shape->label ? *shape->label : empty;
-    constexpr float padding = 8.0F;
     const float sx = basisX(record.transform), sy = basisY(record.transform);
-    const float width = std::max(1.0F, static_cast<float>(shape->width) * sx - 2 * padding);
+    const auto viewport = shapeLabelViewport(shape->shape_kind,
+        static_cast<float>(shape->width) * sx, static_cast<float>(shape->height) * sy);
+    const float width = std::max(1.0F, viewport.right - viewport.left);
     auto display = canonical; display.layout = semantic::RichTextLayout{width};
     bool emptyLabel = true;
     for (const auto& paragraph : display.document.paragraphs)
@@ -521,7 +549,7 @@ EditingGeometry RichTextLayoutService::shapeEditingGeometry(
         const float displayHeight = static_cast<float>(shape->height) * sy;
         geometry.caret.left = static_cast<float>(shape->width) * sx * 0.5F;
         geometry.caret.right = geometry.caret.left + 1;
-        geometry.caret.top = std::max(padding, displayHeight * 0.5F - 8);
+        geometry.caret.top = std::max(viewport.top, (viewport.top + viewport.bottom) * 0.5F - 8);
         geometry.caret.bottom = geometry.caret.top + 16;
         geometry.available = !geometry.diagnostics.empty() ? false : true;
         if (originalHit && originalHit->x >= 0 && originalHit->x <= static_cast<float>(shape->width) * sx &&
@@ -545,7 +573,7 @@ EditingGeometry RichTextLayoutService::editingGeometry(foundation::ObjectId id,c
 #ifdef CANVAS_TEXT_HAS_SKIA
     if(!layout->diagnostics.empty())return out;
     std::uint64_t total=0;bool caret=false;
-    for(std::size_t i=0;i<content.document.paragraphs.size();++i){
+    for(std::size_t i=0;i<content.document.paragraphs.size() && i<layout->paragraphs.size();++i){
         const auto& source=content.document.paragraphs[i];std::string bytes;for(const auto& run:source.runs)bytes+=run.text;
         const auto utf16=SkUnicode::convertUtf8ToUtf16(bytes.data(),static_cast<int>(bytes.size()));
         const auto found=impl_->shaped.find({id,source.id});if(found==impl_->shaped.end()||!found->second)return {};

@@ -135,7 +135,8 @@ int main(int argc, char** argv) {
             assert(composition.serviceFrameOpportunity(false, frame));
             const auto geometry = state.facade->readTextGeometry();
             assert(geometry.available);
-            assert(geometry.caret[1] > y + 20 && geometry.caret[5] < y + 65);
+            const auto centerY = y + (preset == 2 ? 60 : 40);
+            assert(geometry.caret[1] > centerY - 18 && geometry.caret[5] < centerY + 18);
             std::vector<std::uint8_t> previewPixels(800 * 600 * 4);
             assert(composition.readPreviewRgba(previewPixels));
             for (int py = y + 20; py < y + 60; ++py)

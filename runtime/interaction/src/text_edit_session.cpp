@@ -764,7 +764,9 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
         failed_.reset();
         lastComposition_ = acknowledged_ = 0;
         base_ = existing;
-        typingStyle_=false;paragraphStyle_={ParagraphAlignment::kLeft,1,0,0};
+        typingStyle_ = false;
+        paragraphStyle_ = {existing && shapeLabelTarget(*existing) ? ParagraphAlignment::kCenter
+                                                                   : ParagraphAlignment::kLeft, 1, 0, 0};
         style_ = {font->resource_id, 16, 400, false, false, {0, 0, 0, 1}};
         if (existing) {
             const auto& content = *richContent(*existing);

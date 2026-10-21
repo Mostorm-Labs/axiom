@@ -116,7 +116,10 @@ TEST(FC02ShapeLabel, EmptyCaretStartsInsideAllThreeShapeCenters) {
         ASSERT_TRUE(caret.available);
         EXPECT_NEAR(caret.caret[0], 120, 2);
         EXPECT_GT(caret.caret[1], 65);
-        EXPECT_LT(caret.caret[5], 125);
+        if (kind == 3U) {
+            EXPECT_GT(caret.caret[1], 100);
+            EXPECT_LT(caret.caret[5], 142);
+        } else EXPECT_LT(caret.caret[5], 125);
         EXPECT_EQ(h.runtime.semanticObjectCount(), 1U);
         EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), 0U);
     }
@@ -147,6 +150,90 @@ TEST(FC02ShapeLabel, RealDownBeforeSecondDoubleClickDoesNotCreateOrBlockEditor) 
     EXPECT_EQ(h.facade.readTextEditor().token.object, labelShape().id);
     EXPECT_EQ(h.facade.readTextEditor().projection, u"existing label");
     EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), operations);
+}
+TEST(FC02ShapeLabel, FirstShapeLabelTextDefaultsToCenteredParagraph) {
+    Host h(true); seedShape(h, labelShape());
+    runtime::TextIntent edit;
+    edit.clientId = 15; edit.requestId = ++h.request;
+    edit.target = h.facade.mountedCanvasTargets().front();
+    edit.kind = runtime::TextIntentKind::kEditAtPoint; edit.viewX = 120; edit.viewY = 90;
+    ASSERT_EQ(h.facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace, u"AB").status,
+              runtime::TextStatus::kApplied);
+    const auto* object = h.runtime.qualificationRuntime().qualificationObjectRecord(labelShape().id);
+    ASSERT_NE(object, nullptr);
+    const auto* shape = std::get_if<semantic::ShapeContent>(&object->content);
+    ASSERT_NE(shape, nullptr); ASSERT_TRUE(shape->label.has_value());
+    ASSERT_FALSE(shape->label->document.paragraphs.empty());
+    EXPECT_EQ(shape->label->document.paragraphs.front().style.alignment,
+              semantic::ParagraphAlignment::kCenter);
+    const auto geometry = h.facade.readTextGeometry();
+    ASSERT_TRUE(geometry.available);
+    EXPECT_GT(geometry.caret[0], 120.0F);
+    EXPECT_LT(geometry.caret[0], 145.0F);
+}
+
+TEST(FC02ShapeLabel, TriangleAndEllipseUseInteriorLayoutGeometry) {
+    runtime::MemoryResourceProvider resources;
+    const semantic::ResourceId font{foundation::ObjectId::fromUint64(0xFC0202)};
+    std::ifstream file(FC02_HOST_FONT, std::ios::binary);
+    resources.publish(font.value, {std::istreambuf_iterator<char>(file), {}});
+    text::RichTextLayoutService service(resources, {300, 1});
+    service.registerFont({font, std::string(minimal_runtime_host::kHostTextFontSha256), 0});
+    semantic::TextStyle style{font, 16, 400, false, false, {0, 0, 0, 1}};
+    semantic::RichTextContent label;
+    label.document.paragraphs = {{foundation::ObjectId::fromUint64(818),
+        {semantic::ParagraphAlignment::kCenter, 1, 0, 0},
+        {{"A long label that wraps inside the shape", style}}}};
+    for (const auto kind : {2U, 3U}) {
+        auto record = labelShape(kind); auto& shape = std::get<semantic::ShapeContent>(record.content);
+        shape.width = 200; shape.height = 120; shape.label = label; record.kind_version = 3;
+        const auto layout = service.resolveShape(record.id, shape, record.transform);
+        ASSERT_FALSE(layout->runs.empty());
+        EXPECT_LT(layout->context.width, 0.8F * static_cast<float>(shape.width));
+        EXPECT_GT(layout->labelOffsetY, kind == 3U ? 0.30F * static_cast<float>(shape.height) : 0.0F);
+        // Check line corners, rather than only their centers: text clipped by
+        // the sloping boundary must wrap before it reaches that boundary.
+        for (const auto& line : layout->lines)
+            for (const auto x : {line.bounds.left, line.bounds.right})
+                for (const auto y : {line.bounds.top, line.bounds.bottom}) {
+                    if (kind == 2U) {
+                        const auto dx = (x - 100.0F) / 100.0F;
+                        const auto dy = (y - 60.0F) / 60.0F;
+                        EXPECT_LT(dx * dx + dy * dy, 1.0F);
+                    } else {
+                        EXPECT_GT(y, 60.0F);
+                        EXPECT_LT(y, 120.0F);
+                        EXPECT_LT(std::abs(x - 100.0F), y * (100.0F / 120.0F));
+                    }
+                }
+        EXPECT_EQ(*shape.label, label) << "Derived wrapping must preserve canonical content";
+        shape.label->document.paragraphs.front().runs.front().text = "AB";
+        const auto shortLabel = service.resolveShape(record.id, shape, record.transform);
+        ASSERT_EQ(shortLabel->lines.size(), 1U);
+        const auto& line = shortLabel->lines.front().bounds;
+        EXPECT_NEAR((line.left + line.right) * 0.5F, 100, 1);
+        EXPECT_NEAR((line.top + line.bottom) * 0.5F, kind == 3U ? 90 : 60, 2);
+        const auto caret = service.shapeEditingGeometry(record, 2, 0);
+        ASSERT_TRUE(caret.available);
+        EXPECT_NEAR(caret.caret.right - 1, line.right, 2);
+        EXPECT_NEAR(caret.caret.top, line.top, 2);
+        const auto hit = service.shapeEditingGeometry(record, 2, 0,
+            foundation::WorldPoint{caret.caret.left, (caret.caret.top + caret.caret.bottom) * 0.5F});
+        EXPECT_EQ(hit.hit, 2U);
+        // Multiple paragraphs share the same interior height budget.
+        auto& paragraphs = shape.label->document.paragraphs;
+        const auto first = paragraphs.front();
+        for (unsigned i = 0; i < 8; ++i) {
+            auto next = first;
+            next.id = foundation::ObjectId::fromUint64(820 + i);
+            paragraphs.push_back(next);
+        }
+        const auto multi = service.resolveShape(record.id, shape, record.transform);
+        EXPECT_TRUE(multi->overflow);
+        EXPECT_LE(multi->localBounds.bottom, multi->labelViewport.bottom + 0.1F);
+    }
 }
 TEST(FC02ShapeLabel, FixedTypographyPaddingEllipsisAndPlaceholderAreDerived) {
     runtime::MemoryResourceProvider resources;
@@ -584,9 +671,9 @@ TEST(FC02Geometry, DrawnShapeFirstLabelHasRealCaretPreeditAndCanonicalPixels) {
     std::vector<std::uint8_t> pixels(256 * 256 * 4);
     ASSERT_TRUE(h.runtime.readCanonicalRgba(pixels));
     std::size_t dark = 0;
-    // Shape labels use the padded, vertically centered viewport.
-    for (unsigned y = 40; y < 90; ++y)
-        for (unsigned x = 22; x < 70; ++x) {
+    // The first Shape paragraph is centered within its padded label viewport.
+    for (unsigned y = 35; y < 85; ++y)
+        for (unsigned x = 75; x < 165; ++x) {
             const auto i = (y * 256U + x) * 4U;
             if (pixels[i] < 100 && pixels[i + 1] < 100 && pixels[i + 2] < 100) ++dark;
         }
