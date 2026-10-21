@@ -1,7 +1,16 @@
 {
-  "clang_cl_available": false,
-  "native_strict_compiler": "MSVC 19.51.36231 with /W4 /WX",
-  "web_strict_compiler": "Emscripten 6.0.6 with -Wall -Wextra -Wpedantic -Werror",
-  "scoped_native_clang_syntax_check": "not run: no native clang-cl compiler is installed on this machine",
-  "note": "The Emscripten Clang tool is configured for wasm32 and was not represented as a native Clang check."
+  "clang_cl_driver_available": false,
+  "native_clang_syntax_check": "PASS",
+  "compiler": "Emscripten-bundled LLVM Clang 24.0.0git clang.exe",
+  "target": "x86_64-pc-windows-msvc",
+  "standard": "C++20",
+  "warnings": [
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror"
+  ],
+  "source": "apps/minimal_runtime_host/minimal_runtime_facade.cpp",
+  "mode": "-fsyntax-only",
+  "note": "Compiled for native Windows/MSVC target with VS 2026 and locked Semantic SDK headers; this was not a wasm-target compile."
 }

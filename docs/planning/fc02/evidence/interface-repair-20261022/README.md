@@ -17,7 +17,7 @@ Base: `d54029d91aa8e67c9314b05992e749848629c64f` on `codex/fc02-windows-ime-resu
 - Isolated Web build using Emscripten 6.0.6, locked Semantic web SDK and locked Skia release package completed with `-Werror`.
 - New ordinary Web JS/WASM consumer scenarios: 5/5 passed in Chrome 155. Existing Web text: 7/7; Minimal host: 13/13; Shape/DPR reentry: 6/6 passed. These are synthetic browser tests, not physical IME qualification.
 - Compile database inspection: ordinary host/application translation units have no `runtime/semantic/src` include path and no `AXIOM_RUNTIME_QUALIFICATION` definition.
-- A native `clang-cl` executable is not installed here, so the separate native Clang syntax check remains unrun. MSVC `/WX` and Web `-Werror` checks passed.
+- Native Windows syntax was checked with LLVM Clang 24.0.0git targeting `x86_64-pc-windows-msvc`, using VS 2026 headers and `-Wall -Wextra -Wpedantic -Werror`; it passed. The `clang-cl` driver itself is absent, so the bundled LLVM `clang.exe` was invoked directly with a native MSVC target.
 - Existing Windows host PID 262440 remained running from its original executable; it was not replaced. Manual native IME, touch and DPI checks remain `PHYSICAL_PENDING`.
 
 Raw build/test outputs and artifact hashes are in this directory; machine-local result binaries are under `out/fc02-resume`.

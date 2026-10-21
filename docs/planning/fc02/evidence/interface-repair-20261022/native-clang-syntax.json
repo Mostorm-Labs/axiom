@@ -1,0 +1,16 @@
+{
+  "compiler": "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\.deps\\emsdk\\upstream\\bin\\clang.exe",
+  "compilerVersion": "clang version 24.0.0git (LLVM Emscripten toolchain)",
+  "target": "x86_64-pc-windows-msvc",
+  "source": "apps/minimal_runtime_host/minimal_runtime_facade.cpp",
+  "mode": "-fsyntax-only",
+  "warnings": [
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror"
+  ],
+  "standard": "C++20",
+  "result": "PASS",
+  "notes": "Native Windows/MSVC target using VS 2026 and locked Semantic SDK headers; Emscripten-bundled Clang driver, no wasm target."
+}
