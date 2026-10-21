@@ -12,6 +12,24 @@ namespace {
 using namespace runtime;
 using namespace semantic;
 constexpr std::size_t limit = 65536;
+bool validFormat(const TextFormatPatch& patch, const ResourceManifest* manifest) {
+    if(patch.fontSize && (!std::isfinite(*patch.fontSize) || *patch.fontSize<=0 || *patch.fontSize>65536))return false;
+    if(patch.color)for(const auto c:*patch.color)if(!std::isfinite(c) || c<0 || c>1)return false;
+    if(patch.alignment && (*patch.alignment<1 || *patch.alignment>3))return false;
+    if(patch.font) {
+        if(!manifest || std::none_of(manifest->entries.begin(),manifest->entries.end(),[&](const auto& e){return e.resource_kind==ResourceKind::kFont && e.resource_id.value==*patch.font;}))return false;
+    }
+    return true;
+}
+void applyFormat(TextStyle& style, const TextFormatPatch& patch) {
+        if(patch.color){const auto& c=*patch.color;style.color={c[0],c[1],c[2],c[3]};}
+        if(patch.fontSize)style.font_size=*patch.fontSize;
+        if(patch.font)style.font_resource_id=ResourceId{*patch.font};
+        if(patch.bold)style.weight=*patch.bold?700:400;
+        if(patch.italic)style.italic=*patch.italic;
+        if(patch.underline)style.underline=*patch.underline;
+        if(patch.strikethrough)style.strikethrough=*patch.strikethrough;
+}
 struct Applying final {
     bool& flag;
     explicit Applying(bool& value) : flag(value) {
@@ -307,6 +325,33 @@ runtime::TextEditorSnapshot TextEditSession::read() {
         }
     }
 
+    const auto formatTarget = state_.phase == TextPhase::kClosed ? owner_.textSelectedObject() :
+        !state_.selection.length ? state_.token.object : ObjectId{};
+    if (const auto* record = owner_.textRecord(formatTarget);
+        record && shapeLabelTarget(*record) && !state_.composition) {
+        out.formatObject = formatTarget;
+        if (const auto* label = richContent(*record); label && !label->document.paragraphs.empty()) {
+            const auto& first = label->document.paragraphs.front();
+            if (!first.runs.empty()) {
+                const auto& style = first.runs.front().style;
+                out.format.font = style.font_resource_id ? std::optional<ObjectId>{style.font_resource_id->value} : std::nullopt;
+                out.format.fontSize = style.font_size;
+                out.format.color = std::array<float, 4>{style.color.r, style.color.g, style.color.b, style.color.a};
+            }
+            out.format.alignment = static_cast<std::uint32_t>(first.style.alignment);
+            bool bold=false, italic=false, underline=false, strike=false, bullet=false;
+            for (const auto& p : label->document.paragraphs) {
+                bullet = bullet || p.style.bulleted;
+                for (const auto& r : p.runs) {
+                    bold = bold || r.style.weight >= 700; italic = italic || r.style.italic;
+                    underline = underline || r.style.underline; strike = strike || r.style.strikethrough;
+                }
+            }
+            out.format.bold=bold; out.format.italic=italic; out.format.underline=underline;
+            out.format.strikethrough=strike; out.format.bulleted=bullet;
+        }
+    }
+
     if(const auto* manifest=owner_.textManifest())for(const auto& f:manifest->entries) {
         if(f.resource_kind!=ResourceKind::kFont)continue;
         std::string name=owner_.textFontName(f.resource_id.value);
@@ -351,37 +396,36 @@ runtime::TextStatus TextEditSession::finish(bool keepEditor) {
     if(!keepEditor)end();
     return TextStatus::kApplied;
 }
-runtime::TextStatus TextEditSession::applyDelta(RichTextDelta delta) {
-    if (state_.token.projection == std::numeric_limits<std::uint64_t>::max() || !base_ ||
-        !owner_.textWritable(base_->id))
+runtime::TextStatus TextEditSession::applyObjectDelta(const ObjectRecord& base, RichTextDelta delta) {
+    if (!owner_.textReady() || !owner_.textWritable(base.id))
         return TextStatus::kRejected;
-    bool v3=base_->kind_version==3;
+    bool v3=base.kind_version==3;
     for(const auto& step:delta.steps)if(const auto* restore=std::get_if<RestoreRichTextStateStep>(&step))v3=v3 || restore->state.kind_version==3;
     delta.delta_version = v3?3:2;
     const auto deltaVersion=delta.delta_version;
-    delta.expected_state_digest = richTextStateDigest(owner_.textDocument(), *base_);
+    delta.expected_state_digest = richTextStateDigest(owner_.textDocument(), base);
     const Operation forward{owner_.allocateTextOperation(),
                             owner_.textDocument(),
                             1,
                             1,
-                            EditRichTextOp{base_->id, std::move(delta)}};
+                            EditRichTextOp{base.id, std::move(delta)}};
     const auto prepared = owner_.prepareTextOperation(forward);
     if (prepared.disposition != PrepareDisposition::kPrepared || !prepared.plan ||
         prepared.plan->replacements.size() != 1)
         return TextStatus::kRejected;
     const auto& post = prepared.plan->replacements.front();
-    const auto* beforeContent = richContent(*base_);
+    const auto* beforeContent = richContent(base);
     if (beforeContent == nullptr) return TextStatus::kRejected;
-    RichTextState before{base_->kind_version, *beforeContent};
+    RichTextState before{base.kind_version, *beforeContent};
     // An empty legacy Shape state denotes absence of the embedded label.
     // Triangle /2 still uses the existing fixed-width state wire contract.
-    if (shapeLabelTarget(*base_) && base_->kind_version == 2U)
-        before.content.layout = RichTextLayout{std::get<ShapeContent>(base_->content).width};
+    if (shapeLabelTarget(base) && base.kind_version == 2U)
+        before.content.layout = RichTextLayout{std::get<ShapeContent>(base.content).width};
     const Operation inverse{owner_.allocateTextOperation(),
                             owner_.textDocument(),
                             1,
                             1,
-                            EditRichTextOp{base_->id,
+                            EditRichTextOp{base.id,
                                            {deltaVersion,
                                             {RestoreRichTextStateStep{before}},
                                             richTextStateDigest(owner_.textDocument(), post)}}};
@@ -393,12 +437,19 @@ runtime::TextStatus TextEditSession::applyDelta(RichTextDelta delta) {
     if (!owner_.applyTextOperation(forward, inverse))
         return TextStatus::kRejected;
     lastOperation_ = forward.id.value();
+    return TextStatus::kApplied;
+}
+runtime::TextStatus TextEditSession::applyDelta(RichTextDelta delta) {
+    if (!base_ || state_.token.projection == std::numeric_limits<std::uint64_t>::max())
+        return TextStatus::kRejected;
+    const auto status = applyObjectDelta(*base_, std::move(delta));
+    if (status != TextStatus::kApplied) return status;
     base_ = *owner_.textRecord(base_->id);
     const auto& content = *richContent(*base_);
     state_.width = content.layout ? content.layout->wrap_width : 128;
-    state_.projection = std::move(confirmed);
+    (void)project(content, state_.projection);
     ++state_.token.projection;
-    return TextStatus::kApplied;
+    return status;
 }
 runtime::TextStatus TextEditSession::replace(TextRange range, const std::u16string& text) {
     if (state_.token.projection == std::numeric_limits<std::uint64_t>::max() ||
@@ -564,22 +615,8 @@ runtime::TextStatus TextEditSession::replace(TextRange range, const std::u16stri
 runtime::TextStatus TextEditSession::format(const TextFormatPatch& patch) {
     if(state_.composition || state_.phase!=TextPhase::kEditing)return TextStatus::kBusy;
     if(!owner_.textReady() || (base_ && !owner_.textWritable(base_->id)))return TextStatus::kRejected;
-    if(patch.fontSize && (!std::isfinite(*patch.fontSize) || *patch.fontSize<=0 || *patch.fontSize>65536))return TextStatus::kRejected;
-    if(patch.color)for(const auto c:*patch.color)if(!std::isfinite(c) || c<0 || c>1)return TextStatus::kRejected;
-    if(patch.alignment && (*patch.alignment<1 || *patch.alignment>3))return TextStatus::kRejected;
-    if(patch.font) {
-        const auto* manifest=owner_.textManifest();
-        if(!manifest || std::none_of(manifest->entries.begin(),manifest->entries.end(),[&](const auto& e){return e.resource_kind==ResourceKind::kFont && e.resource_id.value==*patch.font;}))return TextStatus::kRejected;
-    }
-    const auto apply=[&](TextStyle& style) {
-        if(patch.color){const auto& c=*patch.color;style.color={c[0],c[1],c[2],c[3]};}
-        if(patch.fontSize)style.font_size=*patch.fontSize;
-        if(patch.font)style.font_resource_id=ResourceId{*patch.font};
-        if(patch.bold)style.weight=*patch.bold?700:400;
-        if(patch.italic)style.italic=*patch.italic;
-        if(patch.underline)style.underline=*patch.underline;
-        if(patch.strikethrough)style.strikethrough=*patch.strikethrough;
-    };
+    if (!validFormat(patch, owner_.textManifest())) return TextStatus::kRejected;
+    const auto apply = [&](TextStyle& style) { applyFormat(style, patch); };
     auto newStyle=style_;apply(newStyle);
     auto newParagraph=paragraphStyle_;
     if(patch.alignment)newParagraph.alignment=static_cast<ParagraphAlignment>(*patch.alignment);
@@ -627,9 +664,54 @@ runtime::TextStatus TextEditSession::format(const TextFormatPatch& patch) {
     }
     return status;
 }
+runtime::TextStatus TextEditSession::formatObject(ObjectId id, const TextFormatPatch& patch) {
+    const bool editing = state_.phase != TextPhase::kClosed;
+    if (editing && (state_.composition || state_.phase != TextPhase::kEditing)) return TextStatus::kBusy;
+    if (editing && state_.token.object != id) return TextStatus::kBusy;
+    if (!editing && owner_.textSelectedObject() != id) return TextStatus::kStale;
+    if (!owner_.textReady() || !owner_.textWritable(id) || !validFormat(patch, owner_.textManifest()))
+        return TextStatus::kRejected;
+    if (editing && state_.token.projection == std::numeric_limits<std::uint64_t>::max()) return TextStatus::kRejected;
+    const auto* current = owner_.textRecord(id);
+    if (!current || !shapeLabelTarget(*current)) return TextStatus::kRejected;
+    const auto before = *current;
+    const auto* original = richContent(before);
+    if (!original) return TextStatus::kRejected;
+    auto content = *original;
+    if (content.document.paragraphs.empty()) {
+        const auto* manifest = owner_.textManifest();
+        if (!manifest) return TextStatus::kRejected;
+        const auto font = std::find_if(manifest->entries.begin(), manifest->entries.end(),
+            [](const auto& entry) { return entry.resource_kind == ResourceKind::kFont; });
+        if (font == manifest->entries.end()) return TextStatus::kRejected;
+        TextStyle initial{font->resource_id, 16, 400, false, false, {0, 0, 0, 1}};
+        content.document.paragraphs.push_back({identity(), {ParagraphAlignment::kCenter, 1, 0, 0}, {{"", initial}}});
+    }
+    for (auto& paragraph : content.document.paragraphs) {
+        if (patch.alignment) paragraph.style.alignment = static_cast<ParagraphAlignment>(*patch.alignment);
+        if (patch.bulleted) paragraph.style.bulleted = *patch.bulleted;
+        for (auto& run : paragraph.runs) applyFormat(run.style, patch);
+    }
+    if (!content.layout) content.layout = RichTextLayout{std::get<ShapeContent>(before.content).width};
+    if (before.kind_version == 3 && content == *original) return TextStatus::kObserved;
+    const auto status = applyObjectDelta(before, {3, {RestoreRichTextStateStep{{3, std::move(content)}}}, {}});
+    if (status == TextStatus::kApplied && editing) {
+        base_ = *owner_.textRecord(id);
+        ++state_.token.projection;
+        applyFormat(style_, patch);
+        if (patch.alignment) paragraphStyle_.alignment = static_cast<ParagraphAlignment>(*patch.alignment);
+        if (patch.bulleted) paragraphStyle_.bulleted = *patch.bulleted;
+    }
+    return status;
+}
 runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
     refresh();
     lastOperation_ = {};
+    if (request.kind == TextIntentKind::kFormat && !request.object.isZero()) {
+        if (state_.phase != TextPhase::kClosed && request.token != state_.token)
+            return outcome(TextStatus::kStale, request.requestId);
+        return outcome(formatObject(request.object, request.format), request.requestId);
+    }
     if (request.kind == TextIntentKind::kCreate || request.kind == TextIntentKind::kEdit) {
         if (state_.phase != TextPhase::kClosed || !owner_.textReady() || runtimeInstance_ == 0)
             return outcome(TextStatus::kBusy, request.requestId);

@@ -1317,6 +1317,38 @@ bool CanvasEditingRuntime::setSelectedObjectSize(double width, double height) no
        semantic::SetObjectSizeOp{{{before->id, shape->width, shape->height}}}});
 }
 
+bool CanvasEditingRuntime::expandShapeLabel(semantic::ObjectId id) {
+  if (!canonicalWriteAdmission() || !textLayoutService_ || !textWritable(id)) return false;
+  const auto* before = semanticObjects_.find(id);
+  const auto* shape = before ? std::get_if<semantic::ShapeContent>(&before->content) : nullptr;
+  if (!shape || shape->shape_kind < 1U || shape->shape_kind > 3U) return false;
+  auto content = shape->label.value_or(semantic::RichTextContent{});
+  content.layout = semantic::RichTextLayout{4096};
+  const auto layout = textLayoutService_->resolveNatural(id, content);
+  if (!layout || !layout->diagnostics.empty()) return false;
+  const float sx = std::max(0.001F, std::hypot(static_cast<float>(before->transform.a),
+                                                static_cast<float>(before->transform.b)));
+  const float sy = std::max(0.001F, std::hypot(static_cast<float>(before->transform.c),
+                                                static_cast<float>(before->transform.d)));
+  const double safe = shape->shape_kind == 2U ? 0.7 : shape->shape_kind == 3U ? 0.45 : 1.0;
+  const double width = std::max(shape->width * sx, (static_cast<double>(layout->localBounds.right - layout->localBounds.left) + 16.0) / safe);
+  const double height = std::max(shape->height * sy, (static_cast<double>(layout->localBounds.bottom - layout->localBounds.top) + 16.0) / safe);
+  const double scaleX = width / (shape->width * sx), scaleY = height / (shape->height * sy);
+  if (scaleX == 1 && scaleY == 1) return true;
+  auto transform = before->transform;
+  transform.a *= scaleX; transform.b *= scaleX;
+  transform.c *= scaleY; transform.d *= scaleY;
+  transform.tx += ((before->transform.a - transform.a) * shape->width +
+                   (before->transform.c - transform.c) * shape->height) * 0.5;
+  transform.ty += ((before->transform.b - transform.b) * shape->width +
+                   (before->transform.d - transform.d) * shape->height) * 0.5;
+  const auto forwardId = allocateOperationId(), inverseId = allocateOperationId();
+  if (forwardId.isZero() || inverseId.isZero()) return false;
+  return applyLocalHistoryOperation(
+      {forwardId, documentId_, 1U, 1U, semantic::SetTransformsOp{{{id, transform}}}},
+      {inverseId, documentId_, 1U, 1U, semantic::SetTransformsOp{{{id, before->transform}}}});
+}
+
 bool CanvasEditingRuntime::patchSelectedProperty(std::uint32_t fieldId,
                                                semantic::PropertyValue value) noexcept {
   if (selection_.primary().isZero() ||
@@ -1743,11 +1775,16 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     (void)presentTransientOverlayFrame(nextCanonicalFrameId());
     if (phase == input::PointerPhase::kUp) {
       const bool accepted=!editingChanged_ || transformDrag_.commit();
-      if (accepted && editingChanged_) {
+      const bool needsHandoff = accepted && editingChanged_;
+      if (needsHandoff) {
         transientOverlayHandoffPending_ = true;
         if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(true);
       }
       cancelSelectionTransform();
+      // A click on an already selected Shape draws an opaque transient copy,
+      // but creates no canonical commit/handoff. Retire that no-op preview so
+      // subsequent text/preedit frames cannot remain hidden beneath it.
+      if (!needsHandoff) (void)clearTransientOverlay();
       return accepted;
     }
   }
@@ -3127,13 +3164,41 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   }
 
   const auto textState=interaction_->textSession()?interaction_->textSession()->read():runtime::TextEditorSnapshot{};
+  foundation::ObjectId placeholderTarget = selection_.primary();
+  if (textState.phase != runtime::TextPhase::kClosed && !textState.token.object.isZero())
+    placeholderTarget = textState.token.object;
+  if (!placeholderTarget.isZero() && textLayoutService_) {
+    const auto selected = std::find_if(references.value().entries.begin(), references.value().entries.end(),
+        [&](const auto& entry) { return entry.record.objectId == placeholderTarget; });
+    if (selected != references.value().entries.end()) {
+      const auto* shape = std::get_if<semantic::ShapeContent>(&selected->record.content);
+      if (shape != nullptr) {
+        const semantic::RichTextContent empty{};
+        const auto& label = shape->label ? *shape->label : empty;
+        bool hasText = false;
+        for (const auto& paragraph : label.document.paragraphs)
+          for (const auto& run : paragraph.runs) hasText = hasText || !run.text.empty();
+        if (!hasText) {
+          const auto layout = textLayoutService_->resolveShapeLabel(
+              selected->record.objectId, label, *shape, selected->record.transform, true);
+          selected->record.textLayout = layout;
+          selected->command = render::ShapeReferenceCommand{*shape, layout};
+          references.value().canonicalBytes.clear();
+          references.value().digest.clear();
+        }
+      }
+    }
+  }
   if (interaction_->textSession() && textLayoutService_) {
     if (const auto object = interaction_->textSession()->presentation()) {
       const semantic::RichTextContent* content = std::get_if<semantic::RichTextContent>(&object->content);
       const semantic::ShapeContent* shape = std::get_if<semantic::ShapeContent>(&object->content);
       if (shape != nullptr && shape->label.has_value()) content = &*shape->label;
       if (content != nullptr) {
-        const auto layout = textLayoutService_->resolve(object->id, *content);
+        const auto layout = shape != nullptr
+            ? textLayoutService_->resolveShapeLabel(object->id, *content, *shape,
+                                                     object->transform, true)
+            : textLayoutService_->resolve(object->id, *content);
         if (layout->diagnostics.empty()) {
           render::ReferenceTraversalEntry entry{};
           entry.record.objectId = object->id;

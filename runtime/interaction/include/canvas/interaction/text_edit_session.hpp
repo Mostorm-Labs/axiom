@@ -13,6 +13,7 @@ class TextEditPort {
     virtual bool textReady() const noexcept = 0;
     virtual bool textClosed() const noexcept = 0;
     virtual bool textWritable(semantic::ObjectId) const noexcept = 0;
+    virtual semantic::ObjectId textSelectedObject() const noexcept { return {}; }
     virtual semantic::DocumentId textDocument() const noexcept = 0;
     virtual std::uint64_t textGeneration() const noexcept = 0;
     virtual const semantic::ObjectRecord* textRecord(semantic::ObjectId) const noexcept = 0;
@@ -48,7 +49,9 @@ class TextEditSession final {
     [[nodiscard]] runtime::TextReceipt outcome(runtime::TextStatus, std::uint64_t = 0) const;
     [[nodiscard]] runtime::TextStatus replace(runtime::TextRange, const std::u16string&);
     [[nodiscard]] runtime::TextStatus format(const runtime::TextFormatPatch&);
+    [[nodiscard]] runtime::TextStatus formatObject(semantic::ObjectId, const runtime::TextFormatPatch&);
     [[nodiscard]] runtime::TextStatus applyDelta(semantic::RichTextDelta);
+    [[nodiscard]] runtime::TextStatus applyObjectDelta(const semantic::ObjectRecord&, semantic::RichTextDelta);
     [[nodiscard]] semantic::ObjectId identity();
     [[nodiscard]] const semantic::RichTextContent* richContent(
         const semantic::ObjectRecord&) const noexcept;

@@ -3,6 +3,7 @@
 #include "canvas/foundation/world_geometry.hpp"
 #include "canvas/runtime/resource_provider.hpp"
 #include "canvas/semantic/object_content.hpp"
+#include "canvas/semantic/object_record.hpp"
 
 #include <memory>
 #include <optional>
@@ -22,6 +23,8 @@ inline constexpr std::string_view kNotoSha256 =
 struct LayoutContext final {
     float width = 0;
     std::uint64_t revision = 0;
+    float height = 0;
+    std::size_t maxLines = 0;
     bool operator==(const LayoutContext&) const = default;
 };
 struct FontResourceDescriptor final {
@@ -85,6 +88,12 @@ struct TextLayoutSnapshot final {
     std::vector<ShapedRun> runs;
     std::vector<TextDecoration> decorations;
     std::vector<std::string> diagnostics;
+    // Shape labels use world-size typography within the object's normalized
+    // axes. These are derived presentation values, never persisted RichText.
+    bool shapeLabel = false, placeholder = false, overflow = false;
+    float labelScaleX = 1, labelScaleY = 1;
+    foundation::WorldRect labelViewport{}, expandButton{};
+    float labelOffsetX = 0, labelOffsetY = 0;
 };
 struct EditingGeometry final {
     std::vector<std::string> diagnostics;
@@ -114,6 +123,19 @@ class RichTextLayoutService final {
     void setContext(LayoutContext);
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
     resolve(foundation::ObjectId, const semantic::RichTextContent&);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolveNatural(foundation::ObjectId, const semantic::RichTextContent&);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolveShape(foundation::ObjectId, const semantic::ShapeContent&,
+                 const semantic::Transform2D&, bool showPlaceholder = false);
+    [[nodiscard]] EditingGeometry
+    shapeEditingGeometry(const semantic::ObjectRecord&, std::uint32_t start,
+                         std::uint32_t length,
+                         std::optional<foundation::WorldPoint> hit = std::nullopt);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolveShapeLabel(foundation::ObjectId, const semantic::RichTextContent&,
+                      const semantic::ShapeContent&, const semantic::Transform2D&,
+                      bool showPlaceholder = false);
     [[nodiscard]] EditingGeometry
     editingGeometry(foundation::ObjectId,
                     const semantic::RichTextContent&,

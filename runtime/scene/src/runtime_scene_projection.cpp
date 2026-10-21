@@ -200,7 +200,9 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
             shape != nullptr && shape->label.has_value()) label = &*shape->label;
         const auto layout = textService && record.kind == semantic::ObjectKind::kRichText
             ? textService->resolve(record.id,std::get<semantic::RichTextContent>(record.content))
-            : textService && label != nullptr ? textService->resolve(record.id, *label) : nullptr;
+            : textService && std::get_if<semantic::ShapeContent>(&record.content)
+                ? textService->resolveShape(record.id, std::get<semantic::ShapeContent>(record.content), record.transform)
+                : textService && label != nullptr ? textService->resolve(record.id, *label) : nullptr;
         const auto bounds = computeBounds(record,layout.get());
         out.records.push_back(InspectionRecord{record.id, record.kind, record.kind_version,
             record.placement, record.transform, record.properties, record.content, record.erase_masks,

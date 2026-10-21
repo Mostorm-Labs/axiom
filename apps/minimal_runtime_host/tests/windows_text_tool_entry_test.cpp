@@ -128,10 +128,76 @@ int main(int argc, char** argv) {
             assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);
             assert(state.facade->readTextEditor().token.object == shape.id);
             assert(state.facade->readTextEditor().projection == u"AB");
+            SendMessageW(owner, WM_CHAR, 'C', 0);
+            pumpWindowsText(state);
+            assert(state.facade->readTextEditor().projection.size() == 3);
+            runtime::RuntimeFrameOpportunity frame;
+            assert(composition.serviceFrameOpportunity(false, frame));
+            const auto geometry = state.facade->readTextGeometry();
+            assert(geometry.available);
+            assert(geometry.caret[1] > y + 20 && geometry.caret[5] < y + 65);
+            std::vector<std::uint8_t> previewPixels(800 * 600 * 4);
+            assert(composition.readPreviewRgba(previewPixels));
+            for (int py = y + 20; py < y + 60; ++py)
+                for (int px = 500; px < 560; ++px)
+                    assert(previewPixels[(py * 800 + px) * 4 + 3] == 0);
             textIntent(state, runtime::TextIntentKind::kFinish);
             pumpWindowsText(state);
-            std::printf("Shape preset %u: first double-click + native characters retained one Shape\n", preset);
+            assert(state.facade->readTextEditor().formatObject == shape.id);
+            runtime::TextIntent format;
+            format.clientId = 0xFC026;
+            format.requestId = preset + 1;
+            format.target = control.target;
+            format.kind = runtime::TextIntentKind::kFormat;
+            format.object = shape.id;
+            format.format.bold = true;
+            format.format.italic = true;
+            format.format.fontSize = 24;
+            assert(state.facade->submitTextIntent(format).status == runtime::TextStatus::kQueued);
+            assert(composition.ownerPump());
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+            assert(state.facade->readTextEditor().format.bold.value_or(false));
+            assert(state.facade->readTextEditor().format.italic.value_or(false));
+            assert(state.facade->readTextEditor().format.fontSize == 24);
+            std::printf("Shape preset %u: live reedit pixels/caret and whole-label Facade format pass\n", preset);
         }
+        state.debugUi = std::make_unique<debug_ui::WindowsDebugUiHost>();
+        assert(state.debugUi->initialize(owner));
+        state.controller = std::make_unique<debug_ui::DebugController>(
+            debug_ui::DebugControllerContext{state.facade.get()});
+        state.controller->uiState().setWorkspace(debug_ui::WorkspaceId::kControl);
+        state.debugUi->setController(state.controller.get());
+        auto& io = ImGui::GetIO();
+        io.IniFilename = nullptr;
+        io.DisplaySize = ImVec2(410, 560);
+        io.DeltaTime = 1.0F / 60.0F;
+        for (int i = 0; i < 2; ++i) {
+            ImGui::NewFrame();
+            (void)state.controller->buildImGuiFrame();
+            ImGui::Render();
+        }
+        auto& gui = *ImGui::GetCurrentContext();
+        ImGuiWindow* content = nullptr;
+        for (auto* window : gui.Windows)
+            if (std::string_view(window->Name).find("/##content_") != std::string_view::npos)
+                content = window;
+        assert(content);
+        // Exercise the real widget -> Router -> Facade -> selected Shape path,
+        // with the text editor closed and Italic as an unchanged sibling leaf.
+        const auto beforeWidget = state.facade->readTextEditor();
+        assert(!beforeWidget.formatObject.isZero());
+        assert(beforeWidget.format.bold.value_or(false));
+        ImGui::NewFrame();
+        gui.NavActivateId = gui.NavActivateDownId = content->GetID("Bold");
+        gui.NavInputSource = ImGuiInputSource_Keyboard;
+        assert(state.controller->buildImGuiFrame());
+        ImGui::Render();
+        assert(composition.ownerPump());
+        assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+        assert(!state.facade->readTextEditor().format.bold.value_or(true));
+        assert(state.facade->readTextEditor().format.italic.value_or(false));
+        std::puts("Real Debug UI Bold widget: selected Shape label updated without an editor session");
+        state.debugUi->shutdown();
         DestroyWindow(owner);
         UnregisterClassW(klass.lpszClassName, instance);
         return 0;

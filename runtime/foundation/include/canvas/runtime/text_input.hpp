@@ -125,6 +125,9 @@ struct TextEditorSnapshot final {
     double width = 320;
     TextStatus exitStatus = TextStatus::kObserved;
     TextFormatPatch format{};
+    // Explicit whole-label target when a Shape is selected, or its editor has
+    // an insertion caret. A non-empty character selection retains range scope.
+    foundation::ObjectId formatObject{};
     std::vector<TextFontOption> fonts;
     bool mixedFormat = false;
 };

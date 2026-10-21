@@ -586,8 +586,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<std::uint32_t> textHit(const semantic::ObjectRecord&,float,float);
   semantic::ObjectId hitTextAtView(float,float);
   bool textPointer(const input::PointerSample&);
+  bool expandShapeLabel(semantic::ObjectId);
   bool textClosed() const noexcept override { return closed_; }
   bool textWritable(semantic::ObjectId) const noexcept override;
+  semantic::ObjectId textSelectedObject() const noexcept override { return selection_.primary(); }
   semantic::DocumentId textDocument() const noexcept override { return documentId_; }
   std::uint64_t textGeneration() const noexcept override { return semanticGeneration_.current().value(); }
   const semantic::ObjectRecord* textRecord(semantic::ObjectId id) const noexcept override { return semanticObjects_.find(id); }

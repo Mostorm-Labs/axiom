@@ -66,7 +66,11 @@ void encodeParagraph(Encoding& e, const semantic::Paragraph& p) {
 }
 std::string snapshotDigest(const TextLayoutSnapshot& s) {
     Encoding e; e.string(s.profile); e.string(s.contentDigest);
-    e.number(s.context.width); e.number(s.context.revision); e.rect(s.localBounds);
+    e.number(s.context.width); e.number(s.context.revision); e.number(s.context.height);
+    e.number<std::uint64_t>(s.context.maxLines); e.rect(s.localBounds);
+    e.number<std::uint8_t>(s.shapeLabel); e.number<std::uint8_t>(s.placeholder);
+    e.number<std::uint8_t>(s.overflow); e.number(s.labelScaleX); e.number(s.labelScaleY);
+    e.rect(s.labelViewport); e.rect(s.expandButton); e.number(s.labelOffsetX); e.number(s.labelOffsetY);
     e.number<std::uint64_t>(s.fonts.size());
     for (const auto& f : s.fonts) {
         e.id(f.resourceId.value); e.number(f.generation); e.string(f.sha256);
@@ -211,6 +215,10 @@ struct RichTextLayoutService::Impl {
             auto fonts=sk_make_sp<FontCollection>();
             fonts->setAssetFontManager(provider); fonts->disableFontFallback();
             ParagraphStyle style; style.turnHintingOff(); style.setFakeMissingFontStyles(false);
+            if (layoutContext.maxLines != 0) {
+                style.setMaxLines(layoutContext.maxLines);
+                style.setEllipsis(std::u16string(u"\u2026"));
+            }
             switch(p.style.alignment) {
                 case semantic::ParagraphAlignment::kCenter: style.setTextAlign(TextAlign::kCenter); break;
                 case semantic::ParagraphAlignment::kRight: style.setTextAlign(TextAlign::kRight); break;
@@ -237,6 +245,7 @@ struct RichTextLayoutService::Impl {
             }
             const float indent=p.style.bulleted ? std::min(layoutContext.width*0.5F,static_cast<float>(p.runs.empty()?24:p.runs.front().style.font_size*1.5)) : 0;
             auto paragraph=builder->Build(); paragraph->layout(layoutContext.width-indent);
+            out->overflow = paragraph->didExceedMaxLines();
             if(paragraph->unresolvedGlyphs()>0) out->diagnostics.push_back("font-glyph-unavailable");
             std::vector<LineMetrics> lines; paragraph->getLineMetrics(lines);
             foundation::WorldRect bounds{}; bool have=false;
@@ -323,6 +332,7 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolve(
     for(const auto& p:content.document.paragraphs) encodeParagraph(semantic,p);
     const auto contentDigest=semantic.digest();
     Encoding key=semantic; key.string(kTextStackProfile); key.number(context.width); key.number(context.revision);
+    key.number(context.height); key.number<std::uint64_t>(context.maxLines);
     for(const auto& p:content.document.paragraphs) state.dependencies(key,p);
     const auto token=key.digest();
     if(auto found=state.objects.find(id);found!=state.objects.end() && found->second.key==token) {
@@ -337,6 +347,7 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolve(
             Encoding paragraphKey; encodeParagraph(paragraphKey,p); state.dependencies(paragraphKey,p);
             paragraphKey.number<std::uint8_t>(content.layout.has_value());
             paragraphKey.number(context.width); paragraphKey.number(context.revision);
+            paragraphKey.number(context.height); paragraphKey.number<std::uint64_t>(context.maxLines);
             const auto hash=paragraphKey.digest(); auto& cached=state.paragraphs[{id,p.id}];
             if(cached.key!=hash || !cached.snapshot) {
                 cached={hash,state.layoutParagraph(p,context,content.layout.has_value())}; ++state.counters.paragraphLayouts;
@@ -345,6 +356,7 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolve(
 #endif
             } else ++state.counters.paragraphCacheHits;
             const auto& fragment=*cached.snapshot;
+            out->overflow = out->overflow || fragment.overflow;
             y+=static_cast<float>(p.style.spacing_before);
             const auto fontOffset=out->fonts.size(); out->fonts.insert(out->fonts.end(),fragment.fonts.begin(),fragment.fonts.end());
             const auto bounds=offset(fragment.localBounds,y);
@@ -361,6 +373,161 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolve(
     out->digest=snapshotDigest(*out); state.objects[id]={token,out}; ++state.counters.objectLayouts;
     state.counters.layoutCpuMs+=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
     return out;
+}
+
+std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveNatural(
+    foundation::ObjectId id, const semantic::RichTextContent& content) {
+    const auto previous = impl_->context;
+    impl_->context.height = 0;
+    impl_->context.maxLines = 0;
+    impl_->context.width = 4096.0F;
+    auto natural = content;
+    natural.layout = semantic::RichTextLayout{4096.0};
+    auto result = resolve(id, natural);
+    impl_->context = previous;
+    return result;
+}
+
+namespace {
+float basisX(const semantic::Transform2D& transform) {
+    return std::max(0.001F, std::hypot(static_cast<float>(transform.a), static_cast<float>(transform.b)));
+}
+float basisY(const semantic::Transform2D& transform) {
+    return std::max(0.001F, std::hypot(static_cast<float>(transform.c), static_cast<float>(transform.d)));
+}
+void offsetSnapshot(TextLayoutSnapshot& snapshot, float x, float y) {
+    snapshot.localBounds.left += x; snapshot.localBounds.right += x;
+    snapshot.localBounds.top += y; snapshot.localBounds.bottom += y;
+    for (auto& paragraph : snapshot.paragraphs) {
+        paragraph.bounds.left += x; paragraph.bounds.right += x;
+        paragraph.bounds.top += y; paragraph.bounds.bottom += y;
+        paragraph.originY += y;
+    }
+    for (auto& line : snapshot.lines) {
+        line.bounds.left += x; line.bounds.right += x;
+        line.bounds.top += y; line.bounds.bottom += y; line.baseline += y;
+    }
+    for (auto& run : snapshot.runs)
+        for (auto& point : run.positions) { point.x += x; point.y += y; }
+    for (auto& decoration : snapshot.decorations) {
+        decoration.bounds.left += x; decoration.bounds.right += x;
+        decoration.bounds.top += y; decoration.bounds.bottom += y;
+    }
+}
+}
+
+std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShapeLabel(
+    foundation::ObjectId id, const semantic::RichTextContent& canonical,
+    const semantic::ShapeContent& shape, const semantic::Transform2D& transform,
+    bool showPlaceholder) {
+    constexpr float padding = 8.0F;
+    const float sx = basisX(transform), sy = basisY(transform);
+    const float width = static_cast<float>(shape.width) * sx;
+    const float height = static_cast<float>(shape.height) * sy;
+    semantic::RichTextContent display = canonical;
+    bool emptyLabel = true;
+    for (const auto& paragraph : display.document.paragraphs)
+        for (const auto& run : paragraph.runs) emptyLabel = emptyLabel && run.text.empty();
+    const bool placeholder = showPlaceholder && emptyLabel;
+    if (placeholder) {
+        semantic::TextStyle style;
+        style.font_size = 16; style.weight = 400; style.color = {0.25F, 0.25F, 0.25F, 1};
+        if (!impl_->descriptors.empty()) style.font_resource_id = impl_->descriptors.begin()->second.resourceId;
+        semantic::Paragraph paragraph;
+        paragraph.id = foundation::ObjectId::fromUint64(0x5459504554455854ULL);
+        paragraph.style.alignment = semantic::ParagraphAlignment::kCenter;
+        paragraph.runs = {{"Type text...", style}};
+        display.document.paragraphs = {std::move(paragraph)};
+    }
+    const float viewportWidth = std::max(1.0F, width - 2 * padding);
+    const float viewportHeight = std::max(1.0F, height - 2 * padding);
+    display.layout = semantic::RichTextLayout{viewportWidth};
+    const auto previous = impl_->context;
+    impl_->context.width = viewportWidth;
+    impl_->context.height = viewportHeight;
+    const float fontSize = placeholder ? 16.0F : [&] {
+        float size = 16.0F;
+        if (!display.document.paragraphs.empty() && !display.document.paragraphs.front().runs.empty())
+            size = static_cast<float>(display.document.paragraphs.front().runs.front().style.font_size);
+        return size;
+    }();
+    impl_->context.maxLines = std::max<std::size_t>(1, static_cast<std::size_t>(viewportHeight / std::max(1.0F, fontSize * 1.25F)));
+    const auto base = resolve(id, display);
+    impl_->context = previous;
+    auto result = std::make_shared<TextLayoutSnapshot>(*base);
+    result->shapeLabel = true;
+    result->placeholder = placeholder;
+    result->labelScaleX = 1.0F / sx;
+    result->labelScaleY = 1.0F / sy;
+    result->labelViewport = {padding, padding, width - padding, height - padding};
+    result->expandButton = {width - 24.0F, height - 24.0F, width - padding, height - padding};
+    result->overflow = result->overflow || base->localBounds.bottom > viewportHeight + 0.5F;
+    result->labelOffsetX = padding;
+    result->labelOffsetY = padding + std::max(0.0F, (viewportHeight - base->localBounds.bottom) * 0.5F);
+    offsetSnapshot(*result, result->labelOffsetX, result->labelOffsetY);
+    result->digest = snapshotDigest(*result);
+    return result;
+}
+
+std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShape(
+    foundation::ObjectId id, const semantic::ShapeContent& shape,
+    const semantic::Transform2D& transform, bool showPlaceholder) {
+    const semantic::RichTextContent empty{};
+    return resolveShapeLabel(id, shape.label ? *shape.label : empty, shape, transform,
+                             showPlaceholder);
+}
+
+EditingGeometry RichTextLayoutService::shapeEditingGeometry(
+    const semantic::ObjectRecord& record, std::uint32_t start, std::uint32_t length,
+    std::optional<foundation::WorldPoint> hit) {
+    const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+    if (!shape) return {};
+    const semantic::RichTextContent empty{};
+    const auto& canonical = shape->label ? *shape->label : empty;
+    constexpr float padding = 8.0F;
+    const float sx = basisX(record.transform), sy = basisY(record.transform);
+    const float width = std::max(1.0F, static_cast<float>(shape->width) * sx - 2 * padding);
+    auto display = canonical; display.layout = semantic::RichTextLayout{width};
+    bool emptyLabel = true;
+    for (const auto& paragraph : display.document.paragraphs)
+        for (const auto& run : paragraph.runs) emptyLabel = emptyLabel && run.text.empty();
+    if (emptyLabel) {
+        semantic::TextStyle style;
+        style.font_size = 16; style.weight = 400; style.color = {0.25F, 0.25F, 0.25F, 1};
+        if (!impl_->descriptors.empty()) style.font_resource_id = impl_->descriptors.begin()->second.resourceId;
+        semantic::Paragraph paragraph;
+        paragraph.id = foundation::ObjectId::fromUint64(0x5459504554455854ULL);
+        paragraph.style.alignment = semantic::ParagraphAlignment::kCenter;
+        paragraph.runs = {{"Type text...", style}};
+        display.document.paragraphs = {std::move(paragraph)};
+    }
+    // Reuse the painted viewport, line budget and vertical alignment. Hit
+    // testing applies the inverse of that same translation.
+    const auto painted = resolveShape(record.id, *shape, record.transform, true);
+    const auto previous = impl_->context;
+    impl_->context = painted->context;
+    const auto originalHit = hit;
+    if (hit) { hit->x -= painted->labelOffsetX; hit->y -= painted->labelOffsetY; }
+    auto geometry = editingGeometry(record.id, display, start, length, hit);
+    impl_->context = previous;
+    geometry.layoutIdentity = painted->digest;
+    geometry.caret.left += painted->labelOffsetX; geometry.caret.right += painted->labelOffsetX;
+    geometry.caret.top += painted->labelOffsetY; geometry.caret.bottom += painted->labelOffsetY;
+    for (auto& rect : geometry.selection) {
+        rect.left += painted->labelOffsetX; rect.right += painted->labelOffsetX;
+        rect.top += painted->labelOffsetY; rect.bottom += painted->labelOffsetY;
+    }
+    if (emptyLabel) {
+        const float displayHeight = static_cast<float>(shape->height) * sy;
+        geometry.caret.left = static_cast<float>(shape->width) * sx * 0.5F;
+        geometry.caret.right = geometry.caret.left + 1;
+        geometry.caret.top = std::max(padding, displayHeight * 0.5F - 8);
+        geometry.caret.bottom = geometry.caret.top + 16;
+        geometry.available = !geometry.diagnostics.empty() ? false : true;
+        if (originalHit && originalHit->x >= 0 && originalHit->x <= static_cast<float>(shape->width) * sx &&
+            originalHit->y >= 0 && originalHit->y <= displayHeight) geometry.hit = 0;
+    }
+    return geometry;
 }
 
 std::vector<std::uint32_t> RichTextLayoutService::graphemeBoundaries(const std::u16string& text) const {

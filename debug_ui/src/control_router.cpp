@@ -449,7 +449,7 @@ DebugActivityState DebugControlRouter::mapSurface(canvas::runtime::SurfaceContro
 namespace canvas::debug_ui {
 canvas::runtime::TextReceipt DebugControlRouter::setTextFormat(const canvas::runtime::TextFormatPatch& patch){
  if(!runtime_ || runtime_->mountedCanvasTargets().empty())return {};
- canvas::runtime::TextIntent request;request.kind=canvas::runtime::TextIntentKind::kFormat;request.clientId=0xD003;request.requestId=nextRequestId();request.target=runtime_->mountedCanvasTargets().front();request.token=runtime_->readTextEditor().token;request.format=patch;return runtime_->submitTextIntent(request);
+ canvas::runtime::TextIntent request;request.kind=canvas::runtime::TextIntentKind::kFormat;request.clientId=0xD003;request.requestId=nextRequestId();request.target=runtime_->mountedCanvasTargets().front();const auto editor=runtime_->readTextEditor();request.token=editor.token;request.object=editor.formatObject;request.format=patch;return runtime_->submitTextIntent(request);
 }
 canvas::runtime::TextEditorSnapshot DebugControlRouter::textEditor() const {return runtime_?runtime_->readTextEditor():canvas::runtime::TextEditorSnapshot{};}
 canvas::runtime::TextReceipt DebugControlRouter::setTextWidth(double width){

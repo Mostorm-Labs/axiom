@@ -358,8 +358,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
         using T = std::decay_t<decltype(command)>;
         if constexpr (std::is_same_v<T, ShapeReferenceCommand>) {
             const auto drawLabel = [&] {
-                if (textResources == nullptr ||
-                    !command.content.label || !command.labelLayout) return;
+                if (textResources == nullptr || !command.labelLayout) return;
                 canvas.save();
                 if (command.content.shape_kind == 2U) {
                     SkPathBuilder ovalPath;
@@ -380,8 +379,28 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                         0.0F, 0.0F, skScalar(command.content.width),
                         skScalar(command.content.height)));
                 }
+                if (command.labelLayout->shapeLabel) {
+                    canvas.scale(command.labelLayout->labelScaleX,
+                                 command.labelLayout->labelScaleY);
+                }
                 textResources->draw(canvas, *command.labelLayout);
                 canvas.restore();
+                if (command.labelLayout->overflow) {
+                    canvas.save();
+                    if (command.labelLayout->shapeLabel)
+                        canvas.scale(command.labelLayout->labelScaleX,
+                                     command.labelLayout->labelScaleY);
+                    const auto& r = command.labelLayout->expandButton;
+                    SkPaint button; button.setAntiAlias(true); button.setColor(SK_ColorWHITE);
+                    button.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left,r.top,r.right,r.bottom),button);
+                    button.setColor(SK_ColorBLACK); button.setStyle(SkPaint::kStroke_Style); button.setStrokeWidth(1.5F);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left,r.top,r.right,r.bottom),button);
+                    button.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left+3,r.top+7,r.right-3,r.top+9),button);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left+7,r.top+3,r.left+9,r.bottom-3),button);
+                    canvas.restore();
+                }
             };
             const auto fill = propertyColor(record, 0x00000100U, {1.0F, 0.0F, 0.0F, 1.0F});
             if (command.content.shape_kind == 3U) {

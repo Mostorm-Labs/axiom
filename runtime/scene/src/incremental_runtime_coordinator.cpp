@@ -348,8 +348,10 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::refreshTextR
         else if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
                  shape != nullptr && shape->label.has_value())
             textContent = &*shape->label;
-        if (textContent == nullptr) continue;
-        auto layout=textLayoutService_->resolve(record.objectId,*textContent);
+        const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+        if (textContent == nullptr && shape == nullptr) continue;
+        auto layout=shape ? textLayoutService_->resolveShape(record.objectId, *shape, record.transform)
+                          : textLayoutService_->resolve(record.objectId,*textContent);
         if(record.textLayout && record.textLayout->digest==layout->digest) continue;
         semantic::ObjectRecord source{}; source.id=record.objectId; source.kind=record.kind;
         source.transform=record.transform; source.properties=record.properties; source.content=record.content;

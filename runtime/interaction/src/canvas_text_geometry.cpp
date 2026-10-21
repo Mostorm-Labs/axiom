@@ -77,11 +77,19 @@ CanvasEditingRuntime::textHit(const semantic::ObjectRecord& record, float x, flo
     const auto* content = std::get_if<semantic::RichTextContent>(&record.content);
     if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
         shape != nullptr && shape->label.has_value()) content = &*shape->label;
-    if (content == nullptr) return {};
-    const auto geometry = textLayoutService_->editingGeometry(
-        record.id, *content, 0, 0,
-        foundation::WorldPoint{static_cast<float>((t.d * dx - t.c * dy) / det),
-                               static_cast<float>((t.a * dy - t.b * dx) / det)});
+    const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+    if (content == nullptr && !shape) return {};
+    foundation::WorldPoint local{static_cast<float>((t.d * dx - t.c * dy) / det),
+                                 static_cast<float>((t.a * dy - t.b * dx) / det)};
+    text::EditingGeometry geometry;
+    if (shape) {
+        const float sx = std::max(0.001F, std::hypot(static_cast<float>(t.a), static_cast<float>(t.b)));
+        const float sy = std::max(0.001F, std::hypot(static_cast<float>(t.c), static_cast<float>(t.d)));
+        local.x *= sx; local.y *= sy;
+        geometry = textLayoutService_->shapeEditingGeometry(record, 0, 0, local);
+    } else {
+        geometry = textLayoutService_->editingGeometry(record.id, *content, 0, 0, local);
+    }
     return geometry.available ? geometry.hit : std::nullopt;
 }
 semantic::ObjectId CanvasEditingRuntime::hitTextAtView(float x, float y) {
@@ -131,8 +139,11 @@ CanvasEditingRuntime::textGeometry(const runtime::CanvasTargetKey& target) {
     const auto* content = std::get_if<semantic::RichTextContent>(&record->content);
     if (const auto* shape = std::get_if<semantic::ShapeContent>(&record->content);
         shape != nullptr && shape->label.has_value()) content = &*shape->label;
-    if (content == nullptr) return out;
-    const auto geometry = textLayoutService_->editingGeometry(record->id, *content, start, length);
+    const auto* shape = std::get_if<semantic::ShapeContent>(&record->content);
+    if (content == nullptr && !shape) return out;
+    const auto geometry = shape
+        ? textLayoutService_->shapeEditingGeometry(*record, start, length)
+        : textLayoutService_->editingGeometry(record->id, *content, start, length);
     out.available = geometry.available;
     out.diagnostics = geometry.diagnostics;
     out.token = {state.token,
@@ -142,15 +153,18 @@ CanvasEditingRuntime::textGeometry(const runtime::CanvasTargetKey& target) {
                      std::to_string(length)};
     const auto view = viewportController_->state();
     const auto t = record->transform;
+    const float labelScaleX = shape ? std::max(0.001F, std::hypot(static_cast<float>(t.a), static_cast<float>(t.b))) : 1.0F;
+    const float labelScaleY = shape ? std::max(0.001F, std::hypot(static_cast<float>(t.c), static_cast<float>(t.d))) : 1.0F;
     const auto quad = [&](foundation::WorldRect r) {
         std::array<float, 8> q{};
         const std::array<foundation::WorldPoint, 4> points{
             {{r.left, r.top}, {r.right, r.top}, {r.right, r.bottom}, {r.left, r.bottom}}};
         for (std::size_t i = 0; i < 4; ++i) {
+            const float x = points[i].x / labelScaleX, y = points[i].y / labelScaleY;
             q[i * 2] = static_cast<float>(
-                (t.a * points[i].x + t.c * points[i].y + t.tx) * view.scale + view.translationX);
+                (t.a * x + t.c * y + t.tx) * view.scale + view.translationX);
             q[i * 2 + 1] = static_cast<float>(
-                (t.b * points[i].x + t.d * points[i].y + t.ty) * view.scale + view.translationY);
+                (t.b * x + t.d * y + t.ty) * view.scale + view.translationY);
         }
         return q;
     };
@@ -168,13 +182,43 @@ bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
     auto state = editor->read();
     const bool active = state.phase != runtime::TextPhase::kClosed;
     if (sample.phase == input::PointerPhase::kDown && (textTool_ || active)) {
+        const float x = sample.x, y = sample.y;
+        const auto existing = hitTextAtView(x, y);
+        if (!active && !existing.isZero()) {
+            const auto* record = semanticObjects_.find(existing);
+            const auto* shape = record ? std::get_if<semantic::ShapeContent>(&record->content) : nullptr;
+            if (shape && shape->label) {
+                const auto point = viewToContent(x, y);
+                const auto& t = record->transform;
+                const auto det = t.a * t.d - t.b * t.c;
+                if (std::abs(det) > 1e-12) {
+                    const float sx = std::max(0.001F, std::hypot(static_cast<float>(t.a), static_cast<float>(t.b)));
+                    const float sy = std::max(0.001F, std::hypot(static_cast<float>(t.c), static_cast<float>(t.d)));
+                    const auto dx = point.first - t.tx, dy = point.second - t.ty;
+                    const float px = static_cast<float>((t.d * dx - t.c * dy) / det) * sx;
+                    const float py = static_cast<float>((t.a * dy - t.b * dx) / det) * sy;
+                    const auto layout = textLayoutService_->resolveShapeLabel(record->id, *shape->label, *shape, t);
+                    if (layout->overflow && px >= layout->expandButton.left && px <= layout->expandButton.right &&
+                        py >= layout->expandButton.top && py <= layout->expandButton.bottom) {
+                        (void)expandShapeLabel(record->id);
+                        return true;
+                    }
+                }
+                textPointerKeys_.insert(sample.key);
+                textSelectionPointer_ = sample.key;
+                return true;
+            }
+        }
         textPointerKeys_.insert(sample.key);
         if (textPointerKeys_.size() > 1)
             return true;
         textSelectionPointer_ = sample.key;
         if (!active) {
             runtime::TextIntent create;
-            create.kind = runtime::TextIntentKind::kCreate;
+            const auto existingForEdit = hitTextAtView(x, y);
+            create.kind = existingForEdit.isZero() ? runtime::TextIntentKind::kCreate
+                                                    : runtime::TextIntentKind::kEdit;
+            create.object = existingForEdit;
             create.viewX = sample.x;
             create.viewY = sample.y;
             (void)editor->intent(create);

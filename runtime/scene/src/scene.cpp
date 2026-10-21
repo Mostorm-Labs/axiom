@@ -39,7 +39,17 @@ RuntimeSceneProjection projectRuntimeScene(
         else if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
                  shape != nullptr && shape->label.has_value())
             textContent = &*shape->label;
-        if (textService != nullptr && textContent != nullptr) {
+        if (textService != nullptr && record.kind == semantic::ObjectKind::kShape) {
+            auto& derived = projection.records.back();
+            derived.textLayout = textService->resolveShape(record.id,
+                std::get<semantic::ShapeContent>(record.content), record.transform);
+            const auto bounds = computeBounds(record, nullptr);
+            derived.geometryBounds=bounds.geometry; derived.visualBounds=bounds.visual; derived.worldBounds=bounds.world;
+            derived.referenceGeometryDigest=derived.textLayout->digest;
+            for(const auto& font:derived.textLayout->fonts) derived.directDependencies.push_back(font.resourceId.value);
+            std::sort(derived.directDependencies.begin(),derived.directDependencies.end());
+            derived.directDependencies.erase(std::unique(derived.directDependencies.begin(),derived.directDependencies.end()),derived.directDependencies.end());
+        } else if (textService != nullptr && textContent != nullptr) {
             auto& derived = projection.records.back();
             derived.textLayout = textService->resolve(record.id,*textContent);
             const auto bounds = record.kind == semantic::ObjectKind::kRichText

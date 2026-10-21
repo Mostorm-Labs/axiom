@@ -19,6 +19,8 @@ void tools(DebugPanelContext& context) {
     if(text.phase!=canvas::runtime::TextPhase::kClosed){
         double width=text.width;if(ImGui::InputDouble("Text wrap width",&width)){(void)context.controls.setTextWidth(width);context.ui.markControlSubmitted();}
         ImGui::Text("Text phase %u / IME %llu",static_cast<unsigned>(text.phase),static_cast<unsigned long long>(text.composition));
+    }
+    if(text.phase!=canvas::runtime::TextPhase::kClosed || !text.formatObject.isZero()){
         ImGui::SeparatorText("Text format");
         const std::array<std::pair<const char*,double>,4> sizes{{{"Title",32},{"Heading",24},{"Subheading",20},{"Body",16}}};
         const double currentSize=text.format.fontSize.value_or(16); int sizeIndex=3; for(int i=0;i<4;++i)if(std::abs(currentSize-sizes[i].second)<0.1)sizeIndex=i;
