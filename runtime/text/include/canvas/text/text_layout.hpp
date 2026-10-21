@@ -126,6 +126,9 @@ class RichTextLayoutService final {
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
     resolveNatural(foundation::ObjectId, const semantic::RichTextContent&);
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolveShapeNatural(foundation::ObjectId, const semantic::RichTextContent&,
+                        const semantic::ShapeContent&, const semantic::Transform2D&);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
     resolveShape(foundation::ObjectId, const semantic::ShapeContent&,
                  const semantic::Transform2D&, bool showPlaceholder = false);
     [[nodiscard]] EditingGeometry

@@ -701,14 +701,19 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   }
   const auto routed = appBinding_->submit(source, batch);
   if (!routed.accepted && !routed.terminalCancel) { AXIOM_ANDROID_DIAG("ingress rejected samples=%zu", routed.normalized.samples.size()); return false; }
+  std::vector<input::PointerSample> routedSamples;
+  routedSamples.reserve(routed.normalized.samples.size());
+  for (const auto& sample : routed.normalized.samples)
+    if (!shapeExpandPointer(sample)) routedSamples.push_back(sample);
+  if (routed.terminalCancel) shapeExpandPointerKeys_.clear();
   // Normalize/retire full pointer identities even while the text editor owns input.
   if(textTool_ || (interaction_->textSession() && interaction_->textSession()->read().phase!=runtime::TextPhase::kClosed) || !textPointerKeys_.empty()){
-    for(const auto& sample:routed.normalized.samples)(void)textPointer(sample);
+    for(const auto& sample:routedSamples)(void)textPointer(sample);
     if(routed.terminalCancel)textPointerKeys_.clear();
     return routed.accepted || routed.terminalCancel;
   }
   if (selectionMode_ || creationMode_ || creationActive() || panTool_) {
-    for (const auto& sample : routed.normalized.samples) {
+    for (const auto& sample : routedSamples) {
       if (!sample.key.valid()) continue;
       if (!dispatchRuntime_.submit(sample)) return false;
     }
@@ -724,7 +729,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
     return accepted;
   };
   const auto viewportBefore = viewportController_->state();
-  for (const auto& sample : routed.normalized.samples) {
+  for (const auto& sample : routedSamples) {
     if (!sample.key.valid()) continue;
     if (panTool_) {
       if (sample.phase == input::PointerPhase::kDown) {
@@ -1009,6 +1014,7 @@ void CanvasEditingRuntime::onSessionCancel(
 
 void CanvasEditingRuntime::cancelAllPointers() noexcept {
   textPointerKeys_.clear();
+  shapeExpandPointerKeys_.clear();
   creations_.clear();
   creationFences_.clear();
   cancelSelectionTransform();
@@ -1298,6 +1304,23 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
   return true;
 }
 
+bool CanvasEditingRuntime::applyTextOperation(semantic::Operation forward,
+                                               semantic::Operation inverse) {
+  const auto* edit = std::get_if<semantic::EditRichTextOp>(&forward.payload);
+  const bool isTextEdit = edit != nullptr;
+  const auto target = edit ? edit->object_id : semantic::ObjectId{};
+  if (!applyLocalHistoryOperation(std::move(forward), std::move(inverse))) return false;
+  if (!isTextEdit) return true;
+  const auto* updated = semanticObjects_.find(target);
+  const auto* shape = updated ? std::get_if<semantic::ShapeContent>(&updated->content) : nullptr;
+  bool hasText = false;
+  if (shape && shape->label)
+    for (const auto& paragraph : shape->label->document.paragraphs)
+      for (const auto& run : paragraph.runs) hasText = hasText || !run.text.empty();
+  if (hasText) (void)expandShapeLabel(target);
+  return true;
+}
+
 bool CanvasEditingRuntime::setSelectedObjectSize(double width, double height) noexcept {
   if (selection_.primary().isZero() || !std::isfinite(width) || !std::isfinite(height) ||
       width <= 0.0 || height <= 0.0) return false;
@@ -1317,35 +1340,51 @@ bool CanvasEditingRuntime::setSelectedObjectSize(double width, double height) no
        semantic::SetObjectSizeOp{{{before->id, shape->width, shape->height}}}});
 }
 
-bool CanvasEditingRuntime::expandShapeLabel(semantic::ObjectId id) {
-  if (!canonicalWriteAdmission() || !textLayoutService_ || !textWritable(id)) return false;
-  const auto* before = semanticObjects_.find(id);
-  const auto* shape = before ? std::get_if<semantic::ShapeContent>(&before->content) : nullptr;
-  if (!shape || shape->shape_kind < 1U || shape->shape_kind > 3U) return false;
-  auto content = shape->label.value_or(semantic::RichTextContent{});
-  content.layout = semantic::RichTextLayout{4096};
-  const auto layout = textLayoutService_->resolveNatural(id, content);
-  if (!layout || !layout->diagnostics.empty()) return false;
-  const float sx = std::max(0.001F, std::hypot(static_cast<float>(before->transform.a),
-                                                static_cast<float>(before->transform.b)));
-  const float sy = std::max(0.001F, std::hypot(static_cast<float>(before->transform.c),
-                                                static_cast<float>(before->transform.d)));
-  const double safe = shape->shape_kind == 2U ? 0.7 : shape->shape_kind == 3U ? 0.45 : 1.0;
-  const double width = std::max(shape->width * sx, (static_cast<double>(layout->localBounds.right - layout->localBounds.left) + 16.0) / safe);
-  const double height = std::max(shape->height * sy, (static_cast<double>(layout->localBounds.bottom - layout->localBounds.top) + 16.0) / safe);
-  const double scaleX = width / (shape->width * sx), scaleY = height / (shape->height * sy);
-  if (scaleX == 1 && scaleY == 1) return true;
-  auto transform = before->transform;
-  transform.a *= scaleX; transform.b *= scaleX;
+std::optional<semantic::Transform2D> CanvasEditingRuntime::fittedShapeLabelTransform(
+    const semantic::ObjectRecord& record) {
+  const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+  if (!textLayoutService_ || !shape || shape->shape_kind < 1U || shape->shape_kind > 3U)
+    return {};
+  const auto content = shape->label.value_or(semantic::RichTextContent{});
+  bool hasText = false;
+  for (const auto& paragraph : content.document.paragraphs)
+    for (const auto& run : paragraph.runs) hasText = hasText || !run.text.empty();
+  if (!hasText) return record.transform;
+  const auto layout = textLayoutService_->resolveShapeNatural(record.id, content, *shape,
+                                                               record.transform);
+  if (!layout || !layout->diagnostics.empty()) return {};
+  const float sy = std::max(0.001F, std::hypot(static_cast<float>(record.transform.c),
+                                                static_cast<float>(record.transform.d)));
+  const double currentWorldHeight = shape->height * sy;
+  const double availableTextHeight = layout->localBounds.bottom - layout->labelOffsetY;
+  if (!std::isfinite(availableTextHeight) || availableTextHeight <= 0.0) return {};
+  const double verticalInset = shape->shape_kind == 2U ? 0.70710678 :
+                              shape->shape_kind == 3U ? 0.5 : 1.0;
+  constexpr double padding = 16.0;
+  const double requiredWorldHeight =
+      (availableTextHeight + padding) / verticalInset;
+  if (requiredWorldHeight <= currentWorldHeight + 0.5) return record.transform;
+  const double scaleY = requiredWorldHeight / currentWorldHeight;
+  auto transform = record.transform;
   transform.c *= scaleY; transform.d *= scaleY;
-  transform.tx += ((before->transform.a - transform.a) * shape->width +
-                   (before->transform.c - transform.c) * shape->height) * 0.5;
-  transform.ty += ((before->transform.b - transform.b) * shape->width +
-                   (before->transform.d - transform.d) * shape->height) * 0.5;
+  // Keep the bottom edge anchored; extending the local Y basis moves only
+  // the top edge toward negative canvas Y.
+  transform.tx += (record.transform.c - transform.c) * shape->height;
+  transform.ty += (record.transform.d - transform.d) * shape->height;
+  return transform;
+}
+
+bool CanvasEditingRuntime::expandShapeLabel(semantic::ObjectId id) {
+  if (!canonicalWriteAdmission() || !textWritable(id)) return false;
+  const auto* before = semanticObjects_.find(id);
+  if (!before) return false;
+  const auto transform = fittedShapeLabelTransform(*before);
+  if (!transform) return false;
+  if (*transform == before->transform) return true;
   const auto forwardId = allocateOperationId(), inverseId = allocateOperationId();
   if (forwardId.isZero() || inverseId.isZero()) return false;
   return applyLocalHistoryOperation(
-      {forwardId, documentId_, 1U, 1U, semantic::SetTransformsOp{{{id, transform}}}},
+      {forwardId, documentId_, 1U, 1U, semantic::SetTransformsOp{{{id, *transform}}}},
       {inverseId, documentId_, 1U, 1U, semantic::SetTransformsOp{{{id, before->transform}}}});
 }
 
@@ -3157,6 +3196,15 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   for (auto& entry: references.value().entries) {
     if (const auto* transform=transformOverrides_.find(entry.record.objectId)) {
       entry.record.transform=*transform;
+      if (textLayoutService_) {
+        if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content)) {
+          const auto layout = textLayoutService_->resolveShape(
+              entry.record.objectId, *shape, entry.record.transform,
+              entry.record.objectId == selection_.primary());
+          entry.record.textLayout = layout;
+          entry.command = render::ShapeReferenceCommand{*shape, layout};
+        }
+      }
       // Canonical digest/encoding does not describe transient editor pixels.
       references.value().canonicalBytes.clear();
       references.value().digest.clear();
@@ -3190,7 +3238,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     }
   }
   if (interaction_->textSession() && textLayoutService_) {
-    if (const auto object = interaction_->textSession()->presentation()) {
+    if (const auto object = textPresentation()) {
       const semantic::RichTextContent* content = std::get_if<semantic::RichTextContent>(&object->content);
       const semantic::ShapeContent* shape = std::get_if<semantic::ShapeContent>(&object->content);
       if (shape != nullptr && shape->label.has_value()) content = &*shape->label;
@@ -3481,6 +3529,15 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
   for (auto& entry : references.value().entries) {
     if (const auto* transform = transformOverrides_.find(entry.record.objectId)) {
       entry.record.transform = *transform;
+      if (textLayoutService_) {
+        if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content)) {
+          const auto layout = textLayoutService_->resolveShape(
+              entry.record.objectId, *shape, entry.record.transform,
+              entry.record.objectId == selection_.primary());
+          entry.record.textLayout = layout;
+          entry.command = render::ShapeReferenceCommand{*shape, layout};
+        }
+      }
       references.value().canonicalBytes.clear();
       references.value().digest.clear();
     }

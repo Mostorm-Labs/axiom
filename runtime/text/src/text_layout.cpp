@@ -442,6 +442,34 @@ void offsetSnapshot(TextLayoutSnapshot& snapshot, float x, float y) {
 }
 }
 
+std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShapeNatural(
+    foundation::ObjectId id, const semantic::RichTextContent& content,
+    const semantic::ShapeContent& shape, const semantic::Transform2D& transform) {
+    const float sx = basisX(transform), sy = basisY(transform);
+    const float width = static_cast<float>(shape.width) * sx;
+    const float height = static_cast<float>(shape.height) * sy;
+    const auto viewport = shapeLabelViewport(shape.shape_kind, width, height);
+    const float innerWidth = std::max(1.0F, viewport.right - viewport.left);
+    auto natural = content;
+    natural.layout = semantic::RichTextLayout{innerWidth};
+    const auto previous = impl_->context;
+    impl_->context.width = innerWidth;
+    impl_->context.height = 0;
+    impl_->context.maxLines = 0;
+    const auto base = resolve(id, natural);
+    impl_->context = previous;
+    auto result = std::make_shared<TextLayoutSnapshot>(*base);
+    result->shapeLabel = true;
+    result->labelScaleX = 1.0F / sx;
+    result->labelScaleY = 1.0F / sy;
+    result->labelViewport = viewport;
+    result->labelOffsetX = viewport.left;
+    result->labelOffsetY = viewport.top;
+    offsetSnapshot(*result, result->labelOffsetX, result->labelOffsetY);
+    result->digest = snapshotDigest(*result);
+    return result;
+}
+
 std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShapeLabel(
     foundation::ObjectId id, const semantic::RichTextContent& canonical,
     const semantic::ShapeContent& shape, const semantic::Transform2D& transform,
@@ -471,14 +499,19 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShapeLab
     display.layout = semantic::RichTextLayout{viewportWidth};
     const auto previous = impl_->context;
     impl_->context.width = viewportWidth;
+    impl_->context.height = 0;
+    impl_->context.maxLines = 0;
+    const auto natural = resolve(id, display);
+    const bool overflow = natural->localBounds.bottom > viewportHeight + 0.5F;
     impl_->context.height = viewportHeight;
-    const float fontSize = placeholder ? 16.0F : [&] {
-        float size = 16.0F;
-        if (!display.document.paragraphs.empty() && !display.document.paragraphs.front().runs.empty())
-            size = static_cast<float>(display.document.paragraphs.front().runs.front().style.font_size);
-        return size;
-    }();
-    impl_->context.maxLines = std::max<std::size_t>(1, static_cast<std::size_t>(viewportHeight / std::max(1.0F, fontSize * 1.25F)));
+    if (overflow) {
+        std::size_t visibleLines = 0;
+        for (const auto& line : natural->lines) {
+            if (line.bounds.bottom > viewportHeight + 0.5F) break;
+            ++visibleLines;
+        }
+        impl_->context.maxLines = std::max<std::size_t>(1, visibleLines);
+    }
     const auto base = resolve(id, display);
     impl_->context = previous;
     auto result = std::make_shared<TextLayoutSnapshot>(*base);
@@ -488,7 +521,7 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShapeLab
     result->labelScaleY = 1.0F / sy;
     result->labelViewport = viewport;
     result->expandButton = {width - 24.0F, height - 24.0F, width - padding, height - padding};
-    result->overflow = result->overflow || base->localBounds.bottom > viewportHeight + 0.5F;
+    result->overflow = result->overflow || overflow;
     result->labelOffsetX = viewport.left;
     result->labelOffsetY = viewport.top + std::max(0.0F, (viewportHeight - base->localBounds.bottom) * 0.5F);
     offsetSnapshot(*result, result->labelOffsetX, result->labelOffsetY);

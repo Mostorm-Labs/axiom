@@ -273,6 +273,81 @@ TEST(FC02ShapeLabel, FixedTypographyPaddingEllipsisAndPlaceholderAreDerived) {
     EXPECT_FLOAT_EQ(large->labelScaleY, 1.0F / 3);
     EXPECT_EQ(*shape.label, label) << "Display truncation must preserve full canonical text";
     EXPECT_NE(small->digest, large->digest);
+    record.transform.a = 0.5;
+    record.transform.d = 0.5;
+    const auto compact = service.resolveShape(record.id, shape, record.transform);
+    EXPECT_TRUE(compact->overflow);
+    EXPECT_FLOAT_EQ(compact->labelScaleX, 2.0F);
+    EXPECT_FLOAT_EQ(compact->labelScaleY, 2.0F);
+}
+TEST(FC02ShapeLabel, TypingLongLabelExpandsUpwardFromTheBottomEdge) {
+    runtime::MemoryResourceProvider resources;
+    const semantic::ResourceId font{foundation::ObjectId::fromUint64(0xFC0202)};
+    std::ifstream file(FC02_HOST_FONT, std::ios::binary);
+    resources.publish(font.value, {std::istreambuf_iterator<char>(file), {}});
+    text::RichTextLayoutService service(resources, {300, 1});
+    service.registerFont({font, std::string(minimal_runtime_host::kHostTextFontSha256), 0});
+    for (const auto kind : {1U, 2U, 3U}) {
+      for (const bool existingLabel : {false, true}) {
+        SCOPED_TRACE(kind);
+        SCOPED_TRACE(existingLabel);
+        Host h(true);
+        auto record = labelShape(kind);
+        auto& shape = std::get<semantic::ShapeContent>(record.content);
+        shape.width = 80; shape.height = 40;
+        semantic::TextStyle style{semantic::ResourceId{foundation::ObjectId::fromUint64(0xFC0202)},
+                                  16, 400, false, false, {0, 0, 0, 1}};
+        semantic::RichTextContent emptyLabel;
+        emptyLabel.layout = semantic::RichTextLayout{80};
+        emptyLabel.document.paragraphs = {{foundation::ObjectId::fromUint64(814),
+            {semantic::ParagraphAlignment::kCenter, 1, 0, 0}, {{"", style}}}};
+        if (existingLabel) {
+            record.kind_version = 3;
+            shape.label = emptyLabel;
+        }
+        seedShape(h, record);
+        runtime::TextIntent edit;
+        edit.clientId = 15; edit.requestId = ++h.request;
+        edit.target = h.facade.mountedCanvasTargets().front();
+        edit.kind = runtime::TextIntentKind::kEditAtPoint; edit.object = record.id;
+        edit.viewX = 60; edit.viewY = 50;
+        ASSERT_EQ(h.facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+        ASSERT_TRUE(h.runtime.ownerPump());
+        ASSERT_EQ(h.facade.textIntentReceipt(15, h.request)->status,
+                  runtime::TextStatus::kApplied);
+        const auto before = *h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
+        const auto& beforeShape = std::get<semantic::ShapeContent>(before.content);
+        const auto beforeBottom = before.transform.ty + before.transform.b * beforeShape.width * 0.5 +
+                                  before.transform.d * beforeShape.height;
+        ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,
+                          u"A\nB\nC\nD\nE\nF").status,
+                  runtime::TextStatus::kApplied);
+        const auto* after = h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
+        ASSERT_NE(after, nullptr);
+        const auto& afterShape = std::get<semantic::ShapeContent>(after->content);
+        EXPECT_GT(after->transform.d * afterShape.height,
+                  before.transform.d * beforeShape.height);
+        EXPECT_NEAR(after->transform.ty + after->transform.b * afterShape.width * 0.5 +
+                        after->transform.d * afterShape.height,
+                    beforeBottom, 0.01);
+        const auto layout = service.resolveShape(after->id, afterShape, after->transform);
+        EXPECT_FALSE(layout->overflow) << "Expansion must reveal the complete label";
+        EXPECT_EQ(layout->lines.size(), 6U);
+        EXPECT_DOUBLE_EQ(afterShape.label->document.paragraphs.front().runs.front().style.font_size, 16);
+        EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), 2U);
+        const auto grownHeight = after->transform.d * afterShape.height;
+        ASSERT_EQ(h.input(runtime::TextInputKind::kReplace, u"\nG").status,
+                  runtime::TextStatus::kApplied);
+        const auto* continued = h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
+        ASSERT_NE(continued, nullptr);
+        const auto& continuedShape = std::get<semantic::ShapeContent>(continued->content);
+        EXPECT_GT(continued->transform.d * continuedShape.height, grownHeight);
+        EXPECT_NEAR(continued->transform.ty + continued->transform.b * continuedShape.width * 0.5 +
+                        continued->transform.d * continuedShape.height,
+                    beforeBottom, 0.01);
+        EXPECT_TRUE(h.facade.readTextGeometry().available);
+      }
+    }
 }
 TEST(FC02ShapeLabel, EmptyPromptAppearsOnlyWhileShapeIsSelected) {
     Host h(true);
@@ -381,6 +456,44 @@ TEST(FC02ShapeLabel, CompositionPreeditChangesRenderedShapePixelsBeforeCommit) {
     EXPECT_EQ(h.facade.readTextEditor().projection, u"1234");
     EXPECT_EQ(h.facade.readTextEditor().preedit, u"MMMM");
 }
+TEST(FC02ShapeLabel, PreeditOverflowGrowsThePresentationWithoutCommittingTheShape) {
+    Host h(true);
+    auto record = labelShape(2);
+    auto& shape = std::get<semantic::ShapeContent>(record.content);
+    shape.width = 80; shape.height = 40;
+    seedShape(h, record);
+    runtime::TextIntent edit;
+    edit.clientId = 15; edit.requestId = ++h.request;
+    edit.target = h.facade.mountedCanvasTargets().front();
+    edit.kind = runtime::TextIntentKind::kEditAtPoint; edit.viewX = 60; edit.viewY = 50;
+    ASSERT_EQ(h.facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_EQ(h.input(runtime::TextInputKind::kBegin).status, runtime::TextStatus::kObserved);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kUpdate, u"A\nB\nC\nD\nE\nF").status,
+              runtime::TextStatus::kObserved);
+    runtime::RuntimeFrameOpportunity frame;
+    ASSERT_TRUE(h.runtime.serviceFrameOpportunity(false, frame));
+    std::vector<std::uint8_t> during(256 * 256 * 4), cancelled(during.size());
+    ASSERT_TRUE(h.runtime.readCanonicalRgba(during));
+    const auto redAboveOriginalShape = [](const auto& pixels) {
+        std::size_t count = 0;
+        for (std::size_t y = 5; y < 20; ++y)
+            for (std::size_t x = 50; x < 70; ++x) {
+                const auto i = (y * 256 + x) * 4;
+                if (pixels[i] > 200 && pixels[i + 1] < 60 && pixels[i + 2] < 60) ++count;
+            }
+        return count;
+    };
+    EXPECT_GT(redAboveOriginalShape(during), 100U);
+    const auto* canonical = h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
+    ASSERT_NE(canonical, nullptr);
+    EXPECT_EQ(canonical->transform, record.transform);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), 0U);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kCancel).status, runtime::TextStatus::kObserved);
+    ASSERT_TRUE(h.runtime.serviceFrameOpportunity(false, frame));
+    ASSERT_TRUE(h.runtime.readCanonicalRgba(cancelled));
+    EXPECT_EQ(redAboveOriginalShape(cancelled), 0U);
+}
 TEST(FC02ShapeLabel, ExpandAffordanceUsesUndoableRuntimeSizeOperation) {
     Host h(true);
     auto shapeRecord = labelShape();
@@ -395,6 +508,7 @@ TEST(FC02ShapeLabel, ExpandAffordanceUsesUndoableRuntimeSizeOperation) {
         {{"A long shape label that needs the expand affordance", style}}}};
     shape.label = label; shapeRecord.kind_version = 3;
     seedShape(h, shapeRecord);
+    ASSERT_TRUE(h.runtime.qualificationRuntime().setSelectionMode(true));
     ASSERT_TRUE(h.runtime.registerSource(86));
     input::PlatformPointerBatch batch;
     batch.samples.push_back({86, 1, 1, 1000, 84, 54, 0, 0, 0, {}, {},
@@ -404,11 +518,20 @@ TEST(FC02ShapeLabel, ExpandAffordanceUsesUndoableRuntimeSizeOperation) {
     const auto* expanded = h.runtime.qualificationRuntime().qualificationObjectRecord(shapeRecord.id);
     ASSERT_NE(expanded, nullptr);
     const auto& expandedShape = std::get<semantic::ShapeContent>(expanded->content);
-    EXPECT_GT(expandedShape.width * expanded->transform.a, 80);
-    EXPECT_GE(expandedShape.height * expanded->transform.d, 40);
-    EXPECT_NEAR(expanded->transform.tx + expandedShape.width * expanded->transform.a * 0.5, 60, 0.01);
-    EXPECT_NEAR(expanded->transform.ty + expandedShape.height * expanded->transform.d * 0.5, 50, 0.01);
+    EXPECT_DOUBLE_EQ(expandedShape.width, 80);
+    EXPECT_GT(expandedShape.height * expanded->transform.d, 40);
+    EXPECT_NEAR(expanded->transform.tx + expanded->transform.a * expandedShape.width * 0.5 +
+                    expanded->transform.c * expandedShape.height,
+                60, 0.01);
+    EXPECT_NEAR(expanded->transform.ty + expanded->transform.b * expandedShape.width * 0.5 +
+                    expanded->transform.d * expandedShape.height,
+                70, 0.01);
     EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), 1U);
+    batch.samples.front().phase = input::PointerPhase::kUp;
+    batch.samples.front().sequence = 2;
+    batch.samples.front().timestampNs = 2000;
+    ASSERT_TRUE(h.runtime.submit(batch));
+    EXPECT_FALSE(h.runtime.qualificationRuntime().selectionTransformActive());
     const auto target = h.facade.mountedCanvasTargets().front();
     ASSERT_EQ(h.facade.undo(2, target.runtimeEpoch, 86).state, runtime::ProductControlState::kQueued);
     ASSERT_TRUE(h.runtime.ownerPump());
@@ -416,6 +539,95 @@ TEST(FC02ShapeLabel, ExpandAffordanceUsesUndoableRuntimeSizeOperation) {
     ASSERT_NE(restored, nullptr);
     EXPECT_EQ(std::get<semantic::ShapeContent>(restored->content).width, 80);
     EXPECT_EQ(std::get<semantic::ShapeContent>(restored->content).height, 40);
+    EXPECT_EQ(restored->transform, shapeRecord.transform);
+}
+TEST(FC02ShapeLabel, ExpandButtonRemainsClickableOutsideTheEllipseContour) {
+    Host h(true);
+    auto record = labelShape(2);
+    auto& shape = std::get<semantic::ShapeContent>(record.content);
+    semantic::TextStyle style{semantic::ResourceId{foundation::ObjectId::fromUint64(0xFC0202)},
+                              16, 400, false, false, {0, 0, 0, 1}};
+    semantic::RichTextContent label;
+    label.layout = semantic::RichTextLayout{200};
+    label.document.paragraphs = {{foundation::ObjectId::fromUint64(825),
+        {semantic::ParagraphAlignment::kCenter, 1, 0, 0},
+        {{std::string(500, 'M'), style}}}};
+    shape.label = label; record.kind_version = 3;
+    seedShape(h, record);
+    ASSERT_TRUE(h.runtime.qualificationRuntime().setSelectionMode(true));
+    runtime::MemoryResourceProvider resources;
+    const semantic::ResourceId font{foundation::ObjectId::fromUint64(0xFC0202)};
+    std::ifstream fontFile(FC02_HOST_FONT, std::ios::binary);
+    resources.publish(font.value, {std::istreambuf_iterator<char>(fontFile), {}});
+    text::RichTextLayoutService layoutService(resources, {300, 1});
+    layoutService.registerFont({font, std::string(minimal_runtime_host::kHostTextFontSha256), 0});
+    const auto derived = layoutService.resolveShape(record.id, shape, record.transform);
+    ASSERT_TRUE(derived->overflow);
+    ASSERT_LE(derived->expandButton.left, 184);
+    ASSERT_GE(derived->expandButton.right, 184);
+    ASSERT_LE(derived->expandButton.top, 104);
+    ASSERT_GE(derived->expandButton.bottom, 104);
+    ASSERT_TRUE(h.runtime.registerSource(86));
+    input::PlatformPointerBatch batch;
+    // The Shape itself is 200x120 at (20,30); its expand affordance is
+    // derived in displayed world coordinates, including the 8px inset.
+    batch.samples.push_back({86, 1, 1, 1000, 204, 134, 0, 0, 0, {}, {},
+        input::SampleProvenance::kConfirmedCurrent, input::PointerPhase::kDown});
+    ASSERT_TRUE(h.runtime.submit(batch));
+    const auto* after = h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
+    ASSERT_NE(after, nullptr);
+    EXPECT_GT(after->transform.d, 1);
+    EXPECT_DOUBLE_EQ(after->transform.a, 1);
+}
+TEST(FC02ShapeLabel, ShrinkPreviewAndCommittedLabelKeepTheSameFontPixels) {
+    Host h(true);
+    auto record = labelShape();
+    auto& shape = std::get<semantic::ShapeContent>(record.content);
+    semantic::TextStyle style{semantic::ResourceId{foundation::ObjectId::fromUint64(0xFC0202)},
+                              16, 400, false, false, {0, 0, 1, 1}};
+    semantic::RichTextContent label;
+    label.layout = semantic::RichTextLayout{200};
+    label.document.paragraphs = {{foundation::ObjectId::fromUint64(819),
+        {semantic::ParagraphAlignment::kCenter, 1, 0, 0},
+        {{"A long label that must become an ellipsis when the shape shrinks", style}}}};
+    shape.label = label; record.kind_version = 3;
+    seedShape(h, record);
+    auto& editor = h.runtime.qualificationRuntime();
+    ASSERT_TRUE(editor.setSelectionMode(true));
+    ASSERT_TRUE(editor.selectAtViewPoint(120, 90));
+    ASSERT_TRUE(editor.renderSelectionOverlay());
+    const auto corner = editor.selectionOverlay()->handle(render::HandleKind::kBottomRight).center;
+    ASSERT_TRUE(editor.selectionPointer(18, input::PointerPhase::kDown, corner.x, corner.y));
+    ASSERT_TRUE(editor.selectionPointer(18, input::PointerPhase::kMove, corner.x - 100, corner.y - 60));
+    ASSERT_TRUE(editor.selectionTransformActive());
+    runtime::RuntimeFrameOpportunity frame;
+    ASSERT_TRUE(h.runtime.serviceFrameOpportunity(false, frame));
+    std::vector<std::uint8_t> preview(256 * 256 * 4), committed(preview.size()),
+                              overlay(preview.size());
+    ASSERT_TRUE(h.runtime.readCanonicalRgba(preview));
+    ASSERT_TRUE(h.runtime.readPreviewRgba(overlay));
+    ASSERT_TRUE(editor.selectionPointer(18, input::PointerPhase::kUp, corner.x - 100, corner.y - 60));
+    ASSERT_TRUE(h.runtime.serviceFrameOpportunity(false, frame));
+    ASSERT_TRUE(h.runtime.readCanonicalRgba(committed));
+    const auto blueMask = [](const auto& pixels) {
+        std::vector<bool> mask;
+        for (std::size_t y = 40; y < 80; ++y)
+            for (std::size_t x = 35; x < 105; ++x) {
+                const auto i = (y * 256 + x) * 4;
+                mask.push_back(pixels[i] < 100 && pixels[i + 1] < 100 && pixels[i + 2] > 150);
+            }
+        return mask;
+    };
+    const auto expected = blueMask(committed);
+    ASSERT_GT(std::count(expected.begin(), expected.end(), true), 20);
+    EXPECT_EQ(blueMask(preview), expected)
+        << "Live resize must re-layout at the new boundary without scaling the glyphs";
+    EXPECT_EQ(blueMask(overlay), expected);
+    const auto* after = editor.qualificationObjectRecord(record.id);
+    ASSERT_NE(after, nullptr);
+    EXPECT_LT(after->transform.a, 1);
+    EXPECT_LT(after->transform.d, 1);
+    EXPECT_EQ(std::get<semantic::ShapeContent>(after->content).label, shape.label);
 }
 TEST(FC02ShapeLabel, SelectedShapeEditorRetiresItsPreviousOpaqueSelectionPreview) {
     Host h(true);

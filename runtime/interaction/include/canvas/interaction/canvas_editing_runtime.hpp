@@ -586,6 +586,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<std::uint32_t> textHit(const semantic::ObjectRecord&,float,float);
   semantic::ObjectId hitTextAtView(float,float);
   bool textPointer(const input::PointerSample&);
+  bool shapeExpandPointer(const input::PointerSample&);
+  std::optional<semantic::Transform2D> fittedShapeLabelTransform(const semantic::ObjectRecord&);
+  std::optional<semantic::ObjectRecord> textPresentation();
   bool expandShapeLabel(semantic::ObjectId);
   bool textClosed() const noexcept override { return closed_; }
   bool textWritable(semantic::ObjectId) const noexcept override;
@@ -599,7 +602,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   semantic::ObjectId allocateTextIdentity() override;
   semantic::OperationId allocateTextOperation() override { return allocateOperationId(); }
   semantic::PrepareResult prepareTextOperation(const semantic::Operation&) const override;
-  bool applyTextOperation(semantic::Operation f,semantic::Operation i) override { return applyLocalHistoryOperation(std::move(f),std::move(i)); }
+  bool applyTextOperation(semantic::Operation f,semantic::Operation i) override;
   std::pair<float,float> textContentPoint(float x,float y) const noexcept override { return viewportController_->viewToContent(x,y); }
   void observeApplied(const semantic::Operation&, const semantic::ApplyResult&) noexcept;
   [[nodiscard]] bool applyLocalHistoryOperation(
@@ -702,6 +705,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   input::PointerKey textSelectionPointer_{};
   std::uint32_t textSelectionAnchor_=0;
   std::unordered_set<input::PointerKey,input::PointerKeyHash> textPointerKeys_;
+  std::unordered_set<input::PointerKey,input::PointerKeyHash> shapeExpandPointerKeys_;
   std::unordered_map<std::uint64_t, PendingBrushCommit> pendingBrushCommits_;
   ink::ArcPreviewSink* arcPreviewSink_ = nullptr;
   ink::CanonicalVisibilitySink* canonicalVisibilitySink_ = nullptr;

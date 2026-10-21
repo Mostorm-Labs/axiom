@@ -119,6 +119,58 @@ semantic::ObjectId CanvasEditingRuntime::hitTextAtView(float x, float y) {
     }
     return {};
 }
+bool CanvasEditingRuntime::shapeExpandPointer(const input::PointerSample& sample) {
+    if (sample.phase != input::PointerPhase::kDown) {
+        if (!shapeExpandPointerKeys_.contains(sample.key)) return false;
+        if (sample.phase == input::PointerPhase::kUp ||
+            sample.phase == input::PointerPhase::kCancel)
+            shapeExpandPointerKeys_.erase(sample.key);
+        return true;
+    }
+    if (!sample.key.valid() || !textLayoutService_) return false;
+    const bool active = interaction_->textSession() &&
+        interaction_->textSession()->read().phase != runtime::TextPhase::kClosed;
+    if (!textTool_ && !selectionMode_ && !active) return false;
+    const auto point = viewToContent(sample.x, sample.y);
+    for (const auto& candidate : semanticObjects_.allObjects()) {
+        const auto* shape = std::get_if<semantic::ShapeContent>(&candidate.content);
+        if (candidate.kind != semantic::ObjectKind::kShape || !shape || !shape->label ||
+            !textWritable(candidate.id)) continue;
+        const auto& transform = candidate.transform;
+        const double det = transform.a * transform.d - transform.b * transform.c;
+        if (!std::isfinite(det) || std::abs(det) < 1.0e-12) continue;
+        const float sx = std::max(0.001F, std::hypot(static_cast<float>(transform.a),
+                                                      static_cast<float>(transform.b)));
+        const float sy = std::max(0.001F, std::hypot(static_cast<float>(transform.c),
+                                                      static_cast<float>(transform.d)));
+        const double dx = point.first - transform.tx, dy = point.second - transform.ty;
+        const float px = static_cast<float>((transform.d * dx - transform.c * dy) / det) * sx;
+        const float py = static_cast<float>((transform.a * dy - transform.b * dx) / det) * sy;
+        const auto layout = textLayoutService_->resolveShapeLabel(
+            candidate.id, *shape->label, *shape, transform);
+        if (!layout || !layout->overflow || px < layout->expandButton.left ||
+            px > layout->expandButton.right || py < layout->expandButton.top ||
+            py > layout->expandButton.bottom) continue;
+        shapeExpandPointerKeys_.insert(sample.key);
+        (void)expandShapeLabel(candidate.id);
+        return true;
+    }
+    return false;
+}
+std::optional<semantic::ObjectRecord> CanvasEditingRuntime::textPresentation() {
+    if (!interaction_->textSession()) return {};
+    const auto state = interaction_->textSession()->read();
+    auto record = interaction_->textSession()->presentation();
+    if (!record) return {};
+    if (const auto* current = semanticObjects_.find(record->id))
+        record->transform = current->transform;
+    // Native preedit is only a presentation. It can expand the drawn Shape,
+    // but cancellation must leave canonical geometry and history untouched.
+    if (state.composition)
+        if (const auto fitted = fittedShapeLabelTransform(*record))
+            record->transform = *fitted;
+    return record;
+}
 runtime::TextGeometrySnapshot
 CanvasEditingRuntime::textGeometry(const runtime::CanvasTargetKey& target) {
     runtime::TextGeometrySnapshot out;
@@ -126,7 +178,7 @@ CanvasEditingRuntime::textGeometry(const runtime::CanvasTargetKey& target) {
         return out;
     auto& editor = *interaction_->textSession();
     const auto state = editor.read();
-    const auto record = editor.presentation();
+    const auto record = textPresentation();
     if (!record)
         return out;
     const auto start =
@@ -188,22 +240,6 @@ bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
             const auto* record = semanticObjects_.find(existing);
             const auto* shape = record ? std::get_if<semantic::ShapeContent>(&record->content) : nullptr;
             if (shape && shape->label) {
-                const auto point = viewToContent(x, y);
-                const auto& t = record->transform;
-                const auto det = t.a * t.d - t.b * t.c;
-                if (std::abs(det) > 1e-12) {
-                    const float sx = std::max(0.001F, std::hypot(static_cast<float>(t.a), static_cast<float>(t.b)));
-                    const float sy = std::max(0.001F, std::hypot(static_cast<float>(t.c), static_cast<float>(t.d)));
-                    const auto dx = point.first - t.tx, dy = point.second - t.ty;
-                    const float px = static_cast<float>((t.d * dx - t.c * dy) / det) * sx;
-                    const float py = static_cast<float>((t.a * dy - t.b * dx) / det) * sy;
-                    const auto layout = textLayoutService_->resolveShapeLabel(record->id, *shape->label, *shape, t);
-                    if (layout->overflow && px >= layout->expandButton.left && px <= layout->expandButton.right &&
-                        py >= layout->expandButton.top && py <= layout->expandButton.bottom) {
-                        (void)expandShapeLabel(record->id);
-                        return true;
-                    }
-                }
                 textPointerKeys_.insert(sample.key);
                 textSelectionPointer_ = sample.key;
                 return true;
@@ -224,7 +260,7 @@ bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
             (void)editor->intent(create);
         } else if (state.composition)
             (void)editor->finish();
-        else if (const auto record = editor->presentation()) {
+        else if (const auto record = textPresentation()) {
             if (const auto hit = textHit(*record, sample.x, sample.y)) {
                 runtime::TextInputEvent selection;
                 selection.token = state.token;
@@ -240,7 +276,7 @@ bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
     }
     if (sample.phase == input::PointerPhase::kMove && sample.key == textSelectionPointer_ &&
         !state.composition) {
-        if (const auto record = editor->presentation())
+        if (const auto record = textPresentation())
             if (const auto hit = textHit(*record, sample.x, sample.y)) {
                 runtime::TextInputEvent selection;
                 selection.token = state.token;
