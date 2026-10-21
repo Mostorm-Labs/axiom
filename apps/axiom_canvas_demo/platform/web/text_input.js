@@ -5,30 +5,44 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
   // belongs to the canvas. In particular it must not steal a double-click's second Down.
   Object.assign(carrier.style,{position:'absolute',width:'1px',height:'1px',opacity:'0',pointerEvents:'none',padding:'0',border:'0',resize:'none',overflow:'hidden',whiteSpace:'pre',fontSize:'1px',lineHeight:'1px'});stage.append(carrier);
   const snapshot=()=>JSON.parse(module.UTF8ToString(module._axiom_web_text_snapshot(handle)));
+  const fontCatalog=()=>JSON.parse(module.UTF8ToString(module._axiom_web_font_catalog(handle)));
+  const fontStatus=id=>withString(id,value=>JSON.parse(module.UTF8ToString(module._axiom_web_font_status(handle,value))));
+  const receipt=(clientId,requestId)=>withString(String(clientId),client=>
+    withString(String(requestId),request=>
+      JSON.parse(module.UTF8ToString(module._axiom_web_text_intent_receipt(handle,client,request)))));
   const decode=units=>{let value='';for(let i=0;i<units.length;i+=4096)value+=String.fromCharCode(...units.slice(i,i+4096));return value;};
   const withString=(value,call)=>{const ptr=module.stringToNewUTF8(value);try{return call(ptr);}finally{module._free(ptr);}};
-  let keepOnBlur=false,nativeComposing=false,epoch=0n,draining=false,disposed=false,lastEffect='',lastSession='',compositionRange=null,compositionToken=null,terminal=null,pendingTerminal=null,fault='',geometryFault='';
+  let keepOnBlur=false,nativeComposing=false,nativePreedit='',epoch=0n,intentSequence=0n,draining=false,disposed=false,lastEffect='',lastSession='',compositionRange=null,compositionToken=null,terminal=null,pendingTerminal=null,fault='',geometryFault='';
   const facts=[],waiters=[];
   const notify=()=>{for(const resolve of waiters.splice(0))resolve();};
   const pump=()=>{if(!module._axiom_web_text_pump(handle))throw new Error('Text owner pump rejected');};
   const wireInput=(s,fact)=>{
     const kind=fact.kind,text=(fact.text||'').replace(/\r\n?/g,'\n');const range=fact.range||(kind===0||kind===4||kind===5?s.selection:s.replacement);
-    const wire={token:fact.token||s.token,sequence:s.sequence,kind,text,range,composition:kind===0?String(fact.epoch):kind===4||kind===5?'0':s.composition,effect:kind===2||kind===6?s.effect:'0'};
+    const wire={token:fact.token||s.token,sequence:s.sequence,kind,text,range,composition:kind===0?String(fact.epoch):kind===4||kind===5?'0':s.composition,effect:kind===2||kind===6?s.effect:'0',preeditSelection:fact.preeditSelection??null};
     if(fact.terminal && fact.terminal.wire)return {...fact.terminal.wire,text};
     if(fact.terminal)fact.terminal.wire=wire;
     return wire;
   };
   const send=wire=>withString(JSON.stringify(wire.token),token=>withString(wire.sequence,sequence=>withString(wire.composition,composition=>withString(wire.effect,effect=>{
     const ptr=module._malloc((wire.text.length+1)*2);try{module.stringToUTF16(wire.text,ptr,(wire.text.length+1)*2);
-      const queued=module._axiom_web_text_input(handle,token,sequence,wire.kind,ptr,wire.text.length,...wire.range,composition,effect);
-      if(queued!==1 && queued!==2 && queued!==3)return queued;pump();return module._axiom_web_text_status(handle,token,sequence,0);
+      const preedit=module.stringToNewUTF8(JSON.stringify(wire.preeditSelection));
+      try{const queued=module._axiom_web_text_input(handle,token,sequence,wire.kind,ptr,wire.text.length,...wire.range,composition,effect,preedit);
+        if(queued!==1 && queued!==2 && queued!==3)return queued;pump();return module._axiom_web_text_status(handle,token,sequence,0);
+      }finally{module._free(preedit);}
     }finally{module._free(ptr);}
   }))));
   async function drain(){if(draining||disposed)return;draining=true;
     try{const accepted=[];while(facts.length){const fact=facts[0],s=snapshot();let result;
-      if(fact.intent!==undefined){result=withString(JSON.stringify(s.token),token=>module._axiom_web_text_intent(handle,fact.intent,token,fact.x||0,fact.y||0,fact.width||320));if(result===1){pump();result=module._axiom_web_text_intent_status(handle);}}
+      if(fact.intent!==undefined){
+        if(!fact.intentClient)fact.intentClient=String(fact.clientId??0xFC0207);
+        if(!fact.intentRequest)fact.intentRequest=fact.requestId===undefined?String(++intentSequence):String(fact.requestId);
+        const request={kind:fact.intent,clientId:fact.intentClient,requestId:fact.intentRequest,target:fact.target??s.target,token:fact.token??s.token,x:fact.x??0,y:fact.y??0,width:fact.width??320};
+        if(fact.object!==undefined)request.object=fact.object;if(fact.format!==undefined)request.format=fact.format;
+        result=withString(JSON.stringify(request),data=>module._axiom_web_text_intent_json(handle,data));
+        if(result===1){pump();fact.receipt=receipt(fact.intentClient,fact.intentRequest);result=fact.receipt?.status??4;}
+      }
       else{if(fact.kind===4)for(const [from,to] of accepted)if(JSON.stringify(fact.token)===from && JSON.stringify(s.token)===JSON.stringify(to)) {fact.token=to;if(fact.range && JSON.stringify(fact.range)===JSON.stringify(fact.selection))fact.range=s.selection;}const wire=wireInput(s,fact);result=send(wire);if(result===3 && fact.kind===4){const next=snapshot().token;for(const alias of accepted)if(JSON.stringify(alias[1])===JSON.stringify(wire.token))alias[1]=next;accepted.push([JSON.stringify(wire.token),next]);}if(result===9){setTimeout(()=>queueMicrotask(drain),0);break;}}
-      facts.shift();if([4,6,7].includes(fact.intent) && [2,3].includes(result))fault='';if(![1,2,3].includes(result)){fault=`Text input rejected (${result}); resync or retry required`;stage.dataset.textError=fault;}
+      facts.shift();if([4,6,7,15].includes(fact.intent) && [2,3].includes(result))fault='';if(![1,2,3].includes(result)){fault=`Text input rejected (${result}); resync or retry required`;stage.dataset.textError=fault;}
       else if(fact.intent===undefined && !fact.terminal){const wire=fact.terminal?.wire||wireInput(s,fact);withString(JSON.stringify(wire.token),token=>withString(wire.sequence,seq=>module._axiom_web_text_status(handle,token,seq,1)));}
       if(!facts.length && pendingTerminal){facts.push(pendingTerminal);pendingTerminal=null;}
     }}catch(error){fault=String(error);stage.dataset.textError=fault;}
@@ -57,8 +71,18 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
     while((s=snapshot()).phase!==0 && s.exit!==4 && performance.now()<until)await new Promise(resolve=>setTimeout(resolve,8));
     if(s.phase!==0){fault=s.exit===4?'IME completion rejected; retry or cancel':'IME completion pending native result';stage.dataset.textError=fault;throw new Error(fault);}return true;
   }
-  carrier.addEventListener('compositionstart',()=>{nativeComposing=true;terminal=null;compositionRange=snapshot().selection;compositionToken=snapshot().token;enqueue({kind:0,epoch:++epoch});});
-  carrier.addEventListener('compositionupdate',event=>enqueue({kind:1,text:event.data}));
+  carrier.addEventListener('compositionstart',()=>{nativeComposing=true;nativePreedit='';terminal=null;compositionRange=snapshot().selection;compositionToken=snapshot().token;enqueue({kind:0,epoch:++epoch});});
+  carrier.addEventListener('compositionupdate',event=>{nativePreedit=event.data;enqueue({kind:1,text:event.data});});
+  carrier.addEventListener('input',event=>{
+    // compositionupdate precedes the browser's carrier mutation. Read native
+    // selection only after input, relative to the pinned composition range.
+    if(!nativeComposing || !event.isComposing || !compositionRange)return;
+    const start=carrier.selectionStart-compositionRange[0],end=carrier.selectionEnd-compositionRange[0];
+    if(start<0 || end<start || end>nativePreedit.length)return;
+    const update=facts.at(-1);
+    if(update?.kind===1 && update.text===nativePreedit)update.preeditSelection=[start,end-start];
+    else enqueue({kind:1,text:nativePreedit,preeditSelection:[start,end-start]});
+  });
   carrier.addEventListener('compositionend',event=>{if(!nativeComposing)return;nativeComposing=false;terminal={epoch,wire:null};enqueue({kind:event.data?2:3,text:event.data,terminal});compositionRange=null;compositionToken=null;});
   carrier.addEventListener('beforeinput',event=>{
     if(nativeComposing||event.isComposing||['insertCompositionText','deleteCompositionText','insertFromComposition'].includes(event.inputType))return;
@@ -88,5 +112,5 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
     canvas.focus({preventScroll:true});
     return intent(13,{x:event.clientX-rect.left,y:event.clientY-rect.top});
   }).catch(error=>{stage.dataset.textError=String(error);});});
-  return {snapshot,sync,intent,finish,complete,composing:()=>nativeComposing,error:()=>fault||geometryFault,dispose(){disposed=true;carrier.remove();}};
+  return {snapshot,sync,intent,finish,complete,composing:()=>nativeComposing,error:()=>fault||geometryFault,fontCatalog,fontStatus,receipt,dispose(){disposed=true;carrier.remove();}};
 }

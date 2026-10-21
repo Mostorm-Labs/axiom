@@ -1,0 +1,53 @@
+{
+  "task": "FC02 public consumer parity repair A1-A4 and header visibility",
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/fc02-windows-ime-resume",
+  "baseRevision": "d54029d91aa8e67c9314b05992e749848629c64f",
+  "remoteDeltaAtStart": "0 0",
+  "implemented": [
+    "MinimalRuntimeFacade forwards font catalog and per-resource status",
+    "Web JS/WASM ordinary consumer supports formatting ingress, receipt identity, format/font readback",
+    "Web forwards observed preedit caret selection to Runtime",
+    "Web preserves zero width for Runtime rejection",
+    "Concrete facade header includes removed; semantic/src made private; qualification-only include retained only on white-box tests"
+  ],
+  "validation": {
+    "nativeConsumer": "PASS",
+    "fc02Text": "PASS",
+    "selectedCtest": "234/234 PASS",
+    "python": "17/17 PASS",
+    "webConsumer": "5/5 PASS",
+    "webText": "7/7 PASS",
+    "webMinimal": "13/13 PASS",
+    "webShapeDpr": "6/6 PASS",
+    "compileDbOrdinaryHeaders": "PASS",
+    "strictMsvc": "/W4 /WX PASS",
+    "strictWeb": "-Werror PASS",
+    "nativeClang": "NOT_RUN_COMPILER_UNAVAILABLE",
+    "physicalIme": "PHYSICAL_PENDING"
+  },
+  "windowsProcess": {
+    "pid": 262440,
+    "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\build\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe",
+    "preserved": true
+  },
+  "artifacts": [
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\web-build-repair\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.wasm",
+      "sha256": "63B64378290524ADBA28AC431754EF8AE84A6224C532110A4C004B3F478CEF67"
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\web-build-repair\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.js",
+      "sha256": "4F8D34CE36BB3377B9DEB84316B0652DBD4AA2285E1FBC987997965C18974915"
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\web-build-repair\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.data",
+      "sha256": "5C3E06A73A2DB90ACD90544E36C0B98BC3B0AB5359C10A1BB6CAB810BF48C887"
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\build\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe",
+      "sha256": "01267B93249747519E71D469A50D55DE7A39584044DCC8CDE8F19780A8250098"
+    }
+  ],
+  "independentReview": "not claimed"
+}

@@ -120,6 +120,6 @@ if(EMSCRIPTEN)
         "SHELL:--preload-file \"${AXIOM_HOST_FONT_ROOT}/NOTICE.txt@/axiom-font.NOTICE.txt\""
         "-sMODULARIZE=1" "-sEXPORT_ES6=1" "-sEXPORT_NAME=createAxiomCanvasModule"
         "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1" "-sMIN_WEBGL_VERSION=2" "-sMAX_WEBGL_VERSION=2"
-        "-sEXPORTED_FUNCTIONS=['_malloc','_free']"
+        "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_web_text_snapshot','_axiom_web_text_intent_json','_axiom_web_text_intent_receipt','_axiom_web_font_catalog','_axiom_web_font_status','_axiom_web_text_intent_status','_axiom_web_text_pump','_axiom_web_text_input','_axiom_web_text_status','_axiom_web_text_tool']"
         "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8','stringToUTF16']")
 endif()

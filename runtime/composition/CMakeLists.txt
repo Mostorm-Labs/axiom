@@ -5,7 +5,8 @@ add_library(canvas_runtime_composition STATIC
     src/canvas_runtime_facade.cpp
     src/canvas_runtime_text.cpp)
 target_include_directories(canvas_runtime_composition PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(canvas_runtime_composition PRIVATE
     ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
 target_link_libraries(canvas_runtime_composition PUBLIC
     canvas_runtime_editor canvas_runtime_scene canvas_runtime_render
@@ -33,6 +34,7 @@ if(BUILD_TESTING)
   target_compile_definitions(axiom_fc02_text_tests PRIVATE FC02_LATIN_FONT="${CANVAS_SKIA_SDK_ROOT}/resources/fonts/Roboto-Regular.ttf")
   target_link_libraries(axiom_fc02_text_tests PRIVATE canvas_runtime_composition GTest::gtest_main protobuf::libprotobuf)
   target_include_directories(axiom_fc02_text_tests PRIVATE ${PROJECT_BINARY_DIR}/runtime/semantic/generated)
+  target_include_directories(axiom_fc02_text_tests PRIVATE ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
   target_compile_definitions(axiom_fc02_text_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
   if(MSVC)
     target_compile_options(axiom_fc02_text_tests PRIVATE /W4 /permissive- /WX /EHsc)
