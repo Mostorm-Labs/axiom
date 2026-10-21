@@ -143,5 +143,8 @@ try {
 finally{
   results.errors=errors;fs.mkdirSync(path.dirname(output),{recursive:true});
   fs.writeFileSync(output,JSON.stringify(results,null,2));console.log(`${results.result}: ${results.cases.length} Shape variants; ${output}`);
-  if(results.error)console.error(results.error);await call('Browser.close');socket.close();
+  if(results.error)console.error(results.error);
+  // Chrome may exit before replying to Browser.close. Do not turn a completed
+  // test into Node's unresolved-top-level-await exit code 13 during teardown.
+  await Promise.race([call('Browser.close'),pause(1000)]).catch(()=>{});socket.close();
 }

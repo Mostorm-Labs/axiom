@@ -26,6 +26,8 @@ struct WorldToViewAffine final {
 struct ShapeReferenceCommand final {
     semantic::ShapeContent content;
     std::shared_ptr<const text::TextLayoutSnapshot> labelLayout = nullptr;
+    // Per-frame editor affordance; canonical Scene never owns selection state.
+    bool showExpandButton = false;
     bool operator==(const ShapeReferenceCommand&) const = default;
 };
 struct ImageReferenceCommand final {

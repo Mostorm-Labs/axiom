@@ -76,7 +76,12 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
     if(kind!==undefined){event.preventDefault();event.stopPropagation();enqueue({intent:kind});}
   });
   carrier.addEventListener('blur',()=>{if(snapshot().phase!==0)enqueue({intent:keepOnBlur?14:2});});
-  canvas.tabIndex=0;canvas.addEventListener('pointerdown',()=>{keepOnBlur=false;canvas.focus({preventScroll:true});});
+  canvas.tabIndex=0;canvas.addEventListener('pointerdown',()=>{keepOnBlur=false;
+    // A canvas click is an editor pointer fact, not a focus exit. Moving focus
+    // off the native carrier here would finish the session before Runtime can
+    // locate the clicked glyph (or request native completion for an outside hit).
+    if(snapshot().phase===0 || document.activeElement!==carrier)canvas.focus({preventScroll:true});
+  });
   canvas.addEventListener('dblclick',event=>{event.preventDefault();const rect=canvas.getBoundingClientRect();finish().then(()=>{
     // Finishing the single-click draft blurs the carrier. Restore canvas focus
     // so sync can hand it to the newly entered editor rather than leaving it on body.

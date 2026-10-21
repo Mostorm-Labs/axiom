@@ -151,6 +151,70 @@ TEST(FC02ShapeLabel, RealDownBeforeSecondDoubleClickDoesNotCreateOrBlockEditor) 
     EXPECT_EQ(h.facade.readTextEditor().projection, u"existing label");
     EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), operations);
 }
+TEST(FC02ShapeLabel, ReenterUsesTheClickedGlyphAndPointerCanMoveCaret) {
+    Host h(true); seedShape(h, labelShape());
+    runtime::TextIntent edit;
+    edit.clientId=15; edit.requestId=++h.request;
+    edit.target=h.facade.mountedCanvasTargets().front();
+    edit.kind=runtime::TextIntentKind::kEditAtPoint; edit.viewX=120; edit.viewY=90;
+    ASSERT_EQ(h.facade.submitTextIntent(edit).status,runtime::TextStatus::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,u"Hello Axiom").status,runtime::TextStatus::kApplied);
+    const auto end=h.facade.readTextGeometry(); ASSERT_TRUE(end.available);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kApplied);
+    edit.requestId=++h.request; edit.viewX=end.caret[0]+2; edit.viewY=(end.caret[1]+end.caret[5])*0.5F;
+    ASSERT_EQ(h.facade.submitTextIntent(edit).status,runtime::TextStatus::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    EXPECT_EQ(h.facade.readTextEditor().selection,(runtime::TextRange{11,0}));
+    ASSERT_TRUE(h.runtime.registerSource(86));
+    const auto click=[&](std::uint64_t seq,float x) {
+        for(auto phase:{input::PointerPhase::kDown,input::PointerPhase::kUp}) {
+            input::PlatformPointerBatch batch;
+            batch.samples.push_back({86,1,seq,seq*1000,x,edit.viewY,0,0,0,{},{},
+                input::SampleProvenance::kConfirmedCurrent,phase});
+            EXPECT_TRUE(h.runtime.submit(batch)); ++seq;
+        }
+    };
+    click(1,70); EXPECT_EQ(h.facade.readTextEditor().selection,(runtime::TextRange{0,0}));
+    click(3,edit.viewX); EXPECT_EQ(h.facade.readTextEditor().selection,(runtime::TextRange{11,0}));
+    EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kEditing);
+}
+TEST(FC02ShapeLabel, OutsideDownFinishesWithoutCreatingAnotherDraft) {
+    for(bool composing:{false,true}) {
+        SCOPED_TRACE(composing);
+        Host h(true); seedShape(h,labelShape());
+        runtime::TextIntent edit;
+        edit.clientId=15;edit.requestId=++h.request;edit.target=h.facade.mountedCanvasTargets().front();
+        edit.kind=runtime::TextIntentKind::kEditAtPoint;edit.viewX=120;edit.viewY=90;
+        ASSERT_EQ(h.facade.submitTextIntent(edit).status,runtime::TextStatus::kQueued);
+        ASSERT_TRUE(h.runtime.ownerPump());
+        ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,u"Confirmed").status,runtime::TextStatus::kApplied);
+        if(composing) {
+            ASSERT_EQ(h.input(runtime::TextInputKind::kBegin).status,runtime::TextStatus::kObserved);
+            ASSERT_EQ(h.input(runtime::TextInputKind::kUpdate,u"preedit").status,runtime::TextStatus::kObserved);
+        }
+        const auto operations=h.runtime.qualificationRuntime().submittedOperationCount();
+        ASSERT_TRUE(h.runtime.registerSource(86));
+        for(auto phase:{input::PointerPhase::kDown,input::PointerPhase::kUp}) {
+            const auto seq=phase==input::PointerPhase::kDown?1U:2U;
+            input::PlatformPointerBatch batch;
+            batch.samples.push_back({86,1,seq,seq*1000,250,240,0,0,0,{},{},
+                input::SampleProvenance::kConfirmedCurrent,phase});
+            ASSERT_TRUE(h.runtime.submit(batch));
+        }
+        const auto state=h.facade.readTextEditor();
+        if(composing) {
+            EXPECT_EQ(state.phase,runtime::TextPhase::kFinishing);
+            EXPECT_NE(state.finishEffect,0U);
+            EXPECT_EQ(state.projection,u"Confirmed");
+            EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(),operations);
+            ASSERT_EQ(h.input(runtime::TextInputKind::kCommit,u"native result").status,runtime::TextStatus::kApplied);
+        }
+        EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kClosed);
+        EXPECT_EQ(h.runtime.semanticObjectCount(),1U);
+        EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(),operations+(composing?1:0));
+    }
+}
 TEST(FC02ShapeLabel, FirstShapeLabelTextDefaultsToCenteredParagraph) {
     Host h(true); seedShape(h, labelShape());
     runtime::TextIntent edit;
@@ -494,6 +558,55 @@ TEST(FC02ShapeLabel, PreeditOverflowGrowsThePresentationWithoutCommittingTheShap
     ASSERT_TRUE(h.runtime.readCanonicalRgba(cancelled));
     EXPECT_EQ(redAboveOriginalShape(cancelled), 0U);
 }
+TEST(FC02ShapeLabel, UnselectedOverflowHasNoExpandPixelsOrExpandHit) {
+    Host h(true);
+    auto record=labelShape();auto& shape=std::get<semantic::ShapeContent>(record.content);
+    shape.width=80;shape.height=40;record.kind_version=3;
+    semantic::TextStyle style{semantic::ResourceId{foundation::ObjectId::fromUint64(0xFC0202)},
+        16,400,false,false,{0,0,0,1}};
+    semantic::RichTextContent label;label.layout=semantic::RichTextLayout{80};
+    label.document.paragraphs={{foundation::ObjectId::fromUint64(841),
+        {semantic::ParagraphAlignment::kCenter,1,0,0},{{std::string(100,'M'),style}}}};
+    shape.label=label;seedShape(h,record);
+    runtime::CanvasControlRequest tool;
+    tool.clientId=86;tool.requestId=2;tool.target=h.facade.mountedCanvasTargets().front();
+    tool.payload.kind=runtime::CanvasControlPayloadKind::kSelectTool;
+    tool.payload.tool=runtime::CanvasToolKind::kSelect;
+    ASSERT_EQ(h.facade.submitCanvasControl(tool).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    runtime::RuntimeFrameOpportunity frame;std::vector<std::uint8_t> pixels(256*256*4);
+    const auto whiteInButton=[&] {
+        EXPECT_TRUE(h.runtime.serviceFrameOpportunity(false,frame));
+        EXPECT_TRUE(h.runtime.readCanonicalRgba(pixels));std::size_t count=0;
+        for(unsigned y=48;y<61;++y)for(unsigned x=78;x<91;++x) {
+            const auto i=(y*256+x)*4;
+            if(pixels[i]>240&&pixels[i+1]>240&&pixels[i+2]>240)++count;
+        }
+        return count;
+    };
+    EXPECT_EQ(whiteInButton(),0U) << "Hidden affordance must not paint";
+    ASSERT_TRUE(h.runtime.registerSource(86));
+    for(auto phase:{input::PointerPhase::kDown,input::PointerPhase::kUp}) {
+        const auto seq=phase==input::PointerPhase::kDown?1U:2U;
+        input::PlatformPointerBatch batch;
+        batch.samples.push_back({86,1,seq,seq*1000,84,54,0,0,0,{},{},
+            input::SampleProvenance::kConfirmedCurrent,phase});
+        ASSERT_TRUE(h.runtime.submit(batch));
+        if(phase==input::PointerPhase::kDown) {
+            ASSERT_TRUE(h.runtime.readPreviewRgba(pixels));std::size_t white=0;
+            for(unsigned y=48;y<61;++y)for(unsigned x=78;x<91;++x) {
+                const auto i=(y*256+x)*4;
+                if(pixels[i]>240&&pixels[i+1]>240&&pixels[i+2]>240&&pixels[i+3]>240)++white;
+            }
+            EXPECT_GT(white,20U) << "The selected affordance must also appear in the transient frame";
+        }
+    }
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(),0U)
+        << "First click selects the shape; a hidden affordance cannot expand it";
+    EXPECT_GT(whiteInButton(),20U);
+    h.runtime.qualificationRuntime().clearSelection();
+    EXPECT_EQ(whiteInButton(),0U);
+}
 TEST(FC02ShapeLabel, ExpandAffordanceUsesUndoableRuntimeSizeOperation) {
     Host h(true);
     auto shapeRecord = labelShape();
@@ -509,6 +622,7 @@ TEST(FC02ShapeLabel, ExpandAffordanceUsesUndoableRuntimeSizeOperation) {
     shape.label = label; shapeRecord.kind_version = 3;
     seedShape(h, shapeRecord);
     ASSERT_TRUE(h.runtime.qualificationRuntime().setSelectionMode(true));
+    ASSERT_TRUE(h.runtime.qualificationRuntime().selectAtViewPoint(60,50));
     ASSERT_TRUE(h.runtime.registerSource(86));
     input::PlatformPointerBatch batch;
     batch.samples.push_back({86, 1, 1, 1000, 84, 54, 0, 0, 0, {}, {},
@@ -555,6 +669,7 @@ TEST(FC02ShapeLabel, ExpandButtonRemainsClickableOutsideTheEllipseContour) {
     shape.label = label; record.kind_version = 3;
     seedShape(h, record);
     ASSERT_TRUE(h.runtime.qualificationRuntime().setSelectionMode(true));
+    ASSERT_TRUE(h.runtime.qualificationRuntime().selectAtViewPoint(120,90));
     runtime::MemoryResourceProvider resources;
     const semantic::ResourceId font{foundation::ObjectId::fromUint64(0xFC0202)};
     std::ifstream fontFile(FC02_HOST_FONT, std::ios::binary);

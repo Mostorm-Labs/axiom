@@ -806,7 +806,9 @@ TEST(FC02Facade, TextOwnershipConsumesPointerLifecycleWithoutStartingInk) {
     ASSERT_TRUE(h.composition.submit(pointer(2, canvas::input::PointerPhase::kUp)));
     EXPECT_EQ(h.operations(), 0U);
     EXPECT_EQ(h.composition.semanticObjectCount(), 0U);
-    ASSERT_EQ(h.intent(TextIntentKind::kFinish).status, TextStatus::kApplied);
+    // This Down is outside the empty draft at (32,48). It now ends editing
+    // itself, while still consuming Up and retiring the original identity.
+    EXPECT_EQ(h.facade.readTextEditor().phase, TextPhase::kClosed);
     ASSERT_TRUE(h.composition.submit(pointer(3, canvas::input::PointerPhase::kDown)));
     const auto next = h.composition.platformKey(17, 9);
     ASSERT_TRUE(next);

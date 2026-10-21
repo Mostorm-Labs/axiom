@@ -219,12 +219,26 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
             else
                 count += service_->processPending(sequence, key);
         } else if (auto* intent = std::get_if<TextIntent>(&item)) {
+            const bool editAtPoint = intent->kind == TextIntentKind::kEditAtPoint;
             const bool editAllowed=intent->kind!=TextIntentKind::kEditAtPoint || runtime_.textTool() || runtime_.selectionMode();
             if(intent->kind==TextIntentKind::kEditAtPoint && editAllowed){intent->object=runtime_.hitTextAtView(intent->viewX,intent->viewY);intent->kind=TextIntentKind::kEdit;}
             const auto result = !editAllowed ? receipt(TextStatus::kRejected,intent->requestId) : !isTargetCurrent(intent->target)
                                     ? receipt(TextStatus::kStale, intent->requestId)
                                 : text ? text->intent(*intent)
                                        : receipt(TextStatus::kUnsupported, intent->requestId);
+            if (editAtPoint && result.status == TextStatus::kApplied && text) {
+                if (const auto record = runtime_.textPresentation()) {
+                    if (const auto hit = runtime_.textHit(*record, intent->viewX, intent->viewY)) {
+                        const auto state = text->read();
+                        TextInputEvent selection;
+                        selection.token = state.token;
+                        selection.sequence = state.nextInputSequence;
+                        selection.kind = TextInputKind::kSelection;
+                        selection.range = {*hit, 0};
+                        (void)text->input(selection);
+                    }
+                }
+            }
             {
                 std::scoped_lock lock(ingressMutex_);
                 for (auto& entry : textIntents_)

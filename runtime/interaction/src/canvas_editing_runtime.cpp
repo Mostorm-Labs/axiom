@@ -3202,7 +3202,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
               entry.record.objectId, *shape, entry.record.transform,
               entry.record.objectId == selection_.primary());
           entry.record.textLayout = layout;
-          entry.command = render::ShapeReferenceCommand{*shape, layout};
+          entry.command = render::ShapeReferenceCommand{*shape, layout,
+              entry.record.objectId == selection_.primary()};
         }
       }
       // Canonical digest/encoding does not describe transient editor pixels.
@@ -3223,17 +3224,12 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       if (shape != nullptr) {
         const semantic::RichTextContent empty{};
         const auto& label = shape->label ? *shape->label : empty;
-        bool hasText = false;
-        for (const auto& paragraph : label.document.paragraphs)
-          for (const auto& run : paragraph.runs) hasText = hasText || !run.text.empty();
-        if (!hasText) {
-          const auto layout = textLayoutService_->resolveShapeLabel(
-              selected->record.objectId, label, *shape, selected->record.transform, true);
-          selected->record.textLayout = layout;
-          selected->command = render::ShapeReferenceCommand{*shape, layout};
-          references.value().canonicalBytes.clear();
-          references.value().digest.clear();
-        }
+        const auto layout = textLayoutService_->resolveShapeLabel(
+            selected->record.objectId, label, *shape, selected->record.transform, true);
+        selected->record.textLayout = layout;
+        selected->command = render::ShapeReferenceCommand{*shape, layout, true};
+        references.value().canonicalBytes.clear();
+        references.value().digest.clear();
       }
     }
   }
@@ -3265,7 +3261,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
           entry.record.visualBounds = bounds.visual;
           entry.record.worldBounds = bounds.world;
           if (shape != nullptr && shape->label.has_value())
-            entry.command = render::ShapeReferenceCommand{*shape, layout};
+            entry.command = render::ShapeReferenceCommand{*shape, layout, true};
           else
             entry.command = render::RichTextReferenceCommand{*content, layout};
           auto& entries = references.value().entries;
@@ -3527,15 +3523,16 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
   if (!references) return false;
   for (auto& entry : references.value().entries) {
-    if (const auto* transform = transformOverrides_.find(entry.record.objectId)) {
-      entry.record.transform = *transform;
+    const auto* transform = transformOverrides_.find(entry.record.objectId);
+    const bool selected = entry.record.objectId == selection_.primary();
+    if (transform) entry.record.transform = *transform;
+    if (transform || selected) {
       if (textLayoutService_) {
         if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content)) {
           const auto layout = textLayoutService_->resolveShape(
-              entry.record.objectId, *shape, entry.record.transform,
-              entry.record.objectId == selection_.primary());
+              entry.record.objectId, *shape, entry.record.transform, selected);
           entry.record.textLayout = layout;
-          entry.command = render::ShapeReferenceCommand{*shape, layout};
+          entry.command = render::ShapeReferenceCommand{*shape, layout, selected};
         }
       }
       references.value().canonicalBytes.clear();

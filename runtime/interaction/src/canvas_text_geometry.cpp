@@ -136,6 +136,9 @@ bool CanvasEditingRuntime::shapeExpandPointer(const input::PointerSample& sample
         const auto* shape = std::get_if<semantic::ShapeContent>(&candidate.content);
         if (candidate.kind != semantic::ObjectKind::kShape || !shape || !shape->label ||
             !textWritable(candidate.id)) continue;
+        const auto selected = active ? interaction_->textSession()->read().token.object
+                                     : selection_.primary();
+        if (candidate.id != selected) continue;
         const auto& transform = candidate.transform;
         const double det = transform.a * transform.d - transform.b * transform.c;
         if (!std::isfinite(det) || std::abs(det) < 1.0e-12) continue;
@@ -258,10 +261,21 @@ bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
             create.viewX = sample.x;
             create.viewY = sample.y;
             (void)editor->intent(create);
-        } else if (state.composition)
-            (void)editor->finish();
-        else if (const auto record = textPresentation()) {
-            if (const auto hit = textHit(*record, sample.x, sample.y)) {
+        } else if (const auto record = textPresentation()) {
+            const auto point = viewToContent(x, y);
+            bool inside = insideShape(*record, {point.first, point.second});
+            if (const auto* content = std::get_if<semantic::RichTextContent>(&record->content)) {
+                const auto layout = textLayoutService_->resolve(record->id, *content);
+                const auto bounds = scene::computeBounds(*record, layout.get()).world;
+                inside = point.first >= bounds.left && point.first <= bounds.right &&
+                         point.second >= bounds.top && point.second <= bounds.bottom;
+            }
+            if (!inside || state.composition) {
+                // Consume this click. Finishing must not create a new draft;
+                // active native preedit waits for the real platform result.
+                (void)editor->finish();
+                textSelectionPointer_ = {};
+            } else if (const auto hit = textHit(*record, sample.x, sample.y)) {
                 runtime::TextInputEvent selection;
                 selection.token = state.token;
                 selection.sequence = state.nextInputSequence;

@@ -385,7 +385,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 }
                 textResources->draw(canvas, *command.labelLayout);
                 canvas.restore();
-                if (command.labelLayout->overflow) {
+                if (command.showExpandButton && command.labelLayout->overflow) {
                     canvas.save();
                     if (command.labelLayout->shapeLabel)
                         canvas.scale(command.labelLayout->labelScaleX,
