@@ -1,5 +1,12 @@
-import createModule from './axiom_canvas_demo_web.js';
-import {installTextInput} from './text_input.js';
+const resourceUrl = name => {
+  const url = new URL(name, import.meta.url);
+  url.search = new URL(import.meta.url).search;
+  return url.href;
+};
+const [{default:createModule},{installTextInput}] = await Promise.all([
+  import(resourceUrl('./axiom_canvas_demo_web.js')),
+  import(resourceUrl('./text_input.js')),
+]);
 
 const canvas = document.getElementById('axiom-canvas');
 const preview = document.getElementById('axiom-preview');
@@ -8,8 +15,8 @@ const toggle = document.getElementById('debugUiToggle');
 const stage = document.getElementById('stage');
 const status = document.getElementById('status');
 
-globalThis.axiomMinimalReady = (async () => {
-  const module = await createModule({canvas});
+export const ready = globalThis.axiomMinimalReady = (async () => {
+  const module = await createModule({canvas,locateFile:resourceUrl});
   const metrics = () => {
     const rect = stage.getBoundingClientRect();
     return [Math.max(1, rect.width), Math.max(1, rect.height), devicePixelRatio || 1];
@@ -22,7 +29,7 @@ globalThis.axiomMinimalReady = (async () => {
   if (!handle) throw new Error('Minimal Web surface binding failed');
   const active = new Map(), lastTimes = new Map(), debugPointers = new Map();
   const trace = [];
-  let scheduled = 0, demand = true, pending = false, debugVisible = false, failure = '';
+  let scheduled = 0, textOpportunityTimer = 0, demand = true, pending = false, debugVisible = false, failure = '';
   const observation = () => ({...JSON.parse(module.UTF8ToString(module._axiom_web_snapshot(handle))),
     failure, trace: trace.slice(), width: canvas.width, height: canvas.height});
   const record = value => { trace.push(value); if (trace.length > 512) trace.shift(); };
@@ -57,6 +64,13 @@ globalThis.axiomMinimalReady = (async () => {
       }
       textInput.sync();
       const editor=textInput.snapshot();textWidth.disabled=editor.phase===0;if(document.activeElement!==textWidth)textWidth.value=editor.width;
+      // Supply idle owner opportunities while editing. Runtime owns the blink
+      // clock and renders only at a phase edge; this is not a repaint timer.
+      if (editor.phase !== 0 && !textOpportunityTimer) {
+        textOpportunityTimer = setTimeout(() => { textOpportunityTimer = 0; schedule(); }, 100);
+      } else if (editor.phase === 0) {
+        clearTimeout(textOpportunityTimer); textOpportunityTimer = 0;
+      }
       const state = observation();
       status.textContent = (stage.dataset.textError||textInput.error()) || `对象 ${state.objects} · 操作 ${state.operations} · 缩放 ${state.camera.scale.toFixed(2)} · 帧 ${state.presentedFrames}`;
       if (pending) schedule(false);
@@ -238,10 +252,10 @@ globalThis.axiomMinimalReady = (async () => {
     if (key) { module._axiom_web_debug(handle,type === 'keydown' ? 6 : 7,0,0,key); schedule(); event.preventDefault(); }
   });
   addEventListener('blur',() => { cancelInputs('focus-loss'); for (const button of debugPointers.values()) module._axiom_web_debug(handle,3,-1,-1,button); debugPointers.clear(); });
-  document.addEventListener('visibilitychange',() => { if (document.hidden) cancelInputs('hidden'); else schedule(); });
+  document.addEventListener('visibilitychange',() => { if (document.hidden) { clearTimeout(textOpportunityTimer); textOpportunityTimer = 0; cancelInputs('hidden'); } else schedule(); });
   document.addEventListener('visibilitychange',()=>{if(document.hidden)textInput.finish().catch(error=>{status.textContent=String(error);});});
   addEventListener('beforeunload',event=>{if(textInput.snapshot().phase!==0){textInput.finish().catch(()=>{});event.preventDefault();event.returnValue='';}});
-  addEventListener('pagehide',() => { if (handle) { textInput.dispose(); resizeObserver.disconnect(); cancelInputs('close'); cancelAnimationFrame(scheduled); module._axiom_web_destroy(handle); handle = 0; } },{once:true});
+  addEventListener('pagehide',() => { if (handle) { clearTimeout(textOpportunityTimer); textInput.dispose(); resizeObserver.disconnect(); cancelInputs('close'); cancelAnimationFrame(scheduled); module._axiom_web_destroy(handle); handle = 0; } },{once:true});
   const host = {module,handle,observation,flush,control,resize,toggleDebugUi,textInput,
     loseSurface() { cancelInputs('surface-loss'); pending = false; return module._axiom_web_lose_surface(handle); }};
   globalThis.axiomMinimalHost = host;

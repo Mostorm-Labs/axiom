@@ -98,8 +98,14 @@ if(EMSCRIPTEN)
     endif()
     target_compile_options(axiom_canvas_demo_web PRIVATE -Wall -Wextra -Wpedantic -Werror)
     set_target_properties(axiom_canvas_demo_web PROPERTIES SUFFIX ".js")
+    execute_process(COMMAND git -C "${PROJECT_SOURCE_DIR}" rev-parse HEAD
+        OUTPUT_VARIABLE AXIOM_WEB_SOURCE_REVISION OUTPUT_STRIP_TRAILING_WHITESPACE)
+    file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/platform/web/host.js" AXIOM_WEB_HOST_HASH)
+    file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/platform/web/text_input.js" AXIOM_WEB_TEXT_HASH)
+    string(SHA256 AXIOM_WEB_ASSET_REVISION
+        "${AXIOM_WEB_SOURCE_REVISION}:${AXIOM_WEB_HOST_HASH}:${AXIOM_WEB_TEXT_HASH}")
     configure_file(platform/web/index.html
-        ${CMAKE_CURRENT_BINARY_DIR}/index.html COPYONLY)
+        ${CMAKE_CURRENT_BINARY_DIR}/index.html @ONLY)
     configure_file(platform/web/text_input.js ${CMAKE_CURRENT_BINARY_DIR}/text_input.js COPYONLY)
     configure_file(platform/web/host.js ${CMAKE_CURRENT_BINARY_DIR}/host.js COPYONLY)
     configure_file(tests/web_fc02_text_test.html ${CMAKE_CURRENT_BINARY_DIR}/tests/web_fc02_text_test.html COPYONLY)
