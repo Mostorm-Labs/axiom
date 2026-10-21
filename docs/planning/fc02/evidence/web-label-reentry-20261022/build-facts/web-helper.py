@@ -21,4 +21,3 @@ if len(sys.argv)>1 and sys.argv[1]=='build':
 log=out/('web-build.log' if len(sys.argv)>1 and sys.argv[1]=='build' else 'web-configure.log'); log.write_text(json.dumps({'command':command,'env':facts,'started_utc':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())},indent=2))
 with log.open('a') as f:r=subprocess.run(command,cwd=root,env=env,stdout=f,stderr=subprocess.STDOUT)
 print(log.read_text(errors='replace')[-12000:]);raise SystemExit(r.returncode)
-
