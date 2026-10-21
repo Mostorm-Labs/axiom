@@ -245,6 +245,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] std::size_t qualificationObjectCount() const noexcept {
     return semanticObjects_.size();
   }
+#if defined(AXIOM_RUNTIME_QUALIFICATION)
+  [[nodiscard]] const semantic::ObjectRecord* qualificationObjectRecord(
+      semantic::ObjectId id) const noexcept { return semanticObjects_.find(id); }
+#endif
   [[nodiscard]] std::uint64_t qualificationSceneGeneration() const noexcept {
     return runtimeSceneHost_ == nullptr ? 0U : runtimeSceneHost_->revision().value();
   }

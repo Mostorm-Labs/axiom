@@ -1,7 +1,9 @@
 // Native input carrier only. Runtime owns text, ranges, layout, history and IDs.
 export function installTextInput({module,handle,canvas,stage,schedule}) {
   const carrier=document.createElement('textarea');carrier.id='axiom-ime';carrier.setAttribute('aria-label','Canvas text input');carrier.spellcheck=false;
-  Object.assign(carrier.style,{position:'absolute',width:'1px',height:'1px',opacity:'0',padding:'0',border:'0',resize:'none',overflow:'hidden',whiteSpace:'pre',fontSize:'1px',lineHeight:'1px'});stage.append(carrier);
+  // The carrier follows the caret for native IME placement, but pointer selection
+  // belongs to the canvas. In particular it must not steal a double-click's second Down.
+  Object.assign(carrier.style,{position:'absolute',width:'1px',height:'1px',opacity:'0',pointerEvents:'none',padding:'0',border:'0',resize:'none',overflow:'hidden',whiteSpace:'pre',fontSize:'1px',lineHeight:'1px'});stage.append(carrier);
   const snapshot=()=>JSON.parse(module.UTF8ToString(module._axiom_web_text_snapshot(handle)));
   const decode=units=>{let value='';for(let i=0;i<units.length;i+=4096)value+=String.fromCharCode(...units.slice(i,i+4096));return value;};
   const withString=(value,call)=>{const ptr=module.stringToNewUTF8(value);try{return call(ptr);}finally{module._free(ptr);}};
@@ -75,6 +77,11 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
   });
   carrier.addEventListener('blur',()=>{if(snapshot().phase!==0)enqueue({intent:keepOnBlur?14:2});});
   canvas.tabIndex=0;canvas.addEventListener('pointerdown',()=>{keepOnBlur=false;canvas.focus({preventScroll:true});});
-  canvas.addEventListener('dblclick',event=>{event.preventDefault();const rect=canvas.getBoundingClientRect();finish().then(()=>intent(13,{x:event.clientX-rect.left,y:event.clientY-rect.top})).catch(error=>{stage.dataset.textError=String(error);});});
+  canvas.addEventListener('dblclick',event=>{event.preventDefault();const rect=canvas.getBoundingClientRect();finish().then(()=>{
+    // Finishing the single-click draft blurs the carrier. Restore canvas focus
+    // so sync can hand it to the newly entered editor rather than leaving it on body.
+    canvas.focus({preventScroll:true});
+    return intent(13,{x:event.clientX-rect.left,y:event.clientY-rect.top});
+  }).catch(error=>{stage.dataset.textError=String(error);});});
   return {snapshot,sync,intent,finish,complete,composing:()=>nativeComposing,error:()=>fault||geometryFault,dispose(){disposed=true;carrier.remove();}};
 }

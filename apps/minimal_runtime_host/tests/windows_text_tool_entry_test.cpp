@@ -71,6 +71,71 @@ int main(int argc, char** argv) {
     assert(composition.bindSurface(800, 600));
     assert(state.host->registerSource(1));
     assert(minimal_runtime_host::bindHostTextFont(composition, "axiom-font.otf"));
+    if (mode == "shape-label") {
+        runtime::CanvasControlRequest control;
+        control.clientId = 0xFC025;
+        control.target = state.facade->mountedCanvasTargets().front();
+        for (unsigned preset = 0; preset < 3; ++preset) {
+            control.requestId++;
+            control.payload.kind = runtime::CanvasControlPayloadKind::kSelectCreationPreset;
+            control.payload.creationPreset = static_cast<runtime::CanvasCreationPreset>(preset);
+            assert(state.facade->submitCanvasControl(control).state == runtime::ProductControlState::kQueued);
+            assert(composition.ownerPump());
+            const auto y = 100 + static_cast<int>(preset) * 130;
+            SendMessageW(owner, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(430, y));
+            SendMessageW(owner, WM_MOUSEMOVE, MK_LBUTTON, MAKELPARAM(630, y + 80));
+            SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(630, y + 80));
+            assert(composition.semanticObjectCount() == preset + 1);
+            control.requestId++;
+            control.payload.kind = runtime::CanvasControlPayloadKind::kSelectTool;
+            control.payload.tool = runtime::CanvasToolKind::kText;
+            assert(state.facade->submitCanvasControl(control).state == runtime::ProductControlState::kQueued);
+            assert(composition.ownerPump());
+            // A real double-click includes the initial single-click draft.
+            SendMessageW(owner, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(530, y + 40));
+            SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(530, y + 40));
+            pumpWindowsText(state);
+            SendMessageW(owner, WM_LBUTTONDBLCLK, MK_LBUTTON, MAKELPARAM(530, y + 40));
+            SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(530, y + 40));
+            pumpWindowsText(state);
+            const auto editor = state.facade->readTextEditor();
+            assert(editor.phase == runtime::TextPhase::kEditing);
+            assert(state.facade->readTextGeometry().available);
+            const auto* before = composition.qualificationRuntime().qualificationObjectRecord(editor.token.object);
+            assert(before && before->kind == semantic::ObjectKind::kShape);
+            const auto shape = *before;
+            assert(!std::get<semantic::ShapeContent>(shape.content).label);
+            SendMessageW(owner, WM_CHAR, 'A', 0);
+            SendMessageW(owner, WM_CHAR, 'B', 0);
+            pumpWindowsText(state);
+            assert(state.facade->readTextEditor().projection == u"AB");
+            textIntent(state, runtime::TextIntentKind::kFinish);
+            pumpWindowsText(state);
+            const auto* after = composition.qualificationRuntime().qualificationObjectRecord(shape.id);
+            assert(after && after->kind_version == 3);
+            assert(after->transform == shape.transform);
+            assert(std::get<semantic::ShapeContent>(after->content).label);
+            assert(composition.semanticObjectCount() == preset + 1);
+            control.requestId++;
+            control.payload.tool = runtime::CanvasToolKind::kSelect;
+            assert(state.facade->submitCanvasControl(control).state == runtime::ProductControlState::kQueued);
+            assert(composition.ownerPump());
+            SendMessageW(owner, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(530, y + 40));
+            SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(530, y + 40));
+            SendMessageW(owner, WM_LBUTTONDBLCLK, MK_LBUTTON, MAKELPARAM(530, y + 40));
+            SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(530, y + 40));
+            pumpWindowsText(state);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);
+            assert(state.facade->readTextEditor().token.object == shape.id);
+            assert(state.facade->readTextEditor().projection == u"AB");
+            textIntent(state, runtime::TextIntentKind::kFinish);
+            pumpWindowsText(state);
+            std::printf("Shape preset %u: first double-click + native characters retained one Shape\n", preset);
+        }
+        DestroyWindow(owner);
+        UnregisterClassW(klass.lpszClassName, instance);
+        return 0;
+    }
     if (mode == "ink-double-click") {
         runtime::TextIntent create;
         create.clientId = 0xFA02;

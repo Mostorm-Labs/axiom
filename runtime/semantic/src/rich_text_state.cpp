@@ -24,13 +24,17 @@ std::vector<std::uint8_t> richTextStateDigest(DocumentId document, const ObjectR
     if (!internal::normalizeObjectRecord(normalized) || !internal::validateObjectRecord(normalized))
         return {};
     bool embeddedShapeLabel = false;
-    if (normalized.kind == ObjectKind::kShape && normalized.kind_version == 3U) {
+    bool absentShapeLabel = false;
+    if (normalized.kind == ObjectKind::kShape) {
         const auto* shape = std::get_if<ShapeContent>(&normalized.content);
-        if (shape == nullptr || !shape->label.has_value()) return {};
+        if (shape == nullptr) return {};
         embeddedShapeLabel = true;
+        absentShapeLabel = !shape->label;
+        const auto version = normalized.kind_version;
+        const auto content = shape->label ? *shape->label : RichTextContent{};
         normalized.kind = ObjectKind::kRichText;
-        normalized.kind_version = 3U;
-        normalized.content = *shape->label;
+        normalized.kind_version = version;
+        normalized.content = content;
     }
     if (normalized.kind != ObjectKind::kRichText) return {};
     auditoryworks::axiom::v1::ObjectRecord wire;
@@ -54,7 +58,7 @@ std::vector<std::uint8_t> richTextStateDigest(DocumentId document, const ObjectR
     bytes.insert(bytes.end(), domain.begin(), domain.end());
     bytes.insert(bytes.end(), document.value().bytes.begin(), document.value().bytes.end());
     bytes.insert(bytes.end(), record.id.bytes.begin(), record.id.bytes.end());
-    if (embeddedShapeLabel) bytes.push_back(1U);
+    if (embeddedShapeLabel) bytes.push_back(absentShapeLabel ? 0U : 1U);
     number(encoded.bytes.size(), 8);
     bytes.insert(bytes.end(), encoded.bytes.begin(), encoded.bytes.end());
     const auto digest = internal::sha256(bytes);

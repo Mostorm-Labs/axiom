@@ -414,7 +414,9 @@ struct RealHost {
     }
     canvas::runtime::TextReceipt intent(canvas::runtime::TextIntentKind kind, double width = 320) {
         canvas::runtime::TextIntent in;
-        in.target = facade.mountedCanvasTargets().front();
+        const auto targets = facade.mountedCanvasTargets();
+        if (targets.empty()) return {canvas::runtime::TextStatus::kStale};
+        in.target = targets.front();
         in.clientId = 7;
         in.requestId = ++request;
         in.kind = kind;
@@ -460,6 +462,9 @@ struct RealHost {
     std::size_t operations() {
         return composition.qualificationRuntime().submittedOperationCount();
     }
+    const ObjectRecord* record(ObjectId object) {
+        return composition.qualificationRuntime().qualificationObjectRecord(object);
+    }
 };
 
 TEST(FC02Facade, ShapeLabelCanEnterTextSessionThroughFacade) {
@@ -484,6 +489,143 @@ TEST(FC02Facade, ShapeLabelCanEnterTextSessionThroughFacade) {
     EXPECT_EQ(receipt->status, TextStatus::kApplied);
     EXPECT_EQ(h.facade.readTextEditor().token.object, object.id);
     EXPECT_EQ(h.facade.readTextEditor().projection, u"AB");
+}
+
+TEST(FC02Facade, PlainShapeFirstLabelPreservesIdentityAndEmptyEditHasNoHistory) {
+    using namespace canvas::runtime;
+    for (const auto kind : {1U, 2U, 3U}) {
+        SCOPED_TRACE(kind);
+        RealHost h;
+        auto shape = shapeLabelObject();
+        shape.kind_version = kind == 3U ? 2U : 1U;
+        shape.content = ShapeContent{kind, 200, 80};
+        shape.transform.tx = -68;
+        shape.transform.ty = 8;
+        const Operation seed{OperationId{id(701)}, DocumentId{id(1)}, 1, 1,
+                             InsertObjectsOp{{shape}}};
+        ASSERT_EQ(h.composition.applyExternalOperation(seed, ApplySource::kRemoteSync).disposition,
+                  ApplyDisposition::kApplied);
+        CanvasControlRequest tool;
+        tool.clientId = 22;
+        tool.requestId = 1;
+        tool.target = h.facade.mountedCanvasTargets().front();
+        tool.payload.kind = CanvasControlPayloadKind::kSelectTool;
+        tool.payload.tool = CanvasToolKind::kText;
+        ASSERT_EQ(h.facade.submitCanvasControl(tool).state, ProductControlState::kQueued);
+        ASSERT_TRUE(h.composition.ownerPump());
+        const auto before = h.operations();
+        ASSERT_EQ(h.intent(TextIntentKind::kEditAtPoint).status, TextStatus::kApplied);
+        EXPECT_EQ(h.facade.readTextEditor().token.object, shape.id);
+        EXPECT_EQ(h.facade.readTextEditor().width, 200);
+        EXPECT_EQ(h.intent(TextIntentKind::kFinish).status, TextStatus::kApplied);
+        EXPECT_EQ(h.operations(), before);
+        EXPECT_EQ(*h.record(shape.id), shape);
+        ASSERT_EQ(h.intent(TextIntentKind::kEditAtPoint).status, TextStatus::kApplied);
+        ASSERT_EQ(h.send(h.event(TextInputKind::kReplace, u"label")).status, TextStatus::kApplied);
+        ASSERT_EQ(h.intent(TextIntentKind::kFinish).status, TextStatus::kApplied);
+        EXPECT_EQ(h.composition.semanticObjectCount(), 1U);
+        const auto labeled = *h.record(shape.id);
+        EXPECT_EQ(labeled.kind, ObjectKind::kShape);
+        EXPECT_EQ(labeled.kind_version, 3U);
+        EXPECT_EQ(labeled.transform, shape.transform);
+        EXPECT_EQ(labeled.placement, shape.placement);
+        const auto& content = std::get<ShapeContent>(labeled.content);
+        EXPECT_EQ(content.shape_kind, kind);
+        EXPECT_EQ(content.width, 200);
+        EXPECT_EQ(content.height, 80);
+        ASSERT_TRUE(content.label);
+        EXPECT_EQ(content.label->document.paragraphs.front().runs.front().text, "label");
+        const auto target = h.facade.mountedCanvasTargets().front();
+        ASSERT_EQ(h.facade.undo(1, target.runtimeEpoch, 23).state, ProductControlState::kQueued);
+        ASSERT_TRUE(h.composition.ownerPump());
+        EXPECT_EQ(*h.record(shape.id), shape);
+        ASSERT_EQ(h.facade.redo(2, target.runtimeEpoch, 23).state, ProductControlState::kQueued);
+        ASSERT_TRUE(h.composition.ownerPump());
+        EXPECT_EQ(*h.record(shape.id), labeled);
+    }
+}
+
+TEST(FC02Semantic, FirstShapeLabelCodecReplayGuardsAndLegacyUndo) {
+    for (const auto kind : {1U, 2U, 3U}) {
+        SCOPED_TRACE(kind);
+        Engine e;
+        auto plain = shapeLabelObject();
+        const auto label = *std::get<ShapeContent>(plain.content).label;
+        plain.kind_version = kind == 3U ? 2U : 1U;
+        plain.content = ShapeContent{kind, 200, 80};
+        ASSERT_EQ(e.apply(e.op(InsertObjectsOp{{plain}})).disposition, ApplyDisposition::kApplied);
+        const auto guard = richTextStateDigest(DocumentId{id(100)}, plain);
+        ASSERT_EQ(guard.size(), 32U);
+        auto forward = e.op(EditRichTextOp{plain.id,
+            {3, {RestoreRichTextStateStep{{3, label}}}, guard}});
+        auto encoded = SemanticCodec::encodeProtobufOperation(forward);
+        ASSERT_TRUE(encoded.ok());
+        auto decoded = SemanticCodec::decodeProtobufOperation(encoded.bytes);
+        ASSERT_TRUE(decoded.ok());
+        auto bad = decoded.operation;
+        std::get<EditRichTextOp>(bad.payload).delta.expected_state_digest[0] ^= 1U;
+        EXPECT_EQ(e.apply(bad).disposition, ApplyDisposition::kRejected);
+        EXPECT_EQ(*e.objects.find(plain.id), plain);
+        ASSERT_EQ(e.apply(decoded.operation).disposition, ApplyDisposition::kApplied);
+        EXPECT_EQ(e.apply(decoded.operation).disposition, ApplyDisposition::kAlreadyApplied);
+        const auto labeled = *e.objects.find(plain.id);
+        RichTextContent absent;
+        if (plain.kind_version == 2U) absent.layout = RichTextLayout{200};
+        const auto inverse = e.op(EditRichTextOp{plain.id,
+            {3, {RestoreRichTextStateStep{{plain.kind_version, absent}}},
+             richTextStateDigest(DocumentId{id(100)}, labeled)}});
+        encoded = SemanticCodec::encodeProtobufOperation(inverse);
+        ASSERT_TRUE(encoded.ok());
+        decoded = SemanticCodec::decodeProtobufOperation(encoded.bytes);
+        ASSERT_TRUE(decoded.ok());
+        ASSERT_EQ(e.apply(decoded.operation).disposition, ApplyDisposition::kApplied);
+        EXPECT_EQ(*e.objects.find(plain.id), plain);
+        forward.id = e.op(DeleteObjectsOp{}).id;
+        ASSERT_EQ(e.apply(forward).disposition, ApplyDisposition::kApplied);
+        EXPECT_EQ(*e.objects.find(plain.id), labeled);
+        auto invalidRemoval = inverse;
+        invalidRemoval.id = e.op(DeleteObjectsOp{}).id;
+        auto& restore = std::get<RestoreRichTextStateStep>(
+            std::get<EditRichTextOp>(invalidRemoval.payload).delta.steps.front());
+        restore.state.content = label;
+        EXPECT_EQ(e.apply(invalidRemoval).disposition, ApplyDisposition::kRejected);
+        EXPECT_EQ(*e.objects.find(plain.id), labeled);
+    }
+}
+
+TEST(FC02Facade, ShapeLabelEntryRejectsInkLockedLostAndClosed) {
+    using namespace canvas::runtime;
+    RealHost h;
+    auto shape = shapeLabelObject();
+    shape.kind_version = 1;
+    shape.content = ShapeContent{1, 200, 80};
+    const Operation seed{OperationId{id(702)}, DocumentId{id(1)}, 1, 1, InsertObjectsOp{{shape}}};
+    ASSERT_EQ(h.composition.applyExternalOperation(seed, ApplySource::kRemoteSync).disposition,
+              ApplyDisposition::kApplied);
+    EXPECT_EQ(h.intent(TextIntentKind::kEditAtPoint).status, TextStatus::kRejected);
+    CanvasControlRequest tool;
+    tool.clientId = 22;
+    tool.requestId = 1;
+    tool.target = h.facade.mountedCanvasTargets().front();
+    tool.payload.kind = CanvasControlPayloadKind::kSelectTool;
+    tool.payload.tool = CanvasToolKind::kSelect;
+    ASSERT_EQ(h.facade.submitCanvasControl(tool).state, ProductControlState::kQueued);
+    ASSERT_TRUE(h.composition.ownerPump());
+    ASSERT_EQ(h.intent(TextIntentKind::kEditAtPoint).status, TextStatus::kApplied);
+    ASSERT_EQ(h.intent(TextIntentKind::kFinish).status, TextStatus::kApplied);
+    auto locked = seed;
+    locked.id = OperationId{id(703)};
+    locked.payload = PatchPropertiesOp{{{shape.id, 2, PropertyPatchAction::kSet,
+                                       PropertyValue{true}}}};
+    ASSERT_EQ(h.composition.applyExternalOperation(locked, ApplySource::kRemoteSync).disposition,
+              ApplyDisposition::kApplied);
+    EXPECT_EQ(h.intent(TextIntentKind::kEditAtPoint).status, TextStatus::kRejected);
+    ASSERT_TRUE(h.composition.loseSurface());
+    EXPECT_NE(h.intent(TextIntentKind::kEditAtPoint).status, TextStatus::kApplied);
+    ASSERT_TRUE(h.composition.close());
+    EXPECT_NE(h.intent(TextIntentKind::kEditAtPoint).status, TextStatus::kApplied);
+    EXPECT_EQ(h.operations(), 0U);
+    EXPECT_EQ(h.composition.semanticObjectCount(), 1U);
 }
 
 TEST(FC02Facade, FontCatalogIsReadOnlyAndTracksAdmittedResourceState) {

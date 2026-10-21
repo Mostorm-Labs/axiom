@@ -178,24 +178,19 @@ const semantic::RichTextContent* TextEditSession::richContent(
         return std::get_if<semantic::RichTextContent>(&record.content);
     if (shapeLabelTarget(record)) {
         const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
-        return shape && shape->label ? &*shape->label : nullptr;
-    }
-    return nullptr;
-}
-semantic::RichTextContent* TextEditSession::richContent(
-    semantic::ObjectRecord& record) const noexcept {
-    if (record.kind == semantic::ObjectKind::kRichText)
-        return std::get_if<semantic::RichTextContent>(&record.content);
-    if (shapeLabelTarget(record)) {
-        auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
-        return shape && shape->label ? &*shape->label : nullptr;
+        if (shape == nullptr) return nullptr;
+        if (shape->label) return &*shape->label;
+        static const semantic::RichTextContent empty{};
+        return &empty;
     }
     return nullptr;
 }
 bool TextEditSession::shapeLabelTarget(const semantic::ObjectRecord& record) const noexcept {
-    return record.kind == semantic::ObjectKind::kShape && record.kind_version == 3U &&
+    return record.kind == semantic::ObjectKind::kShape &&
+           (record.kind_version == 1U || record.kind_version == 2U || record.kind_version == 3U) &&
            std::holds_alternative<semantic::ShapeContent>(record.content) &&
-           std::get<semantic::ShapeContent>(record.content).label.has_value();
+           (record.kind_version != 3U ||
+            std::get<semantic::ShapeContent>(record.content).label.has_value());
 }
 
 void TextEditSession::end() noexcept {
@@ -246,7 +241,8 @@ void TextEditSession::refresh() {
             detach();
             return;
         }
-        state_.width = content.layout ? content.layout->wrap_width : 128;
+        state_.width = content.layout ? content.layout->wrap_width :
+            shapeLabelTarget(*current) ? std::get<ShapeContent>(current->content).width : 128;
         typingStyle_=false;
         state_.selection = {};
         state_.replacement = {};
@@ -376,7 +372,11 @@ runtime::TextStatus TextEditSession::applyDelta(RichTextDelta delta) {
     const auto& post = prepared.plan->replacements.front();
     const auto* beforeContent = richContent(*base_);
     if (beforeContent == nullptr) return TextStatus::kRejected;
-    const RichTextState before{base_->kind_version, *beforeContent};
+    RichTextState before{base_->kind_version, *beforeContent};
+    // An empty legacy Shape state denotes absence of the embedded label.
+    // Triangle /2 still uses the existing fixed-width state wire contract.
+    if (shapeLabelTarget(*base_) && base_->kind_version == 2U)
+        before.content.layout = RichTextLayout{std::get<ShapeContent>(base_->content).width};
     const Operation inverse{owner_.allocateTextOperation(),
                             owner_.textDocument(),
                             1,
@@ -465,7 +465,15 @@ runtime::TextStatus TextEditSession::replace(TextRange range, const std::u16stri
     }
     const auto& content = *richContent(*base_);
     if (content.document.paragraphs.empty()) {
+        if (shapeLabelTarget(*base_) && base_->kind_version != 3U &&
+            std::none_of(projected.begin(), projected.end(), [](char16_t c) { return c != u'\n'; })) {
+            state_.projection = projected;
+            ++state_.token.projection;
+            state_.selection = {static_cast<std::uint32_t>(range.start + text.size()), 0};
+            return TextStatus::kObserved;
+        }
         auto restored = content;
+        if (shapeLabelTarget(*base_)) restored.layout = RichTextLayout{state_.width};
         std::size_t start = 0;
         do {
             const auto end = projected.find(u'\n', start);
@@ -479,8 +487,10 @@ runtime::TextStatus TextEditSession::replace(TextRange range, const std::u16stri
                 break;
             start = end + 1;
         } while (start <= projected.size());
+        const auto version = shapeLabelTarget(*base_) ? 3U : base_->kind_version;
         const auto result = applyDelta(
-            {2, {RestoreRichTextStateStep{{base_->kind_version, std::move(restored)}}}, {}});
+            {version >= 3U ? 3U : 2U,
+             {RestoreRichTextStateStep{{version, std::move(restored)}}}, {}});
         if (result == TextStatus::kApplied)
             state_.selection = {static_cast<std::uint32_t>(range.start + text.size()), 0};
         return result;
@@ -574,7 +584,9 @@ runtime::TextStatus TextEditSession::format(const TextFormatPatch& patch) {
     auto newParagraph=paragraphStyle_;
     if(patch.alignment)newParagraph.alignment=static_cast<ParagraphAlignment>(*patch.alignment);
     if(patch.bulleted)newParagraph.bulleted=*patch.bulleted;
-    if(!base_){style_=newStyle;paragraphStyle_=newParagraph;typingStyle_=true;++state_.token.projection;return TextStatus::kObserved;}
+    if(!base_ || (shapeLabelTarget(*base_) && base_->kind_version != 3U)){
+        style_=newStyle;paragraphStyle_=newParagraph;typingStyle_=true;++state_.token.projection;return TextStatus::kObserved;
+    }
     const auto* currentContent = richContent(*base_);
     if (currentContent == nullptr) return TextStatus::kRejected;
     auto content=*currentContent;
@@ -678,7 +690,8 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
                 end();
                 return outcome(TextStatus::kUnsupported, request.requestId);
             }
-            state_.width = content.layout ? content.layout->wrap_width : 128;
+            state_.width = content.layout ? content.layout->wrap_width :
+                shapeLabelTarget(*existing) ? std::get<ShapeContent>(existing->content).width : 128;
             for (const auto& p : content.document.paragraphs)
                 if (!p.runs.empty()) {
                     style_ = p.runs.front().style;
@@ -725,7 +738,7 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
             return outcome(TextStatus::kBusy, request.requestId);
         if (!validRichTextLayoutState(2, RichTextContent{{}, RichTextLayout{request.width}}))
             return outcome(TextStatus::kRejected, request.requestId);
-        if (!base_) {
+        if (!base_ || (shapeLabelTarget(*base_) && base_->kind_version != 3U)) {
             if (state_.token.projection == std::numeric_limits<std::uint64_t>::max())
                 return outcome(TextStatus::kRejected, request.requestId);
             state_.width = request.width;
@@ -906,7 +919,9 @@ std::optional<semantic::ObjectRecord> TextEditSession::presentation() {
     const auto* original=base_?richContent(*base_):nullptr;
     if(original && !state_.composition && !original->document.paragraphs.empty()){
         // Empty paragraphs still need the admitted font for a real caret metric.
-        auto* content=richContent(object);
+        auto* content = object.kind == ObjectKind::kShape
+            ? &*std::get<ShapeContent>(object.content).label
+            : std::get_if<RichTextContent>(&object.content);
         if (!content) return std::nullopt;
         for(auto& p:content->document.paragraphs)if(p.runs.empty())p.runs.push_back({"",style_});
         return object;
@@ -915,7 +930,7 @@ std::optional<semantic::ObjectRecord> TextEditSession::presentation() {
     if(original)for(const auto& p:original->document.paragraphs){for(const auto& r:p.runs){std::u16string part;if(!utf16(r.text,part))return std::nullopt;styles.insert(styles.end(),part.size(),r.style);}styles.push_back(style_);}
     styles.resize(visible.size(),style_);
     if(state_.composition){visible.replace(state_.replacement.start,state_.replacement.length,state_.preedit);auto it=styles.begin()+state_.replacement.start;it=styles.erase(it,it+state_.replacement.length);styles.insert(it,state_.preedit.size(),style_);}
-    RichTextContent content;content.layout=original?original->layout:std::optional<RichTextLayout>{RichTextLayout{state_.width}};
+    RichTextContent content;content.layout=original && original->layout?original->layout:std::optional<RichTextLayout>{RichTextLayout{state_.width}};
     std::size_t start=0,index=0;
     do {const auto end=visible.find(u'\n',start),stop=end==std::u16string::npos?visible.size():end;
         Paragraph p;auto transient=object.id;transient.bytes[12]^=0x80;transient.bytes[10]=static_cast<std::uint8_t>(index);transient.bytes[11]=static_cast<std::uint8_t>(index>>8U);
@@ -927,9 +942,10 @@ std::optional<semantic::ObjectRecord> TextEditSession::presentation() {
         if(p.runs.empty())p.runs.push_back({"",style_});content.document.paragraphs.push_back(std::move(p));++index;
         if(end==std::u16string::npos)break;start=end+1;
     }while(start<=visible.size());
-    if (shapeLabelTarget(object))
+    if (shapeLabelTarget(object)) {
+        object.kind_version = 3U;
         std::get<semantic::ShapeContent>(object.content).label = std::move(content);
-    else
+    } else
         object.content=std::move(content);
     return object;
 }

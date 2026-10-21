@@ -219,7 +219,7 @@ struct ShapeContent final {
     std::uint32_t shape_kind = 0;
     double width = 0.0;
     double height = 0.0;
-    std::optional<RichTextContent> label;
+    std::optional<RichTextContent> label = std::nullopt;
 
     bool operator==(const ShapeContent&) const = default;
 };

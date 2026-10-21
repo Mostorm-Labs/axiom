@@ -3140,9 +3140,12 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
           entry.record.kind = object->kind;
           entry.record.kindVersion = object->kind_version;
           entry.record.transform = object->transform;
+          entry.record.properties = object->properties;
+          entry.record.eraseMasks = object->erase_masks;
+          entry.record.derivedGeometry = canvas::scene::deriveGeometry(*object);
           entry.record.content = object->content;
           entry.record.textLayout = layout;
-          entry.record.placement.order_key = semantic::OrderKey({255});
+          entry.record.placement = object->placement;
           const auto bounds = canvas::scene::computeBounds(
               *object, object->kind == semantic::ObjectKind::kRichText ? layout.get() : nullptr);
           entry.record.geometryBounds = bounds.geometry;

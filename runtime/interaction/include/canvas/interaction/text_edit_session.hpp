@@ -52,8 +52,6 @@ class TextEditSession final {
     [[nodiscard]] semantic::ObjectId identity();
     [[nodiscard]] const semantic::RichTextContent* richContent(
         const semantic::ObjectRecord&) const noexcept;
-    [[nodiscard]] semantic::RichTextContent* richContent(
-        semantic::ObjectRecord&) const noexcept;
     [[nodiscard]] bool shapeLabelTarget(const semantic::ObjectRecord&) const noexcept;
     TextEditPort& owner_;
     InteractionSessionManager& manager_;

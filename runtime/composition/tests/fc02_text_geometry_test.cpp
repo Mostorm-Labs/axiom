@@ -105,6 +105,60 @@ TEST(FC02Geometry, RealFontCaretPreeditFrameAndStaleGeometry) {
     EXPECT_EQ(h.intent(runtime::TextIntentKind::kEscape).status, runtime::TextStatus::kObserved);
     EXPECT_EQ(h.runtime.semanticObjectCount(), 0U);
 }
+
+TEST(FC02Geometry, DrawnShapeFirstLabelHasRealCaretPreeditAndCanonicalPixels) {
+    using namespace runtime;
+    Host h(true);
+    ASSERT_TRUE(h.runtime.registerSource(39));
+    CanvasControlRequest control;
+    control.clientId = 39;
+    control.requestId = 1;
+    control.target = h.facade.mountedCanvasTargets().front();
+    control.payload.kind = CanvasControlPayloadKind::kSelectCreationPreset;
+    control.payload.creationPreset = CanvasCreationPreset::kRectangle;
+    ASSERT_EQ(h.facade.submitCanvasControl(control).state, ProductControlState::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    const auto pointer = [&](std::uint64_t seq, input::PointerPhase phase, float x, float y) {
+        input::PlatformPointerBatch batch;
+        batch.samples.push_back({39, 1, seq, seq * 1000, x, y, 0, 0, 0, {}, {},
+                                 input::SampleProvenance::kConfirmedCurrent, phase});
+        return h.runtime.submit(batch);
+    };
+    ASSERT_TRUE(pointer(1, input::PointerPhase::kDown, 20, 30));
+    ASSERT_TRUE(pointer(2, input::PointerPhase::kMove, 220, 130));
+    ASSERT_TRUE(pointer(3, input::PointerPhase::kUp, 220, 130));
+    ASSERT_EQ(h.runtime.semanticObjectCount(), 1U);
+    const auto operations = h.runtime.qualificationRuntime().submittedOperationCount();
+    control.requestId++;
+    control.payload.kind = CanvasControlPayloadKind::kSelectTool;
+    control.payload.tool = CanvasToolKind::kText;
+    ASSERT_EQ(h.facade.submitCanvasControl(control).state, ProductControlState::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_EQ(h.intent(TextIntentKind::kEditAtPoint).status, TextStatus::kApplied);
+    const auto token = h.facade.readTextEditor().token;
+    EXPECT_TRUE(h.facade.readTextGeometry().available);
+    EXPECT_EQ(h.facade.readTextEditor().width, 200);
+    ASSERT_EQ(h.input(TextInputKind::kBegin).status, TextStatus::kObserved);
+    ASSERT_EQ(h.input(TextInputKind::kUpdate, u"\u4f60\u597d").status, TextStatus::kObserved);
+    EXPECT_TRUE(h.facade.readTextGeometry().available);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), operations);
+    ASSERT_EQ(h.input(TextInputKind::kCommit, u"\u4f60\u597d").status, TextStatus::kApplied);
+    EXPECT_EQ(h.runtime.semanticObjectCount(), 1U);
+    EXPECT_EQ(h.facade.readTextEditor().token.object, token.object);
+    ASSERT_EQ(h.intent(TextIntentKind::kFinish).status, TextStatus::kApplied);
+    RuntimeFrameOpportunity frame;
+    ASSERT_TRUE(h.runtime.serviceFrameOpportunity(false, frame));
+    std::vector<std::uint8_t> pixels(256 * 256 * 4);
+    ASSERT_TRUE(h.runtime.readCanonicalRgba(pixels));
+    std::size_t dark = 0;
+    for (unsigned y = 32; y < 54; ++y)
+        for (unsigned x = 22; x < 70; ++x) {
+            const auto i = (y * 256U + x) * 4U;
+            if (pixels[i] < 100 && pixels[i + 1] < 100 && pixels[i + 2] < 100) ++dark;
+        }
+    EXPECT_GT(dark, 30U);
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), operations + 1U);
+}
 TEST(FC02Geometry, IdleCaretBlinksWithoutEditingOrContinuousRedraw) {
     Host h(true);
     ASSERT_EQ(h.intent(runtime::TextIntentKind::kCreate).status, runtime::TextStatus::kApplied);

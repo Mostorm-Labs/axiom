@@ -87,15 +87,19 @@ StatefulResult validateEditRichTextStateForDocument(const EditRichTextOp& op,con
     bool embeddedShapeLabel = false;
     if (current->kind == ObjectKind::kRichText) {
         currentContent = std::get_if<RichTextContent>(&current->content);
-    } else if (current->kind == ObjectKind::kShape && current->kind_version == 3U) {
+    } else if (current->kind == ObjectKind::kShape) {
         const auto* shape = std::get_if<ShapeContent>(&current->content);
-        if (shape != nullptr && shape->label.has_value()) {
-            currentContent = &*shape->label;
+        if (shape != nullptr) {
+            static const RichTextContent empty{};
+            currentContent = shape->label ? &*shape->label : &empty;
             embeddedShapeLabel = true;
         }
     }
     if (currentContent == nullptr) return fail(StatefulIssue::kInvalidApplicability);
     if(!internal::validateObjectRecord(*current)) return fail(StatefulIssue::kInvalidKindVersion);
+    if (embeddedShapeLabel && !std::get<ShapeContent>(current->content).label.has_value() &&
+        op.delta.delta_version < 3U)
+        return fail(StatefulIssue::kInvalidApplicability);
     if(op.delta.delta_version==1 && (!embeddedShapeLabel && current->kind_version!=1)) return fail(StatefulIssue::kInvalidKindVersion);
     if(op.delta.delta_version<3 && (embeddedShapeLabel || current->kind_version==3)) return fail(StatefulIssue::kInvalidKindVersion);
     if(op.delta.delta_version>=2 && (op.delta.expected_state_digest.size()!=32 ||
@@ -106,7 +110,27 @@ StatefulResult validateEditRichTextStateForDocument(const EditRichTextOp& op,con
     auto result=*current;
     if (embeddedShapeLabel) {
         auto& shape = std::get<ShapeContent>(result.content);
-        shape.label = std::move(next);
+        const auto* restore = op.delta.steps.size() == 1U
+            ? std::get_if<RestoreRichTextStateStep>(&op.delta.steps.front()) : nullptr;
+        if (!shape.label && (restore == nullptr || restore->state.kind_version != 3U))
+            return fail(StatefulIssue::kTextStateInvalid);
+        if (restore && restore->state.kind_version != 3U) {
+            const auto legacyVersion = shape.shape_kind == 3U ? 2U : 1U;
+            const auto absentLayout = legacyVersion == 2U
+                ? std::optional<RichTextLayout>{RichTextLayout{shape.width}} : std::nullopt;
+            if (restore->state.kind_version != legacyVersion || !next.document.paragraphs.empty() ||
+                next.layout != absentLayout)
+                return fail(StatefulIssue::kTextStateInvalid);
+            result.kind_version = legacyVersion;
+            shape.label.reset();
+        } else {
+            if (const auto* layout = op.delta.steps.size() == 1U
+                    ? std::get_if<SetRichTextLayoutStep>(&op.delta.steps.front()) : nullptr;
+                layout && layout->target_kind_version != 3U)
+                return fail(StatefulIssue::kTextStateInvalid);
+            result.kind_version = 3U;
+            shape.label = std::move(next);
+        }
     } else {
         result.content=std::move(next);
         for(const auto& step:op.delta.steps) {

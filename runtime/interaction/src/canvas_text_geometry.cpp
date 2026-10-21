@@ -1,10 +1,34 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/scene/bounds_system.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 
 #include <algorithm>
 #include <cmath>
 namespace canvas::interaction {
+namespace {
+bool insideShape(const semantic::ObjectRecord& record, foundation::WorldPoint point) {
+    const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+    if (!shape || record.kind != semantic::ObjectKind::kShape) return false;
+    const auto& t = record.transform;
+    const auto det = t.a * t.d - t.b * t.c;
+    if (!std::isfinite(det) || std::abs(det) < 1e-12) return false;
+    const double dx = point.x - t.tx, dy = point.y - t.ty;
+    const double x = (t.d * dx - t.c * dy) / det;
+    const double y = (t.a * dy - t.b * dx) / det;
+    if (x < 0 || y < 0 || x > shape->width || y > shape->height) return false;
+    if (shape->shape_kind == 2U) {
+        const auto nx = 2 * x / shape->width - 1, ny = 2 * y / shape->height - 1;
+        return nx * nx + ny * ny <= 1;
+    }
+    if (shape->shape_kind == 3U) {
+        const auto triangle = scene::triangleGeometry(*shape);
+        return triangle && scene::pointInTriangle(
+            {static_cast<float>(x), static_cast<float>(y)}, *triangle);
+    }
+    return shape->shape_kind == 1U;
+}
+} // namespace
 void CanvasEditingRuntime::updateTextCaretPresentation(
     std::chrono::steady_clock::time_point now) noexcept {
     const auto state = interaction_->textSession()
@@ -72,7 +96,10 @@ semantic::ObjectId CanvasEditingRuntime::hitTextAtView(float x, float y) {
         if (!textWritable(o.id)) continue;
         const auto* content = std::get_if<semantic::RichTextContent>(&o.content);
         if (const auto* shape = std::get_if<semantic::ShapeContent>(&o.content);
-            shape != nullptr && shape->label.has_value()) content = &*shape->label;
+            shape != nullptr) {
+            if (insideShape(o, {point.first, point.second})) return o.id;
+            continue;
+        }
         if (content == nullptr) continue;
         const auto layout = textLayoutService_->resolve(o.id, *content);
         if (!layout->diagnostics.empty())
