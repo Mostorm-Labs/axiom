@@ -11,6 +11,7 @@
 #include <cassert>
 #include <cstdint>
 #include <optional>
+#include <type_traits>
 
 namespace {
 
@@ -220,6 +221,15 @@ void mappingCapacityRejectsBeforeRuntimeSubmission() {
            PresentFeedbackDisposition::kPresented);
 }
 
+void imageFacadeIsExposedThroughWebHost() {
+    WebSurfaceHost host{surface(101U, 101U, metrics(320U, 180U))};
+    canvas::runtime::RuntimeFacade& facade = host.facade();
+    static_assert(std::is_same_v<decltype(&canvas::runtime::RuntimeFacade::importImage),
+                                 canvas::runtime::ImageCommandReceipt (canvas::runtime::RuntimeFacade::*)(const canvas::runtime::ImageImportRequest&)>);
+    const auto rejected = facade.importImage({});
+    assert(rejected.state == canvas::runtime::ImageCommandState::kRejected);
+}
+
 void mappedFeedbackCannotRelabelAnotherRuntimeWork() {
     WebSurfaceHost a{surface(1U, 1U, metrics(128U, 128U))};
     WebSurfaceHost b{surface(1U, 1U, metrics(128U, 128U))};
@@ -263,5 +273,6 @@ int main() {
     invalidReplacementHasNoRuntimeSideEffect();
     preparedBridgeProvidersAreAdoptedWithoutDoubleAdvance();
     mappingCapacityRejectsBeforeRuntimeSubmission();
+    imageFacadeIsExposedThroughWebHost();
     return 0;
 }

@@ -2,6 +2,21 @@
 #include "canvas/runtime/runtime_facade.hpp"
 
 #include <cassert>
+#include <fstream>
+#include <iterator>
+#include <string>
+
+#ifndef FC03_FIXTURE_ROOT
+#error FC03_FIXTURE_ROOT must be provided by the test target
+#endif
+
+namespace {
+std::vector<std::uint8_t> readFixture(const char* name) {
+  std::ifstream file(std::string(FC03_FIXTURE_ROOT) + "/" + name,
+                     std::ios::binary);
+  return {std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>()};
+}
+}
 
 int main() {
   using namespace canvas;
@@ -14,12 +29,23 @@ int main() {
       137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,1,0,0,0,1,
       8,4,0,0,0,181,28,12,2,0,0,0,11,73,68,65,84,120,218,99,100,248,15,
       0,1,5,1,1,39,24,227,102,0,0,0,0,73,69,78,68,174,66,96,130};
+  const auto jpeg = readFixture("fc03-red.jpg");
+  const auto webp = readFixture("fc03-sample.webp");
+  assert(!jpeg.empty() && !webp.empty());
   semantic::ResourceManifest manifest{};
   manifest.manifest_revision = 1U;
   manifest.entries.push_back({semantic::ResourceId{foundation::ObjectId::fromUint64(77U)},
       semantic::ResourceKind::kImage, 1U,
       "sha256:431ced6916a2a21a156e38701afe55bbd7f88969fbbfc56d7fe099d47f265460",
       png.size(), 1U, 0U, {0x08, 0x01, 0x10, 0x01, 0x18, 0x01, 0x20, 0x01}});
+  manifest.entries.push_back({semantic::ResourceId{foundation::ObjectId::fromUint64(78U)},
+      semantic::ResourceKind::kImage, 1U,
+      "sha256:1df3a19acd973f85c4470dec6266fbc668cee8221e30cde2bae66d04decc0a5c",
+      jpeg.size(), 1U, 0U, {0x08, 0x01, 0x10, 0x01, 0x18, 0x01, 0x20, 0x01}});
+  manifest.entries.push_back({semantic::ResourceId{foundation::ObjectId::fromUint64(79U)},
+      semantic::ResourceKind::kImage, 1U,
+      "sha256:4a5afeaff8483923da964bc7896f02d0283e8bff99b5b8f82a31ae3214dab1d0",
+      webp.size(), 1U, 0U, {0x08, 0x01, 0x10, 0x01, 0x18, 0x01, 0x20, 0x01}});
   assert(composition.bindManifest(manifest, 42U));
   runtime::ImageImportRequest request{};
   request.resourceId = semantic::ResourceId{foundation::ObjectId::fromUint64(77U)};
@@ -31,6 +57,22 @@ int main() {
   const auto imported = facade.importImage(request);
   assert(imported.state == runtime::ImageCommandState::kApplied);
   assert(imported.objectId != foundation::ObjectId{});
+
+  runtime::ImageImportRequest jpegRequest = request;
+  jpegRequest.resourceId = semantic::ResourceId{foundation::ObjectId::fromUint64(78U)};
+  jpegRequest.bytes = jpeg;
+  jpegRequest.objectId = foundation::ObjectId::fromUint64(9002U);
+  jpegRequest.placement.order_key = semantic::OrderKey{{0x50U}};
+  const auto jpegImported = facade.importImage(jpegRequest);
+  assert(jpegImported.state == runtime::ImageCommandState::kApplied);
+
+  runtime::ImageImportRequest webpRequest = request;
+  webpRequest.resourceId = semantic::ResourceId{foundation::ObjectId::fromUint64(79U)};
+  webpRequest.bytes = webp;
+  webpRequest.objectId = foundation::ObjectId::fromUint64(9003U);
+  webpRequest.placement.order_key = semantic::OrderKey{{0x60U}};
+  const auto webpImported = facade.importImage(webpRequest);
+  assert(webpImported.state == runtime::ImageCommandState::kApplied);
 
   runtime::ImageCropBeginRequest begin{};
   begin.objectId = imported.objectId;
@@ -51,7 +93,7 @@ int main() {
   const auto beforeBadImportObjects = composition.semanticObjectCount();
   const auto beforeBadImportGeneration = composition.readback().semanticGeneration;
   auto bad = request;
-  bad.objectId = foundation::ObjectId::fromUint64(9002U);
+  bad.objectId = foundation::ObjectId::fromUint64(9902U);
   bad.bytes = {1U, 2U, 3U};
   const auto rejected = facade.importImage(bad);
   assert(rejected.state == runtime::ImageCommandState::kRejected);

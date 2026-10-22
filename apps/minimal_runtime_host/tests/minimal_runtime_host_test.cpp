@@ -4,6 +4,7 @@
 
 #include <cassert>
 #include <thread>
+#include <type_traits>
 
 using canvas::interaction::DispatchMode;
 using canvas::input::PlatformPointerBatch;
@@ -102,6 +103,9 @@ int main() {
   assert(facade.process() == 1U);
   assert(facadeHost.composition().runtime().creationPreset() ==
          canvas::interaction::CreationPreset::kEllipse);
+  static_assert(std::is_same_v<decltype(&canvas::minimal_runtime_host::MinimalRuntimeFacade::importImage),
+                               canvas::runtime::ImageCommandReceipt (canvas::minimal_runtime_host::MinimalRuntimeFacade::*)(const canvas::runtime::ImageImportRequest&)>);
+  assert(facade.importImage({}).state == canvas::runtime::ImageCommandState::kRejected);
 
   // The facade's public pump must share Composition's owner clock; a second
   // counter must not roll the deadline domain back after prior frame pumps.

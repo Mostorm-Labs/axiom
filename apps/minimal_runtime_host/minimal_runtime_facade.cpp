@@ -72,6 +72,14 @@ std::optional<runtime::FontCatalogEntry> MinimalRuntimeFacade::readFontResourceS
 std::optional<runtime::TextReceipt> MinimalRuntimeFacade::textInputReceipt(const runtime::TextSessionToken& t,std::uint64_t s) const { return host_.composition().controlFacade().textInputReceipt(t,s); }
 std::optional<runtime::TextReceipt> MinimalRuntimeFacade::textIntentReceipt(std::uint64_t c,std::uint64_t r) const { return host_.composition().controlFacade().textIntentReceipt(c,r); }
 bool MinimalRuntimeFacade::acknowledgeTextInput(const runtime::TextSessionToken& t,std::uint64_t s) { return host_.composition().controlFacade().acknowledgeTextInput(t,s); }
+runtime::ImageCommandReceipt MinimalRuntimeFacade::importImage(const runtime::ImageImportRequest& request) { return host_.composition().controlFacade().importImage(request); }
+runtime::ImageCommandReceipt MinimalRuntimeFacade::replaceImage(const runtime::ImageReplaceRequest& request) { return host_.composition().controlFacade().replaceImage(request); }
+runtime::ImageCommandReceipt MinimalRuntimeFacade::resizeImage(const runtime::ImageResizeRequest& request) { return host_.composition().controlFacade().resizeImage(request); }
+runtime::ImageCommandReceipt MinimalRuntimeFacade::beginImageCrop(const runtime::ImageCropBeginRequest& request) { return host_.composition().controlFacade().beginImageCrop(request); }
+runtime::ImageCommandReceipt MinimalRuntimeFacade::updateImageCrop(const runtime::ImageCropUpdateRequest& request) { return host_.composition().controlFacade().updateImageCrop(request); }
+runtime::ImageCommandReceipt MinimalRuntimeFacade::commitImageCrop(std::uint64_t token) { return host_.composition().controlFacade().commitImageCrop(token); }
+runtime::ImageCommandReceipt MinimalRuntimeFacade::cancelImageCrop(std::uint64_t token) { return host_.composition().controlFacade().cancelImageCrop(token); }
+runtime::ImageCropSnapshot MinimalRuntimeFacade::readImageCrop() const { return host_.composition().controlFacade().readImageCrop(); }
 
 }  // namespace canvas::minimal_runtime_host
 

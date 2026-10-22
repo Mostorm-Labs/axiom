@@ -19,6 +19,19 @@ class MinimalRuntimeFacade final : public runtime::RuntimeFacade,
   std::optional<runtime::TextReceipt> textInputReceipt(const runtime::TextSessionToken&,std::uint64_t) const override;
   std::optional<runtime::TextReceipt> textIntentReceipt(std::uint64_t,std::uint64_t) const override;
   bool acknowledgeTextInput(const runtime::TextSessionToken&,std::uint64_t) override;
+  [[nodiscard]] runtime::ImageCommandReceipt importImage(
+      const runtime::ImageImportRequest&) override;
+  [[nodiscard]] runtime::ImageCommandReceipt replaceImage(
+      const runtime::ImageReplaceRequest&) override;
+  [[nodiscard]] runtime::ImageCommandReceipt resizeImage(
+      const runtime::ImageResizeRequest&) override;
+  [[nodiscard]] runtime::ImageCommandReceipt beginImageCrop(
+      const runtime::ImageCropBeginRequest&) override;
+  [[nodiscard]] runtime::ImageCommandReceipt updateImageCrop(
+      const runtime::ImageCropUpdateRequest&) override;
+  [[nodiscard]] runtime::ImageCommandReceipt commitImageCrop(std::uint64_t) override;
+  [[nodiscard]] runtime::ImageCommandReceipt cancelImageCrop(std::uint64_t) override;
+  [[nodiscard]] runtime::ImageCropSnapshot readImageCrop() const override;
   [[nodiscard]] runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override;
   [[nodiscard]] runtime::ProductControlReceipt submitProductControl(
       const runtime::ProductControlRequest& request) noexcept override;

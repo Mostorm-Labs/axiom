@@ -92,6 +92,8 @@ if(BUILD_TESTING)
       tests/fc03_image_facade_test.cpp)
   target_link_libraries(axiom_fc03_image_facade_tests PRIVATE canvas_runtime_composition)
   target_compile_definitions(axiom_fc03_image_facade_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+  target_compile_definitions(axiom_fc03_image_facade_tests PRIVATE
+    FC03_FIXTURE_ROOT="${PROJECT_SOURCE_DIR}/verification/fc03/fixtures")
   target_compile_features(axiom_fc03_image_facade_tests PRIVATE cxx_std_20)
   if(MSVC)
     target_compile_options(axiom_fc03_image_facade_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
