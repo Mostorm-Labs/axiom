@@ -1,0 +1,81 @@
+{
+  "schema_version": "0.1",
+  "task_id": "FC-03",
+  "status": "P20_DESIGN_FROZEN_FOR_P31",
+  "source": "docs/planning/FC03_P20_VERIFICATION_FREEZE.md",
+  "obligations": [
+    {
+      "id": "IMG-01",
+      "requirement": "PNG/JPEG/WebP import creates one manifest/resource and ImageContent",
+      "oracle": "three pinned bytes fixtures + facade trace",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "IMG-02",
+      "requirement": "unsupported/read/hash/decode failure is zero mutation",
+      "oracle": "negative fixtures + object/history/generation before/after",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "IMG-03",
+      "requirement": "source rect presence canonicalization exact",
+      "oracle": "absent/full/partial boundary vectors",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "IMG-04",
+      "requirement": "crop-before-mode mapping deterministic",
+      "oracle": "400x200 to 300x300 FIT/FILL/STRETCH",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "IMG-05",
+      "requirement": "crop preview transient; Done atomic; Cancel zero mutation",
+      "oracle": "session trace including loss/cancel",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "IMG-06",
+      "requirement": "ordinary resize aspect preserved; modifier free stretch",
+      "oracle": "resize input vectors + readback",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "IMG-07",
+      "requirement": "resource readiness only derived invalidation",
+      "oracle": "generation/ledger negative oracle",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "IMG-08",
+      "requirement": "late/stale provider cannot overwrite binding",
+      "oracle": "binding token vectors",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "IMG-09",
+      "requirement": "crop/mode invalidates scene digest/bounds/hit/damage",
+      "oracle": "scene projection oracle",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "IMG-10",
+      "requirement": "selection/move/resize/Undo/Redo path",
+      "oracle": "mixed Image/Shape replay",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "IMG-11",
+      "requirement": "Windows/Web mapping/failure categories agree",
+      "oracle": "C++/WASM facade projection",
+      "classification": "BLOCKING"
+    },
+    {
+      "id": "IMG-12",
+      "requirement": "manifest remove with live reference rejects atomically",
+      "oracle": "stateful operation oracle",
+      "classification": "BLOCKING"
+    }
+  ],
+  "physical_boundary": "FC-13/platform physical evidence remains separate; deterministic tests cannot claim physical PASS"
+}

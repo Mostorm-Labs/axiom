@@ -1,0 +1,56 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "FC-03",
+  "stage": "P31_TASK_PACKAGING",
+  "execution_base": {
+    "repository": "Mostorm-Labs/axiom",
+    "task_anchor": "462d80868af2f2e6fb09b235f283c1cb7b221ff3",
+    "p32_starts_from": "exact P31 package materialization commit"
+  },
+  "implementation": {
+    "required_changes": [
+      "Add typed RuntimeFacade image import/replace/crop commands",
+      "Add owner-safe Composition resource/import pipeline using existing ResourceManifest and ImageContent",
+      "Add Crop session with Done/Cancel and one History entry",
+      "Add ordinary resize aspect policy and host adapters",
+      "Add IMG-01..IMG-12 tests/evidence"
+    ],
+    "forbidden_changes": [
+      "schema/axiom/v1/**",
+      "runtime/semantic/include/canvas/semantic/object_content.hpp",
+      "runtime/semantic/include/canvas/semantic/operation_payload.hpp",
+      "runtime/semantic/src/**",
+      "docs/notion/**",
+      ".aegis/gates.json",
+      ".aegis/evidence.json",
+      ".aegis/integrations.json",
+      "G5 cache/scheduler",
+      "FC-02 text",
+      "FC-04 multi-object",
+      "new ObjectKind/Operation/Proto field"
+    ]
+  },
+  "red_oracle_precondition": {
+    "id": "FC03-RED-01",
+    "baseline": "462d80868af2f2e6fb09b235f283c1cb7b221ff3",
+    "observation": "old RuntimeFacade has no typed image import/crop API and no crop session; expected RED via compile/test probe"
+  },
+  "continue_until_terminal_state": true,
+  "terminal_success": "READY_FOR_CONTROL_REVIEW",
+  "terminal_blockers": [
+    "BLOCKED_REPOSITORY_IDENTITY",
+    "BLOCKED_AUTHORITY",
+    "BLOCKED_ENVIRONMENT",
+    "BLOCKED_VERIFICATION"
+  ],
+  "evidence": {
+    "root": ".aegis/results/FC-03-DEV/",
+    "must_be_reviewer_accessible": true,
+    "subject_revision": "exact P32 commit",
+    "required_families": [
+      "IMG-01..IMG-12"
+    ],
+    "no_gate_verdict": true
+  }
+}

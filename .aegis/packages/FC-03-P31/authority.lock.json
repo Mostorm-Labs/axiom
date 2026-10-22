@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "task_id": "FC-03",
+  "authority_id": "fc-feature-completion-execution-v0.3",
+  "authority_status": "CURRENT_REPO_LOCAL_ACCEPTED",
+  "source": {
+    "authority": {
+      "path": ".aegis/authorities.json",
+      "sha256": "ca1875d06fae9cbbd2c398b4af6bd46a82082eac41e6e590ed5161ffea902dcf",
+      "authority_id": "fc-feature-completion-execution-v0.3"
+    },
+    "candidate": {
+      "path": "docs/planning/FC03_IMAGE_DESIGN_CANDIDATE.md",
+      "sha256": "48a5f41e7c1659fcb0657640c5f71f8cbb4379d2c2df67fdf0ca0dfe291670a5"
+    },
+    "authority_alignment": {
+      "path": "docs/planning/FC03_AUTHORITY_ALIGNMENT.md",
+      "sha256": "5c7c7f829ee8936e0f4c3a459457a6c094c906af28cfede527f5c8591d1c5f0f"
+    },
+    "crop_contract": {
+      "path": "docs/planning/FC03_CROP_CONTRACT.md",
+      "sha256": "481054538ffef438d7d9dbb23a564cab8f0c390859948389121672ed2cf75cb2"
+    },
+    "p20": {
+      "path": "docs/planning/FC03_P20_VERIFICATION_FREEZE.md",
+      "sha256": "86eaabc5f4e848ed43cf29c7b6d1c3efadda676f1af760aa81f6dbb7b8b6d232"
+    }
+  },
+  "forbidden_semantic_changes": [
+    "new ObjectKind",
+    "new OperationKind",
+    "new Proto field",
+    "change ImageContent presence/mode mapping"
+  ],
+  "image_boundary": "consume existing ImageContent V1 and ResourceManifest; no second manifest"
+}
