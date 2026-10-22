@@ -60,7 +60,7 @@ Idle → EnterCrop(snapshot) → AdjustContent / AdjustCrop / AdjustScale
 
 首版交互默认：裁剪框为矩形且自由比例；裁剪框四边不能越过 source plane，最小有效范围为正且达到 renderer 可表示的最小面积；内容拖动不能让裁剪结果落到空 source 区域；缩放滑条使用产品层定义的正数范围，语义层只接收最终归一化 source rect。若产品需要固定比例、旋转或 focal point，应在 P11 冻结前另行决定，不能由平台自行解释。
 
-`Done` 的语义提交必须是完整 ImageContent：保留 resource/intrinsic/mode，写入 normalized source rect，并同时写入裁后 display width/height。两项必须在同一个逻辑 History entry 中成功或全部拒绝；不能先写 crop 再写 size。`Cancel`、输入源丢失、Surface lost、关闭请求不生成 Operation。
+`Done` 的语义提交必须是完整 ImageContent：保留 resource/intrinsic/mode，写入 normalized source rect，并同时写入裁后 display width/height。由于 `SetImageContent` 已承载完整 ImageContent，Done 只生成一个 `SetImageContent` Operation 和一个 History entry；不能先写 crop 再写 size。`Cancel`、输入源丢失、Surface lost、关闭请求不生成 Operation。
 
 ## 5. P12/P13 语义与操作约束
 
