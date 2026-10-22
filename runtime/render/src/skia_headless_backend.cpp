@@ -357,6 +357,51 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
     std::visit([&](const auto& command) {
         using T = std::decay_t<decltype(command)>;
         if constexpr (std::is_same_v<T, ShapeReferenceCommand>) {
+            const auto drawLabel = [&] {
+                if (textResources == nullptr || !command.labelLayout) return;
+                canvas.save();
+                if (command.content.shape_kind == 2U) {
+                    SkPathBuilder ovalPath;
+                    ovalPath.addOval(SkRect::MakeXYWH(
+                        0.0F, 0.0F, skScalar(command.content.width),
+                        skScalar(command.content.height)));
+                    canvas.clipPath(ovalPath.detach());
+                } else if (command.content.shape_kind == 3U) {
+                    SkPathBuilder labelPath;
+                    labelPath.moveTo(skScalar(command.content.width * 0.5), 0.0F);
+                    labelPath.lineTo(skScalar(command.content.width),
+                                     skScalar(command.content.height));
+                    labelPath.lineTo(0.0F, skScalar(command.content.height));
+                    labelPath.close();
+                    canvas.clipPath(labelPath.detach());
+                } else {
+                    canvas.clipRect(SkRect::MakeXYWH(
+                        0.0F, 0.0F, skScalar(command.content.width),
+                        skScalar(command.content.height)));
+                }
+                if (command.labelLayout->shapeLabel) {
+                    canvas.scale(command.labelLayout->labelScaleX,
+                                 command.labelLayout->labelScaleY);
+                }
+                textResources->draw(canvas, *command.labelLayout);
+                canvas.restore();
+                if (command.showExpandButton && command.labelLayout->overflow) {
+                    canvas.save();
+                    if (command.labelLayout->shapeLabel)
+                        canvas.scale(command.labelLayout->labelScaleX,
+                                     command.labelLayout->labelScaleY);
+                    const auto& r = command.labelLayout->expandButton;
+                    SkPaint button; button.setAntiAlias(true); button.setColor(SK_ColorWHITE);
+                    button.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left,r.top,r.right,r.bottom),button);
+                    button.setColor(SK_ColorBLACK); button.setStyle(SkPaint::kStroke_Style); button.setStrokeWidth(1.5F);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left,r.top,r.right,r.bottom),button);
+                    button.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left+3,r.top+7,r.right-3,r.top+9),button);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left+7,r.top+3,r.left+9,r.bottom-3),button);
+                    canvas.restore();
+                }
+            };
             const auto fill = propertyColor(record, 0x00000100U, {1.0F, 0.0F, 0.0F, 1.0F});
             if (command.content.shape_kind == 3U) {
                 SkPathBuilder path;
@@ -420,6 +465,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             } else if (fill.a > 0.0F) {
                 drawSolidRect(canvas, record.visualBounds, fill);
             }
+            drawLabel();
         } else if constexpr (std::is_same_v<T, ImageReferenceCommand>) {
             if (images == nullptr) return;
             const auto decoded = images->resolve(command.content.resource_id);
@@ -453,6 +499,10 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(propertyColor(record, 0x00000100U, {0.0F, 0.0F, 1.0F, 1.0F}))); drawPath(canvas, command.content.geometry, paint);
         } else if constexpr (std::is_same_v<T, RichTextReferenceCommand>) {
             if(command.layout && textResources) textResources->draw(canvas,*command.layout);
+            if(!legacyHeadlessGolden && command.content.layout && command.layout) {
+                SkPaint border;border.setAntiAlias(true);border.setStyle(SkPaint::kStroke_Style);border.setStrokeWidth(0);border.setColor(SK_ColorBLACK);
+                canvas.drawRect(SkRect::MakeLTRB(1,1,static_cast<float>(command.content.layout->wrap_width)-1,command.layout->localBounds.bottom-1),border);
+            }
         } else if constexpr (std::is_same_v<T, VectorStrokeReferenceCommand>) {
             const auto& stroke = command.content.stroke;
             const auto* data = std::get_if<semantic::VectorStrokeData>(&stroke.data);

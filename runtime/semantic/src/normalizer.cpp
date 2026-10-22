@@ -229,6 +229,11 @@ bool normalizeRichTextDocument(RichTextDocument& document) {
     return true;
 }
 
+bool normalizeRichTextContent(RichTextContent& content) {
+    return normalizeRichTextDocument(content.document) &&
+           (!content.layout || normalizeDouble(content.layout->wrap_width));
+}
+
 bool normalizeRichTextDelta(RichTextDelta& delta) {
     for (auto& step : delta.steps) {
         const bool valid = std::visit(
@@ -242,8 +247,13 @@ bool normalizeRichTextDelta(RichTextDelta& delta) {
                     return true;
                 } else if constexpr (std::is_same_v<Item, SetInlineStyleStep>) {
                     return normalizeTextStyle(value.style);
-                } else {
+                } else if constexpr (std::is_same_v<Item, SetParagraphStyleStep>) {
                     return normalizeParagraphStyle(value.style);
+                } else if constexpr (std::is_same_v<Item, SetRichTextLayoutStep>) {
+                    return !value.layout || normalizeDouble(value.layout->wrap_width);
+                } else {
+                    return normalizeRichTextDocument(value.state.content.document) &&
+                        (!value.state.content.layout || normalizeDouble(value.state.content.layout->wrap_width));
                 }
             },
             step);
@@ -317,7 +327,8 @@ bool normalizeContent(ObjectContent& content) {
         [](auto& value) -> bool {
             using Item = std::decay_t<decltype(value)>;
             if constexpr (std::is_same_v<Item, ShapeContent>) {
-                return normalizeDouble(value.width) && normalizeDouble(value.height);
+                return normalizeDouble(value.width) && normalizeDouble(value.height) &&
+                       (!value.label || normalizeRichTextContent(*value.label));
             } else if constexpr (std::is_same_v<Item, ImageContent>) {
                 if (!validObjectId(value.resource_id.value)) return false;
                 if (!normalizeDouble(value.intrinsic_width) || !normalizeDouble(value.intrinsic_height) ||
@@ -326,7 +337,7 @@ bool normalizeContent(ObjectContent& content) {
             } else if constexpr (std::is_same_v<Item, VectorPathContent>) {
                 return normalizePath(value.geometry);
             } else if constexpr (std::is_same_v<Item, RichTextContent>) {
-                return normalizeRichTextDocument(value.document);
+                return normalizeRichTextContent(value);
             } else if constexpr (std::is_same_v<Item, VectorStrokeContent>) {
                 return normalizeStroke(value.stroke);
             } else if constexpr (std::is_same_v<Item, DabStrokeContent>) {

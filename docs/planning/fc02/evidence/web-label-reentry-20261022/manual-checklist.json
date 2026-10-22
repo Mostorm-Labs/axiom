@@ -1,0 +1,19 @@
+{
+  "previous_failure": "user-report.json",
+  "items": [
+    {
+      "name": "Select / triangle / Chinese IME digits / reentry",
+      "expected": "Enter then double-click nearest glyph; caret blinks, inside click repositions, outside click finishes and preserves text",
+      "actual": "User confirmed all three checks passed on f0ccfd3a; scope: Select / triangle / numeric text",
+      "result": "PASS",
+      "previous_result": "PHYSICAL_PENDING",
+      "observation": "human-retest.json"
+    },
+    {
+      "name": "Native IME preedit and candidates",
+      "expected": "Candidates/caret align; only real native result commits once; inside/outside interactions honor completion",
+      "actual": "Only synthetic CDP/DOM composition tested this round",
+      "result": "PHYSICAL_PENDING"
+    }
+  ]
+}

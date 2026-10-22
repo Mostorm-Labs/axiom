@@ -1,0 +1,33 @@
+Running main() from C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = FC02Formatting.*
+[==========] Running 8 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 8 tests from FC02Formatting
+[ RUN      ] FC02Formatting.LeafPatchPreservesSelectionStylesAndUndo
+[       OK ] FC02Formatting.LeafPatchPreservesSelectionStylesAndUndo (4 ms)
+[ RUN      ] FC02Formatting.ListAndStrikeChangeSharedLayoutAndCaret
+[       OK ] FC02Formatting.ListAndStrikeChangeSharedLayoutAndCaret (2 ms)
+[ RUN      ] FC02Formatting.CjkBoldItalicKeepsVisibleGlyphsAndCaret
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC02Formatting.CjkBoldItalicKeepsVisibleGlyphsAndCaret (704 ms)
+[ RUN      ] FC02Formatting.MixedSelectionReportsAnySelectedEffectAndClearsItAtomically
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC02Formatting.MixedSelectionReportsAnySelectedEffectAndClearsItAtomically (765 ms)
+[ RUN      ] FC02Formatting.MixedParagraphSelectionReportsAnyBulletAndExcludesEndParagraph
+[       OK ] FC02Formatting.MixedParagraphSelectionReportsAnyBulletAndExcludesEndParagraph (584 ms)
+[ RUN      ] FC02Formatting.BoldAndItalicChangeRealCanonicalPixels
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC02Formatting.BoldAndItalicChangeRealCanonicalPixels (2518 ms)
+[ RUN      ] FC02Formatting.ImportedFamiliesAreNamedSelectableAndActuallyRender
+[       OK ] FC02Formatting.ImportedFamiliesAreNamedSelectableAndActuallyRender (554 ms)
+[ RUN      ] FC02Formatting.VersionThreeObjectHasExplicitConsumerSupport
+[       OK ] FC02Formatting.VersionThreeObjectHasExplicitConsumerSupport (0 ms)
+[----------] 8 tests from FC02Formatting (5135 ms total)
+
+[----------] Global test environment tear-down
+[==========] 8 tests from 1 test suite ran. (5135 ms total)
+[  PASSED  ] 8 tests.

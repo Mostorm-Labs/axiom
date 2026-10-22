@@ -16,7 +16,8 @@ class CanvasControlService final {
   explicit CanvasControlService(CanvasControlPort& port, std::size_t queueCapacity = 256,
                                 std::size_t receiptCapacity = 1024);
   [[nodiscard]] CanvasControlReceipt enqueue(const CanvasControlRequest& request);
-  [[nodiscard]] std::size_t processPending(std::uint64_t ownerSequence);
+  [[nodiscard]] std::size_t processPending(std::uint64_t ownerSequence,std::optional<CanvasControlReceiptKey> only = std::nullopt);
+  void rejectPending(CanvasControlReceiptKey,CanvasControlError);
   [[nodiscard]] std::optional<CanvasControlReceipt> receipt(CanvasControlReceiptKey key) const;
   [[nodiscard]] CanvasControlSnapshot snapshot(const CanvasTargetKey& target) const;
   void destroyTarget(const CanvasTargetKey& target);

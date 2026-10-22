@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <atomic>
+#include <chrono>
 #include <limits>
 #include <string>
 
@@ -36,7 +37,7 @@ RuntimeComposition::RuntimeComposition(render::ViewId viewId)
   imageResolver_ = std::make_unique<canvas::render::ImageResourceResolver>(*provider_);
 #endif
   controlFacade_ = std::make_unique<CanvasRuntimeFacade>(
-      *runtime_, CanvasTargetKey{1U, viewId.value(), 1U, 1U});
+      *runtime_, CanvasTargetKey{1U, viewId.value(), 1U, 1U},runtimeInstanceId_, this);
 #if defined(CANVAS_RENDER_HAS_SKIA)
   runtime_->bindResourceServices(imageResolver_.get(), textLayoutService_.get());
 #else
@@ -305,7 +306,7 @@ bool RuntimeComposition::publishResource(const ResourceBindingToken& token,
 }
 bool RuntimeComposition::ownerPump() noexcept {
   if (std::this_thread::get_id() != ownerThread_) { lastResourceError_ = ResourcePortError::kWrongThread; return false; }
-  if (!canMutate()) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
+  if (!canMutate() && state_!=RuntimeCompositionState::kLost) { lastResourceError_ = ResourcePortError::kNotReady; return false; }
   ++ownerPumpCount_;
   lastOwnerControlCount_ = 0;
   if (controlFacade_ != nullptr) {
@@ -382,6 +383,7 @@ bool RuntimeComposition::serviceFrameOpportunity(
   // Consume controls and resource notifications first. Their application may
   // create a new canonical demand during this same frame opportunity.
   if (!ownerPump()) return false;
+  runtime_->updateTextCaretPresentation(std::chrono::steady_clock::now());
   const bool shouldCanonical = forceCanonical || runtime_->canonicalPresentationDirty();
   if (nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
   if (shouldCanonical) {

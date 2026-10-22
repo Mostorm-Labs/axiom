@@ -1,0 +1,15 @@
+# Worktree root; VS 2026 x64 environment, MSVC 19.51 /MT; no dependency source builds.
+python tools/setup_build_environment.py --core --semantic --facts-output out/fc02-host/environment.json --status
+python tools/setup_build_environment.py --semantic --offline --status
+python tools/setup_build_environment.py --semantic --target web-wasm32 --facts-output out/fc02-host/web-environment.json --status
+python tools/setup_build_environment.py --semantic --target web-wasm32 --offline --status
+# Reuse CMake caches configured from the resolver facts; targets.txt lists exact targets.
+cmake --build out/fc01-closeout/build --parallel 6 --target <targets.txt>
+cmake --build out/p32-web/build --parallel 4 --target axiom_canvas_demo_web
+ctest --test-dir out/fc01-closeout/build --tests-from-file <absolute path to ctest-names.txt> --output-on-failure -j 4
+python -m unittest verification.tests.test_current_semantic_descriptor verification.tests.test_semantic_contract verification.tests.test_fc02_host_contract -v
+# Separate terminal: serve only the actual Web build on loopback.
+python -m http.server 8769 --bind 127.0.0.1 --directory out/p32-web/build/apps/axiom_canvas_demo
+# Node from accepted local Emscripten tooling; driver starts an isolated headless Chrome on ephemeral loopback CDP.
+.deps/emsdk/node/24.19.0_64bit/node.exe docs/planning/fc02/evidence/host-geometry/chrome-test.mjs web_fc02_text_test web_minimal_runtime_test
+# strict-clang.json retains each full clang-cl /Zs /W4 /WX -Wextra -Wpedantic -Werror command.

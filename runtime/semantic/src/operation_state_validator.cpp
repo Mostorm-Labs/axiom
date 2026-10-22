@@ -21,7 +21,7 @@ namespace {
         case StateRule::kStrokeTarget:
             return kind == ObjectKind::kVectorStroke || kind == ObjectKind::kDabStroke;
         case StateRule::kRichTextTarget:
-            return kind == ObjectKind::kRichText;
+            return kind == ObjectKind::kRichText || kind == ObjectKind::kShape;
         case StateRule::kConnectorTarget:
             return kind == ObjectKind::kConnector;
     }
@@ -98,8 +98,10 @@ StatefulResult requireKindVersion(
                         std::holds_alternative<DabBrushStrokeContent>(record.content);
     const bool shape_v2 = kind == ObjectKind::kShape && kind_version == 2U &&
                           std::holds_alternative<ShapeContent>(record.content);
+    const bool shape_v3 = kind == ObjectKind::kShape && kind_version == 3U &&
+                          std::holds_alternative<ShapeContent>(record.content);
     if (record.kind != kind || record.kind_version != kind_version ||
-        (!brush_v2 && !dab_v2 && !shape_v2 && kind_version != 1U)) {
+        (!brush_v2 && !dab_v2 && !shape_v2 && !shape_v3 && !(kind==ObjectKind::kRichText && (kind_version==2U || kind_version==3U)) && kind_version != 1U)) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
     return StatefulResult{};
@@ -109,7 +111,9 @@ StatefulResult requirePropertyApplicability(
     const ObjectRecord& record, std::uint32_t field_id, const PropertyValue* value) {
     const bool shape_v2 = record.kind == ObjectKind::kShape && record.kind_version == 2U &&
                           std::holds_alternative<ShapeContent>(record.content);
-    if (!isKnownObjectKind(record.kind) || (record.kind_version != 1U && !shape_v2)) {
+    const bool shape_v3 = record.kind == ObjectKind::kShape && record.kind_version == 3U &&
+                          std::holds_alternative<ShapeContent>(record.content);
+    if (!isKnownObjectKind(record.kind) || (record.kind_version != 1U && !shape_v2 && !shape_v3 && !(record.kind==ObjectKind::kRichText && (record.kind_version==2U || record.kind_version==3U)))) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
     if (!supportsField(record.kind, field_id)) {
@@ -123,7 +127,8 @@ StatefulResult requirePropertyApplicability(
 StatefulResult validateRecordStateForOperation(const ObjectRecord& record, StateRule rule) {
     if (!isKnownObjectKind(record.kind) ||
         (record.kind_version != 1U &&
-         !(record.kind == ObjectKind::kShape && record.kind_version == 2U &&
+         !(record.kind == ObjectKind::kRichText && (record.kind_version == 2U || record.kind_version == 3U) && std::holds_alternative<RichTextContent>(record.content)) &&
+         !(record.kind == ObjectKind::kShape && (record.kind_version == 2U || record.kind_version == 3U) &&
            std::holds_alternative<ShapeContent>(record.content)) &&
          !(record.kind == ObjectKind::kVectorStroke && record.kind_version == 2U &&
            std::holds_alternative<BrushStrokeContent>(record.content)) &&

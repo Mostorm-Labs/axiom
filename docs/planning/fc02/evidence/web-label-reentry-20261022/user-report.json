@@ -1,0 +1,10 @@
+{
+  "product_revision": "e15170399fb66be91d35d91f0874acff1f6c95f7",
+  "source": "Direct human feedback in this conversation",
+  "result": "FAIL",
+  "actual": "Web Enter 后双击 Shape 文本可进入；外部点击能结束并保留文字；再次进入后光标不闪烁，文本区域内点击反而结束编辑。Windows 对照正常。",
+  "conditions": "Chinese IME selected, digits only, triangle, Select tool",
+  "expected": "Reentry places caret at nearest glyph; caret blinks; inside click moves caret; outside click finishes and keeps text",
+  "new_build_retest": "PHYSICAL_PENDING",
+  "cache_conclusion": "Old cached editor module reproduces the inside-click failure, but the actual human browser cache has not been inspected; this is not proof it was the only cause of the human FAIL."
+}

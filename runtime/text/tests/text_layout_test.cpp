@@ -36,6 +36,28 @@ int main() {
         return 1;
     }
     assert(layout.resolve(id, input) == ready);
+    const auto geometry=layout.editingGeometry(id,input,0,2);
+    assert(geometry.available && !geometry.selection.empty());
+    const auto caretEnd=layout.editingGeometry(id,input,9,0);
+    assert(caretEnd.available && caretEnd.caret.left>geometry.caret.left);
+    const auto hit=layout.editingGeometry(id,input,0,0,foundation::WorldPoint{caretEnd.caret.left,caretEnd.caret.top+2});
+    assert(hit.available && hit.hit && *hit.hit<=9);
+    const auto breaks=layout.graphemeBoundaries(u"A\u0301\U0001F600B");
+    assert((breaks==std::vector<std::uint32_t>{0,2,4,5}));
+
+    // Object-local widths must not change another object or the legacy context.
+    auto fixedNarrow=content("Canvas Canvas Canvas Canvas",latin);
+    fixedNarrow.layout=semantic::RichTextLayout{50};
+    auto fixedWide=fixedNarrow;fixedWide.layout->wrap_width=400;
+    const auto small=layout.resolve(foundation::ObjectId::fromUint64(20),fixedNarrow);
+    const auto large=layout.resolve(foundation::ObjectId::fromUint64(21),fixedWide);
+    assert(small->diagnostics.empty() && large->diagnostics.empty());
+    assert(small->lines.size()>large->lines.size());
+    assert(layout.resolve(id,input)==ready);
+    assert(layout.resolve(foundation::ObjectId::fromUint64(20),fixedNarrow)==small);
+    assert(layout.resolve(foundation::ObjectId::fromUint64(21),fixedWide)==large);
+    assert(small->digest!=large->digest);
+
     const auto narrow = layout.resolve(id, content("iiii", latin));
     const auto wide = layout.resolve(id, content("WWWW", latin));
     assert(wide->localBounds.right > narrow->localBounds.right);

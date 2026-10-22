@@ -2,6 +2,7 @@ add_library(canvas_runtime_interaction STATIC
     src/creation_session.cpp
     src/eraser_session.cpp
     src/editor_session.cpp
+    src/text_edit_session.cpp
     src/hit_test_service.cpp
     src/interaction_runtime.cpp
     src/interaction_dispatch_runtime.cpp
@@ -33,6 +34,7 @@ endif()
 # cycle. It never includes Playground or Debug UI.
 add_library(canvas_runtime_editor STATIC
     src/canvas_editing_runtime.cpp
+    src/canvas_text_geometry.cpp
     src/brush_commit_adapter.cpp)
 target_include_directories(canvas_runtime_editor PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include

@@ -1,0 +1,63 @@
+<!doctype html><meta charset="utf-8"><title>FC02 Web text integration</title>
+<iframe id="app" src="../index.html" width="1000" height="720"></iframe>
+<pre id="result">PENDING</pre>
+<script type="module">
+const results=[];
+const assert=(value,message)=>{if(!value)throw new Error(message);};
+document.getElementById('app').addEventListener('load',async()=>{
+ try {
+  const frame=document.getElementById('app'),win=frame.contentWindow,doc=frame.contentDocument;
+  const host=await win.axiomMinimalReady, text=host.textInput;
+  const canvas=doc.getElementById('axiom-canvas');canvas.setPointerCapture=()=>{};canvas.releasePointerCapture=()=>{};
+  const settle=async()=>{await new Promise(resolve=>setTimeout(resolve,40));await host.flush();};
+  const carrier=()=>doc.getElementById('axiom-ime');
+  const snapshot=()=>text.snapshot();
+  const projection=()=>String.fromCharCode(...snapshot().projection);
+  const pointer=(type,x,y)=>{const r=canvas.getBoundingClientRect();canvas.dispatchEvent(new win.PointerEvent(type,{pointerId:51,pointerType:'mouse',clientX:r.left+x,clientY:r.top+y,buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true}));};
+  const native=(type,data)=>carrier().dispatchEvent(new win.CompositionEvent(type,{data,bubbles:true}));
+  const insert=data=>{carrier().dispatchEvent(new win.KeyboardEvent('keydown',{key:data[0],bubbles:true,cancelable:true}));carrier().dispatchEvent(new win.InputEvent('beforeinput',{inputType:'insertText',data,bubbles:true,cancelable:true}));};
+  const key=(key,ctrlKey=false)=>carrier().dispatchEvent(new win.KeyboardEvent('keydown',{key,ctrlKey,bubbles:true,cancelable:true}));
+  const test=async(name,action)=>{await action();results.push({name,result:'PASS',snapshot:snapshot(),runtime:host.observation()});};
+  await test('Text toolbar / empty draft has no canonical object',async()=>{
+   doc.getElementById('textTool').click();await settle();pointer('pointerdown',80,80);pointer('pointerup',80,80);await settle();
+   assert(snapshot().phase===1,'Text click did not open editor');assert(host.observation().objects===0,'empty draft persisted');assert(snapshot().geometry.available,'real font caret unavailable');
+  });
+  await test('synthetic native preedit / terminal dedup / actual Runtime commit',async()=>{
+   native('compositionstart','');native('compositionupdate','Canvas');await settle();assert(snapshot().preedit.length===6,'preedit missing');assert(host.observation().objects===0,'preedit entered canonical');
+   native('compositionend','Canvas');await settle();assert(projection()==='Canvas','confirmed text missing');assert(host.observation().objects===1,'text object missing');
+   carrier().dispatchEvent(new win.InputEvent('beforeinput',{inputType:'insertText',data:'Canvas',bubbles:true,cancelable:true}));await settle();assert(projection()==='Canvas','native terminal duplicated');
+  });
+  await test('Chinese preedit and canonical render from pinned application font',async()=>{
+   const chinese='\u4f60\u597d\uff0c\u4e16\u754c\uff01 Axiom \u4e2d\u6587\u8f93\u5165\u6d4b\u8bd5 123 \u7e41\u9ad4\u9f8d';
+   const before=host.observation(),old=projection();native('compositionstart','');native('compositionupdate',chinese);await settle();
+   assert(snapshot().geometry.available && snapshot().geometry.diagnostics.length===0,'Chinese preedit has missing glyph or invalid geometry');
+   assert(host.observation().objects===before.objects && host.observation().operations===before.operations,'Chinese preedit changed canonical state');
+   native('compositionend',chinese);await settle();assert(projection()===old+chinese,'Chinese commit changed text');assert(snapshot().geometry.available,'Chinese canonical geometry unavailable');
+   assert(host.observation().objects===before.objects && host.observation().operations===before.operations+1,'Chinese confirmation did not submit once');
+   key('a',true);await settle();insert('Canvas');await settle();
+  });
+  await test('Debug focus completes composition and retains editor / width persistence',async()=>{
+   native('compositionstart','');native('compositionupdate',' A');await settle();const completing=text.complete();await settle();assert(snapshot().effect!=='0','native completion effect missing');
+   native('compositionend',' A');await completing;await settle();assert(snapshot().phase===1 && projection()==='Canvas A','format focus closed editor');
+   const field=doc.getElementById('textWidth');field.dispatchEvent(new win.PointerEvent('pointerdown',{bubbles:true,cancelable:true}));await settle();field.focus();field.value='120';field.dispatchEvent(new win.Event('change',{bubbles:true}));await settle();assert(snapshot().width===120,'width readback mismatch');
+  });
+  await test('Ctrl+Enter paragraph / Enter finishes / resize keeps text',async()=>{
+   canvas.focus();text.sync();key('Enter',true);await settle();insert('B');await settle();assert(projection()==='Canvas A\nB','paragraph mapping incorrect');
+   key('Enter');await settle();assert(snapshot().phase===0,'Enter did not finish');assert(host.observation().objects===1,'extra text object');
+   await host.resize(800,480,1,true);await settle();assert(host.observation().objects===1,'resize lost text');
+  });
+  await test('double click existing / grapheme deletion / missing glyph diagnostic',async()=>{
+   canvas.dispatchEvent(new win.MouseEvent('dblclick',{clientX:canvas.getBoundingClientRect().left+85,clientY:canvas.getBoundingClientRect().top+85,bubbles:true,cancelable:true}));await settle();assert(snapshot().phase===1,'double click edit failed');
+   key('a',true);await settle();insert('A\u0301');await settle();key('Backspace');await settle();assert(projection()==='','grapheme not deleted as one');
+   insert('\u{10fffd}');await settle();assert(!snapshot().geometry.available && snapshot().geometry.diagnostics.includes('font-glyph-unavailable'),'missing glyph hidden');assert(projection()==='\u{10fffd}','unsupported glyph lost semantic text');
+  });
+  await test('tool switch waits for actual native terminal / Ink remains usable',async()=>{
+   key('a',true);await settle();insert('Canvas');await settle();key('Enter');await settle();
+   pointer('pointerdown',200,180);pointer('pointerup',200,180);await settle();native('compositionstart','');native('compositionupdate','X');await settle();
+   const switching=host.control('tool',0);await settle();assert(snapshot().phase===3,'tool switch bypassed native terminal');native('compositionend','X');await switching;await settle();assert(snapshot().phase===0,'tool switch retained editor');
+   pointer('pointerdown',300,180);pointer('pointermove',350,180);pointer('pointerup',380,180);await settle();assert(host.observation().objects===3,'Ink after native completion failed');assert(text.error()==='','resolved font diagnostic remained stuck after recovery');
+  });
+  document.getElementById('result').textContent=JSON.stringify({result:'PASS',mode:'headless Chrome; synthetic DOM IME; no physical IME claim',results});
+ }catch(error){document.getElementById('result').textContent=JSON.stringify({result:'FAIL',error:String(error),stack:error.stack,results});}
+});
+</script>

@@ -1,0 +1,61 @@
+{
+  "status": "PHYSICAL_PENDING",
+  "historical_failure": "../text-tool-entry/user-failure.json; retained unchanged",
+  "automated_input": "Synthetic Windows messages and CDP mouse/insertText do not prove native IME or physical touch",
+  "steps": [
+    {
+      "id": "shape-entry",
+      "expected": "Draw rectangle/ellipse/triangle, choose Text or Select, double-click inside; caret enters same Shape label",
+      "actual": "Not yet reported for this source revision",
+      "status": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "native-ime",
+      "expected": "Confirm Chinese in label; preedit/candidate caret positions agree; no duplicate text",
+      "actual": "Not yet reported for this source revision",
+      "status": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "format",
+      "expected": "F12 Control Text format: font/color/size/align/bold/italic/underline/strike/list update selected label text",
+      "actual": "Not yet reported for this source revision",
+      "status": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "reentry",
+      "expected": "Enter ends; Text/Select double-click reenters existing label",
+      "actual": "Not yet reported for this source revision",
+      "status": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "undo-redo",
+      "expected": "Undo first insertion removes label, retains same Shape; Redo restores it",
+      "actual": "Not yet reported for this source revision",
+      "status": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "empty",
+      "expected": "Enter empty label creates no Object/Operation/History",
+      "actual": "Not yet reported for this source revision",
+      "status": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "ink-protection",
+      "expected": "Ink double-click remains Ink and cannot start text editing",
+      "actual": "Not yet reported for this source revision",
+      "status": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "geometry",
+      "expected": "Caret/preedit/canonical agree after resize/DPI changes",
+      "actual": "Not yet reported for this source revision",
+      "status": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "touch",
+      "expected": "Observe existing touch drawing/navigation without claiming a new touch double-tap recognizer",
+      "actual": "Not yet reported for this source revision",
+      "status": "PHYSICAL_PENDING"
+    }
+  ]
+}

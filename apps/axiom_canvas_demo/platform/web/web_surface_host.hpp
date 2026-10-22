@@ -3,7 +3,7 @@
 #include "canvas/render/presentation_tracker.hpp"
 #include "canvas/render/surface_lifecycle.hpp"
 #include "canvas/runtime/runtime_composition.hpp"
-#include "canvas/runtime/canvas_runtime_facade.hpp"
+#include "canvas/runtime/runtime_facade.hpp"
 
 #include <optional>
 #include <vector>

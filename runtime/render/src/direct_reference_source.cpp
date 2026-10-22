@@ -81,6 +81,27 @@ void encodeTextStyle(CanonicalWriter& out, const semantic::TextStyle& style) {
     out.boolean(style.italic);
     out.boolean(style.underline);
     out.color(style.color);
+    out.boolean(style.strikethrough);
+}
+
+void encodeRichTextCanonical(CanonicalWriter& out, const semantic::RichTextContent& value) {
+    encodeOptional(out, value.layout, [&](const semantic::RichTextLayout& layout) {
+        out.f64(layout.wrap_width);
+    });
+    out.u64(value.document.paragraphs.size());
+    for (const auto& paragraph : value.document.paragraphs) {
+        out.id(paragraph.id);
+        out.byte(static_cast<std::uint8_t>(paragraph.style.alignment));
+        out.f64(paragraph.style.line_height);
+        out.f64(paragraph.style.spacing_before);
+        out.f64(paragraph.style.spacing_after);
+        out.boolean(paragraph.style.bulleted);
+        out.u64(paragraph.runs.size());
+        for (const auto& run : paragraph.runs) {
+            out.string(run.text);
+            encodeTextStyle(out, run.style);
+        }
+    }
 }
 
 void encodeBrush(CanonicalWriter& out, const semantic::BrushDescriptor& brush) {
@@ -149,12 +170,18 @@ void encodeEndpoint(CanonicalWriter& out, const semantic::ConnectorEndpoint& end
     }, endpoint.value);
 }
 
-void encodeContent(CanonicalWriter& out, const semantic::ObjectContent& content) {
+void encodeContent(CanonicalWriter& out, const semantic::ObjectContent& content,
+                   std::uint32_t kindVersion = 0U) {
     out.byte(static_cast<std::uint8_t>(content.index()));
     std::visit([&](const auto& value) {
         using T = std::decay_t<decltype(value)>;
         if constexpr (std::is_same_v<T, semantic::ShapeContent>) {
             out.u32(value.shape_kind); out.f64(value.width); out.f64(value.height);
+            if (kindVersion == 3U) {
+                encodeOptional(out, value.label, [&](const semantic::RichTextContent& label) {
+                    encodeRichTextCanonical(out, label);
+                });
+            }
         } else if constexpr (std::is_same_v<T, semantic::ImageContent>) {
             out.id(value.resource_id.value);
             out.f64(value.intrinsic_width); out.f64(value.intrinsic_height);
@@ -286,7 +313,7 @@ void encodeRecord(CanonicalWriter& out, const RuntimeSceneRecord& record) {
     for (const auto& property : record.properties.entries) {
         out.u32(property.field_id); encodePropertyValue(out, property.value);
     }
-    encodeContent(out, record.content);
+    encodeContent(out, record.content, record.kindVersion);
     out.u64(record.eraseMasks.size());
     for (const auto& mask : record.eraseMasks) encodeEraseMask(out, mask);
     out.rect(record.geometryBounds); out.rect(record.visualBounds); out.rect(record.worldBounds);
@@ -373,7 +400,8 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
     switch (record.kind) {
     case semantic::ObjectKind::kShape:
         if (const auto* value = std::get_if<semantic::ShapeContent>(&record.content))
-            return foundation::Result<ReferenceCommand>::success(ShapeReferenceCommand{*value});
+            return foundation::Result<ReferenceCommand>::success(
+                ShapeReferenceCommand{*value, record.textLayout});
         break;
     case semantic::ObjectKind::kImage:
         if (const auto* value = std::get_if<semantic::ImageContent>(&record.content))

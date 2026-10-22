@@ -1,0 +1,21 @@
+Running main() from C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = FC02Geometry.HostFontChinesePreeditAndCanonicalUseActualGlyphs
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from FC02Geometry
+[ RUN      ] FC02Geometry.HostFontChinesePreeditAndCanonicalUseActualGlyphs
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_geometry_test.cpp(200): error: Value of: preedit.available
+  Actual: false
+Expected: true
+Host font must shape full Chinese/Latin preedit
+
+[  FAILED  ] FC02Geometry.HostFontChinesePreeditAndCanonicalUseActualGlyphs (3 ms)
+[----------] 1 test from FC02Geometry (3 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (3 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] FC02Geometry.HostFontChinesePreeditAndCanonicalUseActualGlyphs
+
+ 1 FAILED TEST

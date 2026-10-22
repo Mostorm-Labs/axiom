@@ -22,24 +22,74 @@ std::vector<std::uint8_t> canonicalSnapshotBytes(const auditoryworks::axiom::v1:
 }
 
 std::array<std::uint8_t, 32> snapshotDigest(const auditoryworks::axiom::v1::DocumentSnapshot& source, bool checkpoint) {
-    auto value = source;
-    value.clear_document_digest();
-    value.clear_checkpoint_digest();
-    if (!checkpoint) {
-        value.clear_document_revision();
-        value.clear_recovery_frontier();
-        value.clear_digest_algorithm();
-    }
-    const auto bytes = canonicalSnapshotBytes(value);
-    if (!checkpoint) return internal::sha256(bytes);
     std::vector<std::uint8_t> framed;
-    constexpr char domain[] = "axiom.checkpoint.v1";
-    const auto append64 = [&](std::uint64_t n) { for (unsigned i=0;i<8U;++i) framed.push_back(static_cast<std::uint8_t>(n >> (8U*i))); };
-    for (unsigned i=0;i<4U;++i) framed.push_back(static_cast<std::uint8_t>((sizeof(domain)-1U) >> (8U*i)));
-    framed.insert(framed.end(), domain, domain + sizeof(domain) - 1U);
-    append64(bytes.size());
-    framed.insert(framed.end(), bytes.begin(), bytes.end());
+    const auto number=[&](std::uint64_t n,unsigned width){for(unsigned i=0;i<width;++i)framed.push_back(static_cast<std::uint8_t>(n>>(8*i)));};
+    const auto blob=[&](const google::protobuf::Message& message){const auto e=internal::canonicalEncodeProto(message);number(e.bytes.size(),4);framed.insert(framed.end(),e.bytes.begin(),e.bytes.end());};
+    if(checkpoint) {
+        auto value=source;value.clear_checkpoint_digest();
+        const auto bytes=canonicalSnapshotBytes(value);
+        const std::string domain="axiom.checkpoint.v1";
+        number(domain.size(),4);framed.insert(framed.end(),domain.begin(),domain.end());
+        number(bytes.size(),8);framed.insert(framed.end(),bytes.begin(),bytes.end());
+    } else {
+        const std::string domain="axiom.semantic.projection.v1";
+        number(domain.size(),4);framed.insert(framed.end(),domain.begin(),domain.end());
+        const auto& document=source.document_id().value();framed.insert(framed.end(),document.begin(),document.end());
+        number(source.schema_version(),4);number(source.capability_requirements().size(),4);
+        framed.insert(framed.end(),source.capability_requirements().begin(),source.capability_requirements().end());
+        number(source.has_manifest()?1U:0U,1);number(source.objects_size(),8);
+        for(const auto& object:source.objects())blob(object);
+        number(source.manifest().schema_version(),4);number(source.manifest().manifest_revision(),8);
+        number(source.manifest().entries_size(),8);for(const auto& entry:source.manifest().entries())blob(entry);
+        number(source.manifest().retired_entries_size(),8);for(const auto& entry:source.manifest().retired_entries())blob(entry);
+    }
     return internal::sha256(framed);
+}
+
+bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reader) {
+    const auto bits=static_cast<unsigned>(reader);
+    if(bits>7U) return false;
+    bool triangle=false,text=false,formatting=false;
+    for(const auto& object:snapshot.objects) {
+        if(object.kind==ObjectKind::kShape && (object.kind_version==2 || object.kind_version==3)) {
+            const auto* shape=std::get_if<ShapeContent>(&object.content);
+            triangle=triangle || (shape && shape->shape_kind==3);
+            text = text || (shape && shape->label.has_value());
+        }
+        text=text || (object.kind==ObjectKind::kRichText && object.kind_version>=2);
+        formatting=formatting || (object.kind==ObjectKind::kRichText && object.kind_version==3);
+    }
+    if((triangle && (bits&1U)==0) || (text && ((bits&2U)==0 || snapshot.schema_version<3))) return false;
+    if(formatting && (bits&4U)==0)return false;
+    if(snapshot.schema_version<3) return true;
+    if(snapshot.capability_requirements.size()>1024 || snapshot.recovery_frontier.size()>32)return false;
+    auditoryworks::axiom::v1::CapabilityRequirementsV1 caps;
+    if(!caps.ParseFromArray(snapshot.capability_requirements.data(),static_cast<int>(snapshot.capability_requirements.size())))return false;
+    std::vector<std::string> expected{"resource-manifest-v1"};
+    if(text)expected.push_back("richtext-fixed-width-v2");if(formatting)expected.push_back("richtext-formatting-v3");if(triangle)expected.push_back("shape2-triangle-v1");
+    bool label = false; for (const auto& object : snapshot.objects) if (object.kind == ObjectKind::kShape && object.kind_version == 3U) { const auto* shape = std::get_if<ShapeContent>(&object.content); label = label || (shape && shape->label.has_value()); }
+    if (label) expected.push_back("shape-richtext-label-v1");
+    if(caps.required_ids_size()!=static_cast<int>(expected.size()))return false;
+    for(int i=0;i<caps.required_ids_size();++i)if(caps.required_ids(i)!=expected[static_cast<std::size_t>(i)])return false;
+    const auto canonical=internal::canonicalEncodeProto(caps);
+    if(!canonical.ok() || canonical.bytes!=snapshot.capability_requirements)return false;
+    auditoryworks::axiom::v1::RecoveryFrontierV1 frontier;
+    if(!frontier.ParseFromArray(snapshot.recovery_frontier.data(),static_cast<int>(snapshot.recovery_frontier.size())) ||
+        !frontier.has_version() || frontier.version()!=1 || !frontier.has_kind() || frontier.kind()!=1 || !frontier.has_sequence())return false;
+    const auto encoded=internal::canonicalEncodeProto(frontier);
+    if(!encoded.ok() || encoded.bytes!=snapshot.recovery_frontier)return false;
+    for(const auto& object:snapshot.objects) {
+        const RichTextContent* rich = nullptr;
+        if (object.kind == ObjectKind::kRichText && object.kind_version >= 2) rich = std::get_if<RichTextContent>(&object.content);
+        else if (object.kind == ObjectKind::kShape && object.kind_version == 3) { const auto* shape = std::get_if<ShapeContent>(&object.content); if (shape && shape->label) rich = &*shape->label; }
+        if (!rich) continue;
+        for(const auto& paragraph:rich->document.paragraphs) for(const auto& run:paragraph.runs) {
+            if(!run.style.font_resource_id)return false;
+            const auto found=std::find_if(snapshot.manifest.entries.begin(),snapshot.manifest.entries.end(),[&](const auto& e){return e.resource_id==*run.style.font_resource_id && e.resource_kind==ResourceKind::kFont;});
+            if(found==snapshot.manifest.entries.end())return false;
+        }
+    }
+    return true;
 }
 
 bool supportedSnapshotVersion(std::uint32_t version) noexcept {
@@ -47,22 +97,26 @@ bool supportedSnapshotVersion(std::uint32_t version) noexcept {
 }
 
 bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability capability, const ObjectRecord& object) noexcept {
+    if (object.kind == ObjectKind::kRichText && object.kind_version == 3U)
+        return schema_version==3U && (static_cast<unsigned>(capability)&6U)==6U;
+    if (object.kind == ObjectKind::kRichText && object.kind_version == 2U)
+        return schema_version==3U && (static_cast<unsigned>(capability)&2U)!=0U;
     if (object.kind != ObjectKind::kShape || object.kind_version != 2U) return true;
     const auto* shape = std::get_if<ShapeContent>(&object.content);
     return shape == nullptr || shape->shape_kind != 3U ||
-           (schema_version == 2U && capability == SnapshotCapability::kShape2Triangle);
+           ((schema_version == 2U || schema_version == 3U) && (static_cast<unsigned>(capability)&1U)!=0U);
 }
 #endif
 }
 
-CodecResult SnapshotCodec::encode(const SemanticSnapshot& snapshot, SnapshotCapability capability) {
+static CodecResult encodeSnapshot(const SemanticSnapshot& snapshot, SnapshotCapability capability, SemanticSnapshot* binding) {
 #if !defined(CANVAS_SEMANTIC_PROTOBUF)
     (void)snapshot;
-    (void)capability;
+    (void)capability;(void)binding;
     return {SemanticError::kRuntimeUnavailable, {}};
 #else
     if (!supportedSnapshotVersion(snapshot.schema_version)) return {SemanticError::kUnsupportedVersion, {}};
-    if (snapshot.document_id.isZero()) return {SemanticError::kInvalidSemanticValue, {}};
+    if (snapshot.document_id.isZero() || !capabilityProfile(snapshot,capability)) return {SemanticError::kInvalidSemanticValue, {}};
     if (snapshot.schema_version < 3U) {
         if (snapshot.manifest_present || snapshot.document_revision != 0U || !snapshot.recovery_frontier.empty() ||
             snapshot.digest_algorithm != 0U || !snapshot.document_digest.empty() ||
@@ -114,12 +168,26 @@ CodecResult SnapshotCodec::encode(const SemanticSnapshot& snapshot, SnapshotCapa
         const auto checkpoint = snapshotDigest(wire, true);
         const std::vector<std::uint8_t> semantic_bytes(semantic.begin(), semantic.end());
         const std::vector<std::uint8_t> checkpoint_bytes(checkpoint.begin(), checkpoint.end());
-        if (snapshot.document_digest != semantic_bytes || snapshot.checkpoint_digest != checkpoint_bytes) {
+        if(binding) {
+            wire.set_document_digest(std::string(semantic.begin(),semantic.end()));
+            const auto bound_checkpoint=snapshotDigest(wire,true);
+            binding->document_digest=semantic_bytes;
+            binding->checkpoint_digest.assign(bound_checkpoint.begin(),bound_checkpoint.end());
+            wire.set_checkpoint_digest(std::string(bound_checkpoint.begin(),bound_checkpoint.end()));
+        } else if (snapshot.document_digest != semantic_bytes || snapshot.checkpoint_digest != checkpoint_bytes) {
             return {SemanticError::kInvalidSemanticValue, {}};
         }
     }
     return internal::canonicalEncodeDocumentSnapshot(wire);
 #endif
+}
+
+CodecResult SnapshotCodec::encode(const SemanticSnapshot& snapshot,SnapshotCapability capability) { return encodeSnapshot(snapshot,capability,nullptr); }
+bool SnapshotCodec::bindDigests(SemanticSnapshot& snapshot,SnapshotCapability capability) {
+    if(snapshot.schema_version!=3)return false;
+    auto staged=snapshot;staged.document_digest.resize(32);staged.checkpoint_digest.resize(32);
+    if(!encodeSnapshot(staged,capability,&staged).ok())return false;
+    snapshot=std::move(staged);return true;
 }
 
 SnapshotDecodeResult SnapshotCodec::decode(const std::vector<std::uint8_t>& bytes, SnapshotCapability capability) {
@@ -190,6 +258,7 @@ SnapshotDecodeResult SnapshotCodec::decode(const std::vector<std::uint8_t>& byte
     for (std::size_t i = 1; i < result.objects.size(); ++i) {
         if (result.objects[i - 1U].id == result.objects[i].id) return {SemanticError::kDuplicateCanonicalKey, std::nullopt};
     }
+    if(!capabilityProfile(result,capability))return {SemanticError::kUnsupportedVersion,std::nullopt};
     return {SemanticError::kNone, std::move(result)};
 #endif
 }

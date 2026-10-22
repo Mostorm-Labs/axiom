@@ -1,0 +1,55 @@
+Running main() from C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = FC02ShapeLabel.ReenterUsesTheClickedGlyphAndPointerCanMoveCaret:FC02ShapeLabel.OutsideDownFinishesWithoutCreatingAnotherDraft:FC02ShapeLabel.UnselectedOverflowHasNoExpandPixelsOrExpandHit
+[==========] Running 3 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 3 tests from FC02ShapeLabel
+[ RUN      ] FC02ShapeLabel.ReenterUsesTheClickedGlyphAndPointerCanMoveCaret
+C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(168): error: Expected equality of these values:
+  h.facade.readTextEditor().selection
+    Which is: 8-byte object <00-00 00-00 00-00 00-00>
+  (runtime::TextRange{11,0})
+    Which is: 8-byte object <0B-00 00-00 00-00 00-00>
+
+[  FAILED  ] FC02ShapeLabel.ReenterUsesTheClickedGlyphAndPointerCanMoveCaret (569 ms)
+[ RUN      ] FC02ShapeLabel.OutsideDownFinishesWithoutCreatingAnotherDraft
+C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(213): error: Expected equality of these values:
+  h.facade.readTextEditor().phase
+    Which is: 1-byte object <01>
+  runtime::TextPhase::kClosed
+    Which is: 1-byte object <00>
+Google Test trace:
+C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(184): false
+
+[  FAILED  ] FC02ShapeLabel.OutsideDownFinishesWithoutCreatingAnotherDraft (1110 ms)
+[ RUN      ] FC02ShapeLabel.UnselectedOverflowHasNoExpandPixelsOrExpandHit
+[axiom] present begin frame=1 objects=1 scene_records=1
+C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(582): error: Expected equality of these values:
+  whiteInButton()
+    Which is: 133
+  0U
+    Which is: 0
+Hidden affordance must not paint
+
+C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(591): error: Expected equality of these values:
+  h.runtime.qualificationRuntime().submittedOperationCount()
+    Which is: 1
+  0U
+    Which is: 0
+First click selects the shape; a hidden affordance cannot expand it
+
+[axiom] present begin frame=2 objects=1 scene_records=1
+C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(593): error: Expected: (whiteInButton()) > (20U), actual: 0 vs 20
+
+[axiom] present begin frame=3 objects=1 scene_records=1
+[  FAILED  ] FC02ShapeLabel.UnselectedOverflowHasNoExpandPixelsOrExpandHit (651 ms)
+[----------] 3 tests from FC02ShapeLabel (2332 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test suite ran. (2332 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 3 tests, listed below:
+[  FAILED  ] FC02ShapeLabel.ReenterUsesTheClickedGlyphAndPointerCanMoveCaret
+[  FAILED  ] FC02ShapeLabel.OutsideDownFinishesWithoutCreatingAnotherDraft
+[  FAILED  ] FC02ShapeLabel.UnselectedOverflowHasNoExpandPixelsOrExpandHit
+
+ 3 FAILED TESTS

@@ -172,5 +172,37 @@ TEST(OperationNormalizer, ElidesFullImageCropWithoutChangingPartialCrop) {
     EXPECT_TRUE(std::get<SetImageContentOp>(partial.value.payload).content.source_rect.has_value());
 }
 
+TEST(OperationNormalizer, NormalizesEmbeddedShapeLabelWithoutChangingPresence) {
+    ObjectRecord record;
+    record.id = id(30U);
+    record.kind = ObjectKind::kShape;
+    record.kind_version = 3U;
+    record.placement.order_key = OrderKey({30U});
+    RichTextContent label;
+    label.layout = RichTextLayout{-0.0};
+    Paragraph paragraph;
+    paragraph.id = id(31U);
+    paragraph.style.line_height = -0.0;
+    TextRun run;
+    run.text = "label";
+    run.style.font_size = -0.0;
+    run.style.color.r = -0.0F;
+    paragraph.runs.push_back(run);
+    label.document.paragraphs.push_back(paragraph);
+    record.content = ShapeContent{1U, 100.0, 80.0, label};
+
+    Operation operation;
+    operation.payload = InsertObjectsOp{{record}};
+    const auto normalized = normalizeOperation(operation);
+    ASSERT_TRUE(normalized.ok());
+    const auto& shape = std::get<ShapeContent>(
+        std::get<InsertObjectsOp>(normalized.value.payload).objects.front().content);
+    ASSERT_TRUE(shape.label.has_value());
+    EXPECT_FALSE(std::signbit(shape.label->layout->wrap_width));
+    EXPECT_FALSE(std::signbit(shape.label->document.paragraphs.front().style.line_height));
+    EXPECT_FALSE(std::signbit(shape.label->document.paragraphs.front().runs.front().style.font_size));
+    EXPECT_FALSE(std::signbit(shape.label->document.paragraphs.front().runs.front().style.color.r));
+}
+
 } // namespace
 } // namespace canvas::semantic

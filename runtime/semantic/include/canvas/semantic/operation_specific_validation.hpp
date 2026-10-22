@@ -27,6 +27,7 @@ struct SplitStrokesStatePlanInputs final {
 [[nodiscard]] StatefulResult validateAddEraseMasksState(const AddEraseMasksOp&, const ObjectStore&, ReplaceObjectsStatePlanInputs* out);
 [[nodiscard]] StatefulResult validateRemoveEraseMasksState(const RemoveEraseMasksOp&, const ObjectStore&, ReplaceObjectsStatePlanInputs* out);
 [[nodiscard]] StatefulResult validateEditRichTextState(const EditRichTextOp&, const ObjectStore&, ReplaceObjectsStatePlanInputs* out);
+[[nodiscard]] StatefulResult validateEditRichTextStateForDocument(const EditRichTextOp&, const ObjectStore&, ReplaceObjectsStatePlanInputs* out, DocumentId document);
 [[nodiscard]] StatefulResult validateSetConnectorContentState(const SetConnectorContentOp&, const ObjectStore&, ReplaceObjectsStatePlanInputs* out);
 
 } // namespace canvas::semantic

@@ -1,0 +1,473 @@
+Test project C:/Users/Chado/.codex/worktrees/fc02-runtime-boundary-resume/canvas/out/fc02-resume/build
+        Start 495: FC02Text
+        Start 505: FC02MinimalTextConsumer
+        Start 512: FC02WindowsShapeLabelEntry
+        Start 511: FC02WindowsInkDoubleClick
+  1/234 Test #505: FC02MinimalTextConsumer .........................................................................................   Passed    0.79 sec
+        Start 510: FC02WindowsTextFormatControls
+  2/234 Test #511: FC02WindowsInkDoubleClick .......................................................................................   Passed    0.69 sec
+        Start 509: FC02WindowsTextToolAfterInk
+  3/234 Test #510: FC02WindowsTextFormatControls ...................................................................................   Passed    0.92 sec
+        Start 508: FC02WindowsTextToolTouchFocus
+  4/234 Test #509: FC02WindowsTextToolAfterInk .....................................................................................   Passed    0.97 sec
+        Start 507: FC02WindowsTextToolFocus
+  5/234 Test #508: FC02WindowsTextToolTouchFocus ...................................................................................   Passed    0.89 sec
+        Start 506: FC02WindowsTextToolEntry
+  6/234 Test #512: FC02WindowsShapeLabelEntry ......................................................................................   Passed    2.58 sec
+        Start 513: FC02WindowsTextIngress
+  7/234 Test #507: FC02WindowsTextToolFocus ........................................................................................   Passed    1.07 sec
+        Start 516: FC00XWindowsPreviewOrigin
+  8/234 Test #506: FC02WindowsTextToolEntry ........................................................................................   Passed    1.04 sec
+        Start 518: FC00XS2WindowsSurfaceBinding
+  9/234 Test #516: FC00XWindowsPreviewOrigin .......................................................................................   Passed    0.86 sec
+ 10/234 Test #513: FC02WindowsTextIngress ..........................................................................................   Passed    1.38 sec
+        Start 514: FC00XWindowsTouchIngress
+        Start 521: DUIWindowsHostInputDispatch
+ 11/234 Test #518: FC00XS2WindowsSurfaceBinding ....................................................................................   Passed    1.19 sec
+        Start 515: FC00XWindowsMouseHistory
+ 12/234 Test #514: FC00XWindowsTouchIngress ........................................................................................   Passed    0.87 sec
+        Start  20: SemanticCodec.ProtobufPreflightEnforcesEditRichTextAggregateBeforeParse
+ 13/234 Test #521: DUIWindowsHostInputDispatch .....................................................................................   Passed    1.07 sec
+        Start 517: FC00XPreviewCanonicalCoordinates
+ 14/234 Test #515: FC00XWindowsMouseHistory ........................................................................................   Passed    0.66 sec
+        Start 503: FC00XRuntimeComposition
+ 15/234 Test  #20: SemanticCodec.ProtobufPreflightEnforcesEditRichTextAggregateBeforeParse .........................................   Passed    0.88 sec
+ 16/234 Test #517: FC00XPreviewCanonicalCoordinates ................................................................................   Passed    0.33 sec
+        Start  35: SemanticCodecNegative.EnforcesCustomOperationWireSizeLimit
+        Start 519: FC00XMinimalRuntimeHost
+ 17/234 Test #503: FC00XRuntimeComposition .........................................................................................   Passed    0.69 sec
+ 18/234 Test  #35: SemanticCodecNegative.EnforcesCustomOperationWireSizeLimit ......................................................   Passed    0.37 sec
+        Start  34: SemanticCodecNegative.EnforcesOperationWireSizeBoundaryBeforeDecode
+        Start 498: FC00XBrushBatchSemantics
+ 19/234 Test  #34: SemanticCodecNegative.EnforcesOperationWireSizeBoundaryBeforeDecode .............................................   Passed    0.39 sec
+ 20/234 Test #519: FC00XMinimalRuntimeHost .........................................................................................   Passed    0.75 sec
+        Start  10: SemanticCodec.ProtobufPreflightRejectsOversizedNestedObjectRecord
+        Start  19: SemanticCodec.ProtobufPreflightRejectsOversizedEditRichTextInsertBeforeParse
+ 21/234 Test  #19: SemanticCodec.ProtobufPreflightRejectsOversizedEditRichTextInsertBeforeParse ....................................   Passed    0.07 sec
+        Start  39: brush_snapshot_v2.BrushSnapshotV2.NewObjectIsRecognizedBeforeMutation
+ 22/234 Test #498: FC00XBrushBatchSemantics ........................................................................................   Passed    0.96 sec
+        Start  36: brush_engine_codec.BrushEngineCodec.AcceptsOnlyVersionedNewObjectBranch
+ 23/234 Test  #10: SemanticCodec.ProtobufPreflightRejectsOversizedNestedObjectRecord ...............................................   Passed    1.16 sec
+        Start 527: PX0ControlRouter
+ 24/234 Test  #39: brush_snapshot_v2.BrushSnapshotV2.NewObjectIsRecognizedBeforeMutation ...........................................   Passed    1.40 sec
+        Start  42: codec_operation_ingress.CodecOperationIngress.DecodesIndependentNonEmptyWireRepresentativesForAllFamilies
+ 25/234 Test  #36: brush_engine_codec.BrushEngineCodec.AcceptsOnlyVersionedNewObjectBranch .........................................   Passed    1.39 sec
+        Start  45: codec_operation_ingress.CodecOperationIngress.PreservesNestedValuesAcrossAllConfiguredFamilies
+ 26/234 Test #527: PX0ControlRouter ................................................................................................   Passed    0.82 sec
+        Start  46: G106Snapshot.ProtobufOffContractOrRoundTrip
+ 27/234 Test  #45: codec_operation_ingress.CodecOperationIngress.PreservesNestedValuesAcrossAllConfiguredFamilies ..................   Passed    0.47 sec
+ 28/234 Test  #42: codec_operation_ingress.CodecOperationIngress.DecodesIndependentNonEmptyWireRepresentativesForAllFamilies .......   Passed    0.97 sec
+        Start 330: OperationSpecificStatefulValidation.CON_B03_MissingAttachedTargetRejects
+        Start 496: FC00XBrushBatchEvaluation
+ 29/234 Test  #46: G106Snapshot.ProtobufOffContractOrRoundTrip .....................................................................   Passed    1.64 sec
+        Start  44: codec_operation_ingress.CodecOperationIngress.PreservesConfiguredNestedValues
+ 30/234 Test #330: OperationSpecificStatefulValidation.CON_B03_MissingAttachedTargetRejects ........................................   Passed    1.23 sec
+        Start  38: brush_engine_codec.BrushEngineCodec.ProtobufAddStrokeV2RoundTripsBeforeMutation
+ 31/234 Test #496: FC00XBrushBatchEvaluation .......................................................................................   Passed    0.08 sec
+ 32/234 Test  #44: codec_operation_ingress.CodecOperationIngress.PreservesConfiguredNestedValues ...................................   Passed    0.06 sec
+        Start  33: SemanticCodecNegative.RejectsNonFiniteAndOversizedValues
+        Start  40: brush_snapshot_v2.BrushSnapshotV2.DabBrushStrokeRoundTripsWithoutChangingLegacyDabShape
+ 33/234 Test  #40: brush_snapshot_v2.BrushSnapshotV2.DabBrushStrokeRoundTripsWithoutChangingLegacyDabShape .........................   Passed    0.06 sec
+        Start  96: PayloadStructure.EnforcesPatchBatchHardLimit
+ 34/234 Test  #38: brush_engine_codec.BrushEngineCodec.ProtobufAddStrokeV2RoundTripsBeforeMutation .................................   Passed    0.66 sec
+        Start  41: brush_snapshot_v2.BrushSnapshotV2.MembraneDabBrushStrokeRoundTripsWithDistinctProfile
+ 35/234 Test  #33: SemanticCodecNegative.RejectsNonFiniteAndOversizedValues ........................................................   Passed    0.65 sec
+        Start 456: C1CommonIngress
+ 36/234 Test  #96: PayloadStructure.EnforcesPatchBatchHardLimit ....................................................................   Passed    0.72 sec
+ 37/234 Test  #41: brush_snapshot_v2.BrushSnapshotV2.MembraneDabBrushStrokeRoundTripsWithDistinctProfile ...........................   Passed    0.14 sec
+        Start  43: codec_operation_ingress.CodecOperationIngress.DecodedOperationIsConsumableByOperationEngine
+        Start   5: SemanticCodec.EncodesAndDecodesCanonicalOperation
+ 38/234 Test #456: C1CommonIngress .................................................................................................   Passed    0.17 sec
+        Start 378: OperationEngineApplyDifferential.ExplicitApplyIdempotencyCollisionAndRejectionSequenceMatchesBothProviders
+ 39/234 Test  #43: codec_operation_ingress.CodecOperationIngress.DecodedOperationIsConsumableByOperationEngine .....................   Passed    0.51 sec
+        Start 414: G47TextLayout
+ 40/234 Test   #5: SemanticCodec.EncodesAndDecodesCanonicalOperation ...............................................................   Passed    0.63 sec
+        Start 348: ApplyPlan.AlreadyAppliedShortCircuitsBeforeObjectStoreLookup
+ 41/234 Test #378: OperationEngineApplyDifferential.ExplicitApplyIdempotencyCollisionAndRejectionSequenceMatchesBothProviders ......   Passed    1.28 sec
+        Start  37: brush_engine_codec.BrushEngineCodec.AddStrokeRequiresPayloadVersionTwo
+ 42/234 Test #414: G47TextLayout ...................................................................................................   Passed    0.81 sec
+        Start  59: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.EmptySnapshotRestoresWhileLoadingWithoutAdvancingGeneration
+ 43/234 Test  #37: brush_engine_codec.BrushEngineCodec.AddStrokeRequiresPayloadVersionTwo ..........................................   Passed    0.76 sec
+ 44/234 Test #348: ApplyPlan.AlreadyAppliedShortCircuitsBeforeObjectStoreLookup ....................................................   Passed    1.44 sec
+        Start 258: OperationSpecificStatefulValidation.FailureSentinelsAreNonEmpty
+        Start 374: OperationEngineApply.FirstSeenInsertAppliesExpectedStateAndRecordsLedgerForBothProviders
+ 45/234 Test  #59: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.EmptySnapshotRestoresWhileLoadingWithoutAdvancingGeneration ......   Passed    1.36 sec
+        Start 504: FC00XRuntimeFacade
+ 46/234 Test #258: OperationSpecificStatefulValidation.FailureSentinelsAreNonEmpty .................................................   Passed    1.07 sec
+        Start 502: FC00XFatalProviderFailure
+ 47/234 Test #374: OperationEngineApply.FirstSeenInsertAppliesExpectedStateAndRecordsLedgerForBothProviders ........................   Passed    1.07 sec
+        Start 373: OperationEngineBoundary.DelegatesToPlanner
+ 48/234 Test #504: FC00XRuntimeFacade ..............................................................................................   Passed    0.91 sec
+        Start 445: G4SessionLifecycle
+ 49/234 Test #502: FC00XFatalProviderFailure .......................................................................................   Passed    0.57 sec
+        Start 408: resource_manifest.ResourceManifest.ValidEntryAndCanonicalOrdering
+ 50/234 Test #373: OperationEngineBoundary.DelegatesToPlanner ......................................................................   Passed    1.10 sec
+ 51/234 Test #445: G4SessionLifecycle ..............................................................................................   Passed    0.67 sec
+        Start 447: G4MultiContactCoordinator
+        Start 500: FC00XPreviewBusyCanonicalProgress
+ 52/234 Test #408: resource_manifest.ResourceManifest.ValidEntryAndCanonicalOrdering ...............................................   Passed    0.81 sec
+        Start  21: SemanticCodec.ProtobufPreflightAllowsExactEraseMaskCollectionLimit
+ 53/234 Test #447: G4MultiContactCoordinator .......................................................................................   Passed    0.31 sec
+        Start 360: AtomicApply.AppliesPreparedMixedPlanToBothStoresWithExplicitFinalState
+ 54/234 Test #500: FC00XPreviewBusyCanonicalProgress ...............................................................................   Passed    0.51 sec
+        Start 326: OperationSpecificStatefulValidation.EDIT_B03_WrongKindRejects
+ 55/234 Test  #21: SemanticCodec.ProtobufPreflightAllowsExactEraseMaskCollectionLimit ..............................................   Passed    0.50 sec
+        Start 454: G4MultiPointerFoundation
+ 56/234 Test #360: AtomicApply.AppliesPreparedMixedPlanToBothStoresWithExplicitFinalState ..........................................   Passed    0.66 sec
+ 57/234 Test #326: OperationSpecificStatefulValidation.EDIT_B03_WrongKindRejects ...................................................   Passed    0.20 sec
+        Start 293: OperationSpecificStatefulValidation.STR_B02_DabStrokeCreateSucceeds
+        Start 282: OperationSpecificStatefulValidation.SIZE_B02_ImageSucceedsAndPreservesNonSizeContent
+ 58/234 Test #454: G4MultiPointerFoundation ........................................................................................   Passed    0.24 sec
+        Start 442: G4EditorHistory
+ 59/234 Test #293: OperationSpecificStatefulValidation.STR_B02_DabStrokeCreateSucceeds .............................................   Passed    0.34 sec
+ 60/234 Test #282: OperationSpecificStatefulValidation.SIZE_B02_ImageSucceedsAndPreservesNonSizeContent ............................   Passed    0.34 sec
+        Start  32: SemanticCodecNegative.RejectsDuplicateAndUnorderedCanonicalFields
+        Start  11: SemanticCodec.ProtobufPreflightRejectsUnknownDuplicateWrongTypeAndOverflowFields
+ 61/234 Test  #11: SemanticCodec.ProtobufPreflightRejectsUnknownDuplicateWrongTypeAndOverflowFields ................................   Passed    0.10 sec
+ 62/234 Test  #32: SemanticCodecNegative.RejectsDuplicateAndUnorderedCanonicalFields ...............................................   Passed    0.11 sec
+        Start 286: OperationSpecificStatefulValidation.PATH_B01_VectorPathSucceeds
+        Start 332: OperationSpecificStatefulValidation.CON_B05_ValidStablePortForConnectableTargetSucceeds
+ 63/234 Test #442: G4EditorHistory .................................................................................................   Passed    0.42 sec
+        Start  18: SemanticCodec.ProtobufPreflightAllowsExactRichTextRunStringLimit
+ 64/234 Test #286: OperationSpecificStatefulValidation.PATH_B01_VectorPathSucceeds .................................................   Passed    0.11 sec
+        Start  30: SemanticCodecNegative.RejectsUnsupportedVersion
+ 65/234 Test #332: OperationSpecificStatefulValidation.CON_B05_ValidStablePortForConnectableTargetSucceeds .........................   Passed    0.12 sec
+        Start 329: OperationSpecificStatefulValidation.CON_B02_NonConnectorTargetObjectRejects
+ 66/234 Test  #18: SemanticCodec.ProtobufPreflightAllowsExactRichTextRunStringLimit ................................................   Passed    0.12 sec
+        Start 367: AtomicApply.RejectsContradictoryCreateAndReplacementIdBeforeAnyMutation
+ 67/234 Test  #30: SemanticCodecNegative.RejectsUnsupportedVersion .................................................................   Passed    0.04 sec
+        Start  86: PayloadStructure.EnforcesAllThirteenKeyedCollectionProfiles
+ 68/234 Test #329: OperationSpecificStatefulValidation.CON_B02_NonConnectorTargetObjectRejects .....................................   Passed    0.07 sec
+        Start 379: OperationEngineApplyDifferential.ProductionEngineDoesNotScanAllObjects
+ 69/234 Test #367: AtomicApply.RejectsContradictoryCreateAndReplacementIdBeforeAnyMutation .........................................   Passed    0.13 sec
+        Start 501: FC00XBusyCanonicalPendingFeedback
+ 70/234 Test  #86: PayloadStructure.EnforcesAllThirteenKeyedCollectionProfiles .....................................................   Passed    0.12 sec
+        Start 499: FC00XCanonicalBusyPreviewProgress
+ 71/234 Test #379: OperationEngineApplyDifferential.ProductionEngineDoesNotScanAllObjects ..........................................   Passed    0.18 sec
+        Start  13: SemanticCodec.ProtobufPreflightAllowsKeyedBatchAtLimitAndRejectsAboveLimit
+ 72/234 Test #499: FC00XCanonicalBusyPreviewProgress ...............................................................................   Passed    0.11 sec
+        Start 261: OperationSpecificStatefulValidation.INS_B01_GroupAndShapeStagedTogetherSucceeds
+ 73/234 Test #501: FC00XBusyCanonicalPendingFeedback ...............................................................................   Passed    0.13 sec
+        Start  58: G106Snapshot.RoundTripsAllV1ContentAndCanonicalizesOrder
+ 74/234 Test  #13: SemanticCodec.ProtobufPreflightAllowsKeyedBatchAtLimitAndRejectsAboveLimit ......................................   Passed    0.13 sec
+        Start 336: RichTextStatePlan.TXT_S01_UnicodeScalarInsertInAEmojiB
+ 75/234 Test #261: OperationSpecificStatefulValidation.INS_B01_GroupAndShapeStagedTogetherSucceeds .................................   Passed    0.66 sec
+        Start  61: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.ReferenceAndIndexedProjectionMatchesCandidateProjection
+ 76/234 Test  #58: G106Snapshot.RoundTripsAllV1ContentAndCanonicalizesOrder ........................................................   Passed    0.66 sec
+        Start  15: SemanticCodec.ProtobufPreflightRejectsPersistentEraseMaskCollectionOverflow
+ 77/234 Test #336: RichTextStatePlan.TXT_S01_UnicodeScalarInsertInAEmojiB ..........................................................   Passed    0.58 sec
+        Start  23: SemanticCodec.ObservesAuthorityCanonicalityAndStableNegativeOutcomes
+ 78/234 Test  #15: SemanticCodec.ProtobufPreflightRejectsPersistentEraseMaskCollectionOverflow .....................................   Passed    0.05 sec
+        Start  12: SemanticCodec.ProtobufPreflightRejectsNestedSplitReplacementCollectionOverflow
+ 79/234 Test  #61: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.ReferenceAndIndexedProjectionMatchesCandidateProjection ..........   Passed    0.09 sec
+        Start  55: G106Snapshot.CanonicalizesEraseMaskSetPermutationOnDabStroke
+ 80/234 Test  #23: SemanticCodec.ObservesAuthorityCanonicalityAndStableNegativeOutcomes ............................................   Passed    0.05 sec
+        Start 377: OperationEngineApply.FirstSeenStateInvalidOperationRejectsWithoutLedgerEntry
+ 81/234 Test  #12: SemanticCodec.ProtobufPreflightRejectsNestedSplitReplacementCollectionOverflow ..................................   Passed    0.06 sec
+        Start  17: SemanticCodec.ProtobufPreflightRejectsNestedRichTextRunStringOverflow
+ 82/234 Test  #55: G106Snapshot.CanonicalizesEraseMaskSetPermutationOnDabStroke ....................................................   Passed    0.06 sec
+        Start 327: OperationSpecificStatefulValidation.EDIT_B04_InvalidStagedDeltaLeavesOutputUnchanged
+ 83/234 Test #377: OperationEngineApply.FirstSeenStateInvalidOperationRejectsWithoutLedgerEntry ....................................   Passed    0.08 sec
+        Start 497: FC00XBrushPressureCapability
+ 84/234 Test #497: FC00XBrushPressureCapability ....................................................................................   Passed    0.05 sec
+        Start  29: SemanticCodecNegative.RejectsTruncatedWire
+ 85/234 Test #327: OperationSpecificStatefulValidation.EDIT_B04_InvalidStagedDeltaLeavesOutputUnchanged ............................   Passed    0.27 sec
+ 86/234 Test  #17: SemanticCodec.ProtobufPreflightRejectsNestedRichTextRunStringOverflow ...........................................   Passed    0.29 sec
+        Start 322: OperationSpecificStatefulValidation.PROP_B06_MissingTargetRejects
+        Start 359: ApplyPlan.ResourceRemovalChecksEverySupportedContentReference
+ 87/234 Test  #29: SemanticCodecNegative.RejectsTruncatedWire ......................................................................   Passed    0.16 sec
+        Start  26: SemanticCodec.AcceptsOrderedRepeatedRichTextDeltaSteps
+ 88/234 Test #322: OperationSpecificStatefulValidation.PROP_B06_MissingTargetRejects ...............................................   Passed    0.07 sec
+        Start 308: OperationSpecificStatefulValidation.MASK_ADD_B03_WrongKindRejects
+ 89/234 Test #359: ApplyPlan.ResourceRemovalChecksEverySupportedContentReference ...................................................   Passed    0.19 sec
+        Start  31: SemanticCodecNegative.RejectsUnknownOperation
+ 90/234 Test #308: OperationSpecificStatefulValidation.MASK_ADD_B03_WrongKindRejects ...............................................   Passed    0.13 sec
+        Start  64: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsNonEmptyTargetAndLeavesItUnchanged
+ 91/234 Test  #26: SemanticCodec.AcceptsOrderedRepeatedRichTextDeltaSteps ..........................................................   Passed    0.18 sec
+        Start  16: SemanticCodec.ProtobufPreflightRejectsNestedOrderKeyByteOverflow
+ 92/234 Test  #31: SemanticCodecNegative.RejectsUnknownOperation ...................................................................   Passed    0.05 sec
+        Start 295: OperationSpecificStatefulValidation.STR_B04_NonStrokeRecordRejects
+ 93/234 Test  #64: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsNonEmptyTargetAndLeavesItUnchanged ........................   Passed    0.05 sec
+        Start 306: OperationSpecificStatefulValidation.MASK_ADD_B01_VectorStrokeSucceeds
+ 94/234 Test #295: OperationSpecificStatefulValidation.STR_B04_NonStrokeRecordRejects ..............................................   Passed    0.05 sec
+        Start  48: G106Snapshot.RejectsUnknownSnapshotWireFieldsBeforeGeneratedParse
+ 95/234 Test  #16: SemanticCodec.ProtobufPreflightRejectsNestedOrderKeyByteOverflow ................................................   Passed    0.07 sec
+        Start  52: G106Snapshot.MapsDirectColorValueMechanicallyThenRejectsItSemantically
+ 96/234 Test #306: OperationSpecificStatefulValidation.MASK_ADD_B01_VectorStrokeSucceeds ...........................................   Passed    0.08 sec
+        Start 273: OperationSpecificStatefulValidation.PLC_B05_MoveRichTextIntoEmptyStickySucceeds
+ 97/234 Test  #48: G106Snapshot.RejectsUnknownSnapshotWireFieldsBeforeGeneratedParse ...............................................   Passed    0.07 sec
+ 98/234 Test  #52: G106Snapshot.MapsDirectColorValueMechanicallyThenRejectsItSemantically ..........................................   Passed    0.06 sec
+        Start 277: OperationSpecificStatefulValidation.PLC_B09_ValidFinalStateBatch
+        Start 375: OperationEngineApply.SameIdAndCanonicalOperationIsAlreadyAppliedWithoutSecondMutation
+ 99/234 Test #273: OperationSpecificStatefulValidation.PLC_B05_MoveRichTextIntoEmptyStickySucceeds .................................   Passed    0.05 sec
+        Start  56: G106Snapshot.CanonicalizesF32NegativeZeroInPropertyValue
+100/234 Test #277: OperationSpecificStatefulValidation.PLC_B09_ValidFinalStateBatch ................................................   Passed    0.06 sec
+        Start   8: SemanticCodec.ProtobufRuntimeRoundTripsAllReconciledOperations
+101/234 Test #375: OperationEngineApply.SameIdAndCanonicalOperationIsAlreadyAppliedWithoutSecondMutation ...........................   Passed    0.06 sec
+        Start   9: SemanticCodec.ProtobufWirePresenceDistinguishesMissingExplicitZeroAndOne
+102/234 Test  #56: G106Snapshot.CanonicalizesF32NegativeZeroInPropertyValue ........................................................   Passed    0.05 sec
+        Start 285: OperationSpecificStatefulValidation.SIZE_B05_MissingTargetRejects
+103/234 Test   #8: SemanticCodec.ProtobufRuntimeRoundTripsAllReconciledOperations ..................................................   Passed    0.06 sec
+        Start  28: SemanticCodec.ObservesStrokeFixedSeedAndDabCenterAsCanonicalProjection
+104/234 Test   #9: SemanticCodec.ProtobufWirePresenceDistinguishesMissingExplicitZeroAndOne ........................................   Passed    0.06 sec
+        Start 409: resource_manifest.ResourceManifest.RejectsUppercaseHash
+105/234 Test #285: OperationSpecificStatefulValidation.SIZE_B05_MissingTargetRejects ...............................................   Passed    0.07 sec
+        Start 267: OperationSpecificStatefulValidation.INS_B07_EmptyStickySucceeds
+106/234 Test  #28: SemanticCodec.ObservesStrokeFixedSeedAndDabCenterAsCanonicalProjection ..........................................   Passed    0.06 sec
+        Start  27: SemanticCodec.ObservesRichTextDocumentWithReleasedParagraphStyleProjection
+107/234 Test #409: resource_manifest.ResourceManifest.RejectsUppercaseHash .........................................................   Passed    0.09 sec
+        Start 292: OperationSpecificStatefulValidation.STR_B01_VectorStrokeCreateSucceeds
+108/234 Test  #27: SemanticCodec.ObservesRichTextDocumentWithReleasedParagraphStyleProjection ......................................   Passed    0.07 sec
+        Start 331: OperationSpecificStatefulValidation.CON_B04_NonConnectableAttachedTargetRejects
+109/234 Test #267: OperationSpecificStatefulValidation.INS_B07_EmptyStickySucceeds .................................................   Passed    0.11 sec
+        Start 262: OperationSpecificStatefulValidation.INS_B02_ExistingCandidateIdentityRejects
+110/234 Test #292: OperationSpecificStatefulValidation.STR_B01_VectorStrokeCreateSucceeds ..........................................   Passed    0.06 sec
+        Start 287: OperationSpecificStatefulValidation.PATH_B02_WrongKindRejects
+111/234 Test #331: OperationSpecificStatefulValidation.CON_B04_NonConnectableAttachedTargetRejects .................................   Passed    0.05 sec
+        Start  70: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.NegativeFixturesRejectAtomicallyOnReferenceAndIndexedProviders
+112/234 Test #262: OperationSpecificStatefulValidation.INS_B02_ExistingCandidateIdentityRejects ....................................   Passed    0.04 sec
+        Start  14: SemanticCodec.ProtobufPreflightRejectsNestedRemovedMaskCollectionOverflow
+113/234 Test #287: OperationSpecificStatefulValidation.PATH_B02_WrongKindRejects ...................................................   Passed    0.04 sec
+        Start 279: OperationSpecificStatefulValidation.TRN_B02_MissingTargetRejects
+114/234 Test  #70: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.NegativeFixturesRejectAtomicallyOnReferenceAndIndexedProviders ...   Passed    0.04 sec
+        Start 296: OperationSpecificStatefulValidation.STR_B05_StrokeUnderGroupSucceeds
+115/234 Test  #14: SemanticCodec.ProtobufPreflightRejectsNestedRemovedMaskCollectionOverflow .......................................   Passed    0.05 sec
+        Start 299: OperationSpecificStatefulValidation.SPL_B02_MissingSourceRejects
+116/234 Test #279: OperationSpecificStatefulValidation.TRN_B02_MissingTargetRejects ................................................   Passed    0.08 sec
+        Start  49: G106Snapshot.RejectsUnknownAndAmbiguousNestedWireBeforeMapping
+117/234 Test #296: OperationSpecificStatefulValidation.STR_B05_StrokeUnderGroupSucceeds ............................................   Passed    0.07 sec
+        Start 284: OperationSpecificStatefulValidation.SIZE_B04_GroupRejects
+118/234 Test #299: OperationSpecificStatefulValidation.SPL_B02_MissingSourceRejects ................................................   Passed    0.06 sec
+        Start  57: G106Snapshot.CanonicalizesF64NegativeZeroInTransform
+119/234 Test  #49: G106Snapshot.RejectsUnknownAndAmbiguousNestedWireBeforeMapping ..................................................   Passed    0.05 sec
+        Start  50: G106Snapshot.RejectsDuplicateSingularAndMissingRequiredSemanticPresence
+120/234 Test #284: OperationSpecificStatefulValidation.SIZE_B04_GroupRejects .......................................................   Passed    0.05 sec
+        Start 275: OperationSpecificStatefulValidation.PLC_B07_MoveShapeIntoStickyRejects
+121/234 Test  #57: G106Snapshot.CanonicalizesF64NegativeZeroInTransform ............................................................   Passed    0.05 sec
+        Start 411: resource_manifest.ResourceManifest.OperationEngineAppliesCreateAndEmitsResourceChange
+122/234 Test  #50: G106Snapshot.RejectsDuplicateSingularAndMissingRequiredSemanticPresence .........................................   Passed    0.09 sec
+        Start 289: OperationSpecificStatefulValidation.IMG_B01_CompleteImageContentReplacementSucceeds
+123/234 Test #411: resource_manifest.ResourceManifest.OperationEngineAppliesCreateAndEmitsResourceChange ...........................   Passed    0.09 sec
+        Start 355: ApplyPlan.RepresentativeB7CreateProjectionUsesAddStroke
+124/234 Test #275: OperationSpecificStatefulValidation.PLC_B07_MoveShapeIntoStickyRejects ..........................................   Passed    0.10 sec
+        Start  68: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsZeroDocumentAndUnsupportedSchema
+125/234 Test #289: OperationSpecificStatefulValidation.IMG_B01_CompleteImageContentReplacementSucceeds .............................   Passed    0.05 sec
+        Start 335: OperationSpecificStatefulValidation.CON_B07_FreePointOnlyNeedsNoEndpointObjectLookup
+126/234 Test #355: ApplyPlan.RepresentativeB7CreateProjectionUsesAddStroke .........................................................   Passed    0.04 sec
+        Start 316: OperationSpecificStatefulValidation.MASK_REM_B05_LateFailureLeavesOutputUnchanged
+127/234 Test  #68: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsZeroDocumentAndUnsupportedSchema ..........................   Passed    0.04 sec
+        Start  53: G106Snapshot.RejectsSemanticallyInvalidObjectOnEncode
+128/234 Test #316: OperationSpecificStatefulValidation.MASK_REM_B05_LateFailureLeavesOutputUnchanged ...............................   Passed    0.04 sec
+        Start  66: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsDuplicateAndBrokenHierarchyBeforeMutation
+129/234 Test #335: OperationSpecificStatefulValidation.CON_B07_FreePointOnlyNeedsNoEndpointObjectLookup ............................   Passed    0.06 sec
+        Start  60: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RestoresCanonicalReferenceAndIndexedCandidates
+130/234 Test  #53: G106Snapshot.RejectsSemanticallyInvalidObjectOnEncode ...........................................................   Passed    0.04 sec
+        Start  25: SemanticCodec.ObservesRichTextDeltaAsCanonicalBytesAndCountBasedProjection
+131/234 Test  #66: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsDuplicateAndBrokenHierarchyBeforeMutation .................   Passed    0.04 sec
+        Start 270: OperationSpecificStatefulValidation.PLC_B02_MissingTargetRejects
+132/234 Test  #60: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RestoresCanonicalReferenceAndIndexedCandidates ...................   Passed    0.04 sec
+        Start 354: ApplyPlan.SplitStrokesUsesGenericDeletesAndCreatesWithoutDeleteClosure
+133/234 Test  #25: SemanticCodec.ObservesRichTextDeltaAsCanonicalBytesAndCountBasedProjection ......................................   Passed    0.05 sec
+        Start 310: OperationSpecificStatefulValidation.MASK_ADD_B05_ExistingMaskIdRejects
+134/234 Test #270: OperationSpecificStatefulValidation.PLC_B02_MissingTargetRejects ................................................   Passed    0.05 sec
+        Start 268: OperationSpecificStatefulValidation.INS_B08_BadRecordRejectsWholeOutput
+135/234 Test #354: ApplyPlan.SplitStrokesUsesGenericDeletesAndCreatesWithoutDeleteClosure ..........................................   Passed    0.05 sec
+        Start 264: OperationSpecificStatefulValidation.INS_B04_ConnectorMissingAttachedTargetRejects
+136/234 Test #310: OperationSpecificStatefulValidation.MASK_ADD_B05_ExistingMaskIdRejects ..........................................   Passed    0.05 sec
+        Start 294: OperationSpecificStatefulValidation.STR_B03_ExistingIdRejects
+137/234 Test #268: OperationSpecificStatefulValidation.INS_B08_BadRecordRejectsWholeOutput .........................................   Passed    0.05 sec
+        Start  51: G106Snapshot.RejectsSemanticallyInvalidMappedRecordWithSharedValidator
+138/234 Test #294: OperationSpecificStatefulValidation.STR_B03_ExistingIdRejects ...................................................   Passed    0.04 sec
+        Start  54: G106Snapshot.CanonicalizesPropertyBagEntryPermutation
+139/234 Test #264: OperationSpecificStatefulValidation.INS_B04_ConnectorMissingAttachedTargetRejects ...............................   Passed    0.06 sec
+        Start 309: OperationSpecificStatefulValidation.MASK_ADD_B04_MissingTargetRejects
+140/234 Test  #51: G106Snapshot.RejectsSemanticallyInvalidMappedRecordWithSharedValidator ..........................................   Passed    0.04 sec
+        Start 280: OperationSpecificStatefulValidation.TRN_B03_LateMissingTargetLeavesWholeOutputUnchanged
+141/234 Test  #54: G106Snapshot.CanonicalizesPropertyBagEntryPermutation ...........................................................   Passed    0.05 sec
+        Start 271: OperationSpecificStatefulValidation.PLC_B03_MissingParentRejectsFromB3
+142/234 Test #309: OperationSpecificStatefulValidation.MASK_ADD_B04_MissingTargetRejects ...........................................   Passed    0.05 sec
+        Start 321: OperationSpecificStatefulValidation.PROP_B05_TwoFieldsOneObjectProduceOneSortedReplacement
+143/234 Test #280: OperationSpecificStatefulValidation.TRN_B03_LateMissingTargetLeavesWholeOutputUnchanged .........................   Passed    0.04 sec
+        Start 305: OperationSpecificStatefulValidation.SPL_B08_OneFailingSplitLeavesAllFragmentsUnchanged
+144/234 Test #271: OperationSpecificStatefulValidation.PLC_B03_MissingParentRejectsFromB3 ..........................................   Passed    0.04 sec
+        Start 300: OperationSpecificStatefulValidation.SPL_B03_NonStrokeSourceRejects
+145/234 Test #321: OperationSpecificStatefulValidation.PROP_B05_TwoFieldsOneObjectProduceOneSortedReplacement ......................   Passed    0.04 sec
+        Start 311: OperationSpecificStatefulValidation.MASK_ADD_B06_LateFailureLeavesWholeOutputUnchanged
+146/234 Test #305: OperationSpecificStatefulValidation.SPL_B08_OneFailingSplitLeavesAllFragmentsUnchanged ..........................   Passed    0.04 sec
+        Start 313: OperationSpecificStatefulValidation.MASK_REM_B02_OneMissingMaskRejectsWholeOperation
+147/234 Test #300: OperationSpecificStatefulValidation.SPL_B03_NonStrokeSourceRejects ..............................................   Passed    0.05 sec
+        Start 259: OperationSpecificStatefulValidation.StructuralPreconditionsCoverCanonicalFixtures
+148/234 Test #311: OperationSpecificStatefulValidation.MASK_ADD_B06_LateFailureLeavesWholeOutputUnchanged ..........................   Passed    0.05 sec
+        Start  67: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsInvalidParentCapabilityAndConnectorReferences
+149/234 Test #313: OperationSpecificStatefulValidation.MASK_REM_B02_OneMissingMaskRejectsWholeOperation ............................   Passed    0.06 sec
+        Start 319: OperationSpecificStatefulValidation.PROP_B03_ClearRemovesExplicitEntry
+150/234 Test #259: OperationSpecificStatefulValidation.StructuralPreconditionsCoverCanonicalFixtures ...............................   Passed    0.07 sec
+        Start 272: OperationSpecificStatefulValidation.PLC_B04_BatchCycleRejectsFromB3
+151/234 Test  #67: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsInvalidParentCapabilityAndConnectorReferences .............   Passed    0.07 sec
+        Start 302: OperationSpecificStatefulValidation.SPL_B05_ReplacementReusesSourceIdRejects
+152/234 Test #319: OperationSpecificStatefulValidation.PROP_B03_ClearRemovesExplicitEntry ..........................................   Passed    0.07 sec
+        Start 297: OperationSpecificStatefulValidation.STR_B06_StrokeUnderStickyRejects
+153/234 Test #272: OperationSpecificStatefulValidation.PLC_B04_BatchCycleRejectsFromB3 .............................................   Passed    0.07 sec
+        Start   7: SemanticCodec.StableSeedContainsExactlySixtyCases
+154/234 Test #302: OperationSpecificStatefulValidation.SPL_B05_ReplacementReusesSourceIdRejects ....................................   Passed    0.06 sec
+        Start 320: OperationSpecificStatefulValidation.PROP_B04_SetRegistryDefaultCanonicalizesToAbsence
+155/234 Test #297: OperationSpecificStatefulValidation.STR_B06_StrokeUnderStickyRejects ............................................   Passed    0.07 sec
+        Start 376: OperationEngineApply.SameIdAndDifferentOperationRejectsCollisionWithoutLedgerOverwrite
+156/234 Test   #7: SemanticCodec.StableSeedContainsExactlySixtyCases ...............................................................   Passed    0.04 sec
+        Start  62: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RestoresHierarchyAndConnectorGraph
+157/234 Test #320: OperationSpecificStatefulValidation.PROP_B04_SetRegistryDefaultCanonicalizesToAbsence ...........................   Passed    0.05 sec
+        Start 351: ApplyPlan.NewInsertProjectsCreatesAndPreparedInvariant
+158/234 Test #376: OperationEngineApply.SameIdAndDifferentOperationRejectsCollisionWithoutLedgerOverwrite ..........................   Passed    0.06 sec
+        Start 290: OperationSpecificStatefulValidation.IMG_B02_WrongKindRejects
+159/234 Test  #62: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RestoresHierarchyAndConnectorGraph ...............................   Passed    0.05 sec
+        Start 325: OperationSpecificStatefulValidation.EDIT_B02_MissingObjectRejects
+160/234 Test #351: ApplyPlan.NewInsertProjectsCreatesAndPreparedInvariant ..........................................................   Passed    0.05 sec
+        Start 357: ApplyPlan.AllFifteenOperationKindsDispatchSmoke
+161/234 Test #290: OperationSpecificStatefulValidation.IMG_B02_WrongKindRejects ....................................................   Passed    0.05 sec
+        Start 269: OperationSpecificStatefulValidation.PLC_B01_MoveShapeUnderGroupSucceeds
+162/234 Test #325: OperationSpecificStatefulValidation.EDIT_B02_MissingObjectRejects ...............................................   Passed    0.05 sec
+        Start 324: OperationSpecificStatefulValidation.EDIT_B01_UnicodeScalarDeltaProducesReplacement
+163/234 Test #357: ApplyPlan.AllFifteenOperationKindsDispatchSmoke .................................................................   Passed    0.05 sec
+        Start 276: OperationSpecificStatefulValidation.PLC_B08_MoveSoleRichTextOutLeavesEmptySticky
+164/234 Test #269: OperationSpecificStatefulValidation.PLC_B01_MoveShapeUnderGroupSucceeds .........................................   Passed    0.04 sec
+        Start  24: SemanticCodec.RejectsUnpackedDashSegmentsWithCanonicalPackedCategory
+165/234 Test #324: OperationSpecificStatefulValidation.EDIT_B01_UnicodeScalarDeltaProducesReplacement ..............................   Passed    0.04 sec
+        Start 323: OperationSpecificStatefulValidation.PROP_B07_LateFailureLeavesOutputUnchanged
+166/234 Test #276: OperationSpecificStatefulValidation.PLC_B08_MoveSoleRichTextOutLeavesEmptySticky ................................   Passed    0.04 sec
+        Start 328: OperationSpecificStatefulValidation.CON_B01_ValidConnectorExistingConnectableTargetSucceeds
+167/234 Test  #24: SemanticCodec.RejectsUnpackedDashSegmentsWithCanonicalPackedCategory ............................................   Passed    0.04 sec
+        Start 283: OperationSpecificStatefulValidation.SIZE_B03_StickySucceeds
+168/234 Test #323: OperationSpecificStatefulValidation.PROP_B07_LateFailureLeavesOutputUnchanged ...................................   Passed    0.05 sec
+        Start  22: SemanticCodec.ObservesAuthorityGoldenVec2AsCanonicalBytes
+169/234 Test #328: OperationSpecificStatefulValidation.CON_B01_ValidConnectorExistingConnectableTargetSucceeds .....................   Passed    0.04 sec
+        Start 318: OperationSpecificStatefulValidation.PROP_B02_WrongKindApplicabilityRejects
+170/234 Test #283: OperationSpecificStatefulValidation.SIZE_B03_StickySucceeds .....................................................   Passed    0.04 sec
+        Start 333: OperationSpecificStatefulValidation.CON_B06_InvalidStablePortForNonConnectableTargetRejects
+171/234 Test  #22: SemanticCodec.ObservesAuthorityGoldenVec2AsCanonicalBytes .......................................................   Passed    0.04 sec
+        Start 260: OperationSpecificStatefulValidation.StructuralCaseMatrixUsesExactCanonicalPayloads
+172/234 Test #318: OperationSpecificStatefulValidation.PROP_B02_WrongKindApplicabilityRejects ......................................   Passed    0.04 sec
+        Start 352: ApplyPlan.DeleteObjectsProjectsAcceptedB5ClosureExactly
+173/234 Test #333: OperationSpecificStatefulValidation.CON_B06_InvalidStablePortForNonConnectableTargetRejects .....................   Passed    0.04 sec
+        Start 317: OperationSpecificStatefulValidation.PROP_B01_SetApplicableFieldProducesExactReplacement
+174/234 Test #260: OperationSpecificStatefulValidation.StructuralCaseMatrixUsesExactCanonicalPayloads ..............................   Passed    0.05 sec
+        Start   6: SemanticCodec.CanonicalizesNegativeZeroToPositiveZero
+175/234 Test #352: ApplyPlan.DeleteObjectsProjectsAcceptedB5ClosureExactly .........................................................   Passed    0.05 sec
+        Start 291: OperationSpecificStatefulValidation.IMG_B03_MissingTargetRejects
+176/234 Test #317: OperationSpecificStatefulValidation.PROP_B01_SetApplicableFieldProducesExactReplacement .........................   Passed    0.05 sec
+        Start 265: OperationSpecificStatefulValidation.INS_B05_StickyShapeChildRejects
+177/234 Test   #6: SemanticCodec.CanonicalizesNegativeZeroToPositiveZero ...........................................................   Passed    0.07 sec
+        Start 358: ApplyPlan.RepeatedPlanningAgainstUnchangedStateIsDeterministic
+178/234 Test #291: OperationSpecificStatefulValidation.IMG_B03_MissingTargetRejects ................................................   Passed    0.06 sec
+        Start 314: OperationSpecificStatefulValidation.MASK_REM_B03_WrongKindRejects
+179/234 Test #265: OperationSpecificStatefulValidation.INS_B05_StickyShapeChildRejects .............................................   Passed    0.13 sec
+        Start 303: OperationSpecificStatefulValidation.SPL_B06_NonStrokeReplacementRejects
+180/234 Test #358: ApplyPlan.RepeatedPlanningAgainstUnchangedStateIsDeterministic ..................................................   Passed    0.10 sec
+        Start 315: OperationSpecificStatefulValidation.MASK_REM_B04_MissingTargetRejects
+181/234 Test #314: OperationSpecificStatefulValidation.MASK_REM_B03_WrongKindRejects ...............................................   Passed    0.12 sec
+        Start 353: ApplyPlan.RestoreObjectsProjectsCreates
+182/234 Test #303: OperationSpecificStatefulValidation.SPL_B06_NonStrokeReplacementRejects .........................................   Passed    0.05 sec
+        Start 301: OperationSpecificStatefulValidation.SPL_B04_ReplacementCollidesWithUnrelatedExistingId
+183/234 Test #315: OperationSpecificStatefulValidation.MASK_REM_B04_MissingTargetRejects ...........................................   Passed    0.05 sec
+        Start 410: resource_manifest.ResourceManifest.RejectsDuplicateIds
+184/234 Test #353: ApplyPlan.RestoreObjectsProjectsCreates .........................................................................   Passed    0.04 sec
+        Start 356: ApplyPlan.RepresentativeB7ReplacementProjectionUsesSetTransforms
+185/234 Test #301: OperationSpecificStatefulValidation.SPL_B04_ReplacementCollidesWithUnrelatedExistingId ..........................   Passed    0.04 sec
+        Start  93: PayloadStructure.EnforcesStickyPositiveFiniteDimensions
+186/234 Test #410: resource_manifest.ResourceManifest.RejectsDuplicateIds ..........................................................   Passed    0.05 sec
+        Start 312: OperationSpecificStatefulValidation.MASK_REM_B01_AllRequestedMasksExistSucceeds
+187/234 Test #356: ApplyPlan.RepresentativeB7ReplacementProjectionUsesSetTransforms ................................................   Passed    0.04 sec
+        Start 350: ApplyPlan.LowerLevelRejectionPreservesIssueAndLeaksNoPartialPlan
+188/234 Test  #93: PayloadStructure.EnforcesStickyPositiveFiniteDimensions .........................................................   Passed    0.03 sec
+        Start 274: OperationSpecificStatefulValidation.PLC_B06_SecondRichTextIntoOccupiedStickyRejects
+189/234 Test #312: OperationSpecificStatefulValidation.MASK_REM_B01_AllRequestedMasksExistSucceeds .................................   Passed    0.05 sec
+        Start 278: OperationSpecificStatefulValidation.TRN_B01_ValidTargetProducesReplacement
+190/234 Test #350: ApplyPlan.LowerLevelRejectionPreservesIssueAndLeaksNoPartialPlan ................................................   Passed    0.05 sec
+        Start  47: G106Snapshot.RejectsInvalidEnvelopeAndDuplicateIds
+191/234 Test #274: OperationSpecificStatefulValidation.PLC_B06_SecondRichTextIntoOccupiedStickyRejects .............................   Passed    0.05 sec
+        Start 334: OperationSpecificStatefulValidation.CountingStore_CoversAllThirteenFamiliesWithoutAllObjectsScan
+192/234 Test #278: OperationSpecificStatefulValidation.TRN_B01_ValidTargetProducesReplacement ......................................   Passed    0.04 sec
+        Start 266: OperationSpecificStatefulValidation.INS_B06_StickyTwoRichTextChildrenRejects
+193/234 Test  #47: G106Snapshot.RejectsInvalidEnvelopeAndDuplicateIds ..............................................................   Passed    0.04 sec
+        Start 307: OperationSpecificStatefulValidation.MASK_ADD_B02_DabStrokeSucceeds
+194/234 Test #334: OperationSpecificStatefulValidation.CountingStore_CoversAllThirteenFamiliesWithoutAllObjectsScan ................   Passed    0.04 sec
+        Start 281: OperationSpecificStatefulValidation.SIZE_B01_ShapeSucceeds
+195/234 Test #266: OperationSpecificStatefulValidation.INS_B06_StickyTwoRichTextChildrenRejects ....................................   Passed    0.05 sec
+        Start 263: OperationSpecificStatefulValidation.INS_B03_ConnectorAndStagedTargetSucceeds
+196/234 Test #307: OperationSpecificStatefulValidation.MASK_ADD_B02_DabStrokeSucceeds ..............................................   Passed    0.04 sec
+        Start 298: OperationSpecificStatefulValidation.SPL_B01_SourceToTwoAbsentReplacementsSucceeds
+197/234 Test #281: OperationSpecificStatefulValidation.SIZE_B01_ShapeSucceeds ......................................................   Passed    0.04 sec
+        Start 288: OperationSpecificStatefulValidation.PATH_B03_MissingTargetRejects
+198/234 Test #298: OperationSpecificStatefulValidation.SPL_B01_SourceToTwoAbsentReplacementsSucceeds ...............................   Passed    0.04 sec
+        Start 304: OperationSpecificStatefulValidation.SPL_B07_InvalidReplacementParentRejects
+199/234 Test #263: OperationSpecificStatefulValidation.INS_B03_ConnectorAndStagedTargetSucceeds ....................................   Passed    0.05 sec
+        Start 349: ApplyPlan.CollisionShortCircuitsBeforeObjectStoreLookupWithExactIssue
+200/234 Test #288: OperationSpecificStatefulValidation.PATH_B03_MissingTargetRejects ...............................................   Passed    0.04 sec
+        Start  65: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsInvalidCandidateBeforeMutation
+201/234 Test #304: OperationSpecificStatefulValidation.SPL_B07_InvalidReplacementParentRejects .....................................   Passed    0.04 sec
+        Start  69: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.SnapshotOneRejectsTriangleAndSnapshotTwoRestoresIt
+202/234 Test #349: ApplyPlan.CollisionShortCircuitsBeforeObjectStoreLookupWithExactIssue ...........................................   Passed    0.05 sec
+        Start  63: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsNonLoadingStatesWithoutChangingAnything
+203/234 Test  #65: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsInvalidCandidateBeforeMutation ............................   Passed    0.05 sec
+        Start  95: PayloadStructure.EnforcesCompleteStrokeStyleRanges
+204/234 Test  #69: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.SnapshotOneRejectsTriangleAndSnapshotTwoRestoresIt ...............   Passed    0.07 sec
+        Start 344: RichTextStatePlan.TXT_S09_SetParagraphStyleReplacesCompleteStyle
+205/234 Test  #63: g1_06_snapshot_bootstrap.G106SnapshotBootstrap.RejectsNonLoadingStatesWithoutChangingAnything ...................   Passed    0.07 sec
+        Start  87: PayloadStructure.EnforcesOperationWideNestedIdentityUniqueness
+206/234 Test  #95: PayloadStructure.EnforcesCompleteStrokeStyleRanges ..............................................................   Passed    0.08 sec
+        Start  88: PayloadStructure.AcceptsOnlyReleasedObjectKindVersionContentTriples
+207/234 Test  #87: PayloadStructure.EnforcesOperationWideNestedIdentityUniqueness ..................................................   Passed    0.06 sec
+        Start 364: AtomicApply.RejectsDuplicateReplacementIdBeforeAnyEarlierMutation
+208/234 Test #344: RichTextStatePlan.TXT_S09_SetParagraphStyleReplacesCompleteStyle ................................................   Passed    0.07 sec
+        Start  90: PayloadStructure.EnforcesFieldApplicabilityByObjectKind
+209/234 Test  #88: PayloadStructure.AcceptsOnlyReleasedObjectKindVersionContentTriples .............................................   Passed    0.05 sec
+        Start 366: AtomicApply.RejectsDuplicateDeleteIdBeforeAnyEarlierMutation
+210/234 Test  #90: PayloadStructure.EnforcesFieldApplicabilityByObjectKind .........................................................   Passed    0.03 sec
+        Start  89: PayloadStructure.EnforcesPropertyPatchPresenceFieldAndValueType
+211/234 Test #364: AtomicApply.RejectsDuplicateReplacementIdBeforeAnyEarlierMutation ...............................................   Passed    0.04 sec
+        Start  91: PayloadStructure.EnforcesSetObjectSizePositiveFiniteDimensions
+212/234 Test #366: AtomicApply.RejectsDuplicateDeleteIdBeforeAnyEarlierMutation ....................................................   Passed    0.04 sec
+        Start 368: AtomicApply.RejectsContradictoryCreateAndDeleteIdBeforeAnyMutation
+213/234 Test  #89: PayloadStructure.EnforcesPropertyPatchPresenceFieldAndValueType .................................................   Passed    0.03 sec
+        Start 443: FC01EditorHistoryInverseFamilies
+214/234 Test  #91: PayloadStructure.EnforcesSetObjectSizePositiveFiniteDimensions ..................................................   Passed    0.03 sec
+        Start 369: AtomicApply.RejectsContradictoryReplacementAndDeleteIdBeforeAnyMutation
+215/234 Test #368: AtomicApply.RejectsContradictoryCreateAndDeleteIdBeforeAnyMutation ..............................................   Passed    0.03 sec
+        Start 340: RichTextStatePlan.TXT_S05_SplitParagraphIdCollisionRejects
+216/234 Test #443: FC01EditorHistoryInverseFamilies ................................................................................   Passed    0.04 sec
+        Start 362: AtomicApply.RejectsDuplicateCreateIdBeforeAnyEarlierMutation
+217/234 Test #369: AtomicApply.RejectsContradictoryReplacementAndDeleteIdBeforeAnyMutation .........................................   Passed    0.03 sec
+        Start  92: PayloadStructure.EnforcesTransformFiniteAndExactNonSingularInvariant
+218/234 Test #340: RichTextStatePlan.TXT_S05_SplitParagraphIdCollisionRejects ......................................................   Passed    0.04 sec
+        Start  94: PayloadStructure.EnforcesEraseMaskObjectKindApplicability
+219/234 Test #362: AtomicApply.RejectsDuplicateCreateIdBeforeAnyEarlierMutation ....................................................   Passed    0.04 sec
+        Start 365: AtomicApply.RejectsMissingDeleteTargetBeforeAnyEarlierMutation
+220/234 Test  #92: PayloadStructure.EnforcesTransformFiniteAndExactNonSingularInvariant ............................................   Passed    0.04 sec
+221/234 Test  #94: PayloadStructure.EnforcesEraseMaskObjectKindApplicability .......................................................   Passed    0.03 sec
+        Start 342: RichTextStatePlan.TXT_S07_MergeNonAdjacentRejects
+        Start 345: RichTextStatePlan.TXT_S10_SecondStepResolvesFirstStepStagedState
+222/234 Test #365: AtomicApply.RejectsMissingDeleteTargetBeforeAnyEarlierMutation ..................................................   Passed    0.02 sec
+        Start 363: AtomicApply.RejectsMissingReplacementTargetBeforeAnyEarlierMutation
+223/234 Test #342: RichTextStatePlan.TXT_S07_MergeNonAdjacentRejects ...............................................................   Passed    0.04 sec
+        Start 361: AtomicApply.RejectsExistingCreateTargetBeforeAnyEarlierMutation
+224/234 Test #345: RichTextStatePlan.TXT_S10_SecondStepResolvesFirstStepStagedState ................................................   Passed    0.04 sec
+        Start 339: RichTextStatePlan.TXT_S04_SplitAtEnd
+225/234 Test #363: AtomicApply.RejectsMissingReplacementTargetBeforeAnyEarlierMutation .............................................   Passed    0.03 sec
+        Start 341: RichTextStatePlan.TXT_S06_MergeAdjacentKeepsFirstIdAndStyle
+226/234 Test #361: AtomicApply.RejectsExistingCreateTargetBeforeAnyEarlierMutation .................................................   Passed    0.03 sec
+        Start 343: RichTextStatePlan.TXT_S08_SetInlineStyleSplitsAndMergesDeterministically
+227/234 Test #339: RichTextStatePlan.TXT_S04_SplitAtEnd ............................................................................   Passed    0.03 sec
+        Start 347: RichTextStatePlan.TXT_S12_EmptyParagraphCanonicalRunsRemainEmpty
+228/234 Test #341: RichTextStatePlan.TXT_S06_MergeAdjacentKeepsFirstIdAndStyle .....................................................   Passed    0.03 sec
+        Start 337: RichTextStatePlan.TXT_S02_DeleteAcrossRunBoundaryNormalizes
+229/234 Test #343: RichTextStatePlan.TXT_S08_SetInlineStyleSplitsAndMergesDeterministically ........................................   Passed    0.03 sec
+        Start 346: RichTextStatePlan.TXT_S11_SecondStepInvalidLeavesWholeOutputUnchanged
+230/234 Test #347: RichTextStatePlan.TXT_S12_EmptyParagraphCanonicalRunsRemainEmpty ................................................   Passed    0.04 sec
+        Start 338: RichTextStatePlan.TXT_S03_SplitAtZero
+231/234 Test #337: RichTextStatePlan.TXT_S02_DeleteAcrossRunBoundaryNormalizes .....................................................   Passed    0.04 sec
+232/234 Test #346: RichTextStatePlan.TXT_S11_SecondStepInvalidLeavesWholeOutputUnchanged ...........................................   Passed    0.03 sec
+233/234 Test #338: RichTextStatePlan.TXT_S03_SplitAtZero ...........................................................................   Passed    0.05 sec
+234/234 Test #495: FC02Text ........................................................................................................   Passed   30.98 sec
+
+100% tests passed, 0 tests failed out of 234
+
+Total Test time (real) =  31.30 sec

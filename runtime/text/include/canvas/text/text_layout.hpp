@@ -3,22 +3,28 @@
 #include "canvas/foundation/world_geometry.hpp"
 #include "canvas/runtime/resource_provider.hpp"
 #include "canvas/semantic/object_content.hpp"
+#include "canvas/semantic/object_record.hpp"
 
 #include <memory>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
 
 namespace canvas::text {
 inline constexpr std::string_view kTextStackProfile = "r1-full-v1/skparagraph/icu-v1";
-inline constexpr std::string_view kRobotoSha256 = "466989fd178ca6ed13641893b7003e5d6ec36e42c2a816dee71f87b775ea097f";
-inline constexpr std::string_view kNotoSha256 = "e7f71fc8aec139bb21cc541067eabb162b87aeeac0ccfcb3c835a20d0cee340a";
+inline constexpr std::string_view kRobotoSha256 =
+    "466989fd178ca6ed13641893b7003e5d6ec36e42c2a816dee71f87b775ea097f";
+inline constexpr std::string_view kNotoSha256 =
+    "e7f71fc8aec139bb21cc541067eabb162b87aeeac0ccfcb3c835a20d0cee340a";
 
 // Supplied by the application/container or verification harness, never inferred
 // from camera/viewport state. This is derived layout policy, not canonical size.
 struct LayoutContext final {
     float width = 0;
     std::uint64_t revision = 0;
+    float height = 0;
+    std::size_t maxLines = 0;
     bool operator==(const LayoutContext&) const = default;
 };
 struct FontResourceDescriptor final {
@@ -34,6 +40,7 @@ struct FontObservation final {
     std::uint32_t weight = 0;
     bool italic = false;
     std::shared_ptr<const std::vector<std::uint8_t>> bytes;
+    bool syntheticStyle = false;
 };
 struct GlyphPosition final {
     float x = 0, y = 0;
@@ -60,6 +67,11 @@ struct ParagraphFragment final {
     foundation::ObjectId paragraphId{};
     foundation::WorldRect bounds{};
     std::string digest;
+    bool bulleted = false;
+    float indent = 0;
+    // The shaping origin is distinct from bounds.top: glyph ink may extend
+    // above the paragraph's first layout line.
+    float originY = 0;
 };
 struct TextDecoration final {
     foundation::WorldRect bounds{};
@@ -76,6 +88,20 @@ struct TextLayoutSnapshot final {
     std::vector<ShapedRun> runs;
     std::vector<TextDecoration> decorations;
     std::vector<std::string> diagnostics;
+    // Shape labels use world-size typography within the object's normalized
+    // axes. These are derived presentation values, never persisted RichText.
+    bool shapeLabel = false, placeholder = false, overflow = false;
+    float labelScaleX = 1, labelScaleY = 1;
+    foundation::WorldRect labelViewport{}, expandButton{};
+    float labelOffsetX = 0, labelOffsetY = 0;
+};
+struct EditingGeometry final {
+    std::vector<std::string> diagnostics;
+    bool available = false;
+    std::string layoutIdentity;
+    foundation::WorldRect caret{};
+    std::vector<foundation::WorldRect> selection;
+    std::optional<std::uint32_t> hit;
 };
 struct LayoutMetrics final {
     std::uint64_t requests = 0, cacheHits = 0, objectLayouts = 0;
@@ -93,10 +119,35 @@ class RichTextLayoutService final {
     RichTextLayoutService& operator=(const RichTextLayoutService&) = delete;
     void registerFont(FontResourceDescriptor);
     void clearFonts() noexcept;
+    [[nodiscard]] std::string fontFamilyName(foundation::ObjectId);
     void setContext(LayoutContext);
-    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot> resolve(
-        foundation::ObjectId, const semantic::RichTextContent&);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolve(foundation::ObjectId, const semantic::RichTextContent&);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolveNatural(foundation::ObjectId, const semantic::RichTextContent&);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolveShapeNatural(foundation::ObjectId, const semantic::RichTextContent&,
+                        const semantic::ShapeContent&, const semantic::Transform2D&);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolveShape(foundation::ObjectId, const semantic::ShapeContent&,
+                 const semantic::Transform2D&, bool showPlaceholder = false);
+    [[nodiscard]] EditingGeometry
+    shapeEditingGeometry(const semantic::ObjectRecord&, std::uint32_t start,
+                         std::uint32_t length,
+                         std::optional<foundation::WorldPoint> hit = std::nullopt);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolveShapeLabel(foundation::ObjectId, const semantic::RichTextContent&,
+                      const semantic::ShapeContent&, const semantic::Transform2D&,
+                      bool showPlaceholder = false);
+    [[nodiscard]] EditingGeometry
+    editingGeometry(foundation::ObjectId,
+                    const semantic::RichTextContent&,
+                    std::uint32_t start,
+                    std::uint32_t length,
+                    std::optional<foundation::WorldPoint> hit = std::nullopt);
+    [[nodiscard]] std::vector<std::uint32_t> graphemeBoundaries(const std::u16string&) const;
     [[nodiscard]] LayoutMetrics metrics() const noexcept;
+
   private:
     struct Impl;
     std::unique_ptr<Impl> impl_;

@@ -55,25 +55,29 @@ struct Encoding {
 };
 void encodeParagraph(Encoding& e, const semantic::Paragraph& p) {
     e.id(p.id); e.number(p.style.alignment); e.number(p.style.line_height);
-    e.number(p.style.spacing_before); e.number(p.style.spacing_after);
+    e.number(p.style.spacing_before); e.number(p.style.spacing_after); e.number<std::uint8_t>(p.style.bulleted);
     e.number<std::uint64_t>(p.runs.size());
     for (const auto& r : p.runs) {
         e.string(r.text); e.number<std::uint8_t>(r.style.font_resource_id.has_value());
         if (r.style.font_resource_id) e.id(r.style.font_resource_id->value);
         e.number(r.style.font_size); e.number(r.style.weight);
-        e.number<std::uint8_t>(r.style.italic); e.number<std::uint8_t>(r.style.underline); e.color(r.style.color);
+        e.number<std::uint8_t>(r.style.italic); e.number<std::uint8_t>(r.style.underline); e.number<std::uint8_t>(r.style.strikethrough); e.color(r.style.color);
     }
 }
 std::string snapshotDigest(const TextLayoutSnapshot& s) {
     Encoding e; e.string(s.profile); e.string(s.contentDigest);
-    e.number(s.context.width); e.number(s.context.revision); e.rect(s.localBounds);
+    e.number(s.context.width); e.number(s.context.revision); e.number(s.context.height);
+    e.number<std::uint64_t>(s.context.maxLines); e.rect(s.localBounds);
+    e.number<std::uint8_t>(s.shapeLabel); e.number<std::uint8_t>(s.placeholder);
+    e.number<std::uint8_t>(s.overflow); e.number(s.labelScaleX); e.number(s.labelScaleY);
+    e.rect(s.labelViewport); e.rect(s.expandButton); e.number(s.labelOffsetX); e.number(s.labelOffsetY);
     e.number<std::uint64_t>(s.fonts.size());
     for (const auto& f : s.fonts) {
         e.id(f.resourceId.value); e.number(f.generation); e.string(f.sha256);
-        e.number(f.collectionIndex); e.number(f.weight); e.number<std::uint8_t>(f.italic);
+        e.number(f.collectionIndex); e.number(f.weight); e.number<std::uint8_t>(f.italic); e.number<std::uint8_t>(f.syntheticStyle);
     }
     e.number<std::uint64_t>(s.paragraphs.size());
-    for (const auto& p : s.paragraphs) { e.id(p.paragraphId); e.rect(p.bounds); e.string(p.digest); }
+    for (const auto& p : s.paragraphs) { e.id(p.paragraphId); e.rect(p.bounds); e.string(p.digest); e.number<std::uint8_t>(p.bulleted); e.number(p.indent); e.number(p.originY); }
     e.number<std::uint64_t>(s.lines.size());
     for (const auto& l : s.lines) {
         e.id(l.paragraphId); e.number<std::uint64_t>(l.utf8Start); e.number<std::uint64_t>(l.utf8End);
@@ -139,6 +143,8 @@ struct RichTextLayoutService::Impl {
     std::map<foundation::ObjectId,Cached> objects;
     std::map<std::pair<foundation::ObjectId,foundation::ObjectId>,Cached> paragraphs;
 #ifdef CANVAS_TEXT_HAS_SKIA
+    std::shared_ptr<Paragraph> lastShaped;
+    std::map<std::pair<foundation::ObjectId,foundation::ObjectId>,std::shared_ptr<Paragraph>> shaped;
     struct Face { FontObservation observation; sk_sp<SkTypeface> face; std::string diagnostic; };
     std::map<std::string,Face> faces;
     sk_sp<SkUnicode> unicode = SkUnicodes::ICU::Make();
@@ -156,8 +162,9 @@ struct RichTextLayoutService::Impl {
         }
     }
 #ifdef CANVAS_TEXT_HAS_SKIA
-    Face& font(const semantic::TextStyle& style) {
+    Face& font(const semantic::TextStyle& style, bool allowSyntheticStyle) {
         Encoding key; key.number(style.weight); key.number<std::uint8_t>(style.italic);
+        key.number<std::uint8_t>(allowSyntheticStyle);
         if(style.font_resource_id) key.id(style.font_resource_id->value);
         const auto resource=style.font_resource_id ? resources.resolve(style.font_resource_id->value) : runtime::EncodedResource{};
         key.number(resource.generation);
@@ -176,6 +183,9 @@ struct RichTextLayoutService::Impl {
             if(data.digest()!=descriptor->second.sha256) result.diagnostic="font-integrity-failed";
             else {
                 result.face=internal::exactFace(result.observation);
+                if(!result.face && allowSyntheticStyle && (style.weight==700 || style.italic)) {
+                    result.observation.syntheticStyle=true;result.face=internal::exactFace(result.observation);
+                }
                 if(!result.face) result.diagnostic="font-exact-face-unavailable";
                 else ++counters.fontMaterializations;
             }
@@ -183,17 +193,19 @@ struct RichTextLayoutService::Impl {
         return faces.emplace(token,std::move(result)).first->second;
     }
 #endif
-    std::shared_ptr<const TextLayoutSnapshot> layoutParagraph(const semantic::Paragraph& p) {
-        auto out=std::make_shared<TextLayoutSnapshot>(); out->context=context;
+    std::shared_ptr<const TextLayoutSnapshot> layoutParagraph(const semantic::Paragraph& p,LayoutContext layoutContext,bool allowSyntheticStyle) {
+        auto out=std::make_shared<TextLayoutSnapshot>(); out->context=layoutContext;
         Encoding content; encodeParagraph(content,p); out->contentDigest=content.digest();
 #ifndef CANVAS_TEXT_HAS_SKIA
+        (void)allowSyntheticStyle;
         out->diagnostics.push_back("text-stack-unavailable");
 #else
+        lastShaped.reset();
         if(!unicode) out->diagnostics.push_back("text-unicode-unavailable");
         auto provider=sk_make_sp<TypefaceFontProvider>();
         std::vector<Face*> resolved;
         for(const auto& run:p.runs) {
-            auto& f=font(run.style); resolved.push_back(&f); out->fonts.push_back(f.observation);
+            auto& f=font(run.style,allowSyntheticStyle); resolved.push_back(&f); out->fonts.push_back(f.observation);
             if(!f.diagnostic.empty()) out->diagnostics.push_back(f.diagnostic);
             else provider->registerTypeface(f.face,SkString(std::to_string(resolved.size()-1).c_str()));
             if(!std::isfinite(run.style.font_size) || run.style.font_size<=0 || run.style.font_size>65536)
@@ -203,6 +215,10 @@ struct RichTextLayoutService::Impl {
             auto fonts=sk_make_sp<FontCollection>();
             fonts->setAssetFontManager(provider); fonts->disableFontFallback();
             ParagraphStyle style; style.turnHintingOff(); style.setFakeMissingFontStyles(false);
+            if (layoutContext.maxLines != 0) {
+                style.setMaxLines(layoutContext.maxLines);
+                style.setEllipsis(std::u16string(u"\u2026"));
+            }
             switch(p.style.alignment) {
                 case semantic::ParagraphAlignment::kCenter: style.setTextAlign(TextAlign::kCenter); break;
                 case semantic::ParagraphAlignment::kRight: style.setTextAlign(TextAlign::kRight); break;
@@ -219,10 +235,17 @@ struct RichTextLayoutService::Impl {
                 text.setColor(SkColor4f{r.style.color.r,r.style.color.g,r.style.color.b,r.style.color.a}.toSkColor());
                 text.setHeight(static_cast<float>(p.style.line_height)); text.setHeightOverride(p.style.line_height>0);
                 text.setSubpixel(true); text.setFontHinting(SkFontHinting::kNone);
-                if(r.style.underline) text.setDecoration(skia::textlayout::TextDecoration::kUnderline);
+                if(r.style.underline || r.style.strikethrough) {
+                    auto decoration=skia::textlayout::TextDecoration::kNoDecoration;
+                    if(r.style.underline)decoration=static_cast<decltype(decoration)>(decoration|skia::textlayout::TextDecoration::kUnderline);
+                    if(r.style.strikethrough)decoration=static_cast<decltype(decoration)>(decoration|skia::textlayout::TextDecoration::kLineThrough);
+                    text.setDecoration(decoration);
+                }
                 builder->pushStyle(text); builder->addText(r.text.data(),r.text.size()); builder->pop();
             }
-            auto paragraph=builder->Build(); paragraph->layout(context.width);
+            const float indent=p.style.bulleted ? std::min(layoutContext.width*0.5F,static_cast<float>(p.runs.empty()?24:p.runs.front().style.font_size*1.5)) : 0;
+            auto paragraph=builder->Build(); paragraph->layout(layoutContext.width-indent);
+            out->overflow = paragraph->didExceedMaxLines();
             if(paragraph->unresolvedGlyphs()>0) out->diagnostics.push_back("font-glyph-unavailable");
             std::vector<LineMetrics> lines; paragraph->getLineMetrics(lines);
             foundation::WorldRect bounds{}; bool have=false;
@@ -259,6 +282,13 @@ struct RichTextLayoutService::Impl {
             out->localBounds=bounds;
             // Include line advance height even for blank paragraphs.
             out->localBounds.bottom=std::max(out->localBounds.bottom,paragraph->getHeight());
+            if(indent>0) {
+                out->localBounds.left+=indent;out->localBounds.right+=indent;
+                for(auto& line:out->lines){line.bounds.left+=indent;line.bounds.right+=indent;}
+                for(auto& run:out->runs)for(auto& point:run.positions)point.x+=indent;
+                for(auto& decoration:out->decorations){decoration.bounds.left+=indent;decoration.bounds.right+=indent;}
+            }
+            lastShaped=std::move(paragraph);
         }
 #endif
         out->digest=snapshotDigest(*out); return out;
@@ -268,44 +298,75 @@ RichTextLayoutService::RichTextLayoutService(const runtime::ResourceProvider& r,
     : impl_(std::make_unique<Impl>(r,c)) {}
 RichTextLayoutService::~RichTextLayoutService() = default;
 void RichTextLayoutService::registerFont(FontResourceDescriptor d) { impl_->descriptors[d.resourceId.value]=std::move(d); }
+std::string RichTextLayoutService::fontFamilyName(foundation::ObjectId id) {
+#ifdef CANVAS_TEXT_HAS_SKIA
+    semantic::TextStyle style;
+    style.font_resource_id = semantic::ResourceId{id};
+    style.weight = 400;
+    auto& resolved = impl_->font(style, false);
+    if (!resolved.face) return {};
+    SkString name;
+    resolved.face->getFamilyName(&name);
+    return {name.c_str(), name.size()};
+#else
+    (void)id;
+    return {};
+#endif
+}
 void RichTextLayoutService::clearFonts() noexcept {
     impl_->descriptors.clear();
     impl_->objects.clear();
     impl_->paragraphs.clear();
 #ifdef CANVAS_TEXT_HAS_SKIA
     impl_->faces.clear();
+    impl_->shaped.clear();
 #endif
 }
 void RichTextLayoutService::setContext(LayoutContext c) { impl_->context=c; }
 std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolve(
     foundation::ObjectId id, const semantic::RichTextContent& content) {
     auto& state=*impl_; ++state.counters.requests;
-    Encoding semantic; semantic.number<std::uint64_t>(content.document.paragraphs.size());
+    auto context=state.context;if(content.layout)context.width=static_cast<float>(content.layout->wrap_width);
+    Encoding semantic; if(content.layout){semantic.string("fixed-width-v2");semantic.number(content.layout->wrap_width);}
+    semantic.number<std::uint64_t>(content.document.paragraphs.size());
     for(const auto& p:content.document.paragraphs) encodeParagraph(semantic,p);
     const auto contentDigest=semantic.digest();
-    Encoding key=semantic; key.string(kTextStackProfile); key.number(state.context.width); key.number(state.context.revision);
+    Encoding key=semantic; key.string(kTextStackProfile); key.number(context.width); key.number(context.revision);
+    key.number(context.height); key.number<std::uint64_t>(context.maxLines);
     for(const auto& p:content.document.paragraphs) state.dependencies(key,p);
     const auto token=key.digest();
     if(auto found=state.objects.find(id);found!=state.objects.end() && found->second.key==token) {
         ++state.counters.cacheHits; return found->second.snapshot;
     }
     const auto start=std::chrono::steady_clock::now();
-    auto out=std::make_shared<TextLayoutSnapshot>(); out->contentDigest=contentDigest; out->context=state.context;
-    if(!std::isfinite(state.context.width) || state.context.width<=0) out->diagnostics.push_back("invalid-layout-context");
+    auto out=std::make_shared<TextLayoutSnapshot>(); out->contentDigest=contentDigest; out->context=context;
+    if(!std::isfinite(context.width) || context.width<=0) out->diagnostics.push_back("invalid-layout-context");
     else {
         float y=0; bool have=false;
+        std::size_t remainingLines = context.maxLines;
         for(const auto& p:content.document.paragraphs) {
+            if (context.maxLines && remainingLines == 0) { out->overflow = true; break; }
+            auto paragraphContext = context;
+            if (context.maxLines) paragraphContext.maxLines = remainingLines;
             Encoding paragraphKey; encodeParagraph(paragraphKey,p); state.dependencies(paragraphKey,p);
-            paragraphKey.number(state.context.width); paragraphKey.number(state.context.revision);
+            paragraphKey.number<std::uint8_t>(content.layout.has_value());
+            paragraphKey.number(context.width); paragraphKey.number(context.revision);
+            paragraphKey.number(context.height); paragraphKey.number<std::uint64_t>(paragraphContext.maxLines);
             const auto hash=paragraphKey.digest(); auto& cached=state.paragraphs[{id,p.id}];
             if(cached.key!=hash || !cached.snapshot) {
-                cached={hash,state.layoutParagraph(p)}; ++state.counters.paragraphLayouts;
+                cached={hash,state.layoutParagraph(p,paragraphContext,content.layout.has_value())}; ++state.counters.paragraphLayouts;
+#ifdef CANVAS_TEXT_HAS_SKIA
+                state.shaped[{id,p.id}]=state.lastShaped;
+#endif
             } else ++state.counters.paragraphCacheHits;
             const auto& fragment=*cached.snapshot;
+            if (context.maxLines) remainingLines -= std::min(remainingLines, fragment.lines.size());
+            out->overflow = out->overflow || fragment.overflow;
             y+=static_cast<float>(p.style.spacing_before);
             const auto fontOffset=out->fonts.size(); out->fonts.insert(out->fonts.end(),fragment.fonts.begin(),fragment.fonts.end());
             const auto bounds=offset(fragment.localBounds,y);
-            out->paragraphs.push_back({p.id,bounds,fragment.digest});
+            const float indent=p.style.bulleted?std::min(context.width*0.5F,static_cast<float>(p.runs.empty()?24:p.runs.front().style.font_size*1.5)):0;
+            out->paragraphs.push_back({p.id,bounds,fragment.digest,p.style.bulleted,indent,y});
             out->localBounds=have?foundation::unionRects(out->localBounds,bounds):bounds; have=true;
             for(auto l:fragment.lines) { l.bounds=offset(l.bounds,y); l.baseline+=y; out->lines.push_back(l); }
             for(auto r:fragment.runs) { r.font+=fontOffset; for(auto& pos:r.positions) pos.y+=y; out->runs.push_back(std::move(r)); }
@@ -316,6 +377,270 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolve(
     }
     out->digest=snapshotDigest(*out); state.objects[id]={token,out}; ++state.counters.objectLayouts;
     state.counters.layoutCpuMs+=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
+    return out;
+}
+
+std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveNatural(
+    foundation::ObjectId id, const semantic::RichTextContent& content) {
+    const auto previous = impl_->context;
+    impl_->context.height = 0;
+    impl_->context.maxLines = 0;
+    impl_->context.width = 4096.0F;
+    auto natural = content;
+    natural.layout = semantic::RichTextLayout{4096.0};
+    auto result = resolve(id, natural);
+    impl_->context = previous;
+    return result;
+}
+
+namespace {
+float basisX(const semantic::Transform2D& transform) {
+    return std::max(0.001F, std::hypot(static_cast<float>(transform.a), static_cast<float>(transform.b)));
+}
+float basisY(const semantic::Transform2D& transform) {
+    return std::max(0.001F, std::hypot(static_cast<float>(transform.c), static_cast<float>(transform.d)));
+}
+// Use the same inscribed region for wrapping, paint and input geometry.
+// The triangle's lower half provides room around its visual center.
+foundation::WorldRect shapeLabelViewport(unsigned kind, float width, float height) {
+    constexpr float padding = 8.0F;
+    if (kind == 2U) {
+        constexpr float diagonal = 0.70710678F;
+        const float halfWidth = std::max(0.0F, width * 0.5F - padding) * diagonal;
+        const float halfHeight = std::max(0.0F, height * 0.5F - padding) * diagonal;
+        return {width * 0.5F - halfWidth, height * 0.5F - halfHeight,
+                width * 0.5F + halfWidth, height * 0.5F + halfHeight};
+    }
+    if (kind == 3U) {
+        const float halfWidth = std::max(0.0F, width * 0.25F - padding);
+        const float halfHeight = std::max(0.0F, height * 0.25F - padding);
+        return {width * 0.5F - halfWidth, height * 0.75F - halfHeight,
+                width * 0.5F + halfWidth, height * 0.75F + halfHeight};
+    }
+    return {std::min(padding, width * 0.5F), std::min(padding, height * 0.5F),
+            std::max(width - padding, width * 0.5F),
+            std::max(height - padding, height * 0.5F)};
+}
+void offsetSnapshot(TextLayoutSnapshot& snapshot, float x, float y) {
+    snapshot.localBounds.left += x; snapshot.localBounds.right += x;
+    snapshot.localBounds.top += y; snapshot.localBounds.bottom += y;
+    for (auto& paragraph : snapshot.paragraphs) {
+        paragraph.bounds.left += x; paragraph.bounds.right += x;
+        paragraph.bounds.top += y; paragraph.bounds.bottom += y;
+        paragraph.originY += y;
+    }
+    for (auto& line : snapshot.lines) {
+        line.bounds.left += x; line.bounds.right += x;
+        line.bounds.top += y; line.bounds.bottom += y; line.baseline += y;
+    }
+    for (auto& run : snapshot.runs)
+        for (auto& point : run.positions) { point.x += x; point.y += y; }
+    for (auto& decoration : snapshot.decorations) {
+        decoration.bounds.left += x; decoration.bounds.right += x;
+        decoration.bounds.top += y; decoration.bounds.bottom += y;
+    }
+}
+}
+
+std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShapeNatural(
+    foundation::ObjectId id, const semantic::RichTextContent& content,
+    const semantic::ShapeContent& shape, const semantic::Transform2D& transform) {
+    const float sx = basisX(transform), sy = basisY(transform);
+    const float width = static_cast<float>(shape.width) * sx;
+    const float height = static_cast<float>(shape.height) * sy;
+    const auto viewport = shapeLabelViewport(shape.shape_kind, width, height);
+    const float innerWidth = std::max(1.0F, viewport.right - viewport.left);
+    auto natural = content;
+    natural.layout = semantic::RichTextLayout{innerWidth};
+    const auto previous = impl_->context;
+    impl_->context.width = innerWidth;
+    impl_->context.height = 0;
+    impl_->context.maxLines = 0;
+    const auto base = resolve(id, natural);
+    impl_->context = previous;
+    auto result = std::make_shared<TextLayoutSnapshot>(*base);
+    result->shapeLabel = true;
+    result->labelScaleX = 1.0F / sx;
+    result->labelScaleY = 1.0F / sy;
+    result->labelViewport = viewport;
+    result->labelOffsetX = viewport.left;
+    result->labelOffsetY = viewport.top;
+    offsetSnapshot(*result, result->labelOffsetX, result->labelOffsetY);
+    result->digest = snapshotDigest(*result);
+    return result;
+}
+
+std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShapeLabel(
+    foundation::ObjectId id, const semantic::RichTextContent& canonical,
+    const semantic::ShapeContent& shape, const semantic::Transform2D& transform,
+    bool showPlaceholder) {
+    constexpr float padding = 8.0F;
+    const float sx = basisX(transform), sy = basisY(transform);
+    const float width = static_cast<float>(shape.width) * sx;
+    const float height = static_cast<float>(shape.height) * sy;
+    semantic::RichTextContent display = canonical;
+    bool emptyLabel = true;
+    for (const auto& paragraph : display.document.paragraphs)
+        for (const auto& run : paragraph.runs) emptyLabel = emptyLabel && run.text.empty();
+    const bool placeholder = showPlaceholder && emptyLabel;
+    if (placeholder) {
+        semantic::TextStyle style;
+        style.font_size = 16; style.weight = 400; style.color = {0.25F, 0.25F, 0.25F, 1};
+        if (!impl_->descriptors.empty()) style.font_resource_id = impl_->descriptors.begin()->second.resourceId;
+        semantic::Paragraph paragraph;
+        paragraph.id = foundation::ObjectId::fromUint64(0x5459504554455854ULL);
+        paragraph.style.alignment = semantic::ParagraphAlignment::kCenter;
+        paragraph.runs = {{"Type text...", style}};
+        display.document.paragraphs = {std::move(paragraph)};
+    }
+    const auto viewport = shapeLabelViewport(shape.shape_kind, width, height);
+    const float viewportWidth = std::max(1.0F, viewport.right - viewport.left);
+    const float viewportHeight = std::max(1.0F, viewport.bottom - viewport.top);
+    display.layout = semantic::RichTextLayout{viewportWidth};
+    const auto previous = impl_->context;
+    impl_->context.width = viewportWidth;
+    impl_->context.height = 0;
+    impl_->context.maxLines = 0;
+    const auto natural = resolve(id, display);
+    const bool overflow = natural->localBounds.bottom > viewportHeight + 0.5F;
+    impl_->context.height = viewportHeight;
+    if (overflow) {
+        std::size_t visibleLines = 0;
+        for (const auto& line : natural->lines) {
+            if (line.bounds.bottom > viewportHeight + 0.5F) break;
+            ++visibleLines;
+        }
+        impl_->context.maxLines = std::max<std::size_t>(1, visibleLines);
+    }
+    const auto base = resolve(id, display);
+    impl_->context = previous;
+    auto result = std::make_shared<TextLayoutSnapshot>(*base);
+    result->shapeLabel = true;
+    result->placeholder = placeholder;
+    result->labelScaleX = 1.0F / sx;
+    result->labelScaleY = 1.0F / sy;
+    result->labelViewport = viewport;
+    result->expandButton = {width - 24.0F, height - 24.0F, width - padding, height - padding};
+    result->overflow = result->overflow || overflow;
+    result->labelOffsetX = viewport.left;
+    result->labelOffsetY = viewport.top + std::max(0.0F, (viewportHeight - base->localBounds.bottom) * 0.5F);
+    offsetSnapshot(*result, result->labelOffsetX, result->labelOffsetY);
+    result->digest = snapshotDigest(*result);
+    return result;
+}
+
+std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShape(
+    foundation::ObjectId id, const semantic::ShapeContent& shape,
+    const semantic::Transform2D& transform, bool showPlaceholder) {
+    const semantic::RichTextContent empty{};
+    return resolveShapeLabel(id, shape.label ? *shape.label : empty, shape, transform,
+                             showPlaceholder);
+}
+
+EditingGeometry RichTextLayoutService::shapeEditingGeometry(
+    const semantic::ObjectRecord& record, std::uint32_t start, std::uint32_t length,
+    std::optional<foundation::WorldPoint> hit) {
+    const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+    if (!shape) return {};
+    const semantic::RichTextContent empty{};
+    const auto& canonical = shape->label ? *shape->label : empty;
+    const float sx = basisX(record.transform), sy = basisY(record.transform);
+    const auto viewport = shapeLabelViewport(shape->shape_kind,
+        static_cast<float>(shape->width) * sx, static_cast<float>(shape->height) * sy);
+    const float width = std::max(1.0F, viewport.right - viewport.left);
+    auto display = canonical; display.layout = semantic::RichTextLayout{width};
+    bool emptyLabel = true;
+    for (const auto& paragraph : display.document.paragraphs)
+        for (const auto& run : paragraph.runs) emptyLabel = emptyLabel && run.text.empty();
+    if (emptyLabel) {
+        semantic::TextStyle style;
+        style.font_size = 16; style.weight = 400; style.color = {0.25F, 0.25F, 0.25F, 1};
+        if (!impl_->descriptors.empty()) style.font_resource_id = impl_->descriptors.begin()->second.resourceId;
+        semantic::Paragraph paragraph;
+        paragraph.id = foundation::ObjectId::fromUint64(0x5459504554455854ULL);
+        paragraph.style.alignment = semantic::ParagraphAlignment::kCenter;
+        paragraph.runs = {{"Type text...", style}};
+        display.document.paragraphs = {std::move(paragraph)};
+    }
+    // Reuse the painted viewport, line budget and vertical alignment. Hit
+    // testing applies the inverse of that same translation.
+    const auto painted = resolveShape(record.id, *shape, record.transform, true);
+    const auto previous = impl_->context;
+    impl_->context = painted->context;
+    const auto originalHit = hit;
+    if (hit) { hit->x -= painted->labelOffsetX; hit->y -= painted->labelOffsetY; }
+    auto geometry = editingGeometry(record.id, display, start, length, hit);
+    impl_->context = previous;
+    geometry.layoutIdentity = painted->digest;
+    geometry.caret.left += painted->labelOffsetX; geometry.caret.right += painted->labelOffsetX;
+    geometry.caret.top += painted->labelOffsetY; geometry.caret.bottom += painted->labelOffsetY;
+    for (auto& rect : geometry.selection) {
+        rect.left += painted->labelOffsetX; rect.right += painted->labelOffsetX;
+        rect.top += painted->labelOffsetY; rect.bottom += painted->labelOffsetY;
+    }
+    if (emptyLabel) {
+        const float displayHeight = static_cast<float>(shape->height) * sy;
+        geometry.caret.left = static_cast<float>(shape->width) * sx * 0.5F;
+        geometry.caret.right = geometry.caret.left + 1;
+        geometry.caret.top = std::max(viewport.top, (viewport.top + viewport.bottom) * 0.5F - 8);
+        geometry.caret.bottom = geometry.caret.top + 16;
+        geometry.available = !geometry.diagnostics.empty() ? false : true;
+        if (originalHit && originalHit->x >= 0 && originalHit->x <= static_cast<float>(shape->width) * sx &&
+            originalHit->y >= 0 && originalHit->y <= displayHeight) geometry.hit = 0;
+    }
+    return geometry;
+}
+
+std::vector<std::uint32_t> RichTextLayoutService::graphemeBoundaries(const std::u16string& text) const {
+    std::vector<std::uint32_t> out;
+#ifdef CANVAS_TEXT_HAS_SKIA
+    if(!impl_->unicode || text.size()>65536)return out;
+    impl_->unicode->forEachBreak(text.data(),static_cast<int>(text.size()),SkUnicode::BreakType::kGraphemes,[&](int position,int){if(position>=0)out.push_back(static_cast<std::uint32_t>(position));});
+#else
+    (void)text;
+#endif
+    return out;
+}
+EditingGeometry RichTextLayoutService::editingGeometry(foundation::ObjectId id,const semantic::RichTextContent& content,std::uint32_t start,std::uint32_t length,std::optional<foundation::WorldPoint> hit) {
+    EditingGeometry out;const auto layout=resolve(id,content);out.layoutIdentity=layout->digest;out.diagnostics=layout->diagnostics;
+#ifdef CANVAS_TEXT_HAS_SKIA
+    if(!layout->diagnostics.empty())return out;
+    std::uint64_t total=0;bool caret=false;
+    for(std::size_t i=0;i<content.document.paragraphs.size() && i<layout->paragraphs.size();++i){
+        const auto& source=content.document.paragraphs[i];std::string bytes;for(const auto& run:source.runs)bytes+=run.text;
+        const auto utf16=SkUnicode::convertUtf8ToUtf16(bytes.data(),static_cast<int>(bytes.size()));
+        const auto found=impl_->shaped.find({id,source.id});if(found==impl_->shaped.end()||!found->second)return {};
+        auto& paragraph=*found->second;const auto y=layout->paragraphs[i].originY;const auto indent=layout->paragraphs[i].indent;
+        const auto localStart=start>=total?static_cast<std::uint64_t>(start)-total:0;
+        if(!caret && start>=total && localStart<=utf16.size()) {
+            if(localStart<utf16.size() && utf16[localStart]>=0xDC00 && utf16[localStart]<=0xDFFF)return {};
+            Paragraph::GlyphInfo info{};
+            if(!utf16.empty() && paragraph.getGlyphInfoAtUTF16Offset(static_cast<std::size_t>(localStart==utf16.size()?localStart-1:localStart),&info)){
+                const bool trailing=localStart==utf16.size();const bool rtl=info.fDirection==TextDirection::kRtl;
+                const auto x=trailing!=rtl?info.fGraphemeLayoutBounds.right():info.fGraphemeLayoutBounds.left();
+                // GlyphInfo retains natural font ascent/descent even when an
+                // explicit line height makes the laid-out line shorter. Use
+                // the same effective line metrics as the frame and Scene.
+                LineMetrics line;
+                const auto index=static_cast<std::size_t>(trailing?localStart-1:localStart);
+                if(!paragraph.getLineMetricsAt(paragraph.getLineNumberAtUTF16Offset(index),&line))return out;
+                out.caret={x+indent,static_cast<float>(line.fBaseline-line.fAscent)+y,
+                           x+indent+1,static_cast<float>(line.fBaseline+line.fDescent)+y};
+            }else{const float height=paragraph.getHeight();if(!(height>0))return {};out.caret={indent,y,indent+1,y+height};}
+            caret=true;
+        }
+        const auto a=std::max<std::uint64_t>(start,total),b=std::min<std::uint64_t>(static_cast<std::uint64_t>(start)+length,total+utf16.size());
+        if(a<b)for(const auto& box:paragraph.getRectsForRange(static_cast<unsigned>(a-total),static_cast<unsigned>(b-total),RectHeightStyle::kTight,RectWidthStyle::kTight))
+            out.selection.push_back({box.rect.left()+indent,box.rect.top()+y,box.rect.right()+indent,box.rect.bottom()+y});
+        if(hit && (hit->y>=y || i==0) && (hit->y<layout->paragraphs[i].bounds.bottom || i+1==content.document.paragraphs.size())){
+            const auto position=paragraph.getGlyphPositionAtCoordinate(hit->x-indent,hit->y-y);out.hit=static_cast<std::uint32_t>(total+std::min<std::size_t>(position.position,utf16.size()));
+        }
+        total+=utf16.size();if(i+1<content.document.paragraphs.size())++total;
+    }
+    out.available=caret && static_cast<std::uint64_t>(start)+length<=total;
+#else
+    (void)start;(void)length;(void)hit;
+#endif
     return out;
 }
 LayoutMetrics RichTextLayoutService::metrics() const noexcept { return impl_->counters; }

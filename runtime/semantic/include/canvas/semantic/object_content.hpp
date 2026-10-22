@@ -12,14 +12,6 @@
 
 namespace canvas::semantic {
 
-struct ShapeContent final {
-    std::uint32_t shape_kind = 0;
-    double width = 0.0;
-    double height = 0.0;
-
-    bool operator==(const ShapeContent&) const = default;
-};
-
 enum class ImageContentMode : std::uint8_t {
     kInvalid = 0,
     kFit = 1,
@@ -165,6 +157,7 @@ struct TextStyle final {
     bool italic = false;
     bool underline = false;
     ColorValue color{};
+    bool strikethrough = false;
 
     bool operator==(const TextStyle&) const = default;
 };
@@ -182,6 +175,7 @@ struct ParagraphStyle final {
     double line_height = 0.0;
     double spacing_before = 0.0;
     double spacing_after = 0.0;
+    bool bulleted = false;
 
     bool operator==(const ParagraphStyle&) const = default;
 };
@@ -207,10 +201,27 @@ struct RichTextDocument final {
     bool operator==(const RichTextDocument&) const = default;
 };
 
+struct RichTextLayout final {
+    double wrap_width = 0.0;
+    bool operator==(const RichTextLayout&) const = default;
+};
 struct RichTextContent final {
     RichTextDocument document{};
+    std::optional<RichTextLayout> layout = std::nullopt;
 
     bool operator==(const RichTextContent&) const = default;
+};
+
+// Shape remains a hierarchy leaf.  Version 3 optionally embeds a RichText
+// label in the same canonical object; it is never materialized as a child
+// object or a second text owner.
+struct ShapeContent final {
+    std::uint32_t shape_kind = 0;
+    double width = 0.0;
+    double height = 0.0;
+    std::optional<RichTextContent> label = std::nullopt;
+
+    bool operator==(const ShapeContent&) const = default;
 };
 
 struct InsertTextStep final {
@@ -261,17 +272,34 @@ struct SetParagraphStyleStep final {
     bool operator==(const SetParagraphStyleStep&) const = default;
 };
 
+struct RichTextState final {
+    std::uint32_t kind_version = 0;
+    RichTextContent content{};
+    bool operator==(const RichTextState&) const = default;
+};
+struct SetRichTextLayoutStep final {
+    std::uint32_t target_kind_version = 0;
+    std::optional<RichTextLayout> layout = std::nullopt;
+    bool operator==(const SetRichTextLayoutStep&) const = default;
+};
+struct RestoreRichTextStateStep final {
+    RichTextState state{};
+    bool operator==(const RestoreRichTextStateStep&) const = default;
+};
 using RichTextStep = std::variant<
     InsertTextStep,
     DeleteTextStep,
     SplitParagraphStep,
     MergeParagraphStep,
     SetInlineStyleStep,
-    SetParagraphStyleStep>;
+    SetParagraphStyleStep,
+    SetRichTextLayoutStep,
+    RestoreRichTextStateStep>;
 
 struct RichTextDelta final {
     std::uint32_t delta_version = 0;
     std::vector<RichTextStep> steps;
+    std::vector<std::uint8_t> expected_state_digest{};
 
     bool operator==(const RichTextDelta&) const = default;
 };

@@ -1,0 +1,71 @@
+{
+  "recorded_utc": "2026-10-20T02:51:39.2118219Z",
+  "source_revision": "1959a2c22476dd06882063ffc2c0295ba23bc2f1",
+  "branch": "codex/fc02-windows-ime-resume",
+  "exe_path": "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\build\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe",
+  "exe_sha256": "D72B8209EF34F93452852556D076C848F7093AD6064E87D41C257155C4861541",
+  "pid": 256432,
+  "user_confirmation": "用户复测新版后确认：是我看错了，现在基本正常了",
+  "original_failure": "FAIL preserved at docs/planning/fc02/evidence/text-tool-entry/user-failure.json",
+  "cases": [
+    {
+      "id": "W1R1",
+      "result": "PASS",
+      "actual": "Text tool entry and Chinese input previously observed normal"
+    },
+    {
+      "id": "W1R2",
+      "result": "PASS",
+      "actual": "Enter end and second creation previously observed normal"
+    },
+    {
+      "id": "W1R3",
+      "result": "PASS",
+      "actual": "10 Ink then Text previously observed normal"
+    },
+    {
+      "id": "W-EMOJI",
+      "result": "KNOWN_LIMITATION",
+      "actual": "Emoji not visible; locked font does not promise emoji coverage"
+    },
+    {
+      "id": "W-CARET-BASELINE",
+      "result": "FAIL",
+      "actual": "No blink at 802a064d; preserved historical physical failure"
+    },
+    {
+      "id": "W-CARET-1959",
+      "result": "PHYSICAL_PENDING",
+      "actual": "User said basically normal but did not explicitly confirm blink"
+    },
+    {
+      "id": "W-IME-CANDIDATE",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "W-TOUCH-DPI-RESIZE",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "B-WEB",
+      "result": "BLOCKED_ENVIRONMENT",
+      "actual": "Chrome/server launcher was rejected by automatic approval review; Web target build completed"
+    }
+  ],
+  "automated": {
+    "python": "16/16 PASS",
+    "web_build": "PASS",
+    "caret_red": "FAIL expected baseline",
+    "strict_clang": "7/7 PASS",
+    "windows_build": "PASS",
+    "caret_green": "PASS",
+    "ctest": "230/230 PASS"
+  },
+  "artifacts": {
+    "web_wasm": "248012649E05606CFCFF69D5ED4D3EA83FE7C8C032083A4C737630D0F977FFF1",
+    "web_data": "E7D95DCDD426774FF6FE79CDDA51C01EE610DA0F5EAA682EEC9FD3B1C8488B0B",
+    "windows_exe_sha256": "D72B8209EF34F93452852556D076C848F7093AD6064E87D41C257155C4861541",
+    "web_js": "7602D3B0A4262C3FE42A6B66DC0FA47867F18570A0594A23DE013241945FB7BA"
+  },
+  "evidence_root": "out/fc02-resume"
+}

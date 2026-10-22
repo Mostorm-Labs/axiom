@@ -1,4 +1,5 @@
 #include "canvas/semantic/validator.hpp"
+#include "canvas/semantic/rich_text_state.hpp"
 #include "canvas/semantic/geometry_accounting_v1.hpp"
 
 #include "object_record_semantics_internal.hpp"
@@ -21,6 +22,7 @@ bool validId(const ObjectId& value) noexcept { return !value.isZero(); }
 
 bool finiteVec(const Vec2& value) noexcept;
 bool validVectorPath(const VectorPathGeometry& path) noexcept;
+bool validRichTextDocument(const RichTextDocument& document) noexcept;
 
 constexpr std::size_t kMaxKeyedBatchItems = 65535U;
 constexpr std::size_t kMaxEraseMasksPerObject = 65535U;
@@ -102,10 +104,13 @@ bool validShape(const ShapeContent& value) noexcept {
 }
 
 bool validShapeForVersion(const ShapeContent& value, std::uint32_t version) noexcept {
-    if (version == 1U) return validShape(value);
+    if (version == 1U) return validShape(value) && !value.label.has_value();
     if (!std::isfinite(value.width) || value.width <= 0.0 ||
         !std::isfinite(value.height) || value.height <= 0.0) return false;
-    return version == 2U && value.shape_kind == 3U;
+    if (version == 2U) return value.shape_kind == 3U && !value.label.has_value();
+    return version == 3U && (value.shape_kind == 1U || value.shape_kind == 2U || value.shape_kind == 3U) &&
+           value.label.has_value() && validRichTextDocument(value.label->document) &&
+           canvas::semantic::validRichTextLayoutState(3U, *value.label);
 }
 
 bool validImage(const ImageContent& value) noexcept {
@@ -436,18 +441,35 @@ bool validRichTextStep(const RichTextStep& step) noexcept {
                 }
             } else if constexpr (std::is_same_v<Step, SplitParagraphStep>) {
                 return validId(value.paragraph_id) && validId(value.new_paragraph_id);
-            } else {
+            } else if constexpr (std::is_same_v<Step, MergeParagraphStep>) {
                 return validId(value.first_paragraph_id) && validId(value.second_paragraph_id);
+            } else if constexpr (std::is_same_v<Step, SetRichTextLayoutStep>) {
+                RichTextContent content;content.layout=value.layout;
+                return canvas::semantic::validRichTextLayoutState(value.target_kind_version,content);
+            } else {
+                return canvas::semantic::validRichTextLayoutState(value.state.kind_version,value.state.content) &&
+                       validRichTextDocument(value.state.content.document);
             }
         },
         step);
 }
 
 bool validRichTextDelta(const RichTextDelta& delta) noexcept {
-    if (delta.delta_version != 1U || delta.steps.empty()) return false;
+    if ((delta.delta_version != 1U && delta.delta_version != 2U && delta.delta_version != 3U) || delta.steps.empty()) return false;
+    if (delta.delta_version == 1U ? !delta.expected_state_digest.empty() : delta.expected_state_digest.size()!=32U) return false;
     std::size_t inserted_bytes = 0U;
     for (const auto& step : delta.steps) {
+        if ((std::holds_alternative<SetRichTextLayoutStep>(step) || std::holds_alternative<RestoreRichTextStateStep>(step)) &&
+            (delta.delta_version<2U || delta.steps.size()!=1U)) return false;
         if (!validRichTextStep(step)) return false;
+        if(delta.delta_version<3U && !std::visit([](const auto& v) {
+            using T=std::decay_t<decltype(v)>;
+            if constexpr(std::is_same_v<T,InsertTextStep> || std::is_same_v<T,SetInlineStyleStep>)return !v.style.strikethrough;
+            else if constexpr(std::is_same_v<T,SetParagraphStyleStep>)return !v.style.bulleted;
+            else if constexpr(std::is_same_v<T,RestoreRichTextStateStep>)return v.state.kind_version<3U;
+            else if constexpr(std::is_same_v<T,SetRichTextLayoutStep>)return v.target_kind_version<3U;
+            else return true;
+        },step))return false;
         if (const auto* insert = std::get_if<InsertTextStep>(&step)) {
             if (insert->text.size() > kMaxRichTextInsertBytes - inserted_bytes) return false;
             inserted_bytes += insert->text.size();
@@ -541,8 +563,12 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
     if (object.kind == ObjectKind::kDabStroke && object.kind_version == 2U) {
         return std::holds_alternative<DabBrushStrokeContent>(object.content);
     }
-    if (object.kind == ObjectKind::kShape && object.kind_version == 2U) {
+    if (object.kind == ObjectKind::kShape &&
+        (object.kind_version == 2U || object.kind_version == 3U)) {
         return std::holds_alternative<ShapeContent>(object.content);
+    }
+    if (object.kind == ObjectKind::kRichText && (object.kind_version == 2U || object.kind_version == 3U)) {
+        return std::holds_alternative<RichTextContent>(object.content);
     }
     if (object.kind_version != 1U) return false;
     switch (object.kind) {
@@ -599,7 +625,7 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
         if (!validImage(*image)) return false;
     }
     if (const auto* rich = std::get_if<RichTextContent>(&object.content)) {
-        if (!validRichTextDocument(rich->document)) return false;
+        if (!validRichTextDocument(rich->document) || !canvas::semantic::validRichTextLayoutState(object.kind_version,*rich)) return false;
     }
     if (const auto* connector = std::get_if<ConnectorContent>(&object.content)) {
         if (!validConnector(*connector)) return false;

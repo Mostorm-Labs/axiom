@@ -1,0 +1,51 @@
+{
+  "task": "FC02-WINDOWS-IME-RESUME",
+  "baseline_revision": "802a064dcb6f543112137c813d7078fef6efe7e5",
+  "result_revision": "1959a2c22476dd06882063ffc2c0295ba23bc2f1",
+  "execution_ref": "codex/fc02-windows-ime-resume",
+  "recorded_utc": "2026-10-20T02:57:43.375946+00:00",
+  "scope": "Resume exact pushed FC02 baseline; preserve historical FAIL; user-operated Windows entry retest; fix newly observed static caret with pre-mutation RED pixel oracle. No font/SDK/semantic contract expansion.",
+  "tests": {
+    "ctest": {
+      "tests": "230",
+      "failures": "0",
+      "skipped": "0",
+      "disabled": "0"
+    },
+    "python": {
+      "executed": 16,
+      "skipped": 0,
+      "result": "PASS"
+    },
+    "strict_clang": {
+      "translation_units": 7,
+      "failures": 0
+    },
+    "caret_oracle": {
+      "red_exit_code": 1,
+      "green_exit_code": 0,
+      "seam": "Real RuntimeComposition, locked host font, headless Skia raster pixel readback, no Object/Operation on blink"
+    },
+    "windows_build": "PASS; MSVC 14.51.36231 /MT /WX /O2 /Ob2 /DNDEBUG; clean revision artifact",
+    "web_build": "PASS; emsdk 6.0.6; actual clang version differs from lock metadata: clang 24.0.0git ff6d537b14d737719d6377789784d04ff9565f65; no claim of LLVM 22.1.8 Web compiler",
+    "chrome_automated": "NOT_RUN; launcher rejected by automatic approval review"
+  },
+  "human": {
+    "text_entry": "PASS by explicit user confirmation at 802a064d",
+    "enter_recreate": "PASS by explicit user confirmation at 802a064d",
+    "ink10_then_text": "PASS by explicit user confirmation at 802a064d",
+    "original_W1": "FAIL preserved unchanged; new successful retests separate",
+    "emoji": "Not visible; known non-promised coverage of locked CJK font",
+    "caret_baseline": "FAIL observed; new pixel RED confirms",
+    "caret_new": "User reports basically normal, no explicit isolated blink verdict; PHYSICAL_PENDING",
+    "candidate_touch_dpi_and_full_matrix": "PHYSICAL_PENDING; general normal report is not per-case acceptance"
+  },
+  "remaining_blockers": [
+    "Browser runtime tests were not executed because automatic approval review rejected localhost-server/Chrome launch.",
+    "Full Windows/Chrome IME candidate/focus/touch/DPI matrix has not been individually confirmed.",
+    "Web toolchain reports Clang 24.0.0git while SDK metadata names LLVM 22.1.8; browser compatibility is not qualified."
+  ],
+  "status": "BLOCKED_ENVIRONMENT",
+  "authority_golden_gate_phys_changes": false,
+  "independent_review_or_gate_claim": false
+}

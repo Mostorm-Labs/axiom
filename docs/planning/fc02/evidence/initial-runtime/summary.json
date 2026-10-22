@@ -1,0 +1,219 @@
+{
+  "scope": "FC02 delta2 / exact History / typed Runtime ingress initial implementation",
+  "task_anchor": "3ddc58d2fa9d21f107e9f208c3a5dbf954a34290",
+  "materialized_ref": "codex/fc02-runtime-boundary-design",
+  "result_revision_binding": "The Git commit containing this evidence; qualification_code_blobs binds tested production/tests/current descriptor exactly.",
+  "remote_baseline_rechecked": {
+    "branch": "3ddc58d2fa9d21f107e9f208c3a5dbf954a34290",
+    "main": "ea135122f8e3266cafa433d69903f7950a5e6300"
+  },
+  "toolchain": {
+    "vs": "2026 BuildTools 18.10.2",
+    "msvc": "19.51.36260 x64 /MT /WX",
+    "clang": "22.1.8 /Zs /W4 /WX -Wextra -Wpedantic -Werror",
+    "semantic_environment": {
+      "AXIOM_DEPS_DIR": "C:\\Users\\NearHub\\.codex\\worktrees\\p32-windows-touch\\axiom\\.deps",
+      "AXIOM_PROTOC": "C:\\Users\\NearHub\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+      "AXIOM_SEMANTIC_HOST_ROOT": "C:\\Users\\NearHub\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85",
+      "AXIOM_SEMANTIC_RUNTIME_ROOT": "C:\\Users\\NearHub\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+      "AXIOM_SEMANTIC_SDK_ROOT": "C:\\Users\\NearHub\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+      "CMAKE_PREFIX_PATH": "C:\\Users\\NearHub\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c"
+    },
+    "semantic_sdk_from_store": true,
+    "offline_resolution_pass": true,
+    "skia_lock_unchanged": true
+  },
+  "results": {
+    "foundation_red": {
+      "expected": "Known old implementation gaps reproduce",
+      "actual": "4/4 failures",
+      "result": "RED_REPRODUCED",
+      "raw": "red.xml"
+    },
+    "additional_red": {
+      "expected": "Reentrancy, pointer isolation and failed terminal gaps reproduce",
+      "actual": "3/3 failures; lost recovery fixture additionally corrected to rebind",
+      "result": "RED_REPRODUCED",
+      "raw": "additional-red.xml"
+    },
+    "intermediate_regression": {
+      "passed": 221,
+      "failed": 2,
+      "raw": "intermediate-failures.json",
+      "resolution": "wrong-kind return-code implementation fixed; codec test oracle aligned with existing decode/validate boundary"
+    },
+    "final_ctest": {
+      "expected": 223,
+      "passed": 223,
+      "failed": 0,
+      "result": "PASS",
+      "raw": "scoped-ctest.xml"
+    },
+    "real_fc02_tests": [
+      {
+        "name": "FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Snapshot.TypedBootstrapMustVerifyDigestValue",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapability",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02History.TextCompensationIsSupported",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Semantic.WidthCodecAndStrictPresenceRoundTrip",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Semantic.ExactRestorePreservesRunBoundariesAndUnrelatedTransform",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Semantic.GuardAndInvalidSecondStepRejectAtomically",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Semantic.ExplicitMigrationAndInverseRestoreLegacyAbsence",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Semantic.WirePresenceAndDecodedSemanticRejectionsLeaveStateUntouched",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Facade.FakeImeCommitsThroughRealHistoryAndCanonicalStore",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Facade.ToolSwitchWaitsForRealImeCommitAndResizeKeepsSession",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Facade.CrossParagraphReplacementAndWidthUndoAreCanonical",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Facade.InvalidOffsetsCancellationAndEmptyDraftLeaveNoObjects",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Facade.PublicationReadCannotInvalidateOwnFinishingComposition",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Facade.TextOwnershipConsumesPointerLifecycleWithoutStartingInk",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Facade.FailedTerminalKeepsPreimageAndRetryDoesNotRewriteRejection",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Facade.AcknowledgedAndOldSessionEventsCannotReapplyAndFailedWidthPreservesRedo",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      },
+      {
+        "name": "FC02Facade.ForcedCloseRejectsQueuedInputAndLateCallbacks",
+        "expected": "Assertions in runtime/composition/tests/fc02_text_test.cpp hold against real engine/History/Facade",
+        "actual": "all assertions passed",
+        "result": "PASS"
+      }
+    ],
+    "schema": {
+      "expected": 9,
+      "passed": 9,
+      "failed": 0,
+      "result": "PASS",
+      "raw": "schema.log"
+    },
+    "clang": {
+      "expected": 23,
+      "passed": 23,
+      "result": "PASS_SYNTAX_ONLY",
+      "raw": "strict-clang.json"
+    }
+  },
+  "remaining": {
+    "native_windows_web_ime": "NOT_IMPLEMENTED_IN_THIS_SLICE",
+    "text_tool_ui_and_geometry": "NEXT_SLICE",
+    "real_ime_and_presentation": "PHYSICAL_PENDING",
+    "android_and_legacy_web_playground": "DEFERRED"
+  },
+  "claims": {
+    "fc02_product_complete": false,
+    "independent_control_review": false,
+    "gate_pass": false,
+    "phys_pass": false
+  },
+  "raw_sha256": {
+    "additional-red.log": "14bc4165b1532ec1f2e81b55b76d43e212f6c35f8e4938f26416277ab57b3cae",
+    "additional-red.xml": "e61f447f4fc7793f61a168425a25d015da74de081de7a2a9c5d7410255b613a7",
+    "build-scoped.log": "42e95ef9add1f2f850a0274d7eaf3406d8d58cf75e03ade5cf29673aa76b8a1a",
+    "ctest-names.txt": "330e1262abf01e8edd37706469a112545acede291829c78d52df40a1bd68e868",
+    "environment.json": "3664d6f794bc507ce02830f50730a58e5c8833605d0196e5ba9456d018e90b90",
+    "integration.log": "5757da0e03060fb62486dd648d54f88f8edfbca1f0ccfb5fac65947d078bf5a4",
+    "integration.xml": "8f65211ed601ea8476d97bff13a2e7fd3f14e08e6b7b04d1818e9526e7f3b418",
+    "intermediate-failures.json": "d4895441d32df42288d39beef48bf3fda0add4117871971a00f629467f439250",
+    "qualification-artifact.json": "99b753493f3d2ff3aa77f58f88a4f737b3e95572bac336605745459a4f0bcfcc",
+    "red.log": "5b801e9d1fbbf284f4d32c4ea9f855d08bb5af55d5f50f1b7f204fd20d6d346c",
+    "red.xml": "ab6e590b1a0083646e8d079d74320c8c52285a7a767fffd762c081009115f309",
+    "schema.log": "06824bab10dd34d8434dfbec836882bbb30d4287a65ff95e358d7a908dcd84e1",
+    "scoped-ctest.log": "bccd0b0971b5f79ae8f9aece7d47ba12b5924b90b7742a12a03363ce70647bdb",
+    "scoped-ctest.xml": "8eca6131a46a17ddebea2c7bf54a19205cc15943051cd53c89924ae8e97a7ef3",
+    "strict-clang.json": "2a6620efcffc5de237e127ac56daa3fe51e54ee77da337edd47da82460f64e81",
+    "targets.txt": "351cdfc18cc8720fe3d22a275e945b18e3bb145c2088fda1b3f682818d50dfa7"
+  },
+  "raw_hash_representation": "Canonical Git/index bytes (LF for text); qualification_working_byte_sha256 and strict-clang.json describe actual local compiled bytes; qualification_code_blobs binds canonical committed source."
+}

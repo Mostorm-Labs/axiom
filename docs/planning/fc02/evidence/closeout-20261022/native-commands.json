@@ -1,0 +1,40 @@
+{
+  "source_revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+  "kind": "native",
+  "runs": [
+    {
+      "name": "ctest",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\build",
+        "--tests-from-file",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\docs\\planning\\fc02\\evidence\\interface-repair-20261022\\ctest-names-with-consumer.txt",
+        "--output-on-failure",
+        "--output-junit",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\closeout-20261022\\ctest.xml",
+        "-j",
+        "4"
+      ],
+      "exit_code": 0,
+      "seconds": 31.578,
+      "log": "ctest.log"
+    },
+    {
+      "name": "python",
+      "command": [
+        "C:\\Users\\Chado\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "-m",
+        "unittest",
+        "verification.tests.test_current_semantic_descriptor",
+        "verification.tests.test_semantic_contract",
+        "verification.tests.test_fc02_host_contract",
+        "verification.tests.test_host_text_font_resource",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 2.224,
+      "log": "python.log"
+    }
+  ]
+}

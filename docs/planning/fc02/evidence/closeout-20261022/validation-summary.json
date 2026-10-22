@@ -1,0 +1,43 @@
+{
+  "source_revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+  "ctest": {
+    "name": "Win32-ninja",
+    "tests": "234",
+    "failures": "0",
+    "disabled": "0",
+    "skipped": "0",
+    "hostname": "HIMEKO",
+    "time": "30",
+    "timestamp": "2026-10-22T09:23:53"
+  },
+  "python": {
+    "executed": 17,
+    "skipped": 0,
+    "log": "python.log",
+    "result": "PASS"
+  },
+  "web_consumer": {
+    "cases": 5,
+    "result": "PASS",
+    "evidence": "web-consumer.json"
+  },
+  "web_existing": {
+    "web_fc02_text_test": {
+      "result": "PASS",
+      "groups": 7,
+      "evidence": "web_fc02_text_test.json"
+    },
+    "web_minimal_runtime_test": {
+      "result": "PASS",
+      "groups": 13,
+      "evidence": "web_minimal_runtime_test.json"
+    }
+  },
+  "web_shape_full": {
+    "cases": 6,
+    "result": "PASS",
+    "evidence": "web-shape-reentry-full.json"
+  },
+  "numeric_ime_supplement": "web-shape-reentry.json",
+  "note": "The first reentry run used a temporary numeric-only probe. The committed stronger Chinese/numeric, elapsed-time blink bound and idle-after-finish oracle was then rerun and passed. Both outputs retained. Synthetic browser input is not physical IME/touch qualification."
+}

@@ -343,7 +343,7 @@ CanvasEditingRuntime::CanvasEditingRuntime(render::ViewId viewId)
       ink_(std::make_unique<ink::InkEngine>(ink::BrushDescriptor{1.0F})),
       preview_(std::make_unique<ink::PreviewModel>()),
       interaction_(std::make_unique<interaction::InteractionRuntime>(
-          *this, *this, *this, *this, *this)),
+          *this, *this, *this, *this, *this,static_cast<TextEditPort*>(this))),
       lifecycle_(std::make_unique<render::SurfaceLifecycle>(render::SurfaceSnapshot{
           viewId, render::SurfaceGeneration{1},
           render::MetricsGeneration{1},
@@ -595,6 +595,7 @@ bool CanvasEditingRuntime::accept(const input::PointerSampleBatch& batch,
       input_->dispatch(batch) != input::DispatchDisposition::kDelivered) {
     return false;
   }
+  if (interaction_->textSession() && interaction_->textSession()->read().phase != runtime::TextPhase::kClosed) return true;
   std::vector<ink::StrokePoint> confirmed;
   std::vector<ink::StrokePoint> predicted;
   confirmed.reserve(batch.samples.size());
@@ -700,10 +701,25 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   }
   const auto routed = appBinding_->submit(source, batch);
   if (!routed.accepted && !routed.terminalCancel) { AXIOM_ANDROID_DIAG("ingress rejected samples=%zu", routed.normalized.samples.size()); return false; }
+  std::vector<input::PointerSample> routedSamples;
+  routedSamples.reserve(routed.normalized.samples.size());
+  for (const auto& sample : routed.normalized.samples)
+    if (!shapeExpandPointer(sample)) routedSamples.push_back(sample);
+  if (routed.terminalCancel) shapeExpandPointerKeys_.clear();
+  // Normalize/retire full pointer identities even while the text editor owns input.
+  if(textTool_ || (interaction_->textSession() && interaction_->textSession()->read().phase!=runtime::TextPhase::kClosed) || !textPointerKeys_.empty()){
+    for(const auto& sample:routedSamples)(void)textPointer(sample);
+    if(routed.terminalCancel)textPointerKeys_.clear();
+    return routed.accepted || routed.terminalCancel;
+  }
   if (selectionMode_ || creationMode_ || creationActive() || panTool_) {
-    for (const auto& sample : routed.normalized.samples) {
+    for (const auto& sample : routedSamples) {
       if (!sample.key.valid()) continue;
       if (!dispatchRuntime_.submit(sample)) return false;
+      if (selectionMode_ && !textTool_ &&
+          (!interaction_->textSession() ||
+           interaction_->textSession()->read().phase == runtime::TextPhase::kClosed))
+        (void)observeTouchTextTap(sample);
     }
     if (routed.terminalCancel) cancelAllPointers();
     return routed.accepted || routed.terminalCancel;
@@ -717,7 +733,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
     return accepted;
   };
   const auto viewportBefore = viewportController_->state();
-  for (const auto& sample : routed.normalized.samples) {
+  for (const auto& sample : routedSamples) {
     if (!sample.key.valid()) continue;
     if (panTool_) {
       if (sample.phase == input::PointerPhase::kDown) {
@@ -987,6 +1003,9 @@ void CanvasEditingRuntime::onSessionCancel(
     const input::PlatformInteractionIngressResult& result) noexcept {
   for (const auto& sample : result.normalized.samples) {
     if (!sample.key.valid()) continue;
+    touchTapContacts_.erase(sample.key);
+    previousTouchTap_.reset();
+    if (touchTapContacts_.empty()) touchTapMultiContact_ = false;
     const auto routing = coordinator_->route(sample);
     if (routing.endedViewport) viewportController_->endGesture();
     baselineDownTimestamps_.erase(sample.key);
@@ -1001,6 +1020,9 @@ void CanvasEditingRuntime::onSessionCancel(
 }
 
 void CanvasEditingRuntime::cancelAllPointers() noexcept {
+  textPointerKeys_.clear();
+  resetTouchTextTap();
+  shapeExpandPointerKeys_.clear();
   creations_.clear();
   creationFences_.clear();
   cancelSelectionTransform();
@@ -1143,7 +1165,10 @@ bool CanvasEditingRuntime::setSelectionMode(bool enabled) noexcept {
   if (!brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty()) {
     return false;
   }
-  if (selectionMode_ != enabled) dispatchRuntime_.cancelAll();
+  if (selectionMode_ != enabled) {
+    dispatchRuntime_.cancelAll();
+    resetTouchTextTap();
+  }
   selectionMode_ = enabled;
   if (enabled) {
     creationMode_ = false;
@@ -1217,17 +1242,47 @@ bool CanvasEditingRuntime::canonicalWriteAdmission() const noexcept {
          std::this_thread::get_id() == ownerThread_ && !publicationCallbackActive_;
 }
 
+bool CanvasEditingRuntime::textReady() const noexcept {
+  return canonicalWriteAdmission() && historySceneReady() && brushSessions_.empty() && eraserTraces_.empty() && keyedStrokeIds_.empty() &&
+         creations_.empty() && panPointers_.empty() && dispatchRuntime_.activeCount()==0 && !selectionTransformActive();
+}
+bool CanvasEditingRuntime::textWritable(semantic::ObjectId id) const noexcept {
+  const auto* current=semanticObjects_.find(id);
+  for(std::size_t count=0;current && count<=semanticObjects_.size();++count) {
+    for(const auto& entry:current->properties.entries) {
+      if(entry.field_id==2 && std::holds_alternative<bool>(entry.value) && std::get<bool>(entry.value))return false;
+      if(entry.field_id==1 && std::holds_alternative<bool>(entry.value) && !std::get<bool>(entry.value))return false;
+    }
+    if(!current->placement.parent_id)return true;
+    current=semanticObjects_.find(*current->placement.parent_id);
+  }
+  return false;
+}
+semantic::ObjectId CanvasEditingRuntime::allocateTextIdentity() {
+  while(nextTextIdentity_!=0) {
+    auto id=foundation::ObjectId::fromUint64(nextTextIdentity_++);id.bytes[15]=0xF2;
+    bool found=semanticObjects_.contains(id);
+    for(const auto& object:semanticObjects_.allObjects())if(const auto* rich=std::get_if<semantic::RichTextContent>(&object.content))
+      for(const auto& paragraph:rich->document.paragraphs)found=found || paragraph.id==id;
+    if(!found)return id;
+  }return {};
+}
+semantic::PrepareResult CanvasEditingRuntime::prepareTextOperation(const semantic::Operation& operation) const {
+  return operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_,resourceManifestPort_});
+}
+
 bool CanvasEditingRuntime::applyLocalHistoryOperation(
     semantic::Operation forward, semantic::Operation inverse) noexcept {
   if (!canonicalWriteAdmission()) return false;
   if (!historySceneReady() || forward.id.isZero() || inverse.id.isZero()) return false;
-  const auto prepared=operationEngine_.prepare(forward,{semanticObjects_,appliedOperations_});
+  const auto prepared=operationEngine_.prepare(forward,{semanticObjects_,appliedOperations_,resourceManifestPort_});
   if(prepared.disposition!=semantic::PrepareDisposition::kPrepared || !prepared.plan) return false;
   interaction::HistoryAspect aspect=interaction::HistoryAspect::kWholeRecord;
   if(forward.kind()==semantic::OperationKind::kSetTransforms) aspect=interaction::HistoryAspect::kTransform;
   if(forward.kind()==semantic::OperationKind::kSetObjectSize) aspect=interaction::HistoryAspect::kSize;
   if(forward.kind()==semantic::OperationKind::kSetPlacements) aspect=interaction::HistoryAspect::kPlacement;
   if(forward.kind()==semantic::OperationKind::kPatchProperties) aspect=interaction::HistoryAspect::kProperties;
+  if(forward.kind()==semantic::OperationKind::kEditRichText) aspect=interaction::HistoryAspect::kRichTextContent;
   std::vector<interaction::HistoryExpectation> before,after;
   const auto capture=[&](semantic::ObjectId id,const semantic::ObjectRecord* post) {
     const auto* prior=semanticObjects_.find(id);
@@ -1240,11 +1295,13 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
   for(const auto& object:prepared.plan->creates)capture(object.id,&object);
   for(const auto& object:prepared.plan->replacements)capture(object.id,&object);
   for(const auto id:prepared.plan->deletes)capture(id,nullptr);
-  const auto applied = operationEngine_.apply(
-      forward, semantic::ApplySource::kLocalInteraction, semanticObjects_,
-      appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+  auto historyEntry=history_.prepareRecord(forward,{inverse},std::move(before),std::move(after));
+  if(!historyEntry) return false;
+  const auto applied = resourceManifestPort_
+      ? operationEngine_.apply(forward, semantic::ApplySource::kLocalInteraction, semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_)
+      : operationEngine_.apply(forward, semantic::ApplySource::kLocalInteraction, semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   if (applied.disposition != semantic::ApplyDisposition::kApplied) return false;
-  if (!history_.recordConditional(forward, {inverse},std::move(before),std::move(after))) std::terminate();
+  history_.commitPrepared(std::move(*historyEntry));
   if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr &&
       sceneCompiler_ != nullptr) {
     const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current(), resourceManifestPort_);
@@ -1255,6 +1312,23 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
   observeApplied(forward, applied);
   ++submittedOperationCount_;
   canonicalPresentationDirty_ = true;
+  return true;
+}
+
+bool CanvasEditingRuntime::applyTextOperation(semantic::Operation forward,
+                                               semantic::Operation inverse) {
+  const auto* edit = std::get_if<semantic::EditRichTextOp>(&forward.payload);
+  const bool isTextEdit = edit != nullptr;
+  const auto target = edit ? edit->object_id : semantic::ObjectId{};
+  if (!applyLocalHistoryOperation(std::move(forward), std::move(inverse))) return false;
+  if (!isTextEdit) return true;
+  const auto* updated = semanticObjects_.find(target);
+  const auto* shape = updated ? std::get_if<semantic::ShapeContent>(&updated->content) : nullptr;
+  bool hasText = false;
+  if (shape && shape->label)
+    for (const auto& paragraph : shape->label->document.paragraphs)
+      for (const auto& run : paragraph.runs) hasText = hasText || !run.text.empty();
+  if (hasText) (void)expandShapeLabel(target);
   return true;
 }
 
@@ -1275,6 +1349,54 @@ bool CanvasEditingRuntime::setSelectedObjectSize(double width, double height) no
        semantic::SetObjectSizeOp{{{before->id, width, height}}}},
       {inverseId, documentId_, 1U, 1U,
        semantic::SetObjectSizeOp{{{before->id, shape->width, shape->height}}}});
+}
+
+std::optional<semantic::Transform2D> CanvasEditingRuntime::fittedShapeLabelTransform(
+    const semantic::ObjectRecord& record) {
+  const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
+  if (!textLayoutService_ || !shape || shape->shape_kind < 1U || shape->shape_kind > 3U)
+    return {};
+  const auto content = shape->label.value_or(semantic::RichTextContent{});
+  bool hasText = false;
+  for (const auto& paragraph : content.document.paragraphs)
+    for (const auto& run : paragraph.runs) hasText = hasText || !run.text.empty();
+  if (!hasText) return record.transform;
+  const auto layout = textLayoutService_->resolveShapeNatural(record.id, content, *shape,
+                                                               record.transform);
+  if (!layout || !layout->diagnostics.empty()) return {};
+  const float sy = std::max(0.001F, std::hypot(static_cast<float>(record.transform.c),
+                                                static_cast<float>(record.transform.d)));
+  const double currentWorldHeight = shape->height * sy;
+  const double availableTextHeight = layout->localBounds.bottom - layout->labelOffsetY;
+  if (!std::isfinite(availableTextHeight) || availableTextHeight <= 0.0) return {};
+  const double verticalInset = shape->shape_kind == 2U ? 0.70710678 :
+                              shape->shape_kind == 3U ? 0.5 : 1.0;
+  constexpr double padding = 16.0;
+  const double requiredWorldHeight =
+      (availableTextHeight + padding) / verticalInset;
+  if (requiredWorldHeight <= currentWorldHeight + 0.5) return record.transform;
+  const double scaleY = requiredWorldHeight / currentWorldHeight;
+  auto transform = record.transform;
+  transform.c *= scaleY; transform.d *= scaleY;
+  // Keep the bottom edge anchored; extending the local Y basis moves only
+  // the top edge toward negative canvas Y.
+  transform.tx += (record.transform.c - transform.c) * shape->height;
+  transform.ty += (record.transform.d - transform.d) * shape->height;
+  return transform;
+}
+
+bool CanvasEditingRuntime::expandShapeLabel(semantic::ObjectId id) {
+  if (!canonicalWriteAdmission() || !textWritable(id)) return false;
+  const auto* before = semanticObjects_.find(id);
+  if (!before) return false;
+  const auto transform = fittedShapeLabelTransform(*before);
+  if (!transform) return false;
+  if (*transform == before->transform) return true;
+  const auto forwardId = allocateOperationId(), inverseId = allocateOperationId();
+  if (forwardId.isZero() || inverseId.isZero()) return false;
+  return applyLocalHistoryOperation(
+      {forwardId, documentId_, 1U, 1U, semantic::SetTransformsOp{{{id, *transform}}}},
+      {inverseId, documentId_, 1U, 1U, semantic::SetTransformsOp{{{id, before->transform}}}});
 }
 
 bool CanvasEditingRuntime::patchSelectedProperty(std::uint32_t fieldId,
@@ -1418,7 +1540,7 @@ bool CanvasEditingRuntime::deleteSelectedObjects() noexcept {
   const auto forwardId=allocateOperationId(),inverseId=allocateOperationId();
   semantic::Operation operation{forwardId,documentId_,1,1,
       semantic::DeleteObjectsOp{{selection_.selected().begin(),selection_.selected().end()}}};
-  const auto plan=operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_});
+  const auto plan=operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_,resourceManifestPort_});
   if(plan.disposition!=semantic::PrepareDisposition::kPrepared || !plan.plan) return false;
   semantic::RestoreObjectsOp inverse;
   for(const auto id:plan.plan->deletes) {
@@ -1703,11 +1825,16 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     (void)presentTransientOverlayFrame(nextCanonicalFrameId());
     if (phase == input::PointerPhase::kUp) {
       const bool accepted=!editingChanged_ || transformDrag_.commit();
-      if (accepted && editingChanged_) {
+      const bool needsHandoff = accepted && editingChanged_;
+      if (needsHandoff) {
         transientOverlayHandoffPending_ = true;
         if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(true);
       }
       cancelSelectionTransform();
+      // A click on an already selected Shape draws an opaque transient copy,
+      // but creates no canonical commit/handoff. Retire that no-op preview so
+      // subsequent text/preedit frames cannot remain hidden beneath it.
+      if (!needsHandoff) (void)clearTransientOverlay();
       return accepted;
     }
   }
@@ -2628,13 +2755,15 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
 interaction::SubmitResult CanvasEditingRuntime::submitConditional(
     std::span<const semantic::Operation> operations, semantic::ApplySource source,
     std::span<const interaction::HistoryExpectation> expectations) {
+  for(const auto& operation:operations)if(const auto* text=std::get_if<semantic::EditRichTextOp>(&operation.payload))
+    if(!textWritable(text->object_id))return interaction::SubmitResult::rejected();
   if(!interaction::historyExpectationsMatch(semanticObjects_,expectations))
     return interaction::SubmitResult::rejected();
   // Resolve the actual deletion closure in this same owner phase. A remote
   // child or dependent connector that was not part of the captured postimage
   // makes compensation conflict, before any canonical apply or publication.
   for(const auto& operation:operations)if(operation.kind()==semantic::OperationKind::kDeleteObjects && !expectations.empty()) {
-    const auto plan=operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_});
+    const auto plan=operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_,resourceManifestPort_});
     if(!plan.plan || plan.disposition!=semantic::PrepareDisposition::kPrepared)
       return interaction::SubmitResult::rejected();
     for(const auto id:plan.plan->deletes)
@@ -2689,9 +2818,9 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
   if (operations.size() != 1U || source != semantic::ApplySource::kUndoRedo ||
       !historySceneReady()) return interaction::SubmitResult::rejected();
   for (const auto& operation : operations) {
-    const auto applied = operationEngine_.apply(
-        operation, source, semanticObjects_, appliedOperations_, semanticGeneration_,
-        canonicalCommitClock_);
+    const auto applied = resourceManifestPort_
+        ? operationEngine_.apply(operation, source, semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_)
+        : operationEngine_.apply(operation, source, semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
     if (applied.disposition != semantic::ApplyDisposition::kApplied) {
       return interaction::SubmitResult::rejected();
     }
@@ -2823,6 +2952,7 @@ bool CanvasEditingRuntime::commitSurfaceBinding(
     }
     return false;
   }
+  resetTouchTextTap();
   pendingCanonicalProvider_.reset();
   pendingPreviewProvider_.reset();
   auto* nextPreview = appBinding_->previewSurfaces()->activeProvider();
@@ -2864,6 +2994,7 @@ bool CanvasEditingRuntime::resizeSurface(const render::SurfaceMetrics& metrics) 
 
 bool CanvasEditingRuntime::loseSurface() noexcept {
   if (closed_ || std::this_thread::get_id() != ownerThread_) return false;
+  resetTouchTextTap();
   if (surfaceTransitionActive_) {
     surfaceAbortRequested_ = true;
     surface_.available = false;
@@ -3078,9 +3209,83 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   for (auto& entry: references.value().entries) {
     if (const auto* transform=transformOverrides_.find(entry.record.objectId)) {
       entry.record.transform=*transform;
+      if (textLayoutService_) {
+        if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content)) {
+          const auto layout = textLayoutService_->resolveShape(
+              entry.record.objectId, *shape, entry.record.transform,
+              entry.record.objectId == selection_.primary());
+          entry.record.textLayout = layout;
+          entry.command = render::ShapeReferenceCommand{*shape, layout,
+              entry.record.objectId == selection_.primary()};
+        }
+      }
       // Canonical digest/encoding does not describe transient editor pixels.
       references.value().canonicalBytes.clear();
       references.value().digest.clear();
+    }
+  }
+
+  const auto textState=interaction_->textSession()?interaction_->textSession()->read():runtime::TextEditorSnapshot{};
+  foundation::ObjectId placeholderTarget = selection_.primary();
+  if (textState.phase != runtime::TextPhase::kClosed && !textState.token.object.isZero())
+    placeholderTarget = textState.token.object;
+  if (!placeholderTarget.isZero() && textLayoutService_) {
+    const auto selected = std::find_if(references.value().entries.begin(), references.value().entries.end(),
+        [&](const auto& entry) { return entry.record.objectId == placeholderTarget; });
+    if (selected != references.value().entries.end()) {
+      const auto* shape = std::get_if<semantic::ShapeContent>(&selected->record.content);
+      if (shape != nullptr) {
+        const semantic::RichTextContent empty{};
+        const auto& label = shape->label ? *shape->label : empty;
+        const auto layout = textLayoutService_->resolveShapeLabel(
+            selected->record.objectId, label, *shape, selected->record.transform, true);
+        selected->record.textLayout = layout;
+        selected->command = render::ShapeReferenceCommand{*shape, layout, true};
+        references.value().canonicalBytes.clear();
+        references.value().digest.clear();
+      }
+    }
+  }
+  if (interaction_->textSession() && textLayoutService_) {
+    if (const auto object = textPresentation()) {
+      const semantic::RichTextContent* content = std::get_if<semantic::RichTextContent>(&object->content);
+      const semantic::ShapeContent* shape = std::get_if<semantic::ShapeContent>(&object->content);
+      if (shape != nullptr && shape->label.has_value()) content = &*shape->label;
+      if (content != nullptr) {
+        const auto layout = shape != nullptr
+            ? textLayoutService_->resolveShapeLabel(object->id, *content, *shape,
+                                                     object->transform, true)
+            : textLayoutService_->resolve(object->id, *content);
+        if (layout->diagnostics.empty()) {
+          render::ReferenceTraversalEntry entry{};
+          entry.record.objectId = object->id;
+          entry.record.kind = object->kind;
+          entry.record.kindVersion = object->kind_version;
+          entry.record.transform = object->transform;
+          entry.record.properties = object->properties;
+          entry.record.eraseMasks = object->erase_masks;
+          entry.record.derivedGeometry = canvas::scene::deriveGeometry(*object);
+          entry.record.content = object->content;
+          entry.record.textLayout = layout;
+          entry.record.placement = object->placement;
+          const auto bounds = canvas::scene::computeBounds(
+              *object, object->kind == semantic::ObjectKind::kRichText ? layout.get() : nullptr);
+          entry.record.geometryBounds = bounds.geometry;
+          entry.record.visualBounds = bounds.visual;
+          entry.record.worldBounds = bounds.world;
+          if (shape != nullptr && shape->label.has_value())
+            entry.command = render::ShapeReferenceCommand{*shape, layout, true};
+          else
+            entry.command = render::RichTextReferenceCommand{*content, layout};
+          auto& entries = references.value().entries;
+          const auto existing = std::find_if(entries.begin(), entries.end(),
+              [&](const auto& value) { return value.record.objectId == object->id; });
+          if (existing != entries.end()) *existing = std::move(entry);
+          else entries.push_back(std::move(entry));
+          references.value().canonicalBytes.clear();
+          references.value().digest.clear();
+        }
+      }
     }
   }
   const auto plan = render::FramePlanBuilder::build(frame, references.value());
@@ -3101,6 +3306,12 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     }
     selectionView_->editingOverlay().setCreationPreview(creationPreview().record, guides);
   } else if (!selectionMode_) selectionView_.reset();
+  if(textState.phase!=runtime::TextPhase::kClosed){
+    selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
+    const auto geometry=textGeometry({1,viewId_.value(),surface_.metricsGeneration,surface_.generation});
+    if(geometry.available){selectionView_->editingOverlay().textCaret=geometry.caret;selectionView_->editingOverlay().textSelection=geometry.selection;}
+    selectionView_->editingOverlay().textCaretVisible = textCaretVisible_;
+  }
   const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value(),
                                                   selectionOverlay());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) {
@@ -3325,8 +3536,18 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
   if (!references) return false;
   for (auto& entry : references.value().entries) {
-    if (const auto* transform = transformOverrides_.find(entry.record.objectId)) {
-      entry.record.transform = *transform;
+    const auto* transform = transformOverrides_.find(entry.record.objectId);
+    const bool selected = entry.record.objectId == selection_.primary();
+    if (transform) entry.record.transform = *transform;
+    if (transform || selected) {
+      if (textLayoutService_) {
+        if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content)) {
+          const auto layout = textLayoutService_->resolveShape(
+              entry.record.objectId, *shape, entry.record.transform, selected);
+          entry.record.textLayout = layout;
+          entry.command = render::ShapeReferenceCommand{*shape, layout, selected};
+        }
+      }
       references.value().canonicalBytes.clear();
       references.value().digest.clear();
     }

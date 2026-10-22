@@ -1,0 +1,50 @@
+{
+  "task": "FC02-CJK-FONT-AND-HUMAN-VALIDATION",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "codex/fc02-runtime-boundary-design",
+  "task_anchor": {
+    "revision": "987aa6d1442084b6c48477a08194eb467817cd2e",
+    "relation": "ancestor"
+  },
+  "design_refs": [
+    "docs/planning/FC02_RUNTIME_INPUT_CONTRACT.md@3ddc58d2fa9d21f107e9f208c3a5dbf954a34290",
+    "docs/planning/FC02_TEXT_HOST_GEOMETRY.md@987aa6d1442084b6c48477a08194eb467817cd2e"
+  ],
+  "required_changes": [
+    "Pin redistributable complete CJK static font, upstream identity/hash/license/copyright",
+    "Bind it as a new application font ResourceId through existing manifest, TextLayout and renderer",
+    "Package same bytes and license in Windows and Web; do not change old font identity",
+    "RED then native real-glyph preedit/canonical and Web Chinese tests; scoped regressions and strict builds",
+    "Open actual Windows and Chrome for user-operated IME/candidate/focus/resize/touch; record user observations with trusted native event logs",
+    "Commit and push scoped implementation/evidence; record exact clean artifacts"
+  ],
+  "forbidden_changes": [
+    "Authority/Golden/historical Gates/PHYS/Android/SDK lock files",
+    "SDK source rebuilds, system font substitution, host text layout or canonical state construction",
+    "Synthetic events labeled physical PASS or unobserved items labeled PASS"
+  ],
+  "tests": {
+    "required": [
+      "Chinese glyph RED on prior host font",
+      "Chinese/Latin preview and canonical real font geometry/render with zero preedit ops",
+      "Existing 226 CTest, schema/boundary, new relevant C++ strict Clang and actual Windows/Web builds",
+      "Chrome existing 13 groups and amended 6 text groups including Chinese preedit/commit",
+      "Asset size/hash/license and packaged identity checks"
+    ],
+    "physical": "User reports required; unobserved PHYSICAL_PENDING; implementation failures remain FAIL"
+  },
+  "terminal_success": [
+    "Scoped implementation and local regression complete and durable; physical results recorded only to observed extent"
+  ],
+  "terminal_blockers": [
+    "AUTHORITY_CONFLICT",
+    "MISSING_REQUIRED_INPUT",
+    "ENVIRONMENT_BLOCKER",
+    "HUMAN_OBSERVATION_NOT_YET_AVAILABLE"
+  ],
+  "continue_until_terminal_state": true,
+  "unresolved_semantic_decisions": []
+}

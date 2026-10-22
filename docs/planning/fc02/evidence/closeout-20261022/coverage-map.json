@@ -1,0 +1,108 @@
+{
+  "source_revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+  "rows": [
+    {
+      "id": "SEMANTIC_HISTORY",
+      "requirement": "RichText width/version/format, Shape embedded label, guarded atomic apply, codec, snapshot/replay and exact undo",
+      "source": "runtime/semantic/include/canvas/semantic/object_content.hpp; runtime/semantic/src; runtime/interaction/src/editor_history.cpp",
+      "owner": "Semantic / History",
+      "consumer": "Shared Runtime editing",
+      "oracle": "FC02Text semantic/snapshot cases and selected CTest",
+      "evidence": "ctest.xml"
+    },
+    {
+      "id": "TEXT_SESSION",
+      "requirement": "Native UTF-16 identities, real terminal/cancel, empty draft, failure/retry, lock/lost/close",
+      "source": "runtime/interaction/src/text_edit_session.cpp; runtime/composition/src/canvas_runtime_text.cpp",
+      "owner": "Interaction / Composition owner",
+      "consumer": "RuntimeFacade on Windows/Web",
+      "oracle": "FC02Text and FC02WindowsTextIngress",
+      "evidence": "ctest.xml"
+    },
+    {
+      "id": "LAYOUT_GEOMETRY",
+      "requirement": "Shared shaping/caret/hit/selection/preedit and blink",
+      "source": "runtime/text; runtime/interaction/src/canvas_text_geometry.cpp; runtime/composition/tests/fc02_text_geometry_test.cpp",
+      "owner": "TextLayout / Runtime",
+      "consumer": "Native IME anchors and render",
+      "oracle": "FC02Geometry; Web reentry DPR1/2",
+      "evidence": "ctest.xml; web-shape-reentry-full.json"
+    },
+    {
+      "id": "FORMATTING_FONTS",
+      "requirement": "Format leaf fidelity, mixed-selection OR, real bold/italic, catalog/hash/license",
+      "source": "runtime/interaction/src/text_edit_session.cpp; runtime/composition/src/canvas_runtime_facade.cpp; assets/fonts",
+      "owner": "Semantic / Interaction / Composition resources",
+      "consumer": "Debug UI and ordinary Facade consumers",
+      "oracle": "FC02Formatting; Python font validation; user prior explicit pass",
+      "evidence": "ctest.xml; python.log; human-feedback.json"
+    },
+    {
+      "id": "SHAPE_LABEL",
+      "requirement": "Centered internal region, fixed font/padding, ellipsis, selected placeholder/expand, upward growth, reentry/inside/outside clicks",
+      "source": "runtime/composition/tests/fc02_text_geometry_test.cpp; runtime/interaction; runtime/text",
+      "owner": "Shared Runtime / TextLayout",
+      "consumer": "Both Minimal Hosts",
+      "oracle": "FC02ShapeLabel; three shapes x DPR1/2; user scenario retest",
+      "evidence": "ctest.xml; web-shape-reentry-full.json; human-feedback.json"
+    },
+    {
+      "id": "A1_MINIMAL_FACADE",
+      "requirement": "Read font catalog and single-font status through ordinary consumer",
+      "source": "apps/minimal_runtime_host/minimal_runtime_facade.cpp; apps/minimal_runtime_host/tests/text_consumer_test.cpp",
+      "owner": "RuntimeFacade adapter",
+      "consumer": "Ordinary C++ RuntimeFacade&",
+      "oracle": "FC02MinimalTextConsumer compares to composition including rejection/geometry",
+      "evidence": "ctest.xml"
+    },
+    {
+      "id": "A2_WEB_FORMAT",
+      "requirement": "Format/object intent, complete font/format readback, explicit receipt identity, replay/collision",
+      "source": "apps/axiom_canvas_demo/platform/web/text_input.js; apps/axiom_canvas_demo/platform/web/text_bridge.inl",
+      "owner": "RuntimeFacade; Web transport only",
+      "consumer": "axiomMinimalHost.textInput",
+      "oracle": "Five ordinary JS/WASM consumer cases",
+      "evidence": "web-consumer.json"
+    },
+    {
+      "id": "A3_PREEDIT_RANGE",
+      "requirement": "Observed preedit selection forwarded without canonical writes",
+      "source": "apps/axiom_canvas_demo/platform/web/text_input.js; runtime/foundation/include/canvas/runtime/text_input.hpp",
+      "owner": "Platform fact adapter / shared Runtime geometry",
+      "consumer": "Native Web input carrier",
+      "oracle": "Ordinary Web consumer preedit geometry and native consumer comparison",
+      "evidence": "web-consumer.json; ctest.xml"
+    },
+    {
+      "id": "A4_ZERO_WIDTH",
+      "requirement": "Zero/invalid width reaches shared Runtime rejection unchanged",
+      "source": "apps/axiom_canvas_demo/platform/web/text_input.js",
+      "owner": "Runtime admission",
+      "consumer": "C++ and JS public consumers",
+      "oracle": "Invalid width no semantic mutation both paths",
+      "evidence": "web-consumer.json; ctest.xml"
+    },
+    {
+      "id": "C1_HEADER_BOUNDARY",
+      "requirement": "Host no concrete facade includes; semantic/src private",
+      "source": "runtime/composition/CMakeLists.txt; apps/minimal_runtime_host/minimal_runtime_facade.hpp",
+      "owner": "Composition / build visibility",
+      "consumer": "Ordinary native/Web application TUs",
+      "oracle": "Actual compile database paths/defines; no qualification/private includes",
+      "evidence": "consumer-compile-surface.json"
+    },
+    {
+      "id": "PLATFORM_REGRESSION",
+      "requirement": "Ink/shape/history/input/resize/retry and shared owner demand",
+      "source": "apps/minimal_runtime_host; apps/axiom_canvas_demo/platform",
+      "owner": "Runtime rules / native platform execution",
+      "consumer": "Windows D3D12; Web WebGL2",
+      "oracle": "Selected CTest; 13 Minimal and 7 text browser groups",
+      "evidence": "ctest.xml; web_minimal_runtime_test.json; web_fc02_text_test.json"
+    }
+  ],
+  "automated_not_physical": true,
+  "manual": "manual-matrix.json",
+  "prior_red_green": "../interface-repair-20261022/README.md",
+  "no_exhaustive_equivalence_claim": true
+}

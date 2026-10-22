@@ -18,15 +18,18 @@ void logInput(State& state, const char* event, bool accepted,
   const auto receipt = composition.readback();
   const auto snapshot = composition.controlFacade().readRuntimeState();
   const auto frame = composition.lastSubmittedCanonicalFrame();
+  const auto text = composition.controlFacade().readTextEditor();
   std::fprintf(state.inputLog.get(),
-      "event=%s accepted=%d source=%llu pointer=%llu generation=%llu state=%u objects=%zu operations=%llu frame=%llu handoff=%zu preview=%d camera=(%.6f,%.3f,%.3f)\n",
+      "event=%s accepted=%d source=%llu pointer=%llu generation=%llu state=%u objects=%zu operations=%llu frame=%llu handoff=%zu preview=%d camera=(%.6f,%.3f,%.3f) tool=%u text_phase=%u text_session=%llu canvas_focus=%d\n",
       event, accepted, static_cast<unsigned long long>(key.source),
       static_cast<unsigned long long>(key.pointer), static_cast<unsigned long long>(key.generation),
       static_cast<unsigned>(receipt.state), composition.semanticObjectCount(),
       static_cast<unsigned long long>(snapshot.identity.documentRevision),
       static_cast<unsigned long long>(frame ? frame->frameId.value() : 0U),
       state.frameOpportunity.pendingCanonicalHandoff, composition.previewActive(),
-      snapshot.camera.scale, snapshot.camera.translationX, snapshot.camera.translationY);
+      snapshot.camera.scale, snapshot.camera.translationX, snapshot.camera.translationY,
+      snapshot.tool.toolId, static_cast<unsigned>(text.phase),
+      static_cast<unsigned long long>(text.token.session), GetFocus() == state.window);
   if (batch) for (const auto& sample : batch->samples) {
     std::fprintf(state.inputLog.get(),
         " sample source=%llu pointer=%llu sequence=%llu ns=%llu phase=%u xy=(%.3f,%.3f) pressure=%.6f pressure_available=%d tool=%u geometry=(%.3f,%.3f,%.3f,%d) history=%d provenance=%u\n",
@@ -219,6 +222,7 @@ bool sendNativePointer(State& state, UINT message, UINT32 id) {
     batch.samples.push_back(sample);
   }
   if (batch.samples.empty()) return true;
+  if (down && GetFocus() != state.window) SetFocus(state.window);
   const auto oldKey = down ? PointerKey{} : existing->second.key;
   const bool accepted = state.host->submit(batch);
   state.nativeWatermarks[identity] = current;

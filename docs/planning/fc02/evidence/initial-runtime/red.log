@@ -1,0 +1,43 @@
+Running main() from C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 4 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 3 tests from FC02Snapshot
+[ RUN      ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp(31): error: Value of: SnapshotBootstrapper::restore(s,SnapshotCapability::kLegacyV1,state,objects,manifest,gen).restored
+  Actual: true
+Expected: false
+
+[  FAILED  ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication (0 ms)
+[ RUN      ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp(38): error: Value of: SnapshotBootstrapper::restore(s,SnapshotCapability::kLegacyV1,state,objects,manifest,gen).restored
+  Actual: true
+Expected: false
+
+[  FAILED  ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue (0 ms)
+[ RUN      ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp(64): error: Value of: SnapshotCodec::encode(s).ok()
+  Actual: false
+Expected: true
+
+[  FAILED  ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest (1 ms)
+[----------] 3 tests from FC02Snapshot (1 ms total)
+
+[----------] 1 test from FC02History
+[ RUN      ] FC02History.TextCompensationIsSupported
+C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\runtime\composition\tests\fc02_text_test.cpp(74): error: Value of: history.record(forward,{inverse})
+  Actual: false
+Expected: true
+
+[  FAILED  ] FC02History.TextCompensationIsSupported (0 ms)
+[----------] 1 test from FC02History (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 2 test suites ran. (1 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 4 tests, listed below:
+[  FAILED  ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication
+[  FAILED  ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue
+[  FAILED  ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest
+[  FAILED  ] FC02History.TextCompensationIsSupported
+
+ 4 FAILED TESTS

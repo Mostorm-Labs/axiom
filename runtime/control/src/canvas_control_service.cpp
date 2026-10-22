@@ -99,7 +99,7 @@ CanvasControlReceipt CanvasControlService::enqueue(const CanvasControlRequest& r
   return receipt;
 }
 
-std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence) {
+std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence,std::optional<CanvasControlReceiptKey> only) {
   std::size_t processed = 0;
   for (;;) {
     CanvasControlRequest request{};
@@ -107,8 +107,11 @@ std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence) {
     {
       std::scoped_lock lock(mutex_);
       if (queue_.empty()) break;
-      request = queue_.front();
-      queue_.pop_front();
+      auto next=queue_.begin();
+      if(only)next=std::find_if(queue_.begin(),queue_.end(),[&](const auto& item){return item.clientId==only->clientId && item.requestId==only->requestId;});
+      if(next==queue_.end())break;
+      request = *next;
+      queue_.erase(next);
       const CanvasControlReceiptKey key{request.clientId, request.requestId};
       const auto captured = capturedSnapshots_.find(key);
       if (captured != capturedSnapshots_.end()) capturedSnapshot = captured->second;
@@ -174,8 +177,16 @@ std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence) {
       remember(std::move(receipt));
     }
     ++processed;
+    if(only)break;
   }
   return processed;
+}
+
+void CanvasControlService::rejectPending(CanvasControlReceiptKey key,CanvasControlError error) {
+  std::scoped_lock lock(mutex_);
+  std::erase_if(queue_,[&](const auto& item){return item.clientId==key.clientId && item.requestId==key.requestId;});
+  capturedSnapshots_.erase(key);
+  remember(makeReceipt(key,CanvasControlReceiptState::kFailed,error));
 }
 
 std::optional<CanvasControlReceipt> CanvasControlService::receipt(CanvasControlReceiptKey key) const {

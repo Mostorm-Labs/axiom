@@ -1,0 +1,44 @@
+{
+  "recorded_utc": "2026-10-21T17:24:15.445271+00:00",
+  "baseline_revision": "15ed9c22f3231e7504c0c3b18a237179daa3c7ac",
+  "result_revision": "2fbba9a8e394362918335b07b9de590c0d8855b8",
+  "status": "HISTORICAL_AUTOMATED_PASS_FOLLOWUP_REPORTED",
+  "automated": {
+    "ctest": {
+      "passed": 233,
+      "skipped": 0,
+      "evidence": "native/ctest.xml"
+    },
+    "python": {
+      "passed": 17,
+      "skipped": 0,
+      "evidence": "native/python.log"
+    },
+    "shape_gtests": {
+      "passed": 17,
+      "evidence": "native/shape-growth-green.xml"
+    },
+    "chrome": {
+      "result": "PASS",
+      "shape_variants": 3,
+      "evidence": "web/shape-growth-web-clean.json"
+    },
+    "strict_clang": {
+      "passed_tus": 10,
+      "evidence": [
+        "native/growth-strict.json",
+        "native/strict-shape-entry.json"
+      ]
+    },
+    "original_web_groups": {
+      "text": 7,
+      "minimal": 13,
+      "evidence": "web/growth-web-regressions-clean.log"
+    }
+  },
+  "known_limit": "User followup found Web caret/reentry and outside-click finish issues. See ../shape-label-editing-20261022. Automated evidence is not physical acceptance.",
+  "physical_status": "PHYSICAL_PENDING",
+  "original_user_failures": "Retained as FAIL; post-fix manual observations recorded separately.",
+  "materialized_ref_resolution": "git log -1 --format=%H -- docs/planning/fc02/evidence/shape-label-sizing-20261022/summary.json",
+  "evidence_storage": "Copied text logs use LF with trailing whitespace removed; original local logs in out/fc02-resume are unchanged. Helper copies remove extra blank EOF lines only."
+}

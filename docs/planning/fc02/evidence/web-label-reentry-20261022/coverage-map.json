@@ -1,0 +1,54 @@
+[
+  {
+    "requirement": "Idle caret blink",
+    "source": "apps/axiom_canvas_demo/platform/web/host.js",
+    "oracle": "chrome-reentry.mjs: screenshot hashes differ across Runtime 500 ms phases; bounded actual frame count by measured elapsed monotonic time",
+    "evidence": [
+      "red/idle-caret.json",
+      "web/reentry-exact.json"
+    ],
+    "physical": "PHYSICAL_PENDING",
+    "human_retest": "human-retest.json",
+    "human_scope": "PASS for user-observed Select / triangle / numeric text with Chinese input method selected; broader native-IME/shape/DPR/touch matrix remains pending"
+  },
+  {
+    "requirement": "Nearest-glyph reentry; inside click repositions; outside click finishes",
+    "source": "Existing Runtime textHit/textPointer and focus adapter retained",
+    "oracle": "3 shapes x DPR 1/2; Select; Enter/outside/reenter; Chinese text and synthetic IME numeric composition; inserted text and selection readback",
+    "evidence": [
+      "web/reentry-exact.json"
+    ],
+    "physical": "PHYSICAL_PENDING",
+    "human_retest": "human-retest.json",
+    "human_scope": "PASS for user-observed Select / triangle / numeric text with Chinese input method selected; broader native-IME/shape/DPR/touch matrix remains pending"
+  },
+  {
+    "requirement": "Fresh asset graph across upgrade",
+    "source": "index.html, host.js resourceUrl, CMake fingerprint",
+    "oracle": "Cache enabled; real old editor JS primed then current deployment; identical rev on host/editor/glue/WASM/data, plus no-rev fingerprint fallback",
+    "evidence": [
+      "red/cache-upgrade.json",
+      "web/cache-exact.json",
+      "artifacts.json"
+    ],
+    "limitation": "Reproduces symptom; actual user browser cache not inspected"
+  },
+  {
+    "requirement": "Startup and existing runtime protection",
+    "oracle": "iframe ready promise; 7 text/13 Minimal groups; 233 CTest; 17 Python",
+    "evidence": [
+      "web/web_fc02_text_test.json",
+      "web/web_minimal_runtime_test.json",
+      "native/ctest.xml",
+      "native/python.log"
+    ]
+  },
+  {
+    "requirement": "No idle continuous repaint",
+    "oracle": "Frame increments only at blink phases; after editing finish count unchanged",
+    "evidence": [
+      "web/reentry-exact.json",
+      "web/web_minimal_runtime_test.json"
+    ]
+  }
+]

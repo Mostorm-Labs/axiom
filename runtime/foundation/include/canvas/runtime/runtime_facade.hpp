@@ -2,6 +2,7 @@
 
 #include "canvas/runtime/product_control.hpp"
 #include "canvas/runtime/runtime_state.hpp"
+#include "canvas/runtime/text_input.hpp"
 
 #include <utility>
 #include <vector>
@@ -11,6 +12,16 @@ namespace canvas::runtime {
 class RuntimeFacade {
  public:
   virtual ~RuntimeFacade() = default;
+  [[nodiscard]] virtual TextReceipt submitTextIntent(const TextIntent&) { return {}; }
+  [[nodiscard]] virtual TextReceipt submitTextInput(const TextInputEvent&) { return {}; }
+  [[nodiscard]] virtual TextEditorSnapshot readTextEditor() const { return {}; }
+  [[nodiscard]] virtual FontCatalogSnapshot readFontCatalog() const { return {}; }
+  [[nodiscard]] virtual std::optional<FontCatalogEntry> readFontResourceStatus(
+      foundation::ObjectId) const { return std::nullopt; }
+  [[nodiscard]] virtual TextGeometrySnapshot readTextGeometry(const std::optional<TextGeometryToken>& = std::nullopt) const { return {}; }
+  [[nodiscard]] virtual std::optional<TextReceipt> textInputReceipt(const TextSessionToken&,std::uint64_t) const { return std::nullopt; }
+  [[nodiscard]] virtual std::optional<TextReceipt> textIntentReceipt(std::uint64_t,std::uint64_t) const { return std::nullopt; }
+  [[nodiscard]] virtual bool acknowledgeTextInput(const TextSessionToken&,std::uint64_t) { return false; }
   [[nodiscard]] virtual ProductControlReceipt submitSelectionPointer(
       const SelectionPointerRequest& request) noexcept {
     ProductControlReceipt receipt{};

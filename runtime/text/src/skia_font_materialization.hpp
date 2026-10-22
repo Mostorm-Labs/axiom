@@ -13,6 +13,11 @@ inline sk_sp<SkTypeface> exactFace(const FontObservation& f) {
     auto manager = SkFontMgr_New_Custom_Data({&data,1});
     auto face = manager ? manager->makeFromData(data,f.collectionIndex) : nullptr;
     if (!face) return nullptr;
+    if(f.syntheticStyle) {
+        // Explicit derived styling from the admitted bytes; no system fallback.
+        SkFontArguments args;args.setCollectionIndex(f.collectionIndex).setSyntheticBold(f.weight>=700).setSyntheticOblique(f.italic);
+        return face->makeClone(args);
+    }
     if (face->fontStyle().weight() != static_cast<int>(f.weight)) {
         const auto count = face->getVariationDesignParameters({});
         if (count <= 0) return nullptr;

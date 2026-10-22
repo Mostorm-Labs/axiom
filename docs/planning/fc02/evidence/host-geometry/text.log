@@ -1,0 +1,76 @@
+Running main() from C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 24 tests from 5 test suites.
+[----------] Global test environment set-up.
+[----------] 5 tests from FC02Snapshot
+[ RUN      ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication
+[       OK ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication (0 ms)
+[ RUN      ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue
+[       OK ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue (0 ms)
+[ RUN      ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest
+[       OK ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest (1 ms)
+[ RUN      ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore
+[       OK ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore (2 ms)
+[ RUN      ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapability
+[       OK ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapability (0 ms)
+[----------] 5 tests from FC02Snapshot (3 ms total)
+
+[----------] 1 test from FC02History
+[ RUN      ] FC02History.TextCompensationIsSupported
+[       OK ] FC02History.TextCompensationIsSupported (0 ms)
+[----------] 1 test from FC02History (0 ms total)
+
+[----------] 5 tests from FC02Semantic
+[ RUN      ] FC02Semantic.WidthCodecAndStrictPresenceRoundTrip
+[       OK ] FC02Semantic.WidthCodecAndStrictPresenceRoundTrip (0 ms)
+[ RUN      ] FC02Semantic.ExactRestorePreservesRunBoundariesAndUnrelatedTransform
+[       OK ] FC02Semantic.ExactRestorePreservesRunBoundariesAndUnrelatedTransform (0 ms)
+[ RUN      ] FC02Semantic.GuardAndInvalidSecondStepRejectAtomically
+[       OK ] FC02Semantic.GuardAndInvalidSecondStepRejectAtomically (0 ms)
+[ RUN      ] FC02Semantic.ExplicitMigrationAndInverseRestoreLegacyAbsence
+[       OK ] FC02Semantic.ExplicitMigrationAndInverseRestoreLegacyAbsence (0 ms)
+[ RUN      ] FC02Semantic.WirePresenceAndDecodedSemanticRejectionsLeaveStateUntouched
+[       OK ] FC02Semantic.WirePresenceAndDecodedSemanticRejectionsLeaveStateUntouched (0 ms)
+[----------] 5 tests from FC02Semantic (0 ms total)
+
+[----------] 9 tests from FC02Facade
+[ RUN      ] FC02Facade.FakeImeCommitsThroughRealHistoryAndCanonicalStore
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02Facade.FakeImeCommitsThroughRealHistoryAndCanonicalStore (1 ms)
+[ RUN      ] FC02Facade.ToolSwitchWaitsForRealImeCommitAndResizeKeepsSession
+[       OK ] FC02Facade.ToolSwitchWaitsForRealImeCommitAndResizeKeepsSession (0 ms)
+[ RUN      ] FC02Facade.CrossParagraphReplacementAndWidthUndoAreCanonical
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02Facade.CrossParagraphReplacementAndWidthUndoAreCanonical (1 ms)
+[ RUN      ] FC02Facade.InvalidOffsetsCancellationAndEmptyDraftLeaveNoObjects
+[       OK ] FC02Facade.InvalidOffsetsCancellationAndEmptyDraftLeaveNoObjects (0 ms)
+[ RUN      ] FC02Facade.PublicationReadCannotInvalidateOwnFinishingComposition
+[       OK ] FC02Facade.PublicationReadCannotInvalidateOwnFinishingComposition (0 ms)
+[ RUN      ] FC02Facade.TextOwnershipConsumesPointerLifecycleWithoutStartingInk
+[       OK ] FC02Facade.TextOwnershipConsumesPointerLifecycleWithoutStartingInk (0 ms)
+[ RUN      ] FC02Facade.FailedTerminalKeepsPreimageAndRetryDoesNotRewriteRejection
+[       OK ] FC02Facade.FailedTerminalKeepsPreimageAndRetryDoesNotRewriteRejection (0 ms)
+[ RUN      ] FC02Facade.AcknowledgedAndOldSessionEventsCannotReapplyAndFailedWidthPreservesRedo
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02Facade.AcknowledgedAndOldSessionEventsCannotReapplyAndFailedWidthPreservesRedo (0 ms)
+[ RUN      ] FC02Facade.ForcedCloseRejectsQueuedInputAndLateCallbacks
+[       OK ] FC02Facade.ForcedCloseRejectsQueuedInputAndLateCallbacks (0 ms)
+[----------] 9 tests from FC02Facade (5 ms total)
+
+[----------] 4 tests from FC02Geometry
+[ RUN      ] FC02Geometry.RealFontCaretPreeditFrameAndStaleGeometry
+[axiom] present begin frame=1 objects=0 scene_records=0
+[       OK ] FC02Geometry.RealFontCaretPreeditFrameAndStaleGeometry (3 ms)
+[ RUN      ] FC02Geometry.SharedGraphemeDeletionAndNativeCompletionFailure
+[       OK ] FC02Geometry.SharedGraphemeDeletionAndNativeCompletionFailure (1 ms)
+[ RUN      ] FC02Geometry.CompleteCompositionKeepsEditorAndFinalizesReceipt
+[       OK ] FC02Geometry.CompleteCompositionKeepsEditorAndFinalizesReceipt (1 ms)
+[ RUN      ] FC02Geometry.TextToolCreatesAndSelectsWithoutInkAndMissingGlyphIsExplicit
+[       OK ] FC02Geometry.TextToolCreatesAndSelectsWithoutInkAndMissingGlyphIsExplicit (1 ms)
+[----------] 4 tests from FC02Geometry (8 ms total)
+
+[----------] Global test environment tear-down
+[==========] 24 tests from 5 test suites ran. (18 ms total)
+[  PASSED  ] 24 tests.

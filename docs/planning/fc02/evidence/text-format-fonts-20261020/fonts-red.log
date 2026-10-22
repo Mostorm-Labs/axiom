@@ -1,0 +1,22 @@
+Running main() from C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = FC02Formatting.ImportedFamilies*
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from FC02Formatting
+[ RUN      ] FC02Formatting.ImportedFamiliesAreNamedSelectableAndActuallyRender
+C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(539): error: Expected equality of these values:
+  options.size()
+    Which is: 1
+  12U
+    Which is: 12
+
+[  FAILED  ] FC02Formatting.ImportedFamiliesAreNamedSelectableAndActuallyRender (333 ms)
+[----------] 1 test from FC02Formatting (333 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (333 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] FC02Formatting.ImportedFamiliesAreNamedSelectableAndActuallyRender
+
+ 1 FAILED TEST

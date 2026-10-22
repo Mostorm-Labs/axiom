@@ -1,0 +1,90 @@
+{
+  "feature": "Windows finger double-tap enters selected Shape label editor",
+  "status": "READY_FOR_PHYSICAL_RETEST",
+  "physical_touch_acceptance": "PHYSICAL_PENDING",
+  "source_identity": {
+    "git_head": "164dfa2fc0af84df397b3ca2de0f6543fd50da02",
+    "built_from_dirty_working_tree": true,
+    "changed_sources": [
+      "apps/minimal_runtime_host/CMakeLists.txt",
+      "apps/minimal_runtime_host/tests/windows_text_tool_entry_test.cpp",
+      "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/src/canvas_text_geometry.cpp"
+    ]
+  },
+  "tests": {
+    "windows_windowproc_touch_shape_label": {
+      "test_name": "FC02WindowsTouchShapeLabelEntry",
+      "result": "PASS",
+      "shape_presets": 3,
+      "entry_sequences": [
+        "first tap selects an unselected Shape, second rapid tap enters label editing",
+        "touch double-tap on an already selected Shape enters editing"
+      ],
+      "negative_scenarios": [
+        "tap interval exceeds threshold",
+        "contact moves beyond slop",
+        "two simultaneous contacts",
+        "pointer capture loss"
+      ]
+    },
+    "touch_and_mouse_regression": {
+      "test_names": [
+        "FC00XWindowsTouchIngress",
+        "FC02WindowsShapeLabelEntry"
+      ],
+      "result": "PASS"
+    },
+    "selected_ctest_list": {
+      "count": 235,
+      "passed": 235,
+      "failed": 0,
+      "skipped": 0,
+      "result": "PASS"
+    },
+    "python_contracts": {
+      "count": 17,
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0,
+      "result": "PASS"
+    },
+    "strict_clang_translation_units": {
+      "count": 9,
+      "passed": 9,
+      "failed": 0,
+      "result": "PASS"
+    },
+    "web_minimal_consumer_build": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "touch_recognition": {
+    "input_owner": "Runtime selection input path",
+    "pointer_tool": "finger",
+    "tap_duration_max_ms": 350,
+    "inter_tap_max_ms": 500,
+    "movement_slop_logical_pixels": 24,
+    "tap_separation_logical_pixels": 36,
+    "entry_target": "selected Shape label using existing TextEditSession and TextLayout hit test",
+    "host_dispatches_touch_facts_only": true
+  },
+  "artifact": {
+    "zip": "out/fc02-resume/touch-shape-windows-package-20261022.zip",
+    "zip_sha256": "C50662C4CA586DF3B700E3E72928C97A9EED56653CE950E8C415217BBAB993FC",
+    "zip_bytes": 27297389,
+    "exe": "axiom_minimal_runtime_host_windows.exe",
+    "exe_sha256": "EED692C4AA982787622446A3B52F38D442FD00F3F1F2A46CF90489BBACD6DC5E",
+    "exe_bytes": 12938240,
+    "includes": [
+      "axiom-font.otf",
+      "axiom-font.LICENSE.txt",
+      "axiom-font.NOTICE.txt",
+      "icudtl.dat",
+      "fonts/ (font catalog, font files and licenses)"
+    ]
+  },
+  "remaining": [
+    "physical touchscreen retest on the target Windows device"
+  ]
+}

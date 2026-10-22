@@ -1,0 +1,58 @@
+{
+  "task": "FC02-PUBLIC-CONSUMER-REPAIR",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "codex/fc02-windows-ime-resume",
+  "task_anchor": {
+    "revision": "d54029d91aa8e67c9314b05992e749848629c64f",
+    "relation": "ancestor"
+  },
+  "authorization": "Direct user instruction to repair audited A1-A4, add ordinary consumer regressions, then clean header dependencies",
+  "audit_ref": "docs/planning/fc02/evidence/interface-audit-20261022/summary.json@d54029d91aa8e67c9314b05992e749848629c64f",
+  "required_changes": [
+    "Forward Minimal font catalog and per-resource readback",
+    "Complete Web format/object/font consumer ingress and readback through existing RuntimeFacade",
+    "Forward observed Web preedit selection without fabricating native facts",
+    "Preserve zero/invalid widths for Runtime rejection",
+    "Remove concrete facade Host includes and make semantic/src private"
+  ],
+  "forbidden_changes": [
+    "New canonical semantics or modules",
+    "SDK locks or dependency source builds",
+    "Authority/Golden/historical Gate/PHYS/Android changes",
+    "Host canonical/delta/history construction",
+    "Computer use"
+  ],
+  "required_tests": [
+    "RED/GREEN native public-consumer integration",
+    "RED/GREEN actual Chrome public JS/WASM consumer cases",
+    "Existing 233-test CTest list plus added consumer",
+    "17 Python tests",
+    "Existing 7 text and 13 Minimal browser groups; six Shape/DPR reentry cases",
+    "Strict native /WX and Web -Werror builds; scoped native Clang syntax checks",
+    "Compile database check: ordinary consumers have no semantic/src or qualification define"
+  ],
+  "hosted_required": [],
+  "hosted_optional": [],
+  "evidence": [
+    "Raw RED/GREEN commands and logs",
+    "Source/artifact identities",
+    "Manual retest plan; unobserved checks PHYSICAL_PENDING"
+  ],
+  "terminal_success": [
+    "All authorized changes implemented and required automated evidence passes",
+    "Source and evidence committed/pushed with exact references"
+  ],
+  "terminal_blockers": [
+    "AUTHORITY_CONFLICT",
+    "MISSING_REQUIRED_INPUT",
+    "ENVIRONMENT_BLOCKER",
+    "FROZEN_VERIFICATION_FAILURE",
+    "NEW_HIGH_IMPACT_FAILURE_MODE"
+  ],
+  "continue_until_terminal_state": true,
+  "resume_cursor": null,
+  "independent_acceptance_claim": false
+}

@@ -1,0 +1,15 @@
+#pragma once
+#include <string_view>
+#include <array>
+#include <cstdint>
+
+namespace canvas::minimal_runtime_host {
+inline constexpr std::string_view kHostTextFontSha256 = "@AXIOM_HOST_FONT_SHA256@";
+struct HostImportedFont final {
+    std::uint64_t id;
+    std::string_view file, sha256;
+    std::uint64_t bytes;
+};
+inline constexpr std::array<HostImportedFont, @AXIOM_IMPORTED_FONT_COUNT@> kHostImportedFonts{{
+@AXIOM_IMPORTED_FONT_ENTRIES@}};
+} // namespace canvas::minimal_runtime_host

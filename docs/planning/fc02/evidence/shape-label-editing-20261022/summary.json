@@ -1,0 +1,72 @@
+{
+  "recorded_utc": "2026-10-21T17:41:14.403423+00:00",
+  "status": "IMPLEMENTED_AUTOMATED_VERIFIED_PHYSICAL_PENDING",
+  "repository": "https://github.com/Mostorm-Labs/axiom.git",
+  "branch": "codex/fc02-windows-ime-resume",
+  "baseline_revision": "2fbba9a8e394362918335b07b9de590c0d8855b8",
+  "result_revision": "e15170399fb66be91d35d91f0874acff1f6c95f7",
+  "materialized_ref_resolution": "git log -1 --format=%H -- docs/planning/fc02/evidence/shape-label-editing-20261022/summary.json",
+  "builds": {
+    "windows": "PASS; VS 2026 MSVC 19.51.36246 /MT /WX; D3D12, Debug UI full",
+    "web": "PASS; locked Emscripten, WebGL2 Skia, Semantic SDK; Debug UI full",
+    "actual_windows_startup": [
+      "build_revision=e15170399fb66be91d35d91f0874acff1f6c95f7 dirty=0 msvc=195136246 pid=220452 debug_ui_enabled=1",
+      "surface physical=1008x729 logical=1008.000x729.000 dpr=1.000 dpi=96"
+    ],
+    "actual_web_revision": "e15170399fb66be91d35d91f0874acff1f6c95f7",
+    "actual_web_dirty": 0
+  },
+  "validation": {
+    "ctest": {
+      "passed": 233,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "native/ctest.xml"
+    },
+    "python": {
+      "passed": 17,
+      "skipped": 0,
+      "evidence": "native/python.log"
+    },
+    "new_runtime_tests": {
+      "passed": 3,
+      "evidence": "native/editing-native-green.xml"
+    },
+    "strict_clang": {
+      "passed_tus": 7,
+      "source_hashes_match": true,
+      "evidence": "native/editing-strict.json"
+    },
+    "chrome_editing": {
+      "shape_variants": 3,
+      "composition_wait_and_terminal": "PASS",
+      "input": "Synthetic CDP mouse and text, DOM composition facts; no physical acceptance",
+      "evidence": "web/editing-web-clean.json"
+    },
+    "chrome_growth": {
+      "shape_variants": 3,
+      "result": "PASS",
+      "evidence": "web/editing-growth-clean.json"
+    },
+    "chrome_existing": {
+      "text_groups": 7,
+      "minimal_groups": 13,
+      "result": "PASS"
+    }
+  },
+  "coverage": "coverage-map.json",
+  "artifacts": "artifacts.json",
+  "manual": "manual-checklist.json",
+  "history": "Original Web user FAIL and baseline Windows normal reentry retained in reproduction/user-report.json. Post-fix manual items remain PHYSICAL_PENDING. No Gate/PHYS or independent review declared.",
+  "test_process_notes": [
+    "Initial CTest had one old expectation requiring Finish after an outside empty-draft click; updated test asserts Closed while preserving no-object/no-operation and pointer-generation checks. Full matrix then passed. Raw prior failure retained.",
+    "Preview affordance had its own RED pixel test; final canonical and transient rules match.",
+    "Browser growth test once had passing payload but exit 13 because Browser.close could exit before replying. Bounded teardown added and fresh runs returned exit 0.",
+    "CMake emits existing long-object-path warnings for unbuilt legacy targets; all selected targets build. Existing /DNDEBUG + /UNDEBUG command-line notices retained; strict Clang uses /WX and -Werror without warning suppression."
+  ],
+  "remaining_blockers": [
+    "Human Windows/Web reentry, positioning, outside finish and native IME observation on this exact build."
+  ],
+  "build_commands": "build-facts; helper copies are exact commands and must be placed at out/fc02-resume before use",
+  "evidence_storage": "Copied text logs use LF with trailing whitespace removed; original local logs in out/fc02-resume are unchanged. Helper copies remove extra blank EOF lines only."
+}

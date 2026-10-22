@@ -1,0 +1,66 @@
+{
+  "recorded_utc": "2026-10-21T18:29:02.461077+00:00",
+  "status": "IMPLEMENTED_AUTOMATED_VERIFIED_PHYSICAL_PENDING",
+  "repository": "https://github.com/Mostorm-Labs/axiom.git",
+  "branch": "codex/fc02-windows-ime-resume",
+  "baseline_product_revision": "e15170399fb66be91d35d91f0874acff1f6c95f7",
+  "baseline_head": "bbb9e0a06833ee2fb6ceb01ffd3e2e3c7f4c606c",
+  "result_revision": "f0ccfd3ae981a3c1fce6caebb47fb95e0bb84e45",
+  "materialized_ref_resolution": "git log -1 --format=%H -- docs/planning/fc02/evidence/web-label-reentry-20261022/summary.json",
+  "actual_web_revision": "f0ccfd3ae981a3c1fce6caebb47fb95e0bb84e45",
+  "actual_web_dirty": 0,
+  "url": "http://127.0.0.1:4174/index.html?rev=f0ccfd3a",
+  "changes": [
+    "Provide 100 ms Web idle owner/frame opportunities only during active visible text editing; Runtime retains blink clock/visibility and demand ownership",
+    "Carry one rev through HTML/host/editor/glue/WASM/data; use configure-time source+JS fingerprint as default",
+    "Publish startup ready promise before async module loading"
+  ],
+  "validation": {
+    "web_build": "PASS; locked SDKs and -Wall -Wextra -Wpedantic -Werror",
+    "chrome_reentry_cases": 6,
+    "chrome_cached_upgrade": "PASS; cache enabled, explicit rev and fingerprint fallback",
+    "existing_chrome_text_groups": 7,
+    "existing_chrome_minimal_groups": 13,
+    "ctest_passed": 233,
+    "ctest_skipped": 0,
+    "python_passed": 17,
+    "python_skipped": 0,
+    "native_cxx_changes": 0,
+    "native_rebuild": "Not needed: production changes are Web JS/HTML and Web-only CMake; reran unchanged native binaries against unchanged native code",
+    "offline_sdk_store": "Native and web resolutions passed; no network or SDK rebuild",
+    "served_artifact_hashes_match": 6
+  },
+  "test_process_notes": [
+    "Initial idle screenshots failed in all six cases before timer fix",
+    "Old editor cache upgrade reproduced internal click closing editor before asset version fix; not claimed as proven cause of actual human browser failure",
+    "Dynamic import startup initially broke iframe consumers; fixed ready-promise publication; both existing pages freshly passed",
+    "One exact-build screenshot run exceeded an unmeasured fixed <=5 frame bound under concurrent Chrome runs; raw failure retained. Oracle now records actual performance.now elapsed time and bounds frames by Runtime 500 ms phases, rather than assuming screenshot calls finish quickly",
+    "Early temporary probe scripts that passed were not labelled successful RED reproductions",
+    "Evidence text copies normalize line endings and trailing whitespace; raw out logs retained"
+  ],
+  "original_failure": "FAIL retained in user-report.json",
+  "new_build_manual": "THREE_REENTRY_CHECKS_PASS_OTHER_ITEMS_PHYSICAL_PENDING",
+  "limitations": [
+    "No computer use",
+    "No physical native IME/candidate/touch acceptance this round",
+    "Cache reproducer is controlled and does not inspect the user browser",
+    "No independent review, Gate or PHYS PASS claimed"
+  ],
+  "artifacts": "artifacts.json",
+  "coverage": "coverage-map.json",
+  "manual": "manual-checklist.json",
+  "processes": "processes.json",
+  "commands": [
+    "python out/fc02-resume/web.py",
+    "python out/fc02-resume/web.py build",
+    "node --experimental-websocket docs/planning/fc02/evidence/web-label-reentry-20261022/chrome-reentry.mjs http://127.0.0.1:4174/index.html?rev=f0ccfd3a out/fc02-resume/web-reentry-exact-timed.json",
+    "node --experimental-websocket docs/planning/fc02/evidence/web-label-reentry-20261022/chrome-cache-upgrade.mjs out/fc02-resume/web-build/apps/axiom_canvas_demo out/fc02-resume/web-cache-exact.json",
+    "node --experimental-websocket out/fc02-resume/reentry-web-existing.mjs web_fc02_text_test web_minimal_runtime_test",
+    "python out/fc02-resume/native.py ctest",
+    "python out/fc02-resume/native.py python"
+  ],
+  "test_oracle_revision_note": "The measured elapsed-time screenshot bound is an evidence/test-only follow-up in the materialized revision; Web product remains exact result_revision above.",
+  "build_facts": "build-facts",
+  "sdk_status_capture": "Merged stdout/stderr stored under build-facts; each offline command exited zero and reports Network: not used",
+  "human_retest": "human-retest.json"
+}

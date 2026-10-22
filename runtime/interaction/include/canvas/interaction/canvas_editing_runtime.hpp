@@ -1,4 +1,6 @@
 #pragma once
+namespace canvas::runtime { class CanvasRuntimeFacade; }
+#include "canvas/interaction/text_edit_session.hpp"
 
 #include "canvas/input/input_router.hpp"
 #include "canvas/input/platform_input_contract.hpp"
@@ -41,6 +43,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <chrono>
 #include <limits>
 #include <string>
 #include <string_view>
@@ -129,6 +132,7 @@ struct PreviewPresentationCapture final {
 // owners and their lifecycle are composed here; platform Hosts supply resources
 // and execution opportunities without implementing tool behavior.
 class CanvasEditingRuntime : public interaction::SemanticReadPort,
+                                private interaction::TextEditPort,
                                 public interaction::SceneQueryPort,
                                 public interaction::ViewStatePort,
                                 public interaction::OperationSubmitPort,
@@ -138,6 +142,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
                                 public render::SessionCancelSink,
                                 public interaction::InteractionDispatchPort {
   friend class canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+  friend class canvas::runtime::CanvasRuntimeFacade;
   public:
   enum class ToolMode : std::uint8_t { kBrush = 0, kObjectEraser = 1, kPartialEraser = 2 };
   explicit CanvasEditingRuntime(render::ViewId viewId = render::ViewId{1});
@@ -240,6 +245,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] std::size_t qualificationObjectCount() const noexcept {
     return semanticObjects_.size();
   }
+#if defined(AXIOM_RUNTIME_QUALIFICATION)
+  [[nodiscard]] const semantic::ObjectRecord* qualificationObjectRecord(
+      semantic::ObjectId id) const noexcept { return semanticObjects_.find(id); }
+#endif
   [[nodiscard]] std::uint64_t qualificationSceneGeneration() const noexcept {
     return runtimeSceneHost_ == nullptr ? 0U : runtimeSceneHost_->revision().value();
   }
@@ -252,6 +261,15 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] const render::EditingOverlay* selectionOverlay() const noexcept {
     return selectionView_ == nullptr ? nullptr : &selectionView_->editingOverlay();
   }
+  // View-only animation, advanced by the Composition frame opportunity.
+  // Layout geometry and canonical text remain independent of the blink phase.
+  void updateTextCaretPresentation(std::chrono::steady_clock::time_point now) noexcept;
+  bool setTextTool(bool value) noexcept {
+    if (textTool_ != value) resetTouchTextTap();
+    textTool_=value;
+    return true;
+  }
+  bool textTool() const noexcept {return textTool_;}
   [[nodiscard]] bool selectBrushProfile(std::string_view profileId,
                                         std::uint32_t revision = 1U) noexcept;
   [[nodiscard]] bool setInkOptions(float size, float red, float green, float blue,
@@ -566,6 +584,33 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] std::uint64_t localOperationOrdinal() const noexcept;
   [[nodiscard]] bool historySceneReady() const noexcept;
   [[nodiscard]] bool canonicalWriteAdmission() const noexcept;
+  bool textReady() const noexcept override;
+  std::vector<std::uint32_t> textGraphemes(const std::u16string&) const override;
+  runtime::TextGeometrySnapshot textGeometry(const runtime::CanvasTargetKey&);
+  std::optional<std::uint32_t> textHit(const semantic::ObjectRecord&,float,float);
+  semantic::ObjectId hitTextAtView(float,float);
+  bool textPointer(const input::PointerSample&);
+  bool observeTouchTextTap(const input::PointerSample&);
+  bool beginShapeTextEditAt(float, float, semantic::ObjectId);
+  void resetTouchTextTap() noexcept;
+  bool shapeExpandPointer(const input::PointerSample&);
+  std::optional<semantic::Transform2D> fittedShapeLabelTransform(const semantic::ObjectRecord&);
+  std::optional<semantic::ObjectRecord> textPresentation();
+  bool expandShapeLabel(semantic::ObjectId);
+  bool textClosed() const noexcept override { return closed_; }
+  bool textWritable(semantic::ObjectId) const noexcept override;
+  semantic::ObjectId textSelectedObject() const noexcept override { return selection_.primary(); }
+  semantic::DocumentId textDocument() const noexcept override { return documentId_; }
+  std::uint64_t textGeneration() const noexcept override { return semanticGeneration_.current().value(); }
+  const semantic::ObjectRecord* textRecord(semantic::ObjectId id) const noexcept override { return semanticObjects_.find(id); }
+  std::vector<semantic::ObjectRecord> textObjects() const override { return semanticObjects_.allObjects(); }
+  std::string textFontName(semantic::ObjectId) const override;
+  const semantic::ResourceManifest* textManifest() const noexcept override { return resourceManifestPort_; }
+  semantic::ObjectId allocateTextIdentity() override;
+  semantic::OperationId allocateTextOperation() override { return allocateOperationId(); }
+  semantic::PrepareResult prepareTextOperation(const semantic::Operation&) const override;
+  bool applyTextOperation(semantic::Operation f,semantic::Operation i) override;
+  std::pair<float,float> textContentPoint(float x,float y) const noexcept override { return viewportController_->viewToContent(x,y); }
   void observeApplied(const semantic::Operation&, const semantic::ApplyResult&) noexcept;
   [[nodiscard]] bool applyLocalHistoryOperation(
       semantic::Operation forward, semantic::Operation inverse) noexcept;
@@ -655,6 +700,35 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   semantic::ResourceManifest* resourceManifestPort_ = &resourceManifest_;
   semantic::DocumentId documentId_{canvas::foundation::ObjectId::fromUint64(1U)};
   std::uint64_t nextHistoryOperationOrdinal_ = (std::uint64_t{1} << 63U);
+    std::uint64_t nextTextIdentity_ = 1;
+  bool textTool_=false;
+  runtime::TextSessionToken caretToken_{};
+  runtime::TextRange caretSelection_{};
+  std::optional<runtime::TextRange> caretPreeditSelection_;
+  runtime::TextPhase caretPhase_ = runtime::TextPhase::kClosed;
+  std::uint64_t caretInputSequence_ = 0;
+  std::chrono::steady_clock::time_point caretBlinkStart_{};
+  bool textCaretVisible_ = true;
+  input::PointerKey textSelectionPointer_{};
+  std::uint32_t textSelectionAnchor_=0;
+  std::unordered_set<input::PointerKey,input::PointerKeyHash> textPointerKeys_;
+  struct TouchTapContact final {
+    semantic::ObjectId object{};
+    float x = 0.0F, y = 0.0F;
+    std::uint64_t timestampNs = 0;
+    bool moved = false;
+  };
+  struct CompletedTouchTap final {
+    input::PointerKey key{};
+    semantic::ObjectId object{};
+    float x = 0.0F, y = 0.0F;
+    std::uint64_t timestampNs = 0;
+  };
+  std::unordered_map<input::PointerKey, TouchTapContact, input::PointerKeyHash>
+      touchTapContacts_;
+  std::optional<CompletedTouchTap> previousTouchTap_;
+  bool touchTapMultiContact_ = false;
+  std::unordered_set<input::PointerKey,input::PointerKeyHash> shapeExpandPointerKeys_;
   std::unordered_map<std::uint64_t, PendingBrushCommit> pendingBrushCommits_;
   ink::ArcPreviewSink* arcPreviewSink_ = nullptr;
   ink::CanonicalVisibilitySink* canonicalVisibilitySink_ = nullptr;

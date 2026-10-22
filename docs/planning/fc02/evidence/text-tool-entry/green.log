@@ -1,0 +1,79 @@
+UpdateCTestConfiguration  from :C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/fc01-closeout/build/DartConfiguration.tcl
+Parse Config file:C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/fc01-closeout/build/DartConfiguration.tcl
+Test project C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/fc01-closeout/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 380
+    Start 380: FC02WindowsTextToolEntry
+
+380: Test command: C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\out\fc01-closeout\build\apps\minimal_runtime_host\axiom_minimal_windows_text_tool_entry_tests.exe "entry"
+380: Working Directory: C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/fc01-closeout/build/apps/minimal_runtime_host
+380: Test timeout computed to be: 30
+380: after Text widget: tool=4 phase=0 objects=0
+380: after canvas click: tool=4 phase=1 canvas_focus=1 objects=0
+380: PASS: real Text widget / host canvas entry
+1/4 Test #380: FC02WindowsTextToolEntry .........   Passed    0.37 sec
+test 381
+    Start 381: FC02WindowsTextToolFocus
+
+381: Test command: C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\out\fc01-closeout\build\apps\minimal_runtime_host\axiom_minimal_windows_text_tool_entry_tests.exe "focus"
+381: Working Directory: C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/fc01-closeout/build/apps/minimal_runtime_host
+381: Test timeout computed to be: 30
+381: after Text widget: tool=4 phase=0 objects=0
+381: after canvas click: tool=4 phase=1 canvas_focus=1 objects=0
+381: PASS: real Text widget / host canvas entry
+2/4 Test #381: FC02WindowsTextToolFocus .........   Passed    0.39 sec
+test 382
+    Start 382: FC02WindowsTextToolTouchFocus
+
+382: Test command: C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\out\fc01-closeout\build\apps\minimal_runtime_host\axiom_minimal_windows_text_tool_entry_tests.exe "touch"
+382: Working Directory: C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/fc01-closeout/build/apps/minimal_runtime_host
+382: Test timeout computed to be: 30
+382: after Text widget: tool=4 phase=0 objects=0
+382: after canvas click: tool=4 phase=1 canvas_focus=1 objects=0
+382: PASS: real Text widget / host canvas entry
+3/4 Test #382: FC02WindowsTextToolTouchFocus ....   Passed    0.38 sec
+test 383
+    Start 383: FC02WindowsTextToolAfterInk
+
+383: Test command: C:\Users\NearHub\.codex\worktrees\p32-windows-touch\axiom\out\fc01-closeout\build\apps\minimal_runtime_host\axiom_minimal_windows_text_tool_entry_tests.exe "after-ink"
+383: Working Directory: C:/Users/NearHub/.codex/worktrees/p32-windows-touch/axiom/out/fc01-closeout/build/apps/minimal_runtime_host
+383: Test timeout computed to be: 30
+383: [axiom] finish begin pointer=1 objects=0 scene_gen=0
+383: [axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+383: [axiom] finish begin pointer=2 objects=1 scene_gen=1
+383: [axiom] scene apply pointer=2 ok=1 objects=2 scene_gen=2
+383: [axiom] finish begin pointer=3 objects=2 scene_gen=2
+383: [axiom] scene apply pointer=3 ok=1 objects=3 scene_gen=3
+383: [axiom] finish begin pointer=4 objects=3 scene_gen=3
+383: [axiom] scene apply pointer=4 ok=1 objects=4 scene_gen=4
+383: [axiom] finish begin pointer=5 objects=4 scene_gen=4
+383: [axiom] scene apply pointer=5 ok=1 objects=5 scene_gen=5
+383: [axiom] finish begin pointer=6 objects=5 scene_gen=5
+383: [axiom] scene apply pointer=6 ok=1 objects=6 scene_gen=6
+383: [axiom] finish begin pointer=7 objects=6 scene_gen=6
+383: [axiom] scene apply pointer=7 ok=1 objects=7 scene_gen=7
+383: [axiom] finish begin pointer=8 objects=7 scene_gen=7
+383: [axiom] scene apply pointer=8 ok=1 objects=8 scene_gen=8
+383: [axiom] finish begin pointer=9 objects=8 scene_gen=8
+383: [axiom] scene apply pointer=9 ok=1 objects=9 scene_gen=9
+383: [axiom] finish begin pointer=10 objects=9 scene_gen=9
+383: [axiom] scene apply pointer=10 ok=1 objects=10 scene_gen=10
+383: after Text widget: tool=4 phase=0 objects=10
+383: after canvas click: tool=4 phase=1 canvas_focus=1 objects=10
+383: PASS: real Text widget / host canvas entry
+4/4 Test #383: FC02WindowsTextToolAfterInk ......   Passed    0.46 sec
+
+The following tests passed:
+	FC02WindowsTextToolEntry
+	FC02WindowsTextToolFocus
+	FC02WindowsTextToolTouchFocus
+	FC02WindowsTextToolAfterInk
+
+100% tests passed out of 4
+
+Total Test time (real) =   1.63 sec

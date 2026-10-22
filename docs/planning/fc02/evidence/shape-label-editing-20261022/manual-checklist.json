@@ -1,0 +1,75 @@
+{
+  "items": [
+    {
+      "platform": "Windows D3D12",
+      "name": "Reenter and locate",
+      "expected": "Text/Select double-click at end/middle, then click or drag to another glyph; caret/selection and inserted text match the hit",
+      "actual": "Not observed on new build",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "platform": "Windows D3D12",
+      "name": "Outside finish",
+      "expected": "Click outside current Shape finishes confirmed editing, hides caret and creates no extra draft/object/Operation",
+      "actual": "Not observed on new build",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "platform": "Windows D3D12",
+      "name": "IME outside finish",
+      "expected": "While native composition is active, outside click requests completion; real native result is committed once, no fake Update confirmation",
+      "actual": "Not observed on new build",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "platform": "Windows D3D12",
+      "name": "Expand visibility",
+      "expected": "Overflow plus appears only for selected/editing Shape; unselected plus neither paints nor expands on first hit",
+      "actual": "Not observed on new build",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "platform": "Windows D3D12",
+      "name": "Regression",
+      "expected": "Rectangle/ellipse/triangle typography, shrink ellipsis, upward growth, fonts, Undo/Redo and ordinary Ink remain usable",
+      "actual": "Not observed on new build",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "platform": "Chrome WebGL2",
+      "name": "Reenter and locate",
+      "expected": "Text/Select double-click at end/middle, then click or drag to another glyph; caret/selection and inserted text match the hit",
+      "actual": "Not observed on new build",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "platform": "Chrome WebGL2",
+      "name": "Outside finish",
+      "expected": "Click outside current Shape finishes confirmed editing, hides caret and creates no extra draft/object/Operation",
+      "actual": "Not observed on new build",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "platform": "Chrome WebGL2",
+      "name": "IME outside finish",
+      "expected": "While native composition is active, outside click requests completion; real native result is committed once, no fake Update confirmation",
+      "actual": "Not observed on new build",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "platform": "Chrome WebGL2",
+      "name": "Expand visibility",
+      "expected": "Overflow plus appears only for selected/editing Shape; unselected plus neither paints nor expands on first hit",
+      "actual": "Not observed on new build",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "platform": "Chrome WebGL2",
+      "name": "Regression",
+      "expected": "Rectangle/ellipse/triangle typography, shrink ellipsis, upward growth, fonts, Undo/Redo and ordinary Ink remain usable",
+      "actual": "Not observed on new build",
+      "result": "PHYSICAL_PENDING"
+    }
+  ],
+  "note": "Original Web FAIL remains in reproduction/user-report.json. Windows baseline normal reentry is retained separately."
+}

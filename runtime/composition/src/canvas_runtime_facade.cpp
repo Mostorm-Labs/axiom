@@ -1,4 +1,6 @@
 #include "canvas/runtime/canvas_runtime_facade.hpp"
+#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/interaction/text_edit_session.hpp"
 #include "canvas/semantic/property_value.hpp"
 
 namespace canvas::runtime {
@@ -19,6 +21,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     auto& runtime = runtime_;
     const auto& p = request.payload;
     bool applied = false;
+
     switch (p.kind) {
       case CanvasControlPayloadKind::kSelectTool:
         if (p.tool == CanvasToolKind::kSelect) applied = runtime.setSelectionMode(true);
@@ -102,7 +105,9 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
                 ? p.eraser.diameterLogicalPx.value : runtime.eraserDiameterLogicalPx());
         break;
     }
-    if (applied) { ++revision_; return {}; }
+    if (applied) {
+    if(p.kind==CanvasControlPayloadKind::kSelectTool || p.kind==CanvasControlPayloadKind::kSelectPreset || p.kind==CanvasControlPayloadKind::kSelectCreationPreset)runtime.setTextTool(p.kind==CanvasControlPayloadKind::kSelectTool && p.tool==CanvasToolKind::kText);
+      ++revision_; return {}; }
     return CanvasControlApplyResult{CanvasControlError::kBusy, "runtime rejected request"};
   }
 
@@ -141,7 +146,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     out.size = runtime.inkSize(); out.opacity = runtime.inkOpacity();
     const auto color = runtime.inkColor(); out.color = {color[0], color[1], color[2], color[3]};
     out.eraserMode = runtime.eraserMode(); out.eraserDiameterLogicalPx = runtime.eraserDiameterLogicalPx();
-    out.tool = runtime.selectionMode() ? CanvasToolKind::kSelect
+    out.tool = runtime.textTool() ? CanvasToolKind::kText : runtime.selectionMode() ? CanvasToolKind::kSelect
         : runtime.panTool() ? CanvasToolKind::kPan
         : runtime.toolMode() == canvas::interaction::CanvasEditingRuntime::ToolMode::kObjectEraser ||
           runtime.toolMode() == canvas::interaction::CanvasEditingRuntime::ToolMode::kPartialEraser
@@ -201,12 +206,55 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
 
 
 CanvasRuntimeFacade::CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
-                                         CanvasTargetKey target) noexcept
-    : runtime_(runtime), binding_(std::make_unique<Binding>(runtime)),
+                                         CanvasTargetKey target,std::uint64_t runtimeInstance,
+                                         RuntimeComposition* composition) noexcept
+    : runtime_(runtime), composition_(composition), binding_(std::make_unique<Binding>(runtime)),
       service_(std::make_unique<CanvasControlService>(*binding_)) {
   binding_->setTarget(target);
+  if(runtime_.interaction_ && runtime_.interaction_->textSession())runtime_.interaction_->textSession()->configure(runtimeInstance,target.viewId);
 }
 CanvasRuntimeFacade::~CanvasRuntimeFacade() = default;
+FontCatalogSnapshot CanvasRuntimeFacade::readFontCatalog() const {
+  FontCatalogSnapshot out{};
+  const auto* manifest = runtime_.textManifest();
+  if (manifest == nullptr) return out;
+  out.manifestRevision = manifest->manifest_revision;
+  if (composition_ != nullptr) out.bindingGeneration = composition_->resources().lifetimeGeneration;
+  for (const auto& entry : manifest->entries) {
+    if (entry.resource_kind != semantic::ResourceKind::kFont) continue;
+    FontCatalogEntry item{};
+    item.id = entry.resource_id.value;
+    item.family = runtime_.textFontName(item.id);
+    item.revision = entry.resource_revision;
+    item.contentHash = entry.content_hash;
+    if (composition_ != nullptr) {
+      const auto receipt = composition_->resourceReceipt(item.id);
+      if (receipt.has_value()) {
+        item.byteLength = receipt->byteLength;
+        switch (receipt->state) {
+          case ResourceBindingState::kBytesValidated: item.status = FontResourceStatus::kBytesValidated; break;
+          case ResourceBindingState::kDecodeReady: item.status = FontResourceStatus::kDecodeReady; break;
+          case ResourceBindingState::kLayoutReady: item.status = FontResourceStatus::kLayoutReady; break;
+          case ResourceBindingState::kFailed: item.status = FontResourceStatus::kFailed; break;
+          case ResourceBindingState::kEvicted: item.status = FontResourceStatus::kEvicted; break;
+          case ResourceBindingState::kRetryable: item.status = FontResourceStatus::kRetryable; break;
+          case ResourceBindingState::kProviderReplaced: item.status = FontResourceStatus::kProviderReplaced; break;
+          case ResourceBindingState::kMissing: item.status = FontResourceStatus::kMissing; break;
+        }
+      }
+    }
+    if (item.family.empty()) item.diagnostic = "font family unavailable";
+    out.entries.push_back(std::move(item));
+  }
+  return out;
+}
+std::optional<FontCatalogEntry> CanvasRuntimeFacade::readFontResourceStatus(
+    foundation::ObjectId id) const {
+  const auto catalog = readFontCatalog();
+  const auto it = std::find_if(catalog.entries.begin(), catalog.entries.end(),
+                               [&](const auto& entry) { return entry.id == id; });
+  return it == catalog.entries.end() ? std::nullopt : std::optional<FontCatalogEntry>(*it);
+}
 bool CanvasRuntimeFacade::ownerThread() const noexcept {
   return std::this_thread::get_id() == ownerThread_;
 }
@@ -231,7 +279,12 @@ ProductControlReceipt CanvasRuntimeFacade::submitCanvasControl(const CanvasContr
     return {request.requestId, ProductControlState::kRejected,
             request.target.runtimeEpoch, stale};
   }
+  std::scoped_lock ingressLock(ingressMutex_);
   const auto receipt = service_->enqueue(request);
+  if(receipt.state==CanvasControlReceiptState::kQueued){
+    if(pendingWork_.load()>=256){service_->rejectPending({request.clientId,request.requestId},CanvasControlError::kQueueFull);return {request.requestId,ProductControlState::kRejected,request.target.runtimeEpoch,std::nullopt};}
+    ingress_.push_back(request);++pendingWork_;
+  }
   ProductControlReceipt out{request.requestId,
       receipt.state == CanvasControlReceiptState::kQueued ? ProductControlState::kQueued
         : receipt.state == CanvasControlReceiptState::kApplied ? ProductControlState::kApplied
@@ -265,7 +318,8 @@ ProductControlReceipt CanvasRuntimeFacade::submitProductControl(const ProductCon
   switch (request.action) {
     case ProductControlAction::kSetTool:
       canvas.payload.kind = CanvasControlPayloadKind::kSelectTool;
-      if (request.toolId == 4102U) canvas.payload.tool = CanvasToolKind::kSelect;
+      if (request.toolId == 4106U) canvas.payload.tool=CanvasToolKind::kText;
+      else if (request.toolId == 4102U) canvas.payload.tool = CanvasToolKind::kSelect;
       else if (request.toolId == 4103U) canvas.payload.tool = CanvasToolKind::kPan;
       else if (request.toolId == 4104U) { canvas.payload.tool = CanvasToolKind::kEraser; canvas.payload.eraser.mode = OptionPatch<std::uint32_t>::set(2U); }
       else if (request.toolId == 4105U) { canvas.payload.tool = CanvasToolKind::kEraser; canvas.payload.eraser.mode = OptionPatch<std::uint32_t>::set(1U); }
@@ -319,7 +373,7 @@ RuntimeStateSnapshot CanvasRuntimeFacade::readRuntimeState() const noexcept {
   out.identity = {target().runtimeEpoch, runtime_.semanticGeneration().value(),
                   static_cast<std::uint64_t>(runtime_.submittedOperationCount()), target().viewEpoch,
                   runtime_.surface().generation};
-  out.tool = {runtime_.selectionMode() ? 2U : runtime_.panTool() ? 3U :
+  out.tool = {runtime_.textTool() ? 4U : runtime_.selectionMode() ? 2U : runtime_.panTool() ? 3U :
                 (runtime_.toolMode() == interaction::CanvasEditingRuntime::ToolMode::kObjectEraser ||
                  runtime_.toolMode() == interaction::CanvasEditingRuntime::ToolMode::kPartialEraser) ? 0U : 1U,
               runtime_.selectedBrushProfile() == "vector-solid-v1" ? 1U :
@@ -364,7 +418,7 @@ std::optional<CanvasControlReceipt> CanvasRuntimeFacade::canvasControlReceipt(Ca
 std::size_t CanvasRuntimeFacade::process(std::uint64_t ownerSequence) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || processing_.exchange(true)) return 0;
   controlSequence_.store(ownerSequence, std::memory_order_release);
-  const auto result = service_->processPending(ownerSequence);
+  const auto result = processIngress(ownerSequence);
   processing_ = false;
   return result;
 }

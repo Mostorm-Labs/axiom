@@ -1,0 +1,375 @@
+{
+  "url": "http://127.0.0.1:4174/index.html?rev=f0ccfd3a",
+  "browser": "Chrome/155.0.8059.84",
+  "mode": "Synthetic Chrome/CDP and direct public JS/WASM consumer calls; not physical IME",
+  "findings": [
+    {
+      "id": "WEB_FORMAT_BRIDGE",
+      "reproduced": true,
+      "actual": 4
+    },
+    {
+      "id": "WEB_READBACK_FIELDS",
+      "reproduced": true,
+      "absent": [
+        "format",
+        "formatObject",
+        "fonts",
+        "mixedFormat",
+        "preeditSelection"
+      ]
+    },
+    {
+      "id": "WEB_PREEDIT_CURSOR",
+      "reproduced": true,
+      "actual": {
+        "native": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "runtime": [
+          [
+            236.58999633789062,
+            180,
+            237.58999633789062,
+            180,
+            237.58999633789062,
+            196,
+            236.58999633789062,
+            196
+          ],
+          [
+            236.58999633789062,
+            180,
+            237.58999633789062,
+            180,
+            237.58999633789062,
+            196,
+            236.58999633789062,
+            196
+          ]
+        ]
+      }
+    },
+    {
+      "id": "WEB_ZERO_WIDTH",
+      "reproduced": true,
+      "actual": 320
+    }
+  ],
+  "observation": {
+    "owner": "RuntimeComposition",
+    "revision": "f0ccfd3ae981a3c1fce6caebb47fb95e0bb84e45",
+    "dirty": 0,
+    "debugUiEnabled": true,
+    "state": 2,
+    "objects": 0,
+    "operations": 0,
+    "pointerSamples": 0,
+    "rejectedInputs": 0,
+    "activePointers": 0,
+    "presentedFrames": 1,
+    "retries": 0,
+    "pendingFrame": false,
+    "previewActive": false,
+    "surfaceGeneration": 1,
+    "metricsGeneration": 1,
+    "width": 764,
+    "height": 396,
+    "logicalWidth": 764,
+    "logicalHeight": 396,
+    "dpr": 1,
+    "controlState": 9,
+    "tool": 0,
+    "creationMode": false,
+    "creationPreset": 0,
+    "size": 16,
+    "opacity": 1,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "lastPointer": {
+      "source": 0,
+      "pointer": 0,
+      "generation": 0
+    },
+    "error": "",
+    "failure": "",
+    "trace": []
+  },
+  "initial": {
+    "composition": "0",
+    "effect": "0",
+    "exit": 2,
+    "geometry": {
+      "available": true,
+      "camera": "1",
+      "caret": [
+        200,
+        180,
+        201,
+        180,
+        201,
+        200,
+        200,
+        200
+      ],
+      "diagnostics": [],
+      "layout": "aa793e3064ecd9e8e4c7429a7deecbee33c47c155a9e6f198901647228eaa942:0:0"
+    },
+    "phase": 1,
+    "preedit": [],
+    "projection": [],
+    "replacement": [
+      0,
+      0
+    ],
+    "selection": [
+      0,
+      0
+    ],
+    "sequence": "1",
+    "token": {
+      "adapter": "1",
+      "attachment": "1",
+      "document": "01000000000000000000000000000000",
+      "object": "010000000000000000000000000000f2",
+      "projection": "1",
+      "runtime": "1",
+      "session": "1",
+      "view": "301"
+    },
+    "width": 320
+  },
+  "formatRaw": 4,
+  "afterFormat": {
+    "composition": "0",
+    "effect": "0",
+    "exit": 2,
+    "geometry": {
+      "available": true,
+      "camera": "1",
+      "caret": [
+        200,
+        180,
+        201,
+        180,
+        201,
+        200,
+        200,
+        200
+      ],
+      "diagnostics": [],
+      "layout": "aa793e3064ecd9e8e4c7429a7deecbee33c47c155a9e6f198901647228eaa942:0:0"
+    },
+    "phase": 1,
+    "preedit": [],
+    "projection": [],
+    "replacement": [
+      0,
+      0
+    ],
+    "selection": [
+      0,
+      0
+    ],
+    "sequence": "1",
+    "token": {
+      "adapter": "1",
+      "attachment": "1",
+      "document": "01000000000000000000000000000000",
+      "object": "010000000000000000000000000000f2",
+      "projection": "1",
+      "runtime": "1",
+      "session": "1",
+      "view": "301"
+    },
+    "width": 320
+  },
+  "formatError": "Text input rejected (4); resync or retry required",
+  "snapshotFields": [
+    "composition",
+    "effect",
+    "exit",
+    "geometry",
+    "phase",
+    "preedit",
+    "projection",
+    "replacement",
+    "selection",
+    "sequence",
+    "token",
+    "width"
+  ],
+  "consumerFields": [
+    "snapshot",
+    "sync",
+    "intent",
+    "finish",
+    "complete",
+    "composing",
+    "error",
+    "dispose"
+  ],
+  "compositionOne": {
+    "composition": "1",
+    "effect": "0",
+    "exit": 2,
+    "geometry": {
+      "available": true,
+      "camera": "1",
+      "caret": [
+        236.58999633789062,
+        180,
+        237.58999633789062,
+        180,
+        237.58999633789062,
+        196,
+        236.58999633789062,
+        196
+      ],
+      "diagnostics": [],
+      "layout": "f8bc776bbe84919637ca9ba5fcdefa1947b4d581ad1bfed55892ddb3548b83ce:4:0"
+    },
+    "phase": 2,
+    "preedit": [
+      97,
+      98,
+      99,
+      100
+    ],
+    "projection": [],
+    "replacement": [
+      0,
+      0
+    ],
+    "selection": [
+      0,
+      0
+    ],
+    "sequence": "3",
+    "token": {
+      "adapter": "1",
+      "attachment": "1",
+      "document": "01000000000000000000000000000000",
+      "object": "010000000000000000000000000000f2",
+      "projection": "1",
+      "runtime": "1",
+      "session": "1",
+      "view": "301"
+    },
+    "width": 320
+  },
+  "nativeSelectionOne": [
+    1,
+    1
+  ],
+  "compositionThree": {
+    "composition": "1",
+    "effect": "0",
+    "exit": 2,
+    "geometry": {
+      "available": true,
+      "camera": "1",
+      "caret": [
+        236.58999633789062,
+        180,
+        237.58999633789062,
+        180,
+        237.58999633789062,
+        196,
+        236.58999633789062,
+        196
+      ],
+      "diagnostics": [],
+      "layout": "f8bc776bbe84919637ca9ba5fcdefa1947b4d581ad1bfed55892ddb3548b83ce:4:0"
+    },
+    "phase": 2,
+    "preedit": [
+      97,
+      98,
+      99,
+      100
+    ],
+    "projection": [],
+    "replacement": [
+      0,
+      0
+    ],
+    "selection": [
+      0,
+      0
+    ],
+    "sequence": "4",
+    "token": {
+      "adapter": "1",
+      "attachment": "1",
+      "document": "01000000000000000000000000000000",
+      "object": "010000000000000000000000000000f2",
+      "projection": "1",
+      "runtime": "1",
+      "session": "1",
+      "view": "301"
+    },
+    "width": 320
+  },
+  "nativeSelectionThree": [
+    3,
+    3
+  ],
+  "widthBeforeZero": 420,
+  "widthAfterZero": {
+    "composition": "0",
+    "effect": "0",
+    "exit": 4,
+    "geometry": {
+      "available": true,
+      "camera": "1",
+      "caret": [
+        200,
+        180,
+        201,
+        180,
+        201,
+        200,
+        200,
+        200
+      ],
+      "diagnostics": [],
+      "layout": "aa793e3064ecd9e8e4c7429a7deecbee33c47c155a9e6f198901647228eaa942:0:0"
+    },
+    "phase": 1,
+    "preedit": [],
+    "projection": [],
+    "replacement": [
+      0,
+      0
+    ],
+    "selection": [
+      0,
+      0
+    ],
+    "sequence": "6",
+    "token": {
+      "adapter": "1",
+      "attachment": "1",
+      "document": "01000000000000000000000000000000",
+      "object": "010000000000000000000000000000f2",
+      "projection": "3",
+      "runtime": "1",
+      "session": "1",
+      "view": "301"
+    },
+    "width": 320
+  },
+  "result": "EXPECTED_GAPS_REPRODUCED",
+  "errors": []
+}

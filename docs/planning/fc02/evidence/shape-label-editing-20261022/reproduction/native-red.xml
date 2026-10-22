@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="3" failures="3" disabled="0" errors="0" time="2.332" timestamp="2026-10-22T01:12:13.811" name="AllTests">
+  <testsuite name="FC02ShapeLabel" tests="3" failures="3" disabled="0" skipped="0" errors="0" time="2.332" timestamp="2026-10-22T01:12:13.811">
+    <testcase name="ReenterUsesTheClickedGlyphAndPointerCanMoveCaret" file="C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp" line="154" status="run" result="completed" time="0.569" timestamp="2026-10-22T01:12:13.811" classname="FC02ShapeLabel">
+      <failure message="C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp:168&#x0A;Expected equality of these values:&#x0A;  h.facade.readTextEditor().selection&#x0A;    Which is: 8-byte object &lt;00-00 00-00 00-00 00-00&gt;&#x0A;  (runtime::TextRange{11,0})&#x0A;    Which is: 8-byte object &lt;0B-00 00-00 00-00 00-00&gt;&#x0A;" type=""><![CDATA[C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp:168
+Expected equality of these values:
+  h.facade.readTextEditor().selection
+    Which is: 8-byte object <00-00 00-00 00-00 00-00>
+  (runtime::TextRange{11,0})
+    Which is: 8-byte object <0B-00 00-00 00-00 00-00>
+]]></failure>
+    </testcase>
+    <testcase name="OutsideDownFinishesWithoutCreatingAnotherDraft" file="C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp" line="182" status="run" result="completed" time="1.11" timestamp="2026-10-22T01:12:14.381" classname="FC02ShapeLabel">
+      <failure message="C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp:213&#x0A;Expected equality of these values:&#x0A;  h.facade.readTextEditor().phase&#x0A;    Which is: 1-byte object &lt;01&gt;&#x0A;  runtime::TextPhase::kClosed&#x0A;    Which is: 1-byte object &lt;00&gt;&#x0A;Google Test trace:&#x0A;C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(184): false&#x0A;" type=""><![CDATA[C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp:213
+Expected equality of these values:
+  h.facade.readTextEditor().phase
+    Which is: 1-byte object <01>
+  runtime::TextPhase::kClosed
+    Which is: 1-byte object <00>
+Google Test trace:
+C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(184): false
+]]></failure>
+    </testcase>
+    <testcase name="UnselectedOverflowHasNoExpandPixelsOrExpandHit" file="C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp" line="561" status="run" result="completed" time="0.651" timestamp="2026-10-22T01:12:15.492" classname="FC02ShapeLabel">
+      <failure message="C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp:582&#x0A;Expected equality of these values:&#x0A;  whiteInButton()&#x0A;    Which is: 133&#x0A;  0U&#x0A;    Which is: 0&#x0A;Hidden affordance must not paint&#x0A;" type=""><![CDATA[C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp:582
+Expected equality of these values:
+  whiteInButton()
+    Which is: 133
+  0U
+    Which is: 0
+Hidden affordance must not paint
+]]></failure>
+      <failure message="C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp:591&#x0A;Expected equality of these values:&#x0A;  h.runtime.qualificationRuntime().submittedOperationCount()&#x0A;    Which is: 1&#x0A;  0U&#x0A;    Which is: 0&#x0A;First click selects the shape; a hidden affordance cannot expand it&#x0A;" type=""><![CDATA[C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp:591
+Expected equality of these values:
+  h.runtime.qualificationRuntime().submittedOperationCount()
+    Which is: 1
+  0U
+    Which is: 0
+First click selects the shape; a hidden affordance cannot expand it
+]]></failure>
+      <failure message="C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp:593&#x0A;Expected: (whiteInButton()) &gt; (20U), actual: 0 vs 20&#x0A;" type=""><![CDATA[C:\Users\Chado\.codex\worktrees\fc02-runtime-boundary-resume\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp:593
+Expected: (whiteInButton()) > (20U), actual: 0 vs 20
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

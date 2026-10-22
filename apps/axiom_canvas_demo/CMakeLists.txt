@@ -78,10 +78,13 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING)
 endif()
 
 if(EMSCRIPTEN)
+    include(${PROJECT_SOURCE_DIR}/cmake/AxiomHostTextFont.cmake)
+    axiom_resolve_host_text_font()
     add_executable(axiom_canvas_demo_web
         platform/web/bridge.cpp)
     target_link_libraries(axiom_canvas_demo_web PRIVATE axiom_canvas_demo_common)
-    target_include_directories(axiom_canvas_demo_web PRIVATE platform/web)
+    target_include_directories(axiom_canvas_demo_web PRIVATE platform/web ${AXIOM_HOST_FONT_INCLUDE} ${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
+    find_package(CanvasSkia CONFIG REQUIRED PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia" NO_DEFAULT_PATH)
     target_compile_features(axiom_canvas_demo_web PRIVATE cxx_std_20)
     axiom_configure_build_info(axiom_canvas_demo_web)
     if(AXIOM_BUILD_DEBUG_UI)
@@ -95,14 +98,28 @@ if(EMSCRIPTEN)
     endif()
     target_compile_options(axiom_canvas_demo_web PRIVATE -Wall -Wextra -Wpedantic -Werror)
     set_target_properties(axiom_canvas_demo_web PROPERTIES SUFFIX ".js")
+    execute_process(COMMAND git -C "${PROJECT_SOURCE_DIR}" rev-parse HEAD
+        OUTPUT_VARIABLE AXIOM_WEB_SOURCE_REVISION OUTPUT_STRIP_TRAILING_WHITESPACE)
+    file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/platform/web/host.js" AXIOM_WEB_HOST_HASH)
+    file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/platform/web/text_input.js" AXIOM_WEB_TEXT_HASH)
+    string(SHA256 AXIOM_WEB_ASSET_REVISION
+        "${AXIOM_WEB_SOURCE_REVISION}:${AXIOM_WEB_HOST_HASH}:${AXIOM_WEB_TEXT_HASH}")
     configure_file(platform/web/index.html
-        ${CMAKE_CURRENT_BINARY_DIR}/index.html COPYONLY)
+        ${CMAKE_CURRENT_BINARY_DIR}/index.html @ONLY)
+    configure_file(platform/web/text_input.js ${CMAKE_CURRENT_BINARY_DIR}/text_input.js COPYONLY)
     configure_file(platform/web/host.js ${CMAKE_CURRENT_BINARY_DIR}/host.js COPYONLY)
+    configure_file(tests/web_fc02_text_test.html ${CMAKE_CURRENT_BINARY_DIR}/tests/web_fc02_text_test.html COPYONLY)
     configure_file(tests/web_minimal_runtime_test.html
         ${CMAKE_CURRENT_BINARY_DIR}/tests/web_minimal_runtime_test.html COPYONLY)
+    configure_file(${AXIOM_HOST_FONT_ROOT}/LICENSE.txt ${CMAKE_CURRENT_BINARY_DIR}/axiom-font.LICENSE.txt COPYONLY)
+    configure_file(${AXIOM_HOST_FONT_ROOT}/NOTICE.txt ${CMAKE_CURRENT_BINARY_DIR}/axiom-font.NOTICE.txt COPYONLY)
     target_link_options(axiom_canvas_demo_web PRIVATE
+        "SHELL:--preload-file \"${AXIOM_HOST_FONT_PATH}@/axiom-font.otf\""
+        "SHELL:--preload-file \"${AXIOM_HOST_FONT_CATALOG_ROOT}@/fonts\""
+        "SHELL:--preload-file \"${AXIOM_HOST_FONT_ROOT}/LICENSE.txt@/axiom-font.LICENSE.txt\""
+        "SHELL:--preload-file \"${AXIOM_HOST_FONT_ROOT}/NOTICE.txt@/axiom-font.NOTICE.txt\""
         "-sMODULARIZE=1" "-sEXPORT_ES6=1" "-sEXPORT_NAME=createAxiomCanvasModule"
         "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1" "-sMIN_WEBGL_VERSION=2" "-sMAX_WEBGL_VERSION=2"
-        "-sEXPORTED_FUNCTIONS=['_malloc','_free']"
-        "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8']")
+        "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_web_text_snapshot','_axiom_web_text_intent_json','_axiom_web_text_intent_receipt','_axiom_web_font_catalog','_axiom_web_font_status','_axiom_web_text_intent_status','_axiom_web_text_pump','_axiom_web_text_input','_axiom_web_text_status','_axiom_web_text_tool']"
+        "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8','stringToUTF16']")
 endif()
