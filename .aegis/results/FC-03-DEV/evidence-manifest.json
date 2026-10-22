@@ -1,0 +1,90 @@
+{
+  "schema_version": "0.1",
+  "format": "fc03-dev-evidence-manifest-v1",
+  "task_id": "FC-03",
+  "gate_id": "FC-03-DEV",
+  "gate_scope": "development_only",
+  "package_ref": ".aegis/packages/FC-03-P31/package.json@6129bed9dbbbf55e7cb99960b2cf88d6f02ade17",
+  "task_anchor": "462d80868af2f2e6fb09b235f283c1cb7b221ff3",
+  "result_revision": "fb6a646efb37100dfb8f1fa4e9f291ae76db800c",
+  "materialized_ref": "origin/codex/fc03-image-design",
+  "build_profile": {
+    "compiler": "MSVC 19.51.36231",
+    "build_type": "Release",
+    "skia_sdk": ".deps/skia-sdk/windows-x64-d3d12/release",
+    "semantic_runtime": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c"
+  },
+  "commands": {
+    "build": "cmd /c out/fc03-build-only.cmd",
+    "ctest": "ctest --test-dir out/fc03-p32-red -R G47ImageResource|FC03ImageFacade|FC00XRuntimeFacade|FC00XRuntimeComposition --output-on-failure",
+    "python": "python -m unittest verification.tests.test_current_semantic_descriptor verification.tests.test_semantic_contract verification.tests.test_fc02_host_contract verification.tests.test_host_text_font_resource -v",
+    "diff_check": "git diff --check"
+  },
+  "outcomes": {
+    "build": "PASS",
+    "ctest": "4/4 PASS",
+    "python": "17/17 PASS",
+    "diff_check": "PASS"
+  },
+  "source_files": [
+    {
+      "path": "runtime/foundation/include/canvas/runtime/image_input.hpp",
+      "sha256": "75b1d02ce8cc20bd674fe131e7a28a97e19d302d197da74aadbd93d2bad9e029"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "sha256": "9c0095ce6f0679e1c4d4f7cc4c86b614d15647f7e37b1f3907183798fdff4418"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp",
+      "sha256": "3dc901e330116fa87df660ec015177e3a9d723cc5f630619f4397f5bce439d24"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/runtime_composition.hpp",
+      "sha256": "6f743f609de749a15f6ecf5c835cd210234487ed10e3ee57ac35b8f0d758b72e"
+    },
+    {
+      "path": "runtime/composition/src/canvas_runtime_image.cpp",
+      "sha256": "ff9fa583024812ebfc805bf89073b96ae46899920397029942b40e1f9dab398e"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "7757a2b8ca0fba1efb0fcba1f59268a4858d3044b30146485217a95aea0ffbc1"
+    },
+    {
+      "path": "runtime/composition/tests/fc03_image_facade_test.cpp",
+      "sha256": "aa157a9c17febeafa0f9528dd88045661086eae9f014ee11a9224527340bc764"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "5080a600a8997c92bf896dbabd0c7786b0adc285f1ecabd1fcf26bcac49164a0"
+    },
+    {
+      "path": "runtime/interaction/src/editor_history.cpp",
+      "sha256": "5ab71d30b0a6b7426a6118353881ae76722837f55768f57e7086d424aac4dcf6"
+    }
+  ],
+  "obligations": {
+    "IMG01": "PARTIAL: typed PNG import path and manifest/hash/decode trace; JPEG/WebP facade fixtures not yet added",
+    "IMG02": "PASS: invalid bytes zero semantic mutation",
+    "IMG03": "PASS: full source rect canonicalizes to absent; partial rect validated",
+    "IMG04": "PASS: existing ImageResource FIT/FILL/STRETCH oracle",
+    "IMG05": "PASS: crop preview transient, Done one SetImageContent history entry, Cancel/lost/close zero mutation",
+    "IMG06": "PASS: preserve aspect/free stretch typed resize",
+    "IMG07": "PASS: resource readiness derived render test",
+    "IMG08": "PASS: stale binding existing composition tests plus tokenized replace",
+    "IMG09": "PARTIAL: existing render source-rect oracle; dedicated scene hit/damage evidence not materialized",
+    "IMG10": "PASS: selection/history owner path plus image resize undo/redo",
+    "IMG11": "BLOCKED_VERIFICATION: Windows/Web facade projection targets not yet materialized",
+    "IMG12": "PASS: live manifest remove rejection and zero mutation"
+  },
+  "physical_claim": false,
+  "physical_debt": {
+    "windows_file_picker": "PHYSICAL_PENDING",
+    "web_file_input": "PHYSICAL_PENDING",
+    "real_gpu": "PHYSICAL_PENDING",
+    "cross_platform": "PHYSICAL_PENDING"
+  },
+  "terminal": "BLOCKED_VERIFICATION",
+  "blocker": "P31 requires IMG-01..IMG-12 distinct reviewer-accessible evidence; current deterministic evidence is incomplete for JPEG/WebP, dedicated scene projection/hit/damage, and Windows/Web differential host mapping."
+}
