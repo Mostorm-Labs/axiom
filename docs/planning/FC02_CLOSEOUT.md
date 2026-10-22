@@ -71,8 +71,34 @@ Web 使用 `http://127.0.0.1:4175/index.html?rev=3d7afa35`，避免误用旧 417
 当前已知限制：字体不保证全部 Unicode/emoji；缺字有诊断，不能以系统字体替代。
 编辑投影上限为 65536 UTF-16 units；这不是 canonical 文档大小限制。
 Shape 确认文字与自动扩展沿既有两个 History 记录提交，Undo 按记录逐步恢复；
-旋转 Shape 的扩展方向是局部负 Y。未新增触摸双击、全字符字体回退或强制离页保存承诺。
+旋转 Shape 的扩展方向是局部负 Y。原始关闭基准版本没有触摸双击入口；本报告末尾的后续记录新增了 Windows Runtime 入口与独立复测状态。全字符字体回退和强制离页保存不在本次承诺内。
 
 本轮范围内没有新复现且未修复的实现失败。上述限制和未观察项不代表完整跨平台等价性已获证明。
 独立 Control Review 尚未执行；后续审查应从本报告所在精确提交解析证据，
 逐项人工验证也应单独新增记录。FC-03、FC-01A、FC-04、Android 和延期 FC-01 事项未启动。
+
+## Follow-up: Windows touch double-tap on Shape labels (2026-10-22)
+
+A physical-device report found that after creating and selecting a Shape, touch
+double-tap did not enter its embedded text editor. The Windows Host forwarded
+native pointer contacts but did not recognize a touch double-tap, while
+touch-promoted mouse messages are intentionally filtered. The existing
+`WM_LBUTTONDBLCLK` text entry therefore only handled mouse input.
+
+The existing Runtime selection input path now recognizes two valid finger taps
+on the same selected Shape and enters the existing TextEditSession, using shared
+text hit-testing to place the caret. It handles empty and populated Shape labels
+without adding host-side targeting, editing state, or canonical mutations.
+Dragging, a pause outside the tap interval, concurrent contacts, capture loss,
+tool changes and source/lifecycle cancellation clear the candidate. Ink
+double-tap remains an Ink gesture.
+
+The WindowProc/Runtime fixture covers all three Shape presets, initial selection
+and entry, populated-label reentry, no additional canonical commit on entry, and
+negative drag/timeout/multi-contact/capture-loss cases. Windows `/W4 /WX`
+build passed; the selected FC02 list passed 235/235, Python contracts 17/17,
+strict Clang checks 9/9, and the Web Minimal target linked. These automated
+pointer fixtures are not a touchscreen observation. Physical retest of this new
+behavior remains `PHYSICAL_PENDING`; historical reports remain unchanged.
+Current details and a resource-complete Windows bundle are in the
+[touch-to-edit evidence](fc02/evidence/windows-touch-shape-dbltap-20261022/README.md).

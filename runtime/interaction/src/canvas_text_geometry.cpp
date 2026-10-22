@@ -309,4 +309,123 @@ bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
         textPointerKeys_.erase(sample.key);
     return owned || active;
 }
+
+void CanvasEditingRuntime::resetTouchTextTap() noexcept {
+    touchTapContacts_.clear();
+    previousTouchTap_.reset();
+    touchTapMultiContact_ = false;
+}
+
+bool CanvasEditingRuntime::beginShapeTextEditAt(float x, float y,
+                                                semantic::ObjectId expected) {
+    auto* editor = interaction_->textSession();
+    if (!editor || expected.isZero() || selection_.primary() != expected ||
+        !textWritable(expected) || hitTextAtView(x, y) != expected)
+        return false;
+    const auto* record = semanticObjects_.find(expected);
+    if (!record || record->kind != semantic::ObjectKind::kShape)
+        return false;
+
+    runtime::TextIntent edit;
+    edit.kind = runtime::TextIntentKind::kEdit;
+    edit.object = expected;
+    edit.viewX = x;
+    edit.viewY = y;
+    if (editor->intent(edit).status != runtime::TextStatus::kApplied)
+        return false;
+
+    const auto state = editor->read();
+    if (const auto presentation = textPresentation()) {
+        if (const auto hit = textHit(*presentation, x, y)) {
+            runtime::TextInputEvent selection;
+            selection.token = state.token;
+            selection.sequence = state.nextInputSequence;
+            selection.kind = runtime::TextInputKind::kSelection;
+            selection.range = {*hit, 0};
+            (void)editor->input(selection);
+        }
+    }
+    textSelectionPointer_ = {};
+    canonicalPresentationDirty_ = true;
+    return true;
+}
+
+bool CanvasEditingRuntime::observeTouchTextTap(const input::PointerSample& sample) {
+    using input::PointerPhase;
+    using input::PointerTool;
+    constexpr std::uint64_t kTapDurationNs = 350'000'000U;
+    constexpr std::uint64_t kDoubleTapIntervalNs = 500'000'000U;
+    constexpr float kMoveSlop = 24.0F;
+    constexpr float kDoubleTapSlop = 36.0F;
+
+    if (sample.capabilities.tool != PointerTool::kFinger || !sample.key.valid())
+        return false;
+    if (sample.phase == PointerPhase::kDown) {
+        if (!touchTapContacts_.empty()) {
+            // A multi-contact sequence is navigation/selection input, never a
+            // text double tap. Discard every candidate until all fingers lift.
+            touchTapMultiContact_ = true;
+            previousTouchTap_.reset();
+            for (auto& [key, contact] : touchTapContacts_) {
+                (void)key;
+                contact.moved = true;
+            }
+        }
+        const auto object = hitTextAtView(sample.x, sample.y);
+        const auto* record = object.isZero() ? nullptr : semanticObjects_.find(object);
+        touchTapContacts_.insert_or_assign(
+            sample.key, TouchTapContact{record && record->kind == semantic::ObjectKind::kShape
+                                            ? object : semantic::ObjectId{},
+                                        sample.x, sample.y, sample.timestampNs, false});
+        return false;
+    }
+
+    const auto contact = touchTapContacts_.find(sample.key);
+    if (contact == touchTapContacts_.end())
+        return false;
+    if (sample.phase == PointerPhase::kMove) {
+        const auto dx = sample.x - contact->second.x;
+        const auto dy = sample.y - contact->second.y;
+        if (dx * dx + dy * dy > kMoveSlop * kMoveSlop)
+            contact->second.moved = true;
+        return false;
+    }
+    if (sample.phase != PointerPhase::kUp && sample.phase != PointerPhase::kCancel)
+        return false;
+
+    const auto current = contact->second;
+    touchTapContacts_.erase(contact);
+    const auto upDx = sample.x - current.x;
+    const auto upDy = sample.y - current.y;
+    const bool movedOnRelease = upDx * upDx + upDy * upDy > kMoveSlop * kMoveSlop;
+    if (sample.phase == PointerPhase::kCancel || touchTapMultiContact_ || current.moved ||
+        movedOnRelease ||
+        current.object.isZero() || sample.timestampNs < current.timestampNs ||
+        sample.timestampNs - current.timestampNs > kTapDurationNs) {
+        previousTouchTap_.reset();
+        if (touchTapContacts_.empty()) touchTapMultiContact_ = false;
+        return false;
+    }
+
+    const bool isDoubleTap = previousTouchTap_ &&
+        previousTouchTap_->key.source == sample.key.source &&
+        previousTouchTap_->key != sample.key &&
+        previousTouchTap_->object == current.object &&
+        sample.timestampNs >= previousTouchTap_->timestampNs &&
+        sample.timestampNs - previousTouchTap_->timestampNs <= kDoubleTapIntervalNs &&
+        (sample.x - previousTouchTap_->x) * (sample.x - previousTouchTap_->x) +
+                (sample.y - previousTouchTap_->y) * (sample.y - previousTouchTap_->y) <=
+            kDoubleTapSlop * kDoubleTapSlop &&
+        selection_.primary() == current.object;
+    if (isDoubleTap) {
+        previousTouchTap_.reset();
+        if (touchTapContacts_.empty()) touchTapMultiContact_ = false;
+        return beginShapeTextEditAt(sample.x, sample.y, current.object);
+    }
+
+    previousTouchTap_ = CompletedTouchTap{sample.key, current.object, sample.x, sample.y,
+                                          sample.timestampNs};
+    if (touchTapContacts_.empty()) touchTapMultiContact_ = false;
+    return false;
+}
 } // namespace canvas::interaction

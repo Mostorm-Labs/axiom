@@ -71,6 +71,137 @@ int main(int argc, char** argv) {
     assert(composition.bindSurface(800, 600));
     assert(state.host->registerSource(1));
     assert(minimal_runtime_host::bindHostTextFont(composition, "axiom-font.otf"));
+    if (mode == "touch-shape-label") {
+        runtime::CanvasControlRequest control;
+        control.clientId = 0xFC027;
+        control.target = state.facade->mountedCanvasTargets().front();
+        const auto choose = [&](runtime::CanvasToolKind tool) {
+            control.requestId++;
+            control.payload.kind = runtime::CanvasControlPayloadKind::kSelectTool;
+            control.payload.tool = tool;
+            assert(state.facade->submitCanvasControl(control).state == runtime::ProductControlState::kQueued);
+            assert(composition.ownerPump());
+        };
+        DWORD clock = GetTickCount();
+        const auto touch = [&](UINT message, UINT32 id, int x, int y, DWORD elapsed = 40) {
+            Sleep(elapsed);
+            clock = GetTickCount();
+            nativePointer = {};
+            nativePointer.pointerType = PT_TOUCH;
+            nativePointer.pointerId = id;
+            nativePointer.sourceDevice = reinterpret_cast<HANDLE>(1);
+            nativePointer.hwndTarget = owner;
+            nativePointer.ptPixelLocation = {x, y};
+            assert(ClientToScreen(owner, &nativePointer.ptPixelLocation));
+            nativePointer.dwTime = clock;
+            nativePointer.pointerFlags = message == WM_POINTERUP ? POINTER_FLAG_UP :
+                message == WM_POINTERDOWN ? POINTER_FLAG_DOWN | POINTER_FLAG_INCONTACT :
+                                            POINTER_FLAG_UPDATE | POINTER_FLAG_INCONTACT;
+            SendMessageW(owner, message, id, 0);
+            pumpWindowsText(state);
+        };
+        const auto tap = [&](int x, int y, DWORD gap = 80) {
+            touch(WM_POINTERDOWN, 7, x, y, gap);
+            touch(WM_POINTERUP, 7, x, y);
+        };
+        const auto drag = [&](int x, int y) {
+            touch(WM_POINTERDOWN, 7, x, y, 80);
+            touch(WM_POINTERUPDATE, 7, x + 50, y);
+            touch(WM_POINTERUP, 7, x + 50, y);
+        };
+        for (unsigned preset = 0; preset < 3; ++preset) {
+            control.requestId++;
+            control.payload.kind = runtime::CanvasControlPayloadKind::kSelectCreationPreset;
+            control.payload.creationPreset = static_cast<runtime::CanvasCreationPreset>(preset);
+            assert(state.facade->submitCanvasControl(control).state == runtime::ProductControlState::kQueued);
+            assert(composition.ownerPump());
+            const int y = 100 + static_cast<int>(preset) * 130;
+            SendMessageW(owner, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(430, y));
+            SendMessageW(owner, WM_MOUSEMOVE, MK_LBUTTON, MAKELPARAM(630, y + 80));
+            SendMessageW(owner, WM_LBUTTONUP, 0, MAKELPARAM(630, y + 80));
+            choose(runtime::CanvasToolKind::kSelect);
+            int centerX = 530;
+            tap(centerX, y + 40, 600);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+            const auto selected = composition.qualificationRuntime().selectedPrimaryObject();
+            assert(!selected.isZero());
+            const auto generation = composition.controlFacade().readRuntimeState().identity.documentRevision;
+            // The tap that selected the Shape plus the next rapid tap enters
+            // its label editor; touch must not depend on promoted mouse clicks.
+            tap(centerX, y + 40, 120);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);
+            assert(state.facade->readTextEditor().token.object == selected);
+            assert(GetFocus() == owner);
+            assert(composition.semanticObjectCount() == preset + 1);
+            assert(composition.controlFacade().readRuntimeState().identity.documentRevision == generation);
+            SendMessageW(owner, WM_CHAR, 'A', 0);
+            SendMessageW(owner, WM_CHAR, 'B', 0);
+            pumpWindowsText(state);
+            textIntent(state, runtime::TextIntentKind::kFinish);
+            pumpWindowsText(state);
+            tap(centerX, y + 40, 600);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+            tap(centerX, y + 40, 120);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);
+            textIntent(state, runtime::TextIntentKind::kFinish);
+            pumpWindowsText(state);
+            tap(centerX, y + 40, 600);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+            tap(centerX, y + 40, 600);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+            touch(WM_POINTERDOWN, 7, centerX, y + 40, 600);
+            touch(WM_POINTERDOWN, 8, centerX + 5, y + 40);
+            touch(WM_POINTERUP, 7, centerX, y + 40);
+            touch(WM_POINTERUP, 8, centerX + 5, y + 40);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+            tap(centerX, y + 40, 600);
+            touch(WM_POINTERDOWN, 7, centerX, y + 40, 80);
+            SendMessageW(owner, WM_POINTERCAPTURECHANGED, 7, 0);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+            tap(centerX, y + 40, 600);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+            drag(centerX, y + 40);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+            centerX += 50;
+            tap(centerX, y + 40, 600);
+            tap(centerX + 2, y + 41, 120);
+            const auto reedit = state.facade->readTextEditor();
+            assert(reedit.phase == runtime::TextPhase::kEditing);
+            assert(state.facade->readTextEditor().projection == u"AB");
+            assert(state.facade->readTextGeometry().available);
+            textIntent(state, runtime::TextIntentKind::kFinish);
+            pumpWindowsText(state);
+
+            tap(centerX, y + 40, 600);
+            drag(centerX, y + 40);
+            centerX += 50;
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+            assert(composition.qualificationRuntime().selectedPrimaryObject() == selected);
+            tap(centerX, y + 40, 600);
+            tap(centerX + 2, y + 41, 120);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);
+            textIntent(state, runtime::TextIntentKind::kFinish);
+            pumpWindowsText(state);
+
+            tap(centerX, y + 40, 600);
+            tap(centerX, y + 40, 600);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+            touch(WM_POINTERDOWN, 7, centerX, y + 40, 80);
+            touch(WM_POINTERDOWN, 8, centerX + 5, y + 40);
+            touch(WM_POINTERUP, 7, centerX, y + 40);
+            touch(WM_POINTERUP, 8, centerX + 5, y + 40);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kClosed);
+            tap(centerX, y + 40, 600);
+            tap(centerX + 2, y + 41, 120);
+            assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);
+            textIntent(state, runtime::TextIntentKind::kFinish);
+            pumpWindowsText(state);
+            std::printf("Touch double-tap Shape %u: empty entry, reentry, focus and no extra commit pass\n", preset);
+        }
+        DestroyWindow(owner);
+        UnregisterClassW(klass.lpszClassName, instance);
+        return 0;
+    }
     if (mode == "shape-label") {
         runtime::CanvasControlRequest control;
         control.clientId = 0xFC025;

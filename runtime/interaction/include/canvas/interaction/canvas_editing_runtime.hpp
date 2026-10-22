@@ -264,7 +264,11 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   // View-only animation, advanced by the Composition frame opportunity.
   // Layout geometry and canonical text remain independent of the blink phase.
   void updateTextCaretPresentation(std::chrono::steady_clock::time_point now) noexcept;
-  bool setTextTool(bool value) noexcept { textTool_=value;return true; }
+  bool setTextTool(bool value) noexcept {
+    if (textTool_ != value) resetTouchTextTap();
+    textTool_=value;
+    return true;
+  }
   bool textTool() const noexcept {return textTool_;}
   [[nodiscard]] bool selectBrushProfile(std::string_view profileId,
                                         std::uint32_t revision = 1U) noexcept;
@@ -586,6 +590,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<std::uint32_t> textHit(const semantic::ObjectRecord&,float,float);
   semantic::ObjectId hitTextAtView(float,float);
   bool textPointer(const input::PointerSample&);
+  bool observeTouchTextTap(const input::PointerSample&);
+  bool beginShapeTextEditAt(float, float, semantic::ObjectId);
+  void resetTouchTextTap() noexcept;
   bool shapeExpandPointer(const input::PointerSample&);
   std::optional<semantic::Transform2D> fittedShapeLabelTransform(const semantic::ObjectRecord&);
   std::optional<semantic::ObjectRecord> textPresentation();
@@ -705,6 +712,22 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   input::PointerKey textSelectionPointer_{};
   std::uint32_t textSelectionAnchor_=0;
   std::unordered_set<input::PointerKey,input::PointerKeyHash> textPointerKeys_;
+  struct TouchTapContact final {
+    semantic::ObjectId object{};
+    float x = 0.0F, y = 0.0F;
+    std::uint64_t timestampNs = 0;
+    bool moved = false;
+  };
+  struct CompletedTouchTap final {
+    input::PointerKey key{};
+    semantic::ObjectId object{};
+    float x = 0.0F, y = 0.0F;
+    std::uint64_t timestampNs = 0;
+  };
+  std::unordered_map<input::PointerKey, TouchTapContact, input::PointerKeyHash>
+      touchTapContacts_;
+  std::optional<CompletedTouchTap> previousTouchTap_;
+  bool touchTapMultiContact_ = false;
   std::unordered_set<input::PointerKey,input::PointerKeyHash> shapeExpandPointerKeys_;
   std::unordered_map<std::uint64_t, PendingBrushCommit> pendingBrushCommits_;
   ink::ArcPreviewSink* arcPreviewSink_ = nullptr;

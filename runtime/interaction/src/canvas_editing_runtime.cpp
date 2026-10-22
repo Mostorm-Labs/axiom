@@ -716,6 +716,10 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
     for (const auto& sample : routedSamples) {
       if (!sample.key.valid()) continue;
       if (!dispatchRuntime_.submit(sample)) return false;
+      if (selectionMode_ && !textTool_ &&
+          (!interaction_->textSession() ||
+           interaction_->textSession()->read().phase == runtime::TextPhase::kClosed))
+        (void)observeTouchTextTap(sample);
     }
     if (routed.terminalCancel) cancelAllPointers();
     return routed.accepted || routed.terminalCancel;
@@ -999,6 +1003,9 @@ void CanvasEditingRuntime::onSessionCancel(
     const input::PlatformInteractionIngressResult& result) noexcept {
   for (const auto& sample : result.normalized.samples) {
     if (!sample.key.valid()) continue;
+    touchTapContacts_.erase(sample.key);
+    previousTouchTap_.reset();
+    if (touchTapContacts_.empty()) touchTapMultiContact_ = false;
     const auto routing = coordinator_->route(sample);
     if (routing.endedViewport) viewportController_->endGesture();
     baselineDownTimestamps_.erase(sample.key);
@@ -1014,6 +1021,7 @@ void CanvasEditingRuntime::onSessionCancel(
 
 void CanvasEditingRuntime::cancelAllPointers() noexcept {
   textPointerKeys_.clear();
+  resetTouchTextTap();
   shapeExpandPointerKeys_.clear();
   creations_.clear();
   creationFences_.clear();
@@ -1157,7 +1165,10 @@ bool CanvasEditingRuntime::setSelectionMode(bool enabled) noexcept {
   if (!brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty()) {
     return false;
   }
-  if (selectionMode_ != enabled) dispatchRuntime_.cancelAll();
+  if (selectionMode_ != enabled) {
+    dispatchRuntime_.cancelAll();
+    resetTouchTextTap();
+  }
   selectionMode_ = enabled;
   if (enabled) {
     creationMode_ = false;
@@ -2941,6 +2952,7 @@ bool CanvasEditingRuntime::commitSurfaceBinding(
     }
     return false;
   }
+  resetTouchTextTap();
   pendingCanonicalProvider_.reset();
   pendingPreviewProvider_.reset();
   auto* nextPreview = appBinding_->previewSurfaces()->activeProvider();
@@ -2982,6 +2994,7 @@ bool CanvasEditingRuntime::resizeSurface(const render::SurfaceMetrics& metrics) 
 
 bool CanvasEditingRuntime::loseSurface() noexcept {
   if (closed_ || std::this_thread::get_id() != ownerThread_) return false;
+  resetTouchTextTap();
   if (surfaceTransitionActive_) {
     surfaceAbortRequested_ = true;
     surface_.available = false;
