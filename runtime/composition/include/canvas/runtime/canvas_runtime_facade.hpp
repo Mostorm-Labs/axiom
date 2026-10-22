@@ -47,6 +47,14 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   [[nodiscard]] std::optional<TextReceipt> textInputReceipt(const TextSessionToken&,std::uint64_t) const override;
   [[nodiscard]] std::optional<TextReceipt> textIntentReceipt(std::uint64_t,std::uint64_t) const override;
   [[nodiscard]] bool acknowledgeTextInput(const TextSessionToken&,std::uint64_t) override;
+  [[nodiscard]] ImageCommandReceipt importImage(const ImageImportRequest&) override;
+  [[nodiscard]] ImageCommandReceipt replaceImage(const ImageReplaceRequest&) override;
+  [[nodiscard]] ImageCommandReceipt resizeImage(const ImageResizeRequest&) override;
+  [[nodiscard]] ImageCommandReceipt beginImageCrop(const ImageCropBeginRequest&) override;
+  [[nodiscard]] ImageCommandReceipt updateImageCrop(const ImageCropUpdateRequest&) override;
+  [[nodiscard]] ImageCommandReceipt commitImageCrop(std::uint64_t) override;
+  [[nodiscard]] ImageCommandReceipt cancelImageCrop(std::uint64_t) override;
+  [[nodiscard]] ImageCropSnapshot readImageCrop() const override;
   CanvasRuntimeFacade(const CanvasRuntimeFacade&) = delete;
   CanvasRuntimeFacade& operator=(const CanvasRuntimeFacade&) = delete;
 
@@ -76,6 +84,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   // reach the concrete binding or editor.
 #endif
   friend class RuntimeComposition;
+  void discardImageCrop() noexcept;
   [[nodiscard]] CanvasControlApplyResult applyControl(
       const CanvasControlRequest& request);
   [[nodiscard]] CanvasControlSnapshot snapshotControl(
@@ -103,6 +112,14 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   std::deque<std::pair<TextIntent,TextReceipt>> textIntents_;
   std::deque<std::pair<TextInputEvent,TextReceipt>> textInputs_;
   std::unordered_map<std::uint64_t,std::uint64_t> textClientHighWater_;
+  struct ImageCropSession final {
+    std::uint64_t token = 0;
+    semantic::ObjectId objectId{};
+    semantic::ImageContent original{};
+    semantic::ImageContent current{};
+  };
+  std::optional<ImageCropSession> imageCrop_;
+  std::uint64_t nextImageCropToken_ = 1;
   std::atomic_size_t pendingWork_{0};
   void refreshTarget() const noexcept;
 

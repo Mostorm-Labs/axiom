@@ -59,6 +59,7 @@ bool RuntimeComposition::canAdvanceSurfaceBinding() const noexcept {
       resources_.lifetimeGeneration < limit;
 }
 void RuntimeComposition::surfaceBindingChanged() noexcept {
+  if (controlFacade_ != nullptr) controlFacade_->discardImageCrop();
   if (attachmentEpoch_ != std::numeric_limits<std::uint64_t>::max()) ++attachmentEpoch_;
   if (providerEpoch_ != std::numeric_limits<std::uint64_t>::max()) ++providerEpoch_;
   resources_.invalidate();
@@ -547,7 +548,7 @@ bool RuntimeComposition::detach() noexcept {
   notifications_.clear();
   return true;
 }
-bool RuntimeComposition::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
+bool RuntimeComposition::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (controlFacade_ != nullptr) controlFacade_->discardImageCrop(); if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
 std::uint64_t RuntimeComposition::canonicalPresentCount() const noexcept {
   const auto* provider = runtime_->activeSurfaceProvider();
   return provider == nullptr ? 0U : provider->presentCount();
@@ -647,5 +648,25 @@ std::optional<ResourcePortReceipt> RuntimeComposition::resourceReceipt(
   if (resources_.find(id) == nullptr) return std::nullopt;
   const auto it = resourceReceipts_.find(id);
   return it == resourceReceipts_.end() ? std::nullopt : std::optional<ResourcePortReceipt>(it->second);
+}
+
+std::optional<ResourceBindingToken> RuntimeComposition::currentResourceToken(
+    foundation::ObjectId id) const noexcept {
+  if (std::this_thread::get_id() != ownerThread_) return std::nullopt;
+  return resources_.token(id, providerEpoch_, nextRequestId_);
+}
+
+bool RuntimeComposition::imageResourceDecodeReady(
+    foundation::ObjectId id) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || provider_ == nullptr)
+    return false;
+#if defined(CANVAS_RENDER_HAS_SKIA)
+  if (imageResolver_ == nullptr) return false;
+  const auto decoded = imageResolver_->resolve(semantic::ResourceId{id});
+  return decoded != nullptr && decoded->state == render::ImageResourceState::kReady;
+#else
+  (void)id;
+  return true;
+#endif
 }
 }  // namespace canvas::runtime

@@ -220,6 +220,10 @@ class RuntimeComposition final {
   }
   [[nodiscard]] std::optional<ResourcePortReceipt> resourceReceipt(
       foundation::ObjectId id) const noexcept;
+  [[nodiscard]] bool imageResourceDecodeReady(
+      foundation::ObjectId id) noexcept;
+  [[nodiscard]] std::optional<ResourceBindingToken> currentResourceToken(
+      foundation::ObjectId id) const noexcept;
   [[nodiscard]] ResourcePortError lastResourceError() const noexcept {
     return lastResourceError_;
   }

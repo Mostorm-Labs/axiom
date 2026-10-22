@@ -3,6 +3,7 @@
 #include "canvas/runtime/product_control.hpp"
 #include "canvas/runtime/runtime_state.hpp"
 #include "canvas/runtime/text_input.hpp"
+#include "canvas/runtime/image_input.hpp"
 
 #include <utility>
 #include <vector>
@@ -22,6 +23,14 @@ class RuntimeFacade {
   [[nodiscard]] virtual std::optional<TextReceipt> textInputReceipt(const TextSessionToken&,std::uint64_t) const { return std::nullopt; }
   [[nodiscard]] virtual std::optional<TextReceipt> textIntentReceipt(std::uint64_t,std::uint64_t) const { return std::nullopt; }
   [[nodiscard]] virtual bool acknowledgeTextInput(const TextSessionToken&,std::uint64_t) { return false; }
+  [[nodiscard]] virtual ImageCommandReceipt importImage(const ImageImportRequest&) { return {}; }
+  [[nodiscard]] virtual ImageCommandReceipt replaceImage(const ImageReplaceRequest&) { return {}; }
+  [[nodiscard]] virtual ImageCommandReceipt resizeImage(const ImageResizeRequest&) { return {}; }
+  [[nodiscard]] virtual ImageCommandReceipt beginImageCrop(const ImageCropBeginRequest&) { return {}; }
+  [[nodiscard]] virtual ImageCommandReceipt updateImageCrop(const ImageCropUpdateRequest&) { return {}; }
+  [[nodiscard]] virtual ImageCommandReceipt commitImageCrop(std::uint64_t) { return {}; }
+  [[nodiscard]] virtual ImageCommandReceipt cancelImageCrop(std::uint64_t) { return {}; }
+  [[nodiscard]] virtual ImageCropSnapshot readImageCrop() const { return {}; }
   [[nodiscard]] virtual ProductControlReceipt submitSelectionPointer(
       const SelectionPointerRequest& request) noexcept {
     ProductControlReceipt receipt{};
