@@ -3,6 +3,30 @@
 这是 `3d7afa351dfbd42f18c449bda35f861089b1fb4f` 的实现使用说明，
 不新增 Authority、稳定 ABI 或 SDK。当前结果和验证限制见 [收尾记录](FC02_CLOSEOUT.md)。
 
+## Windows 分发目录
+
+Windows exe 不是独立交付物。复制或压缩发布时，保留既有
+`cmake/AxiomHostTextFont.cmake` 和 `apps/minimal_runtime_host/CMakeLists.txt`
+打包的配套资源及相对目录：
+
+```text
+axiom_minimal_runtime_host_windows[-revision].exe
+axiom-font.otf
+axiom-font.LICENSE.txt
+axiom-font.NOTICE.txt
+fonts/                 # 整个 imported catalog、字体子目录和许可证
+icudtl.dat             # 锁定 Skia SDK 的 runtime/windows 数据
+```
+
+主字体和 catalog 由 exe 所在目录解析，不从另一台机器的源码绝对路径读取。
+字体必须与该产品 revision 的 manifest/catalog 中大小和摘要一致；不能只复制
+一个喜欢的字体、替换成系统字体，或将文件名与资源身份混用。`imgui.ini` 是本机
+UI 状态，不是必需分发资源，也不提交到 Git。
+
+2026-10-22 本机仅复制 exe 的失败及补齐资源后的对照见
+[Windows 启动调查](FC02_WINDOWS_DEVICE_STARTUP_20261022.md)。该次修复保留原 exe
+及其 hash，不需要重建产品或安装 VC 运行库；这不是其它启动故障的通用归因。
+
 ## 用户操作
 
 独立文本：Text tool 单击空白创建，Text/Select 双击已有文字再次编辑；Ink 双击不进入编辑。

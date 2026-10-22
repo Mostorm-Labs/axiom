@@ -1,0 +1,88 @@
+{
+  "product_revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+  "process_id": 72572,
+  "no_computer_use": true,
+  "checks": [
+    {
+      "id": "W01",
+      "scenario": "Ink/Shape、preview/canonical、松手提交、Undo/Redo",
+      "expected": "Ink 与 Shape 均可绘制；预览与 canonical 对齐；松手保留；Undo/Redo 精确恢复。",
+      "actual": "No per-case user confirmation recorded yet; native logs alone do not prove the visual/native result.",
+      "result": "PHYSICAL_PENDING",
+      "evidence": []
+    },
+    {
+      "id": "W02",
+      "scenario": "Text 新建、你好 Axiom、Enter 再建、十笔 Ink 后切 Text",
+      "expected": "真实确认后文字显示；Enter 结束可再次创建；十笔后 Text 不回退为 Ink。",
+      "actual": "No per-case user confirmation recorded yet; native logs alone do not prove the visual/native result.",
+      "result": "PHYSICAL_PENDING",
+      "evidence": []
+    },
+    {
+      "id": "W03",
+      "scenario": "Text/Select 双击、caret、内部定位、外部完成",
+      "expected": "双击在最近文字处进入并闪烁 caret；内部点击定位；外部完成且不落笔。",
+      "actual": "No per-case user confirmation recorded yet; native logs alone do not prove the visual/native result.",
+      "result": "PHYSICAL_PENDING",
+      "evidence": []
+    },
+    {
+      "id": "W04",
+      "scenario": "矩形/椭圆/三角形内嵌 label",
+      "expected": "三种 Shape 的首次及再次编辑、中文预编辑、caret 与实际文字均对齐。",
+      "actual": "No per-case user confirmation recorded yet; native logs alone do not prove the visual/native result.",
+      "result": "PHYSICAL_PENDING",
+      "evidence": []
+    },
+    {
+      "id": "W05",
+      "scenario": "字体、颜色、四档字号、对齐及所有格式叶子",
+      "expected": "黑/蓝、32/24/20/16、对齐、粗斜体、下划线、删除线、项目符号生效；部分/混合选区按既有策略读回。",
+      "actual": "No per-case user confirmation recorded yet; native logs alone do not prove the visual/native result.",
+      "result": "PHYSICAL_PENDING",
+      "evidence": []
+    },
+    {
+      "id": "W06",
+      "scenario": "Shape 缩小、溢出、选中提示/加号、扩展与 Undo",
+      "expected": "字号保持；溢出省略号；仅选中时提示/加号；扩展及 Undo 保持既有 History 规则。",
+      "actual": "No per-case user confirmation recorded yet; native logs alone do not prove the visual/native result.",
+      "result": "PHYSICAL_PENDING",
+      "evidence": []
+    },
+    {
+      "id": "W07",
+      "scenario": "真实中文 IME 候选窗/键、预编辑、确认/取消、Ctrl+Enter",
+      "expected": "候选窗与 caret 对齐；真实结果只写一次；预编辑/取消不写 canonical；Ctrl+Enter 换段。",
+      "actual": "No per-case user confirmation recorded yet; native logs alone do not prove the visual/native result.",
+      "result": "PHYSICAL_PENDING",
+      "evidence": []
+    },
+    {
+      "id": "W08",
+      "scenario": "合成期间切工具/格式焦点、Alt+Tab、Esc、受控关闭",
+      "expected": "真实 native 终态处理后转换；失败不伪造成功；失焦/超时不被当作确认。",
+      "actual": "No per-case user confirmation recorded yet; native logs alone do not prove the visual/native result.",
+      "result": "PHYSICAL_PENDING",
+      "evidence": []
+    },
+    {
+      "id": "W09",
+      "scenario": "真触摸/笔、Debug UI 隔离、双指导航/缩放和 MultiInk",
+      "expected": "完整 source/pointer/generation；无 promoted mouse 重复；UI 不穿透；保持 250ms 窗口、MultiInk 与 Ink slop 的既有规则。",
+      "actual": "No per-case user confirmation recorded yet; native logs alone do not prove the visual/native result.",
+      "result": "PHYSICAL_PENDING",
+      "evidence": []
+    },
+    {
+      "id": "W10",
+      "scenario": "窗口 resize/maximize/minimize/restore 与 DPI/多屏",
+      "expected": "文本、caret、选区和实际候选窗在各迁移后仍对齐，陈旧几何不可用于定位。",
+      "actual": "No per-case user confirmation recorded yet; native logs alone do not prove the visual/native result.",
+      "result": "PHYSICAL_PENDING",
+      "evidence": []
+    }
+  ],
+  "not_a_gate_or_phys_record": true
+}

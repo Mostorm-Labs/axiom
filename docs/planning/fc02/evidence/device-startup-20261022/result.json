@@ -1,0 +1,46 @@
+{
+  "recorded_at_utc": "2026-10-22T02:36:49.124320+00:00",
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/fc02-device-startup-20261022",
+  "source_revision": "164dfa2fc0af84df397b3ca2de0f6543fd50da02",
+  "tested_product_revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+  "result_revision_query": "git log -1 --format=%H -- docs/planning/fc02/evidence/device-startup-20261022/result.json",
+  "status": "STARTUP_RECOVERED_MANUAL_PENDING",
+  "original_result": "FAIL",
+  "original_classification": "MAIN_RESOURCE_INITIALIZATION_EXIT_1",
+  "root_cause": "Executable-only transfer omitted mandatory font resource tree; WinMain returns 1 on bindHostTextFonts failure. ICU runtime data was also absent. ICU-only and ICU+CJK controls still fail; complete resources recover the unchanged exe.",
+  "startup_cli_result": "PASS",
+  "launch": "complete-launch.json",
+  "loaded_modules": "complete-loaded-modules.json",
+  "no_matching_crash_or_hang_event": true,
+  "delivery": "delivery.json",
+  "files": "distribution-manifest.json",
+  "manual": "manual-matrix.json",
+  "manual_results": {
+    "W01": "PHYSICAL_PENDING",
+    "W02": "PHYSICAL_PENDING",
+    "W03": "PHYSICAL_PENDING",
+    "W04": "PHYSICAL_PENDING",
+    "W05": "PHYSICAL_PENDING",
+    "W06": "PHYSICAL_PENDING",
+    "W07": "PHYSICAL_PENDING",
+    "W08": "PHYSICAL_PENDING",
+    "W09": "PHYSICAL_PENDING",
+    "W10": "PHYSICAL_PENDING"
+  },
+  "changed_files": [
+    "docs/planning/FC02_CONSUMER_GUIDE.md",
+    "docs/planning/FC02_WINDOWS_DEVICE_STARTUP_20261022.md",
+    "docs/planning/fc02/evidence/device-startup-20261022/**"
+  ],
+  "product_code_changed": false,
+  "product_rebuilt": false,
+  "remaining_blockers": [
+    "Per-case user confirmation of the ten physical scenarios remains pending.",
+    "Exact selected adapter LUID/name is not directly recorded by this binary; hardware D3D12 init/present and Intel UMD loading are observed.",
+    "No multi-monitor or actual DPI migration evidence is inferred from the current single active monitor."
+  ],
+  "fc02_completion_claimed": false,
+  "independent_review_claimed": false,
+  "authority_golden_historical_gate_phys_changed": false
+}

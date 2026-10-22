@@ -1,0 +1,35 @@
+{
+  "working_directory": "C:\\Users\\NearHub\\.codex\\worktrees\\fc02-device-20261022\\axiom",
+  "source_fetch": "git fetch origin refs/heads/codex/fc02-windows-ime-resume:refs/remotes/origin/codex/fc02-windows-ime-resume",
+  "network": "Direct GitHub connection failed; retry with user-authorized HTTP_PROXY/HTTPS_PROXY=http://127.0.0.1:7897 succeeded.",
+  "baseline": "164dfa2fc0af84df397b3ca2de0f6543fd50da02",
+  "remote_delta": [],
+  "branch": "codex/fc02-device-startup-20261022",
+  "skia": "python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target windows-x64-d3d12 --variant release --install-root C:/Users/NearHub/Documents/ChatGPT/axiom/.deps/skia-sdk",
+  "pe": [
+    "dumpbin /headers <original-exe>",
+    "dumpbin /dependents <original-exe>"
+  ],
+  "staging": [
+    "python out/fc02-device/stage-distribution.py",
+    "./out/fc02-device/launch-probe.ps1 -Stage icu-only",
+    "./out/fc02-device/launch-probe.ps1 -Stage icu-cjk",
+    "./out/fc02-device/launch-probe.ps1 -Stage complete",
+    "python out/fc02-device/prepare-delivery.py"
+  ],
+  "product_build": {
+    "status": "NOT_RUN_DEPLOYMENT_ONLY",
+    "reason": "Unchanged transferred exe recovers with its required resources; no product patch or rebuild required."
+  },
+  "ctest": {
+    "status": "NOT_RUN_DEPLOYMENT_ONLY",
+    "list": "docs/planning/fc02/evidence/closeout-20261022/ctest-names.txt",
+    "historical_count_not_rerun": 234
+  },
+  "python_semantic_suite": {
+    "status": "NOT_RUN_DEPLOYMENT_ONLY",
+    "historical_count_not_rerun": 17,
+    "note": "No test was invoked without AXIOM_PROTOC or counted as skipped/pass; packaging hash scripts are not Semantic tests."
+  },
+  "dependency_production": "Not invoked: no Semantic/Protobuf/Abseil/protoc/Skia source builds, no .deps/protobuf, no lock changes."
+}
