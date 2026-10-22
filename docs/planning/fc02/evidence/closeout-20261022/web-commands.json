@@ -1,0 +1,45 @@
+{
+  "source_revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+  "kind": "web",
+  "runs": [
+    {
+      "name": "web-consumer",
+      "command": [
+        "node",
+        "--experimental-websocket",
+        "apps/axiom_canvas_demo/tests/fc02_text_consumer.mjs",
+        "http://127.0.0.1:4175/index.html?rev=3d7afa35",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\closeout-20261022\\web-consumer.json"
+      ],
+      "exit_code": 0,
+      "seconds": 10.182,
+      "log": "web-consumer.log"
+    },
+    {
+      "name": "web-existing",
+      "command": [
+        "node",
+        "--experimental-websocket",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\closeout-20261022\\web-existing.mjs",
+        "web_fc02_text_test",
+        "web_minimal_runtime_test"
+      ],
+      "exit_code": 0,
+      "seconds": 15.011,
+      "log": "web-existing.log"
+    },
+    {
+      "name": "web-shape-reentry",
+      "command": [
+        "node",
+        "--experimental-websocket",
+        "out/fc02-resume/web-reentry-numeric-ime.mjs",
+        "http://127.0.0.1:4175/index.html?rev=3d7afa35",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc02-runtime-boundary-resume\\canvas\\out\\fc02-resume\\closeout-20261022\\web-shape-reentry.json"
+      ],
+      "exit_code": 0,
+      "seconds": 29.05,
+      "log": "web-shape-reentry.log"
+    }
+  ]
+}

@@ -1,0 +1,1752 @@
+{
+  "url": "http://127.0.0.1:4175/index.html?rev=3d7afa35",
+  "browser": "Chrome/155.0.8059.84",
+  "mode": "Synthetic CDP; ordinary JS/WASM consumer; not physical IME",
+  "cases": [
+    {
+      "name": "font catalog and per-resource readback available to ordinary JS consumer",
+      "result": "PASS",
+      "evidence": {
+        "s": {
+          "composition": "0",
+          "effect": "0",
+          "exit": 2,
+          "fonts": [
+            {
+              "id": "0202fc00000000000000000000000000",
+              "name": "Noto Sans CJK SC"
+            },
+            {
+              "id": "0303fc00000000000000000000000000",
+              "name": "Comic Neue"
+            },
+            {
+              "id": "0403fc00000000000000000000000000",
+              "name": "Fira Sans"
+            },
+            {
+              "id": "0503fc00000000000000000000000000",
+              "name": "IBM Plex Mono"
+            },
+            {
+              "id": "0603fc00000000000000000000000000",
+              "name": "IBM Plex Sans"
+            },
+            {
+              "id": "0703fc00000000000000000000000000",
+              "name": "Inter"
+            },
+            {
+              "id": "0803fc00000000000000000000000000",
+              "name": "Inter Tight"
+            },
+            {
+              "id": "0903fc00000000000000000000000000",
+              "name": "Open Sans"
+            },
+            {
+              "id": "0a03fc00000000000000000000000000",
+              "name": "Oswald"
+            },
+            {
+              "id": "0b03fc00000000000000000000000000",
+              "name": "Roboto"
+            },
+            {
+              "id": "0c03fc00000000000000000000000000",
+              "name": "STIX Two Text"
+            },
+            {
+              "id": "0d03fc00000000000000000000000000",
+              "name": "Ubuntu"
+            }
+          ],
+          "format": {
+            "alignment": 1,
+            "bold": false,
+            "bulleted": false,
+            "color": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "fontSize": 0,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "formatObject": "00000000000000000000000000000000",
+          "geometry": {
+            "available": false,
+            "camera": "0",
+            "caret": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "diagnostics": [],
+            "layout": "",
+            "selection": [],
+            "token": {
+              "camera": "0",
+              "layout": "",
+              "session": {
+                "adapter": "0",
+                "attachment": "0",
+                "document": "00000000000000000000000000000000",
+                "object": "00000000000000000000000000000000",
+                "projection": "0",
+                "runtime": "0",
+                "session": "0",
+                "view": "0"
+              },
+              "target": {
+                "attachmentEpoch": "0",
+                "runtimeEpoch": "0",
+                "viewEpoch": "0",
+                "viewId": "0"
+              }
+            }
+          },
+          "mixedFormat": false,
+          "phase": 0,
+          "preedit": [],
+          "preeditSelection": null,
+          "projection": [],
+          "projectionLimit": 65536,
+          "replacement": [
+            0,
+            0
+          ],
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "1",
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "301"
+          },
+          "token": {
+            "adapter": "0",
+            "attachment": "0",
+            "document": "00000000000000000000000000000000",
+            "object": "00000000000000000000000000000000",
+            "projection": "0",
+            "runtime": "0",
+            "session": "0",
+            "view": "0"
+          },
+          "width": 320
+        },
+        "catalog": {
+          "bindingGeneration": "1",
+          "entries": [
+            {
+              "byteLength": 16437364,
+              "contentHash": "sha256:2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+              "diagnostic": "",
+              "family": "Noto Sans CJK SC",
+              "id": "0202fc00000000000000000000000000",
+              "revision": "1",
+              "status": 1
+            },
+            {
+              "byteLength": 54844,
+              "contentHash": "sha256:63690a24f0ded1a87858c22a4abe69f07765661d3b0ac7284f90235c5dbd9539",
+              "diagnostic": "",
+              "family": "Comic Neue",
+              "id": "0303fc00000000000000000000000000",
+              "revision": "1",
+              "status": 1
+            },
+            {
+              "byteLength": 440984,
+              "contentHash": "sha256:3dabf3d48bf4599f95cffd92f99ea426a014d5311f52a5eb5ec3af265e97cd97",
+              "diagnostic": "",
+              "family": "Fira Sans",
+              "id": "0403fc00000000000000000000000000",
+              "revision": "1",
+              "status": 1
+            },
+            {
+              "byteLength": 133796,
+              "contentHash": "sha256:ab08018ccd276b79fb2c636bb95b9c543598f9d50505fe92506fcb4dae7810cd",
+              "diagnostic": "",
+              "family": "IBM Plex Mono",
+              "id": "0503fc00000000000000000000000000",
+              "revision": "1",
+              "status": 1
+            },
+            {
+              "byteLength": 218236,
+              "contentHash": "sha256:8685116dfbcfa639621631c4af0ad62e52ddeb9979acbec0007ccef2e4801a27",
+              "diagnostic": "",
+              "family": "IBM Plex Sans",
+              "id": "0603fc00000000000000000000000000",
+              "revision": "1",
+              "status": 1
+            },
+            {
+              "byteLength": 874708,
+              "contentHash": "sha256:0be2399ea925f1f83ff974764761da9860ec50742ed29a5d4c1ffd0c5c7ac3a8",
+              "diagnostic": "",
+              "family": "Inter",
+              "id": "0703fc00000000000000000000000000",
+              "revision": "1",
+              "status": 1
+            },
+            {
+              "byteLength": 580572,
+              "contentHash": "sha256:4b8ef9ed255ebe7341aa566554c0f3e87ee10ce06d2085f07ccf66f41ef96c28",
+              "diagnostic": "",
+              "family": "Inter Tight",
+              "id": "0803fc00000000000000000000000000",
+              "revision": "1",
+              "status": 1
+            },
+            {
+              "byteLength": 529700,
+              "contentHash": "sha256:177359dff5017066301cff7264b86851b60b68628636255015d1db37b54b344d",
+              "diagnostic": "",
+              "family": "Open Sans",
+              "id": "0903fc00000000000000000000000000",
+              "revision": "1",
+              "status": 1
+            },
+            {
+              "byteLength": 169108,
+              "contentHash": "sha256:731d3a8cf6b598adff0d8096747a744263afebb36668884c5aa2a5911e529fa3",
+              "diagnostic": "",
+              "family": "Oswald",
+              "id": "0a03fc00000000000000000000000000",
+              "revision": "1",
+              "status": 1
+            },
+            {
+              "byteLength": 487768,
+              "contentHash": "sha256:0fe599aba604c33d7ac9bb5f642dd15198bf7fbf037b0bbb78b4dcb89d340fc5",
+              "diagnostic": "",
+              "family": "Roboto",
+              "id": "0b03fc00000000000000000000000000",
+              "revision": "1",
+              "status": 1
+            },
+            {
+              "byteLength": 423048,
+              "contentHash": "sha256:9a8cb68386dc968c6bbd52f5ec4be384a289d114a2b8d21b5620b273face0072",
+              "diagnostic": "",
+              "family": "STIX Two Text",
+              "id": "0c03fc00000000000000000000000000",
+              "revision": "1",
+              "status": 1
+            },
+            {
+              "byteLength": 299684,
+              "contentHash": "sha256:540f19be11a368130641d00ec1c354b535c0803560f598d7d062486c9278387a",
+              "diagnostic": "",
+              "family": "Ubuntu",
+              "id": "0d03fc00000000000000000000000000",
+              "revision": "1",
+              "status": 1
+            }
+          ],
+          "manifestRevision": "0"
+        },
+        "ready": {
+          "byteLength": 16437364,
+          "contentHash": "sha256:2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+          "diagnostic": "",
+          "family": "Noto Sans CJK SC",
+          "id": "0202fc00000000000000000000000000",
+          "revision": "1",
+          "status": 1
+        },
+        "missing": null
+      }
+    },
+    {
+      "name": "format patch and explicit receipt identities support replay and reject collisions",
+      "result": "PASS",
+      "evidence": {
+        "patch": {
+          "font": "0202fc00000000000000000000000000",
+          "color": [
+            0.125,
+            0.25,
+            0.75,
+            1
+          ],
+          "fontSize": 24,
+          "bold": true,
+          "italic": true,
+          "underline": true,
+          "strikethrough": true,
+          "bulleted": true,
+          "alignment": 1
+        },
+        "formatted": {
+          "composition": "0",
+          "effect": "0",
+          "exit": 2,
+          "fonts": [
+            {
+              "id": "0202fc00000000000000000000000000",
+              "name": "Noto Sans CJK SC"
+            },
+            {
+              "id": "0303fc00000000000000000000000000",
+              "name": "Comic Neue"
+            },
+            {
+              "id": "0403fc00000000000000000000000000",
+              "name": "Fira Sans"
+            },
+            {
+              "id": "0503fc00000000000000000000000000",
+              "name": "IBM Plex Mono"
+            },
+            {
+              "id": "0603fc00000000000000000000000000",
+              "name": "IBM Plex Sans"
+            },
+            {
+              "id": "0703fc00000000000000000000000000",
+              "name": "Inter"
+            },
+            {
+              "id": "0803fc00000000000000000000000000",
+              "name": "Inter Tight"
+            },
+            {
+              "id": "0903fc00000000000000000000000000",
+              "name": "Open Sans"
+            },
+            {
+              "id": "0a03fc00000000000000000000000000",
+              "name": "Oswald"
+            },
+            {
+              "id": "0b03fc00000000000000000000000000",
+              "name": "Roboto"
+            },
+            {
+              "id": "0c03fc00000000000000000000000000",
+              "name": "STIX Two Text"
+            },
+            {
+              "id": "0d03fc00000000000000000000000000",
+              "name": "Ubuntu"
+            }
+          ],
+          "format": {
+            "alignment": 1,
+            "bold": true,
+            "bulleted": true,
+            "color": [
+              0.125,
+              0.25,
+              0.75,
+              1
+            ],
+            "font": "0202fc00000000000000000000000000",
+            "fontSize": 24,
+            "italic": true,
+            "strikethrough": true,
+            "underline": true
+          },
+          "formatObject": "00000000000000000000000000000000",
+          "geometry": {
+            "available": true,
+            "camera": "1",
+            "caret": [
+              186,
+              150,
+              187,
+              150,
+              187,
+              174,
+              186,
+              174
+            ],
+            "diagnostics": [],
+            "layout": "e044b9d14b9f90a79aacfd64ebea623728baedd65fcb0e84e045e4ef12b545e1:0:4",
+            "selection": [
+              [
+                186,
+                141.38999938964844,
+                242.89999389648438,
+                141.38999938964844,
+                242.89999389648438,
+                176.13999938964844,
+                186,
+                176.13999938964844
+              ]
+            ],
+            "token": {
+              "camera": "1",
+              "layout": "e044b9d14b9f90a79aacfd64ebea623728baedd65fcb0e84e045e4ef12b545e1:0:4",
+              "session": {
+                "adapter": "1",
+                "attachment": "1",
+                "document": "01000000000000000000000000000000",
+                "object": "010000000000000000000000000000f2",
+                "projection": "3",
+                "runtime": "1",
+                "session": "1",
+                "view": "301"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "301"
+              }
+            }
+          },
+          "mixedFormat": false,
+          "phase": 1,
+          "preedit": [],
+          "preeditSelection": null,
+          "projection": [
+            65,
+            66,
+            99,
+            100
+          ],
+          "projectionLimit": 65536,
+          "replacement": [
+            0,
+            0
+          ],
+          "selection": [
+            0,
+            4
+          ],
+          "sequence": "2",
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "301"
+          },
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "3",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          },
+          "width": 320
+        },
+        "receipt": {
+          "operation": "02000000000000800000000000000000",
+          "replay": false,
+          "request": "1",
+          "semanticGeneration": "2",
+          "status": 3,
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "3",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          }
+        },
+        "replay": {
+          "operation": "02000000000000800000000000000000",
+          "replay": false,
+          "request": "1",
+          "semanticGeneration": "2",
+          "status": 3,
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "3",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          }
+        },
+        "before": {
+          "owner": "RuntimeComposition",
+          "revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+          "dirty": 0,
+          "debugUiEnabled": true,
+          "state": 2,
+          "objects": 1,
+          "operations": 2,
+          "pointerSamples": 2,
+          "rejectedInputs": 0,
+          "activePointers": 0,
+          "presentedFrames": 4,
+          "retries": 6,
+          "pendingFrame": true,
+          "previewActive": false,
+          "surfaceGeneration": 1,
+          "metricsGeneration": 1,
+          "width": 1100,
+          "height": 761,
+          "logicalWidth": 1100,
+          "logicalHeight": 761,
+          "dpr": 1,
+          "controlState": 9,
+          "tool": 4,
+          "creationMode": false,
+          "creationPreset": 0,
+          "size": 16,
+          "opacity": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "lastPointer": {
+            "source": 1,
+            "pointer": 1,
+            "generation": 1
+          },
+          "error": "",
+          "failure": "",
+          "trace": [
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 1,
+              "generation": "1",
+              "phase": 0,
+              "timestampNs": "1001400000",
+              "x": 150,
+              "y": 150,
+              "pressure": 0,
+              "history": false
+            },
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 1,
+              "generation": "1",
+              "phase": 2,
+              "timestampNs": "1015400000",
+              "x": 150,
+              "y": 150,
+              "pressure": 0,
+              "history": false
+            }
+          ]
+        },
+        "afterReplay": {
+          "owner": "RuntimeComposition",
+          "revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+          "dirty": 0,
+          "debugUiEnabled": true,
+          "state": 2,
+          "objects": 1,
+          "operations": 2,
+          "pointerSamples": 2,
+          "rejectedInputs": 0,
+          "activePointers": 0,
+          "presentedFrames": 4,
+          "retries": 6,
+          "pendingFrame": true,
+          "previewActive": false,
+          "surfaceGeneration": 1,
+          "metricsGeneration": 1,
+          "width": 1100,
+          "height": 761,
+          "logicalWidth": 1100,
+          "logicalHeight": 761,
+          "dpr": 1,
+          "controlState": 9,
+          "tool": 4,
+          "creationMode": false,
+          "creationPreset": 0,
+          "size": 16,
+          "opacity": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "lastPointer": {
+            "source": 1,
+            "pointer": 1,
+            "generation": 1
+          },
+          "error": "",
+          "failure": "",
+          "trace": [
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 1,
+              "generation": "1",
+              "phase": 0,
+              "timestampNs": "1001400000",
+              "x": 150,
+              "y": 150,
+              "pressure": 0,
+              "history": false
+            },
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 1,
+              "generation": "1",
+              "phase": 2,
+              "timestampNs": "1015400000",
+              "x": 150,
+              "y": 150,
+              "pressure": 0,
+              "history": false
+            }
+          ]
+        },
+        "final": {
+          "composition": "0",
+          "effect": "0",
+          "exit": 2,
+          "fonts": [
+            {
+              "id": "0202fc00000000000000000000000000",
+              "name": "Noto Sans CJK SC"
+            },
+            {
+              "id": "0303fc00000000000000000000000000",
+              "name": "Comic Neue"
+            },
+            {
+              "id": "0403fc00000000000000000000000000",
+              "name": "Fira Sans"
+            },
+            {
+              "id": "0503fc00000000000000000000000000",
+              "name": "IBM Plex Mono"
+            },
+            {
+              "id": "0603fc00000000000000000000000000",
+              "name": "IBM Plex Sans"
+            },
+            {
+              "id": "0703fc00000000000000000000000000",
+              "name": "Inter"
+            },
+            {
+              "id": "0803fc00000000000000000000000000",
+              "name": "Inter Tight"
+            },
+            {
+              "id": "0903fc00000000000000000000000000",
+              "name": "Open Sans"
+            },
+            {
+              "id": "0a03fc00000000000000000000000000",
+              "name": "Oswald"
+            },
+            {
+              "id": "0b03fc00000000000000000000000000",
+              "name": "Roboto"
+            },
+            {
+              "id": "0c03fc00000000000000000000000000",
+              "name": "STIX Two Text"
+            },
+            {
+              "id": "0d03fc00000000000000000000000000",
+              "name": "Ubuntu"
+            }
+          ],
+          "format": {
+            "alignment": 1,
+            "bold": true,
+            "bulleted": true,
+            "color": [
+              0.125,
+              0.25,
+              0.75,
+              1
+            ],
+            "font": "0202fc00000000000000000000000000",
+            "fontSize": 24,
+            "italic": true,
+            "strikethrough": true,
+            "underline": true
+          },
+          "formatObject": "00000000000000000000000000000000",
+          "geometry": {
+            "available": true,
+            "camera": "1",
+            "caret": [
+              186,
+              150,
+              187,
+              150,
+              187,
+              174,
+              186,
+              174
+            ],
+            "diagnostics": [],
+            "layout": "e044b9d14b9f90a79aacfd64ebea623728baedd65fcb0e84e045e4ef12b545e1:0:4",
+            "selection": [
+              [
+                186,
+                141.38999938964844,
+                242.89999389648438,
+                141.38999938964844,
+                242.89999389648438,
+                176.13999938964844,
+                186,
+                176.13999938964844
+              ]
+            ],
+            "token": {
+              "camera": "1",
+              "layout": "e044b9d14b9f90a79aacfd64ebea623728baedd65fcb0e84e045e4ef12b545e1:0:4",
+              "session": {
+                "adapter": "1",
+                "attachment": "1",
+                "document": "01000000000000000000000000000000",
+                "object": "010000000000000000000000000000f2",
+                "projection": "3",
+                "runtime": "1",
+                "session": "1",
+                "view": "301"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "301"
+              }
+            }
+          },
+          "mixedFormat": false,
+          "phase": 1,
+          "preedit": [],
+          "preeditSelection": null,
+          "projection": [
+            65,
+            66,
+            99,
+            100
+          ],
+          "projectionLimit": 65536,
+          "replacement": [
+            0,
+            0
+          ],
+          "selection": [
+            0,
+            4
+          ],
+          "sequence": "2",
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "301"
+          },
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "3",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          },
+          "width": 320
+        },
+        "error": "Text input rejected (7); resync or retry required"
+      }
+    },
+    {
+      "name": "zero width and invalid format fail without changing accepted text or width",
+      "result": "PASS",
+      "evidence": {
+        "before": {
+          "owner": "RuntimeComposition",
+          "revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+          "dirty": 0,
+          "debugUiEnabled": true,
+          "state": 2,
+          "objects": 1,
+          "operations": 2,
+          "pointerSamples": 2,
+          "rejectedInputs": 0,
+          "activePointers": 0,
+          "presentedFrames": 4,
+          "retries": 3,
+          "pendingFrame": false,
+          "previewActive": false,
+          "surfaceGeneration": 1,
+          "metricsGeneration": 1,
+          "width": 1100,
+          "height": 761,
+          "logicalWidth": 1100,
+          "logicalHeight": 761,
+          "dpr": 1,
+          "controlState": 9,
+          "tool": 4,
+          "creationMode": false,
+          "creationPreset": 0,
+          "size": 16,
+          "opacity": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "lastPointer": {
+            "source": 1,
+            "pointer": 1,
+            "generation": 1
+          },
+          "error": "",
+          "failure": "",
+          "trace": [
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 1,
+              "generation": "1",
+              "phase": 0,
+              "timestampNs": "919300000",
+              "x": 150,
+              "y": 150,
+              "pressure": 0,
+              "history": false
+            },
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 1,
+              "generation": "1",
+              "phase": 2,
+              "timestampNs": "921700000",
+              "x": 150,
+              "y": 150,
+              "pressure": 0,
+              "history": false
+            }
+          ]
+        },
+        "after": {
+          "owner": "RuntimeComposition",
+          "revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+          "dirty": 0,
+          "debugUiEnabled": true,
+          "state": 2,
+          "objects": 1,
+          "operations": 2,
+          "pointerSamples": 2,
+          "rejectedInputs": 0,
+          "activePointers": 0,
+          "presentedFrames": 4,
+          "retries": 3,
+          "pendingFrame": false,
+          "previewActive": false,
+          "surfaceGeneration": 1,
+          "metricsGeneration": 1,
+          "width": 1100,
+          "height": 761,
+          "logicalWidth": 1100,
+          "logicalHeight": 761,
+          "dpr": 1,
+          "controlState": 9,
+          "tool": 4,
+          "creationMode": false,
+          "creationPreset": 0,
+          "size": 16,
+          "opacity": 1,
+          "camera": {
+            "scale": 1,
+            "x": 0,
+            "y": 0
+          },
+          "lastPointer": {
+            "source": 1,
+            "pointer": 1,
+            "generation": 1
+          },
+          "error": "",
+          "failure": "",
+          "trace": [
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 1,
+              "generation": "1",
+              "phase": 0,
+              "timestampNs": "919300000",
+              "x": 150,
+              "y": 150,
+              "pressure": 0,
+              "history": false
+            },
+            {
+              "kind": "pointer",
+              "source": 1,
+              "pointer": 1,
+              "generation": "1",
+              "phase": 2,
+              "timestampNs": "921700000",
+              "x": 150,
+              "y": 150,
+              "pressure": 0,
+              "history": false
+            }
+          ]
+        },
+        "zero": {
+          "operation": "00000000000000000000000000000000",
+          "replay": false,
+          "request": "1",
+          "semanticGeneration": "2",
+          "status": 4,
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "3",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          }
+        },
+        "invalid": {
+          "operation": "00000000000000000000000000000000",
+          "replay": false,
+          "request": "2",
+          "semanticGeneration": "2",
+          "status": 4,
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "3",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          }
+        },
+        "s": {
+          "composition": "0",
+          "effect": "0",
+          "exit": 2,
+          "fonts": [
+            {
+              "id": "0202fc00000000000000000000000000",
+              "name": "Noto Sans CJK SC"
+            },
+            {
+              "id": "0303fc00000000000000000000000000",
+              "name": "Comic Neue"
+            },
+            {
+              "id": "0403fc00000000000000000000000000",
+              "name": "Fira Sans"
+            },
+            {
+              "id": "0503fc00000000000000000000000000",
+              "name": "IBM Plex Mono"
+            },
+            {
+              "id": "0603fc00000000000000000000000000",
+              "name": "IBM Plex Sans"
+            },
+            {
+              "id": "0703fc00000000000000000000000000",
+              "name": "Inter"
+            },
+            {
+              "id": "0803fc00000000000000000000000000",
+              "name": "Inter Tight"
+            },
+            {
+              "id": "0903fc00000000000000000000000000",
+              "name": "Open Sans"
+            },
+            {
+              "id": "0a03fc00000000000000000000000000",
+              "name": "Oswald"
+            },
+            {
+              "id": "0b03fc00000000000000000000000000",
+              "name": "Roboto"
+            },
+            {
+              "id": "0c03fc00000000000000000000000000",
+              "name": "STIX Two Text"
+            },
+            {
+              "id": "0d03fc00000000000000000000000000",
+              "name": "Ubuntu"
+            }
+          ],
+          "format": {
+            "alignment": 1,
+            "bold": false,
+            "bulleted": false,
+            "color": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "font": "0202fc00000000000000000000000000",
+            "fontSize": 16,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "formatObject": "00000000000000000000000000000000",
+          "geometry": {
+            "available": true,
+            "camera": "1",
+            "caret": [
+              235.5,
+              150,
+              236.5,
+              150,
+              236.5,
+              166,
+              235.5,
+              166
+            ],
+            "diagnostics": [],
+            "layout": "607a6ac513d6b873b22a7d77dccc0ed087248a9dc7bf2e86d74c76bfd29228da:9:0",
+            "selection": [],
+            "token": {
+              "camera": "1",
+              "layout": "607a6ac513d6b873b22a7d77dccc0ed087248a9dc7bf2e86d74c76bfd29228da:9:0",
+              "session": {
+                "adapter": "1",
+                "attachment": "1",
+                "document": "01000000000000000000000000000000",
+                "object": "010000000000000000000000000000f2",
+                "projection": "3",
+                "runtime": "1",
+                "session": "1",
+                "view": "301"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "301"
+              }
+            }
+          },
+          "mixedFormat": false,
+          "phase": 1,
+          "preedit": [],
+          "preeditSelection": null,
+          "projection": [
+            85,
+            110,
+            99,
+            104,
+            97,
+            110,
+            103,
+            101,
+            100
+          ],
+          "projectionLimit": 65536,
+          "replacement": [
+            0,
+            0
+          ],
+          "selection": [
+            9,
+            0
+          ],
+          "sequence": "2",
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "301"
+          },
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "3",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          },
+          "width": 420
+        }
+      }
+    },
+    {
+      "name": "native preedit caret offsets reach Runtime geometry without canonical writes",
+      "result": "PASS",
+      "evidence": {
+        "one": {
+          "composition": "1",
+          "effect": "0",
+          "exit": 2,
+          "fonts": [
+            {
+              "id": "0202fc00000000000000000000000000",
+              "name": "Noto Sans CJK SC"
+            },
+            {
+              "id": "0303fc00000000000000000000000000",
+              "name": "Comic Neue"
+            },
+            {
+              "id": "0403fc00000000000000000000000000",
+              "name": "Fira Sans"
+            },
+            {
+              "id": "0503fc00000000000000000000000000",
+              "name": "IBM Plex Mono"
+            },
+            {
+              "id": "0603fc00000000000000000000000000",
+              "name": "IBM Plex Sans"
+            },
+            {
+              "id": "0703fc00000000000000000000000000",
+              "name": "Inter"
+            },
+            {
+              "id": "0803fc00000000000000000000000000",
+              "name": "Inter Tight"
+            },
+            {
+              "id": "0903fc00000000000000000000000000",
+              "name": "Open Sans"
+            },
+            {
+              "id": "0a03fc00000000000000000000000000",
+              "name": "Oswald"
+            },
+            {
+              "id": "0b03fc00000000000000000000000000",
+              "name": "Roboto"
+            },
+            {
+              "id": "0c03fc00000000000000000000000000",
+              "name": "STIX Two Text"
+            },
+            {
+              "id": "0d03fc00000000000000000000000000",
+              "name": "Ubuntu"
+            }
+          ],
+          "format": {
+            "alignment": 1,
+            "bold": false,
+            "bulleted": false,
+            "color": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "font": "0202fc00000000000000000000000000",
+            "fontSize": 16,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "formatObject": "00000000000000000000000000000000",
+          "geometry": {
+            "available": true,
+            "camera": "1",
+            "caret": [
+              159.00999450683594,
+              150,
+              160.00999450683594,
+              150,
+              160.00999450683594,
+              166,
+              159.00999450683594,
+              166
+            ],
+            "diagnostics": [],
+            "layout": "f8bc776bbe84919637ca9ba5fcdefa1947b4d581ad1bfed55892ddb3548b83ce:1:0",
+            "selection": [],
+            "token": {
+              "camera": "1",
+              "layout": "f8bc776bbe84919637ca9ba5fcdefa1947b4d581ad1bfed55892ddb3548b83ce:1:0",
+              "session": {
+                "adapter": "1",
+                "attachment": "1",
+                "document": "01000000000000000000000000000000",
+                "object": "010000000000000000000000000000f2",
+                "projection": "1",
+                "runtime": "1",
+                "session": "1",
+                "view": "301"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "301"
+              }
+            }
+          },
+          "mixedFormat": false,
+          "phase": 2,
+          "preedit": [
+            97,
+            98,
+            99,
+            100
+          ],
+          "preeditSelection": [
+            1,
+            0
+          ],
+          "projection": [],
+          "projectionLimit": 65536,
+          "replacement": [
+            0,
+            0
+          ],
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "4",
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "301"
+          },
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "1",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          },
+          "width": 320
+        },
+        "three": {
+          "composition": "1",
+          "effect": "0",
+          "exit": 2,
+          "fonts": [
+            {
+              "id": "0202fc00000000000000000000000000",
+              "name": "Noto Sans CJK SC"
+            },
+            {
+              "id": "0303fc00000000000000000000000000",
+              "name": "Comic Neue"
+            },
+            {
+              "id": "0403fc00000000000000000000000000",
+              "name": "Fira Sans"
+            },
+            {
+              "id": "0503fc00000000000000000000000000",
+              "name": "IBM Plex Mono"
+            },
+            {
+              "id": "0603fc00000000000000000000000000",
+              "name": "IBM Plex Sans"
+            },
+            {
+              "id": "0703fc00000000000000000000000000",
+              "name": "Inter"
+            },
+            {
+              "id": "0803fc00000000000000000000000000",
+              "name": "Inter Tight"
+            },
+            {
+              "id": "0903fc00000000000000000000000000",
+              "name": "Open Sans"
+            },
+            {
+              "id": "0a03fc00000000000000000000000000",
+              "name": "Oswald"
+            },
+            {
+              "id": "0b03fc00000000000000000000000000",
+              "name": "Roboto"
+            },
+            {
+              "id": "0c03fc00000000000000000000000000",
+              "name": "STIX Two Text"
+            },
+            {
+              "id": "0d03fc00000000000000000000000000",
+              "name": "Ubuntu"
+            }
+          ],
+          "format": {
+            "alignment": 1,
+            "bold": false,
+            "bulleted": false,
+            "color": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "font": "0202fc00000000000000000000000000",
+            "fontSize": 16,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "formatObject": "00000000000000000000000000000000",
+          "geometry": {
+            "available": true,
+            "camera": "1",
+            "caret": [
+              176.6699981689453,
+              150,
+              177.6699981689453,
+              150,
+              177.6699981689453,
+              166,
+              176.6699981689453,
+              166
+            ],
+            "diagnostics": [],
+            "layout": "f8bc776bbe84919637ca9ba5fcdefa1947b4d581ad1bfed55892ddb3548b83ce:3:0",
+            "selection": [],
+            "token": {
+              "camera": "1",
+              "layout": "f8bc776bbe84919637ca9ba5fcdefa1947b4d581ad1bfed55892ddb3548b83ce:3:0",
+              "session": {
+                "adapter": "1",
+                "attachment": "1",
+                "document": "01000000000000000000000000000000",
+                "object": "010000000000000000000000000000f2",
+                "projection": "1",
+                "runtime": "1",
+                "session": "1",
+                "view": "301"
+              },
+              "target": {
+                "attachmentEpoch": "2",
+                "runtimeEpoch": "1",
+                "viewEpoch": "1",
+                "viewId": "301"
+              }
+            }
+          },
+          "mixedFormat": false,
+          "phase": 2,
+          "preedit": [
+            97,
+            98,
+            99,
+            100
+          ],
+          "preeditSelection": [
+            3,
+            0
+          ],
+          "projection": [],
+          "projectionLimit": 65536,
+          "replacement": [
+            0,
+            0
+          ],
+          "selection": [
+            0,
+            0
+          ],
+          "sequence": "6",
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "301"
+          },
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "010000000000000000000000000000f2",
+            "projection": "1",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          },
+          "width": 320
+        }
+      }
+    },
+    {
+      "name": "selected closed Shape label accepts ordinary-consumer whole-label formatting",
+      "result": "PASS",
+      "evidence": {
+        "before": {
+          "composition": "0",
+          "effect": "0",
+          "exit": 3,
+          "fonts": [
+            {
+              "id": "0202fc00000000000000000000000000",
+              "name": "Noto Sans CJK SC"
+            },
+            {
+              "id": "0303fc00000000000000000000000000",
+              "name": "Comic Neue"
+            },
+            {
+              "id": "0403fc00000000000000000000000000",
+              "name": "Fira Sans"
+            },
+            {
+              "id": "0503fc00000000000000000000000000",
+              "name": "IBM Plex Mono"
+            },
+            {
+              "id": "0603fc00000000000000000000000000",
+              "name": "IBM Plex Sans"
+            },
+            {
+              "id": "0703fc00000000000000000000000000",
+              "name": "Inter"
+            },
+            {
+              "id": "0803fc00000000000000000000000000",
+              "name": "Inter Tight"
+            },
+            {
+              "id": "0903fc00000000000000000000000000",
+              "name": "Open Sans"
+            },
+            {
+              "id": "0a03fc00000000000000000000000000",
+              "name": "Oswald"
+            },
+            {
+              "id": "0b03fc00000000000000000000000000",
+              "name": "Roboto"
+            },
+            {
+              "id": "0c03fc00000000000000000000000000",
+              "name": "STIX Two Text"
+            },
+            {
+              "id": "0d03fc00000000000000000000000000",
+              "name": "Ubuntu"
+            }
+          ],
+          "format": {
+            "alignment": 2,
+            "bold": false,
+            "bulleted": false,
+            "color": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "font": "0202fc00000000000000000000000000",
+            "fontSize": 16,
+            "italic": false,
+            "strikethrough": false,
+            "underline": false
+          },
+          "formatObject": "01000000000001000000000000000000",
+          "geometry": {
+            "available": false,
+            "camera": "0",
+            "caret": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "diagnostics": [],
+            "layout": "",
+            "selection": [],
+            "token": {
+              "camera": "0",
+              "layout": "",
+              "session": {
+                "adapter": "0",
+                "attachment": "0",
+                "document": "00000000000000000000000000000000",
+                "object": "00000000000000000000000000000000",
+                "projection": "0",
+                "runtime": "0",
+                "session": "0",
+                "view": "0"
+              },
+              "target": {
+                "attachmentEpoch": "0",
+                "runtimeEpoch": "0",
+                "viewEpoch": "0",
+                "viewId": "0"
+              }
+            }
+          },
+          "mixedFormat": false,
+          "phase": 0,
+          "preedit": [],
+          "preeditSelection": null,
+          "projection": [
+            83,
+            104,
+            97,
+            112,
+            101,
+            32,
+            108,
+            97,
+            98,
+            101,
+            108
+          ],
+          "projectionLimit": 65536,
+          "replacement": [
+            0,
+            0
+          ],
+          "selection": [
+            11,
+            0
+          ],
+          "sequence": "3",
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "301"
+          },
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "01000000000001000000000000000000",
+            "projection": "2",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          },
+          "width": 240
+        },
+        "after": {
+          "composition": "0",
+          "effect": "0",
+          "exit": 3,
+          "fonts": [
+            {
+              "id": "0202fc00000000000000000000000000",
+              "name": "Noto Sans CJK SC"
+            },
+            {
+              "id": "0303fc00000000000000000000000000",
+              "name": "Comic Neue"
+            },
+            {
+              "id": "0403fc00000000000000000000000000",
+              "name": "Fira Sans"
+            },
+            {
+              "id": "0503fc00000000000000000000000000",
+              "name": "IBM Plex Mono"
+            },
+            {
+              "id": "0603fc00000000000000000000000000",
+              "name": "IBM Plex Sans"
+            },
+            {
+              "id": "0703fc00000000000000000000000000",
+              "name": "Inter"
+            },
+            {
+              "id": "0803fc00000000000000000000000000",
+              "name": "Inter Tight"
+            },
+            {
+              "id": "0903fc00000000000000000000000000",
+              "name": "Open Sans"
+            },
+            {
+              "id": "0a03fc00000000000000000000000000",
+              "name": "Oswald"
+            },
+            {
+              "id": "0b03fc00000000000000000000000000",
+              "name": "Roboto"
+            },
+            {
+              "id": "0c03fc00000000000000000000000000",
+              "name": "STIX Two Text"
+            },
+            {
+              "id": "0d03fc00000000000000000000000000",
+              "name": "Ubuntu"
+            }
+          ],
+          "format": {
+            "alignment": 2,
+            "bold": true,
+            "bulleted": false,
+            "color": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "font": "0703fc00000000000000000000000000",
+            "fontSize": 16,
+            "italic": true,
+            "strikethrough": false,
+            "underline": false
+          },
+          "formatObject": "01000000000001000000000000000000",
+          "geometry": {
+            "available": false,
+            "camera": "0",
+            "caret": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "diagnostics": [],
+            "layout": "",
+            "selection": [],
+            "token": {
+              "camera": "0",
+              "layout": "",
+              "session": {
+                "adapter": "0",
+                "attachment": "0",
+                "document": "00000000000000000000000000000000",
+                "object": "00000000000000000000000000000000",
+                "projection": "0",
+                "runtime": "0",
+                "session": "0",
+                "view": "0"
+              },
+              "target": {
+                "attachmentEpoch": "0",
+                "runtimeEpoch": "0",
+                "viewEpoch": "0",
+                "viewId": "0"
+              }
+            }
+          },
+          "mixedFormat": false,
+          "phase": 0,
+          "preedit": [],
+          "preeditSelection": null,
+          "projection": [
+            83,
+            104,
+            97,
+            112,
+            101,
+            32,
+            108,
+            97,
+            98,
+            101,
+            108
+          ],
+          "projectionLimit": 65536,
+          "replacement": [
+            0,
+            0
+          ],
+          "selection": [
+            11,
+            0
+          ],
+          "sequence": "3",
+          "target": {
+            "attachmentEpoch": "2",
+            "runtimeEpoch": "1",
+            "viewEpoch": "1",
+            "viewId": "301"
+          },
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "01000000000001000000000000000000",
+            "projection": "2",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          },
+          "width": 240
+        },
+        "font": {
+          "byteLength": 874708,
+          "contentHash": "sha256:0be2399ea925f1f83ff974764761da9860ec50742ed29a5d4c1ffd0c5c7ac3a8",
+          "diagnostic": "",
+          "family": "Inter",
+          "id": "0703fc00000000000000000000000000",
+          "revision": "1",
+          "status": 1
+        },
+        "receipt": {
+          "operation": "03000000000000800000000000000000",
+          "replay": false,
+          "request": "1",
+          "semanticGeneration": "3",
+          "status": 3,
+          "token": {
+            "adapter": "1",
+            "attachment": "1",
+            "document": "01000000000000000000000000000000",
+            "object": "01000000000001000000000000000000",
+            "projection": "2",
+            "runtime": "1",
+            "session": "1",
+            "view": "301"
+          }
+        },
+        "objects": 1
+      }
+    }
+  ],
+  "result": "PASS",
+  "errors": []
+}

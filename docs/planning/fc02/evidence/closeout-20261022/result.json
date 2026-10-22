@@ -1,0 +1,39 @@
+{
+  "task": "FC02 implementation closeout and human-feedback reconciliation",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "codex/fc02-windows-ime-resume",
+  "baseline_revision": "802a064dcb6f543112137c813d7078fef6efe7e5",
+  "tested_source_revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+  "materialized_ref_resolution": "git log -1 --format=%H -- docs/planning/fc02/evidence/closeout-20261022/result.json",
+  "scope": "Documentation/evidence only; no new product semantics or code",
+  "authorizations": "Direct user request to close out FC02 after both latest products basically passed testing",
+  "implementation_contracts": [
+    "../../implementation-closure.json",
+    "../../host-closure.json",
+    "../../font-closure.json",
+    "../interface-repair-20261022/execution-closure.json"
+  ],
+  "coverage": "coverage-map.json",
+  "validation": "validation-summary.json",
+  "human": "human-feedback.json",
+  "manual_remaining": "manual-matrix.json",
+  "artifacts": "artifacts.json",
+  "consumer_guide": "../../../FC02_CONSUMER_GUIDE.md",
+  "closeout_report": "../../../FC02_CLOSEOUT.md",
+  "known_unresolved_implementation_failure_in_tested_scope": [],
+  "remaining_limits": [
+    "Per-case real IME/touch/DPI/lifecycle observations PHYSICAL_PENDING",
+    "Emoji/all Unicode coverage not promised",
+    "Editor projection limit 65536 UTF-16 units",
+    "Text auto-growth uses separate text and geometry History records; local-negative-Y for rotated shapes",
+    "Web installed compiler differs from SDK LLVM metadata; tested actual browser path only"
+  ],
+  "independent_control_review": "NOT_PERFORMED",
+  "gate_or_phys_pass_claim": false,
+  "historical_records_modified": false,
+  "protected_changes": false
+}

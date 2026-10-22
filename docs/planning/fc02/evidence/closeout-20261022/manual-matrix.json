@@ -1,0 +1,42 @@
+{
+  "product_revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+  "aggregate_feedback": "human-feedback.json",
+  "checks": [
+    {
+      "id": "NATIVE_IME",
+      "scenario": "Windows/Chrome real IME candidate position, candidate keys, preedit caret, result/cancel and duplicate terminal",
+      "expected": "Committed text matches actual native result once; preedit/cancel does not fabricate commits",
+      "actual": "Not individually confirmed by the latest aggregate user report",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "FOCUS_EXIT",
+      "scenario": "Active composition: tool switch, Debug UI format focus, Alt+Tab, Esc, controlled close and completion failure",
+      "expected": "Actual native completion before intended edit transition; no fake timeout/focus commit",
+      "actual": "Not individually confirmed by the latest aggregate user report",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "TOUCH_PEN",
+      "scenario": "Real touch/pen text creation, positioning/selection, Debug UI isolation and existing multi-finger rules",
+      "expected": "Complete source/pointer/generation; no promoted-mouse duplicate, penetration or altered gesture policy",
+      "actual": "Not individually confirmed by the latest aggregate user report",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "DPI_DISPLAY",
+      "scenario": "Multi-monitor/DPI and resize/maximize/minimize/restore during text/IME",
+      "expected": "Text, caret, selection and candidate window remain aligned; stale geometry is rejected",
+      "actual": "Not individually confirmed by the latest aggregate user report",
+      "result": "PHYSICAL_PENDING"
+    },
+    {
+      "id": "BROWSER_LIFECYCLE",
+      "scenario": "Chrome native focus, hide, controlled leave and forced destroy with IME",
+      "expected": "Controlled failures visible; forced leave never claims guaranteed asynchronous save",
+      "actual": "Not individually confirmed by the latest aggregate user report",
+      "result": "PHYSICAL_PENDING"
+    }
+  ],
+  "not_a_gate_or_phys_record": true
+}

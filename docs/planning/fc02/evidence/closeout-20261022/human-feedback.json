@@ -1,0 +1,31 @@
+{
+  "recorded_local_date": "2026-10-22",
+  "source": "Direct user report in this conversation after launching both products",
+  "quote": "这两个端的测试基本通过了，继续收尾fc02吧",
+  "product_revision": "3d7afa351dfbd42f18c449bda35f861089b1fb4f",
+  "windows_artifact": "artifacts.json#/windows",
+  "web_url": "http://127.0.0.1:4175/index.html?rev=3d7afa35",
+  "result": "BASIC_SMOKE_PASS_BY_USER_REPORT",
+  "interpretation": "Windows and Web basic use reported satisfactory; no new per-case native IME/touch/DPI verdict inferred",
+  "prior_explicit_passes": [
+    {
+      "scope": "Windows Text entry, Enter/recreate, ten Ink strokes then Text",
+      "evidence": "../windows-ime-resume-20261020/summary.json"
+    },
+    {
+      "scope": "Debug UI effect buttons, bold/italic, font selection",
+      "evidence": "../text-format-fonts-20261020/summary.json"
+    },
+    {
+      "scope": "Web Select/triangle/numeric IME scenario: nearest caret blink, inside click moves, outside click finishes",
+      "evidence": "../web-label-reentry-20261022/human-retest.json"
+    }
+  ],
+  "historical_failures_preserved": [
+    "../text-tool-entry/user-failure.json",
+    "../web-label-reentry-20261022/user-report.json",
+    "../shape-label-editing-20261022/reproduction/user-report.json"
+  ],
+  "specialized_matrix_result": "PHYSICAL_PENDING",
+  "independent_review_or_gate_claim": false
+}
