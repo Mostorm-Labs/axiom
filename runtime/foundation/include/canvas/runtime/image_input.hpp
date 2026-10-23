@@ -63,7 +63,7 @@ struct ImageCropUpdateRequest final {
   semantic::NormalizedRect sourceRect{};
   double width = 0.0;
   double height = 0.0;
-  std::optional<double> contentScale;
+  std::optional<double> contentScale{};
 };
 
 struct ImageCommandReceipt final {
