@@ -1,0 +1,43 @@
+{
+  "task_id": "FC03-DESIGN-CLOSURE",
+  "status": "READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "source_revision": "dd840d8eef868528fea0a9842b4dd77111856ecf",
+  "materialized_revision": "dd840d8eef868528fea0a9842b4dd77111856ecf",
+  "authority": {
+    "previous_current": "fc-feature-completion-execution-v0.2",
+    "current": "fc-feature-completion-execution-v0.3",
+    "superseded": "fc-feature-completion-execution-v0.2",
+    "notion_ref": "notion://3f74c57a590c812a8260dcf23b659ed0",
+    "current_scope_kind_count": 5
+  },
+  "image_content_status": {
+    "repository_mirror": "frozen-by-v1-final-gate",
+    "notion_page": "Proposed Freeze",
+    "page_id": "3c44c57a590c81948870c4f266a39861",
+    "resolution": "consume existing repository ImageContent fields; preserve discrepancy for P21/P22; no new semantic authority"
+  },
+  "crop_contract": "docs/planning/FC03_CROP_CONTRACT.md",
+  "p20_freeze": "docs/planning/FC03_P20_VERIFICATION_FREEZE.md",
+  "candidate": "docs/planning/FC03_IMAGE_DESIGN_CANDIDATE.md",
+  "file_sha256": {
+    ".aegis/authorities.json": "ca1875d06fae9cbbd2c398b4af6bd46a82082eac41e6e590ed5161ffea902dcf",
+    ".aegis/state.json": "ae2c62a6ece03487e56e9288ad7207ce8d7dfa5aee0312e45bd6834cfabfc3d1",
+    "docs/planning/FC03_IMAGE_DESIGN_CANDIDATE.md": "48a5f41e7c1659fcb0657640c5f71f8cbb4379d2c2df67fdf0ca0dfe291670a5",
+    "docs/planning/FC03_CROP_CONTRACT.md": "481054538ffef438d7d9dbb23a564cab8f0c390859948389121672ed2cf75cb2",
+    "docs/planning/FC03_P20_VERIFICATION_FREEZE.md": "86eaabc5f4e848ed43cf29c7b6d1c3efadda676f1af760aa81f6dbb7b8b6d232",
+    "docs/planning/FC03_AUTHORITY_ALIGNMENT.md": "5c7c7f829ee8936e0f4c3a459457a6c094c906af28cfede527f5c8591d1c5f0f"
+  },
+  "aegis_cli": {
+    "revision": "Mostorm-Labs/aegis@00d3690ca2cdde15b3f919c54ccc8ef6290f55ba",
+    "baseline_validate": "VALID",
+    "transition_check": "TRANSITION_OK",
+    "successor_validate": "VALID",
+    "successor_check": "STATE_OK"
+  },
+  "nonclaims": [
+    "no product source implementation",
+    "no FC03 P31/P32/P34 or DEV/PHYS PASS",
+    "no ImageContent semantic redefinition",
+    "no historical Gate/Evidence/Integration rewrite"
+  ]
+}

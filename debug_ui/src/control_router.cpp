@@ -447,6 +447,80 @@ DebugActivityState DebugControlRouter::mapSurface(canvas::runtime::SurfaceContro
 }  // namespace canvas::debug_ui
 
 namespace canvas::debug_ui {
+canvas::runtime::SelectedImageSnapshot DebugControlRouter::selectedImage() const {
+ return runtime_ ? runtime_->readSelectedImage() : canvas::runtime::SelectedImageSnapshot{};
+}
+canvas::runtime::ImageCropSnapshot DebugControlRouter::imageCrop() const {
+ return runtime_ ? runtime_->readImageCrop() : canvas::runtime::ImageCropSnapshot{};
+}
+void DebugControlRouter::requestImageFile(bool replace) {
+ if (!runtime_ || imageFileRequest_ || imageCrop().active) return;
+ const auto targets = runtime_->mountedCanvasTargets(); if (targets.empty()) return;
+ const auto selected = selectedImage();
+ if (replace && (!selected.available || !selected.editable)) return;
+ imageFileRequest_ = ImageFileRequest{replace, selected, targets.front()};
+ imageStatus_ = "Choose a PNG, JPEG or WebP file";
+}
+void DebugControlRouter::processImageFileRequest(const std::function<ImageFileResult()>& chooseFile) {
+ if (!imageFileRequest_) return;
+ const auto request = *imageFileRequest_; imageFileRequest_.reset();
+ if (!chooseFile) { imageStatus_ = "File picker unavailable in this host"; return; }
+ const auto file = chooseFile();
+ if (file.cancelled) { imageStatus_ = "File selection cancelled"; return; }
+ if (!file.error.empty()) { imageStatus_ = file.error; return; }
+ const auto targets = runtime_->mountedCanvasTargets();
+ if (targets.empty() || targets.front() != request.target) { imageStatus_ = "Image request rejected: binding changed"; return; }
+ if (request.replace) {
+   const auto current = selectedImage();
+   if (!current.editable || current.objectId != request.selected.objectId || current.content != request.selected.content) {
+     imageStatus_ = "Image request rejected: selection changed"; return;
+   }
+   canvas::runtime::ImageReplaceRequest r; r.objectId = request.selected.objectId;
+   r.bytes = file.bytes; r.mimeType = file.mimeType;
+   r.content = request.selected.content; r.content.source_rect.reset();
+   recordImage("Replace image", runtime_->replaceImage(r));
+ } else {
+   canvas::runtime::ImageImportRequest r; r.bytes = file.bytes; r.mimeType = file.mimeType;
+   const auto camera = runtime_->readRuntimeState().camera;
+   const double scale = camera.scale > 0 ? camera.scale : 1;
+   r.transform.tx = (450.0 - camera.translationX) / scale;
+   r.transform.ty = (100.0 - camera.translationY) / scale;
+   recordImage("Import image", runtime_->importImage(r));
+ }
+}
+void DebugControlRouter::recordImage(const char* action, const canvas::runtime::ImageCommandReceipt& r) {
+ using R = canvas::runtime::ImageFailureReason;
+ const char* reason = "Rejected";
+ switch (r.reason) {
+ case R::kNone: reason = "Applied"; break;
+ case R::kWrongThread: reason = "Wrong owner thread"; break;
+ case R::kNotReady: reason = "Runtime not ready"; break;
+ case R::kInvalidRequest: reason = "Invalid crop or image values"; break;
+ case R::kUnknownResource: reason = "Resource missing"; break;
+ case R::kResourceRejected: reason = "Resource validation rejected"; break;
+ case R::kObjectRejected: reason = "Object is unavailable, locked or conflicting"; break;
+ case R::kInvalidCropSession: reason = "No valid crop session"; break;
+ case R::kStaleCropSession: reason = "Crop session expired"; break;
+ case R::kUnsupportedFormat: reason = "Unsupported image format"; break;
+ case R::kMimeMismatch: reason = "File type does not match encoded bytes"; break;
+ case R::kDecodeFailed: reason = "Image decode failed"; break;
+ }
+ imageStatus_ = std::string(action) + ": " + reason;
+ if (activity_) activity_->record({0, nextRequestId(), DebugControlOwner::kProduct, imageStatus_,
+   r.state == canvas::runtime::ImageCommandState::kApplied ? DebugActivityState::kApplied : DebugActivityState::kRejected,
+   frame_.stamp.runtimeGeneration, r.semanticGeneration, frame_.stamp.surfaceGeneration, 0, {}, {}});
+}
+void DebugControlRouter::beginImageCrop() {
+ if (runtime_) recordImage("Crop", runtime_->beginImageCrop({selectedImage().objectId}));
+}
+void DebugControlRouter::updateImageCrop(const canvas::runtime::ImageCropUpdateRequest& r) {
+ if (runtime_) recordImage("Crop preview", runtime_->updateImageCrop(r));
+}
+void DebugControlRouter::finishImageCrop(bool commit) {
+ if (!runtime_) return;
+ const auto crop = imageCrop();
+ recordImage(commit ? "Crop Done" : "Crop Cancel", commit ? runtime_->commitImageCrop(crop.cropToken) : runtime_->cancelImageCrop(crop.cropToken));
+}
 canvas::runtime::TextReceipt DebugControlRouter::setTextFormat(const canvas::runtime::TextFormatPatch& patch){
  if(!runtime_ || runtime_->mountedCanvasTargets().empty())return {};
  canvas::runtime::TextIntent request;request.kind=canvas::runtime::TextIntentKind::kFormat;request.clientId=0xD003;request.requestId=nextRequestId();request.target=runtime_->mountedCanvasTargets().front();const auto editor=runtime_->readTextEditor();request.token=editor.token;request.object=editor.formatObject;request.format=patch;return runtime_->submitTextIntent(request);

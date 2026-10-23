@@ -1,0 +1,246 @@
+{
+  "schema_version": "0.1",
+  "format": "fc03-dev-evidence-manifest-v1",
+  "task_id": "FC-03",
+  "gate_id": "FC-03-DEV",
+  "gate_scope": "development_only",
+  "package_ref": ".aegis/packages/FC-03-P31/package.json@6129bed9dbbbf55e7cb99960b2cf88d6f02ade17",
+  "task_anchor": "462d80868af2f2e6fb09b235f283c1cb7b221ff3",
+  "result_revision": "e53de4632967fc406e0b40c8195a6b34df28385f",
+  "materialized_ref": "codex/fc03-image-design",
+  "build_profile": {
+    "compiler": "MSVC 19.51.36231",
+    "build_type": "Release",
+    "skia_sdk": ".deps/skia-sdk/windows-x64-d3d12/release",
+    "semantic_runtime": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c"
+  },
+  "commands": {
+    "build": "cmd /c out/fc03-final-run.cmd",
+    "ctest": "ctest --test-dir out/fc03-p32-red -R G47ImageResource|FC03ImageFacade|FC03ImageScene|FC00XRuntimeFacade|FC00XRuntimeComposition|FC00XMinimalRuntimeHost|G3WebSurfaceHost --output-on-failure",
+    "python": "python -m unittest verification.tests.test_current_semantic_descriptor verification.tests.test_semantic_contract verification.tests.test_fc02_host_contract verification.tests.test_host_text_font_resource -v",
+    "diff_check": "git diff --check"
+  },
+  "outcomes": {
+    "build": "PASS",
+    "ctest": "7/7 PASS",
+    "python": "17/17 PASS",
+    "diff_check": "PASS"
+  },
+  "source_files": [
+    {
+      "path": "runtime/foundation/include/canvas/runtime/image_input.hpp",
+      "sha256": "75b1d02ce8cc20bd674fe131e7a28a97e19d302d197da74aadbd93d2bad9e029"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "sha256": "9c0095ce6f0679e1c4d4f7cc4c86b614d15647f7e37b1f3907183798fdff4418"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp",
+      "sha256": "3dc901e330116fa87df660ec015177e3a9d723cc5f630619f4397f5bce439d24"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/runtime_composition.hpp",
+      "sha256": "6f743f609de749a15f6ecf5c835cd210234487ed10e3ee57ac35b8f0d758b72e"
+    },
+    {
+      "path": "runtime/composition/src/canvas_runtime_image.cpp",
+      "sha256": "ff9fa583024812ebfc805bf89073b96ae46899920397029942b40e1f9dab398e"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "7757a2b8ca0fba1efb0fcba1f59268a4858d3044b30146485217a95aea0ffbc1"
+    },
+    {
+      "path": "runtime/composition/tests/fc03_image_facade_test.cpp",
+      "sha256": "aa157a9c17febeafa0f9528dd88045661086eae9f014ee11a9224527340bc764"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "5080a600a8997c92bf896dbabd0c7786b0adc285f1ecabd1fcf26bcac49164a0"
+    },
+    {
+      "path": "runtime/interaction/src/editor_history.cpp",
+      "sha256": "5ab71d30b0a6b7426a6118353881ae76722837f55768f57e7086d424aac4dcf6"
+    },
+    {
+      "path": "runtime/scene/src/scene.cpp",
+      "sha256": "a83cbd69a02c286a63a046f7350c230d06be9726ec4ea2ae13d61edff6cbcef4"
+    },
+    {
+      "path": "runtime/scene/src/runtime_scene_projection.cpp",
+      "sha256": "e2f6540df295e687c0038db434e40009dd062ef0800a4507b8b68e85475fa398"
+    },
+    {
+      "path": "runtime/scene/tests/fc03_image_scene_test.cpp",
+      "sha256": "300a24e487f3e38b1557d3d54632b6c41eda6d54cace9cce67b393164ed0bbe9"
+    },
+    {
+      "path": "runtime/scene/tests/CMakeLists.txt",
+      "sha256": "afa316bcde6b37e5075f2e8f6607db0fa21c9c23c788f24be620a40ddb8955d4"
+    },
+    {
+      "path": "runtime/composition/tests/fc03_image_facade_test.cpp",
+      "sha256": "6ca0393a485048b243b89b0cf0ea5a2a5252cbcae8f064be792dc0f103b93f88"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "f7b566e14e326f12db991b432da4200706a58368412f286d06dab9186473d894"
+    },
+    {
+      "path": "apps/minimal_runtime_host/minimal_runtime_facade.hpp",
+      "sha256": "52528241748ecf653571e38eb3309679609fbb574d7d8d6a80b232ec95214760"
+    },
+    {
+      "path": "apps/minimal_runtime_host/minimal_runtime_facade.cpp",
+      "sha256": "4d7ec37a49c113fae208dccac02c8d5bfc19c5a7b5aff4428e298c99cc3668f2"
+    },
+    {
+      "path": "apps/minimal_runtime_host/tests/minimal_runtime_host_test.cpp",
+      "sha256": "999b7f5ca28eb92de13d2167f90de4f2149d757d19aa19e9c9c75a8f84f35954"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/tests/web_surface_host_test.cpp",
+      "sha256": "875de94a5a3ea97b967f3653dc813ccc11399c22f588c686fbb2890fcc463f6a"
+    },
+    {
+      "path": "verification/fixtures/fc03/fc03-red.jpg",
+      "sha256": "1df3a19acd973f85c4470dec6266fbc668cee8221e30cde2bae66d04decc0a5c"
+    },
+    {
+      "path": "verification/fixtures/fc03/fc03-sample.jpg",
+      "sha256": "6cafb569563f09572602971f21fc72ddf711f6d6e056abc3cd7ffbdff2e09e68"
+    },
+    {
+      "path": "verification/fixtures/fc03/fc03-sample.webp",
+      "sha256": "4a5afeaff8483923da964bc7896f02d0283e8bff99b5b8f82a31ae3214dab1d0"
+    },
+    {
+      "path": "runtime/scene/src/scene.cpp",
+      "sha256": "a83cbd69a02c286a63a046f7350c230d06be9726ec4ea2ae13d61edff6cbcef4"
+    },
+    {
+      "path": "runtime/scene/src/runtime_scene_projection.cpp",
+      "sha256": "e2f6540df295e687c0038db434e40009dd062ef0800a4507b8b68e85475fa398"
+    },
+    {
+      "path": "runtime/scene/tests/fc03_image_scene_test.cpp",
+      "sha256": "300a24e487f3e38b1557d3d54632b6c41eda6d54cace9cce67b393164ed0bbe9"
+    },
+    {
+      "path": "runtime/scene/tests/CMakeLists.txt",
+      "sha256": "afa316bcde6b37e5075f2e8f6607db0fa21c9c23c788f24be620a40ddb8955d4"
+    },
+    {
+      "path": "runtime/composition/tests/fc03_image_facade_test.cpp",
+      "sha256": "6ca0393a485048b243b89b0cf0ea5a2a5252cbcae8f064be792dc0f103b93f88"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "173d7f1f76fd50b834cdfc95a1e8ab25afa7b966f32788b43451c87c55e3efd2"
+    },
+    {
+      "path": "apps/minimal_runtime_host/minimal_runtime_facade.hpp",
+      "sha256": "52528241748ecf653571e38eb3309679609fbb574d7d8d6a80b232ec95214760"
+    },
+    {
+      "path": "apps/minimal_runtime_host/minimal_runtime_facade.cpp",
+      "sha256": "4d7ec37a49c113fae208dccac02c8d5bfc19c5a7b5aff4428e298c99cc3668f2"
+    },
+    {
+      "path": "apps/minimal_runtime_host/tests/minimal_runtime_host_test.cpp",
+      "sha256": "999b7f5ca28eb92de13d2167f90de4f2149d757d19aa19e9c9c75a8f84f35954"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/tests/web_surface_host_test.cpp",
+      "sha256": "875de94a5a3ea97b967f3653dc813ccc11399c22f588c686fbb2890fcc463f6a"
+    },
+    {
+      "path": "verification/fc03/fixtures/fc03-red.jpg",
+      "sha256": "1df3a19acd973f85c4470dec6266fbc668cee8221e30cde2bae66d04decc0a5c"
+    },
+    {
+      "path": "verification/fc03/fixtures/fc03-sample.jpg",
+      "sha256": "6cafb569563f09572602971f21fc72ddf711f6d6e056abc3cd7ffbdff2e09e68"
+    },
+    {
+      "path": "verification/fc03/fixtures/fc03-sample.webp",
+      "sha256": "4a5afeaff8483923da964bc7896f02d0283e8bff99b5b8f82a31ae3214dab1d0"
+    },
+    {
+      "path": "runtime/scene/src/scene.cpp",
+      "sha256": "62ef2d6d87902d8d0c3b3c5181ba9142c82759a33deb6e3b9b5c7859660797c2"
+    },
+    {
+      "path": "runtime/scene/src/runtime_scene_projection.cpp",
+      "sha256": "e2f6540df295e687c0038db434e40009dd062ef0800a4507b8b68e85475fa398"
+    },
+    {
+      "path": "runtime/scene/tests/fc03_image_scene_test.cpp",
+      "sha256": "e0c7c070d4c45a4ad4dec093e9c88b3f8d20f2b802a6d14f0478f3ba8c3b6a0c"
+    },
+    {
+      "path": "runtime/scene/tests/CMakeLists.txt",
+      "sha256": "afa316bcde6b37e5075f2e8f6607db0fa21c9c23c788f24be620a40ddb8955d4"
+    },
+    {
+      "path": "runtime/composition/tests/fc03_image_facade_test.cpp",
+      "sha256": "6ca0393a485048b243b89b0cf0ea5a2a5252cbcae8f064be792dc0f103b93f88"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "173d7f1f76fd50b834cdfc95a1e8ab25afa7b966f32788b43451c87c55e3efd2"
+    },
+    {
+      "path": "apps/minimal_runtime_host/minimal_runtime_facade.hpp",
+      "sha256": "52528241748ecf653571e38eb3309679609fbb574d7d8d6a80b232ec95214760"
+    },
+    {
+      "path": "apps/minimal_runtime_host/minimal_runtime_facade.cpp",
+      "sha256": "4d7ec37a49c113fae208dccac02c8d5bfc19c5a7b5aff4428e298c99cc3668f2"
+    },
+    {
+      "path": "apps/minimal_runtime_host/tests/minimal_runtime_host_test.cpp",
+      "sha256": "999b7f5ca28eb92de13d2167f90de4f2149d757d19aa19e9c9c75a8f84f35954"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/tests/web_surface_host_test.cpp",
+      "sha256": "875de94a5a3ea97b967f3653dc813ccc11399c22f588c686fbb2890fcc463f6a"
+    },
+    {
+      "path": "verification/fc03/fixtures/fc03-red.jpg",
+      "sha256": "1df3a19acd973f85c4470dec6266fbc668cee8221e30cde2bae66d04decc0a5c"
+    },
+    {
+      "path": "verification/fc03/fixtures/fc03-sample.jpg",
+      "sha256": "6cafb569563f09572602971f21fc72ddf711f6d6e056abc3cd7ffbdff2e09e68"
+    },
+    {
+      "path": "verification/fc03/fixtures/fc03-sample.webp",
+      "sha256": "4a5afeaff8483923da964bc7896f02d0283e8bff99b5b8f82a31ae3214dab1d0"
+    }
+  ],
+  "obligations": {
+    "IMG01": "PASS: PNG/JPEG/WebP typed RuntimeFacade import with pinned bytes, manifest hash/length, and SkCodec decode",
+    "IMG02": "PASS: invalid bytes zero semantic mutation",
+    "IMG03": "PASS: full source rect canonicalizes to absent; partial rect validated",
+    "IMG04": "PASS: existing ImageResource FIT/FILL/STRETCH oracle",
+    "IMG05": "PASS: crop preview transient, Done one SetImageContent history entry, Cancel/lost/close zero mutation",
+    "IMG06": "PASS: preserve aspect/free stretch typed resize",
+    "IMG07": "PASS: resource readiness derived render test",
+    "IMG08": "PASS: stale binding existing composition tests plus tokenized replace",
+    "IMG09": "PASS: source_rect/content_mode digest changes, bounds remain valid, Scene impact marks local/world/spatial/resource dirty, and Scene hit/damage regression passes",
+    "IMG10": "PASS: selection/history owner path plus image resize undo/redo",
+    "IMG11": "PASS: Windows MinimalRuntimeFacade and WebSurfaceHost facade expose the same typed Image API; forwarding and rejection contract tests pass",
+    "IMG12": "PASS: live manifest remove rejection and zero mutation"
+  },
+  "physical_claim": false,
+  "physical_debt": {
+    "windows_file_picker": "PHYSICAL_PENDING",
+    "web_file_input": "PHYSICAL_PENDING",
+    "real_gpu": "PHYSICAL_PENDING",
+    "cross_platform": "PHYSICAL_PENDING"
+  },
+  "terminal": "READY_FOR_CONTROL_REVIEW",
+  "blocker": ""
+}

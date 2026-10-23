@@ -88,6 +88,19 @@ target_link_libraries(canvas_g2_a2_scene_impact_test PRIVATE canvas_runtime_scen
 target_compile_features(canvas_g2_a2_scene_impact_test PRIVATE cxx_std_20)
 add_test(NAME canvas_g2_a2_scene_impact COMMAND canvas_g2_a2_scene_impact_test)
 
+add_executable(canvas_fc03_image_scene_test fc03_image_scene_test.cpp)
+target_include_directories(canvas_fc03_image_scene_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(canvas_fc03_image_scene_test PRIVATE ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
+target_link_libraries(canvas_fc03_image_scene_test PRIVATE
+    canvas_runtime_scene canvas_runtime_semantic canvas_runtime_scene_fakes)
+target_compile_features(canvas_fc03_image_scene_test PRIVATE cxx_std_20)
+if(MSVC)
+    target_compile_options(canvas_fc03_image_scene_test PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+else()
+    target_compile_options(canvas_fc03_image_scene_test PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+endif()
+add_test(NAME FC03ImageScene COMMAND canvas_fc03_image_scene_test)
+
 add_executable(canvas_g2_a2_dependency_closure_test dependency_closure_test.cpp)
 target_link_libraries(canvas_g2_a2_dependency_closure_test PRIVATE canvas_runtime_scene)
 target_compile_features(canvas_g2_a2_dependency_closure_test PRIVATE cxx_std_20)

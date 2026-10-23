@@ -1,0 +1,106 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-package-v1",
+  "package_id": "FC-03-P31-v0.1",
+  "task_id": "FC-03",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "MATERIALIZED_READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "purpose": "Implement resource-backed Image insertion/replacement, Crop session, History and Windows/Web typed RuntimeFacade adapters on existing ImageContent/ResourceManifest semantics.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "base_lineage_revision": "462d80868af2f2e6fb09b235f283c1cb7b221ff3"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "462d80868af2f2e6fb09b235f283c1cb7b221ff3",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "gate_id": "FC-03-DEV",
+  "gate_scope": "development_only",
+  "authority_bindings": {
+    "authority": {
+      "path": ".aegis/authorities.json",
+      "sha256": "ca1875d06fae9cbbd2c398b4af6bd46a82082eac41e6e590ed5161ffea902dcf",
+      "authority_id": "fc-feature-completion-execution-v0.3"
+    },
+    "candidate": {
+      "path": "docs/planning/FC03_IMAGE_DESIGN_CANDIDATE.md",
+      "sha256": "48a5f41e7c1659fcb0657640c5f71f8cbb4379d2c2df67fdf0ca0dfe291670a5"
+    },
+    "authority_alignment": {
+      "path": "docs/planning/FC03_AUTHORITY_ALIGNMENT.md",
+      "sha256": "5c7c7f829ee8936e0f4c3a459457a6c094c906af28cfede527f5c8591d1c5f0f"
+    },
+    "crop_contract": {
+      "path": "docs/planning/FC03_CROP_CONTRACT.md",
+      "sha256": "481054538ffef438d7d9dbb23a564cab8f0c390859948389121672ed2cf75cb2"
+    },
+    "p20": {
+      "path": "docs/planning/FC03_P20_VERIFICATION_FREEZE.md",
+      "sha256": "86eaabc5f4e848ed43cf29c7b6d1c3efadda676f1af760aa81f6dbb7b8b6d232"
+    }
+  },
+  "scope": {
+    "allowed_mutation_scope": [
+      "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "runtime/foundation/include/canvas/runtime/image_input.hpp",
+      "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp",
+      "runtime/composition/src/canvas_runtime_facade.cpp",
+      "runtime/composition/include/canvas/runtime/runtime_composition.hpp",
+      "runtime/composition/src/runtime_composition.cpp",
+      "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+      "runtime/interaction/src/editor_history.cpp",
+      "apps/minimal_runtime_host/**",
+      "apps/axiom_canvas_demo/platform/web/**",
+      "runtime/composition/tests/**",
+      "runtime/interaction/tests/**",
+      "apps/minimal_runtime_host/tests/**",
+      "CMakeLists.txt",
+      "runtime/**/CMakeLists.txt",
+      "apps/**/CMakeLists.txt",
+      "verification/fc03/**",
+      ".aegis/results/FC-03-DEV/**"
+    ],
+    "forbidden_changes": [
+      "schema/axiom/v1/**",
+      "runtime/semantic/include/canvas/semantic/object_content.hpp",
+      "runtime/semantic/include/canvas/semantic/operation_payload.hpp",
+      "runtime/semantic/src/**",
+      "docs/notion/**",
+      ".aegis/gates.json",
+      ".aegis/evidence.json",
+      ".aegis/integrations.json",
+      "G5 cache/scheduler",
+      "FC-02 text",
+      "FC-04 multi-object",
+      "new ObjectKind/Operation/Proto field"
+    ],
+    "preserve_unchanged": [
+      "existing ImageContent wire/schema and semantic validator",
+      "historical Gate/Evidence/Integration/PHYS",
+      "FC02 text owner and G4.7 authority",
+      "semantic-sdk/skia locks"
+    ]
+  },
+  "preflights": [
+    "RepositoryIdentity",
+    "PackageBindingPreflight",
+    "EvidenceContractPreflight",
+    "ImplementationDesignPreflight",
+    "FC03-RED-01"
+  ],
+  "terminal_target": "READY_FOR_CONTROL_REVIEW with IMG-01..IMG-12 evidence or explicit environment blocker",
+  "nonclaims": [
+    "No P34/DEV Gate PASS",
+    "No physical PASS",
+    "No schema redesign",
+    "No historical Gate rewrite"
+  ]
+}

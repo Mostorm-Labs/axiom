@@ -59,6 +59,25 @@ RuntimeSceneProjection projectRuntimeScene(
             for(const auto& font:derived.textLayout->fonts) derived.directDependencies.push_back(font.resourceId.value);
             std::sort(derived.directDependencies.begin(),derived.directDependencies.end());
             derived.directDependencies.erase(std::unique(derived.directDependencies.begin(),derived.directDependencies.end()),derived.directDependencies.end());
+        } else if (record.kind == semantic::ObjectKind::kImage) {
+            auto& derived = projection.records.back();
+            const auto bounds = computeBounds(record, nullptr);
+            derived.geometryBounds = bounds.geometry;
+            derived.visualBounds = bounds.visual;
+            derived.worldBounds = bounds.world;
+            const auto& image = std::get<semantic::ImageContent>(record.content);
+            derived.referenceGeometryDigest = "image:" +
+                std::to_string(static_cast<unsigned>(image.content_mode));
+            if (image.source_rect) {
+                derived.referenceGeometryDigest += ":source:" +
+                    std::to_string(image.source_rect->x) + "," +
+                    std::to_string(image.source_rect->y) + "," +
+                    std::to_string(image.source_rect->width) + "," +
+                    std::to_string(image.source_rect->height);
+            } else {
+                derived.referenceGeometryDigest += ":source:full";
+            }
+            if (!image.resource_id.value.isZero()) derived.directDependencies.push_back(image.resource_id.value);
         }
     }
     std::sort(projection.records.begin(), projection.records.end(),

@@ -1,5 +1,6 @@
 #include "canvas/render/skia_headless_backend.hpp"
 #include "canvas/render/image_resource.hpp"
+#include "canvas/render/image_crop_geometry.hpp"
 #include "canvas/render/skia_text_resources.hpp"
 #include "include/core/SkImage.h"
 #include "include/core/SkData.h"
@@ -475,6 +476,22 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             const auto image = SkImages::RasterFromData(info,
                 SkData::MakeWithCopy(decoded->rgba.data(), decoded->rgba.size()), info.minRowBytes());
             if (!image) return;
+            if (command.showCropSource) {
+                const auto fullSource = SkRect::MakeWH(static_cast<float>(decoded->width),
+                                                       static_cast<float>(decoded->height));
+                const auto fullDestination = rect(imageCropSourceBounds(command.content));
+                const auto trim = SkRect::MakeWH(skScalar(command.content.width), skScalar(command.content.height));
+                // A single full-source draw keeps inside/outside pixels aligned.
+                // Darken only the part excluded by the current trim frame.
+                canvas.drawImageRect(image, fullSource, fullDestination,
+                    SkSamplingOptions(SkFilterMode::kNearest), nullptr, SkCanvas::kStrict_SrcRectConstraint);
+                canvas.save();
+                canvas.clipRect(trim, SkClipOp::kDifference);
+                SkPaint dim; dim.setColor4f({0, 0, 0, .5F});
+                canvas.drawRect(fullDestination, dim);
+                canvas.restore();
+                return;
+            }
             SkRect source = SkRect::MakeWH(static_cast<float>(decoded->width), static_cast<float>(decoded->height));
             if (command.content.source_rect) {
                 const auto& r = *command.content.source_rect;

@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1",
+  "task_id": "FC-03",
+  "review_boundary": "exact P32 source commit and reviewer-accessible result",
+  "required_artifacts": [
+    "red-preflight.json",
+    "implementation-design-preflight.json",
+    "evidence-manifest.json",
+    "physical-debt-ledger.json"
+  ],
+  "blocking": "IMG-01..IMG-12 each distinct failure mode",
+  "corroborative": [
+    "duplicate runs",
+    "screenshots",
+    "physical observations"
+  ],
+  "no_physical_claim": true
+}

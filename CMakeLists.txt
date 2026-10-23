@@ -106,6 +106,15 @@ if(MSVC)
   endif()
 endif()
 
+# Match Skia's inline ABI to the published SDK variant independently of the
+# application's NDEBUG setting. Tests deliberately keep standard assertions on
+# while consuming the release SDK.
+if(CANVAS_SKIA_SDK_VARIANT STREQUAL "release")
+  add_compile_definitions(SK_RELEASE)
+elseif(CANVAS_SKIA_SDK_VARIANT MATCHES "^(debug|asan)$")
+  add_compile_definitions(SK_DEBUG)
+endif()
+
 include(CTest)
 if(AXIOM_BUILD_VERIFICATION)
   add_subdirectory(verification/native/platform)

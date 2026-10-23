@@ -33,12 +33,20 @@ class DebugUiSessionState final {
     creationPresetDraft_ = preset;
   }
   void beginFrame() noexcept { controlSubmittedThisFrame_ = false; }
+  struct ImageDraft final {
+    std::uint64_t token = 0;
+    double rect[4] = {0, 0, 1, 1};
+    double width = 0, height = 0;
+    float scale = 1;
+  };
+  [[nodiscard]] ImageDraft& imageDraft() noexcept { return imageDraft_; }
 
  private:
   WorkspaceId workspace_ = WorkspaceId::kDashboard;
   bool activityAutoScroll_ = true;
   bool controlSubmittedThisFrame_ = false;
   CameraDraft cameraDraft_{};
+  ImageDraft imageDraft_{};
   canvas::runtime::CanvasCreationPreset creationPresetDraft_ =
       canvas::runtime::CanvasCreationPreset::kRectangle;
 };

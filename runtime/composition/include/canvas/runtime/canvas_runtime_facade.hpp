@@ -47,6 +47,15 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   [[nodiscard]] std::optional<TextReceipt> textInputReceipt(const TextSessionToken&,std::uint64_t) const override;
   [[nodiscard]] std::optional<TextReceipt> textIntentReceipt(std::uint64_t,std::uint64_t) const override;
   [[nodiscard]] bool acknowledgeTextInput(const TextSessionToken&,std::uint64_t) override;
+  [[nodiscard]] ImageCommandReceipt importImage(const ImageImportRequest&) override;
+  [[nodiscard]] ImageCommandReceipt replaceImage(const ImageReplaceRequest&) override;
+  [[nodiscard]] ImageCommandReceipt resizeImage(const ImageResizeRequest&) override;
+  [[nodiscard]] ImageCommandReceipt beginImageCrop(const ImageCropBeginRequest&) override;
+  [[nodiscard]] ImageCommandReceipt updateImageCrop(const ImageCropUpdateRequest&) override;
+  [[nodiscard]] ImageCommandReceipt commitImageCrop(std::uint64_t) override;
+  [[nodiscard]] ImageCommandReceipt cancelImageCrop(std::uint64_t) override;
+  [[nodiscard]] ImageCropSnapshot readImageCrop() const override;
+  [[nodiscard]] SelectedImageSnapshot readSelectedImage() const override;
   CanvasRuntimeFacade(const CanvasRuntimeFacade&) = delete;
   CanvasRuntimeFacade& operator=(const CanvasRuntimeFacade&) = delete;
 
@@ -76,6 +85,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   // reach the concrete binding or editor.
 #endif
   friend class RuntimeComposition;
+  void discardImageCrop() noexcept;
   [[nodiscard]] CanvasControlApplyResult applyControl(
       const CanvasControlRequest& request);
   [[nodiscard]] CanvasControlSnapshot snapshotControl(
@@ -94,6 +104,9 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   }
  private:
   struct Binding;
+  [[nodiscard]] ImageCommandReceipt registerImageBytes(
+      const std::vector<std::uint8_t>& bytes, const std::string& mimeType, bool commit = true);
+  void imageCropPointer(const input::PointerSample&);
   [[nodiscard]] std::size_t processIngress(std::uint64_t);
   void finishTextReceipts();
   using Work = std::variant<CanvasControlRequest,TextIntent,TextInputEvent>;
@@ -103,6 +116,19 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   std::deque<std::pair<TextIntent,TextReceipt>> textIntents_;
   std::deque<std::pair<TextInputEvent,TextReceipt>> textInputs_;
   std::unordered_map<std::uint64_t,std::uint64_t> textClientHighWater_;
+  struct ImageCropSession final {
+    std::uint64_t token = 0;
+    semantic::ObjectId objectId{};
+    semantic::ImageContent original{};
+    semantic::ImageContent current{};
+    input::PointerKey pointer{};
+    double downX = 0, downY = 0;
+    render::HandleKind handle = render::HandleKind::kNone;
+    semantic::ImageContent dragStart{};
+    double contentScale = 1;
+  };
+  std::optional<ImageCropSession> imageCrop_;
+  std::uint64_t nextImageCropToken_ = 1;
   std::atomic_size_t pendingWork_{0};
   void refreshTarget() const noexcept;
 

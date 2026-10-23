@@ -263,7 +263,7 @@
       "scope": "execution:FC/feature-completion",
       "kind": "execution-policy",
       "version": "v0.2",
-      "status": "Current",
+      "status": "Superseded",
       "ref": "notion://3f74c57a590c8139b903f14f0aae0c57",
       "depends_on": [
         "g4-capability-authority-v0.3",
@@ -322,6 +322,58 @@
           "Notion P23 approval is not P31/P32 authorization",
           "No original PX0/G4.6/G4.7 or FC-13 physical Gate PASS from this change",
           "No new Operation/Protobuf field or selected Shape conversion",
+          "No G5 authorization",
+          "No historical Gate/Evidence/Integration outcome rewriting"
+        ]
+      },
+      "superseded_by": "fc-feature-completion-execution-v0.3"
+    },
+    {
+      "id": "fc-feature-completion-execution-v0.3",
+      "scope": "execution:FC/feature-completion",
+      "kind": "execution-policy",
+      "version": "v0.3",
+      "status": "Current",
+      "ref": "notion://3f74c57a590c812a8260dcf23b659ed0",
+      "depends_on": [
+        "g4-capability-authority-v0.3",
+        "fc01-shape-triangle-semantic-v0.1"
+      ],
+      "supersedes": "fc-feature-completion-execution-v0.2",
+      "change_class": "semantic",
+      "content": {
+        "owner": "FC Feature Completion Track",
+        "objective": "Deliver FC-01..FC-12 functional development before G5; retain original physical Gates for FC-13",
+        "source_basis": [
+          "notion://3f74c57a590c812a8260dcf23b659ed0",
+          "notion://3f74c57a590c819ebc62dba091371f17",
+          "notion://3f64c57a590c810c82aee0166056b73d"
+        ],
+        "accepted_decisions": [
+          "FC01A-P23-C01",
+          "FC01A-P23-C02",
+          "FC01A-P23-C03"
+        ],
+        "stage_order": [
+          "FC-00",
+          "FC-01",
+          "FC-01A",
+          "FC-02..FC-12",
+          "FC-13",
+          "G5-v0.3"
+        ],
+        "progressive_selectability": "Each visible and instantiable released V1 ObjectKind owns a producer Geometry Provider and Capability Provider; common selection integrates producers progressively; FC-12 proves the nine released V1 kinds.",
+        "early_design_permissions": [
+          "FC-04 aggregate selection/property capability design only",
+          "FC-08 Group/Section design only"
+        ],
+        "fc03_scope": "Resource-backed Image insertion, replacement, transform, crop session and history under the existing ImageContent and G4.7 resource ownership boundary; no new ObjectKind, Operation kind or Proto field by implication.",
+        "gated_execution": "FC-01..FC-12 each require frozen P20/P31 and independently reviewed FC-N-DEV; FC-01A follows FC-01.",
+        "physical_obligations": "FC-13 retains exact original PX0-07, G4.6-C, G4.7 physical profiles and final FC-12 integration; each remains independently reviewed.",
+        "nonclaims": [
+          "Notion P23 is not P31/P32 authorization",
+          "No FC-04/FC-08 implementation acceleration",
+          "No original PX0/G4.6/G4.7 or FC-13 physical PASS",
           "No G5 authorization",
           "No historical Gate/Evidence/Integration outcome rewriting"
         ]

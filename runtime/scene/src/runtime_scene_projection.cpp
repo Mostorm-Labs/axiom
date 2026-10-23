@@ -72,7 +72,14 @@ std::string geometryText(const semantic::ObjectRecord& r) {
         } else if constexpr (std::is_same_v<T, semantic::ImageContent>) {
             out << ":image:";
             for (const auto byte : c.resource_id.value.bytes) out << static_cast<unsigned>(byte) << ',';
-            out << ':' << c.intrinsic_width << ':' << c.intrinsic_height << ':' << c.width << ':' << c.height;
+            out << ':' << c.intrinsic_width << ':' << c.intrinsic_height << ':'
+                << static_cast<unsigned>(c.content_mode) << ':' << c.width << ':' << c.height;
+            if (c.source_rect) {
+                out << ":source:" << c.source_rect->x << ',' << c.source_rect->y << ','
+                    << c.source_rect->width << ',' << c.source_rect->height;
+            } else {
+                out << ":source:full";
+            }
         } else if constexpr (std::is_same_v<T, semantic::VectorPathContent>) {
             out << ":path:" << static_cast<unsigned>(c.geometry.fill_rule) << ':' << c.geometry.commands.size();
             for (const auto& command : c.geometry.commands) {

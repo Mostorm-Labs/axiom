@@ -701,6 +701,12 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   }
   const auto routed = appBinding_->submit(source, batch);
   if (!routed.accepted && !routed.terminalCancel) { AXIOM_ANDROID_DIAG("ingress rejected samples=%zu", routed.normalized.samples.size()); return false; }
+  if (imageCropPointer_) {
+    // Retain normal ingress identities, then give Crop exclusive ownership.
+    const auto consume = imageCropPointer_;
+    for (const auto& sample : routed.normalized.samples) consume(sample);
+    return routed.accepted || routed.terminalCancel;
+  }
   std::vector<input::PointerSample> routedSamples;
   routedSamples.reserve(routed.normalized.samples.size());
   for (const auto& sample : routed.normalized.samples)
@@ -1271,6 +1277,25 @@ semantic::PrepareResult CanvasEditingRuntime::prepareTextOperation(const semanti
   return operationEngine_.prepare(operation,{semanticObjects_,appliedOperations_,resourceManifestPort_});
 }
 
+bool CanvasEditingRuntime::applyResourceManifestOperation(const semantic::Operation& operation) noexcept {
+  if (!canonicalWriteAdmission() || !resourceManifestPort_ ||
+      operation.kind() != semantic::OperationKind::kUpdateResourceManifest) return false;
+  const auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalCommand,
+      semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+  if (applied.disposition != semantic::ApplyDisposition::kApplied) return false;
+  if (applied.commit_record && sceneCoordinator_ && sceneCompiler_) {
+    const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current(), resourceManifestPort_);
+    const canvas::SceneCommitInput input(applied.commit_record->before_generation,
+        applied.commit_record->after_generation, view, &applied.commit_record->change_set);
+    (void)sceneCoordinator_->apply(*sceneCompiler_, input);
+  }
+  observeApplied(operation, applied);
+  ++submittedOperationCount_;
+  refreshResourceManifestServices();
+  canonicalPresentationDirty_ = true;
+  return true;
+}
+
 bool CanvasEditingRuntime::applyLocalHistoryOperation(
     semantic::Operation forward, semantic::Operation inverse) noexcept {
   if (!canonicalWriteAdmission()) return false;
@@ -1601,13 +1626,15 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
       foundation::WorldRect{0.0F, 0.0F, surface_.logicalWidth,
                             surface_.logicalHeight}};
   selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
+  const auto cropBounds = imageCropPresentation_
+      ? std::optional(canvas::scene::computeBounds(*imageCropPresentation_)) : std::nullopt;
   const bool updated = selectionView_->editingOverlay().update(render::EditingOverlayInput{
-      record->objectId, record->visualBounds,
+      record->objectId, cropBounds ? cropBounds->visual : record->visualBounds,
       transformOverrides_.find(record->objectId) == nullptr ? record->transform
           : *transformOverrides_.find(record->objectId),
       true, false, transformDrag_.active(),
       render::HandleCapabilities{
-          !selectedObjectLocked(), !selectedObjectLocked(), !selectedObjectLocked()}, snapGuides_});
+          !selectedObjectLocked(), !selectedObjectLocked(), !selectedObjectLocked() && !imageCropPresentation_}, snapGuides_});
   if (updated) ++selectionOverlayUpdates_;
   return updated;
 }
@@ -3190,11 +3217,13 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   if (!visibility) { AXIOM_ANDROID_DIAG("present visibility failed"); return false; }
   // A selected object can be dragged into view from outside the canonical
   // visibility set. Extend only this view's transient traversal, never Scene.
-  if (transformDrag_.active() &&
+  const auto transientObject = imageCropPresentation_ ? imageCropPresentation_->id : selection_.primary();
+  if ((transformDrag_.active() || imageCropPresentation_) &&
       std::find(visibility.value().backToFront.begin(),visibility.value().backToFront.end(),
-                selection_.primary())==visibility.value().backToFront.end()) {
+                transientObject)==visibility.value().backToFront.end() &&
+      sceneCoordinator_->runtimeScene().find(transientObject)) {
     auto& ids=visibility.value().backToFront;
-    ids.push_back(selection_.primary());
+    ids.push_back(transientObject);
     std::sort(ids.begin(),ids.end(),[&](auto a,auto b) {
       return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a),
                                   *sceneCoordinator_->runtimeScene().find(b));
@@ -3286,6 +3315,20 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
           references.value().digest.clear();
         }
       }
+    }
+  }
+  if (imageCropPresentation_) {
+    for (auto& entry : references.value().entries) {
+      if (entry.record.objectId != imageCropPresentation_->id) continue;
+      entry.record.content = imageCropPresentation_->content;
+      const auto bounds = canvas::scene::computeBounds(*imageCropPresentation_);
+      entry.record.geometryBounds = bounds.geometry;
+      entry.record.visualBounds = bounds.visual;
+      entry.record.worldBounds = bounds.world;
+      entry.command = render::ImageReferenceCommand{
+          std::get<semantic::ImageContent>(imageCropPresentation_->content), true};
+      references.value().canonicalBytes.clear();
+      references.value().digest.clear();
     }
   }
   const auto plan = render::FramePlanBuilder::build(frame, references.value());

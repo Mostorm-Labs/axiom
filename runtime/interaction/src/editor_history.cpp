@@ -21,7 +21,15 @@ bool historyExpectationsMatch(const semantic::ObjectStore& store,
             case HistoryAspect::kSize: {
                 const auto* a=std::get_if<semantic::ShapeContent>(&current->content);
                 const auto* b=std::get_if<semantic::ShapeContent>(&record.content);
-                if (!a || !b || a->width!=b->width || a->height!=b->height) return false;
+                if (a != nullptr && b != nullptr) {
+                    if (a->width != b->width || a->height != b->height) return false;
+                    break;
+                }
+                const auto* imageA = std::get_if<semantic::ImageContent>(&current->content);
+                const auto* imageB = std::get_if<semantic::ImageContent>(&record.content);
+                if (imageA == nullptr || imageB == nullptr ||
+                    imageA->width != imageB->width || imageA->height != imageB->height)
+                    return false;
                 break;
             }
             case HistoryAspect::kProperties:
@@ -52,6 +60,7 @@ bool supportedForward(const semantic::Operation& operation) noexcept {
         case OperationKind::kSetPlacements:
         case OperationKind::kPatchProperties:
         case OperationKind::kSetObjectSize:
+        case OperationKind::kSetImageContent:
         case OperationKind::kEditRichText:
             return true;
         default:
@@ -69,6 +78,7 @@ bool supportedInverse(const semantic::Operation& operation) noexcept {
         case OperationKind::kSetPlacements:
         case OperationKind::kPatchProperties:
         case OperationKind::kSetObjectSize:
+        case OperationKind::kSetImageContent:
         case OperationKind::kEditRichText:
             return true;
         default:
@@ -155,7 +165,7 @@ bool EditorHistory::redo() {
     if (!canRedo()) return false;
     auto forward = entries_[cursor_].forward;
     if (const auto* insert=std::get_if<semantic::InsertObjectsOp>(&forward.payload); insert &&
-        std::all_of(insert->objects.begin(),insert->objects.end(),[](const auto& object){return object.kind==semantic::ObjectKind::kRichText;}))
+        std::all_of(insert->objects.begin(),insert->objects.end(),[](const auto& object){return object.kind==semantic::ObjectKind::kRichText || object.kind==semantic::ObjectKind::kImage;}))
         forward.payload=semantic::RestoreObjectsOp{insert->objects};
     if (!submitFresh(std::span<const semantic::Operation>(&forward, 1), entries_[cursor_].before)) return false;
     ++cursor_;

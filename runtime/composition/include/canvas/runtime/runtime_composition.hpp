@@ -108,6 +108,7 @@ struct RuntimeSurfaceSnapshot final {
 };
 
 class RuntimeComposition final {
+  friend class CanvasRuntimeFacade;
  public:
   explicit RuntimeComposition(render::ViewId viewId = render::ViewId{1});
   ~RuntimeComposition();
@@ -219,6 +220,10 @@ class RuntimeComposition final {
     return resources_;
   }
   [[nodiscard]] std::optional<ResourcePortReceipt> resourceReceipt(
+      foundation::ObjectId id) const noexcept;
+  [[nodiscard]] bool imageResourceDecodeReady(
+      foundation::ObjectId id) noexcept;
+  [[nodiscard]] std::optional<ResourceBindingToken> currentResourceToken(
       foundation::ObjectId id) const noexcept;
   [[nodiscard]] ResourcePortError lastResourceError() const noexcept {
     return lastResourceError_;

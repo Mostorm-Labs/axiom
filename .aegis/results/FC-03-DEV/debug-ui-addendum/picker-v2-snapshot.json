@@ -1,0 +1,31 @@
+{
+  "base_revision": "a17280a66392bb108c787b1c2414649d1d9939e6",
+  "dirty": true,
+  "result_revision": null,
+  "changed_files": [
+    {
+      "path": "apps/minimal_runtime_host/windows_image_file.hpp",
+      "sha256": "09fc099f9c4230afe72ac04796473dbeaf51fe476280d07eb69410fb1c449eaa"
+    },
+    {
+      "path": "apps/minimal_runtime_host/tests/windows_image_debug_ui_test.cpp",
+      "sha256": "c7dfd3967449a8df30b4e17b9b50bae5808adbb8d8c9314ca55d17165db08186"
+    },
+    {
+      "path": "apps/minimal_runtime_host/CMakeLists.txt",
+      "sha256": "81887ebe8d9d8131f6a4b3f01782862c1d48f50c801078cc8e96d86db6ae0756"
+    },
+    {
+      "path": "docs/planning/FC03_WINDOWS_IMAGE_DEBUG_UI.md",
+      "sha256": "500fc0534797c4ce1e5a5d3e1c35df926c178aff95f1b1f92d2cd82f6857f903"
+    }
+  ],
+  "ctest": {
+    "failed": 0,
+    "passed": 5,
+    "skipped": 0
+  },
+  "original_user_result": "FAIL",
+  "current_physical_retest": "PHYSICAL_PENDING",
+  "cause": "Original standard-JPEG enumeration failure not reproduced automatically; default browse-all filter removes extension exclusion."
+}

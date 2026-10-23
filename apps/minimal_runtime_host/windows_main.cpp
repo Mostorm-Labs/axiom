@@ -5,6 +5,7 @@
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
 #include "canvas/debug_ui/controller.hpp"
 #include "canvas/debug_ui/windows_host.hpp"
+#include "windows_image_file.hpp"
 #endif
 #include "windows_d3d12_surface_provider.hpp"
 
@@ -338,6 +339,7 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       if (state->host->composition().readback().lastOwnerControlCount != 0U)
         logInput(*state, "facade-control", true, {});
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
+      if (state->controller) state->controller->processHostRequests();
       if (state->debugUi) state->debugUi->refresh();
       if (state->inputLog && state->controller) {
         for (const auto& entry : state->controller->snapshot().activity.entries) {
@@ -386,6 +388,10 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       return 0;
     }
     case WM_KEYDOWN:
+      if (wParam == VK_ESCAPE && state->facade->readImageCrop().active) {
+        (void)state->facade->cancelImageCrop(state->facade->readImageCrop().cropToken);
+        return 0;
+      }
       if (wParam == VK_F12) {
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
         if (state->debugUi) {
@@ -502,7 +508,8 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
   state.controller = std::make_unique<canvas::debug_ui::DebugController>(
       canvas::debug_ui::DebugControllerContext{state.facade.get(), nullptr, nullptr,
-          state.facade.get(), nullptr, nullptr, nullptr});
+          state.facade.get(), nullptr, nullptr, nullptr,
+          [&state] { return canvas::minimal_runtime_host::chooseWindowsImageFile(state.window); }});
   state.debugUi->setController(state.controller.get());
   state.debugUi->setFocusAdmission([&state]{return admitWindowsDebugFocus(state);});
 #endif

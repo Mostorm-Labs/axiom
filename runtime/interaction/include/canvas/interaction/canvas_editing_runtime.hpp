@@ -55,6 +55,7 @@ namespace canvas::runtime { class CanvasRuntimeFacade; }
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
+#include <functional>
 
 namespace canvas::ink_playground { class InkPlaygroundHistoryTestAccess; }
 namespace canvas::render { class ImageResourceResolver; }
@@ -609,6 +610,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   semantic::ObjectId allocateTextIdentity() override;
   semantic::OperationId allocateTextOperation() override { return allocateOperationId(); }
   semantic::PrepareResult prepareTextOperation(const semantic::Operation&) const override;
+  [[nodiscard]] bool applyResourceManifestOperation(const semantic::Operation&) noexcept;
   bool applyTextOperation(semantic::Operation f,semantic::Operation i) override;
   std::pair<float,float> textContentPoint(float x,float y) const noexcept override { return viewportController_->viewToContent(x,y); }
   void observeApplied(const semantic::Operation&, const semantic::ApplyResult&) noexcept;
@@ -743,6 +745,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unique_ptr<canvas::ISemanticSceneCompiler> sceneCompiler_;
   text::RichTextLayoutService* textLayoutService_ = nullptr;
   std::unique_ptr<render::RenderViewRuntime> selectionView_;
+  // Owner-controlled presentation override; never part of Semantic or Scene.
+  std::optional<semantic::ObjectRecord> imageCropPresentation_;
+  std::function<void(const input::PointerSample&)> imageCropPointer_;
   interaction::EditorHistory history_;
   render::SkiaRenderer skiaRenderer_;
   render::SkiaRenderer previewRenderer_;

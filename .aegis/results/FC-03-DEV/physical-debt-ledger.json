@@ -1,0 +1,26 @@
+{
+  "task_id": "FC-03",
+  "physical_claim": false,
+  "rows": [
+    {
+      "id": "FC03-WINDOWS-FILE",
+      "status": "PHYSICAL_PENDING",
+      "reason": "no real file picker execution in P32"
+    },
+    {
+      "id": "FC03-WEB-FILE",
+      "status": "PHYSICAL_PENDING",
+      "reason": "no browser file input execution in P32"
+    },
+    {
+      "id": "FC03-GPU",
+      "status": "PHYSICAL_PENDING",
+      "reason": "deterministic headless only"
+    },
+    {
+      "id": "FC03-CROSS-PLATFORM",
+      "status": "PHYSICAL_PENDING",
+      "reason": "Windows/Web differential host evidence pending"
+    }
+  ]
+}

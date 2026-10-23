@@ -3,7 +3,8 @@ add_library(canvas_runtime_composition STATIC
     src/scene_adapter.cpp
     src/runtime_composition.cpp
     src/canvas_runtime_facade.cpp
-    src/canvas_runtime_text.cpp)
+    src/canvas_runtime_text.cpp
+    src/canvas_runtime_image.cpp)
 target_include_directories(canvas_runtime_composition PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(canvas_runtime_composition PRIVATE
@@ -31,7 +32,8 @@ if(BUILD_TESTING)
   axiom_resolve_host_text_font()
   target_include_directories(axiom_fc02_text_tests PRIVATE ${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host ${AXIOM_HOST_FONT_INCLUDE})
   target_compile_definitions(axiom_fc02_text_tests PRIVATE FC02_HOST_FONT="${AXIOM_HOST_FONT_PATH}" FC02_FONT_CATALOG_ROOT="${AXIOM_HOST_FONT_CATALOG_ROOT}")
-  target_compile_definitions(axiom_fc02_text_tests PRIVATE FC02_LATIN_FONT="${CANVAS_SKIA_SDK_ROOT}/resources/fonts/Roboto-Regular.ttf")
+  file(TO_CMAKE_PATH "${CANVAS_SKIA_SDK_ROOT}/resources/fonts/Roboto-Regular.ttf" AXIOM_FC02_LATIN_FONT)
+  target_compile_definitions(axiom_fc02_text_tests PRIVATE FC02_LATIN_FONT="${AXIOM_FC02_LATIN_FONT}")
   target_link_libraries(axiom_fc02_text_tests PRIVATE canvas_runtime_composition GTest::gtest_main protobuf::libprotobuf)
   target_include_directories(axiom_fc02_text_tests PRIVATE ${PROJECT_BINARY_DIR}/runtime/semantic/generated)
   target_include_directories(axiom_fc02_text_tests PRIVATE ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
@@ -86,4 +88,24 @@ if(BUILD_TESTING)
     target_compile_options(axiom_fc00x_runtime_facade_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
   endif()
   add_test(NAME FC00XRuntimeFacade COMMAND axiom_fc00x_runtime_facade_tests)
+
+  add_executable(axiom_fc03_image_facade_tests
+      tests/fc03_image_facade_test.cpp)
+  target_link_libraries(axiom_fc03_image_facade_tests PRIVATE canvas_runtime_composition)
+  target_compile_definitions(axiom_fc03_image_facade_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+  target_compile_definitions(axiom_fc03_image_facade_tests PRIVATE
+    FC03_FIXTURE_ROOT="${PROJECT_SOURCE_DIR}/verification/fc03/fixtures")
+  target_compile_features(axiom_fc03_image_facade_tests PRIVATE cxx_std_20)
+  if(MSVC)
+    target_compile_options(axiom_fc03_image_facade_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+  else()
+    target_compile_options(axiom_fc03_image_facade_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+  endif()
+  add_test(NAME FC03ImageFacade COMMAND axiom_fc03_image_facade_tests)
+  if(WIN32 AND EXISTS "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat")
+    add_custom_command(TARGET axiom_fc03_image_facade_tests POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat"
+        "$<TARGET_FILE_DIR:axiom_fc03_image_facade_tests>/icudtl.dat")
+  endif()
 endif()
