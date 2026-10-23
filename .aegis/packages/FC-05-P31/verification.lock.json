@@ -1,0 +1,16 @@
+{
+  "schema_version":"0.1",
+  "format":"aegis-verification-lock-v1",
+  "task_id":"FC-05",
+  "stage":"P31_TASK_PACKAGING",
+  "status":"FROZEN_FOR_CODE_EXECUTION",
+  "trusted_basis":{"p20":"docs/planning/FC05_P20_FREEZE.md","subject_revision":"16f5a8dcbc7ff09c682ede4d8c1e3adc7b25fbeb"},
+  "blocking_obligations":["CON-01","CON-02","CON-03","CON-04","CON-05","CON-06","CON-07","CON-08","STK-01","STK-02","STK-03","PLAT-01"],
+  "red_oracles":[
+    "old connector validation rejects Shape/2 and Shape/3 targets",
+    "old History rejects SetConnectorContent and Sticky size expectations",
+    "old public facade has no typed Connector/Sticky consumer parity"
+  ],
+  "physical_status":"PHYSICAL_PENDING",
+  "gate_claim":"NONE"
+}

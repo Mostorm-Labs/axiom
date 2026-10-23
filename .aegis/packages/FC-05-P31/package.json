@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-package-v1",
+  "package_id": "FC-05-P31-v0.1",
+  "task_id": "FC-05",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "MATERIALIZED_READY_FOR_CODE_EXECUTION",
+  "purpose": "Implement the frozen FC05 Connector and Sticky closure through the shared RuntimeFacade on Windows/Web, preserving canonical ownership and explicit failure semantics.",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "base_lineage_branch": "codex/fc05-architecture-p20",
+    "execution_ref": "codex/fc05-p32"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "16f5a8dcbc7ff09c682ede4d8c1e3adc7b25fbeb",
+    "relation": "ancestor"
+  },
+  "starting_revision": "16f5a8dcbc7ff09c682ede4d8c1e3adc7b25fbeb",
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "preferred_executor": "codex",
+  "gate_id": "FC-05-DEV",
+  "gate_scope": "development_only",
+  "authority_lock_ref": {"path":"authority.lock.json","sha256":"faa1f4965f502623892ee091747619a1cc7129f27f4dd09c57bfa78213213ee5"},
+  "verification_lock_ref": {"path":"verification.lock.json","sha256":"f84ffd77551a0e924bc0bc7bc367e22de93ff57101f7d523ab4dc71c997ac5c0"},
+  "execution_contract_ref": {"path":"execution-contract.json","sha256":"b7c3280fa07bfa8264de7dbf15088f6ffa77e6b737fe6d3d84a05dc4cfb436f9"},
+  "implementation_context_ref": {"path":"implementation-context.md","sha256":"a7b2b684a911d95ef1b376d9355442b12f547926c21a0b7b434d3a57611d09ae"},
+  "evidence_contract_ref": {"path":"evidence-contract.json","sha256":"6508867839c56f1e35c83599919f42343acad0cbf56939f3c202034443668ccc"},
+  "review_ref": "docs/planning/fc05/evidence/architecture-p20/independent-review.json@16f5a8dcbc7ff09c682ede4d8c1e3adc7b25fbeb",
+  "p20_ref": "docs/planning/FC05_P20_FREEZE.md@16f5a8dcbc7ff09c682ede4d8c1e3adc7b25fbeb",
+  "nonclaims": ["No P34/DEV Gate PASS", "No physical PASS", "No release claim"]
+}
+

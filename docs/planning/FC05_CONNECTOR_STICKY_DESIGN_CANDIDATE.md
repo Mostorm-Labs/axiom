@@ -1,6 +1,6 @@
 # FC-05 Connector + Sticky design candidate
 
-Status: **SCOPE_CONFIRMED / MODELING_IN_PROGRESS**. This is a proposal, not Current
+Status: **SCOPE_CONFIRMED / SUCCESSOR_REVIEW_INPUTS_MATERIALIZED**. This is a proposal, not Current
 Authority, a P20 freeze, a P31 package, or implementation permission.
 Baseline: `178173a03acd6f458991a69227ce3fdccaaffedd` (FC03 merged into main).
 
@@ -103,6 +103,11 @@ pending independent design review. Do not downgrade Shapes or bypass validation.
 
 ## Interaction proposals for acceptance
 
+This iteration's concrete successors are recorded in `FC05_STICKY_MUTATION_CONTRACT.md`,
+`FC05_ROUTING_CONTRACT.md`, `FC05_PUBLIC_CONSUMER_CONTRACT.md` and
+`FC05_CAPABILITY_SUCCESSOR_REVIEW.md`. They are review inputs, not independent
+approval, Current Authority or P31 authorization.
+
 Connector: enable its tool or drag a selected object's connection affordance; show a
 transient route and nearest eligible perimeter candidate. Runtime owns snap decisions,
 source/pointer/generation and commit/cancel. Valid release creates one object; release
@@ -118,13 +123,12 @@ confirmed nonempty text inserts one RichText child under the Sticky, later edits
 reuse it; IME finish/cancel rules from FC02 remain unchanged. Fill uses existing
 PropertyBag fill field 0x100, not a painted child object.
 
-Propose resize preserves text size and reflows inside padding; editing may grow the
-box upward if overflow policy is accepted. Exact grow/clip/ellipsis behavior and the
-relationship between Sticky width and persistent RichText wrap width still need one
-accepted rule. Parent dimensions and child layout must not be published half changed.
-The existing history submission seam must be checked for true multi-Operation
-atomicity; a single Undo item alone is not proof of atomic apply. No new transaction
-Operation or schema is authorized by this proposal.
+The user confirmed fixed font size and interior wrapping, upward growth while
+typing, derived ellipsis on manual shrink and selected-only expansion. The successor
+proposes parent-derived wrapping and a restricted EditSticky operation for one-plan
+text plus geometry publication. This proposed wire extension is subject to semantic
+review; it is not a generic transaction, production allocation or P31 authorization.
+A single Undo item alone is not proof of atomic apply.
 
 ## Routing risks and design inputs
 
@@ -156,13 +160,13 @@ budgets and acceptance hardware are not yet frozen; no speed claim is made.
 
 ## Next unresolved decisions
 
-1. Review the accepted Shape compatibility scope and its explicit Triangle geometry,
-   port and reader contract; then materialize the narrow Authority successor.
-2. Accept creation/reconnect behavior, Sticky defaults and resize/text overflow rule.
-3. Complete P14–P18 with no-route presentation, obstacle geometry/clearance,
-   deterministic tie-breaks and measurable work budgets.
-4. Review the [P20 draft](FC05_P20_VERIFICATION_DESIGN_DRAFT.md); freeze fixtures,
-   command surfaces and blocking evidence only after upstream contracts are accepted.
+1. Independently review Shape compatibility and the capability-order legacy finding,
+   then materialize the narrow Authority successor.
+2. Review the concrete Sticky domain mutation, proposed defaults and guarded
+   parent/child History; the overflow behavior itself is confirmed.
+3. Review routing geometry, escape/no-route/work limits and public consumer parity.
+4. Review the [P20 draft](FC05_P20_VERIFICATION_DESIGN_DRAFT.md) and freeze only
+   after successor candidates are accepted. P31 has not been issued.
 
 See the [narrow Authority delta proposal](FC05_AUTHORITY_DELTA_PROPOSAL.md) for the
 exact old/new scope and preserved history.
