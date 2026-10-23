@@ -14,7 +14,13 @@ assign its RuntimeFacade pointer explicitly. No warning flag was weakened.
 Fresh verification: the probe passes, and canvas_runtime_image.cpp, control.cpp,
 fc03_image_facade_test.cpp and windows_image_debug_ui_test.cpp all pass strict
 syntax compilation. Commands and output are recorded in strict-results.json.
-This is compilation evidence, not a full linked build, CTest run or physical test.
+A subsequent fresh Release /MT MSVC /WX configure and linked build also passed
+for axiom_fc03_image_facade_tests and axiom_minimal_windows_image_debug_ui_tests.
+CTest: FC03ImageFacade and FC03WindowsImageDebugUi both PASS (2/2, zero skipped).
+Build, configure, resolver facts, offline resolution, commands and raw CTest output
+are preserved alongside this record. CMake emitted object-path length warnings for
+unbuilt unrelated targets; the selected targets completed successfully. This is not
+a physical-platform observation or an all-CI-green claim.
 
 Existing CI failures remain separate: G4.7 Windows configuration fails at the
 FC02 test's unavailable GTest::gtest_main target; the platform Windows boundary job
