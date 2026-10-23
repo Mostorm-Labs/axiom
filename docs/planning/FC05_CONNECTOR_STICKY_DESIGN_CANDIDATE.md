@@ -19,6 +19,9 @@ Baseline: `178173a03acd6f458991a69227ce3fdccaaffedd` (FC03 merged into main).
 - Handoff: resolve the compatibility decision, accept P11/P12/P13, then prepare
   P14–P18 and freeze P20. No automatic downstream authorization.
 
+Notion: [已确认范围与 Shape 兼容合同私有草稿](https://app.notion.com/p/4024c57a590c817ebe90e50dc83c1372)。
+旧 Current 页面保持；此草稿不替代正式 Authority。
+
 ## Sources and status
 
 | Source | Classification | Relevant boundary |
@@ -78,7 +81,7 @@ refresh adds **no extra** Connector Operation, History or semantic generation.
 Deleting a target follows existing cascade-delete closure; Undo restores the whole
 resolved preimage, including affected connectors, as one user edit.
 
-## Version compatibility decision (not yet accepted)
+## Version compatibility decision (scope accepted)
 
 The validator at baseline accepts Shape/1, Image/1 and Sticky/1 only. Shape/2 Triangle
 and Shape/3 labels therefore cannot currently be attached targets. This is encoded
@@ -86,7 +89,7 @@ in both `connector_stateful_validation_test.cpp` and the FC01 negative triangle 
 A common user flow could also upgrade a connected Shape/1 to Shape/3 by adding text;
 that must never produce an invalid surviving reference or silently detach it.
 
-Recommended successor scope: accept the existing released Shape tuples (Shape/1
+User-confirmed successor scope: accept the existing released Shape tuples (Shape/1
 rectangle/ellipse, Shape/2 triangle, Shape/3 rectangle/ellipse/triangle with label),
 retain Image/1 and Sticky/1, and reject unknown tuples. It must define Triangle
 perimeter and stable-port geometry, Shape label upgrade/Undo behavior, and old-reader
@@ -94,8 +97,9 @@ capability rejection before changing validators. No new wire field is implied.
 
 This would supersede only the named applicability/FC06 deferral, preserving V1 bytes,
 V1 historical rejection fixtures, delete policy, hint presence and anchor semantics.
-The human decision is pending. Do not downgrade Shapes or create a second capability
-projection merely to bypass canonical validation.
+The human scope decision is accepted. The exact successor is materialized in
+[Shape compatibility contract](FC05_CONNECTOR_SHAPE_COMPATIBILITY_CONTRACT.md),
+pending independent design review. Do not downgrade Shapes or bypass validation.
 
 ## Interaction proposals for acceptance
 
@@ -152,8 +156,8 @@ budgets and acceptance hardware are not yet frozen; no speed claim is made.
 
 ## Next unresolved decisions
 
-1. Accept or reject the proposed Shape compatibility extension and narrow execution
-   scope change; Triangle geometry/ports must then be explicitly defined.
+1. Review the accepted Shape compatibility scope and its explicit Triangle geometry,
+   port and reader contract; then materialize the narrow Authority successor.
 2. Accept creation/reconnect behavior, Sticky defaults and resize/text overflow rule.
 3. Complete P14–P18 with no-route presentation, obstacle geometry/clearance,
    deterministic tie-breaks and measurable work budgets.
