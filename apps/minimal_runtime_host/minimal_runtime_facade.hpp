@@ -32,6 +32,7 @@ class MinimalRuntimeFacade final : public runtime::RuntimeFacade,
   [[nodiscard]] runtime::ImageCommandReceipt commitImageCrop(std::uint64_t) override;
   [[nodiscard]] runtime::ImageCommandReceipt cancelImageCrop(std::uint64_t) override;
   [[nodiscard]] runtime::ImageCropSnapshot readImageCrop() const override;
+  [[nodiscard]] runtime::SelectedImageSnapshot readSelectedImage() const override;
   [[nodiscard]] runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override;
   [[nodiscard]] runtime::ProductControlReceipt submitProductControl(
       const runtime::ProductControlRequest& request) noexcept override;

@@ -108,6 +108,7 @@ struct RuntimeSurfaceSnapshot final {
 };
 
 class RuntimeComposition final {
+  friend class CanvasRuntimeFacade;
  public:
   explicit RuntimeComposition(render::ViewId viewId = render::ViewId{1});
   ~RuntimeComposition();

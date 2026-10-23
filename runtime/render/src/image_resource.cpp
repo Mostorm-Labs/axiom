@@ -1,5 +1,6 @@
 #include "canvas/render/image_resource.hpp"
 #include "include/codec/SkCodec.h"
+#include "include/codec/SkEncodedImageFormat.h"
 #include "include/core/SkColorSpace.h"
 #include "include/core/SkData.h"
 #include "include/core/SkImageInfo.h"
@@ -18,6 +19,14 @@ std::shared_ptr<const DecodedImage> ImageResourceResolver::resolve(semantic::Res
         result->state = ImageResourceState::kDecodeFailed;
         result->diagnostic = "image-decode-failed";
         auto codec = SkCodec::MakeFromData(SkData::MakeWithCopy(resource.bytes->data(), resource.bytes->size()));
+        if (codec) {
+            switch (codec->getEncodedFormat()) {
+                case SkEncodedImageFormat::kPNG: result->mimeType = "image/png"; break;
+                case SkEncodedImageFormat::kJPEG: result->mimeType = "image/jpeg"; break;
+                case SkEncodedImageFormat::kWEBP: result->mimeType = "image/webp"; break;
+                default: break;
+            }
+        }
         if (codec && codec->dimensions().width() > 0 && codec->dimensions().height() > 0 &&
             static_cast<std::uint64_t>(codec->dimensions().width()) * codec->dimensions().height() <= 67108864U) {
             const auto info = SkImageInfo::Make(codec->dimensions().width(), codec->dimensions().height(),

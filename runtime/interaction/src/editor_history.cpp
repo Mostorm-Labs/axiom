@@ -165,7 +165,7 @@ bool EditorHistory::redo() {
     if (!canRedo()) return false;
     auto forward = entries_[cursor_].forward;
     if (const auto* insert=std::get_if<semantic::InsertObjectsOp>(&forward.payload); insert &&
-        std::all_of(insert->objects.begin(),insert->objects.end(),[](const auto& object){return object.kind==semantic::ObjectKind::kRichText;}))
+        std::all_of(insert->objects.begin(),insert->objects.end(),[](const auto& object){return object.kind==semantic::ObjectKind::kRichText || object.kind==semantic::ObjectKind::kImage;}))
         forward.payload=semantic::RestoreObjectsOp{insert->objects};
     if (!submitFresh(std::span<const semantic::Operation>(&forward, 1), entries_[cursor_].before)) return false;
     ++cursor_;

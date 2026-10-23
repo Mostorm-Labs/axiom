@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iterator>
 #include <string>
+#include <limits>
 
 #ifndef FC03_FIXTURE_ROOT
 #error FC03_FIXTURE_ROOT must be provided by the test target
@@ -32,6 +33,66 @@ int main() {
   const auto jpeg = readFixture("fc03-red.jpg");
   const auto webp = readFixture("fc03-sample.webp");
   assert(!jpeg.empty() && !webp.empty());
+  // An ordinary consumer supplies file bytes, not a prebuilt Manifest.
+  // Rejecting this request leaves the actual Minimal Host unable to import.
+  {
+    runtime::RuntimeComposition files;
+    assert(files.open() && files.bindSurface(800, 600));
+    auto& consumer = files.controlFacade();
+    runtime::ImageImportRequest file;
+    file.bytes = jpeg;
+    const auto receipt = consumer.importImage(file);
+    assert(receipt.state == runtime::ImageCommandState::kApplied);
+    assert(receipt.content.intrinsic_width == 1.0);
+    assert(receipt.content.intrinsic_height == 1.0);
+    assert(files.resources().manifest.entries.size() == 1U);
+    assert(files.semanticObjectCount() == 1U);
+    const auto beforeInvalid = files.resources();
+    const auto beforeInvalidGeneration = files.readback().semanticGeneration;
+    auto invalid = file;
+    invalid.bytes = webp;
+    invalid.transform.a = std::numeric_limits<double>::quiet_NaN();
+    assert(consumer.importImage(invalid).state == runtime::ImageCommandState::kRejected);
+    assert(files.resources().manifest == beforeInvalid.manifest);
+    assert(files.resources().lifetimeGeneration == beforeInvalid.lifetimeGeneration);
+    assert(files.readback().semanticGeneration == beforeInvalidGeneration);
+    invalid = file; invalid.bytes = webp;
+    invalid.placement.parent_id = foundation::ObjectId::fromUint64(99123);
+    assert(consumer.importImage(invalid).state == runtime::ImageCommandState::kRejected);
+    assert(files.resources().manifest == beforeInvalid.manifest);
+    assert(files.readback().semanticGeneration == beforeInvalidGeneration);
+    invalid = file; invalid.mimeType = "image/png";
+    assert(consumer.importImage(invalid).reason == runtime::ImageFailureReason::kMimeMismatch);
+    assert(files.resources().manifest == beforeInvalid.manifest);
+    assert(consumer.undo(501, consumer.readRuntimeState().identity.runtimeGeneration).state ==
+           runtime::ProductControlState::kQueued);
+    assert(files.ownerPump());
+    assert(files.semanticObjectCount() == 0U);
+    assert(consumer.redo(502, consumer.readRuntimeState().identity.runtimeGeneration).state ==
+           runtime::ProductControlState::kQueued);
+    assert(files.ownerPump());
+    assert(files.semanticObjectCount() == 1U);
+  }
+  for (const auto& bytes : {png, jpeg, webp}) {
+    runtime::RuntimeComposition ordinary;
+    assert(ordinary.open() && ordinary.bindSurface(800,600));
+    auto& consumer = ordinary.controlFacade();
+    runtime::CanvasControlRequest tool{};
+    tool.clientId=123; tool.requestId=1; tool.target=consumer.mountedCanvasTargets().front();
+    tool.payload.kind=runtime::CanvasControlPayloadKind::kSelectTool;
+    tool.payload.tool=runtime::CanvasToolKind::kText;
+    assert(consumer.submitCanvasControl(tool).state == runtime::ProductControlState::kQueued);
+    assert(ordinary.ownerPump());
+    runtime::ImageImportRequest file{}; file.bytes=bytes;
+    const auto result=consumer.importImage(file);
+    assert(result.state==runtime::ImageCommandState::kApplied);
+    assert(consumer.readCanvasControlSnapshot(consumer.mountedCanvasTargets().front()).tool==runtime::CanvasToolKind::kSelect);
+    const auto before=ordinary.readback().semanticGeneration;
+    const auto manifest=ordinary.resources().manifest;
+    file.bytes={1,2,3};
+    assert(consumer.importImage(file).reason==runtime::ImageFailureReason::kDecodeFailed);
+    assert(ordinary.readback().semanticGeneration==before && ordinary.resources().manifest==manifest);
+  }
   semantic::ResourceManifest manifest{};
   manifest.manifest_revision = 1U;
   manifest.entries.push_back({semantic::ResourceId{foundation::ObjectId::fromUint64(77U)},
@@ -79,6 +140,18 @@ int main() {
   const auto started = facade.beginImageCrop(begin);
   assert(started.state == runtime::ImageCommandState::kApplied);
   assert(started.cropToken != 0U);
+  const auto initialCrop = facade.readImageCrop().content;
+  assert(facade.updateImageCrop({started.cropToken, {0,0,1.0/4096,1}, 30,20}).state ==
+      runtime::ImageCommandState::kRejected);
+  assert(facade.updateImageCrop({started.cropToken, {0,0,1,1}, 1,20}).state ==
+      runtime::ImageCommandState::kRejected);
+  assert(facade.readImageCrop().content == initialCrop);
+  runtime::ImageCropUpdateRequest scaleRequest{started.cropToken, {}, 0, 0, 0.1};
+  assert(facade.updateImageCrop(scaleRequest).state == runtime::ImageCommandState::kRejected);
+  scaleRequest.contentScale = 2;
+  assert(facade.updateImageCrop(scaleRequest).state == runtime::ImageCommandState::kApplied);
+  assert(facade.readImageCrop().content.source_rect == semantic::NormalizedRect(.25,.25,.5,.5));
+  assert(facade.readImageCrop().contentScale == 2);
   runtime::ImageCropUpdateRequest update{};
   update.cropToken = started.cropToken;
   update.sourceRect = semantic::NormalizedRect{0.1, 0.1, 0.8, 0.8};

@@ -3,6 +3,7 @@
 #include "imgui.h"
 
 #include <cmath>
+#include <algorithm>
 #include <array>
 #include <utility>
 
@@ -101,6 +102,62 @@ void tools(DebugPanelContext& context) {
         ImGui::Text("legacy toolId (diagnostic): %u", snapshot.product.value.tool.toolId);
     }
 }
+void images(DebugPanelContext& context) {
+    auto& controls = context.controls;
+    const auto selected = controls.selectedImage();
+    const auto crop = controls.imageCrop();
+    ImGui::SeparatorText("Image");
+    ImGui::BeginDisabled(!controls.hasRuntimeOwner() || crop.active);
+    if (ImGui::Button("Import image...")) { controls.requestImageFile(false); context.ui.markControlSubmitted(); }
+    ImGui::EndDisabled();
+    ImGui::BeginDisabled(!selected.editable || crop.active);
+    if (ImGui::Button("Replace selected image...")) { controls.requestImageFile(true); context.ui.markControlSubmitted(); }
+    if (ImGui::Button("Crop selected image")) { controls.beginImageCrop(); context.ui.markControlSubmitted(); }
+    ImGui::EndDisabled();
+    if (selected.available)
+        ImGui::Text("Image %.0f x %.0f / source %.0f x %.0f", selected.content.width, selected.content.height,
+                    selected.content.intrinsic_width, selected.content.intrinsic_height);
+    else ImGui::TextWrapped("Select an image on the canvas to replace or crop it.");
+    if (crop.active) {
+        auto& draft = context.ui.imageDraft();
+        const auto rect = crop.content.source_rect.value_or(canvas::semantic::NormalizedRect{0,0,1,1});
+        if (draft.token != crop.cropToken ||
+            (!ImGui::IsAnyItemActive() &&
+             (draft.rect[0] != rect.x || draft.rect[1] != rect.y || draft.rect[2] != rect.width ||
+              draft.rect[3] != rect.height || draft.width != crop.content.width || draft.height != crop.content.height ||
+              draft.scale != static_cast<float>(crop.contentScale)))) {
+            draft.token = crop.cropToken; draft.rect[0] = rect.x; draft.rect[1] = rect.y;
+            draft.rect[2] = rect.width; draft.rect[3] = rect.height;
+            draft.width = crop.content.width; draft.height = crop.content.height; draft.scale = static_cast<float>(crop.contentScale);
+        }
+        bool changed = false;
+        ImGui::TextWrapped("Live crop preview. Done creates one Undo step; Cancel discards it.");
+        float scale = draft.scale;
+        if (ImGui::SliderFloat("Content zoom", &scale, 0.25F, 4.0F, "%.2fx")) {
+            canvas::runtime::ImageCropUpdateRequest request{};
+            request.cropToken=crop.cropToken; request.contentScale=scale;
+            controls.updateImageCrop(request); draft.scale=scale;
+            context.ui.markControlSubmitted();
+        }
+        changed = ImGui::InputDouble("Crop X", &draft.rect[0], .01, .1, "%.4f") || changed;
+        changed = ImGui::InputDouble("Crop Y", &draft.rect[1], .01, .1, "%.4f") || changed;
+        changed = ImGui::InputDouble("Crop width", &draft.rect[2], .01, .1, "%.4f") || changed;
+        changed = ImGui::InputDouble("Crop height", &draft.rect[3], .01, .1, "%.4f") || changed;
+        changed = ImGui::InputDouble("Display width", &draft.width) || changed;
+        changed = ImGui::InputDouble("Display height", &draft.height) || changed;
+        if (changed) {
+            controls.updateImageCrop({crop.cropToken,
+                {draft.rect[0], draft.rect[1], draft.rect[2], draft.rect[3]}, draft.width, draft.height});
+            context.ui.markControlSubmitted();
+        }
+        if (ImGui::Button("Crop Done")) { controls.finishImageCrop(true); context.ui.markControlSubmitted(); }
+        ImGui::SameLine();
+        if (ImGui::Button("Crop Cancel") || ImGui::IsKeyPressed(ImGuiKey_Escape)) {
+            controls.finishImageCrop(false); context.ui.markControlSubmitted();
+        }
+    }
+    if (!controls.imageStatus().empty()) ImGui::TextWrapped("%s", controls.imageStatus().c_str());
+}
 void view(DebugPanelContext& context) {
     const auto& snapshot = context.snapshot;
     ImGui::SeparatorText("View");
@@ -182,15 +239,11 @@ void history(DebugPanelContext& context) {
     }
     ImGui::EndDisabled();
 }
-void feature(DebugPanelContext&) {
-    ImGui::SeparatorText("Feature");
-    ImGui::TextUnformatted("Unsupported / Not implemented (successor feature slot)");
-}
 } // namespace
 void registerControlDebugPanels(PanelRegistry& registry) noexcept {
+    (void)registry.add({WorkspaceId::kControl, PanelSlot::kTools, -10, nullptr, images});
     (void)registry.add({WorkspaceId::kControl, PanelSlot::kTools, 0, nullptr, tools});
     (void)registry.add({WorkspaceId::kControl, PanelSlot::kView, 0, nullptr, view});
     (void)registry.add({WorkspaceId::kControl, PanelSlot::kHistory, 0, nullptr, history});
-    (void)registry.add({WorkspaceId::kControl, PanelSlot::kFeature, 0, nullptr, feature});
 }
 } // namespace canvas::debug_ui

@@ -31,6 +31,7 @@ class RuntimeFacade {
   [[nodiscard]] virtual ImageCommandReceipt commitImageCrop(std::uint64_t) { return {}; }
   [[nodiscard]] virtual ImageCommandReceipt cancelImageCrop(std::uint64_t) { return {}; }
   [[nodiscard]] virtual ImageCropSnapshot readImageCrop() const { return {}; }
+  [[nodiscard]] virtual SelectedImageSnapshot readSelectedImage() const { return {}; }
   [[nodiscard]] virtual ProductControlReceipt submitSelectionPointer(
       const SelectionPointerRequest& request) noexcept {
     ProductControlReceipt receipt{};

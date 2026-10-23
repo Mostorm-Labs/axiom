@@ -55,6 +55,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   [[nodiscard]] ImageCommandReceipt commitImageCrop(std::uint64_t) override;
   [[nodiscard]] ImageCommandReceipt cancelImageCrop(std::uint64_t) override;
   [[nodiscard]] ImageCropSnapshot readImageCrop() const override;
+  [[nodiscard]] SelectedImageSnapshot readSelectedImage() const override;
   CanvasRuntimeFacade(const CanvasRuntimeFacade&) = delete;
   CanvasRuntimeFacade& operator=(const CanvasRuntimeFacade&) = delete;
 
@@ -103,6 +104,9 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   }
  private:
   struct Binding;
+  [[nodiscard]] ImageCommandReceipt registerImageBytes(
+      const std::vector<std::uint8_t>& bytes, const std::string& mimeType, bool commit = true);
+  void imageCropPointer(const input::PointerSample&);
   [[nodiscard]] std::size_t processIngress(std::uint64_t);
   void finishTextReceipts();
   using Work = std::variant<CanvasControlRequest,TextIntent,TextInputEvent>;
@@ -117,6 +121,11 @@ class CanvasRuntimeFacade : public RuntimeFacade {
     semantic::ObjectId objectId{};
     semantic::ImageContent original{};
     semantic::ImageContent current{};
+    input::PointerKey pointer{};
+    double downX = 0, downY = 0;
+    render::HandleKind handle = render::HandleKind::kNone;
+    semantic::ImageContent dragStart{};
+    double contentScale = 1;
   };
   std::optional<ImageCropSession> imageCrop_;
   std::uint64_t nextImageCropToken_ = 1;

@@ -13,6 +13,7 @@ DebugController::DebugController(DebugControllerContext context)
 
 DebugSnapshot DebugController::snapshot() const { return latest_; }
 DebugUiSessionState& DebugController::uiState() noexcept { return ui_; }
+void DebugController::processHostRequests() { router_.processImageFileRequest(context_.chooseImageFile); }
 
 bool DebugController::buildImGuiFrame() {
   DebugSnapshotSources sources{context_.runtime, context_.axiom, context_.arc,

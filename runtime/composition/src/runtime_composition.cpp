@@ -181,6 +181,7 @@ bool RuntimeComposition::bindManifest(const semantic::ResourceManifest& manifest
       provider_->markMissing(oldEntry.resource_id.value);
     }
   }
+  if (controlFacade_) controlFacade_->discardImageCrop();
   notifications_.clear();
   resourceReceipts_.clear();
   for (auto it = resourceReceipts_.begin(); it != resourceReceipts_.end();) {
@@ -200,6 +201,8 @@ bool RuntimeComposition::unregisterSource(input::InputSourceId source,
                                            std::uint64_t sequence,
                                            std::uint64_t timestampNs) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || surfaceTransitionActive_ || !canMutate()) return false;
+  if (controlFacade_ && controlFacade_->imageCrop_ && controlFacade_->imageCrop_->pointer.source == source)
+    controlFacade_->discardImageCrop();
   return runtime_->unregisterInputSource(source, sequence, timestampNs);
 }
 bool RuntimeComposition::cancelAllPointers() noexcept {
@@ -227,6 +230,8 @@ std::optional<input::PointerKey> RuntimeComposition::platformKey(
 bool RuntimeComposition::cancelPlatformPointer(const input::PointerKey& key,
     std::uint64_t sequence, std::uint64_t timestampNs) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || surfaceTransitionActive_ || !canMutate()) return false;
+  if (controlFacade_ && controlFacade_->imageCrop_ && controlFacade_->imageCrop_->pointer == key)
+    controlFacade_->discardImageCrop();
   return runtime_->cancelPlatformPointer(key, sequence, timestampNs);
 }
 std::size_t RuntimeComposition::semanticObjectCount() const noexcept {
@@ -534,6 +539,7 @@ bool RuntimeComposition::adoptPreparedSurface(
 bool RuntimeComposition::stop() noexcept {
   if (std::this_thread::get_id() != ownerThread_ ||
       (state_ != RuntimeCompositionState::kReady && state_ != RuntimeCompositionState::kLost)) return false;
+  if (controlFacade_) controlFacade_->discardImageCrop();
   resources_.invalidate();
   notifications_.clear();
   pendingPreviewCapture_.reset();

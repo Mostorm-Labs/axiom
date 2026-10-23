@@ -32,6 +32,8 @@ struct ShapeReferenceCommand final {
 };
 struct ImageReferenceCommand final {
     semantic::ImageContent content;
+    // Per-frame Crop affordance. DirectReferenceSource leaves this disabled.
+    bool showCropSource = false;
     bool operator==(const ImageReferenceCommand&) const = default;
 };
 struct VectorPathReferenceCommand final {

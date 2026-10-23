@@ -1,0 +1,133 @@
+{
+  "base_revision": "a17280a66392bb108c787b1c2414649d1d9939e6",
+  "dirty": true,
+  "materialized_ref": null,
+  "source_files": [
+    {
+      "path": "apps/minimal_runtime_host/CMakeLists.txt",
+      "sha256": "ddc5c12161ca7aec7f9a520a180fd1387f8fbc0226532fe4c7cba4ccb09df625"
+    },
+    {
+      "path": "apps/minimal_runtime_host/minimal_runtime_facade.cpp",
+      "sha256": "b08265f27a02ae49e4bc91e621532566a27857b1a9c158f9bdd2680f2134659a"
+    },
+    {
+      "path": "apps/minimal_runtime_host/minimal_runtime_facade.hpp",
+      "sha256": "b9fb394e77082148e0a11d38cb7c7aaec27a6ac25b4ee19ccaf7503e2e3abb3b"
+    },
+    {
+      "path": "apps/minimal_runtime_host/tests/windows_image_debug_ui_test.cpp",
+      "sha256": "39ab0a13b0eae731df048d74350c0c788671c7bc3f8c69fbe7bfb05dd58925b5"
+    },
+    {
+      "path": "apps/minimal_runtime_host/windows_image_file.hpp",
+      "sha256": "e8f92c655908a936c7ffd67c214298a0d509aa10d67024c24ac8156464775c06"
+    },
+    {
+      "path": "apps/minimal_runtime_host/windows_main.cpp",
+      "sha256": "f01f52ce76d951b0f30aed6cde508f67adb03ceab16e46dcda0918a46aa7366e"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "sha256": "34c7a05535b2b32865b389b0ec606aa7abb45f59aaec4913e05a84ee07254a42"
+    },
+    {
+      "path": "debug_ui/include/canvas/debug_ui/control_router.hpp",
+      "sha256": "45840288742a7e9f41ea1f72ce918a4eac8eaa5a1dd4d374491d9740e0d6d524"
+    },
+    {
+      "path": "debug_ui/include/canvas/debug_ui/controller.hpp",
+      "sha256": "2a3317785ef1ed6e00c3407cc03c8961854a213f9b37bd562cecf0b2c875dd1b"
+    },
+    {
+      "path": "debug_ui/include/canvas/debug_ui/ui_session_state.hpp",
+      "sha256": "1353bc78f0df8cd625609a3ca0cb865089db37ff9ed657f8001e85ca4e3edf45"
+    },
+    {
+      "path": "debug_ui/src/control_router.cpp",
+      "sha256": "f9808105908bd1536c1289f906771520bfd1aa7caf5b1cf61b3394166cb77e89"
+    },
+    {
+      "path": "debug_ui/src/controller.cpp",
+      "sha256": "36ae6996590789b94d2e0f8b5f3f47e74829574ca4b2f8d26dbca9091b6e3948"
+    },
+    {
+      "path": "debug_ui/src/panels/control.cpp",
+      "sha256": "63a2b597ad20ca5487b9b3f5bdc2fc6a4f41e9a7127dea4929c0eea4bfb47fc0"
+    },
+    {
+      "path": "docs/planning/FC03_WINDOWS_IMAGE_DEBUG_UI.md",
+      "sha256": "267b4a9f10d011569a1451237a1439c9d3c35178b4bbd0da79e0c9f2705aa7e5"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "sha256": "7de90dc813a5ec0f9b6290f0b350c4caca67343ed217ad79a72becce5a915c27"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp",
+      "sha256": "0eab0423a982ce501be87e620149a55642cb2b37d529a2c4b4af7d65ce2ed8f1"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/runtime_composition.hpp",
+      "sha256": "1530cf8010ed0f9edd48d25959295fe5c89e36602c4d1b466429bcd134669fbd"
+    },
+    {
+      "path": "runtime/composition/src/canvas_runtime_facade.cpp",
+      "sha256": "f6254af5d70e8d5b57eb86f1d5264697a0bd1081f2b79e80add618a2e24f3867"
+    },
+    {
+      "path": "runtime/composition/src/canvas_runtime_image.cpp",
+      "sha256": "c679e40a7de18df0391a8e474d52abbd9c473396f795d04e6704ab9bc1c422ab"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "7172cb6e3630957bd7c565721915f4c72ecad4971cf87bf1f7bf725106e842a2"
+    },
+    {
+      "path": "runtime/composition/tests/fc03_image_facade_test.cpp",
+      "sha256": "5a9208708e22f55978587fc6b8523e32b19f2854fea1efa5c1a66ef8e58ea76f"
+    },
+    {
+      "path": "runtime/foundation/CMakeLists.txt",
+      "sha256": "472d99cc45704d058c820797b84d1f05b702c162ef24a32031aa34e2cc711f3b"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/image_input.hpp",
+      "sha256": "1bd91325e2a298a07e2e7426ea6cfc74b03f9086928315eed8eef497ca0ccec5"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "sha256": "d993890da791b2fdb8997a038b8bec1e0ee4922e0a5ffdf4e010468bb9d64c7f"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "4a137fca2df293938fccee38238e352dc366fe2fba1a59ba4e64935c96d0eeeb"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "c5146bb8da7b97ba4edb2c9be3fb29b27d06841f940cabb8a84d80db679b4543"
+    },
+    {
+      "path": "runtime/interaction/src/editor_history.cpp",
+      "sha256": "cb2bddb1d3048d7058ad4e0b35eb2a8a5479d15c3c67fcef3d0fff0145f0e913"
+    },
+    {
+      "path": "runtime/render/include/canvas/render/image_resource.hpp",
+      "sha256": "c11de6c6cd805efcc3c8664e091a71e8c25fe740d188655a51f2318203f71093"
+    },
+    {
+      "path": "runtime/render/src/image_resource.cpp",
+      "sha256": "4baf3372c3c9659f3d1da0775cf439d82d57dfb1b2570221d0658f9c8ac4629e"
+    }
+  ],
+  "ctest": {
+    "failed": 0,
+    "passed": 21
+  },
+  "python": {
+    "skipped": 0,
+    "passed": 17
+  },
+  "physical_status": "PHYSICAL_PENDING",
+  "independent_review": "NOT_PERFORMED"
+}

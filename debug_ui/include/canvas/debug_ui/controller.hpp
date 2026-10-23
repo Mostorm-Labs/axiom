@@ -17,6 +17,7 @@ struct DebugControllerContext final {
   const canvas::runtime::ITelemetry* telemetry = nullptr;
   canvas::runtime::AxiomDebugControl* axiomDebug = nullptr;
   canvas::runtime::PlatformDebugControl* platformDebug = nullptr;
+  std::function<ImageFileResult()> chooseImageFile;
 };
 
 class DebugController final {
@@ -25,6 +26,8 @@ class DebugController final {
   [[nodiscard]] bool buildImGuiFrame();
   [[nodiscard]] DebugSnapshot snapshot() const;
   [[nodiscard]] DebugUiSessionState& uiState() noexcept;
+  // Called by the host outside ImGui rendering: a native dialog runs a modal loop.
+  void processHostRequests();
  private:
   DebugControllerContext context_{};
   DebugSnapshotAssembler assembler_{};

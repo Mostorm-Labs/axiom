@@ -295,6 +295,7 @@ CanvasControlApplyResult CanvasRuntimeFacade::applyControl(
     const CanvasControlRequest& request) {
   if (!ownerThread() || runtime_.closed())
     return {CanvasControlError::kPermissionDenied, "owner or lifecycle admission failed"};
+  if (imageCrop_) discardImageCrop();
   return binding_->apply(request);
 }
 CanvasControlSnapshot CanvasRuntimeFacade::snapshotControl(

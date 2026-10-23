@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <optional>
+#include <string>
 #include <vector>
 
 namespace canvas::runtime {
@@ -13,6 +14,7 @@ enum class ImageCommandState : std::uint8_t { kRejected, kApplied };
 enum class ImageFailureReason : std::uint8_t {
   kNone, kWrongThread, kNotReady, kInvalidRequest, kUnknownResource,
   kResourceRejected, kObjectRejected, kInvalidCropSession, kStaleCropSession,
+  kUnsupportedFormat, kMimeMismatch, kDecodeFailed,
 };
 enum class ImageResizePolicy : std::uint8_t { kPreserveAspect, kFreeStretch };
 
@@ -28,6 +30,8 @@ struct ImageImportRequest final {
   semantic::Transform2D transform{};
   semantic::Placement placement{};
   semantic::ObjectId objectId{};
+  // Empty ResourceId requests owner-side registration from immutable bytes.
+  std::string mimeType;
 };
 
 struct ImageReplaceRequest final {
@@ -35,6 +39,15 @@ struct ImageReplaceRequest final {
   semantic::ResourceId resourceId{};
   std::vector<std::uint8_t> bytes{};
   semantic::ImageContent content{};
+  std::string mimeType;
+};
+
+struct SelectedImageSnapshot final {
+  bool available = false;
+  semantic::ObjectId objectId{};
+  semantic::ImageContent content{};
+  semantic::Transform2D transform{};
+  bool editable = false;
 };
 
 struct ImageResizeRequest final {
@@ -50,6 +63,7 @@ struct ImageCropUpdateRequest final {
   semantic::NormalizedRect sourceRect{};
   double width = 0.0;
   double height = 0.0;
+  std::optional<double> contentScale;
 };
 
 struct ImageCommandReceipt final {
@@ -67,6 +81,7 @@ struct ImageCropSnapshot final {
   std::uint64_t cropToken = 0;
   semantic::ObjectId objectId{};
   semantic::ImageContent content{};
+  double contentScale = 1.0;
 };
 
 }  // namespace canvas::runtime

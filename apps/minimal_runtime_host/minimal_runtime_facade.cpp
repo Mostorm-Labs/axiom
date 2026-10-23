@@ -80,6 +80,7 @@ runtime::ImageCommandReceipt MinimalRuntimeFacade::updateImageCrop(const runtime
 runtime::ImageCommandReceipt MinimalRuntimeFacade::commitImageCrop(std::uint64_t token) { return host_.composition().controlFacade().commitImageCrop(token); }
 runtime::ImageCommandReceipt MinimalRuntimeFacade::cancelImageCrop(std::uint64_t token) { return host_.composition().controlFacade().cancelImageCrop(token); }
 runtime::ImageCropSnapshot MinimalRuntimeFacade::readImageCrop() const { return host_.composition().controlFacade().readImageCrop(); }
+runtime::SelectedImageSnapshot MinimalRuntimeFacade::readSelectedImage() const { return host_.composition().controlFacade().readSelectedImage(); }
 
 }  // namespace canvas::minimal_runtime_host
 

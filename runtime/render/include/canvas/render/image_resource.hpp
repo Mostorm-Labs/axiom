@@ -17,6 +17,7 @@ struct DecodedImage final {
     int width = 0, height = 0;
     std::vector<std::uint8_t> rgba;
     std::string diagnostic;
+    std::string mimeType;
 };
 class ImageResourceResolver final {
   public:
