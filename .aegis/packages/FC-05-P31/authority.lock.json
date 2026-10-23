@@ -1,0 +1,19 @@
+{
+  "schema_version":"0.1",
+  "format":"aegis-authority-lock-v1",
+  "task_id":"FC-05",
+  "stage":"P31_TASK_PACKAGING",
+  "authority_status":"CURRENT_ACCEPTED_FC05_DESIGN_SUCCESSOR_BOUND",
+  "subject_revision":"16f5a8dcbc7ff09c682ede4d8c1e3adc7b25fbeb",
+  "trusted_inputs":[
+    {"path":"docs/planning/FC05_CONNECTOR_STICKY_DESIGN_CANDIDATE.md","role":"scope/modeling"},
+    {"path":"docs/planning/FC05_CONNECTOR_SHAPE_COMPATIBILITY_CONTRACT.md","role":"compatibility/modeling"},
+    {"path":"docs/planning/FC05_STICKY_MUTATION_CONTRACT.md","role":"sticky semantic successor"},
+    {"path":"docs/planning/FC05_ROUTING_CONTRACT.md","role":"route architecture"},
+    {"path":"docs/planning/FC05_PUBLIC_CONSUMER_CONTRACT.md","role":"facade/platform contract"},
+    {"path":"docs/planning/FC05_P14_P18_ARCHITECTURE_REVIEW.md","role":"architecture"},
+    {"path":"docs/planning/FC05_P20_FREEZE.md","role":"frozen verification target"}
+  ],
+  "preserved_authority":["FC02 text contracts","Sticky zero-or-one direct RichText child","existing Image/1 and Shape/1 behavior","historical FC01/FC03 evidence"],
+  "forbidden_authority_changes":["generic Transaction","new Registry","curved/manual Connector routes","schema lock changes","historical Gate/Golden rewrites","FC04/FC01A expansion"]
+}
