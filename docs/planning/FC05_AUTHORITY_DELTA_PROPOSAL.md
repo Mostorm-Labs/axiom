@@ -17,6 +17,8 @@ here so a later acceptance cannot silently replace historical scope.
 | Connectable tuples | Connector V1 Notion `3c44c57a590c817384dedc221b023bde`; repository mirror | Retain Shape/1, Image/1, Sticky/1; propose explicit Shape/2 triangle and released Shape/3 rectangle/ellipse/triangle-label tuples | Human scope accepted; exact contract materialized; validator unchanged |
 | Triangle attachment deferral | `fc01-shape-triangle-semantic-v0.1`; Notion `3f74c57a590c8128b936d7491884ffb7` | Supersede only `attached_endpoint_triangle=DEFERRED_FC-06` for this first slice, with frozen perimeter/port math | Human scope accepted; Triangle ray/ports explicitly defined in linked contract |
 | Sticky hierarchy | Current zero-or-one direct RichText child authority | No change; use separate RichText child, not embedded Shape label or another text model | Existing Current rule consumed |
+| Sticky composed mutation | Current one-operation apply seam | Proposed restricted EditSticky/tag17 for parent geometry plus unique-child create/edit/remove/restore; no generic transaction | FC05_STICKY_MUTATION_CONTRACT.md; review pending |
+| schema3 capability order | Current mixed triangle+label construction is not sorted ASCII | Exact successor vectors; preserve historical evidence and reject unsorted successor input until recovery is accepted | FC05_CAPABILITY_SUCCESSOR_REVIEW.md; review pending |
 
 ## Required successor content
 
