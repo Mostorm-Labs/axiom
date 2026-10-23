@@ -21,6 +21,15 @@ RuntimeSceneProjection projectRuntimeScene(
     projection.generation = generation;
     projection.records.reserve(source.size());
     for (const semantic::ObjectRecord& record : source) {
+        auto derivedGeometry = scene::deriveGeometry(record);
+        if (record.kind == semantic::ObjectKind::kConnector) {
+            if (const auto route = scene::connectorGeometry(record,
+                    std::vector<semantic::ObjectRecord>(source.begin(), source.end())); route) {
+                derivedGeometry = *route;
+            }
+        }
+        const auto* route = std::get_if<scene::ConnectorGeometry>(&derivedGeometry);
+        const auto bounds = scene::computeBounds(record, nullptr, route);
         projection.records.push_back(RuntimeSceneRecord{
             .objectId = record.id,
             .kind = record.kind,
@@ -30,9 +39,12 @@ RuntimeSceneProjection projectRuntimeScene(
             .properties = record.properties,
             .content = record.content,
             .eraseMasks = record.erase_masks,
-            .derivedGeometry = scene::deriveGeometry(record),
+            .derivedGeometry = std::move(derivedGeometry),
             .textLayout = nullptr,
         });
+        projection.records.back().geometryBounds = bounds.geometry;
+        projection.records.back().visualBounds = bounds.visual;
+        projection.records.back().worldBounds = bounds.world;
         const semantic::RichTextContent* textContent = nullptr;
         if (record.kind == semantic::ObjectKind::kRichText)
             textContent = std::get_if<semantic::RichTextContent>(&record.content);
@@ -43,8 +55,9 @@ RuntimeSceneProjection projectRuntimeScene(
             auto& derived = projection.records.back();
             derived.textLayout = textService->resolveShape(record.id,
                 std::get<semantic::ShapeContent>(record.content), record.transform);
-            const auto bounds = computeBounds(record, nullptr);
-            derived.geometryBounds=bounds.geometry; derived.visualBounds=bounds.visual; derived.worldBounds=bounds.world;
+            const auto textBounds = computeBounds(record, nullptr,
+                std::get_if<scene::ConnectorGeometry>(&derived.derivedGeometry));
+            derived.geometryBounds=textBounds.geometry; derived.visualBounds=textBounds.visual; derived.worldBounds=textBounds.world;
             derived.referenceGeometryDigest=derived.textLayout->digest;
             for(const auto& font:derived.textLayout->fonts) derived.directDependencies.push_back(font.resourceId.value);
             std::sort(derived.directDependencies.begin(),derived.directDependencies.end());
@@ -52,19 +65,20 @@ RuntimeSceneProjection projectRuntimeScene(
         } else if (textService != nullptr && textContent != nullptr) {
             auto& derived = projection.records.back();
             derived.textLayout = textService->resolve(record.id,*textContent);
-            const auto bounds = record.kind == semantic::ObjectKind::kRichText
-                ? computeBounds(record,derived.textLayout.get()) : computeBounds(record, nullptr);
-            derived.geometryBounds=bounds.geometry; derived.visualBounds=bounds.visual; derived.worldBounds=bounds.world;
+            const auto textBounds = record.kind == semantic::ObjectKind::kRichText
+                ? computeBounds(record,derived.textLayout.get()) : computeBounds(record, nullptr,
+                    std::get_if<scene::ConnectorGeometry>(&derived.derivedGeometry));
+            derived.geometryBounds=textBounds.geometry; derived.visualBounds=textBounds.visual; derived.worldBounds=textBounds.world;
             derived.referenceGeometryDigest=derived.textLayout->digest;
             for(const auto& font:derived.textLayout->fonts) derived.directDependencies.push_back(font.resourceId.value);
             std::sort(derived.directDependencies.begin(),derived.directDependencies.end());
             derived.directDependencies.erase(std::unique(derived.directDependencies.begin(),derived.directDependencies.end()),derived.directDependencies.end());
         } else if (record.kind == semantic::ObjectKind::kImage) {
             auto& derived = projection.records.back();
-            const auto bounds = computeBounds(record, nullptr);
-            derived.geometryBounds = bounds.geometry;
-            derived.visualBounds = bounds.visual;
-            derived.worldBounds = bounds.world;
+            const auto imageBounds = computeBounds(record, nullptr);
+            derived.geometryBounds = imageBounds.geometry;
+            derived.visualBounds = imageBounds.visual;
+            derived.worldBounds = imageBounds.world;
             const auto& image = std::get<semantic::ImageContent>(record.content);
             derived.referenceGeometryDigest = "image:" +
                 std::to_string(static_cast<unsigned>(image.content_mode));

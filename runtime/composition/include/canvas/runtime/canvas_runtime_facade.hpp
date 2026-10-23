@@ -56,6 +56,10 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   [[nodiscard]] ImageCommandReceipt cancelImageCrop(std::uint64_t) override;
   [[nodiscard]] ImageCropSnapshot readImageCrop() const override;
   [[nodiscard]] SelectedImageSnapshot readSelectedImage() const override;
+  [[nodiscard]] ConnectorCommandReceipt createConnector(const ConnectorCreateRequest&) override;
+  [[nodiscard]] StickyCommandReceipt createSticky(const StickyCreateRequest&) override;
+  [[nodiscard]] ConnectorSnapshot readSelectedConnector() const override;
+  [[nodiscard]] StickySnapshot readSelectedSticky() const override;
   CanvasRuntimeFacade(const CanvasRuntimeFacade&) = delete;
   CanvasRuntimeFacade& operator=(const CanvasRuntimeFacade&) = delete;
 

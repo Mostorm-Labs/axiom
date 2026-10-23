@@ -12,8 +12,9 @@
 
 namespace canvas::scene {
 namespace {
-foundation::WorldRect shapeRect(const semantic::ObjectRecord& record) noexcept {
-    return std::visit([&record](const auto& content) -> foundation::WorldRect {
+foundation::WorldRect shapeRect(const semantic::ObjectRecord& record,
+                                const ConnectorGeometry* routeOverride) noexcept {
+    return std::visit([&record, routeOverride](const auto& content) -> foundation::WorldRect {
         using T = std::decay_t<decltype(content)>;
         if constexpr (std::is_same_v<T, semantic::ShapeContent>) {
             return {0.0F, 0.0F, static_cast<float>(content.width), static_cast<float>(content.height)};
@@ -108,8 +109,20 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record) noexcept {
                     }
                 }
             }; add(content.start); add(content.end);
+            const auto route = routeOverride != nullptr
+                ? std::optional<ConnectorGeometry>(*routeOverride)
+                : connectorGeometry(record);
+            if (route.has_value() && route->route.size() > 1U) {
+                result = {};
+                have = false;
+                for (const auto point : route->route) {
+                    const foundation::WorldRect pointRect{point.x, point.y, point.x, point.y};
+                    result = have ? foundation::unionRects(result, pointRect) : pointRect;
+                    have = true;
+                }
+            }
             bool arrow=false; for(const auto& entry:record.properties.entries) if(entry.field_id==0x201U) if(const auto* v=std::get_if<semantic::ConnectorDecorationValue>(&entry.value)) arrow=*v==semantic::ConnectorDecorationValue::kArrow;
-            if(arrow && have) { const auto start=std::get_if<semantic::FreePointEndpoint>(&content.start.value); const auto end=std::get_if<semantic::FreePointEndpoint>(&content.end.value); if(start&&end) { const ConnectorGeometry g{{static_cast<float>(start->point.x),static_cast<float>(start->point.y)},{static_cast<float>(end->point.x),static_cast<float>(end->point.y)},true}; const auto h=arrowHead(g); result=foundation::unionRects(result,{h.left.x,h.left.y,h.left.x,h.left.y}); result=foundation::unionRects(result,{h.right.x,h.right.y,h.right.x,h.right.y}); } }
+            if(arrow && have) { const auto start=std::get_if<semantic::FreePointEndpoint>(&content.start.value); const auto end=std::get_if<semantic::FreePointEndpoint>(&content.end.value); if(start&&end) { const ConnectorGeometry g{{static_cast<float>(start->point.x),static_cast<float>(start->point.y)}, {static_cast<float>(end->point.x),static_cast<float>(end->point.y)}, {}, true}; const auto h=arrowHead(g); result=foundation::unionRects(result,{h.left.x,h.left.y,h.left.x,h.left.y}); result=foundation::unionRects(result,{h.right.x,h.right.y,h.right.x,h.right.y}); } }
             return result;
         } else { return {}; }
     }, record.content);
@@ -118,11 +131,13 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record) noexcept {
 bool finiteRect(const foundation::WorldRect& r) noexcept { return r.isFiniteAndOrdered(); }
 } // namespace
 
-BoundsResult computeBounds(const semantic::ObjectRecord& record, const text::TextLayoutSnapshot* textLayout) noexcept {
+BoundsResult computeBounds(const semantic::ObjectRecord& record,
+                           const text::TextLayoutSnapshot* textLayout,
+                           const ConnectorGeometry* connectorGeometryOverride) noexcept {
     BoundsResult result;
     if (record.kind == semantic::ObjectKind::kGroup) { result.geometry = {}; result.visual = {}; result.world = {}; return result; }
     result.geometry = record.kind == semantic::ObjectKind::kRichText && textLayout != nullptr
-        ? textLayout->localBounds : shapeRect(record);
+        ? textLayout->localBounds : shapeRect(record, connectorGeometryOverride);
     if(record.kind==semantic::ObjectKind::kRichText && textLayout) {
         const auto& content=std::get<semantic::RichTextContent>(record.content);
         if(content.layout)result.geometry=foundation::unionRects(result.geometry,{0,0,static_cast<float>(content.layout->wrap_width),textLayout->localBounds.bottom});

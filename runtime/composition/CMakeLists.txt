@@ -5,6 +5,7 @@ add_library(canvas_runtime_composition STATIC
     src/canvas_runtime_facade.cpp
     src/canvas_runtime_text.cpp
     src/canvas_runtime_image.cpp)
+target_sources(canvas_runtime_composition PRIVATE src/canvas_runtime_connector_sticky.cpp)
 target_include_directories(canvas_runtime_composition PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(canvas_runtime_composition PRIVATE

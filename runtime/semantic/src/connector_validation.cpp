@@ -12,17 +12,54 @@ namespace {
     return StatefulResult{issue};
 }
 
+[[nodiscard]] bool connectableShapeTuple(const ObjectRecord& target) noexcept {
+    const auto* shape = std::get_if<ShapeContent>(&target.content);
+    if (shape == nullptr) return false;
+    if (target.kind_version == 1U)
+        return shape->shape_kind != 3U && !shape->label.has_value();
+    if (target.kind_version == 2U)
+        return shape->shape_kind == 3U && !shape->label.has_value();
+    return target.kind_version == 3U &&
+           (shape->shape_kind == 1U || shape->shape_kind == 2U ||
+            shape->shape_kind == 3U) && shape->label.has_value();
+}
+
+[[nodiscard]] StatefulResult validateShapeTuple(const ObjectRecord& target) noexcept {
+    const auto* shape = std::get_if<ShapeContent>(&target.content);
+    if (shape == nullptr) return invalid(StatefulIssue::kInvalidKindVersion);
+    if (target.kind_version == 1U && shape->shape_kind == 3U)
+        return invalid(StatefulIssue::kInvalidKindVersion);
+    if (target.kind_version == 2U && shape->shape_kind != 3U)
+        return invalid(StatefulIssue::kInvalidKindVersion);
+    if (target.kind_version == 3U &&
+        (shape->shape_kind < 1U || shape->shape_kind > 3U || !shape->label.has_value()))
+        return invalid(StatefulIssue::kInvalidKindVersion);
+    return StatefulResult{};
+}
+
 [[nodiscard]] StatefulResult validateAttachedEndpoint(
     const StagedObjectView& staged, const AttachedEndpoint& endpoint) {
     const ObjectRecord* target = staged.find(endpoint.target_object_id);
     if (target == nullptr) return invalid(StatefulIssue::kInvalidReference);
 
-    if (!isKnownObjectKind(target->kind) || target->kind_version != 1U) {
+    if (!isKnownObjectKind(target->kind) ||
+        target->kind_version == 0U ||
+        (target->kind != ObjectKind::kShape && target->kind_version != 1U) ||
+        (target->kind == ObjectKind::kShape && target->kind_version > 3U)) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
 
-    if (!isConnectableObjectKind(target->kind, target->kind_version)) {
+    if (target->kind != ObjectKind::kShape &&
+        !isConnectableObjectKind(target->kind, target->kind_version)) {
         return invalid(StatefulIssue::kConnectorInvalid);
+    }
+    if (target->kind == ObjectKind::kShape &&
+        (target->kind_version >= 2U ||
+         (std::get_if<ShapeContent>(&target->content) != nullptr &&
+          std::get<ShapeContent>(target->content).shape_kind == 3U))) {
+        const auto tuple = validateShapeTuple(*target);
+        if (!tuple.ok()) return tuple;
+        if (!connectableShapeTuple(*target)) return invalid(StatefulIssue::kConnectorInvalid);
     }
 
     return std::visit(
@@ -58,6 +95,8 @@ namespace {
 } // namespace
 
 bool isConnectableObjectKind(ObjectKind kind, std::uint32_t kind_version) noexcept {
+    if (kind == ObjectKind::kShape)
+        return kind_version >= 1U && kind_version <= 3U;
     if (kind_version != 1U) return false;
     switch (kind) {
         case ObjectKind::kShape:
@@ -77,17 +116,28 @@ bool isConnectableObjectKind(ObjectKind kind, std::uint32_t kind_version) noexce
 
 StatefulResult validateStablePortForTarget(
     const ObjectRecord& target, const StablePortAnchor& anchor) {
-    if (!isKnownObjectKind(target.kind) || target.kind_version != 1U) {
+    if (!isKnownObjectKind(target.kind) ||
+        target.kind_version == 0U ||
+        (target.kind != ObjectKind::kShape && target.kind_version != 1U) ||
+        (target.kind == ObjectKind::kShape && target.kind_version > 3U)) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
-    if (!isConnectableObjectKind(target.kind, target.kind_version)) {
+    if (target.kind != ObjectKind::kShape &&
+        !isConnectableObjectKind(target.kind, target.kind_version)) {
         return invalid(StatefulIssue::kConnectorInvalid);
     }
+    if (target.kind == ObjectKind::kShape &&
+        (target.kind_version >= 2U ||
+         (std::get_if<ShapeContent>(&target.content) != nullptr &&
+          std::get<ShapeContent>(target.content).shape_kind == 3U))) {
+        const auto tuple = validateShapeTuple(target);
+        if (!tuple.ok()) return tuple;
+        if (!connectableShapeTuple(target)) return invalid(StatefulIssue::kConnectorInvalid);
+    }
 
-    // The caller's A structural-validation precondition guarantees a released
-    // StablePort identity. B4 only evaluates target applicability and does not
-    // classify structurally invalid port IDs.
-    (void)anchor;
+    if (target.kind == ObjectKind::kShape && target.kind_version >= 2U &&
+        (anchor.port_id < 1U || anchor.port_id > 4U))
+        return invalid(StatefulIssue::kConnectorInvalid);
     return StatefulResult{};
 }
 

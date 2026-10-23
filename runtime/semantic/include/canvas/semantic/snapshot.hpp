@@ -19,6 +19,7 @@ enum class SnapshotCapability : std::uint8_t {
     kShape2TriangleAndRichTextFixedWidthV2 = 3,
     kRichTextFormattingV3 = 6,
     kShape2TriangleAndRichTextFormattingV3 = 7,
+    kShape2TriangleRichTextFormattingAndConnectorAttachmentV1 = 15,
 };
 
 struct SemanticSnapshot final {

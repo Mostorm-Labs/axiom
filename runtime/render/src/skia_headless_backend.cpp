@@ -7,6 +7,7 @@
 #include "canvas/render/brush_outline_skia_path.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/scene/bounds_system.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 
 #include "include/core/SkBlendMode.h"
 #include "include/core/SkCanvas.h"
@@ -288,6 +289,13 @@ HeadlessSubmissionIssue validateCommand(const ReferenceTraversalEntry& entry) no
             if (!integral(start->point.x) || !integral(start->point.y) ||
                 !integral(end->point.x) || !integral(end->point.y)) {
                 return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            }
+            if (const auto* derived = std::get_if<scene::ConnectorGeometry>(&entry.record.derivedGeometry);
+                derived != nullptr) {
+                for (const auto point : derived->route)
+                    if (!std::isfinite(point.x) || !std::isfinite(point.y) ||
+                        std::abs(point.x) > 100000000.0F || std::abs(point.y) > 100000000.0F)
+                        return HeadlessSubmissionIssue::kOverflow;
             }
         } else if constexpr (std::is_same_v<T, StickyReferenceCommand>) {
             if (!scalarRange(command.content.width) || !scalarRange(command.content.height)) {
@@ -597,7 +605,14 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             const auto opacity=objectOpacity(record);
             if(opacity==1.0F) canvas.save();
             else {SkPaint layer;layer.setAlphaf(opacity);canvas.saveLayer(nullptr,&layer);}
-            if (command.content.routing == semantic::ConnectorRouting::kOrthogonal) {
+            if (const auto* derived = std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry);
+                derived != nullptr && derived->route.size() >= 2U) {
+                for (std::size_t index = 1U; index < derived->route.size(); ++index) {
+                    const auto& from = derived->route[index - 1U];
+                    const auto& to = derived->route[index];
+                    canvas.drawLine(from.x, from.y, to.x, to.y, paint);
+                }
+            } else if (command.content.routing == semantic::ConnectorRouting::kOrthogonal) {
                 canvas.drawLine(skScalar(start->point.x), skScalar(start->point.y), skScalar(end->point.x),
                                 skScalar(start->point.y), paint);
                 canvas.drawLine(skScalar(end->point.x), skScalar(start->point.y), skScalar(end->point.x),

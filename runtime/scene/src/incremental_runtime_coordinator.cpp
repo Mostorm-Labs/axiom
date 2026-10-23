@@ -236,7 +236,8 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
         }
         if (const auto* object = input.post_state.find(change.object_id)) {
             const auto* derived=runtimePrepared.value().projection.find(object->id);
-            const auto bounds = computeBounds(*object,derived ? derived->textLayout.get() : nullptr);
+            const auto bounds = computeBounds(*object,derived ? derived->textLayout.get() : nullptr,
+                derived ? std::get_if<scene::ConnectorGeometry>(&derived->derivedGeometry) : nullptr);
             if (!bounds.finite) {
                 abortPublication();
                 return foundation::Result<SceneSyncReceipt>::failure(

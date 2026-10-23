@@ -68,12 +68,12 @@ int main() {
     bool eraser(const canvas::input::PointerSample& sample, std::uint64_t id) noexcept override {
       events.push_back({DispatchEvent::kEraser, id, sample.key}); return true;
     }
-    bool cancel(DispatchMode mode, const canvas::input::PointerSample& sample,
+    bool cancel(DispatchMode dispatchMode, const canvas::input::PointerSample& sample,
                 std::uint64_t id) noexcept override {
-      events.push_back({mode == DispatchMode::kSelection ? DispatchEvent::kSelection :
-                        mode == DispatchMode::kCreation ? DispatchEvent::kCreation :
-                        mode == DispatchMode::kPan ? DispatchEvent::kPan :
-                        mode == DispatchMode::kObjectEraser || mode == DispatchMode::kPartialEraser
+      events.push_back({dispatchMode == DispatchMode::kSelection ? DispatchEvent::kSelection :
+                        dispatchMode == DispatchMode::kCreation ? DispatchEvent::kCreation :
+                        dispatchMode == DispatchMode::kPan ? DispatchEvent::kPan :
+                        dispatchMode == DispatchMode::kObjectEraser || dispatchMode == DispatchMode::kPartialEraser
                             ? DispatchEvent::kEraser : DispatchEvent::kBrush,
                         id, sample.key}); return true;
     }

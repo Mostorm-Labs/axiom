@@ -74,6 +74,19 @@ int main() {
   canvas::minimal_runtime_host::MinimalRuntimeFacade facade(facadeHost);
   assert(facadeHost.composition().bindSurface(256, 256));
   const auto target = facade.mountedCanvasTargets().front();
+  canvas::runtime::StickyCreateRequest stickyRequest{};
+  stickyRequest.objectId = canvas::foundation::ObjectId::fromUint64(700U);
+  const auto stickyReceipt = facade.createSticky(stickyRequest);
+  assert(stickyReceipt.state == canvas::runtime::ConnectorCommandState::kApplied);
+  assert(facadeHost.composition().semanticObjectCount() == 1U);
+  canvas::runtime::ConnectorCreateRequest connectorRequest{};
+  connectorRequest.objectId = canvas::foundation::ObjectId::fromUint64(701U);
+  connectorRequest.content.start.value = canvas::semantic::FreePointEndpoint{{0.0, 0.0}};
+  connectorRequest.content.end.value = canvas::semantic::AttachedEndpoint{
+      stickyRequest.objectId, canvas::semantic::AutoPerimeterAnchor{}};
+  const auto connectorReceipt = facade.createConnector(connectorRequest);
+  assert(connectorReceipt.state == canvas::runtime::ConnectorCommandState::kApplied);
+  assert(facadeHost.composition().semanticObjectCount() == 2U);
   assert(facade.setBrush(2U, 1U, 1U, target.runtimeEpoch).state ==
          canvas::runtime::ProductControlState::kQueued);
   assert(facade.process() == 1U);

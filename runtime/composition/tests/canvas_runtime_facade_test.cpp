@@ -19,6 +19,11 @@ int main() {
   canvas::interaction::CanvasEditingRuntime runtime;
   canvas::runtime::CanvasRuntimeFacade facade(runtime, {1U, 1U, 1U, 1U});
 
+  canvas::runtime::StickyCreateRequest stickyRequest{};
+  stickyRequest.objectId = canvas::foundation::ObjectId::fromUint64(700U);
+  const auto stickyReceipt = facade.createSticky(stickyRequest);
+  assert(stickyReceipt.state == canvas::runtime::ConnectorCommandState::kRejected);
+
   const auto brush = facade.setBrush(2U, 1U, 1U, 1U);
   assert(brush.state == canvas::runtime::ProductControlState::kQueued);
   assert(runtime.selectedBrushProfile() != "marker-flat-v1");

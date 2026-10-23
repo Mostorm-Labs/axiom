@@ -210,10 +210,15 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
             : textService && std::get_if<semantic::ShapeContent>(&record.content)
                 ? textService->resolveShape(record.id, std::get<semantic::ShapeContent>(record.content), record.transform)
                 : textService && label != nullptr ? textService->resolve(record.id, *label) : nullptr;
-        const auto bounds = computeBounds(record,layout.get());
+        auto derivedGeometry = deriveGeometry(record);
+        if (record.kind == semantic::ObjectKind::kConnector) {
+            if (const auto route = connectorGeometry(record, source); route) derivedGeometry = *route;
+        }
+        const auto bounds = computeBounds(record, layout.get(),
+            std::get_if<ConnectorGeometry>(&derivedGeometry));
         out.records.push_back(InspectionRecord{record.id, record.kind, record.kind_version,
             record.placement, record.transform, record.properties, record.content, record.erase_masks,
-            deriveGeometry(record),
+            std::move(derivedGeometry),
             bounds.geometry, bounds.visual, bounds.world, layout ? layout->digest : geometryText(record), dependencies(record), layout});
     }
     std::sort(out.records.begin(), out.records.end(), [](const auto& a, const auto& b) {

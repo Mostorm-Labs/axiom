@@ -70,6 +70,15 @@ target_link_libraries(canvas_g2_a2_bounds_system_test PRIVATE canvas_runtime_sce
 target_compile_features(canvas_g2_a2_bounds_system_test PRIVATE cxx_std_20)
 add_test(NAME canvas_g2_a2_bounds_system COMMAND canvas_g2_a2_bounds_system_test)
 
+add_executable(canvas_fc05_route_test fc05_route_test.cpp)
+target_link_libraries(canvas_fc05_route_test PRIVATE canvas_runtime_scene GTest::gtest_main)
+if(MSVC)
+    target_compile_options(canvas_fc05_route_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+    target_compile_options(canvas_fc05_route_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+add_test(NAME FC05Route COMMAND canvas_fc05_route_test)
+
 add_executable(axiom_rich_text_layout_red_test rich_text_layout_red_test.cpp)
 target_link_libraries(axiom_rich_text_layout_red_test PRIVATE canvas_runtime_scene)
 
