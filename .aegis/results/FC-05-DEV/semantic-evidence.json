@@ -1,0 +1,47 @@
+{
+  "schema": "fc05-semantic-evidence-v1",
+  "source_revision": "1f81bee484f1ab719a23973a24f5e644525e09c4",
+  "tests": [
+    {
+      "exit": 0,
+      "count": 4,
+      "name": "FC05Connector"
+    },
+    {
+      "exit": 0,
+      "count": 17,
+      "name": "ConnectorStatefulValidation"
+    },
+    {
+      "exit": 0,
+      "count": 12,
+      "name": "FC01Shape2Apply"
+    },
+    {
+      "exit": 0,
+      "count": 78,
+      "name": "OperationSpecificStatefulValidation"
+    },
+    {
+      "exit": 0,
+      "count": 16,
+      "name": "HierarchyCapabilityValidation"
+    },
+    {
+      "exit": 0,
+      "name": "EditorHistory"
+    }
+  ],
+  "semantic_scope": [
+    "Shape/2 and Shape/3 target tuple admission",
+    "connector capability bit and snapshot bootstrap guard",
+    "SetConnectorContent History support",
+    "Sticky size expectation support"
+  ],
+  "status": "PASS_FOCUSED",
+  "limitations": [
+    "no EditSticky parent/child operation",
+    "no full capability vector order conformance",
+    "no route failure/budget/invalidation oracle"
+  ]
+}

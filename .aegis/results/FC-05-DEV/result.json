@@ -1,0 +1,32 @@
+{
+  "schema": "fc05-p32-result-v2",
+  "task_id": "FC-05",
+  "stage": "P32",
+  "status": "BLOCKED_IMPLEMENTATION",
+  "result_revision": "1f81bee484f1ab719a23973a24f5e644525e09c4",
+  "materialized_ref": "refs/heads/codex/fc05-p32",
+  "package_ref": ".aegis/packages/FC-05-P31/package.json@07b51678eccddf0f50104842a1e95c06bc02e77c",
+  "task_anchor": "16f5a8dcbc7ff09c682ede4d8c1e3adc7b25fbeb",
+  "execution_ref": "codex/fc05-p32",
+  "focused_windows_build": "PASS",
+  "focused_windows_ctest": "129/129 PASS",
+  "windows_minimal": "PASS_BUILD_PHYSICAL_PENDING",
+  "web_minimal": "BLOCKED_ENVIRONMENT",
+  "full_windows_build": "BLOCKED_EXTERNAL_SKIA_HEADER_WARNINGS",
+  "implementation_completed": [
+    "Semantic Shape/2/3 connector tuple admission and capability guard",
+    "Typed RuntimeFacade Connector/Sticky create/read methods and ordinary Minimal consumer parity",
+    "Derived Connector-local endpoints, orthogonal elbow, obstacle corridor check, shared route bounds/render/hit",
+    "Connector SetContent History support",
+    "RichText operation-matrix compatibility test repair"
+  ],
+  "blocking_gaps": [
+    "Sticky parent/child text atomic EditSticky path is not implemented",
+    "Bounded router failure/budget/invalidation receipts and dependency cache are not implemented",
+    "Web Minimal build blocked by locked Emscripten clang frontend access violation",
+    "Full Windows build blocked by locked Skia third-party header warnings under /WX"
+  ],
+  "physical_status": "PHYSICAL_PENDING",
+  "gate_claim": "NONE",
+  "imgui_ini": "EXCLUDED"
+}
