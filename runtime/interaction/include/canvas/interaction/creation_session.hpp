@@ -13,7 +13,9 @@
 
 namespace canvas::interaction {
 
-enum class CreationPreset : std::uint8_t { kRectangle, kEllipse, kTriangle, kLine, kArrow };
+enum class CreationPreset : std::uint8_t {
+  kRectangle, kEllipse, kTriangle, kLine, kArrow, kSticky
+};
 struct CreationStyle final { semantic::PropertyBag properties{}; bool operator==(const CreationStyle&) const = default; };
 struct CreationPreview final {
   bool active = false;
@@ -38,6 +40,12 @@ class CreationSession final {
   [[nodiscard]] bool cancel(input::PointerKey) noexcept;
   [[nodiscard]] bool active() const noexcept { return preview_.active; }
   [[nodiscard]] const CreationPreview& preview() const noexcept { return preview_; }
+  // A connector endpoint may be attached to the object whose perimeter
+  // accepted the latest snapped pointer position.  This is transient
+  // interaction state; only the resulting AttachedEndpoint is canonical.
+  [[nodiscard]] std::optional<semantic::AttachedEndpoint> snappedEndpoint() const noexcept {
+    return snappedEndpoint_;
+  }
   void setSnapTargets(std::vector<interaction::SnapTarget> targets) noexcept {
     snapTargets_ = std::move(targets);
   }
@@ -55,5 +63,6 @@ class CreationSession final {
   std::vector<interaction::SnapTarget> snapTargets_{};
   float snapScale_ = 1.0F;
   CreationPreview preview_{};
+  std::optional<semantic::AttachedEndpoint> snappedEndpoint_{};
 };
 }  // namespace canvas::interaction

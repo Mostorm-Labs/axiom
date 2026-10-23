@@ -56,6 +56,7 @@ enum class SceneObjectKind : std::uint8_t {
     kVectorStroke = 5,
     kDabStroke = 6,
     kConnector = 7,
+    kSticky = 8,
 };
 
 // Renderer-neutral projection consumed by Scene Core and inspection tooling.

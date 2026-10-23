@@ -27,6 +27,11 @@ struct SnapGuideGeometry final {
     ScreenPoint end{};
 };
 
+struct AttachmentPointGeometry final {
+    ScreenPoint center{};
+    bool active = false;
+};
+
 enum class HandleKind : std::uint8_t {
     kNone = 0,
     kTopLeft,
@@ -70,6 +75,7 @@ struct EditingOverlayInput final {
     bool active = false;
     HandleCapabilities capabilities{};
     std::span<const SnapGuideGeometry> guides{};
+    std::span<const AttachmentPointGeometry> attachmentPoints{};
 };
 
 class EditingOverlay final {
@@ -110,6 +116,9 @@ class EditingOverlay final {
     [[nodiscard]] const std::vector<SnapGuideGeometry>& guides() const noexcept {
         return guides_;
     }
+    [[nodiscard]] const std::vector<AttachmentPointGeometry>& attachmentPoints() const noexcept {
+        return attachmentPoints_;
+    }
     [[nodiscard]] HandleKind hitTest(ScreenPoint point, float hitSlop = 0.0F) const noexcept;
 
   private:
@@ -119,6 +128,7 @@ class EditingOverlay final {
     SelectionOutline outline_{};
     std::array<HandleGeometry, kHandleCount> handles_{};
     std::vector<SnapGuideGeometry> guides_{};
+    std::vector<AttachmentPointGeometry> attachmentPoints_{};
     std::uint64_t updateCount_ = 0;
     std::optional<semantic::ObjectRecord> creationPreview_;
 };

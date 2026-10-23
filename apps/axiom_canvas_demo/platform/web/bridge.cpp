@@ -407,7 +407,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_control(
             payload.eraser.diameterLogicalPx = runtime::OptionPatch<float>::set(b);
         break;
     case K::kSelectCreationPreset:
-        if (a < 0 || a > 4)
+        if (a < 0 || a > 5)
             return 0;
         payload.creationPreset = static_cast<runtime::CanvasCreationPreset>(static_cast<int>(a));
         break;

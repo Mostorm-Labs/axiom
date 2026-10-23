@@ -205,6 +205,8 @@ std::uint32_t kindBit(SceneObjectKind kind) {
         return static_cast<std::uint32_t>(HitTestKindMask::kDabStroke);
     case SceneObjectKind::kConnector:
         return static_cast<std::uint32_t>(HitTestKindMask::kConnector);
+    case SceneObjectKind::kSticky:
+        return static_cast<std::uint32_t>(HitTestKindMask::kSticky);
     }
     return 0U;
 }

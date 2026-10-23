@@ -229,6 +229,7 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
         case semantic::ObjectKind::kVectorStroke: kind = canvas::SceneObjectKind::kVectorStroke; break;
         case semantic::ObjectKind::kDabStroke: kind = canvas::SceneObjectKind::kDabStroke; break;
         case semantic::ObjectKind::kConnector: kind = canvas::SceneObjectKind::kConnector; break;
+        case semantic::ObjectKind::kSticky: kind = canvas::SceneObjectKind::kSticky; break;
         default: break;
       }
       const auto flags = static_cast<canvas::SceneRecordFlags>(
@@ -903,7 +904,10 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     const auto view = runtimeSceneHost_->read();
     for (const auto id : queried.value().backToFront) {
       const auto* record = view.find(id);
-      if (record == nullptr || record->kind != canvas::SceneObjectKind::kShape ||
+      if (record == nullptr ||
+          (record->kind != canvas::SceneObjectKind::kShape &&
+           record->kind != canvas::SceneObjectKind::kImage &&
+           record->kind != canvas::SceneObjectKind::kSticky) ||
           std::find(selection_.selected().begin(), selection_.selected().end(), id) !=
               selection_.selected().end()) continue;
       targets.push_back({id, record->worldBounds, false, false});
@@ -1628,13 +1632,35 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
   selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
   const auto cropBounds = imageCropPresentation_
       ? std::optional(canvas::scene::computeBounds(*imageCropPresentation_)) : std::nullopt;
+  std::vector<render::AttachmentPointGeometry> attachmentPoints;
+  if (record->kind == semantic::ObjectKind::kShape ||
+      record->kind == semantic::ObjectKind::kImage ||
+      record->kind == semantic::ObjectKind::kSticky) {
+    const auto& bounds = cropBounds ? cropBounds->geometry : record->geometryBounds;
+    const auto point = [&](float x, float y) {
+      const auto world = render::ScreenPoint{
+          static_cast<float>(record->transform.a * x + record->transform.c * y + record->transform.tx),
+          static_cast<float>(record->transform.b * x + record->transform.d * y + record->transform.ty)};
+      const auto screen = render::ScreenPoint{
+          static_cast<float>(surface_.logicalWidth * 0.5F +
+                             viewport.scale * (world.x - center.x)),
+          static_cast<float>(surface_.logicalHeight * 0.5F +
+                             viewport.scale * (world.y - center.y))};
+      attachmentPoints.push_back({screen, true});
+    };
+    point((bounds.left + bounds.right) * 0.5F, bounds.top);
+    point(bounds.right, (bounds.top + bounds.bottom) * 0.5F);
+    point((bounds.left + bounds.right) * 0.5F, bounds.bottom);
+    point(bounds.left, (bounds.top + bounds.bottom) * 0.5F);
+  }
   const bool updated = selectionView_->editingOverlay().update(render::EditingOverlayInput{
       record->objectId, cropBounds ? cropBounds->visual : record->visualBounds,
       transformOverrides_.find(record->objectId) == nullptr ? record->transform
           : *transformOverrides_.find(record->objectId),
       true, false, transformDrag_.active(),
       render::HandleCapabilities{
-          !selectedObjectLocked(), !selectedObjectLocked(), !selectedObjectLocked() && !imageCropPresentation_}, snapGuides_});
+          !selectedObjectLocked(), !selectedObjectLocked(), !selectedObjectLocked() && !imageCropPresentation_},
+      snapGuides_, attachmentPoints});
   if (updated) ++selectionOverlayUpdates_;
   return updated;
 }

@@ -55,12 +55,13 @@ void tools(DebugPanelContext& context) {
     }
     ImGui::EndDisabled();
     ImGui::SeparatorText("Create");
-    const std::array<std::pair<const char*, canvas::runtime::CanvasCreationPreset>, 5> presets{{
+    const std::array<std::pair<const char*, canvas::runtime::CanvasCreationPreset>, 6> presets{{
         {"Rectangle", canvas::runtime::CanvasCreationPreset::kRectangle},
         {"Ellipse", canvas::runtime::CanvasCreationPreset::kEllipse},
         {"Triangle", canvas::runtime::CanvasCreationPreset::kTriangle},
         {"Line", canvas::runtime::CanvasCreationPreset::kLine},
         {"Arrow", canvas::runtime::CanvasCreationPreset::kArrow},
+        {"Sticky", canvas::runtime::CanvasCreationPreset::kSticky},
     }};
     std::size_t selectedPreset = 0U;
     const auto runtimePreset = static_cast<canvas::runtime::CanvasCreationPreset>(
@@ -89,6 +90,20 @@ void tools(DebugPanelContext& context) {
         ImGui::EndCombo();
     }
     ImGui::EndDisabled();
+    ImGui::SeparatorText("Connector / Sticky");
+    ImGui::BeginDisabled(!context.controls.hasRuntimeOwner());
+    if (ImGui::Button("Create Sticky")) {
+        (void)context.controls.createSticky();
+        context.ui.markControlSubmitted();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Create Connector")) {
+        (void)context.controls.createConnector();
+        context.ui.markControlSubmitted();
+    }
+    ImGui::EndDisabled();
+    if (!context.controls.connectorStickyStatus().empty())
+        ImGui::TextWrapped("%s", context.controls.connectorStickyStatus().c_str());
     if (panel_detail::hasReadback(snapshot.product.availability)) {
         if (!snapshot.product.value.control.creationMode) {
             ImGui::Text("Creation mode: disabled (last preset: %s)",

@@ -442,6 +442,12 @@ int main() {
   assert(facade.readRuntimeState().control.creationMode);
   assert(facade.readRuntimeState().control.creationPreset ==
          static_cast<std::uint8_t>(canvas::runtime::CanvasCreationPreset::kRectangle));
+  const auto sticky = realRouter.createSticky();
+  assert(sticky.state == canvas::runtime::ConnectorCommandState::kApplied);
+  assert(composition.semanticObjectCount() == 1U);
+  const auto connector = realRouter.createConnector();
+  assert(connector.state == canvas::runtime::ConnectorCommandState::kApplied);
+  assert(composition.semanticObjectCount() == 2U);
   assert(composition.registerSource(1U));
   canvas::input::PlatformPointerBatch down;
   down.samples.push_back({1U, 7U, 1U, 1'000U, 20.0F, 20.0F, 0.5F, 0.0F, 0.0F,

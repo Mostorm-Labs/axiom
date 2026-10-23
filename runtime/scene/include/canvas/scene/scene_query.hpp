@@ -32,7 +32,8 @@ enum class HitTestKindMask : std::uint32_t {
     kVectorStroke = 1U << 4U,
     kDabStroke = 1U << 5U,
     kConnector = 1U << 6U,
-    kAll = 0x7f,
+    kSticky = 1U << 7U,
+    kAll = 0xff,
 };
 
 struct HitTestFilter final {

@@ -226,6 +226,69 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setCreationPreset(
   return receipt;
 }
 
+canvas::runtime::StickyCommandReceipt DebugControlRouter::createSticky() noexcept {
+  canvas::runtime::StickyCommandReceipt receipt{};
+  if (runtime_ == nullptr) {
+    connectorStickyStatus_ = "Sticky: Runtime owner unavailable";
+    return receipt;
+  }
+  const auto state = runtime_->readRuntimeState();
+  const auto id = canvas::foundation::ObjectId::fromUint64(
+      (nextRequestId() << 8U) ^ 0x535449434B59ULL);
+  canvas::runtime::StickyCreateRequest request{};
+  request.objectId = id;
+  request.transform.tx = (450.0 - state.camera.translationX) /
+                         (state.camera.scale > 0.0 ? state.camera.scale : 1.0);
+  request.transform.ty = (140.0 - state.camera.translationY) /
+                         (state.camera.scale > 0.0 ? state.camera.scale : 1.0);
+  receipt = runtime_->createSticky(request);
+  connectorStickyStatus_ = receipt.state == canvas::runtime::ConnectorCommandState::kApplied
+      ? "Sticky: created" : "Sticky: rejected";
+  return receipt;
+}
+
+canvas::runtime::ConnectorCommandReceipt DebugControlRouter::createConnector() noexcept {
+  canvas::runtime::ConnectorCommandReceipt receipt{};
+  if (runtime_ == nullptr) {
+    connectorStickyStatus_ = "Connector: Runtime owner unavailable";
+    return receipt;
+  }
+  const auto state = runtime_->readRuntimeState();
+  const auto id = canvas::foundation::ObjectId::fromUint64(
+      (nextRequestId() << 8U) ^ 0x434F4E4EULL);
+  canvas::runtime::ConnectorCreateRequest request{};
+  request.objectId = id;
+  request.content.start.value = canvas::semantic::FreePointEndpoint{{80.0, 140.0}};
+  std::optional<canvas::foundation::ObjectId> selectedObject;
+  const auto targets = runtime_->mountedCanvasTargets();
+  if (!targets.empty()) {
+    selectedObject = runtime_->readCanvasControlSnapshot(targets.front()).selectedObject;
+  }
+  if (selectedObject.has_value() && !selectedObject->isZero()) {
+    request.content.end.value = canvas::semantic::AttachedEndpoint{
+        *selectedObject,
+        canvas::semantic::AutoPerimeterAnchor{}};
+  } else {
+    request.content.end.value = canvas::semantic::FreePointEndpoint{{240.0, 140.0}};
+  }
+  request.transform.tx = -state.camera.translationX /
+                         (state.camera.scale > 0.0 ? state.camera.scale : 1.0);
+  request.transform.ty = -state.camera.translationY /
+                         (state.camera.scale > 0.0 ? state.camera.scale : 1.0);
+  receipt = runtime_->createConnector(request);
+  connectorStickyStatus_ = receipt.state == canvas::runtime::ConnectorCommandState::kApplied
+      ? "Connector: created" : "Connector: rejected";
+  return receipt;
+}
+
+canvas::runtime::StickySnapshot DebugControlRouter::selectedSticky() const {
+  return runtime_ ? runtime_->readSelectedSticky() : canvas::runtime::StickySnapshot{};
+}
+
+canvas::runtime::ConnectorSnapshot DebugControlRouter::selectedConnector() const {
+  return runtime_ ? runtime_->readSelectedConnector() : canvas::runtime::ConnectorSnapshot{};
+}
+
 canvas::runtime::ProductControlReceipt DebugControlRouter::panBy(float dx, float dy) noexcept {
   const auto id = nextRequestId();
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)

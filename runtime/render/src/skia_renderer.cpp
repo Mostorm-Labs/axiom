@@ -64,6 +64,13 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
             canvas->drawLine(guide.start.x, guide.start.y, guide.end.x, guide.end.y,
                              guidePaint);
         }
+        SkPaint attachmentPaint;
+        attachmentPaint.setAntiAlias(true);
+        attachmentPaint.setColor4f({0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
+        for (const auto& point : selectionOverlay->attachmentPoints()) {
+            if (point.active) canvas->drawCircle(point.center.x, point.center.y, 4.0F,
+                                                  attachmentPaint);
+        }
         if (selectionOverlay->selectionOutline().visible) {
         SkPaint chrome;
         chrome.setAntiAlias(true);
@@ -139,6 +146,13 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     for (const auto& guide : selectionOverlay->guides()) {
         canvas->drawLine(guide.start.x, guide.start.y, guide.end.x, guide.end.y,
                          guidePaint);
+    }
+    SkPaint attachmentPaint;
+    attachmentPaint.setAntiAlias(true);
+    attachmentPaint.setColor4f({0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
+    for (const auto& point : selectionOverlay->attachmentPoints()) {
+        if (point.active) canvas->drawCircle(point.center.x, point.center.y, 4.0F,
+                                              attachmentPaint);
     }
     if (selectionOverlay->selectionOutline().visible) {
         SkPaint chrome;
