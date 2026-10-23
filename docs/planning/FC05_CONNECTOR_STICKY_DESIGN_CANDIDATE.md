@@ -160,5 +160,8 @@ budgets and acceptance hardware are not yet frozen; no speed claim is made.
 4. Review the [P20 draft](FC05_P20_VERIFICATION_DESIGN_DRAFT.md); freeze fixtures,
    command surfaces and blocking evidence only after upstream contracts are accepted.
 
+See the [narrow Authority delta proposal](FC05_AUTHORITY_DELTA_PROPOSAL.md) for the
+exact old/new scope and preserved history.
+
 No FC05 product code, SDK lock, Current Authority, historical Gate or Golden changes
 are part of this candidate.

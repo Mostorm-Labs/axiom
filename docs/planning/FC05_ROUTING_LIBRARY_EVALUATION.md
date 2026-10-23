@@ -1,5 +1,10 @@
 # FC-05 routing library evaluation notes
 
+Status: research candidate, not a dependency or algorithm decision. Source blob
+identities and SHA-256 values are saved in
+[research evidence](fc05/evidence/design-research/source-identities.json). No library
+has been built or benchmarked in this worktree.
+
 ## Recommendation
 
 Do not make libavoid or ELK a hard dependency before measuring the Axiom boundary.
@@ -9,14 +14,16 @@ Implement and benchmark a replaceable `ConnectorRouteProvider` contract first:
   routing policy and revisions;
 - output: derived polyline, endpoint normals, diagnostics and deterministic route key;
 - no canonical mutation and no persisted route points;
-- bounded cancellation and a straight fallback when a route is unavailable.
+- bounded cancellation and explicit no-route/budget diagnostics; an obstacle-crossing
+  straight line must never be reported as a valid avoided orthogonal route.
 
 libavoid is the strongest external candidate for the orthogonal phase. Its public
 documentation describes fast object-avoiding orthogonal/polyline routing and
 incremental routing, and its Router API exposes transactions, shape movement and
 connector deletion. The repository README identifies LGPL-2.1-or-later licensing and
-commercial licensing; there are no official releases. These facts require a pinned
-source revision, license/notice treatment, Windows static build, WebAssembly build,
+commercial licensing. No maintained distribution/release candidate has been accepted
+for Axiom. Adoption requires a pinned source revision, license/notice treatment,
+Windows static build, WebAssembly build,
 and ABI/performance qualification before adoption. Sources:
 
 - https://www.adaptagrams.org/documentation/libavoid.html
@@ -42,7 +49,7 @@ Source: https://raw.githubusercontent.com/tldraw/tldraw/main/LICENSE.md
 
 ## Performance test matrix
 
-Run the same route corpus through the in-house provider and any libavoid experiment:
+If adopted for an experiment, run the same fixed route corpus through each candidate:
 
 | Corpus | Obstacles | Connectors | Mutation | Metrics |
 |---|---:|---:|---|---|
@@ -52,5 +59,7 @@ Run the same route corpus through the in-house provider and any libavoid experim
 
 Required invariants: deterministic route for identical revisions, no obstacle
 intersection except permitted endpoint gaps, bounded work per drag sample, no
-canonical generation change from a derived-only route refresh, and identical Windows
-/ Web route output for the same input corpus.
+canonical generation change from a derived-only route refresh, and matching route
+topology and coordinates under an accepted tolerance on Windows/Web for the same
+input corpus. Numeric budgets and precise obstacle/escape rules
+remain open; these measurements do not yet establish performance feasibility.
