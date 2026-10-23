@@ -84,7 +84,8 @@ int main() {
   auto& io = ImGui::GetIO(); io.IniFilename = nullptr; io.DisplaySize = {900, 1400}; io.DeltaTime = 1.0F / 60;
   unsigned char* pixels = nullptr; int w = 0, h = 0;
   io.Fonts->GetTexDataAsRGBA32(&pixels, &w, &h);
-  debug_ui::DebugControllerContext context{&facade};
+  debug_ui::DebugControllerContext context{};
+  context.runtime = &facade;
   bool cancelFile = false;
   const char* fileName = "fc03-sample.jpg";
   std::string mime = "image/jpeg";
