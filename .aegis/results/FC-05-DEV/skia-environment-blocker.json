@@ -1,0 +1,8 @@
+{
+  "schema":"fc05-environment-blocker-v1",
+  "skia_fetch_command":"python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target windows-x64-d3d12 --variant release",
+  "status":"BLOCKED_ENVIRONMENT",
+  "reason":"locked Skia download timed out with WinError 10060; no unlocked or source-built replacement used",
+  "impact":"Windows D3D12 and Web Minimal binaries not yet built",
+  "next_action":"rerun the exact locked fetch when network access is available"
+}
