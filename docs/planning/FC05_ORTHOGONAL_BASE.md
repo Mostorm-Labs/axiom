@@ -69,3 +69,15 @@ InvalidEndpoint 等显示橙色虚线诊断弦，不承诺该弦避障，不冒�
 支持任意数量障碍物。曲线、手工折点、平行线排布继续不在本次范围。
 
 真实 Windows/Web 鼠标、触摸和视觉质量需要单独人工确认，未观察项保持 PHYSICAL_PENDING。
+
+## 本轮结果
+
+实现提交：`6840cb95ed4c732f4579ee2f69065ac984b8f171`。
+Windows D3D12 Host 与完整 Web Host 构建通过；40 项 native/WASM 核心语料完全一致。
+Chrome 13 组基础回归、7 组文本回归通过；Python 17 项通过、0 skipped。
+开启断言的 CTest 对照矩阵为 27 PASS、1 FAIL、0 skipped。失败为未修改的旧 Image
+摘要期望缺少 FC03 content_mode/source 字段；保留失败与诊断，不更新历史期望。
+
+本机 i5-10400 的 100 对象 / 20 连线语料全部 Ready，单作业 p95：native 1.008 ms、
+Node/WASM 1.544 ms。密集 1000 / 10000 对象语料全部触发 256 相关障碍物上限，
+不将其短耗时误记为吞吐能力。详见 validation.json 与 benchmark JSON。

@@ -1,0 +1,316 @@
+{
+  "format": "axiom-fc05-orthogonal-base-validation-v1",
+  "created_utc": "2026-10-25T07:32:49.762026+00:00",
+  "implementation_revision": "6840cb95ed4c732f4579ee2f69065ac984b8f171",
+  "base_revision": "e8dc57bca231c84321a1b7fef7259b11c479dd4e",
+  "materialized_ref": "origin/codex/fc05-p32",
+  "package": {
+    "id": "FC-05-P31-v0.1",
+    "anchor": "16f5a8dcbc7ff09c682ede4d8c1e3adc7b25fbeb",
+    "sha256": "eb5ac52b0deee8a55bac457494fae42e5725ad70dfb56d50e654ebc36a0539e7"
+  },
+  "source_sha256": {
+    "apps/axiom_canvas_demo/platform/web/web_debug_ui.inl": "6cdff1d2d989c33a01f87348352ece0de962539f4823d92bcf0990e5de4e12ba",
+    "apps/ink_playground/tests/selected_actions_test.cpp": "1557ea03855a948c581cd0e8430cc54ba57b5fb6a8bdcb19d2fab5570d9573a5",
+    "apps/minimal_runtime_host/minimal_runtime_facade.cpp": "ade14f0c98a6526cc73008b049376faa5063abfd7216c69dfe9b797477b558b8",
+    "apps/minimal_runtime_host/minimal_runtime_facade.hpp": "e428b9688a168fcae0ca46c66e542883efe9a05ceed678cdda9608ede91db540",
+    "apps/minimal_runtime_host/tests/minimal_runtime_host_test.cpp": "fedb82ae01b7b2ff2bf332e48d13985f47a592378614d7d09195c54bda797249",
+    "debug_ui/include/canvas/debug_ui/control_router.hpp": "4d732798d19ba4aa863cffc20bfc99c9b3a33b032d5ed820350a5dfe5a48a1a3",
+    "debug_ui/src/control_router.cpp": "59ed965df580d85639ce6dad723bc066522a0cd8fff41a04c5f1b44d2a315739",
+    "debug_ui/src/panels/control.cpp": "3bd485281c25aab0d92d66b8316ec7bbf102f87a3f8a4a8c22bb7d6e5b7b04da",
+    "debug_ui/tests/control_router_test.cpp": "36f2c783482f0657606e2655696c52feb08c1e55c632f4b4bc0b6426d6d410a9",
+    "runtime/composition/CMakeLists.txt": "4247ce43ccb7dc6e001fae7c4f6247d2f80be351131e241462cf40289dc3cf95",
+    "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp": "fe9622dbecf46d178ffe8b911228108b6e96b84c2e5aee2b69dd7c7adaba88a1",
+    "runtime/composition/src/canvas_runtime_connector_sticky.cpp": "64ebf059cf1220d9be4b49c42b28fb96c4b729f8166f620ff4e4a6d19ab4cf24",
+    "runtime/composition/src/canvas_runtime_image.cpp": "bd68f5470ca8a9b07cc9c57c706aeec89bcef5fa0ec4ed1c75c04c72d03e4d64",
+    "runtime/composition/src/runtime_composition.cpp": "4ab5d1349f399f4e54ec4564bdbf7bc439cc40d75c50b52919d07e101c346c84",
+    "runtime/composition/tests/fc05_connector_facade_test.cpp": "f4187c4c438e02dab9845e79dc702e8788e608bbbb4ed3a9b9750584c1159329",
+    "runtime/foundation/include/canvas/runtime/connector_route.hpp": "3d885c535370d95572d59277b25e257bb4eb528a50d728e8e67b4a75b44a1824",
+    "runtime/foundation/include/canvas/runtime/connector_sticky_input.hpp": "5a5e0f7d664683b83131b2ec5cdb896b6ec16052f3924c073f2f179406b23f23",
+    "runtime/foundation/include/canvas/runtime/runtime_facade.hpp": "3a1153a2a05309e4f5fc0ef4cae55c8e0d048a18b04dde113fe8820a108e3c79",
+    "runtime/interaction/CMakeLists.txt": "541319ceac6744349092fc759cc78d4172a38a6b35223e5e3d26041129d6fb21",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "d608c6fbe63ba453ba594ff6e3dc55e517b05a51d43a96ba3e0324a9e1614d08",
+    "runtime/interaction/include/canvas/interaction/creation_session.hpp": "923254210a6653e65e09235a1051e7acb5b3cdebe8c1d4e2446c5616fce63592",
+    "runtime/interaction/src/canvas_connector_routing.cpp": "b754a59be04b41a477c3b943cafdc5c6a56d2388ea35ba94ef6eaf96a65e34d9",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "311b04101592ab76f01c1d1f2426d4cd044351c7beafccfb90caf47bccc4d8b0",
+    "runtime/interaction/src/creation_session.cpp": "2118b2b9aa555a06019439f9c577ae5790d6d6d6ae085784d827f0e5e630f23d",
+    "runtime/render/include/canvas/render/editing_overlay.hpp": "063ecc3083af8ec54db9592c6db1ca1b3ae5fcb6f16844ddb2c26a37b533ab3f",
+    "runtime/render/include/canvas/render/skia_scene_renderer.hpp": "0b1303c803c4cb396a538253d39d64ac4899925a7fa9e67196c002228704363d",
+    "runtime/render/src/editing_overlay.cpp": "b53d16e264af7e58de231b7b1d9162ff3460f1743c8357e7f741b1e6fc0fc8be",
+    "runtime/render/src/skia_headless_backend.cpp": "8cc21f9b38e383264ba17be4377701597fb8e9d7739675a207491b8f38a25bd0",
+    "runtime/render/src/skia_renderer.cpp": "5148fda8aa99b79236db5b038c22d1425400a19ffe987022fd47e395c23bd933",
+    "runtime/scene/CMakeLists.txt": "ad2d19b22e43bc9426eb2512a9b8a5c9e0299b38fd666eb1d1bb7021616f4369",
+    "runtime/scene/include/canvas/scene/connector_router.hpp": "a718e02c14c8b48a9bbb6baa0d84b9fff6d5a807ab2a236032720d4464c93e61",
+    "runtime/scene/include/canvas/scene/derived_geometry.hpp": "0ff250f80014801fd1e12fab77d847a0db4ed542440637fcfc3cc6502ddd771f",
+    "runtime/scene/include/canvas/scene/full_scene_compiler.hpp": "e7d8db2a9281b384878a4676849104a6ca775903307e9bf648f2328ada4fe34e",
+    "runtime/scene/include/canvas/scene/incremental_runtime_coordinator.hpp": "7022ac61502f88488cd8fbc5132eb0e1843e63fd407c54631fd679d008f185db",
+    "runtime/scene/include/canvas/scene/runtime_scene_projection.hpp": "98e35703d821f3363c6599e864cb7dcbdfe44f17025da3b5cf03946bb3be5d0d",
+    "runtime/scene/include/canvas/scene/scene_types.hpp": "4d927fa34dc9246e0426eac2ce9f6475c4b444a31998b02b77050be540a96594",
+    "runtime/scene/src/bounds_system.cpp": "2a7b08e9b96b014494b028c6fdeb0b1b979f0866d6c7d4a9ef285ecc73cfa261",
+    "runtime/scene/src/connector_router.cpp": "67e6c96ebc18f2638a1c2aeae1d34f253e592e9b2b04ba5db1394fbe0d53776d",
+    "runtime/scene/src/derived_geometry.cpp": "e3c223c200991eefdc1d671753133b3fce685845ecc4ded0bc9a67674b634b32",
+    "runtime/scene/src/full_scene_compiler.cpp": "22917c2ca879fb2ca63f10a9dc2b501a1b70e114f160e6cee95a2be9f2b6279c",
+    "runtime/scene/src/incremental_runtime_coordinator.cpp": "820f517377a8fac841e6b5a9cfbf09e9c2fc072443646623ae6abde9028c9601",
+    "runtime/scene/src/incremental_runtime_full_materialization_bridge.cpp": "b25285323dcd3b9e4266fc05dfaa4af98b58dd062997d056e64de40df07c5c6a",
+    "runtime/scene/src/incremental_runtime_full_materialization_bridge.hpp": "d7da63eb678bd4f8760323725c2d83bc28a787c10640ebca661096c3f37919c4",
+    "runtime/scene/src/runtime_scene_projection.cpp": "e6d2632b413eca6c5f121f1031fe4703bc1eb360cd990fc6d0c61a4350a2a4b8",
+    "runtime/scene/src/scene.cpp": "3020520cdc159cedca262dee6d7a8819d0dc09670a2a19715e1e1d0f15cee519",
+    "runtime/scene/tests/fc05_route_test.cpp": "be47e0930e4f1108a1a604b21a62b38f7b64044301e4eb3436d60a112365c22f",
+    "runtime/scene/tools/fc05_route_probe.cpp": "abe38fa8f98b0dc341fab2c4331775b40f6a1cc2306514317823dc13375ea37c"
+  },
+  "windows": {
+    "build": "PASS",
+    "exe": "C:\\Users\\Chado\\.codex\\worktrees\\fc05-p32\\out\\fc05-windows\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe",
+    "sha256": "dbdd0986c145325d63c4f40ee7f62f39b2c99c222312b724fb73c9c97edc087d",
+    "pid": 212660,
+    "source_revision": "6840cb95ed4c732f4579ee2f69065ac984b8f171",
+    "source_dirty": false,
+    "compiler": "MSVC 19.51.36246.0 x64, /MT /W4 /WX; assert-based tests /UNDEBUG",
+    "process": {
+      "pid": 212660,
+      "startedUtc": "2026-10-25T07:31:05.6047599Z",
+      "responding": true,
+      "actualPath": "C:\\Users\\Chado\\.codex\\worktrees\\fc05-p32\\out\\fc05-windows\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe"
+    }
+  },
+  "web": {
+    "build": "PASS",
+    "wasm": "C:\\Users\\Chado\\.codex\\worktrees\\fc05-p32\\out\\fc05-orthogonal-web\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.wasm",
+    "wasm_sha256": "af47b8d06ad5785af4f0f80c929031ffe13230d3258c5f12ce048824be87126f",
+    "js_sha256": "4a0a2fc42c8002859715cbace0d0ab60c091760dc3b1d994750150b122a37851",
+    "source_revision": "6840cb95ed4c732f4579ee2f69065ac984b8f171",
+    "source_dirty": false,
+    "url": "http://127.0.0.1:4180/index.html?rev=6840cb95",
+    "compiler": "Emscripten 6.0.6 ce75e06884093bcefb86a6b8fd56a5d62a4cc245; LLVM 24.0.0git ff6d537b14d737719d6377789784d04ff9565f65; official emsdk tag 6.0.6. SDK metadata records LLVM 22.1.8; actual binary link and browser smoke verified, no SDK rebuilt.",
+    "fixtures": [
+      {
+        "fixture": "web_minimal_runtime_test",
+        "browser": "Chrome/155.0.8059.86",
+        "groups": 13,
+        "status": "PASS"
+      },
+      {
+        "fixture": "web_fc02_text_test",
+        "browser": "Chrome/155.0.8059.86",
+        "groups": 7,
+        "status": "PASS"
+      }
+    ]
+  },
+  "ctest": {
+    "passed": 27,
+    "failed": 1,
+    "skipped": 0,
+    "tests": [
+      {
+        "name": "FC05Connector.TriangleShapeV2IsConnectable",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC05Connector.RichShapeV3IsConnectable",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC05Connector.ShapeV1TriangleAndShapeV3WithoutLabelAreRejected",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC05Connector.StablePortOutsideReleasedNamespaceIsRejected",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a2_bounds_system",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC05Route",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a2_reference_geometry",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a2_scene_impact",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a2_dependency_closure",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a3_full_incremental_equivalence",
+        "status": "fail",
+        "failed": true
+      },
+      {
+        "name": "canvas_g2_a6_incremental_equivalence",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a6_atomic_publication",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a6_recovery",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "canvas_fc01_derived_geometry",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "G3HeadlessSkia",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "G3DirectReference",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "G3FrameOrchestration",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC05ConnectorFacade",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC02Text",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC00XRuntimeComposition",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC03ImageFacade",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC02WindowsTextToolEntry",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC02WindowsTextToolFocus",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC02WindowsTextToolTouchFocus",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC02WindowsTextToolAfterInk",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC00XMinimalRuntimeHost",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "PX0ControlRouter",
+        "status": "run",
+        "failed": false
+      },
+      {
+        "name": "FC01SelectedActions",
+        "status": "run",
+        "failed": false
+      }
+    ],
+    "known_failure": "Unchanged legacy Image digest expected value, see legacy-image-fixture-diagnostic.log. No broad-green claim."
+  },
+  "python": {
+    "passed": 17,
+    "skipped": 0
+  },
+  "route_core": {
+    "fixtures": 40,
+    "native_wasm_exact_equality": true,
+    "status_coverage": [
+      "Ready",
+      "NoRouteInDomain",
+      "BudgetExceeded",
+      "InvalidEndpoint",
+      "Degenerate",
+      "Cancelled"
+    ]
+  },
+  "device": {
+    "os": "Microsoft Windows NT 10.0.19045.0",
+    "cpu": "Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz",
+    "logicalProcessors": 12,
+    "gpu": [
+      {
+        "Name": "OrayIddDriver Device",
+        "DriverVersion": "17.50.19.949"
+      },
+      {
+        "Name": "Intel(R) UHD Graphics 630",
+        "DriverVersion": "31.0.101.2111"
+      }
+    ],
+    "machine": {
+      "Manufacturer": "Micro-Star International Co., Ltd.",
+      "Model": "MS-7C83",
+      "TotalPhysicalMemory": 34219245568
+    }
+  },
+  "physical": "PHYSICAL_PENDING",
+  "scope_audit": {
+    "protected_paths_changed": false,
+    "sdk_locks_changed": false,
+    "imgui_ini_committed": false,
+    "sticky_tag_unchanged": true,
+    "old_aegis_results_untouched": true
+  },
+  "commands": {
+    "native": "vcvars64.bat; cmake -S . -B out/fc05-windows; cmake --build out/fc05-windows --target axiom_minimal_runtime_host_windows --parallel 6",
+    "web": "Set EM_CONFIG and EMSDK_PYTHON to isolated emsdk 6.0.6; resolve setup_build_environment.py --semantic --target web-wasm32 --offline; use consumer_cmake_arguments; configure Release with locked Skia, Semantic, Render/RF01/Debug UI and CANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON, BUILD_TESTING=OFF; cmake --build out/fc05-orthogonal-web --target axiom_canvas_demo_web axiom_fc05_route_probe --parallel 6",
+    "ctest": "See ctest.log, assertions active; full selected test names are recorded above",
+    "python": "python -m unittest verification.tests.test_current_semantic_descriptor verification.tests.test_semantic_contract verification.tests.test_fc02_host_contract verification.tests.test_host_text_font_resource -v (emitted native SDK environment imported)",
+    "probe": "axiom_fc05_route_probe[.exe/.js]; --benchmark for timing. Native JSON must equal Node/WASM JSON including statuses/counters.",
+    "boundaries": "python tools/check_runtime_boundaries.py --root .",
+    "browser": "Adapt committed chrome-test.mjs loopback port 8769 to 4180 and isolated out/fc05-orthogonal-chrome profile; final run after linker completed. Synthetic DOM input only."
+  },
+  "build_adjustments": [
+    "Explicit nullopt initializes existing ImageCropUpdateRequest.contentScale in two callers; no semantic behavior change.",
+    "Web DebugControllerContext initialized by named assignments to preserve optional callback defaults.",
+    "Local Web configure enables existing Skia render feature; disabled feature had caused missing surface/renderer symbols."
+  ],
+  "known_limits": [
+    "Conservative world AABB obstacles",
+    "256 relevant obstacle / 8192 state budgets; dense 1000/10000-object profiles explicitly exceed budget, not throughput successes",
+    "Existing full Scene projection and immutable source snapshot remain; no G5 claim"
+  ],
+  "nonclaims": [
+    "No independent review claim",
+    "No Gate/DEV/PHYS PASS",
+    "No FC05 closure claim"
+  ]
+}
