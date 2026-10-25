@@ -33,3 +33,22 @@
 - 完整 Windows/Web 构建、native/WASM 语料对照与 Chrome 合成回归单独绑定结果。
 
 此记录不声明 FC05 Gate、G5、独立审查或真实触摸通过。人工观感仍待用户复测。
+
+## 真实拖动折线修正
+
+用户在 `edccc2db` 人工复测中仍观察到拖动时为斜线、松手后才为折线；该次结果记录为 FAIL。
+新一轮人工复测单独保持 PHYSICAL_PENDING，不改写这个失败。
+
+根因是 `connectorGeometry(..., defer=true)` 在路由器已返回 Ready 四点折线后，仍无条件
+把 route 改写成两个端点。此前回归只断言 Ready 和端点位置，未检查路由形状与实际像素。
+现在延迟适配直接沿用作业路径；尚在计算时保留带 Pending 状态的正交示意路径，不能
+把该示意当作完成避障。普通小场景继续在第一 quantum 中返回认证的完整折线。
+
+新增验证覆盖连续三次 Move 的真实 Runtime → FramePlan → Skia 光栅输出：中间折线段
+像素存在，斜线位置为空白；Move 不写 canonical。另对照 Up 后的完整顶点、一次 History
+和取消语义，避免只检查派生几何函数。41 项 native/WASM 语料同时覆盖作业与延迟适配，
+包含实际跨 quantum 的 Pending 四点折线。
+
+Up 对照还发现没有文字布局服务时，派生路由推进 Scene 版本后重建会拒绝旧版本。
+现在 deferred routing 也使用已有版本适配器，保持 Scene 版本与 Semantic generation 独立。
+相关证据在 `fc05/evidence/live-polyline/`；保留原 Image 旧期望失败，不修改历史 Golden 或 Gate。

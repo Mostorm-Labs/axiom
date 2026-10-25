@@ -214,11 +214,11 @@ struct ConnectorRouteJob::Impl {
             xs.size()*static_cast<std::size_t>(std::lower_bound(ys.begin(),ys.end(),p.y)-ys.begin());
     }
     Entry entry(Key k,const Node& n) const {return {n.g+distance(point(k.first),end),n.bends,-n.g,k.first,k.second};}
-    void finishPath(const std::vector<P>& path) {
+    void finishPath(const std::vector<P>& path,Status status=Status::kReady) {
         result.route.clear();
         for(const auto p:path) {P local{};if(!inverse(connector.transform,p,local)){fail(Status::kInvalidEndpoint);return;}
             result.route.push_back({static_cast<float>(local.x),static_cast<float>(local.y)});}
-        result.status=Status::kReady; result.work.obstacles=static_cast<std::uint32_t>(obstacles.size());
+        result.status=status; result.work.obstacles=static_cast<std::uint32_t>(obstacles.size());
     }
     std::vector<P> exits(const Endpoint& e) {
         if (!e.target) return {e.p};
@@ -312,6 +312,28 @@ struct ConnectorRouteJob::Impl {
                 result.end={static_cast<float>(lb.x),static_cast<float>(lb.y)};
                 if(a.p==b.p){fail(Status::kDegenerate);break;}
                 if(cc.routing==semantic::ConnectorRouting::kStraight){finishPath({a.p,b.p});break;}
+                // A provisional orthogonal path follows the current endpoints
+                // during bounded work. It remains Pending until collision
+                // checks/search certify a route; never publish it as Ready.
+                std::vector<P> provisional{a.p};
+                if(a.p.x!=b.p.x&&a.p.y!=b.p.y) {
+                    const auto vertical=[](const Endpoint& e) {
+                        return e.target&&std::abs(e.normal.y+e.cornerNormal.y)>=
+                            std::abs(e.normal.x+e.cornerNormal.x);
+                    };
+                    const bool va=vertical(a),vb=vertical(b);
+                    const bool ha=a.target&&!va,hb=b.target&&!vb;
+                    if((va||vb)&&!ha&&!hb) {
+                        const double mid=a.p.y+(b.p.y-a.p.y)*0.5;
+                        provisional.push_back({a.p.x,mid});provisional.push_back({b.p.x,mid});
+                    } else if((ha||hb)&&!va&&!vb) {
+                        const double mid=a.p.x+(b.p.x-a.p.x)*0.5;
+                        provisional.push_back({mid,a.p.y});provisional.push_back({mid,b.p.y});
+                    } else provisional.push_back(ha?P{b.p.x,a.p.y}:P{a.p.x,b.p.y});
+                }
+                provisional.push_back(b.p);
+                finishPath(provisional,Status::kPending);
+                if(result.status!=Status::kPending)break;
                 finalDomain={std::min(a.p.x,b.p.x)-1024,std::min(a.p.y,b.p.y)-1024,
                              std::max(a.p.x,b.p.x)+1024,std::max(a.p.y,b.p.y)+1024};
                 phase=1;scan=0;

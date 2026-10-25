@@ -1,0 +1,182 @@
+{
+  "base_revision": "aa4c8ef3c1374f3a3e3cc81fe19157dfeb3e8cd8",
+  "materialized_ref": "origin/codex/fc05-p32",
+  "reported_failure": {
+    "build": "edccc2db",
+    "status": "FAIL",
+    "actual": "Active drag displayed a diagonal chord; pointer Up displayed the orthogonal polyline.",
+    "source": "User annotated response and supplied two screenshots."
+  },
+  "changes": [
+    "Preserve deferred job polyline instead of replacing it with an endpoint chord",
+    "Keep provisional orthogonal shape while status remains Pending",
+    "Use existing Scene revision adapter for deferred routing without a text layout service"
+  ],
+  "tests": {
+    "ctest": {
+      "pass": 29,
+      "fail": 1,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "FC05Connector.TriangleShapeV2IsConnectable",
+          "failed": false
+        },
+        {
+          "name": "FC05Connector.RichShapeV3IsConnectable",
+          "failed": false
+        },
+        {
+          "name": "FC05Connector.ShapeV1TriangleAndShapeV3WithoutLabelAreRejected",
+          "failed": false
+        },
+        {
+          "name": "FC05Connector.StablePortOutsideReleasedNamespaceIsRejected",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a2_bounds_system",
+          "failed": false
+        },
+        {
+          "name": "FC05Route",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a2_reference_geometry",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a2_scene_impact",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a2_dependency_closure",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a3_full_incremental_equivalence",
+          "failed": true
+        },
+        {
+          "name": "canvas_g2_a6_incremental_equivalence",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a6_atomic_publication",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a6_recovery",
+          "failed": false
+        },
+        {
+          "name": "canvas_fc01_derived_geometry",
+          "failed": false
+        },
+        {
+          "name": "G3HeadlessSkia",
+          "failed": false
+        },
+        {
+          "name": "FC05ConnectorPendingRaster",
+          "failed": false
+        },
+        {
+          "name": "G3DirectReference",
+          "failed": false
+        },
+        {
+          "name": "G3FrameOrchestration",
+          "failed": false
+        },
+        {
+          "name": "FC05ConnectorFacade",
+          "failed": false
+        },
+        {
+          "name": "FC02Text",
+          "failed": false
+        },
+        {
+          "name": "FC00XRuntimeComposition",
+          "failed": false
+        },
+        {
+          "name": "FC03ImageFacade",
+          "failed": false
+        },
+        {
+          "name": "FC02WindowsTextToolEntry",
+          "failed": false
+        },
+        {
+          "name": "FC02WindowsTextToolFocus",
+          "failed": false
+        },
+        {
+          "name": "FC02WindowsTextToolTouchFocus",
+          "failed": false
+        },
+        {
+          "name": "FC02WindowsTextToolAfterInk",
+          "failed": false
+        },
+        {
+          "name": "FC00XMinimalRuntimeHost",
+          "failed": false
+        },
+        {
+          "name": "PX0ControlRouter",
+          "failed": false
+        },
+        {
+          "name": "FC01SelectedActions",
+          "failed": false
+        },
+        {
+          "name": "FC05ConnectorDragPreview",
+          "failed": false
+        }
+      ],
+      "known_failure": "canvas_g2_a3_full_incremental_equivalence: unchanged pre-existing Image digest expectation mismatch"
+    },
+    "native_wasm": {
+      "exact_fixture_matches": 41,
+      "includes_deferred_adapter": true,
+      "pending_sample_status": 0,
+      "pending_sample_path": [
+        [
+          50,
+          100
+        ],
+        [
+          50,
+          200
+        ],
+        [
+          100,
+          200
+        ],
+        [
+          100,
+          300
+        ]
+      ]
+    },
+    "rendered_frame": "Three actual Move FramePlans rendered through Skia: middle leg pixels exist; diagonal pixels are white; canonical unchanged during Move; Cancel and Up path parity + exactly one commit pass"
+  },
+  "source_sha256": {
+    "apps/ink_playground/tests/selected_actions_test.cpp": "dcc45be2c887a74b44485ef6a19dbfeaba764cfc4860625103e021740f89a17f",
+    "runtime/scene/src/connector_router.cpp": "d7cdf7f1bf8d942e82cf6c9a0e05096ce6b8f9d341c364377e863be9c5b3d1df",
+    "runtime/scene/src/derived_geometry.cpp": "1b46d92591bc7818fe478862398b4b6df587c9a45ad28c13b66f9681a207453a",
+    "runtime/scene/src/incremental_runtime_coordinator.cpp": "a508259e7744821387325b3cb78043cedd27248ae7561873f535501d534c2646",
+    "runtime/scene/tests/fc05_route_test.cpp": "a12dfab12028b2f76c355a522e4c7415f07f336b553ad1972871c311c7df5e34",
+    "runtime/scene/tools/fc05_route_probe.cpp": "310993f67d600fbe47113d0fc181a485dd591d7e28e10c825736d0a25372775e"
+  },
+  "new_physical_retest": "PHYSICAL_PENDING",
+  "nonclaims": [
+    "No Gate/PHYS PASS",
+    "No G5 PASS"
+  ]
+}

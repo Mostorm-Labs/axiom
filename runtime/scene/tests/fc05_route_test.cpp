@@ -59,6 +59,26 @@ TEST(FC05Route, ClearParallelPortsUseTheMiddleLaneInOneQuantum) {
         avoids(*route,objects);
     }
 }
+TEST(FC05Route, DeferredPreviewKeepsReadyPolylineAndPendingOrthogonalShape) {
+    for(bool pending:{false,true}) {
+        auto a=box(1,0,0,100,100),b=box(2,50,300,100,100);
+        auto c=wire(0,0,0,0);auto& cc=std::get<semantic::ConnectorContent>(c.content);
+        cc.start.value=semantic::AttachedEndpoint{a.id,semantic::StablePortAnchor{3}};
+        cc.end.value=semantic::AttachedEndpoint{b.id,semantic::StablePortAnchor{1}};
+        std::vector<semantic::ObjectRecord> objects{a,b};
+        if(pending)for(unsigned n=0;n<1500;++n)objects.push_back(box(n+10,100000+n*20,100000,10,10));
+        const auto route=scene::connectorGeometry(c,objects,true);ASSERT_TRUE(route);
+        EXPECT_EQ(route->status,pending?runtime::ConnectorRouteStatus::kPending:runtime::ConnectorRouteStatus::kReady);
+        ASSERT_EQ(route->route.size(),4U);
+        EXPECT_FLOAT_EQ(route->route[0].x,50);EXPECT_FLOAT_EQ(route->route[0].y,100);
+        EXPECT_FLOAT_EQ(route->route[1].x,50);EXPECT_FLOAT_EQ(route->route[1].y,200);
+        EXPECT_FLOAT_EQ(route->route[2].x,100);EXPECT_FLOAT_EQ(route->route[2].y,200);
+        EXPECT_FLOAT_EQ(route->route[3].x,100);EXPECT_FLOAT_EQ(route->route[3].y,300);
+        for(std::size_t n=1;n<route->route.size();++n)
+            EXPECT_TRUE(route->route[n-1].x==route->route[n].x||route->route[n-1].y==route->route[n].y);
+    }
+}
+
 TEST(FC05Route, AlignedPortsStayStraightAndCenterLaneNeverCrossesAnObstacle) {
     auto a=box(1,0,0,100,100),b=box(2,300,0,100,100);
     auto c=wire(0,0,0,0);auto& cc=std::get<semantic::ConnectorContent>(c.content);

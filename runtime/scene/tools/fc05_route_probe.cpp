@@ -45,7 +45,7 @@ int main(int argc,char** argv) {
     const bool benchmark=argc>1&&std::string_view(argv[1])=="--benchmark";
     if(benchmark){benchmarks();return 0;}
     std::cout<<std::setprecision(17)<<"[";
-    const unsigned count=benchmark?3U:40U;
+    const unsigned count=benchmark?3U:41U;
     for(unsigned fixture=0;fixture<count;++fixture) {
         if(fixture)std::cout<<",";
         semantic::ObjectRecord c{};c.id=foundation::ObjectId::fromUint64(900000);
@@ -83,6 +83,13 @@ int main(int argc,char** argv) {
                 cc.start.value=semantic::AttachedEndpoint{a.id,semantic::StablePortAnchor{1}};
             }
             if(fixture==39)c.transform={0,1,-1,0,0,0};
+            if(fixture==40) {
+                const auto a=box(1,0,0,100,100),b=box(2,50,300,100,100);objects={a,b};
+                cc.start.value=semantic::AttachedEndpoint{a.id,semantic::StablePortAnchor{3}};
+                cc.end.value=semantic::AttachedEndpoint{b.id,semantic::StablePortAnchor{1}};
+                for(unsigned n=0;n<1500;++n)objects.push_back(box(n+10,100000+n*20,100000,10,10));
+            }
+
         }
         scene::ConnectorRouteJob job(c,objects);unsigned quanta=0;
         if(fixture==36)job.cancel();
@@ -99,6 +106,12 @@ int main(int argc,char** argv) {
         for(std::size_t i=0;i<result.route.size();++i) {
             if(i)std::cout<<",";
             std::cout<<"["<<result.route[i].x<<","<<result.route[i].y<<"]";
+        }
+        const auto deferred=scene::connectorGeometry(c,objects,true);
+        std::cout<<"],\"deferred_status\":"<<static_cast<unsigned>(deferred->status)<<",\"deferred_route\":[";
+        for(std::size_t n=0;n<deferred->route.size();++n) {
+            if(n)std::cout<<",";
+            std::cout<<"["<<deferred->route[n].x<<","<<deferred->route[n].y<<"]";
         }
         std::cout<<"]}";
     }

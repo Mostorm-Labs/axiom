@@ -309,6 +309,7 @@ void connector_preview_follows_transient_target_without_canonical_edit() {
   target.placement.order_key=OrderKey{{20}};
   ObjectRecord connector{};connector.id=canvas::foundation::ObjectId::fromUint64(503);
   connector.kind=ObjectKind::kConnector;connector.kind_version=1;connector.placement.order_key=OrderKey{{30}};
+  connector.properties.entries={{0x101U,StrokeStyleValue{SolidStroke{{0,0,0,1},4,StrokeCap::kButt,RoundJoin{},SolidDash{}}}}};
   connector.content=ConnectorContent{{AttachedEndpoint{source.id,StablePortAnchor{2}}},
       {AttachedEndpoint{target.id,StablePortAnchor{4}}},ConnectorRouting::kOrthogonal};
   assert(Access::applyRemote(host,InsertObjectsOp{{source,target,connector}}));
@@ -317,19 +318,45 @@ void connector_preview_follows_transient_target_without_canonical_edit() {
   assert(host.setSelectionMode(true)&&host.selectAtViewPoint(60,60));
   const canvas::input::PointerKey key{11,450,1};
   assert(host.selectionPointer(key,PointerPhase::kDown,60,60));
-  assert(host.selectionPointer(key,PointerPhase::kMove,60,180));
-  auto route=host.previewConnectorGeometry(connector);
-  assert(route.status==canvas::runtime::ConnectorRouteStatus::kReady);
-  for(unsigned q=0;q<64&&route.status==canvas::runtime::ConnectorRouteStatus::kPending;++q) {
-    assert(host.serviceConnectorRouting());route=host.previewConnectorGeometry(connector);
+  const std::array<std::array<unsigned,2>,3> moves{{{180,150},{160,135},{200,165}}};
+  std::vector<std::uint8_t> pixels(512U*512U*4U);
+  for(const auto& move:moves) {
+    assert(host.selectionPointer(key,PointerPhase::kMove,60,static_cast<float>(move[0])));
+    assert(host.presentTransientOverlayFrame(host.nextCanonicalFrameId()));
+    assert(host.previewSurfaceProvider()->readbackRgba(pixels).code==canvas::render::BackendSubmissionCode::kAccepted);
+    // The real rendered frame must contain the middle vertical leg, and no
+    // diagonal chord. Coordinates are independent hand-checked fixture points.
+    const auto elbow=(100U*512U+200U)*4U;
+    const auto diagonal=(move[1]*512U+150U)*4U;
+    assert(pixels[elbow]<32U&&pixels[elbow+1]<32U&&pixels[elbow+2]<32U);
+    assert(pixels[diagonal]==255U&&pixels[diagonal+1]==255U&&pixels[diagonal+2]==255U);
+    const auto route=host.previewConnectorGeometry(connector);
+    assert(route.status==canvas::runtime::ConnectorRouteStatus::kReady&&route.route.size()==4);
+    for(std::size_t n=1;n<route.route.size();++n)
+      assert(route.route[n-1].x==route.route[n].x||route.route[n-1].y==route.route[n].y);
+    assert(std::abs(route.start.y-static_cast<float>(move[0]))<1e-4F);
+    assert(Access::objects(host)==before&&host.semanticGeneration()==generation);
   }
-  assert(route.status==canvas::runtime::ConnectorRouteStatus::kReady);
-  assert(std::abs(route.start.y-180)<1e-4F);
-  assert(Access::objects(host)==before&&host.semanticGeneration()==generation);
-  assert(host.selectionPointer(key,PointerPhase::kCancel,60,180));
+  assert(host.selectionPointer(key,PointerPhase::kCancel,60,200));
   assert(host.serviceConnectorRouting());
   assert(!host.connectorPreviewRoutingPending());
   assert(Access::objects(host)==before);
+  const auto operations=host.submittedOperationCount();
+  const canvas::input::PointerKey committed{11,451,1};
+  assert(host.selectionPointer(committed,PointerPhase::kDown,60,60));
+  assert(host.selectionPointer(committed,PointerPhase::kMove,60,180));
+  const auto live=host.previewConnectorGeometry(connector);
+  assert(host.selectionPointer(committed,PointerPhase::kUp,60,180));
+  assert(host.presentCanonicalFrame(host.nextCanonicalFrameId(),0.0));
+  for(unsigned q=0;q<16;++q)assert(host.serviceConnectorRouting());
+  const auto records=Access::runtimeRecords(host);
+  const auto found=std::find_if(records.begin(),records.end(),[&](const auto& r){return r.objectId==connector.id;});
+  assert(found!=records.end());
+  const auto& final=std::get<canvas::scene::ConnectorGeometry>(found->derivedGeometry);
+  assert(final.status==canvas::runtime::ConnectorRouteStatus::kReady&&final.route.size()==live.route.size());
+  for(std::size_t n=0;n<final.route.size();++n)
+    assert(final.route[n].x==live.route[n].x&&final.route[n].y==live.route[n].y);
+  assert(host.submittedOperationCount()==operations+1);
 }
 
 void remote_child_survives_conditional_insert_undo() {

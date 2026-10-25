@@ -10,7 +10,7 @@ namespace canvas {
 
 namespace {
 // The accepted compiler still owns Scene records. This adapter contributes
-// derived text bounds and maps Scene revisions after resource-only updates.
+// derived text bounds and maps Scene revisions after resource/route updates.
 class TextBoundsCompiler final : public ISemanticSceneCompiler {
   public:
     TextBoundsCompiler(const ISemanticSceneCompiler& delegate,const RuntimeSceneProjection& projection,
@@ -259,7 +259,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     pendingRevision_ = SceneRevision(input.after_generation.value());
     const TextBoundsCompiler textCompiler(compiler,pendingPublication_->projection,binding_._scene);
     auto incremental = binding_.synchronize(
-        textLayoutService_ ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler,
+        (textLayoutService_||deferConnectorRoutes_) ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler,
         input, &IncrementalRuntimeCoordinator::transactionCheckpoint, this,
         &IncrementalRuntimeCoordinator::publishPending, this);
     if (incremental) {
@@ -316,7 +316,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
             {foundation::ErrorCode::kParticipantRejected, "Recovery publication checkpoint failure"});
     }
     const TextBoundsCompiler textCompiler(compiler,runtimePrepared.value().projection,binding_._scene);
-    auto result = binding_.rebuild(textLayoutService_ ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler, input);
+    auto result = binding_.rebuild((textLayoutService_||deferConnectorRoutes_) ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler, input);
     if (!result) {
         abortPublication();
         return result;

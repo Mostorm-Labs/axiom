@@ -15,7 +15,10 @@ std::optional<ConnectorGeometry> connectorGeometry(const semantic::ObjectRecord&
  ConnectorRouteJob job(record, obstacles);
  if (defer && std::get<semantic::ConnectorContent>(record.content).routing == semantic::ConnectorRouting::kOrthogonal) {
      (void)job.advance();
-     auto pending=job.result();pending.route={pending.start,pending.end};return pending;
+     auto partial=job.result();
+     if(partial.status==runtime::ConnectorRouteStatus::kPending&&partial.route.empty())
+         partial.route={partial.start,partial.end};
+     return partial;
  }
  while (job.advance() == runtime::ConnectorRouteStatus::kPending) {}
  return job.result();
