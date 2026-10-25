@@ -1,0 +1,92 @@
+{
+  "implementation_revision": "301b8138e7deae8ac5b12fc84cc6ec0b8340f922",
+  "materialized_ref": "origin/codex/fc05-p32",
+  "source_dirty": false,
+  "windows": {
+    "build": "PASS",
+    "exe": "C:\\Users\\Chado\\.codex\\worktrees\\fc05-p32\\out\\fc05-windows\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe",
+    "sha256": "3fb11cc5287d4225f76a39442415e901e993c32754a52fcb2a2f28948d089fc8",
+    "pid": 270976,
+    "startup": "build_revision=301b8138e7deae8ac5b12fc84cc6ec0b8340f922 dirty=0 msvc=195136246 pid=270976 debug_ui_enabled=1",
+    "compiler": "MSVC 19.51.36246 x64 /MT /W4 /WX"
+  },
+  "web": {
+    "build": "PASS",
+    "wasm_path": "C:\\Users\\Chado\\.codex\\worktrees\\fc05-p32\\out\\fc05-orthogonal-web\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.wasm",
+    "wasm_sha256": "45bcc7b4c864ab958555c046ac4733657d2652a0769854c3948234ea64ddd5e4",
+    "js_sha256": "4a0a2fc42c8002859715cbace0d0ab60c091760dc3b1d994750150b122a37851",
+    "url": "http://127.0.0.1:4180/index.html?rev=301b8138",
+    "browser": "Chrome/155.0.8059.86",
+    "synthetic_regression": {
+      "status": "PASS",
+      "groups": [
+        {
+          "name": "DOM Down/Move/Up renders preview and canonical",
+          "result": "PASS"
+        },
+        {
+          "name": "ten strokes retain sampling and independent commits",
+          "result": "PASS"
+        },
+        {
+          "name": "Facade Shape presets and return to Ink",
+          "result": "PASS"
+        },
+        {
+          "name": "Facade Undo and Redo read back",
+          "result": "PASS"
+        },
+        {
+          "name": "cancel, identity reuse and stale generation rejection",
+          "result": "PASS"
+        },
+        {
+          "name": "frozen AutoIntent: within 250 ms zoom; later MultiInk",
+          "result": "PASS"
+        },
+        {
+          "name": "resize cancels active input and preserves canonical",
+          "result": "PASS"
+        },
+        {
+          "name": "Debug UI sibling uses Facade and cannot penetrate canvas",
+          "result": "PASS"
+        },
+        {
+          "name": "idle does not continuously submit canonical frames",
+          "result": "PASS"
+        },
+        {
+          "name": "capture/focus loss cancel input and the next stroke works",
+          "result": "PASS"
+        },
+        {
+          "name": "failed Down permits tool switch and next drawing",
+          "result": "PASS"
+        },
+        {
+          "name": "surface loss/rebind preserves canonical and permits drawing",
+          "result": "PASS"
+        },
+        {
+          "name": "mouse/pen sources, coalesced history and tool controls use the same owner",
+          "result": "PASS"
+        }
+      ]
+    },
+    "raw_local_path": "out\\fc05-triangle-ports-web_minimal_runtime_test.json",
+    "raw_sha256": "e96f0ff8edaef12fd692bf476e324e8b4abe0bc60a2bf877955f3c7c49d32354"
+  },
+  "physical_retest": "PHYSICAL_PENDING",
+  "commands": {
+    "windows": "vcvars64.bat; cmake -S . -B out/fc05-windows; cmake --build out/fc05-windows --target axiom_minimal_runtime_host_windows --parallel 6",
+    "web": "Isolated emsdk6.0.6 EM_CONFIG and local EMSDK_PYTHON; cmake -S . -B out/fc05-orthogonal-web -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON; cmake --build out/fc05-orthogonal-web --target axiom_canvas_demo_web axiom_fc05_route_probe --parallel 4",
+    "ctest": "ctest --test-dir out/fc05-windows -R \"^(FC05|FC02Text$|FC03ImageFacade$|FC00XRuntimeComposition$|FC00XMinimalRuntimeHost$|FC01SelectedActions$|PX0ControlRouter$|canvas_g2_a[236]_|canvas_fc01_derived_geometry$|G3HeadlessSkia$|G3FrameOrchestration$|G3DirectReference|FC02WindowsTextTool)\" --output-on-failure --output-junit out-triangle-ports.xml",
+    "corpus": "Run native axiom_fc05_route_probe and Node/WASM probe, compare all 44 records exactly; assert two-point Triangle up/down routes and a nonstraight blocked counterexample",
+    "boundaries": "python tools/check_runtime_boundaries.py --root ."
+  },
+  "nonclaims": [
+    "No G5 PASS",
+    "No Gate/PHYS PASS"
+  ]
+}
