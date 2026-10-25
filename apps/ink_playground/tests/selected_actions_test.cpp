@@ -106,6 +106,17 @@ void selected_attachment_point_creates_connector_and_target() {
   assert(startAttachment != nullptr);
   assert(startAttachment->target_object_id == objects.front().id ||
          startAttachment->target_object_id == objects.back().id);
+  const auto target = std::find_if(objects.begin(), objects.end(), [&](const auto& object) {
+    return object.id != startAttachment->target_object_id && object.kind != ObjectKind::kConnector;
+  });
+  assert(target != objects.end());
+  assert(target->kind == ObjectKind::kShape);
+  const auto endAttachment = std::get_if<AttachedEndpoint>(&content.end.value);
+  assert(endAttachment != nullptr);
+  // Source is the selected Shape's right port, so the generated target is
+  // attached on its left port.
+  assert(std::holds_alternative<StablePortAnchor>(endAttachment->anchor));
+  assert(std::get<StablePortAnchor>(endAttachment->anchor).port_id == 4U);
 }
 
 void selected_attachment_point_click_creates_connector_and_target() {
@@ -123,6 +134,104 @@ void selected_attachment_point_click_creates_connector_and_target() {
   assert(host.selectionPointer(key, PointerPhase::kUp, point.x, point.y));
   const auto objects = Access::objects(host);
   assert(objects.size() == 3U);
+}
+
+void selected_attachment_point_click_uses_opposite_target_port_and_source_kind() {
+  using Access = canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+  using namespace canvas::semantic;
+  struct Case {
+    CreationPreset preset;
+    std::size_t sourcePortIndex;
+    std::uint32_t expectedTargetPort;
+    ObjectKind expectedKind;
+    std::uint32_t expectedShapeKind;
+  };
+  const std::array cases{
+      Case{CreationPreset::kRectangle, 0U, 3U, ObjectKind::kShape, 1U},
+      Case{CreationPreset::kEllipse, 1U, 4U, ObjectKind::kShape, 2U},
+      Case{CreationPreset::kTriangle, 2U, 1U, ObjectKind::kShape, 3U},
+      Case{CreationPreset::kSticky, 3U, 2U, ObjectKind::kSticky, 0U},
+  };
+  for (const auto& test : cases) {
+    InkPlaygroundHost host;
+    assert(host.bindSurface(256, 256));
+    assert(host.selectCreationPreset(test.preset));
+    pointer(host, 1U, 20.0F, 20.0F, PointerPhase::kDown);
+    pointer(host, 2U, 100.0F, 80.0F, PointerPhase::kUp);
+    const auto sourceId = Access::objects(host).front().id;
+    assert(host.setSelectionMode(true));
+    assert(host.selectAtViewPoint(60.0F, 50.0F));
+    const auto* overlay = host.selectionOverlay();
+    assert(overlay != nullptr);
+    assert(overlay->attachmentPoints().size() == 4U);
+    const auto point = overlay->attachmentPoints()[test.sourcePortIndex].center;
+    const auto sourcePoint = point;
+    const canvas::input::PointerKey key{11U,
+        static_cast<std::uint64_t>(100U + test.sourcePortIndex), 1U};
+    assert(host.selectionPointer(key, PointerPhase::kDown, point.x, point.y));
+    assert(host.selectionPointer(key, PointerPhase::kUp, point.x, point.y));
+
+    const auto objects = Access::objects(host);
+    assert(objects.size() == 3U);
+    const auto connector = std::find_if(objects.begin(), objects.end(), [](const auto& object) {
+      return object.kind == ObjectKind::kConnector;
+    });
+    assert(connector != objects.end());
+    const auto& content = std::get<ConnectorContent>(connector->content);
+    const auto start = std::get_if<AttachedEndpoint>(&content.start.value);
+    const auto end = std::get_if<AttachedEndpoint>(&content.end.value);
+    assert(start != nullptr && end != nullptr);
+    assert(start->target_object_id == sourceId);
+    assert(std::holds_alternative<StablePortAnchor>(start->anchor));
+    assert(std::get<StablePortAnchor>(start->anchor).port_id ==
+           static_cast<std::uint32_t>(test.sourcePortIndex + 1U));
+    assert(std::holds_alternative<StablePortAnchor>(end->anchor));
+    assert(std::get<StablePortAnchor>(end->anchor).port_id == test.expectedTargetPort);
+
+    const auto target = std::find_if(objects.begin(), objects.end(), [&](const auto& object) {
+      return object.id != sourceId && object.id != connector->id;
+    });
+    assert(target != objects.end());
+    assert(target->kind == test.expectedKind);
+    if (test.expectedKind == ObjectKind::kShape) {
+      const auto* shape = std::get_if<ShapeContent>(&target->content);
+      assert(shape != nullptr);
+      assert(shape->shape_kind == test.expectedShapeKind);
+    } else {
+      assert(std::holds_alternative<StickyContent>(target->content));
+    }
+    double targetWidth = 0.0;
+    double targetHeight = 0.0;
+    if (const auto* shape = std::get_if<ShapeContent>(&target->content)) {
+      targetWidth = shape->width;
+      targetHeight = shape->height;
+    } else {
+      const auto* sticky = std::get_if<StickyContent>(&target->content);
+      assert(sticky != nullptr);
+      targetWidth = sticky->width;
+      targetHeight = sticky->height;
+    }
+    canvas::foundation::WorldPoint expectedEnd{sourcePoint.x, sourcePoint.y};
+    if (test.sourcePortIndex == 0U) expectedEnd.y -= 120.0F;
+    else if (test.sourcePortIndex == 1U) expectedEnd.x += 120.0F;
+    else if (test.sourcePortIndex == 2U) expectedEnd.y += 120.0F;
+    else expectedEnd.x -= 120.0F;
+    canvas::foundation::WorldPoint targetPoint{
+        static_cast<float>(target->transform.tx), static_cast<float>(target->transform.ty)};
+    if (test.expectedTargetPort == 1U) {
+      targetPoint.x += static_cast<float>(targetWidth * 0.5);
+    } else if (test.expectedTargetPort == 2U) {
+      targetPoint.x += static_cast<float>(targetWidth);
+      targetPoint.y += static_cast<float>(targetHeight * 0.5);
+    } else if (test.expectedTargetPort == 3U) {
+      targetPoint.x += static_cast<float>(targetWidth * 0.5);
+      targetPoint.y += static_cast<float>(targetHeight);
+    } else {
+      targetPoint.y += static_cast<float>(targetHeight * 0.5);
+    }
+    assert(std::abs(targetPoint.x - expectedEnd.x) < 1.0e-4F);
+    assert(std::abs(targetPoint.y - expectedEnd.y) < 1.0e-4F);
+  }
 }
 
 void remote_child_survives_conditional_insert_undo() {
@@ -235,6 +344,7 @@ int main(int argc, char** argv) {
   if(argc>1){remote_edit_must_fence_undo();return 0;}
   selected_attachment_point_creates_connector_and_target();
   selected_attachment_point_click_creates_connector_and_target();
+  selected_attachment_point_click_uses_opposite_target_port_and_source_kind();
   InkPlaygroundHost host;
   assert(host.bindSurface(256U, 256U));
   assert(host.selectCreationPreset(CreationPreset::kRectangle));

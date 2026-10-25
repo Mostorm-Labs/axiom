@@ -1070,6 +1070,23 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
         while (targetOrdinal != 0U &&
                semanticObjects_.contains(foundation::ObjectId::fromUint64(targetOrdinal))) ++targetOrdinal;
         if (targetOrdinal == 0U) return false;
+        const auto* source = semanticObjects_.find(startAttachment->target_object_id);
+        if (source == nullptr) return false;
+        std::uint32_t sourcePort = 2U;
+        if (const auto* stable = std::get_if<semantic::StablePortAnchor>(
+                &startAttachment->anchor)) {
+          sourcePort = stable->port_id;
+        }
+        const auto oppositePort = [](std::uint32_t port) noexcept {
+          switch (port) {
+            case 1U: return 3U; // top -> target bottom
+            case 2U: return 4U; // right -> target left
+            case 3U: return 1U; // bottom -> target top
+            case 4U: return 2U; // left -> target right
+            default: return 4U;
+          }
+        };
+        const std::uint32_t targetPort = oppositePort(sourcePort);
         semantic::ObjectRecord target{};
         target.id = foundation::ObjectId::fromUint64(targetOrdinal);
         target.kind = semantic::ObjectKind::kShape;
@@ -1077,12 +1094,54 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
         target.placement.order_key = semantic::OrderKey{{0xFD, 0xFE,
             static_cast<std::uint8_t>((targetOrdinal & 0xFFU) == 0U
                 ? 1U : targetOrdinal & 0xFFU)}};
-        target.transform.tx = freeEnd->point.x - 60.0;
-        target.transform.ty = freeEnd->point.y - 40.0;
-        target.content = semantic::ShapeContent{1U, 120.0, 80.0};
+        double targetWidth = 120.0;
+        double targetHeight = 80.0;
+        if (const auto* sourceShape = std::get_if<semantic::ShapeContent>(&source->content)) {
+          target.kind = semantic::ObjectKind::kShape;
+          // Preserve the source geometry tuple, but start a newly generated
+          // object with an empty label.  Copying an existing rich label here
+          // would duplicate user text while also making Shape/3 invalid when
+          // the new object has no label of its own.
+          target.kind_version = sourceShape->shape_kind == 3U ? 2U : 1U;
+          targetWidth = sourceShape->width;
+          targetHeight = sourceShape->height;
+          target.content = semantic::ShapeContent{sourceShape->shape_kind,
+              targetWidth, targetHeight};
+        } else if (const auto* sourceSticky = std::get_if<semantic::StickyContent>(&source->content)) {
+          target.kind = semantic::ObjectKind::kSticky;
+          target.kind_version = 1U;
+          targetWidth = sourceSticky->width;
+          targetHeight = sourceSticky->height;
+          target.content = *sourceSticky;
+        } else {
+          // Images remain connectable, but do not yet have a creation preset;
+          // retain the legacy rectangle fallback until image replacement owns
+          // an explicit target factory.
+          target.kind = semantic::ObjectKind::kShape;
+          target.kind_version = 1U;
+          target.content = semantic::ShapeContent{1U, targetWidth, targetHeight};
+        }
+        switch (targetPort) {
+          case 1U:
+            target.transform.tx = freeEnd->point.x - targetWidth * 0.5;
+            target.transform.ty = freeEnd->point.y;
+            break;
+          case 2U:
+            target.transform.tx = freeEnd->point.x - targetWidth;
+            target.transform.ty = freeEnd->point.y - targetHeight * 0.5;
+            break;
+          case 3U:
+            target.transform.tx = freeEnd->point.x - targetWidth * 0.5;
+            target.transform.ty = freeEnd->point.y - targetHeight;
+            break;
+          default:
+            target.transform.tx = freeEnd->point.x;
+            target.transform.ty = freeEnd->point.y - targetHeight * 0.5;
+            break;
+        }
         target.properties = appearanceProperties(futureAppearance_, true);
         connectorContent->end.value = semantic::AttachedEndpoint{
-            target.id, semantic::StablePortAnchor{1U}};
+            target.id, semantic::StablePortAnchor{targetPort}};
         inserted.push_back(std::move(target));
         inverseIds.push_back(inserted.back().id);
       }
