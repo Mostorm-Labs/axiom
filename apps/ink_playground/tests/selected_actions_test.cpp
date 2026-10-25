@@ -277,9 +277,10 @@ void selected_attachment_click_does_not_snap_generated_target_to_neighbor() {
 void off_center_attachment_click_still_creates_an_axis_aligned_sibling() {
   using Access=canvas::ink_playground::InkPlaygroundHistoryTestAccess;
   using namespace canvas::semantic;
+  for(const auto preset:{CreationPreset::kRectangle,CreationPreset::kEllipse,CreationPreset::kTriangle,CreationPreset::kSticky})
   for(unsigned port=0;port<4;++port) {
     InkPlaygroundHost host;assert(host.bindSurface(512,512));
-    assert(host.selectCreationPreset(CreationPreset::kRectangle));
+    assert(host.selectCreationPreset(preset));
     pointer(host,1,180,180,PointerPhase::kDown);pointer(host,2,260,260,PointerPhase::kUp);
     assert(host.setSelectionMode(true)&&host.selectAtViewPoint(220,220));
     auto point=host.selectionOverlay()->attachmentPoints()[port].center;

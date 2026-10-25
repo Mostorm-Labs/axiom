@@ -93,6 +93,31 @@ TEST(FC05Route, AlignedPortsStayStraightAndCenterLaneNeverCrossesAnObstacle) {
     ASSERT_EQ(route->status,runtime::ConnectorRouteStatus::kReady);avoids(*route,objects);
 }
 
+TEST(FC05Route, AlignedTriangleVerticalPortsPreferStraightAcrossEscapeAlternatives) {
+    auto a=box(1,0,0,100,100),b=box(2,0,300,100,100);
+    a.kind_version=b.kind_version=2;
+    std::get<semantic::ShapeContent>(a.content).shape_kind=3;
+    std::get<semantic::ShapeContent>(b.content).shape_kind=3;
+    for(bool reverse:{false,true}) {
+        auto c=wire(0,0,0,0);auto& cc=std::get<semantic::ConnectorContent>(c.content);
+        cc.start.value=semantic::AttachedEndpoint{reverse?b.id:a.id,semantic::StablePortAnchor{reverse?1U:3U}};
+        cc.end.value=semantic::AttachedEndpoint{reverse?a.id:b.id,semantic::StablePortAnchor{reverse?3U:1U}};
+        const auto route=scene::connectorGeometry(c,{a,b});ASSERT_TRUE(route);
+        ASSERT_EQ(route->status,runtime::ConnectorRouteStatus::kReady);
+        EXPECT_EQ(route->route.size(),2U);
+        EXPECT_FLOAT_EQ(route->start.x,50);EXPECT_FLOAT_EQ(route->end.x,50);
+        EXPECT_FLOAT_EQ(route->start.y,reverse?300.0F:100.0F);
+        EXPECT_FLOAT_EQ(route->end.y,reverse?100.0F:300.0F);
+        const auto preview=scene::connectorGeometry(c,{a,b},true);ASSERT_TRUE(preview);
+        EXPECT_EQ(preview->status,runtime::ConnectorRouteStatus::kReady);
+        EXPECT_EQ(preview->route.size(),2U);
+        const std::vector<semantic::ObjectRecord> blocked{a,b,box(3,35,180,30,40)};
+        const auto detour=scene::connectorGeometry(c,blocked);ASSERT_TRUE(detour);
+        ASSERT_EQ(detour->status,runtime::ConnectorRouteStatus::kReady);
+        EXPECT_GT(detour->route.size(),2U);avoids(*detour,blocked);
+    }
+}
+
 TEST(FC05Route, CollinearEndpointsDetourAroundBlockingObject) {
     const auto c=wire(0,50,200,50);
     const std::vector<semantic::ObjectRecord> obstacles{box(1,80,20,40,60)};

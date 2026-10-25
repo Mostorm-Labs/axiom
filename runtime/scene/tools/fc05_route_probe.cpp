@@ -45,7 +45,7 @@ int main(int argc,char** argv) {
     const bool benchmark=argc>1&&std::string_view(argv[1])=="--benchmark";
     if(benchmark){benchmarks();return 0;}
     std::cout<<std::setprecision(17)<<"[";
-    const unsigned count=benchmark?3U:41U;
+    const unsigned count=benchmark?3U:44U;
     for(unsigned fixture=0;fixture<count;++fixture) {
         if(fixture)std::cout<<",";
         semantic::ObjectRecord c{};c.id=foundation::ObjectId::fromUint64(900000);
@@ -83,6 +83,16 @@ int main(int argc,char** argv) {
                 cc.start.value=semantic::AttachedEndpoint{a.id,semantic::StablePortAnchor{1}};
             }
             if(fixture==39)c.transform={0,1,-1,0,0,0};
+            if(fixture>=41) {
+                auto a=box(1,0,0,100,100),b=box(2,0,300,100,100);
+                a.kind_version=b.kind_version=2;
+                std::get<semantic::ShapeContent>(a.content).shape_kind=3;
+                std::get<semantic::ShapeContent>(b.content).shape_kind=3;
+                objects={a,b};const bool reverse=fixture==42;
+                cc.start.value=semantic::AttachedEndpoint{reverse?b.id:a.id,semantic::StablePortAnchor{reverse?1U:3U}};
+                cc.end.value=semantic::AttachedEndpoint{reverse?a.id:b.id,semantic::StablePortAnchor{reverse?3U:1U}};
+                if(fixture==43)objects.push_back(box(3,35,180,30,40));
+            }
             if(fixture==40) {
                 const auto a=box(1,0,0,100,100),b=box(2,50,300,100,100);objects={a,b};
                 cc.start.value=semantic::AttachedEndpoint{a.id,semantic::StablePortAnchor{3}};

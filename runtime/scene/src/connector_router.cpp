@@ -220,6 +220,17 @@ struct ConnectorRouteJob::Impl {
             result.route.push_back({static_cast<float>(local.x),static_cast<float>(local.y)});}
         result.status=status; result.work.obstacles=static_cast<std::uint32_t>(obstacles.size());
     }
+    void considerPath(std::vector<P> path) {
+        path=simplified(std::move(path));
+        if(path.size()>256U){fail(Status::kBudgetExceeded);return;}
+        double length=0;
+        for(std::size_t i=1;i<path.size();++i)length+=distance(path[i-1],path[i]);
+        const auto bends=path.size()>1?static_cast<unsigned>(path.size()-2):0U;
+        if(length<bestLength||(length==bestLength&&(bends<bestBends||
+            (bends==bestBends&&pathLess(path,best))))) {
+            best=std::move(path);bestLength=length;bestBends=bends;
+        }
+    }
     std::vector<P> exits(const Endpoint& e) {
         if (!e.target) return {e.p};
         const auto found=std::find_if(obstacles.begin(),obstacles.end(),[&](const auto& o){return o.id==e.target->id;});
@@ -369,7 +380,13 @@ struct ConnectorRouteJob::Impl {
                     const auto& path=preferred[preferredIndex];
                     if(preferredSegment>=path.size()) {
                         auto complete=path;complete.insert(complete.begin(),a.p);complete.push_back(b.p);
-                        finishPath(simplified(std::move(complete)));break;
+                        // A corner can have several legal escape directions.
+                        // Compare their complete routes, rather than accepting
+                        // the first sideways detour before trying a direct exit.
+                        considerPath(std::move(complete));
+                        if(result.status!=Status::kPending)break;
+                        if(bestBends==0&&bestLength==distance(a.p,b.p)) {finishPath(best);break;}
+                        searching=false;continue;
                     }
                     if(preferredObstacle>=obstacles.size()) {
                         ++preferredSegment;preferredObstacle=0;continue;
@@ -386,14 +403,11 @@ struct ConnectorRouteJob::Impl {
                     if(result.work.expanded>=8192U){fail(Status::kBudgetExceeded);break;}
                     const auto top=*open.begin();open.erase(open.begin());current={std::get<3>(top),std::get<4>(top)};
                     auto& n=nodes.at(current);n.closed=true;++result.work.expanded;
-                    if(!best.empty()&&n.bends>bestBends)continue;
+                    if(!best.empty()&&n.bends>bestBends&&
+                       n.g+distance(point(current.first),end)+distance(end,b.p)>=bestLength)continue;
                     if(point(current.first)==end) {
-                        auto path=n.path;if(end!=b.p)path.push_back(b.p);path=simplified(std::move(path));
-                        if(path.size()>256U){fail(Status::kBudgetExceeded);break;}
-                        double length=0;for(std::size_t i=1;i<path.size();++i)length+=distance(path[i-1],path[i]);
-                        const auto bends=path.size()>1?static_cast<unsigned>(path.size()-2):0U;
-                        if(length<bestLength||(length==bestLength&&(bends<bestBends||
-                            (bends==bestBends&&pathLess(path,best))))) {best=std::move(path);bestLength=length;bestBends=bends;}
+                        auto path=n.path;if(end!=b.p)path.push_back(b.p);
+                        considerPath(std::move(path));
                         edge=4;continue;
                     }
                     edge=0;predicateIndex=0;candidateValid=false;
