@@ -48,7 +48,7 @@ std::array<std::uint8_t, 32> snapshotDigest(const auditoryworks::axiom::v1::Docu
 
 bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reader) {
     const auto bits=static_cast<unsigned>(reader);
-    if(bits>7U) return false;
+    if(bits>15U) return false;
     bool triangle=false,text=false,formatting=false;
     for(const auto& object:snapshot.objects) {
         if(object.kind==ObjectKind::kShape && (object.kind_version==2 || object.kind_version==3)) {
@@ -69,6 +69,22 @@ bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reade
     if(text)expected.push_back("richtext-fixed-width-v2");if(formatting)expected.push_back("richtext-formatting-v3");if(triangle)expected.push_back("shape2-triangle-v1");
     bool label = false; for (const auto& object : snapshot.objects) if (object.kind == ObjectKind::kShape && object.kind_version == 3U) { const auto* shape = std::get_if<ShapeContent>(&object.content); label = label || (shape && shape->label.has_value()); }
     if (label) expected.push_back("shape-richtext-label-v1");
+    bool connectorShapeAttachment = false;
+    for (const auto& object : snapshot.objects) {
+        if (object.kind != ObjectKind::kConnector) continue;
+        const auto* connector = std::get_if<ConnectorContent>(&object.content);
+        if (connector == nullptr) continue;
+        for (const auto* endpoint : {&connector->start, &connector->end}) {
+            if (const auto* attached = std::get_if<AttachedEndpoint>(&endpoint->value)) {
+                const auto target = std::find_if(snapshot.objects.begin(), snapshot.objects.end(),
+                    [&](const auto& candidate) { return candidate.id == attached->target_object_id; });
+                if (target != snapshot.objects.end() && target->kind == ObjectKind::kShape &&
+                    target->kind_version >= 2U) connectorShapeAttachment = true;
+            }
+        }
+    }
+    if (connectorShapeAttachment) expected.push_back("connector-shape-attachment-v1");
+    if (connectorShapeAttachment && (bits & 8U) == 0U) return false;
     if(caps.required_ids_size()!=static_cast<int>(expected.size()))return false;
     for(int i=0;i<caps.required_ids_size();++i)if(caps.required_ids(i)!=expected[static_cast<std::size_t>(i)])return false;
     const auto canonical=internal::canonicalEncodeProto(caps);

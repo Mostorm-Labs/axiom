@@ -1,0 +1,142 @@
+{
+  "classification": "research, not dependency authority or benchmark",
+  "sources": [
+    {
+      "repo": "mjwybrow/adaptagrams",
+      "path": "cola/libavoid/README",
+      "url": "https://github.com/mjwybrow/adaptagrams/blob/master/cola/libavoid/README",
+      "blob_sha": "fe62f13b04f7709f4ead5b4942a4f93deffe0728",
+      "sha256": "a99c4fdb8031014d729f5da9d98ef6093e9ea6cb8cb89e2ea3200e7f6cbd4ea7",
+      "excerpts": [
+        "License v2.1.  Commercial licenses are also available, for more information ",
+        "  M. Wybrow, K. Marriott, and P.J. Stuckey. Orthogonal connector routing."
+      ]
+    },
+    {
+      "repo": "mjwybrow/adaptagrams",
+      "path": "cola/libavoid/router.h",
+      "url": "https://github.com/mjwybrow/adaptagrams/blob/master/cola/libavoid/router.h",
+      "blob_sha": "4a551be75acf090a0558c7c9af65d2bee0940e06",
+      "sha256": "9333c35b25f0135be858c8e531c6f02c1597eb6499cb65e5c5b1795dabac298b",
+      "excerpts": [
+        " * License as published by the Free Software Foundation; either",
+        " * version 2.1 of the License, or (at your option) any later version.",
+        " * See the file LICENSE.LGPL distributed with the library.",
+        " * Licensees holding a valid commercial license may use this file in",
+        " * accordance with the commercial license agreement provided with the ",
+        "    PolyLineRouting = 1,",
+        "    //!         structures necessary to allow orthogonal connector routing.",
+        "    OrthogonalRouting = 2",
+        "    //!         when doing orthogonal routing to prevent step-like connector",
+        "    //!         order for orthogonal connector nudging to be performed, since",
+        "    //!         180 degrees.  This is useful for polyline routing where there",
+        "    nudgeOrthogonalSegmentsConnectedToShapes = 0,",
+        "    //! This option penalises and attempts to reroute orthogonal shared ",
+        "    penaliseOrthogonalSharedPathsAtConnEnds,",
+        "    nudgeOrthogonalTouchingColinearSegments,",
+        "    //! a preprocessing step before orthogonal nudging where is tries"
+      ]
+    },
+    {
+      "repo": "kieler/elkjs",
+      "path": "README.md",
+      "url": "https://github.com/kieler/elkjs/blob/master/README.md",
+      "blob_sha": "c862107025195fdf083c118b08f72548d561f020",
+      "sha256": "b2d1f5d457f07b28356f400b6600ea62f5239f0d0db51b23933d4aa47711d95c",
+      "excerpts": [
+        "  * `Can't resolve web-worker`, and",
+        "The latest released version:",
+        "# Releases and Versioning",
+        "Releases are partly synchronized with ELK's versions: the minor version number is always the same but the revision number may diverge. For instance, elkjs 0.3.0 equals the functionality of ELK 0.3.0 but elkjs 0.3.2 may be different from ELK 0.3.2. This is necessary as there may be fixes that solely concern elkjs and should be released independently of ELK.",
+        "* `elk-worker.js`: Provides the code that actually knows how to lay out a graph. This is the file that is generated from ELK's Java code base using GWT.",
+        "Web Workers are supported out of the box.",
+        "with and without a Web Worker.",
+        "// without web worker",
+        "// with web worker",
+        "  workerUrl: './node_modules/elkjs/lib/elk-worker.min.js'",
+        "Since version 10.x, node.js comes with a worker threads implementation that is similar to,",
+        "but not equal to, a browser's `Worker` class.",
+        "To ease implementation on our side, we use a library, `web-worker`, ",
+        "that provides a wrapper around node's `worker_threads`, which is API-compatible to a browser's `Worker.",
+        "Any other library that provides the standard Web Worker methods should be fine though.",
+        "interested in using a web worker."
+      ]
+    },
+    {
+      "repo": "kieler/elkjs",
+      "path": "LICENSE.md",
+      "url": "https://github.com/kieler/elkjs/blob/master/LICENSE.md",
+      "blob_sha": "91dd37eefbe62d3d9fb7a1e7e2c7a9a1e2cdcbcc",
+      "sha256": "637e81f4a1b6b4079535c499fca05e238cf7605c1ff5b76d60d7da7ce96700c9",
+      "excerpts": [
+        "# Eclipse Public License - v 2.0",
+        "PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF",
+        "“Licensed Patents” mean patent claims licensable by a Contributor which",
+        "or any Secondary License (as applicable), including Contributors.",
+        "“Secondary License” means either the GNU General Public License, Version",
+        "2.0, or any later versions of that license, including any exceptions or",
+        "    license to reproduce, prepare Derivative Works of, publicly display,",
+        "    publicly perform, Distribute and sublicense the Contribution of such",
+        "    grants Recipient a non-exclusive, worldwide, royalty-free patent license",
+        "    under Licensed Patents to make, use, sell, offer to sell, import and",
+        "    Source Code or other form. This patent license shall apply to the",
+        "    Licensed Patents. The patent license shall not apply to any other",
+        "    licensed hereunder.",
+        "    licenses to its Contributions set forth herein, no assurances are",
+        "    or otherwise. As a condition to exercising the rights and licenses",
+        "    example, if a third party patent license is required to allow Recipient"
+      ]
+    },
+    {
+      "repo": "tldraw/tldraw",
+      "path": "LICENSE.md",
+      "url": "https://github.com/tldraw/tldraw/blob/main/LICENSE.md",
+      "blob_sha": "346511b1cc5338abdca005a4c5cb49eec183f483",
+      "sha256": "9578fcddc20e404b6a29f44b6fea81d8b331698c0e7e9be34132d6f4394fa533",
+      "excerpts": [
+        "# tldraw license",
+        "This License from tldraw, Inc. (“tldraw”) governs your use of the accompanying Software. By using the Software, you accept the terms of this License. The tldraw software is copyrighted by tldraw Inc.",
+        "Alternative licenses are available from tldraw for commercial and non-commercial use. To get an alternative license or to learn more, visit https://tldraw.dev or contact sales@tldraw.com.",
+        "\"License Key\" means the programmatically generated key that controls Software functionality and usage restrictions.",
+        "- Not to disable, change, or interfere with the Software's License Key enforcement.",
+        "- Not to make the Software available under a license that supersedes or negates the effect of this License.",
+        "- To include a verbatim copy of this License in any distribution of the Software.",
+        "## Trial license",
+        "In the case that tldraw makes the Software available to you on a trial basis, you are permitted to use the Software in Production Environments for the specified period beginning from the date of the trial’s License Key issuance. Business units are limited to one trial period unless otherwise approved by tldraw in writing.",
+        "## Commercial license",
+        "In the case that tldraw makes the Software available to you under the terms of a separate commercial agreement, you are permitted to use the Software in Production Environments for the specified period beginning from the date of the agreement’s License Key issuance.",
+        "Your license to use the Software will terminate automatically if you breach any terms of this License or initiate a copyright, trade secret, or patent claim against tldraw, any of its affiliates, or any user of the Software (including as modified by you).",
+        "The Software includes technical measures to verify License Key validity, detect deployment environments, enforce usage restrictions based on license type, and ensure proper watermark display. The Software may collect and transmit usage data to tldraw for license compliance purposes.",
+        "tldraw is not liable for any damages related to the Software or this License, including direct, indirect, special, or incidental damages, to the fullest extent permitted by law. You must pass this limitation of liability on whenever you distribute the Software or derivative works.",
+        "This License is governed by the laws of Delaware, and the parties consent to exclusive jurisdiction in Delaware courts. The parties waive all defenses of lack of personal jurisdiction and forum non-conveniens.",
+        "This License is the entire agreement between the parties, and supersedes any and all prior agreements, understandings or communications, written or oral, between the parties relating to the subject matter hereof. This License may be assigned by tldraw without your prior consent."
+      ]
+    },
+    {
+      "repo": "excalidraw/excalidraw",
+      "path": "LICENSE",
+      "url": "https://github.com/excalidraw/excalidraw/blob/master/LICENSE",
+      "blob_sha": "8a844bc750a313db95d147bea9e4c9537b2cebc0",
+      "sha256": "1352d204fdb90d5e482c13139d848bc2c9300a9a7de358a0a558a23e72d0d8be",
+      "excerpts": [
+        "MIT License",
+        "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell"
+      ]
+    },
+    {
+      "repo": "excalidraw/excalidraw",
+      "path": "packages/element/src/elbowArrow.ts",
+      "url": "https://github.com/excalidraw/excalidraw/blob/master/packages/element/src/elbowArrow.ts",
+      "blob_sha": "239d8ffdeabc9813906a81041efe957b8d2196ff",
+      "sha256": "5bc1ae35ee1645048daffd33332ba13b2245e738b280b6332694b0abde93b8af",
+      "excerpts": [
+        "const handleSegmentRelease = (",
+        "    return handleSegmentRelease(arrow, fixedSegments, elementsMap);",
+        "  const path = astar(",
+        " * Routing algorithm based on the A* path search algorithm.",
+        "const astar = (",
+        " * the grid line intersections by the A* algorithm."
+      ]
+    }
+  ]
+}

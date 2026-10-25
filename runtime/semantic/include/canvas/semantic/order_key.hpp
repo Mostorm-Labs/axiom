@@ -22,8 +22,17 @@ class OrderKey final {
     }
     [[nodiscard]] std::span<const std::uint8_t> bytes() const noexcept { return bytes_; }
 
-    auto operator<=>(const OrderKey&) const = default;
-    bool operator==(const OrderKey&) const = default;
+    bool operator==(const OrderKey& other) const noexcept { return bytes_ == other.bytes_; }
+    auto operator<=>(const OrderKey& other) const noexcept {
+        const auto count = std::min(bytes_.size(), other.bytes_.size());
+        for (std::size_t index = 0U; index < count; ++index) {
+            if (bytes_[index] < other.bytes_[index]) return std::strong_ordering::less;
+            if (bytes_[index] > other.bytes_[index]) return std::strong_ordering::greater;
+        }
+        if (bytes_.size() < other.bytes_.size()) return std::strong_ordering::less;
+        if (bytes_.size() > other.bytes_.size()) return std::strong_ordering::greater;
+        return std::strong_ordering::equal;
+    }
 
   private:
     std::vector<std::uint8_t> bytes_;

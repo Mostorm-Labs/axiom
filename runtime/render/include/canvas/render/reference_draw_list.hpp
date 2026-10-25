@@ -43,6 +43,8 @@ struct VectorPathReferenceCommand final {
 struct RichTextReferenceCommand final {
     semantic::RichTextContent content;
     std::shared_ptr<const text::TextLayoutSnapshot> layout;
+    bool showExpandButton = false;
+    bool suppressBorder = false;
     bool operator==(const RichTextReferenceCommand&) const = default;
 };
 struct VectorStrokeReferenceCommand final {
@@ -67,6 +69,8 @@ struct ConnectorReferenceCommand final {
 };
 struct StickyReferenceCommand final {
     semantic::StickyContent content;
+    std::shared_ptr<const text::TextLayoutSnapshot> labelLayout = nullptr;
+    bool showExpandButton = false;
     bool operator==(const StickyReferenceCommand&) const = default;
 };
 struct GroupReferenceCommand final {

@@ -56,6 +56,7 @@ enum class SceneObjectKind : std::uint8_t {
     kVectorStroke = 5,
     kDabStroke = 6,
     kConnector = 7,
+    kSticky = 8,
 };
 
 // Renderer-neutral projection consumed by Scene Core and inspection tooling.
@@ -101,6 +102,7 @@ class RuntimeScene final {
   public:
     RuntimeScene() = default;
     void setTextLayoutService(text::RichTextLayoutService* service) noexcept { _textLayoutService = service; }
+    void setDeferredConnectorRouting(bool defer) noexcept { deferConnectorRoutes_ = defer; }
 
     [[nodiscard]] semantic::SemanticGeneration generation() const noexcept {
         return _publicationGate != nullptr && _publicationGate->transactionActive
@@ -149,11 +151,12 @@ class RuntimeScene final {
     RuntimeSceneProjection _stableProjection;
     ScenePublicationGate* _publicationGate = nullptr;
     text::RichTextLayoutService* _textLayoutService = nullptr;
+    bool deferConnectorRoutes_ = false;
 };
 
 [[nodiscard]] RuntimeSceneProjection projectRuntimeScene(
     std::span<const semantic::ObjectRecord> source,
-    semantic::SemanticGeneration generation = {}, text::RichTextLayoutService* textService = nullptr);
+    semantic::SemanticGeneration generation = {}, text::RichTextLayoutService* textService = nullptr, bool deferRoutes = false);
 
 enum class SceneRecordFlags : std::uint32_t {
     kNone = 0,

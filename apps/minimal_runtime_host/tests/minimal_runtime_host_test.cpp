@@ -74,6 +74,39 @@ int main() {
   canvas::minimal_runtime_host::MinimalRuntimeFacade facade(facadeHost);
   assert(facadeHost.composition().bindSurface(256, 256));
   const auto target = facade.mountedCanvasTargets().front();
+  canvas::minimal_runtime_host::MinimalRuntimeHost routingHost;
+  canvas::minimal_runtime_host::MinimalRuntimeFacade routingFacade(routingHost);
+  assert(routingHost.composition().bindSurface(256, 256));
+  canvas::runtime::RuntimeFacade& consumer = routingFacade;
+  canvas::runtime::ConnectorRoutingRequest routePreset{};
+  routePreset.routing = canvas::semantic::ConnectorRouting::kOrthogonal;
+  assert(consumer.setConnectorRouting(routePreset).state == canvas::runtime::ConnectorCommandState::kApplied);
+  assert(consumer.readConnectorRoutingPreset() == canvas::semantic::ConnectorRouting::kOrthogonal);
+  canvas::runtime::ConnectorCreateRequest routeRequest{};
+  routeRequest.objectId = canvas::foundation::ObjectId::fromUint64(699U);
+  routeRequest.content.start.value = canvas::semantic::FreePointEndpoint{{10,10}};
+  routeRequest.content.end.value = canvas::semantic::FreePointEndpoint{{100,100}};
+  routeRequest.content.routing = canvas::semantic::ConnectorRouting::kOrthogonal;
+  assert(consumer.createConnector(routeRequest).state == canvas::runtime::ConnectorCommandState::kApplied);
+  for(unsigned q=0;q<16;++q) assert(routingHost.composition().ownerPump());
+  assert(consumer.readConnectorState(routeRequest.objectId).routeStatus == canvas::runtime::ConnectorRouteStatus::kReady);
+  assert(consumer.readConnectorState(routeRequest.objectId).available);
+  routePreset.routing = canvas::semantic::ConnectorRouting::kStraight;
+  assert(consumer.setConnectorRouting(routePreset).state == canvas::runtime::ConnectorCommandState::kApplied);
+
+  canvas::runtime::StickyCreateRequest stickyRequest{};
+  stickyRequest.objectId = canvas::foundation::ObjectId::fromUint64(700U);
+  const auto stickyReceipt = facade.createSticky(stickyRequest);
+  assert(stickyReceipt.state == canvas::runtime::ConnectorCommandState::kApplied);
+  assert(facadeHost.composition().semanticObjectCount() == 1U);
+  canvas::runtime::ConnectorCreateRequest connectorRequest{};
+  connectorRequest.objectId = canvas::foundation::ObjectId::fromUint64(701U);
+  connectorRequest.content.start.value = canvas::semantic::FreePointEndpoint{{0.0, 0.0}};
+  connectorRequest.content.end.value = canvas::semantic::AttachedEndpoint{
+      stickyRequest.objectId, canvas::semantic::AutoPerimeterAnchor{}};
+  const auto connectorReceipt = facade.createConnector(connectorRequest);
+  assert(connectorReceipt.state == canvas::runtime::ConnectorCommandState::kApplied);
+  assert(facadeHost.composition().semanticObjectCount() == 2U);
   assert(facade.setBrush(2U, 1U, 1U, target.runtimeEpoch).state ==
          canvas::runtime::ProductControlState::kQueued);
   assert(facade.process() == 1U);

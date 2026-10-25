@@ -10,7 +10,7 @@ namespace canvas {
 
 namespace {
 // The accepted compiler still owns Scene records. This adapter contributes
-// derived text bounds and maps Scene revisions after resource-only updates.
+// derived text bounds and maps Scene revisions after resource/route updates.
 class TextBoundsCompiler final : public ISemanticSceneCompiler {
   public:
     TextBoundsCompiler(const ISemanticSceneCompiler& delegate,const RuntimeSceneProjection& projection,
@@ -236,7 +236,8 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
         }
         if (const auto* object = input.post_state.find(change.object_id)) {
             const auto* derived=runtimePrepared.value().projection.find(object->id);
-            const auto bounds = computeBounds(*object,derived ? derived->textLayout.get() : nullptr);
+            const auto bounds = computeBounds(*object,derived ? derived->textLayout.get() : nullptr,
+                derived ? std::get_if<scene::ConnectorGeometry>(&derived->derivedGeometry) : nullptr);
             if (!bounds.finite) {
                 abortPublication();
                 return foundation::Result<SceneSyncReceipt>::failure(
@@ -258,7 +259,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     pendingRevision_ = SceneRevision(input.after_generation.value());
     const TextBoundsCompiler textCompiler(compiler,pendingPublication_->projection,binding_._scene);
     auto incremental = binding_.synchronize(
-        textLayoutService_ ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler,
+        (textLayoutService_||deferConnectorRoutes_) ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler,
         input, &IncrementalRuntimeCoordinator::transactionCheckpoint, this,
         &IncrementalRuntimeCoordinator::publishPending, this);
     if (incremental) {
@@ -288,7 +289,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
             {foundation::ErrorCode::kInvalidRevision,
              "Full runtime recovery must not carry a ChangeSet"});
     }
-    auto materialized = internal::materializeFullScene(input.post_state,textLayoutService_);
+    auto materialized = internal::materializeFullScene(input.post_state,textLayoutService_,deferConnectorRoutes_);
     if (!materialized) {
         return foundation::Result<SceneSyncReceipt>::failure(materialized.error());
     }
@@ -315,7 +316,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
             {foundation::ErrorCode::kParticipantRejected, "Recovery publication checkpoint failure"});
     }
     const TextBoundsCompiler textCompiler(compiler,runtimePrepared.value().projection,binding_._scene);
-    auto result = binding_.rebuild(textLayoutService_ ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler, input);
+    auto result = binding_.rebuild((textLayoutService_||deferConnectorRoutes_) ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler, input);
     if (!result) {
         abortPublication();
         return result;
@@ -367,6 +368,56 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::refreshTextR
             {foundation::ErrorCode::kMissingObject,"Text contribution missing from published Scene"});
         auto after=*before; after.worldBounds=bounds.world;
         delta.mutations.push_back({SceneMutationKind::kUpdate,record.objectId,*before,after});
+    }
+    if(delta.mutations.empty()) return foundation::Result<SceneSyncReceipt>::success(
+        {published.revision(),runtimeScene_.generation(),SceneSyncDisposition::kAppliedIncremental,
+         SceneApplyReceipt{published.revision(),published.revision(),0,0,0,{}},std::nullopt});
+    publicationGate_.previousGeneration=runtimeScene_.generation();
+    publicationGate_.previousRevision=published.revision();
+    publicationGate_.generation=next.generation; publicationGate_.revision=delta.afterRevision;
+    publicationGate_.transactionActive=true;
+    publicationGate_.observation=&IncrementalRuntimeCoordinator::observePublication;
+    publicationGate_.observationContext=this;
+    runtimeScene_._stableProjection=runtimeScene_._projection;
+    binding_._scene._stablePublishedRecords=binding_._scene._publishedRecords;
+    binding_._scene._stablePublishedBounds=binding_._scene._publishedBounds;
+    binding_._scene._stableInvalidationGeneration=binding_._scene._invalidationGeneration;
+    binding_._scene._stablePublishedInvalidation=binding_._scene._publishedInvalidation;
+    pendingGeneration_=next.generation; pendingRevision_=delta.afterRevision;
+    pendingPublication_=RuntimeScene::PreparedPublication{std::move(next)};
+    auto applied=binding_._scene.applyPreparedDelta(std::move(delta),
+        &IncrementalRuntimeCoordinator::transactionCheckpoint,this,
+        &IncrementalRuntimeCoordinator::publishPending,this);
+    if(!applied) { abortPublication(); return foundation::Result<SceneSyncReceipt>::failure(applied.error()); }
+    return foundation::Result<SceneSyncReceipt>::success({applied.value().afterRevision,pendingGeneration_,
+        SceneSyncDisposition::kAppliedIncremental,std::move(applied.value()),std::nullopt});
+}
+
+
+foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::publishConnectorRoutes(
+    std::span<const std::pair<semantic::ObjectId, scene::ConnectorGeometry>> routes,
+    semantic::SemanticGeneration generation) {
+    if (generation != runtimeScene_.generation()) return foundation::Result<SceneSyncReceipt>::failure(
+        {foundation::ErrorCode::kInvalidRevision,"Stale connector solve"});
+    auto next=runtimeScene_._projection;
+    CompiledSceneDelta delta{binding_._scene.revision(),SceneRevision(binding_._scene.revision().value()+1),{},std::nullopt};
+    const auto published=binding_._scene.read();
+    for (const auto& [id,geometry]:routes) {
+        auto it=std::find_if(next.records.begin(),next.records.end(),[&](const auto& r){return r.objectId==id;});
+        const auto* before=published.find(id);
+        if(it==next.records.end()||!before||it->kind!=semantic::ObjectKind::kConnector) continue;
+        semantic::ObjectRecord object{};object.id=id;object.kind=it->kind;object.kind_version=it->kindVersion;
+        object.transform=it->transform;object.content=it->content;object.properties=it->properties;
+        const auto bounds=computeBounds(object,nullptr,&geometry);
+        if(!bounds.finite) return foundation::Result<SceneSyncReceipt>::failure(
+            {foundation::ErrorCode::kInvalidRecord,"Non-finite routed bounds"});
+        it->derivedGeometry=geometry;it->geometryBounds=bounds.geometry;
+        it->visualBounds=bounds.visual;it->worldBounds=bounds.world;
+        it->referenceGeometryDigest="route:"+std::to_string(static_cast<unsigned>(geometry.status));
+        for(const auto p:geometry.route) it->referenceGeometryDigest+=":"+std::to_string(p.x)+","+std::to_string(p.y);
+        auto after=*before;after.worldBounds=bounds.world;after.derivedGeometry=geometry;
+        after.contentRevision=ContentRevision(before->contentRevision.value()+1);
+        delta.mutations.push_back({SceneMutationKind::kUpdate,id,*before,after});
     }
     if(delta.mutations.empty()) return foundation::Result<SceneSyncReceipt>::success(
         {published.revision(),runtimeScene_.generation(),SceneSyncDisposition::kAppliedIncremental,

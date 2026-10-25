@@ -7,6 +7,8 @@ namespace canvas::text { struct TextLayoutSnapshot; }
 
 namespace canvas::scene {
 
+struct ConnectorGeometry;
+
 struct BoundsResult final {
     foundation::WorldRect geometry{};
     foundation::WorldRect visual{};
@@ -15,7 +17,8 @@ struct BoundsResult final {
 };
 
 [[nodiscard]] BoundsResult computeBounds(const semantic::ObjectRecord& record,
-    const text::TextLayoutSnapshot* textLayout = nullptr) noexcept;
+    const text::TextLayoutSnapshot* textLayout = nullptr,
+    const ConnectorGeometry* connectorGeometry = nullptr) noexcept;
 
 } // namespace canvas::scene
 

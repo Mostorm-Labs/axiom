@@ -31,9 +31,10 @@ class WebDebugUi final : public canvas::runtime::PlatformDiagnostics {
             canvas::render::WebGlSurfaceConfig{"#debugUi", kPanelWidth, kPanelHeight});
         if (!provider_->ready())
             return false;
-        controller_ = std::make_unique<canvas::debug_ui::DebugController>(
-            canvas::debug_ui::DebugControllerContext{
-                &composition_.controlFacade(), nullptr, nullptr, this, nullptr, nullptr, nullptr});
+        canvas::debug_ui::DebugControllerContext controls{};
+        controls.runtime = &composition_.controlFacade();
+        controls.platformDiagnostics = this;
+        controller_ = std::make_unique<canvas::debug_ui::DebugController>(std::move(controls));
         IMGUI_CHECKVERSION();
         context_ = ImGui::CreateContext();
         if (!context_)

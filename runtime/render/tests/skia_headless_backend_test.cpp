@@ -718,6 +718,34 @@ void fc01TriangleAndConnectorStyleProbes() {
     std::cout<<"PASS FC01 raster Triangle fill/stroke/opacity/None and Connector width/opacity\n";
 }
 
+void pendingConnectorKeepsSolidStyleAndFailureStaysDistinct() {
+    const auto frame=fixtureFrame();
+    auto entry=connectorEntry();
+    auto content=std::get<ConnectorReferenceCommand>(entry.command).content;
+    content.start.value=canvas::semantic::FreePointEndpoint{{40,100}};
+    content.end.value=canvas::semantic::FreePointEndpoint{{220,100}};
+    entry.command=ConnectorReferenceCommand{content};entry.record.content=content;
+    entry.record.visualBounds={40,98,220,102};entry.record.worldBounds=entry.record.visualBounds;
+    entry.record.geometryBounds=entry.record.visualBounds;
+    entry.record.properties.entries={{0x101U,canvas::semantic::StrokeStyleValue{
+        canvas::semantic::SolidStroke{{0,0,1,1},4}}}};
+    canvas::scene::ConnectorGeometry geometry{{40,100},{220,100},{{40,100},{220,100}},false};
+    entry.record.derivedGeometry=geometry;
+    auto list=fixtureDrawList(frame,false);list.entries={entry};list.visibleRecords=1;list.candidatesExamined=1;
+    SkiaHeadlessBackend backend({256,256});
+    assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
+    const auto ready=backend.observation()->rgba;
+    geometry.status=canvas::runtime::ConnectorRouteStatus::kPending;
+    list.entries[0].record.derivedGeometry=geometry;
+    assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
+    assert(backend.observation()->rgba==ready);
+    for(unsigned x=50;x<210;++x)assert(pixel(*backend.observation(),x,100)==(Rgba{0,0,255,255}));
+    geometry.status=canvas::runtime::ConnectorRouteStatus::kNoRouteInDomain;
+    list.entries[0].record.derivedGeometry=geometry;
+    assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
+    assert(backend.observation()->rgba!=ready);
+}
+
 void ellipseUsesLocalOvalGeometryAfterTransform() {
     const FrameState frame = fixtureFrame();
     RuntimeSceneRecord ellipse = baseRecord(701, ObjectKind::kShape, {0, 0, 100, 80});
@@ -747,7 +775,8 @@ void ellipseUsesLocalOvalGeometryAfterTransform() {
 
 int main(int argc,char** argv) {
     if(argc>1){
-        if (std::string_view(argv[1]) == "ellipse") ellipseUsesLocalOvalGeometryAfterTransform();
+        if (std::string_view(argv[1]) == "connector-pending") pendingConnectorKeepsSolidStyleAndFailureStaysDistinct();
+        else if (std::string_view(argv[1]) == "ellipse") ellipseUsesLocalOvalGeometryAfterTransform();
         else if (std::string_view(argv[1]) == "production-fractional") productionRendererAcceptsFractionalSnapBounds();
         else if (std::string_view(argv[1]) == "production-connector-fractional") productionRendererAcceptsFractionalConnectorEndpoints();
         else if (std::string_view(argv[1]) == "production-connector-aa") productionConnectorUsesAntialiasedEdges();

@@ -1,0 +1,33 @@
+{
+  "schema_version":"0.1",
+  "format":"aegis-execution-closure-contract-v1",
+  "task_id":"FC-05",
+  "stage":"P31_TASK_PACKAGING",
+  "execution_base":{"repository":"Mostorm-Labs/axiom","task_anchor":"16f5a8dcbc7ff09c682ede4d8c1e3adc7b25fbeb","p32_starts_from":"exact P31 package materialization commit"},
+  "implementation":{
+    "required_changes":[
+      "Extend Semantic connector target applicability for Shape/2 and Shape/3 with exact analytical Triangle ports and successor capability admission",
+      "Add the restricted Sticky parent/child atomic mutation path or an equivalent one PreparedApplyPlan with aggregate guard and identity-preserving History",
+      "Implement deterministic derived orthogonal route provider with admitted obstacles, invalidation, no-route and budget diagnostics",
+      "Make Scene/render/bounds/index/hit consume one derived connector route",
+      "Expose typed Connector/Sticky requests, receipts and readback through RuntimeFacade and wire ordinary consumer parity",
+      "Add Windows/Web adapter and Minimal host coverage through the shared facade"
+    ],
+    "forbidden_changes":["new generic transaction subsystem","new ObjectKind except the proposed reviewed Sticky/1 existing kind","curved or manual bend routes","direct host/store mutation","second text/layout owner","SDK/protobuf/Skia rebuild or lock edits","historical Gate/Golden/.aegis Current rewrites"]
+  },
+  "tests":{
+    "required":[
+      {"id":"FC05-RED","command_or_oracle":"run focused old-baseline probes before production edits","expected_result":"RED for the frozen missing seams","blocking_reason":"proves the acceptance oracle detects the known gap"},
+      {"id":"FC05-SEMANTIC","command_or_oracle":"focused semantic connector/Sticky/capability tests","expected_result":"PASS with assertions enabled","blocking_reason":"canonical target and atomicity correctness"},
+      {"id":"FC05-SCENE","command_or_oracle":"focused route/Scene projection and hit/bounds tests","expected_result":"PASS with assertions enabled","blocking_reason":"one derived route and invalidation correctness"},
+      {"id":"FC05-FACADE","command_or_oracle":"ordinary consumer versus Debug UI facade tests","expected_result":"PASS","blocking_reason":"public boundary parity"},
+      {"id":"FC05-HOST","command_or_oracle":"Windows Minimal and Web Minimal build/tests","expected_result":"PASS or explicit environment blocker","blocking_reason":"platform integration is in frozen scope"},
+      {"id":"FC05-REGRESSION","command_or_oracle":"existing selected CTest and Python regression matrix","expected_result":"PASS","blocking_reason":"protect FC02/FC03 and existing interaction behavior"}
+    ]
+  },
+  "hosted_verification":{"required":["reviewer-resolvable pushed P32 result/evidence revision"],"optional":["physical Windows/Web observation"]},
+  "evidence":{"blocking":["FC05-SEMANTIC","FC05-SCENE","FC05-FACADE","FC05-HOST","FC05-REGRESSION","exact result revision/materialized_ref"],"corroborative":["artifact hashes","manual observations","timing/performance traces"]},
+  "terminal_success":{"all_of":["all required tests pass with active assertions","all blocking obligations have evidence","P32 result and evidence are pushed and reviewer-resolvable","Windows/Web binaries are built or a classified environment blocker is returned","no forbidden path changed"]},
+  "terminal_blockers":{"explicit_classes":["AUTHORITY_CONFLICT","MISSING_REQUIRED_INPUT","ENVIRONMENT_BLOCKER","FROZEN_VERIFICATION_FAILURE","NEW_HIGH_IMPACT_FAILURE_MODE","BLOCKED_REPOSITORY_IDENTITY"]},
+  "return_policy":{"continue_until_terminal_state":true,"return_surface":"CONTROL_REVIEW","gate_verdict_forbidden":true}
+}

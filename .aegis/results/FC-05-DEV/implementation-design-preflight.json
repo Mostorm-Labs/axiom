@@ -1,0 +1,10 @@
+{
+  "schema":"fc05-implementation-design-preflight-v1",
+  "package_ref":".aegis/packages/FC-05-P31/package.json@07b51678eccddf0f50104842a1e95c06bc02e77c",
+  "result_ref":"codex/fc05-p32",
+  "owner_graph":{"semantic":"runtime/semantic","interaction_history":"runtime/interaction","scene_route":"runtime/scene","public_facade":"runtime/foundation + runtime/composition","platform":"apps/minimal_runtime_host and apps/ink_playground"},
+  "lifecycle":"canonical owner remains CanvasEditingRuntime; RuntimeFacade delegates; route is derived and route refresh is not a semantic operation",
+  "failure_order":"validate tuple and route inputs -> prepare operation -> apply canonical atomically -> update scene derived route -> publish platform frame",
+  "status":"PASS",
+  "unresolved_decisions":[]
+}

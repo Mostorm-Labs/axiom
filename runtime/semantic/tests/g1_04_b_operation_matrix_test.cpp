@@ -460,9 +460,17 @@ void writeOperationPayload(std::ostream& out, const OperationPayload& payload) {
                             << "\",\"start\":" << step.start_scalar << ",\"count\":"
                             << step.scalar_count << ",\"style\":";
                         writeTextStyle(out, step.style);
-                    } else {
-                        out << "\"paragraph_id\":\"" << idHex(step.paragraph_id) << "\",\"style\":";
+                    } else if constexpr (std::is_same_v<S, SetParagraphStyleStep>) {
+                        out << "\"paragraph_id\":\"" << idHex(step.paragraph_id)
+                            << "\",\"style\":";
                         writeParagraphStyle(out, step.style);
+                    } else if constexpr (std::is_same_v<S, SetRichTextLayoutStep>) {
+                        out << "\"target_kind_version\":" << step.target_kind_version
+                            << ",\"layout\":";
+                        if (step.layout) out << "{\"wrap_width\":" << step.layout->wrap_width << "}";
+                        else out << "null";
+                    } else if constexpr (std::is_same_v<S, RestoreRichTextStateStep>) {
+                        out << "\"kind_version\":" << step.state.kind_version;
                     }
                     out << '}';
                 }, value.delta.steps[i]);

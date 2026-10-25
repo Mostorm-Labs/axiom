@@ -27,8 +27,15 @@ bool historyExpectationsMatch(const semantic::ObjectStore& store,
                 }
                 const auto* imageA = std::get_if<semantic::ImageContent>(&current->content);
                 const auto* imageB = std::get_if<semantic::ImageContent>(&record.content);
-                if (imageA == nullptr || imageB == nullptr ||
-                    imageA->width != imageB->width || imageA->height != imageB->height)
+                if (imageA != nullptr && imageB != nullptr) {
+                    if (imageA->width != imageB->width || imageA->height != imageB->height)
+                        return false;
+                    break;
+                }
+                const auto* stickyA = std::get_if<semantic::StickyContent>(&current->content);
+                const auto* stickyB = std::get_if<semantic::StickyContent>(&record.content);
+                if (stickyA == nullptr || stickyB == nullptr ||
+                    stickyA->width != stickyB->width || stickyA->height != stickyB->height)
                     return false;
                 break;
             }
@@ -62,6 +69,7 @@ bool supportedForward(const semantic::Operation& operation) noexcept {
         case OperationKind::kSetObjectSize:
         case OperationKind::kSetImageContent:
         case OperationKind::kEditRichText:
+        case OperationKind::kSetConnectorContent:
             return true;
         default:
             return false;
@@ -80,6 +88,7 @@ bool supportedInverse(const semantic::Operation& operation) noexcept {
         case OperationKind::kSetObjectSize:
         case OperationKind::kSetImageContent:
         case OperationKind::kEditRichText:
+        case OperationKind::kSetConnectorContent:
             return true;
         default:
             return false;

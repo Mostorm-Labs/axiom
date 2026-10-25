@@ -237,9 +237,11 @@ TEST(ConnectorStatefulValidation, ConnectableHelperMatchesIndependentV1Matrix) {
     for (const ObjectKind kind : kinds) {
         const bool expected = independentKindOutcome(kind, 1U) == StatefulIssue::kNone;
         EXPECT_EQ(isConnectableObjectKind(kind, 1U), expected);
-        EXPECT_FALSE(isConnectableObjectKind(kind, 2U));
+        EXPECT_EQ(isConnectableObjectKind(kind, 2U), kind == ObjectKind::kShape);
     }
     EXPECT_FALSE(isConnectableObjectKind(static_cast<ObjectKind>(99U), 1U));
+    EXPECT_TRUE(isConnectableObjectKind(ObjectKind::kShape, 2U));
+    EXPECT_TRUE(isConnectableObjectKind(ObjectKind::kShape, 3U));
 }
 
 template <typename Store>

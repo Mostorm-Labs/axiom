@@ -1,0 +1,66 @@
+Test project C:/Users/Chado/.codex/worktrees/fc05-p32/out/fc05-windows
+    Start 554: FC05Route
+1/2 Test #554: FC05Route ........................***Failed    0.13 sec
+Running main() from C:\Users\Chado\.codex\worktrees\fc05-p32\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 15 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 15 tests from FC05Route
+[ RUN      ] FC05Route.ClearParallelPortsUseTheMiddleLaneInOneQuantum
+[       OK ] FC05Route.ClearParallelPortsUseTheMiddleLaneInOneQuantum (0 ms)
+[ RUN      ] FC05Route.DeferredPreviewKeepsReadyPolylineAndPendingOrthogonalShape
+C:\Users\Chado\.codex\worktrees\fc05-p32\runtime\scene\tests\fc05_route_test.cpp(72): error: Expected equality of these values:
+  route->route.size()
+    Which is: 2
+  4U
+    Which is: 4
+
+[  FAILED  ] FC05Route.DeferredPreviewKeepsReadyPolylineAndPendingOrthogonalShape (0 ms)
+[ RUN      ] FC05Route.AlignedPortsStayStraightAndCenterLaneNeverCrossesAnObstacle
+[       OK ] FC05Route.AlignedPortsStayStraightAndCenterLaneNeverCrossesAnObstacle (0 ms)
+[ RUN      ] FC05Route.CollinearEndpointsDetourAroundBlockingObject
+[       OK ] FC05Route.CollinearEndpointsDetourAroundBlockingObject (0 ms)
+[ RUN      ] FC05Route.BothSingleElbowsBlockedStillFindsMultipleBendRoute
+[       OK ] FC05Route.BothSingleElbowsBlockedStillFindsMultipleBendRoute (0 ms)
+[ RUN      ] FC05Route.CancellationIsTerminalAndEachQuantumIsBounded
+[       OK ] FC05Route.CancellationIsTerminalAndEachQuantumIsBounded (0 ms)
+[ RUN      ] FC05Route.BudgetFailureIsExplicitAndNeverPublishesAnAvoidingRoute
+[       OK ] FC05Route.BudgetFailureIsExplicitAndNeverPublishesAnAvoidingRoute (0 ms)
+[ RUN      ] FC05Route.FreeEndpointInsideObstacleReportsNoRoute
+[       OK ] FC05Route.FreeEndpointInsideObstacleReportsNoRoute (0 ms)
+[ RUN      ] FC05Route.ObstacleOrderDoesNotChangeRouteAndThirdObstacleRecomputes
+[       OK ] FC05Route.ObstacleOrderDoesNotChangeRouteAndThirdObstacleRecomputes (0 ms)
+[ RUN      ] FC05Route.TriangleCardinalPortsAndEllipseAutoAnchorUseActualPerimeter
+[       OK ] FC05Route.TriangleCardinalPortsAndEllipseAutoAnchorUseActualPerimeter (0 ms)
+[ RUN      ] FC05Route.ArrowFollowsFinalSegmentAndBoundsIncludeHead
+[       OK ] FC05Route.ArrowFollowsFinalSegmentAndBoundsIncludeHead (0 ms)
+[ RUN      ] FC05Route.ShortestLengthMatchesIndependentUnitGridOracle
+[       OK ] FC05Route.ShortestLengthMatchesIndependentUnitGridOracle (3 ms)
+[ RUN      ] FC05Route.OrthogonalConnectorKeepsStableEndpoints
+[       OK ] FC05Route.OrthogonalConnectorKeepsStableEndpoints (0 ms)
+[ RUN      ] FC05Route.OrthogonalRouteUsesObstacleAndBoundsShareDerivedPolyline
+[       OK ] FC05Route.OrthogonalRouteUsesObstacleAndBoundsShareDerivedPolyline (0 ms)
+[ RUN      ] FC05Route.AttachedEndpointResolvesTargetPortInConnectorLocalSpace
+[       OK ] FC05Route.AttachedEndpointResolvesTargetPortInConnectorLocalSpace (0 ms)
+[----------] 15 tests from FC05Route (5 ms total)
+
+[----------] Global test environment tear-down
+[==========] 15 tests from 1 test suite ran. (5 ms total)
+[  PASSED  ] 14 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] FC05Route.DeferredPreviewKeepsReadyPolylineAndPendingOrthogonalShape
+
+ 1 FAILED TEST
+
+    Start 689: FC05ConnectorDragPreview
+2/2 Test #689: FC05ConnectorDragPreview .........Exit code 0xc0000409***Exception:   3.24 sec
+Assertion failed: Access::applyRemote(host,InsertObjectsOp{{source,target,connector}}), file C:\Users\Chado\.codex\worktrees\fc05-p32\apps\ink_playground\tests\selected_actions_test.cpp, line 315
+
+
+0% tests passed, 2 tests failed out of 2
+
+Total Test time (real) =   3.98 sec
+
+The following tests FAILED:
+	554 - FC05Route (Failed)
+	689 - FC05ConnectorDragPreview (Exit code 0xc0000409)
+Errors while running CTest

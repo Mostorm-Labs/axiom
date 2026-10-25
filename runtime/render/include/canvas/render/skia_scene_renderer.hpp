@@ -27,7 +27,8 @@ void drawInkEntriesToSkCanvas(
 // Reuse the canonical renderer command mapping for a view-owned provisional
 // object. This value never enters Semantic or RuntimeScene storage.
 void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
-                                  const semantic::ObjectRecord& object);
+                                  const semantic::ObjectRecord& object,
+                                  const scene::ConnectorGeometry* route = nullptr);
 void drawTransientEntryToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
                                   const ReferenceTraversalEntry& entry);
 

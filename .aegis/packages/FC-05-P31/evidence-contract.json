@@ -1,0 +1,13 @@
+{
+  "schema_version":"0.1",
+  "format":"aegis-evidence-contract-v1",
+  "task_id":"FC-05",
+  "output_root":".aegis/results/FC-05-DEV/",
+  "required_artifacts":["package-binding-preflight.json","implementation-design-preflight.json","red-preflight.json","semantic-evidence.json","scene-route-evidence.json","facade-equivalence.json","windows-minimal.json","web-minimal.json","regression-matrix.json","scope-audit.json","result.json"],
+  "identity_rule":"Hash exact Git/file bytes with lowercase SHA-256; bind package commit and later P32 result separately; never use a future self SHA.",
+  "blocking":["frozen CON/STK/PLAT obligations","active assertions","ordinary-consumer parity","Windows/Web build outcome or classified environment blocker","exact pushed result revision/materialized_ref","scope/protected-path audit"],
+  "corroborative":["binary hashes","manual physical observations","timing traces"],
+  "physical_status":"PHYSICAL_PENDING",
+  "producer_may_claim_gate_pass":false,
+  "materialization_requirement":"P31 package commit and P32 result commit must be pushed and reviewer-resolvable."
+}

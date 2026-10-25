@@ -222,6 +222,10 @@ bool RuntimeComposition::submit(const input::PlatformPointerBatch& batch) noexce
   return
       runtime_->acceptPlatformBatch(batch, batch.samples.back().timestampNs);
 }
+bool RuntimeComposition::hoverSelectionAtViewPoint(float x, float y) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+  return runtime_->hoverSelectionAtViewPoint(x, y);
+}
 std::optional<input::PointerKey> RuntimeComposition::platformKey(
     input::InputSourceId source, input::PointerId pointer) const noexcept {
   if (std::this_thread::get_id() != ownerThread_ || !runtime_) return std::nullopt;
@@ -318,6 +322,7 @@ bool RuntimeComposition::ownerPump() noexcept {
   if (controlFacade_ != nullptr) {
     lastOwnerControlCount_ = controlFacade_->process(ownerPumpCount_);
   }
+  if(canMutate() && !runtime_->serviceConnectorRouting())return false;
   bool derivedRefresh = false;
   for (const auto& notification : notifications_) {
     const auto* entry = resources_.find(notification.resourceId);

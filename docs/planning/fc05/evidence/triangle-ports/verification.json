@@ -1,0 +1,175 @@
+{
+  "base_revision": "2e409b04cea8fc05b1a6c39864f6d2111507b2b1",
+  "materialized_ref": "origin/codex/fc05-p32",
+  "reported_failure": {
+    "status": "FAIL",
+    "symptom": "Clicking top/bottom Triangle ports created avoidable sideways bends for aligned sibling triangles.",
+    "automated_reproduction": "red.log"
+  },
+  "source_sha256": {
+    "apps/ink_playground/tests/selected_actions_test.cpp": "f2cfb058b05fac0da9da100adf7c0397ab3ebdee70398806e4ecfd56d39d6458",
+    "runtime/scene/src/connector_router.cpp": "ff4cee2535d5a4bde6127265670db25f8fc64852a768b7adfda5fc061e874e1e",
+    "runtime/scene/tests/fc05_route_test.cpp": "8b0d58f764047cc516c77c8d4e302c0b8d64fb16b03bbef809fc2ecb404b71f7",
+    "runtime/scene/tools/fc05_route_probe.cpp": "c7ea89592152b2febb99ff8018bb3d85bb36fc2d626194bd443a39dee5d0670b"
+  },
+  "tests": {
+    "ctest": {
+      "passed": 29,
+      "failed": 1,
+      "skipped": 0,
+      "tests": [
+        {
+          "name": "FC05Connector.TriangleShapeV2IsConnectable",
+          "failed": false
+        },
+        {
+          "name": "FC05Connector.RichShapeV3IsConnectable",
+          "failed": false
+        },
+        {
+          "name": "FC05Connector.ShapeV1TriangleAndShapeV3WithoutLabelAreRejected",
+          "failed": false
+        },
+        {
+          "name": "FC05Connector.StablePortOutsideReleasedNamespaceIsRejected",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a2_bounds_system",
+          "failed": false
+        },
+        {
+          "name": "FC05Route",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a2_reference_geometry",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a2_scene_impact",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a2_dependency_closure",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a3_full_incremental_equivalence",
+          "failed": true
+        },
+        {
+          "name": "canvas_g2_a6_incremental_equivalence",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a6_atomic_publication",
+          "failed": false
+        },
+        {
+          "name": "canvas_g2_a6_recovery",
+          "failed": false
+        },
+        {
+          "name": "canvas_fc01_derived_geometry",
+          "failed": false
+        },
+        {
+          "name": "G3HeadlessSkia",
+          "failed": false
+        },
+        {
+          "name": "FC05ConnectorPendingRaster",
+          "failed": false
+        },
+        {
+          "name": "G3DirectReference",
+          "failed": false
+        },
+        {
+          "name": "G3FrameOrchestration",
+          "failed": false
+        },
+        {
+          "name": "FC05ConnectorFacade",
+          "failed": false
+        },
+        {
+          "name": "FC02Text",
+          "failed": false
+        },
+        {
+          "name": "FC00XRuntimeComposition",
+          "failed": false
+        },
+        {
+          "name": "FC03ImageFacade",
+          "failed": false
+        },
+        {
+          "name": "FC02WindowsTextToolEntry",
+          "failed": false
+        },
+        {
+          "name": "FC02WindowsTextToolFocus",
+          "failed": false
+        },
+        {
+          "name": "FC02WindowsTextToolTouchFocus",
+          "failed": false
+        },
+        {
+          "name": "FC02WindowsTextToolAfterInk",
+          "failed": false
+        },
+        {
+          "name": "FC00XMinimalRuntimeHost",
+          "failed": false
+        },
+        {
+          "name": "PX0ControlRouter",
+          "failed": false
+        },
+        {
+          "name": "FC01SelectedActions",
+          "failed": false
+        },
+        {
+          "name": "FC05ConnectorDragPreview",
+          "failed": false
+        }
+      ],
+      "known_failure": "canvas_g2_a3_full_incremental_equivalence: unchanged pre-existing Image digest expectation mismatch"
+    },
+    "native_wasm_exact_fixtures": 44,
+    "upward_triangle": [
+      [
+        50,
+        300
+      ],
+      [
+        50,
+        100
+      ]
+    ],
+    "downward_triangle": [
+      [
+        50,
+        100
+      ],
+      [
+        50,
+        300
+      ]
+    ],
+    "blocked_triangle_still_detours": true,
+    "click_entry": "16 combinations: all four ports on Rectangle/Ellipse/Triangle/Sticky including off-center pointer hits",
+    "preview": "Same direct geometry through deferred preview; existing live Move raster and Up parity regressions pass"
+  },
+  "scope": "Shared route selection across escape candidates; no endpoint, canonical/schema, SDK lock or host algorithm change",
+  "physical_retest": "PHYSICAL_PENDING",
+  "nonclaims": [
+    "No G5 PASS",
+    "No Gate/PHYS PASS"
+  ]
+}

@@ -112,6 +112,31 @@ void fixed_edge_must_not_suppress_movable_endpoint() {
   assert(session.preview().end.x == 100.0F);
   assert(session.preview().snapped);
 }
+
+void connector_endpoint_attaches_to_shape_target() {
+  CreationSession session;
+  const PointerKey key{25U, 1U, 1U};
+  session.setSnapTargets({{canvas::foundation::ObjectId::fromUint64(202U),
+                           {100.0F, 40.0F, 160.0F, 100.0F}, false, false}});
+  assert(session.begin(key, CreationPreset::kLine, CreationStyle{},
+                       {20.0F, 70.0F}, {0.0F, 0.0F, 240.0F, 180.0F}, 702));
+  assert(session.move(key, {98.0F, 70.0F}));
+  const auto& connector = std::get<ConnectorContent>(session.preview().record.content);
+  const auto* attached = std::get_if<canvas::semantic::AttachedEndpoint>(&connector.end.value);
+  assert(attached != nullptr);
+  assert(attached->target_object_id == canvas::foundation::ObjectId::fromUint64(202U));
+}
+
+void sticky_creation_keeps_square_geometry() {
+  CreationSession session;
+  const PointerKey key{26U, 2U, 1U};
+  assert(session.begin(key, CreationPreset::kSticky, CreationStyle{},
+                       {40.0F, 40.0F}, {0.0F, 0.0F, 240.0F, 180.0F}, 703));
+  assert(session.move(key, {140.0F, 80.0F}));
+  const auto& sticky = std::get<canvas::semantic::StickyContent>(session.preview().record.content);
+  assert(sticky.width == sticky.height);
+  assert(sticky.width == 100.0);
+}
 }  // namespace
 
 int main() {
@@ -122,5 +147,7 @@ int main() {
   nonfinite_move_cancels_without_ghost_session();
   offscreen_target_cannot_snap_creation();
   fixed_edge_must_not_suppress_movable_endpoint();
+  connector_endpoint_attaches_to_shape_target();
+  sticky_creation_keeps_square_geometry();
   return 0;
 }

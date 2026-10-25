@@ -81,6 +81,13 @@ runtime::ImageCommandReceipt MinimalRuntimeFacade::commitImageCrop(std::uint64_t
 runtime::ImageCommandReceipt MinimalRuntimeFacade::cancelImageCrop(std::uint64_t token) { return host_.composition().controlFacade().cancelImageCrop(token); }
 runtime::ImageCropSnapshot MinimalRuntimeFacade::readImageCrop() const { return host_.composition().controlFacade().readImageCrop(); }
 runtime::SelectedImageSnapshot MinimalRuntimeFacade::readSelectedImage() const { return host_.composition().controlFacade().readSelectedImage(); }
+runtime::ConnectorCommandReceipt MinimalRuntimeFacade::createConnector(const runtime::ConnectorCreateRequest& r) { return host_.composition().controlFacade().createConnector(r); }
+runtime::ConnectorCommandReceipt MinimalRuntimeFacade::setConnectorRouting(const runtime::ConnectorRoutingRequest& r) { return host_.composition().controlFacade().setConnectorRouting(r); }
+semantic::ConnectorRouting MinimalRuntimeFacade::readConnectorRoutingPreset() const { return host_.composition().controlFacade().readConnectorRoutingPreset(); }
+runtime::ConnectorSnapshot MinimalRuntimeFacade::readConnectorState(semantic::ObjectId id) const { return host_.composition().controlFacade().readConnectorState(id); }
+runtime::StickyCommandReceipt MinimalRuntimeFacade::createSticky(const runtime::StickyCreateRequest& r) { return host_.composition().controlFacade().createSticky(r); }
+runtime::ConnectorSnapshot MinimalRuntimeFacade::readSelectedConnector() const { return host_.composition().controlFacade().readSelectedConnector(); }
+runtime::StickySnapshot MinimalRuntimeFacade::readSelectedSticky() const { return host_.composition().controlFacade().readSelectedSticky(); }
 
 }  // namespace canvas::minimal_runtime_host
 

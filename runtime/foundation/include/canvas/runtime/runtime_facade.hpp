@@ -4,6 +4,7 @@
 #include "canvas/runtime/runtime_state.hpp"
 #include "canvas/runtime/text_input.hpp"
 #include "canvas/runtime/image_input.hpp"
+#include "canvas/runtime/connector_sticky_input.hpp"
 
 #include <utility>
 #include <vector>
@@ -32,6 +33,13 @@ class RuntimeFacade {
   [[nodiscard]] virtual ImageCommandReceipt cancelImageCrop(std::uint64_t) { return {}; }
   [[nodiscard]] virtual ImageCropSnapshot readImageCrop() const { return {}; }
   [[nodiscard]] virtual SelectedImageSnapshot readSelectedImage() const { return {}; }
+  [[nodiscard]] virtual ConnectorCommandReceipt createConnector(const ConnectorCreateRequest&) { return {}; }
+  [[nodiscard]] virtual ConnectorCommandReceipt setConnectorRouting(const ConnectorRoutingRequest&) { return {}; }
+  [[nodiscard]] virtual semantic::ConnectorRouting readConnectorRoutingPreset() const { return semantic::ConnectorRouting::kStraight; }
+  [[nodiscard]] virtual StickyCommandReceipt createSticky(const StickyCreateRequest&) { return {}; }
+  [[nodiscard]] virtual ConnectorSnapshot readSelectedConnector() const { return {}; }
+  [[nodiscard]] virtual ConnectorSnapshot readConnectorState(semantic::ObjectId) const { return {}; }
+  [[nodiscard]] virtual StickySnapshot readSelectedSticky() const { return {}; }
   [[nodiscard]] virtual ProductControlReceipt submitSelectionPointer(
       const SelectionPointerRequest& request) noexcept {
     ProductControlReceipt receipt{};

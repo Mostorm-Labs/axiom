@@ -139,12 +139,27 @@ class RichTextLayoutService final {
     resolveShapeLabel(foundation::ObjectId, const semantic::RichTextContent&,
                       const semantic::ShapeContent&, const semantic::Transform2D&,
                       bool showPlaceholder = false);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolveStickyLabel(foundation::ObjectId, const semantic::RichTextContent&,
+                       const semantic::StickyContent&, bool showPlaceholder = false,
+                       const semantic::Transform2D& transform = {});
     [[nodiscard]] EditingGeometry
     editingGeometry(foundation::ObjectId,
                     const semantic::RichTextContent&,
                     std::uint32_t start,
                     std::uint32_t length,
                     std::optional<foundation::WorldPoint> hit = std::nullopt);
+    // Editing geometry for a RichText child owned by a Sticky.  The returned
+    // caret/selection coordinates are in the Sticky's local space, including
+    // its text padding and the same max-line/ellipsis policy used for paint.
+    [[nodiscard]] EditingGeometry
+    stickyEditingGeometry(foundation::ObjectId,
+                          const semantic::RichTextContent&,
+                          const semantic::StickyContent&,
+                          std::uint32_t start,
+                          std::uint32_t length,
+                          std::optional<foundation::WorldPoint> hit = std::nullopt,
+                          const semantic::Transform2D& transform = {});
     [[nodiscard]] std::vector<std::uint32_t> graphemeBoundaries(const std::u16string&) const;
     [[nodiscard]] LayoutMetrics metrics() const noexcept;
 

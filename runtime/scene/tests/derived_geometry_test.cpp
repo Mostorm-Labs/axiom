@@ -100,7 +100,7 @@ int main() {
     auto arrowRecord = record;
     arrowRecord.kind = canvas::SceneObjectKind::kConnector;
     arrowRecord.worldBounds = {0.0F, -8.0F, 100.0F, 8.0F};
-    arrowRecord.derivedGeometry = canvas::scene::ConnectorGeometry{{0.0F,0.0F},{100.0F,0.0F},true};
+    arrowRecord.derivedGeometry = canvas::scene::ConnectorGeometry{{0.0F,0.0F},{100.0F,0.0F},{},true};
     if (!arrow.replace({canvas::SceneRevision(1), {arrowRecord}})) return EXIT_FAILURE;
     const auto arrowInterior = arrow.hitTest({{90.0F, 4.0F}, 0.0F, {}, 1});
     if (!arrowInterior || arrowInterior.value().frontToBack.size() != 1U) {

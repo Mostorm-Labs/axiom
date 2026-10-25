@@ -1,0 +1,29 @@
+-- The C compiler identification is MSVC 19.51.36246.0
+-- The CXX compiler identification is MSVC 19.51.36246.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Python3: D:/Softwares/Anaconda/python.exe (found version "3.13.9") found components: Interpreter
+-- Configuring done (6.7s)
+CMake Error at runtime/scene/tests/CMakeLists.txt:74 (target_link_libraries):
+  Target "canvas_fc05_route_test" links to:
+
+    GTest::gtest_main
+
+  but the target was not found.  Possible reasons include:
+
+    * There is a typo in the target name.
+    * A find_package call is missing for an IMPORTED target.
+    * An ALIAS target is missing.
+
+
+
+-- Generating done (0.5s)
+CMake Generate step failed.  Build files cannot be regenerated correctly.

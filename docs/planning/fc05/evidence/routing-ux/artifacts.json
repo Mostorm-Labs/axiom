@@ -1,0 +1,36 @@
+{
+  "implementation_revision": "edccc2db54f7eccbe576729e686d975e6e105e8d",
+  "materialized_ref": "origin/codex/fc05-p32",
+  "source_dirty": false,
+  "windows": {
+    "build": "PASS",
+    "actualPath": "C:\\Users\\Chado\\.codex\\worktrees\\fc05-p32\\out\\fc05-windows\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe",
+    "sha256": "c1e2984e212e29c2047bfa0d613eae367cb2aea4c1b41db6b60f3623cfcdd8bc",
+    "responding": true,
+    "pid": 250464,
+    "compiler": "MSVC 19.51.36246.0 x64 /MT /W4 /WX"
+  },
+  "web": {
+    "build": "PASS",
+    "compiler": "Emscripten 6.0.6 / Clang 24.0.0git; published locked SDKs",
+    "wasm_path": "C:\\Users\\Chado\\.codex\\worktrees\\fc05-p32\\out\\fc05-orthogonal-web\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.wasm",
+    "wasm_sha256": "7938d4dcc029410db49154f5556ea82e351a928fd62e75497a00e46a363c8664",
+    "js_sha256": "4a0a2fc42c8002859715cbace0d0ab60c091760dc3b1d994750150b122a37851",
+    "url": "http://127.0.0.1:4180/index.html?rev=edccc2db",
+    "final_artifact_browser_smoke": "PASS 13 groups",
+    "browser": "Chrome/155.0.8059.86",
+    "raw_smoke_sha256": "04698bbe6b94d59ea14c458a6f5cc1a3a48f65ce815b5eb7be567c527aed7de6"
+  },
+  "input_note": "Synthetic automatic coverage; physical mouse/touch/visual checks remain PHYSICAL_PENDING.",
+  "nonclaims": [
+    "No independent Gate review or PHYS PASS",
+    "No G5 PASS"
+  ],
+  "commands": {
+    "native_build": "vcvars64.bat; cmake -S . -B out/fc05-windows; cmake --build out/fc05-windows --target axiom_minimal_runtime_host_windows --parallel 6 (_CL_=/UNDEBUG for assert tests)",
+    "web_build": "EM_CONFIG=<isolated emsdk6.0.6>/.emscripten; EMSDK_PYTHON=<local python>; cmake -S . -B out/fc05-orthogonal-web -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON; cmake --build out/fc05-orthogonal-web --target axiom_canvas_demo_web axiom_fc05_route_probe --parallel 4",
+    "ctest": "ctest --test-dir out/fc05-windows -R \"^(FC05|FC02Text$|FC03ImageFacade$|FC00XRuntimeComposition$|FC00XMinimalRuntimeHost$|FC01SelectedActions$|PX0ControlRouter$|canvas_g2_a[236]_|canvas_fc01_derived_geometry$|G3HeadlessSkia$|G3FrameOrchestration$|G3DirectReference|FC02WindowsTextTool)\" --output-on-failure --output-junit out-routing-ux.xml",
+    "web_tests": "Run committed host-geometry/chrome-test.mjs with discovered Chrome/Node, loopback port 4180 and isolated profile; result payloads checked as PASS.",
+    "boundaries": "python tools/check_runtime_boundaries.py --root ."
+  }
+}

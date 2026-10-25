@@ -145,6 +145,7 @@ class RuntimeComposition final {
       std::uint64_t sequence, std::uint64_t timestampNs) noexcept;
   [[nodiscard]] std::size_t semanticObjectCount() const noexcept;
   [[nodiscard]] bool submit(const input::PlatformPointerBatch& batch) noexcept;
+  [[nodiscard]] bool hoverSelectionAtViewPoint(float x, float y) noexcept;
   [[nodiscard]] semantic::ApplyResult applyExternalOperation(
       const semantic::Operation& operation, semantic::ApplySource source) noexcept;
   [[nodiscard]] bool notifyResource(foundation::ObjectId resourceId) noexcept;

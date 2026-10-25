@@ -7,6 +7,7 @@
 #include "canvas/render/brush_outline_skia_path.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/scene/bounds_system.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 
 #include "include/core/SkBlendMode.h"
 #include "include/core/SkCanvas.h"
@@ -281,6 +282,15 @@ HeadlessSubmissionIssue validateCommand(const ReferenceTraversalEntry& entry) no
         } else if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
+            const auto* derived = std::get_if<scene::ConnectorGeometry>(&entry.record.derivedGeometry);
+            if (derived != nullptr) {
+                if (derived->route.size() < 2U) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+                for (const auto point : derived->route)
+                    if (!std::isfinite(point.x) || !std::isfinite(point.y) ||
+                        std::abs(point.x) > 100000000.0F || std::abs(point.y) > 100000000.0F)
+                        return HeadlessSubmissionIssue::kOverflow;
+                return HeadlessSubmissionIssue::kNone;
+            }
             if (start == nullptr || end == nullptr) return HeadlessSubmissionIssue::kUnsupportedGeometry;
             if (!pointInScalarRange(start->point) || !pointInScalarRange(end->point)) {
                 return HeadlessSubmissionIssue::kOverflow;
@@ -307,6 +317,15 @@ HeadlessSubmissionIssue validateProductionCommand(const ReferenceTraversalEntry&
         if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
+            const auto* derived = std::get_if<scene::ConnectorGeometry>(&entry.record.derivedGeometry);
+            if (derived != nullptr) {
+                if (derived->route.size() < 2U) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+                for (const auto point : derived->route)
+                    if (!std::isfinite(point.x) || !std::isfinite(point.y) ||
+                        std::abs(point.x) > 100000000.0F || std::abs(point.y) > 100000000.0F)
+                        return HeadlessSubmissionIssue::kOverflow;
+                return HeadlessSubmissionIssue::kNone;
+            }
             if (start == nullptr || end == nullptr) return HeadlessSubmissionIssue::kUnsupportedGeometry;
             if (!pointInScalarRange(start->point) || !pointInScalarRange(end->point))
                 return HeadlessSubmissionIssue::kOverflow;
@@ -515,8 +534,32 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
         } else if constexpr (std::is_same_v<T, VectorPathReferenceCommand>) {
             SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(propertyColor(record, 0x00000100U, {0.0F, 0.0F, 1.0F, 1.0F}))); drawPath(canvas, command.content.geometry, paint);
         } else if constexpr (std::is_same_v<T, RichTextReferenceCommand>) {
-            if(command.layout && textResources) textResources->draw(canvas,*command.layout);
-            if(!legacyHeadlessGolden && command.content.layout && command.layout) {
+            if (command.layout && textResources) {
+                canvas.save();
+                if (command.suppressBorder) {
+                    canvas.scale(command.layout->labelScaleX,
+                                 command.layout->labelScaleY);
+                }
+                textResources->draw(canvas,*command.layout);
+                canvas.restore();
+            }
+            if (command.showExpandButton && command.layout && command.layout->overflow) {
+                canvas.save();
+                if (command.suppressBorder) {
+                    canvas.scale(command.layout->labelScaleX,
+                                 command.layout->labelScaleY);
+                }
+                const auto& r = command.layout->expandButton;
+                SkPaint button; button.setAntiAlias(true); button.setColor(SK_ColorWHITE);
+                button.setStyle(SkPaint::kFill_Style); canvas.drawRect(SkRect::MakeLTRB(r.left, r.top, r.right, r.bottom), button);
+                button.setColor(SK_ColorBLACK); button.setStyle(SkPaint::kStroke_Style); button.setStrokeWidth(1.5F);
+                canvas.drawRect(SkRect::MakeLTRB(r.left, r.top, r.right, r.bottom), button);
+                button.setStyle(SkPaint::kFill_Style);
+                canvas.drawRect(SkRect::MakeLTRB(r.left + 3, r.top + 7, r.right - 3, r.top + 9), button);
+                canvas.drawRect(SkRect::MakeLTRB(r.left + 7, r.top + 3, r.left + 9, r.bottom - 3), button);
+                canvas.restore();
+            }
+            if(!legacyHeadlessGolden && !command.suppressBorder && command.content.layout && command.layout) {
                 SkPaint border;border.setAntiAlias(true);border.setStyle(SkPaint::kStroke_Style);border.setStrokeWidth(0);border.setColor(SK_ColorBLACK);
                 canvas.drawRect(SkRect::MakeLTRB(1,1,static_cast<float>(command.content.layout->wrap_width)-1,command.layout->localBounds.bottom-1),border);
             }
@@ -585,7 +628,9 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
         } else if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
-            if (start == nullptr || end == nullptr) return;
+            const auto* derived = std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry);
+            if ((start == nullptr || end == nullptr) &&
+                (derived == nullptr || derived->route.size() < 2U)) return;
             const bool hasStroke=std::any_of(record.properties.entries.begin(),record.properties.entries.end(),
                 [](const auto& entry){return entry.field_id==0x101U;});
             const auto* stroke=objectStroke(record);
@@ -594,10 +639,25 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             // Explicit styles always use the same Field Registry values as Preview.
             const semantic::SolidStroke legacy{{1.0F,128.0F/255.0F,0.0F,1.0F},4.0};
             auto paint=strokePaint(stroke ? *stroke : legacy, antiAliasConnectors);
+            // Pending is an interactive connection, not a routing failure.
+            // Keep its authored solid/dash style while the readback remains
+            // Pending; only terminal failures use the diagnostic treatment.
+            if(derived && derived->status!=runtime::ConnectorRouteStatus::kReady &&
+               derived->status!=runtime::ConnectorRouteStatus::kPending) {
+                const SkScalar intervals[]{6.0F,4.0F};
+                paint.setColor4f({0.9F,0.35F,0.12F,1.0F},nullptr);
+                paint.setPathEffect(SkDashPathEffect::Make(SkSpan<const SkScalar>(intervals,2),0));
+            }
             const auto opacity=objectOpacity(record);
             if(opacity==1.0F) canvas.save();
             else {SkPaint layer;layer.setAlphaf(opacity);canvas.saveLayer(nullptr,&layer);}
-            if (command.content.routing == semantic::ConnectorRouting::kOrthogonal) {
+            if (derived != nullptr && derived->route.size() >= 2U) {
+                for (std::size_t index = 1U; index < derived->route.size(); ++index) {
+                    const auto& from = derived->route[index - 1U];
+                    const auto& to = derived->route[index];
+                    canvas.drawLine(from.x, from.y, to.x, to.y, paint);
+                }
+            } else if (command.content.routing == semantic::ConnectorRouting::kOrthogonal) {
                 canvas.drawLine(skScalar(start->point.x), skScalar(start->point.y), skScalar(end->point.x),
                                 skScalar(start->point.y), paint);
                 canvas.drawLine(skScalar(end->point.x), skScalar(start->point.y), skScalar(end->point.x),
@@ -612,27 +672,51 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 if (const auto* decoration = std::get_if<semantic::ConnectorDecorationValue>(&property.value))
                     arrow = *decoration == semantic::ConnectorDecorationValue::kArrow;
             }
-            if (arrow) {
-                const float dx = skScalar(end->point.x - start->point.x);
-                const float dy = skScalar(end->point.y - start->point.y);
-                const float length = std::hypot(dx, dy);
-                if (length > 0.0F) {
-                    const float ux = dx / length, uy = dy / length;
-                    const float px = -uy, py = ux;
-                    SkPathBuilder head;
-                    head.moveTo(skScalar(end->point.x), skScalar(end->point.y));
-                    head.lineTo(skScalar(end->point.x - ux * 12.0F + px * 6.0F),
-                                skScalar(end->point.y - uy * 12.0F + py * 6.0F));
-                    head.lineTo(skScalar(end->point.x - ux * 12.0F - px * 6.0F),
-                                skScalar(end->point.y - uy * 12.0F - py * 6.0F));
-                    head.close();
-                    paint.setStyle(SkPaint::kFill_Style);paint.setPathEffect(nullptr);
-                    canvas.drawPath(head.detach(), paint);
-                }
+            if (arrow && derived && derived->status==runtime::ConnectorRouteStatus::kReady) {
+                auto geometry=*derived;geometry.arrow_end=true;
+                const auto headGeometry=scene::arrowHead(geometry);
+                SkPathBuilder head;head.moveTo(headGeometry.tip.x,headGeometry.tip.y);
+                head.lineTo(headGeometry.left.x,headGeometry.left.y);
+                head.lineTo(headGeometry.right.x,headGeometry.right.y);head.close();
+                paint.setStyle(SkPaint::kFill_Style);paint.setPathEffect(nullptr);
+                canvas.drawPath(head.detach(),paint);
             }
             canvas.restore();
         } else if constexpr (std::is_same_v<T, StickyReferenceCommand>) {
-            drawSolidRect(canvas, foundation::WorldRect{record.visualBounds.left, record.visualBounds.top, record.visualBounds.left + static_cast<float>(command.content.width), record.visualBounds.top + static_cast<float>(command.content.height)}, {1.0F, 1.0F, 0.5F, 1.0F});
+            const auto width = static_cast<float>(command.content.width);
+            const auto height = static_cast<float>(command.content.height);
+            const bool identity = record.transform.a == 1.0 && record.transform.b == 0.0 &&
+                record.transform.c == 0.0 && record.transform.d == 1.0 &&
+                record.transform.tx == 0.0 && record.transform.ty == 0.0;
+            const auto bounds = identity
+                ? foundation::WorldRect{record.visualBounds.left, record.visualBounds.top,
+                                        record.visualBounds.left + width, record.visualBounds.top + height}
+                : foundation::WorldRect{0.0F, 0.0F, width, height};
+            drawSolidRect(canvas, bounds, {1.0F, 1.0F, 0.5F, 1.0F});
+            if (command.labelLayout && textResources) {
+                canvas.save();
+                canvas.clipRect(SkRect::MakeXYWH(0.0F, 0.0F, width, height));
+                canvas.scale(command.labelLayout->labelScaleX,
+                             command.labelLayout->labelScaleY);
+                textResources->draw(canvas, *command.labelLayout);
+                canvas.restore();
+                if (command.showExpandButton && command.labelLayout->overflow) {
+                    canvas.save();
+                    canvas.scale(command.labelLayout->labelScaleX,
+                                 command.labelLayout->labelScaleY);
+                    const auto& r = command.labelLayout->expandButton;
+                    SkPaint button; button.setAntiAlias(true); button.setColor(SK_ColorWHITE);
+                    button.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left, r.top, r.right, r.bottom), button);
+                    button.setColor(SK_ColorBLACK); button.setStyle(SkPaint::kStroke_Style);
+                    button.setStrokeWidth(1.5F);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left, r.top, r.right, r.bottom), button);
+                    button.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left + 3, r.top + 7, r.right - 3, r.top + 9), button);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left + 7, r.top + 3, r.left + 9, r.bottom - 3), button);
+                    canvas.restore();
+                }
+            }
         } else if constexpr (std::is_same_v<T, GroupReferenceCommand>) {
             // Group is an ordered traversal entry with no pixel contribution.
         }
@@ -713,7 +797,8 @@ std::string digest(const std::vector<std::uint8_t>& bytes) {
 namespace internal {
 
 void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
-                                  const semantic::ObjectRecord& object) {
+                                  const semantic::ObjectRecord& object,
+                                  const scene::ConnectorGeometry* route) {
     RuntimeSceneRecord record{};
     record.objectId = object.id; record.kind = object.kind; record.kindVersion = object.kind_version;
     record.transform = object.transform; record.properties = object.properties; record.content = object.content;
@@ -721,7 +806,8 @@ void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
     // Populate the same derived bounds that canonical records carry; without
     // this, rectangle/ellipse previews reach the renderer with a zero visual
     // rect and appear only after pointer-up commits them.
-    const auto bounds = canvas::scene::computeBounds(object);
+    const auto bounds = canvas::scene::computeBounds(object, nullptr, route);
+    if(route)record.derivedGeometry=*route;
     record.geometryBounds = bounds.geometry;
     record.visualBounds = bounds.visual;
     record.worldBounds = bounds.world;
@@ -730,6 +816,8 @@ void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
         entry.command = ShapeReferenceCommand{*shape};
     else if (const auto* connector = std::get_if<semantic::ConnectorContent>(&object.content))
         entry.command = ConnectorReferenceCommand{*connector};
+    else if (const auto* sticky = std::get_if<semantic::StickyContent>(&object.content))
+        entry.command = StickyReferenceCommand{*sticky, nullptr, false};
     else return;
     drawTransientEntryToSkCanvas(canvas, plan, entry);
 }

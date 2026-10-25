@@ -1,0 +1,93 @@
+{
+  "implementation_revision": "c8219092dec56f743be855bf68cc9c6bb4167e9d",
+  "materialized_ref": "origin/codex/fc05-p32",
+  "source_dirty": false,
+  "windows": {
+    "build": "PASS",
+    "exe": "C:\\Users\\Chado\\.codex\\worktrees\\fc05-p32\\out\\fc05-windows\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe",
+    "exe_sha256": "c491dd017e7fdf7f7a0ed599f495f6517a1714e0e4d6c7c426ae7da408c88766",
+    "pid": 271032,
+    "startup": "build_revision=c8219092dec56f743be855bf68cc9c6bb4167e9d dirty=0 msvc=195136246 pid=271032 debug_ui_enabled=1",
+    "compiler": "MSVC 19.51.36246 x64 /MT /W4 /WX"
+  },
+  "web": {
+    "build": "PASS",
+    "wasm": "C:\\Users\\Chado\\.codex\\worktrees\\fc05-p32\\out\\fc05-orthogonal-web\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.wasm",
+    "wasm_sha256": "70edeacb34c0df60c7aef2223f6b19117348cabaf3ed6c7c3fddbd819cc7c287",
+    "js_sha256": "4a0a2fc42c8002859715cbace0d0ab60c091760dc3b1d994750150b122a37851",
+    "url": "http://127.0.0.1:4180/index.html?rev=c8219092",
+    "browser": "Chrome/155.0.8059.86",
+    "fixture": "web_minimal_runtime_test",
+    "groups": [
+      {
+        "name": "DOM Down/Move/Up renders preview and canonical",
+        "status": "PASS"
+      },
+      {
+        "name": "ten strokes retain sampling and independent commits",
+        "status": "PASS"
+      },
+      {
+        "name": "Facade Shape presets and return to Ink",
+        "status": "PASS"
+      },
+      {
+        "name": "Facade Undo and Redo read back",
+        "status": "PASS"
+      },
+      {
+        "name": "cancel, identity reuse and stale generation rejection",
+        "status": "PASS"
+      },
+      {
+        "name": "frozen AutoIntent: within 250 ms zoom; later MultiInk",
+        "status": "PASS"
+      },
+      {
+        "name": "resize cancels active input and preserves canonical",
+        "status": "PASS"
+      },
+      {
+        "name": "Debug UI sibling uses Facade and cannot penetrate canvas",
+        "status": "PASS"
+      },
+      {
+        "name": "idle does not continuously submit canonical frames",
+        "status": "PASS"
+      },
+      {
+        "name": "capture/focus loss cancel input and the next stroke works",
+        "status": "PASS"
+      },
+      {
+        "name": "failed Down permits tool switch and next drawing",
+        "status": "PASS"
+      },
+      {
+        "name": "surface loss/rebind preserves canonical and permits drawing",
+        "status": "PASS"
+      },
+      {
+        "name": "mouse/pen sources, coalesced history and tool controls use the same owner",
+        "status": "PASS"
+      }
+    ],
+    "raw_local_path": "out\\fc05-live-polyline-web_minimal_runtime_test.json",
+    "raw_sha256": "00fc2f360632d6a018eeeba6646f2edb930a0e8558e8496f45994ad868276b76",
+    "mode": "Headless Chrome SwiftShader; synthetic DOM regression, no physical claim"
+  },
+  "physical_retest": "PHYSICAL_PENDING",
+  "previous_user_failure_preserved": "FAIL on edccc2db; latest retest recorded separately",
+  "commands": {
+    "native": "vcvars64.bat; cmake -S . -B out/fc05-windows; cmake --build out/fc05-windows --target axiom_minimal_runtime_host_windows --parallel 6",
+    "web": "EM_CONFIG=<isolated emsdk6.0.6>/.emscripten; EMSDK_PYTHON=<local python>; cmake -S . -B out/fc05-orthogonal-web -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON; cmake --build out/fc05-orthogonal-web --target axiom_canvas_demo_web axiom_fc05_route_probe --parallel 4",
+    "ctest": "ctest --test-dir out/fc05-windows -R \"^(FC05|FC02Text$|FC03ImageFacade$|FC00XRuntimeComposition$|FC00XMinimalRuntimeHost$|FC01SelectedActions$|PX0ControlRouter$|canvas_g2_a[236]_|canvas_fc01_derived_geometry$|G3HeadlessSkia$|G3FrameOrchestration$|G3DirectReference|FC02WindowsTextTool)\" --output-on-failure --output-junit out-live-polyline.xml",
+    "focused": "ctest --test-dir out/fc05-windows -R \"^(FC05Route|FC05ConnectorDragPreview|FC01SelectedActions)$\" --output-on-failure; includes real rendered frame sampling and Up comparison",
+    "corpus": "axiom_fc05_route_probe[.exe/.js]; compare all 41 jobs, deferred statuses and paths exactly",
+    "browser": "Adapt existing chrome-test.mjs for port 4180, isolated profile, discovered Chrome/Node; run only after linker completes"
+  },
+  "nonclaims": [
+    "No Gate or PHYS PASS",
+    "No G5 claim"
+  ]
+}

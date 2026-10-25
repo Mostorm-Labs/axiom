@@ -37,12 +37,14 @@ float distanceSquared(ScreenPoint first, ScreenPoint second) noexcept {
 
 bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
     creationPreview_.reset();
+    creationRoute_.reset();
     if (input.selectedObject.isZero() || !input.worldBounds.isFiniteAndOrdered()) {
         clear();
         return false;
     }
     input_ = input;
     guides_.assign(input.guides.begin(), input.guides.end());
+    attachmentPoints_.assign(input.attachmentPoints.begin(), input.attachmentPoints.end());
     ++updateCount_;
 
     const ScreenPoint localTopLeft{input.worldBounds.left, input.worldBounds.top};
@@ -63,7 +65,10 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
                              (corners[2].y + corners[3].y) * 0.5F};
     const ScreenPoint left{(corners[3].x + corners[0].x) * 0.5F,
                            (corners[3].y + corners[0].y) * 0.5F};
-    const ScreenPoint rotation{top.x, top.y - 24.0F};
+    // Keep the rotation affordance clear of the top attachment point.  The
+    // top-right corner gives the user an unambiguous control without
+    // overlapping the semantic top port.
+    const ScreenPoint rotation{corners[1].x + 24.0F, corners[1].y - 24.0F};
     outline_ = SelectionOutline{corners, rotation, input.selected};
     const std::array<std::pair<HandleKind, ScreenPoint>, kHandleCount> geometry{{
         {HandleKind::kTopLeft, corners[0]},
@@ -96,9 +101,11 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
 
 void EditingOverlay::clear() noexcept {
     creationPreview_.reset();
+    creationRoute_.reset();
     input_ = {};
     outline_ = {};
     guides_.clear();
+    attachmentPoints_.clear();
     for (auto& handle : handles_) handle = {};
 }
 

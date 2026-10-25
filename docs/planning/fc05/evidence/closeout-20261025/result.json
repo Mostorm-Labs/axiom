@@ -1,0 +1,854 @@
+{
+  "schema": "fc05-product-closeout-v1",
+  "task_id": "FC-05",
+  "date": "2026-10-25",
+  "status": "PRODUCT_BASELINE_ACCEPTED_FOR_MAIN_INTEGRATION",
+  "implementation_source": "301b8138e7deae8ac5b12fc84cc6ec0b8340f922",
+  "execution_evidence_head": "e9e2da735eb02ca4dfb92eb20ee51834610e827d",
+  "materialized_ref": "refs/heads/codex/fc05-p32",
+  "integration_target": "refs/heads/main",
+  "integration_base_main": "10dd7e4bf783ebcf299a1305d74f49e960f9ac69",
+  "integration_authorized": true,
+  "user_confirmation": "human-feedback.json",
+  "historical_snapshot": {
+    "path": ".aegis/results/FC-05-DEV/result.json",
+    "revision": "1f81bee484f1ab719a23973a24f5e644525e09c4",
+    "meaning": "Historical P32 blocked snapshot, preserved unchanged; compare each gap with current evidence, do not infer all frozen obligations closed."
+  },
+  "validation": {
+    "ctest": {
+      "total": 157,
+      "passed": 156,
+      "failed": 1,
+      "skipped": 0,
+      "known_failure": "canvas_g2_a3_full_incremental_equivalence: pre-existing Image reference digest expectation omits FC03 content_mode/source fields; original expectation retained.",
+      "cases": [
+        {
+          "name": "FC01Shape2Apply.TypedInsertUsesUniversalTupleValidation",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01Shape2Apply.TypedIngressChecksEnvelopeBeforeMutation",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01Shape2Apply.TypedIngressNormalizesBeforeIdempotency",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01Shape2Apply.MixedBatchRejectsAtomicallyAndFailedReplayNeverReady",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01Shape2Apply.SnapshotTriangleRequiresExplicitReaderCapability",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01Shape2Apply.CapableSnapshotRoundTripAndLegacyWriterRefusal",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01Shape2Apply.FrozenIndependentOperationGoldenMatchesProductionEncoding",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01Shape2Apply.GoldenRootsAndNestedUnknownWireFailClosed",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC05Connector.TriangleShapeV2IsConnectable",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC05Connector.RichShapeV3IsConnectable",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC05Connector.ShapeV1TriangleAndShapeV3WithoutLabelAreRejected",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC05Connector.StablePortOutsideReleasedNamespaceIsRejected",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.FreeFreeIsValid",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.V1ConnectableKindsAcceptAutoPerimeter",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.V1ConnectableKindsAcceptStablePorts1Through4",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.MissingAttachedTargetReturnsInvalidReference",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.StagedDeletedTargetReturnsInvalidReference",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.UnsupportedTargetKindVersionReturnsInvalidKindVersion",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.V1NonConnectableKindsReturnConnectorInvalid",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.SameBatchStagedConnectableTargetIsVisible",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.StartInvalidReferenceWinsOverEndNonConnectable",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.StartNonConnectableWinsOverEndInvalidReference",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.StablePortApplicabilityUsesActualTargetKindVersion",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.ConnectableHelperMatchesIndependentV1Matrix",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.ReferenceAndIndexedStoresHaveDecisionParity",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.ReferenceAndIndexedStoresHaveStablePortDecisionParity",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.AttachedEndpointsUseAtMostOneStagedLookupAndNoFullScan",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.EvaluationDoesNotMutateReferenceStore",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "ConnectorStatefulValidation.EvaluationDoesNotMutateIndexedStoreOrIndex",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B01_RootShapeAccepts",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B02_GroupShapeAccepts",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B03_GroupGroupAccepts",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B04_GroupStickyAccepts",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B05_StickyRichTextAccepts",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B06_EmptyStickyAccepts",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B07_StickyShapeRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B08_ShapeRichTextRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B09_ConnectorShapeRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B10_SecondStickyRichTextRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B11_OrderingDoesNotChangeResult",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B12_ExistingGroupParentAcceptsStagedChild",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B13_ExistingEmptyStickyAcceptsStagedRichText",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B14_ExistingStickySecondRichTextRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B15_ReferenceIndexedParityAndNoMutation",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "HierarchyCapabilityValidation.HCV_B16_NoAllObjectsAndOverlayLookups",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.FailureSentinelsAreNonEmpty",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.StructuralPreconditionsCoverCanonicalFixtures",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.StructuralCaseMatrixUsesExactCanonicalPayloads",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.INS_B01_GroupAndShapeStagedTogetherSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.INS_B02_ExistingCandidateIdentityRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.INS_B03_ConnectorAndStagedTargetSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.INS_B04_ConnectorMissingAttachedTargetRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.INS_B05_StickyShapeChildRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.INS_B06_StickyTwoRichTextChildrenRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.INS_B07_EmptyStickySucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.INS_B08_BadRecordRejectsWholeOutput",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PLC_B01_MoveShapeUnderGroupSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PLC_B02_MissingTargetRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PLC_B03_MissingParentRejectsFromB3",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PLC_B04_BatchCycleRejectsFromB3",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PLC_B05_MoveRichTextIntoEmptyStickySucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PLC_B06_SecondRichTextIntoOccupiedStickyRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PLC_B07_MoveShapeIntoStickyRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PLC_B08_MoveSoleRichTextOutLeavesEmptySticky",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PLC_B09_ValidFinalStateBatch",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.TRN_B01_ValidTargetProducesReplacement",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.TRN_B02_MissingTargetRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.TRN_B03_LateMissingTargetLeavesWholeOutputUnchanged",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SIZE_B01_ShapeSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SIZE_B02_ImageSucceedsAndPreservesNonSizeContent",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SIZE_B03_StickySucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SIZE_B04_GroupRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SIZE_B05_MissingTargetRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PATH_B01_VectorPathSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PATH_B02_WrongKindRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PATH_B03_MissingTargetRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.IMG_B01_CompleteImageContentReplacementSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.IMG_B02_WrongKindRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.IMG_B03_MissingTargetRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.STR_B01_VectorStrokeCreateSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.STR_B02_DabStrokeCreateSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.STR_B03_ExistingIdRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.STR_B04_NonStrokeRecordRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.STR_B05_StrokeUnderGroupSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.STR_B06_StrokeUnderStickyRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SPL_B01_SourceToTwoAbsentReplacementsSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SPL_B02_MissingSourceRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SPL_B03_NonStrokeSourceRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SPL_B04_ReplacementCollidesWithUnrelatedExistingId",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SPL_B05_ReplacementReusesSourceIdRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SPL_B06_NonStrokeReplacementRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SPL_B07_InvalidReplacementParentRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.SPL_B08_OneFailingSplitLeavesAllFragmentsUnchanged",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.MASK_ADD_B01_VectorStrokeSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.MASK_ADD_B02_DabStrokeSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.MASK_ADD_B03_WrongKindRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.MASK_ADD_B04_MissingTargetRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.MASK_ADD_B05_ExistingMaskIdRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.MASK_ADD_B06_LateFailureLeavesWholeOutputUnchanged",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.MASK_REM_B01_AllRequestedMasksExistSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.MASK_REM_B02_OneMissingMaskRejectsWholeOperation",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.MASK_REM_B03_WrongKindRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.MASK_REM_B04_MissingTargetRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.MASK_REM_B05_LateFailureLeavesOutputUnchanged",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PROP_B01_SetApplicableFieldProducesExactReplacement",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PROP_B02_WrongKindApplicabilityRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PROP_B03_ClearRemovesExplicitEntry",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PROP_B04_SetRegistryDefaultCanonicalizesToAbsence",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PROP_B05_TwoFieldsOneObjectProduceOneSortedReplacement",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PROP_B06_MissingTargetRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.PROP_B07_LateFailureLeavesOutputUnchanged",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.EDIT_B01_UnicodeScalarDeltaProducesReplacement",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.EDIT_B02_MissingObjectRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.EDIT_B03_WrongKindRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.EDIT_B04_InvalidStagedDeltaLeavesOutputUnchanged",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.CON_B01_ValidConnectorExistingConnectableTargetSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.CON_B02_NonConnectorTargetObjectRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.CON_B03_MissingAttachedTargetRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.CON_B04_NonConnectableAttachedTargetRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.CON_B05_ValidStablePortForConnectableTargetSucceeds",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.CON_B06_InvalidStablePortForNonConnectableTargetRejects",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.CountingStore_CoversAllThirteenFamiliesWithoutAllObjectsScan",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "OperationSpecificStatefulValidation.CON_B07_FreePointOnlyNeedsNoEndpointObjectLookup",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "canvas_g2_a2_bounds_system",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC05Route",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "canvas_g2_a2_reference_geometry",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "canvas_g2_a2_scene_impact",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "canvas_g2_a2_dependency_closure",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "canvas_g2_a3_full_incremental_equivalence",
+          "failed": true,
+          "skipped": false
+        },
+        {
+          "name": "canvas_g2_a6_incremental_equivalence",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "canvas_g2_a6_atomic_publication",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "canvas_g2_a6_recovery",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "canvas_fc01_derived_geometry",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "G4EditorHistory",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "G3HeadlessSkia",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC05ConnectorPendingRaster",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "G3DirectReference",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "G3FrameOrchestration",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC05ConnectorFacade",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC02Text",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC00XRuntimeComposition",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC03ImageFacade",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC03WindowsImageDebugUi",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC02WindowsTextToolEntry",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC02WindowsTextToolFocus",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC02WindowsTextToolTouchFocus",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC02WindowsTextToolAfterInk",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC00XMinimalRuntimeHost",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "PX0ControlRouter",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01SelectedActions",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC05ConnectorDragPreview",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01SelectedRemoteConflict",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01InsertHistory",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01SelectedLocked",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01SelectedDependent",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01SelectedRemoteChild",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "FC01SelectedPreimageMatrix",
+          "failed": false,
+          "skipped": false
+        }
+      ]
+    },
+    "python": {
+      "passed": 17,
+      "skipped": 0,
+      "emitted_sdk_environment_imported": true
+    },
+    "boundaries": "PASS 96 contract files",
+    "route_corpus_reference": "../triangle-ports/verification.json",
+    "native_wasm_fixtures": 44,
+    "image_oracle_repair": "x=220,y=400 overlaps FC05 attachment chrome. Sample x=205 remains in crop backdrop, asserts dim-red before Done and white after Done; no Image product code changed.",
+    "final_artifact_rebuild": "artifacts.json",
+    "chrome": {
+      "basic_passed": 13,
+      "text_passed": 7,
+      "failed": 0,
+      "mode": "Chrome headless SwiftShader synthetic DOM events"
+    }
+  },
+  "integration_adjustments": [
+    "Retain main FC03 optional contentScale{} initialization",
+    "Retain main FC03 explicit DebugControllerContext initialization",
+    "Update FC03 crop raster probe to avoid newly added FC05 attachment dot while keeping before/after evidence"
+  ],
+  "integration_source_sha256": {
+    "apps/minimal_runtime_host/tests/windows_image_debug_ui_test.cpp": "e51600c651528ee78149aa2efec94790df4d9d87e0fc96f7dd61f39bd6bf8c1d",
+    "runtime/foundation/include/canvas/runtime/image_input.hpp": "af9e027227eb9ec178e1eacf6272545b18787ccad90ac186215b88c697449bf0"
+  },
+  "retained_contract_gaps": [
+    "Frozen dedicated EditSticky aggregate transaction is not claimed by existing multi-step child/text/expansion History",
+    "Dedicated public reconnect and complete request retry/receipt conformance are not claimed",
+    "No latest-product independent Gate verdict or complete Windows/Web physical matrix",
+    "Conservative AABBs/full Scene snapshots and bounded dense-scene rejection remain; no G5 claim"
+  ],
+  "future_product_work": [
+    "Sticky color palette/types",
+    "Advanced connector curves/manual bends/global arrangement if prioritized",
+    "Lasso/Frame/Group/composite selection in later work"
+  ],
+  "formal_gate": "NOT_CLAIMED",
+  "physical": "GENERAL_USER_ACCEPTANCE_ONLY; itemized unobserved checks remain PHYSICAL_PENDING",
+  "protected_paths": "No Authority/SDK lock/Golden/PHYS/historical .aegis rewrite",
+  "imgui_ini": "UNTRACKED_AND_EXCLUDED"
+}

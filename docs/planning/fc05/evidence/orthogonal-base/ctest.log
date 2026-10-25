@@ -1,0 +1,67 @@
+Test project C:/Users/Chado/.codex/worktrees/fc05-p32/out/fc05-windows
+      Start 181: FC05Connector.TriangleShapeV2IsConnectable
+ 1/28 Test #181: FC05Connector.TriangleShapeV2IsConnectable .......................   Passed    0.30 sec
+      Start 182: FC05Connector.RichShapeV3IsConnectable
+ 2/28 Test #182: FC05Connector.RichShapeV3IsConnectable ...........................   Passed    0.17 sec
+      Start 183: FC05Connector.ShapeV1TriangleAndShapeV3WithoutLabelAreRejected
+ 3/28 Test #183: FC05Connector.ShapeV1TriangleAndShapeV3WithoutLabelAreRejected ...   Passed    0.15 sec
+      Start 184: FC05Connector.StablePortOutsideReleasedNamespaceIsRejected
+ 4/28 Test #184: FC05Connector.StablePortOutsideReleasedNamespaceIsRejected .......   Passed    0.11 sec
+      Start 553: canvas_g2_a2_bounds_system
+ 5/28 Test #553: canvas_g2_a2_bounds_system .......................................   Passed    0.31 sec
+      Start 554: FC05Route
+ 6/28 Test #554: FC05Route ........................................................   Passed    0.27 sec
+      Start 556: canvas_g2_a2_reference_geometry
+ 7/28 Test #556: canvas_g2_a2_reference_geometry ..................................   Passed    0.30 sec
+      Start 557: canvas_g2_a2_scene_impact
+ 8/28 Test #557: canvas_g2_a2_scene_impact ........................................   Passed    0.27 sec
+      Start 559: canvas_g2_a2_dependency_closure
+ 9/28 Test #559: canvas_g2_a2_dependency_closure ..................................   Passed    0.24 sec
+      Start 560: canvas_g2_a3_full_incremental_equivalence
+10/28 Test #560: canvas_g2_a3_full_incremental_equivalence ........................Exit code 0xc0000409***Exception:   5.04 sec
+Assertion failed: actual.referenceGeometryDigest == expected.referenceGeometry, file C:\Users\Chado\.codex\worktrees\fc05-p32\runtime\scene\tests\full_incremental_equivalence_test.cpp, line 59
+
+      Start 562: canvas_g2_a6_incremental_equivalence
+11/28 Test #562: canvas_g2_a6_incremental_equivalence .............................   Passed    0.91 sec
+      Start 563: canvas_g2_a6_atomic_publication
+12/28 Test #563: canvas_g2_a6_atomic_publication ..................................   Passed    0.37 sec
+      Start 564: canvas_g2_a6_recovery
+13/28 Test #564: canvas_g2_a6_recovery ............................................   Passed    0.30 sec
+      Start 570: canvas_fc01_derived_geometry
+14/28 Test #570: canvas_fc01_derived_geometry .....................................   Passed    0.27 sec
+      Start 617: G3HeadlessSkia
+15/28 Test #617: G3HeadlessSkia ...................................................   Passed    0.27 sec
+      Start 627: G3DirectReference
+16/28 Test #627: G3DirectReference ................................................   Passed    1.31 sec
+      Start 628: G3FrameOrchestration
+17/28 Test #628: G3FrameOrchestration .............................................   Passed    0.30 sec
+      Start 630: FC05ConnectorFacade
+18/28 Test #630: FC05ConnectorFacade ..............................................   Passed    0.16 sec
+      Start 631: FC02Text
+19/28 Test #631: FC02Text .........................................................   Passed   41.98 sec
+      Start 639: FC00XRuntimeComposition
+20/28 Test #639: FC00XRuntimeComposition ..........................................   Passed    0.12 sec
+      Start 641: FC03ImageFacade
+21/28 Test #641: FC03ImageFacade ..................................................   Passed    0.06 sec
+      Start 644: FC02WindowsTextToolEntry
+22/28 Test #644: FC02WindowsTextToolEntry .........................................   Passed    0.59 sec
+      Start 645: FC02WindowsTextToolFocus
+23/28 Test #645: FC02WindowsTextToolFocus .........................................   Passed    0.57 sec
+      Start 646: FC02WindowsTextToolTouchFocus
+24/28 Test #646: FC02WindowsTextToolTouchFocus ....................................   Passed    0.54 sec
+      Start 647: FC02WindowsTextToolAfterInk
+25/28 Test #647: FC02WindowsTextToolAfterInk ......................................   Passed    0.74 sec
+      Start 658: FC00XMinimalRuntimeHost
+26/28 Test #658: FC00XMinimalRuntimeHost ..........................................   Passed    0.15 sec
+      Start 666: PX0ControlRouter
+27/28 Test #666: PX0ControlRouter .................................................   Passed    0.09 sec
+      Start 687: FC01SelectedActions
+28/28 Test #687: FC01SelectedActions ..............................................   Passed    0.31 sec
+
+96% tests passed, 1 tests failed out of 28
+
+Total Test time (real) =  56.70 sec
+
+The following tests FAILED:
+	560 - canvas_g2_a3_full_incremental_equivalence (Exit code 0xc0000409)
+Errors while running CTest

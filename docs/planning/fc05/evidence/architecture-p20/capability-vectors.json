@@ -1,0 +1,67 @@
+{
+  "status": "SUCCESSOR_REVIEW_INPUT_NOT_A_PASS",
+  "baseline": "d6a47d53dfc6fa5381e20a528ecceb1e2878fa55",
+  "encoding": "CapabilityRequirementsV1.required_ids, exact ASCII byte sort, unique",
+  "legacy_policy": {
+    "schema1_schema2_bytes": "preserve",
+    "released_schema3_vectors": "preserve",
+    "mixed_triangle_label_unsorted_source_fixture": "reject_as_successor_until_explicit_migration"
+  },
+  "vectors": [
+    {
+      "id": "schema3-v1-only",
+      "features": ["schema3", "resource_manifest"],
+      "required_ids": ["resource-manifest-v1"]
+    },
+    {
+      "id": "schema3-attached-shape2",
+      "features": ["schema3", "connector_attached_shape2", "triangle"],
+      "required_ids": [
+        "connector-shape-attachment-v1",
+        "resource-manifest-v1",
+        "shape2-triangle-v1"
+      ]
+    },
+    {
+      "id": "schema3-attached-shape3-label",
+      "features": ["schema3", "connector_attached_shape3", "shape_label", "fixed_width_text"],
+      "required_ids": [
+        "connector-shape-attachment-v1",
+        "resource-manifest-v1",
+        "richtext-fixed-width-v2",
+        "shape-richtext-label-v1"
+      ]
+    },
+    {
+      "id": "schema3-attached-shape3-triangle-label",
+      "features": ["schema3", "connector_attached_shape3", "triangle", "shape_label", "fixed_width_text"],
+      "required_ids": [
+        "connector-shape-attachment-v1",
+        "resource-manifest-v1",
+        "richtext-fixed-width-v2",
+        "shape-richtext-label-v1",
+        "shape2-triangle-v1"
+      ]
+    },
+    {
+      "id": "schema3-attached-shape3-triangle-label-richtext3",
+      "features": ["schema3", "connector_attached_shape3", "triangle", "shape_label", "fixed_width_text", "standalone_richtext3"],
+      "required_ids": [
+        "connector-shape-attachment-v1",
+        "resource-manifest-v1",
+        "richtext-fixed-width-v2",
+        "richtext-formatting-v3",
+        "shape-richtext-label-v1",
+        "shape2-triangle-v1"
+      ]
+    }
+  ],
+  "negative_vectors": [
+    "unknown_required_id",
+    "duplicate_required_id",
+    "unsorted_required_ids",
+    "missing_connector_shape_attachment_for_shape2_or_shape3_target",
+    "old_reader_without_connector_shape_attachment_v1",
+    "continuation_without_sticky_edit_v1_support"
+  ]
+}

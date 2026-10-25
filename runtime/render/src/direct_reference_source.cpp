@@ -413,7 +413,9 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
         break;
     case semantic::ObjectKind::kRichText:
         if (const auto* value = std::get_if<semantic::RichTextContent>(&record.content))
-            return foundation::Result<ReferenceCommand>::success(RichTextReferenceCommand{*value,record.textLayout});
+            return foundation::Result<ReferenceCommand>::success(
+                RichTextReferenceCommand{*value, record.textLayout, false,
+                                         record.placement.parent_id.has_value()});
         break;
     case semantic::ObjectKind::kVectorStroke:
         if (record.kindVersion == 2U) {
@@ -439,7 +441,8 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
         break;
     case semantic::ObjectKind::kSticky:
         if (const auto* value = std::get_if<semantic::StickyContent>(&record.content))
-            return foundation::Result<ReferenceCommand>::success(StickyReferenceCommand{*value});
+            return foundation::Result<ReferenceCommand>::success(
+                StickyReferenceCommand{*value, record.textLayout, false});
         break;
     case semantic::ObjectKind::kGroup:
         if (std::holds_alternative<semantic::GroupContent>(record.content))

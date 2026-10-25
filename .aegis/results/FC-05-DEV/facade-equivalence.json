@@ -1,0 +1,19 @@
+{
+  "schema": "fc05-facade-equivalence-v1",
+  "source_revision": "1f81bee484f1ab719a23973a24f5e644525e09c4",
+  "ordinary_consumer": "axiom_minimal_runtime_host_tests.exe",
+  "facade_test": "axiom_fc00x_runtime_facade_tests.exe",
+  "ordinary_exit": 0,
+  "facade_exit": 0,
+  "typed_methods": [
+    "createConnector",
+    "createSticky",
+    "readSelectedConnector",
+    "readSelectedSticky"
+  ],
+  "status": "PASS_NARROW",
+  "limitations": [
+    "Debug UI comparison not executed",
+    "no reconnect/resize/fit/fill Sticky intent surface"
+  ]
+}

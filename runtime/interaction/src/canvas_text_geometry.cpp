@@ -88,7 +88,21 @@ CanvasEditingRuntime::textHit(const semantic::ObjectRecord& record, float x, flo
         local.x *= sx; local.y *= sy;
         geometry = textLayoutService_->shapeEditingGeometry(record, 0, 0, local);
     } else {
-        geometry = textLayoutService_->editingGeometry(record.id, *content, 0, 0, local);
+        if (record.placement.parent_id) {
+            const auto* parent = semanticObjects_.find(*record.placement.parent_id);
+            if (parent != nullptr && parent->kind == semantic::ObjectKind::kSticky) {
+                if (const auto* sticky = std::get_if<semantic::StickyContent>(&parent->content))
+                    geometry = textLayoutService_->stickyEditingGeometry(
+                        record.id, *content, *sticky, 0, 0, local,
+                        parent == nullptr ? semantic::Transform2D{} : parent->transform);
+                else
+                    geometry = textLayoutService_->editingGeometry(record.id, *content, 0, 0, local);
+            } else {
+                geometry = textLayoutService_->editingGeometry(record.id, *content, 0, 0, local);
+            }
+        } else {
+            geometry = textLayoutService_->editingGeometry(record.id, *content, 0, 0, local);
+        }
     }
     return geometry.available ? geometry.hit : std::nullopt;
 }
@@ -102,6 +116,19 @@ semantic::ObjectId CanvasEditingRuntime::hitTextAtView(float x, float y) {
     const auto point = viewToContent(x, y);
     for (const auto& o : objects) {
         if (!textWritable(o.id)) continue;
+        if (o.kind == semantic::ObjectKind::kSticky) {
+            const auto* sticky = std::get_if<semantic::StickyContent>(&o.content);
+            if (!sticky) continue;
+            const auto& t = o.transform;
+            const auto det = t.a * t.d - t.b * t.c;
+            if (!std::isfinite(det) || std::abs(det) < 1e-12) continue;
+            const double dx = point.first - t.tx, dy = point.second - t.ty;
+            const float localX = static_cast<float>((t.d * dx - t.c * dy) / det);
+            const float localY = static_cast<float>((t.a * dy - t.b * dx) / det);
+            if (localX >= 0.0F && localY >= 0.0F && localX <= sticky->width && localY <= sticky->height)
+                return o.id;
+            continue;
+        }
         const auto* content = std::get_if<semantic::RichTextContent>(&o.content);
         if (const auto* shape = std::get_if<semantic::ShapeContent>(&o.content);
             shape != nullptr) {
@@ -130,9 +157,72 @@ bool CanvasEditingRuntime::shapeExpandPointer(const input::PointerSample& sample
     if (!sample.key.valid() || !textLayoutService_) return false;
     const bool active = interaction_->textSession() &&
         interaction_->textSession()->read().phase != runtime::TextPhase::kClosed;
-    if (!textTool_ && !selectionMode_ && !active) return false;
+    // The expand affordance is a selection affordance. Text tool/editing may
+    // also own it, but a selected Sticky/Shape must be enough to activate it.
+    if (!textTool_ && !selectionMode_ && !active && selection_.primary().isZero()) return false;
     const auto point = viewToContent(sample.x, sample.y);
+    // Selection chrome normally owns the parent Sticky, but Text tool input
+    // can leave the active RichText child as the only current identity.  Use
+    // the editor token as a fallback so the affordance remains clickable while
+    // editing, exactly like the Shape label button.
+    auto selectedId = selection_.primary();
+    if (selectedId.isZero() && active)
+        selectedId = interaction_->textSession()->read().token.object;
+    const auto* selectedObject = selectedId.isZero() ? nullptr : semanticObjects_.find(selectedId);
+    auto selectedSticky = selectedObject != nullptr &&
+        selectedObject->kind == semantic::ObjectKind::kSticky
+        ? selectedObject->id : semantic::ObjectId{};
+    if (selectedSticky.isZero() && selectedObject != nullptr &&
+        selectedObject->kind == semantic::ObjectKind::kRichText &&
+        selectedObject->placement.parent_id) {
+        const auto* parent = semanticObjects_.find(*selectedObject->placement.parent_id);
+        if (parent != nullptr && parent->kind == semantic::ObjectKind::kSticky)
+            selectedSticky = parent->id;
+    }
     for (const auto& candidate : semanticObjects_.allObjects()) {
+        if (candidate.kind == semantic::ObjectKind::kRichText && candidate.placement.parent_id &&
+            selectedSticky == *candidate.placement.parent_id && textLayoutService_) {
+            const auto* parent = semanticObjects_.find(*candidate.placement.parent_id);
+            const auto* sticky = parent ? std::get_if<semantic::StickyContent>(&parent->content) : nullptr;
+            const auto* rich = std::get_if<semantic::RichTextContent>(&candidate.content);
+            if (parent && sticky && rich) {
+                const auto* overrideTransform = transformOverrides_.find(parent->id);
+                const auto visualTransform = overrideTransform != nullptr
+                    ? *overrideTransform : parent->transform;
+                const auto layout = textLayoutService_->resolveStickyLabel(candidate.id, *rich, *sticky, true,
+                                                                            visualTransform);
+                if (layout && layout->overflow) {
+                    const auto& transform = visualTransform;
+                    const double det = transform.a * transform.d - transform.b * transform.c;
+                    if (std::isfinite(det) && std::abs(det) >= 1.0e-12) {
+                        const double dx = point.first - transform.tx, dy = point.second - transform.ty;
+                        // Sticky layout snapshots use world-size coordinates
+                        // so text can be inverse-scaled like Shape labels.
+                        // The inverse transform returns Sticky-local
+                        // coordinates.  resolveStickyLabel stores its
+                        // affordance in visible/world-size label space, so
+                        // convert once by the current basis before testing.
+                        const float sx = std::max(0.001F,
+                            std::hypot(static_cast<float>(transform.a),
+                                       static_cast<float>(transform.b)));
+                        const float sy = std::max(0.001F,
+                            std::hypot(static_cast<float>(transform.c),
+                                       static_cast<float>(transform.d)));
+                        const float px = static_cast<float>((transform.d * dx - transform.c * dy) / det) * sx;
+                        const float py = static_cast<float>((transform.a * dy - transform.b * dx) / det) * sy;
+                        constexpr float kExpandHitSlop = 10.0F;
+                        if (px >= layout->expandButton.left - kExpandHitSlop &&
+                            px <= layout->expandButton.right + kExpandHitSlop &&
+                            py >= layout->expandButton.top - kExpandHitSlop &&
+                            py <= layout->expandButton.bottom + kExpandHitSlop) {
+                            shapeExpandPointerKeys_.insert(sample.key);
+                            (void)expandShapeLabel(parent->id);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
         const auto* shape = std::get_if<semantic::ShapeContent>(&candidate.content);
         if (candidate.kind != semantic::ObjectKind::kShape || !shape || !shape->label ||
             !textWritable(candidate.id)) continue;
@@ -165,8 +255,21 @@ std::optional<semantic::ObjectRecord> CanvasEditingRuntime::textPresentation() {
     const auto state = interaction_->textSession()->read();
     auto record = interaction_->textSession()->presentation();
     if (!record) return {};
-    if (const auto* current = semanticObjects_.find(record->id))
+    if (const auto* current = semanticObjects_.find(record->id)) {
         record->transform = current->transform;
+        if (current->kind == semantic::ObjectKind::kRichText && current->placement.parent_id) {
+            if (const auto* parent = semanticObjects_.find(*current->placement.parent_id)) {
+                const auto& p = parent->transform;
+                const auto& c = current->transform;
+                record->transform = {p.a * c.a + p.c * c.b,
+                                     p.b * c.a + p.d * c.b,
+                                     p.a * c.c + p.c * c.d,
+                                     p.b * c.c + p.d * c.d,
+                                     p.a * c.tx + p.c * c.ty + p.tx,
+                                     p.b * c.tx + p.d * c.ty + p.ty};
+            }
+        }
+    }
     // Native preedit is only a presentation. It can expand the drawn Shape,
     // but cancellation must leave canonical geometry and history untouched.
     if (state.composition)
@@ -196,20 +299,39 @@ CanvasEditingRuntime::textGeometry(const runtime::CanvasTargetKey& target) {
         shape != nullptr && shape->label.has_value()) content = &*shape->label;
     const auto* shape = std::get_if<semantic::ShapeContent>(&record->content);
     if (content == nullptr && !shape) return out;
+    const semantic::StickyContent* sticky = nullptr;
+    if (!shape && record->placement.parent_id) {
+        if (const auto* parent = semanticObjects_.find(*record->placement.parent_id))
+            sticky = std::get_if<semantic::StickyContent>(&parent->content);
+    }
     const auto geometry = shape
         ? textLayoutService_->shapeEditingGeometry(*record, start, length)
-        : textLayoutService_->editingGeometry(record->id, *content, start, length);
-    out.available = geometry.available;
-    out.diagnostics = geometry.diagnostics;
+        : sticky != nullptr
+            ? textLayoutService_->stickyEditingGeometry(
+                  record->id, *content, *sticky, start, length, std::nullopt,
+                  [&]() {
+                    if (record->placement.parent_id) {
+                      if (const auto* parent = semanticObjects_.find(*record->placement.parent_id))
+                        return parent->transform;
+                    }
+                    return semantic::Transform2D{};
+                  }())
+            : textLayoutService_->editingGeometry(record->id, *content, start, length);
+    auto adjustedGeometry = geometry;
+    out.available = adjustedGeometry.available;
+    out.diagnostics = adjustedGeometry.diagnostics;
     out.token = {state.token,
                  target,
                  cameraGeneration(),
-                 geometry.layoutIdentity + ":" + std::to_string(start) + ":" +
+                     adjustedGeometry.layoutIdentity + ":" + std::to_string(start) + ":" +
                      std::to_string(length)};
     const auto view = viewportController_->state();
     const auto t = record->transform;
-    const float labelScaleX = shape ? std::max(0.001F, std::hypot(static_cast<float>(t.a), static_cast<float>(t.b))) : 1.0F;
-    const float labelScaleY = shape ? std::max(0.001F, std::hypot(static_cast<float>(t.c), static_cast<float>(t.d))) : 1.0F;
+    const bool stickyLabel = !shape && sticky != nullptr;
+    const float labelScaleX = (shape || stickyLabel)
+        ? std::max(0.001F, std::hypot(static_cast<float>(t.a), static_cast<float>(t.b))) : 1.0F;
+    const float labelScaleY = (shape || stickyLabel)
+        ? std::max(0.001F, std::hypot(static_cast<float>(t.c), static_cast<float>(t.d))) : 1.0F;
     const auto quad = [&](foundation::WorldRect r) {
         std::array<float, 8> q{};
         const std::array<foundation::WorldPoint, 4> points{
@@ -224,8 +346,8 @@ CanvasEditingRuntime::textGeometry(const runtime::CanvasTargetKey& target) {
         return q;
     };
     if (out.available) {
-        out.caret = quad(geometry.caret);
-        for (const auto& r : geometry.selection)
+        out.caret = quad(adjustedGeometry.caret);
+        for (const auto& r : adjustedGeometry.selection)
             out.selection.push_back(quad(r));
     }
     return out;
@@ -323,7 +445,8 @@ bool CanvasEditingRuntime::beginShapeTextEditAt(float x, float y,
         !textWritable(expected) || hitTextAtView(x, y) != expected)
         return false;
     const auto* record = semanticObjects_.find(expected);
-    if (!record || record->kind != semantic::ObjectKind::kShape)
+    if (!record || (record->kind != semantic::ObjectKind::kShape &&
+                    record->kind != semantic::ObjectKind::kSticky))
         return false;
 
     runtime::TextIntent edit;
@@ -374,7 +497,8 @@ bool CanvasEditingRuntime::observeTouchTextTap(const input::PointerSample& sampl
         const auto object = hitTextAtView(sample.x, sample.y);
         const auto* record = object.isZero() ? nullptr : semanticObjects_.find(object);
         touchTapContacts_.insert_or_assign(
-            sample.key, TouchTapContact{record && record->kind == semantic::ObjectKind::kShape
+            sample.key, TouchTapContact{record && (record->kind == semantic::ObjectKind::kShape ||
+                                                   record->kind == semantic::ObjectKind::kSticky)
                                             ? object : semantic::ObjectId{},
                                         sample.x, sample.y, sample.timestampNs, false});
         return false;

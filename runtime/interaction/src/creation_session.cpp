@@ -26,6 +26,7 @@ bool CreationSession::begin(input::PointerKey pointer, CreationPreset preset, Cr
       viewport.right <= viewport.left || viewport.bottom <= viewport.top || active()) return false;
   pointer_ = pointer; objectSeed_ = objectSeed; preset_ = preset; style_ = std::move(style); viewport_ = viewport;
   preview_ = {}; preview_.active = true; preview_.preset = preset; preview_.start = start; preview_.end = start; preview_.viewport = viewport;
+  snappedEndpoint_.reset();
   preview_.record.id = makeId(objectSeed); preview_.record.placement.order_key = makeOrder(objectSeed); preview_.record.properties = style_.properties;
   return rebuild(start);
 }
@@ -38,6 +39,7 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
   preview_.valid = false;
   preview_.snapped = false;
   preview_.guides.clear();
+  snappedEndpoint_.reset();
   const auto start = preview_.start;
   preview_.end = end;
   foundation::WorldPoint snappedEnd = end;
@@ -54,7 +56,8 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
   auto extent = rebuildExtent(snappedEnd);
   const bool shapePreset = preset_ == CreationPreset::kRectangle ||
       preset_ == CreationPreset::kEllipse || preset_ == CreationPreset::kTriangle;
-  if ((shapePreset && (extent[2] <= std::numeric_limits<float>::epsilon() ||
+  const bool boxPreset = shapePreset || preset_ == CreationPreset::kSticky;
+  if ((boxPreset && (extent[2] <= std::numeric_limits<float>::epsilon() ||
                        extent[3] <= std::numeric_limits<float>::epsilon())) ||
       (!shapePreset && extent[2] <= std::numeric_limits<float>::epsilon() &&
                        extent[3] <= std::numeric_limits<float>::epsilon())) {
@@ -94,6 +97,14 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
       if (!center && !endpointFeature) return;
       endpoint += (center ? 2.0F : 1.0F) * candidate->correction / snapScale_;
       preview_.snapped = true;
+      // The movable endpoint is the only endpoint that can be attached by a
+      // drag.  Preserve the target identity while the resolver supplies the
+      // exact edge/center correction; the semantic anchor remains automatic.
+      if ((preset_ == CreationPreset::kLine || preset_ == CreationPreset::kArrow) &&
+          !snappedEndpoint_.has_value()) {
+        snappedEndpoint_ = semantic::AttachedEndpoint{
+            candidate->targetObjectId, semantic::AutoPerimeterAnchor{}};
+      }
     };
     apply(resolved.x, true);
     apply(resolved.y, false);
@@ -116,7 +127,15 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
     extent = rebuildExtent(snappedEnd);
   }
   preview_.end = snappedEnd;
-  if (shapePreset) {
+  if (preset_ == CreationPreset::kSticky) {
+    record.kind = semantic::ObjectKind::kSticky;
+    record.kind_version = 1U;
+    record.transform = {};
+    record.transform.tx = extent[0];
+    record.transform.ty = extent[1];
+    const float side = std::max(extent[2], extent[3]);
+    record.content = semantic::StickyContent{side, side};
+  } else if (shapePreset) {
     record.kind = semantic::ObjectKind::kShape;
     record.kind_version = preset_ == CreationPreset::kTriangle ? 2U : 1U;
     record.transform = {};
@@ -129,10 +148,13 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
     record.kind = semantic::ObjectKind::kConnector;
     record.kind_version = 1U;
     record.transform = {};
+    semantic::ConnectorEndpoint endPoint{semantic::FreePointEndpoint{{snappedEnd.x, snappedEnd.y}}};
+    if (endAttachment_.has_value()) endPoint.value = *endAttachment_;
+    else if (snappedEndpoint_.has_value()) endPoint.value = *snappedEndpoint_;
     record.content = semantic::ConnectorContent{
-        {semantic::FreePointEndpoint{{start.x, start.y}}},
-        {semantic::FreePointEndpoint{{snappedEnd.x, snappedEnd.y}}},
-        semantic::ConnectorRouting::kStraight};
+        {startAttachment_.has_value() ? semantic::ConnectorEndpoint{*startAttachment_}
+                                      : semantic::ConnectorEndpoint{semantic::FreePointEndpoint{{start.x, start.y}}}}, endPoint,
+        routing_};
     if (preset_ == CreationPreset::kArrow)
       record.properties.entries.push_back({0x201U, semantic::ConnectorDecorationValue::kArrow});
   }
@@ -148,5 +170,5 @@ std::optional<CreationCommit> CreationSession::finish(input::PointerKey pointer)
   return out;
 }
 bool CreationSession::cancel(input::PointerKey pointer) noexcept { if (!active() || pointer != pointer_) return false; clear(); return true; }
-void CreationSession::clear() noexcept { pointer_ = {}; objectSeed_ = 0; style_ = {}; preview_ = {}; snapResolver_.reset(); }
+void CreationSession::clear() noexcept { pointer_ = {}; objectSeed_ = 0; style_ = {}; preview_ = {}; snappedEndpoint_.reset(); startAttachment_.reset(); endAttachment_.reset(); snapResolver_.reset(); }
 }  // namespace canvas::interaction

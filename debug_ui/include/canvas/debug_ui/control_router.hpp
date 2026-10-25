@@ -52,6 +52,15 @@ class DebugControlRouter final {
   canvas::runtime::ProductControlReceipt redo() noexcept;
   canvas::runtime::ProductControlReceipt setCreationPreset(
       canvas::runtime::CanvasCreationPreset preset) noexcept;
+  canvas::runtime::StickyCommandReceipt createSticky() noexcept;
+  canvas::runtime::ConnectorCommandReceipt createConnector() noexcept;
+  canvas::runtime::ConnectorCommandReceipt setConnectorRouting(canvas::semantic::ConnectorRouting, bool selected) noexcept;
+  [[nodiscard]] canvas::semantic::ConnectorRouting connectorRoutingPreset() const;
+  [[nodiscard]] canvas::runtime::StickySnapshot selectedSticky() const;
+  [[nodiscard]] canvas::runtime::ConnectorSnapshot selectedConnector() const;
+  [[nodiscard]] const std::string& connectorStickyStatus() const noexcept {
+    return connectorStickyStatus_;
+  }
   canvas::runtime::ProductControlReceipt panBy(float dx, float dy) noexcept;
   canvas::runtime::ProductControlReceipt zoomAt(float anchorX, float anchorY,
                                                  float scaleDelta) noexcept;
@@ -110,6 +119,7 @@ class DebugControlRouter final {
   };
   std::optional<ImageFileRequest> imageFileRequest_;
   std::string imageStatus_;
+  std::string connectorStickyStatus_;
   std::unordered_map<std::uint64_t, PendingAxiom> pendingAxiom_;
   std::unordered_map<std::uint64_t, PendingSurface> pendingSurface_;
   std::unordered_map<canvas::runtime::CanvasControlReceiptKey, std::string,

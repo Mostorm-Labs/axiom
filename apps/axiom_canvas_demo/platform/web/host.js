@@ -145,6 +145,14 @@ export const ready = globalThis.axiomMinimalReady = (async () => {
     catch (error) { cancelInputs('failed-down'); record({kind:'failed-down',error:String(error)}); }
   });
   canvas.addEventListener('pointermove', event => forward(event,1));
+  canvas.addEventListener('pointermove', event => {
+    if (event.buttons !== 0) return;
+    const rect = canvas.getBoundingClientRect();
+    module._axiom_web_hover(handle,
+      (event.clientX - rect.left) * logicalWidth / rect.width,
+      (event.clientY - rect.top) * logicalHeight / rect.height);
+    schedule();
+  });
   canvas.addEventListener('pointerup', event => forward(event,2));
   canvas.addEventListener('pointercancel', event => forward(event,3));
   canvas.addEventListener('lostpointercapture', event => {

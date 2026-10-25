@@ -25,6 +25,7 @@ using canvas::semantic::SplitStrokesOp;
 using canvas::semantic::StrokeSplit;
 using canvas::semantic::Transform2D;
 using canvas::semantic::TransformItem;
+using canvas::semantic::SetConnectorContentOp;
 
 ObjectId id(std::uint64_t value) { return ObjectId::fromUint64(value); }
 Operation operation(std::uint64_t value, canvas::semantic::OperationPayload payload) {
@@ -97,6 +98,23 @@ void rejected_compensation_is_retryable_without_cursor_advance() {
     assert(history.canUndo());
     assert(!history.canRedo());
     assert(submit.calls == 1);
+}
+
+void connector_content_compensation_is_supported() {
+    Submit submit;
+    EditorHistory history(submit);
+    canvas::semantic::ConnectorContent before{};
+    before.start.value = canvas::semantic::FreePointEndpoint{{0.0, 0.0}};
+    before.end.value = canvas::semantic::FreePointEndpoint{{1.0, 1.0}};
+    auto after = before;
+    after.routing = canvas::semantic::ConnectorRouting::kOrthogonal;
+    assert(history.record(operation(30, SetConnectorContentOp{id(4), after}),
+                          {operation(31, SetConnectorContentOp{id(4), before})}));
+    assert(history.undo());
+    assert(submit.last.size() == 1U);
+    assert(std::get<SetConnectorContentOp>(submit.last.front().payload).content == before);
+    assert(history.redo());
+    assert(std::get<SetConnectorContentOp>(submit.last.front().payload).content == after);
 }
 
 void mask_history_preserves_typed_payload() {
@@ -253,5 +271,6 @@ int main(int argc, char**) {
     delete_and_split_preimages_submit_exact_restore_batches();
     fresh_local_intention_clears_redo_and_duplicate_allocator_identity_fails_closed();
     every_frozen_family_redoes_the_original_typed_operation();
+    connector_content_compensation_is_supported();
     return 0;
 }

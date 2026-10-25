@@ -442,6 +442,21 @@ int main() {
   assert(facade.readRuntimeState().control.creationMode);
   assert(facade.readRuntimeState().control.creationPreset ==
          static_cast<std::uint8_t>(canvas::runtime::CanvasCreationPreset::kRectangle));
+  const auto sticky = realRouter.createSticky();
+  assert(sticky.state == canvas::runtime::ConnectorCommandState::kApplied);
+  assert(composition.semanticObjectCount() == 1U);
+  assert(realRouter.setConnectorRouting(canvas::semantic::ConnectorRouting::kOrthogonal,false).state==
+         canvas::runtime::ConnectorCommandState::kApplied);
+  assert(facade.readConnectorRoutingPreset()==canvas::semantic::ConnectorRouting::kOrthogonal);
+  const auto connector = realRouter.createConnector();
+  assert(connector.state == canvas::runtime::ConnectorCommandState::kApplied);
+  assert(composition.semanticObjectCount() == 2U);
+  for(unsigned q=0;q<16;++q)assert(composition.ownerPump());
+  const auto routeReadback=facade.readConnectorState(connector.objectId);
+  assert(routeReadback.available&&routeReadback.routeStatus==canvas::runtime::ConnectorRouteStatus::kReady);
+  assert(routeReadback.content.routing==canvas::semantic::ConnectorRouting::kOrthogonal);
+  assert(realRouter.setConnectorRouting(canvas::semantic::ConnectorRouting::kStraight,false).state==
+         canvas::runtime::ConnectorCommandState::kApplied);
   assert(composition.registerSource(1U));
   canvas::input::PlatformPointerBatch down;
   down.samples.push_back({1U, 7U, 1U, 1'000U, 20.0F, 20.0F, 0.5F, 0.0F, 0.0F,

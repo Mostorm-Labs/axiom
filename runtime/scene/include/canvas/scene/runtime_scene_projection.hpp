@@ -40,7 +40,7 @@ struct RuntimeSceneProjection final {
 };
 
 [[nodiscard]] foundation::Result<RuntimeSceneProjection> projectSemanticScene(
-    const semantic::SemanticReadView& view, text::RichTextLayoutService* textService = nullptr);
+    const semantic::SemanticReadView& view, text::RichTextLayoutService* textService = nullptr, bool deferRoutes = false);
 
 } // namespace canvas::scene
 

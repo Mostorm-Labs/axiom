@@ -33,6 +33,6 @@ struct FullMaterializedScene final {
 };
 
 foundation::Result<FullMaterializedScene> materializeFullScene(
-    const semantic::SemanticReadView& view, text::RichTextLayoutService* textService = nullptr);
+    const semantic::SemanticReadView& view, text::RichTextLayoutService* textService = nullptr, bool deferRoutes = false);
 
 } // namespace canvas::internal

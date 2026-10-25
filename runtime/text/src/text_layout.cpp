@@ -537,6 +537,72 @@ std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveShape(
                              showPlaceholder);
 }
 
+std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveStickyLabel(
+    foundation::ObjectId id, const semantic::RichTextContent& canonical,
+    const semantic::StickyContent& sticky, bool showPlaceholder,
+    const semantic::Transform2D& transform) {
+    constexpr float padding = 12.0F;
+    const float sx = basisX(transform), sy = basisY(transform);
+    const float worldWidth = static_cast<float>(sticky.width) * sx;
+    const float worldHeight = static_cast<float>(sticky.height) * sy;
+    const float width = std::max(1.0F, worldWidth - 2.0F * padding);
+    const float height = std::max(1.0F, worldHeight - 2.0F * padding);
+    semantic::RichTextContent display = canonical;
+    bool empty = true;
+    for (const auto& paragraph : display.document.paragraphs)
+        for (const auto& run : paragraph.runs) empty = empty && run.text.empty();
+    const bool placeholder = showPlaceholder && empty;
+    if (placeholder) {
+        semantic::TextStyle style;
+        style.font_size = 16.0;
+        style.weight = 400;
+        style.color = {0.25F, 0.25F, 0.25F, 1.0F};
+        if (!impl_->descriptors.empty()) style.font_resource_id = impl_->descriptors.begin()->second.resourceId;
+        semantic::Paragraph paragraph;
+        paragraph.id = foundation::ObjectId::fromUint64(0x535449434B595445ULL);
+        paragraph.style.alignment = semantic::ParagraphAlignment::kLeft;
+        paragraph.runs = {{"Type text", style}};
+        display.document.paragraphs = {std::move(paragraph)};
+    }
+    display.layout = semantic::RichTextLayout{width};
+    const auto previous = impl_->context;
+    impl_->context.width = width;
+    impl_->context.height = height;
+    impl_->context.maxLines = 0;
+    // First lay out at the actual Sticky width.  This is the geometry users
+    // see after wrapping; using a 4096px "natural" width here loses the
+    // line-count information needed to apply ellipsis when the Sticky is
+    // manually reduced.
+    const auto fittedNatural = resolve(id, display);
+    const bool verticalOverflow = fittedNatural->localBounds.bottom > height + 0.5F;
+    const bool horizontalOverflow = fittedNatural->lines.size() == 1U &&
+        fittedNatural->localBounds.right > width + 0.5F;
+    if (verticalOverflow || horizontalOverflow) {
+        std::size_t lines = 0;
+        for (const auto& line : fittedNatural->lines) {
+            if (line.bounds.bottom > height + 0.5F) break;
+            ++lines;
+        }
+        impl_->context.maxLines = std::max<std::size_t>(1, lines);
+    }
+    const auto fitted = resolve(id, display);
+    impl_->context = previous;
+    auto result = std::make_shared<TextLayoutSnapshot>(*fitted);
+    result->placeholder = placeholder;
+    result->labelScaleX = 1.0F / sx;
+    result->labelScaleY = 1.0F / sy;
+    result->labelViewport = {padding, padding, worldWidth - padding,
+                             worldHeight - padding};
+    result->expandButton = {worldWidth - 28.0F, worldHeight - 28.0F,
+                            worldWidth - padding, worldHeight - padding};
+    result->labelOffsetX = padding;
+    result->labelOffsetY = padding;
+    offsetSnapshot(*result, padding, padding);
+    result->overflow = verticalOverflow || horizontalOverflow || fitted->overflow;
+    result->digest = snapshotDigest(*result);
+    return result;
+}
+
 EditingGeometry RichTextLayoutService::shapeEditingGeometry(
     const semantic::ObjectRecord& record, std::uint32_t start, std::uint32_t length,
     std::optional<foundation::WorldPoint> hit) {
@@ -642,6 +708,66 @@ EditingGeometry RichTextLayoutService::editingGeometry(foundation::ObjectId id,c
     (void)start;(void)length;(void)hit;
 #endif
     return out;
+}
+
+EditingGeometry RichTextLayoutService::stickyEditingGeometry(
+    foundation::ObjectId id, const semantic::RichTextContent& canonical,
+    const semantic::StickyContent& sticky, std::uint32_t start,
+    std::uint32_t length, std::optional<foundation::WorldPoint> hit,
+    const semantic::Transform2D& transform) {
+    constexpr float padding = 12.0F;
+    const float sx = basisX(transform), sy = basisY(transform);
+    const float worldWidth = static_cast<float>(sticky.width) * sx;
+    const float worldHeight = static_cast<float>(sticky.height) * sy;
+    const float width = std::max(1.0F, worldWidth - 2.0F * padding);
+    auto display = canonical;
+    display.layout = semantic::RichTextLayout{width};
+    const auto painted = resolveStickyLabel(id, canonical, sticky, false, transform);
+    const auto previous = impl_->context;
+    impl_->context = painted->context;
+    if (hit) {
+        hit->x = hit->x * sx - padding;
+        hit->y = hit->y * sy - padding;
+    }
+    auto geometry = editingGeometry(id, display, start, length, hit);
+    impl_->context = previous;
+    geometry.layoutIdentity = painted->digest;
+    geometry.caret.left += padding;
+    geometry.caret.right += padding;
+    geometry.caret.top += padding;
+    geometry.caret.bottom += padding;
+    for (auto& selection : geometry.selection) {
+        selection.left += padding;
+        selection.right += padding;
+        selection.top += padding;
+        selection.bottom += padding;
+    }
+    const float maxX = std::max(padding, worldWidth - padding);
+    const float maxY = std::max(padding, worldHeight - padding);
+    if (!geometry.available || painted->lines.empty()) {
+        if (painted->lines.empty()) {
+            geometry.caret = {padding, padding, padding + 1.0F,
+                              std::min(maxY, padding + 16.0F)};
+        } else {
+            const auto& line = painted->lines.back();
+            geometry.caret = {std::min(maxX, std::max(padding, line.bounds.right)),
+                              std::min(maxY, std::max(padding, line.bounds.top)),
+                              std::min(maxX, std::max(padding, line.bounds.right)) + 1.0F,
+                              std::min(maxY, std::max(padding, line.bounds.bottom))};
+        }
+        geometry.available = painted->diagnostics.empty();
+    }
+    if (geometry.available) {
+        const float caretWidth = std::max(1.0F, geometry.caret.right - geometry.caret.left);
+        const float caretHeight = std::max(1.0F, geometry.caret.bottom - geometry.caret.top);
+        geometry.caret.left = std::min(maxX - std::min(1.0F, caretWidth),
+                                       std::max(padding, geometry.caret.left));
+        geometry.caret.right = std::min(maxX, geometry.caret.left + caretWidth);
+        geometry.caret.top = std::min(maxY - std::min(1.0F, caretHeight),
+                                      std::max(padding, geometry.caret.top));
+        geometry.caret.bottom = std::min(maxY, geometry.caret.top + caretHeight);
+    }
+    return geometry;
 }
 LayoutMetrics RichTextLayoutService::metrics() const noexcept { return impl_->counters; }
 }

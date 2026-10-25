@@ -194,6 +194,11 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_cancel_all(std::uintptr_t h) {
     v->cancel();
     return 1;
 }
+EMSCRIPTEN_KEEPALIVE int axiom_web_hover(std::uintptr_t h, float x, float y) {
+    auto* v = instance(h);
+    if (!v || !std::isfinite(x) || !std::isfinite(y)) return 0;
+    return v->lifecycle.composition().hoverSelectionAtViewPoint(x, y) ? 1 : 0;
+}
 EMSCRIPTEN_KEEPALIVE int
 axiom_web_cancel_pointer(std::uintptr_t h, std::uint32_t s, std::uint32_t p, std::uint64_t g) {
     auto* v = instance(h);
@@ -407,7 +412,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_control(
             payload.eraser.diameterLogicalPx = runtime::OptionPatch<float>::set(b);
         break;
     case K::kSelectCreationPreset:
-        if (a < 0 || a > 4)
+        if (a < 0 || a > 5)
             return 0;
         payload.creationPreset = static_cast<runtime::CanvasCreationPreset>(static_cast<int>(a));
         break;

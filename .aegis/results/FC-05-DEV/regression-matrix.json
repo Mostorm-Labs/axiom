@@ -1,0 +1,21 @@
+{
+  "schema": "fc05-regression-matrix-v1",
+  "source_revision": "1f81bee484f1ab719a23973a24f5e644525e09c4",
+  "focused_windows_build": "PASS",
+  "focused_windows_tests": "129/129 PASS",
+  "web_build": "BLOCKED_ENVIRONMENT",
+  "web_blocker": "Emscripten 6.0.6 clang frontend access violation in locked protobuf parse_context.h",
+  "selected_regressions": [
+    "FC01Shape2Apply 12/12",
+    "ConnectorStatefulValidation 17/17",
+    "OperationSpecificStatefulValidation 78/78",
+    "HierarchyCapabilityValidation 16/16",
+    "FC05Route 3/3",
+    "G4EditorHistory PASS",
+    "FC00XRuntimeFacade PASS",
+    "FC00XMinimalRuntimeHost PASS",
+    "PX0RuntimeFacadeContract PASS"
+  ],
+  "status": "PARTIAL_BLOCKED",
+  "physical_status": "PHYSICAL_PENDING"
+}

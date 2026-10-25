@@ -1,0 +1,325 @@
+Test project C:/Users/Chado/.codex/worktrees/fc05-p32/out/fc05-windows
+        Start 169: FC01Shape2Apply.TypedInsertUsesUniversalTupleValidation
+  1/157 Test #169: FC01Shape2Apply.TypedInsertUsesUniversalTupleValidation ............................................   Passed    0.04 sec
+        Start 170: FC01Shape2Apply.TypedIngressChecksEnvelopeBeforeMutation
+  2/157 Test #170: FC01Shape2Apply.TypedIngressChecksEnvelopeBeforeMutation ...........................................   Passed    0.03 sec
+        Start 171: FC01Shape2Apply.TypedIngressNormalizesBeforeIdempotency
+  3/157 Test #171: FC01Shape2Apply.TypedIngressNormalizesBeforeIdempotency ............................................   Passed    0.03 sec
+        Start 172: FC01Shape2Apply.MixedBatchRejectsAtomicallyAndFailedReplayNeverReady
+  4/157 Test #172: FC01Shape2Apply.MixedBatchRejectsAtomicallyAndFailedReplayNeverReady ...............................   Passed    0.03 sec
+        Start 173: FC01Shape2Apply.SnapshotTriangleRequiresExplicitReaderCapability
+  5/157 Test #173: FC01Shape2Apply.SnapshotTriangleRequiresExplicitReaderCapability ...................................   Passed    0.04 sec
+        Start 174: FC01Shape2Apply.CapableSnapshotRoundTripAndLegacyWriterRefusal
+  6/157 Test #174: FC01Shape2Apply.CapableSnapshotRoundTripAndLegacyWriterRefusal .....................................   Passed    0.04 sec
+        Start 175: FC01Shape2Apply.FrozenIndependentOperationGoldenMatchesProductionEncoding
+  7/157 Test #175: FC01Shape2Apply.FrozenIndependentOperationGoldenMatchesProductionEncoding ..........................   Passed    0.04 sec
+        Start 176: FC01Shape2Apply.GoldenRootsAndNestedUnknownWireFailClosed
+  8/157 Test #176: FC01Shape2Apply.GoldenRootsAndNestedUnknownWireFailClosed ..........................................   Passed    0.03 sec
+        Start 181: FC05Connector.TriangleShapeV2IsConnectable
+  9/157 Test #181: FC05Connector.TriangleShapeV2IsConnectable .........................................................   Passed    0.04 sec
+        Start 182: FC05Connector.RichShapeV3IsConnectable
+ 10/157 Test #182: FC05Connector.RichShapeV3IsConnectable .............................................................   Passed    0.03 sec
+        Start 183: FC05Connector.ShapeV1TriangleAndShapeV3WithoutLabelAreRejected
+ 11/157 Test #183: FC05Connector.ShapeV1TriangleAndShapeV3WithoutLabelAreRejected .....................................   Passed    0.03 sec
+        Start 184: FC05Connector.StablePortOutsideReleasedNamespaceIsRejected
+ 12/157 Test #184: FC05Connector.StablePortOutsideReleasedNamespaceIsRejected .........................................   Passed    0.03 sec
+        Start 220: ConnectorStatefulValidation.FreeFreeIsValid
+ 13/157 Test #220: ConnectorStatefulValidation.FreeFreeIsValid ........................................................   Passed    0.04 sec
+        Start 221: ConnectorStatefulValidation.V1ConnectableKindsAcceptAutoPerimeter
+ 14/157 Test #221: ConnectorStatefulValidation.V1ConnectableKindsAcceptAutoPerimeter ..................................   Passed    0.03 sec
+        Start 222: ConnectorStatefulValidation.V1ConnectableKindsAcceptStablePorts1Through4
+ 15/157 Test #222: ConnectorStatefulValidation.V1ConnectableKindsAcceptStablePorts1Through4 ...........................   Passed    0.03 sec
+        Start 223: ConnectorStatefulValidation.MissingAttachedTargetReturnsInvalidReference
+ 16/157 Test #223: ConnectorStatefulValidation.MissingAttachedTargetReturnsInvalidReference ...........................   Passed    0.03 sec
+        Start 224: ConnectorStatefulValidation.StagedDeletedTargetReturnsInvalidReference
+ 17/157 Test #224: ConnectorStatefulValidation.StagedDeletedTargetReturnsInvalidReference .............................   Passed    0.03 sec
+        Start 225: ConnectorStatefulValidation.UnsupportedTargetKindVersionReturnsInvalidKindVersion
+ 18/157 Test #225: ConnectorStatefulValidation.UnsupportedTargetKindVersionReturnsInvalidKindVersion ..................   Passed    0.03 sec
+        Start 226: ConnectorStatefulValidation.V1NonConnectableKindsReturnConnectorInvalid
+ 19/157 Test #226: ConnectorStatefulValidation.V1NonConnectableKindsReturnConnectorInvalid ............................   Passed    0.03 sec
+        Start 227: ConnectorStatefulValidation.SameBatchStagedConnectableTargetIsVisible
+ 20/157 Test #227: ConnectorStatefulValidation.SameBatchStagedConnectableTargetIsVisible ..............................   Passed    0.03 sec
+        Start 228: ConnectorStatefulValidation.StartInvalidReferenceWinsOverEndNonConnectable
+ 21/157 Test #228: ConnectorStatefulValidation.StartInvalidReferenceWinsOverEndNonConnectable .........................   Passed    0.03 sec
+        Start 229: ConnectorStatefulValidation.StartNonConnectableWinsOverEndInvalidReference
+ 22/157 Test #229: ConnectorStatefulValidation.StartNonConnectableWinsOverEndInvalidReference .........................   Passed    0.03 sec
+        Start 230: ConnectorStatefulValidation.StablePortApplicabilityUsesActualTargetKindVersion
+ 23/157 Test #230: ConnectorStatefulValidation.StablePortApplicabilityUsesActualTargetKindVersion .....................   Passed    0.03 sec
+        Start 231: ConnectorStatefulValidation.ConnectableHelperMatchesIndependentV1Matrix
+ 24/157 Test #231: ConnectorStatefulValidation.ConnectableHelperMatchesIndependentV1Matrix ............................   Passed    0.03 sec
+        Start 232: ConnectorStatefulValidation.ReferenceAndIndexedStoresHaveDecisionParity
+ 25/157 Test #232: ConnectorStatefulValidation.ReferenceAndIndexedStoresHaveDecisionParity ............................   Passed    0.03 sec
+        Start 233: ConnectorStatefulValidation.ReferenceAndIndexedStoresHaveStablePortDecisionParity
+ 26/157 Test #233: ConnectorStatefulValidation.ReferenceAndIndexedStoresHaveStablePortDecisionParity ..................   Passed    0.02 sec
+        Start 234: ConnectorStatefulValidation.AttachedEndpointsUseAtMostOneStagedLookupAndNoFullScan
+ 27/157 Test #234: ConnectorStatefulValidation.AttachedEndpointsUseAtMostOneStagedLookupAndNoFullScan .................   Passed    0.02 sec
+        Start 235: ConnectorStatefulValidation.EvaluationDoesNotMutateReferenceStore
+ 28/157 Test #235: ConnectorStatefulValidation.EvaluationDoesNotMutateReferenceStore ..................................   Passed    0.02 sec
+        Start 236: ConnectorStatefulValidation.EvaluationDoesNotMutateIndexedStoreOrIndex
+ 29/157 Test #236: ConnectorStatefulValidation.EvaluationDoesNotMutateIndexedStoreOrIndex .............................   Passed    0.03 sec
+        Start 258: HierarchyCapabilityValidation.HCV_B01_RootShapeAccepts
+ 30/157 Test #258: HierarchyCapabilityValidation.HCV_B01_RootShapeAccepts .............................................   Passed    0.04 sec
+        Start 259: HierarchyCapabilityValidation.HCV_B02_GroupShapeAccepts
+ 31/157 Test #259: HierarchyCapabilityValidation.HCV_B02_GroupShapeAccepts ............................................   Passed    0.03 sec
+        Start 260: HierarchyCapabilityValidation.HCV_B03_GroupGroupAccepts
+ 32/157 Test #260: HierarchyCapabilityValidation.HCV_B03_GroupGroupAccepts ............................................   Passed    0.03 sec
+        Start 261: HierarchyCapabilityValidation.HCV_B04_GroupStickyAccepts
+ 33/157 Test #261: HierarchyCapabilityValidation.HCV_B04_GroupStickyAccepts ...........................................   Passed    0.03 sec
+        Start 262: HierarchyCapabilityValidation.HCV_B05_StickyRichTextAccepts
+ 34/157 Test #262: HierarchyCapabilityValidation.HCV_B05_StickyRichTextAccepts ........................................   Passed    0.03 sec
+        Start 263: HierarchyCapabilityValidation.HCV_B06_EmptyStickyAccepts
+ 35/157 Test #263: HierarchyCapabilityValidation.HCV_B06_EmptyStickyAccepts ...........................................   Passed    0.03 sec
+        Start 264: HierarchyCapabilityValidation.HCV_B07_StickyShapeRejects
+ 36/157 Test #264: HierarchyCapabilityValidation.HCV_B07_StickyShapeRejects ...........................................   Passed    0.03 sec
+        Start 265: HierarchyCapabilityValidation.HCV_B08_ShapeRichTextRejects
+ 37/157 Test #265: HierarchyCapabilityValidation.HCV_B08_ShapeRichTextRejects .........................................   Passed    0.02 sec
+        Start 266: HierarchyCapabilityValidation.HCV_B09_ConnectorShapeRejects
+ 38/157 Test #266: HierarchyCapabilityValidation.HCV_B09_ConnectorShapeRejects ........................................   Passed    0.03 sec
+        Start 267: HierarchyCapabilityValidation.HCV_B10_SecondStickyRichTextRejects
+ 39/157 Test #267: HierarchyCapabilityValidation.HCV_B10_SecondStickyRichTextRejects ..................................   Passed    0.03 sec
+        Start 268: HierarchyCapabilityValidation.HCV_B11_OrderingDoesNotChangeResult
+ 40/157 Test #268: HierarchyCapabilityValidation.HCV_B11_OrderingDoesNotChangeResult ..................................   Passed    0.02 sec
+        Start 269: HierarchyCapabilityValidation.HCV_B12_ExistingGroupParentAcceptsStagedChild
+ 41/157 Test #269: HierarchyCapabilityValidation.HCV_B12_ExistingGroupParentAcceptsStagedChild ........................   Passed    0.02 sec
+        Start 270: HierarchyCapabilityValidation.HCV_B13_ExistingEmptyStickyAcceptsStagedRichText
+ 42/157 Test #270: HierarchyCapabilityValidation.HCV_B13_ExistingEmptyStickyAcceptsStagedRichText .....................   Passed    0.03 sec
+        Start 271: HierarchyCapabilityValidation.HCV_B14_ExistingStickySecondRichTextRejects
+ 43/157 Test #271: HierarchyCapabilityValidation.HCV_B14_ExistingStickySecondRichTextRejects ..........................   Passed    0.03 sec
+        Start 272: HierarchyCapabilityValidation.HCV_B15_ReferenceIndexedParityAndNoMutation
+ 44/157 Test #272: HierarchyCapabilityValidation.HCV_B15_ReferenceIndexedParityAndNoMutation ..........................   Passed    0.02 sec
+        Start 273: HierarchyCapabilityValidation.HCV_B16_NoAllObjectsAndOverlayLookups
+ 45/157 Test #273: HierarchyCapabilityValidation.HCV_B16_NoAllObjectsAndOverlayLookups ................................   Passed    0.03 sec
+        Start 314: OperationSpecificStatefulValidation.FailureSentinelsAreNonEmpty
+ 46/157 Test #314: OperationSpecificStatefulValidation.FailureSentinelsAreNonEmpty ....................................   Passed    0.04 sec
+        Start 315: OperationSpecificStatefulValidation.StructuralPreconditionsCoverCanonicalFixtures
+ 47/157 Test #315: OperationSpecificStatefulValidation.StructuralPreconditionsCoverCanonicalFixtures ..................   Passed    0.03 sec
+        Start 316: OperationSpecificStatefulValidation.StructuralCaseMatrixUsesExactCanonicalPayloads
+ 48/157 Test #316: OperationSpecificStatefulValidation.StructuralCaseMatrixUsesExactCanonicalPayloads .................   Passed    0.04 sec
+        Start 317: OperationSpecificStatefulValidation.INS_B01_GroupAndShapeStagedTogetherSucceeds
+ 49/157 Test #317: OperationSpecificStatefulValidation.INS_B01_GroupAndShapeStagedTogetherSucceeds ....................   Passed    0.04 sec
+        Start 318: OperationSpecificStatefulValidation.INS_B02_ExistingCandidateIdentityRejects
+ 50/157 Test #318: OperationSpecificStatefulValidation.INS_B02_ExistingCandidateIdentityRejects .......................   Passed    0.03 sec
+        Start 319: OperationSpecificStatefulValidation.INS_B03_ConnectorAndStagedTargetSucceeds
+ 51/157 Test #319: OperationSpecificStatefulValidation.INS_B03_ConnectorAndStagedTargetSucceeds .......................   Passed    0.03 sec
+        Start 320: OperationSpecificStatefulValidation.INS_B04_ConnectorMissingAttachedTargetRejects
+ 52/157 Test #320: OperationSpecificStatefulValidation.INS_B04_ConnectorMissingAttachedTargetRejects ..................   Passed    0.03 sec
+        Start 321: OperationSpecificStatefulValidation.INS_B05_StickyShapeChildRejects
+ 53/157 Test #321: OperationSpecificStatefulValidation.INS_B05_StickyShapeChildRejects ................................   Passed    0.03 sec
+        Start 322: OperationSpecificStatefulValidation.INS_B06_StickyTwoRichTextChildrenRejects
+ 54/157 Test #322: OperationSpecificStatefulValidation.INS_B06_StickyTwoRichTextChildrenRejects .......................   Passed    0.03 sec
+        Start 323: OperationSpecificStatefulValidation.INS_B07_EmptyStickySucceeds
+ 55/157 Test #323: OperationSpecificStatefulValidation.INS_B07_EmptyStickySucceeds ....................................   Passed    0.03 sec
+        Start 324: OperationSpecificStatefulValidation.INS_B08_BadRecordRejectsWholeOutput
+ 56/157 Test #324: OperationSpecificStatefulValidation.INS_B08_BadRecordRejectsWholeOutput ............................   Passed    0.03 sec
+        Start 325: OperationSpecificStatefulValidation.PLC_B01_MoveShapeUnderGroupSucceeds
+ 57/157 Test #325: OperationSpecificStatefulValidation.PLC_B01_MoveShapeUnderGroupSucceeds ............................   Passed    0.03 sec
+        Start 326: OperationSpecificStatefulValidation.PLC_B02_MissingTargetRejects
+ 58/157 Test #326: OperationSpecificStatefulValidation.PLC_B02_MissingTargetRejects ...................................   Passed    0.03 sec
+        Start 327: OperationSpecificStatefulValidation.PLC_B03_MissingParentRejectsFromB3
+ 59/157 Test #327: OperationSpecificStatefulValidation.PLC_B03_MissingParentRejectsFromB3 .............................   Passed    0.03 sec
+        Start 328: OperationSpecificStatefulValidation.PLC_B04_BatchCycleRejectsFromB3
+ 60/157 Test #328: OperationSpecificStatefulValidation.PLC_B04_BatchCycleRejectsFromB3 ................................   Passed    0.03 sec
+        Start 329: OperationSpecificStatefulValidation.PLC_B05_MoveRichTextIntoEmptyStickySucceeds
+ 61/157 Test #329: OperationSpecificStatefulValidation.PLC_B05_MoveRichTextIntoEmptyStickySucceeds ....................   Passed    0.03 sec
+        Start 330: OperationSpecificStatefulValidation.PLC_B06_SecondRichTextIntoOccupiedStickyRejects
+ 62/157 Test #330: OperationSpecificStatefulValidation.PLC_B06_SecondRichTextIntoOccupiedStickyRejects ................   Passed    0.03 sec
+        Start 331: OperationSpecificStatefulValidation.PLC_B07_MoveShapeIntoStickyRejects
+ 63/157 Test #331: OperationSpecificStatefulValidation.PLC_B07_MoveShapeIntoStickyRejects .............................   Passed    0.03 sec
+        Start 332: OperationSpecificStatefulValidation.PLC_B08_MoveSoleRichTextOutLeavesEmptySticky
+ 64/157 Test #332: OperationSpecificStatefulValidation.PLC_B08_MoveSoleRichTextOutLeavesEmptySticky ...................   Passed    0.03 sec
+        Start 333: OperationSpecificStatefulValidation.PLC_B09_ValidFinalStateBatch
+ 65/157 Test #333: OperationSpecificStatefulValidation.PLC_B09_ValidFinalStateBatch ...................................   Passed    0.03 sec
+        Start 334: OperationSpecificStatefulValidation.TRN_B01_ValidTargetProducesReplacement
+ 66/157 Test #334: OperationSpecificStatefulValidation.TRN_B01_ValidTargetProducesReplacement .........................   Passed    0.03 sec
+        Start 335: OperationSpecificStatefulValidation.TRN_B02_MissingTargetRejects
+ 67/157 Test #335: OperationSpecificStatefulValidation.TRN_B02_MissingTargetRejects ...................................   Passed    0.03 sec
+        Start 336: OperationSpecificStatefulValidation.TRN_B03_LateMissingTargetLeavesWholeOutputUnchanged
+ 68/157 Test #336: OperationSpecificStatefulValidation.TRN_B03_LateMissingTargetLeavesWholeOutputUnchanged ............   Passed    0.03 sec
+        Start 337: OperationSpecificStatefulValidation.SIZE_B01_ShapeSucceeds
+ 69/157 Test #337: OperationSpecificStatefulValidation.SIZE_B01_ShapeSucceeds .........................................   Passed    0.03 sec
+        Start 338: OperationSpecificStatefulValidation.SIZE_B02_ImageSucceedsAndPreservesNonSizeContent
+ 70/157 Test #338: OperationSpecificStatefulValidation.SIZE_B02_ImageSucceedsAndPreservesNonSizeContent ...............   Passed    0.03 sec
+        Start 339: OperationSpecificStatefulValidation.SIZE_B03_StickySucceeds
+ 71/157 Test #339: OperationSpecificStatefulValidation.SIZE_B03_StickySucceeds ........................................   Passed    0.03 sec
+        Start 340: OperationSpecificStatefulValidation.SIZE_B04_GroupRejects
+ 72/157 Test #340: OperationSpecificStatefulValidation.SIZE_B04_GroupRejects ..........................................   Passed    0.03 sec
+        Start 341: OperationSpecificStatefulValidation.SIZE_B05_MissingTargetRejects
+ 73/157 Test #341: OperationSpecificStatefulValidation.SIZE_B05_MissingTargetRejects ..................................   Passed    0.03 sec
+        Start 342: OperationSpecificStatefulValidation.PATH_B01_VectorPathSucceeds
+ 74/157 Test #342: OperationSpecificStatefulValidation.PATH_B01_VectorPathSucceeds ....................................   Passed    0.03 sec
+        Start 343: OperationSpecificStatefulValidation.PATH_B02_WrongKindRejects
+ 75/157 Test #343: OperationSpecificStatefulValidation.PATH_B02_WrongKindRejects ......................................   Passed    0.03 sec
+        Start 344: OperationSpecificStatefulValidation.PATH_B03_MissingTargetRejects
+ 76/157 Test #344: OperationSpecificStatefulValidation.PATH_B03_MissingTargetRejects ..................................   Passed    0.03 sec
+        Start 345: OperationSpecificStatefulValidation.IMG_B01_CompleteImageContentReplacementSucceeds
+ 77/157 Test #345: OperationSpecificStatefulValidation.IMG_B01_CompleteImageContentReplacementSucceeds ................   Passed    0.03 sec
+        Start 346: OperationSpecificStatefulValidation.IMG_B02_WrongKindRejects
+ 78/157 Test #346: OperationSpecificStatefulValidation.IMG_B02_WrongKindRejects .......................................   Passed    0.03 sec
+        Start 347: OperationSpecificStatefulValidation.IMG_B03_MissingTargetRejects
+ 79/157 Test #347: OperationSpecificStatefulValidation.IMG_B03_MissingTargetRejects ...................................   Passed    0.03 sec
+        Start 348: OperationSpecificStatefulValidation.STR_B01_VectorStrokeCreateSucceeds
+ 80/157 Test #348: OperationSpecificStatefulValidation.STR_B01_VectorStrokeCreateSucceeds .............................   Passed    0.03 sec
+        Start 349: OperationSpecificStatefulValidation.STR_B02_DabStrokeCreateSucceeds
+ 81/157 Test #349: OperationSpecificStatefulValidation.STR_B02_DabStrokeCreateSucceeds ................................   Passed    0.03 sec
+        Start 350: OperationSpecificStatefulValidation.STR_B03_ExistingIdRejects
+ 82/157 Test #350: OperationSpecificStatefulValidation.STR_B03_ExistingIdRejects ......................................   Passed    0.03 sec
+        Start 351: OperationSpecificStatefulValidation.STR_B04_NonStrokeRecordRejects
+ 83/157 Test #351: OperationSpecificStatefulValidation.STR_B04_NonStrokeRecordRejects .................................   Passed    0.05 sec
+        Start 352: OperationSpecificStatefulValidation.STR_B05_StrokeUnderGroupSucceeds
+ 84/157 Test #352: OperationSpecificStatefulValidation.STR_B05_StrokeUnderGroupSucceeds ...............................   Passed    0.04 sec
+        Start 353: OperationSpecificStatefulValidation.STR_B06_StrokeUnderStickyRejects
+ 85/157 Test #353: OperationSpecificStatefulValidation.STR_B06_StrokeUnderStickyRejects ...............................   Passed    0.03 sec
+        Start 354: OperationSpecificStatefulValidation.SPL_B01_SourceToTwoAbsentReplacementsSucceeds
+ 86/157 Test #354: OperationSpecificStatefulValidation.SPL_B01_SourceToTwoAbsentReplacementsSucceeds ..................   Passed    0.03 sec
+        Start 355: OperationSpecificStatefulValidation.SPL_B02_MissingSourceRejects
+ 87/157 Test #355: OperationSpecificStatefulValidation.SPL_B02_MissingSourceRejects ...................................   Passed    0.03 sec
+        Start 356: OperationSpecificStatefulValidation.SPL_B03_NonStrokeSourceRejects
+ 88/157 Test #356: OperationSpecificStatefulValidation.SPL_B03_NonStrokeSourceRejects .................................   Passed    0.03 sec
+        Start 357: OperationSpecificStatefulValidation.SPL_B04_ReplacementCollidesWithUnrelatedExistingId
+ 89/157 Test #357: OperationSpecificStatefulValidation.SPL_B04_ReplacementCollidesWithUnrelatedExistingId .............   Passed    0.03 sec
+        Start 358: OperationSpecificStatefulValidation.SPL_B05_ReplacementReusesSourceIdRejects
+ 90/157 Test #358: OperationSpecificStatefulValidation.SPL_B05_ReplacementReusesSourceIdRejects .......................   Passed    0.03 sec
+        Start 359: OperationSpecificStatefulValidation.SPL_B06_NonStrokeReplacementRejects
+ 91/157 Test #359: OperationSpecificStatefulValidation.SPL_B06_NonStrokeReplacementRejects ............................   Passed    0.03 sec
+        Start 360: OperationSpecificStatefulValidation.SPL_B07_InvalidReplacementParentRejects
+ 92/157 Test #360: OperationSpecificStatefulValidation.SPL_B07_InvalidReplacementParentRejects ........................   Passed    0.03 sec
+        Start 361: OperationSpecificStatefulValidation.SPL_B08_OneFailingSplitLeavesAllFragmentsUnchanged
+ 93/157 Test #361: OperationSpecificStatefulValidation.SPL_B08_OneFailingSplitLeavesAllFragmentsUnchanged .............   Passed    0.03 sec
+        Start 362: OperationSpecificStatefulValidation.MASK_ADD_B01_VectorStrokeSucceeds
+ 94/157 Test #362: OperationSpecificStatefulValidation.MASK_ADD_B01_VectorStrokeSucceeds ..............................   Passed    0.03 sec
+        Start 363: OperationSpecificStatefulValidation.MASK_ADD_B02_DabStrokeSucceeds
+ 95/157 Test #363: OperationSpecificStatefulValidation.MASK_ADD_B02_DabStrokeSucceeds .................................   Passed    0.03 sec
+        Start 364: OperationSpecificStatefulValidation.MASK_ADD_B03_WrongKindRejects
+ 96/157 Test #364: OperationSpecificStatefulValidation.MASK_ADD_B03_WrongKindRejects ..................................   Passed    0.03 sec
+        Start 365: OperationSpecificStatefulValidation.MASK_ADD_B04_MissingTargetRejects
+ 97/157 Test #365: OperationSpecificStatefulValidation.MASK_ADD_B04_MissingTargetRejects ..............................   Passed    0.03 sec
+        Start 366: OperationSpecificStatefulValidation.MASK_ADD_B05_ExistingMaskIdRejects
+ 98/157 Test #366: OperationSpecificStatefulValidation.MASK_ADD_B05_ExistingMaskIdRejects .............................   Passed    0.03 sec
+        Start 367: OperationSpecificStatefulValidation.MASK_ADD_B06_LateFailureLeavesWholeOutputUnchanged
+ 99/157 Test #367: OperationSpecificStatefulValidation.MASK_ADD_B06_LateFailureLeavesWholeOutputUnchanged .............   Passed    0.03 sec
+        Start 368: OperationSpecificStatefulValidation.MASK_REM_B01_AllRequestedMasksExistSucceeds
+100/157 Test #368: OperationSpecificStatefulValidation.MASK_REM_B01_AllRequestedMasksExistSucceeds ....................   Passed    0.03 sec
+        Start 369: OperationSpecificStatefulValidation.MASK_REM_B02_OneMissingMaskRejectsWholeOperation
+101/157 Test #369: OperationSpecificStatefulValidation.MASK_REM_B02_OneMissingMaskRejectsWholeOperation ...............   Passed    0.03 sec
+        Start 370: OperationSpecificStatefulValidation.MASK_REM_B03_WrongKindRejects
+102/157 Test #370: OperationSpecificStatefulValidation.MASK_REM_B03_WrongKindRejects ..................................   Passed    0.03 sec
+        Start 371: OperationSpecificStatefulValidation.MASK_REM_B04_MissingTargetRejects
+103/157 Test #371: OperationSpecificStatefulValidation.MASK_REM_B04_MissingTargetRejects ..............................   Passed    0.03 sec
+        Start 372: OperationSpecificStatefulValidation.MASK_REM_B05_LateFailureLeavesOutputUnchanged
+104/157 Test #372: OperationSpecificStatefulValidation.MASK_REM_B05_LateFailureLeavesOutputUnchanged ..................   Passed    0.03 sec
+        Start 373: OperationSpecificStatefulValidation.PROP_B01_SetApplicableFieldProducesExactReplacement
+105/157 Test #373: OperationSpecificStatefulValidation.PROP_B01_SetApplicableFieldProducesExactReplacement ............   Passed    0.03 sec
+        Start 374: OperationSpecificStatefulValidation.PROP_B02_WrongKindApplicabilityRejects
+106/157 Test #374: OperationSpecificStatefulValidation.PROP_B02_WrongKindApplicabilityRejects .........................   Passed    0.03 sec
+        Start 375: OperationSpecificStatefulValidation.PROP_B03_ClearRemovesExplicitEntry
+107/157 Test #375: OperationSpecificStatefulValidation.PROP_B03_ClearRemovesExplicitEntry .............................   Passed    0.03 sec
+        Start 376: OperationSpecificStatefulValidation.PROP_B04_SetRegistryDefaultCanonicalizesToAbsence
+108/157 Test #376: OperationSpecificStatefulValidation.PROP_B04_SetRegistryDefaultCanonicalizesToAbsence ..............   Passed    0.03 sec
+        Start 377: OperationSpecificStatefulValidation.PROP_B05_TwoFieldsOneObjectProduceOneSortedReplacement
+109/157 Test #377: OperationSpecificStatefulValidation.PROP_B05_TwoFieldsOneObjectProduceOneSortedReplacement .........   Passed    0.03 sec
+        Start 378: OperationSpecificStatefulValidation.PROP_B06_MissingTargetRejects
+110/157 Test #378: OperationSpecificStatefulValidation.PROP_B06_MissingTargetRejects ..................................   Passed    0.03 sec
+        Start 379: OperationSpecificStatefulValidation.PROP_B07_LateFailureLeavesOutputUnchanged
+111/157 Test #379: OperationSpecificStatefulValidation.PROP_B07_LateFailureLeavesOutputUnchanged ......................   Passed    0.03 sec
+        Start 380: OperationSpecificStatefulValidation.EDIT_B01_UnicodeScalarDeltaProducesReplacement
+112/157 Test #380: OperationSpecificStatefulValidation.EDIT_B01_UnicodeScalarDeltaProducesReplacement .................   Passed    0.03 sec
+        Start 381: OperationSpecificStatefulValidation.EDIT_B02_MissingObjectRejects
+113/157 Test #381: OperationSpecificStatefulValidation.EDIT_B02_MissingObjectRejects ..................................   Passed    0.03 sec
+        Start 382: OperationSpecificStatefulValidation.EDIT_B03_WrongKindRejects
+114/157 Test #382: OperationSpecificStatefulValidation.EDIT_B03_WrongKindRejects ......................................   Passed    0.03 sec
+        Start 383: OperationSpecificStatefulValidation.EDIT_B04_InvalidStagedDeltaLeavesOutputUnchanged
+115/157 Test #383: OperationSpecificStatefulValidation.EDIT_B04_InvalidStagedDeltaLeavesOutputUnchanged ...............   Passed    0.03 sec
+        Start 384: OperationSpecificStatefulValidation.CON_B01_ValidConnectorExistingConnectableTargetSucceeds
+116/157 Test #384: OperationSpecificStatefulValidation.CON_B01_ValidConnectorExistingConnectableTargetSucceeds ........   Passed    0.03 sec
+        Start 385: OperationSpecificStatefulValidation.CON_B02_NonConnectorTargetObjectRejects
+117/157 Test #385: OperationSpecificStatefulValidation.CON_B02_NonConnectorTargetObjectRejects ........................   Passed    0.03 sec
+        Start 386: OperationSpecificStatefulValidation.CON_B03_MissingAttachedTargetRejects
+118/157 Test #386: OperationSpecificStatefulValidation.CON_B03_MissingAttachedTargetRejects ...........................   Passed    0.03 sec
+        Start 387: OperationSpecificStatefulValidation.CON_B04_NonConnectableAttachedTargetRejects
+119/157 Test #387: OperationSpecificStatefulValidation.CON_B04_NonConnectableAttachedTargetRejects ....................   Passed    0.03 sec
+        Start 388: OperationSpecificStatefulValidation.CON_B05_ValidStablePortForConnectableTargetSucceeds
+120/157 Test #388: OperationSpecificStatefulValidation.CON_B05_ValidStablePortForConnectableTargetSucceeds ............   Passed    0.03 sec
+        Start 389: OperationSpecificStatefulValidation.CON_B06_InvalidStablePortForNonConnectableTargetRejects
+121/157 Test #389: OperationSpecificStatefulValidation.CON_B06_InvalidStablePortForNonConnectableTargetRejects ........   Passed    0.03 sec
+        Start 390: OperationSpecificStatefulValidation.CountingStore_CoversAllThirteenFamiliesWithoutAllObjectsScan
+122/157 Test #390: OperationSpecificStatefulValidation.CountingStore_CoversAllThirteenFamiliesWithoutAllObjectsScan ...   Passed    0.03 sec
+        Start 391: OperationSpecificStatefulValidation.CON_B07_FreePointOnlyNeedsNoEndpointObjectLookup
+123/157 Test #391: OperationSpecificStatefulValidation.CON_B07_FreePointOnlyNeedsNoEndpointObjectLookup ...............   Passed    0.03 sec
+        Start 553: canvas_g2_a2_bounds_system
+124/157 Test #553: canvas_g2_a2_bounds_system .........................................................................   Passed    0.03 sec
+        Start 554: FC05Route
+125/157 Test #554: FC05Route ..........................................................................................   Passed    0.03 sec
+        Start 556: canvas_g2_a2_reference_geometry
+126/157 Test #556: canvas_g2_a2_reference_geometry ....................................................................   Passed    0.03 sec
+        Start 557: canvas_g2_a2_scene_impact
+127/157 Test #557: canvas_g2_a2_scene_impact ..........................................................................   Passed    0.03 sec
+        Start 559: canvas_g2_a2_dependency_closure
+128/157 Test #559: canvas_g2_a2_dependency_closure ....................................................................   Passed    0.03 sec
+        Start 560: canvas_g2_a3_full_incremental_equivalence
+129/157 Test #560: canvas_g2_a3_full_incremental_equivalence ..........................................................Exit code 0xc0000409***Exception:   3.38 sec
+Assertion failed: actual.referenceGeometryDigest == expected.referenceGeometry, file C:\Users\Chado\.codex\worktrees\fc05-p32\runtime\scene\tests\full_incremental_equivalence_test.cpp, line 59
+
+        Start 562: canvas_g2_a6_incremental_equivalence
+130/157 Test #562: canvas_g2_a6_incremental_equivalence ...............................................................   Passed    0.29 sec
+        Start 563: canvas_g2_a6_atomic_publication
+131/157 Test #563: canvas_g2_a6_atomic_publication ....................................................................   Passed    0.03 sec
+        Start 564: canvas_g2_a6_recovery
+132/157 Test #564: canvas_g2_a6_recovery ..............................................................................   Passed    0.02 sec
+        Start 570: canvas_fc01_derived_geometry
+133/157 Test #570: canvas_fc01_derived_geometry .......................................................................   Passed    0.03 sec
+        Start 577: G4EditorHistory
+134/157 Test #577: G4EditorHistory ....................................................................................   Passed    0.03 sec
+        Start 617: G3HeadlessSkia
+135/157 Test #617: G3HeadlessSkia .....................................................................................   Passed    0.09 sec
+        Start 618: FC05ConnectorPendingRaster
+136/157 Test #618: FC05ConnectorPendingRaster .........................................................................   Passed    0.02 sec
+        Start 628: G3DirectReference
+137/157 Test #628: G3DirectReference ..................................................................................   Passed    0.64 sec
+        Start 629: G3FrameOrchestration
+138/157 Test #629: G3FrameOrchestration ...............................................................................   Passed    0.03 sec
+        Start 631: FC05ConnectorFacade
+139/157 Test #631: FC05ConnectorFacade ................................................................................   Passed    0.04 sec
+        Start 632: FC02Text
+140/157 Test #632: FC02Text ...........................................................................................   Passed   25.50 sec
+        Start 640: FC00XRuntimeComposition
+141/157 Test #640: FC00XRuntimeComposition ............................................................................   Passed    0.12 sec
+        Start 642: FC03ImageFacade
+142/157 Test #642: FC03ImageFacade ....................................................................................   Passed    0.06 sec
+        Start 644: FC03WindowsImageDebugUi
+143/157 Test #644: FC03WindowsImageDebugUi ............................................................................   Passed    0.15 sec
+        Start 645: FC02WindowsTextToolEntry
+144/157 Test #645: FC02WindowsTextToolEntry ...........................................................................   Passed    0.58 sec
+        Start 646: FC02WindowsTextToolFocus
+145/157 Test #646: FC02WindowsTextToolFocus ...........................................................................   Passed    0.57 sec
+        Start 647: FC02WindowsTextToolTouchFocus
+146/157 Test #647: FC02WindowsTextToolTouchFocus ......................................................................   Passed    0.57 sec
+        Start 648: FC02WindowsTextToolAfterInk
+147/157 Test #648: FC02WindowsTextToolAfterInk ........................................................................   Passed    0.73 sec
+        Start 659: FC00XMinimalRuntimeHost
+148/157 Test #659: FC00XMinimalRuntimeHost ............................................................................   Passed    0.10 sec
+        Start 667: PX0ControlRouter
+149/157 Test #667: PX0ControlRouter ...................................................................................   Passed    0.05 sec
+        Start 688: FC01SelectedActions
+150/157 Test #688: FC01SelectedActions ................................................................................   Passed    1.10 sec
+        Start 689: FC05ConnectorDragPreview
+151/157 Test #689: FC05ConnectorDragPreview ...........................................................................   Passed    0.61 sec
+        Start 690: FC01SelectedRemoteConflict
+152/157 Test #690: FC01SelectedRemoteConflict .........................................................................   Passed    0.03 sec
+        Start 691: FC01InsertHistory
+153/157 Test #691: FC01InsertHistory ..................................................................................   Passed    0.04 sec
+        Start 692: FC01SelectedLocked
+154/157 Test #692: FC01SelectedLocked .................................................................................   Passed    0.03 sec
+        Start 693: FC01SelectedDependent
+155/157 Test #693: FC01SelectedDependent ..............................................................................   Passed    0.04 sec
+        Start 694: FC01SelectedRemoteChild
+156/157 Test #694: FC01SelectedRemoteChild ............................................................................   Passed    0.03 sec
+        Start 695: FC01SelectedPreimageMatrix
+157/157 Test #695: FC01SelectedPreimageMatrix .........................................................................   Passed    0.63 sec
+
+99% tests passed, 1 tests failed out of 157
+
+Total Test time (real) =  39.57 sec
+
+The following tests FAILED:
+	560 - canvas_g2_a3_full_incremental_equivalence (Exit code 0xc0000409)
+Errors while running CTest

@@ -1,0 +1,16 @@
+Test project C:/Users/Chado/.codex/worktrees/fc05-p32/out/fc05-windows
+    Start 689: FC05ConnectorDragPreview
+1/1 Test #689: FC05ConnectorDragPreview .........Exit code 0xc0000409***Exception:   2.76 sec
+[axiom] present begin frame=11 objects=3 scene_records=3
+[axiom] connector test recovery: Snapshot revision must advance Scene
+[axiom] present reject scene generation
+Assertion failed: host.presentCanonicalFrame(host.nextCanonicalFrameId(),0.0), file C:\Users\Chado\.codex\worktrees\fc05-p32\apps\ink_playground\tests\selected_actions_test.cpp, line 350
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   3.05 sec
+
+The following tests FAILED:
+	689 - FC05ConnectorDragPreview (Exit code 0xc0000409)
+Errors while running CTest

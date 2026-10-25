@@ -2,8 +2,17 @@
 #include "canvas/debug_ui/ui_session_state.hpp"
 #include "imgui.h"
 
+#include <cstddef>
+#include <cstdint>
+
 namespace canvas::debug_ui {
 namespace {
+std::uint64_t lowObjectId(const canvas::foundation::ObjectId& id) noexcept {
+    std::uint64_t value = 0;
+    for (std::size_t i = 0; i < 8U; ++i)
+        value |= static_cast<std::uint64_t>(id.bytes[i]) << (8U * i);
+    return value;
+}
 void selection(DebugPanelContext& c) {
     const auto& s = c.snapshot;
     ImGui::SeparatorText("Selection");
@@ -67,9 +76,27 @@ void interaction(DebugPanelContext& c) {
                 static_cast<unsigned long long>(s.axiom.value.interaction.overlayUpdateCount),
                 static_cast<unsigned long long>(s.axiom.value.interaction.transientTransformCount));
 }
-void relationship(DebugPanelContext&) {
+void relationship(DebugPanelContext& c) {
     ImGui::SeparatorText("Relationship");
-    ImGui::TextUnformatted("Unsupported / Not implemented");
+    const auto sticky = c.controls.selectedSticky();
+    const auto connector = c.controls.selectedConnector();
+    if (sticky.available) {
+        ImGui::Text("Sticky %llu / %.0f x %.0f",
+                    static_cast<unsigned long long>(lowObjectId(sticky.objectId)),
+                    sticky.content.width, sticky.content.height);
+    } else if (connector.available) {
+        const auto endpointName = [](const canvas::semantic::ConnectorEndpoint& endpoint) {
+            if (std::holds_alternative<canvas::semantic::FreePointEndpoint>(endpoint.value))
+                return "free";
+            return "attached";
+        };
+        ImGui::Text("Connector %llu / start %s / end %s",
+                    static_cast<unsigned long long>(lowObjectId(connector.objectId)),
+                    endpointName(connector.content.start), endpointName(connector.content.end));
+        ImGui::TextUnformatted("Auto perimeter snap points: top / right / bottom / left");
+    } else {
+        ImGui::TextUnformatted("Select a Sticky or Connector to inspect attachment state");
+    }
 }
 } // namespace
 void registerInspectDebugPanels(PanelRegistry& r) noexcept {

@@ -4,6 +4,7 @@
 #include "canvas/foundation/world_geometry.hpp"
 #include "canvas/render/frame_state.hpp"
 #include "canvas/semantic/object_record.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 
 #include <array>
 #include <cstddef>
@@ -25,6 +26,12 @@ struct SnapGuideGeometry final {
     SnapGuideAxis axis = SnapGuideAxis::kVertical;
     ScreenPoint start{};
     ScreenPoint end{};
+};
+
+struct AttachmentPointGeometry final {
+    ScreenPoint center{};
+    bool active = false;
+    bool hovered = false;
 };
 
 enum class HandleKind : std::uint8_t {
@@ -70,6 +77,7 @@ struct EditingOverlayInput final {
     bool active = false;
     HandleCapabilities capabilities{};
     std::span<const SnapGuideGeometry> guides{};
+    std::span<const AttachmentPointGeometry> attachmentPoints{};
 };
 
 class EditingOverlay final {
@@ -79,13 +87,17 @@ class EditingOverlay final {
     [[nodiscard]] bool update(const EditingOverlayInput& input) noexcept;
     void clear() noexcept;
     void setCreationPreview(const semantic::ObjectRecord& record,
-                            std::span<const SnapGuideGeometry> guides) {
-        clear();
+                            std::span<const SnapGuideGeometry> guides,
+                            std::optional<scene::ConnectorGeometry> route = std::nullopt) {
         creationPreview_ = record;
+        creationRoute_ = std::move(route);
         guides_.assign(guides.begin(), guides.end());
     }
     [[nodiscard]] const std::optional<semantic::ObjectRecord>& creationPreview() const noexcept {
         return creationPreview_;
+    }
+    [[nodiscard]] const scene::ConnectorGeometry* creationRoute() const noexcept {
+        return creationRoute_?&*creationRoute_:nullptr;
     }
 
     std::vector<std::array<float,8>> textSelection;
@@ -110,6 +122,12 @@ class EditingOverlay final {
     [[nodiscard]] const std::vector<SnapGuideGeometry>& guides() const noexcept {
         return guides_;
     }
+    [[nodiscard]] const std::vector<AttachmentPointGeometry>& attachmentPoints() const noexcept {
+        return attachmentPoints_;
+    }
+    [[nodiscard]] std::vector<AttachmentPointGeometry>& mutableAttachmentPoints() noexcept {
+        return attachmentPoints_;
+    }
     [[nodiscard]] HandleKind hitTest(ScreenPoint point, float hitSlop = 0.0F) const noexcept;
 
   private:
@@ -119,8 +137,10 @@ class EditingOverlay final {
     SelectionOutline outline_{};
     std::array<HandleGeometry, kHandleCount> handles_{};
     std::vector<SnapGuideGeometry> guides_{};
+    std::vector<AttachmentPointGeometry> attachmentPoints_{};
     std::uint64_t updateCount_ = 0;
     std::optional<semantic::ObjectRecord> creationPreview_;
+    std::optional<scene::ConnectorGeometry> creationRoute_;
 };
 
 } // namespace canvas::render

@@ -320,7 +320,7 @@ TEST(FC01Shape2Closeout, LegacySnapshotRemainsV1AndTriangleCannotBeDowngraded) {
     EXPECT_EQ(generation.current().value(), 0U);
 }
 
-TEST(FC01Shape2Closeout, AttachedConnectorCannotTargetTriangle) {
+TEST(FC01Shape2Closeout, FC05AttachedConnectorCanTargetTriangleSuccessor) {
     IndexedObjectStore objects;
     AppliedOperationLedger ledger;
     SemanticGenerationState generation;
@@ -335,14 +335,13 @@ TEST(FC01Shape2Closeout, AttachedConnectorCannotTargetTriangle) {
     content.end.value = FreePointEndpoint{{200.0, 100.0}};
     content.routing = ConnectorRouting::kStraight;
     connector.content = content;
-    const auto before = objects.allObjects();
-    const auto rejected = engine.apply(insert(connector, 11U), ApplySource::kRemoteSync,
+    const auto accepted = engine.apply(insert(connector, 11U), ApplySource::kRemoteSync,
                                         objects, ledger, generation, clock);
-    EXPECT_EQ(rejected.disposition, ApplyDisposition::kRejected);
-    EXPECT_EQ(objects.allObjects(), before);
-    EXPECT_FALSE(ledger.find(OperationId{id(11U)}).has_value());
-    EXPECT_EQ(generation.current().value(), 1U);
-    EXPECT_EQ(clock.lastCommittedOrdinal().value(), 1U);
+    EXPECT_EQ(accepted.disposition, ApplyDisposition::kApplied);
+    ASSERT_EQ(objects.size(), 2U);
+    ASSERT_TRUE(ledger.find(OperationId{id(11U)}).has_value());
+    EXPECT_EQ(generation.current().value(), 2U);
+    EXPECT_EQ(clock.lastCommittedOrdinal().value(), 2U);
 }
 
 }  // namespace

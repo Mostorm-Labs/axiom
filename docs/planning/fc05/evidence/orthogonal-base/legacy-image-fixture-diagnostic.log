@@ -1,0 +1,15 @@
+Test project C:/Users/Chado/.codex/worktrees/fc05-p32/out/fc05-windows
+    Start 560: canvas_g2_a3_full_incremental_equivalence
+1/1 Test #560: canvas_g2_a3_full_incremental_equivalence ...Exit code 0xc0000409***Exception:   3.24 sec
+ACTUAL=2:1,0,0,1,2,0:image:90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,:0:0:3:11:12:source:full
+EXPECTED=2:1,0,0,1,2,0:image:90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,:0:0:11:12
+Assertion failed: actual.referenceGeometryDigest == expected.referenceGeometry, file C:\Users\Chado\.codex\worktrees\fc05-p32\runtime\scene\tests\full_incremental_equivalence_test.cpp, line 61
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   3.48 sec
+
+The following tests FAILED:
+	560 - canvas_g2_a3_full_incremental_equivalence (Exit code 0xc0000409)
+Errors while running CTest

@@ -10,6 +10,9 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+#include "auditoryworks/axiom/v1/snapshot.pb.h"
+#endif
 
 namespace canvas::semantic {
 namespace {
@@ -27,6 +30,33 @@ bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability ca
     const auto* shape = std::get_if<ShapeContent>(&object.content);
     return shape == nullptr || shape->shape_kind != 3U ||
            ((schema_version == 2U || schema_version == 3U) && (static_cast<unsigned>(capability)&1U)!=0U);
+}
+
+bool connectorShapeCapabilitySatisfied(const SemanticSnapshot& snapshot) {
+    bool required = false;
+    for (const auto& object : snapshot.objects) {
+        if (object.kind != ObjectKind::kConnector) continue;
+        const auto* connector = std::get_if<ConnectorContent>(&object.content);
+        if (!connector) continue;
+        for (const auto* endpoint : {&connector->start, &connector->end}) {
+            const auto* attached = std::get_if<AttachedEndpoint>(&endpoint->value);
+            if (!attached) continue;
+            const auto it = std::find_if(snapshot.objects.begin(), snapshot.objects.end(),
+                [&](const auto& candidate) { return candidate.id == attached->target_object_id; });
+            if (it != snapshot.objects.end() && it->kind == ObjectKind::kShape && it->kind_version >= 2U)
+                required = true;
+        }
+    }
+    if (!required) return true;
+    if (snapshot.schema_version < 3U) return false;
+#if !defined(CANVAS_SEMANTIC_PROTOBUF)
+    return false;
+#else
+    auditoryworks::axiom::v1::CapabilityRequirementsV1 caps;
+    if (!caps.ParseFromArray(snapshot.capability_requirements.data(), static_cast<int>(snapshot.capability_requirements.size()))) return false;
+    for (const auto& id : caps.required_ids()) if (id == "connector-shape-attachment-v1") return true;
+    return false;
+#endif
 }
 
 SnapshotBootstrapResult rejectWithoutFailure(StatefulIssue issue) {
@@ -57,6 +87,8 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
     if (!supportedSnapshotVersion(snapshot.schema_version) || snapshot.document_id.isZero()) {
         return rejectLoading(state, StatefulIssue::kInvalidApplicability);
     }
+    if (!connectorShapeCapabilitySatisfied(snapshot))
+        return rejectLoading(state, StatefulIssue::kInvalidKindVersion);
     if(snapshot.schema_version==3U) {
         if(!checkpoint || checkpoint->document!=snapshot.document_id ||
            checkpoint->source_revision!=snapshot.document_revision || checkpoint->frontier!=snapshot.recovery_frontier ||

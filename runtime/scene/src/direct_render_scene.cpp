@@ -280,7 +280,10 @@ DirectRenderScene::preciseHitTest(const PreciseHitRequest& request) const {
               distance <= request.tolerance + stroke;
         if (hit) distance = 0.0F;
     } else if (const auto* connector = std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry)) {
-        const scene::ConnectorGeometry transformed{world(connector->start), world(connector->end), connector->arrow_end};
+        std::vector<foundation::WorldPoint> transformedRoute;
+        transformedRoute.reserve(connector->route.size());
+        for (const auto point : connector->route) transformedRoute.push_back(world(point));
+        const scene::ConnectorGeometry transformed{world(connector->start), world(connector->end), std::move(transformedRoute), connector->arrow_end};
         hit = scene::pointOnConnector(request.worldPoint, transformed, request.tolerance);
         distance = scene::distanceToSegment(request.worldPoint, transformed.start, transformed.end);
         if (connector->arrow_end) {

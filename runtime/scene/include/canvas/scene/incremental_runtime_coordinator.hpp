@@ -64,6 +64,12 @@ class IncrementalRuntimeCoordinator final {
     // Derived resource refresh uses the already-published read projection;
     // it never reads or writes the canonical document or manufactures an Operation.
     foundation::Result<SceneSyncReceipt> refreshTextResources();
+    void setDeferredConnectorRouting(bool defer) noexcept {
+        deferConnectorRoutes_ = defer; runtimeScene_.setDeferredConnectorRouting(defer);
+    }
+    foundation::Result<SceneSyncReceipt> publishConnectorRoutes(
+        std::span<const std::pair<semantic::ObjectId, scene::ConnectorGeometry>> routes,
+        semantic::SemanticGeneration generation);
     [[nodiscard]] bool publicationObservationCoherent() const noexcept {
         return publicationObservationCoherent_;
     }
@@ -101,6 +107,7 @@ class IncrementalRuntimeCoordinator final {
     SceneRevision pendingRevision_{};
     std::uint64_t publicationObservations_ = 0;
     bool publicationObservationCoherent_ = true;
+    bool deferConnectorRoutes_ = false;
     TestPublicationObserver testPublicationObserver_ = nullptr;
     void* testPublicationObserverContext_ = nullptr;
 };
