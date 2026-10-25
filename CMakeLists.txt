@@ -179,3 +179,8 @@ if(CANVAS_BUILD_POC06)
   endif()
   add_subdirectory(pocs/fastink)
 endif()
+
+option(AXIOM_BUILD_FC08_VERIFICATION "Build isolated FC08 verification materialization hosts" OFF)
+if(AXIOM_BUILD_FC08_VERIFICATION)
+  add_subdirectory(tests/fc08)
+endif()

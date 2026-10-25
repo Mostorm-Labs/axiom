@@ -1,0 +1,58 @@
+{
+  "semantic": {
+    "id": "fc08-container-extension-semantic-v0.1",
+    "scope": "semantic:axiom/fc08-container-extension",
+    "url": "https://app.notion.com/p/4044c57a590c81a8813bcad8c57ff6ee",
+    "classification": "Current Authority",
+    "input_manifest_sha256": "f93b286dfd93607342219f879747b2fa207b0eefaad068cbf4e16cfff0b99035"
+  },
+  "p12": {
+    "url": "https://app.notion.com/p/4044c57a590c8192b9cbc6dd108a408e",
+    "version": "v0.2 accepted by reference; CAP-01..06 supersede section 7.2 tail-append interpretation"
+  },
+  "p13": {
+    "url": "https://app.notion.com/p/4044c57a590c81d2a4d7cf6cd20c0402",
+    "version": "v0.2 + E01 accepted by reference"
+  },
+  "wire": {
+    "url": "https://app.notion.com/p/4044c57a590c812cbfdfef7e95eb57e2",
+    "version": "P23 exact accepted input"
+  },
+  "architecture_closure": {
+    "url": "https://app.notion.com/p/4044c57a590c81829a18c198cc4cdd47",
+    "version": "v0.1 + ARC-CR-C01/C02",
+    "classification": "Closed Architecture Contract"
+  },
+  "fc_track": {
+    "url": "https://app.notion.com/p/3f74c57a590c812a8260dcf23b659ed0",
+    "classification": "Current execution policy in retained scope"
+  },
+  "implementation_observation": {
+    "repository": "Mostorm-Labs/axiom",
+    "revision": "e5e630c5662167763fc7ba66b94c35881b1e1470",
+    "latest_head_claimed": false,
+    "classification": "Implementation Reality"
+  },
+  "existing_coverage": [
+    {
+      "source": "https://github.com/Mostorm-Labs/axiom/blob/e5e630c5662167763fc7ba66b94c35881b1e1470/runtime/semantic/tests/CMakeLists.txt",
+      "observed": "codec, ingress, snapshot/bootstrap/replay, reference/indexed suites are registered",
+      "limitation": "registration is not execution evidence or complete FC08 coverage"
+    },
+    {
+      "source": "https://github.com/Mostorm-Labs/axiom/blob/e5e630c5662167763fc7ba66b94c35881b1e1470/runtime/semantic/tests/g1_08_reference_differential_test.cpp",
+      "observed": "storage and replay projection parity on legacy corpus",
+      "limitation": "does not independently establish correct new topology semantics; matching providers can share a wrong interpretation"
+    },
+    {
+      "source": "https://app.notion.com/p/3f74c57a590c812a8260dcf23b659ed0",
+      "observed": "FC01A B01-B10 retained; producer owns new selection geometry; DEV/PHYS separation",
+      "limitation": "historical gate results not rerun or retroactively enlarged"
+    },
+    {
+      "source": "https://app.notion.com/p/4044c57a590c81829a18c198cc4cdd47",
+      "observed": "review identifies existing History/Scene/control seams",
+      "limitation": "headers and design review are not behavioral PASS evidence"
+    }
+  ]
+}

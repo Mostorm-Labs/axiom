@@ -1,0 +1,68 @@
+{
+  "format": "fc08-observation-seam-inventory-v1",
+  "source_revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78",
+  "seams": [
+    {
+      "role": "raw operation ingress",
+      "status": "BOUND",
+      "interface": "SemanticCodec::decodeProtobufOperation",
+      "source": {
+        "path": "runtime/semantic/include/canvas/semantic/codec.hpp",
+        "sha256": "9e618b973edbb54f2e72406c338e09870af44f917d015b3ae4ad603c75451bb3",
+        "git_blob": "94dedeb25ccac5ff9f5a08bac686283d61f05d8f"
+      }
+    },
+    {
+      "role": "raw snapshot ingress",
+      "status": "BOUND",
+      "interface": "SnapshotCodec::decode",
+      "source": {
+        "path": "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+        "sha256": "a380540aee3799e7bad1c795551431a7ea46f7e4dd37619f91fda5a3c01da50a",
+        "git_blob": "95d3da850b0b50ba98676bf4b9b3a56fc655ac3f"
+      }
+    },
+    {
+      "role": "ordinary public consumer",
+      "status": "BOUND_BASELINE_CONTAINER_API_ABSENT",
+      "interface": "RuntimeComposition::controlFacade() -> RuntimeFacade",
+      "future_interface": "P15 section2 submitContainerIntent/readContainerState/readContainerReceipt",
+      "source": {
+        "path": "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+        "sha256": "3a1153a2a05309e4f5fc0ef4cae55c8e0d048a18b04dde113fe8820a108e3c79",
+        "git_blob": "c017779b8dab74d234e090a6db0e83da8e61465e"
+      }
+    },
+    {
+      "role": "Scene fault/publication observer",
+      "status": "EXISTING_QUALIFICATION_SEAM",
+      "interface": "IncrementalRuntimeTestAccess::failAt/observe via existing friend",
+      "source": {
+        "path": "runtime/scene/tests/incremental_runtime_test_access.hpp",
+        "sha256": "b4a70788b230e978a9a9c60389a563e980f9dfe58bb21f674e4bdfc8c4af59aa",
+        "git_blob": "7b5d75b7e6233f6f33e779973af53a98f4753583"
+      }
+    },
+    {
+      "role": "canonical prepared apply owner",
+      "status": "READ_PREPARE_EXISTS_NO_CHECKPOINT_CALLBACK",
+      "interface": "OperationEngine::prepare/apply",
+      "source": {
+        "path": "runtime/semantic/include/canvas/semantic/operation_engine.hpp",
+        "sha256": "cfbb04764567e618834ad4bd232c354d25655a65befcba503ce7e48865ef9af3",
+        "git_blob": "b15b1f8b44ac43d7a9682445f92de75b3f936229"
+      }
+    },
+    {
+      "role": "History admission checkpoint",
+      "status": "NO_EXISTING_FAULT_OBSERVER",
+      "interface": "EditorHistory::prepareRecord/commitPrepared (no callback or injection parameter)",
+      "source": {
+        "path": "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+        "sha256": "eb886f3db3b5b5c9e96fd893d41eea96dbafd6e5552a92c74d55ad06fa3738a1",
+        "git_blob": "f57290aa4c2b1fcff1a16861c63bcac5c024c39c"
+      }
+    }
+  ],
+  "product_P32_authorized": false
+}

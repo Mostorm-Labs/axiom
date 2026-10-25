@@ -1,0 +1,118 @@
+{
+  "before": {
+    "P": {
+      "kind": "Section",
+      "parent": null,
+      "order": "10",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        10,
+        0
+      ]
+    },
+    "Q": {
+      "kind": "Section",
+      "parent": null,
+      "order": "30",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        100,
+        50
+      ]
+    },
+    "a": {
+      "kind": "Shape",
+      "parent": "P",
+      "order": "10",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        2,
+        3
+      ],
+      "local_rect": [
+        0,
+        0,
+        2,
+        2
+      ]
+    },
+    "b": {
+      "kind": "Shape",
+      "parent": "Q",
+      "order": "10",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        4,
+        5
+      ],
+      "local_rect": [
+        0,
+        0,
+        2,
+        2
+      ]
+    }
+  },
+  "explicit_final_wrapper": {
+    "S": {
+      "parent": null,
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "boundary": [
+        12,
+        3,
+        94,
+        54
+      ],
+      "title": "",
+      "padding": 0,
+      "header_height": 0
+    }
+  },
+  "final_children": {
+    "a": {
+      "parent": "S",
+      "order": "10",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        12,
+        3
+      ]
+    },
+    "b": {
+      "parent": "S",
+      "order": "30",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        104,
+        55
+      ]
+    }
+  },
+  "order_contract": "For planner-created wrapper check accepted P13 slot and relative ordering; do not require a particular new key encoding when authority permits equivalent keys. For canonical raw-op test supply explicit keys and compare exactly.",
+  "undo": "Restore original parent, exact local and key for a/b; remove S; retain P and Q."
+}

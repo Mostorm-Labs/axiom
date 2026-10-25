@@ -1,0 +1,37 @@
+{
+  "review_id": "FC08-P20-CLOSURE-v0.1",
+  "review_date": "2026-10-26",
+  "time_zone": "Asia/Tokyo",
+  "review_method": "same-assistant scoped document review, immutable input audit and independent literal calculations; no independent person/subagent claimed",
+  "verdict": "PASS_WITH_FINDINGS",
+  "design_status": "DESIGN_FROZEN_WITH_MATERIALIZATION_PRECONDITIONS",
+  "effective_design_id": "FC08-P20-v0.1+CR01",
+  "semantic_authority_id": "fc08-container-extension-semantic-v0.1",
+  "architecture": "v0.1 + ARC-CR-C01/C02",
+  "input_zip_sha256": "22a3f66c25d6f73c8d03b785bd388d4a3868a9dead31f14aee5af5448fe16ff7",
+  "input_manifest_sha256": "1e705746182e83ca90803966d7d8c3110688152c424d65c3944a545db89d83b6",
+  "direct_design_blockers": [],
+  "retained_preconditions": [
+    "M01 source-complete authority/baseline materialization and BASE-01 before machine publication",
+    "M02 full corpus and non-dyadic reference expected values independently fixed before corresponding production mutation",
+    "M03 exact oracle/observation adapter binding, without silent expectation changes",
+    "M04 actual native/Web/headless profiles and case discovery/regression identities"
+  ],
+  "carried_integration_item": "INT-01 remains owned by FC04/FC10; no waiver",
+  "physical_debts": [
+    "PH01",
+    "PH02",
+    "PH03",
+    "PH04"
+  ],
+  "product_case_execution_status": "DESIGNED_NOT_EXECUTED",
+  "repo_verification_lock_materialized": false,
+  "p31_p32_authorized": false,
+  "next_owner_stage": "aegis-implementation: P31 materialization/readiness preparation; task order and authorization checks preserved",
+  "axiom_build_or_tests_run": false,
+  "physical_tests_run": false,
+  "source_or_registry_modified": false,
+  "notion_review_url": "https://app.notion.com/p/4044c57a590c81ceae9ac22d3f023b40",
+  "input_checks_passed": 31,
+  "input_checks_are_product_tests": false
+}

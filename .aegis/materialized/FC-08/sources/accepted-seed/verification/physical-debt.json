@@ -1,0 +1,56 @@
+{
+  "gate": "FC13_PHYS",
+  "blocks_FC08_DEV": false,
+  "not_waived": true,
+  "inherited_px0_debt": "Preserve original source revision and observation identities; this file only appends FC08 obligations.",
+  "rows": [
+    {
+      "id": "FC08-PH01",
+      "platforms": [
+        "Windows",
+        "Web"
+      ],
+      "failure_mode": "real pointer/capture/terminal integration",
+      "procedure": "mouse/pen/touch actually supported by each Windows/Web profile; cancel,capture-lost,late-Up and remount",
+      "expected": "one visible final effect or visible cancel as common receipt states; no stray commit",
+      "status": "DEFERRED_NOT_EXECUTED",
+      "origin": "FC08 P17 + architecture C01/C02"
+    },
+    {
+      "id": "FC08-PH02",
+      "platforms": [
+        "Windows",
+        "Web"
+      ],
+      "failure_mode": "DPI/browser scale and nonclipping rendering",
+      "procedure": "rotated/scaled nested Group/Section, overflow child, resize four edges, toolbar follow",
+      "expected": "no jump/cutoff/double transform; coordinate mapping consistent; font/alpha output inspected",
+      "status": "DEFERRED_NOT_EXECUTED",
+      "origin": "FC08 P17 + architecture C01/C02"
+    },
+    {
+      "id": "FC08-PH03",
+      "platforms": [
+        "Windows",
+        "Web"
+      ],
+      "failure_mode": "native/browser title IME",
+      "procedure": "compose/confirm/cancel/blur in real title widget on each supported IME profile",
+      "expected": "preedit not canonical; confirmation exactly one command; cancelled draft not committed",
+      "status": "DEFERRED_NOT_EXECUTED",
+      "origin": "FC08 P17 + architecture C01/C02"
+    },
+    {
+      "id": "FC08-PH04",
+      "platforms": [
+        "Windows",
+        "Web"
+      ],
+      "failure_mode": "recovery and truthful presentation",
+      "procedure": "real surface loss/restore plus common projection failure diagnostic on existing qualified host",
+      "expected": "committed result not shown as cancelled; no second commit; current selection retained",
+      "status": "DEFERRED_NOT_EXECUTED",
+      "origin": "FC08 P17 + architecture C01/C02"
+    }
+  ]
+}

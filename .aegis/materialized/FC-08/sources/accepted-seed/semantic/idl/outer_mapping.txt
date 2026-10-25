@@ -1,0 +1,26 @@
+FC-08 P23 v0.1: proposed additive splice, NOT a stand-alone .proto file.
+Base repository: Mostorm-Labs/axiom
+Base revision: e5e630c5662167763fc7ba66b94c35881b1e1470
+
+object.proto:
+  add import "auditoryworks/axiom/v1/section.proto";
+  add to ObjectContent.value:
+    SectionContent section = 12;
+  preserve every existing field, including ShapeContent.label = 4.
+  do NOT copy a stale descriptor to regenerate the source baseline.
+
+operation.proto:
+  add import "auditoryworks/axiom/v1/container_operations.proto";
+  add to OperationPayload.payload:
+    SetSectionContentOp set_section_content = 17;
+    EditContainerTopologyOp edit_container_topology = 18;
+  preserve Operation envelope fields 1..5 and payload cases 1..16.
+
+ObjectKind registry:
+  request Section kind_id=10, kind_version=1, content_branch=section.
+OperationKind registry:
+  request SetSectionContent=17 and EditContainerTopology=18.
+  envelope schema_version=1, payload_version=1 for these new kinds only.
+
+This draft does not add an ObjectKind proto enum, a Transaction carrier,
+SelectionState, History token, new Snapshot field, or a numeric capability bit.

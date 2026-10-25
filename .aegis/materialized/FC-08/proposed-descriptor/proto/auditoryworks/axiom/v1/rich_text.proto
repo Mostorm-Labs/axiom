@@ -1,0 +1,67 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+import "auditoryworks/axiom/v1/common.proto";
+import "auditoryworks/axiom/v1/paint.proto";
+
+// V1 TextStyle is an explicit semantic value. In particular, false italic or
+// underline is not equivalent to absence, and a font is never inferred from a
+// platform default. The corresponding presence and validation policy is
+// implemented in GT-G1-02/04; this structural source intentionally preserves
+// the released tags here.
+message TextStyle {
+  Id128 font_resource_id = 1;
+  double font_size = 2;
+  uint32 weight = 3;
+  bool italic = 4;
+  bool underline = 5;
+  ColorValue color = 6;
+  // Present only when true, admitted by RichText/3 and delta3.
+  bool strikethrough = 7;
+}
+enum ParagraphAlignment {
+  INVALID = 0;
+  LEFT = 1;
+  CENTER = 2;
+  RIGHT = 3;
+  JUSTIFY = 4;
+}
+message ParagraphStyle {
+  ParagraphAlignment alignment = 1;
+  double line_height = 2;
+  double spacing_before = 3;
+  double spacing_after = 4;
+  bool bulleted = 5;
+}
+message TextRun { string text = 1; TextStyle style = 2; }
+message Paragraph { Id128 paragraph_id = 1; ParagraphStyle style = 2; repeated TextRun runs = 3; }
+message RichTextDocument { repeated Paragraph paragraphs = 1; }
+message RichTextLayoutV2 { double wrap_width = 1; }
+message RichTextContent { RichTextDocument document = 1; RichTextLayoutV2 layout = 2; }
+message RichTextStateV2 { uint32 kind_version = 1; RichTextDocument document = 2; RichTextLayoutV2 layout = 3; }
+message SetRichTextLayoutStep { uint32 target_kind_version = 1; RichTextLayoutV2 layout = 2; }
+message RestoreRichTextStateStep { RichTextStateV2 state = 1; }
+
+message InsertTextStep { Id128 paragraph_id = 1; uint32 scalar_offset = 2; string text = 3; TextStyle style = 4; }
+message DeleteTextStep { Id128 paragraph_id = 1; uint32 start_scalar = 2; uint32 scalar_count = 3; }
+message SetInlineStyleStep { Id128 paragraph_id = 1; uint32 start_scalar = 2; uint32 scalar_count = 3; TextStyle style = 4; }
+message SplitParagraphStep { Id128 paragraph_id = 1; uint32 scalar_offset = 2; Id128 new_paragraph_id = 3; }
+message MergeParagraphStep { Id128 first_paragraph_id = 1; Id128 second_paragraph_id = 2; }
+message SetParagraphStyleStep { Id128 paragraph_id = 1; ParagraphStyle style = 2; }
+message RichTextStep {
+  oneof step {
+    InsertTextStep insert_text = 1;
+    DeleteTextStep delete_text = 2;
+    SplitParagraphStep split_paragraph = 3;
+    MergeParagraphStep merge_paragraph = 4;
+    SetInlineStyleStep set_inline_style = 5;
+    SetParagraphStyleStep set_paragraph_style = 6;
+    SetRichTextLayoutStep set_layout = 7;
+    RestoreRichTextStateStep restore_state = 8;
+  }
+}
+message RichTextDelta {
+  uint32 delta_version = 1;
+  repeated RichTextStep steps = 2;
+  bytes expected_state_digest = 3;
+}

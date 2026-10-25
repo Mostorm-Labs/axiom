@@ -1,0 +1,40 @@
+operation_id {
+  value: "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\003\351"
+}
+document_id {
+  value: "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000d"
+}
+schema_version: 1
+payload_version: 1
+payload {
+  set_section_content {
+    items {
+      object_id {
+        value: "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\n"
+      }
+      expected_kind_version: 1
+      expected_content {
+        boundary {
+          x: -20
+          y: 0
+          width: 120
+          height: 80
+        }
+        title: ""
+        padding: 8
+        header_height: 20
+      }
+      replacement_content {
+        boundary {
+          x: -20
+          y: 0
+          width: 120
+          height: 80
+        }
+        title: "\346\240\207\351\242\230 Axiom"
+        padding: 8
+        header_height: 20
+      }
+    }
+  }
+}

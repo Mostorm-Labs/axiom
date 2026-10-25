@@ -1,0 +1,57 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+        "--proto_path=C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\materialized\\FC-08\\baseline-descriptor\\proto",
+        "--include_imports",
+        "--descriptor_set_out=C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\materialized\\FC-08\\baseline-descriptor\\generated.tmp.pb",
+        "auditoryworks/axiom/v1/brush_engine.proto",
+        "auditoryworks/axiom/v1/brush_stroke.proto",
+        "auditoryworks/axiom/v1/common.proto",
+        "auditoryworks/axiom/v1/connector.proto",
+        "auditoryworks/axiom/v1/erase_mask.proto",
+        "auditoryworks/axiom/v1/geometry.proto",
+        "auditoryworks/axiom/v1/object.proto",
+        "auditoryworks/axiom/v1/operation.proto",
+        "auditoryworks/axiom/v1/paint.proto",
+        "auditoryworks/axiom/v1/property.proto",
+        "auditoryworks/axiom/v1/rich_text.proto",
+        "auditoryworks/axiom/v1/snapshot.proto",
+        "auditoryworks/axiom/v1/vector_path.proto"
+      ],
+      "exit_code": 0,
+      "profile": "baseline",
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "argv": [
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+        "--proto_path=C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\materialized\\FC-08\\proposed-descriptor\\proto",
+        "--include_imports",
+        "--descriptor_set_out=C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\materialized\\FC-08\\proposed-descriptor\\generated.tmp.pb",
+        "auditoryworks/axiom/v1/brush_engine.proto",
+        "auditoryworks/axiom/v1/brush_stroke.proto",
+        "auditoryworks/axiom/v1/common.proto",
+        "auditoryworks/axiom/v1/connector.proto",
+        "auditoryworks/axiom/v1/container_operations.proto",
+        "auditoryworks/axiom/v1/erase_mask.proto",
+        "auditoryworks/axiom/v1/geometry.proto",
+        "auditoryworks/axiom/v1/object.proto",
+        "auditoryworks/axiom/v1/operation.proto",
+        "auditoryworks/axiom/v1/paint.proto",
+        "auditoryworks/axiom/v1/property.proto",
+        "auditoryworks/axiom/v1/rich_text.proto",
+        "auditoryworks/axiom/v1/section.proto",
+        "auditoryworks/axiom/v1/snapshot.proto",
+        "auditoryworks/axiom/v1/vector_path.proto"
+      ],
+      "exit_code": 0,
+      "profile": "proposed",
+      "stderr": "",
+      "stdout": ""
+    }
+  ],
+  "version": "libprotoc 36.0"
+}

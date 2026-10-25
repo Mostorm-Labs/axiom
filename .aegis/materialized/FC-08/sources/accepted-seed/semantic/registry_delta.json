@@ -1,0 +1,17 @@
+{
+  "id": "fc08-container-extension-p23-input-v0.1",
+  "status": "PROPOSED_ACCEPTANCE_INPUT_NOT_ACCEPTED",
+  "scope": "semantic:axiom/fc08-container-extension",
+  "source_revision": "e5e630c5662167763fc7ba66b94c35881b1e1470",
+  "object_kind_request": {"id":10,"version":1,"content_branch":"section","content_tag":12},
+  "operation_requests": [
+    {"name":"SetSectionContent","kind_id":17,"payload_tag":17,"schema_version":1,"payload_version":1},
+    {"name":"EditContainerTopology","kind_id":18,"payload_tag":18,"schema_version":1,"payload_version":1}
+  ],
+  "section_property_applicability": {"allowed_field_ids":[3,256],"existing_types_defaults_clear":"unchanged","subtree_opacity":false},
+  "new_capabilities": ["section-v1","container-topology-v1"],
+  "snapshot_capabilities": {"encoding":"inherited CapabilityRequirementsV1","order":"unsigned_ASCII_lexicographic_ascending","duplicates":"reject","unknown":"reject","derived_from":"accepted content-dependent requirements; add section-v1 iff Section/1 present","topology_capability_in_snapshot":"not added solely because prior edits used topology opcode"},
+  "history_admission": "P13 v0.2 E01 UB-01..06 and 10.1; local Command/History only",
+  "formal_acceptance": false,
+  "p31_p32_authorized": false
+}

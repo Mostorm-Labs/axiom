@@ -1,0 +1,67 @@
+{
+  "independent_decode": [
+    {
+      "id": "section-record",
+      "argv": [
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+        "--proto_path=C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\materialized\\FC-08\\proposed-descriptor\\proto",
+        "--decode=auditoryworks.axiom.v1.ObjectRecord",
+        "auditoryworks/axiom/v1/operation.proto",
+        "auditoryworks/axiom/v1/snapshot.proto"
+      ],
+      "exit_code": 0,
+      "input_sha256": "75b9a5ded3dcb9f24ad0db4c1f32b51eef74335f413852a48f1103b88ae9920a",
+      "decoded_artifact": ".aegis/results/FC-08-VERIFY-MATERIALIZE/baseline/windows-native/section-record.independent-descriptor-decode.txt",
+      "production_codec_used": false
+    },
+    {
+      "id": "section-snapshot3",
+      "argv": [
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+        "--proto_path=C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\materialized\\FC-08\\proposed-descriptor\\proto",
+        "--decode=auditoryworks.axiom.v1.DocumentSnapshot",
+        "auditoryworks/axiom/v1/operation.proto",
+        "auditoryworks/axiom/v1/snapshot.proto"
+      ],
+      "exit_code": 0,
+      "input_sha256": "1fd6a786c299e067d13a92cddac7e7159ad661df2e8c4c8f3302e8593918f571",
+      "decoded_artifact": ".aegis/results/FC-08-VERIFY-MATERIALIZE/baseline/windows-native/section-snapshot3.independent-descriptor-decode.txt",
+      "production_codec_used": false
+    },
+    {
+      "id": "op17-content",
+      "argv": [
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+        "--proto_path=C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\materialized\\FC-08\\proposed-descriptor\\proto",
+        "--decode=auditoryworks.axiom.v1.Operation",
+        "auditoryworks/axiom/v1/operation.proto",
+        "auditoryworks/axiom/v1/snapshot.proto"
+      ],
+      "exit_code": 0,
+      "input_sha256": "4ef678aad6bc6b314b0ad5fe44d178770b12fededcee93145f0a988fd4c88aea",
+      "decoded_artifact": ".aegis/results/FC-08-VERIFY-MATERIALIZE/baseline/windows-native/op17-content.independent-descriptor-decode.txt",
+      "production_codec_used": false
+    },
+    {
+      "id": "op18-introduce",
+      "argv": [
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+        "--proto_path=C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\materialized\\FC-08\\proposed-descriptor\\proto",
+        "--decode=auditoryworks.axiom.v1.Operation",
+        "auditoryworks/axiom/v1/operation.proto",
+        "auditoryworks/axiom/v1/snapshot.proto"
+      ],
+      "exit_code": 0,
+      "input_sha256": "825994a3a14a87563ebf4c2b8ea33634361888bc3625f1a81daeb00b8a323221",
+      "decoded_artifact": ".aegis/results/FC-08-VERIFY-MATERIALIZE/baseline/windows-native/op18-introduce.independent-descriptor-decode.txt",
+      "production_codec_used": false
+    }
+  ],
+  "semantic_context": {
+    "op18-introduce": "Empty document100; complete root expectation empty; fresh nonzero Section10/version1; all required fields finite, boundary positive; legal empty-adoption IntroduceWrappers; one effect.",
+    "op17-content": "Prestate is the separately authored section-record fixture. Metadata-only title replacement preserves boundary and needs no geometry basis. Both content values are valid; item target/version/preimage are exact.",
+    "section-record": "Full explicit placement/order, identity transform, empty properties/masks, explicit valid Section fields; kind10/version1/content12.",
+    "section-snapshot3": "Same full record plus independently framed schema3 empty-manifest/recovery/capability/digest projection. Sorted capabilities resource-manifest-v1,section-v1. Legacy empty schema3 using the same inherited framing is actually accepted by normal ingress."
+  },
+  "qualification": "Proposed-descriptor structural decode plus independently authored semantic context; old-codec output is never the expected-value source."
+}

@@ -1,0 +1,14 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+import "auditoryworks/axiom/v1/common.proto";
+import "auditoryworks/axiom/v1/geometry.proto";
+
+message AutoPerimeterAnchor { Vec2 hint = 1; }
+message StablePortAnchor { uint32 port_id = 1; }
+message AnchorRef { oneof anchor { AutoPerimeterAnchor auto_perimeter = 1; StablePortAnchor stable_port = 2; } }
+message FreePointEndpoint { Vec2 point = 1; }
+message AttachedEndpoint { Id128 target_object_id = 1; AnchorRef anchor = 2; }
+message ConnectorEndpoint { oneof endpoint { FreePointEndpoint free_point = 1; AttachedEndpoint attached = 2; } }
+enum ConnectorRouting { CONNECTOR_ROUTING_INVALID = 0; CONNECTOR_ROUTING_STRAIGHT = 1; CONNECTOR_ROUTING_ORTHOGONAL = 2; }
+message ConnectorContent { ConnectorEndpoint start = 1; ConnectorEndpoint end = 2; ConnectorRouting routing = 3; }

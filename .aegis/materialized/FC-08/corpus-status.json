@@ -1,0 +1,24 @@
+{
+  "status": "PARTIAL_UNREVIEWED_M02_NOT_FROZEN",
+  "full_catalog_complete": false,
+  "accepted_seed_vectors": "original bytes preserved",
+  "qualified_materialization_components": [
+    "source-complete descriptor delta",
+    "independent raw R01 inputs",
+    "literal graph copies",
+    "non-dyadic reference tables",
+    "R02 fixed oracle controls"
+  ],
+  "draft_components": [
+    "wire-variant-index.partial.json",
+    "tests/fc08/reference/variants.py",
+    "tests/fc08/corpus/variants/**"
+  ],
+  "known_draft_review_items": [
+    "Wire variants need complete per-variant state contexts and single-condition negative review before acceptance.",
+    "W03/W05 multi-effect drafts must not be treated as qualified single-condition negatives.",
+    "The W06 erase-mask variant and W04 keyed collection expansion remain unmaterialized.",
+    "Other families remain inventory only, with no blanket positive coverage claim."
+  ],
+  "drafts_are_not_product_expected_golden": true
+}

@@ -1,0 +1,22 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+message ColorValue { float r = 1; float g = 2; float b = 3; float a = 4; }
+message NoFill {}
+message SolidFill { ColorValue color = 1; }
+message FillStyleValue { oneof value { NoFill none = 1; SolidFill solid = 2; } }
+
+message NoStroke {}
+enum StrokeCap { STROKE_CAP_INVALID = 0; STROKE_CAP_BUTT = 1; STROKE_CAP_ROUND = 2; STROKE_CAP_SQUARE = 3; }
+message MiterJoin { double limit = 1; }
+message RoundJoin {}
+message BevelJoin {}
+message StrokeJoin { oneof value { MiterJoin miter = 1; RoundJoin round = 2; BevelJoin bevel = 3; } }
+message SolidDash {}
+message DashPattern { repeated double segments = 1; double offset = 2; }
+message StrokeDash { oneof value { SolidDash solid = 1; DashPattern pattern = 2; } }
+message SolidStroke { ColorValue color = 1; double width = 2; StrokeCap cap = 3; StrokeJoin join = 4; StrokeDash dash = 5; }
+message StrokeStyleValue { oneof value { NoStroke none = 1; SolidStroke solid = 2; } }
+
+enum BlendModeValue { BLEND_MODE_INVALID = 0; BLEND_MODE_NORMAL = 1; }
+enum ConnectorDecorationValue { CONNECTOR_DECORATION_INVALID = 0; CONNECTOR_DECORATION_NONE = 1; CONNECTOR_DECORATION_ARROW = 2; }

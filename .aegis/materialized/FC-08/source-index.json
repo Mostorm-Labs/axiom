@@ -1,0 +1,473 @@
+{
+  "accepted_exports": [
+    {
+      "acceptance_event": "FC08-P23-ACCEPTANCE-v0.1",
+      "accepted_sections": [
+        "## 2. 对象身份和 Schema 所有权",
+        "## 3. SectionContent/1 可执行字段候选",
+        "## 4. 层级、引用与选择边界",
+        "## 5. 一般仿射、独立边界与变换闭包",
+        "## 6. 数值和确定性：不把协议语义交给 P20",
+        "## 7. 编号及兼容矩阵候选"
+      ],
+      "accepted_version": "v0.2",
+      "capture_sha256": "b8ad67729494dea666a4cdf89a7268e7d98e46c2a4401628d28dff5594734d1a",
+      "captured_last_edit": "2026-10-25T17:26:15.718Z",
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift.",
+      "id": "P12",
+      "observed_last_edit": "2026-10-25T17:26:15.718Z",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P12.md",
+      "provider": "Notion",
+      "sha256": "b4cd1c0f685199f6d370242e334645d78881640abe3c807cf480568d8da52cbc",
+      "trusted_sections": "sections2..7 with D05/CAP precedence",
+      "url": "https://app.notion.com/p/4044c57a590c8192b9cbc6dd108a408e"
+    },
+    {
+      "acceptance_event": "FC08-P23-ACCEPTANCE-v0.1",
+      "accepted_sections": [
+        "## 1. 为什么采用两个新增操作，而不是固定原来的四个",
+        "## 2. 共享数据模型与 canonical 集合规则",
+        "## 3. Guard、并发检查与原子提交",
+        "## 4. IntroduceWrappers：Group、Section、空容器和恢复",
+        "## 5. ReleaseWrappers：Ungroup 与安全 Remove Section",
+        "## 6. RelocateObjects：原子重设父级与拖放提交",
+        "## 7. 跨父 Wrap、LCA 与 OrderKey",
+        "## 8. 数值、姿态保持与唯一语义来源",
+        "## 9. 命令 → 操作覆盖矩阵",
+        "## 10. History 的精确正反向合同",
+        "## 11. 错误与结果状态（逻辑名称，非最终错误码分配）",
+        "## 12. 版本、能力及 legacy 保留",
+        "## 13. 有限 domain 与最小性说明"
+      ],
+      "accepted_version": "v0.2+E01",
+      "capture_sha256": "d5456e5bccb7cc65a715deedd266b6afd93c4495e5f2923e566f0562abe676bd",
+      "captured_last_edit": "2026-10-25T17:26:27.069Z",
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift.",
+      "id": "P13",
+      "observed_last_edit": "2026-10-25T17:26:27.069Z",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P13.md",
+      "provider": "Notion",
+      "sha256": "6f65325d4282a78774489bddd9f716614994f63757957675b82f3c423983f3fe",
+      "trusted_sections": "sections1..13 including UB01..06 and 10.1",
+      "url": "https://app.notion.com/p/4044c57a590c81d2a4d7cf6cd20c0402"
+    },
+    {
+      "acceptance_event": "FC08-P20-CLOSURE-v0.1: architecture v0.1 + ARC-CR-C01/C02",
+      "accepted_sections": [
+        "## 1. 架构选择",
+        "## 2. 单一所有权表",
+        "## 3. 运行时、线程和身份边界",
+        "## 4. 两个发布边界，不能伪装成一个事务",
+        "## 5. 三类 bounds 与非裁剪层级",
+        "## 6. 选择、变化传播和资源失效",
+        "## 7. 实现映射及真实缺口"
+      ],
+      "accepted_version": "v0.1",
+      "capture_sha256": "f7618e51d0b58861ad7a3835a6820a7b0eba825c806d10c20231cd0662d69649",
+      "captured_last_edit": "2026-10-25T17:50:16.763Z",
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift.",
+      "id": "P14",
+      "observed_last_edit": null,
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P14.md",
+      "provider": "Notion",
+      "sha256": "a43d1bad1dc79e54b80ad6a85d0f24c4d6d20fe011f291b90b5a688fcac4c9de",
+      "trusted_sections": "technical architecture sections",
+      "url": "https://app.notion.com/p/4044c57a590c81c99f68d25e076eed2d"
+    },
+    {
+      "acceptance_event": "FC08-P20-CLOSURE-v0.1: architecture v0.1 + ARC-CR-C01/C02",
+      "accepted_sections": [
+        "## 1. 模块和依赖",
+        "## 2. 公开 source API 合同",
+        "## 3. 指令及 canonical 表达",
+        "## 4. 内部准备与提交接口",
+        "## 5. Gesture 与对象编辑互斥",
+        "## 6. Readback、能力与状态",
+        "## 7. 有界队列、终态与幂等",
+        "## 8. Projection 模块接口"
+      ],
+      "accepted_version": "v0.1+C01",
+      "capture_sha256": "7340021be564513d354f4b4cda6b6eec3c9e726e582339e5ed4bd96d1b08f8d8",
+      "captured_last_edit": "2026-10-25T17:50:21.409Z",
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift.",
+      "id": "P15",
+      "observed_last_edit": null,
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P15.md",
+      "provider": "Notion",
+      "sha256": "95f6650dd26809e60560fbdeeb7fb9751ed42d9555e8a62849f4b38261a40837",
+      "trusted_sections": "technical sections including8.1",
+      "url": "https://app.notion.com/p/4044c57a590c81c7b484eb243f2685c3"
+    },
+    {
+      "acceptance_event": "FC08-P20-CLOSURE-v0.1: architecture v0.1 + ARC-CR-C01/C02",
+      "accepted_sections": [
+        "## 1. 三种状态机不混用",
+        "## 2. F01：跨父 Wrap / GroupSelection",
+        "## 3. F02：空 Section 创建、移除与 Undo",
+        "## 4. F03：Resize Section 边界与嵌套 Group transform",
+        "## 5. F04：拖放、跨边界与取消",
+        "## 6. F05：批量嵌套 Release 与逆向恢复",
+        "## 7. F06：Rename、外观、Undo/Redo",
+        "## 8. F07：重试、背压与结束事件",
+        "## 9. F08：commit 前后故障域",
+        "## 10. F09：detach、close 和重新挂载",
+        "## 11. F10：Snapshot／replay 与 persistence"
+      ],
+      "accepted_version": "v0.1+C02",
+      "capture_sha256": "bcf1cb263138ca5478d2533808b5ef6f59ca7f91e26eb368a90070b98250bc23",
+      "captured_last_edit": "2026-10-25T17:50:33.926Z",
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift.",
+      "id": "P16",
+      "observed_last_edit": null,
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P16.md",
+      "provider": "Notion",
+      "sha256": "e07dd7c33029393e033079c62618166589a9ca9c357acce85146b0ac809074f4",
+      "trusted_sections": "technical flows including9.1",
+      "url": "https://app.notion.com/p/4044c57a590c81249863c8461f266b09"
+    },
+    {
+      "acceptance_event": "FC08-P20-CLOSURE-v0.1: architecture v0.1 + ARC-CR-C01/C02",
+      "accepted_sections": [
+        "## 1. Common 与 Host 的不可交换责任",
+        "## 2. 两条输入通道",
+        "## 3. 跨语言值、坐标和生命周期身份",
+        "## 4. Windows realization",
+        "## 5. Web realization",
+        "## 6. 功能支持与 writer admission",
+        "## 7. Receipt、重试与错误呈现",
+        "## 8. 标题、样式和上下文工具栏",
+        "## 9. 兼容与 release 条件",
+        "## 10. 给 P20 的最小观察面"
+      ],
+      "accepted_version": "v0.1+closure",
+      "capture_sha256": "837c81b233418802aaab24bc0822f40e6998b60ecd3b70291f90159c64bffa39",
+      "captured_last_edit": "2026-10-25T17:50:41.513Z",
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift.",
+      "id": "P17",
+      "observed_last_edit": null,
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P17.md",
+      "provider": "Notion",
+      "sha256": "400805038f42e4bb10e781d7e3fce17d09bbde491b4b284a282ed63feabac399",
+      "trusted_sections": "platform and receipt contract",
+      "url": "https://app.notion.com/p/4044c57a590c817ebf4ef0b7727c6c34"
+    },
+    {
+      "acceptance_event": "FC08-P20-CLOSURE-v0.1",
+      "accepted_sections": [
+        "## 1. 执行profile与语料发现",
+        "## 2. Oracle实现约束",
+        "## 3. RED前置：区分能力缺失、行为反例和oracle敏感性",
+        "## 4. 机器证据格式与终态",
+        "## 5. 预留的FC-13物理债务",
+        "## 6. 物化前置与边界",
+        "## 8. CR01 — 同范围 Closure 的执行判据澄清"
+      ],
+      "accepted_version": "v0.1+CR01",
+      "capture_sha256": "c5577ac1a1a3e6d0715a08d43edeaa605c2094484499efe3b6979584bfa8c7fb",
+      "captured_last_edit": "2026-10-25T18:14:31.105Z",
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift.",
+      "id": "P20 execution",
+      "observed_last_edit": "2026-10-25T18:14:31.105Z",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P20.md",
+      "provider": "Notion",
+      "sha256": "5089fe4b71ef130d35e41bbda8826839406a1c546af71be54bdddc26f6eee087",
+      "trusted_sections": "execution and CR01 delta",
+      "url": "https://app.notion.com/p/4044c57a590c81a884e7d17b561dd486"
+    }
+  ],
+  "format": "fc08-source-index-v1",
+  "inherited_math_export": {
+    "acceptance_event": "FC08-P23-D06 incorporates Geometry Types via P12 section6.2",
+    "accepted_sections": "2..8, especially exact inverse formula section8",
+    "capture_path": ".aegis/materialized/FC-08/sources/captures/GeometryTypes.response.json",
+    "capture_sha256": "ae958f7469a2aca9e92cbd184268a37bf2687fd1baeb90186008e1137fdcb1c5",
+    "captured_last_edit": "2026-08-22T17:05:52.449Z",
+    "path": ".aegis/materialized/FC-08/sources/accepted-exports/GeometryTypes-math.md",
+    "ref": "https://app.notion.com/p/3c44c57a590c8157a657c7f796ebcdac",
+    "sha256": "74398617f1c0917e18066552378cda62b643569c63d924fcac8f633857ab7a78"
+  },
+  "precedence": [
+    "execution v0.4 replaces FC08 order only",
+    "semantic D05 CAP sorted-unique supersedes historical P12 tail-append wording",
+    "P23 typed wire binding replaces earlier helper naming",
+    "P20 CR01 supersedes only the named seven case expressions"
+  ],
+  "product_P32_authorized": false,
+  "schema_sources": [
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_engine.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/brush_engine.proto",
+      "profile": "baseline",
+      "sha256": "d61abcb963dca259aecd01598350ff2579f939911a5f511eaaa2acc8db7209ec"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_stroke.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/brush_stroke.proto",
+      "profile": "baseline",
+      "sha256": "4d09856c710e3c649b907d4ca26ec34f479bc36d36051be591fdfe8c2b817b6a"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/common.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/common.proto",
+      "profile": "baseline",
+      "sha256": "c4ae15df0603bd47ad458dc21e48347842728856c789db36f1d06539ff831f4f"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/connector.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/connector.proto",
+      "profile": "baseline",
+      "sha256": "fda2af65ddf673ea3f432330c50521eebc6e013dc300056bae6b9c6d237129b1"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/erase_mask.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/erase_mask.proto",
+      "profile": "baseline",
+      "sha256": "7396300fefe1c501aa8063cb91cde0fe0e45a0cc47528e6e6df6458978dbb844"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/geometry.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/geometry.proto",
+      "profile": "baseline",
+      "sha256": "0cad1d9b78c3153488023d693f7676899bafac3f240913cf1ea6fd3113e97a80"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/object.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/object.proto",
+      "profile": "baseline",
+      "sha256": "404b55649e2fdcac0cd59b7f92a65fe17a197dd1ee3ddc28f338c01b42553ec2"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/operation.proto",
+      "profile": "baseline",
+      "sha256": "83f85cf9cf45959ae4777643c08df5a0c77b6407f92c654b4d5281f797599d0d"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/paint.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/paint.proto",
+      "profile": "baseline",
+      "sha256": "b19b9c8c97af0c95582405c2f75de08fe685e9d713daefad1b6b0367211259ac"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/property.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/property.proto",
+      "profile": "baseline",
+      "sha256": "8a5422742d0c9822a145e5548e2eb660ce8663158fb963727b66caaec2e5cb68"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/rich_text.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/rich_text.proto",
+      "profile": "baseline",
+      "sha256": "85a0a8324e14c499a4a6e16d371ad57c12b4ec946982aa08a22ceae731f125fc"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/snapshot.proto",
+      "profile": "baseline",
+      "sha256": "b4776ddd307106297f51ae95611a01473a429b77edca8510d4d53eb7ff7a6787"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/vector_path.proto",
+      "path": ".aegis/materialized/FC-08/baseline-descriptor/proto/auditoryworks/axiom/v1/vector_path.proto",
+      "profile": "baseline",
+      "sha256": "4b1621e376e68762b000bafcdf4d4ce87116ecdc3db9c2c2a4e7fd90f4a9d88b"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_engine.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/brush_engine.proto",
+      "profile": "proposed",
+      "sha256": "d61abcb963dca259aecd01598350ff2579f939911a5f511eaaa2acc8db7209ec"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_stroke.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/brush_stroke.proto",
+      "profile": "proposed",
+      "sha256": "4d09856c710e3c649b907d4ca26ec34f479bc36d36051be591fdfe8c2b817b6a"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/common.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/common.proto",
+      "profile": "proposed",
+      "sha256": "c4ae15df0603bd47ad458dc21e48347842728856c789db36f1d06539ff831f4f"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/connector.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/connector.proto",
+      "profile": "proposed",
+      "sha256": "fda2af65ddf673ea3f432330c50521eebc6e013dc300056bae6b9c6d237129b1"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/erase_mask.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/erase_mask.proto",
+      "profile": "proposed",
+      "sha256": "7396300fefe1c501aa8063cb91cde0fe0e45a0cc47528e6e6df6458978dbb844"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/geometry.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/geometry.proto",
+      "profile": "proposed",
+      "sha256": "0cad1d9b78c3153488023d693f7676899bafac3f240913cf1ea6fd3113e97a80"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/object.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/object.proto",
+      "profile": "proposed",
+      "sha256": "b94ca4f237bc98f69821bfc1f8424a8953d668612fa6770f10876d50e2300cad"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/operation.proto",
+      "profile": "proposed",
+      "sha256": "ab4bf959748f7c389753a2290d09bdc8eaacf8b64ec8c0188a2fd72ae7a9042d"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/paint.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/paint.proto",
+      "profile": "proposed",
+      "sha256": "b19b9c8c97af0c95582405c2f75de08fe685e9d713daefad1b6b0367211259ac"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/property.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/property.proto",
+      "profile": "proposed",
+      "sha256": "8a5422742d0c9822a145e5548e2eb660ce8663158fb963727b66caaec2e5cb68"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/rich_text.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/rich_text.proto",
+      "profile": "proposed",
+      "sha256": "85a0a8324e14c499a4a6e16d371ad57c12b4ec946982aa08a22ceae731f125fc"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/snapshot.proto",
+      "profile": "proposed",
+      "sha256": "b4776ddd307106297f51ae95611a01473a429b77edca8510d4d53eb7ff7a6787"
+    },
+    {
+      "git_source": "db21441a1e978ea30fcfb4185691dadbb6f81f78:schema/axiom/v1/proto/auditoryworks/axiom/v1/vector_path.proto",
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/vector_path.proto",
+      "profile": "proposed",
+      "sha256": "4b1621e376e68762b000bafcdf4d4ce87116ecdc3db9c2c2a4e7fd90f4a9d88b"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/section.proto",
+      "profile": "proposed",
+      "seed_source": ".aegis/materialized/FC-08/sources/accepted-seed/semantic/idl/section.proto",
+      "sha256": "6b2bff0e7298ef06a3740f7317c2b67fee937210f70e631f1f9f0776ab47f927"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/proposed-descriptor/proto/auditoryworks/axiom/v1/container_operations.proto",
+      "profile": "proposed",
+      "seed_source": ".aegis/materialized/FC-08/sources/accepted-seed/semantic/idl/container_operations.proto",
+      "sha256": "905389d433c7bb96863ae26e08108fa834c7063246d0f6713a15d5cc76ead84d"
+    }
+  ],
+  "seed_sources": [
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/authority/authorities-at-a5af5f6.json",
+      "sha256": "131d9edcf480bb477bcf4e9288fcac0eb92913eeb68da9b4f17349c565f835f4"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/authority/execution-sequencing-acceptance.json",
+      "sha256": "b449d111a4899d0c416bdcf77b451dc5a10064f79a68852681663013156609ae"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/authority/semantic-acceptance.json",
+      "sha256": "43893116526e47753735e7e11e22807c8e54edaf803d3acb5c11dbb7a6d81e76"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/manifest.json",
+      "sha256": "b38c62e739cddd9aa17a6bda592b70ba80aedd20a773b3d9d337894debbf44b0"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/semantic/capability_binding.md",
+      "sha256": "795bed80c7aa264dac8e8f779c2d0e8fd771f47b43c637a4b524d3b3c744c881"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/semantic/idl/container_operations.proto",
+      "sha256": "905389d433c7bb96863ae26e08108fa834c7063246d0f6713a15d5cc76ead84d"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/semantic/idl/outer_mapping.txt",
+      "sha256": "e874f307001020394657b745fc2c0e4cd7b8ec6d320e5f39dc7ccc8182bfab15"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/semantic/idl/section.proto",
+      "sha256": "6b2bff0e7298ef06a3740f7317c2b67fee937210f70e631f1f9f0776ab47f927"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/semantic/registry_delta.json",
+      "sha256": "607a5971f9aca871dcc0555381954ef15bff660c074745b91e2c29dd70bbe9f5"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/semantic/wire_profile.md",
+      "sha256": "9791533f4e101b67c6d92a6a62dcfd65b667d25ae3da52526daccf2e442c7747"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/closure-receipt.json",
+      "sha256": "fd37fa1d9d4ffa6324c328edb797ce86518df4ca74202652f85d4a4d467682ce"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/effective-case-catalog.json",
+      "sha256": "da62f3c6c6a7191b01ba7ba4713290acaea26755ef2971fe62475cb101c9b268"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/execution.md",
+      "sha256": "7cbc51c0a4e100459c280169d909422b0eb40f03624540b33620fd4c9d61a196"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/fixtures/affine-reparent.json",
+      "sha256": "03f60ee56b50dbce2e12dcbf42c5a2859fba0445b90161ee58e89bb5b179ed51"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/fixtures/concave-region.json",
+      "sha256": "61b04383d25753b4e322baf7698737b3a4dd527394a3268377e0ea5294122482"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/fixtures/cross-parent.json",
+      "sha256": "bc329faa44b8748678782b80384dc38cb57f93fe97e66836abe69b3c794a14dd"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/fixtures/handoff-traces.json",
+      "sha256": "84f471a36efdad47ab23129767cc359ad9f7ab14d9ce315a4df3c2f7b883ab35"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/fixtures/identity-map.json",
+      "sha256": "b3499204f332828523076ffa9f9e5ae46d5c89ccd58eeef780895852b1938cbd"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/fixtures/nested-release.json",
+      "sha256": "22c9f2602c723ff4050ebe0c142e62299ea3beb62e0019acae08082215e7a552"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/fixtures/section-content-wire.json",
+      "sha256": "3a7a670f06fc34ad268b3f2ed9913444e8e4e54b91aec797e6e2261daa03e7fe"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/physical-debt.json",
+      "sha256": "6f59176ea6a8139802a33dfaec19009125ea41d12d9ecfb50464dbdc953649e2"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json",
+      "sha256": "bcd4262976b9ca1ffc6348350355e70f26635437124a1fa63c8cb6e57726ed19"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/review-delta.json",
+      "sha256": "d0b3f718a74cd3e1c2d9e873c6f45c932ddf46db4733ff5e299b23d33cd37ff2"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json",
+      "sha256": "f24d43c32d4a0aa99c18eb927d66ce87e00b5bf4b03fe3d3f7e74d9c23112990"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/source-binding.json",
+      "sha256": "61eebabe51add0017fa0cf37c245dd2c7617f4d8dde9b9ef6eb77c926b1f5024"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/temporal-controls-CR01.json",
+      "sha256": "b2143a270d444e3236ebc9ea0c5d19233ba2f5974213d4ce54a386682221ad18"
+    }
+  ],
+  "starting_revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78"
+}

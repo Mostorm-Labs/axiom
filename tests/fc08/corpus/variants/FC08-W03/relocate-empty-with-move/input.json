@@ -1,0 +1,77 @@
+{
+  "direction": "wire-ingress",
+  "message_type": "Operation",
+  "value": {
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "operation_id": {
+      "value": "000000000000000000000000000003e9"
+    },
+    "payload": {
+      "edit_container_topology": {
+        "guard": {
+          "child_sets": [
+            {
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000014"
+                  },
+                  "order_key": {
+                    "value": "10"
+                  }
+                }
+              ]
+            }
+          ],
+          "nodes": [
+            {
+              "kind_id": 1,
+              "kind_version": 1,
+              "object_id": {
+                "value": "00000000000000000000000000000014"
+              },
+              "placement_before": {
+                "order_key": {
+                  "value": "10"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              }
+            }
+          ]
+        },
+        "relocate_objects": {},
+        "relocations": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000014"
+            },
+            "placement_after": {
+              "order_key": {
+                "value": "20"
+              }
+            },
+            "transform_after": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 0,
+              "ty": 0
+            }
+          }
+        ]
+      }
+    },
+    "payload_version": 1,
+    "schema_version": 1
+  }
+}

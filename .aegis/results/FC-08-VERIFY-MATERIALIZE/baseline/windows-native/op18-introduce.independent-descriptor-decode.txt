@@ -1,0 +1,53 @@
+operation_id {
+  value: "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\003\351"
+}
+document_id {
+  value: "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000d"
+}
+schema_version: 1
+payload_version: 1
+payload {
+  edit_container_topology {
+    guard {
+      child_sets {
+      }
+    }
+    introduce_wrappers {
+      containers {
+        id {
+          value: "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\n"
+        }
+        kind_id: 10
+        kind_version: 1
+        placement {
+          order_key {
+            value: "\020"
+          }
+        }
+        transform {
+          a: 1
+          b: 0
+          c: 0
+          d: 1
+          tx: 0
+          ty: 0
+        }
+        properties {
+        }
+        content {
+          section {
+            boundary {
+              x: -20
+              y: 0
+              width: 120
+              height: 80
+            }
+            title: ""
+            padding: 8
+            header_height: 20
+          }
+        }
+      }
+    }
+  }
+}

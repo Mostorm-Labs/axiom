@@ -1,0 +1,13 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+import "auditoryworks/axiom/v1/common.proto";
+import "auditoryworks/axiom/v1/geometry.proto";
+import "auditoryworks/axiom/v1/vector_path.proto";
+
+message EraseKnot { Vec2 position = 1; double radius = 2; }
+message EraseCubicSegment { EraseKnot p0 = 1; EraseKnot p1 = 2; Vec2 control1 = 3; Vec2 control2 = 4; }
+message SweptCircleMask { repeated EraseCubicSegment segments = 1; }
+message FilledPathMask { VectorPathGeometry path = 1; }
+message EraseMaskGeometry { oneof geometry { SweptCircleMask swept_circle = 1; FilledPathMask filled_path = 2; } }
+message EraseMaskRecord { Id128 mask_id = 1; EraseMaskGeometry geometry = 2; }
