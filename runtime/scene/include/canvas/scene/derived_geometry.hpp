@@ -15,11 +15,12 @@ struct ConnectorGeometry final {
     runtime::ConnectorRouteStatus status = runtime::ConnectorRouteStatus::kReady;
     runtime::ConnectorRouteWork work{};
     foundation::WorldRect searchedDomain{};
-    std::uint32_t algorithmRevision = 1;
+    std::uint32_t algorithmRevision = 2;
     bool operator==(const ConnectorGeometry& o) const {
         if (start.x != o.start.x || start.y != o.start.y || end.x != o.end.x ||
             end.y != o.end.y || arrow_end != o.arrow_end || status != o.status ||
-            work != o.work || searchedDomain != o.searchedDomain || route.size() != o.route.size()) return false;
+            work != o.work || algorithmRevision != o.algorithmRevision ||
+            searchedDomain != o.searchedDomain || route.size() != o.route.size()) return false;
         for (std::size_t i=0; i<route.size(); ++i)
             if (route[i].x != o.route[i].x || route[i].y != o.route[i].y) return false;
         return true;

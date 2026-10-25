@@ -639,7 +639,11 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             // Explicit styles always use the same Field Registry values as Preview.
             const semantic::SolidStroke legacy{{1.0F,128.0F/255.0F,0.0F,1.0F},4.0};
             auto paint=strokePaint(stroke ? *stroke : legacy, antiAliasConnectors);
-            if(derived && derived->status!=runtime::ConnectorRouteStatus::kReady) {
+            // Pending is an interactive connection, not a routing failure.
+            // Keep its authored solid/dash style while the readback remains
+            // Pending; only terminal failures use the diagnostic treatment.
+            if(derived && derived->status!=runtime::ConnectorRouteStatus::kReady &&
+               derived->status!=runtime::ConnectorRouteStatus::kPending) {
                 const SkScalar intervals[]{6.0F,4.0F};
                 paint.setColor4f({0.9F,0.35F,0.12F,1.0F},nullptr);
                 paint.setPathEffect(SkDashPathEffect::Make(SkSpan<const SkScalar>(intervals,2),0));

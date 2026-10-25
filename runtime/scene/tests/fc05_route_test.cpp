@@ -41,6 +41,38 @@ void avoids(const scene::ConnectorGeometry& g, const std::vector<semantic::Objec
 }
 }
 
+TEST(FC05Route, ClearParallelPortsUseTheMiddleLaneInOneQuantum) {
+    for(bool vertical:{false,true}) {
+        auto a=box(1,0,0,100,100),b=box(2,300,50,100,100);
+        if(vertical)b.transform={1,0,0,1,50,300};
+        auto c=wire(0,0,0,0);auto& cc=std::get<semantic::ConnectorContent>(c.content);
+        cc.start.value=semantic::AttachedEndpoint{a.id,semantic::StablePortAnchor{vertical?3U:2U}};
+        cc.end.value=semantic::AttachedEndpoint{b.id,semantic::StablePortAnchor{vertical?1U:4U}};
+        const std::vector<semantic::ObjectRecord> objects{a,b};
+        scene::ConnectorRouteJob job(c,objects);
+        EXPECT_EQ(job.advance(),runtime::ConnectorRouteStatus::kReady);
+        const auto route=scene::connectorGeometry(c,objects);ASSERT_TRUE(route);
+        ASSERT_EQ(route->status,runtime::ConnectorRouteStatus::kReady);
+        ASSERT_EQ(route->route.size(),4U);
+        if(vertical) {EXPECT_FLOAT_EQ(route->route[1].y,200);EXPECT_FLOAT_EQ(route->route[2].y,200);}
+        else {EXPECT_FLOAT_EQ(route->route[1].x,200);EXPECT_FLOAT_EQ(route->route[2].x,200);}
+        avoids(*route,objects);
+    }
+}
+TEST(FC05Route, AlignedPortsStayStraightAndCenterLaneNeverCrossesAnObstacle) {
+    auto a=box(1,0,0,100,100),b=box(2,300,0,100,100);
+    auto c=wire(0,0,0,0);auto& cc=std::get<semantic::ConnectorContent>(c.content);
+    cc.start.value=semantic::AttachedEndpoint{a.id,semantic::StablePortAnchor{2}};
+    cc.end.value=semantic::AttachedEndpoint{b.id,semantic::StablePortAnchor{4}};
+    auto route=scene::connectorGeometry(c,{a,b});ASSERT_TRUE(route);
+    ASSERT_EQ(route->status,runtime::ConnectorRouteStatus::kReady);
+    EXPECT_EQ(route->route.size(),2U);
+    b.transform.ty=50;
+    const std::vector<semantic::ObjectRecord> objects{a,b,box(3,180,40,40,80)};
+    route=scene::connectorGeometry(c,objects);ASSERT_TRUE(route);
+    ASSERT_EQ(route->status,runtime::ConnectorRouteStatus::kReady);avoids(*route,objects);
+}
+
 TEST(FC05Route, CollinearEndpointsDetourAroundBlockingObject) {
     const auto c=wire(0,50,200,50);
     const std::vector<semantic::ObjectRecord> obstacles{box(1,80,20,40,60)};
@@ -59,7 +91,9 @@ TEST(FC05Route, BothSingleElbowsBlockedStillFindsMultipleBendRoute) {
 TEST(FC05Route, CancellationIsTerminalAndEachQuantumIsBounded) {
     const auto c=wire(0,0,500,500);
     std::vector<semantic::ObjectRecord> objects;
-    for(unsigned i=0;i<100;++i)objects.push_back(box(i+1,50+(i%10)*35,50+(i/10)*35,12,12));
+    // Force an actual input-scan yield, rather than depending on a small
+    // clear route artificially yielding before it can be certified.
+    for(unsigned i=0;i<1500;++i)objects.push_back(box(i+1,100000+i*20,100000,12,12));
     scene::ConnectorRouteJob cancelled(c,objects);
     ASSERT_EQ(cancelled.advance(),runtime::ConnectorRouteStatus::kPending);
     cancelled.cancel();

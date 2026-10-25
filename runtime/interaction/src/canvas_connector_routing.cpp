@@ -37,7 +37,10 @@ scene::ConnectorGeometry CanvasEditingRuntime::previewConnectorGeometry(const se
     }
     const auto found=connectorPreviewRouting_->results.find(record.id);
     if(found!=connectorPreviewRouting_->results.end())return found->second;
-    return *scene::connectorGeometry(record,connectorPreviewRouting_->source,true);
+    auto route=*scene::connectorGeometry(record,connectorPreviewRouting_->source,true);
+    if(route.status!=runtime::ConnectorRouteStatus::kPending)
+        connectorPreviewRouting_->results.emplace(record.id,route);
+    return route;
 }
 unsigned CanvasEditingRuntime::serviceConnectorPreviewRouting(unsigned quanta) {
     if(!transformDrag_.active()&&!creationActive()) {connectorPreviewRouting_.reset();return 0;}
@@ -46,6 +49,7 @@ unsigned CanvasEditingRuntime::serviceConnectorPreviewRouting(unsigned quanta) {
     unsigned used=0;
     while(used<quanta&&preview.cursor<preview.queue.size()) {
         const auto& object=preview.queue[preview.cursor];
+        if(preview.results.contains(object.id)) {++preview.cursor;continue;}
         if(!preview.job)preview.job=std::make_unique<scene::ConnectorRouteJob>(object,preview.source);
         ++used;
         if(preview.job->advance()==runtime::ConnectorRouteStatus::kPending)continue;

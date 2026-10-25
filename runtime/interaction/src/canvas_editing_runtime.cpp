@@ -1039,6 +1039,18 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
       else if (stable->port_id == 4U) { dx = -120.0F; dy = 0.0F; }
     }
     finalEnd = {creation.preview().start.x + dx, creation.preview().start.y + dy};
+    // A hit within the affordance circle need not be at its exact center.
+    // Align the sibling with the semantic port, not that physical click offset.
+    // A zero-length Down has no valid preview record yet.
+    semantic::ObjectRecord anchorRecord{};
+    anchorRecord.kind=semantic::ObjectKind::kConnector;anchorRecord.kind_version=1;
+    anchorRecord.content=semantic::ConnectorContent{{*creation.startAttachment()},
+        {semantic::FreePointEndpoint{{finalEnd.x,finalEnd.y}}},semantic::ConnectorRouting::kStraight};
+    if(const auto* source=semanticObjects_.find(creation.startAttachment()->target_object_id))
+      if(const auto resolved=scene::connectorGeometry(anchorRecord,{*source});
+         resolved&&resolved->status==runtime::ConnectorRouteStatus::kReady) {
+        if(dx==0)finalEnd.x=resolved->start.x;else finalEnd.y=resolved->start.y;
+      }
     // A point click is the explicit "create a sibling on this side" action.
     // Do not feed its synthesized endpoint through ordinary drag snapping:
     // nearby objects must not steal the generated target or pull it toward a

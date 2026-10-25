@@ -1,0 +1,18 @@
+Test project C:/Users/Chado/.codex/worktrees/fc05-p32/out/fc05-windows
+    Start 687: FC01SelectedActions
+1/2 Test #687: FC01SelectedActions ..............Exit code 0xc0000409***Exception:   2.82 sec
+Assertion failed: route->route.size()==2, file C:\Users\Chado\.codex\worktrees\fc05-p32\apps\ink_playground\tests\selected_actions_test.cpp, line 295
+
+    Start 688: FC05ConnectorDragPreview
+2/2 Test #688: FC05ConnectorDragPreview .........Exit code 0xc0000409***Exception:   2.89 sec
+Assertion failed: route.status==canvas::runtime::ConnectorRouteStatus::kReady, file C:\Users\Chado\.codex\worktrees\fc05-p32\apps\ink_playground\tests\selected_actions_test.cpp, line 322
+
+
+0% tests passed, 2 tests failed out of 2
+
+Total Test time (real) =   6.14 sec
+
+The following tests FAILED:
+	687 - FC01SelectedActions (Exit code 0xc0000409)
+	688 - FC05ConnectorDragPreview (Exit code 0xc0000409)
+Errors while running CTest

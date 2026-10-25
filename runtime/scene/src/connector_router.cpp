@@ -186,6 +186,8 @@ struct ConnectorRouteJob::Impl {
     std::vector<P> best;
     double bestLength=INFINITY; unsigned bestBends=0;
     bool searching=false;
+    std::vector<std::vector<P>> preferred;
+    std::size_t preferredIndex=0, preferredSegment=1, preferredObstacle=0;
 
     Impl(const semantic::ObjectRecord& c,std::span<const semantic::ObjectRecord> s):connector(c),source(s) {
         result.status=Status::kPending;
@@ -242,6 +244,25 @@ struct ConnectorRouteJob::Impl {
         }
         if(domainIndex>=3) {fail(Status::kNoRouteInDomain);return false;}
         start=exitsA[pairIndex/exitsB.size()]; end=exitsB[pairIndex%exitsB.size()]; ++pairIndex;
+        // Certify common interactive routes before opening the general search.
+        // The first/last escape stubs already obey each port's outward normal.
+        // Test the middle lane before equal-length routes along object edges.
+        preferred.clear();preferredIndex=0;preferredSegment=1;preferredObstacle=0;
+        if(start.x==end.x||start.y==end.y)preferred.push_back({start,end});
+        const bool horizontalA=start!=a.p&&start.y==a.p.y;
+        const bool horizontalB=end!=b.p&&end.y==b.p.y;
+        const bool verticalA=start!=a.p&&start.x==a.p.x;
+        const bool verticalB=end!=b.p&&end.x==b.p.x;
+        if((horizontalA||horizontalB)&&!verticalA&&!verticalB) {
+            const double mid=a.p.x+(b.p.x-a.p.x)*0.5;
+            preferred.push_back({start,{mid,start.y},{mid,end.y},end});
+        }
+        if((verticalA||verticalB)&&!horizontalA&&!horizontalB) {
+            const double mid=a.p.y+(b.p.y-a.p.y)*0.5;
+            preferred.push_back({start,{start.x,mid},{end.x,mid},end});
+        }
+        preferred.push_back({start,{start.x,end.y},end});
+        preferred.push_back({start,{end.x,start.y},end});
         const double pad=std::array<double,3>{64,256,1024}[domainIndex];
         domain={std::min(a.p.x,b.p.x)-pad,std::min(a.p.y,b.p.y)-pad,
                 std::max(a.p.x,b.p.x)+pad,std::max(a.p.y,b.p.y)+pad};
@@ -294,7 +315,7 @@ struct ConnectorRouteJob::Impl {
                 finalDomain={std::min(a.p.x,b.p.x)-1024,std::min(a.p.y,b.p.y)-1024,
                              std::max(a.p.x,b.p.x)+1024,std::max(a.p.y,b.p.y)+1024};
                 phase=1;scan=0;
-                return result.status;
+                continue;
             } else if(phase==1) {
                 if(scan<source.size()) {
                     if(result.work.examined>=8192U){fail(Status::kBudgetExceeded);break;}
@@ -317,11 +338,25 @@ struct ConnectorRouteJob::Impl {
                 if(result.status!=Status::kPending)break;
                 if(exitsA.empty()||exitsB.empty()){fail(Status::kNoRouteInDomain);break;}
                 phase=2;
-                // Escape checks are bounded (at most 4*256 predicates). Yield
-                // before search so the next quantum has its full budget.
-                return result.status;
+                // Small scenes can finish in the same quantum. The shared
+                // counters still enforce the limit before every next step.
+                continue;
             } else {
                 if(!searching&&!setupAttempt())break;
+                if(preferredIndex<preferred.size()) {
+                    const auto& path=preferred[preferredIndex];
+                    if(preferredSegment>=path.size()) {
+                        auto complete=path;complete.insert(complete.begin(),a.p);complete.push_back(b.p);
+                        finishPath(simplified(std::move(complete)));break;
+                    }
+                    if(preferredObstacle>=obstacles.size()) {
+                        ++preferredSegment;preferredObstacle=0;continue;
+                    }
+                    if(!predicate(path[preferredSegment-1],path[preferredSegment],obstacles[preferredObstacle++])) {
+                        ++preferredIndex;preferredSegment=1;preferredObstacle=0;
+                    }
+                    continue;
+                }
                 if(edge>=4) {
                     if(open.empty() || (!best.empty() && std::get<0>(*open.begin())+distance(end,b.p)>bestLength)) {
                         searching=false;continue;

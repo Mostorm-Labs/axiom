@@ -1,0 +1,172 @@
+{
+  "base_revision": "0d4644447b9a864264c03ec2e469cd436d473cf0",
+  "materialized_ref": "origin/codex/fc05-p32",
+  "source_sha256": {
+    "apps/ink_playground/CMakeLists.txt": "99520d6d6bedc3291d14a7a52b75c0cce786be8730bcdb1d5d7190012cae78f7",
+    "apps/ink_playground/tests/selected_actions_test.cpp": "44fd709bbab2dd04673198f6407f57b0a7ef3989da66db51d5b0ef868a13f734",
+    "runtime/interaction/src/canvas_connector_routing.cpp": "77a7715e0aecae761c3f074038c53911219bc91228c5ce15df0aec4b25a85b01",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "ebee10689a3e54fc32c6cc01389f81f694ff01db5b99ef874509f9df1c85190c",
+    "runtime/render/CMakeLists.txt": "b08372b162d8260b7de461a7a942f625886f914f81bca82b2556cb185cb1bb57",
+    "runtime/render/src/skia_headless_backend.cpp": "2008faae0e286234019fbaf02511e060e4414f5321eb36a2bbc346664595bda6",
+    "runtime/render/tests/skia_headless_backend_test.cpp": "7721aa66dd331600c1de9da945813a2a369d47e839f15e9e178f39545db358a0",
+    "runtime/scene/include/canvas/scene/derived_geometry.hpp": "869868599975bb88c35117b9512b796cfafc259feb4341d2699ac7c4bbbfc86d",
+    "runtime/scene/src/connector_router.cpp": "e9cae4435dad213fb8d49198cbb9a6faab34f8ca0bee3218780873e35b63134d",
+    "runtime/scene/tests/fc05_route_test.cpp": "0bb312047c8386a1369f3d9d3e4a82c2b364813d87d7157099172f8e7c39b8f2",
+    "runtime/scene/tools/fc05_route_probe.cpp": "62e1f2b99858a409aad49383a574f0f0239bb970b070fa1c6253536d2ef1bccf"
+  },
+  "route_algorithm_revision": 2,
+  "ctest": {
+    "passed": 29,
+    "failed": 1,
+    "skipped": 0,
+    "tests": [
+      {
+        "name": "FC05Connector.TriangleShapeV2IsConnectable",
+        "failed": false
+      },
+      {
+        "name": "FC05Connector.RichShapeV3IsConnectable",
+        "failed": false
+      },
+      {
+        "name": "FC05Connector.ShapeV1TriangleAndShapeV3WithoutLabelAreRejected",
+        "failed": false
+      },
+      {
+        "name": "FC05Connector.StablePortOutsideReleasedNamespaceIsRejected",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a2_bounds_system",
+        "failed": false
+      },
+      {
+        "name": "FC05Route",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a2_reference_geometry",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a2_scene_impact",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a2_dependency_closure",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a3_full_incremental_equivalence",
+        "failed": true
+      },
+      {
+        "name": "canvas_g2_a6_incremental_equivalence",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a6_atomic_publication",
+        "failed": false
+      },
+      {
+        "name": "canvas_g2_a6_recovery",
+        "failed": false
+      },
+      {
+        "name": "canvas_fc01_derived_geometry",
+        "failed": false
+      },
+      {
+        "name": "G3HeadlessSkia",
+        "failed": false
+      },
+      {
+        "name": "FC05ConnectorPendingRaster",
+        "failed": false
+      },
+      {
+        "name": "G3DirectReference",
+        "failed": false
+      },
+      {
+        "name": "G3FrameOrchestration",
+        "failed": false
+      },
+      {
+        "name": "FC05ConnectorFacade",
+        "failed": false
+      },
+      {
+        "name": "FC02Text",
+        "failed": false
+      },
+      {
+        "name": "FC00XRuntimeComposition",
+        "failed": false
+      },
+      {
+        "name": "FC03ImageFacade",
+        "failed": false
+      },
+      {
+        "name": "FC02WindowsTextToolEntry",
+        "failed": false
+      },
+      {
+        "name": "FC02WindowsTextToolFocus",
+        "failed": false
+      },
+      {
+        "name": "FC02WindowsTextToolTouchFocus",
+        "failed": false
+      },
+      {
+        "name": "FC02WindowsTextToolAfterInk",
+        "failed": false
+      },
+      {
+        "name": "FC00XMinimalRuntimeHost",
+        "failed": false
+      },
+      {
+        "name": "PX0ControlRouter",
+        "failed": false
+      },
+      {
+        "name": "FC01SelectedActions",
+        "failed": false
+      },
+      {
+        "name": "FC05ConnectorDragPreview",
+        "failed": false
+      }
+    ],
+    "known_failure": "canvas_g2_a3_full_incremental_equivalence: unchanged legacy Image digest expected value, same as base evidence. No historical expectation changed."
+  },
+  "route_cases": {
+    "native_wasm_exact_matches": 40
+  },
+  "browser": [
+    {
+      "fixture": "web_minimal_runtime_test",
+      "groups": 13,
+      "status": "PASS"
+    },
+    {
+      "fixture": "web_fc02_text_test",
+      "groups": 7,
+      "status": "PASS"
+    }
+  ],
+  "boundaries": "PASS 96 contract files",
+  "scope": [
+    "Runtime/Scene route candidate policy and shared renderer",
+    "Runtime port-click placement",
+    "Regression tests and documentation"
+  ],
+  "physical": "PHYSICAL_PENDING",
+  "nonclaims": [
+    "No G5 PASS",
+    "No Gate/PHYS PASS"
+  ]
+}

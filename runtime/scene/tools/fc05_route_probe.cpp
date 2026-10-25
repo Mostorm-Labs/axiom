@@ -85,7 +85,7 @@ int main(int argc,char** argv) {
             if(fixture==39)c.transform={0,1,-1,0,0,0};
         }
         scene::ConnectorRouteJob job(c,objects);unsigned quanta=0;
-        if(fixture==36) { (void)job.advance();job.cancel(); }
+        if(fixture==36)job.cancel();
 
         const auto start=std::chrono::steady_clock::now();
         while(job.advance()==runtime::ConnectorRouteStatus::kPending)++quanta;

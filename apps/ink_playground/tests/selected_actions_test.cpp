@@ -274,6 +274,30 @@ void selected_attachment_click_does_not_snap_generated_target_to_neighbor() {
   assert(std::get<StablePortAnchor>(end->anchor).port_id == 2U);
 }
 
+void off_center_attachment_click_still_creates_an_axis_aligned_sibling() {
+  using Access=canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+  using namespace canvas::semantic;
+  for(unsigned port=0;port<4;++port) {
+    InkPlaygroundHost host;assert(host.bindSurface(512,512));
+    assert(host.selectCreationPreset(CreationPreset::kRectangle));
+    pointer(host,1,180,180,PointerPhase::kDown);pointer(host,2,260,260,PointerPhase::kUp);
+    assert(host.setSelectionMode(true)&&host.selectAtViewPoint(220,220));
+    auto point=host.selectionOverlay()->attachmentPoints()[port].center;
+    if(port%2==0)point.x+=6;else point.y+=6;
+    const canvas::input::PointerKey key{11,600+port,1};
+    assert(host.selectionPointer(key,PointerPhase::kDown,point.x,point.y));
+    assert(host.selectionPointer(key,PointerPhase::kUp,point.x,point.y));
+    const auto objects=Access::objects(host);assert(objects.size()==3);
+    auto connector=*std::find_if(objects.begin(),objects.end(),[](const auto& o){return o.kind==ObjectKind::kConnector;});
+    std::get<ConnectorContent>(connector.content).routing=ConnectorRouting::kOrthogonal;
+    const auto route=canvas::scene::connectorGeometry(connector,objects);assert(route);
+    assert(route->status==canvas::runtime::ConnectorRouteStatus::kReady);
+    assert(route->route.size()==2);
+    if(port%2==0)assert(route->start.x==route->end.x);else assert(route->start.y==route->end.y);
+    assert(host.submittedOperationCount()==2);
+  }
+}
+
 void connector_preview_follows_transient_target_without_canonical_edit() {
   using Access=canvas::ink_playground::InkPlaygroundHistoryTestAccess;
   using namespace canvas::semantic;
@@ -295,6 +319,7 @@ void connector_preview_follows_transient_target_without_canonical_edit() {
   assert(host.selectionPointer(key,PointerPhase::kDown,60,60));
   assert(host.selectionPointer(key,PointerPhase::kMove,60,180));
   auto route=host.previewConnectorGeometry(connector);
+  assert(route.status==canvas::runtime::ConnectorRouteStatus::kReady);
   for(unsigned q=0;q<64&&route.status==canvas::runtime::ConnectorRouteStatus::kPending;++q) {
     assert(host.serviceConnectorRouting());route=host.previewConnectorGeometry(connector);
   }
@@ -409,12 +434,14 @@ void selected_preimage_matrix_uses_real_conditional_history() {
 }
 
 int main(int argc, char** argv) {
+  if(argc>1 && std::string_view(argv[1])=="connector-preview"){connector_preview_follows_transient_target_without_canonical_edit();return 0;}
   if(argc>1 && std::string_view(argv[1])=="child"){remote_child_survives_conditional_insert_undo();return 0;}
   if(argc>1 && std::string_view(argv[1])=="preimages"){selected_preimage_matrix_uses_real_conditional_history();return 0;}
   if(argc>1 && std::string_view(argv[1])=="locked"){lock_blocks_actual_handle_preview();return 0;}
   if(argc>1 && std::string_view(argv[1])=="dependent"){dependent_connector_survives_insert_undo();return 0;}
   if(argc>1 && std::string_view(argv[1])=="creation"){creation_records_conditional_history();return 0;}
   if(argc>1){remote_edit_must_fence_undo();return 0;}
+  off_center_attachment_click_still_creates_an_axis_aligned_sibling();
   selected_attachment_point_creates_connector_and_target();
   selected_attachment_point_click_creates_connector_and_target();
   selected_attachment_point_click_uses_opposite_target_port_and_source_kind();
