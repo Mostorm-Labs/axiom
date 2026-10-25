@@ -1911,9 +1911,23 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
   if (record->kind == semantic::ObjectKind::kShape ||
       record->kind == semantic::ObjectKind::kImage ||
       record->kind == semantic::ObjectKind::kSticky) {
-    const auto& bounds = cropBounds ? cropBounds->geometry : record->geometryBounds;
+    // Attachment points are presentation affordances around the same visible
+    // outline used by the selection chrome.  Using geometryBounds here leaves
+    // the top and left ports inside the outline whenever a stroke expands the
+    // visual bounds, which makes those two ports look offset from the object.
+    const auto& bounds = cropBounds ? cropBounds->visual : record->visualBounds;
     constexpr float kAttachmentGap = 28.0F;
-    const auto point = [&](float x, float y, float nx, float ny) {
+    const auto screenCenter = [&] {
+      const float x = static_cast<float>((bounds.left + bounds.right) * 0.5);
+      const float y = static_cast<float>((bounds.top + bounds.bottom) * 0.5);
+      const auto world = render::ScreenPoint{
+          static_cast<float>(record->transform.a * x + record->transform.c * y + record->transform.tx),
+          static_cast<float>(record->transform.b * x + record->transform.d * y + record->transform.ty)};
+      return render::ScreenPoint{
+          static_cast<float>(surface_.logicalWidth * 0.5F + viewport.scale * (world.x - center.x)),
+          static_cast<float>(surface_.logicalHeight * 0.5F + viewport.scale * (world.y - center.y))};
+    }();
+    const auto point = [&](float x, float y) {
       const auto world = render::ScreenPoint{
           static_cast<float>(record->transform.a * x + record->transform.c * y + record->transform.tx),
           static_cast<float>(record->transform.b * x + record->transform.d * y + record->transform.ty)};
@@ -1922,8 +1936,13 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
                              viewport.scale * (world.x - center.x)),
           static_cast<float>(surface_.logicalHeight * 0.5F +
                              viewport.scale * (world.y - center.y))};
-      screen.x += nx * kAttachmentGap;
-      screen.y += ny * kAttachmentGap;
+      float nx = screen.x - screenCenter.x;
+      float ny = screen.y - screenCenter.y;
+      const float length = std::hypot(nx, ny);
+      if (length > 1.0e-5F) {
+        screen.x += nx / length * kAttachmentGap;
+        screen.y += ny / length * kAttachmentGap;
+      }
       bool hovered = false;
       for (const auto& previous : previousAttachmentPoints) {
         const float dx = previous.center.x - screen.x;
@@ -1932,10 +1951,10 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
       }
       attachmentPoints.push_back({screen, true, hovered});
     };
-    point((bounds.left + bounds.right) * 0.5F, bounds.top, 0, -1);
-    point(bounds.right, (bounds.top + bounds.bottom) * 0.5F, 1, 0);
-    point((bounds.left + bounds.right) * 0.5F, bounds.bottom, 0, 1);
-    point(bounds.left, (bounds.top + bounds.bottom) * 0.5F, -1, 0);
+    point((bounds.left + bounds.right) * 0.5F, bounds.top);
+    point(bounds.right, (bounds.top + bounds.bottom) * 0.5F);
+    point((bounds.left + bounds.right) * 0.5F, bounds.bottom);
+    point(bounds.left, (bounds.top + bounds.bottom) * 0.5F);
   }
   if (transformDrag_.active()) attachmentPoints.clear();
   const bool updated = selectionView_->editingOverlay().update(render::EditingOverlayInput{

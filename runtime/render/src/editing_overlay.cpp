@@ -64,7 +64,10 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
                              (corners[2].y + corners[3].y) * 0.5F};
     const ScreenPoint left{(corners[3].x + corners[0].x) * 0.5F,
                            (corners[3].y + corners[0].y) * 0.5F};
-    const ScreenPoint rotation{top.x, top.y - 24.0F};
+    // Keep the rotation affordance clear of the top attachment point.  The
+    // top-right corner gives the user an unambiguous control without
+    // overlapping the semantic top port.
+    const ScreenPoint rotation{corners[1].x + 24.0F, corners[1].y - 24.0F};
     outline_ = SelectionOutline{corners, rotation, input.selected};
     const std::array<std::pair<HandleKind, ScreenPoint>, kHandleCount> geometry{{
         {HandleKind::kTopLeft, corners[0]},

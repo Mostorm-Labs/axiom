@@ -125,8 +125,9 @@ void attachment_points_are_offset_from_selection_outline() {
     assert(ports[1].center.x > outline.corners[1].x);
     assert(ports[2].center.y > outline.corners[2].y);
     assert(ports[3].center.x < outline.corners[3].x);
-    assert(view.editingOverlay().handle(HandleKind::kRotation).center.x >
-           outline.corners[1].x - 1.0F);
+    const auto rotation = view.editingOverlay().handle(HandleKind::kRotation).center;
+    assert(rotation.x > outline.corners[1].x);
+    assert(rotation.y < outline.corners[1].y);
 }
 } // namespace
 
