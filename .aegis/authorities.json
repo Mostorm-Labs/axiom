@@ -333,7 +333,7 @@
       "scope": "execution:FC/feature-completion",
       "kind": "execution-policy",
       "version": "v0.3",
-      "status": "Current",
+      "status": "Superseded",
       "ref": "notion://3f74c57a590c812a8260dcf23b659ed0",
       "depends_on": [
         "g4-capability-authority-v0.3",
@@ -377,7 +377,104 @@
           "No G5 authorization",
           "No historical Gate/Evidence/Integration outcome rewriting"
         ]
-      }
+      },
+      "superseded_by": "fc-feature-completion-execution-v0.4",
+      "supersession_record": ".aegis/packages/FC-08-P31-READINESS/final-binding/seq01-p23-acceptance-v0.1.json"
+    },
+    {
+      "id": "fc-feature-completion-execution-v0.4",
+      "scope": "execution:FC/feature-completion",
+      "kind": "execution-policy",
+      "version": "v0.4",
+      "status": "Current",
+      "ref": "notion://4044c57a590c81a8b2aec982fad25107",
+      "depends_on": [
+        "g4-capability-authority-v0.3",
+        "fc01-shape-triangle-semantic-v0.1"
+      ],
+      "supersedes": "fc-feature-completion-execution-v0.3",
+      "change_class": "semantic",
+      "content": {
+        "owner": "FC Feature Completion Track",
+        "objective": "Deliver FC-01..FC-12 functional development before G5; retain original physical Gates for FC-13",
+        "source_basis": [
+          "notion://3f74c57a590c812a8260dcf23b659ed0",
+          "notion://3f74c57a590c819ebc62dba091371f17",
+          "notion://3f64c57a590c810c82aee0166056b73d",
+          "notion://4044c57a590c81a8b2aec982fad25107"
+        ],
+        "accepted_decisions": [
+          "FC01A-P23-C01",
+          "FC01A-P23-C02",
+          "FC01A-P23-C03",
+          "SEQ-D01",
+          "SEQ-D02",
+          "SEQ-D03",
+          "SEQ-D04",
+          "SEQ-D05",
+          "SEQ-D06"
+        ],
+        "stage_order": [
+          "FC-00",
+          "FC-01",
+          "FC-01A",
+          "FC-02..FC-12",
+          "FC-13",
+          "G5-v0.3"
+        ],
+        "progressive_selectability": "Each visible and instantiable released V1 ObjectKind owns a producer Geometry Provider and Capability Provider; common selection integrates producers progressively; FC-12 proves the nine released V1 kinds.",
+        "early_design_permissions": [
+          "FC-04 aggregate selection/property capability design only"
+        ],
+        "fc03_scope": "Resource-backed Image insertion, replacement, transform, crop session and history under the existing ImageContent and G4.7 resource ownership boundary; no new ObjectKind, Operation kind or Proto field by implication.",
+        "gated_execution": "FC-01..FC-12 each require frozen P20/P31 and independently reviewed FC-N-DEV; FC-01A follows FC-01.",
+        "physical_obligations": "FC-13 retains exact original PX0-07, G4.6-C, G4.7 physical profiles and final FC-12 integration; each remains independently reviewed.",
+        "nonclaims": [
+          "Notion P23 is not P31/P32 authorization",
+          "No FC-04 implementation acceleration; FC-08 exception only under SEQ-D01 through SEQ-D06, with no automatic P32 authorization",
+          "No original PX0/G4.6/G4.7 or FC-13 physical PASS",
+          "No G5 authorization",
+          "No historical Gate/Evidence/Integration outcome rewriting"
+        ],
+        "fc08_sequence_exception": {
+          "decision_record": ".aegis/packages/FC-08-P31-READINESS/final-binding/seq01-p23-acceptance-v0.1.json",
+          "status": "ACCEPTED_SCOPE_LIMITED",
+          "sequence_blocker": "SEQ-01 CLOSED_BY_SCOPED_EXECUTION_AMENDMENT",
+          "accepted_candidate_revision": "91700fc26f4c23e27d9e158f2f74fcac45695dc6",
+          "accepted_candidate_sha256": "a6b3439e3de8c35e5b687cb3eb27e17894cb9e14ea7704aafbd89805fc5daf0e",
+          "dependency_ids": [
+            "DEP-01",
+            "DEP-02",
+            "DEP-03",
+            "DEP-04",
+            "DEP-05",
+            "DEP-06"
+          ],
+          "conditional_development_anchor": "a1e8819abe245ab7487f18771970721f480ff487",
+          "anchor_relation": "ancestor_with_descendant_reconciliation",
+          "entry_policy": "Capability-bound early FC-08 development; whole FC-04/FC-06/FC-07 closure is not an ordinal prerequisite. Do not declare FC-05 or any predecessor complete. Bind actually consumed dependencies.",
+          "allowed_preparation": "P31 may separately authorize minimal M01-M04 control/test materialization and scoped BASE-01 alignment; no production mutation from this record alone.",
+          "mandatory_before_product_execution": [
+            "Complete M01-M04 bindings",
+            "Separate exact FC-08 product P31 package",
+            "PackageBindingPreflight",
+            "EvidenceContractPreflight"
+          ],
+          "preserved": [
+            "P23 semantic D01-D07 and non-ordering D08",
+            "P12/P13 E01",
+            "P14-P17 C01/C02",
+            "P20 v0.1+CR01 ten obligations and sixty logical cases",
+            "Applicable inherited regression and independent P34",
+            "BASE-01",
+            "INT-01",
+            "FC12/FC13 and G5 conditions"
+          ],
+          "scope_limits": "No full FC04 inspector, advanced FC06/FC07 or FC10 clipboard expansion; no hiding existing producers, mocks or deleted positive cases to bypass required behavior.",
+          "P32_authorized": false
+        }
+      },
+      "supersession_record": ".aegis/packages/FC-08-P31-READINESS/final-binding/seq01-p23-acceptance-v0.1.json"
     }
   ],
   "schema_version": "0.6"
