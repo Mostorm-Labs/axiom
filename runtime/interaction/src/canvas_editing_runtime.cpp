@@ -1036,6 +1036,12 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
       else if (stable->port_id == 4U) { dx = -120.0F; dy = 0.0F; }
     }
     finalEnd = {creation.preview().start.x + dx, creation.preview().start.y + dy};
+    // A point click is the explicit "create a sibling on this side" action.
+    // Do not feed its synthesized endpoint through ordinary drag snapping:
+    // nearby objects must not steal the generated target or pull it toward a
+    // center/edge on another side.  Dragging still retains the normal snap
+    // resolver and end attachment behavior.
+    creation.setSnapTargets({});
     endAttachment.reset();
     creation.setEndAttachment(endAttachment);
   }

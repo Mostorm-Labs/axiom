@@ -234,6 +234,43 @@ void selected_attachment_point_click_uses_opposite_target_port_and_source_kind()
   }
 }
 
+void selected_attachment_click_does_not_snap_generated_target_to_neighbor() {
+  using Access = canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+  using namespace canvas::semantic;
+  InkPlaygroundHost host;
+  assert(host.bindSurface(512, 512));
+  assert(host.selectCreationPreset(CreationPreset::kRectangle));
+  pointer(host, 1U, 180.0F, 180.0F, PointerPhase::kDown);
+  pointer(host, 2U, 260.0F, 260.0F, PointerPhase::kUp);
+  const auto sourceId = Access::objects(host).front().id;
+  // Put an existing object where the left-side click's generated target would
+  // otherwise be close enough for normal drag snapping.
+  assert(host.selectCreationPreset(CreationPreset::kRectangle));
+  pointer(host, 3U, 60.0F, 180.0F, PointerPhase::kDown);
+  pointer(host, 4U, 180.0F, 260.0F, PointerPhase::kUp);
+  const auto neighborId = Access::objects(host).back().id;
+  assert(host.setSelectionMode(true));
+  assert(host.selectAtViewPoint(220.0F, 220.0F));
+  const auto leftPoint = host.selectionOverlay()->attachmentPoints()[3].center;
+  const canvas::input::PointerKey key{11U, 121U, 1U};
+  assert(host.selectionPointer(key, PointerPhase::kDown, leftPoint.x, leftPoint.y));
+  assert(host.selectionPointer(key, PointerPhase::kUp, leftPoint.x, leftPoint.y));
+
+  const auto objects = Access::objects(host);
+  assert(objects.size() == 4U);
+  const auto connector = std::find_if(objects.begin(), objects.end(), [](const auto& object) {
+    return object.kind == ObjectKind::kConnector;
+  });
+  assert(connector != objects.end());
+  const auto& content = std::get<ConnectorContent>(connector->content);
+  const auto end = std::get_if<AttachedEndpoint>(&content.end.value);
+  assert(end != nullptr);
+  assert(end->target_object_id != neighborId);
+  assert(end->target_object_id != sourceId);
+  assert(std::holds_alternative<StablePortAnchor>(end->anchor));
+  assert(std::get<StablePortAnchor>(end->anchor).port_id == 2U);
+}
+
 void remote_child_survives_conditional_insert_undo() {
   using namespace canvas::semantic;
   using Access = canvas::ink_playground::InkPlaygroundHistoryTestAccess;
@@ -345,6 +382,7 @@ int main(int argc, char** argv) {
   selected_attachment_point_creates_connector_and_target();
   selected_attachment_point_click_creates_connector_and_target();
   selected_attachment_point_click_uses_opposite_target_port_and_source_kind();
+  selected_attachment_click_does_not_snap_generated_target_to_neighbor();
   InkPlaygroundHost host;
   assert(host.bindSurface(256U, 256U));
   assert(host.selectCreationPreset(CreationPreset::kRectangle));
