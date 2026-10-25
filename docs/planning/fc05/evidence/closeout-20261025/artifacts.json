@@ -1,0 +1,62 @@
+{
+  "schema": "fc05-closeout-artifacts-v1",
+  "build_source_revision": "7ddfaf54eeb438ead748458fe1fd4d070363c05f",
+  "build_source_tracked_dirty": false,
+  "excluded_untracked": [
+    "imgui.ini"
+  ],
+  "materialized_ref": "refs/heads/codex/fc05-p32",
+  "integration_main_base": "10dd7e4bf783ebcf299a1305d74f49e960f9ac69",
+  "merge_preview_tree": "cff0e30bd2d651a5eb8054f40ca6db14b9ed6765",
+  "merge_preview_runtime_apps_debug_ui_delta": [],
+  "builds": {
+    "windows": "PASS /MT /WX, MSVC 19.51.36246, assert checks enabled via _CL_=/UNDEBUG",
+    "web": "PASS locked Semantic web-wasm32 and Skia web-wasm-webgl2 SDK consumers, Emscripten 6.0.6"
+  },
+  "artifacts": [
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc05-p32\\out\\fc05-windows\\apps\\minimal_runtime_host\\axiom_minimal_runtime_host_windows.exe",
+      "sha256": "3a941ede6399b67f6cd1ef596ae27711f01a033d321eae469386e46e36cdaf9d",
+      "bytes": 13187072
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc05-p32\\out\\fc05-orthogonal-web\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.js",
+      "sha256": "4a0a2fc42c8002859715cbace0d0ab60c091760dc3b1d994750150b122a37851",
+      "bytes": 130200
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc05-p32\\out\\fc05-orthogonal-web\\apps\\axiom_canvas_demo\\axiom_canvas_demo_web.wasm",
+      "sha256": "65a786ca6e9f43a6358b63308f4879ea5e592ecdeb2f11a6dd0ba987f8484b8d",
+      "bytes": 11312760
+    }
+  ],
+  "chrome": [
+    {
+      "page": "web_minimal_runtime_test",
+      "passed": 13,
+      "failed": 0,
+      "browser": "Chrome/155.0.8059.86",
+      "mode": "Chrome headless SwiftShader, synthetic DOM events"
+    },
+    {
+      "page": "web_fc02_text_test",
+      "passed": 7,
+      "failed": 0,
+      "browser": "Chrome/155.0.8059.86",
+      "mode": "Chrome headless SwiftShader, synthetic DOM events"
+    }
+  ],
+  "route_parity": {
+    "fixtures": 44,
+    "exact_equal": true
+  },
+  "commands": {
+    "windows": "vcvars64.bat && cmake -S . -B out/fc05-windows && cmake --build out/fc05-windows --target axiom_minimal_runtime_host_windows axiom_fc05_route_probe --parallel 6",
+    "web": "cmake -S . -B out/fc05-orthogonal-web -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON; cmake --build out/fc05-orthogonal-web --target axiom_canvas_demo_web axiom_fc05_route_probe --parallel 4",
+    "chrome": "Node 24.19.0 out/fc05-closeout-chrome-test.mjs web_minimal_runtime_test web_fc02_text_test",
+    "route": "axiom_fc05_route_probe.exe / Node axiom_fc05_route_probe.js; compare complete JSON"
+  },
+  "font_deployment": "Windows exe must be distributed with sibling axiom-font.otf and fonts/ resources",
+  "physical": "Synthetic Chrome events only, no new physical IME/touch assertion",
+  "formal_gate": "NOT_CLAIMED"
+}

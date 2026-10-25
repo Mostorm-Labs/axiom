@@ -71,3 +71,11 @@ Sticky 使用同一文本编辑与格式入口。旋转手柄位于右上方。
 没有在本次收尾中被宣称全部完成。上述合同/验证收敛、独立产品 Gate Review 另行保留，不伪造 P34/DEV PASS。
 
 历史 Gate、Authority、Golden、PHYS 和 `.aegis` 状态/结果不改写；本次是用户接受的产品基线整合。
+
+## 本轮最终复核
+
+Windows/Web 产物重新构建通过；44 组 Native/WASM 路由输出完全一致。Chrome 合成回归中，
+普通画板 13 组、文本 7 组均通过。Native CTest 156/157 通过、0 skipped，保留上文已知 Image 摘要失败；
+Python 17 项通过、0 skipped，Runtime 边界检查覆盖 96 个文件。
+精确构建 revision、命令、exe/JS/WASM 摘要及原始输出见
+[artifacts.json](fc05/evidence/closeout-20261025/artifacts.json)。最终证据提交只增加文档，不重新标记物理验收。

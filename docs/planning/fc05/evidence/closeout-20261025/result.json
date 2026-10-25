@@ -818,7 +818,14 @@
     "boundaries": "PASS 96 contract files",
     "route_corpus_reference": "../triangle-ports/verification.json",
     "native_wasm_fixtures": 44,
-    "image_oracle_repair": "x=220,y=400 overlaps FC05 attachment chrome. Sample x=205 remains in crop backdrop, asserts dim-red before Done and white after Done; no Image product code changed."
+    "image_oracle_repair": "x=220,y=400 overlaps FC05 attachment chrome. Sample x=205 remains in crop backdrop, asserts dim-red before Done and white after Done; no Image product code changed.",
+    "final_artifact_rebuild": "artifacts.json",
+    "chrome": {
+      "basic_passed": 13,
+      "text_passed": 7,
+      "failed": 0,
+      "mode": "Chrome headless SwiftShader synthetic DOM events"
+    }
   },
   "integration_adjustments": [
     "Retain main FC03 optional contentScale{} initialization",
