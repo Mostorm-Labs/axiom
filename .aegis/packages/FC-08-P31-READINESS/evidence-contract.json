@@ -1,0 +1,30 @@
+{
+  "schema": "fc08-p31-readiness-evidence-v1",
+  "scope": "Preparation evidence only, not product evidence",
+  "durable_boundary": {
+    "provider": "github",
+    "repository": "Mostorm-Labs/axiom",
+    "branch": "control/fc08-p31-readiness",
+    "required_identity": "Exact result commit containing the eight readiness files, plus same-repository ancestry to the frozen preparation base"
+  },
+  "source_artifact_index": "source-input-index.json",
+  "input_validation_report": "Companion readiness ZIP: audit/archive-integrity.json and audit/package-check.json",
+  "return_fields": [
+    "result_revision",
+    "materialized_ref",
+    "package_path",
+    "companion_zip_sha256"
+  ],
+  "not_required": [
+    "An evidence-only descendant commit",
+    "Windows/Web physical observations for this preparation",
+    "Full Axiom test run for documentation-only readiness materialization"
+  ],
+  "prohibited_claims": [
+    "FC-08 DEV/P34 PASS",
+    "BASE-01 fixed",
+    "60 product cases passed",
+    "Executable verification lock complete",
+    "FC-06/FC-07 completed without exact decisions"
+  ]
+}
