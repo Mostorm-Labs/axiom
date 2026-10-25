@@ -79,3 +79,14 @@ Windows/Web 产物重新构建通过；44 组 Native/WASM 路由输出完全一�
 Python 17 项通过、0 skipped，Runtime 边界检查覆盖 96 个文件。
 精确构建 revision、命令、exe/JS/WASM 摘要及原始输出见
 [artifacts.json](fc05/evidence/closeout-20261025/artifacts.json)。最终证据提交只增加文档，不重新标记物理验收。
+
+## 托管 CI 的补充发现
+
+PR #154 的首轮 CI 在独立 RF-01 配置中发现 FC05Route 隐式依赖 Semantic 测试创建 GoogleTest。
+已修为 Scene 测试在目标缺失时单独消费锁定 core GoogleTest；RF-01 独立配置与完整配置均重新通过路由测试，
+不跳过测试、不修改 SDK。RED/GREEN 与远端检查链接见
+[ci-followup.json](fc05/evidence/closeout-20261025/ci-followup.json)。
+
+托管全库 CI 尚有旧配置/历史输入的失败，包括 GCC 的 snapshot.cpp 旧语句警告、G1 descriptor 原始字节比较、
+旧 Playground Web Skia 链接、Android sourceEpoch，以及验证工作流缺少 ImGui 源码。相关输入与 main 对照保留，
+本次不把托管 CI 或全库专项写成 PASS；Windows/Web Minimal Host 的上述构建及产品回归结果单独有效。
