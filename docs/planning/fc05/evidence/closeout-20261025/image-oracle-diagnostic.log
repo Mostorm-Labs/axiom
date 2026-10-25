@@ -1,0 +1,27 @@
+Test project C:/Users/Chado/.codex/worktrees/fc05-p32/out/fc05-windows
+    Start 644: FC03WindowsImageDebugUi
+1/1 Test #644: FC03WindowsImageDebugUi ..........Exit code 0xc0000409***Exception:   2.58 sec
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=2 scene_records=2
+[axiom] present begin frame=6 objects=2 scene_records=2
+[axiom] present begin frame=7 objects=2 scene_records=2
+[axiom] present begin frame=8 objects=2 scene_records=2
+[axiom] present begin frame=9 objects=2 scene_records=2
+[axiom] present begin frame=10 objects=2 scene_records=2
+crop pixel x=205 before=128,0,0,255 after=255,255,255,255
+crop pixel x=210 before=128,0,0,255 after=255,255,255,255
+crop pixel x=220 before=237,141,29,255 after=243,153,42,255
+crop pixel x=222 before=237,141,29,255 after=243,153,42,255
+Assertion failed: rgbaAt(committedStripe,220,400) == white, file C:\Users\Chado\.codex\worktrees\fc05-p32\apps\minimal_runtime_host\tests\windows_image_debug_ui_test.cpp, line 237
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   2.65 sec
+
+The following tests FAILED:
+	644 - FC03WindowsImageDebugUi (Exit code 0xc0000409)
+Errors while running CTest

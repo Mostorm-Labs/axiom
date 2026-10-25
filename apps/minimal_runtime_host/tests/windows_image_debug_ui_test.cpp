@@ -84,7 +84,8 @@ int main() {
   auto& io = ImGui::GetIO(); io.IniFilename = nullptr; io.DisplaySize = {900, 1400}; io.DeltaTime = 1.0F / 60;
   unsigned char* pixels = nullptr; int w = 0, h = 0;
   io.Fonts->GetTexDataAsRGBA32(&pixels, &w, &h);
-  debug_ui::DebugControllerContext context{&facade};
+  debug_ui::DebugControllerContext context{};
+  context.runtime = &facade;
   bool cancelFile = false;
   const char* fileName = "fc03-sample.jpg";
   std::string mime = "image/jpeg";
@@ -228,9 +229,13 @@ int main() {
   stripeCrop = facade.beginImageCrop({stripeInserted.objectId});
   assert(stripeCrop.state == runtime::ImageCommandState::kApplied);
   assert(facade.updateImageCrop({stripeCrop.cropToken,{.25,0,.5,1},100,100}).state == runtime::ImageCommandState::kApplied);
+  // x=205 is inside the full-source backdrop and outside the selected
+  // image's left Connector affordance (center x=222, radius 4).
+  const auto beforeDone = rgbaAt(renderPixels(),205,400);
+  assert(beforeDone[0] > 70 && beforeDone[0] < 200 && beforeDone[1] == 0 && beforeDone[2] == 0 && beforeDone[3] == 255);
   assert(facade.commitImageCrop(stripeCrop.cropToken).state == runtime::ImageCommandState::kApplied);
   const auto committedStripe = renderPixels();
-  assert(rgbaAt(committedStripe,220,400) == white); // editing backdrop disappears
+  assert(rgbaAt(committedStripe,205,400) == white); // editing backdrop disappears
   assert(facade.undo(602,facade.readRuntimeState().identity.runtimeGeneration).state == runtime::ProductControlState::kQueued);
   assert(host.composition().ownerPump());
   assert(renderPixels() == stripeBefore);

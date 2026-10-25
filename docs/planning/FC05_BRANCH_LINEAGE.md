@@ -1,3 +1,13 @@
+# FC05 当前分支与收尾入口
+
+日期：2026-10-25。当前执行/整合分支 `codex/fc05-p32`，产品功能经用户确认并获授权合入 main。
+当前说明见 [FC05_CLOSEOUT.md](FC05_CLOSEOUT.md)，证据索引见 [fc05/README.md](fc05/README.md)。
+本次整合的远端 main 基线为 `10dd7e4bf783ebcf299a1305d74f49e960f9ac69`，已包含 FC03 热修复 PR #151。
+较早设计和架构 PR #152/#153 是本分支祖先，整合时保留全部提交历史。不要把下述旧准备状态当成当前实现状态。
+用户的 main 合并指令不等同于独立 Gate 决定；本次不声明 Gate/PHYS/G5 PASS。
+
+## 历史分支准备记录（保留原文）
+
 # FC05 branch lineage and handoff
 
 Status: **ARCHITECTURE_WORKTREE_READY / DESIGN_REVIEW_PENDING**
