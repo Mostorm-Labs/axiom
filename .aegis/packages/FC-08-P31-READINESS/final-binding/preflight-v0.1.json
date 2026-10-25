@@ -1,0 +1,114 @@
+{
+  "record_id": "FC08-P31-FINAL-BINDING-PREFLIGHT-v0.1",
+  "record_kind": "control_readiness_observation_not_authority",
+  "date": "2026-10-26",
+  "stage": "P31",
+  "status": "BLOCKED_MISSING_INPUT",
+  "reason_code": "SEQ01_EXECUTION_ELIGIBILITY_UNBOUND",
+  "P32_authorized": false,
+  "may_start_code_execution": false,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "id": 1306396623
+  },
+  "readiness_package": {
+    "path": ".aegis/packages/FC-08-P31-READINESS/package.json",
+    "revision": "b69c87c7477a17f62086b06d61137a22cdc4b1dd",
+    "sha256": "181e1adbcf833ae60a08194b7eeb929a7c70e84c98a26d6e548052782533e1c5",
+    "materialized_ref": "refs/heads/control/fc08-p31-readiness",
+    "original_eight_files": "PRESERVE_UNCHANGED"
+  },
+  "observed_main_revision": "a1e8819abe245ab7487f18771970721f480ff487",
+  "sequence_assessment": {
+    "execution_authority_id": "fc-feature-completion-execution-v0.3",
+    "execution_authority_ref": "https://app.notion.com/p/3f74c57a590c812a8260dcf23b659ed0",
+    "repository_authority_blob_sha": "8ed76b1128437b0aa2a3c966180b81001fbc3a59",
+    "semantic_authority_id": "fc08-container-extension-semantic-v0.1",
+    "semantic_acceptance_ref": "https://app.notion.com/p/4044c57a590c81a8813bcad8c57ff6ee",
+    "semantic_decision_preserving_order": "FC08-P23-D08",
+    "rule": "Early FC-08 design and semantic acceptance do not accelerate FC-08 implementation or waive applicable predecessor qualification.",
+    "bound_predecessor_decision_and_integration_refs": [],
+    "bound_sequencing_amendment": null,
+    "authority_conflict_found": false,
+    "interpretation": "Missing applicability/eligibility binding, not proof that predecessors are unimplemented or failed.",
+    "bounded_checks": [
+      "Read current preparation branch and main refs; both match previous exact revisions.",
+      "Read current execution policy and FC-08 P23 D08.",
+      "Read gates.json and integrations.json at observed main; no FC-06/FC-07 qualification binding was found in these registries.",
+      "Notion queries FC-06, FC-07 DEV, FC-08 execution sequence and GitHub default-branch query FC-07 did not yield a matching accepted prerequisite bundle."
+    ],
+    "search_limit": "Not an exhaustive claim about all remote branches, external records, or unindexed pages."
+  },
+  "blocked_work": [
+    "Issue a final FC-08 product implementation package.",
+    "Mark M01-M04 closed or replace unresolved bindings with placeholder commands.",
+    "Enable P32, accelerate feature order, or edit product code."
+  ],
+  "remaining_materialization": {
+    "M01": "PARTIAL: accepted normative body exports and inherited Authority content bindings still incomplete.",
+    "M02": "PARTIAL: logical 60-case CR01 catalog intact; full typed variants/corpus and numeric references still incomplete.",
+    "M03": "UNBOUND: actual product oracle/adapter/runner and evidence-compilation identities not supplied by this readiness snapshot.",
+    "M04": "UNBOUND: native, browser/WASM and headless execution profiles and inherited regression discovery still not bound.",
+    "this_turn": "No claim that these four inputs were completed. Product final binding stops at execution eligibility."
+  },
+  "resolution_paths": [
+    {
+      "kind": "bind_existing_qualification",
+      "required": "Applicable predecessor DEV decision IDs, exact qualified result revisions, and integration applicability to the selected FC-08 baseline.",
+      "constraint": "Resolve genuine applicability; do not invent a blanket requirement that every smaller FC number must be rerun."
+    },
+    {
+      "kind": "scoped_execution_policy_decision",
+      "required": "A separately accepted, narrowly scoped sequencing decision identifying actual prerequisite capabilities, baseline, retained debts, and explicitly permitted materialization/implementation scope.",
+      "constraint": "Not accepted by this report; no inferred waiver from the request to continue P31. P23 semantics/P20 targets/BASE-01/INT-01/FC-13 remain intact."
+    }
+  ],
+  "ownership_handoff": {
+    "type": "ownership_handoff",
+    "from_owner": "aegis-implementation",
+    "to": "aegis",
+    "reason": "earlier_untrusted_layer",
+    "requested_stage": "P21",
+    "earliest_untrusted_layer": "execution-policy prerequisite applicability / SEQ-01",
+    "status": "BLOCKED_MISSING_INPUT",
+    "suggested_next_stage": "Targeted execution-eligibility reconciliation; scoped P23 only if an amendment is necessary",
+    "continue_execution": false,
+    "metadata_only": true
+  },
+  "resume_after_resolution": {
+    "preserve": [
+      "P10/P11 closure",
+      "P23 D01-D08",
+      "P12/P13 E01",
+      "P14-P17 C01/C02",
+      "P20 v0.1+CR01",
+      "original preparation snapshot",
+      "BASE-01",
+      "INT-01",
+      "FC-13 debt"
+    ],
+    "next_action": "Bind the resolved execution eligibility, then complete M01-M04 and product PackageBindingPreflight/EvidenceContractPreflight before a separate P32 authorization.",
+    "no_whole_design_restart": true
+  },
+  "input_integrity": {
+    "readiness_zip_sha256": "e9753434115665b26e6bf75745b17c36d2ca87097f712ea1ac22e89e7fa4e302",
+    "readiness_manifest_sha256": "19ec971754569cdfb988aac1e2365efe99e40615568f08551db0542cc00cae66",
+    "readiness_files_checked": 18,
+    "nested_archive_entries_checked": 47,
+    "package_local_hash_refs_checked": 7,
+    "effective_catalog_sha256": "da62f3c6c6a7191b01ba7ba4713290acaea26755ef2971fe62475cb101c9b268",
+    "effective_case_ids_unique": true,
+    "crc_and_listed_hashes_match": true,
+    "interpretation": "Input integrity only; no Axiom or oracle behavioral execution."
+  },
+  "nonclaims": {
+    "product_package_preflight_pass": false,
+    "product_evidence_preflight_pass": false,
+    "Axiom_tests_executed": false,
+    "product_code_changed": false,
+    "global_authority_or_gate_changed": false,
+    "new_P23_decision": false,
+    "P34_or_physical_pass": false
+  }
+}
