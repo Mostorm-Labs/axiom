@@ -68,8 +68,13 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         attachmentPaint.setAntiAlias(true);
         attachmentPaint.setColor4f({0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
         for (const auto& point : selectionOverlay->attachmentPoints()) {
-            if (point.active) canvas->drawCircle(point.center.x, point.center.y, 4.0F,
-                                                  attachmentPaint);
+            if (point.active) {
+                attachmentPaint.setColor4f(point.hovered
+                    ? SkColor4f{0.35F, 0.72F, 1.0F, 0.38F}
+                    : SkColor4f{0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
+                canvas->drawCircle(point.center.x, point.center.y, point.hovered ? 8.0F : 4.0F,
+                                   attachmentPaint);
+            }
         }
         if (selectionOverlay->selectionOutline().visible) {
         SkPaint chrome;
@@ -151,8 +156,13 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     attachmentPaint.setAntiAlias(true);
     attachmentPaint.setColor4f({0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
     for (const auto& point : selectionOverlay->attachmentPoints()) {
-        if (point.active) canvas->drawCircle(point.center.x, point.center.y, 4.0F,
-                                              attachmentPaint);
+        if (point.active) {
+            attachmentPaint.setColor4f(point.hovered
+                ? SkColor4f{0.35F, 0.72F, 1.0F, 0.38F}
+                : SkColor4f{0.95F, 0.58F, 0.12F, 0.95F}, nullptr);
+            canvas->drawCircle(point.center.x, point.center.y, point.hovered ? 8.0F : 4.0F,
+                               attachmentPaint);
+        }
     }
     if (selectionOverlay->selectionOutline().visible) {
         SkPaint chrome;

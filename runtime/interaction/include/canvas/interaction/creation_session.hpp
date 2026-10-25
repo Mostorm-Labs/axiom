@@ -46,6 +46,15 @@ class CreationSession final {
   [[nodiscard]] std::optional<semantic::AttachedEndpoint> snappedEndpoint() const noexcept {
     return snappedEndpoint_;
   }
+  [[nodiscard]] std::optional<semantic::AttachedEndpoint> startAttachment() const noexcept {
+    return startAttachment_;
+  }
+  void setStartAttachment(std::optional<semantic::AttachedEndpoint> value) noexcept {
+    startAttachment_ = std::move(value);
+  }
+  void setEndAttachment(std::optional<semantic::AttachedEndpoint> value) noexcept {
+    endAttachment_ = std::move(value);
+  }
   void setSnapTargets(std::vector<interaction::SnapTarget> targets) noexcept {
     snapTargets_ = std::move(targets);
   }
@@ -64,5 +73,7 @@ class CreationSession final {
   float snapScale_ = 1.0F;
   CreationPreview preview_{};
   std::optional<semantic::AttachedEndpoint> snappedEndpoint_{};
+  std::optional<semantic::AttachedEndpoint> startAttachment_{};
+  std::optional<semantic::AttachedEndpoint> endAttachment_{};
 };
 }  // namespace canvas::interaction

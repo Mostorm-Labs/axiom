@@ -282,6 +282,15 @@ HeadlessSubmissionIssue validateCommand(const ReferenceTraversalEntry& entry) no
         } else if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
+            const auto* derived = std::get_if<scene::ConnectorGeometry>(&entry.record.derivedGeometry);
+            if (derived != nullptr) {
+                if (derived->route.size() < 2U) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+                for (const auto point : derived->route)
+                    if (!std::isfinite(point.x) || !std::isfinite(point.y) ||
+                        std::abs(point.x) > 100000000.0F || std::abs(point.y) > 100000000.0F)
+                        return HeadlessSubmissionIssue::kOverflow;
+                return HeadlessSubmissionIssue::kNone;
+            }
             if (start == nullptr || end == nullptr) return HeadlessSubmissionIssue::kUnsupportedGeometry;
             if (!pointInScalarRange(start->point) || !pointInScalarRange(end->point)) {
                 return HeadlessSubmissionIssue::kOverflow;
@@ -289,13 +298,6 @@ HeadlessSubmissionIssue validateCommand(const ReferenceTraversalEntry& entry) no
             if (!integral(start->point.x) || !integral(start->point.y) ||
                 !integral(end->point.x) || !integral(end->point.y)) {
                 return HeadlessSubmissionIssue::kUnsupportedGeometry;
-            }
-            if (const auto* derived = std::get_if<scene::ConnectorGeometry>(&entry.record.derivedGeometry);
-                derived != nullptr) {
-                for (const auto point : derived->route)
-                    if (!std::isfinite(point.x) || !std::isfinite(point.y) ||
-                        std::abs(point.x) > 100000000.0F || std::abs(point.y) > 100000000.0F)
-                        return HeadlessSubmissionIssue::kOverflow;
             }
         } else if constexpr (std::is_same_v<T, StickyReferenceCommand>) {
             if (!scalarRange(command.content.width) || !scalarRange(command.content.height)) {
@@ -315,6 +317,15 @@ HeadlessSubmissionIssue validateProductionCommand(const ReferenceTraversalEntry&
         if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
+            const auto* derived = std::get_if<scene::ConnectorGeometry>(&entry.record.derivedGeometry);
+            if (derived != nullptr) {
+                if (derived->route.size() < 2U) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+                for (const auto point : derived->route)
+                    if (!std::isfinite(point.x) || !std::isfinite(point.y) ||
+                        std::abs(point.x) > 100000000.0F || std::abs(point.y) > 100000000.0F)
+                        return HeadlessSubmissionIssue::kOverflow;
+                return HeadlessSubmissionIssue::kNone;
+            }
             if (start == nullptr || end == nullptr) return HeadlessSubmissionIssue::kUnsupportedGeometry;
             if (!pointInScalarRange(start->point) || !pointInScalarRange(end->point))
                 return HeadlessSubmissionIssue::kOverflow;
@@ -523,8 +534,32 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
         } else if constexpr (std::is_same_v<T, VectorPathReferenceCommand>) {
             SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(propertyColor(record, 0x00000100U, {0.0F, 0.0F, 1.0F, 1.0F}))); drawPath(canvas, command.content.geometry, paint);
         } else if constexpr (std::is_same_v<T, RichTextReferenceCommand>) {
-            if(command.layout && textResources) textResources->draw(canvas,*command.layout);
-            if(!legacyHeadlessGolden && command.content.layout && command.layout) {
+            if (command.layout && textResources) {
+                canvas.save();
+                if (command.suppressBorder) {
+                    canvas.scale(command.layout->labelScaleX,
+                                 command.layout->labelScaleY);
+                }
+                textResources->draw(canvas,*command.layout);
+                canvas.restore();
+            }
+            if (command.showExpandButton && command.layout && command.layout->overflow) {
+                canvas.save();
+                if (command.suppressBorder) {
+                    canvas.scale(command.layout->labelScaleX,
+                                 command.layout->labelScaleY);
+                }
+                const auto& r = command.layout->expandButton;
+                SkPaint button; button.setAntiAlias(true); button.setColor(SK_ColorWHITE);
+                button.setStyle(SkPaint::kFill_Style); canvas.drawRect(SkRect::MakeLTRB(r.left, r.top, r.right, r.bottom), button);
+                button.setColor(SK_ColorBLACK); button.setStyle(SkPaint::kStroke_Style); button.setStrokeWidth(1.5F);
+                canvas.drawRect(SkRect::MakeLTRB(r.left, r.top, r.right, r.bottom), button);
+                button.setStyle(SkPaint::kFill_Style);
+                canvas.drawRect(SkRect::MakeLTRB(r.left + 3, r.top + 7, r.right - 3, r.top + 9), button);
+                canvas.drawRect(SkRect::MakeLTRB(r.left + 7, r.top + 3, r.left + 9, r.bottom - 3), button);
+                canvas.restore();
+            }
+            if(!legacyHeadlessGolden && !command.suppressBorder && command.content.layout && command.layout) {
                 SkPaint border;border.setAntiAlias(true);border.setStyle(SkPaint::kStroke_Style);border.setStrokeWidth(0);border.setColor(SK_ColorBLACK);
                 canvas.drawRect(SkRect::MakeLTRB(1,1,static_cast<float>(command.content.layout->wrap_width)-1,command.layout->localBounds.bottom-1),border);
             }
@@ -593,7 +628,9 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
         } else if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
-            if (start == nullptr || end == nullptr) return;
+            const auto* derived = std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry);
+            if ((start == nullptr || end == nullptr) &&
+                (derived == nullptr || derived->route.size() < 2U)) return;
             const bool hasStroke=std::any_of(record.properties.entries.begin(),record.properties.entries.end(),
                 [](const auto& entry){return entry.field_id==0x101U;});
             const auto* stroke=objectStroke(record);
@@ -605,8 +642,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             const auto opacity=objectOpacity(record);
             if(opacity==1.0F) canvas.save();
             else {SkPaint layer;layer.setAlphaf(opacity);canvas.saveLayer(nullptr,&layer);}
-            if (const auto* derived = std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry);
-                derived != nullptr && derived->route.size() >= 2U) {
+            if (derived != nullptr && derived->route.size() >= 2U) {
                 for (std::size_t index = 1U; index < derived->route.size(); ++index) {
                     const auto& from = derived->route[index - 1U];
                     const auto& to = derived->route[index];
@@ -628,18 +664,22 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                     arrow = *decoration == semantic::ConnectorDecorationValue::kArrow;
             }
             if (arrow) {
-                const float dx = skScalar(end->point.x - start->point.x);
-                const float dy = skScalar(end->point.y - start->point.y);
+                const auto startPoint = derived != nullptr ? derived->start :
+                    foundation::WorldPoint{static_cast<float>(start->point.x), static_cast<float>(start->point.y)};
+                const auto endPoint = derived != nullptr ? derived->end :
+                    foundation::WorldPoint{static_cast<float>(end->point.x), static_cast<float>(end->point.y)};
+                const float dx = skScalar(endPoint.x - startPoint.x);
+                const float dy = skScalar(endPoint.y - startPoint.y);
                 const float length = std::hypot(dx, dy);
                 if (length > 0.0F) {
                     const float ux = dx / length, uy = dy / length;
                     const float px = -uy, py = ux;
                     SkPathBuilder head;
-                    head.moveTo(skScalar(end->point.x), skScalar(end->point.y));
-                    head.lineTo(skScalar(end->point.x - ux * 12.0F + px * 6.0F),
-                                skScalar(end->point.y - uy * 12.0F + py * 6.0F));
-                    head.lineTo(skScalar(end->point.x - ux * 12.0F - px * 6.0F),
-                                skScalar(end->point.y - uy * 12.0F - py * 6.0F));
+                    head.moveTo(skScalar(endPoint.x), skScalar(endPoint.y));
+                    head.lineTo(skScalar(endPoint.x - ux * 12.0F + px * 6.0F),
+                                skScalar(endPoint.y - uy * 12.0F + py * 6.0F));
+                    head.lineTo(skScalar(endPoint.x - ux * 12.0F - px * 6.0F),
+                                skScalar(endPoint.y - uy * 12.0F - py * 6.0F));
                     head.close();
                     paint.setStyle(SkPaint::kFill_Style);paint.setPathEffect(nullptr);
                     canvas.drawPath(head.detach(), paint);
@@ -647,7 +687,40 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             }
             canvas.restore();
         } else if constexpr (std::is_same_v<T, StickyReferenceCommand>) {
-            drawSolidRect(canvas, foundation::WorldRect{record.visualBounds.left, record.visualBounds.top, record.visualBounds.left + static_cast<float>(command.content.width), record.visualBounds.top + static_cast<float>(command.content.height)}, {1.0F, 1.0F, 0.5F, 1.0F});
+            const auto width = static_cast<float>(command.content.width);
+            const auto height = static_cast<float>(command.content.height);
+            const bool identity = record.transform.a == 1.0 && record.transform.b == 0.0 &&
+                record.transform.c == 0.0 && record.transform.d == 1.0 &&
+                record.transform.tx == 0.0 && record.transform.ty == 0.0;
+            const auto bounds = identity
+                ? foundation::WorldRect{record.visualBounds.left, record.visualBounds.top,
+                                        record.visualBounds.left + width, record.visualBounds.top + height}
+                : foundation::WorldRect{0.0F, 0.0F, width, height};
+            drawSolidRect(canvas, bounds, {1.0F, 1.0F, 0.5F, 1.0F});
+            if (command.labelLayout && textResources) {
+                canvas.save();
+                canvas.clipRect(SkRect::MakeXYWH(0.0F, 0.0F, width, height));
+                canvas.scale(command.labelLayout->labelScaleX,
+                             command.labelLayout->labelScaleY);
+                textResources->draw(canvas, *command.labelLayout);
+                canvas.restore();
+                if (command.showExpandButton && command.labelLayout->overflow) {
+                    canvas.save();
+                    canvas.scale(command.labelLayout->labelScaleX,
+                                 command.labelLayout->labelScaleY);
+                    const auto& r = command.labelLayout->expandButton;
+                    SkPaint button; button.setAntiAlias(true); button.setColor(SK_ColorWHITE);
+                    button.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left, r.top, r.right, r.bottom), button);
+                    button.setColor(SK_ColorBLACK); button.setStyle(SkPaint::kStroke_Style);
+                    button.setStrokeWidth(1.5F);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left, r.top, r.right, r.bottom), button);
+                    button.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left + 3, r.top + 7, r.right - 3, r.top + 9), button);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left + 7, r.top + 3, r.left + 9, r.bottom - 3), button);
+                    canvas.restore();
+                }
+            }
         } else if constexpr (std::is_same_v<T, GroupReferenceCommand>) {
             // Group is an ordered traversal entry with no pixel contribution.
         }
@@ -745,6 +818,8 @@ void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
         entry.command = ShapeReferenceCommand{*shape};
     else if (const auto* connector = std::get_if<semantic::ConnectorContent>(&object.content))
         entry.command = ConnectorReferenceCommand{*connector};
+    else if (const auto* sticky = std::get_if<semantic::StickyContent>(&object.content))
+        entry.command = StickyReferenceCommand{*sticky, nullptr, false};
     else return;
     drawTransientEntryToSkCanvas(canvas, plan, entry);
 }

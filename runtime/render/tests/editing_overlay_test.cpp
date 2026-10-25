@@ -107,6 +107,27 @@ void guides_are_transient_screen_space_overlay_geometry() {
     view.editingOverlay().clear();
     assert(view.editingOverlay().guides().empty());
 }
+
+void attachment_points_are_offset_from_selection_outline() {
+    RenderViewRuntime view(frame(ViewId(7), CameraGeneration(16), 1.0F));
+    const std::array points{
+        canvas::render::AttachmentPointGeometry{{400.0F, 170.0F}, true},
+        canvas::render::AttachmentPointGeometry{{630.0F, 300.0F}, true},
+        canvas::render::AttachmentPointGeometry{{400.0F, 430.0F}, true},
+        canvas::render::AttachmentPointGeometry{{270.0F, 300.0F}, true}};
+    EditingOverlayInput input{id(16), WorldRect{-100.0F, -100.0F, 100.0F, 100.0F}, {}, true,
+                              false, false, HandleCapabilities{}, {}, points};
+    assert(view.editingOverlay().update(input));
+    const auto& outline = view.editingOverlay().selectionOutline();
+    const auto& ports = view.editingOverlay().attachmentPoints();
+    assert(ports.size() == 4U);
+    assert(ports[0].center.y < outline.corners[0].y);
+    assert(ports[1].center.x > outline.corners[1].x);
+    assert(ports[2].center.y > outline.corners[2].y);
+    assert(ports[3].center.x < outline.corners[3].x);
+    assert(view.editingOverlay().handle(HandleKind::kRotation).center.x >
+           outline.corners[1].x - 1.0F);
+}
 } // namespace
 
 int main() {
@@ -115,5 +136,6 @@ int main() {
     chrome_is_stable_across_device_pixel_ratios();
     unsupported_handle_capabilities_do_not_create_hit_targets();
     guides_are_transient_screen_space_overlay_geometry();
+    attachment_points_are_offset_from_selection_outline();
     return 0;
 }

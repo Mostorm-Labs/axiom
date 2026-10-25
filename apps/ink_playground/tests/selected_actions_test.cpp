@@ -2,6 +2,7 @@
 #include "ink_playground_history_test_access.hpp"
 
 #include <cassert>
+#include <algorithm>
 #include <iostream>
 #include <set>
 
@@ -71,6 +72,57 @@ void dependent_connector_survives_insert_undo() {
   const auto before=Access::objects(host);const auto generation=host.semanticGeneration();
   assert(!host.undo());assert(host.canUndo() && !host.canRedo());
   assert(Access::objects(host)==before && host.semanticGeneration()==generation);
+}
+
+void selected_attachment_point_creates_connector_and_target() {
+  using Access = canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+  using namespace canvas::semantic;
+  InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  assert(host.selectCreationPreset(CreationPreset::kRectangle));
+  pointer(host, 1, 20, 20, PointerPhase::kDown);
+  pointer(host, 2, 100, 80, PointerPhase::kUp);
+  assert(host.setSelectionMode(true));
+  assert(host.selectAtViewPoint(60, 50));
+  const auto* overlay = host.selectionOverlay();
+  assert(overlay != nullptr);
+  assert(overlay->attachmentPoints().size() == 4U);
+  const auto start = overlay->attachmentPoints()[1].center;
+  assert(!overlay->attachmentPoints()[1].hovered);
+  assert(host.hoverSelectionAtViewPoint(start.x, start.y));
+  assert(host.selectionOverlay()->attachmentPoints()[1].hovered);
+  const canvas::input::PointerKey key{11U, 91U, 1U};
+  assert(host.selectionPointer(key, PointerPhase::kDown, start.x, start.y));
+  assert(host.selectionPointer(key, PointerPhase::kMove, 180.0F, 60.0F));
+  assert(host.selectionPointer(key, PointerPhase::kUp, 180.0F, 60.0F));
+  const auto objects = Access::objects(host);
+  assert(objects.size() == 3U);
+  const auto connector = std::find_if(objects.begin(), objects.end(), [](const auto& object) {
+    return object.kind == ObjectKind::kConnector;
+  });
+  assert(connector != objects.end());
+  const auto& content = std::get<ConnectorContent>(connector->content);
+  const auto startAttachment = std::get_if<AttachedEndpoint>(&content.start.value);
+  assert(startAttachment != nullptr);
+  assert(startAttachment->target_object_id == objects.front().id ||
+         startAttachment->target_object_id == objects.back().id);
+}
+
+void selected_attachment_point_click_creates_connector_and_target() {
+  using Access = canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+  InkPlaygroundHost host;
+  assert(host.bindSurface(256, 256));
+  assert(host.selectCreationPreset(CreationPreset::kRectangle));
+  pointer(host, 1, 20, 20, PointerPhase::kDown);
+  pointer(host, 2, 100, 80, PointerPhase::kUp);
+  assert(host.setSelectionMode(true));
+  assert(host.selectAtViewPoint(60, 50));
+  const auto point = host.selectionOverlay()->attachmentPoints()[1].center;
+  const canvas::input::PointerKey key{11U, 92U, 1U};
+  assert(host.selectionPointer(key, PointerPhase::kDown, point.x, point.y));
+  assert(host.selectionPointer(key, PointerPhase::kUp, point.x, point.y));
+  const auto objects = Access::objects(host);
+  assert(objects.size() == 3U);
 }
 
 void remote_child_survives_conditional_insert_undo() {
@@ -181,6 +233,8 @@ int main(int argc, char** argv) {
   if(argc>1 && std::string_view(argv[1])=="dependent"){dependent_connector_survives_insert_undo();return 0;}
   if(argc>1 && std::string_view(argv[1])=="creation"){creation_records_conditional_history();return 0;}
   if(argc>1){remote_edit_must_fence_undo();return 0;}
+  selected_attachment_point_creates_connector_and_target();
+  selected_attachment_point_click_creates_connector_and_target();
   InkPlaygroundHost host;
   assert(host.bindSurface(256U, 256U));
   assert(host.selectCreationPreset(CreationPreset::kRectangle));

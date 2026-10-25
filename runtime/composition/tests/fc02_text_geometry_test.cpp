@@ -100,6 +100,20 @@ void seedShape(Host& h, const semantic::ObjectRecord& shape) {
     ASSERT_EQ(h.facade.submitCanvasControl(tool).state, runtime::ProductControlState::kQueued);
     ASSERT_TRUE(h.runtime.ownerPump());
 }
+void seedSticky(Host& h, const semantic::ObjectRecord& sticky) {
+    const semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(812)} ,
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)}, 1, 1,
+        semantic::InsertObjectsOp{{sticky}}};
+    ASSERT_EQ(h.runtime.applyExternalOperation(seed, semantic::ApplySource::kRemoteSync).disposition,
+              semantic::ApplyDisposition::kApplied);
+    runtime::CanvasControlRequest tool;
+    tool.clientId = 86; tool.requestId = 1;
+    tool.target = h.facade.mountedCanvasTargets().front();
+    tool.payload.kind = runtime::CanvasControlPayloadKind::kSelectTool;
+    tool.payload.tool = runtime::CanvasToolKind::kText;
+    ASSERT_EQ(h.facade.submitCanvasControl(tool).state, runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+}
 TEST(FC02ShapeLabel, EmptyCaretStartsInsideAllThreeShapeCenters) {
     for (unsigned kind : {1U, 2U, 3U}) {
         SCOPED_TRACE(kind);
@@ -123,6 +137,215 @@ TEST(FC02ShapeLabel, EmptyCaretStartsInsideAllThreeShapeCenters) {
         EXPECT_EQ(h.runtime.semanticObjectCount(), 1U);
         EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), 0U);
     }
+}
+TEST(FC02StickyLabel, TypingKeepsSizeUntilSelectedExpand) {
+    Host h(true);
+    semantic::ObjectRecord record;
+    record.id = foundation::ObjectId::fromUint64(901);
+    record.kind = semantic::ObjectKind::kSticky;
+    record.kind_version = 1;
+    record.placement.order_key = semantic::OrderKey({1});
+    record.transform.tx = 20;
+    record.transform.ty = 100;
+    record.content = semantic::StickyContent{48, 48};
+    seedSticky(h, record);
+    runtime::TextIntent edit;
+    edit.clientId = 15; edit.requestId = ++h.request;
+    edit.target = h.facade.mountedCanvasTargets().front();
+    edit.kind = runtime::TextIntentKind::kEditAtPoint;
+    edit.object = record.id; edit.viewX = 32; edit.viewY = 112;
+    ASSERT_EQ(h.facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_EQ(h.facade.textIntentReceipt(15, h.request)->status, runtime::TextStatus::kApplied);
+    const auto before = *h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace, u"A\nB\nC\nD\nE\nF").status,
+              runtime::TextStatus::kApplied);
+    const auto* after = h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
+    ASSERT_NE(after, nullptr);
+    const auto& grown = std::get<semantic::StickyContent>(after->content);
+    const auto& original = std::get<semantic::StickyContent>(before.content);
+    EXPECT_EQ(grown.width, grown.height);
+    EXPECT_EQ(grown.width, original.width);
+    EXPECT_EQ(after->transform.ty, before.transform.ty);
+    EXPECT_DOUBLE_EQ(after->transform.ty, before.transform.ty);
+    const auto geometry = h.facade.readTextGeometry();
+    ASSERT_TRUE(geometry.available);
+    EXPECT_GE(geometry.caret[1], after->transform.ty);
+    EXPECT_LE(geometry.caret[5], after->transform.ty + grown.height);
+}
+TEST(FC02StickyLabel, LongUnbrokenTextWrapsBeforeSquareExpansion) {
+    Host h(true);
+    semantic::ObjectRecord record;
+    record.id = foundation::ObjectId::fromUint64(902);
+    record.kind = semantic::ObjectKind::kSticky;
+    record.kind_version = 1;
+    record.placement.order_key = semantic::OrderKey({1});
+    record.transform.tx = 20;
+    record.transform.ty = 100;
+    record.content = semantic::StickyContent{96, 96};
+    seedSticky(h, record);
+    runtime::TextIntent edit;
+    edit.clientId = 15; edit.requestId = ++h.request;
+    edit.target = h.facade.mountedCanvasTargets().front();
+    edit.kind = runtime::TextIntentKind::kEditAtPoint;
+    edit.object = record.id; edit.viewX = 32; edit.viewY = 112;
+    ASSERT_EQ(h.facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_EQ(h.facade.textIntentReceipt(15, h.request)->status, runtime::TextStatus::kApplied);
+    std::u16string digits(160, u'2');
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace, digits).status,
+              runtime::TextStatus::kApplied);
+    const auto* after = h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
+    ASSERT_NE(after, nullptr);
+    const auto& sticky = std::get<semantic::StickyContent>(after->content);
+    EXPECT_EQ(sticky.width, sticky.height);
+    EXPECT_EQ(sticky.height, 96.0);
+    EXPECT_LT(sticky.height, 4096.0);
+    EXPECT_TRUE(h.facade.readTextGeometry().available);
+    const auto geometry = h.facade.readTextGeometry();
+    ASSERT_TRUE(geometry.available);
+    EXPECT_LE(geometry.caret[2], after->transform.tx + sticky.width);
+    EXPECT_LE(geometry.caret[5], after->transform.ty + sticky.height);
+}
+TEST(FC02StickyLabel, SelectedExpandButtonCommitsSquareGrowth) {
+    Host h(true);
+    semantic::ObjectRecord record;
+    record.id = foundation::ObjectId::fromUint64(903);
+    record.kind = semantic::ObjectKind::kSticky;
+    record.kind_version = 1;
+    record.placement.order_key = semantic::OrderKey({1});
+    record.transform.tx = 20;
+    record.transform.ty = 40;
+    record.content = semantic::StickyContent{48, 48};
+    seedSticky(h, record);
+    runtime::TextIntent edit;
+    edit.clientId = 15; edit.requestId = ++h.request;
+    edit.target = h.facade.mountedCanvasTargets().front();
+    edit.kind = runtime::TextIntentKind::kEditAtPoint;
+    edit.object = record.id; edit.viewX = 32; edit.viewY = 52;
+    ASSERT_EQ(h.facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_EQ(h.facade.textIntentReceipt(15, h.request)->status, runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace, u"A\nB\nC\nD\nE\nF").status,
+              runtime::TextStatus::kApplied);
+    ASSERT_TRUE(h.runtime.qualificationRuntime().setSelectionMode(true));
+    ASSERT_TRUE(h.runtime.qualificationRuntime().selectAtViewPoint(32, 52));
+    ASSERT_EQ(h.runtime.qualificationRuntime().selectedPrimaryObject(), record.id);
+    ASSERT_TRUE(h.runtime.registerSource(86));
+    input::PlatformPointerBatch batch;
+    // Sticky is at (20,40) with a 48x48 local box.  The rendered affordance
+    // occupies the inset bottom-right corner; click its center rather than
+    // relying on the inclusive outer edge of the hit rectangle.
+    batch.samples.push_back({86, 1, 1, 1000, 48, 68, 0, 0, 0, {}, {},
+        input::SampleProvenance::kConfirmedCurrent, input::PointerPhase::kDown});
+    ASSERT_TRUE(h.runtime.submit(batch));
+    const auto* after = h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
+    ASSERT_NE(after, nullptr);
+    const auto& sticky = std::get<semantic::StickyContent>(after->content);
+    EXPECT_GT(sticky.width, 48.0);
+    EXPECT_EQ(sticky.width, sticky.height);
+    // Sticky editing first creates its lazy RichText child, then commits the
+    // text and the explicit square expansion.
+    EXPECT_EQ(h.runtime.qualificationRuntime().submittedOperationCount(), 3U);
+}
+TEST(FC02StickyLabel, SelectedExpandButtonGrowsForHorizontalOverflow) {
+    Host h(true);
+    semantic::ObjectRecord record;
+    record.id = foundation::ObjectId::fromUint64(904);
+    record.kind = semantic::ObjectKind::kSticky;
+    record.kind_version = 1;
+    record.placement.order_key = semantic::OrderKey({1});
+    record.transform.tx = 20;
+    record.transform.ty = 40;
+    record.content = semantic::StickyContent{200, 200};
+    seedSticky(h, record);
+    runtime::TextIntent edit;
+    edit.clientId = 15; edit.requestId = ++h.request;
+    edit.target = h.facade.mountedCanvasTargets().front();
+    edit.kind = runtime::TextIntentKind::kEditAtPoint;
+    edit.object = record.id; edit.viewX = 32; edit.viewY = 52;
+    ASSERT_EQ(h.facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_EQ(h.facade.textIntentReceipt(15, h.request)->status, runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,
+                      std::u16string(300, u'W')).status,
+              runtime::TextStatus::kApplied);
+    ASSERT_TRUE(h.runtime.qualificationRuntime().setSelectionMode(true));
+    ASSERT_TRUE(h.runtime.qualificationRuntime().selectAtViewPoint(32, 52));
+    ASSERT_EQ(h.runtime.qualificationRuntime().selectedPrimaryObject(), record.id);
+    ASSERT_TRUE(h.runtime.registerSource(86));
+    input::PlatformPointerBatch batch;
+    batch.samples.push_back({86, 1, 1, 1000, 200, 220, 0, 0, 0, {}, {},
+        input::SampleProvenance::kConfirmedCurrent, input::PointerPhase::kDown});
+    ASSERT_TRUE(h.runtime.submit(batch));
+    const auto* after = h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
+    ASSERT_NE(after, nullptr);
+    const auto& sticky = std::get<semantic::StickyContent>(after->content);
+    EXPECT_GT(sticky.width, 200.0);
+    EXPECT_EQ(sticky.width, sticky.height);
+}
+TEST(FC02StickyLabel, WrappedTextThatFitsDoesNotShowExpand) {
+    runtime::MemoryResourceProvider resources;
+    const semantic::ResourceId font{foundation::ObjectId::fromUint64(0xFC0202)};
+    std::ifstream file(FC02_HOST_FONT, std::ios::binary);
+    resources.publish(font.value, {std::istreambuf_iterator<char>(file), {}});
+    text::RichTextLayoutService service(resources, {300, 1});
+    service.registerFont({font, std::string(minimal_runtime_host::kHostTextFontSha256), 0});
+    semantic::TextStyle style{font, 16, 400, false, false, {0, 0, 0, 1}};
+    semantic::RichTextContent label;
+    label.document.paragraphs = {{foundation::ObjectId::fromUint64(905),
+        {semantic::ParagraphAlignment::kLeft, 1, 0, 0},
+        {{"878787878787878787878787878787 878787878787", style}}}};
+    const semantic::StickyContent sticky{200, 200};
+    const auto layout = service.resolveStickyLabel(
+        foundation::ObjectId::fromUint64(905), label, sticky, false);
+    ASSERT_TRUE(layout->diagnostics.empty());
+    EXPECT_FALSE(layout->overflow);
+    EXPECT_GT(layout->lines.size(), 1U);
+    EXPECT_LE(layout->localBounds.bottom, 188.0F);
+}
+TEST(FC02StickyLabel, SelectedExpandAfterManualScaleUsesVisibleButton) {
+    Host h(true);
+    semantic::ObjectRecord record;
+    record.id = foundation::ObjectId::fromUint64(906);
+    record.kind = semantic::ObjectKind::kSticky;
+    record.kind_version = 1;
+    record.placement.order_key = semantic::OrderKey({1});
+    record.transform.tx = 20;
+    record.transform.ty = 40;
+    // Equivalent to manually shrinking a 200x200 Sticky to half size: the
+    // canonical content size stays fixed while the transform carries the
+    // visible scale.
+    record.transform.a = 0.5;
+    record.transform.d = 0.5;
+    record.content = semantic::StickyContent{200, 200};
+    seedSticky(h, record);
+    runtime::TextIntent edit;
+    edit.clientId = 15; edit.requestId = ++h.request;
+    edit.target = h.facade.mountedCanvasTargets().front();
+    edit.kind = runtime::TextIntentKind::kEditAtPoint;
+    edit.object = record.id; edit.viewX = 35; edit.viewY = 55;
+    ASSERT_EQ(h.facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_EQ(h.facade.textIntentReceipt(15, h.request)->status, runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace, std::u16string(300, u'W')).status,
+              runtime::TextStatus::kApplied);
+    ASSERT_TRUE(h.runtime.qualificationRuntime().setSelectionMode(true));
+    ASSERT_TRUE(h.runtime.qualificationRuntime().selectAtViewPoint(35, 55));
+    ASSERT_EQ(h.runtime.qualificationRuntime().selectedPrimaryObject(), record.id);
+    ASSERT_TRUE(h.runtime.registerSource(86));
+    input::PlatformPointerBatch batch;
+    // The renderer applies the inverse label scale inside the Sticky
+    // transform. The visible button therefore lands at world center (100,120)
+    // for this 0.5-scaled 200px Sticky, not at the canonical local midpoint.
+    batch.samples.push_back({86, 1, 1, 1000, 100, 120, 0, 0, 0, {}, {},
+        input::SampleProvenance::kConfirmedCurrent, input::PointerPhase::kDown});
+    ASSERT_TRUE(h.runtime.submit(batch));
+    const auto* after = h.runtime.qualificationRuntime().qualificationObjectRecord(record.id);
+    ASSERT_NE(after, nullptr);
+    const auto& sticky = std::get<semantic::StickyContent>(after->content);
+    EXPECT_GT(sticky.width, 200.0);
+    EXPECT_EQ(sticky.width, sticky.height);
 }
 TEST(FC02ShapeLabel, RealDownBeforeSecondDoubleClickDoesNotCreateOrBlockEditor) {
     Host h(true); seedShape(h, labelShape());

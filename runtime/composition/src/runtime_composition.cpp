@@ -222,6 +222,10 @@ bool RuntimeComposition::submit(const input::PlatformPointerBatch& batch) noexce
   return
       runtime_->acceptPlatformBatch(batch, batch.samples.back().timestampNs);
 }
+bool RuntimeComposition::hoverSelectionAtViewPoint(float x, float y) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || !canMutate()) return false;
+  return runtime_->hoverSelectionAtViewPoint(x, y);
+}
 std::optional<input::PointerKey> RuntimeComposition::platformKey(
     input::InputSourceId source, input::PointerId pointer) const noexcept {
   if (std::this_thread::get_id() != ownerThread_ || !runtime_) return std::nullopt;

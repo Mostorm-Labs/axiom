@@ -413,6 +413,13 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       if (!state->mouseKey) releaseHostMouseCapture(*state);
       return 0;
     case WM_MOUSEMOVE:
+      if (!isPromotedPointerMouse() && !state->mouseKey) {
+        const auto surface = state->host->composition().surfaceSnapshot();
+        if (surface.width != 0U && surface.height != 0U)
+          (void)state->host->composition().hoverSelectionAtViewPoint(
+              static_cast<float>(GET_X_LPARAM(lParam)) * surface.logicalWidth / surface.width,
+              static_cast<float>(GET_Y_LPARAM(lParam)) * surface.logicalHeight / surface.height);
+      }
       if (!isPromotedPointerMouse() && state->mouseKey && (wParam & MK_LBUTTON))
         sendPointer(*state, lParam, canvas::input::PointerPhase::kMove);
       return 0;

@@ -62,7 +62,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
       case CanvasControlPayloadKind::kUndo: applied = runtime.undo(); break;
       case CanvasControlPayloadKind::kRedo: applied = runtime.redo(); break;
       case CanvasControlPayloadKind::kSelectCreationPreset:
-        applied = runtime.setSelectionMode(false) && runtime.setPanTool(false) &&
+        applied = runtime.setPanTool(false) &&
                   runtime.selectCreationPreset(static_cast<canvas::interaction::CreationPreset>(p.creationPreset));
         break;
       case CanvasControlPayloadKind::kFutureAppearance: applied = runtime.setFutureAppearance(p.appearance); break;

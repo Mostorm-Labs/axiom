@@ -156,6 +156,8 @@ bool runtimeTraversalLess(const canvas::RuntimeSceneRecord& left,
   };
   const bool leftInk = isInk(left.kind);
   const bool rightInk = isInk(right.kind);
+  if (left.kind == semantic::ObjectKind::kSticky && right.kind == semantic::ObjectKind::kRichText) return true;
+  if (left.kind == semantic::ObjectKind::kRichText && right.kind == semantic::ObjectKind::kSticky) return false;
   if (leftInk != rightInk) return !leftInk;
   if (left.placement.order_key != right.placement.order_key) {
     return left.placement.order_key < right.placement.order_key;
@@ -872,9 +874,17 @@ bool CanvasEditingRuntime::cancelPlatformPointer(const input::PointerKey& key,
 
 bool CanvasEditingRuntime::selectCreationPreset(CreationPreset preset) noexcept {
   if (closed_ || !brushSessions_.empty() || !eraserTraces_.empty() || !keyedStrokeIds_.empty() ||
-      selectionMode_ || panTool_ || creationActive()) return false;
+      panTool_ || creationActive()) return false;
+  if (selectionMode_) {
+    dispatchRuntime_.cancelAll();
+    resetTouchTextTap();
+    selectionMode_ = false;
+    cancelSelectionTransform();
+    connectorPointerKeys_.clear();
+  }
   creationPreset_ = preset;
   creationMode_ = true;
+  if (!selection_.primary().isZero()) (void)renderSelectionOverlay();
   return true;
 }
 
@@ -895,6 +905,47 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   const auto eraseSession = [&] {
     creations_.erase(key);
     creationFences_.erase(key);
+  };
+  const auto attachmentAt = [&](foundation::WorldPoint point) -> std::optional<semantic::AttachedEndpoint> {
+    if (runtimeSceneHost_ == nullptr) return std::nullopt;
+    constexpr float kSnapRadius = 14.0F;
+    const float gap = 28.0F / std::max(0.001F, viewportController_->state().scale);
+    std::optional<semantic::AttachedEndpoint> result;
+    float best = kSnapRadius * kSnapRadius;
+    for (const auto& record : runtimeSceneHost_->read().records()) {
+      const auto* semanticRecord = semanticObjects_.find(record.objectId);
+      if (semanticRecord == nullptr ||
+          (semanticRecord->kind != semantic::ObjectKind::kShape &&
+           semanticRecord->kind != semantic::ObjectKind::kImage &&
+           semanticRecord->kind != semantic::ObjectKind::kSticky)) continue;
+      const auto& bounds = record.worldBounds;
+      const std::array<foundation::WorldPoint, 4> points{{
+          {(bounds.left + bounds.right) * 0.5F, bounds.top - gap},
+          {bounds.right + gap, (bounds.top + bounds.bottom) * 0.5F},
+          {(bounds.left + bounds.right) * 0.5F, bounds.bottom + gap},
+          {bounds.left - gap, (bounds.top + bounds.bottom) * 0.5F}}};
+      for (std::size_t i = 0; i < points.size(); ++i) {
+        const float dx = points[i].x - point.x, dy = points[i].y - point.y;
+        const float distance = dx * dx + dy * dy;
+        if (distance >= best) continue;
+        best = distance;
+        result = semantic::AttachedEndpoint{semanticRecord->id,
+          semantic::StablePortAnchor{static_cast<std::uint32_t>(i + 1U)}};
+      }
+    }
+    return result;
+  };
+  const auto attachmentAtView = [&](float viewX, float viewY) -> std::optional<semantic::AttachedEndpoint> {
+    if (!selectionView_ || selection_.primary().isZero()) return std::nullopt;
+    const auto& points = selectionView_->editingOverlay().attachmentPoints();
+    for (std::size_t index = 0; index < points.size(); ++index) {
+      const float dx = points[index].center.x - viewX;
+      const float dy = points[index].center.y - viewY;
+      if (dx * dx + dy * dy <= 16.0F * 16.0F)
+        return semantic::AttachedEndpoint{selection_.primary(),
+            semantic::StablePortAnchor{static_cast<std::uint32_t>(index + 1U)}};
+    }
+    return std::nullopt;
   };
   const auto refreshTargets = [&](CreationSession& creation) {
     if (!historySceneReady()) return false;
@@ -922,6 +973,11 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     auto& creation = creations_[key];
     latestCreationPointer_ = key;
     if (!refreshTargets(creation)) { eraseSession(); return false; }
+    if (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow) {
+      auto start = attachmentAtView(x, y);
+      if (!start) start = attachmentAt({content.first, content.second});
+      creation.setStartAttachment(start);
+    }
     const auto seed = ++creationSerial_ + (std::uint64_t{1} << 48U);
     if (!creation.begin(key, creationPreset_, CreationStyle{appearanceProperties(futureAppearance_,
                         creationPreset_<=CreationPreset::kTriangle)},
@@ -937,7 +993,13 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   latestCreationPointer_ = key;
   canonicalPresentationDirty_ = true;
   if (phase == input::PointerPhase::kMove) {
-    if (!refreshTargets(creation) || !creation.move(key, {content.first, content.second})) eraseSession();
+    if (!refreshTargets(creation)) eraseSession();
+    else {
+      auto endpoint = attachmentAtView(x, y);
+      if (!endpoint) endpoint = attachmentAt({content.first, content.second});
+      creation.setEndAttachment(endpoint);
+      if (!creation.move(key, {content.first, content.second})) eraseSession();
+    }
     // The transient object and snap guides are part of the next display
     // frame, so make the owner host repaint immediately after every move.
     canonicalPresentationDirty_ = true;
@@ -955,7 +1017,30 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   const auto fence = creationFences_.find(key);
   if (fence == creationFences_.end() || fence->second.semantic != semanticGeneration_.current() ||
       fence->second.camera != cameraGeneration()) { eraseSession(); return false; }
-  if (!creation.move(key, {content.first, content.second})) { eraseSession(); return true; }
+  auto endAttachment = attachmentAtView(x, y);
+  if (!endAttachment) endAttachment = attachmentAt({content.first, content.second});
+  creation.setEndAttachment(endAttachment);
+  foundation::WorldPoint finalEnd{content.first, content.second};
+  if ((creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow) &&
+      creation.startAttachment() &&
+      std::abs(finalEnd.x - creation.preview().start.x) < 1.0e-4F &&
+      std::abs(finalEnd.y - creation.preview().start.y) < 1.0e-4F) {
+    // A tap on a yellow point is an explicit connector affordance.  Give it
+    // the same short default reach as a drag before synthesizing the target.
+    float dx = 120.0F;
+    float dy = 0.0F;
+    if (const auto* stable = std::get_if<semantic::StablePortAnchor>(
+            &creation.startAttachment()->anchor)) {
+      if (stable->port_id == 1U) { dx = 0.0F; dy = -120.0F; }
+      else if (stable->port_id == 3U) { dx = 0.0F; dy = 120.0F; }
+      else if (stable->port_id == 4U) { dx = -120.0F; dy = 0.0F; }
+    }
+    finalEnd = {creation.preview().start.x + dx, creation.preview().start.y + dy};
+    endAttachment.reset();
+    creation.setEndAttachment(endAttachment);
+  }
+  if (!creation.move(key, finalEnd)) { eraseSession(); return true; }
+  const auto startAttachment = creation.startAttachment();
   const auto commit = creation.finish(key);
   eraseSession();
   // Keep the last transient shape/guide visible until the canonical frame
@@ -970,13 +1055,46 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   }
   const auto ordinal = localOperationOrdinal();
   if (ordinal == 0U) return false;
+  std::vector<semantic::ObjectRecord> inserted{commit->record};
+  std::vector<semantic::ObjectId> inverseIds{commit->record.id};
+  if ((creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow) &&
+      startAttachment.has_value()) {
+    auto& connector = inserted.front();
+    auto* connectorContent = std::get_if<semantic::ConnectorContent>(&connector.content);
+    const bool endAttached = connectorContent != nullptr &&
+        std::holds_alternative<semantic::AttachedEndpoint>(connectorContent->end.value);
+    if (connectorContent != nullptr && !endAttached) {
+      const auto* freeEnd = std::get_if<semantic::FreePointEndpoint>(&connectorContent->end.value);
+      if (freeEnd != nullptr) {
+        std::uint64_t targetOrdinal = ordinal + 0x100000U;
+        while (targetOrdinal != 0U &&
+               semanticObjects_.contains(foundation::ObjectId::fromUint64(targetOrdinal))) ++targetOrdinal;
+        if (targetOrdinal == 0U) return false;
+        semantic::ObjectRecord target{};
+        target.id = foundation::ObjectId::fromUint64(targetOrdinal);
+        target.kind = semantic::ObjectKind::kShape;
+        target.kind_version = 1U;
+        target.placement.order_key = semantic::OrderKey{{0xFD, 0xFE,
+            static_cast<std::uint8_t>((targetOrdinal & 0xFFU) == 0U
+                ? 1U : targetOrdinal & 0xFFU)}};
+        target.transform.tx = freeEnd->point.x - 60.0;
+        target.transform.ty = freeEnd->point.y - 40.0;
+        target.content = semantic::ShapeContent{1U, 120.0, 80.0};
+        target.properties = appearanceProperties(futureAppearance_, true);
+        connectorContent->end.value = semantic::AttachedEndpoint{
+            target.id, semantic::StablePortAnchor{1U}};
+        inserted.push_back(std::move(target));
+        inverseIds.push_back(inserted.back().id);
+      }
+    }
+  }
   semantic::Operation operation{
       semantic::OperationId(foundation::ObjectId::fromUint64(ordinal)), documentId_,
-      1U, 1U, semantic::InsertObjectsOp{{commit->record}}};
+      1U, 1U, semantic::InsertObjectsOp{std::move(inserted)}};
   const auto inverseId = allocateOperationId();
   if (inverseId.isZero()) return false;
   const bool applied = applyLocalHistoryOperation(std::move(operation),
-      {inverseId, documentId_, 1U, 1U, semantic::DeleteObjectsOp{{commit->record.id}}});
+      {inverseId, documentId_, 1U, 1U, semantic::DeleteObjectsOp{std::move(inverseIds)}});
   // Keep the last transient creation frame visible until the canonical frame
   // containing the committed object is accepted. Clearing here exposes one
   // blank/old frame between pointer-up and the render-pump handoff.
@@ -1035,6 +1153,7 @@ void CanvasEditingRuntime::cancelAllPointers() noexcept {
   shapeExpandPointerKeys_.clear();
   creations_.clear();
   creationFences_.clear();
+  connectorPointerKeys_.clear();
   cancelSelectionTransform();
   for (const auto& [key, strokeId] : keyedStrokeIds_) {
     ink_->cancel(key);
@@ -1154,6 +1273,7 @@ bool CanvasEditingRuntime::selectTool(ToolMode mode) noexcept {
   creationMode_ = false;
   creations_.clear();
   creationFences_.clear();
+  connectorPointerKeys_.clear();
   return true;
 }
 
@@ -1164,6 +1284,7 @@ bool CanvasEditingRuntime::setPanTool(bool enabled) noexcept {
   creationMode_ = false;
   creations_.clear();
   creationFences_.clear();
+  connectorPointerKeys_.clear();
   if (enabled) {
     toolMode_ = ToolMode::kBrush;
     if (selectionMode_) (void)setSelectionMode(false);
@@ -1186,6 +1307,7 @@ bool CanvasEditingRuntime::setSelectionMode(bool enabled) noexcept {
     creationFences_.clear();
   }
   if (!enabled) { cancelSelectionTransform(); selection_.cancel(); selectionView_.reset(); }
+  if (!enabled) connectorPointerKeys_.clear();
   canonicalPresentationDirty_ = true;
   return true;
 }
@@ -1204,7 +1326,18 @@ bool CanvasEditingRuntime::selectAtViewPoint(float x, float y) noexcept {
     canonicalPresentationDirty_ = true;
     return true;
   }
-  const bool selected = selection_.click(tested.value().frontToBack.front());
+  auto selectedId = tested.value().frontToBack.front();
+  // A Sticky's RichText child is a canonical implementation detail.  The
+  // user-facing selection belongs to the Sticky parent so its selection
+  // chrome and label affordances (including expand) use one identity.
+  if (const auto* hit = semanticObjects_.find(selectedId);
+      hit != nullptr && hit->kind == semantic::ObjectKind::kRichText &&
+      hit->placement.parent_id) {
+    if (const auto* parent = semanticObjects_.find(*hit->placement.parent_id);
+        parent != nullptr && parent->kind == semantic::ObjectKind::kSticky)
+      selectedId = parent->id;
+  }
+  const bool selected = selection_.click(selectedId);
   if (selected) {
     snapGuides_.clear();
     canonicalPresentationDirty_ = true;
@@ -1353,11 +1486,24 @@ bool CanvasEditingRuntime::applyTextOperation(semantic::Operation forward,
   if (!isTextEdit) return true;
   const auto* updated = semanticObjects_.find(target);
   const auto* shape = updated ? std::get_if<semantic::ShapeContent>(&updated->content) : nullptr;
+  semantic::ObjectId expansionTarget = target;
   bool hasText = false;
   if (shape && shape->label)
     for (const auto& paragraph : shape->label->document.paragraphs)
       for (const auto& run : paragraph.runs) hasText = hasText || !run.text.empty();
-  if (hasText) (void)expandShapeLabel(target);
+  if (updated && updated->kind == semantic::ObjectKind::kRichText && updated->placement.parent_id) {
+    if (const auto* parent = semanticObjects_.find(*updated->placement.parent_id)) {
+      if (parent->kind == semantic::ObjectKind::kSticky) {
+        expansionTarget = parent->id;
+        if (const auto* rich = std::get_if<semantic::RichTextContent>(&updated->content))
+          for (const auto& paragraph : rich->document.paragraphs)
+            for (const auto& run : paragraph.runs) hasText = hasText || !run.text.empty();
+      }
+    }
+  }
+  // Sticky follows Shape's visible affordance contract: retain ellipsis while
+  // typing and expand only after the selected object's button is clicked.
+  if (shape && hasText) (void)expandShapeLabel(expansionTarget);
   return true;
 }
 
@@ -1370,14 +1516,19 @@ bool CanvasEditingRuntime::setSelectedObjectSize(double width, double height) no
     if (entry.field_id == 0x00000002U && std::get_if<bool>(&entry.value) != nullptr &&
         std::get<bool>(entry.value)) return false;
   const auto* shape = std::get_if<semantic::ShapeContent>(&before->content);
-  if (shape == nullptr) return false;
+  const auto* sticky = std::get_if<semantic::StickyContent>(&before->content);
+  if (shape == nullptr && sticky == nullptr) return false;
+  const double nextSide = sticky == nullptr ? 0.0 : std::max(width, height);
+  const double priorWidth = sticky == nullptr ? shape->width : sticky->width;
+  const double priorHeight = sticky == nullptr ? shape->height : sticky->height;
   const auto forwardId = allocateOperationId(), inverseId = allocateOperationId();
   if (forwardId.isZero() || inverseId.isZero()) return false;
   return applyLocalHistoryOperation(
       {forwardId, documentId_, 1U, 1U,
-       semantic::SetObjectSizeOp{{{before->id, width, height}}}},
+       semantic::SetObjectSizeOp{{{before->id, sticky == nullptr ? width : nextSide,
+                                    sticky == nullptr ? height : nextSide}}}},
       {inverseId, documentId_, 1U, 1U,
-       semantic::SetObjectSizeOp{{{before->id, shape->width, shape->height}}}});
+       semantic::SetObjectSizeOp{{{before->id, priorWidth, priorHeight}}}});
 }
 
 std::optional<semantic::Transform2D> CanvasEditingRuntime::fittedShapeLabelTransform(
@@ -1418,6 +1569,58 @@ bool CanvasEditingRuntime::expandShapeLabel(semantic::ObjectId id) {
   if (!canonicalWriteAdmission() || !textWritable(id)) return false;
   const auto* before = semanticObjects_.find(id);
   if (!before) return false;
+  if (before->kind == semantic::ObjectKind::kRichText && before->placement.parent_id) {
+    const auto* parent = semanticObjects_.find(*before->placement.parent_id);
+    if (parent != nullptr && parent->kind == semantic::ObjectKind::kSticky) {
+      id = parent->id;
+      before = parent;
+    }
+  }
+  if (before->kind == semantic::ObjectKind::kSticky) {
+    const auto objects = semanticObjects_.allObjects();
+    const auto child = std::find_if(objects.begin(), objects.end(), [&](const auto& value) {
+      return value.kind == semantic::ObjectKind::kRichText && value.placement.parent_id &&
+          *value.placement.parent_id == id;
+    });
+    const auto* sticky = std::get_if<semantic::StickyContent>(&before->content);
+    if (child == objects.end() || sticky == nullptr || !textLayoutService_) return false;
+    const double originalWidth = sticky->width;
+    const double originalHeight = sticky->height;
+    const auto* rich = std::get_if<semantic::RichTextContent>(&child->content);
+    if (rich == nullptr) return false;
+    // Measure using the exact Sticky presentation used for painting. Grow in
+    // bounded passes until ellipsis is no longer required.
+    double side = std::max(originalWidth, originalHeight);
+    constexpr int kMaxExpansionPasses = 10;
+    constexpr double kMaxStickySide = 16384.0;
+    for (int pass = 0; pass < kMaxExpansionPasses; ++pass) {
+      const semantic::StickyContent candidateSticky{side, side};
+      const auto candidateLayout = textLayoutService_->resolveStickyLabel(
+          child->id, *rich, candidateSticky, false, before->transform);
+      if (!candidateLayout || !candidateLayout->diagnostics.empty()) return false;
+      if (!candidateLayout->overflow) break;
+      const double demandWidth = std::max(
+          0.0, static_cast<double>(candidateLayout->localBounds.right - candidateLayout->localBounds.left));
+      const double demandHeight = std::max(
+          0.0, static_cast<double>(candidateLayout->localBounds.bottom - candidateLayout->localBounds.top));
+      const double next = std::max({side * 1.5, demandWidth + 24.0, demandHeight + 24.0});
+      if (!std::isfinite(next) || next <= side + 0.5) return false;
+      side = std::min(kMaxStickySide, next);
+    }
+    if (side <= originalWidth + 0.5 && side <= originalHeight + 0.5) return true;
+    const auto forwardId = allocateOperationId(), inverseId = allocateOperationId();
+    if (forwardId.isZero() || inverseId.isZero()) return false;
+    // Grow the Sticky from its top-left anchor toward +X/+Y. The unchanged
+    // transform keeps the text, connectors, and selection chrome aligned.
+    semantic::Operation sizeForward{
+        forwardId, documentId_, 1U, 1U,
+        semantic::SetObjectSizeOp{{{id, side, side}}}};
+    semantic::Operation sizeInverse{
+        inverseId, documentId_, 1U, 1U,
+        semantic::SetObjectSizeOp{{{id, originalWidth, originalHeight}}}};
+    if (!applyLocalHistoryOperation(std::move(sizeForward), std::move(sizeInverse))) return false;
+    return true;
+  }
   const auto transform = fittedShapeLabelTransform(*before);
   if (!transform) return false;
   if (*transform == before->transform) return true;
@@ -1588,7 +1791,15 @@ bool CanvasEditingRuntime::toggleSelectionAtViewPoint(float x, float y) noexcept
       foundation::WorldPoint{content.first, content.second}, 4.0F,
       canvas::HitTestFilter{canvas::HitTestKindMask::kAll, true}, 1U});
   if (!tested || tested.value().frontToBack.empty()) return false;
-  if (!selection_.toggle(tested.value().frontToBack.front())) return false;
+  auto selectedId = tested.value().frontToBack.front();
+  if (const auto* hit = semanticObjects_.find(selectedId);
+      hit != nullptr && hit->kind == semantic::ObjectKind::kRichText &&
+      hit->placement.parent_id) {
+    if (const auto* parent = semanticObjects_.find(*hit->placement.parent_id);
+        parent != nullptr && parent->kind == semantic::ObjectKind::kSticky)
+      selectedId = parent->id;
+  }
+  if (!selection_.toggle(selectedId)) return false;
   snapGuides_.clear();
   canonicalPresentationDirty_ = true;
   if (selection_.primary().isZero()) {
@@ -1599,7 +1810,9 @@ bool CanvasEditingRuntime::toggleSelectionAtViewPoint(float x, float y) noexcept
 }
 
 bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
-  if (!selectionMode_ || selection_.primary().isZero() ||
+  const bool connectorCreation = creationMode_ &&
+      (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow);
+  if ((!selectionMode_ && !connectorCreation) || selection_.primary().isZero() ||
       sceneCoordinator_ == nullptr || surface_.width == 0U || surface_.height == 0U) {
     selectionView_.reset();
     return false;
@@ -1629,6 +1842,9 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
       render::FrameId{nextCanonicalFrameId()},
       foundation::WorldRect{0.0F, 0.0F, surface_.logicalWidth,
                             surface_.logicalHeight}};
+  std::vector<render::AttachmentPointGeometry> previousAttachmentPoints;
+  if (selectionView_ != nullptr && selectionView_->editingOverlay().selectedObject() == record->objectId)
+    previousAttachmentPoints = selectionView_->editingOverlay().attachmentPoints();
   selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
   const auto cropBounds = imageCropPresentation_
       ? std::optional(canvas::scene::computeBounds(*imageCropPresentation_)) : std::nullopt;
@@ -1637,22 +1853,32 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
       record->kind == semantic::ObjectKind::kImage ||
       record->kind == semantic::ObjectKind::kSticky) {
     const auto& bounds = cropBounds ? cropBounds->geometry : record->geometryBounds;
-    const auto point = [&](float x, float y) {
+    constexpr float kAttachmentGap = 28.0F;
+    const auto point = [&](float x, float y, float nx, float ny) {
       const auto world = render::ScreenPoint{
           static_cast<float>(record->transform.a * x + record->transform.c * y + record->transform.tx),
           static_cast<float>(record->transform.b * x + record->transform.d * y + record->transform.ty)};
-      const auto screen = render::ScreenPoint{
+      auto screen = render::ScreenPoint{
           static_cast<float>(surface_.logicalWidth * 0.5F +
                              viewport.scale * (world.x - center.x)),
           static_cast<float>(surface_.logicalHeight * 0.5F +
                              viewport.scale * (world.y - center.y))};
-      attachmentPoints.push_back({screen, true});
+      screen.x += nx * kAttachmentGap;
+      screen.y += ny * kAttachmentGap;
+      bool hovered = false;
+      for (const auto& previous : previousAttachmentPoints) {
+        const float dx = previous.center.x - screen.x;
+        const float dy = previous.center.y - screen.y;
+        if (dx * dx + dy * dy <= 4.0F * 4.0F) { hovered = previous.hovered; break; }
+      }
+      attachmentPoints.push_back({screen, true, hovered});
     };
-    point((bounds.left + bounds.right) * 0.5F, bounds.top);
-    point(bounds.right, (bounds.top + bounds.bottom) * 0.5F);
-    point((bounds.left + bounds.right) * 0.5F, bounds.bottom);
-    point(bounds.left, (bounds.top + bounds.bottom) * 0.5F);
+    point((bounds.left + bounds.right) * 0.5F, bounds.top, 0, -1);
+    point(bounds.right, (bounds.top + bounds.bottom) * 0.5F, 1, 0);
+    point((bounds.left + bounds.right) * 0.5F, bounds.bottom, 0, 1);
+    point(bounds.left, (bounds.top + bounds.bottom) * 0.5F, -1, 0);
   }
+  if (transformDrag_.active()) attachmentPoints.clear();
   const bool updated = selectionView_->editingOverlay().update(render::EditingOverlayInput{
       record->objectId, cropBounds ? cropBounds->visual : record->visualBounds,
       transformOverrides_.find(record->objectId) == nullptr ? record->transform
@@ -1685,9 +1911,37 @@ bool CanvasEditingRuntime::selectionPointer(std::uint64_t pointer, input::Pointe
   return selectionPointer(key, phase, x, y);
 }
 
+bool CanvasEditingRuntime::hoverSelectionAtViewPoint(float x, float y) noexcept {
+  const bool connectorCreation = creationMode_ &&
+      (creationPreset_ == CreationPreset::kLine ||
+       creationPreset_ == CreationPreset::kArrow);
+  if ((!selectionMode_ && !connectorCreation) || selection_.primary().isZero() || !selectionView_ ||
+      !std::isfinite(x) || !std::isfinite(y)) return false;
+  auto& points = selectionView_->editingOverlay().mutableAttachmentPoints();
+  bool changed = false;
+  for (auto& point : points) {
+    const float dx = point.center.x - x, dy = point.center.y - y;
+    const bool hovered = dx * dx + dy * dy <= 12.0F * 12.0F;
+    changed = changed || point.hovered != hovered;
+    point.hovered = hovered;
+  }
+  if (changed) {
+    canonicalPresentationDirty_ = true;
+    if (platformPresentationDeferred_) transientOverlayDirty_ = true;
+    else (void)presentTransientOverlayFrame(nextCanonicalFrameId());
+  }
+  return changed;
+}
+
 bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input::PointerPhase phase,
                                          float x, float y) noexcept {
   if (!selectionMode_ || !key.valid()) return false;
+  if (connectorPointerKeys_.contains(key)) {
+    const bool accepted = creationPointer(key, phase, x, y);
+    if (phase == input::PointerPhase::kUp || phase == input::PointerPhase::kCancel || !accepted)
+      connectorPointerKeys_.erase(key);
+    return accepted;
+  }
   if (phase == input::PointerPhase::kCancel) {
     if (editingPointer_ == key) cancelSelectionTransform();
     (void)clearTransientOverlay();
@@ -1701,14 +1955,37 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
   if (phase == input::PointerPhase::kDown) {
     if (editingPointer_.valid()) return true;
     (void)renderSelectionOverlay();
+    const auto* overlay = selectionOverlay();
+    if (overlay != nullptr) {
+      for (const auto& point : overlay->attachmentPoints()) {
+        const float dx = point.center.x - x;
+        const float dy = point.center.y - y;
+        if (dx * dx + dy * dy > 16.0F * 16.0F) continue;
+        if (creationPreset_ != CreationPreset::kLine && creationPreset_ != CreationPreset::kArrow)
+          creationPreset_ = CreationPreset::kLine;
+        connectorPointerKeys_.insert(key);
+        if (creationPointer(key, phase, x, y)) return true;
+        connectorPointerKeys_.erase(key);
+        return false;
+      }
+    }
     editingHandle_ = selectionOverlay() == nullptr ? render::HandleKind::kNone
         : selectionOverlay()->hitTest({x,y});
     bool moveSelected = false;
     if (editingHandle_ == render::HandleKind::kNone && runtimeSceneHost_ != nullptr) {
       const auto hit = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
           {world.first,world.second},4.0F,{canvas::HitTestKindMask::kAll,true},1U});
-      moveSelected = hit && !hit.value().frontToBack.empty() &&
-          hit.value().frontToBack.front() == selection_.primary();
+      if (hit && !hit.value().frontToBack.empty()) {
+        auto hitId = hit.value().frontToBack.front();
+        if (const auto* hitRecord = semanticObjects_.find(hitId);
+            hitRecord != nullptr && hitRecord->kind == semantic::ObjectKind::kRichText &&
+            hitRecord->placement.parent_id) {
+          if (const auto* parent = semanticObjects_.find(*hitRecord->placement.parent_id);
+              parent != nullptr && parent->kind == semantic::ObjectKind::kSticky)
+            hitId = parent->id;
+        }
+        moveSelected = hitId == selection_.primary();
+      }
     }
     if (editingHandle_ == render::HandleKind::kNone && !moveSelected) {
       (void)selectAtViewPoint(x,y);
@@ -1772,6 +2049,12 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       const double height=editingLocalBounds_.bottom-editingLocalBounds_.top;
       sx=(left||right)&&width>1e-6 ? std::clamp(1.0+localDx/(left?-width:width),0.01,100.0):1.0;
       sy=(top||bottom)&&height>1e-6 ? std::clamp(1.0+localDy/(top?-height:height),0.01,100.0):1.0;
+      const auto* selectedObject = semanticObjects_.find(selection_.primary());
+      if (selectedObject != nullptr && selectedObject->kind == semantic::ObjectKind::kSticky) {
+        const double uniform = std::max(sx, sy);
+        sx = uniform;
+        sy = uniform;
+      }
       next={t.a*sx,t.b*sx,t.c*sy,t.d*sy,t.tx+t.a*ax*(1-sx)+t.c*ay*(1-sy),
                                          t.ty+t.b*ax*(1-sx)+t.d*ay*(1-sy)};
     }
@@ -3256,9 +3539,56 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     });
     visibility.value().visibleRecords=ids.size();
   }
+  if (transformDrag_.active()) {
+    auto& ids = visibility.value().backToFront;
+    for (const auto& candidate : sceneCoordinator_->runtimeScene().records()) {
+      if (!candidate.placement.parent_id || *candidate.placement.parent_id != selection_.primary()) continue;
+      if (std::find(ids.begin(), ids.end(), candidate.objectId) == ids.end()) ids.push_back(candidate.objectId);
+    }
+    std::sort(ids.begin(), ids.end(), [&](auto a, auto b) {
+      return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a), *sceneCoordinator_->runtimeScene().find(b));
+    });
+    visibility.value().visibleRecords = ids.size();
+  }
   auto references = render::DirectReferenceSource::build(
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
   if (!references) { AXIOM_ANDROID_DIAG("present references failed"); return false; }
+  // Sticky text follows the Shape label presentation path: the parent owns
+  // the clipped text and expand affordance for this frame. The semantic
+  // RichText child remains canonical, but is suppressed from drawing here so
+  // it cannot drift or produce a second, misplaced button.
+  if (textLayoutService_) {
+    for (auto& parentEntry : references.value().entries) {
+      const auto* sticky = std::get_if<semantic::StickyContent>(&parentEntry.record.content);
+      if (parentEntry.record.kind != semantic::ObjectKind::kSticky || sticky == nullptr) continue;
+      const semantic::RichTextContent* richContent = nullptr;
+      render::ReferenceTraversalEntry* childEntryPtr = nullptr;
+      for (auto& childEntry : references.value().entries) {
+        if (childEntry.record.kind != semantic::ObjectKind::kRichText ||
+            !childEntry.record.placement.parent_id ||
+            *childEntry.record.placement.parent_id != parentEntry.record.objectId) continue;
+        richContent = std::get_if<semantic::RichTextContent>(&childEntry.record.content);
+        childEntryPtr = &childEntry;
+        break;
+      }
+      if (richContent == nullptr) {
+        for (const auto& object : semanticObjects_.allObjects()) {
+          if (object.kind != semantic::ObjectKind::kRichText || !object.placement.parent_id ||
+              *object.placement.parent_id != parentEntry.record.objectId) continue;
+          richContent = std::get_if<semantic::RichTextContent>(&object.content);
+          break;
+        }
+      }
+      if (richContent == nullptr) continue;
+      const auto layout = textLayoutService_->resolveStickyLabel(
+          parentEntry.record.objectId, *richContent, *sticky, true, parentEntry.record.transform);
+      parentEntry.command = render::StickyReferenceCommand{
+          *sticky, layout, selection_.primary() == parentEntry.record.objectId};
+      if (childEntryPtr != nullptr) childEntryPtr->command = render::GroupReferenceCommand{};
+      references.value().canonicalBytes.clear();
+      references.value().digest.clear();
+    }
+  }
   // The copy belongs to this frame only. Canonical storage and the shared
   // RuntimeScene retain their original records throughout a drag.
   for (auto& entry: references.value().entries) {
@@ -3275,6 +3605,38 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
         }
       }
       // Canonical digest/encoding does not describe transient editor pixels.
+      references.value().canonicalBytes.clear();
+      references.value().digest.clear();
+    }
+  }
+  if (textLayoutService_) {
+    for (auto& parentEntry : references.value().entries) {
+      const auto* sticky = std::get_if<semantic::StickyContent>(&parentEntry.record.content);
+      if (parentEntry.record.kind != semantic::ObjectKind::kSticky || sticky == nullptr) continue;
+      const semantic::RichTextContent* richContent = nullptr;
+      render::ReferenceTraversalEntry* childEntryPtr = nullptr;
+      for (auto& childEntry : references.value().entries) {
+        if (childEntry.record.kind != semantic::ObjectKind::kRichText ||
+            !childEntry.record.placement.parent_id ||
+            *childEntry.record.placement.parent_id != parentEntry.record.objectId) continue;
+        richContent = std::get_if<semantic::RichTextContent>(&childEntry.record.content);
+        childEntryPtr = &childEntry;
+        break;
+      }
+      if (richContent == nullptr) {
+        for (const auto& object : semanticObjects_.allObjects()) {
+          if (object.kind != semantic::ObjectKind::kRichText || !object.placement.parent_id ||
+              *object.placement.parent_id != parentEntry.record.objectId) continue;
+          richContent = std::get_if<semantic::RichTextContent>(&object.content);
+          break;
+        }
+      }
+      if (richContent == nullptr) continue;
+      const auto layout = textLayoutService_->resolveStickyLabel(
+          parentEntry.record.objectId, *richContent, *sticky, true, parentEntry.record.transform);
+        parentEntry.command = render::StickyReferenceCommand{
+            *sticky, layout, selection_.primary() == parentEntry.record.objectId};
+      if (childEntryPtr != nullptr) childEntryPtr->command = render::GroupReferenceCommand{};
       references.value().canonicalBytes.clear();
       references.value().digest.clear();
     }
@@ -3299,6 +3661,21 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
         references.value().canonicalBytes.clear();
         references.value().digest.clear();
       }
+      if (const auto* sticky = std::get_if<semantic::StickyContent>(&selected->record.content)) {
+        const auto allObjects = semanticObjects_.allObjects();
+        const bool hasChild = std::any_of(allObjects.begin(), allObjects.end(), [&](const auto& candidate) {
+              return candidate.kind == semantic::ObjectKind::kRichText &&
+                  candidate.placement.parent_id && *candidate.placement.parent_id == selected->record.objectId;
+            });
+        if (!hasChild) {
+          const semantic::RichTextContent empty{};
+          const auto stickyLayout = textLayoutService_->resolveStickyLabel(
+              selected->record.objectId, empty, *sticky, true, selected->record.transform);
+          selected->command = render::StickyReferenceCommand{*sticky, stickyLayout, true};
+          references.value().canonicalBytes.clear();
+          references.value().digest.clear();
+        }
+      }
     }
   }
   if (interaction_->textSession() && textLayoutService_) {
@@ -3307,10 +3684,21 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       const semantic::ShapeContent* shape = std::get_if<semantic::ShapeContent>(&object->content);
       if (shape != nullptr && shape->label.has_value()) content = &*shape->label;
       if (content != nullptr) {
-        const auto layout = shape != nullptr
-            ? textLayoutService_->resolveShapeLabel(object->id, *content, *shape,
-                                                     object->transform, true)
-            : textLayoutService_->resolve(object->id, *content);
+        std::shared_ptr<const text::TextLayoutSnapshot> layout;
+        if (shape != nullptr) {
+          layout = textLayoutService_->resolveShapeLabel(object->id, *content, *shape,
+                                                         object->transform, true);
+        } else if (object->kind == semantic::ObjectKind::kRichText && object->placement.parent_id) {
+          const auto* parent = semanticObjects_.find(*object->placement.parent_id);
+          if (parent != nullptr) {
+            if (const auto* sticky = std::get_if<semantic::StickyContent>(&parent->content))
+              layout = textLayoutService_->resolveStickyLabel(object->id, *content, *sticky, true,
+                                                              object->transform);
+          }
+          if (!layout) layout = textLayoutService_->resolve(object->id, *content);
+        } else {
+          layout = textLayoutService_->resolve(object->id, *content);
+        }
         if (layout->diagnostics.empty()) {
           render::ReferenceTraversalEntry entry{};
           entry.record.objectId = object->id;
@@ -3330,6 +3718,25 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
           entry.record.worldBounds = bounds.world;
           if (shape != nullptr && shape->label.has_value())
             entry.command = render::ShapeReferenceCommand{*shape, layout, true};
+      else if (object->kind == semantic::ObjectKind::kRichText && object->placement.parent_id) {
+        const auto* parent = semanticObjects_.find(*object->placement.parent_id);
+        const bool stickyChild = parent != nullptr && parent->kind == semantic::ObjectKind::kSticky;
+        if (stickyChild) {
+          auto existingParent = std::find_if(references.value().entries.begin(),
+              references.value().entries.end(), [&](const auto& value) {
+                return value.record.objectId == *object->placement.parent_id;
+              });
+          if (existingParent != references.value().entries.end()) {
+            const auto& sticky = std::get<semantic::StickyContent>(parent->content);
+            existingParent->command = render::StickyReferenceCommand{
+                sticky, layout, selection_.primary() == existingParent->record.objectId};
+            references.value().canonicalBytes.clear();
+            references.value().digest.clear();
+            entry.command = render::GroupReferenceCommand{};
+          }
+        }
+        entry.command = render::RichTextReferenceCommand{*content, layout, stickyChild, stickyChild};
+      }
           else
             entry.command = render::RichTextReferenceCommand{*content, layout};
           auto& entries = references.value().entries;
@@ -3357,11 +3764,38 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       references.value().digest.clear();
     }
   }
+  // Final Sticky/Shape-equivalent presentation pass. Text-session rendering
+  // above may reinsert the canonical RichText child; collapse it back into
+  // the Sticky parent immediately before planning so canonical and transient
+  // frames have identical pixels and affordance hit geometry.
+  if (textLayoutService_) {
+    for (auto& parentEntry : references.value().entries) {
+      const auto* sticky = std::get_if<semantic::StickyContent>(&parentEntry.record.content);
+      if (parentEntry.record.kind != semantic::ObjectKind::kSticky || sticky == nullptr) continue;
+      for (auto& childEntry : references.value().entries) {
+        if (childEntry.record.kind != semantic::ObjectKind::kRichText ||
+            !childEntry.record.placement.parent_id ||
+            *childEntry.record.placement.parent_id != parentEntry.record.objectId) continue;
+        const auto* rich = std::get_if<semantic::RichTextContent>(&childEntry.record.content);
+        if (rich == nullptr) continue;
+        const auto layout = textLayoutService_->resolveStickyLabel(
+            childEntry.record.objectId, *rich, *sticky, true, parentEntry.record.transform);
+      parentEntry.command = render::StickyReferenceCommand{
+          *sticky, layout, selection_.primary() == parentEntry.record.objectId};
+        childEntry.command = render::GroupReferenceCommand{};
+        references.value().canonicalBytes.clear();
+        references.value().digest.clear();
+        break;
+      }
+    }
+  }
   const auto plan = render::FramePlanBuilder::build(frame, references.value());
   if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
-  if (selectionMode_) (void)renderSelectionOverlay();
+  const bool connectorCreation = creationMode_ &&
+      (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow);
+  if (selectionMode_ || connectorCreation) (void)renderSelectionOverlay();
   if (creationActive() && creationPreview().valid) {
-    selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
+    if (!selectionView_) selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
     std::vector<render::SnapGuideGeometry> guides;
     for (const auto& guide : creationPreview().guides) {
       const auto screen = [&](float x, float y) {
@@ -3373,8 +3807,20 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       else guides.push_back({render::SnapGuideAxis::kHorizontal, screen(guide.spanStart, guide.position),
                             screen(guide.spanEnd, guide.position)});
     }
-    selectionView_->editingOverlay().setCreationPreview(creationPreview().record, guides);
-  } else if (!selectionMode_) selectionView_.reset();
+    auto previewRecord = creationPreview().record;
+    if (auto* connector = std::get_if<semantic::ConnectorContent>(&previewRecord.content)) {
+      if (std::holds_alternative<semantic::AttachedEndpoint>(connector->start.value))
+        connector->start.value = semantic::FreePointEndpoint{{creationPreview().start.x,
+                                                               creationPreview().start.y}};
+      if (std::holds_alternative<semantic::AttachedEndpoint>(connector->end.value))
+        connector->end.value = semantic::FreePointEndpoint{{creationPreview().end.x,
+                                                             creationPreview().end.y}};
+    }
+    selectionView_->editingOverlay().setCreationPreview(previewRecord, guides);
+  } else if (!selectionMode_ && !(creationMode_ &&
+      (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow))) {
+    selectionView_.reset();
+  }
   if(textState.phase!=runtime::TextPhase::kClosed){
     selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
     const auto geometry=textGeometry({1,viewId_.value(),surface_.metricsGeneration,surface_.generation});
@@ -3601,13 +4047,79 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
     });
     visibility.value().visibleRecords = ids.size();
   }
+  if (transformDrag_.active()) {
+    auto& ids = visibility.value().backToFront;
+    for (const auto& candidate : sceneCoordinator_->runtimeScene().records()) {
+      if (!candidate.placement.parent_id || *candidate.placement.parent_id != selection_.primary())
+        continue;
+      if (std::find(ids.begin(), ids.end(), candidate.objectId) == ids.end())
+        ids.push_back(candidate.objectId);
+    }
+    std::sort(ids.begin(), ids.end(), [&](auto a, auto b) {
+      return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a),
+                                  *sceneCoordinator_->runtimeScene().find(b));
+    });
+    visibility.value().visibleRecords = ids.size();
+  }
   auto references = render::DirectReferenceSource::build(
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
   if (!references) return false;
+  const auto composeTransform = [](const semantic::Transform2D& parent,
+                                   const semantic::Transform2D& child) {
+    return semantic::Transform2D{
+        parent.a * child.a + parent.c * child.b,
+        parent.b * child.a + parent.d * child.b,
+        parent.a * child.c + parent.c * child.d,
+        parent.b * child.c + parent.d * child.d,
+        parent.a * child.tx + parent.c * child.ty + parent.tx,
+        parent.b * child.tx + parent.d * child.ty + parent.ty};
+  };
+  const auto selectedTransform = transformOverrides_.find(selection_.primary());
   for (auto& entry : references.value().entries) {
     const auto* transform = transformOverrides_.find(entry.record.objectId);
     const bool selected = entry.record.objectId == selection_.primary();
     if (transform) entry.record.transform = *transform;
+    if (selectedTransform && entry.record.placement.parent_id &&
+        *entry.record.placement.parent_id == selection_.primary()) {
+      // RuntimeScene records for RichText children are already projected into
+      // the old parent world transform.  Recompose from the semantic child's
+      // local transform, otherwise the old parent is applied twice and the
+      // text visibly separates from Sticky while dragging.
+      const auto* child = semanticObjects_.find(entry.record.objectId);
+      entry.record.transform = child == nullptr
+          ? composeTransform(*selectedTransform, entry.record.transform)
+          : composeTransform(*selectedTransform, child->transform);
+      if (entry.record.kind == semantic::ObjectKind::kRichText) {
+        semantic::ObjectRecord childRecord{};
+        childRecord.id = entry.record.objectId;
+        childRecord.kind = entry.record.kind;
+        childRecord.kind_version = entry.record.kindVersion;
+        childRecord.placement = entry.record.placement;
+        childRecord.transform = entry.record.transform;
+        childRecord.content = entry.record.content;
+        const auto bounds = scene::computeBounds(childRecord, entry.record.textLayout.get());
+        entry.record.geometryBounds = bounds.geometry;
+        entry.record.visualBounds = bounds.visual;
+        entry.record.worldBounds = bounds.world;
+      }
+    }
+    if (selectedTransform && entry.record.kind == semantic::ObjectKind::kConnector) {
+      // Recompute attached routes against the transient target transform so a
+      // connector follows a Sticky/Shape during the same drag frame.
+      auto objects = semanticObjects_.allObjects();
+      for (auto& object : objects)
+        if (object.id == selection_.primary()) object.transform = *selectedTransform;
+      const auto* connector = semanticObjects_.find(entry.record.objectId);
+      if (connector != nullptr) {
+        if (const auto route = scene::connectorGeometry(*connector, objects)) {
+          entry.record.derivedGeometry = *route;
+          const auto bounds = scene::computeBounds(*connector, nullptr, &*route);
+          entry.record.geometryBounds = bounds.geometry;
+          entry.record.visualBounds = bounds.visual;
+          entry.record.worldBounds = bounds.world;
+        }
+      }
+    }
     if (transform || selected) {
       if (textLayoutService_) {
         if (const auto* shape = std::get_if<semantic::ShapeContent>(&entry.record.content)) {
@@ -3621,11 +4133,38 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
       references.value().digest.clear();
     }
   }
+  // Apply the same Sticky-as-Shape presentation to the transient drag frame.
+  // The parent entry already carries the temporary transform above, so the
+  // label scale and button geometry must be rebuilt from that transform
+  // before the preview renderer consumes the plan.
+  if (textLayoutService_) {
+    for (auto& parentEntry : references.value().entries) {
+      const auto* sticky = std::get_if<semantic::StickyContent>(&parentEntry.record.content);
+      if (parentEntry.record.kind != semantic::ObjectKind::kSticky || sticky == nullptr) continue;
+      for (auto& childEntry : references.value().entries) {
+        if (childEntry.record.kind != semantic::ObjectKind::kRichText ||
+            !childEntry.record.placement.parent_id ||
+            *childEntry.record.placement.parent_id != parentEntry.record.objectId) continue;
+        const auto* rich = std::get_if<semantic::RichTextContent>(&childEntry.record.content);
+        if (rich == nullptr) continue;
+        const auto layout = textLayoutService_->resolveStickyLabel(
+            childEntry.record.objectId, *rich, *sticky, true, parentEntry.record.transform);
+        parentEntry.command = render::StickyReferenceCommand{
+            *sticky, layout, selection_.primary() == parentEntry.record.objectId};
+        childEntry.command = render::GroupReferenceCommand{};
+        references.value().canonicalBytes.clear();
+        references.value().digest.clear();
+        break;
+      }
+    }
+  }
   const auto plan = render::FramePlanBuilder::build(frame, references.value());
   if (!plan) return false;
-  if (selectionMode_) (void)renderSelectionOverlay();
+  const bool connectorCreation = creationMode_ &&
+      (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow);
+  if (selectionMode_ || connectorCreation) (void)renderSelectionOverlay();
   if (creationActive() && creationPreview().valid) {
-    selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
+    if (!selectionView_) selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
     std::vector<render::SnapGuideGeometry> guides;
     for (const auto& guide : creationPreview().guides) {
       const auto screen = [&](float x, float y) {
@@ -3642,7 +4181,16 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
                           screen(guide.spanEnd, guide.position)});
       }
     }
-    selectionView_->editingOverlay().setCreationPreview(creationPreview().record, guides);
+    auto previewRecord = creationPreview().record;
+    if (auto* connector = std::get_if<semantic::ConnectorContent>(&previewRecord.content)) {
+      if (std::holds_alternative<semantic::AttachedEndpoint>(connector->start.value))
+        connector->start.value = semantic::FreePointEndpoint{{creationPreview().start.x,
+                                                               creationPreview().start.y}};
+      if (std::holds_alternative<semantic::AttachedEndpoint>(connector->end.value))
+        connector->end.value = semantic::FreePointEndpoint{{creationPreview().end.x,
+                                                             creationPreview().end.y}};
+    }
+    selectionView_->editingOverlay().setCreationPreview(previewRecord, guides);
   }
   const auto rendered = previewRenderer_.renderTransientOverlay(
       *previewProvider_, plan.value(), selectionOverlay());

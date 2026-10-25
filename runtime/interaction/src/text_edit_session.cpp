@@ -205,10 +205,9 @@ const semantic::RichTextContent* TextEditSession::richContent(
 }
 bool TextEditSession::shapeLabelTarget(const semantic::ObjectRecord& record) const noexcept {
     return record.kind == semantic::ObjectKind::kShape &&
-           (record.kind_version == 1U || record.kind_version == 2U || record.kind_version == 3U) &&
-           std::holds_alternative<semantic::ShapeContent>(record.content) &&
-           (record.kind_version != 3U ||
-            std::get<semantic::ShapeContent>(record.content).label.has_value());
+        (record.kind_version == 1U || record.kind_version == 2U || record.kind_version == 3U) &&
+        std::holds_alternative<semantic::ShapeContent>(record.content) &&
+        (record.kind_version != 3U || std::get<semantic::ShapeContent>(record.content).label.has_value());
 }
 
 void TextEditSession::end() noexcept {
@@ -729,9 +728,46 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
         std::optional<ObjectRecord> existing;
         if (request.kind == TextIntentKind::kEdit) {
             const auto* value = owner_.textRecord(request.object);
-            if (!value || richContent(*value) == nullptr || !owner_.textWritable(value->id))
+            if (!value || !owner_.textWritable(value->id))
                 return outcome(TextStatus::kRejected, request.requestId);
-            existing = *value;
+            if (value->kind == ObjectKind::kSticky) {
+                // Sticky text is represented by the existing single RichText
+                // child contract. Create the child lazily on first edit so an
+                // empty Sticky remains a single canonical object.
+                for (const auto& candidate : owner_.textObjects()) {
+                    if (candidate.kind == ObjectKind::kRichText &&
+                        candidate.placement.parent_id == value->id) {
+                        existing = candidate;
+                        break;
+                    }
+                }
+                if (!existing) {
+                    ObjectRecord child{};
+                    child.id = owner_.allocateTextIdentity();
+                    child.kind = ObjectKind::kRichText;
+                    child.kind_version = 2U;
+                    child.placement.parent_id = value->id;
+                    child.placement.order_key = OrderKey({0x80U});
+                    // Child transforms are local to the Sticky.  The parent
+                    // transform is composed by Scene/Runtime projection;
+                    // persisting the parent's world transform here would
+                    // double-apply it and place text outside the box.
+                    child.transform = {};
+                    child.content = RichTextContent{{}, RichTextLayout{
+                        std::max(1.0, std::get<StickyContent>(value->content).width - 24.0)}};
+                    const Operation forward{owner_.allocateTextOperation(), owner_.textDocument(), 1, 1,
+                                             InsertObjectsOp{{child}}};
+                    const Operation inverse{owner_.allocateTextOperation(), owner_.textDocument(), 1, 1,
+                                            DeleteObjectsOp{{child.id}}};
+                    if (child.id.isZero() || !owner_.applyTextOperation(forward, inverse))
+                        return outcome(TextStatus::kRejected, request.requestId);
+                    existing = *owner_.textRecord(child.id);
+                }
+            } else {
+                if (richContent(*value) == nullptr)
+                    return outcome(TextStatus::kRejected, request.requestId);
+                existing = *value;
+            }
         }
         if (existing)
             for (const auto& paragraph :

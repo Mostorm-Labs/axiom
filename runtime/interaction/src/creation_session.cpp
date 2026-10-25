@@ -133,7 +133,8 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
     record.transform = {};
     record.transform.tx = extent[0];
     record.transform.ty = extent[1];
-    record.content = semantic::StickyContent{extent[2], extent[3]};
+    const float side = std::max(extent[2], extent[3]);
+    record.content = semantic::StickyContent{side, side};
   } else if (shapePreset) {
     record.kind = semantic::ObjectKind::kShape;
     record.kind_version = preset_ == CreationPreset::kTriangle ? 2U : 1U;
@@ -148,9 +149,11 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
     record.kind_version = 1U;
     record.transform = {};
     semantic::ConnectorEndpoint endPoint{semantic::FreePointEndpoint{{snappedEnd.x, snappedEnd.y}}};
-    if (snappedEndpoint_.has_value()) endPoint.value = *snappedEndpoint_;
+    if (endAttachment_.has_value()) endPoint.value = *endAttachment_;
+    else if (snappedEndpoint_.has_value()) endPoint.value = *snappedEndpoint_;
     record.content = semantic::ConnectorContent{
-        {semantic::FreePointEndpoint{{start.x, start.y}}}, endPoint,
+        {startAttachment_.has_value() ? semantic::ConnectorEndpoint{*startAttachment_}
+                                      : semantic::ConnectorEndpoint{semantic::FreePointEndpoint{{start.x, start.y}}}}, endPoint,
         semantic::ConnectorRouting::kStraight};
     if (preset_ == CreationPreset::kArrow)
       record.properties.entries.push_back({0x201U, semantic::ConnectorDecorationValue::kArrow});
@@ -167,5 +170,5 @@ std::optional<CreationCommit> CreationSession::finish(input::PointerKey pointer)
   return out;
 }
 bool CreationSession::cancel(input::PointerKey pointer) noexcept { if (!active() || pointer != pointer_) return false; clear(); return true; }
-void CreationSession::clear() noexcept { pointer_ = {}; objectSeed_ = 0; style_ = {}; preview_ = {}; snappedEndpoint_.reset(); snapResolver_.reset(); }
+void CreationSession::clear() noexcept { pointer_ = {}; objectSeed_ = 0; style_ = {}; preview_ = {}; snappedEndpoint_.reset(); startAttachment_.reset(); endAttachment_.reset(); snapResolver_.reset(); }
 }  // namespace canvas::interaction

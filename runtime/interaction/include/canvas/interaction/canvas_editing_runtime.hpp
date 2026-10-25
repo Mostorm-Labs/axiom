@@ -214,6 +214,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool toggleSelectionAtViewPoint(float x, float y) noexcept;
   [[nodiscard]] bool selectionPointer(const input::PointerKey& key, input::PointerPhase phase,
                                       float x, float y) noexcept;
+  [[nodiscard]] bool hoverSelectionAtViewPoint(float x, float y) noexcept;
   [[nodiscard]] bool selectionPointer(std::uint64_t pointer, input::PointerPhase phase,
                                       float x, float y) noexcept;
   void cancelSelectionTransform() noexcept;
@@ -792,6 +793,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::uint64_t selectionOverlayUpdates_ = 0;
   QualificationObservation qualificationObservation_{};
   std::unordered_map<input::PointerKey, CreationSession, input::PointerKeyHash> creations_;
+  std::unordered_set<input::PointerKey, input::PointerKeyHash> connectorPointerKeys_;
   struct CreationFence final {
     semantic::SemanticGeneration semantic{};
     std::uint64_t camera = 0;

@@ -126,6 +126,17 @@ void connector_endpoint_attaches_to_shape_target() {
   assert(attached != nullptr);
   assert(attached->target_object_id == canvas::foundation::ObjectId::fromUint64(202U));
 }
+
+void sticky_creation_keeps_square_geometry() {
+  CreationSession session;
+  const PointerKey key{26U, 2U, 1U};
+  assert(session.begin(key, CreationPreset::kSticky, CreationStyle{},
+                       {40.0F, 40.0F}, {0.0F, 0.0F, 240.0F, 180.0F}, 703));
+  assert(session.move(key, {140.0F, 80.0F}));
+  const auto& sticky = std::get<canvas::semantic::StickyContent>(session.preview().record.content);
+  assert(sticky.width == sticky.height);
+  assert(sticky.width == 100.0);
+}
 }  // namespace
 
 int main() {
@@ -137,5 +148,6 @@ int main() {
   offscreen_target_cannot_snap_creation();
   fixed_edge_must_not_suppress_movable_endpoint();
   connector_endpoint_attaches_to_shape_target();
+  sticky_creation_keeps_square_geometry();
   return 0;
 }

@@ -42,6 +42,16 @@ int main() {
     assert(caretEnd.available && caretEnd.caret.left>geometry.caret.left);
     const auto hit=layout.editingGeometry(id,input,0,0,foundation::WorldPoint{caretEnd.caret.left,caretEnd.caret.top+2});
     assert(hit.available && hit.hit && *hit.hit<=9);
+    semantic::StickyContent sticky{120.0, 48.0};
+    auto stickyText = content("one two three four five six seven eight nine ten", latin);
+    const auto stickyPaint = layout.resolveStickyLabel(foundation::ObjectId::fromUint64(77),
+                                                       stickyText, sticky, false);
+    const auto stickyCaret = layout.stickyEditingGeometry(
+        foundation::ObjectId::fromUint64(77), stickyText, sticky, 48, 0);
+    assert(stickyPaint->overflow);
+    assert(stickyCaret.available);
+    assert(stickyCaret.caret.left >= 12.0F && stickyCaret.caret.right <= 108.0F);
+    assert(stickyCaret.caret.top >= 12.0F && stickyCaret.caret.bottom <= 36.0F);
     const auto breaks=layout.graphemeBoundaries(u"A\u0301\U0001F600B");
     assert((breaks==std::vector<std::uint32_t>{0,2,4,5}));
 

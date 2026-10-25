@@ -14,6 +14,17 @@
 #include <utility>
 
 namespace canvas {
+namespace {
+semantic::Transform2D compose(const semantic::Transform2D& parent,
+                              const semantic::Transform2D& child) noexcept {
+    return {parent.a * child.a + parent.c * child.b,
+            parent.b * child.a + parent.d * child.b,
+            parent.a * child.c + parent.c * child.d,
+            parent.b * child.c + parent.d * child.d,
+            parent.a * child.tx + parent.c * child.ty + parent.tx,
+            parent.b * child.tx + parent.d * child.ty + parent.ty};
+}
+}
 RuntimeSceneProjection projectRuntimeScene(
     std::span<const semantic::ObjectRecord> source,
     semantic::SemanticGeneration generation, text::RichTextLayoutService* textService) {
@@ -21,7 +32,14 @@ RuntimeSceneProjection projectRuntimeScene(
     projection.generation = generation;
     projection.records.reserve(source.size());
     for (const semantic::ObjectRecord& record : source) {
-        auto derivedGeometry = scene::deriveGeometry(record);
+        auto projectedRecord = record;
+        if (record.kind == semantic::ObjectKind::kRichText && record.placement.parent_id) {
+            const auto parent = std::find_if(source.begin(), source.end(), [&](const auto& candidate) {
+                return candidate.id == *record.placement.parent_id;
+            });
+            if (parent != source.end()) projectedRecord.transform = compose(parent->transform, record.transform);
+        }
+        auto derivedGeometry = scene::deriveGeometry(projectedRecord);
         if (record.kind == semantic::ObjectKind::kConnector) {
             if (const auto route = scene::connectorGeometry(record,
                     std::vector<semantic::ObjectRecord>(source.begin(), source.end())); route) {
@@ -29,13 +47,13 @@ RuntimeSceneProjection projectRuntimeScene(
             }
         }
         const auto* route = std::get_if<scene::ConnectorGeometry>(&derivedGeometry);
-        const auto bounds = scene::computeBounds(record, nullptr, route);
+        const auto bounds = scene::computeBounds(projectedRecord, nullptr, route);
         projection.records.push_back(RuntimeSceneRecord{
             .objectId = record.id,
             .kind = record.kind,
             .kindVersion = record.kind_version,
             .placement = record.placement,
-            .transform = record.transform,
+            .transform = projectedRecord.transform,
             .properties = record.properties,
             .content = record.content,
             .eraseMasks = record.erase_masks,
@@ -64,15 +82,29 @@ RuntimeSceneProjection projectRuntimeScene(
             derived.directDependencies.erase(std::unique(derived.directDependencies.begin(),derived.directDependencies.end()),derived.directDependencies.end());
         } else if (textService != nullptr && textContent != nullptr) {
             auto& derived = projection.records.back();
-            derived.textLayout = textService->resolve(record.id,*textContent);
+            if (record.kind == semantic::ObjectKind::kRichText && record.placement.parent_id) {
+                const auto parent = std::find_if(source.begin(), source.end(), [&](const auto& candidate) {
+                    return candidate.id == *record.placement.parent_id;
+                });
+                if (parent != source.end()) {
+                    if (const auto* sticky = std::get_if<semantic::StickyContent>(&parent->content))
+                        derived.textLayout = textService->resolveStickyLabel(record.id, *textContent, *sticky,
+                                                                              false, projectedRecord.transform);
+                }
+            }
+            if (!derived.textLayout) derived.textLayout = textService->resolve(record.id,*textContent);
             const auto textBounds = record.kind == semantic::ObjectKind::kRichText
-                ? computeBounds(record,derived.textLayout.get()) : computeBounds(record, nullptr,
+                ? computeBounds(projectedRecord,derived.textLayout.get()) : computeBounds(projectedRecord, nullptr,
                     std::get_if<scene::ConnectorGeometry>(&derived.derivedGeometry));
             derived.geometryBounds=textBounds.geometry; derived.visualBounds=textBounds.visual; derived.worldBounds=textBounds.world;
             derived.referenceGeometryDigest=derived.textLayout->digest;
             for(const auto& font:derived.textLayout->fonts) derived.directDependencies.push_back(font.resourceId.value);
             std::sort(derived.directDependencies.begin(),derived.directDependencies.end());
             derived.directDependencies.erase(std::unique(derived.directDependencies.begin(),derived.directDependencies.end()),derived.directDependencies.end());
+        } else if (textService != nullptr && record.kind == semantic::ObjectKind::kSticky) {
+            // Sticky text is an optional RichText child; projection resolves it
+            // through the child record when present. The parent remains a
+            // drawable background command.
         } else if (record.kind == semantic::ObjectKind::kImage) {
             auto& derived = projection.records.back();
             const auto imageBounds = computeBounds(record, nullptr);
@@ -96,6 +128,8 @@ RuntimeSceneProjection projectRuntimeScene(
     }
     std::sort(projection.records.begin(), projection.records.end(),
               [](const RuntimeSceneRecord& left, const RuntimeSceneRecord& right) {
+                  if (right.placement.parent_id && *right.placement.parent_id == left.objectId) return true;
+                  if (left.placement.parent_id && *left.placement.parent_id == right.objectId) return false;
                   if (left.placement.order_key != right.placement.order_key) {
                       return left.placement.order_key < right.placement.order_key;
                   }
@@ -116,6 +150,8 @@ bool isInkRecord(const SceneRecord& record) noexcept {
 }
 
 bool backToFrontLess(const SceneRecord& left, const SceneRecord& right) noexcept {
+    if (left.kind == SceneObjectKind::kSticky && right.kind == SceneObjectKind::kRichText) return true;
+    if (left.kind == SceneObjectKind::kRichText && right.kind == SceneObjectKind::kSticky) return false;
     const bool leftInk = isInkRecord(left);
     const bool rightInk = isInkRecord(right);
     if (leftInk != rightInk) return !leftInk;
@@ -263,39 +299,14 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                       "RuntimeScene incremental generation does not match published state"));
     }
     try {
-        RuntimeSceneProjection next = _projection;
-        next.generation = post_state.generation();
-        for (const auto& change : changes.objects()) {
-            const auto* current = post_state.find(change.object_id);
-            const auto impact = scene::classifyImpact(change, current);
-            (void)impact;
-            const auto existing = std::find_if(
-                next.records.begin(), next.records.end(), [&](const RuntimeSceneRecord& record) {
-                    return record.objectId == change.object_id;
-                });
-            const bool deleted = (static_cast<unsigned char>(change.flags) &
-                                  static_cast<unsigned char>(semantic::SemanticChangeFlags::kDeleted)) != 0;
-            if (deleted || current == nullptr) {
-                if (existing != next.records.end()) next.records.erase(existing);
-                continue;
-            }
-            auto projected = projectRuntimeScene(std::span<const semantic::ObjectRecord>(current, 1),
-                                                 post_state.generation(), _textLayoutService);
-            if (existing == next.records.end()) {
-                next.records.push_back(std::move(projected.records.front()));
-            } else {
-                *existing = std::move(projected.records.front());
-            }
-        }
-        std::sort(next.records.begin(), next.records.end(),
-                  [](const RuntimeSceneRecord& left, const RuntimeSceneRecord& right) {
-                      if (left.placement.order_key != right.placement.order_key) {
-                          return left.placement.order_key < right.placement.order_key;
-                      }
-                      return left.objectId < right.objectId;
-                  });
+        // Attached Connector routes and Sticky RichText child world transforms
+        // depend on objects outside the ChangeSet item itself. Reproject the
+        // complete immutable source for this owner-side publication so parent
+        // moves update children, routes, bounds and hit geometry atomically.
+        const auto full = projectRuntimeScene(post_state.allObjects(),
+                                               post_state.generation(), _textLayoutService);
         return foundation::Result<PreparedPublication>::success(
-            PreparedPublication{std::move(next)});
+            PreparedPublication{std::move(full)});
     } catch (const std::bad_alloc&) {
         return foundation::Result<PreparedPublication>::failure(
             makeError(foundation::ErrorCode::kOutOfMemory,
