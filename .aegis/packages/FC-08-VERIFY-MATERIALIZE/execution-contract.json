@@ -1,0 +1,115 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "FC-08-VERIFY-MATERIALIZE",
+  "authorized_work": "verification_materialization_only",
+  "implementation": {
+    "required_changes": [
+      "Execute M01-M04 in implementation-context.md to completion or an explicit terminal blocker",
+      "Produce source-complete isolated descriptor, exact variants, independent oracles and real profile bindings",
+      "Publish reviewer-accessible result and a product binding candidate with product authorization false"
+    ],
+    "allowed_paths": [
+      ".aegis/materialized/FC-08/**",
+      ".aegis/results/FC-08-VERIFY-MATERIALIZE/**",
+      "tests/fc08/**",
+      "tools/fc08/**"
+    ],
+    "conditional_build_glue": [
+      "CMakeLists.txt: only a guarded opt-in add_subdirectory(tests/fc08); existing production options/targets/behavior unchanged",
+      "tests/fc08/CMakeLists.txt: standalone test targets linked to existing production interfaces"
+    ],
+    "forbidden_changes": [
+      "runtime/**",
+      "apps/**",
+      "debug_ui/**",
+      "schema/** production tree and historical descriptor.lock",
+      "Production implementation of Section or operations17/18",
+      "Existing dependency locks, published SDKs, historical goldens and P20 expectations",
+      "Original FC-08-P31-READINESS eight files and past control receipts",
+      "Global authorities/gates/evidence/integrations or main branch",
+      "New broad inspector/connector/alignment/clipboard functionality",
+      "Automatic product P32 enablement or merge"
+    ],
+    "preserved_work": "All accepted descendants of a1e8819; input control a5af5f6 or reconciled descendants."
+  },
+  "tests": {
+    "required": [
+      {
+        "id": "MAT-01",
+        "command_or_oracle": "Compare exported accepted sections, immutable source hashes, generated descriptor field tables and exact accepted wire deltas. Source acquisition precedes fixture construction.",
+        "expected_result": "No unreviewed field lost; inherited and FC08 differences separated; historical locks unchanged; complete source index.",
+        "blocking_reason": "Complete source binding and isolated BASE-01/FC08 descriptor materialization"
+      },
+      {
+        "id": "MAT-02",
+        "command_or_oracle": "Frozen effective catalog plus literal expected tables/independent numeric reference and byte vectors. Do not obtain expected values from DUT.",
+        "expected_result": "Every logical case has all required variants, complete inputs and exact expected hashes; original seed vectors unchanged.",
+        "blocking_reason": "Expand and bind all 60 logical cases and their listed variants"
+      },
+      {
+        "id": "MAT-03",
+        "command_or_oracle": "Run fixed R02 controls and legitimate baseline R01 probes; enumerate runner IDs; inspect actual observation seam and independence mapping.",
+        "expected_result": "Runner discovery is nonempty and complete; bad traces rejected and valid controls accepted; baseline absence is explicit nonpassing capability status, not a fake product PASS.",
+        "blocking_reason": "Materialize real runner/oracles and observation bindings without implementing product behavior"
+      },
+      {
+        "id": "MAT-04",
+        "command_or_oracle": "Locked SDK resolution facts, successful relevant test-host build/load/discovery, real browser invocation and exact regression identities.",
+        "expected_result": "All required environment identities and commands are observed, not guessed. Missing platform yields BLOCKED_ENVIRONMENT; never substitute Node/Linux for real browser/Windows coverage.",
+        "blocking_reason": "Bind real native, browser/WASM and headless profiles and inherited regression"
+      }
+    ]
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": [
+      "Existing CI may supply a required platform observation instead of local execution when its exact subject/configuration is applicable. No duplicate run required."
+    ]
+  },
+  "evidence": {
+    "blocking": [
+      "Exact source/corpus/oracle/profile identities for MAT-01..04",
+      "Raw probe/control/build/discovery observations and durable result ref"
+    ],
+    "corroborative": [
+      "Additional CI repeats",
+      "Screenshots of documentation",
+      "Unfrozen fuzz/performance diagnostics"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "MAT-01..MAT-04 acceptance satisfied",
+      "Result artifacts resolve at a same-repository exact revision and materialized ref",
+      "Product package candidate retains product_P32_authorized=false",
+      "No mutation outside frozen scope; no FC08 DEV/P34/PHYS PASS claim"
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "ENVIRONMENT_BLOCKER",
+      "TASK_PACKAGE_DEFECT",
+      "FROZEN_VERIFICATION_FAILURE",
+      "NEW_HIGH_IMPACT_FAILURE_MODE"
+    ],
+    "policy": "Preserve valid outputs and return exact missing input/interface/environment with invocation/log. Do not continue redefining finish lines or re-run the closed SEQ-01 review."
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "may_claim_P34_PASS": false
+  },
+  "implementation_design_preflight": {
+    "required": true,
+    "record": "Actual observer, runner, test build and isolated schema generation flow. If no unresolved semantic/scope/verification decisions, continue inline without another human planning gate."
+  },
+  "entry_preflights": [
+    "Repository identity + accepted anchor ancestry",
+    "PackageBindingPreflight for this materialization package",
+    "EvidenceContractPreflight for this materialization package"
+  ],
+  "product_package_generation": "A non-authorized candidate is an output; no authority to freeze or execute that future product package."
+}
