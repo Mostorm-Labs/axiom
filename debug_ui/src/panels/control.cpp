@@ -1,138 +1,205 @@
 #include "canvas/debug_ui/builtin_panels.hpp"
 #include "canvas/debug_ui/ui_session_state.hpp"
-#include "imgui.h"
+#include "widgets.hpp"
 
-#include <cmath>
 #include <algorithm>
 #include <array>
+#include <cmath>
+#include <cstdio>
+#include <string>
 #include <utility>
 
 namespace canvas::debug_ui {
 namespace {
-void tools(DebugPanelContext& context) {
-    const auto& snapshot = context.snapshot;
-    ImGui::SeparatorText("Tools");
-    ImGui::Text("Product: %s", panel_detail::availabilityLabel(snapshot.product.availability));
-    if (!context.controls.hasRuntimeOwner())
-        ImGui::TextUnformatted("Tool controls: Unsupported (Runtime owner unbound)");
-    if(ImGui::Button("Text tool")){(void)context.controls.setTool(canvas::runtime::CanvasToolKind::kText);context.ui.markControlSubmitted();}
-    const auto text=context.controls.textEditor();
-    if(text.phase!=canvas::runtime::TextPhase::kClosed){
-        double width=text.width;if(ImGui::InputDouble("Text wrap width",&width)){(void)context.controls.setTextWidth(width);context.ui.markControlSubmitted();}
-        ImGui::Text("Text phase %u / IME %llu",static_cast<unsigned>(text.phase),static_cast<unsigned long long>(text.composition));
-    }
-    if(text.phase!=canvas::runtime::TextPhase::kClosed || !text.formatObject.isZero()){
-        ImGui::SeparatorText("Text format");
-        const std::array<std::pair<const char*,double>,4> sizes{{{"Title",32},{"Heading",24},{"Subheading",20},{"Body",16}}};
-        const double currentSize=text.format.fontSize.value_or(16); int sizeIndex=3; for(int i=0;i<4;++i)if(std::abs(currentSize-sizes[i].second)<0.1)sizeIndex=i;
-        if(ImGui::BeginCombo("Size",sizes[sizeIndex].first)){for(int i=0;i<4;++i){if(ImGui::Selectable(sizes[i].first,i==sizeIndex)){canvas::runtime::TextFormatPatch p;p.fontSize=sizes[i].second;(void)context.controls.setTextFormat(p);context.ui.markControlSubmitted();}if(i==sizeIndex)ImGui::SetItemDefaultFocus();}ImGui::EndCombo();}
-        const auto color=text.format.color.value_or(std::array<float,4>{0,0,0,1});
-        int colorIndex=color[2]>0.5F?1:0;const char* colors[]={"Black","Blue"};if(ImGui::Combo("Color",&colorIndex,colors,2)){canvas::runtime::TextFormatPatch p;p.color=colorIndex==0?std::array<float,4>{0,0,0,1}:std::array<float,4>{0.12F,0.42F,0.95F,1};(void)context.controls.setTextFormat(p);context.ui.markControlSubmitted();}
-        bool bold=text.format.bold.value_or(false),italic=text.format.italic.value_or(false),underline=text.format.underline.value_or(false),strike=text.format.strikethrough.value_or(false),bullet=text.format.bulleted.value_or(false);
-        if(ImGui::Checkbox("Bold",&bold)){canvas::runtime::TextFormatPatch p;p.bold=bold;(void)context.controls.setTextFormat(p);context.ui.markControlSubmitted();}
-        ImGui::SameLine();if(ImGui::Checkbox("Italic",&italic)){canvas::runtime::TextFormatPatch p;p.italic=italic;(void)context.controls.setTextFormat(p);context.ui.markControlSubmitted();}
-        ImGui::SameLine();if(ImGui::Checkbox("Underline",&underline)){canvas::runtime::TextFormatPatch p;p.underline=underline;(void)context.controls.setTextFormat(p);context.ui.markControlSubmitted();}
-        ImGui::SameLine();if(ImGui::Checkbox("Strike",&strike)){canvas::runtime::TextFormatPatch p;p.strikethrough=strike;(void)context.controls.setTextFormat(p);context.ui.markControlSubmitted();}
-        if(ImGui::Checkbox("Bulleted list",&bullet)){canvas::runtime::TextFormatPatch p;p.bulleted=bullet;(void)context.controls.setTextFormat(p);context.ui.markControlSubmitted();}
-        const char* align[] = {"Left","Center","Right"};int alignIndex=static_cast<int>(text.format.alignment.value_or(1))-1;if(alignIndex<0||alignIndex>2)alignIndex=0;
-        if(ImGui::Combo("Align",&alignIndex,align,3)){canvas::runtime::TextFormatPatch p;p.alignment=static_cast<std::uint32_t>(alignIndex+1);(void)context.controls.setTextFormat(p);context.ui.markControlSubmitted();}
-        if(!text.fonts.empty()){int fontIndex=0;for(std::size_t i=0;i<text.fonts.size();++i)if(text.format.font==text.fonts[i].id)fontIndex=static_cast<int>(i);std::vector<const char*> names;for(const auto& f:text.fonts)names.push_back(f.name.c_str());if(ImGui::Combo("Font",&fontIndex,names.data(),static_cast<int>(names.size()))){canvas::runtime::TextFormatPatch p;p.font=text.fonts[fontIndex].id;(void)context.controls.setTextFormat(p);context.ui.markControlSubmitted();}}
-    }
-    bool selectionMode = snapshot.product.value.selection.enabled;
-    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(context));
-    if (ImGui::Checkbox("Selection mode", &selectionMode)) {
-        (void)context.controls.setSelectionMode(selectionMode);
-        context.ui.markControlSubmitted();
-    }
-    const auto eraserId = snapshot.product.value.tool.eraserId;
-    if (ImGui::Selectable("Object Eraser", eraserId == 1U)) {
-        (void)context.controls.setEraser(1U);
-        context.ui.markControlSubmitted();
-    }
-    if (ImGui::Selectable("Partial Eraser", eraserId == 2U)) {
-        (void)context.controls.setEraser(2U);
-        context.ui.markControlSubmitted();
-    }
-    ImGui::EndDisabled();
-    ImGui::SeparatorText("Create");
-    const std::array<std::pair<const char*, canvas::runtime::CanvasCreationPreset>, 6> presets{{
-        {"Rectangle", canvas::runtime::CanvasCreationPreset::kRectangle},
-        {"Ellipse", canvas::runtime::CanvasCreationPreset::kEllipse},
-        {"Triangle", canvas::runtime::CanvasCreationPreset::kTriangle},
-        {"Line", canvas::runtime::CanvasCreationPreset::kLine},
-        {"Arrow", canvas::runtime::CanvasCreationPreset::kArrow},
-        {"Sticky", canvas::runtime::CanvasCreationPreset::kSticky},
-    }};
-    std::size_t selectedPreset = 0U;
-    const auto runtimePreset = static_cast<canvas::runtime::CanvasCreationPreset>(
-        snapshot.product.value.control.creationPreset);
-    for (std::size_t i = 0; i < presets.size(); ++i) {
-        if (panel_detail::hasReadback(snapshot.product.availability)
-                ? presets[i].second == runtimePreset
-                : presets[i].second == context.ui.creationPresetDraft()) {
-            selectedPreset = i;
-            break;
+using Tool = canvas::runtime::CanvasToolKind;
+using Preset = canvas::runtime::CanvasCreationPreset;
+void textFormat(DebugPanelContext& c) {
+    const auto text = c.controls.textEditor();
+    if (text.phase == canvas::runtime::TextPhase::kClosed && text.formatObject.isZero()) return;
+    ImGui::SeparatorText("Text format");
+    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c) || c.snapshot.product.value.control.selectedLocked);
+    const std::array<std::pair<const char*, double>, 4> sizes{{{"Title",32},{"Heading",24},{"Subheading",20},{"Body",16}}};
+    const double currentSize = text.format.fontSize.value_or(16);
+    char customSize[48]{};
+    (void)std::snprintf(customSize, sizeof(customSize), "Custom (%.4g)", currentSize);
+    std::string sizeLabel = customSize;
+    for (const auto& size : sizes) if (std::abs(currentSize - size.second) < 0.001) sizeLabel = size.first;
+    if (ImGui::BeginCombo("Size", sizeLabel.c_str())) {
+        for (const auto& size : sizes) if (ImGui::Selectable(size.first, sizeLabel == size.first)) {
+            canvas::runtime::TextFormatPatch patch; patch.fontSize = size.second;
+            (void)c.controls.setTextFormat(patch); c.ui.markControlSubmitted();
         }
+        ImGui::EndCombo();
     }
-    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(context));
-    if (ImGui::BeginCombo("Creation", presets[selectedPreset].first)) {
-        for (std::size_t i = 0; i < presets.size(); ++i) {
-            const bool selected = i == selectedPreset;
-            if (ImGui::Selectable(presets[i].first, selected)) {
-                const auto receipt = context.controls.setCreationPreset(presets[i].second);
-                if (receipt.state == canvas::runtime::ProductControlState::kApplied) {
-                    context.ui.setCreationPresetDraft(presets[i].second);
-                }
-                context.ui.markControlSubmitted();
-            }
-            if (selected) ImGui::SetItemDefaultFocus();
+    std::string fontLabel = text.format.font ? "Unavailable font" : "Default / mixed font";
+    for (const auto& font : text.fonts) if (text.format.font == font.id) fontLabel = font.name;
+    ImGui::BeginDisabled(text.fonts.empty());
+    if (ImGui::BeginCombo("Font", fontLabel.c_str())) {
+        for (const auto& font : text.fonts) if (ImGui::Selectable(font.name.c_str(), text.format.font == font.id)) {
+            canvas::runtime::TextFormatPatch patch; patch.font = font.id;
+            (void)c.controls.setTextFormat(patch); c.ui.markControlSubmitted();
         }
         ImGui::EndCombo();
     }
     ImGui::EndDisabled();
-    ImGui::SeparatorText("Connector / Sticky");
-    ImGui::BeginDisabled(!context.controls.hasRuntimeOwner());
-    int routing=context.controls.connectorRoutingPreset()==canvas::semantic::ConnectorRouting::kOrthogonal?1:0;
-    if(ImGui::Combo("New connector routing",&routing,"Straight\0Orthogonal (avoid objects)\0")) {
-        (void)context.controls.setConnectorRouting(routing==1?canvas::semantic::ConnectorRouting::kOrthogonal:
-            canvas::semantic::ConnectorRouting::kStraight,false);
-        context.ui.markControlSubmitted();
-    }
-    const auto connector=context.controls.selectedConnector();
-    if(connector.available) {
-        int selectedRouting=connector.content.routing==canvas::semantic::ConnectorRouting::kOrthogonal?1:0;
-        if(ImGui::Combo("Selected connector routing",&selectedRouting,"Straight\0Orthogonal (avoid objects)\0")) {
-            (void)context.controls.setConnectorRouting(selectedRouting==1?canvas::semantic::ConnectorRouting::kOrthogonal:
-                canvas::semantic::ConnectorRouting::kStraight,true);
-            context.ui.markControlSubmitted();
+    const std::array<std::array<float,4>,2> colors{{{0,0,0,1},{0.12F,0.42F,0.95F,1}}};
+    const auto color = text.format.color.value_or(colors[0]);
+    const char* colorNames[] = {"Black", "Blue"};
+    const char* colorLabel = "Custom color";
+    for (std::size_t i=0; i<colors.size(); ++i) if (color == colors[i]) colorLabel = colorNames[i];
+    if (ImGui::BeginCombo("Color", colorLabel)) {
+        for (std::size_t i=0; i<colors.size(); ++i) if (ImGui::Selectable(colorNames[i], color == colors[i])) {
+            canvas::runtime::TextFormatPatch patch; patch.color = colors[i];
+            (void)c.controls.setTextFormat(patch); c.ui.markControlSubmitted();
         }
-        ImGui::Text("Route: %s",canvas::runtime::connectorRouteStatusName(connector.routeStatus));
-        ImGui::Text("Search: %u states / %u predicates",connector.work.expanded,connector.work.predicates);
+        ImGui::EndCombo();
     }
-    if (ImGui::Button("Create Sticky")) {
-        (void)context.controls.createSticky();
-        context.ui.markControlSubmitted();
+    bool first=true;
+    const auto effect = [&](const char* label, const std::optional<bool>& value,
+                            std::optional<bool> canvas::runtime::TextFormatPatch::* field) {
+        if (panel_detail::flowButton(label, first, value.value_or(false))) {
+            canvas::runtime::TextFormatPatch patch; patch.*field = !value.value_or(false);
+            (void)c.controls.setTextFormat(patch); c.ui.markControlSubmitted();
+        }
+    };
+    effect("Bold", text.format.bold, &canvas::runtime::TextFormatPatch::bold);
+    effect("Italic", text.format.italic, &canvas::runtime::TextFormatPatch::italic);
+    effect("Underline", text.format.underline, &canvas::runtime::TextFormatPatch::underline);
+    effect("Strike", text.format.strikethrough, &canvas::runtime::TextFormatPatch::strikethrough);
+    effect("Bulleted list", text.format.bulleted, &canvas::runtime::TextFormatPatch::bulleted);
+    const char* align[] = {"Left", "Center", "Right"};
+    int alignment = static_cast<int>(text.format.alignment.value_or(1)) - 1;
+    if (alignment < 0 || alignment > 2) alignment = 0;
+    if (ImGui::Combo("Align", &alignment, align, 3)) {
+        canvas::runtime::TextFormatPatch patch; patch.alignment = static_cast<std::uint32_t>(alignment + 1);
+        (void)c.controls.setTextFormat(patch); c.ui.markControlSubmitted();
     }
-    ImGui::SameLine();
-    if (ImGui::Button("Create Connector")) {
-        (void)context.controls.createConnector();
-        context.ui.markControlSubmitted();
+    const auto kind = c.snapshot.product.value.control.selectedKind;
+    if (text.phase != canvas::runtime::TextPhase::kClosed &&
+        kind != static_cast<std::uint32_t>(canvas::semantic::ObjectKind::kShape) &&
+        kind != static_cast<std::uint32_t>(canvas::semantic::ObjectKind::kSticky)) {
+        double width = text.width;
+        if (ImGui::InputDouble("Text wrap width", &width)) {
+            (void)c.controls.setTextWidth(width); c.ui.markControlSubmitted();
+        }
+    }
+    if (text.mixedFormat) ImGui::TextWrapped("Mixed selection: active effects apply to part of the selection.");
+    if (c.ui.advancedControls()) ImGui::Text("Text phase %u / IME %llu", static_cast<unsigned>(text.phase),
+        static_cast<unsigned long long>(text.composition));
+    ImGui::EndDisabled();
+}
+void tools(DebugPanelContext& c) {
+    const auto& state = c.snapshot.product.value;
+    const bool creating = state.control.creationMode;
+    const auto preset = static_cast<Preset>(state.control.creationPreset);
+    const auto tool = c.controls.canvasTool();
+    ImGui::SeparatorText("Tools");
+    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c) || c.controls.imageCrop().active);
+    bool first=true;
+    const auto chooseTool = [&](const char* label, Tool value, bool selected) {
+        if (panel_detail::flowButton(label, first, selected)) {
+            (void)c.controls.setTool(value); c.ui.markControlSubmitted();
+        }
+    };
+    chooseTool("Select", Tool::kSelect, state.selection.enabled && !creating);
+    chooseTool("Ink", Tool::kInk, tool == Tool::kInk && !creating && !state.selection.enabled);
+    chooseTool("Eraser", Tool::kEraser, tool == Tool::kEraser && !creating);
+    chooseTool("Text tool", Tool::kText, tool == Tool::kText && !creating);
+    if (preset <= Preset::kTriangle && panel_detail::hasReadback(c.snapshot.product.availability))
+        c.ui.setCreationPresetDraft(preset);
+    const bool shape = creating && preset <= Preset::kTriangle;
+    if (panel_detail::flowButton("Shape", first, shape)) {
+        (void)c.controls.setCreationPreset(c.ui.creationPresetDraft()); c.ui.markControlSubmitted();
+    }
+    if (panel_detail::flowButton("Sticky", first, creating && preset == Preset::kSticky)) {
+        (void)c.controls.setCreationPreset(Preset::kSticky); c.ui.markControlSubmitted();
+    }
+    const bool connector = creating && (preset == Preset::kLine || preset == Preset::kArrow);
+    if (panel_detail::flowButton("Connector", first, connector)) {
+        const auto receipt = c.controls.setConnectorRouting(canvas::semantic::ConnectorRouting::kOrthogonal, false);
+        if (receipt.state == canvas::runtime::ConnectorCommandState::kApplied)
+            (void)c.controls.setCreationPreset(preset == Preset::kArrow ? Preset::kArrow : Preset::kLine);
+        c.ui.markControlSubmitted();
+    }
+    if (shape) {
+        const char* labels[] = {"Rectangle", "Ellipse", "Triangle"};
+        int index = static_cast<int>(preset);
+        if (ImGui::Combo("Creation", &index, labels, 3)) {
+            (void)c.controls.setCreationPreset(static_cast<Preset>(index)); c.ui.markControlSubmitted();
+        }
+    }
+    if (connector) {
+        int index = preset == Preset::kArrow ? 1 : 0;
+        if (ImGui::Combo("Connector style", &index, "No arrow\0Arrow\0")) {
+            const auto receipt = c.controls.setConnectorRouting(canvas::semantic::ConnectorRouting::kOrthogonal, false);
+            if (receipt.state == canvas::runtime::ConnectorCommandState::kApplied)
+                (void)c.controls.setCreationPreset(index == 1 ? Preset::kArrow : Preset::kLine);
+            c.ui.markControlSubmitted();
+        }
+    }
+    if ((!creating && tool == Tool::kEraser) || c.ui.advancedControls()) {
+        bool eraserFirst=true;
+        for (const auto& mode : std::array<std::pair<const char*,std::uint32_t>,2>{{{"Object Eraser",1},{"Partial Eraser",2}}}) {
+            if (panel_detail::flowButton(mode.first, eraserFirst, state.tool.eraserId == mode.second)) {
+                (void)c.controls.setEraser(mode.second); c.ui.markControlSubmitted();
+            }
+        }
     }
     ImGui::EndDisabled();
-    if (!context.controls.connectorStickyStatus().empty())
-        ImGui::TextWrapped("%s", context.controls.connectorStickyStatus().c_str());
-    if (panel_detail::hasReadback(snapshot.product.availability)) {
-        if (!snapshot.product.value.control.creationMode) {
-            ImGui::Text("Creation mode: disabled (last preset: %s)",
-                        presets[selectedPreset].first);
-        } else {
-            ImGui::Text("Creation mode: %s", presets[selectedPreset].first);
+    if (!c.controls.hasRuntimeOwner()) ImGui::TextWrapped("Runtime unavailable");
+    if (c.controls.hasRuntimeOwner() && !c.controls.connectorDefaultsReady()) {
+        ImGui::TextWrapped("Connector defaults unavailable");
+        ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c));
+        bool retryFirst=true;
+        if (panel_detail::flowButton("Retry connector setup", retryFirst)) {
+            c.controls.prepareConnectorDefaults(c.snapshot.stamp.runtimeGeneration, true);
+            c.ui.markControlSubmitted();
         }
-        ImGui::Text("resolved eraserId: %u / selection: %s",
-                    eraserId,
-                    snapshot.product.value.selection.enabled ? "enabled" : "disabled");
-        ImGui::Text("legacy toolId (diagnostic): %u", snapshot.product.value.tool.toolId);
+        ImGui::EndDisabled();
     }
+    if (state.selection.selectedObjectCount != 0) {
+        ImGui::SeparatorText("Selected object");
+        ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c));
+        bool objectFirst=true;
+        if (panel_detail::flowButton(state.control.selectedLocked ? "Unlock" : "Lock", objectFirst)) {
+            (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedLock,
+                                            !state.control.selectedLocked); c.ui.markControlSubmitted();
+        }
+        ImGui::BeginDisabled(state.control.selectedLocked);
+        if (panel_detail::flowButton("Delete selected", objectFirst)) {
+            (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kDeleteSelected); c.ui.markControlSubmitted();
+        }
+        if (panel_detail::flowButton("Bring front", objectFirst)) {
+            (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedOrder, true); c.ui.markControlSubmitted();
+        }
+        const auto selectedConnector = c.controls.selectedConnector();
+        if (selectedConnector.available) {
+            if (selectedConnector.content.routing == canvas::semantic::ConnectorRouting::kStraight &&
+                panel_detail::flowButton("Convert to orthogonal", objectFirst)) {
+                (void)c.controls.setConnectorRouting(canvas::semantic::ConnectorRouting::kOrthogonal, true); c.ui.markControlSubmitted();
+            }
+            ImGui::Text("Route: %s", canvas::runtime::connectorRouteStatusName(selectedConnector.routeStatus));
+            if (c.ui.advancedControls()) ImGui::Text("Search: %u states / %u predicates",
+                selectedConnector.work.expanded, selectedConnector.work.predicates);
+        }
+        ImGui::EndDisabled();
+        ImGui::EndDisabled();
+    }
+    textFormat(c);
+    if (c.ui.advancedControls()) {
+        ImGui::SeparatorText("Test creation");
+        ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c));
+        bool selected = state.selection.enabled;
+        if (ImGui::Checkbox("Selection mode", &selected)) {
+            (void)c.controls.setSelectionMode(selected); c.ui.markControlSubmitted();
+        }
+        if (ImGui::Button("Create Sticky")) { (void)c.controls.createSticky(); c.ui.markControlSubmitted(); }
+        if (ImGui::Button("Create Connector")) { (void)c.controls.createConnector(); c.ui.markControlSubmitted(); }
+        ImGui::Text("legacy toolId (diagnostic): %u", state.tool.toolId);
+        ImGui::EndDisabled();
+    }
+    const auto& message = c.controls.connectorStickyStatus();
+    if (!message.empty()) ImGui::TextWrapped("%s", message.c_str());
 }
 void images(DebugPanelContext& context) {
     auto& controls = context.controls;
@@ -140,16 +207,17 @@ void images(DebugPanelContext& context) {
     const auto crop = controls.imageCrop();
     ImGui::SeparatorText("Image");
     ImGui::BeginDisabled(!controls.hasRuntimeOwner() || crop.active);
-    if (ImGui::Button("Import image...")) { controls.requestImageFile(false); context.ui.markControlSubmitted(); }
+    bool imageFirst=true;
+    if (panel_detail::flowButton("Import image...", imageFirst)) { controls.requestImageFile(false); context.ui.markControlSubmitted(); }
     ImGui::EndDisabled();
     ImGui::BeginDisabled(!selected.editable || crop.active);
-    if (ImGui::Button("Replace selected image...")) { controls.requestImageFile(true); context.ui.markControlSubmitted(); }
-    if (ImGui::Button("Crop selected image")) { controls.beginImageCrop(); context.ui.markControlSubmitted(); }
+    if (selected.available && panel_detail::flowButton("Replace selected image...", imageFirst)) { controls.requestImageFile(true); context.ui.markControlSubmitted(); }
+    if (selected.available && panel_detail::flowButton("Crop selected image", imageFirst)) { controls.beginImageCrop(); context.ui.markControlSubmitted(); }
     ImGui::EndDisabled();
     if (selected.available)
         ImGui::Text("Image %.0f x %.0f / source %.0f x %.0f", selected.content.width, selected.content.height,
                     selected.content.intrinsic_width, selected.content.intrinsic_height);
-    else ImGui::TextWrapped("Select an image on the canvas to replace or crop it.");
+
     if (crop.active) {
         auto& draft = context.ui.imageDraft();
         const auto rect = crop.content.source_rect.value_or(canvas::semantic::NormalizedRect{0,0,1,1});
@@ -171,6 +239,7 @@ void images(DebugPanelContext& context) {
             controls.updateImageCrop(request); draft.scale=scale;
             context.ui.markControlSubmitted();
         }
+        if (context.ui.advancedControls()) {
         changed = ImGui::InputDouble("Crop X", &draft.rect[0], .01, .1, "%.4f") || changed;
         changed = ImGui::InputDouble("Crop Y", &draft.rect[1], .01, .1, "%.4f") || changed;
         changed = ImGui::InputDouble("Crop width", &draft.rect[2], .01, .1, "%.4f") || changed;
@@ -182,9 +251,10 @@ void images(DebugPanelContext& context) {
                 {draft.rect[0], draft.rect[1], draft.rect[2], draft.rect[3]}, draft.width, draft.height,std::nullopt});
             context.ui.markControlSubmitted();
         }
-        if (ImGui::Button("Crop Done")) { controls.finishImageCrop(true); context.ui.markControlSubmitted(); }
-        ImGui::SameLine();
-        if (ImGui::Button("Crop Cancel") || ImGui::IsKeyPressed(ImGuiKey_Escape)) {
+        }
+        bool cropFirst=true;
+        if (panel_detail::flowButton("Crop Done", cropFirst)) { controls.finishImageCrop(true); context.ui.markControlSubmitted(); }
+        if (panel_detail::flowButton("Crop Cancel", cropFirst) || ImGui::IsKeyPressed(ImGuiKey_Escape)) {
             controls.finishImageCrop(false); context.ui.markControlSubmitted();
         }
     }
@@ -193,6 +263,7 @@ void images(DebugPanelContext& context) {
 void view(DebugPanelContext& context) {
     const auto& snapshot = context.snapshot;
     ImGui::SeparatorText("View");
+    if (context.ui.advancedControls()) {
     if (panel_detail::hasReadback(snapshot.product.availability)) {
         const auto& camera = snapshot.product.value.camera;
         ImGui::Text("camera scale %.3f / translation %.3f, %.3f",
@@ -232,49 +303,47 @@ void view(DebugPanelContext& context) {
         context.ui.markControlSubmitted();
     }
     ImGui::EndDisabled();
+    }
+    const bool available = panel_detail::canSubmitProduct(context);
     ImGui::BeginDisabled(!available);
-    if (ImGui::Button("Fit Content")) {
+    bool first = true;
+    if (panel_detail::flowButton("Fit Content", first)) {
         (void)context.controls.fitToContent();
         context.ui.markControlSubmitted();
     }
     ImGui::EndDisabled();
     ImGui::BeginDisabled(!available || snapshot.product.value.selection.selectedObjectCount == 0);
-    if (ImGui::Button("Fit Selection")) {
+    if (panel_detail::flowButton("Fit Selection", first)) {
         (void)context.controls.fitToSelection();
         context.ui.markControlSubmitted();
     }
     ImGui::EndDisabled();
+    if (context.ui.advancedControls()) {
     ImGui::BeginDisabled(!available || snapshot.product.value.selection.primaryObject == 0);
     if (ImGui::Button("Fit Primary Object")) {
         (void)context.controls.fitPrimaryObject();
         context.ui.markControlSubmitted();
     }
     ImGui::EndDisabled();
+    }
     if (!context.controls.hasRuntimeOwner())
         ImGui::TextUnformatted("View controls: Unsupported (Runtime owner unbound)");
 }
-void history(DebugPanelContext& context) {
-    const auto& snapshot = context.snapshot;
+void history(DebugPanelContext& c) {
     ImGui::SeparatorText("History");
-    ImGui::Text("History: %s", panel_detail::availabilityLabel(snapshot.product.availability));
-    const bool available = panel_detail::canSubmitProduct(context);
-    ImGui::BeginDisabled(!available || !snapshot.product.value.history.canUndo);
-    if (ImGui::Button("Undo (Ctrl+Z)")) {
-        (void)context.controls.undo();
-        context.ui.markControlSubmitted();
-    }
+    const bool enabled = panel_detail::canSubmitProduct(c);
+    bool first=true;
+    ImGui::BeginDisabled(!enabled || !c.snapshot.product.value.history.canUndo);
+    if (panel_detail::flowButton("Undo (Ctrl+Z)", first)) { (void)c.controls.undo(); c.ui.markControlSubmitted(); }
     ImGui::EndDisabled();
-    ImGui::BeginDisabled(!available || !snapshot.product.value.history.canRedo);
-    if (ImGui::Button("Redo (Ctrl+Y)")) {
-        (void)context.controls.redo();
-        context.ui.markControlSubmitted();
-    }
+    ImGui::BeginDisabled(!enabled || !c.snapshot.product.value.history.canRedo);
+    if (panel_detail::flowButton("Redo (Ctrl+Y)", first)) { (void)c.controls.redo(); c.ui.markControlSubmitted(); }
     ImGui::EndDisabled();
 }
 } // namespace
 void registerControlDebugPanels(PanelRegistry& registry) noexcept {
-    (void)registry.add({WorkspaceId::kControl, PanelSlot::kTools, -10, nullptr, images});
     (void)registry.add({WorkspaceId::kControl, PanelSlot::kTools, 0, nullptr, tools});
+    (void)registry.add({WorkspaceId::kControl, PanelSlot::kTools, 10, nullptr, images});
     (void)registry.add({WorkspaceId::kControl, PanelSlot::kView, 0, nullptr, view});
     (void)registry.add({WorkspaceId::kControl, PanelSlot::kHistory, 0, nullptr, history});
 }

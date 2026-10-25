@@ -59,10 +59,16 @@ frame.addEventListener('load', async () => {
       for (let preset = 0; preset < 5; ++preset) {
         await host.control('shape', preset);
         clock += 600;
-        event('pointerdown', 30 + preset, 250, 50 + preset * 45, clock);
-        event('pointermove', 30 + preset, 360, 85 + preset * 45, clock + 16);
-        event('pointerup', 30 + preset, 360, 85 + preset * 45, clock + 32);
+        // Orthogonal connectors need endpoints outside existing obstacle clearance.
+        const x = preset < 3 ? 250 : 600;
+        const y = preset < 3 ? 50 + preset * 45 : 400 + (preset - 3) * 70;
+        const rejectedBefore = host.observation().rejectedInputs;
+        event('pointerdown', 30 + preset, x, y, clock);
+        event('pointermove', 30 + preset, x + 110, y + 35, clock + 16);
+        event('pointerup', 30 + preset, x + 110, y + 35, clock + 32);
         await host.flush();
+        assert(host.observation().objects === 12 + preset, `Creation ${preset} did not commit once`);
+        assert(host.observation().rejectedInputs === rejectedBefore, `Creation ${preset} was rejected`);
       }
       assert(host.observation().objects === 16, 'Shape/Line/Arrow commits missing');
       await host.control('tool', 0);

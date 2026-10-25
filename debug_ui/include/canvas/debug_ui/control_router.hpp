@@ -30,6 +30,10 @@ class DebugControlRouter final {
 
   void beginFrame(const DebugSnapshot& snapshot) noexcept;
   void refreshReceipts() noexcept;
+  // UI consumer policy only: one attempt per bound Runtime, before the UI opens.
+  void prepareConnectorDefaults(std::uint64_t runtimeEpoch, bool retry = false);
+  [[nodiscard]] bool connectorDefaultsReady() const noexcept { return connectorDefaultsReady_; }
+  [[nodiscard]] canvas::runtime::CanvasToolKind canvasTool() const;
 
   canvas::runtime::ProductControlReceipt setTool(
       canvas::runtime::CanvasToolKind tool) noexcept;
@@ -41,6 +45,10 @@ class DebugControlRouter final {
   canvas::runtime::TextReceipt setTextFormat(const canvas::runtime::TextFormatPatch&);
   void requestImageFile(bool replace);
   void processImageFileRequest(const std::function<ImageFileResult()>& chooseFile);
+  // Asynchronous host adapter. Taking a request never commits; completion is
+  // accepted once and revalidates the captured target/selection.
+  [[nodiscard]] std::uint64_t beginImageFileRequest();
+  bool completeImageFileRequest(std::uint64_t token, const ImageFileResult& file);
   [[nodiscard]] canvas::runtime::SelectedImageSnapshot selectedImage() const;
   [[nodiscard]] canvas::runtime::ImageCropSnapshot imageCrop() const;
   void beginImageCrop();
@@ -105,6 +113,9 @@ class DebugControlRouter final {
   [[nodiscard]] canvas::runtime::ProductControlReceipt localRejected(
       std::uint64_t requestId) const noexcept;
   void recordImage(const char* action, const canvas::runtime::ImageCommandReceipt&);
+  void recordText(const char* action, const canvas::runtime::TextReceipt&);
+  struct PendingText final { std::uint64_t client; std::string action; };
+  std::unordered_map<std::uint64_t, PendingText> pendingText_;
 
   canvas::runtime::RuntimeFacade* runtime_ = nullptr;
   canvas::runtime::AxiomDebugControl* axiomDebug_ = nullptr;
@@ -116,10 +127,14 @@ class DebugControlRouter final {
     bool replace = false;
     canvas::runtime::SelectedImageSnapshot selected;
     canvas::runtime::CanvasTargetKey target;
+    std::uint64_t token = 0;
+    bool dispatched = false;
   };
   std::optional<ImageFileRequest> imageFileRequest_;
   std::string imageStatus_;
   std::string connectorStickyStatus_;
+  std::uint64_t connectorDefaultsEpoch_ = 0;
+  bool connectorDefaultsReady_ = false;
   std::unordered_map<std::uint64_t, PendingAxiom> pendingAxiom_;
   std::unordered_map<std::uint64_t, PendingSurface> pendingSurface_;
   std::unordered_map<canvas::runtime::CanvasControlReceiptKey, std::string,

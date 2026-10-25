@@ -28,6 +28,8 @@ class DebugController final {
   [[nodiscard]] DebugUiSessionState& uiState() noexcept;
   // Called by the host outside ImGui rendering: a native dialog runs a modal loop.
   void processHostRequests();
+  [[nodiscard]] std::uint64_t beginImageFileRequest();
+  bool completeImageFileRequest(std::uint64_t token, const ImageFileResult& file);
  private:
   DebugControllerContext context_{};
   DebugSnapshotAssembler assembler_{};

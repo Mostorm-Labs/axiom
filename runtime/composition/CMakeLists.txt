@@ -85,6 +85,8 @@ if(BUILD_TESTING)
     target_compile_options(axiom_fc00x_runtime_composition_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
   endif()
   add_test(NAME FC00XRuntimeComposition COMMAND axiom_fc00x_runtime_composition_tests)
+  add_test(NAME FC00XCancelKeepsViewport COMMAND axiom_fc00x_runtime_composition_tests cancel-camera)
+  add_test(NAME FC00XFitFullScene COMMAND axiom_fc00x_runtime_composition_tests fit-full-scene)
 
   add_executable(axiom_fc00x_runtime_facade_tests
       tests/canvas_runtime_facade_test.cpp)

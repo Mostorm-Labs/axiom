@@ -14,6 +14,12 @@ class DebugUiSessionState final {
     if (isValidWorkspace(workspace)) workspace_ = workspace;
   }
   [[nodiscard]] bool activityAutoScroll() const noexcept { return activityAutoScroll_; }
+  [[nodiscard]] bool advancedControls() const noexcept { return advancedControls_; }
+  void setAdvancedControls(bool enabled) noexcept {
+    advancedControls_ = enabled;
+    if (!enabled && (workspace_ == WorkspaceId::kDashboard || workspace_ == WorkspaceId::kRuntime ||
+                     workspace_ == WorkspaceId::kScenarios)) workspace_ = WorkspaceId::kControl;
+  }
   void setActivityAutoScroll(bool enabled) noexcept { activityAutoScroll_ = enabled; }
   [[nodiscard]] bool controlSubmittedThisFrame() const noexcept { return controlSubmittedThisFrame_; }
   void markControlSubmitted() noexcept { controlSubmittedThisFrame_ = true; }
@@ -42,7 +48,8 @@ class DebugUiSessionState final {
   [[nodiscard]] ImageDraft& imageDraft() noexcept { return imageDraft_; }
 
  private:
-  WorkspaceId workspace_ = WorkspaceId::kDashboard;
+  WorkspaceId workspace_ = WorkspaceId::kControl;
+  bool advancedControls_ = false;
   bool activityAutoScroll_ = true;
   bool controlSubmittedThisFrame_ = false;
   CameraDraft cameraDraft_{};

@@ -26,10 +26,6 @@ void document(DebugPanelContext& c) {
     ImGui::Text("Axis LocalDurable: %s / CloudSynced: %s",
         label(control.axisLocalDurable),label(control.axisCloudSynced));
 }
-void scene(DebugPanelContext&) {
-    ImGui::SeparatorText("Scene");
-    ImGui::TextUnformatted("Unsupported / Not implemented");
-}
 void arc(DebugPanelContext& c) {
     const auto& s = c.snapshot;
     ImGui::SeparatorText("ARC");
@@ -134,14 +130,6 @@ void surface(DebugPanelContext& c) {
     } else
         ImGui::TextUnformatted("No Surface receipt");
 }
-void resources(DebugPanelContext&) {
-    ImGui::SeparatorText("Resources");
-    ImGui::TextUnformatted("Unsupported / Not implemented");
-}
-void diagnostics(DebugPanelContext&) {
-    ImGui::SeparatorText("Feature Diagnostics");
-    ImGui::TextUnformatted("Unsupported / Not implemented");
-}
 void advanced(DebugPanelContext& c) {
     ImGui::SeparatorText("Advanced Actions");
     const bool enabled = panel_detail::canSubmitAxiom(c);
@@ -153,22 +141,13 @@ void advanced(DebugPanelContext& c) {
     ImGui::EndDisabled();
     if (!enabled)
         ImGui::TextUnformatted("Force Full Redraw: Unsupported (Axiom owner unavailable)");
-    ImGui::TextUnformatted("Set Overlay Flags: Unsupported");
-    ImGui::TextUnformatted("Force Scene Recompile: Unsupported");
-    ImGui::TextUnformatted("Evict Tile Cache: Unsupported");
-    ImGui::TextUnformatted("Evict Raster Cache: Unsupported");
-    ImGui::TextUnformatted("Pause Background Raster: Unsupported");
-    ImGui::TextUnformatted("Runtime Memory Budget: Unsupported");
 }
 } // namespace
 void registerRuntimeDebugPanels(PanelRegistry& r) noexcept {
     (void)r.add({WorkspaceId::kRuntime, PanelSlot::kDocument, 0, nullptr, document});
-    (void)r.add({WorkspaceId::kRuntime, PanelSlot::kScene, 0, nullptr, scene});
     (void)r.add({WorkspaceId::kRuntime, PanelSlot::kArc, 0, nullptr, arc});
     (void)r.add({WorkspaceId::kRuntime, PanelSlot::kRender, 0, nullptr, render});
     (void)r.add({WorkspaceId::kRuntime, PanelSlot::kSurface, 0, nullptr, surface});
-    (void)r.add({WorkspaceId::kRuntime, PanelSlot::kResources, 0, nullptr, resources});
-    (void)r.add({WorkspaceId::kRuntime, PanelSlot::kFeatureDiagnostics, 0, nullptr, diagnostics});
     (void)r.add({WorkspaceId::kRuntime, PanelSlot::kAdvancedActions, 0, nullptr, advanced});
 }
 } // namespace canvas::debug_ui

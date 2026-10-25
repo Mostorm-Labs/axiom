@@ -330,6 +330,14 @@ HeadlessSubmissionIssue validateProductionCommand(const ReferenceTraversalEntry&
             if (!pointInScalarRange(start->point) || !pointInScalarRange(end->point))
                 return HeadlessSubmissionIssue::kOverflow;
             return HeadlessSubmissionIssue::kNone;
+        } else if constexpr (std::is_same_v<T, StickyReferenceCommand>) {
+            // View-to-world mapping and snapping produce fractional sizes.
+            // Only the legacy headless fixture contract requires integers.
+            if (!scalarRange(command.content.width) || !scalarRange(command.content.height))
+                return HeadlessSubmissionIssue::kOverflow;
+            if (command.content.width <= 0.0 || command.content.height <= 0.0)
+                return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            return HeadlessSubmissionIssue::kNone;
         }
         return validateCommand(entry);
     }, entry.command);

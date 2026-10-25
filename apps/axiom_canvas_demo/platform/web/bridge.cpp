@@ -503,6 +503,35 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_debug_text(std::uintptr_t h, const char* valu
     return 0;
 #endif
 }
+EMSCRIPTEN_KEEPALIVE std::uint64_t axiom_web_debug_image_request(std::uintptr_t h) {
+#if AXIOM_WEB_DEBUG_UI
+    auto* v = instance(h);
+    return v && v->debug ? v->debug->beginImageFileRequest() : 0;
+#else
+    (void)h;
+    return 0;
+#endif
+}
+EMSCRIPTEN_KEEPALIVE int axiom_web_debug_image_result(
+    std::uintptr_t h, std::uint64_t token, const std::uint8_t* bytes, std::size_t size,
+    const char* mime, const char* error, int cancelled) {
+#if AXIOM_WEB_DEBUG_UI
+    auto* v = instance(h);
+    if (!v || !v->debug) return 0;
+    canvas::debug_ui::ImageFileResult result;
+    result.cancelled = cancelled != 0;
+    result.mimeType = mime ? mime : "";
+    result.error = error ? error : "";
+    if (size > 128U * 1024U * 1024U || (size && !bytes))
+        result.error = "Image file buffer is invalid or exceeds 128 MiB";
+    else if (size)
+        result.bytes.assign(bytes, bytes + size);
+    return v->debug->completeImageFileRequest(token, result);
+#else
+    (void)h; (void)token; (void)bytes; (void)size; (void)mime; (void)error; (void)cancelled;
+    return 0;
+#endif
+}
 }
 
 #include "text_bridge.inl"

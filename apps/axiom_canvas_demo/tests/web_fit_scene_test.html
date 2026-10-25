@@ -1,0 +1,48 @@
+<!doctype html><meta charset="utf-8"><title>Fit Content includes the complete scene</title>
+<iframe id="app" src="../index.html" width="1100" height="850"></iframe><pre id="result">PENDING</pre>
+<script type="module">
+const frame=document.getElementById('app'),results=[];
+frame.addEventListener('load',async()=>{
+  let host;
+  try {
+    const win=frame.contentWindow;host=await win.axiomMinimalReady;
+    const doc=frame.contentDocument,canvas=doc.getElementById('axiom-canvas'),debug=doc.getElementById('debugUi');
+    canvas.setPointerCapture=()=>{};debug.setPointerCapture=()=>{};
+    const assert=(v,message)=>{if(!v)throw new Error(message);};
+    const raf=()=>new Promise(resolve=>win.requestAnimationFrame(resolve));let time=1000;
+    const event=(target,type,x,y)=>{
+      const rect=target.getBoundingClientRect();const sx=target===debug?rect.width/410:1,sy=target===debug?rect.height/650:1;
+      const e=new win.PointerEvent(type,{pointerId:1,pointerType:'mouse',clientX:rect.left+x*sx,
+        clientY:rect.top+y*sy,buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true});
+      Object.defineProperty(e,'timeStamp',{value:time+=17});target.dispatchEvent(e);
+    };
+    const click=async(target,x,y)=>{time+=600;event(target,'pointerdown',x,y);await raf();event(target,'pointerup',x,y);await host.flush();};
+    event(canvas,'pointerdown',600,100);event(canvas,'pointermove',700,180);event(canvas,'pointerup',700,180);await host.flush();
+    await host.control('shape',0);
+    time+=600;event(canvas,'pointerdown',600,300);event(canvas,'pointerup',700,400);await host.flush();
+    await host.control('tool',1);await click(canvas,650,350);
+    const count=host.observation().objects;
+    await click(canvas,728,350); // selected Shape's external right attachment
+    assert(host.observation().objects===count+2,'Attachment click must create a target and Connector');
+    await host.toggleDebugUi();await host.flush();await click(debug,45,232); // actual Fit Content
+    const state=host.observation(),cam=state.camera;
+    const screen=(x,y)=>[x*cam.scale+cam.x,y*cam.scale+cam.y];
+    for(const [x,y] of [[600,100],[700,180],[600,300],[700,400]]) {
+      const [sx,sy]=screen(x,y);
+      assert(sx>=30 && sx<=state.logicalWidth-30 && sy>=30 && sy<=state.logicalHeight-30,
+        `Fit after attachment creation lost earlier object (${x},${y}): ${JSON.stringify(cam)}`);
+    }
+    // Confirm the real canonical canvas still contains the earlier Shape.
+    const gl=canvas.getContext('webgl2'),saved=gl.getParameter(gl.FRAMEBUFFER_BINDING),pixel=new Uint8Array(4);
+    const [cx,cy]=screen(650,350);gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+    gl.readPixels(Math.floor(cx*state.dpr),canvas.height-1-Math.floor(cy*state.dpr),1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixel);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,saved);
+    assert(pixel[3]>0 && (pixel[0]<230 || pixel[1]<230 || pixel[2]<230),'Fit produced a blank earlier Shape');
+    results.push({name:'Stroke / Shape / attachment-created Shape+Connector fit together',result:'PASS'});
+    const fitted=JSON.stringify(cam);await host.control('fit');
+    assert(JSON.stringify(host.observation().camera)===fitted,'Repeated Fit must use the same full-scene extent');
+    results.push({name:'repeated Fit keeps all unchanged objects',result:'PASS'});
+    document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,observation:host.observation()});
+  }catch(error){document.getElementById('result').textContent=JSON.stringify({status:'FAIL',error:String(error),results,observation:host?.observation()});}
+},{once:true});
+</script>

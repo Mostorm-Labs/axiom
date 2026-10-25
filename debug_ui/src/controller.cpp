@@ -9,16 +9,24 @@ namespace canvas::debug_ui {
 DebugController::DebugController(DebugControllerContext context)
     : context_(context), router_(context.runtime, context.axiomDebug, context.platformDebug, &activity_) {
   registerBuiltinPanels(registry_);
+  if (context_.runtime != nullptr)
+    router_.prepareConnectorDefaults(context_.runtime->readRuntimeState().identity.runtimeGeneration);
 }
 
 DebugSnapshot DebugController::snapshot() const { return latest_; }
 DebugUiSessionState& DebugController::uiState() noexcept { return ui_; }
 void DebugController::processHostRequests() { router_.processImageFileRequest(context_.chooseImageFile); }
+std::uint64_t DebugController::beginImageFileRequest() { return router_.beginImageFileRequest(); }
+bool DebugController::completeImageFileRequest(std::uint64_t token, const ImageFileResult& file) {
+  return router_.completeImageFileRequest(token, file);
+}
 
 bool DebugController::buildImGuiFrame() {
   DebugSnapshotSources sources{context_.runtime, context_.axiom, context_.arc,
       context_.platformDiagnostics, context_.telemetry, nullptr};
   auto captured = assembler_.capture(sources);
+  if (captured.coherence == SnapshotCoherence::kCoherent)
+    router_.prepareConnectorDefaults(captured.stamp.runtimeGeneration);
   router_.beginFrame(captured);
   router_.refreshReceipts();
   captured.activity = activity_.snapshot();
@@ -35,7 +43,8 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool, DebugCont
   const ImGuiID workspaceKey = ImHashStr("PX0.SelectedWorkspace");
   const ImGuiID scrollKey = ImHashStr("PX0.ActivityAutoScroll");
   if (auto* window = ImGui::FindWindowByName("Axiom Debug Workbench")) {
-    ui.setWorkspace(static_cast<WorkspaceId>(window->StateStorage.GetInt(workspaceKey, 0)));
+    ui.setWorkspace(static_cast<WorkspaceId>(window->StateStorage.GetInt(workspaceKey, 1)));
+    ui.setAdvancedControls(window->StateStorage.GetBool(ImHashStr("PX0.AdvancedControls"), false));
     ui.setActivityAutoScroll(window->StateStorage.GetBool(scrollKey, true));
     auto& draft = ui.cameraDraft();
     draft.panDeltaX = window->StateStorage.GetFloat(ImHashStr("PX0.PanDeltaX"), 0.0F);
@@ -52,6 +61,7 @@ bool buildImGuiPanels(const DebugSnapshot& snapshot, int selectedTool, DebugCont
                                            ui, registry);
   if (auto* window = ImGui::FindWindowByName("Axiom Debug Workbench")) {
     window->StateStorage.SetInt(workspaceKey, static_cast<int>(ui.workspace()));
+    window->StateStorage.SetBool(ImHashStr("PX0.AdvancedControls"), ui.advancedControls());
     window->StateStorage.SetBool(scrollKey, ui.activityAutoScroll());
     const auto& draft = ui.cameraDraft();
     window->StateStorage.SetFloat(ImHashStr("PX0.PanDeltaX"), draft.panDeltaX);

@@ -639,6 +639,40 @@ void productionRendererAcceptsFractionalConnectorEndpoints() {
     assert(result.code == BackendSubmissionCode::kAccepted);
 }
 
+void productionRendererAcceptsFractionalStickyDimensions() {
+    const FrameState frame = fixtureFrame(FrameId{926});
+    auto entry = stickyEntry();
+    ReferenceDrawList list = fixtureDrawList(frame, false);
+    list.entries = {entry};
+    list.candidatesExamined = list.visibleRecords = 1U;
+    list.diagnostics = {.visibleIdsProcessed = 1U, .runtimeSceneFindLookups = 1U};
+    canvas::render::RasterSkiaSurfaceProvider provider;
+    assert(provider.resize(kWidth, kHeight).code == BackendSubmissionCode::kAccepted);
+    for (std::uint64_t generation = provider.generation(); generation < frame.surfaceGeneration.value(); ++generation)
+        assert(provider.advanceGeneration().code == BackendSubmissionCode::kAccepted);
+    canvas::render::SkiaRenderer renderer;
+    // View-to-world mapping and snapping legitimately produce fractional sides.
+    for (const double side : {0.5, 13.25, 24.5, 79.99999}) {
+        const canvas::semantic::StickyContent content{side, side};
+        list.entries.front().record.content = content;
+        list.entries.front().command = StickyReferenceCommand{content};
+        const auto result = renderer.renderFrame(provider, FramePlan{frame, list});
+        if (result.code != BackendSubmissionCode::kAccepted) std::cerr << result.message << '\n';
+        assert(result.code == BackendSubmissionCode::kAccepted &&
+               "a fractional Sticky must not reject the entire production frame");
+    }
+    // The old deterministic headless fixture restriction stays independent.
+    SkiaHeadlessBackend legacy(HeadlessRasterConfig{kWidth, kHeight});
+    assert(legacy.submit(FramePlan{frame, list}).code == BackendSubmissionCode::kRejected);
+    assert(legacy.lastIssue() == HeadlessSubmissionIssue::kUnsupportedGeometry);
+    for (const double side : {0.0, -1.0, std::numeric_limits<double>::infinity(),
+                              std::numeric_limits<double>::quiet_NaN()}) {
+        const canvas::semantic::StickyContent content{side, side};
+        list.entries.front().command = StickyReferenceCommand{content};
+        assert(renderer.renderFrame(provider, FramePlan{frame, list}).code == BackendSubmissionCode::kRejected);
+    }
+}
+
 void productionConnectorUsesAntialiasedEdges() {
     FrameState frame = fixtureFrame(FrameId{925});
     auto entry = connectorEntry();
@@ -779,6 +813,7 @@ int main(int argc,char** argv) {
         else if (std::string_view(argv[1]) == "ellipse") ellipseUsesLocalOvalGeometryAfterTransform();
         else if (std::string_view(argv[1]) == "production-fractional") productionRendererAcceptsFractionalSnapBounds();
         else if (std::string_view(argv[1]) == "production-connector-fractional") productionRendererAcceptsFractionalConnectorEndpoints();
+        else if (std::string_view(argv[1]) == "production-sticky-fractional") productionRendererAcceptsFractionalStickyDimensions();
         else if (std::string_view(argv[1]) == "production-connector-aa") productionConnectorUsesAntialiasedEdges();
         else fc01TriangleAndConnectorStyleProbes();
         return 0;

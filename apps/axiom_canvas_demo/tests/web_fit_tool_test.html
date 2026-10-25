@@ -1,0 +1,52 @@
+<!doctype html><meta charset="utf-8"><title>Fit Content survives Web controls</title>
+<iframe id="app" src="../index.html" width="1100" height="850"></iframe><pre id="result">PENDING</pre>
+<script type="module">
+const frame=document.getElementById('app'),results=[];
+frame.addEventListener('load',async()=>{
+  let host;
+  try {
+    const win=frame.contentWindow; host=await win.axiomMinimalReady;
+    const doc=frame.contentDocument,canvas=doc.getElementById('axiom-canvas'),debug=doc.getElementById('debugUi');
+    const assert=(v,message)=>{if(!v)throw new Error(message);};
+    const raf=()=>new Promise(resolve=>win.requestAnimationFrame(resolve));
+    canvas.setPointerCapture=()=>{}; debug.setPointerCapture=()=>{};
+    let clock=1000;
+    const event=(target,type,x,y)=>{
+      const rect=target.getBoundingClientRect();
+      const scaleX=target===debug?rect.width/410:1, scaleY=target===debug?rect.height/650:1;
+      const e=new win.PointerEvent(type,{pointerId:1,pointerType:'mouse',clientX:rect.left+x*scaleX,
+        clientY:rect.top+y*scaleY,buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true});
+      Object.defineProperty(e,'timeStamp',{value:clock+=17}); target.dispatchEvent(e);
+    };
+    const click=async(x,y)=>{event(debug,'pointerdown',x,y);await raf();event(debug,'pointerup',x,y);await host.flush();};
+    const camera=()=>host.observation().camera;
+    const sameCamera=(before,where)=>assert(JSON.stringify(camera())===JSON.stringify(before),
+      `${where} reset fitted camera: ${JSON.stringify(before)} -> ${JSON.stringify(camera())}`);
+    event(canvas,'pointerdown',600,100);event(canvas,'pointermove',700,180);event(canvas,'pointerup',700,180);await host.flush();
+    await host.toggleDebugUi();await host.flush();
+    const tools=[['Select',45,291,1],['Ink',145,291,0],['Eraser',230,291,2],['Text',335,291,4],
+      ['Shape',45,326,null,0],['Sticky',135,326,null,5],['Connector',220,326,null,3]];
+    for(const [name,x,y,tool,preset] of tools) {
+      await click(45,232);const fitted=camera();assert(fitted.scale!==1,'Fit Content fixture must change zoom');
+      await click(x,y);sameCamera(fitted,`Debug UI ${name}`);
+      const state=host.observation();
+      assert(tool===null?state.creationMode && state.creationPreset===preset:!state.creationMode && state.tool===tool,
+        `${name} request must also apply`);
+      results.push({name:`Fit Content / Debug UI ${name}`,result:'PASS'});
+    }
+    // The ordinary host consumer uses the same cancellation boundary.
+    for(const tool of [0,1,2,3]) {
+      await host.control('fit');const fitted=camera();await host.control('tool',tool);
+      sameCamera(fitted,`ordinary consumer tool ${tool}`);
+    }
+    results.push({name:'ordinary consumer tool changes preserve camera',result:'PASS'});
+    await host.control('fit');const fitted=camera();
+    await host.toggleDebugUi();await host.flush();sameCamera(fitted,'hide Debug UI');
+    await host.toggleDebugUi();await host.flush();sameCamera(fitted,'show Debug UI');
+    win.dispatchEvent(new win.Event('blur'));await host.flush();sameCamera(fitted,'focus loss');
+    results.push({name:'UI toggle and focus cancellation preserve camera',result:'PASS'});
+    assert(!host.observation().failure,'Web frame loop failed');
+    document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,observation:host.observation()});
+  }catch(error){document.getElementById('result').textContent=JSON.stringify({status:'FAIL',error:String(error),results,observation:host?.observation()});}
+},{once:true});
+</script>

@@ -287,6 +287,7 @@ if(CANVAS_RENDER_BUILD_TESTS AND BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEA
     endif()
     add_test(NAME G3HeadlessSkia COMMAND axiom_render_headless_skia_tests)
     add_test(NAME FC05ConnectorPendingRaster COMMAND axiom_render_headless_skia_tests connector-pending)
+    add_test(NAME FC05StickyFractionalProduction COMMAND axiom_render_headless_skia_tests production-sticky-fractional)
     add_test(NAME FC01TriangleConnectorRaster COMMAND axiom_render_headless_skia_tests fc01)
 endif()
 

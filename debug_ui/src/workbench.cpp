@@ -1,5 +1,6 @@
 #include "canvas/debug_ui/workbench.hpp"
 #include "imgui.h"
+#include "panels/widgets.hpp"
 
 #include <algorithm>
 
@@ -39,41 +40,69 @@ bool DebugWorkbench::render(const DebugSnapshot& snapshot, DebugControlRouter& c
   }
 
   const float rowHeight = ImGui::GetTextLineHeightWithSpacing();
-  const float chromeHeight = rowHeight * 2.0f + ImGui::GetStyle().WindowPadding.y * 2.0f;
+  const float chromeHeight = rowHeight * ((ui.advancedControls() || snapshot.coherence != SnapshotCoherence::kCoherent) ? 2.0f : 1.0f) + ImGui::GetStyle().WindowPadding.y * 2.0f;
   if (ImGui::BeginChild("##header", ImVec2(0, chromeHeight), ImGuiChildFlags_Borders)) {
     const char* coherence = snapshot.coherence == SnapshotCoherence::kCoherent ? "Coherent" :
         snapshot.coherence == SnapshotCoherence::kMixedGeneration ? "Mixed generation" : "Stale";
-    ImGui::Text("Workbench | runtime %llu | document %llu",
-        static_cast<unsigned long long>(snapshot.stamp.runtimeGeneration),
-        static_cast<unsigned long long>(snapshot.stamp.documentGeneration));
-    ImGui::Text("%s | frame %llu | snapshot #%llu", coherence,
-        static_cast<unsigned long long>(snapshot.stamp.frameId),
-        static_cast<unsigned long long>(snapshot.stamp.snapshotSequence));
-  }
-  ImGui::EndChild();
-
-  const float bodyHeight = (std::max)(rowHeight * 6.0f,
-      ImGui::GetContentRegionAvail().y - chromeHeight - ImGui::GetStyle().ItemSpacing.y);
-  const float sidebarWidth = std::clamp(width * 0.26f, 110.0f, 170.0f);
-  if (ImGui::BeginChild("##sidebar", ImVec2(sidebarWidth, bodyHeight), ImGuiChildFlags_Borders)) {
-    for (std::size_t i = 0; i < kWorkspaceLabels.size(); ++i) {
-      const auto workspace = static_cast<WorkspaceId>(i);
-      if (ImGui::Selectable(workspaceLabel(workspace).data(), ui.workspace() == workspace)) {
-        ui.setWorkspace(workspace);
-      }
+    if (ui.advancedControls()) {
+      ImGui::Text("Workbench | runtime %llu | document %llu",
+          static_cast<unsigned long long>(snapshot.stamp.runtimeGeneration),
+          static_cast<unsigned long long>(snapshot.stamp.documentGeneration));
+      ImGui::Text("%s | frame %llu | snapshot #%llu", coherence,
+          static_cast<unsigned long long>(snapshot.stamp.frameId),
+          static_cast<unsigned long long>(snapshot.stamp.snapshotSequence));
+    } else {
+      ImGui::TextUnformatted("Axiom Debug Workbench");
+      if (snapshot.coherence != SnapshotCoherence::kCoherent)
+        ImGui::TextColored(ImVec4(1,0.6F,0.2F,1), "%s: controls unavailable", coherence);
     }
   }
   ImGui::EndChild();
-  ImGui::SameLine();
+
+  const bool compact = width < 650.0F;
+  const auto navigation = [&] {
+    bool first = true;
+    for (const auto workspace : {WorkspaceId::kControl, WorkspaceId::kInspect, WorkspaceId::kPerformance}) {
+      if (compact ? panel_detail::flowButton(workspaceLabel(workspace).data(), first, ui.workspace() == workspace)
+                  : ImGui::Selectable(workspaceLabel(workspace).data(), ui.workspace() == workspace))
+        ui.setWorkspace(workspace);
+    }
+    bool advanced = ui.advancedControls();
+    if (ImGui::Checkbox("Advanced", &advanced)) ui.setAdvancedControls(advanced);
+    if (advanced) {
+      bool advancedFirst=true;
+      for (const auto workspace : {WorkspaceId::kDashboard, WorkspaceId::kRuntime}) {
+        if (compact ? panel_detail::flowButton(workspaceLabel(workspace).data(), advancedFirst, ui.workspace() == workspace)
+                    : ImGui::Selectable(workspaceLabel(workspace).data(), ui.workspace() == workspace))
+          ui.setWorkspace(workspace);
+      }
+    }
+  };
+  if (compact) navigation();
+  const float bodyHeight = (std::max)(rowHeight * 4.0F,
+      ImGui::GetContentRegionAvail().y - chromeHeight - ImGui::GetStyle().ItemSpacing.y);
+  if (!compact) {
+    const float sidebarWidth = std::clamp(width * 0.20F, 110.0F, 150.0F);
+    if (ImGui::BeginChild("##sidebar", ImVec2(sidebarWidth, bodyHeight), ImGuiChildFlags_Borders)) navigation();
+    ImGui::EndChild();
+    ImGui::SameLine();
+  }
   if (ImGui::BeginChild("##content", ImVec2(0, bodyHeight), ImGuiChildFlags_Borders)) {
     ImGui::TextUnformatted(workspaceLabel(ui.workspace()).data());
     ImGui::Separator();
     bool rendered = false;
     DebugPanelContext context{snapshot, controls, ui};
-    for (const auto& contribution : registry.contributions(ui.workspace())) {
-      if (contribution.visible != nullptr && !contribution.visible(snapshot)) continue;
+    const auto render = [&](const PanelContribution& contribution) {
+      if (contribution.visible != nullptr && !contribution.visible(snapshot)) return;
       contribution.render(context);
       rendered = true;
+    };
+    if (ui.workspace() == WorkspaceId::kControl) {
+      for (const auto slot : {PanelSlot::kHistory, PanelSlot::kView, PanelSlot::kTools, PanelSlot::kInk, PanelSlot::kFeature})
+        for (const auto& contribution : registry.contributions(ui.workspace()))
+          if (contribution.slot == slot) render(contribution);
+    } else {
+      for (const auto& contribution : registry.contributions(ui.workspace())) render(contribution);
     }
     if (!rendered) {
       ImGui::TextWrapped("No panels registered for %s (not yet migrated).",
@@ -87,10 +116,13 @@ bool DebugWorkbench::render(const DebugSnapshot& snapshot, DebugControlRouter& c
       ImGui::TextUnformatted("No control activity");
     } else {
       const auto& entry = snapshot.activity.entries.back();
-      ImGui::Text("Activity #%llu | request %llu | %s",
+      if (ui.advancedControls()) ImGui::Text("Activity #%llu | request %llu | %s",
           static_cast<unsigned long long>(entry.sequence),
           static_cast<unsigned long long>(entry.requestId), activityLabel(entry.state));
-      ImGui::TextUnformatted(entry.action.c_str());
+      const bool failed = entry.state != DebugActivityState::kApplied && entry.state != DebugActivityState::kPending;
+      if (failed) ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1,0.6F,0.2F,1));
+      ImGui::TextWrapped("%s: %s", entry.action.c_str(), activityLabel(entry.state));
+      if (failed) ImGui::PopStyleColor();
     }
   }
   ImGui::EndChild();

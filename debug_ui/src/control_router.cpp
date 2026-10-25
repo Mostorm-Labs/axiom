@@ -286,6 +286,29 @@ canvas::runtime::StickySnapshot DebugControlRouter::selectedSticky() const {
   return runtime_ ? runtime_->readSelectedSticky() : canvas::runtime::StickySnapshot{};
 }
 
+void DebugControlRouter::prepareConnectorDefaults(std::uint64_t epoch, bool retry) {
+  if (!runtime_ || epoch == 0 || (!retry && connectorDefaultsEpoch_ == epoch)) return;
+  connectorDefaultsEpoch_ = epoch;
+  connectorDefaultsReady_ = false;
+  if (runtime_->readConnectorRoutingPreset() == canvas::semantic::ConnectorRouting::kOrthogonal) {
+    connectorDefaultsReady_ = true;
+    return;
+  }
+  canvas::runtime::ConnectorRoutingRequest request{};
+  request.routing = canvas::semantic::ConnectorRouting::kOrthogonal;
+  const auto receipt = runtime_->setConnectorRouting(request);
+  connectorDefaultsReady_ = receipt.state == canvas::runtime::ConnectorCommandState::kApplied &&
+      runtime_->readConnectorRoutingPreset() == request.routing;
+  if (!connectorDefaultsReady_) connectorStickyStatus_ = "Connector setup failed; retry when Runtime is ready";
+}
+canvas::runtime::CanvasToolKind DebugControlRouter::canvasTool() const {
+  if (runtime_) {
+    const auto targets = runtime_->mountedCanvasTargets();
+    if (!targets.empty()) return runtime_->readCanvasControlSnapshot(targets.front()).tool;
+  }
+  return canvas::runtime::CanvasToolKind::kInk;
+}
+
 canvas::runtime::ConnectorCommandReceipt DebugControlRouter::setConnectorRouting(
     canvas::semantic::ConnectorRouting routing, bool selected) noexcept {
   if(!runtime_)return {};
@@ -298,6 +321,13 @@ canvas::runtime::ConnectorCommandReceipt DebugControlRouter::setConnectorRouting
   const auto receipt=runtime_->setConnectorRouting(request);
   connectorStickyStatus_=receipt.state==canvas::runtime::ConnectorCommandState::kApplied
       ? "Connector routing: applied" : "Connector routing: rejected (no route / invalid target / budget)";
+  if (activity_) {
+    DebugActivityEntry entry{};
+    entry.action = selected ? "Convert connector to orthogonal" : "New connector routing";
+    entry.state = receipt.state == canvas::runtime::ConnectorCommandState::kApplied
+        ? DebugActivityState::kApplied : DebugActivityState::kRejected;
+    activity_->record(std::move(entry));
+  }
   return receipt;
 }
 canvas::semantic::ConnectorRouting DebugControlRouter::connectorRoutingPreset() const {
@@ -428,6 +458,13 @@ canvas::runtime::SurfaceModeReceipt DebugControlRouter::setCanonicalSurfaceMode(
 
 void DebugControlRouter::refreshReceipts() noexcept {
   if (runtime_ != nullptr) {
+    for (auto it = pendingText_.begin(); it != pendingText_.end();) {
+      const auto receipt = runtime_->textIntentReceipt(it->second.client, it->first);
+      if (!receipt || receipt->status == canvas::runtime::TextStatus::kQueued ||
+          receipt->status == canvas::runtime::TextStatus::kObserved) { ++it; continue; }
+      recordText(it->second.action.c_str(), *receipt);
+      it = pendingText_.erase(it);
+    }
     for (auto it = pendingProduct_.begin(); it != pendingProduct_.end();) {
       const auto terminal = runtime_->canvasControlReceipt(it->first);
       if (!terminal.has_value() || terminal->state == canvas::runtime::CanvasControlReceiptState::kQueued) {
@@ -540,22 +577,33 @@ void DebugControlRouter::requestImageFile(bool replace) {
  const auto targets = runtime_->mountedCanvasTargets(); if (targets.empty()) return;
  const auto selected = selectedImage();
  if (replace && (!selected.available || !selected.editable)) return;
- imageFileRequest_ = ImageFileRequest{replace, selected, targets.front()};
+ imageFileRequest_ = ImageFileRequest{replace, selected, targets.front(), nextRequestId(), false};
  imageStatus_ = "Choose a PNG, JPEG or WebP file";
 }
 void DebugControlRouter::processImageFileRequest(const std::function<ImageFileResult()>& chooseFile) {
- if (!imageFileRequest_) return;
+ const auto token = beginImageFileRequest();
+ if (!token) return;
+ ImageFileResult file;
+ if (chooseFile) file = chooseFile();
+ else file.error = "File picker unavailable in this host";
+ (void)completeImageFileRequest(token, file);
+}
+std::uint64_t DebugControlRouter::beginImageFileRequest() {
+ if (!imageFileRequest_ || imageFileRequest_->dispatched) return 0;
+ imageFileRequest_->dispatched = true;
+ return imageFileRequest_->token;
+}
+bool DebugControlRouter::completeImageFileRequest(std::uint64_t token, const ImageFileResult& file) {
+ if (!imageFileRequest_ || !imageFileRequest_->dispatched || imageFileRequest_->token != token) return false;
  const auto request = *imageFileRequest_; imageFileRequest_.reset();
- if (!chooseFile) { imageStatus_ = "File picker unavailable in this host"; return; }
- const auto file = chooseFile();
- if (file.cancelled) { imageStatus_ = "File selection cancelled"; return; }
- if (!file.error.empty()) { imageStatus_ = file.error; return; }
+ if (file.cancelled) { imageStatus_ = "File selection cancelled"; return true; }
+ if (!file.error.empty()) { imageStatus_ = file.error; return true; }
  const auto targets = runtime_->mountedCanvasTargets();
- if (targets.empty() || targets.front() != request.target) { imageStatus_ = "Image request rejected: binding changed"; return; }
+ if (targets.empty() || targets.front() != request.target) { imageStatus_ = "Image request rejected: binding changed"; return true; }
  if (request.replace) {
    const auto current = selectedImage();
    if (!current.editable || current.objectId != request.selected.objectId || current.content != request.selected.content) {
-     imageStatus_ = "Image request rejected: selection changed"; return;
+     imageStatus_ = "Image request rejected: selection changed"; return true;
    }
    canvas::runtime::ImageReplaceRequest r; r.objectId = request.selected.objectId;
    r.bytes = file.bytes; r.mimeType = file.mimeType;
@@ -569,6 +617,7 @@ void DebugControlRouter::processImageFileRequest(const std::function<ImageFileRe
    r.transform.ty = (100.0 - camera.translationY) / scale;
    recordImage("Import image", runtime_->importImage(r));
  }
+ return true;
 }
 void DebugControlRouter::recordImage(const char* action, const canvas::runtime::ImageCommandReceipt& r) {
  using R = canvas::runtime::ImageFailureReason;
@@ -603,13 +652,39 @@ void DebugControlRouter::finishImageCrop(bool commit) {
  const auto crop = imageCrop();
  recordImage(commit ? "Crop Done" : "Crop Cancel", commit ? runtime_->commitImageCrop(crop.cropToken) : runtime_->cancelImageCrop(crop.cropToken));
 }
+void DebugControlRouter::recordText(const char* action, const canvas::runtime::TextReceipt& receipt) {
+ if (!activity_) return;
+ DebugActivityEntry entry{}; entry.action = action; entry.requestId = receipt.request;
+ entry.runtimeGeneration = frame_.stamp.runtimeGeneration;
+ entry.documentGeneration = frame_.stamp.documentGeneration;
+ using S = canvas::runtime::TextStatus;
+ switch (receipt.status) {
+ case S::kApplied: entry.state = DebugActivityState::kApplied; break;
+ case S::kQueued: case S::kObserved: entry.state = DebugActivityState::kPending; break;
+ case S::kUnsupported: entry.state = DebugActivityState::kUnsupported; break;
+ case S::kStale: entry.state = DebugActivityState::kStaleGeneration; break;
+ case S::kExpired: entry.state = DebugActivityState::kExpired; break;
+ case S::kBackpressure: entry.state = DebugActivityState::kQueueFull; break;
+ case S::kBusy: entry.state = DebugActivityState::kUnavailable; break;
+ default: entry.state = DebugActivityState::kRejected; break;
+ }
+ activity_->record(std::move(entry));
+}
 canvas::runtime::TextReceipt DebugControlRouter::setTextFormat(const canvas::runtime::TextFormatPatch& patch){
  if(!runtime_ || runtime_->mountedCanvasTargets().empty())return {};
- canvas::runtime::TextIntent request;request.kind=canvas::runtime::TextIntentKind::kFormat;request.clientId=0xD003;request.requestId=nextRequestId();request.target=runtime_->mountedCanvasTargets().front();const auto editor=runtime_->readTextEditor();request.token=editor.token;request.object=editor.formatObject;request.format=patch;return runtime_->submitTextIntent(request);
+ canvas::runtime::TextIntent request;request.kind=canvas::runtime::TextIntentKind::kFormat;request.clientId=0xD003;request.requestId=nextRequestId();request.target=runtime_->mountedCanvasTargets().front();const auto editor=runtime_->readTextEditor();request.token=editor.token;request.object=editor.formatObject;request.format=patch;
+ const auto receipt=runtime_->submitTextIntent(request); recordText("text-format", receipt);
+ if (receipt.status==canvas::runtime::TextStatus::kQueued || receipt.status==canvas::runtime::TextStatus::kObserved)
+   pendingText_.emplace(request.requestId, PendingText{request.clientId,"text-format"});
+ return receipt;
 }
 canvas::runtime::TextEditorSnapshot DebugControlRouter::textEditor() const {return runtime_?runtime_->readTextEditor():canvas::runtime::TextEditorSnapshot{};}
 canvas::runtime::TextReceipt DebugControlRouter::setTextWidth(double width){
  if(!runtime_ || runtime_->mountedCanvasTargets().empty())return {};
- canvas::runtime::TextIntent request;request.kind=canvas::runtime::TextIntentKind::kSetWidth;request.clientId=0xD002;request.requestId=nextRequestId();request.target=runtime_->mountedCanvasTargets().front();request.token=runtime_->readTextEditor().token;request.width=width;return runtime_->submitTextIntent(request);
+ canvas::runtime::TextIntent request;request.kind=canvas::runtime::TextIntentKind::kSetWidth;request.clientId=0xD002;request.requestId=nextRequestId();request.target=runtime_->mountedCanvasTargets().front();request.token=runtime_->readTextEditor().token;request.width=width;
+ const auto receipt=runtime_->submitTextIntent(request); recordText("text-width", receipt);
+ if (receipt.status==canvas::runtime::TextStatus::kQueued || receipt.status==canvas::runtime::TextStatus::kObserved)
+   pendingText_.emplace(request.requestId, PendingText{request.clientId,"text-width"});
+ return receipt;
 }
 }

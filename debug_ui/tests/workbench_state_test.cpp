@@ -18,6 +18,26 @@ struct Providers final : canvas::runtime::RuntimeFacade,
                          canvas::runtime::AxiomDebugControl {
     mutable std::vector<int> reads;
     int mutations = 0;
+    int routingWrites = 0;
+    canvas::semantic::ConnectorRouting routing = canvas::semantic::ConnectorRouting::kStraight;
+    canvas::semantic::ConnectorRouting readConnectorRoutingPreset() const override { return routing; }
+    canvas::runtime::ConnectorCommandReceipt setConnectorRouting(const canvas::runtime::ConnectorRoutingRequest& request) override {
+        ++routingWrites; routing = request.routing;
+        canvas::runtime::ConnectorCommandReceipt receipt{};
+        receipt.state = canvas::runtime::ConnectorCommandState::kApplied;
+        receipt.reason = canvas::runtime::ConnectorFailureReason::kNone;
+        return receipt;
+    }
+    canvas::runtime::TextEditorSnapshot editor{};
+    std::vector<canvas::runtime::CanvasTargetKey> mountedCanvasTargets() const override { return {{11,1,14,15}}; }
+    int textCalls = 0;
+    canvas::runtime::TextIntent lastText{};
+    canvas::runtime::TextReceipt submitTextIntent(const canvas::runtime::TextIntent& request) override {
+        ++textCalls; lastText = request;
+        canvas::runtime::TextReceipt receipt{}; receipt.status = canvas::runtime::TextStatus::kApplied;
+        receipt.request = request.requestId; return receipt;
+    }
+    canvas::runtime::TextEditorSnapshot readTextEditor() const override { return editor; }
     canvas::runtime::ProductControlRequest lastProduct{};
     canvas::runtime::AxiomDebugCommand lastAxiom{};
     canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
@@ -160,7 +180,7 @@ std::string renderPanel(const PanelRegistry& registry,
 }
 } // namespace
 
-int main() {
+int main(int argc, char**) {
     ImGui::CreateContext();
     auto& io = ImGui::GetIO();
     io.DisplaySize = ImVec2(900, 640);
@@ -170,16 +190,66 @@ int main() {
     int width = 0, height = 0;
     io.Fonts->GetTexDataAsAlpha8(&pixels, &width, &height);
     Providers providers;
+    if (argc > 1) {
+        DebugSnapshot snapshot{};
+        snapshot.coherence = SnapshotCoherence::kCoherent;
+        snapshot.product.availability = DebugAvailability::kAvailable;
+        snapshot.stamp.runtimeGeneration = 11;
+        snapshot.stamp.documentGeneration = 12;
+        PanelRegistry panels;
+        registerBuiltinPanels(panels);
+        DebugActivityLog activity;
+        DebugControlRouter controls(&providers, nullptr, nullptr, &activity);
+        DebugUiSessionState ui;
+        ui.setAdvancedControls(true); ui.setWorkspace(WorkspaceId::kRuntime);
+        ui.setAdvancedControls(false);
+        assert(ui.workspace() == WorkspaceId::kControl);
+        auto text = renderPanel(panels, WorkspaceId::kControl, PanelSlot::kTools, snapshot, controls, ui);
+        assert(text.find("Text tool") != std::string::npos);
+        assert(text.find("Create Sticky") == std::string::npos);
+        assert(text.find("Create Connector") == std::string::npos);
+        assert(text.find("New connector routing") == std::string::npos);
+        assert(text.find("Replace selected image") == std::string::npos);
+        providers.editor.phase = canvas::runtime::TextPhase::kEditing;
+        providers.editor.format.fontSize = 18;
+        providers.editor.format.color = std::array<float,4>{0.2F,0.8F,0.3F,1.0F};
+        providers.editor.format.font = canvas::foundation::ObjectId::fromUint64(99);
+        providers.editor.fonts.push_back({canvas::foundation::ObjectId::fromUint64(4), "Known font"});
+        text = renderPanel(panels, WorkspaceId::kControl, PanelSlot::kTools, snapshot, controls, ui);
+        assert(text.find("Custom (18") != std::string::npos);
+        assert(text.find("Custom color") != std::string::npos);
+        assert(text.find("Unavailable font") != std::string::npos);
+        assert(providers.mutations == 0);
+        providers.editor.format.bold = true; // aggregate readback: some selected text is bold
+        (void)renderPanel(panels, WorkspaceId::kControl, PanelSlot::kTools, snapshot, controls, ui, "Bold");
+        assert(providers.textCalls == 1 && providers.lastText.format.bold == false);
+        assert(providers.editor.format.bold == true); // immediate receipt never replaces readback
+        assert(!activity.snapshot().entries.empty());
+        assert(activity.snapshot().entries.back().action == "text-format");
+        (void)renderPanel(panels, WorkspaceId::kControl, PanelSlot::kTools, snapshot, controls, ui, "Select");
+        assert(providers.lastProduct.canvasControl->payload.tool == canvas::runtime::CanvasToolKind::kSelect);
+        const auto beforeUnavailable = providers.mutations;
+        snapshot.product.availability = DebugAvailability::kUnavailable;
+        (void)renderPanel(panels, WorkspaceId::kControl, PanelSlot::kTools, snapshot, controls, ui, "Shape");
+        assert(providers.mutations == beforeUnavailable && !ui.controlSubmittedThisFrame());
+        ImGui::DestroyContext();
+        return 0;
+    }
     DebugController controller(
         {&providers, &providers, &providers, &providers, &providers, &providers, nullptr});
-    assert(controller.uiState().workspace() == WorkspaceId::kDashboard);
+    assert(controller.uiState().workspace() == WorkspaceId::kControl);
+    controller.uiState().setAdvancedControls(true);
+    assert(providers.routingWrites == 1 && providers.routing == canvas::semantic::ConnectorRouting::kOrthogonal);
+    // Another public consumer may choose Straight; merely rendering must not override it.
+    providers.routing = canvas::semantic::ConnectorRouting::kStraight;
+    providers.reads.clear();
     for (int i = 0; i < 6; ++i) {
         controller.uiState().setWorkspace(static_cast<WorkspaceId>(i));
         startFrame();
         assert(!controller.buildImGuiFrame());
         const auto text = finishFrame();
         for (const auto label : kWorkspaceLabels)
-            assert(text.find(label) != std::string::npos);
+            if (label != "Scenarios") assert(text.find(label) != std::string::npos);
         assert(text.find("runtime 11") != std::string::npos);
         assert(text.find("document 12") != std::string::npos);
         assert(text.find("Coherent") != std::string::npos);
@@ -208,12 +278,9 @@ int main() {
         }
         if (i == 3) {
             for (const auto* label : {"Document",
-                                      "Scene",
                                       "ARC",
                                       "Render",
                                       "Surface",
-                                      "Resources",
-                                      "Feature Diagnostics",
                                       "Advanced Actions"})
                 assert(text.find(label) != std::string::npos);
         }
@@ -221,10 +288,7 @@ int main() {
             for (const auto* label : {"Live Metrics",
                                       "Input / ARC",
                                       "Rendering",
-                                      "Memory & Cache",
-                                      "Trace",
-                                      "GPU Timing",
-                                      "Feature Metrics"})
+                                      "Rendering"})
                 assert(text.find(label) != std::string::npos);
         }
         const auto snapshot = controller.snapshot();
@@ -236,6 +300,7 @@ int main() {
         assert(providers.reads == std::vector<int>({1, 2, 3, 4, 5, 1}));
         providers.reads.clear();
         assert(providers.mutations == 0);
+        assert(providers.routingWrites == 1 && providers.routing == canvas::semantic::ConnectorRouting::kStraight);
     }
     DebugActivityLog activity;
     DebugControlRouter router(&providers, nullptr, nullptr, &activity);
@@ -246,6 +311,7 @@ int main() {
     assert(registry.add({WorkspaceId::kControl, PanelSlot::kFeature, 1, hidden, mustNotRender}));
     DebugUiSessionState ui;
     ui.setWorkspace(WorkspaceId::kControl);
+    ui.setAdvancedControls(true);
     DebugWorkbench workbench;
     startFrame();
     assert(workbench.render(snapshot, router, ui, registry));

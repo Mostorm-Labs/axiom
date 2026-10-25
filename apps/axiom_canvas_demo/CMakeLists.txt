@@ -102,15 +102,23 @@ if(EMSCRIPTEN)
         OUTPUT_VARIABLE AXIOM_WEB_SOURCE_REVISION OUTPUT_STRIP_TRAILING_WHITESPACE)
     file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/platform/web/host.js" AXIOM_WEB_HOST_HASH)
     file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/platform/web/text_input.js" AXIOM_WEB_TEXT_HASH)
+    file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/platform/web/image_input.js" AXIOM_WEB_IMAGE_HASH)
     string(SHA256 AXIOM_WEB_ASSET_REVISION
-        "${AXIOM_WEB_SOURCE_REVISION}:${AXIOM_WEB_HOST_HASH}:${AXIOM_WEB_TEXT_HASH}")
+        "${AXIOM_WEB_SOURCE_REVISION}:${AXIOM_WEB_HOST_HASH}:${AXIOM_WEB_TEXT_HASH}:${AXIOM_WEB_IMAGE_HASH}")
     configure_file(platform/web/index.html
         ${CMAKE_CURRENT_BINARY_DIR}/index.html @ONLY)
     configure_file(platform/web/text_input.js ${CMAKE_CURRENT_BINARY_DIR}/text_input.js COPYONLY)
+    configure_file(platform/web/image_input.js ${CMAKE_CURRENT_BINARY_DIR}/image_input.js COPYONLY)
     configure_file(platform/web/host.js ${CMAKE_CURRENT_BINARY_DIR}/host.js COPYONLY)
     configure_file(tests/web_fc02_text_test.html ${CMAKE_CURRENT_BINARY_DIR}/tests/web_fc02_text_test.html COPYONLY)
     configure_file(tests/web_minimal_runtime_test.html
         ${CMAKE_CURRENT_BINARY_DIR}/tests/web_minimal_runtime_test.html COPYONLY)
+    configure_file(tests/web_sticky_fractional_test.html
+        ${CMAKE_CURRENT_BINARY_DIR}/tests/web_sticky_fractional_test.html COPYONLY)
+    configure_file(tests/web_fit_tool_test.html
+        ${CMAKE_CURRENT_BINARY_DIR}/tests/web_fit_tool_test.html COPYONLY)
+    configure_file(tests/web_fit_scene_test.html
+        ${CMAKE_CURRENT_BINARY_DIR}/tests/web_fit_scene_test.html COPYONLY)
     configure_file(${AXIOM_HOST_FONT_ROOT}/LICENSE.txt ${CMAKE_CURRENT_BINARY_DIR}/axiom-font.LICENSE.txt COPYONLY)
     configure_file(${AXIOM_HOST_FONT_ROOT}/NOTICE.txt ${CMAKE_CURRENT_BINARY_DIR}/axiom-font.NOTICE.txt COPYONLY)
     target_link_options(axiom_canvas_demo_web PRIVATE
@@ -121,5 +129,5 @@ if(EMSCRIPTEN)
         "-sMODULARIZE=1" "-sEXPORT_ES6=1" "-sEXPORT_NAME=createAxiomCanvasModule"
         "-sENVIRONMENT=web" "-sALLOW_MEMORY_GROWTH=1" "-sMIN_WEBGL_VERSION=2" "-sMAX_WEBGL_VERSION=2"
         "-sEXPORTED_FUNCTIONS=['_malloc','_free','_axiom_web_text_snapshot','_axiom_web_text_intent_json','_axiom_web_text_intent_receipt','_axiom_web_font_catalog','_axiom_web_font_status','_axiom_web_text_intent_status','_axiom_web_text_pump','_axiom_web_text_input','_axiom_web_text_status','_axiom_web_text_tool']"
-        "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8','stringToUTF16']")
+        "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8','stringToUTF16','HEAPU8']")
 endif()

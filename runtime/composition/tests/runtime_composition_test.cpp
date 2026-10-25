@@ -557,7 +557,115 @@ void terminalEventsCannotPublishOrAdvanceBindings() {
   }
 }
 
+void cancelPointersKeepsViewport() {
+  using namespace canvas;
+  runtime::RuntimeComposition composition;
+  assert(composition.open() && composition.bindSurface(800U, 600U));
+  assert(composition.registerSource(17U));
+  auto& facade = composition.controlFacade();
+  std::uint64_t request = 0, sequence = 0;
+  const auto control = [&](runtime::CanvasControlPayload payload) {
+    runtime::CanvasControlRequest command{};
+    command.clientId = 0xFA12; command.requestId = ++request;
+    command.target = facade.mountedCanvasTargets().front(); command.payload = payload;
+    assert(facade.submitCanvasControl(command).state == runtime::ProductControlState::kQueued);
+    assert(composition.ownerPump());
+    assert(facade.canvasControlReceipt({command.clientId,command.requestId})->state == runtime::CanvasControlReceiptState::kApplied);
+  };
+  const auto pointer = [&](input::PointerPhase phase,float x,float y) {
+    input::PlatformPointerBatch batch;
+    ++sequence;
+    batch.samples.push_back({17U,1U,sequence,sequence*1000000U,x,y,0,0,0,{}, {},
+        input::SampleProvenance::kConfirmedCurrent,phase});
+    assert(composition.submit(batch));
+  };
+  runtime::CanvasControlPayload payload{};
+  payload.kind = runtime::CanvasControlPayloadKind::kSelectCreationPreset;
+  payload.creationPreset = runtime::CanvasCreationPreset::kRectangle; control(payload);
+  pointer(input::PointerPhase::kDown,50,60); pointer(input::PointerPhase::kUp,130,120);
+  payload = {}; payload.kind = runtime::CanvasControlPayloadKind::kFit; control(payload);
+  const auto fitted = facade.readRuntimeState().camera;
+  assert(fitted.scale > 1.0F);
+  const auto unchanged = [&](const runtime::CameraState& before) {
+    const auto after = facade.readRuntimeState().camera;
+    assert(after.scale == before.scale && after.translationX == before.translationX &&
+           after.translationY == before.translationY && "cancelling input must preserve the current camera");
+  };
+  for (const auto tool : {runtime::CanvasToolKind::kSelect,runtime::CanvasToolKind::kInk,
+                         runtime::CanvasToolKind::kEraser,runtime::CanvasToolKind::kPan,runtime::CanvasToolKind::kText}) {
+    assert(composition.cancelAllPointers()); unchanged(fitted);
+    payload = {}; payload.kind = runtime::CanvasControlPayloadKind::kSelectTool; payload.tool = tool;
+    control(payload); unchanged(fitted);
+  }
+  for (const auto preset : {runtime::CanvasCreationPreset::kRectangle,runtime::CanvasCreationPreset::kEllipse,
+                           runtime::CanvasCreationPreset::kTriangle,runtime::CanvasCreationPreset::kLine,
+                           runtime::CanvasCreationPreset::kArrow,runtime::CanvasCreationPreset::kSticky}) {
+    assert(composition.cancelAllPointers());
+    payload = {}; payload.kind = runtime::CanvasControlPayloadKind::kSelectCreationPreset; payload.creationPreset = preset;
+    control(payload); unchanged(fitted);
+  }
+  // Active pan cancellation keeps the view already displayed to the user too.
+  payload = {}; payload.kind = runtime::CanvasControlPayloadKind::kSelectTool; payload.tool = runtime::CanvasToolKind::kPan;
+  control(payload);
+  pointer(input::PointerPhase::kDown,300,300); pointer(input::PointerPhase::kMove,350,340);
+  const auto panned = facade.readRuntimeState().camera;
+  assert(panned.translationX != fitted.translationX);
+  assert(composition.cancelAllPointers()); unchanged(panned);
+  assert(composition.semanticObjectCount() == 1);
+}
+
+void fitIncludesEarlierUnchangedObjects() {
+  using namespace canvas;
+  runtime::RuntimeComposition composition;
+  assert(composition.open() && composition.bindSurface(800U,600U) && composition.registerSource(18U));
+  assert(composition.setPlatformPresentationDeferred(true));
+  auto& facade = composition.controlFacade();
+  runtime::ConnectorRoutingRequest routing{}; routing.routing=semantic::ConnectorRouting::kOrthogonal;
+  assert(facade.setConnectorRouting(routing).state==runtime::ConnectorCommandState::kApplied);
+  std::uint64_t request=0,sequence=0;
+  const auto control = [&](runtime::CanvasControlPayload payload) {
+    runtime::CanvasControlRequest command{};
+    command.clientId=0xFA13; command.requestId=++request;
+    command.target=facade.mountedCanvasTargets().front(); command.payload=payload;
+    assert(facade.submitCanvasControl(command).state==runtime::ProductControlState::kQueued);
+    assert(composition.ownerPump());
+    assert(facade.canvasControlReceipt({command.clientId,command.requestId})->state==runtime::CanvasControlReceiptState::kApplied);
+  };
+  const auto pointer = [&](input::PointerPhase phase,float x,float y) {
+    input::PlatformPointerBatch batch; ++sequence;
+    batch.samples.push_back({18U,1U,sequence,sequence*1000000U,x,y,0,0,0,{}, {},
+        input::SampleProvenance::kConfirmedCurrent,phase});
+    assert(composition.submit(batch));
+  };
+  runtime::CanvasControlPayload payload{};
+  payload.kind=runtime::CanvasControlPayloadKind::kSelectCreationPreset;
+  payload.creationPreset=runtime::CanvasCreationPreset::kRectangle; control(payload);
+  std::vector<foundation::WorldRect> originals;
+  for(unsigned i=0;i<7;++i) {
+    const float x=20.0F+180.0F*(i%4),y=40.0F+200.0F*(i/4);
+    pointer(input::PointerPhase::kDown,x,y); pointer(input::PointerPhase::kUp,x+90,y+90);
+    originals.push_back({x,y,x+90,y+90});
+  }
+  payload={}; payload.kind=runtime::CanvasControlPayloadKind::kSelectTool;
+  payload.tool=runtime::CanvasToolKind::kSelect; control(payload);
+  pointer(input::PointerPhase::kDown,425,285); pointer(input::PointerPhase::kUp,425,285);
+  // The selected Shape's right attachment creates a new Shape + Connector.
+  pointer(input::PointerPhase::kDown,498,285); pointer(input::PointerPhase::kUp,498,285);
+  assert(composition.semanticObjectCount()==9);
+  payload={}; payload.kind=runtime::CanvasControlPayloadKind::kFit; control(payload);
+  const auto fit=facade.readRuntimeState().camera;
+  assert(fit.scale<2.0F && "Fit after attachment creation must include the entire existing scene");
+  for(const auto& bounds:originals) {
+    assert(bounds.left*fit.scale+fit.translationX>=31.9F);
+    assert(bounds.top*fit.scale+fit.translationY>=31.9F);
+    assert(bounds.right*fit.scale+fit.translationX<=768.1F);
+    assert(bounds.bottom*fit.scale+fit.translationY<=568.1F);
+  }
+}
+
 int main(int argc, char** argv) {
+  if (argc > 1 && std::string(argv[1]) == "fit-full-scene") { fitIncludesEarlierUnchangedObjects(); return 0; }
+  if (argc > 1 && std::string(argv[1]) == "cancel-camera") { cancelPointersKeepsViewport(); return 0; }
   if (argc > 1 && std::string(argv[1]) == "r1") { canonicalFeedbackCannotQualifyAnotherInstance(); return 0; }
   if (argc > 1 && std::string(argv[1]) == "r2") { reentrantCloseCannotBecomeLost(); return 0; }
   canonicalFeedbackCannotQualifyAnotherInstance();

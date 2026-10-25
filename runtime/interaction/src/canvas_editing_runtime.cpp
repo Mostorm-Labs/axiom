@@ -1261,7 +1261,9 @@ void CanvasEditingRuntime::cancelAllPointers() noexcept {
   }
   keyedStrokeIds_.clear();
   coordinator_->reset();
-  viewportController_->reset();
+  // Cancel contacts, not the view. Focus/tool/surface transitions also use
+  // this path; preserve the displayed camera and its monotonic generation.
+  viewportController_->endGesture();
   interaction_->cancelKeyedSessions(interaction::CancellationReason::kSourceLost);
   dispatchRuntime_.cancelAll();
   for (auto& [pointer, session] : brushSessions_) {
@@ -3088,10 +3090,14 @@ bool CanvasEditingRuntime::fitViewportToContent(
     return false;
   }
   std::optional<foundation::WorldRect> target = requestedTarget;
-  if (!target.has_value() && runtimeSceneHost_ != nullptr) {
-    const auto bounds = runtimeSceneHost_->publishedBounds();
-    if (!runtimeSceneHost_->read().records().empty() && bounds.isFiniteAndOrdered()) {
-      target = bounds;
+  if (!target.has_value() && sceneCoordinator_ != nullptr) {
+    // Fit the same complete derived scene used for drawing. The compatibility
+    // Scene's staged publication bounds can describe only the latest update
+    // (or unresolved Connector geometry), rather than the document extent.
+    for (const auto& record : sceneCoordinator_->runtimeScene().records()) {
+      if (!record.worldBounds.isFiniteAndOrdered()) return false;
+      target = target.has_value() ? foundation::unionRects(*target, record.worldBounds)
+                                 : record.worldBounds;
     }
   }
   if (!target.has_value()) return false;

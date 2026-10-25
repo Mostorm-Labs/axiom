@@ -1,0 +1,66 @@
+<!doctype html><meta charset="utf-8"><title>Web fractional Sticky / tool switching regression</title>
+<iframe id="app" src="../index.html" width="1100" height="850"></iframe>
+<pre id="result">PENDING</pre>
+<script type="module">
+const frame=document.getElementById('app'), results=[];
+frame.addEventListener('load',async()=>{
+  let host;
+  try {
+    const win=frame.contentWindow; host=await win.axiomMinimalReady;
+    const doc=frame.contentDocument, canvas=doc.getElementById('axiom-canvas'), debug=doc.getElementById('debugUi');
+    const assert=(value,message)=>{if(!value)throw new Error(message);};
+    const raf=()=>new Promise(resolve=>win.requestAnimationFrame(resolve));
+    let clock=1000;
+    canvas.setPointerCapture=()=>{}; debug.setPointerCapture=()=>{};
+    const event=(target,type,x,y)=>{
+      const r=target.getBoundingClientRect();
+      const scaleX=target===debug?r.width/410:1, scaleY=target===debug?r.height/650:1;
+      const e=new win.PointerEvent(type,{pointerId:1,pointerType:'mouse',
+        clientX:r.left+x*scaleX,clientY:r.top+y*scaleY,
+        buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true});
+      Object.defineProperty(e,'timeStamp',{value:clock+=17}); target.dispatchEvent(e);
+    };
+    const click=async(x,y)=>{
+      event(debug,'pointerdown',x,y); await raf(); event(debug,'pointerup',x,y); await host.flush();
+    };
+    event(canvas,'pointerdown',600,100); event(canvas,'pointermove',700,180);
+    event(canvas,'pointerup',700,180); await host.flush();
+    await host.toggleDebugUi(); await host.flush();
+    for(const [index,side] of [50.625,1.25,-3.5,40.75].entries()) {
+      await click(45,232); // actual Fit Content button
+      await click(135,326); // actual Sticky tool button
+      assert(host.observation().creationPreset===5 && host.observation().creationMode,'Sticky tool not selected');
+      const before=host.observation().objects;
+      const module=host.module, complete=module._axiom_web_complete_frame;
+      let polls=0;
+      // Model a slower GPU by delaying polls, never synthesizing completion.
+      module._axiom_web_complete_frame=handle=>++polls<=4?2:complete(handle);
+      try {
+        clock+=600;
+        const x=800.125,y=400.125;
+        event(canvas,'pointerdown',x,y); event(canvas,'pointermove',x+side/2,y+side/2);
+        await raf(); event(canvas,'pointermove',x+side,y+side); await raf();
+        event(canvas,'pointerup',x+side,y+side);
+        await click(45,291); // actual Select button before the GPU has settled
+      } finally { module._axiom_web_complete_frame=complete; }
+      await host.flush();
+      const state=host.observation();
+      assert(!state.failure && !state.error,'Sticky must not stop the Web frame loop');
+      assert(state.objects===before+1,'Sticky was not committed once');
+      assert(state.tool===1 && !state.creationMode,'Select remained Pending after Sticky creation');
+      results.push({name:`Fit / fractional Sticky ${index} / Select`,result:'PASS'});
+    }
+    // Controls and History must still make progress after the original trigger.
+    const count=host.observation().objects;
+    await host.control('undo'); assert(host.observation().objects===count-1,'Undo stalled');
+    await host.control('redo'); assert(host.observation().objects===count,'Redo stalled');
+    await host.flush(); const frames=host.observation().presentedFrames;
+    for(let i=0;i<4;++i) await raf();
+    assert(host.observation().presentedFrames===frames,'Recovery must retain demand-driven idle');
+    results.push({name:'Undo/Redo and idle after repeated Fit/Sticky',result:'PASS'});
+    document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,observation:host.observation()});
+  } catch(error) {
+    document.getElementById('result').textContent=JSON.stringify({status:'FAIL',results,error:String(error),observation:host?.observation()});
+  }
+},{once:true});
+</script>

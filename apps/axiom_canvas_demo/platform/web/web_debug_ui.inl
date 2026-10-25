@@ -105,6 +105,10 @@ class WebDebugUi final : public canvas::runtime::PlatformDiagnostics {
         ImGui::GetIO().AddInputCharactersUTF8(value);
         return render();
     }
+    std::uint64_t beginImageFileRequest() { return controller_->beginImageFileRequest(); }
+    bool completeImageFileRequest(std::uint64_t token, const canvas::debug_ui::ImageFileResult& file) {
+        return controller_->completeImageFileRequest(token, file);
+    }
     canvas::runtime::PlatformDiagnosticsSnapshot readPlatformDiagnostics() const noexcept override {
         canvas::runtime::PlatformDiagnosticsSnapshot out{};
         const auto s = composition_.surfaceSnapshot();

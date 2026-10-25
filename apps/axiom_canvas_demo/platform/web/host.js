@@ -3,9 +3,10 @@ const resourceUrl = name => {
   url.search = new URL(import.meta.url).search;
   return url.href;
 };
-const [{default:createModule},{installTextInput}] = await Promise.all([
+const [{default:createModule},{installTextInput},{installImageInput}] = await Promise.all([
   import(resourceUrl('./axiom_canvas_demo_web.js')),
   import(resourceUrl('./text_input.js')),
+  import(resourceUrl('./image_input.js')),
 ]);
 
 const canvas = document.getElementById('axiom-canvas');
@@ -39,6 +40,7 @@ export const ready = globalThis.axiomMinimalReady = (async () => {
     if (!scheduled && handle && !document.hidden) scheduled = requestAnimationFrame(tick);
   };
   const textInput=installTextInput({module,handle,canvas,stage,schedule});
+  const imageInput=installImageInput({module,getHandle:()=>handle,schedule,restoreFocus:()=>debug.focus()});
   document.getElementById("textTool").addEventListener("click",()=>textInput.finish().then(()=>{module._axiom_web_text_tool(handle);schedule();}).catch(error=>{status.textContent=String(error);}));
   const textWidth=document.getElementById('textWidth');
   textWidth.addEventListener('pointerdown',event=>{if(textInput.snapshot().phase!==0){if(textInput.snapshot().composition!=='0')event.preventDefault();textInput.complete().then(()=>textWidth.focus()).catch(error=>{stage.dataset.textError=String(error);});}});
@@ -227,6 +229,7 @@ export const ready = globalThis.axiomMinimalReady = (async () => {
       const button = debugPointers.get(event.pointerId);
       if (button !== undefined) {
         module._axiom_web_debug(handle,phase,...debugPoint(event),button);
+        imageInput.process();
         if (phase === 2 || phase === 3) { debugPointers.delete(event.pointerId); if (debug.hasPointerCapture?.(event.pointerId)) debug.releasePointerCapture(event.pointerId); }
         schedule();
       } else if (phase === 1 && event.pointerType === 'mouse') {
@@ -257,13 +260,13 @@ export const ready = globalThis.axiomMinimalReady = (async () => {
       const text = module.stringToNewUTF8(event.key);
       module._axiom_web_debug_text(handle,text); module._free(text); schedule();
     }
-    if (key) { module._axiom_web_debug(handle,type === 'keydown' ? 6 : 7,0,0,key); schedule(); event.preventDefault(); }
+    if (key) { module._axiom_web_debug(handle,type === 'keydown' ? 6 : 7,0,0,key); imageInput.process(); schedule(); event.preventDefault(); }
   });
   addEventListener('blur',() => { cancelInputs('focus-loss'); for (const button of debugPointers.values()) module._axiom_web_debug(handle,3,-1,-1,button); debugPointers.clear(); });
   document.addEventListener('visibilitychange',() => { if (document.hidden) { clearTimeout(textOpportunityTimer); textOpportunityTimer = 0; cancelInputs('hidden'); } else schedule(); });
   document.addEventListener('visibilitychange',()=>{if(document.hidden)textInput.finish().catch(error=>{status.textContent=String(error);});});
   addEventListener('beforeunload',event=>{if(textInput.snapshot().phase!==0){textInput.finish().catch(()=>{});event.preventDefault();event.returnValue='';}});
-  addEventListener('pagehide',() => { if (handle) { clearTimeout(textOpportunityTimer); textInput.dispose(); resizeObserver.disconnect(); cancelInputs('close'); cancelAnimationFrame(scheduled); module._axiom_web_destroy(handle); handle = 0; } },{once:true});
+  addEventListener('pagehide',() => { if (handle) { clearTimeout(textOpportunityTimer); imageInput.dispose(); textInput.dispose(); resizeObserver.disconnect(); cancelInputs('close'); cancelAnimationFrame(scheduled); module._axiom_web_destroy(handle); handle = 0; } },{once:true});
   const host = {module,handle,observation,flush,control,resize,toggleDebugUi,textInput,
     loseSurface() { cancelInputs('surface-loss'); pending = false; return module._axiom_web_lose_surface(handle); }};
   globalThis.axiomMinimalHost = host;

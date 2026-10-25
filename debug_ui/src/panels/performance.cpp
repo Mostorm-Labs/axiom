@@ -48,30 +48,10 @@ void rendering(DebugPanelContext& c) {
                 static_cast<unsigned long long>(s.platform.value.presentCount),
                 static_cast<unsigned long long>(s.platform.value.lostCount));
 }
-void memory(DebugPanelContext&) {
-    ImGui::SeparatorText("Memory & Cache");
-    ImGui::TextUnformatted("Unsupported / Not implemented");
-}
-void trace(DebugPanelContext&) {
-    ImGui::SeparatorText("Trace");
-    ImGui::TextUnformatted("Unsupported / Not implemented");
-}
-void gpu(DebugPanelContext&) {
-    ImGui::SeparatorText("GPU Timing");
-    ImGui::TextUnformatted("Unsupported / Not implemented");
-}
-void features(DebugPanelContext&) {
-    ImGui::SeparatorText("Feature Metrics");
-    ImGui::TextUnformatted("Unsupported / Not implemented");
-}
 } // namespace
 void registerPerformanceDebugPanels(PanelRegistry& r) noexcept {
     (void)r.add({WorkspaceId::kPerformance, PanelSlot::kLiveMetrics, 0, nullptr, live});
     (void)r.add({WorkspaceId::kPerformance, PanelSlot::kInputArc, 0, nullptr, input});
     (void)r.add({WorkspaceId::kPerformance, PanelSlot::kRendering, 0, nullptr, rendering});
-    (void)r.add({WorkspaceId::kPerformance, PanelSlot::kMemoryCache, 0, nullptr, memory});
-    (void)r.add({WorkspaceId::kPerformance, PanelSlot::kTrace, 0, nullptr, trace});
-    (void)r.add({WorkspaceId::kPerformance, PanelSlot::kGPUTiming, 0, nullptr, gpu});
-    (void)r.add({WorkspaceId::kPerformance, PanelSlot::kFeatureMetrics, 0, nullptr, features});
 }
 } // namespace canvas::debug_ui

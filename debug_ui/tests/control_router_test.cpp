@@ -1,5 +1,6 @@
 #include "canvas/debug_ui/activity_log.hpp"
 #include "canvas/debug_ui/control_router.hpp"
+#include "canvas/debug_ui/controller.hpp"
 #include "canvas/debug_ui/snapshot_assembler.hpp"
 #include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/runtime/canvas_runtime_facade.hpp"
@@ -167,9 +168,77 @@ void checkSurface(canvas::debug_ui::DebugControlRouter& router,
   router.refreshReceipts();
   assert(lastState(log) == expected);
 }
+
+void checkAsyncImageFile() {
+  struct ImageRuntime final : runtime::RuntimeFacade {
+    runtime::CanvasTargetKey target{7, 3, 9, 12};
+    runtime::SelectedImageSnapshot selected{};
+    int imports = 0, replacements = 0;
+    runtime::ImageImportRequest imported{};
+    runtime::ImageReplaceRequest replaced{};
+    runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override { return {}; }
+    runtime::ProductControlReceipt submitProductControl(const runtime::ProductControlRequest&) noexcept override { return {}; }
+    std::vector<runtime::CanvasTargetKey> mountedCanvasTargets() const override { return {target}; }
+    runtime::SelectedImageSnapshot readSelectedImage() const override { return selected; }
+    runtime::ImageCommandReceipt importImage(const runtime::ImageImportRequest& request) override {
+      ++imports; imported = request;
+      return {runtime::ImageCommandState::kApplied, runtime::ImageFailureReason::kNone};
+    }
+    runtime::ImageCommandReceipt replaceImage(const runtime::ImageReplaceRequest& request) override {
+      ++replacements; replaced = request;
+      return {runtime::ImageCommandState::kApplied, runtime::ImageFailureReason::kNone};
+    }
+  } owner;
+  debug_ui::DebugControlRouter router(&owner, nullptr, nullptr, nullptr);
+  const debug_ui::ImageFileResult file{{1,2,3}, "image/png", {}, false};
+  router.requestImageFile(false);
+  const auto first = router.beginImageFileRequest();
+  assert(first != 0 && owner.imports == 0);
+  assert(router.beginImageFileRequest() == 0); // never show a second picker
+  router.requestImageFile(false);
+  assert(router.beginImageFileRequest() == 0);
+  assert(!router.completeImageFileRequest(first + 1, file));
+  assert(router.completeImageFileRequest(first, file));
+  assert(owner.imports == 1 && owner.imported.bytes == file.bytes && owner.imported.mimeType == file.mimeType);
+  assert(!router.completeImageFileRequest(first, file)); // late/duplicate callback
+  router.requestImageFile(false);
+  const auto cancelled = router.beginImageFileRequest();
+  assert(cancelled != 0 && cancelled != first);
+  assert(router.completeImageFileRequest(cancelled, {{}, {}, {}, true}));
+  assert(owner.imports == 1 && router.imageStatus() == "File selection cancelled");
+  router.requestImageFile(false);
+  const auto failed = router.beginImageFileRequest();
+  assert(router.completeImageFileRequest(failed, {{}, {}, "Read failed", false}));
+  assert(owner.imports == 1 && router.imageStatus() == "Read failed");
+  router.requestImageFile(false);
+  const auto staleBinding = router.beginImageFileRequest();
+  owner.target = {8, 3, 9, 12};
+  assert(router.completeImageFileRequest(staleBinding, file));
+  assert(owner.imports == 1 && router.imageStatus().find("binding changed") != std::string::npos);
+  owner.selected.available = owner.selected.editable = true;
+  owner.selected.objectId = foundation::ObjectId::fromUint64(42);
+  router.requestImageFile(true);
+  const auto replace = router.beginImageFileRequest();
+  assert(router.completeImageFileRequest(replace, file));
+  assert(owner.replacements == 1 && owner.replaced.objectId == owner.selected.objectId);
+  router.requestImageFile(true);
+  const auto staleSelection = router.beginImageFileRequest();
+  owner.selected.objectId = foundation::ObjectId::fromUint64(43);
+  assert(router.completeImageFileRequest(staleSelection, file));
+  assert(owner.replacements == 1 && router.imageStatus().find("selection changed") != std::string::npos);
+  router.requestImageFile(true);
+  const auto staleContent = router.beginImageFileRequest();
+  owner.selected.content.width += 10;
+  assert(router.completeImageFileRequest(staleContent, file));
+  assert(owner.replacements == 1);
+  router.requestImageFile(false);
+  router.processImageFileRequest([&] { return file; });
+  assert(owner.imports == 2); // Windows synchronous adapter shares completion
+}
 }  // namespace
 
 int main() {
+  checkAsyncImageFile();
   canvas::debug_ui::DebugActivityLog defaultCapacity;
   for (std::uint64_t requestId = 1; requestId <= 65; ++requestId) {
     defaultCapacity.record({0, requestId, canvas::debug_ui::DebugControlOwner::kProduct,
@@ -482,5 +551,26 @@ int main() {
   const auto state = facade.readRuntimeState();
   assert(state.selection.enabled);
   assert(state.control.semanticGeneration != 0U);
+  // Constructing the shared UI controller establishes the new-connector policy
+  // even before its first visible frame. Existing document content is unchanged.
+  const auto oldStraight = realRouter.createConnector();
+  assert(oldStraight.state == runtime::ConnectorCommandState::kApplied);
+  const auto revisionBeforeUi = facade.readRuntimeState().identity.documentRevision;
+  const auto countBeforeUi = composition.semanticObjectCount();
+  canvas::debug_ui::DebugControllerContext uiContext{};
+  uiContext.runtime = &facade;
+  canvas::debug_ui::DebugController uiController(uiContext);
+  assert(facade.readConnectorRoutingPreset() == semantic::ConnectorRouting::kOrthogonal);
+  assert(facade.readConnectorState(oldStraight.objectId).content.routing == semantic::ConnectorRouting::kStraight);
+  assert(composition.semanticObjectCount() == countBeforeUi);
+  assert(facade.readRuntimeState().identity.documentRevision == revisionBeforeUi);
+  const auto newOrthogonal = realRouter.createConnector();
+  assert(newOrthogonal.state == runtime::ConnectorCommandState::kApplied);
+  assert(facade.readConnectorState(newOrthogonal.objectId).content.routing == semantic::ConnectorRouting::kOrthogonal);
+  assert(realRouter.setConnectorRouting(semantic::ConnectorRouting::kStraight, false).state ==
+         runtime::ConnectorCommandState::kApplied);
+  uiController.processHostRequests();
+  uiController.processHostRequests();
+  assert(facade.readConnectorRoutingPreset() == semantic::ConnectorRouting::kStraight);
   return 0;
 }

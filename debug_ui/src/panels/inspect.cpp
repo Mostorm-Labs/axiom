@@ -41,25 +41,7 @@ void object(DebugPanelContext& c) {
                 object.selectedTransform[0], object.selectedTransform[1],
                 object.selectedTransform[2], object.selectedTransform[3],
                 object.selectedTransform[4], object.selectedTransform[5]);
-    const bool enabled = panel_detail::canSubmitProduct(c);
-    ImGui::BeginDisabled(!enabled);
-    if (ImGui::Button(object.selectedLocked ? "Unlock" : "Lock")) {
-        (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedLock,
-                                        !object.selectedLocked);
-        c.ui.markControlSubmitted();
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Delete selected")) {
-        (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kDeleteSelected);
-        c.ui.markControlSubmitted();
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Bring front")) {
-        (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedOrder, true);
-        c.ui.markControlSubmitted();
-    }
-    ImGui::EndDisabled();
-    ImGui::TextUnformatted("Advanced text/copy/duplicate controls remain unsupported by FC-01");
+
 }
 void interaction(DebugPanelContext& c) {
     const auto& s = c.snapshot;

@@ -1,68 +1,31 @@
 #include "canvas/debug_ui/builtin_panels.hpp"
 #include "canvas/debug_ui/ui_session_state.hpp"
-#include "imgui.h"
-
+#include "../widgets.hpp"
 #include <array>
 
 namespace canvas::debug_ui {
 namespace {
-void ink(DebugPanelContext& context) {
+void ink(DebugPanelContext& c) {
+    const auto& state = c.snapshot.product.value;
+    if (!c.ui.advancedControls() && (state.control.creationMode || state.selection.enabled ||
+        c.controls.canvasTool() != canvas::runtime::CanvasToolKind::kInk)) return;
     ImGui::SeparatorText("Ink");
-    const auto& snapshot = context.snapshot;
-    struct Preset {
-        const char* label;
-        std::uint32_t id;
-        std::uint32_t revision;
-    };
-    constexpr std::array<Preset, 4> presets{{{"Vector Solid", 1U, 1U},
-                                             {"Marker Flat", 2U, 1U},
-                                             {"Chalk Grain", 3U, 4U},
-                                             {"Membrane", 4U, 1U}}};
-    if (panel_detail::hasReadback(snapshot.product.availability)) {
-        ImGui::Text("resolved brushId: %u / brush revision: %u",
-                    snapshot.product.value.tool.brushId,
-                    snapshot.product.value.tool.brushRevision);
-    } else
-        ImGui::Text("Brush readback: %s",
-                    panel_detail::availabilityLabel(snapshot.product.availability));
-    if (!context.controls.hasRuntimeOwner())
-        ImGui::TextUnformatted("Brush controls: Unsupported (Runtime owner unbound)");
-    std::size_t selectedBrush = 0U;
-    for (std::size_t i = 0; i < presets.size(); ++i) {
-        if (snapshot.product.value.tool.brushId == presets[i].id &&
-            snapshot.product.value.tool.brushRevision == presets[i].revision) {
-            selectedBrush = i;
-            break;
+    struct Preset { const char* label; std::uint32_t id, revision; };
+    constexpr std::array<Preset,4> presets{{{"Vector Solid",1,1},{"Marker Flat",2,1},{"Chalk Grain",3,4},{"Membrane",4,1}}};
+    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c));
+    bool first = true;
+    for (const auto& preset : presets) {
+        if (panel_detail::flowButton(preset.label, first,
+            state.tool.brushId == preset.id && state.tool.brushRevision == preset.revision)) {
+            (void)c.controls.setBrush(preset.id, preset.revision); c.ui.markControlSubmitted();
         }
-    }
-    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(context));
-    ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 0.0F);
-    (void)ImGui::InvisibleButton("Vector Solid", ImVec2(1.0F, 1.0F));
-    const bool legacyBrushActivated = ImGui::IsItemActivated();
-    ImGui::PopStyleVar();
-    if (legacyBrushActivated) {
-        (void)context.controls.setBrush(1U, 1U);
-        context.ui.markControlSubmitted();
-    }
-    const bool comboOpen = ImGui::BeginCombo("Brush", presets[selectedBrush].label);
-    if (comboOpen) {
-        for (std::size_t i = 0; i < presets.size(); ++i) {
-            const bool selected = i == selectedBrush;
-            if (ImGui::Selectable(presets[i].label, selected)) {
-                (void)context.controls.setBrush(presets[i].id, presets[i].revision);
-                context.ui.markControlSubmitted();
-            }
-            if (selected) ImGui::SetItemDefaultFocus();
-        }
-        ImGui::EndCombo();
     }
     ImGui::EndDisabled();
-    ImGui::TextUnformatted("Size: Unsupported");
-    ImGui::TextUnformatted("Opacity: Unsupported");
-    ImGui::TextUnformatted("Other brush parameters: Unsupported");
+    if (c.ui.advancedControls()) ImGui::Text("resolved brushId: %u / brush revision: %u",
+                                           state.tool.brushId, state.tool.brushRevision);
 }
-} // namespace
+}
 void registerInkDebugPanels(PanelRegistry& registry) noexcept {
     (void)registry.add({WorkspaceId::kControl, PanelSlot::kInk, 0, nullptr, ink});
 }
-} // namespace canvas::debug_ui
+}
