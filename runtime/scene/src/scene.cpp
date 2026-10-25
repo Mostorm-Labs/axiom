@@ -27,7 +27,7 @@ semantic::Transform2D compose(const semantic::Transform2D& parent,
 }
 RuntimeSceneProjection projectRuntimeScene(
     std::span<const semantic::ObjectRecord> source,
-    semantic::SemanticGeneration generation, text::RichTextLayoutService* textService) {
+    semantic::SemanticGeneration generation, text::RichTextLayoutService* textService, bool deferRoutes) {
     RuntimeSceneProjection projection;
     projection.generation = generation;
     projection.records.reserve(source.size());
@@ -42,7 +42,7 @@ RuntimeSceneProjection projectRuntimeScene(
         auto derivedGeometry = scene::deriveGeometry(projectedRecord);
         if (record.kind == semantic::ObjectKind::kConnector) {
             if (const auto route = scene::connectorGeometry(record,
-                    std::vector<semantic::ObjectRecord>(source.begin(), source.end())); route) {
+                    std::vector<semantic::ObjectRecord>(source.begin(), source.end()), deferRoutes); route) {
                 derivedGeometry = *route;
             }
         }
@@ -275,7 +275,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
             }
         }
         return foundation::Result<PreparedPublication>::success(
-            PreparedPublication{projectRuntimeScene(source, post_state.generation(), _textLayoutService)});
+            PreparedPublication{projectRuntimeScene(source, post_state.generation(), _textLayoutService, deferConnectorRoutes_)});
     } catch (const std::bad_alloc&) {
         return foundation::Result<PreparedPublication>::failure(
             makeError(foundation::ErrorCode::kOutOfMemory,
@@ -304,7 +304,7 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
         // complete immutable source for this owner-side publication so parent
         // moves update children, routes, bounds and hit geometry atomically.
         const auto full = projectRuntimeScene(post_state.allObjects(),
-                                               post_state.generation(), _textLayoutService);
+                                               post_state.generation(), _textLayoutService, deferConnectorRoutes_);
         return foundation::Result<PreparedPublication>::success(
             PreparedPublication{std::move(full)});
     } catch (const std::bad_alloc&) {

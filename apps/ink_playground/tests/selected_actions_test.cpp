@@ -151,6 +151,8 @@ void selected_attachment_point_click_uses_opposite_target_port_and_source_kind()
       Case{CreationPreset::kEllipse, 1U, 4U, ObjectKind::kShape, 2U},
       Case{CreationPreset::kTriangle, 2U, 1U, ObjectKind::kShape, 3U},
       Case{CreationPreset::kSticky, 3U, 2U, ObjectKind::kSticky, 0U},
+      Case{CreationPreset::kTriangle, 1U, 4U, ObjectKind::kShape, 3U},
+      Case{CreationPreset::kTriangle, 3U, 2U, ObjectKind::kShape, 3U},
   };
   for (const auto& test : cases) {
     InkPlaygroundHost host;
@@ -221,12 +223,13 @@ void selected_attachment_point_click_uses_opposite_target_port_and_source_kind()
     if (test.expectedTargetPort == 1U) {
       targetPoint.x += static_cast<float>(targetWidth * 0.5);
     } else if (test.expectedTargetPort == 2U) {
-      targetPoint.x += static_cast<float>(targetWidth);
+      targetPoint.x += static_cast<float>(targetWidth * (test.expectedShapeKind == 3U ? 0.75 : 1.0));
       targetPoint.y += static_cast<float>(targetHeight * 0.5);
     } else if (test.expectedTargetPort == 3U) {
       targetPoint.x += static_cast<float>(targetWidth * 0.5);
       targetPoint.y += static_cast<float>(targetHeight);
     } else {
+      targetPoint.x += static_cast<float>(targetWidth * (test.expectedShapeKind == 3U ? 0.25 : 0.0));
       targetPoint.y += static_cast<float>(targetHeight * 0.5);
     }
     assert(std::abs(targetPoint.x - expectedEnd.x) < 1.0e-4F);
@@ -269,6 +272,39 @@ void selected_attachment_click_does_not_snap_generated_target_to_neighbor() {
   assert(end->target_object_id != sourceId);
   assert(std::holds_alternative<StablePortAnchor>(end->anchor));
   assert(std::get<StablePortAnchor>(end->anchor).port_id == 2U);
+}
+
+void connector_preview_follows_transient_target_without_canonical_edit() {
+  using Access=canvas::ink_playground::InkPlaygroundHistoryTestAccess;
+  using namespace canvas::semantic;
+  InkPlaygroundHost host;assert(host.bindSurface(512,512));
+  ObjectRecord source{};source.id=canvas::foundation::ObjectId::fromUint64(501);
+  source.kind=ObjectKind::kShape;source.kind_version=1;source.content=ShapeContent{1,80,80};
+  source.placement.order_key=OrderKey{{10}};source.transform.tx=20;source.transform.ty=20;
+  auto target=source;target.id=canvas::foundation::ObjectId::fromUint64(502);target.transform.tx=300;
+  target.placement.order_key=OrderKey{{20}};
+  ObjectRecord connector{};connector.id=canvas::foundation::ObjectId::fromUint64(503);
+  connector.kind=ObjectKind::kConnector;connector.kind_version=1;connector.placement.order_key=OrderKey{{30}};
+  connector.content=ConnectorContent{{AttachedEndpoint{source.id,StablePortAnchor{2}}},
+      {AttachedEndpoint{target.id,StablePortAnchor{4}}},ConnectorRouting::kOrthogonal};
+  assert(Access::applyRemote(host,InsertObjectsOp{{source,target,connector}}));
+  for(unsigned q=0;q<16;++q)assert(host.serviceConnectorRouting());
+  const auto before=Access::objects(host);const auto generation=host.semanticGeneration();
+  assert(host.setSelectionMode(true)&&host.selectAtViewPoint(60,60));
+  const canvas::input::PointerKey key{11,450,1};
+  assert(host.selectionPointer(key,PointerPhase::kDown,60,60));
+  assert(host.selectionPointer(key,PointerPhase::kMove,60,180));
+  auto route=host.previewConnectorGeometry(connector);
+  for(unsigned q=0;q<64&&route.status==canvas::runtime::ConnectorRouteStatus::kPending;++q) {
+    assert(host.serviceConnectorRouting());route=host.previewConnectorGeometry(connector);
+  }
+  assert(route.status==canvas::runtime::ConnectorRouteStatus::kReady);
+  assert(std::abs(route.start.y-180)<1e-4F);
+  assert(Access::objects(host)==before&&host.semanticGeneration()==generation);
+  assert(host.selectionPointer(key,PointerPhase::kCancel,60,180));
+  assert(host.serviceConnectorRouting());
+  assert(!host.connectorPreviewRoutingPending());
+  assert(Access::objects(host)==before);
 }
 
 void remote_child_survives_conditional_insert_undo() {
@@ -383,6 +419,7 @@ int main(int argc, char** argv) {
   selected_attachment_point_click_creates_connector_and_target();
   selected_attachment_point_click_uses_opposite_target_port_and_source_kind();
   selected_attachment_click_does_not_snap_generated_target_to_neighbor();
+  connector_preview_follows_transient_target_without_canonical_edit();
   InkPlaygroundHost host;
   assert(host.bindSurface(256U, 256U));
   assert(host.selectCreationPreset(CreationPreset::kRectangle));

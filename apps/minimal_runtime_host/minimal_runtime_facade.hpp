@@ -34,6 +34,9 @@ class MinimalRuntimeFacade final : public runtime::RuntimeFacade,
   [[nodiscard]] runtime::ImageCropSnapshot readImageCrop() const override;
   [[nodiscard]] runtime::SelectedImageSnapshot readSelectedImage() const override;
   [[nodiscard]] runtime::ConnectorCommandReceipt createConnector(const runtime::ConnectorCreateRequest&) override;
+  [[nodiscard]] runtime::ConnectorCommandReceipt setConnectorRouting(const runtime::ConnectorRoutingRequest&) override;
+  [[nodiscard]] semantic::ConnectorRouting readConnectorRoutingPreset() const override;
+  [[nodiscard]] runtime::ConnectorSnapshot readConnectorState(semantic::ObjectId) const override;
   [[nodiscard]] runtime::StickyCommandReceipt createSticky(const runtime::StickyCreateRequest&) override;
   [[nodiscard]] runtime::ConnectorSnapshot readSelectedConnector() const override;
   [[nodiscard]] runtime::StickySnapshot readSelectedSticky() const override;

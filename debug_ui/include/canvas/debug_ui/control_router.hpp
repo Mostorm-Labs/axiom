@@ -54,6 +54,8 @@ class DebugControlRouter final {
       canvas::runtime::CanvasCreationPreset preset) noexcept;
   canvas::runtime::StickyCommandReceipt createSticky() noexcept;
   canvas::runtime::ConnectorCommandReceipt createConnector() noexcept;
+  canvas::runtime::ConnectorCommandReceipt setConnectorRouting(canvas::semantic::ConnectorRouting, bool selected) noexcept;
+  [[nodiscard]] canvas::semantic::ConnectorRouting connectorRoutingPreset() const;
   [[nodiscard]] canvas::runtime::StickySnapshot selectedSticky() const;
   [[nodiscard]] canvas::runtime::ConnectorSnapshot selectedConnector() const;
   [[nodiscard]] const std::string& connectorStickyStatus() const noexcept {

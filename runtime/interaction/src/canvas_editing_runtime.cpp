@@ -198,7 +198,7 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
  public:
   foundation::Result<canvas::CompiledSceneSnapshot> compileFull(
       const semantic::SemanticReadView& view) const override {
-    const auto projection = canvas::scene::FullSceneCompiler::compile(view);
+    const auto projection = canvas::scene::FullSceneCompiler::compile(view, nullptr, true);
     if (!projection) return foundation::Result<canvas::CompiledSceneSnapshot>::failure(projection.error());
     canvas::CompiledSceneSnapshot result{canvas::SceneRevision(view.generation().value()), {}};
     result.records.reserve(projection.value().records.size());
@@ -372,6 +372,7 @@ CanvasEditingRuntime::CanvasEditingRuntime(render::ViewId viewId)
       sceneCompiler_(std::make_unique<EditingSceneCompiler>()),
       history_(*this), ownerThread_(std::this_thread::get_id()) {
   appBinding_->setSessionCancelSink(this);
+  sceneCoordinator_->setDeferredConnectorRouting(true);
 }
 
 void CanvasEditingRuntime::bindResourceServices(
@@ -413,6 +414,7 @@ bool CanvasEditingRuntime::registerInputSource(input::InputSourceId source,
 
 void CanvasEditingRuntime::close() noexcept {
   if (closed_) return;
+  cancelConnectorRouting();
   if (surfaceTransitionActive_) {
     surfaceAbortRequested_ = true;
     surface_.available = false;
@@ -971,6 +973,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   if (phase == input::PointerPhase::kDown) {
     if (creations_.contains(key)) return false;
     auto& creation = creations_[key];
+    creation.setRouting(connectorRoutingPreset_);
     latestCreationPointer_ = key;
     if (!refreshTargets(creation)) { eraseSession(); return false; }
     if (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow) {
@@ -1133,7 +1136,9 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
             target.transform.ty = freeEnd->point.y;
             break;
           case 2U:
-            target.transform.tx = freeEnd->point.x - targetWidth;
+            target.transform.tx = freeEnd->point.x - targetWidth *
+                (std::get_if<semantic::ShapeContent>(&target.content) &&
+                 std::get<semantic::ShapeContent>(target.content).shape_kind == 3U ? 0.75 : 1.0);
             target.transform.ty = freeEnd->point.y - targetHeight * 0.5;
             break;
           case 3U:
@@ -1141,7 +1146,9 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
             target.transform.ty = freeEnd->point.y - targetHeight;
             break;
           default:
-            target.transform.tx = freeEnd->point.x;
+            target.transform.tx = freeEnd->point.x - targetWidth *
+                (std::get_if<semantic::ShapeContent>(&target.content) &&
+                 std::get<semantic::ShapeContent>(target.content).shape_kind == 3U ? 0.25 : 0.0);
             target.transform.ty = freeEnd->point.y - targetHeight * 0.5;
             break;
         }
@@ -1151,6 +1158,21 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
         inserted.push_back(std::move(target));
         inverseIds.push_back(inserted.back().id);
       }
+    }
+  }
+  // Creation is a staged graph: route against both existing objects and the
+  // synthesized target. Never commit a no-route/budget result as if it were
+  // successful avoidance. Subsequent target moves retain their own acceptance
+  // and surface any reroute failure as a derived diagnostic.
+  if (const auto* connector = std::get_if<semantic::ConnectorContent>(&inserted.front().content);
+      connector && connector->routing == semantic::ConnectorRouting::kOrthogonal) {
+    auto staged = semanticObjects_.allObjects();
+    staged.insert(staged.end(), inserted.begin(), inserted.end());
+    const auto route = scene::connectorGeometry(inserted.front(), staged);
+    if (!route || route->status != runtime::ConnectorRouteStatus::kReady) {
+      transientOverlayHandoffPending_ = false;
+      (void)clearTransientOverlay();
+      return false;
     }
   }
   semantic::Operation operation{
@@ -1213,6 +1235,7 @@ void CanvasEditingRuntime::onSessionCancel(
 }
 
 void CanvasEditingRuntime::cancelAllPointers() noexcept {
+  cancelConnectorRouting();
   textPointerKeys_.clear();
   resetTouchTextTap();
   shapeExpandPointerKeys_.clear();
@@ -3637,6 +3660,16 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   auto references = render::DirectReferenceSource::build(
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
   if (!references) { AXIOM_ANDROID_DIAG("present references failed"); return false; }
+  if (transformDrag_.active()) for(auto& entry:references.value().entries) {
+    if(entry.record.kind!=semantic::ObjectKind::kConnector)continue;
+    const auto* object=semanticObjects_.find(entry.record.objectId);
+    if(!object)continue;
+    const auto route=previewConnectorGeometry(*object);
+    const auto bounds=scene::computeBounds(*object,nullptr,&route);
+    entry.record.derivedGeometry=route;entry.record.geometryBounds=bounds.geometry;
+    entry.record.visualBounds=bounds.visual;entry.record.worldBounds=bounds.world;
+    references.value().canonicalBytes.clear();references.value().digest.clear();
+  }
   // Sticky text follows the Shape label presentation path: the parent owns
   // the clipped text and expand affordance for this frame. The semantic
   // RichText child remains canonical, but is suppressed from drawing here so
@@ -3900,7 +3933,9 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
         connector->end.value = semantic::FreePointEndpoint{{creationPreview().end.x,
                                                              creationPreview().end.y}};
     }
-    selectionView_->editingOverlay().setCreationPreview(previewRecord, guides);
+    const auto route = previewRecord.kind == semantic::ObjectKind::kConnector
+        ? std::optional(previewConnectorGeometry(creationPreview().record)) : std::nullopt;
+    selectionView_->editingOverlay().setCreationPreview(previewRecord, guides, route);
   } else if (!selectionMode_ && !(creationMode_ &&
       (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow))) {
     selectionView_.reset();
@@ -4195,7 +4230,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
         if (object.id == selection_.primary()) object.transform = *selectedTransform;
       const auto* connector = semanticObjects_.find(entry.record.objectId);
       if (connector != nullptr) {
-        if (const auto route = scene::connectorGeometry(*connector, objects)) {
+        if (const auto route = std::optional(previewConnectorGeometry(*connector))) {
           entry.record.derivedGeometry = *route;
           const auto bounds = scene::computeBounds(*connector, nullptr, &*route);
           entry.record.geometryBounds = bounds.geometry;
@@ -4274,7 +4309,9 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
         connector->end.value = semantic::FreePointEndpoint{{creationPreview().end.x,
                                                              creationPreview().end.y}};
     }
-    selectionView_->editingOverlay().setCreationPreview(previewRecord, guides);
+    const auto route = previewRecord.kind == semantic::ObjectKind::kConnector
+        ? std::optional(previewConnectorGeometry(creationPreview().record)) : std::nullopt;
+    selectionView_->editingOverlay().setCreationPreview(previewRecord, guides, route);
   }
   const auto rendered = previewRenderer_.renderTransientOverlay(
       *previewProvider_, plan.value(), selectionOverlay());

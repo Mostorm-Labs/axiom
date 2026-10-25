@@ -37,6 +37,7 @@ float distanceSquared(ScreenPoint first, ScreenPoint second) noexcept {
 
 bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
     creationPreview_.reset();
+    creationRoute_.reset();
     if (input.selectedObject.isZero() || !input.worldBounds.isFiniteAndOrdered()) {
         clear();
         return false;
@@ -100,6 +101,7 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
 
 void EditingOverlay::clear() noexcept {
     creationPreview_.reset();
+    creationRoute_.reset();
     input_ = {};
     outline_ = {};
     guides_.clear();

@@ -122,7 +122,13 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record,
                 }
             }
             bool arrow=false; for(const auto& entry:record.properties.entries) if(entry.field_id==0x201U) if(const auto* v=std::get_if<semantic::ConnectorDecorationValue>(&entry.value)) arrow=*v==semantic::ConnectorDecorationValue::kArrow;
-            if(arrow && have) { const auto start=std::get_if<semantic::FreePointEndpoint>(&content.start.value); const auto end=std::get_if<semantic::FreePointEndpoint>(&content.end.value); if(start&&end) { const ConnectorGeometry g{{static_cast<float>(start->point.x),static_cast<float>(start->point.y)}, {static_cast<float>(end->point.x),static_cast<float>(end->point.y)}, {}, true}; const auto h=arrowHead(g); result=foundation::unionRects(result,{h.left.x,h.left.y,h.left.x,h.left.y}); result=foundation::unionRects(result,{h.right.x,h.right.y,h.right.x,h.right.y}); } }
+            if(arrow && have && route && route->status==runtime::ConnectorRouteStatus::kReady) {
+                auto geometry=*route;geometry.arrow_end=true;
+                const auto head=arrowHead(geometry);
+                result=foundation::unionRects(result,{head.left.x,head.left.y,head.left.x,head.left.y});
+                result=foundation::unionRects(result,{head.right.x,head.right.y,head.right.x,head.right.y});
+            }
+
             return result;
         } else { return {}; }
     }, record.content);
@@ -149,10 +155,11 @@ BoundsResult computeBounds(const semantic::ObjectRecord& record,
                     if (const auto* solid = std::get_if<semantic::SolidStroke>(style)) {
                         return static_cast<float>(std::max(0.0, solid->width) * 0.5);
                     }
+                    return 0.0F;
                 }
             }
         }
-        return 0.0F;
+        return record.kind == semantic::ObjectKind::kConnector ? 2.0F : 0.0F;
     }();
     result.visual = {result.geometry.left - stroke, result.geometry.top - stroke,
                      result.geometry.right + stroke, result.geometry.bottom + stroke};

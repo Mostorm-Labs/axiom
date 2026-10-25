@@ -322,6 +322,7 @@ bool RuntimeComposition::ownerPump() noexcept {
   if (controlFacade_ != nullptr) {
     lastOwnerControlCount_ = controlFacade_->process(ownerPumpCount_);
   }
+  if(canMutate() && !runtime_->serviceConnectorRouting())return false;
   bool derivedRefresh = false;
   for (const auto& notification : notifications_) {
     const auto* entry = resources_.find(notification.resourceId);

@@ -639,6 +639,11 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             // Explicit styles always use the same Field Registry values as Preview.
             const semantic::SolidStroke legacy{{1.0F,128.0F/255.0F,0.0F,1.0F},4.0};
             auto paint=strokePaint(stroke ? *stroke : legacy, antiAliasConnectors);
+            if(derived && derived->status!=runtime::ConnectorRouteStatus::kReady) {
+                const SkScalar intervals[]{6.0F,4.0F};
+                paint.setColor4f({0.9F,0.35F,0.12F,1.0F},nullptr);
+                paint.setPathEffect(SkDashPathEffect::Make(SkSpan<const SkScalar>(intervals,2),0));
+            }
             const auto opacity=objectOpacity(record);
             if(opacity==1.0F) canvas.save();
             else {SkPaint layer;layer.setAlphaf(opacity);canvas.saveLayer(nullptr,&layer);}
@@ -663,27 +668,14 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 if (const auto* decoration = std::get_if<semantic::ConnectorDecorationValue>(&property.value))
                     arrow = *decoration == semantic::ConnectorDecorationValue::kArrow;
             }
-            if (arrow) {
-                const auto startPoint = derived != nullptr ? derived->start :
-                    foundation::WorldPoint{static_cast<float>(start->point.x), static_cast<float>(start->point.y)};
-                const auto endPoint = derived != nullptr ? derived->end :
-                    foundation::WorldPoint{static_cast<float>(end->point.x), static_cast<float>(end->point.y)};
-                const float dx = skScalar(endPoint.x - startPoint.x);
-                const float dy = skScalar(endPoint.y - startPoint.y);
-                const float length = std::hypot(dx, dy);
-                if (length > 0.0F) {
-                    const float ux = dx / length, uy = dy / length;
-                    const float px = -uy, py = ux;
-                    SkPathBuilder head;
-                    head.moveTo(skScalar(endPoint.x), skScalar(endPoint.y));
-                    head.lineTo(skScalar(endPoint.x - ux * 12.0F + px * 6.0F),
-                                skScalar(endPoint.y - uy * 12.0F + py * 6.0F));
-                    head.lineTo(skScalar(endPoint.x - ux * 12.0F - px * 6.0F),
-                                skScalar(endPoint.y - uy * 12.0F - py * 6.0F));
-                    head.close();
-                    paint.setStyle(SkPaint::kFill_Style);paint.setPathEffect(nullptr);
-                    canvas.drawPath(head.detach(), paint);
-                }
+            if (arrow && derived && derived->status==runtime::ConnectorRouteStatus::kReady) {
+                auto geometry=*derived;geometry.arrow_end=true;
+                const auto headGeometry=scene::arrowHead(geometry);
+                SkPathBuilder head;head.moveTo(headGeometry.tip.x,headGeometry.tip.y);
+                head.lineTo(headGeometry.left.x,headGeometry.left.y);
+                head.lineTo(headGeometry.right.x,headGeometry.right.y);head.close();
+                paint.setStyle(SkPaint::kFill_Style);paint.setPathEffect(nullptr);
+                canvas.drawPath(head.detach(),paint);
             }
             canvas.restore();
         } else if constexpr (std::is_same_v<T, StickyReferenceCommand>) {
@@ -801,7 +793,8 @@ std::string digest(const std::vector<std::uint8_t>& bytes) {
 namespace internal {
 
 void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
-                                  const semantic::ObjectRecord& object) {
+                                  const semantic::ObjectRecord& object,
+                                  const scene::ConnectorGeometry* route) {
     RuntimeSceneRecord record{};
     record.objectId = object.id; record.kind = object.kind; record.kindVersion = object.kind_version;
     record.transform = object.transform; record.properties = object.properties; record.content = object.content;
@@ -809,7 +802,8 @@ void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
     // Populate the same derived bounds that canonical records carry; without
     // this, rectangle/ellipse previews reach the renderer with a zero visual
     // rect and appear only after pointer-up commits them.
-    const auto bounds = canvas::scene::computeBounds(object);
+    const auto bounds = canvas::scene::computeBounds(object, nullptr, route);
+    if(route)record.derivedGeometry=*route;
     record.geometryBounds = bounds.geometry;
     record.visualBounds = bounds.visual;
     record.worldBounds = bounds.world;

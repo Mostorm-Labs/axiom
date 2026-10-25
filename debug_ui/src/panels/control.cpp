@@ -92,6 +92,23 @@ void tools(DebugPanelContext& context) {
     ImGui::EndDisabled();
     ImGui::SeparatorText("Connector / Sticky");
     ImGui::BeginDisabled(!context.controls.hasRuntimeOwner());
+    int routing=context.controls.connectorRoutingPreset()==canvas::semantic::ConnectorRouting::kOrthogonal?1:0;
+    if(ImGui::Combo("New connector routing",&routing,"Straight\0Orthogonal (avoid objects)\0")) {
+        (void)context.controls.setConnectorRouting(routing==1?canvas::semantic::ConnectorRouting::kOrthogonal:
+            canvas::semantic::ConnectorRouting::kStraight,false);
+        context.ui.markControlSubmitted();
+    }
+    const auto connector=context.controls.selectedConnector();
+    if(connector.available) {
+        int selectedRouting=connector.content.routing==canvas::semantic::ConnectorRouting::kOrthogonal?1:0;
+        if(ImGui::Combo("Selected connector routing",&selectedRouting,"Straight\0Orthogonal (avoid objects)\0")) {
+            (void)context.controls.setConnectorRouting(selectedRouting==1?canvas::semantic::ConnectorRouting::kOrthogonal:
+                canvas::semantic::ConnectorRouting::kStraight,true);
+            context.ui.markControlSubmitted();
+        }
+        ImGui::Text("Route: %s",canvas::runtime::connectorRouteStatusName(connector.routeStatus));
+        ImGui::Text("Search: %u states / %u predicates",connector.work.expanded,connector.work.predicates);
+    }
     if (ImGui::Button("Create Sticky")) {
         (void)context.controls.createSticky();
         context.ui.markControlSubmitted();
@@ -162,7 +179,7 @@ void images(DebugPanelContext& context) {
         changed = ImGui::InputDouble("Display height", &draft.height) || changed;
         if (changed) {
             controls.updateImageCrop({crop.cropToken,
-                {draft.rect[0], draft.rect[1], draft.rect[2], draft.rect[3]}, draft.width, draft.height});
+                {draft.rect[0], draft.rect[1], draft.rect[2], draft.rect[3]}, draft.width, draft.height,std::nullopt});
             context.ui.markControlSubmitted();
         }
         if (ImGui::Button("Crop Done")) { controls.finishImageCrop(true); context.ui.markControlSubmitted(); }

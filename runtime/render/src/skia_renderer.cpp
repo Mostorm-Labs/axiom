@@ -41,7 +41,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr) {
         auto* canvas = acquired.frame.surface->getCanvas();
         if (selectionOverlay->creationPreview()) {
-            internal::drawTransientObjectToSkCanvas(*canvas, plan, *selectionOverlay->creationPreview());
+            internal::drawTransientObjectToSkCanvas(*canvas, plan, *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
             internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
         }
         canvas->save();
@@ -137,7 +137,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     }
     if (selectionOverlay->creationPreview()) {
         internal::drawTransientObjectToSkCanvas(*canvas, plan,
-                                                 *selectionOverlay->creationPreview());
+                                                 *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
         internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
     }
     canvas->save();

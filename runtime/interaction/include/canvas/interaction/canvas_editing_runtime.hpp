@@ -35,6 +35,7 @@ namespace canvas::runtime { class CanvasRuntimeFacade; }
 #include "canvas/ink/arc_runtime_sinks.hpp"
 #include "canvas/scene/scene.hpp"
 #include "canvas/scene/scene_binding.hpp"
+#include "canvas/scene/connector_router.hpp"
 #include "canvas/scene/incremental_runtime_coordinator.hpp"
 #include "canvas/text/text_layout.hpp"
 #include "canvas/interaction/creation_session.hpp"
@@ -491,8 +492,12 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   // redraw after a viewport-only change.  It is cleared only after the
   // current viewport has been successfully presented.
   [[nodiscard]] bool canonicalPresentationDirty() const noexcept {
-    return canonicalPresentationDirty_;
+    return canonicalPresentationDirty_ || connectorRoutingPending_ || connectorPreviewRoutingPending();
   }
+  bool serviceConnectorRouting() noexcept;
+  [[nodiscard]] bool connectorPreviewRoutingPending() const noexcept;
+  scene::ConnectorGeometry previewConnectorGeometry(const semantic::ObjectRecord&);
+  unsigned serviceConnectorPreviewRouting(unsigned quanta);
   [[nodiscard]] bool canonicalPresentationRetryable() const noexcept {
     return canonicalPresentationRetryable_;
   }
@@ -502,6 +507,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   // Owner-side derived resources can invalidate the current pixels without
   // mutating the semantic document or history.
   void markCanonicalPresentationDirty() noexcept { canonicalPresentationDirty_ = true; }
+  void cancelConnectorRouting() noexcept;
   void bindResourceServices(render::ImageResourceResolver* images,
                             text::RichTextLayoutService* textService) noexcept;
   void bindResourceManifest(semantic::ResourceManifest* manifest) noexcept {
@@ -761,6 +767,15 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<render::RuntimeFrameIdentity> lastPresentedCanonicalFrame_;
   std::unique_ptr<render::FrameState> lastPresentedCanonicalFrameState_;
   bool canonicalPresentationDirty_ = false;
+  bool connectorRoutingPending_ = false;
+  semantic::ConnectorRouting connectorRoutingPreset_ = semantic::ConnectorRouting::kStraight;
+  std::uint64_t connectorRoutingGeneration_ = std::numeric_limits<std::uint64_t>::max();
+  std::vector<semantic::ObjectRecord> connectorRoutingSource_;
+  std::vector<std::size_t> connectorRoutingQueue_;
+  std::size_t connectorRoutingCursor_ = 0;
+  std::unique_ptr<scene::ConnectorRouteJob> connectorRoutingJob_;
+  struct ConnectorPreviewRouting;
+  std::shared_ptr<ConnectorPreviewRouting> connectorPreviewRouting_;
   bool transientOverlayDirty_ = false;
   // A completed creation/selection gesture keeps its last transient frame
   // visible until the replacement canonical frame is accepted. This avoids

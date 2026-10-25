@@ -1,0 +1,39 @@
+{
+  "phase": "P32_IMPLEMENTED_AWAITING_PHYSICAL_CHECK",
+  "base_revision": "e8dc57bca231c84321a1b7fef7259b11c479dd4e",
+  "ctest": {
+    "total": 28,
+    "passed": 27,
+    "failed": 1,
+    "skipped": 0,
+    "failure": "canvas_g2_a3_full_incremental_equivalence",
+    "classification": "Existing Image digest fixture mismatch; exact HEAD Image encoder includes content_mode and source:full while unchanged test expectation omits both. Baseline binary was not separately rebuilt. Diagnostic run confirms failure occurs at Image, before Connector. No historical expectation changed."
+  },
+  "python": {
+    "passed": 17,
+    "skipped": 0
+  },
+  "native_wasm_equivalence": {
+    "fixtures": 40,
+    "exact_paths_statuses_counters": true,
+    "failure_and_cancel_cases": true
+  },
+  "browser": {
+    "minimal_groups": 13,
+    "text_groups": 7,
+    "mode": "headless Chrome synthetic DOM; not physical"
+  },
+  "red_evidence": {
+    "old_algorithm": [
+      "CollinearEndpointsDetourAroundBlockingObject: crossing obstacle",
+      "BothSingleElbowsBlockedStillFindsMultipleBendRoute: crossing obstacle"
+    ],
+    "host_wrapper": "host-consumer-red.log"
+  },
+  "physical": "PHYSICAL_PENDING",
+  "nonclaims": [
+    "No FC05 Gate PASS",
+    "No G5 performance PASS",
+    "No physical PASS"
+  ]
+}

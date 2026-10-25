@@ -1,9 +1,19 @@
 #include "canvas/runtime/canvas_runtime_facade.hpp"
 #include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 
 namespace canvas::runtime {
 namespace {
 ConnectorCommandReceipt rejectConnector(ConnectorFailureReason reason) { ConnectorCommandReceipt r{}; r.reason=reason; return r; }
+ConnectorFailureReason routeFailure(ConnectorRouteStatus s) {
+  switch(s) {
+    case ConnectorRouteStatus::kReady: return ConnectorFailureReason::kNone;
+    case ConnectorRouteStatus::kBudgetExceeded: return ConnectorFailureReason::kBudgetExceeded;
+    case ConnectorRouteStatus::kNoRouteInDomain: return ConnectorFailureReason::kNoRouteInDomain;
+    case ConnectorRouteStatus::kCancelled: return ConnectorFailureReason::kCancelled;
+    default: return ConnectorFailureReason::kInvalidEndpoint;
+  }
+}
 StickyCommandReceipt rejectSticky(ConnectorFailureReason reason) { StickyCommandReceipt r{}; r.reason=reason; return r; }
 
 // Public object creation must allocate the same canonical root ordering key
@@ -35,6 +45,12 @@ ConnectorCommandReceipt CanvasRuntimeFacade::createConnector(const ConnectorCrea
   if(f.isZero()||i.isZero()) return rejectConnector(ConnectorFailureReason::kObjectRejected);
   semantic::Operation forward{f,runtime_.textDocument(),1,1,semantic::InsertObjectsOp{{object}}};
   if(runtime_.prepareTextOperation(forward).disposition!=semantic::PrepareDisposition::kPrepared || !runtime_.historySceneReady()) return rejectConnector(ConnectorFailureReason::kObjectRejected);
+  if(request.content.routing==semantic::ConnectorRouting::kOrthogonal) {
+    auto objects=runtime_.textObjects();objects.push_back(object);
+    const auto route=scene::connectorGeometry(object,objects);
+    const auto failure=route?routeFailure(route->status):ConnectorFailureReason::kInvalidEndpoint;
+    if(failure!=ConnectorFailureReason::kNone)return rejectConnector(failure);
+  }
   if(!runtime_.applyLocalHistoryOperation(forward,{i,runtime_.textDocument(),1,1,semantic::DeleteObjectsOp{{request.objectId}}})) return rejectConnector(ConnectorFailureReason::kObjectRejected);
   ConnectorCommandReceipt r{}; r.state=ConnectorCommandState::kApplied; r.reason=ConnectorFailureReason::kNone; r.objectId=request.objectId; r.semanticGeneration=runtime_.semanticGeneration().value(); r.historyChanged=true; return r;
 }
@@ -52,6 +68,61 @@ StickyCommandReceipt CanvasRuntimeFacade::createSticky(const StickyCreateRequest
   StickyCommandReceipt r{}; r.state=ConnectorCommandState::kApplied; r.reason=ConnectorFailureReason::kNone; r.objectId=request.objectId; r.semanticGeneration=runtime_.semanticGeneration().value(); r.historyChanged=true; return r;
 }
 
-ConnectorSnapshot CanvasRuntimeFacade::readSelectedConnector() const { ConnectorSnapshot r{}; const auto* o=runtime_.textRecord(runtime_.selection_.primary()); if(o&&o->kind==semantic::ObjectKind::kConnector){r.available=true;r.objectId=o->id;r.content=std::get<semantic::ConnectorContent>(o->content);} return r; }
+ConnectorCommandReceipt CanvasRuntimeFacade::setConnectorRouting(const ConnectorRoutingRequest& request) {
+  if(!ownerThread())return rejectConnector(ConnectorFailureReason::kWrongThread);
+  if(!composition_||!composition_->canMutate())return rejectConnector(ConnectorFailureReason::kNotReady);
+  if(request.routing!=semantic::ConnectorRouting::kStraight&&request.routing!=semantic::ConnectorRouting::kOrthogonal)
+    return rejectConnector(ConnectorFailureReason::kInvalidRequest);
+  if(request.expectedSemanticGeneration!=0&&request.expectedSemanticGeneration!=runtime_.semanticGeneration().value())
+    return rejectConnector(ConnectorFailureReason::kInvalidRequest);
+  ConnectorCommandReceipt receipt{};receipt.objectId=request.objectId;
+  if(request.objectId.isZero()) {
+    runtime_.connectorRoutingPreset_=request.routing;
+  } else {
+    const auto* current=runtime_.textRecord(request.objectId);
+    if(!current||current->kind!=semantic::ObjectKind::kConnector)return rejectConnector(ConnectorFailureReason::kInvalidTarget);
+    for(const auto& p:current->properties.entries)if(p.field_id==2U)
+      if(const auto* locked=std::get_if<bool>(&p.value);locked&&*locked)return rejectConnector(ConnectorFailureReason::kInvalidTarget);
+    const auto before=std::get<semantic::ConnectorContent>(current->content);
+    auto content=before;content.routing=request.routing;
+    if(content!=before) {
+      auto candidate=*current;candidate.content=content;
+      if(request.routing==semantic::ConnectorRouting::kOrthogonal) {
+        const auto route=scene::connectorGeometry(candidate,runtime_.textObjects());
+        const auto failure=route?routeFailure(route->status):ConnectorFailureReason::kInvalidEndpoint;
+        if(failure!=ConnectorFailureReason::kNone)return rejectConnector(failure);
+      }
+      const auto f=runtime_.allocateOperationId(),i=runtime_.allocateOperationId();
+      if(f.isZero()||i.isZero()||!runtime_.applyLocalHistoryOperation(
+          {f,runtime_.textDocument(),1,1,semantic::SetConnectorContentOp{request.objectId,content}},
+          {i,runtime_.textDocument(),1,1,semantic::SetConnectorContentOp{request.objectId,before}}))
+        return rejectConnector(ConnectorFailureReason::kObjectRejected);
+      receipt.historyChanged=true;
+    }
+  }
+  receipt.state=ConnectorCommandState::kApplied;receipt.reason=ConnectorFailureReason::kNone;
+  receipt.semanticGeneration=runtime_.semanticGeneration().value();return receipt;
+}
+semantic::ConnectorRouting CanvasRuntimeFacade::readConnectorRoutingPreset() const {
+  return runtime_.connectorRoutingPreset_;
+}
+ConnectorSnapshot CanvasRuntimeFacade::readSelectedConnector() const {
+  return readConnectorState(runtime_.selection_.primary());
+}
+ConnectorSnapshot CanvasRuntimeFacade::readConnectorState(semantic::ObjectId id) const {
+  ConnectorSnapshot snapshot{};
+  const auto* object=runtime_.textRecord(id);
+  if(!object||object->kind!=semantic::ObjectKind::kConnector)return snapshot;
+  snapshot.available=true;snapshot.objectId=object->id;snapshot.content=std::get<semantic::ConnectorContent>(object->content);
+  snapshot.semanticGeneration=runtime_.semanticGeneration().value();snapshot.sceneRevision=runtime_.sceneRevision();
+  if(const auto* record=runtime_.sceneCoordinator_->runtimeScene().find(object->id)) {
+    if(const auto* geometry=std::get_if<scene::ConnectorGeometry>(&record->derivedGeometry)) {
+      snapshot.routeStatus=geometry->status;snapshot.work=geometry->work;
+      snapshot.algorithmRevision=geometry->algorithmRevision;
+      for(const auto p:geometry->route)snapshot.route.push_back({p.x,p.y});
+    }
+  }
+  return snapshot;
+}
 StickySnapshot CanvasRuntimeFacade::readSelectedSticky() const { StickySnapshot r{}; const auto* o=runtime_.textRecord(runtime_.selection_.primary()); if(o&&o->kind==semantic::ObjectKind::kSticky){r.available=true;r.objectId=o->id;r.content=std::get<semantic::StickyContent>(o->content);} return r; }
 }

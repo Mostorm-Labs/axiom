@@ -489,7 +489,7 @@ void CanvasRuntimeFacade::imageCropPointer(const input::PointerSample& sample) {
     const auto token = imageCrop_->token;
     (void)updateImageCrop({token,r,
         handle==H::kNone ? start.width : std::max(1.01,start.width*r.width/initial.width),
-        handle==H::kNone ? start.height : std::max(1.01,start.height*r.height/initial.height)});
+        handle==H::kNone ? start.height : std::max(1.01,start.height*r.height/initial.height),std::nullopt});
   }
   if (imageCrop_ && sample.phase == input::PointerPhase::kUp) imageCrop_->pointer = {};
 }

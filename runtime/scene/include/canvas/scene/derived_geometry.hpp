@@ -2,6 +2,7 @@
 #include "canvas/foundation/world_geometry.hpp"
 #include "canvas/semantic/object_content.hpp"
 #include "canvas/semantic/object_record.hpp"
+#include "canvas/runtime/connector_route.hpp"
 #include <optional>
 #include <vector>
 #include <variant>
@@ -11,9 +12,14 @@ struct ConnectorGeometry final {
     foundation::WorldPoint start{}, end{};
     std::vector<foundation::WorldPoint> route{};
     bool arrow_end=false;
+    runtime::ConnectorRouteStatus status = runtime::ConnectorRouteStatus::kReady;
+    runtime::ConnectorRouteWork work{};
+    foundation::WorldRect searchedDomain{};
+    std::uint32_t algorithmRevision = 1;
     bool operator==(const ConnectorGeometry& o) const {
         if (start.x != o.start.x || start.y != o.start.y || end.x != o.end.x ||
-            end.y != o.end.y || arrow_end != o.arrow_end || route.size() != o.route.size()) return false;
+            end.y != o.end.y || arrow_end != o.arrow_end || status != o.status ||
+            work != o.work || searchedDomain != o.searchedDomain || route.size() != o.route.size()) return false;
         for (std::size_t i=0; i<route.size(); ++i)
             if (route[i].x != o.route[i].x || route[i].y != o.route[i].y) return false;
         return true;
@@ -25,7 +31,7 @@ using DerivedGeometry = std::variant<std::monostate, TriangleGeometry, Connector
 [[nodiscard]] std::optional<TriangleGeometry> triangleGeometry(const semantic::ShapeContent&) noexcept;
 [[nodiscard]] std::optional<ConnectorGeometry> connectorGeometry(
     const semantic::ObjectRecord& connector,
-    const std::vector<semantic::ObjectRecord>& obstacles = {}) noexcept;
+    const std::vector<semantic::ObjectRecord>& obstacles = {}, bool defer = false) noexcept;
 [[nodiscard]] std::optional<ConnectorGeometry> connectorGeometry(
     const semantic::ConnectorContent&, const semantic::PropertyBag&) noexcept;
 [[nodiscard]] bool pointInTriangle(foundation::WorldPoint, const TriangleGeometry&, float tolerance=0.0F) noexcept;

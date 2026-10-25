@@ -8,6 +8,7 @@ add_library(canvas_runtime_scene STATIC
     src/bounds_system.cpp
     src/reference_geometry.cpp
     src/derived_geometry.cpp
+    src/connector_router.cpp
     src/scene_impact.cpp
     src/scene_dependency_graph.cpp
     src/scene_record_store.cpp
@@ -25,6 +26,17 @@ target_include_directories(canvas_runtime_scene PUBLIC include
 target_link_libraries(canvas_runtime_scene PUBLIC canvas_runtime_foundation
                       canvas_runtime_semantic canvas_runtime_text)
 target_compile_features(canvas_runtime_scene PUBLIC cxx_std_20)
+
+add_executable(axiom_fc05_route_probe tools/fc05_route_probe.cpp)
+target_link_libraries(axiom_fc05_route_probe PRIVATE canvas_runtime_scene)
+if(MSVC)
+    target_compile_options(axiom_fc05_route_probe PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+    target_compile_options(axiom_fc05_route_probe PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+if(EMSCRIPTEN)
+    target_link_options(axiom_fc05_route_probe PRIVATE -sENVIRONMENT=node -sEXIT_RUNTIME=1 -sALLOW_MEMORY_GROWTH=1)
+endif()
 
 if(MSVC)
     target_compile_options(canvas_runtime_scene PRIVATE /W4 /permissive- /WX /EHsc)

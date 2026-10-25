@@ -59,6 +59,7 @@ class CreationSession final {
     snapTargets_ = std::move(targets);
   }
   void setSnapScale(float scale) noexcept { snapScale_ = scale > 0.0F ? scale : 1.0F; }
+  void setRouting(semantic::ConnectorRouting routing) noexcept { routing_ = routing; }
   void setSnapPolicy(SnapPolicy policy) noexcept { snapResolver_.setPolicy(policy); }
   void clear() noexcept;
  private:
@@ -66,6 +67,7 @@ class CreationSession final {
   input::PointerKey pointer_{};
   std::uint64_t objectSeed_ = 0;
   CreationPreset preset_ = CreationPreset::kRectangle;
+  semantic::ConnectorRouting routing_ = semantic::ConnectorRouting::kStraight;
   CreationStyle style_{};
   foundation::WorldRect viewport_{};
   interaction::SnapResolver snapResolver_{};

@@ -7,9 +7,9 @@
 namespace canvas::internal {
 
 foundation::Result<FullMaterializedScene> materializeFullScene(
-    const semantic::SemanticReadView& view, text::RichTextLayoutService* textService) {
+    const semantic::SemanticReadView& view, text::RichTextLayoutService* textService, bool deferRoutes) {
     try {
-        const auto compiled = scene::FullSceneCompiler::compile(view,textService);
+        const auto compiled = scene::FullSceneCompiler::compile(view,textService,deferRoutes);
         if (!compiled) return foundation::Result<FullMaterializedScene>::failure(compiled.error());
         FullMaterializedScene result;
         result.generation = compiled.value().generation;

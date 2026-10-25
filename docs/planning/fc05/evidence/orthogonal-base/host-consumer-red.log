@@ -1,0 +1,15 @@
+Test project C:/Users/Chado/.codex/worktrees/fc05-p32/out/fc05-windows
+    Start 658: FC00XMinimalRuntimeHost
+1/1 Test #658: FC00XMinimalRuntimeHost ..........Exit code 0xc0000409***Exception:   2.78 sec
+[axiom] present begin frame=7 objects=1 scene_records=1
+[axiom] present begin frame=8 objects=1 scene_records=1
+Assertion failed: consumer.setConnectorRouting(routePreset).state == canvas::runtime::ConnectorCommandState::kApplied, file C:\Users\Chado\.codex\worktrees\fc05-p32\apps\minimal_runtime_host\tests\minimal_runtime_host_test.cpp, line 80
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   3.06 sec
+
+The following tests FAILED:
+	658 - FC00XMinimalRuntimeHost (Exit code 0xc0000409)
+Errors while running CTest

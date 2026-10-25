@@ -154,7 +154,7 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
     record.content = semantic::ConnectorContent{
         {startAttachment_.has_value() ? semantic::ConnectorEndpoint{*startAttachment_}
                                       : semantic::ConnectorEndpoint{semantic::FreePointEndpoint{{start.x, start.y}}}}, endPoint,
-        semantic::ConnectorRouting::kStraight};
+        routing_};
     if (preset_ == CreationPreset::kArrow)
       record.properties.entries.push_back({0x201U, semantic::ConnectorDecorationValue::kArrow});
   }

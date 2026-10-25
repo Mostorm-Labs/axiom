@@ -258,6 +258,7 @@ canvas::runtime::ConnectorCommandReceipt DebugControlRouter::createConnector() n
       (nextRequestId() << 8U) ^ 0x434F4E4EULL);
   canvas::runtime::ConnectorCreateRequest request{};
   request.objectId = id;
+  request.content.routing=runtime_->readConnectorRoutingPreset();
   request.content.start.value = canvas::semantic::FreePointEndpoint{{80.0, 140.0}};
   std::optional<canvas::foundation::ObjectId> selectedObject;
   const auto targets = runtime_->mountedCanvasTargets();
@@ -283,6 +284,24 @@ canvas::runtime::ConnectorCommandReceipt DebugControlRouter::createConnector() n
 
 canvas::runtime::StickySnapshot DebugControlRouter::selectedSticky() const {
   return runtime_ ? runtime_->readSelectedSticky() : canvas::runtime::StickySnapshot{};
+}
+
+canvas::runtime::ConnectorCommandReceipt DebugControlRouter::setConnectorRouting(
+    canvas::semantic::ConnectorRouting routing, bool selected) noexcept {
+  if(!runtime_)return {};
+  canvas::runtime::ConnectorRoutingRequest request{};request.routing=routing;
+  if(selected) {
+    const auto connector=runtime_->readSelectedConnector();
+    if(!connector.available)return {};
+    request.objectId=connector.objectId;
+  }
+  const auto receipt=runtime_->setConnectorRouting(request);
+  connectorStickyStatus_=receipt.state==canvas::runtime::ConnectorCommandState::kApplied
+      ? "Connector routing: applied" : "Connector routing: rejected (no route / invalid target / budget)";
+  return receipt;
+}
+canvas::semantic::ConnectorRouting DebugControlRouter::connectorRoutingPreset() const {
+  return runtime_?runtime_->readConnectorRoutingPreset():canvas::semantic::ConnectorRouting::kStraight;
 }
 
 canvas::runtime::ConnectorSnapshot DebugControlRouter::selectedConnector() const {

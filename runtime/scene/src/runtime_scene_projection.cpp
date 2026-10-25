@@ -202,7 +202,7 @@ const InspectionRecord* RuntimeSceneProjection::find(semantic::ObjectId id) cons
     return it == records.end() ? nullptr : &*it;
 }
 
-foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::SemanticReadView& view, text::RichTextLayoutService* textService) {
+foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::SemanticReadView& view, text::RichTextLayoutService* textService, bool deferRoutes) {
     RuntimeSceneProjection out;
     out.generation = view.generation();
     auto source = view.allObjects();
@@ -243,7 +243,7 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
         projectedRecord.transform = projectedTransform;
         auto derivedGeometry = deriveGeometry(projectedRecord);
         if (record.kind == semantic::ObjectKind::kConnector) {
-            if (const auto route = connectorGeometry(record, source); route) derivedGeometry = *route;
+            if (const auto route = connectorGeometry(record, source, deferRoutes); route) derivedGeometry = *route;
         }
         const auto bounds = computeBounds(projectedRecord, layout.get(),
             std::get_if<ConnectorGeometry>(&derivedGeometry));
