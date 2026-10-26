@@ -343,7 +343,14 @@ TEST_P(SectionHistoryBudget,ActualBidirectionalAdmission) {
     const auto row=GetParam();const auto variant=row["variant_id"].get<std::string>();SCOPED_TRACE(variant);
     const auto expected=read(root/row["expected"]["path"].get<std::string>());
     const auto name=variant.substr(variant.find('/')+1);
-    const auto path=root/"out/fc08-section-c/frozen-budgets";
+    const bool amended=row["case_id"]=="FC08-H03";
+    const auto path=root/(amended?"out/fc08-section-c/h03-input-overlay-v0.1":"out/fc08-section-c/frozen-budgets");
+    if(amended) {
+        const auto overlay=read(root/".aegis/packages/FC-08-SECTION-C-H03-v0.1/input-overlay.json");
+        ASSERT_EQ(overlay["status"],"ACCEPTED_BY_USER_FOR_C_VERIFICATION");
+        std::printf("C H03 active input=H03-v0.1 expected=%s original-input-preserved=%s\n",
+            row["expected"]["sha256"].get<std::string>().c_str(),row["input"]["sha256"].get<std::string>().c_str());
+    }
     const auto forward=bytes(path/(name+".pb"));ASSERT_FALSE(forward.empty());
     HistoryRuntime<IndexedObjectStore> rt;
     if(row["case_id"]=="FC08-H03") {
@@ -355,9 +362,26 @@ TEST_P(SectionHistoryBudget,ActualBidirectionalAdmission) {
         ASSERT_EQ(rt.apply(seedBytes).disposition,ApplyDisposition::kApplied);
     }
     const auto before=rt.objects.allObjects();const auto ordinal=rt.clock.lastCommittedOrdinal();const auto generation=rt.generation.current();
+    const auto trace=[&](const char* phase) {
+        const Json observed={{"variant_id",variant},{"input_version",amended?"H03-v0.1":"original"},
+            {"phase",phase},{"objects",rt.objects.size()},{"generation",rt.generation.current().value()},
+            {"ordinal",rt.clock.lastCommittedOrdinal().value()},{"history_size",rt.history.size()},
+            {"can_undo",rt.history.canUndo()},{"can_redo",rt.history.canRedo()},
+            {"applied_submissions",rt.submitted.size()},{"last_history_submit_disposition",static_cast<int>(rt.last)}};
+        std::printf("C budget SUT observation=%s\n",observed.dump().c_str());
+    };
+    trace("before-forward");
     bool admitted=false;
     const auto decoded=SemanticCodec::decodeProtobufOperation(forward);
+    if(amended) {
+        ASSERT_TRUE(decoded.ok())<<"amended forward must be valid before inverse-budget admission";
+        const auto prepared=rt.engine.prepare(decoded.operation,{rt.objects,rt.ledger});
+        ASSERT_EQ(prepared.disposition,PrepareDisposition::kPrepared);ASSERT_TRUE(prepared.plan);
+        EXPECT_EQ(prepared.plan->creates.size(),1U);EXPECT_TRUE(prepared.plan->deletes.empty());
+        EXPECT_TRUE(prepared.plan->replacements.empty());
+    }
     if(decoded.ok()) admitted=rt.history.executeUndoable(decoded.operation);
+    trace("after-forward-attempt");
     bool independentSizePredicate=SemanticCodec::preflightOperationBytes(forward)==SemanticError::kNone;
     if(row["case_id"]=="FC08-H03") independentSizePredicate=rt.objects.size()<=65535U && before.size()+1U<=65535U;
     for(const auto& predicate:expected["predicates"]) {
@@ -370,15 +394,44 @@ TEST_P(SectionHistoryBudget,ActualBidirectionalAdmission) {
         EXPECT_EQ(rt.objects.allObjects(),before);EXPECT_EQ(rt.history.size(),0U);
         EXPECT_EQ(rt.generation.current(),generation);EXPECT_EQ(rt.clock.lastCommittedOrdinal(),ordinal);
         if(decoded.ok()) EXPECT_FALSE(rt.ledger.find(decoded.operation.id));
+        EXPECT_FALSE(rt.history.canUndo());EXPECT_FALSE(rt.history.canRedo());
+        if(amended) { EXPECT_EQ(before.size()+1U,65536U);EXPECT_EQ(rt.last,ApplyDisposition::kRejected); }
     } else {
+        const auto after=rt.objects.allObjects();
+        if(amended) { EXPECT_EQ(after.size(),65535U);EXPECT_EQ(before.size(),65534U); }
         ASSERT_TRUE(rt.history.undo());EXPECT_EQ(rt.objects.allObjects(),before);
+        trace("after-real-undo");
         ASSERT_TRUE(rt.history.redo());EXPECT_EQ(rt.history.size(),1U);
+        trace("after-real-redo");
+        EXPECT_EQ(rt.objects.allObjects(),after);
+        ASSERT_EQ(rt.submitted.size(),3U);
+        EXPECT_NE(rt.submitted[0],rt.submitted[1]);EXPECT_NE(rt.submitted[1],rt.submitted[2]);
+        EXPECT_NE(rt.submitted[0],rt.submitted[2]);
+        Json emitted=Json::array();
+        for(const auto& value:rt.submitted) {
+            const auto& raw=value.value().bytes;
+            emitted.push_back(hex(std::string(raw.begin(),raw.end())));
+        }
+        std::printf("C budget actual F/U/Redo operation IDs=%s\n",emitted.dump().c_str());
+        EXPECT_EQ(rt.generation.current().value(),generation.value()+3U);
         EXPECT_EQ(rt.clock.lastCommittedOrdinal().value(),ordinal.value()+3U);
     }
     std::printf("C budget variant=%s forward-wire=%zu admitted=%d size-predicate=%d history=%zu\n",variant.c_str(),forward.size(),admitted,independentSizePredicate,rt.history.size());
 }
 INSTANTIATE_TEST_SUITE_P(Accepted,SectionHistoryBudget,testing::ValuesIn(budgetCases()),
     [](const testing::TestParamInfo<Json>& i){return std::to_string(i.index);});
+
+TEST(SectionHistory,H03HistoricalOriginalRecipesRemainInvalid) {
+    for(const auto& row:budgetCases())if(row["case_id"]=="FC08-H03") {
+        const auto name=row["variant_id"].get<std::string>().substr(9);
+        const auto original=root/"out/fc08-section-c/frozen-budgets";
+        const auto seedBytes=bytes(original/(name+".seed.pb"));ASSERT_FALSE(seedBytes.empty());
+        const auto seed=SemanticCodec::decodeProtobufOperation(seedBytes);
+        EXPECT_FALSE(seed.ok());
+        std::printf("C historical H03 original remains rejected before setup variant=%s error=%d; not a product budget PASS\n",
+            row["variant_id"].get<std::string>().c_str(),static_cast<int>(seed.error));
+    }
+}
 
 TEST(SectionHistory,ChangedCanonicalBasisAfterHistoryReserveRejectsLocalPublish) {
     struct Runtime final : HistoryRuntime<IndexedObjectStore> {
