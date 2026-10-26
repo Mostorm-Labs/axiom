@@ -1,0 +1,13 @@
+{
+  "format": "fc08-section-a-source-path-amendment-v1",
+  "authorized_by": "Same direct human Section implementation instruction; mechanical path resolution, no new semantic scope",
+  "parent_package_revision": "48282ee83f70dcbfa0b7db3c7d252797fcb91fe9",
+  "parent_package_sha256": "d83cbc26289764a96a5d4e0c2152d281fa8c3ea331163195f29e3b3fc2cb9683",
+  "added_allowed_files": [
+    "runtime/semantic/src/object_record_semantics_internal.hpp",
+    "runtime/semantic/src/operation_state_validator.cpp",
+    "runtime/semantic/tools/g1_06_projection.cpp"
+  ],
+  "reason": "Share typed Section leaf normalization/validation with the existing codec and enforce identical property applicability on existing canonical PatchProperties admission. The exhaustive legacy G1 diagnostic visitor explicitly rejects the new alternative so existing regressions still compile without inventing Section snapshot/projection support. No old oracle, output format, runtime owner or operation17/18 behavior is changed.",
+  "authorized_slice": "A only"
+}
