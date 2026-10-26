@@ -1,0 +1,190 @@
+{
+  "id": "FC08-RED-01",
+  "status": "NOT_RUN_BLOCKED_VERIFICATION",
+  "qualification_subject_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+  "frozen_red_subject_revision": "0d3b10bba1ac4a31d669dd4a45f94975ec24f3c3",
+  "baseline_production_equivalence_observed": true,
+  "product_runner_established": false,
+  "valid_product_RED_observed": false,
+  "cases": [
+    {
+      "case_id": "FC08-W02",
+      "variant_id": "FC08-W02/SCW01",
+      "input": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W02/SCW01/input.json",
+        "sha256": "a458b2925fa78acc1cc611ba3d9a47372556db887795db65739f52b31ebc4d47",
+        "size": 270
+      },
+      "expected": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W02/SCW01/expected.json",
+        "sha256": "3a3e7dda159a17692d467139092a2775a3dbc6448bd2156944f5d1b4c3c6e6a7",
+        "size": 170
+      },
+      "result": "NOT_RUN",
+      "failure_boundary": "blocked preflight before product runner establishment/SUT invocation",
+      "sut_invocation": null,
+      "raw_SUT_observation": null,
+      "blocker_ids": [
+        "BOOT-VER-01",
+        "BOOT-PKG-02"
+      ]
+    },
+    {
+      "case_id": "FC08-T01",
+      "variant_id": "FC08-T01/Group-empty-introduce",
+      "input": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-T01/Group-empty-introduce/input.json",
+        "sha256": "93ccbab0f5295b90e65236d3466c232c73dbbcb5868ba330b189a5318de2a28b",
+        "size": 5071
+      },
+      "expected": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-T01/Group-empty-introduce/expected.json",
+        "sha256": "fb881461a87aedba8547c1945e5ba407ae513af1bf9537af499874a4708372a4",
+        "size": 884
+      },
+      "result": "NOT_RUN",
+      "failure_boundary": "blocked preflight before product runner establishment/SUT invocation",
+      "sut_invocation": null,
+      "raw_SUT_observation": null,
+      "blocker_ids": [
+        "BOOT-VER-01",
+        "BOOT-PKG-02"
+      ]
+    },
+    {
+      "case_id": "FC08-H01",
+      "variant_id": "FC08-H01/empty-Section",
+      "input": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H01/empty-Section/input.json",
+        "sha256": "eb11fc05284109d073413e2672474e43798dc47dc9c026fdb120ce0826f11c65",
+        "size": 6204
+      },
+      "expected": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H01/empty-Section/expected.json",
+        "sha256": "653a8c0482e3ee7a23d66968ce7bec032e7a7fbee7b4dd6b8e76262698030906",
+        "size": 878
+      },
+      "result": "NOT_RUN",
+      "failure_boundary": "blocked preflight before product runner establishment/SUT invocation",
+      "sut_invocation": null,
+      "raw_SUT_observation": null,
+      "blocker_ids": [
+        "BOOT-VER-01",
+        "BOOT-PKG-02"
+      ]
+    },
+    {
+      "case_id": "FC08-S01",
+      "variant_id": "FC08-S01/boundary-full-child-inside",
+      "input": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-inside/input.json",
+        "sha256": "9c9977c1dfca068586503c625a767f956b8795c97613729202ea8bf74c601c5a",
+        "size": 2840
+      },
+      "expected": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-inside/expected.json",
+        "sha256": "4d0051cf58e22de52688039c38a638a45555e7cf3b92cec609fff6b4ca493544",
+        "size": 482
+      },
+      "result": "NOT_RUN",
+      "failure_boundary": "blocked preflight before product runner establishment/SUT invocation",
+      "sut_invocation": null,
+      "raw_SUT_observation": null,
+      "blocker_ids": [
+        "BOOT-VER-01",
+        "BOOT-PKG-02"
+      ]
+    },
+    {
+      "case_id": "FC08-K02",
+      "variant_id": "FC08-K02/Section-and-Triangle-and-resource",
+      "input": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-K02/Section-and-Triangle-and-resource/input.json",
+        "sha256": "48c137ea83e9d3142862620469a3a22325dad98cfd13b6aad5c7cedcd85fc62d",
+        "size": 2092
+      },
+      "expected": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-K02/Section-and-Triangle-and-resource/expected.json",
+        "sha256": "0d1d3bf40302ed9d56d1565d354bf2de4a675ad01759e7f2eedff4fdc5c4e4f3",
+        "size": 351
+      },
+      "result": "NOT_RUN",
+      "failure_boundary": "blocked preflight before product runner establishment/SUT invocation",
+      "sut_invocation": null,
+      "raw_SUT_observation": null,
+      "blocker_ids": [
+        "BOOT-VER-01",
+        "BOOT-PKG-02"
+      ]
+    },
+    {
+      "case_id": "FC08-P01",
+      "variant_id": "FC08-P01/create",
+      "input": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-P01/create/input.json",
+        "sha256": "4c399d7e656913e370312e7f6535372e33633ef52b41e5aa238d401d269231fa",
+        "size": 6541
+      },
+      "expected": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-P01/create/expected.json",
+        "sha256": "0a44aebc16b1053556d17a10364580ce2242f280bc6ac7be3fc2dfe4348dc6ff",
+        "size": 1334
+      },
+      "result": "NOT_RUN",
+      "failure_boundary": "blocked preflight before product runner establishment/SUT invocation",
+      "sut_invocation": null,
+      "raw_SUT_observation": null,
+      "blocker_ids": [
+        "BOOT-VER-01",
+        "BOOT-PKG-02"
+      ]
+    },
+    {
+      "case_id": "FC08-P02",
+      "variant_id": "FC08-P02/confirmed-utf8-title",
+      "input": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-P02/confirmed-utf8-title/input.json",
+        "sha256": "c34b460da9a9ce7e2ebc8f595cd7170e9bd30d60995066ed5526a6498b618844",
+        "size": 874
+      },
+      "expected": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-P02/confirmed-utf8-title/expected.json",
+        "sha256": "941b9d5dc50645c04dd017fee7bebc0818233fb352eb79c6e41627a58e2a0c75",
+        "size": 851
+      },
+      "result": "NOT_RUN",
+      "failure_boundary": "blocked preflight before product runner establishment/SUT invocation",
+      "sut_invocation": null,
+      "raw_SUT_observation": null,
+      "blocker_ids": [
+        "BOOT-VER-01",
+        "BOOT-PKG-02"
+      ]
+    }
+  ],
+  "profiles": {
+    "windows-native": {
+      "result": "NOT_RUN",
+      "reason": "upstream verification binding conflict; no environment-failure or product-RED inference",
+      "SUT_invocation": null
+    },
+    "web-wasm": {
+      "result": "NOT_RUN",
+      "reason": "upstream verification binding conflict; no environment-failure or product-RED inference",
+      "SUT_invocation": null
+    },
+    "headless": {
+      "result": "NOT_RUN",
+      "reason": "upstream verification binding conflict; no environment-failure or product-RED inference",
+      "SUT_invocation": null
+    }
+  },
+  "historical_baseline_records": "Preserved by exact revision; not repurposed as a new product RED run",
+  "not_valid_RED": [
+    "checker unit failures or passes",
+    "descriptor inspection",
+    "qualification hook observations",
+    "synthetic traces",
+    "missing runner/environment"
+  ]
+}

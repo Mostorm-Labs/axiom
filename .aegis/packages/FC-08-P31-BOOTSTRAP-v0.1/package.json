@@ -1,0 +1,38 @@
+{
+  "format": "aegis-repo-local-execution-package-v1",
+  "package_id": "FC-08-P31-BOOTSTRAP-v0.1",
+  "stage": "P31_VERIFICATION_BOOTSTRAP",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "repository_id": 1306396623
+  },
+  "authorization_basis": "Explicit human Codex Handoff \u2014 FC-08 P31 Preflight Bootstrap Repair; verification-only scope items1-7 and fail-closed stop rule",
+  "status": "AUTHORIZED_BOOTSTRAP_ONLY_PRODUCT_REVIEW_NOT_ACCEPTED",
+  "materialization_ref": "refs/heads/codex/fc08-p31-bootstrap",
+  "task_anchor": {
+    "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+    "relation": "ancestor"
+  },
+  "source_package_revision": "f67b9db29090449799bd3e05ef7f1d269dab6d31",
+  "source_package_ref": {
+    "path": ".aegis/packages/FC-08-PRODUCT-P31-v0.1/package.json",
+    "revision": "f67b9db29090449799bd3e05ef7f1d269dab6d31",
+    "sha256": "16bf27433764def988bbff5eb925f08816c42f32842e23a4b33e46976c2df165"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "a891be947ee557e48c035c717b3fca310045563a5d0837491876e4d212fef215"
+  },
+  "inputs_lock_ref": {
+    "path": "inputs.lock.json",
+    "sha256": "2bae873730a3deb604c9ef90b56aa1a789c1df97d7cbcb36b05d977d98571a2b"
+  },
+  "product_P32_authorized": false,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "verification_tools_ref": {
+    "path": "verification-tools.json",
+    "sha256": "20388c9db10260baa81f4b9a71dfa19598f5a7866ff9f559d1eaeaeeccfcfefc"
+  }
+}

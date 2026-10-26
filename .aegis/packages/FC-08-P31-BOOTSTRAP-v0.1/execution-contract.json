@@ -1,0 +1,55 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "authorized_work": "P31 verification bootstrap only",
+  "implementation": {
+    "required_changes": [
+      "Resolve repository/package/anchor and frozen byte identities",
+      "Audit frozen inputs and exact product-runner/profile bindings before any SUT adapter work",
+      "Run PackageBindingPreflight and EvidenceContractPreflight and persist commands, stdout/stderr and exit codes",
+      "Record existing owner/source boundaries and future authority-bound design requirements",
+      "Only if binding/oracle truth is resolved, establish actual product-runner adapters and execute FC08-RED-01; otherwise return precise blockers to P20/P31"
+    ],
+    "allowed_paths": [
+      ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.1/**",
+      ".aegis/results/FC-08-P31-BOOTSTRAP/**",
+      "tools/fc08/bootstrap_preflight.py",
+      "tests/fc08/bootstrap_preflight_test.py"
+    ],
+    "forbidden_changes": [
+      "All production runtime/schema/registry/host/debug UI/CMake behavior",
+      "All frozen FC08 inputs, expected values, oracle sources, historical results and qualification hooks",
+      "All global Aegis registries and main",
+      "FC08 product P32 or product Gate/DEV/PHYS/release claims"
+    ],
+    "runner_stop_condition": "No product runner stub or synthetic/capability-summary RED. If exact applicability or input/oracle meaning is unresolved, stop tooling expansion and return to the owning control stage."
+  },
+  "tests": {
+    "required": [
+      "Checker unit sensitivity tests (not Axiom product tests)",
+      "PackageBindingPreflight against exact f67 package identities",
+      "EvidenceContractPreflight against exact f67 locks",
+      "Protected-input/source byte preservation audit"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Both product package preflights PASS",
+      "ImplementationDesignPreflight has no unresolved authority/verification decision",
+      "Actual FC08-RED-01 observations at frozen real SUT boundary on required profiles",
+      "Exact reviewer-accessible result; product_P32_authorized=false"
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "AUTHORITY_CONFLICT",
+      "BLOCKED_ENVIRONMENT"
+    ],
+    "policy": "Do not invent applicability, pick contradictory fixture truth or alter accepted expected values. Persist partial findings and return CONTROL_REVIEW with P20/P31 owner handoff."
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "product_P32_authorized": false
+}
