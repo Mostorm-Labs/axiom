@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 BASE = 'af1aff801369052eb7b94716f6b4ab3e899eb3e9'
-PKG = '.aegis/packages/FC-08-SECTION-DE-v0.4'
+PKG = '.aegis/packages/FC-08-SECTION-DE-v0.5'
 RESULT = '.aegis/results/FC-08-SECTION-DE'
 BRANCH = 'refs/heads/codex/fc08-section-scene-host'
 
@@ -28,7 +28,7 @@ def materialize():
     assert git('symbolic-ref', 'HEAD') == BRANCH
     authority = json.loads((ROOT / '.aegis/packages/FC-08-SECTION-C-v0.1/authority.lock.json').read_text())
     authority.update(status='Current', source_revision=BASE,
-        authorization='Direct user instruction: 继续实现后续的切片D/E',
+        authorization='Direct user instruction: 缁х画瀹炵幇鍚庣画鐨勫垏鐗嘍/E',
         previous_C=ref('.aegis/results/FC-08-SECTION-C-H03-v0.1/terminal-result.json'))
     write(ROOT / PKG / 'authority.lock.json', authority)
     tests = [
@@ -53,6 +53,10 @@ def preflight(phase, audit):
     errors=[]; checked=[]
     def check(v):
         if isinstance(v,dict):
+            if 'source_sha256' in v:
+                before=subprocess.check_output(['git','show',v['revision']+':'+v['path']],cwd=ROOT)
+                assert hashlib.sha256(before).hexdigest()==v['source_sha256'],v['path']
+                checked.append(v)
             if 'path' in v and 'sha256' in v:
                 assert (ROOT/v['path']).resolve().is_relative_to(ROOT)
                 assert ref(v['path'])==v,v['path']
