@@ -1,0 +1,25 @@
+Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0:Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1
+[==========] Running 2 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 2 tests from Accepted/SectionHistoryBudget
+[ RUN      ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0
+C H03 active input=H03-v0.1 expected=79d2b28490940471480f11e07fb7bf2885f73bc1b740ed02374454e58cd3fa1f original-input-preserved=f77b15b0b27e3a5136cbb0b1cc31e26efb729499eef639cdd15ecdfb65ee09c6
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":1,"history_size":0,"input_version":"H03-v0.1","last_history_submit_disposition":2,"objects":65534,"ordinal":1,"phase":"before-forward","variant_id":"FC08-H03/root-children-65534"}
+C budget SUT observation={"applied_submissions":1,"can_redo":false,"can_undo":true,"generation":2,"history_size":1,"input_version":"H03-v0.1","last_history_submit_disposition":0,"objects":65535,"ordinal":2,"phase":"after-forward-attempt","variant_id":"FC08-H03/root-children-65534"}
+C budget SUT observation={"applied_submissions":2,"can_redo":true,"can_undo":false,"generation":3,"history_size":1,"input_version":"H03-v0.1","last_history_submit_disposition":0,"objects":65534,"ordinal":3,"phase":"after-real-undo","variant_id":"FC08-H03/root-children-65534"}
+C budget SUT observation={"applied_submissions":3,"can_redo":false,"can_undo":true,"generation":4,"history_size":1,"input_version":"H03-v0.1","last_history_submit_disposition":0,"objects":65535,"ordinal":4,"phase":"after-real-redo","variant_id":"FC08-H03/root-children-65534"}
+C budget actual F/U/Redo operation IDs=["000000000000000000000000000003e9","00000000000000800000000000000000","01000000000000800000000000000000"]
+C budget variant=FC08-H03/root-children-65534 forward-wire=8126441 admitted=1 size-predicate=1 history=1
+[       OK ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0 (7145 ms)
+[ RUN      ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1
+C H03 active input=H03-v0.1 expected=e1cc24f9249d0d1d6f7c0cd0e61e5c66f9dadab13392425f90e0c44b577db110 original-input-preserved=7d55163ba474acd767dc6a4d9ed3628c62403f01f9e5b7d45228012d6ee2c92a
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":1,"history_size":0,"input_version":"H03-v0.1","last_history_submit_disposition":2,"objects":65535,"ordinal":1,"phase":"before-forward","variant_id":"FC08-H03/root-children-65535"}
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":1,"history_size":0,"input_version":"H03-v0.1","last_history_submit_disposition":2,"objects":65535,"ordinal":1,"phase":"after-forward-attempt","variant_id":"FC08-H03/root-children-65535"}
+C budget variant=FC08-H03/root-children-65535 forward-wire=8126565 admitted=0 size-predicate=0 history=0
+[       OK ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1 (3045 ms)
+[----------] 2 tests from Accepted/SectionHistoryBudget (10191 ms total)
+
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test suite ran. (10191 ms total)
+[  PASSED  ] 2 tests.

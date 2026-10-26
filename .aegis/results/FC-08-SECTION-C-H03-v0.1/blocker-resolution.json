@@ -1,0 +1,25 @@
+{
+  "resolution": "H03_INPUT_VERSION_CORRECTION_ACCEPTED_AND_VERIFIED",
+  "accepted_proposal": {
+    "revision": "a68f37da7b261eade60e06209ac6ca8a1ac5faa8",
+    "path": ".aegis/results/FC-08-SECTION-C/h03-input-proposal-001/proposal.json",
+    "sha256": "d31824ed2e41c9f72d71b3566efe2cf340f92c7eb1d7cefe0ee5bd3800cc660c"
+  },
+  "materialized_package": {
+    "revision": "6bab7b7ffde876317c11a8e69201da9505d6a476",
+    "path": ".aegis/packages/FC-08-SECTION-C-H03-v0.1/package.json",
+    "sha256": "afe81967b3032612920d2c4b9752ba2ced3c203a555f57149e2a131269ace4b0"
+  },
+  "accepted_overlay": {
+    "path": ".aegis/packages/FC-08-SECTION-C-H03-v0.1/input-overlay.json",
+    "sha256": "71249644f37d2a7c1c3bb4b6492be28fe6f4bea79cb805a13c026994b1b39657"
+  },
+  "resolves": ".aegis/results/FC-08-SECTION-C/blockers.json (H03 items only)",
+  "old_records_immutable": true,
+  "old_invalid_input_became_PASS": false,
+  "both_original_expected_unchanged": true,
+  "global_catalog_or_registries_modified": false,
+  "remaining_preserved_baseline_failure": [
+    "StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds"
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "source_head": "7570a816b058f7df2f67ef7fcdcbf22835e93ce8",
+  "argv": [
+    "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\build\\runtime\\semantic\\tests\\axiom_fc08_section_history_tests.exe",
+    "--gtest_filter=Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0:Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1"
+  ],
+  "exit_code": 0,
+  "executable_sha256": "ad6731d1d4568fe1015e0e423b0282017e94d994830e7231324bef5b91ca836d",
+  "input_observations_before_after_equal": true,
+  "input_observations": [
+    {
+      "variant_id": "FC08-H03/root-children-65534",
+      "role": "F",
+      "path": "out/fc08-section-c/h03-input-overlay-v0.1/root-children-65534.pb",
+      "sha256": "6b16921d644ab5faddafff6d0c260b8141bb7911bbd48aa177d8a7935330d321",
+      "bytes": 8126441
+    },
+    {
+      "variant_id": "FC08-H03/root-children-65534",
+      "role": "U",
+      "path": "out/fc08-section-c/h03-input-overlay-v0.1/root-children-65534.reference-u.pb",
+      "sha256": "e12e57834d9e28337b9a82dc337549ed9cae9f1491ab59a9ad52367b2e2df631",
+      "bytes": 8126587
+    },
+    {
+      "variant_id": "FC08-H03/root-children-65534",
+      "role": "independent-before-seed",
+      "path": "out/fc08-section-c/h03-input-overlay-v0.1/root-children-65534.seed.pb",
+      "sha256": "97dc3c1b3e790f3d1c720ecf0d1df803f213871030ecc1f238570cc6018d3475",
+      "bytes": 7798600
+    },
+    {
+      "variant_id": "FC08-H03/root-children-65535",
+      "role": "F",
+      "path": "out/fc08-section-c/h03-input-overlay-v0.1/root-children-65535.pb",
+      "sha256": "45b9719e51f329a61f6f8a2a5267abaced626c62f201e4ef3001f57cf8303f10",
+      "bytes": 8126565
+    },
+    {
+      "variant_id": "FC08-H03/root-children-65535",
+      "role": "U",
+      "path": "out/fc08-section-c/h03-input-overlay-v0.1/root-children-65535.reference-u.pb",
+      "sha256": "ef2259ed16170ebc6ab68e7b75564f7a8ac60e2607d6d763591233304e41faca",
+      "bytes": 8126711
+    },
+    {
+      "variant_id": "FC08-H03/root-children-65535",
+      "role": "independent-before-seed",
+      "path": "out/fc08-section-c/h03-input-overlay-v0.1/root-children-65535.seed.pb",
+      "sha256": "0fb22472704633fdba93d48ac82c786576faa87598d2e46a04ed370858c39d1a",
+      "bytes": 7798719
+    },
+    {
+      "variant_id": "FC08-H03/root-children-65534",
+      "role": "historical-original-F",
+      "path": "out/fc08-section-c/frozen-budgets/root-children-65534.pb",
+      "sha256": "fb9eaa43f11fea93607ca4ee00b28465c7f3f8c2d24a12833488c7c4ac77363b",
+      "bytes": 7995372
+    },
+    {
+      "variant_id": "FC08-H03/root-children-65534",
+      "role": "historical-original-independent-before-seed",
+      "path": "out/fc08-section-c/frozen-budgets/root-children-65534.seed.pb",
+      "sha256": "1714a0d0e93915632f0430f2c696ca8e6200d5c2c60d95d20aca4a4ab74316da",
+      "bytes": 7733066
+    },
+    {
+      "variant_id": "FC08-H03/root-children-65535",
+      "role": "historical-original-F",
+      "path": "out/fc08-section-c/frozen-budgets/root-children-65535.pb",
+      "sha256": "75d41a3e30a176a64742a9ba08fb7e4697f9863f45b3be1104691d4676165e5b",
+      "bytes": 7995494
+    },
+    {
+      "variant_id": "FC08-H03/root-children-65535",
+      "role": "historical-original-independent-before-seed",
+      "path": "out/fc08-section-c/frozen-budgets/root-children-65535.seed.pb",
+      "sha256": "75fdfbb8c375d68048f0977731b7ff1148ac0d842a78cca2d337d41b0f560748",
+      "bytes": 7733184
+    }
+  ],
+  "reason": "CTest JUnit limits passed-test stdout to 1024 bytes; preserve direct same-binary complete raw observations without changing tests or global CTest policy."
+}

@@ -1,0 +1,109 @@
+{
+  "source_revision": "7570a816b058f7df2f67ef7fcdcbf22835e93ce8",
+  "DUT_production_source": "4a4c0b419a57fdaae12e8d7454f5463361f1c501",
+  "package_revision": "6bab7b7ffde876317c11a8e69201da9505d6a476",
+  "rows": [
+    {
+      "variant_id": "FC08-H03/root-children-65534",
+      "active_input": "H03-v0.1",
+      "status": "PASS_NATIVE_C_OWNER_BOUNDARY",
+      "observations": [
+        {
+          "applied_submissions": 0,
+          "can_redo": false,
+          "can_undo": false,
+          "generation": 1,
+          "history_size": 0,
+          "input_version": "H03-v0.1",
+          "last_history_submit_disposition": 2,
+          "objects": 65534,
+          "ordinal": 1,
+          "phase": "before-forward",
+          "variant_id": "FC08-H03/root-children-65534"
+        },
+        {
+          "applied_submissions": 1,
+          "can_redo": false,
+          "can_undo": true,
+          "generation": 2,
+          "history_size": 1,
+          "input_version": "H03-v0.1",
+          "last_history_submit_disposition": 0,
+          "objects": 65535,
+          "ordinal": 2,
+          "phase": "after-forward-attempt",
+          "variant_id": "FC08-H03/root-children-65534"
+        },
+        {
+          "applied_submissions": 2,
+          "can_redo": true,
+          "can_undo": false,
+          "generation": 3,
+          "history_size": 1,
+          "input_version": "H03-v0.1",
+          "last_history_submit_disposition": 0,
+          "objects": 65534,
+          "ordinal": 3,
+          "phase": "after-real-undo",
+          "variant_id": "FC08-H03/root-children-65534"
+        },
+        {
+          "applied_submissions": 3,
+          "can_redo": false,
+          "can_undo": true,
+          "generation": 4,
+          "history_size": 1,
+          "input_version": "H03-v0.1",
+          "last_history_submit_disposition": 0,
+          "objects": 65535,
+          "ordinal": 4,
+          "phase": "after-real-redo",
+          "variant_id": "FC08-H03/root-children-65534"
+        }
+      ],
+      "actual_operation_ids": [
+        "000000000000000000000000000003e9",
+        "00000000000000800000000000000000",
+        "01000000000000800000000000000000"
+      ],
+      "reference_U_submitted": false,
+      "raw_test": "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0"
+    },
+    {
+      "variant_id": "FC08-H03/root-children-65535",
+      "active_input": "H03-v0.1",
+      "status": "PASS_NATIVE_C_OWNER_BOUNDARY",
+      "observations": [
+        {
+          "applied_submissions": 0,
+          "can_redo": false,
+          "can_undo": false,
+          "generation": 1,
+          "history_size": 0,
+          "input_version": "H03-v0.1",
+          "last_history_submit_disposition": 2,
+          "objects": 65535,
+          "ordinal": 1,
+          "phase": "before-forward",
+          "variant_id": "FC08-H03/root-children-65535"
+        },
+        {
+          "applied_submissions": 0,
+          "can_redo": false,
+          "can_undo": false,
+          "generation": 1,
+          "history_size": 0,
+          "input_version": "H03-v0.1",
+          "last_history_submit_disposition": 2,
+          "objects": 65535,
+          "ordinal": 1,
+          "phase": "after-forward-attempt",
+          "variant_id": "FC08-H03/root-children-65535"
+        }
+      ],
+      "actual_operation_ids": [],
+      "reference_U_submitted": false,
+      "raw_test": "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1"
+    }
+  ]
+}

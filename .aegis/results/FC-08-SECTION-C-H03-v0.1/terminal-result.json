@@ -1,0 +1,57 @@
+{
+  "task": "FC-08 Section C accepted H03 amendment",
+  "status": "READY_FOR_CONTROL_REVIEW",
+  "result_revision": "7570a816b058f7df2f67ef7fcdcbf22835e93ce8",
+  "materialized_ref": "refs/heads/codex/fc08-section-history",
+  "production_source_revision": "4a4c0b419a57fdaae12e8d7454f5463361f1c501",
+  "product_behavior_changed": false,
+  "package_revision": "6bab7b7ffde876317c11a8e69201da9505d6a476",
+  "package_sha256": "afe81967b3032612920d2c4b9752ba2ced3c203a555f57149e2a131269ace4b0",
+  "results": {
+    "package_preflights": "PASS_H03_AMENDMENT",
+    "scope_preservation": "PASS_H03_AMENDMENT",
+    "actual_H03": {
+      "tests": 2,
+      "passed": 2,
+      "skipped": 0
+    },
+    "C_native_regression": {
+      "tests": 140,
+      "passed": 140,
+      "skipped": 0
+    },
+    "selected_native_matrix": {
+      "tests": 690,
+      "passed": 689,
+      "failed": 1,
+      "skipped": 0,
+      "CTest_exit": 8,
+      "preserved_baseline_failure": [
+        "StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds"
+      ]
+    },
+    "Axiom_Python_contract_tests": 10,
+    "Axiom_Python_passed": 10,
+    "verification_tool_tests": 6,
+    "verification_tool_passed": 6,
+    "runtime_boundary_check": "PASS",
+    "existing_Native_Runtime_evidence": {
+      "reuse": true,
+      "tests": 13,
+      "passed": 13,
+      "new_run_claimed": false
+    }
+  },
+  "H03_blocker_closed_for_accepted_input_version": true,
+  "frozen_original_and_expected_and_oracles_and_prior_evidence_preserved": true,
+  "remaining_blockers_for_this_bounded_amendment": [],
+  "remaining_baseline_failure_not_reclassified": [
+    "StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds"
+  ],
+  "not_run": [
+    "D/E Section geometry/Scene/Windows-Web product interaction",
+    "Full302 product runner",
+    "Independent P34/DEV/PHYS/release approval"
+  ],
+  "next_smallest_implementation_slice": "Separately authorize D: Section geometry/world transforms/selection scope/Scene publication."
+}

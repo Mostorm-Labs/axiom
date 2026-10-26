@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="3"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="10"
+	timestamp="2026-10-26T23:36:16"
+	>
+	<testcase name="fc08.section_c.SectionHistory.H03HistoricalOriginalRecipesRemainInvalid" classname="fc08.section_c.SectionHistory.H03HistoricalOriginalRecipesRemainInvalid" time="0.418702" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionHistory.H03HistoricalOriginalRecipesRemainInvalid
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionHistory
+[ RUN      ] SectionHistory.H03HistoricalOriginalRecipesRemainInvalid
+C historical H03 original remains rejected before setup variant=FC08-H03/root-children-65534 error=10; not a product budget PASS
+C historical H03 original remains rejected before setup variant=FC08-H03/root-children-65535 error=10; not a product budget PASS
+[       OK ] SectionHistory.H03HistoricalOriginalRecipesRemainInvalid (377 ms)
+[----------] 1 test from SectionHistory (377 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (377 ms total)
+[  PASSED  ] 1 test.
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0" classname="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0" time="6.688" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Accepted/SectionHistoryBudget
+[ RUN      ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0
+C H03 active input=H03-v0.1 expected=79d2b28490940471480f11e07fb7bf2885f73bc1b740ed02374454e58cd3fa1f original-input-preserved=f77b15b0b27e3a5136cbb0b1cc31e26efb729499eef639cdd15ecdfb65ee09c6
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":1,"history_size":0,"input_version":"H03-v0.1","last_disposition":2,"objects":65534,"ordinal":1,"phase":"before-forward","variant_id":"FC08-H03/root-children-65534"}
+C budget SUT observation={"applied_submissions":1,"can_redo":false,"can_undo":true,"generation":2,"history_size":1,"input_version":"H03-v...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1" classname="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1" time="3.00733" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Accepted/SectionHistoryBudget
+[ RUN      ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1
+C H03 active input=H03-v0.1 expected=e1cc24f9249d0d1d6f7c0cd0e61e5c66f9dadab13392425f90e0c44b577db110 original-input-preserved=7d55163ba474acd767dc6a4d9ed3628c62403f01f9e5b7d45228012d6ee2c92a
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":1,"history_size":0,"input_version":"H03-v0.1","last_disposition":2,"objects":65535,"ordinal":1,"phase":"before-forward","variant_id":"FC08-H03/root-children-65535"}
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":1,"history_size":0,"input_version":"H03-...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>
