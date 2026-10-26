@@ -36,6 +36,39 @@ void ObjectIndex::publishParentChanges(ParentPatch&& patch) noexcept {
     }
 }
 
+ObjectIndex::ConnectorPatch ObjectIndex::prepareConnectorChanges(
+    const std::vector<ObjectRecord>& before, const std::vector<ObjectRecord>& after) const {
+    ConnectorPatch patch;
+    const auto edit = [&](const ObjectRecord& record, bool insert) {
+        const auto* connector = std::get_if<ConnectorContent>(&record.content);
+        if (!connector) return;
+        for (const auto* endpoint : {&connector->start, &connector->end}) {
+            if (const auto* target = std::get_if<AttachedEndpoint>(&endpoint->value)) {
+                auto [it, fresh] = patch.try_emplace(target->target_object_id);
+                if (fresh) {
+                    const auto current = connectors_by_target_.find(target->target_object_id);
+                    if (current != connectors_by_target_.end()) it->second = current->second;
+                }
+                if (insert) it->second.insert(record.id); else it->second.erase(record.id);
+            }
+        }
+    };
+    for (const auto& r : before) edit(r, false);
+    for (const auto& r : after) edit(r, true);
+    return patch;
+}
+void ObjectIndex::publishConnectorChanges(ConnectorPatch&& patch) noexcept {
+    while (!patch.empty()) {
+        auto next = patch.begin();
+        const auto current = connectors_by_target_.find(next->first);
+        if (next->second.empty()) {
+            if (current != connectors_by_target_.end()) connectors_by_target_.erase(current);
+        } else if (current != connectors_by_target_.end()) current->second.swap(next->second);
+        else { connectors_by_target_.insert(patch.extract(next)); continue; }
+        patch.erase(next);
+    }
+}
+
 void ObjectIndex::insert(const ObjectRecord& record) {
     children_by_parent_[record.placement.parent_id].insert(
         ChildEntry{record.placement.order_key, record.id});

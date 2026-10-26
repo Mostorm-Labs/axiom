@@ -17,8 +17,8 @@ bool AppliedOperationLedger::recordApplied(const Operation& canonical_operation)
         .second;
 }
 
-std::optional<AppliedOperationLedger::ReservedEntry> AppliedOperationLedger::reserveContainerEntry(const Operation& operation) {
-    if (operation.kind() != OperationKind::kSetSectionContent && operation.kind() != OperationKind::kEditContainerTopology)
+std::optional<AppliedOperationLedger::ReservedEntry> AppliedOperationLedger::reserveContainerEntry(const Operation& operation, bool required) {
+    if (!required && operation.kind() != OperationKind::kSetSectionContent && operation.kind() != OperationKind::kEditContainerTopology)
         return std::nullopt;
     std::map<OperationId, AppliedOperationEntry> reservation;
     reservation.emplace(operation.id, AppliedOperationEntry{operation, std::nullopt});

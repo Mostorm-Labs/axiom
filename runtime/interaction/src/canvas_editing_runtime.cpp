@@ -1,4 +1,5 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
+#include "undoable_command.hpp"
 
 #include "canvas/semantic/brush_engine_codec.hpp"
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
@@ -1551,7 +1552,9 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
   canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
 #endif
   if (!canonicalWriteAdmission()) return false;
-  if (!historySceneReady() || forward.id.isZero() || inverse.id.isZero()) return false;
+  if (!historySceneReady() || forward.id.isZero()) return false;
+  if (interaction::isContainerCommand(forward, semanticObjects_)) return history_.executeUndoable(forward);
+  if (inverse.id.isZero()) return false;
   const auto prepared=operationEngine_.prepare(forward,{semanticObjects_,appliedOperations_,resourceManifestPort_});
   if(prepared.disposition!=semantic::PrepareDisposition::kPrepared || !prepared.plan) return false;
   interaction::HistoryAspect aspect=interaction::HistoryAspect::kWholeRecord;
@@ -3251,6 +3254,61 @@ interaction::SubmitResult CanvasEditingRuntime::submitConditional(
            return item.objectId==id && item.record.has_value();})) return interaction::SubmitResult::rejected();
   }
   return submit(operations,source);
+}
+
+interaction::SubmitResult CanvasEditingRuntime::submitAdmitted(
+    const semantic::Operation& operation, semantic::ApplySource source,
+    semantic::OperationAdmission& admission) {
+  if (historyCommitForPublication_ || !canonicalWriteAdmission() || !historySceneReady() ||
+      (source != semantic::ApplySource::kLocalInteraction && source != semantic::ApplySource::kUndoRedo) ||
+      !interaction::supportsUndoableCommand(operation.kind())) return interaction::SubmitResult::rejected();
+  auto* commandAdmission = &admission;
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+  class QualifiedAdmission final : public semantic::OperationAdmission {
+    semantic::OperationAdmission& inner_;
+    canvas::qualification::ApplyContext context_;
+    bool forward_;
+   public:
+    QualifiedAdmission(semantic::OperationAdmission& inner, canvas::qualification::ApplyContext context, bool forward)
+      : inner_(inner), context_(context), forward_(forward) {}
+    bool admit(const semantic::PreparedApplyPlan& plan, const semantic::StatefulValidationContext& before,
+        const semantic::StagedObjectView& after) override {
+      if (!inner_.admit(plan,before,after)) return false;
+      return !forward_ || !canvas::qualification::notify(&context_, canvas::qualification::Point::kCmdAdmitted, plan.operation);
+    }
+  } qualified(admission, {fc08Qualification_.get(), this, semanticGeneration_.current().value(),
+      canonicalCommitClock_.lastCommittedOrdinal().value(),
+      canvas::qualification::kApplyPlan | canvas::qualification::kHistoryEntry},
+      source == semantic::ApplySource::kLocalInteraction);
+  commandAdmission = &qualified;
+#endif
+  auto applied = resourceManifestPort_
+      ? operationEngine_.apply(operation, source, semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_, commandAdmission)
+      : operationEngine_.apply(operation, source, semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_, commandAdmission);
+  if (applied.disposition == semantic::ApplyDisposition::kAlreadyApplied)
+    return interaction::SubmitResult::acceptedResult();
+  if (applied.disposition != semantic::ApplyDisposition::kApplied) return interaction::SubmitResult::rejected();
+  // Canonical is committed. A derived publication failure is recovered by the
+  // existing Scene owner; it must not reject the retained History intention.
+  observeApplied(operation, applied);
+  ++submittedOperationCount_;
+  canonicalPresentationDirty_ = true;
+  historyCommitForPublication_ = std::move(applied.commit_record);
+  return interaction::SubmitResult::acceptedResult();
+}
+
+void CanvasEditingRuntime::publishAdmitted() noexcept {
+  if (!historyCommitForPublication_) return;
+  auto commit=std::move(*historyCommitForPublication_);
+  historyCommitForPublication_.reset();
+  try {
+    if (sceneCoordinator_ && sceneCompiler_) {
+      const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current(), resourceManifestPort_);
+      const canvas::SceneCommitInput input(commit.before_generation,
+          commit.after_generation, view, &commit.change_set);
+      (void)sceneCoordinator_->apply(*sceneCompiler_, input);
+    }
+  } catch (const std::bad_alloc&) { /* Applied is retained; the existing owner recovers on next frame. */ }
 }
 
 semantic::OperationId CanvasEditingRuntime::allocateOperationId() {

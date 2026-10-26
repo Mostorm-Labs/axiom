@@ -1,6 +1,7 @@
 #include "container_operation_mapping.hpp"
 #if defined(CANVAS_SEMANTIC_PROTOBUF)
 #include "protobuf_object_mapping.hpp"
+#include "protobuf_owned_append.hpp"
 #include "auditoryworks/axiom/v1/operation.pb.h"
 #include <memory>
 namespace canvas::semantic::internal {
@@ -40,26 +41,26 @@ bool toProtobufContainerOperation(const OperationPayload& value,p::OperationPayl
     if(const auto* section=std::get_if<SetSectionContentOp>(&value)) {
         auto owned=std::make_unique<p::SetSectionContentOp>(); auto* out=owned.get();
         for(const auto& i:section->items) {
-            auto* item=out->add_items();putId(i.object_id,*item->mutable_object_id());item->set_expected_kind_version(i.expected_kind_version);
+            auto* item=appendOwned(out->mutable_items());putId(i.object_id,*item->mutable_object_id());item->set_expected_kind_version(i.expected_kind_version);
             if(!toProtobufSectionContent(i.expected_content,*item->mutable_expected_content())||!toProtobufSectionContent(i.replacement_content,*item->mutable_replacement_content()))return false;
         }
-        for(const auto& n:section->geometry_basis)putNode(n,*out->add_geometry_basis());
+        for(const auto& n:section->geometry_basis)putNode(n,*appendOwned(out->mutable_geometry_basis()));
         destination.set_allocated_set_section_content(owned.release());
         return true;
     }
     const auto* topology=std::get_if<EditContainerTopologyOp>(&value);if(!topology)return false;
     auto owned=std::make_unique<p::EditContainerTopologyOp>(); auto* out=owned.get();auto* guard=out->mutable_guard();
-    for(const auto& n:topology->guard.nodes)putNode(n,*guard->add_nodes());
+    for(const auto& n:topology->guard.nodes)putNode(n,*appendOwned(guard->mutable_nodes()));
     for(const auto& c:topology->guard.child_sets) {
-        auto* children=guard->add_child_sets();if(c.parent_id)putId(*c.parent_id,*children->mutable_parent_id());
-        for(const auto& m:c.complete_members){auto* member=children->add_complete_members();putId(m.object_id,*member->mutable_object_id());putKey(m.order_key,*member->mutable_order_key());}
+        auto* children=appendOwned(guard->mutable_child_sets());if(c.parent_id)putId(*c.parent_id,*children->mutable_parent_id());
+        for(const auto& m:c.complete_members){auto* member=appendOwned(children->mutable_complete_members());putId(m.object_id,*member->mutable_object_id());putKey(m.order_key,*member->mutable_order_key());}
     }
-    for(const auto& r:topology->relocations){auto* move=out->add_relocations();putId(r.object_id,*move->mutable_object_id());putPlacement(r.placement_after,*move->mutable_placement_after());putMatrix(r.transform_after,*move->mutable_transform_after());}
-    for(const auto& r:topology->order_only_edits){auto* edit=out->add_order_only_edits();putId(r.object_id,*edit->mutable_object_id());putKey(r.order_key_after,*edit->mutable_order_key_after());}
+    for(const auto& r:topology->relocations){auto* move=appendOwned(out->mutable_relocations());putId(r.object_id,*move->mutable_object_id());putPlacement(r.placement_after,*move->mutable_placement_after());putMatrix(r.transform_after,*move->mutable_transform_after());}
+    for(const auto& r:topology->order_only_edits){auto* edit=appendOwned(out->mutable_order_only_edits());putId(r.object_id,*edit->mutable_object_id());putKey(r.order_key_after,*edit->mutable_order_key_after());}
     if(const auto* a=std::get_if<IntroduceWrappersEffect>(&topology->effect)) {
-        auto effect=std::make_unique<p::IntroduceWrappersEffect>();for(const auto& r:a->containers)if(!toProtobufObjectRecord(r,*effect->add_containers()))return false;out->set_allocated_introduce_wrappers(effect.release());
+        auto effect=std::make_unique<p::IntroduceWrappersEffect>();for(const auto& r:a->containers)if(!toProtobufObjectRecord(r,*appendOwned(effect->mutable_containers())))return false;out->set_allocated_introduce_wrappers(effect.release());
     } else if(const auto* b=std::get_if<ReleaseWrappersEffect>(&topology->effect)) {
-        auto effect=std::make_unique<p::ReleaseWrappersEffect>();for(const auto& r:b->containers_before)if(!toProtobufObjectRecord(r,*effect->add_containers_before()))return false;out->set_allocated_release_wrappers(effect.release());
+        auto effect=std::make_unique<p::ReleaseWrappersEffect>();for(const auto& r:b->containers_before)if(!toProtobufObjectRecord(r,*appendOwned(effect->mutable_containers_before())))return false;out->set_allocated_release_wrappers(effect.release());
     } else if(std::holds_alternative<RelocateObjectsEffect>(topology->effect))out->set_allocated_relocate_objects(std::make_unique<p::RelocateObjectsEffect>().release());
     else return false;
     destination.set_allocated_edit_container_topology(owned.release());

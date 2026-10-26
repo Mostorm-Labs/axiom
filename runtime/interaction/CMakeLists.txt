@@ -11,6 +11,7 @@ add_library(canvas_runtime_interaction STATIC
     src/transform_handle_drag.cpp
     src/session_manager.cpp
     src/editor_history.cpp
+    src/undoable_command.cpp
     src/interaction_dependency_footprint.cpp)
 target_sources(canvas_runtime_interaction PRIVATE src/gesture_arbiter.cpp)
 target_sources(canvas_runtime_interaction PRIVATE src/multi_contact_coordinator.cpp)

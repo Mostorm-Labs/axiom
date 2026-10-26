@@ -634,8 +634,12 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] interaction::SubmitResult submitConditional(
       std::span<const semantic::Operation> operations, semantic::ApplySource source,
       std::span<const interaction::HistoryExpectation> expectations) override;
+  [[nodiscard]] interaction::SubmitResult submitAdmitted(const semantic::Operation&,
+      semantic::ApplySource, semantic::OperationAdmission&) override;
+  void publishAdmitted() noexcept override;
   void cancel(std::uint64_t) noexcept override;
 
+  std::optional<semantic::CanonicalCommitRecord> historyCommitForPublication_;
   std::unique_ptr<input::InputRouter> input_;
   std::unique_ptr<ink::InkEngine> ink_;
   std::unique_ptr<ink::PreviewModel> preview_;

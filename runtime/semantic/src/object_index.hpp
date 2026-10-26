@@ -36,6 +36,10 @@ class ObjectIndex final {
     [[nodiscard]] ParentPatch prepareParentChanges(
         const std::vector<ParentEntry>& before, const std::vector<ParentEntry>& after) const;
     void publishParentChanges(ParentPatch&&) noexcept;
+    using ConnectorPatch = std::map<ObjectId, std::set<ObjectId>>;
+    [[nodiscard]] ConnectorPatch prepareConnectorChanges(
+        const std::vector<ObjectRecord>& before, const std::vector<ObjectRecord>& after) const;
+    void publishConnectorChanges(ConnectorPatch&&) noexcept;
 
   private:
     std::map<ParentScope, ChildSet> children_by_parent_;

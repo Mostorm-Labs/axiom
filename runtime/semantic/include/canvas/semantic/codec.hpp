@@ -4,6 +4,7 @@
 #include "canvas/semantic/semantic_error.hpp"
 
 #include <cstdint>
+#include <cstddef>
 #include <string>
 #include <utility>
 #include <vector>
@@ -88,6 +89,11 @@ struct GoldenCodecObservation final {
           semantic_projection_json(std::move(semantic_projection_json_value)) {}
 };
 
+struct OperationMeasure final {
+    SemanticError error = SemanticError::kNone;
+    std::size_t bytes = 0;
+    [[nodiscard]] bool ok() const noexcept { return error == SemanticError::kNone; }
+};
 class SemanticCodec final {
   public:
     static SemanticError preflightOperationBytes(const std::vector<std::uint8_t>& bytes) noexcept;
@@ -96,6 +102,7 @@ class SemanticCodec final {
     // this returns the canonical runtime bytes without exposing that ABI.
     static CodecResult encodeProtobufOperation(OperationKind kind);
     static CodecResult encodeProtobufOperation(const Operation& operation);
+    static OperationMeasure measureProtobufOperation(const Operation& operation);
     // Decode a complete canonical protobuf Operation while keeping generated
     // DTOs private to codec.cpp. Callers may normalize the returned operation
     // before applying it through the existing semantic validation surfaces.

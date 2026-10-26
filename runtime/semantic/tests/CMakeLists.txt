@@ -2,7 +2,7 @@ add_executable(canvas_semantic_types_test semantic_types_test.cpp)
 
 if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
   add_executable(axiom_fc08_section_history_tests fc08_section_history_test.cpp
-    ../../interaction/src/editor_history.cpp)
+    ../../interaction/src/editor_history.cpp ../../interaction/src/undoable_command.cpp)
   target_link_libraries(axiom_fc08_section_history_tests PRIVATE canvas_runtime_semantic GTest::gtest_main protobuf::libprotobuf)
   target_include_directories(axiom_fc08_section_history_tests PRIVATE
     "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include"
@@ -16,6 +16,21 @@ if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
   endif()
   include(GoogleTest)
   gtest_discover_tests(axiom_fc08_section_history_tests TEST_PREFIX "fc08.section_c." NO_PRETTY_VALUES)
+  add_executable(axiom_fc08_section_history_allocation_tests fc08_section_history_allocation_test.cpp
+    ../../interaction/src/editor_history.cpp ../../interaction/src/undoable_command.cpp)
+  target_link_libraries(axiom_fc08_section_history_allocation_tests PRIVATE canvas_runtime_semantic GTest::gtest_main protobuf::libprotobuf)
+  target_include_directories(axiom_fc08_section_history_allocation_tests PRIVATE
+    "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include"
+    "${PROJECT_SOURCE_DIR}/runtime/interaction/include" "${PROJECT_SOURCE_DIR}/runtime/interaction/src"
+    ${CMAKE_CURRENT_BINARY_DIR}/../generated ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+  target_compile_definitions(axiom_fc08_section_history_allocation_tests PRIVATE AXIOM_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+  if(MSVC)
+    target_compile_options(axiom_fc08_section_history_allocation_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_fc08_section_history_allocation_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  include(GoogleTest)
+  gtest_discover_tests(axiom_fc08_section_history_allocation_tests TEST_PREFIX "fc08.section_c_allocation." NO_PRETTY_VALUES)
   add_executable(axiom_fc08_section_operation_tests fc08_section_operation_test.cpp fc08_section_safety_test.cpp)
   target_link_libraries(axiom_fc08_section_operation_tests PRIVATE canvas_runtime_semantic GTest::gtest_main protobuf::libprotobuf)
   target_include_directories(axiom_fc08_section_operation_tests PRIVATE

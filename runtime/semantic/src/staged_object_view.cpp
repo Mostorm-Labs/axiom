@@ -28,6 +28,12 @@ StagedObjectView::StagedObjectView(const StagedObjectView& other)
 
 StagedObjectView::~StagedObjectView() { internal::forgetStagedBase(*this); }
 
+std::size_t StagedObjectView::size() const noexcept {
+    auto count = base_.size() + creates_.size();
+    for (const auto& id : deletes_) if (base_.contains(id)) --count;
+    return count;
+}
+
 bool StagedObjectView::contains(const ObjectId& id) const noexcept {
     return find(id) != nullptr;
 }

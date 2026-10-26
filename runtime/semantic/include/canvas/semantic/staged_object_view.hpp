@@ -9,17 +9,18 @@
 
 namespace canvas::semantic {
 
-class StagedObjectView final {
+class StagedObjectView final : public ObjectStore {
   public:
     explicit StagedObjectView(const ObjectStore& base);
     StagedObjectView(const StagedObjectView&);
-    ~StagedObjectView();
+    ~StagedObjectView() override;
 
-    [[nodiscard]] bool contains(const ObjectId& id) const noexcept;
-    [[nodiscard]] const ObjectRecord* find(const ObjectId& id) const noexcept;
-    [[nodiscard]] std::vector<ObjectRecord> allObjects() const;
+    [[nodiscard]] std::size_t size() const noexcept override;
+    [[nodiscard]] bool contains(const ObjectId& id) const noexcept override;
+    [[nodiscard]] const ObjectRecord* find(const ObjectId& id) const noexcept override;
+    [[nodiscard]] std::vector<ObjectRecord> allObjects() const override;
     [[nodiscard]] std::vector<ObjectRecord> children(
-        const std::optional<ObjectId>& parent_id) const;
+        const std::optional<ObjectId>& parent_id) const override;
     [[nodiscard]] std::vector<ObjectRecord> projection() const { return allObjects(); }
 
     [[nodiscard]] bool stageCreate(ObjectRecord record);

@@ -23,7 +23,7 @@ struct AtomicApplyResult final {
 
 [[nodiscard]] AtomicApplyResult applyPreparedPlan(
     ReferenceObjectStore& store,
-    const PreparedApplyPlan& plan
+    const PreparedApplyPlan& plan, bool reserved = false
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
     , const canvas::qualification::ApplyContext* context = nullptr
 #endif
@@ -31,7 +31,7 @@ struct AtomicApplyResult final {
 
 [[nodiscard]] AtomicApplyResult applyPreparedPlan(
     IndexedObjectStore& store,
-    const PreparedApplyPlan& plan
+    const PreparedApplyPlan& plan, bool reserved = false
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
     , const canvas::qualification::ApplyContext* context = nullptr
 #endif
@@ -40,7 +40,7 @@ struct AtomicApplyResult final {
 [[nodiscard]] AtomicApplyResult applyPreparedPlan(
     ReferenceObjectStore& store,
     ResourceManifest& manifest,
-    const PreparedApplyPlan& plan
+    const PreparedApplyPlan& plan, bool reserved = false
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
     , const canvas::qualification::ApplyContext* context = nullptr
 #endif
@@ -49,7 +49,7 @@ struct AtomicApplyResult final {
 [[nodiscard]] AtomicApplyResult applyPreparedPlan(
     IndexedObjectStore& store,
     ResourceManifest& manifest,
-    const PreparedApplyPlan& plan
+    const PreparedApplyPlan& plan, bool reserved = false
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
     , const canvas::qualification::ApplyContext* context = nullptr
 #endif

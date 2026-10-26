@@ -127,6 +127,7 @@ class PreparedIndexedContainerApply::State final {
     std::vector<ObjectId> replacements;
     std::vector<ObjectId> deletes;
     ObjectIndex::ParentPatch parents;
+    ObjectIndex::ConnectorPatch connectors;
 };
 
 PreparedIndexedContainerApply::PreparedIndexedContainerApply(std::unique_ptr<State> state) : state_(std::move(state)) {}
@@ -143,17 +144,25 @@ void PreparedIndexedContainerApply::publish() noexcept {
     while (!state_->reserved_records.empty()) records.insert(state_->reserved_records.extract(state_->reserved_records.begin()));
     for (const auto& id : state_->deletes) records.erase(id);
     state_->store.object_index_->publishParentChanges(std::move(state_->parents));
+    state_->store.object_index_->publishConnectorChanges(std::move(state_->connectors));
 }
 
 std::unique_ptr<PreparedIndexedContainerApply> ObjectStoreMutator::prepareContainerPlan(
-    IndexedObjectStore& store, const PreparedApplyPlan& plan) {
-    if (plan.operation.kind() != OperationKind::kSetSectionContent && plan.operation.kind() != OperationKind::kEditContainerTopology) return {};
+    IndexedObjectStore& store, const PreparedApplyPlan& plan, bool admitted) {
+    const auto kind = plan.operation.kind();
+    if (kind != OperationKind::kSetSectionContent && kind != OperationKind::kEditContainerTopology &&
+        (!admitted || (kind != OperationKind::kInsertObjects && kind != OperationKind::kRestoreObjects &&
+        kind != OperationKind::kDeleteObjects && kind != OperationKind::kSetTransforms &&
+        kind != OperationKind::kPatchProperties))) return {};
+    if (plan.manifest) return {};
     auto state = std::make_unique<PreparedIndexedContainerApply::State>(store);
     std::vector<ObjectIndex::ParentEntry> before, after;
+    std::vector<ObjectRecord> connectorBefore, connectorAfter;
     for (const auto& record : plan.creates) {
-        if (record.kind != ObjectKind::kGroup && record.kind != ObjectKind::kSection) return {};
+        if (!admitted && record.kind != ObjectKind::kGroup && record.kind != ObjectKind::kSection) return {};
         if (!state->reserved_records.emplace(record.id, record).second) return {};
         after.push_back({record.id, record.placement});
+        if (record.kind == ObjectKind::kConnector) connectorAfter.push_back(record);
     }
     for (const auto& record : plan.replacements) {
         const auto* current = store.find(record.id);
@@ -168,11 +177,13 @@ std::unique_ptr<PreparedIndexedContainerApply> ObjectStoreMutator::prepareContai
     }
     for (const auto& id : plan.deletes) {
         const auto* current = store.find(id);
-        if (!current || (current->kind != ObjectKind::kGroup && current->kind != ObjectKind::kSection)) return {};
+        if (!current || (!admitted && current->kind != ObjectKind::kGroup && current->kind != ObjectKind::kSection)) return {};
+        if (current->kind == ObjectKind::kConnector) connectorBefore.push_back(*current);
         before.push_back({id, current->placement});
         state->deletes.push_back(id);
     }
     state->parents = store.object_index_->prepareParentChanges(before, after);
+    state->connectors = store.object_index_->prepareConnectorChanges(connectorBefore, connectorAfter);
     return std::unique_ptr<PreparedIndexedContainerApply>(new PreparedIndexedContainerApply(std::move(state)));
 }
 

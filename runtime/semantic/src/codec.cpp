@@ -1454,6 +1454,29 @@ CodecResult SemanticCodec::encodeProtobufOperation(const Operation& operation) {
 #endif
 }
 
+OperationMeasure SemanticCodec::measureProtobufOperation(const Operation& operation) {
+#if !defined(CANVAS_SEMANTIC_PROTOBUF)
+    (void)operation;
+    return {SemanticError::kRuntimeUnavailable, 0};
+#else
+    const auto normalized = normalizeOperation(operation);
+    if (!normalized.ok() || !validatePayloadStructure(normalized.value).ok())
+        return {SemanticError::kInvalidSemanticValue, 0};
+    if (!validateEnvelope(normalized.value, OperationFieldPresence{true, true}).ok())
+        return {SemanticError::kUnsupportedVersion, 0};
+    auditoryworks::axiom::v1::Operation wire;
+    if (!internal::toProtobufOperation(normalized.value, wire))
+        return {SemanticError::kInvalidSemanticValue, 0};
+    const auto bytes = wire.ByteSizeLong();
+    if (bytes > kMaxOperationBytes) return {SemanticError::kLimitExceeded, bytes};
+    std::vector<std::uint8_t> encoded;
+    if (!canonicalEncodeMessage(wire, encoded)) return {SemanticError::kMalformedWire, bytes};
+    std::string category;
+    if (rawOperationLimitViolation(encoded, category)) return {SemanticError::kLimitExceeded, bytes};
+    return {SemanticError::kNone, encoded.size()};
+#endif
+}
+
 DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::uint8_t>& bytes) {
 #if !defined(CANVAS_SEMANTIC_PROTOBUF)
     (void)bytes;

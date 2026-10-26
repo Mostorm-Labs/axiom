@@ -49,7 +49,9 @@ def main():
   for name in (["PackageBindingPreflight","EvidenceContractPreflight"] if a.action=="preflight" else ["ScopePreservationAudit"]):
    save(name+".json",{"name":name,"status":"PASS_SLICE_C" if not errors else "BLOCKED","package_revision":REV,"source_head":git("rev-parse","HEAD"),"verified_refs":refs,"errors":errors})
   print(json.dumps({"action":a.action,"errors":errors}));return int(bool(errors))
- source_files=sorted(set(git("ls-files","runtime/semantic").splitlines()+git("ls-files","--others","--exclude-standard","runtime/semantic").splitlines()))
+ from tools.fc08.section_c_fixtures import materialize
+ save("budget-input-receipts.json",materialize())
+ source_files=sorted(set(git("ls-files","runtime/semantic","runtime/interaction","tools/fc08/section_c.py","tools/fc08/section_c_native.py").splitlines()+git("ls-files","--others","--exclude-standard","runtime/semantic","runtime/interaction","tools/fc08").splitlines()))
  source_manifest=[{"path":f,"sha256":hashlib.sha256((ROOT/f).read_bytes()).hexdigest()} for f in source_files if (ROOT/f).is_file()]
  facts=json.loads((ROOT/"out/fc08-section-c/environment.json").read_text());env={**os.environ,**facts["environment"],"PYTHONUTF8":"1"};build=ROOT/"out/fc08-section-c/build";journal=[]
  def run(name,argv):
@@ -63,7 +65,7 @@ def main():
   tests=json.loads((out/"discover.stdout.log").read_text())["tests"]
   names=[t["name"] for t in tests if Path(t.get("command",[""])[0]).stem in a.targets];assert names
   (out/"ctest-names.txt").write_text("\n".join(names)+"\n",encoding="utf-8")
-  code=run("ctest",["ctest","--test-dir",build,"--tests-from-file",out/"ctest-names.txt","--output-on-failure","--output-junit",out/"ctest.xml"])
+  code=run("ctest",["ctest","--test-dir",build,"--tests-from-file",out/"ctest-names.txt","--output-on-failure","--timeout","120","--output-junit",out/"ctest.xml"])
  save("invocations.json",{"source_head":git("rev-parse","HEAD"),"cwd":str(ROOT),"commands":journal,"exit_code":code,"SDK_environment":facts["environment"],"dirty_status":git("status","--porcelain"),"semantic_source_manifest":source_manifest})
  return code
 if __name__=="__main__":raise SystemExit(main())
