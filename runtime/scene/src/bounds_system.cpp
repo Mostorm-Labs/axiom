@@ -22,6 +22,10 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record,
             return {0.0F, 0.0F, static_cast<float>(content.width), static_cast<float>(content.height)};
         } else if constexpr (std::is_same_v<T, semantic::StickyContent>) {
             return {0.0F, 0.0F, static_cast<float>(content.width), static_cast<float>(content.height)};
+        } else if constexpr (std::is_same_v<T, semantic::SectionContent>) {
+            const auto& b=content.boundary;
+            return {static_cast<float>(b.x),static_cast<float>(b.y),
+                    static_cast<float>(b.x+b.width),static_cast<float>(b.y+b.height)};
         } else if constexpr (std::is_same_v<T, semantic::VectorPathContent>) {
             ReferenceGeometry geometry;
             for (const auto& command : content.geometry.commands) {

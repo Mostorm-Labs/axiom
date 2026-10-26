@@ -2,6 +2,7 @@
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/scene/bounds_system.hpp"
 #include "canvas/scene/derived_geometry.hpp"
+#include "canvas/scene/hierarchy_geometry.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -66,6 +67,7 @@ std::vector<std::uint32_t> CanvasEditingRuntime::textGraphemes(const std::u16str
 }
 std::optional<std::uint32_t>
 CanvasEditingRuntime::textHit(const semantic::ObjectRecord& record, float x, float y) {
+    if(!historySceneReady())return {};
     if (!textLayoutService_)
         return {};
     const auto point = viewToContent(x, y);
@@ -94,7 +96,7 @@ CanvasEditingRuntime::textHit(const semantic::ObjectRecord& record, float x, flo
                 if (const auto* sticky = std::get_if<semantic::StickyContent>(&parent->content))
                     geometry = textLayoutService_->stickyEditingGeometry(
                         record.id, *content, *sticky, 0, 0, local,
-                        parent == nullptr ? semantic::Transform2D{} : parent->transform);
+                        parent == nullptr ? semantic::Transform2D{} : sceneCoordinator_->runtimeScene().find(parent->id)->transform);
                 else
                     geometry = textLayoutService_->editingGeometry(record.id, *content, 0, 0, local);
             } else {
@@ -107,12 +109,11 @@ CanvasEditingRuntime::textHit(const semantic::ObjectRecord& record, float x, flo
     return geometry.available ? geometry.hit : std::nullopt;
 }
 semantic::ObjectId CanvasEditingRuntime::hitTextAtView(float x, float y) {
+    if(!historySceneReady())return {};
     if (!textLayoutService_)
         return {};
-    auto objects = semanticObjects_.allObjects();
-    std::sort(objects.begin(), objects.end(), [](const auto& a, const auto& b) {
-        return a.placement.order_key > b.placement.order_key;
-    });
+    auto objects = scene::projectWorldObjects(semanticObjects_.allObjects());
+    std::reverse(objects.begin(),objects.end());
     const auto point = viewToContent(x, y);
     for (const auto& o : objects) {
         if (!textWritable(o.id)) continue;
@@ -179,7 +180,7 @@ bool CanvasEditingRuntime::shapeExpandPointer(const input::PointerSample& sample
         if (parent != nullptr && parent->kind == semantic::ObjectKind::kSticky)
             selectedSticky = parent->id;
     }
-    for (const auto& candidate : semanticObjects_.allObjects()) {
+    for (const auto& candidate : scene::projectWorldObjects(semanticObjects_.allObjects())) {
         if (candidate.kind == semantic::ObjectKind::kRichText && candidate.placement.parent_id &&
             selectedSticky == *candidate.placement.parent_id && textLayoutService_) {
             const auto* parent = semanticObjects_.find(*candidate.placement.parent_id);
@@ -188,7 +189,7 @@ bool CanvasEditingRuntime::shapeExpandPointer(const input::PointerSample& sample
             if (parent && sticky && rich) {
                 const auto* overrideTransform = transformOverrides_.find(parent->id);
                 const auto visualTransform = overrideTransform != nullptr
-                    ? *overrideTransform : parent->transform;
+                    ? *overrideTransform : sceneCoordinator_->runtimeScene().find(parent->id)->transform;
                 const auto layout = textLayoutService_->resolveStickyLabel(candidate.id, *rich, *sticky, true,
                                                                             visualTransform);
                 if (layout && layout->overflow) {
@@ -256,19 +257,14 @@ std::optional<semantic::ObjectRecord> CanvasEditingRuntime::textPresentation() {
     auto record = interaction_->textSession()->presentation();
     if (!record) return {};
     if (const auto* current = semanticObjects_.find(record->id)) {
-        record->transform = current->transform;
-        if (current->kind == semantic::ObjectKind::kRichText && current->placement.parent_id) {
-            if (const auto* parent = semanticObjects_.find(*current->placement.parent_id)) {
-                const auto& p = parent->transform;
-                const auto& c = current->transform;
-                record->transform = {p.a * c.a + p.c * c.b,
-                                     p.b * c.a + p.d * c.b,
-                                     p.a * c.c + p.c * c.d,
-                                     p.b * c.c + p.d * c.d,
-                                     p.a * c.tx + p.c * c.ty + p.tx,
-                                     p.b * c.tx + p.d * c.ty + p.ty};
-            }
-        }
+        if(!historySceneReady())return {};
+        const auto* world=sceneCoordinator_->runtimeScene().find(current->id);
+        if(!world)return {};
+        record->transform=world->transform;
+    } else if(record->placement.parent_id) {
+        const auto* parent=sceneCoordinator_->runtimeScene().find(*record->placement.parent_id);
+        if(!parent||!historySceneReady())return {};
+        record->transform=scene::composeTransform(parent->transform,record->transform);
     }
     // Native preedit is only a presentation. It can expand the drawn Shape,
     // but cancellation must leave canonical geometry and history untouched.
@@ -280,7 +276,7 @@ std::optional<semantic::ObjectRecord> CanvasEditingRuntime::textPresentation() {
 runtime::TextGeometrySnapshot
 CanvasEditingRuntime::textGeometry(const runtime::CanvasTargetKey& target) {
     runtime::TextGeometrySnapshot out;
-    if (!interaction_->textSession() || !textLayoutService_ || !surface_.available)
+    if (!historySceneReady() || !interaction_->textSession() || !textLayoutService_ || !surface_.available)
         return out;
     auto& editor = *interaction_->textSession();
     const auto state = editor.read();
@@ -312,7 +308,7 @@ CanvasEditingRuntime::textGeometry(const runtime::CanvasTargetKey& target) {
                   [&]() {
                     if (record->placement.parent_id) {
                       if (const auto* parent = semanticObjects_.find(*record->placement.parent_id))
-                        return parent->transform;
+                        if(const auto* world=sceneCoordinator_->runtimeScene().find(parent->id))return world->transform;
                     }
                     return semantic::Transform2D{};
                   }())

@@ -725,6 +725,23 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                     canvas.restore();
                 }
             }
+        } else if constexpr (std::is_same_v<T, SectionReferenceCommand>) {
+            const auto& b=command.content.boundary;
+            const auto area=SkRect::MakeXYWH(skScalar(b.x),skScalar(b.y),skScalar(b.width),skScalar(b.height));
+            const auto fill=propertyColor(record,0x100U,{0,0,0,0});
+            if(fill.a>0)drawSolidRect(canvas,{skScalar(b.x),skScalar(b.y),skScalar(b.x+b.width),skScalar(b.y+b.height)},fill);
+            // Boundary chrome is presentation only, never a persisted stroke.
+            SkPaint border;border.setAntiAlias(true);border.setColor4f({.4F,.45F,.5F,.65F});
+            border.setStyle(SkPaint::kStroke_Style);border.setStrokeWidth(1);
+            canvas.drawRect(area,border);
+            if(command.titleLayout&&textResources) {
+                canvas.save();
+                canvas.clipRect(SkRect::MakeXYWH(skScalar(b.x),skScalar(b.y),skScalar(b.width),
+                    skScalar(std::min(b.height,command.content.header_height))));
+                canvas.translate(skScalar(b.x+command.content.padding),skScalar(b.y));
+                textResources->draw(canvas,*command.titleLayout);
+                canvas.restore();
+            }
         } else if constexpr (std::is_same_v<T, GroupReferenceCommand>) {
             // Group is an ordered traversal entry with no pixel contribution.
         }

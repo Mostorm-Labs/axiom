@@ -31,6 +31,7 @@ foundation::Result<FullMaterializedScene> materializeFullScene(
                 .referenceGeometryDigest = source.referenceGeometryDigest,
                 .directDependencies = source.directDependencies,
                 .textLayout = source.textLayout,
+                .hierarchyOrder = source.hierarchyOrder,
             });
         }
         return foundation::Result<FullMaterializedScene>::success(std::move(result));

@@ -1,6 +1,7 @@
 #include "canvas/scene/runtime_scene_projection.hpp"
 
 #include "canvas/scene/bounds_system.hpp"
+#include "canvas/scene/hierarchy_geometry.hpp"
 #include "canvas/scene/derived_geometry.hpp"
 
 #include <algorithm>
@@ -9,15 +10,6 @@
 
 namespace canvas::scene {
 namespace {
-semantic::Transform2D compose(const semantic::Transform2D& parent,
-                              const semantic::Transform2D& child) noexcept {
-    return {parent.a * child.a + parent.c * child.b,
-            parent.b * child.a + parent.d * child.b,
-            parent.a * child.c + parent.c * child.d,
-            parent.b * child.c + parent.d * child.d,
-            parent.a * child.tx + parent.c * child.ty + parent.tx,
-            parent.b * child.tx + parent.d * child.ty + parent.ty};
-}
 void encodeBrush(std::ostringstream& out, const semantic::BrushDescriptor& brush) {
     out << ":brush:" << brush.brush_family_id << ':' << brush.brush_version << ':'
         << brush.color.r << ',' << brush.color.g << ',' << brush.color.b << ',' << brush.color.a
@@ -147,6 +139,8 @@ std::string geometryText(const semantic::ObjectRecord& r) {
             }, endpoint->value);
         } else if constexpr (std::is_same_v<T, semantic::StickyContent>) {
             out << ":sticky:" << c.width << ':' << c.height;
+        } else if constexpr (std::is_same_v<T, semantic::SectionContent>) {
+            out << ":section:" << c.boundary.x << ":" << c.boundary.y << ":" << c.boundary.width << ":" << c.boundary.height << ":" << c.title << ":" << c.padding << ":" << c.header_height;
         } else {
             out << ":group";
         }
@@ -205,7 +199,7 @@ const InspectionRecord* RuntimeSceneProjection::find(semantic::ObjectId id) cons
 foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::SemanticReadView& view, text::RichTextLayoutService* textService, bool deferRoutes) {
     RuntimeSceneProjection out;
     out.generation = view.generation();
-    auto source = view.allObjects();
+    auto source = projectWorldObjects(view.allObjects());
     out.records.reserve(source.size());
     for (const auto& record : source) {
         if (record.id.isZero() || !semantic::isKnownObjectKind(record.kind)) {
@@ -215,12 +209,6 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
         if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
             shape != nullptr && shape->label.has_value()) label = &*shape->label;
         semantic::Transform2D projectedTransform = record.transform;
-        if (record.kind == semantic::ObjectKind::kRichText && record.placement.parent_id) {
-            const auto parent = std::find_if(source.begin(), source.end(), [&](const auto& candidate) {
-                return candidate.id == *record.placement.parent_id;
-            });
-            if (parent != source.end()) projectedTransform = compose(parent->transform, record.transform);
-        }
         const auto layout = textService && record.kind == semantic::ObjectKind::kRichText
             ? [&]() {
                 const auto& content = std::get<semantic::RichTextContent>(record.content);
@@ -236,6 +224,8 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
                 }
                 return textService->resolve(record.id, content);
               }()
+            : textService && record.kind == semantic::ObjectKind::kSection
+                ? textService->resolveSectionTitle(record.id,std::get<semantic::SectionContent>(record.content))
             : textService && std::get_if<semantic::ShapeContent>(&record.content)
                 ? textService->resolveShape(record.id, std::get<semantic::ShapeContent>(record.content), record.transform)
                 : textService && label != nullptr ? textService->resolve(record.id, *label) : nullptr;
@@ -251,15 +241,10 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
             record.placement, projectedTransform, record.properties, record.content, record.erase_masks,
             std::move(derivedGeometry),
             bounds.geometry, bounds.visual, bounds.world, layout ? layout->digest : geometryText(record), dependencies(record), layout});
+        if(record.kind==semantic::ObjectKind::kSection&&layout)
+            for(const auto& font:layout->fonts)out.records.back().directDependencies.push_back(font.resourceId.value);
     }
-    std::sort(out.records.begin(), out.records.end(), [](const auto& a, const auto& b) {
-        if (a.kind == semantic::ObjectKind::kSticky && b.kind == semantic::ObjectKind::kRichText) return true;
-        if (a.kind == semantic::ObjectKind::kRichText && b.kind == semantic::ObjectKind::kSticky) return false;
-        if (b.placement.parent_id && *b.placement.parent_id == a.objectId) return true;
-        if (a.placement.parent_id && *a.placement.parent_id == b.objectId) return false;
-        if (a.placement.order_key != b.placement.order_key) return a.placement.order_key < b.placement.order_key;
-        return a.objectId < b.objectId;
-    });
+    projectGroupBounds(out.records);
     return foundation::Result<RuntimeSceneProjection>::success(std::move(out));
 }
 } // namespace canvas::scene

@@ -270,7 +270,15 @@ DirectRenderScene::preciseHitTest(const PreciseHitRequest& request) const {
         return WorldPoint{static_cast<float>(transform.a * point.x + transform.c * point.y + transform.tx),
                           static_cast<float>(transform.b * point.x + transform.d * point.y + transform.ty)};
     };
-    if (const auto* triangle = std::get_if<scene::TriangleGeometry>(&record.derivedGeometry)) {
+    if (const auto* section=std::get_if<scene::SectionBoundaryGeometry>(&record.derivedGeometry)) {
+        const auto& b=section->boundary;
+        const auto a=world({b.left,b.top}),c=world({b.right,b.bottom});
+        const auto topRight=world({b.right,b.top}),bottomLeft=world({b.left,b.bottom});
+        const scene::TriangleGeometry first{a,topRight,c,{}},second{a,c,bottomLeft,{}};
+        distance=std::min({scene::distanceToSegment(request.worldPoint,a,topRight),scene::distanceToSegment(request.worldPoint,topRight,c),
+            scene::distanceToSegment(request.worldPoint,c,bottomLeft),scene::distanceToSegment(request.worldPoint,bottomLeft,a)});
+        hit=scene::pointInTriangle(request.worldPoint,first)||scene::pointInTriangle(request.worldPoint,second)||distance<=request.tolerance;
+    } else if (const auto* triangle = std::get_if<scene::TriangleGeometry>(&record.derivedGeometry)) {
         const scene::TriangleGeometry transformed{world(triangle->top), world(triangle->right), world(triangle->left), {}};
         distance = std::min({scene::distanceToSegment(request.worldPoint, transformed.top, transformed.right),
                              scene::distanceToSegment(request.worldPoint, transformed.right, transformed.left),

@@ -6,6 +6,7 @@ add_library(canvas_runtime_composition STATIC
     src/canvas_runtime_text.cpp
     src/canvas_runtime_image.cpp)
 target_sources(canvas_runtime_composition PRIVATE src/canvas_runtime_connector_sticky.cpp)
+target_sources(canvas_runtime_composition PRIVATE src/canvas_runtime_section.cpp)
 target_include_directories(canvas_runtime_composition PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(canvas_runtime_composition PRIVATE
@@ -26,6 +27,14 @@ else()
 endif()
 
 if(BUILD_TESTING)
+  add_executable(axiom_fc08_section_consumer_tests tests/fc08_section_consumer_test.cpp)
+  target_link_libraries(axiom_fc08_section_consumer_tests PRIVATE canvas_runtime_composition GTest::gtest_main)
+  if(MSVC)
+    target_compile_options(axiom_fc08_section_consumer_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_fc08_section_consumer_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME FC08SectionConsumer COMMAND axiom_fc08_section_consumer_tests)
   add_executable(axiom_fc05_connector_facade_tests tests/fc05_connector_facade_test.cpp)
   target_link_libraries(axiom_fc05_connector_facade_tests PRIVATE canvas_runtime_composition)
   if(MSVC)

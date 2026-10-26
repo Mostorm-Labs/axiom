@@ -29,6 +29,7 @@ struct InspectionRecord final {
     std::string referenceGeometryDigest;
     std::vector<semantic::ObjectId> directDependencies;
     std::shared_ptr<const text::TextLayoutSnapshot> textLayout;
+    std::uint64_t hierarchyOrder = 0;
     bool operator==(const InspectionRecord&) const = default;
 };
 

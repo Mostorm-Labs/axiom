@@ -2,6 +2,7 @@
 
 #include "incremental_runtime_full_materialization_bridge.hpp"
 #include "canvas/scene/bounds_system.hpp"
+#include "canvas/scene/hierarchy_geometry.hpp"
 #include "canvas/text/text_layout.hpp"
 
 #include <algorithm>
@@ -74,6 +75,7 @@ RuntimeSceneProjection projectionFromMaterialized(internal::FullMaterializedScen
             .referenceGeometryDigest = std::move(record.referenceGeometryDigest),
             .directDependencies = std::move(record.directDependencies),
             .textLayout = std::move(record.textLayout),
+            .hierarchyOrder = record.hierarchyOrder,
         });
     }
     return projection;
@@ -344,14 +346,16 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::refreshTextR
     const auto published=binding_._scene.read();
     for(auto& record:next.records) {
         const semantic::RichTextContent* textContent = nullptr;
+        const auto* section=std::get_if<semantic::SectionContent>(&record.content);
         if (record.kind == semantic::ObjectKind::kRichText)
             textContent = std::get_if<semantic::RichTextContent>(&record.content);
         else if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
                  shape != nullptr && shape->label.has_value())
             textContent = &*shape->label;
         const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
-        if (textContent == nullptr && shape == nullptr) continue;
-        auto layout=shape ? textLayoutService_->resolveShape(record.objectId, *shape, record.transform)
+        if (textContent == nullptr && shape == nullptr && section == nullptr) continue;
+        auto layout=section ? textLayoutService_->resolveSectionTitle(record.objectId,*section)
+                          : shape ? textLayoutService_->resolveShape(record.objectId, *shape, record.transform)
                           : textLayoutService_->resolve(record.objectId,*textContent);
         if(record.textLayout && record.textLayout->digest==layout->digest) continue;
         semantic::ObjectRecord source{}; source.id=record.objectId; source.kind=record.kind;

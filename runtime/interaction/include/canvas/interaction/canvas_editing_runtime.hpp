@@ -199,6 +199,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool setSelectionMode(bool enabled) noexcept;
   [[nodiscard]] bool selectionMode() const noexcept { return selectionMode_; }
   [[nodiscard]] bool selectAtViewPoint(float x, float y) noexcept;
+  [[nodiscard]] runtime::SectionOutcome executeSectionIntent(const runtime::SectionIntent&) noexcept;
+  [[nodiscard]] runtime::SectionSnapshot sectionSnapshot(foundation::ObjectId = {}) const;
+  [[nodiscard]] std::optional<runtime::SectionOutcome> removeSelectedSections() noexcept;
   [[nodiscard]] bool setSelectedObjectSize(double width, double height) noexcept;
   [[nodiscard]] bool patchSelectedProperty(std::uint32_t fieldId,
                                             semantic::PropertyValue value) noexcept;
@@ -223,7 +226,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool selectionPointer(std::uint64_t pointer, input::PointerPhase phase,
                                       float x, float y) noexcept;
   void cancelSelectionTransform() noexcept;
-  [[nodiscard]] bool selectionTransformActive() const noexcept { return transformDrag_.active(); }
+  [[nodiscard]] bool selectionTransformActive() const noexcept { return transformDrag_.active() || sectionBoundaryDrag_.has_value(); }
   [[nodiscard]] std::size_t transientTransformCount() const noexcept { return transformOverrides_.size(); }
   void clearSelection() noexcept {
     cancelSelectionTransform();
@@ -751,6 +754,17 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   ink::CanonicalVisibilitySink* canonicalVisibilitySink_ = nullptr;
   LocalOperationSink* localOperationSink_ = nullptr;
   std::optional<semantic::CanonicalCommitRecord> lastAppliedCommit_;
+  bool sectionDefersPublication_ = false;
+  struct SectionBoundaryDrag final {
+    foundation::ObjectId object{};
+    semantic::SectionContent initial{},preview{};
+    semantic::Transform2D world{};
+    std::uint64_t generation=0,camera=0,metrics=0;
+    bool valid=true;
+  };
+  std::optional<SectionBoundaryDrag> sectionBoundaryDrag_;
+  bool sectionBoundaryPointer(const input::PointerKey&,input::PointerPhase,float,float) noexcept;
+  void applyContainerPreview(render::ReferenceDrawList&);
   semantic::SemanticGeneration presentedSemanticGeneration_{};
   render::SurfaceGeneration presentedSurfaceGeneration_{};
   render::MetricsGeneration presentedMetricsGeneration_{};

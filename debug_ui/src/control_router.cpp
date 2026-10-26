@@ -31,6 +31,17 @@ DebugControlRouter::DebugControlRouter(canvas::runtime::RuntimeFacade* runtime,
                                        DebugActivityLog* activity) noexcept
     : runtime_(runtime), axiomDebug_(axiomDebug), platformDebug_(platformDebug), activity_(activity) {}
 
+canvas::runtime::SectionSnapshot DebugControlRouter::sectionSnapshot() const {
+  return runtime_?runtime_->readSection():canvas::runtime::SectionSnapshot{};
+}
+canvas::runtime::ProductControlReceipt DebugControlRouter::sectionIntent(
+    const canvas::runtime::SectionIntent& intent) noexcept {
+  const auto request=nextRequestId();
+  const auto receipt=runtime_?runtime_->submitSectionIntent(intent,request,0xD001U):
+      unsupportedReceipt<canvas::runtime::ProductControlReceipt>(request);
+  recordProduct("Section",receipt);return receipt;
+}
+
 std::uint64_t DebugControlRouter::productDeadline() const noexcept {
   // Product/Canvas requests are consumed by the Runtime owner sequence. The
   // UI snapshot sequence is only a UI observation counter and can lag far

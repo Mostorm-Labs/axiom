@@ -42,6 +42,8 @@ class CanvasControlService final {
   // high-water marks: old IDs remain non-executable after receipt eviction.
   // The client registry itself is bounded; new clients are refused when full.
   std::unordered_map<std::uint64_t, std::uint64_t> clientHighWater_;
+  std::unordered_map<CanvasControlReceiptKey,CanvasControlRequest,
+                     CanvasControlReceiptKeyHash> sectionRequests_;
   std::unordered_set<CanvasTargetKey, CanvasTargetKeyHash> destroyed_;
 };
 

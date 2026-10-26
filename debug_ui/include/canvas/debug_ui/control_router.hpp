@@ -65,6 +65,8 @@ class DebugControlRouter final {
   canvas::runtime::ConnectorCommandReceipt setConnectorRouting(canvas::semantic::ConnectorRouting, bool selected) noexcept;
   [[nodiscard]] canvas::semantic::ConnectorRouting connectorRoutingPreset() const;
   [[nodiscard]] canvas::runtime::StickySnapshot selectedSticky() const;
+  [[nodiscard]] canvas::runtime::SectionSnapshot sectionSnapshot() const;
+  canvas::runtime::ProductControlReceipt sectionIntent(const canvas::runtime::SectionIntent&) noexcept;
   [[nodiscard]] canvas::runtime::ConnectorSnapshot selectedConnector() const;
   [[nodiscard]] const std::string& connectorStickyStatus() const noexcept {
     return connectorStickyStatus_;

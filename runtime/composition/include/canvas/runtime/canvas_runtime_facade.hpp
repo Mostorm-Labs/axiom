@@ -63,6 +63,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   [[nodiscard]] ConnectorSnapshot readSelectedConnector() const override;
   [[nodiscard]] ConnectorSnapshot readConnectorState(semantic::ObjectId) const override;
   [[nodiscard]] StickySnapshot readSelectedSticky() const override;
+  [[nodiscard]] SectionSnapshot readSection(foundation::ObjectId = {}) const override;
   CanvasRuntimeFacade(const CanvasRuntimeFacade&) = delete;
   CanvasRuntimeFacade& operator=(const CanvasRuntimeFacade&) = delete;
 

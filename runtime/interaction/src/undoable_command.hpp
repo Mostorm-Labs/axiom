@@ -7,6 +7,7 @@ namespace canvas::interaction {
 [[nodiscard]] bool supportsUndoableCommand(semantic::OperationKind) noexcept;
 // Reused FC08 commands are selected by the existing owner, not by the host.
 [[nodiscard]] bool isContainerCommand(const semantic::Operation&, const semantic::ObjectStore&) noexcept;
+[[nodiscard]] bool buildContainerGuards(semantic::EditContainerTopologyOp&,const semantic::ObjectStore&);
 struct PreparedUndoableCommand final {
     semantic::Operation forward, inverse;
     std::vector<HistoryExpectation> before, after;

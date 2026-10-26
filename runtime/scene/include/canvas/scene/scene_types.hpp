@@ -57,6 +57,7 @@ enum class SceneObjectKind : std::uint8_t {
     kDabStroke = 6,
     kConnector = 7,
     kSticky = 8,
+    kSection = 10,
 };
 
 // Renderer-neutral projection consumed by Scene Core and inspection tooling.
@@ -78,6 +79,7 @@ struct RuntimeSceneRecord final {
     std::string referenceGeometryDigest{};
     std::vector<semantic::ObjectId> directDependencies{};
     std::shared_ptr<const text::TextLayoutSnapshot> textLayout;
+    std::uint64_t hierarchyOrder = 0;
 
     bool operator==(const RuntimeSceneRecord&) const = default;
 };
@@ -206,6 +208,7 @@ struct SceneRecord final {
     semantic::Transform2D localTransform{};
     scene::DerivedGeometry derivedGeometry{};
     semantic::PropertyBag properties{};
+    std::uint64_t hierarchyOrder = 0;
 
     bool operator==(const SceneRecord&) const = default;
 };

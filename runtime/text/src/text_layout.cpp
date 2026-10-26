@@ -297,6 +297,19 @@ struct RichTextLayoutService::Impl {
 RichTextLayoutService::RichTextLayoutService(const runtime::ResourceProvider& r, LayoutContext c)
     : impl_(std::make_unique<Impl>(r,c)) {}
 RichTextLayoutService::~RichTextLayoutService() = default;
+std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveSectionTitle(
+    foundation::ObjectId id,const semantic::SectionContent& section) {
+    // Plain metadata presentation, with the same deterministic admitted-font
+    // fallback used by existing labels. This never creates canonical RichText.
+    semantic::RichTextContent display;
+    semantic::Paragraph paragraph;paragraph.id=id;
+    paragraph.style.alignment=semantic::ParagraphAlignment::kLeft;paragraph.style.line_height=1.2;
+    semantic::TextStyle style;style.font_size=16;style.weight=400;style.color={.15F,.2F,.25F,1};
+    if(!impl_->descriptors.empty())style.font_resource_id=impl_->descriptors.begin()->second.resourceId;
+    paragraph.runs.push_back({section.title,style});display.document.paragraphs.push_back(std::move(paragraph));
+    display.layout=semantic::RichTextLayout{std::max(1.0,section.boundary.width-2*section.padding)};
+    return resolve(id,display);
+}
 void RichTextLayoutService::registerFont(FontResourceDescriptor d) { impl_->descriptors[d.resourceId.value]=std::move(d); }
 std::string RichTextLayoutService::fontFamilyName(foundation::ObjectId id) {
 #ifdef CANVAS_TEXT_HAS_SKIA

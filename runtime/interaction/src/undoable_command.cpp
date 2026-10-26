@@ -90,6 +90,7 @@ std::set<ObjectId> footprint(const PreparedApplyPlan& plan) {
     return ids;
 }
 }
+bool buildContainerGuards(EditContainerTopologyOp& op,const ObjectStore& before) { return guards(op,before); }
 bool supportsUndoableCommand(OperationKind kind) noexcept {
     return kind == OperationKind::kSetSectionContent || kind == OperationKind::kEditContainerTopology ||
         kind == OperationKind::kInsertObjects || kind == OperationKind::kDeleteObjects ||

@@ -7,6 +7,7 @@ namespace canvas::runtime {
 struct CanvasControlApplyResult final {
   CanvasControlError error = CanvasControlError::kNone;
   const char* detail = "";
+  std::optional<SectionOutcome> section{};
 };
 
 class CanvasControlPort {
