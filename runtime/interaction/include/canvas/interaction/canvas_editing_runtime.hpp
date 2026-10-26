@@ -764,6 +764,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   };
   std::optional<SectionBoundaryDrag> sectionBoundaryDrag_;
   bool sectionBoundaryPointer(const input::PointerKey&,input::PointerPhase,float,float) noexcept;
+  std::optional<interaction::SubmitResult> tryCommitSectionDrop(const semantic::SetTransformsOp&) noexcept;
+  runtime::SectionOutcome executeSectionCommand(const runtime::SectionIntent&,const semantic::SetTransformsOp* confirmedDrop) noexcept;
   void applyContainerPreview(render::ReferenceDrawList&);
   semantic::SemanticGeneration presentedSemanticGeneration_{};
   render::SurfaceGeneration presentedSurfaceGeneration_{};
@@ -823,6 +825,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   semantic::Transform2D editingInitial_{};
   foundation::WorldPoint editingDownWorld_{};
   semantic::SemanticGeneration editingGeneration_{};
+  std::uint64_t editingCameraGeneration_=0,editingMetricsGeneration_=0,editingSurfaceGeneration_=0,editingSelectionRevision_=0;
+  foundation::WorldPoint editingDropWorld_{};
   bool editingChanged_ = false;
   interaction::SnapResolver snapResolver_{};
   std::uint64_t snapCandidateCount_ = 0;

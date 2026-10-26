@@ -199,7 +199,44 @@ runtime::SectionSnapshot CanvasEditingRuntime::sectionSnapshot(foundation::Objec
     return out;
 }
 
+std::optional<interaction::SubmitResult> CanvasEditingRuntime::tryCommitSectionDrop(
+    const semantic::SetTransformsOp& desiredWorld) noexcept {
+    if(editingHandle_!=render::HandleKind::kNone||!transformDrag_.active()||desiredWorld.items.size()!=1)return std::nullopt;
+    try {
+        const auto id=desiredWorld.items.front().object_id;
+        const auto* source=semanticObjects_.find(id);if(!source||!historySceneReady())return interaction::SubmitResult::rejected();
+        std::optional<ObjectId> destination=selection_.groupScope();
+        const auto records=sceneCoordinator_->runtimeScene().records();
+        // Same coherent committed projection as the captured gesture. The
+        // release point is tested in actual Section-local space, not its AABB.
+        for(auto it=records.rbegin();it!=records.rend();++it) {
+            if(it->kind!=ObjectKind::kSection||under(it->objectId,id,semanticObjects_)||
+               !textWritable(it->objectId)||selection_.resolveHit(it->objectId,semanticObjects_)!=it->objectId)continue;
+            Transform2D inverse{};
+            if(!scene::inverseTransform(it->transform,inverse)) {
+                const auto& b=it->worldBounds;const auto p=editingDropWorld_;
+                if(p.x>=b.left&&p.x<=b.right&&p.y>=b.top&&p.y<=b.bottom)return interaction::SubmitResult::rejected();
+                continue;
+            }
+            const double x=(inverse.a*editingDropWorld_.x+inverse.c*editingDropWorld_.y)+inverse.tx;
+            const double y=(inverse.b*editingDropWorld_.x+inverse.d*editingDropWorld_.y)+inverse.ty;
+            const auto& b=std::get<SectionContent>(it->content).boundary;
+            if(x>=b.x&&x<=b.x+b.width&&y>=b.y&&y<=b.y+b.height){destination=it->objectId;break;}
+        }
+        if(destination==source->placement.parent_id)return std::nullopt;
+        runtime::SectionIntent intent;intent.action=runtime::SectionAction::kReparent;intent.objects={id};intent.parentId=destination;
+        intent.expectedSemanticGeneration=editingGeneration_.value();intent.selectionRevision=editingSelectionRevision_;
+        const auto result=executeSectionCommand(intent,&desiredWorld);
+        return result.failure==runtime::SectionFailure::kNone?interaction::SubmitResult::acceptedResult():interaction::SubmitResult::rejected();
+    } catch(const std::bad_alloc&) {return interaction::SubmitResult::rejected();}
+}
+
 runtime::SectionOutcome CanvasEditingRuntime::executeSectionIntent(const runtime::SectionIntent& intent) noexcept {
+    return executeSectionCommand(intent,nullptr);
+}
+
+runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtime::SectionIntent& intent,
+    const semantic::SetTransformsOp* confirmedDrop) noexcept {
     using A=runtime::SectionAction;using Failure=runtime::SectionFailure;
     runtime::SectionOutcome result;result.objectId=intent.objectId;
     result.semanticGeneration=semanticGeneration().value();result.sceneRevision=sceneRevision();
@@ -212,7 +249,9 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionIntent(const runtime
         if(intent.expectedSemanticGeneration!=0&&intent.expectedSemanticGeneration!=semanticGeneration().value())return fail(Failure::kStale);
         if(intent.selectionRevision&&*intent.selectionRevision!=selection_.revision())return fail(Failure::kStale);
         if(!historySceneReady())return fail(Failure::kProjectionUnavailable);
-        if(creationActive()||selectionTransformActive()||imageCropPresentation_||
+        if(confirmedDrop&&(intent.action!=A::kReparent||!transformDrag_.active()||editingHandle_!=render::HandleKind::kNone||
+           confirmedDrop->items.size()!=1||intent.objects.size()!=1||confirmedDrop->items.front().object_id!=intent.objects.front()))return fail(Failure::kInvalidTarget);
+        if(creationActive()||(!confirmedDrop&&selectionTransformActive())||imageCropPresentation_||
            (interaction_&&interaction_->textSession()&&interaction_->textSession()->read().phase!=runtime::TextPhase::kClosed))return fail(Failure::kBusy);
         const auto* object=semanticObjects_.find(intent.objectId);
         auto chosen=roots(intent.objects,semanticObjects_);
@@ -357,7 +396,8 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionIntent(const runtime
             if(!chosen.empty()&&!scene::inverseTransform(destinationWorld,inverse))return fail(Failure::kNumericRange);
             for(std::size_t i=0;i<chosen.size();++i) {
                 const auto* item=projection.find(chosen[i]);if(!item)return fail(Failure::kProjectionUnavailable);
-                const auto local=scene::composeTransform(inverse,item->transform);
+                const auto desired=confirmedDrop?confirmedDrop->items.front().transform:item->transform;
+                const auto local=scene::composeTransform(inverse,desired);
                 auto testBounds=item->kind==ObjectKind::kGroup?foundation::WorldRect{0,0,1,1}:item->visualBounds;
                 for(const auto& descendant:projection.records()) {
                     if(descendant.objectId==item->objectId||!under(descendant.objectId,item->objectId,semanticObjects_))continue;
@@ -374,7 +414,7 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionIntent(const runtime
                         testBounds=foundation::unionRects(testBounds,{static_cast<float>(px),static_cast<float>(py),static_cast<float>(px),static_cast<float>(py)});
                       }
                 }
-                if(!quality(item->transform,destinationWorld,local,testBounds))return fail(Failure::kNumericRange);
+                if(!quality(desired,destinationWorld,local,testBounds))return fail(Failure::kNumericRange);
                 const auto pos=std::find(finalOrder.begin(),finalOrder.end(),chosen[i]);
                 const auto key=introduce?ordinalKey(i+1):ordinalKey(static_cast<std::size_t>(pos-finalOrder.begin())+1);
                 edit.relocations.push_back({chosen[i],{introduce?std::optional<ObjectId>(wrapper.id):parent,key},local});

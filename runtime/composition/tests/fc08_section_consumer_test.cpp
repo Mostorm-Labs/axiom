@@ -203,4 +203,115 @@ TEST(FC08SectionConsumer, ProducerOnlyQueuesAndClosingRetiresPendingRequest) {
     EXPECT_EQ(retired->state,runtime::CanvasControlReceiptState::kTargetDestroyed);
     EXPECT_EQ(c.readback().semanticGeneration,generation);EXPECT_TRUE(f.mountedCanvasTargets().empty());
 }
+class SectionDropTest : public testing::Test {
+protected:
+    runtime::RuntimeComposition c;
+    runtime::RuntimeFacade& f=c.controlFacade();
+    std::uint64_t request=0,sequence=0;
+    const foundation::ObjectId actor=foundation::ObjectId::fromUint64(6601);
+    const foundation::ObjectId section=foundation::ObjectId::fromUint64(6602);
+    void SetUp() override {
+        ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));ASSERT_TRUE(c.registerSource(6600));
+        ASSERT_EQ(f.setSelectionMode(true,++request,f.readRuntimeState().identity.runtimeGeneration,6600).state,runtime::ProductControlState::kQueued);
+        ASSERT_TRUE(c.ownerPump());
+    }
+    void seed(bool ink=false) {
+        semantic::ObjectRecord object;object.id=actor;object.kind_version=1;
+        object.placement.order_key=semantic::OrderKey({1});object.transform.tx=20;object.transform.ty=40;
+        if(ink) {
+            semantic::StrokeRecord stroke;stroke.brush.brush_family_id=1;stroke.brush.brush_version=1;
+            stroke.brush.color={0,0,0,1};stroke.brush.nominal_size=2;stroke.brush.opacity=1;
+            stroke.data=semantic::VectorStrokeData{{{{0,0},1,{0,0}},{{80,60},1,{0,0}}}};
+            object.kind=semantic::ObjectKind::kVectorStroke;object.content=semantic::VectorStrokeContent{stroke};
+        } else {object.kind=semantic::ObjectKind::kShape;object.content=semantic::ShapeContent{1,80,60};}
+        semantic::Operation operation{semantic::OperationId{foundation::ObjectId::fromUint64(6603)},
+            semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,semantic::InsertObjectsOp{{object}}};
+        ASSERT_EQ(c.applyExternalOperation(operation,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    }
+    void command(runtime::SectionIntent intent) {
+        const auto n=++request;ASSERT_EQ(f.submitSectionIntent(intent,n,6600).state,runtime::ProductControlState::kQueued);
+        ASSERT_TRUE(c.ownerPump());const auto receipt=f.canvasControlReceipt({6600,n});
+        ASSERT_TRUE(receipt&&receipt->section);ASSERT_EQ(receipt->section->failure,runtime::SectionFailure::kNone);
+    }
+    void create(semantic::Transform2D transform={1,0,0,1,300,200},semantic::Rect2 boundary={0,0,240,220}) {
+        runtime::SectionIntent intent;intent.objectId=section;intent.transform=transform;intent.content.boundary=boundary;command(intent);
+    }
+    bool pointer(input::PointerPhase phase,float x,float y) {
+        const auto view=f.readCanvasControlSnapshot(f.mountedCanvasTargets().front());
+        input::PlatformPointerBatch batch;++sequence;
+        batch.samples.push_back({6600,1,sequence,sequence*1000000,x*view.cameraScale+view.cameraTranslationX,
+            y*view.cameraScale+view.cameraTranslationY,0,0,0,{},{},input::SampleProvenance::kConfirmedCurrent,phase});
+        return c.submit(batch);
+    }
+    bool click(float x,float y) {return pointer(input::PointerPhase::kDown,x,y)&&pointer(input::PointerPhase::kUp,x,y);}
+    bool drag(float x,float y,float tx,float ty) {return pointer(input::PointerPhase::kDown,x,y)&&pointer(input::PointerPhase::kMove,tx,ty)&&pointer(input::PointerPhase::kUp,tx,ty);}
+    void undo() {ASSERT_EQ(f.undo(++request,f.readRuntimeState().identity.runtimeGeneration,6600).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());}
+    void redo() {ASSERT_EQ(f.redo(++request,f.readRuntimeState().identity.runtimeGeneration,6600).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());}
+    void exercise(bool ink) {
+        seed(ink);create();ASSERT_TRUE(click(60,70));
+        const auto before=c.readback().semanticGeneration;
+        ASSERT_TRUE(pointer(input::PointerPhase::kDown,60,70));ASSERT_TRUE(pointer(input::PointerPhase::kMove,390,290));
+        EXPECT_TRUE(f.readSection(section).directChildren.empty());EXPECT_EQ(c.readback().semanticGeneration,before);
+        ASSERT_TRUE(pointer(input::PointerPhase::kUp,390,290));
+        auto s=f.readSection(section);ASSERT_EQ(s.directChildren,std::vector{actor});ASSERT_EQ(s.members.size(),1U);
+        EXPECT_DOUBLE_EQ(s.members[0].localTransform.tx,50);EXPECT_DOUBLE_EQ(s.members[0].localTransform.ty,60);
+        EXPECT_DOUBLE_EQ(s.members[0].worldTransform.tx,350);EXPECT_DOUBLE_EQ(s.members[0].worldTransform.ty,260);
+        EXPECT_EQ(c.readback().semanticGeneration,before+1); // final pose + parent is ONE operation
+        undo();EXPECT_TRUE(f.readSection(section).directChildren.empty());
+        auto control=f.readCanvasControlSnapshot(f.mountedCanvasTargets().front());
+        EXPECT_DOUBLE_EQ(control.selectedTransform[4],20);EXPECT_DOUBLE_EQ(control.selectedTransform[5],40);
+        redo();ASSERT_EQ(f.readSection(section).directChildren,std::vector{actor});
+        runtime::SectionIntent select;select.action=runtime::SectionAction::kSelect;select.objectId=section;command(select);
+        ASSERT_TRUE(drag(310,210,340,250));s=f.readSection(section);ASSERT_EQ(s.members.size(),1U);
+        EXPECT_DOUBLE_EQ(s.members[0].localTransform.tx,50);EXPECT_DOUBLE_EQ(s.members[0].worldTransform.tx,380);
+        EXPECT_DOUBLE_EQ(s.members[0].worldTransform.ty,300);
+        ASSERT_TRUE(click(420,330));const auto preExit=c.readback().semanticGeneration;
+        ASSERT_TRUE(drag(420,330,100,120));EXPECT_TRUE(f.readSection(section).directChildren.empty());
+        control=f.readCanvasControlSnapshot(f.mountedCanvasTargets().front());
+        EXPECT_DOUBLE_EQ(control.selectedTransform[4],60);EXPECT_DOUBLE_EQ(control.selectedTransform[5],90);
+        EXPECT_EQ(c.readback().semanticGeneration,preExit+1);
+        undo();s=f.readSection(section);ASSERT_EQ(s.members.size(),1U);
+        EXPECT_DOUBLE_EQ(s.members[0].worldTransform.tx,380);EXPECT_DOUBLE_EQ(s.members[0].worldTransform.ty,300);
+    }
+};
+TEST_F(SectionDropTest, ShapeDropUpdatesMembershipAndFollowsSectionWithOneStepHistory) {exercise(false);}
+TEST_F(SectionDropTest, StrokeDropUpdatesMembershipAndFollowsSectionWithOneStepHistory) {exercise(true);}
+TEST_F(SectionDropTest, ActualAffineBoundaryAndFinalPreviewPoseDetermineDrop) {
+    seed();create({1,1,-1,1,400,200},{0,0,100,100});ASSERT_TRUE(click(60,70));
+    ASSERT_TRUE(drag(60,70,310,210)); // inside AABB, outside the actual parallelogram
+    EXPECT_TRUE(f.readSection(section).directChildren.empty());
+    ASSERT_TRUE(drag(310,210,400,300));auto s=f.readSection(section);ASSERT_EQ(s.members.size(),1U);
+    const semantic::Transform2D expected{.5,-.5,.5,.5,15,55};EXPECT_EQ(s.members[0].localTransform,expected);
+    EXPECT_DOUBLE_EQ(s.members[0].worldTransform.tx,360);EXPECT_DOUBLE_EQ(s.members[0].worldTransform.ty,270);
+}
+TEST_F(SectionDropTest, CancelAndLateUpNeverChangeMembershipOrHistory) {
+    seed();create();ASSERT_TRUE(click(60,70));const auto before=c.readback().semanticGeneration;
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,60,70));ASSERT_TRUE(pointer(input::PointerPhase::kMove,390,290));
+    (void)pointer(input::PointerPhase::kCancel,390,290);(void)pointer(input::PointerPhase::kUp,390,290);
+    EXPECT_EQ(c.readback().semanticGeneration,before);EXPECT_TRUE(f.readSection(section).directChildren.empty());
+    const auto control=f.readCanvasControlSnapshot(f.mountedCanvasTargets().front());
+    EXPECT_DOUBLE_EQ(control.selectedTransform[4],20);EXPECT_DOUBLE_EQ(control.selectedTransform[5],40);
+}
+
+TEST_F(SectionDropTest, NestedSectionWinsAndCannotBecomeDescendantOfItsOwnChild) {
+    seed();create({1,0,0,1,250,150},{0,0,400,300});
+    const auto inner=foundation::ObjectId::fromUint64(6604);
+    runtime::SectionIntent nested;nested.objectId=inner;nested.parentId=section;
+    nested.transform.tx=50;nested.transform.ty=50;nested.content.boundary={0,0,200,160};command(nested);
+    ASSERT_TRUE(click(60,70));ASSERT_TRUE(drag(60,70,390,290));
+    ASSERT_EQ(f.readSection(inner).directChildren,std::vector{actor});
+    EXPECT_EQ(f.readSection(section).directChildren,std::vector{inner});
+    runtime::SectionIntent select;select.action=runtime::SectionAction::kSelect;select.objectId=section;command(select);
+    ASSERT_TRUE(drag(260,160,390,280)); // release inside committed child; must not introduce a cycle
+    EXPECT_FALSE(f.readSection(section).parentId);
+    const auto child=f.readSection(inner);ASSERT_EQ(child.members.size(),1U);
+    EXPECT_DOUBLE_EQ(child.members[0].worldTransform.tx,480);EXPECT_DOUBLE_EQ(child.members[0].worldTransform.ty,380);
+}
+TEST_F(SectionDropTest, SurfaceMetricsChangeInvalidatesDropAndLateUp) {
+    seed();create();ASSERT_TRUE(click(60,70));const auto before=c.readback().semanticGeneration;
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,60,70));ASSERT_TRUE(pointer(input::PointerPhase::kMove,390,290));
+    ASSERT_TRUE(c.resizeSurface(810,610));(void)pointer(input::PointerPhase::kUp,390,290);
+    EXPECT_EQ(c.readback().semanticGeneration,before);EXPECT_TRUE(f.readSection(section).directChildren.empty());
+}
+
 }

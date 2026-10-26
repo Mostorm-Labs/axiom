@@ -2198,15 +2198,21 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     editingLocalBounds_ = bounds.visual;
     editingDownWorld_ = {world.first,world.second};
     editingGeneration_ = semanticGeneration_.current();
+    editingCameraGeneration_=cameraGeneration();editingMetricsGeneration_=surface_.metricsGeneration;
+    editingSurfaceGeneration_=surface_.generation;editingSelectionRevision_=selection_.revision();
+    editingDropWorld_={world.first,world.second};
     editingChanged_ = false;
     (void)presentTransientOverlayFrame(nextCanonicalFrameId());
     return true;
   }
   if (key != editingPointer_) return true;
   if (transformDrag_.active()) {
-    if (editingGeneration_ != semanticGeneration_.current()) {
+    if (editingGeneration_ != semanticGeneration_.current() || editingCameraGeneration_!=cameraGeneration() ||
+        editingMetricsGeneration_!=surface_.metricsGeneration || editingSurfaceGeneration_!=surface_.generation ||
+        editingSelectionRevision_!=selection_.revision()) {
       cancelSelectionTransform(); return false;
     }
+    editingDropWorld_={world.first,world.second};
     const auto& t = editingInitial_;
     semantic::Transform2D next=t;
     using H=render::HandleKind;
@@ -2378,6 +2384,7 @@ interaction::SubmitResult CanvasEditingRuntime::submit(const semantic::SetTransf
       editingGeneration_!=semanticGeneration_.current()) return interaction::SubmitResult::rejected();
   const auto* before=semanticObjects_.find(transforms.items.front().object_id);
   if (before==nullptr || before->id!=selection_.primary() || selectedObjectLocked()) return interaction::SubmitResult::rejected();
+  if(const auto drop=tryCommitSectionDrop(transforms))return *drop;
   const auto forwardId=allocateOperationId(), inverseId=allocateOperationId();
   if (forwardId.isZero() || inverseId.isZero()) return interaction::SubmitResult::rejected();
   auto localTransforms=transforms;

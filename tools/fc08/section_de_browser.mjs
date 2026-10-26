@@ -88,6 +88,50 @@ try {
     await command({action:6,objectId:b});await host.control(14,0,2,-2,0,480,340);
     const followed=snapshot(a);check(followed.worldTransform[4]===60&&followed.worldTransform[5]===80,'ancestor moves descendants once',followed);
     await host.control('fit');await host.control('tool',1);check(!host.observation().failure,'render/fit/tool remains live',host.observation());
+
+    if (${opts.drop==='1'}) {
+      await command({action:2,objectId:b});await command({action:2,objectId:a});
+      check(host.observation().objects===0,'drop fixture starts empty',host.observation());
+      await host.control('setZoom',0,0,1);
+      const camera=host.observation().camera;await host.control('pan',-camera.x,-camera.y);
+      let timestamp=BigInt(Math.ceil(performance.now()*1000000))+1000000n,generation=0n;
+      const point=async(phase,x,y)=>{
+        const camera=host.observation().camera;
+        const accepted=m._axiom_web_pointer(h,1,71,phase===0?0n:generation,++timestamp,phase,
+          x*camera.scale+camera.x,y*camera.scale+camera.y,0,0,0,0,0,0,0);
+        check(accepted===1,'confirmed pointer '+phase,{x,y,phase,accepted});
+        if(phase===0)generation=m._axiom_web_pointer_generation(h,1,71);
+        if(phase===2||phase===3)generation=0n;
+        await host.flush();
+      };
+      const click=async(x,y)=>{await point(0,x,y);await point(2,x,y);};
+      const drag=async(x,y,tx,ty)=>{await point(0,x,y);await point(1,tx,ty);await point(2,tx,ty);};
+      for(const ink of [false,true]) {
+        const targetId='f'.repeat(30)+(ink?'02':'01');
+        await command({action:0,objectId:targetId,boundary:[0,0,240,220],transform:[1,0,0,1,300,200]});
+        await host.control(ink?'tool':'shape',0);
+        await drag(20,40,100,100);await host.control('tool',1);await click(60,70);
+        const before=BigInt(snapshot(targetId).generation);
+        await point(0,60,70);await point(1,390,290);
+        check(snapshot(targetId).children.length===0&&BigInt(snapshot(targetId).generation)===before,'crossing is transient '+ink,snapshot(targetId));
+        await point(2,390,290);let target=snapshot(targetId);
+        check(target.children.length===1&&BigInt(target.generation)===before+1n,'one atomic membership/pose drop '+ink,target);
+        const actor=target.children[0];
+        // Real brush samples/outline already use content-world coordinates; its initial matrix is identity.
+        // Shape creation starts at transform (20,40). Both displays translate by (330,220).
+        const pose=target.members[0].worldTransform;
+        check(Math.abs(pose[4]-(ink?330:350))<.001&&Math.abs(pose[5]-(ink?220:260))<.001,'last confirmed preview pose '+ink,pose);
+        await host.control('undo');check(snapshot(targetId).children.length===0,'one-step drop undo '+ink,snapshot(targetId));
+        await host.control('redo');check(snapshot(targetId).children.includes(actor),'one-step drop redo '+ink,snapshot(targetId));
+        await command({action:6,objectId:targetId});await drag(310,210,340,250);target=snapshot(targetId);
+        check(Math.abs(target.members[0].worldTransform[4]-(ink?360:380))<.001&&Math.abs(target.members[0].worldTransform[5]-(ink?260:300))<.001,'Section pointer drag carries member once '+ink,target);
+        await click(420,330);const preExit=BigInt(snapshot(targetId).generation);await drag(420,330,100,120);
+        check(snapshot(targetId).children.length===0&&BigInt(snapshot(targetId).generation)===preExit+1n,'drop out is one commit '+ink,snapshot(targetId));
+        await host.control('undo');check(snapshot(targetId).children.includes(actor),'drop out undo restores membership '+ink,snapshot(targetId));
+        for(let i=0;i<12&&host.observation().objects>0;i++)await host.control('undo');
+        check(host.observation().objects===0,'bounded fixture undo cleanup '+ink,host.observation());
+      }
+    }
     return {rows,final:host.observation(),section:snapshot(b),physicalInput:'NOT_RUN'};
   })()`);
   await fs.writeFile(path.join(out,'observations.json'),JSON.stringify(observed,null,2)+'\n');
