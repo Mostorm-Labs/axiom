@@ -12,7 +12,6 @@
   },
   "execution_authority_mode": "repo_materialized",
   "package_materialization_ref": "refs/heads/control/fc08-product-p31-package",
-  "package_source_revision": "2efbd5a3c86aa89949271ce95c377108b45c42b0",
   "execution_ref": null,
   "task_anchor": {
     "revision": "a1e8819abe245ab7487f18771970721f480ff487",
@@ -32,7 +31,7 @@
   },
   "authority_lock_ref": {
     "path": "authority.lock.json",
-    "sha256": "bf874e674d06fea4689a57d8c80c9d6b1773b21d71d78b71bf00ade715b77da3"
+    "sha256": "c29d7d2e0785cf2108acb618ff42571a545426880a0c388ab27512f4ff8e814a"
   },
   "verification_lock_ref": {
     "path": "verification.lock.json",
@@ -75,5 +74,6 @@
     "No product code, product test, DEV PASS, P34 PASS, PHYS PASS, or release PASS is claimed.",
     "M01-M04 baseline materialization is not product implementation evidence.",
     "PH01-PH04 remain FC13 debt; INT-01 remains FC04/FC10-owned beyond the required pre-write rejection test."
-  ]
+  ],
+  "source_baseline_revision": "427580ae13b60a39e88959b282cbffc695c9aabb"
 }
