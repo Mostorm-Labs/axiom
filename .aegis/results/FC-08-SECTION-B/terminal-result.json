@@ -1,0 +1,236 @@
+{
+  "status": "READY_FOR_CONTROL_REVIEW_B_WITH_PREEXISTING_REGRESSION",
+  "result_revision": "21f06e48f849812a82a2aaf389459f4c7ab6d76f",
+  "materialized_ref": "refs/heads/codex/fc08-section-operations",
+  "source_baseline": "fecd797a3f6a6fb9c27ac6d96f7edeafdfb9dc4c",
+  "authorization": {
+    "package_revision": "cbe90563cf45f16be54fb8b4f8b6d765de9203ac",
+    "path": ".aegis/packages/FC-08-SECTION-B-v0.1/package.json",
+    "sha256": "4978b9c012a7167538067ffeac16c2d7dd77bf4e3fa073388c78d86fc1f7a7a3",
+    "source": "Direct human request to implement the selected B slice; B only; original P31/A history not rewritten"
+  },
+  "changed_files": [
+    {
+      "path": "runtime/semantic/CMakeLists.txt",
+      "sha256": "9d2dbf0501cba089e00bea29d5319c0d42a64e8cc71efee427e352f40e61c456"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/applied_operation_ledger.hpp",
+      "sha256": "4e72db2726594e4fe304f267c4bfb012a1c2c6df0e381cf9d5564589691bab4a"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/container_operation.hpp",
+      "sha256": "0aecd9d69a785608791c7ddb8973e38a602fc58e8bc392060dd9854c462d563b"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/indexed_object_store.hpp",
+      "sha256": "36ef957ed1ee78af7ffa076472ce73a26b556b94b5a3013774d59b8eb4987064"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation.hpp",
+      "sha256": "0f14eee73da2c138590f782f8bf3c9ef341e99f920011cf5a7a8e9f006cbf691"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_payload.hpp",
+      "sha256": "faed5dd5785a2b9f11fb320eb2720494dc9b4caf371cfd6f9d92c3b1b2be17ae"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/staged_object_view.hpp",
+      "sha256": "5154b5e52b3e0f2f1a0bdb6118536f970e7b16d6aeaec80336e246e3d639da66"
+    },
+    {
+      "path": "runtime/semantic/src/applied_operation_ledger.cpp",
+      "sha256": "e301ffa873aa234550e39453a804ada2cf102aef922c5ee532a1d22b9d76133d"
+    },
+    {
+      "path": "runtime/semantic/src/apply_plan.cpp",
+      "sha256": "575b6f272a1db9a0044c2fe6341c6d4d33914fde9b0a85a08824c6517e712c15"
+    },
+    {
+      "path": "runtime/semantic/src/atomic_apply.cpp",
+      "sha256": "5a53a06fff84d792b20379999237cff26cd83d1b56e2f6806a8ff3bc9f20c066"
+    },
+    {
+      "path": "runtime/semantic/src/change_set_builder.cpp",
+      "sha256": "723cfb8cc389eb5d55e08f7b281be3e307b6fdfb1fb2539a5c902d63b275b33a"
+    },
+    {
+      "path": "runtime/semantic/src/codec.cpp",
+      "sha256": "fe986c8977b84c89845848b9549bf52f74e72e97f2699bbd57bcf1c270ab5c08"
+    },
+    {
+      "path": "runtime/semantic/src/container_operation_internal.hpp",
+      "sha256": "27d10ac45c98cce0e62c4799b00175d4a25f38d8d9101063b0f5dae742480669"
+    },
+    {
+      "path": "runtime/semantic/src/container_operation_mapping.cpp",
+      "sha256": "d9839f505e722ec2937ad32a88993ae0679c11692e592649966f23a964244804"
+    },
+    {
+      "path": "runtime/semantic/src/container_operation_mapping.hpp",
+      "sha256": "ae350cff56b7527c4aacfe7cf80cdca019a97b0a22aacbcde3cc57b967acaec1"
+    },
+    {
+      "path": "runtime/semantic/src/container_operation_normalization.cpp",
+      "sha256": "34f7ac84b9f47ddeeb89c5406d94aaa78523777b418911601879c97435f7c8c0"
+    },
+    {
+      "path": "runtime/semantic/src/container_operation_validation.cpp",
+      "sha256": "6692180d94d79c64a85303eba76a7c3304301c0d96e2d59106fbfc0a06523e64"
+    },
+    {
+      "path": "runtime/semantic/src/container_topology_plan.cpp",
+      "sha256": "031204417995b738ff5d0dd19d4fec51a2c89db8f65f738971a694470a3c0eab"
+    },
+    {
+      "path": "runtime/semantic/src/g1_08_indexed_access_probe_internal.hpp",
+      "sha256": "3126ae44228c6ec98882d15d83262b448952abb04237c010b1efc5244c1c0399"
+    },
+    {
+      "path": "runtime/semantic/src/indexed_object_store.cpp",
+      "sha256": "f37c4de76d6801dd33ce5dbaac2e7525b758332f5d6baa0c3641c17675455955"
+    },
+    {
+      "path": "runtime/semantic/src/normalizer.cpp",
+      "sha256": "3b28cfc1e51462558b6f9812382082fdeb1f9a6855535331ac4d1cdeb4a19a1b"
+    },
+    {
+      "path": "runtime/semantic/src/object_index.cpp",
+      "sha256": "38c97ce6cbec459d5672ee6633f1f6679164cb385614d1e869a25bc5253c29ab"
+    },
+    {
+      "path": "runtime/semantic/src/object_index.hpp",
+      "sha256": "9f8dfc3875a6faa43351f25e3f62db1688b6000fa8c1c1bc5ba5eaeff018711b"
+    },
+    {
+      "path": "runtime/semantic/src/object_store_mutator.hpp",
+      "sha256": "d852e77323eeb86a4a5d3d79d779b540d5fb7ec49eeedf8e5948327ed8735aca"
+    },
+    {
+      "path": "runtime/semantic/src/operation_engine.cpp",
+      "sha256": "414d33c97846cb76ed8b3c124555125143af1208f5e172117bbe698d86ee9c53"
+    },
+    {
+      "path": "runtime/semantic/src/protobuf_object_mapping.cpp",
+      "sha256": "1c77cdb8a4b37a05b27c393e57620eb5b9962f0740cac0b81f36d289313ce913"
+    },
+    {
+      "path": "runtime/semantic/src/reference_object_store.cpp",
+      "sha256": "288014e1723a98654785400d3f550aad7374db1091a963076b2ea4f4c4adedf7"
+    },
+    {
+      "path": "runtime/semantic/src/semantic_types.cpp",
+      "sha256": "2a101c2140267405bfc243b7a22719f786c77a5d98c89b310e8a53af1cecb623"
+    },
+    {
+      "path": "runtime/semantic/src/staged_object_view.cpp",
+      "sha256": "17de644c253d4c18f06eb8a5b6643f4dd432ec83465f96c1d59ed1539a06554d"
+    },
+    {
+      "path": "runtime/semantic/src/validator.cpp",
+      "sha256": "cbf43a030b5fef97d13f45615976763a621741eceae060b9b636d52de807e345"
+    },
+    {
+      "path": "runtime/semantic/tests/CMakeLists.txt",
+      "sha256": "9cca14874f174a4b63511f69c94041416aee88bd0eff248e9f9d6d2550afcd0e"
+    },
+    {
+      "path": "runtime/semantic/tests/fc08_container_fixture.hpp",
+      "sha256": "219c3faefc169e5a5b447b4fea151e4a150247e7279970f394c6aed291f09669"
+    },
+    {
+      "path": "runtime/semantic/tests/fc08_section_allocation_test.cpp",
+      "sha256": "78c64343ab21d8d272e589b295a0f4c9244da6a08c5372ccc03756639ad6531e"
+    },
+    {
+      "path": "runtime/semantic/tests/fc08_section_operation_test.cpp",
+      "sha256": "a0b48960202a7b284598fc479e74e1b13650a2af23c93f8565c0fac2218a7148"
+    },
+    {
+      "path": "runtime/semantic/tests/fc08_section_safety_test.cpp",
+      "sha256": "da4772b68a77fa64e634ab18a36ad6f87bbe1b0910c79b2d4208ac4812d71daa"
+    },
+    {
+      "path": "runtime/semantic/tests/semantic_types_test.cpp",
+      "sha256": "72381ace4d1fe891c78b7377843dfc3fabb7f25a87b361d35ff5dc6c636c6eb8"
+    },
+    {
+      "path": "schema/axiom/v1/registry/operation_registry_v1.yaml",
+      "sha256": "d2781ce06624db4fec3f96b5bda423a0816a8ab2c91c8eb99830e93ba2b601af"
+    },
+    {
+      "path": "tools/fc08/section_b.py",
+      "sha256": "88f7a544ccbf115952c6fa36d754a63215d6f8fd71ed03ab0c773b9b021d37e8"
+    }
+  ],
+  "results": {
+    "B_native": {
+      "tests": 117,
+      "failures": 0,
+      "skipped": 0
+    },
+    "A_native": {
+      "tests": 48,
+      "failures": 0,
+      "skipped": 0
+    },
+    "matrix": {
+      "name": "Win32-ninja",
+      "tests": "550",
+      "failures": "1",
+      "disabled": "0",
+      "skipped": "0",
+      "hostname": "HIMEKO",
+      "time": "18",
+      "timestamp": "2026-10-26T20:23:05"
+    },
+    "ctest_exit": 8,
+    "configure_exit": 0,
+    "build_exit": 0,
+    "python": {
+      "tests": 10,
+      "failures": 0,
+      "skipped": 0,
+      "exit": 0
+    },
+    "PackageBindingPreflight": 0,
+    "EvidenceContractPreflight": 0,
+    "ScopePreservationAudit": 0
+  },
+  "known_failure": {
+    "test": "StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds",
+    "status": "FAIL_PREEXISTING",
+    "evidence_reused": ".aegis/results/FC-08-SECTION-A/baseline-regression-001/",
+    "baseline_subject": "427580ae13b60a39e88959b282cbffc695c9aabb",
+    "description": "Old Shape/RichTextTarget expectation conflict; no frozen expectation weakened and no all-regression-pass claim."
+  },
+  "limitations": [
+    {
+      "classification": "HISTORY_FIXTURE_REVIEW_REQUIRED_FOR_C",
+      "path": "fixture-limitations.json",
+      "description": "T06 disjoint-order-edits/permutation forward has an order delta omitted from shared redo carrier. All frozen B forward predicates pass; no new accepted input amendment or History pass."
+    },
+    {
+      "classification": "COLD_INITIALIZATION_ALLOCATION_PROFILE_NOT_QUALIFIED",
+      "description": "A cold fault sweep made no progress and owned controller/test were stopped; raw termination record retained. Final fault sweeps initialize real codec descriptors before arming C++ new failures, and are not a claim about cold SDK initialization or all malloc/arena allocation failures."
+    },
+    {
+      "classification": "PERFORMANCE_NOT_QUALIFIED",
+      "description": "Production commit uses only reserved touched record nodes/affected parent sets. Semantic final-graph prepare still materializes the graph; no G5 performance claim."
+    }
+  ],
+  "not_run": [
+    "C: real inverse construction, bidirectional payload budgets, EditorHistory reservation/admission/Undo/Redo",
+    "D: Section geometry, selection/Scene publication, snapshot/recovery/capabilities",
+    "E: RuntimeFacade/Interaction command surface and actual Windows/Web Section interaction",
+    "Full302 product runner, full E01-E10 discharge, actual Chrome/WASM Section execution and PHYS"
+  ],
+  "next_smallest_slice": "C: bind real F/U preparation, exact bidirectional size/collection admission and precommit EditorHistory reservation to existing owners; resolve T06 redo carrier omission with the Verification owner before claiming its History oracle.",
+  "claims": {
+    "full_product_runner_complete": false,
+    "DEV_PASS": false,
+    "P34_PASS": false,
+    "PHYS_PASS": false,
+    "release_ready": false
+  }
+}
