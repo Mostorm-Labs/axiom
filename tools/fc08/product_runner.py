@@ -25,8 +25,9 @@ def now():return datetime.now(timezone.utc).isoformat()
 def load(path):return json.loads(Path(path).read_text(encoding='utf-8'))
 def digest(data):return hashlib.sha256(data).hexdigest()
 def ref(path):
-    path=Path(path);data=path.read_bytes()
-    return {'path':str(path),'sha256':digest(data),'size':len(data)}
+    path=Path(path).resolve();data=path.read_bytes()
+    portable=path.relative_to(ROOT).as_posix() if path.is_relative_to(ROOT) else str(path)
+    return {'path':portable,'sha256':digest(data),'size':len(data)}
 def save(path,value):
     path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
     with path.open('x',encoding='utf-8',newline='\n') as stream:stream.write(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
