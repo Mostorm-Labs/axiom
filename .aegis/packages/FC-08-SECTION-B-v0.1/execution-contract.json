@@ -1,0 +1,44 @@
+{
+  "source_revision": "fecd797a3f6a6fb9c27ac6d96f7edeafdfb9dc4c",
+  "allowed_files": [
+    "runtime/semantic/include/canvas/semantic/**",
+    "runtime/semantic/src/**",
+    "runtime/semantic/tests/**",
+    "runtime/semantic/tools/**",
+    "runtime/semantic/CMakeLists.txt",
+    "schema/axiom/v1/registry/operation_registry_v1.yaml",
+    "tools/fc08/section_b*.py",
+    ".aegis/packages/FC-08-SECTION-B-v0.1/**",
+    ".aegis/results/FC-08-SECTION-B/**"
+  ],
+  "required": [
+    "Typed append-only operation17/18 payloads and existing normalizer/validator/codec integration",
+    "Exact structural/content/children guards, old/new ancestor coverage, closed effects, full released wrapper preimages and surviving frontier",
+    "Existing staged view final forest, parent capabilities, order-key uniqueness and connector references; preserve all unmodified content",
+    "Prepare existing ChangeSet/outcome and idempotency ledger entry before publication; stage storage/index updates before no-fail swap inside existing atomic owner for these operations",
+    "Real baseline RED, new semantic tests and impacted regressions with frozen inputs/oracles untouched",
+    "Durable exact result and meaningful terminal report including NOT_RUN C-E"
+  ],
+  "forbidden": [
+    "Schema identities/current descriptor changes (already published in A)",
+    "descriptor.lock files and SDK locks",
+    "Frozen inputs/expected/reference oracles/historical results including A packages/results",
+    "Qualification hook code/default policy",
+    "Global Aegis Authority/Gate/Evidence/Integration registries/default branch",
+    "RuntimeFacade/Interaction/EditorHistory/Scene/host UI product implementation (C-E)",
+    "Parallel ContainerRuntime/History/membership/transaction framework",
+    "Reinterpreting old operations1-16"
+  ],
+  "terminal_success": [
+    "B targeted real semantic and frozen applicable tests pass",
+    "Impacted regressions pass except independently reproduced unchanged baseline failures",
+    "Exact scope/preservation audit and reviewer-accessible source/evidence"
+  ],
+  "terminal_blockers": [
+    "AUTHORITY_CONFLICT",
+    "FROZEN_ORACLE_CONFLICT",
+    "ENVIRONMENT_BLOCKER",
+    "IMPLEMENTATION_FAILURE"
+  ],
+  "continue_until_terminal_state": true
+}

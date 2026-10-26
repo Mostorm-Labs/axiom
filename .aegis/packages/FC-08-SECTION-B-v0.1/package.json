@@ -1,0 +1,45 @@
+{
+  "format": "aegis-repo-local-execution-package-v1",
+  "execution_authority_mode": "repo_materialized",
+  "package_id": "FC-08-SECTION-B-v0.1",
+  "task_id": "FC-08-SECTION-B",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "source_revision": "fecd797a3f6a6fb9c27ac6d96f7edeafdfb9dc4c",
+  "execution_ref": "refs/heads/codex/fc08-section-operations",
+  "task_anchor": {
+    "revision": "fecd797a3f6a6fb9c27ac6d96f7edeafdfb9dc4c",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "product_P32_authorized": true,
+  "authorized_slice": "B only",
+  "authorization_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-B-v0.1/authorization.json",
+    "sha256": "8cd4225b23009b984590898e30b2f35dd7b9b1ece23bfaf5c27a816172cff6f3"
+  },
+  "authority_lock_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-B-v0.1/authority.lock.json",
+    "sha256": "aeec6c3a159e26b6023148a4bb7d2fbd16a9152a331a869eb4651d4ce7965da7"
+  },
+  "verification_lock_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-B-v0.1/verification.lock.json",
+    "sha256": "f1e3627a1d80d85fb22759c69b0b4d5cf3af10375f4dbd5d3905ae243aa689a8"
+  },
+  "execution_contract_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-B-v0.1/execution-contract.json",
+    "sha256": "2949df69ed745e1a0c56012ce283434f701c748187ee76e13a0336b1d22cdd12"
+  },
+  "evidence_contract_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-B-v0.1/evidence-contract.json",
+    "sha256": "c14536ae40f7c834ac5e3ed419bcf109411196a769aeb8b67bcccfe70073442c"
+  },
+  "implementation_context_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-B-v0.1/implementation-context.json",
+    "sha256": "6083f1195a542eb24b947b2bffeeec931c0fe657efcd89beeaffe7b091068731"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW"
+}
