@@ -1,0 +1,35 @@
+{
+  "source_revision": "a68f37da7b261eade60e06209ac6ca8a1ac5faa8",
+  "allowed_files": [
+    ".aegis/packages/FC-08-SECTION-C-H03-v0.1/**",
+    ".aegis/results/FC-08-SECTION-C-H03-v0.1/**",
+    "tools/fc08/section_c_h03*.py",
+    "runtime/semantic/tests/fc08_section_history_test.cpp"
+  ],
+  "required": [
+    "Read exact package and run PackageBindingPreflight / EvidenceContractPreflight in the actual worktree with --repo . before execution",
+    "Reproduce original input failure, materialize accepted overlay separately, verify approved F/U and original expected hashes",
+    "Run real C owner admission/Undo/Redo and rejection observations for both active H03 variants; do not submit reference U instead of actual History inverse",
+    "Run focused tool tests and selected native semantic regression; preserve raw exits and historical failures",
+    "Commit and push reviewer-accessible exact result and evidence; return CONTROL_REVIEW"
+  ],
+  "forbidden": [
+    "Production runtime/schema/descriptor/SDK lock changes",
+    "Edits to any prior packages, results, accepted original inputs, expected files, reference writer/oracles or global registries",
+    "D/E feature implementation or main merge",
+    "P34/DEV/PHYS/full302 runner completion claims"
+  ],
+  "terminal_success": [
+    "Active H03 variants meet unchanged expected via real SUT",
+    "Preflights and preservation audit pass",
+    "No new regression failures; preserved baseline failure remains explicit",
+    "Exact source/result/ref and evidence committed and pushed"
+  ],
+  "terminal_blockers": [
+    "AUTHORITY_OR_VERIFICATION_CONFLICT",
+    "ENVIRONMENT_BLOCKER",
+    "IMPLEMENTATION_FAILURE"
+  ],
+  "continue_until_terminal_state": true,
+  "optional_hosted_verification": "No native Runtime behavior changed: reuse exact production-source-matched prior Windows/13 and Python/10 evidence; Chrome/WASM and D/E remain NOT_RUN"
+}

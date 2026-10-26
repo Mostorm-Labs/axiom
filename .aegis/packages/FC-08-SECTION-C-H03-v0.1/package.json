@@ -1,0 +1,51 @@
+{
+  "format": "aegis-repo-local-execution-package-v1",
+  "package_id": "FC-08-SECTION-C-H03-v0.1",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "source_revision": "a68f37da7b261eade60e06209ac6ca8a1ac5faa8",
+  "execution_ref": "refs/heads/codex/fc08-section-history",
+  "task_anchor": {
+    "revision": "c4fde4d4b1843673a71cce0546921f4494b16635",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/fc08-section-history",
+    "revision": "a68f37da7b261eade60e06209ac6ca8a1ac5faa8",
+    "next_action": "Execute accepted H03 input amendment and close C verification subset"
+  },
+  "product_behavior_changes_authorized": false,
+  "authorization_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-C-H03-v0.1/authorization.json",
+    "sha256": "100da2c01a81464e16edd0382d4b9d482a8c800fc9cebedddc79c02f33e03c09"
+  },
+  "authority_lock_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-C-H03-v0.1/authority.lock.json",
+    "sha256": "b18e5f17ce066e078c086516248b69d75e3867e6e2cab6f550d8a7ea277d79a0"
+  },
+  "verification_lock_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-C-H03-v0.1/verification.lock.json",
+    "sha256": "bb611c7f24ebcec134b71c43f08866569a397ca59f8a3a01f1b963d1115f24da"
+  },
+  "execution_contract_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-C-H03-v0.1/execution-contract.json",
+    "sha256": "f4ad26b3897c19878b211ff6c128b5eb0f864cc33e5f2bbb63f9bb9b09fee40e"
+  },
+  "evidence_contract_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-C-H03-v0.1/evidence-contract.json",
+    "sha256": "871e7cea2511c1f06f17825a456272139791992d2fc6a53c95f491467708d598"
+  },
+  "implementation_context_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-C-H03-v0.1/implementation-context.json",
+    "sha256": "5bbf5a48b1de6dacc1498ab2ff3e86aeecc201802aa9cb28dd91dce65e371061"
+  },
+  "input_overlay_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-C-H03-v0.1/input-overlay.json",
+    "sha256": "71249644f37d2a7c1c3bb4b6492be28fe6f4bea79cb805a13c026994b1b39657"
+  },
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW"
+}
