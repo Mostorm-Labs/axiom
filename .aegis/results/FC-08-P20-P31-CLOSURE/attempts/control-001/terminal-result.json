@@ -1,0 +1,138 @@
+{
+  "task_id": "FC-08-P20-P31-BLOCKER-CLOSURE",
+  "stage": "P20/P31 control remediation",
+  "terminal_state": "BLOCKED_PENDING_VERIFICATION_ACCEPTANCE",
+  "return_surface": "CONTROL_REVIEW",
+  "success": false,
+  "product_P32_authorized": false,
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "result_revision": "eb12da1acc4516e115d36767073f8bdc607f8a4d",
+  "materialized_ref": "refs/heads/codex/fc08-p20-p31-closure",
+  "receipt_policy": "An evidence-only descendant stores exact-revision post-commit run002 and this receipt; it does not alter candidate inputs/tools at result_revision. Final response identifies that receipt commit.",
+  "qualification_subject_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+  "bootstrap_receipt_revision": "63ea152b2944d21120c968d5e11e166d1096b44f",
+  "parent_product_package_revision": "f67b9db29090449799bd3e05ef7f1d269dab6d31",
+  "candidate_package_ref": {
+    "path": ".aegis/packages/FC-08-P20-P31-INPUT-AMENDMENT-v0.2/package.json",
+    "sha256": "52fc554901368ec1e4ece9ef2950f03eefdbd55cbf67def6ff68785b47f85a8c",
+    "size": 3972,
+    "revision": "eb12da1acc4516e115d36767073f8bdc607f8a4d"
+  },
+  "source_truth_decision": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/source-of-truth-decision.json",
+    "sha256": "4ff75d97ac6a530c6bea41bc8f5a3641b001923ed12892eb97503cddfd619a6d",
+    "size": 3177
+  },
+  "matrix": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-applicability.json",
+    "sha256": "61dc6757053034b7a11f84028e0c23017e351d0c2edd9c0e4f78e6012de6e8d4",
+    "size": 551932,
+    "matrix_version": "1"
+  },
+  "matrix_schema": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-applicability.schema.json",
+    "sha256": "d87bcc1ef05edbf3a2990a893b599633aa294e3fb1f165f6a58400569252927d",
+    "size": 11987,
+    "schema_version": "1"
+  },
+  "method_bindings": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-method-bindings.json",
+    "sha256": "fa6324b0f78c9c3b4655c418e87de1fc418465f951419f66c030d9aec2b3e019",
+    "size": 850014
+  },
+  "corpus": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus-manifest.json",
+    "sha256": "1f472bc4eb916816de87191d20ed67d3ce59e5e5edfca3d414a2d4a880a70452",
+    "size": 396551
+  },
+  "changed_input_ledger": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/input-change-ledger.json",
+    "sha256": "91ceb928381b04a1b1ae980dffd03c02771361b21291128f08ab0a917dfd78ca",
+    "size": 19488
+  },
+  "candidate_dispositions": {
+    "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/candidate-dispositions.json",
+    "sha256": "c1870411ea05ad91f12d66034ea948863d6a4a4e3a04eea0b80310102cbd80d8",
+    "size": 1207
+  },
+  "evidence_manifest": {
+    "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/evidence-manifest.json",
+    "sha256": "0262d39deddd4bf11c84c967755f797f0444353d79777b46fc80d84ea17f64d6",
+    "size": 18887
+  },
+  "actual_invocations": {
+    "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/invocations.json",
+    "sha256": "af6c12936f46ec1a3b3cb1ae81c856d5e7a64af6f36b270c9bfd908c71c88e56",
+    "size": 7613
+  },
+  "tool_checks": {
+    "candidate_consistency": "PASS_CANDIDATE_CONSISTENCY_ONLY",
+    "unit_tests": 8,
+    "all_recorded_command_exit_codes": 0,
+    "Axiom_product_tests_run": 0,
+    "SUT_invocations": []
+  },
+  "coverage": {
+    "logical_cases": 60,
+    "unique_variants": 302,
+    "families": 10,
+    "profile_cells": 906,
+    "corrected_inputs": 16,
+    "unchanged_expected_files": 302,
+    "windows_native_applicable": 302,
+    "web_wasm_applicable": 302,
+    "headless_applicable": 148,
+    "headless_not_applicable": 154,
+    "shared_controls_per_profile": 3,
+    "environment_assessment": "NOT_ASSESSED"
+  },
+  "blockers": [
+    {
+      "id": "BOOT-VER-01",
+      "classification": "MISSING_VERIFICATION_AUTHORITY_ACCEPTANCE",
+      "owner": "P20 Verification / control review",
+      "status": "SOURCE_BACKED_VERSIONED_CORRECTIONS_PROPOSED_NOT_ACCEPTED",
+      "decision_required": "Accept or amend exact candidate02 decisions: shared ellipse13, original S04 rectangles1, empty-Group graph2. Expected files/oracles unchanged."
+    },
+    {
+      "id": "BOOT-PKG-02",
+      "classification": "MISSING_PROFILE_BINDING_ACCEPTANCE",
+      "owner": "P31 control review",
+      "status": "EXACT_302_ID_MATRIX_MATERIALIZED_NOT_ACCEPTED",
+      "decision_required": "Accept or amend the bound matrix/schema/method book; verify explicit headless exclusions and shared host/oracle-control roles."
+    }
+  ],
+  "downstream": {
+    "PackageBindingPreflight": {
+      "status": "NOT_RUN_PENDING_VERIFICATION_ACCEPTANCE",
+      "exit_code": null
+    },
+    "EvidenceContractPreflight": {
+      "status": "NOT_RUN_PENDING_VERIFICATION_ACCEPTANCE",
+      "exit_code": null
+    },
+    "ImplementationDesignPreflight": {
+      "status": "NOT_RUN_PENDING_VERIFICATION_ACCEPTANCE",
+      "exit_code": null
+    },
+    "actual_product_runner_and_tests": {
+      "status": "NOT_RUN_PENDING_VERIFICATION_ACCEPTANCE",
+      "exit_code": null
+    },
+    "FC08-RED-01": {
+      "status": "NOT_RUN_PENDING_VERIFICATION_ACCEPTANCE",
+      "exit_code": null
+    }
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/fc08-p20-p31-closure",
+    "revision": "eb12da1acc4516e115d36767073f8bdc607f8a4d",
+    "candidate_package_sha256": "52fc554901368ec1e4ece9ef2950f03eefdbd55cbf67def6ff68785b47f85a8c",
+    "next_action": "Obtain explicit control acceptance of candidate02 source truth and profile matrix. Then rerun audits, bind revised exact P31 locks, both package preflights, ImplementationDesignPreflight, real runner/tests and FC08-RED-01. Do not reuse old preflight PASS or start product P32."
+  },
+  "preserved": "All previously tracked files are byte-identical to63ea. Old inputs/expected/oracles/catalog/CR01/descriptor locks/history remain intact. No production runtime/schema/global registry edits or main merge.",
+  "physical_debt": "Existing PH01-PH04/PX0/FC13 obligations unchanged; no physical observations claimed."
+}

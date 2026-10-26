@@ -1,0 +1,31 @@
+{
+  "candidate01": {
+    "status": "SUPERSEDED_UNACCEPTED_CANDIDATE",
+    "package": {
+      "path": ".aegis/packages/FC-08-P20-P31-INPUT-AMENDMENT-v0.1/package.json",
+      "sha256": "b80301d5b81cec10724a427f25c0650c5b638adbb8b4ead522a20d0bfa3196d6",
+      "size": 3729
+    },
+    "audit": {
+      "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/candidate-01-audit.json",
+      "sha256": "88fb8ae8bdee3c4b983adb30f606006b693c8a577c5ec7727f546d6e5f99d7fd",
+      "size": 141
+    },
+    "finding": "FC08-S05/empty-Group-paint and empty-Group-identity retained stale graph S/a/b while canonical records contained only empty G.",
+    "product_failure_claimed": false
+  },
+  "candidate02": {
+    "status": "PROPOSED_PENDING_ACCEPTANCE",
+    "package": {
+      "path": ".aegis/packages/FC-08-P20-P31-INPUT-AMENDMENT-v0.2/package.json",
+      "sha256": "52fc554901368ec1e4ece9ef2950f03eefdbd55cbf67def6ff68785b47f85a8c",
+      "size": 3972
+    },
+    "audit": {
+      "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/audit.json",
+      "sha256": "29008f071687167c3c4a118c9a1abe05db59d17c72373ea4e508f510ff5f2a6c",
+      "size": 2478
+    },
+    "accepted": false
+  }
+}

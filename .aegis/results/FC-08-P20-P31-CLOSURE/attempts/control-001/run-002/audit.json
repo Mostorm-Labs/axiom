@@ -1,0 +1,74 @@
+{
+  "format": "fc08-input-amendment-audit-v1",
+  "status": "PASS_CANDIDATE_CONSISTENCY_ONLY",
+  "authority_acceptance": false,
+  "package_preflights_run": false,
+  "SUT_invocations": [],
+  "counts": {
+    "logical_cases": 60,
+    "variants": 302,
+    "families": 10,
+    "profile_cells": 906,
+    "corrected_inputs": 16,
+    "unchanged_expected": 302,
+    "audited_selection_variants": 16
+  },
+  "profile_counts": {
+    "windows-native:APPLICABLE": 302,
+    "web-wasm:APPLICABLE": 302,
+    "headless:APPLICABLE": 148,
+    "headless:NOT_APPLICABLE": 154
+  },
+  "corrected_variant_ids": [
+    "FC08-S01/boundary-full-child-inside",
+    "FC08-S01/boundary-full-child-overflow",
+    "FC08-S02/partial-actual-child",
+    "FC08-S02/broad-phase-only-child",
+    "FC08-S03/outer-partial-inner-full",
+    "FC08-S03/unopened-Group",
+    "FC08-S03/entered-Group",
+    "FC08-S04/concave-notch",
+    "FC08-S05/child",
+    "FC08-S05/blank-interior",
+    "FC08-S05/header",
+    "FC08-S05/border",
+    "FC08-S05/empty-Group-paint",
+    "FC08-S05/empty-Group-identity",
+    "FC08-S06/shift-at-down-release-before-up",
+    "FC08-S06/cancel"
+  ],
+  "selection_expectations_checked": [
+    "FC08-S01/boundary-full-child-inside",
+    "FC08-S01/boundary-full-child-overflow",
+    "FC08-S02/partial-actual-child",
+    "FC08-S02/broad-phase-only-child",
+    "FC08-S03/outer-partial-inner-full",
+    "FC08-S03/unopened-Group",
+    "FC08-S03/entered-Group",
+    "FC08-S04/concave-notch",
+    "FC08-S05/child",
+    "FC08-S05/blank-interior",
+    "FC08-S05/header",
+    "FC08-S05/border",
+    "FC08-S05/empty-Group-paint",
+    "FC08-S05/empty-Group-identity",
+    "FC08-S06/shift-at-down-release-before-up",
+    "FC08-S06/cancel"
+  ],
+  "independent_geometry_witnesses": {
+    "S02_nearest_ellipse_distance_squared": "32/25 > 1",
+    "S04_section_corners_inside": true,
+    "S04_interior_notch_witness": [
+      50,
+      75
+    ],
+    "S04_A_hit": true,
+    "S04_B_hit": false
+  },
+  "independence": "No generator, production codec/planner/normalizer/Runtime imported; independent literal identities and rational geometry. Expected files not regenerated.",
+  "preservation": "git diff against63ea reports zero changes to all previously tracked files; sources/expected/oracles also individually hash verified.",
+  "limitations": [
+    "Candidate audit is not control acceptance or product verification.",
+    "No revised package preflight, product runner or product RED execution before acceptance."
+  ]
+}
