@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 BASE = 'af1aff801369052eb7b94716f6b4ab3e899eb3e9'
-PKG = '.aegis/packages/FC-08-SECTION-DE-v0.2'
+PKG = '.aegis/packages/FC-08-SECTION-DE-v0.3'
 RESULT = '.aegis/results/FC-08-SECTION-DE'
 BRANCH = 'refs/heads/codex/fc08-section-scene-host'
 
@@ -69,12 +69,22 @@ def preflight(phase, audit):
             allowed=json.loads((ROOT/PKG/'execution-contract.json').read_text())['allowed_files']
             files=set(git('diff','--name-only',BASE).splitlines()+git('ls-files','--others','--exclude-standard').splitlines())
             assert all(any(fnmatch.fnmatchcase(f,a) for a in allowed) for f in files),sorted(files)
-            assert not git('diff',BASE,'--','schema','tests/fc08/reference','.aegis/materialized','semantic-sdk.lock.json','r1-full-skia-sdk.lock.json','runtime/semantic','runtime/interaction/src/qualification_checkpoint.hpp')
+            assert not git('diff',BASE,'--','schema','tests/fc08/reference','.aegis/materialized','semantic-sdk.lock.json','r1-full-skia-sdk.lock.json','runtime/interaction/src/qualification_checkpoint.hpp')
+            semantic=git('diff','--name-only',BASE,'--','runtime/semantic').splitlines()
+            assert set(semantic).issubset({'runtime/semantic/src/connector_validation.cpp'})
+            if semantic:
+                path='runtime/semantic/src/connector_validation.cpp'
+                before=subprocess.check_output(['git','show',BASE+':'+path],cwd=ROOT).decode().replace('\r\n','\n')
+                after=(ROOT/path).read_text()
+                assert after==before.replace('        case ObjectKind::kGroup:\n','        case ObjectKind::kGroup:\n        case ObjectKind::kSection:\n')
+
     except (AssertionError, OSError, ValueError, subprocess.CalledProcessError) as e: errors.append(str(e))
     write(out/'PackageBindingPreflight.json',{'status':'BLOCKED' if errors else 'PASS','source_head':git('rev-parse','HEAD'),'checked':checked,'errors':errors})
     evidence_errors=[]
     try:
-        v=json.loads((ROOT/PKG/'verification.lock.json').read_text());e=json.loads((ROOT/PKG/'evidence-contract.json').read_text());c=json.loads((ROOT/PKG/'execution-contract.json').read_text())
+        package=json.loads((ROOT/PKG/'package.json').read_text())
+        def bound(key): return json.loads((ROOT/package[key+'_ref']['path']).read_text())
+        v=bound('verification_lock');e=bound('evidence_contract');c=bound('execution_contract')
         assert all(all(o.get(k) for k in ['id','requirement','oracle','acceptance','evidence_required']) for o in v['obligations'])
         assert e['blocking'] and c['terminal_success'] and c['terminal_blockers'] and c['continue_until_terminal_state']
     except (AssertionError, OSError, ValueError) as e: evidence_errors.append(str(e))
