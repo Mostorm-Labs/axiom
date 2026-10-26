@@ -1,0 +1,203 @@
+{
+  "runtime": "ACTUAL_CHROME_WASM",
+  "browser": {
+    "Browser": "Chrome/155.0.8059.86",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "V8-Version": "15.5.35.25",
+    "WebKit-Version": "537.36 (@804d6b05f089b27af8342622a36558c49401a1d4)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:11344/devtools/browser/e7b85770-7472-42b3-9ca7-6131e41c49f1"
+  },
+  "chrome_executable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+  "chrome_pid": 276396,
+  "chrome_argv": [
+    "--headless=new",
+    "--disable-gpu",
+    "--no-first-run",
+    "--no-default-browser-check",
+    "--remote-debugging-port=0",
+    "--user-data-dir=C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-bootstrap-003\\chrome-1793004738352",
+    "about:blank"
+  ],
+  "node": "v24.19.0",
+  "binaries": [
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm\\tests\\fc08\\axiom_fc08_baseline_probe.js",
+      "sha256": "36a6f63034bd63178d389c5142d0dc8815f0e89406002edbf00968a4ec4b29ef",
+      "size": 77139
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm\\tests\\fc08\\axiom_fc08_baseline_probe.wasm",
+      "sha256": "fe7ddb4dc98fee2c7ee404d41042186d4269f1f99675ace1f8b628d36f540d54",
+      "size": 9425486
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm\\tests\\fc08\\axiom_fc08_headless_probe.js",
+      "sha256": "647f54412ba381951a9827e166a08f21e14449157cfb866943200895525c8908",
+      "size": 75453
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm\\tests\\fc08\\axiom_fc08_headless_probe.wasm",
+      "sha256": "8b2d58363f9bc83bb35f3b275767721a0841c193dda9356b38b7853760cf7400",
+      "size": 2409226
+    }
+  ],
+  "invocations": [
+    {
+      "id": "r01-section-record",
+      "argv": [
+        "ObjectRecord",
+        "/fixture.pb"
+      ],
+      "input_sha256": "75b9a5ded3dcb9f24ad0db4c1f32b51eef74335f413852a48f1103b88ae9920a",
+      "exit_code": 0
+    },
+    {
+      "id": "r01-section-snapshot3",
+      "argv": [
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "input_sha256": "1fd6a786c299e067d13a92cddac7e7159ad661df2e8c4c8f3302e8593918f571",
+      "exit_code": 0
+    },
+    {
+      "id": "r01-op17-content",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "input_sha256": "4ef678aad6bc6b314b0ad5fe44d178770b12fededcee93145f0a988fd4c88aea",
+      "exit_code": 0
+    },
+    {
+      "id": "r01-op18-introduce",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "input_sha256": "825994a3a14a87563ebf4c2b8ea33634361888bc3625f1a81daeb00b8a323221",
+      "exit_code": 0
+    },
+    {
+      "id": "r01-legacy-insert",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "input_sha256": "44552a83022422b70ba7162d4361b2dad7e4e0b003e9fd3addf209612ed5ef8c",
+      "exit_code": 0
+    },
+    {
+      "id": "r01-legacy-snapshot1",
+      "argv": [
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "input_sha256": "7993293111cb8b8bc4d24df0934771febe03ac8e163aeb227de2908e322cee3d",
+      "exit_code": 0
+    },
+    {
+      "id": "r01-legacy-snapshot2",
+      "argv": [
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "input_sha256": "9f169ee33252ce0ffaaf77424c7dbe17f535f1a9e29b0a9e266fb9fd9f6f729a",
+      "exit_code": 0
+    },
+    {
+      "id": "r01-legacy-snapshot3",
+      "argv": [
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "input_sha256": "a9e4060ff6f61c2f5007af60eb8ffb92a1e9e2e367edd1e05a828bde5c0dc36d",
+      "exit_code": 0
+    },
+    {
+      "id": "case-043",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "input_sha256": "825994a3a14a87563ebf4c2b8ea33634361888bc3625f1a81daeb00b8a323221",
+      "exit_code": 0
+    },
+    {
+      "id": "case-044",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "input_sha256": "ae030309947b72a6932e063026febfb3e1b47c46d745e2425f1ef245141062dd",
+      "exit_code": 0
+    },
+    {
+      "id": "case-045",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "input_sha256": "412845604737893ab991c56b4fd909aaf71ba8f564d26019a14774058557620b",
+      "exit_code": 0
+    },
+    {
+      "id": "case-046",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "input_sha256": "5419f0421534d19979aa1fde99b3dab54ff97de24d21471266aacee482aaa6f9",
+      "exit_code": 0
+    },
+    {
+      "id": "case-049",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "input_sha256": "7621e94ba09dc75b27857e25fb7370b6a33918e584b8eb08e3c7854b2f71fad5",
+      "exit_code": 0
+    },
+    {
+      "id": "case-050",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "input_sha256": "2f5ccd200cb6fa55dad8534b3600d7426fd4657aa604336dff27a1a38adcce0e",
+      "exit_code": 0
+    },
+    {
+      "id": "case-073",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "input_sha256": "256122d7e4491c39d30e6aa0dd299efae97050cdc7ddb19b55faee528f4d1644",
+      "exit_code": 0
+    },
+    {
+      "id": "case-261",
+      "argv": [
+        "LegacyImport",
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "input_sha256": "7993293111cb8b8bc4d24df0934771febe03ac8e163aeb227de2908e322cee3d",
+      "exit_code": 0
+    },
+    {
+      "id": "case-262",
+      "argv": [
+        "LegacyImport",
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "input_sha256": "9f169ee33252ce0ffaaf77424c7dbe17f535f1a9e29b0a9e266fb9fd9f6f729a",
+      "exit_code": 0
+    }
+  ],
+  "physical_observation_claimed": false
+}

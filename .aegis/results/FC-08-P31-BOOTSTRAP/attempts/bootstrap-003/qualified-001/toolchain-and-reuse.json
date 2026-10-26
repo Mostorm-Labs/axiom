@@ -1,0 +1,167 @@
+{
+  "current_semantic_environment": {
+    "core": {
+      "depsLockSha256": "11f19f907af2b489951773d4ccec6e766123b1e0b7b11faa4ce6d9f443906e4b",
+      "enabled": true
+    },
+    "environment": {
+      "AXIOM_DEPS_DIR": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.deps",
+      "AXIOM_PROTOC": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+      "AXIOM_SEMANTIC_HOST_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85",
+      "AXIOM_SEMANTIC_RUNTIME_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+      "AXIOM_SEMANTIC_SDK_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+      "CMAKE_PREFIX_PATH": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c"
+    },
+    "format": "axiom-build-environment-v2",
+    "host": "windows-x64",
+    "semantic": {
+      "enabled": true,
+      "indexSha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5",
+      "lockSha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+      "mode": "v2",
+      "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea",
+      "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970",
+      "resolution": {
+        "artifacts": [
+          {
+            "family": "semantic",
+            "identity": "fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85",
+            "key": "windows-x64",
+            "kind": "host-tools",
+            "networkUsed": false,
+            "root": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85",
+            "sha256": "6be86ab9c88bfdcc137d28672d7e5809c82ff8836296f737c08966005087d77c",
+            "source": "store"
+          },
+          {
+            "family": "semantic",
+            "identity": "aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+            "key": "windows-x64-msvc-static",
+            "kind": "runtimes",
+            "networkUsed": false,
+            "root": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+            "sha256": "7a936b388c4368e360c0c857a776d6a7b2a7dcaab5d5613f3273198aadbbbe23",
+            "source": "store"
+          }
+        ],
+        "family": "semantic",
+        "format": "axiom-sdk-resolution-v1",
+        "host": "windows-x64",
+        "index": {
+          "identity": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea",
+          "networkUsed": false,
+          "root": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\release-sets\\semantic\\14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea\\semantic-sdk-index.json",
+          "sha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5",
+          "source": "store"
+        },
+        "metadata": {
+          "abi": {
+            "buildType": "Release",
+            "crt": "static-release",
+            "cxxRuntime": "msvc",
+            "cxxStandard": 20,
+            "exceptions": true,
+            "iteratorDebugLevel": 0,
+            "linkage": "static",
+            "pic": true,
+            "rtti": true,
+            "sanitizer": "none"
+          },
+          "abseilVersion": "20250512.1",
+          "hostTool": "windows-x64",
+          "indexSha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5",
+          "protobufVersion": "36.0",
+          "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea",
+          "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970",
+          "target": "windows-x64-msvc-static",
+          "toolchain": {
+            "cmakeVersion": "cmake version 3.30.5",
+            "compiler": "clang-cl",
+            "compilerTarget": "x86_64-pc-windows-msvc",
+            "compilerVersion": "clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)",
+            "cxxRuntime": "msvc",
+            "llvmVersion": "22.1.8",
+            "msvcVersion": "14.51.36231",
+            "ninjaVersion": "1.11.1.git.kitware.jobserver-1",
+            "windowsSdkVersion": "10.0.26100.0"
+          }
+        },
+        "networkUsed": false,
+        "target": "windows-x64-msvc-static"
+      }
+    },
+    "target": "windows-x64-msvc-static"
+  },
+  "actual_baseline_consumer_compilers": [
+    {
+      "tag": "v02-on",
+      "profile": "windows-native",
+      "CMAKE_CXX_COMPILER": "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+      "CMAKE_CXX_COMPILER_ID": "MSVC",
+      "CMAKE_CXX_COMPILER_VERSION": "19.51.36246.0",
+      "raw_CMake_fact": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/environment/compiler-v02-on-windows-native.cmake",
+        "sha256": "0fe410869376371c16e8b29b3b306ccc7c1273a4c866840bf1eae8e6a554bc96",
+        "size": 6624
+      }
+    },
+    {
+      "tag": "v02-on",
+      "profile": "web-wasm",
+      "CMAKE_CXX_COMPILER": "C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/upstream/emscripten/em++.exe",
+      "CMAKE_CXX_COMPILER_ID": "Clang",
+      "CMAKE_CXX_COMPILER_VERSION": "24.0.0",
+      "raw_CMake_fact": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/environment/compiler-v02-on-web-wasm.cmake",
+        "sha256": "28e9635b770d15d9c00c3e1fd82a13652f876c48b403cd3ae26050ee5f999083",
+        "size": 6530
+      }
+    },
+    {
+      "tag": "v02-off",
+      "profile": "windows-native",
+      "CMAKE_CXX_COMPILER": "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+      "CMAKE_CXX_COMPILER_ID": "MSVC",
+      "CMAKE_CXX_COMPILER_VERSION": "19.51.36246.0",
+      "raw_CMake_fact": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/environment/compiler-v02-off-windows-native.cmake",
+        "sha256": "0fe410869376371c16e8b29b3b306ccc7c1273a4c866840bf1eae8e6a554bc96",
+        "size": 6624
+      }
+    },
+    {
+      "tag": "v02-off",
+      "profile": "web-wasm",
+      "CMAKE_CXX_COMPILER": "C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/upstream/emscripten/em++.exe",
+      "CMAKE_CXX_COMPILER_ID": "Clang",
+      "CMAKE_CXX_COMPILER_VERSION": "24.0.0",
+      "raw_CMake_fact": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/environment/compiler-v02-off-web-wasm.cmake",
+        "sha256": "28e9635b770d15d9c00c3e1fd82a13652f876c48b403cd3ae26050ee5f999083",
+        "size": 6530
+      }
+    }
+  ],
+  "historical_build_invocations": [
+    {
+      "tag": "v02-off",
+      "profile": "windows-native",
+      "invocations": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/builds/v02-off/windows-native/run-004/invocations.json",
+        "sha256": "ffeeb408497b0be0c90b01f75d95e4ed63f6fb41f2a5bf769819ad218ffce3cd",
+        "size": 4361
+      }
+    },
+    {
+      "tag": "v02-off",
+      "profile": "web-wasm",
+      "invocations": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/builds/v02-off/web-wasm/run-003/invocations.json",
+        "sha256": "9b67bce09cf1daca701f5a8a6fc245d49079610cd2ebcab168aa2d35193df291",
+        "size": 3270
+      }
+    }
+  ],
+  "reuse_basis": "Exact prior OFF native binaries, WASM and JS hashes verified before actual new calls; production and observer source byte-equivalence checked. No dependencies or product binary rebuilt.",
+  "old_observations_reused_as_new_results": false
+}

@@ -1,0 +1,108 @@
+{
+  "baseline": {
+    "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm\\tests\\fc08\\axiom_fc08_baseline_probe.wasm",
+    "sha256": "fe7ddb4dc98fee2c7ee404d41042186d4269f1f99675ace1f8b628d36f540d54",
+    "size": 9425486,
+    "historical_binding": {
+      "path": "out/fc08/v02-off/web-wasm/tests/fc08/axiom_fc08_baseline_probe.wasm",
+      "sha256": "fe7ddb4dc98fee2c7ee404d41042186d4269f1f99675ace1f8b628d36f540d54",
+      "size": 9425486,
+      "tag": "v02-off",
+      "profile": "web-wasm",
+      "role": "baseline_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    "cache": {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm\\CMakeCache.txt",
+      "sha256": "c004610b7cc5a648182a23e4c21e59475fc6c982763433e39ca7eb3c34dda3b2",
+      "size": 29804
+    },
+    "compiler": {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm\\CMakeFiles\\4.3.3\\CMakeCXXCompiler.cmake",
+      "sha256": "28e9635b770d15d9c00c3e1fd82a13652f876c48b403cd3ae26050ee5f999083",
+      "size": 6530
+    },
+    "reuse_policy": "Reuse exact verified baseline binary; every new run invokes it again. No historical observation is substituted.",
+    "source_equivalence": "0d3b10bb production tree equals427580ae and current production tree, checked by actual git diff before execution.",
+    "javascript": {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm\\tests\\fc08\\axiom_fc08_baseline_probe.js",
+      "sha256": "36a6f63034bd63178d389c5142d0dc8815f0e89406002edbf00968a4ec4b29ef",
+      "size": 77139
+    },
+    "historical_browser_binding": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/browser/off-final/profile.json",
+      "sha256": "a95e07ce12f0207ecd17a2c6cddc605549edbc2b37c8133d9fc210c3e1b1b608",
+      "size": 15837
+    },
+    "source_files": [
+      {
+        "path": "tests/fc08/native/baseline_probe.cpp",
+        "sha256": "2202525c5a59d35138c5243504bccef1e7adff7924f2b805f95164dea7980327",
+        "size": 1852
+      },
+      {
+        "path": "tests/fc08/native/public_consumer.cpp",
+        "sha256": "eb91514030d768aa32228f59a576416c7e0334665d42266642826e94736690bf",
+        "size": 819
+      },
+      {
+        "path": "tests/fc08/native/headless_probe.cpp",
+        "sha256": "d79326ce9f9d699992ea9649e2b5771976ac38d5a8dc129657ec2c8c57de4529",
+        "size": 4152
+      }
+    ]
+  },
+  "headless": {
+    "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm\\tests\\fc08\\axiom_fc08_headless_probe.wasm",
+    "sha256": "8b2d58363f9bc83bb35f3b275767721a0841c193dda9356b38b7853760cf7400",
+    "size": 2409226,
+    "historical_binding": {
+      "path": "out/fc08/v02-off/web-wasm/tests/fc08/axiom_fc08_headless_probe.wasm",
+      "sha256": "8b2d58363f9bc83bb35f3b275767721a0841c193dda9356b38b7853760cf7400",
+      "size": 2409226,
+      "tag": "v02-off",
+      "profile": "web-wasm",
+      "role": "headless_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    "cache": {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm\\CMakeCache.txt",
+      "sha256": "c004610b7cc5a648182a23e4c21e59475fc6c982763433e39ca7eb3c34dda3b2",
+      "size": 29804
+    },
+    "compiler": {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm\\CMakeFiles\\4.3.3\\CMakeCXXCompiler.cmake",
+      "sha256": "28e9635b770d15d9c00c3e1fd82a13652f876c48b403cd3ae26050ee5f999083",
+      "size": 6530
+    },
+    "reuse_policy": "Reuse exact verified baseline binary; every new run invokes it again. No historical observation is substituted.",
+    "source_equivalence": "0d3b10bb production tree equals427580ae and current production tree, checked by actual git diff before execution.",
+    "javascript": {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm\\tests\\fc08\\axiom_fc08_headless_probe.js",
+      "sha256": "647f54412ba381951a9827e166a08f21e14449157cfb866943200895525c8908",
+      "size": 75453
+    },
+    "historical_browser_binding": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/browser/off-final/profile.json",
+      "sha256": "a95e07ce12f0207ecd17a2c6cddc605549edbc2b37c8133d9fc210c3e1b1b608",
+      "size": 15837
+    },
+    "source_files": [
+      {
+        "path": "tests/fc08/native/baseline_probe.cpp",
+        "sha256": "2202525c5a59d35138c5243504bccef1e7adff7924f2b805f95164dea7980327",
+        "size": 1852
+      },
+      {
+        "path": "tests/fc08/native/public_consumer.cpp",
+        "sha256": "eb91514030d768aa32228f59a576416c7e0334665d42266642826e94736690bf",
+        "size": 819
+      },
+      {
+        "path": "tests/fc08/native/headless_probe.cpp",
+        "sha256": "d79326ce9f9d699992ea9649e2b5771976ac38d5a8dc129657ec2c8c57de4529",
+        "size": 4152
+      }
+    ]
+  }
+}

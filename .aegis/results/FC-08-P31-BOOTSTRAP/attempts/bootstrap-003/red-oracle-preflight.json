@@ -1,0 +1,914 @@
+{
+  "status": "REAL_R01_RED_OBSERVED_ALL_THREE_PROFILES",
+  "qualification_subject_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+  "runner_revision": "266b0a141abbd952c6cdc377915220d887cc0cef",
+  "profiles": {
+    "windows-native": {
+      "result": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/results.json",
+        "sha256": "6173315373d45647bb096dc05623fc69be7885b4157cff7f807b49562b63aee5",
+        "size": 202116
+      },
+      "raw_red_observations": [
+        {
+          "probe_id": "section-record",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "section-record",
+            "new_feature": true,
+            "path": "tests/fc08/corpus/wire/section-record.pb",
+            "production_writer_used": false,
+            "root": "ObjectRecord",
+            "sha256": "75b9a5ded3dcb9f24ad0db4c1f32b51eef74335f413852a48f1103b88ae9920a"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/fixture-proofs/section-record.json",
+            "sha256": "00cd104a46ee24e7c26ca10a5a573bd955d185c30edda0b2d15589d27be99e8d",
+            "size": 2316
+          },
+          "actual": {
+            "root": "ObjectRecord",
+            "input_bytes": 151,
+            "accepted": false,
+            "stage": 1,
+            "category": "MALFORMED_WIRE"
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/native/r01-section-record.json",
+            "sha256": "839e24e345809959a9cd27d7118811edf6952159faa2dd21ba0be888a1d48823",
+            "size": 662
+          },
+          "result": "FAIL",
+          "classification": "BASELINE_POSITIVE_CONTRACT_NOT_MET",
+          "valid_product_RED": true
+        },
+        {
+          "probe_id": "section-snapshot3",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "section-snapshot3",
+            "new_feature": true,
+            "path": "tests/fc08/corpus/wire/section-snapshot3.pb",
+            "production_writer_used": false,
+            "root": "DocumentSnapshot",
+            "sha256": "1fd6a786c299e067d13a92cddac7e7159ad661df2e8c4c8f3302e8593918f571"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/fixture-proofs/section-snapshot3.json",
+            "sha256": "34c92dd499b7972fb624221fb71bd8d7223e208a9d50f092f8bbf74107413d4d",
+            "size": 3076
+          },
+          "actual": {
+            "root": "DocumentSnapshot",
+            "input_bytes": 298,
+            "accepted": true,
+            "stage": 6,
+            "category": "",
+            "normal_ingress_ok": false,
+            "semantic_error": 8
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/native/r01-section-snapshot3.json",
+            "sha256": "c10bcf88381165d459882e279d642f59e1cf1aac3537a657a3db8e4f9a931026",
+            "size": 707
+          },
+          "result": "FAIL",
+          "classification": "BASELINE_POSITIVE_CONTRACT_NOT_MET",
+          "valid_product_RED": true
+        },
+        {
+          "probe_id": "op17-content",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "op17-content",
+            "new_feature": true,
+            "path": "tests/fc08/corpus/wire/op17-content.pb",
+            "production_writer_used": false,
+            "root": "Operation",
+            "sha256": "4ef678aad6bc6b314b0ad5fe44d178770b12fededcee93145f0a988fd4c88aea"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/fixture-proofs/op17-content.json",
+            "sha256": "51643a2510386463fca042dfe76640a7491aa4c2be5cb11c6deb34e4ef9564c9",
+            "size": 2824
+          },
+          "actual": {
+            "root": "Operation",
+            "input_bytes": 208,
+            "accepted": false,
+            "stage": 1,
+            "category": "MALFORMED_WIRE",
+            "normal_ingress_ok": false,
+            "semantic_error": 8
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/native/r01-op17-content.json",
+            "sha256": "8da081106f0747b45b2ddcbf9707fd95eda16b7b7747f948a34f94368235c973",
+            "size": 703
+          },
+          "result": "FAIL",
+          "classification": "BASELINE_POSITIVE_CONTRACT_NOT_MET",
+          "valid_product_RED": true
+        },
+        {
+          "probe_id": "op18-introduce",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "op18-introduce",
+            "new_feature": true,
+            "path": "tests/fc08/corpus/wire/op18-introduce.pb",
+            "production_writer_used": false,
+            "root": "Operation",
+            "sha256": "825994a3a14a87563ebf4c2b8ea33634361888bc3625f1a81daeb00b8a323221"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/fixture-proofs/op18-introduce.json",
+            "sha256": "cdfce13118c8ad8ed610777093adfa3f1ff6877850d5001a91a60139aa570ca8",
+            "size": 3039
+          },
+          "actual": {
+            "root": "Operation",
+            "input_bytes": 212,
+            "accepted": false,
+            "stage": 1,
+            "category": "MALFORMED_WIRE",
+            "normal_ingress_ok": false,
+            "semantic_error": 8
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/native/r01-op18-introduce.json",
+            "sha256": "9486226a4f7a02b62835c11ef92579b4d564c9415bd9b1d0b9114618bff7d8eb",
+            "size": 705
+          },
+          "result": "FAIL",
+          "classification": "BASELINE_POSITIVE_CONTRACT_NOT_MET",
+          "valid_product_RED": true
+        },
+        {
+          "probe_id": "legacy-insert",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "legacy-insert",
+            "new_feature": false,
+            "path": "tests/fc08/corpus/wire/legacy-insert.pb",
+            "production_writer_used": false,
+            "root": "Operation",
+            "sha256": "44552a83022422b70ba7162d4361b2dad7e4e0b003e9fd3addf209612ed5ef8c"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/fixture-proofs/legacy-insert.json",
+            "sha256": "aed3b0a88c937017a16e6e00d211e3fff249dfd928ce695cdd87b94300f87470",
+            "size": 2720
+          },
+          "actual": {
+            "root": "Operation",
+            "input_bytes": 163,
+            "accepted": true,
+            "stage": 6,
+            "category": "",
+            "normal_ingress_ok": true,
+            "semantic_error": 0
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/native/r01-legacy-insert.json",
+            "sha256": "6f9608118c72ef9b5823b843e06333f3bb3e39e3f3741b9756d4445921894d78",
+            "size": 688
+          },
+          "result": "PASS",
+          "classification": "INHERITED_NORMAL_INGRESS_CONTROL",
+          "valid_product_RED": false
+        },
+        {
+          "probe_id": "legacy-snapshot1",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "legacy-snapshot1",
+            "new_feature": false,
+            "path": "tests/fc08/corpus/wire/legacy-snapshot1.pb",
+            "production_writer_used": false,
+            "root": "DocumentSnapshot",
+            "sha256": "7993293111cb8b8bc4d24df0934771febe03ac8e163aeb227de2908e322cee3d"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/fixture-proofs/legacy-snapshot1.json",
+            "sha256": "6e2e6bd30164db97db5a968f04e4f7aa685d8e737f2c7cf813f4fe8888628f01",
+            "size": 2430
+          },
+          "actual": {
+            "root": "DocumentSnapshot",
+            "input_bytes": 137,
+            "accepted": true,
+            "stage": 6,
+            "category": "",
+            "normal_ingress_ok": true,
+            "semantic_error": 0
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/native/r01-legacy-snapshot1.json",
+            "sha256": "101d3783a28e2ac7c177447fc600fc47dd8a0d45076d6f31befda815f2cbe30d",
+            "size": 705
+          },
+          "result": "PASS",
+          "classification": "INHERITED_NORMAL_INGRESS_CONTROL",
+          "valid_product_RED": false
+        },
+        {
+          "probe_id": "legacy-snapshot2",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "legacy-snapshot2",
+            "new_feature": false,
+            "path": "tests/fc08/corpus/wire/legacy-snapshot2.pb",
+            "production_writer_used": false,
+            "root": "DocumentSnapshot",
+            "sha256": "9f169ee33252ce0ffaaf77424c7dbe17f535f1a9e29b0a9e266fb9fd9f6f729a"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/fixture-proofs/legacy-snapshot2.json",
+            "sha256": "f484c6f93f3fd66b673680f56c08dca6bfcfd5ec8dc3a0bdea562adc2c234ad3",
+            "size": 1948
+          },
+          "actual": {
+            "root": "DocumentSnapshot",
+            "input_bytes": 22,
+            "accepted": true,
+            "stage": 6,
+            "category": "",
+            "normal_ingress_ok": true,
+            "semantic_error": 0
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/native/r01-legacy-snapshot2.json",
+            "sha256": "68eb6a95bbd07fe6e164c88b420a6d3b07f94d5d3b05e164b82fb905cf086c58",
+            "size": 704
+          },
+          "result": "PASS",
+          "classification": "INHERITED_NORMAL_INGRESS_CONTROL",
+          "valid_product_RED": false
+        },
+        {
+          "probe_id": "legacy-snapshot3",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "legacy-snapshot3",
+            "new_feature": false,
+            "path": "tests/fc08/corpus/wire/legacy-snapshot3.pb",
+            "production_writer_used": false,
+            "root": "DocumentSnapshot",
+            "sha256": "a9e4060ff6f61c2f5007af60eb8ffb92a1e9e2e367edd1e05a828bde5c0dc36d"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/fixture-proofs/legacy-snapshot3.json",
+            "sha256": "f74777692f1faabaaf6dd5c1c03be18b7b5631ffba00a48a8c5cfa64793f98c5",
+            "size": 2447
+          },
+          "actual": {
+            "root": "DocumentSnapshot",
+            "input_bytes": 132,
+            "accepted": true,
+            "stage": 6,
+            "category": "",
+            "normal_ingress_ok": true,
+            "semantic_error": 0
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/windows-native/native/r01-legacy-snapshot3.json",
+            "sha256": "7f349a3cccb55288b8862c1cd23abd7a35fd691e292e89ac2875580b48dba685",
+            "size": 705
+          },
+          "result": "PASS",
+          "classification": "INHERITED_NORMAL_INGRESS_CONTROL",
+          "valid_product_RED": false
+        }
+      ],
+      "interpretation": "The four independently valid Section/17/18 positives fail at actual normal codec/ingress; inherited controls succeed. This is feature-absence R01 RED, not every future workflow executed."
+    },
+    "web-wasm": {
+      "result": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/results.json",
+        "sha256": "cee30b9c597d81bf2c0b7925347b9c32a79fa3141c73d7f1fdfe3946a2693a8a",
+        "size": 203482
+      },
+      "raw_red_observations": [
+        {
+          "probe_id": "section-record",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "section-record",
+            "new_feature": true,
+            "path": "tests/fc08/corpus/wire/section-record.pb",
+            "production_writer_used": false,
+            "root": "ObjectRecord",
+            "sha256": "75b9a5ded3dcb9f24ad0db4c1f32b51eef74335f413852a48f1103b88ae9920a"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/fixture-proofs/section-record.json",
+            "sha256": "00cd104a46ee24e7c26ca10a5a573bd955d185c30edda0b2d15589d27be99e8d",
+            "size": 2316
+          },
+          "actual": {
+            "root": "ObjectRecord",
+            "input_bytes": 151,
+            "accepted": false,
+            "stage": 1,
+            "category": "MALFORMED_WIRE"
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/browser/r01-section-record.json",
+            "sha256": "c0626ca1829b296de49778bba569bd39017335e3f4feba78ad827ff8f06a0619",
+            "size": 724
+          },
+          "result": "FAIL",
+          "classification": "BASELINE_POSITIVE_CONTRACT_NOT_MET",
+          "valid_product_RED": true
+        },
+        {
+          "probe_id": "section-snapshot3",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "section-snapshot3",
+            "new_feature": true,
+            "path": "tests/fc08/corpus/wire/section-snapshot3.pb",
+            "production_writer_used": false,
+            "root": "DocumentSnapshot",
+            "sha256": "1fd6a786c299e067d13a92cddac7e7159ad661df2e8c4c8f3302e8593918f571"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/fixture-proofs/section-snapshot3.json",
+            "sha256": "34c92dd499b7972fb624221fb71bd8d7223e208a9d50f092f8bbf74107413d4d",
+            "size": 3076
+          },
+          "actual": {
+            "root": "DocumentSnapshot",
+            "input_bytes": 298,
+            "accepted": true,
+            "stage": 6,
+            "category": "",
+            "normal_ingress_ok": false,
+            "semantic_error": 8
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/browser/r01-section-snapshot3.json",
+            "sha256": "704a783acc5cb13a5ccdf9558379cec0589d5d9a65019bc99a30b9ae00efb27d",
+            "size": 776
+          },
+          "result": "FAIL",
+          "classification": "BASELINE_POSITIVE_CONTRACT_NOT_MET",
+          "valid_product_RED": true
+        },
+        {
+          "probe_id": "op17-content",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "op17-content",
+            "new_feature": true,
+            "path": "tests/fc08/corpus/wire/op17-content.pb",
+            "production_writer_used": false,
+            "root": "Operation",
+            "sha256": "4ef678aad6bc6b314b0ad5fe44d178770b12fededcee93145f0a988fd4c88aea"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/fixture-proofs/op17-content.json",
+            "sha256": "51643a2510386463fca042dfe76640a7491aa4c2be5cb11c6deb34e4ef9564c9",
+            "size": 2824
+          },
+          "actual": {
+            "root": "Operation",
+            "input_bytes": 208,
+            "accepted": false,
+            "stage": 1,
+            "category": "MALFORMED_WIRE",
+            "normal_ingress_ok": false,
+            "semantic_error": 8
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/browser/r01-op17-content.json",
+            "sha256": "35d9d2d89ddff0d0e02aa3ff57ced6f58c0bdb274a3f4b76244c6d0f0cfe428f",
+            "size": 760
+          },
+          "result": "FAIL",
+          "classification": "BASELINE_POSITIVE_CONTRACT_NOT_MET",
+          "valid_product_RED": true
+        },
+        {
+          "probe_id": "op18-introduce",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "op18-introduce",
+            "new_feature": true,
+            "path": "tests/fc08/corpus/wire/op18-introduce.pb",
+            "production_writer_used": false,
+            "root": "Operation",
+            "sha256": "825994a3a14a87563ebf4c2b8ea33634361888bc3625f1a81daeb00b8a323221"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/fixture-proofs/op18-introduce.json",
+            "sha256": "cdfce13118c8ad8ed610777093adfa3f1ff6877850d5001a91a60139aa570ca8",
+            "size": 3039
+          },
+          "actual": {
+            "root": "Operation",
+            "input_bytes": 212,
+            "accepted": false,
+            "stage": 1,
+            "category": "MALFORMED_WIRE",
+            "normal_ingress_ok": false,
+            "semantic_error": 8
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/browser/r01-op18-introduce.json",
+            "sha256": "a52fd082ad7ef349fb29a3e06455ec623db1238b1bf719fd4136ea3df352683c",
+            "size": 764
+          },
+          "result": "FAIL",
+          "classification": "BASELINE_POSITIVE_CONTRACT_NOT_MET",
+          "valid_product_RED": true
+        },
+        {
+          "probe_id": "legacy-insert",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "legacy-insert",
+            "new_feature": false,
+            "path": "tests/fc08/corpus/wire/legacy-insert.pb",
+            "production_writer_used": false,
+            "root": "Operation",
+            "sha256": "44552a83022422b70ba7162d4361b2dad7e4e0b003e9fd3addf209612ed5ef8c"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/fixture-proofs/legacy-insert.json",
+            "sha256": "aed3b0a88c937017a16e6e00d211e3fff249dfd928ce695cdd87b94300f87470",
+            "size": 2720
+          },
+          "actual": {
+            "root": "Operation",
+            "input_bytes": 163,
+            "accepted": true,
+            "stage": 6,
+            "category": "",
+            "normal_ingress_ok": true,
+            "semantic_error": 0
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/browser/r01-legacy-insert.json",
+            "sha256": "e5547a0eb0a8c2cc303bf945567965b6d804af39221ceb924e69f685efffe3cd",
+            "size": 746
+          },
+          "result": "PASS",
+          "classification": "INHERITED_NORMAL_INGRESS_CONTROL",
+          "valid_product_RED": false
+        },
+        {
+          "probe_id": "legacy-snapshot1",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "legacy-snapshot1",
+            "new_feature": false,
+            "path": "tests/fc08/corpus/wire/legacy-snapshot1.pb",
+            "production_writer_used": false,
+            "root": "DocumentSnapshot",
+            "sha256": "7993293111cb8b8bc4d24df0934771febe03ac8e163aeb227de2908e322cee3d"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/fixture-proofs/legacy-snapshot1.json",
+            "sha256": "6e2e6bd30164db97db5a968f04e4f7aa685d8e737f2c7cf813f4fe8888628f01",
+            "size": 2430
+          },
+          "actual": {
+            "root": "DocumentSnapshot",
+            "input_bytes": 137,
+            "accepted": true,
+            "stage": 6,
+            "category": "",
+            "normal_ingress_ok": true,
+            "semantic_error": 0
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/browser/r01-legacy-snapshot1.json",
+            "sha256": "672f1b486e7f535ad87eda49b97083ee05638e997bb47c19e585187cfaa129c9",
+            "size": 773
+          },
+          "result": "PASS",
+          "classification": "INHERITED_NORMAL_INGRESS_CONTROL",
+          "valid_product_RED": false
+        },
+        {
+          "probe_id": "legacy-snapshot2",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "legacy-snapshot2",
+            "new_feature": false,
+            "path": "tests/fc08/corpus/wire/legacy-snapshot2.pb",
+            "production_writer_used": false,
+            "root": "DocumentSnapshot",
+            "sha256": "9f169ee33252ce0ffaaf77424c7dbe17f535f1a9e29b0a9e266fb9fd9f6f729a"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/fixture-proofs/legacy-snapshot2.json",
+            "sha256": "f484c6f93f3fd66b673680f56c08dca6bfcfd5ec8dc3a0bdea562adc2c234ad3",
+            "size": 1948
+          },
+          "actual": {
+            "root": "DocumentSnapshot",
+            "input_bytes": 22,
+            "accepted": true,
+            "stage": 6,
+            "category": "",
+            "normal_ingress_ok": true,
+            "semantic_error": 0
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/browser/r01-legacy-snapshot2.json",
+            "sha256": "2cd3fdc7db170787f810d6ec26cd82bd42b0d13699018ade62eaa5f858fc6745",
+            "size": 772
+          },
+          "result": "PASS",
+          "classification": "INHERITED_NORMAL_INGRESS_CONTROL",
+          "valid_product_RED": false
+        },
+        {
+          "probe_id": "legacy-snapshot3",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "legacy-snapshot3",
+            "new_feature": false,
+            "path": "tests/fc08/corpus/wire/legacy-snapshot3.pb",
+            "production_writer_used": false,
+            "root": "DocumentSnapshot",
+            "sha256": "a9e4060ff6f61c2f5007af60eb8ffb92a1e9e2e367edd1e05a828bde5c0dc36d"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/fixture-proofs/legacy-snapshot3.json",
+            "sha256": "f74777692f1faabaaf6dd5c1c03be18b7b5631ffba00a48a8c5cfa64793f98c5",
+            "size": 2447
+          },
+          "actual": {
+            "root": "DocumentSnapshot",
+            "input_bytes": 132,
+            "accepted": true,
+            "stage": 6,
+            "category": "",
+            "normal_ingress_ok": true,
+            "semantic_error": 0
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/web-wasm/browser/r01-legacy-snapshot3.json",
+            "sha256": "2055a956a1b2392429070995d898e4ed7e317e6a2bcd298d026226f574609ef0",
+            "size": 773
+          },
+          "result": "PASS",
+          "classification": "INHERITED_NORMAL_INGRESS_CONTROL",
+          "valid_product_RED": false
+        }
+      ],
+      "interpretation": "The four independently valid Section/17/18 positives fail at actual normal codec/ingress; inherited controls succeed. This is feature-absence R01 RED, not every future workflow executed."
+    },
+    "headless": {
+      "result": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/results.json",
+        "sha256": "a668b1937e09880f99b8eebab8967bfc1ce5bce08c76eeb1d9b1ae3c8f2a1471",
+        "size": 234844
+      },
+      "raw_red_observations": [
+        {
+          "probe_id": "section-record",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "section-record",
+            "new_feature": true,
+            "path": "tests/fc08/corpus/wire/section-record.pb",
+            "production_writer_used": false,
+            "root": "ObjectRecord",
+            "sha256": "75b9a5ded3dcb9f24ad0db4c1f32b51eef74335f413852a48f1103b88ae9920a"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/fixture-proofs/section-record.json",
+            "sha256": "00cd104a46ee24e7c26ca10a5a573bd955d185c30edda0b2d15589d27be99e8d",
+            "size": 2316
+          },
+          "actual": {
+            "mode": "Ingress",
+            "History_owner": false,
+            "category": "MALFORMED_WIRE",
+            "input_bytes": 151,
+            "ok": false,
+            "state": 1,
+            "objects": 0,
+            "generation": 0,
+            "ordinal": 0,
+            "records": [],
+            "accepted": false
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/native/r01-section-record.json",
+            "sha256": "0bf9ef27c60147b8861c10b3958db122f0675affe4d2cf72bc4246c70aed7332",
+            "size": 750
+          },
+          "result": "FAIL",
+          "classification": "BASELINE_POSITIVE_CONTRACT_NOT_MET",
+          "valid_product_RED": true
+        },
+        {
+          "probe_id": "section-snapshot3",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "section-snapshot3",
+            "new_feature": true,
+            "path": "tests/fc08/corpus/wire/section-snapshot3.pb",
+            "production_writer_used": false,
+            "root": "DocumentSnapshot",
+            "sha256": "1fd6a786c299e067d13a92cddac7e7159ad661df2e8c4c8f3302e8593918f571"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/fixture-proofs/section-snapshot3.json",
+            "sha256": "34c92dd499b7972fb624221fb71bd8d7223e208a9d50f092f8bbf74107413d4d",
+            "size": 3076
+          },
+          "actual": {
+            "mode": "Ingress",
+            "History_owner": false,
+            "category": "",
+            "input_bytes": 298,
+            "normal_ingress_ok": false,
+            "ok": true,
+            "state": 1,
+            "objects": 0,
+            "generation": 0,
+            "ordinal": 0,
+            "records": [],
+            "accepted": true
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/native/r01-section-snapshot3.json",
+            "sha256": "6ca78ece73d57d2ae524850b50f52067b6feb0e706a9d0039182fcd907f0d171",
+            "size": 770
+          },
+          "result": "FAIL",
+          "classification": "BASELINE_POSITIVE_CONTRACT_NOT_MET",
+          "valid_product_RED": true
+        },
+        {
+          "probe_id": "op17-content",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "op17-content",
+            "new_feature": true,
+            "path": "tests/fc08/corpus/wire/op17-content.pb",
+            "production_writer_used": false,
+            "root": "Operation",
+            "sha256": "4ef678aad6bc6b314b0ad5fe44d178770b12fededcee93145f0a988fd4c88aea"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/fixture-proofs/op17-content.json",
+            "sha256": "51643a2510386463fca042dfe76640a7491aa4c2be5cb11c6deb34e4ef9564c9",
+            "size": 2824
+          },
+          "actual": {
+            "mode": "Ingress",
+            "History_owner": false,
+            "category": "MALFORMED_WIRE",
+            "input_bytes": 208,
+            "normal_ingress_ok": false,
+            "ok": false,
+            "state": 1,
+            "objects": 0,
+            "generation": 0,
+            "ordinal": 0,
+            "records": [],
+            "accepted": false
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/native/r01-op17-content.json",
+            "sha256": "66ab0bad4affc455fc940814b5a143f6f32956350f07b712d72f4ca43d703754",
+            "size": 773
+          },
+          "result": "FAIL",
+          "classification": "BASELINE_POSITIVE_CONTRACT_NOT_MET",
+          "valid_product_RED": true
+        },
+        {
+          "probe_id": "op18-introduce",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "op18-introduce",
+            "new_feature": true,
+            "path": "tests/fc08/corpus/wire/op18-introduce.pb",
+            "production_writer_used": false,
+            "root": "Operation",
+            "sha256": "825994a3a14a87563ebf4c2b8ea33634361888bc3625f1a81daeb00b8a323221"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/fixture-proofs/op18-introduce.json",
+            "sha256": "cdfce13118c8ad8ed610777093adfa3f1ff6877850d5001a91a60139aa570ca8",
+            "size": 3039
+          },
+          "actual": {
+            "mode": "Ingress",
+            "History_owner": false,
+            "category": "MALFORMED_WIRE",
+            "input_bytes": 212,
+            "normal_ingress_ok": false,
+            "ok": false,
+            "state": 1,
+            "objects": 0,
+            "generation": 0,
+            "ordinal": 0,
+            "records": [],
+            "accepted": false
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/native/r01-op18-introduce.json",
+            "sha256": "2b4951c9d9504a16ad600579c49dada817d895c1b8b119d8607e4cc647a885ec",
+            "size": 775
+          },
+          "result": "FAIL",
+          "classification": "BASELINE_POSITIVE_CONTRACT_NOT_MET",
+          "valid_product_RED": true
+        },
+        {
+          "probe_id": "legacy-insert",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "legacy-insert",
+            "new_feature": false,
+            "path": "tests/fc08/corpus/wire/legacy-insert.pb",
+            "production_writer_used": false,
+            "root": "Operation",
+            "sha256": "44552a83022422b70ba7162d4361b2dad7e4e0b003e9fd3addf209612ed5ef8c"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/fixture-proofs/legacy-insert.json",
+            "sha256": "aed3b0a88c937017a16e6e00d211e3fff249dfd928ce695cdd87b94300f87470",
+            "size": 2720
+          },
+          "actual": {
+            "mode": "Ingress",
+            "History_owner": false,
+            "category": "",
+            "input_bytes": 163,
+            "normal_ingress_ok": true,
+            "ok": true,
+            "state": 1,
+            "objects": 0,
+            "generation": 0,
+            "ordinal": 0,
+            "records": [],
+            "accepted": true
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/native/r01-legacy-insert.json",
+            "sha256": "44192e4dd44c96a10806cde3bb06b1538be6d4519531b26b516b11b8e0c3b71a",
+            "size": 758
+          },
+          "result": "PASS",
+          "classification": "INHERITED_NORMAL_INGRESS_CONTROL",
+          "valid_product_RED": false
+        },
+        {
+          "probe_id": "legacy-snapshot1",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "legacy-snapshot1",
+            "new_feature": false,
+            "path": "tests/fc08/corpus/wire/legacy-snapshot1.pb",
+            "production_writer_used": false,
+            "root": "DocumentSnapshot",
+            "sha256": "7993293111cb8b8bc4d24df0934771febe03ac8e163aeb227de2908e322cee3d"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/fixture-proofs/legacy-snapshot1.json",
+            "sha256": "6e2e6bd30164db97db5a968f04e4f7aa685d8e737f2c7cf813f4fe8888628f01",
+            "size": 2430
+          },
+          "actual": {
+            "mode": "Ingress",
+            "History_owner": false,
+            "category": "",
+            "input_bytes": 137,
+            "normal_ingress_ok": true,
+            "ok": true,
+            "state": 1,
+            "objects": 0,
+            "generation": 0,
+            "ordinal": 0,
+            "records": [],
+            "accepted": true
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/native/r01-legacy-snapshot1.json",
+            "sha256": "66702c7f7b6a6e216d7804a7fbb734711c2ae13c7ff3d23049cba8ac42baa434",
+            "size": 768
+          },
+          "result": "PASS",
+          "classification": "INHERITED_NORMAL_INGRESS_CONTROL",
+          "valid_product_RED": false
+        },
+        {
+          "probe_id": "legacy-snapshot2",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "legacy-snapshot2",
+            "new_feature": false,
+            "path": "tests/fc08/corpus/wire/legacy-snapshot2.pb",
+            "production_writer_used": false,
+            "root": "DocumentSnapshot",
+            "sha256": "9f169ee33252ce0ffaaf77424c7dbe17f535f1a9e29b0a9e266fb9fd9f6f729a"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/fixture-proofs/legacy-snapshot2.json",
+            "sha256": "f484c6f93f3fd66b673680f56c08dca6bfcfd5ec8dc3a0bdea562adc2c234ad3",
+            "size": 1948
+          },
+          "actual": {
+            "mode": "Ingress",
+            "History_owner": false,
+            "category": "",
+            "input_bytes": 22,
+            "normal_ingress_ok": true,
+            "ok": true,
+            "state": 1,
+            "objects": 0,
+            "generation": 0,
+            "ordinal": 0,
+            "records": [],
+            "accepted": true
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/native/r01-legacy-snapshot2.json",
+            "sha256": "a6d12d399f84098aafd938f7d712059161c5e9651c238a9d33607df8f11f4915",
+            "size": 767
+          },
+          "result": "PASS",
+          "classification": "INHERITED_NORMAL_INGRESS_CONTROL",
+          "valid_product_RED": false
+        },
+        {
+          "probe_id": "legacy-snapshot3",
+          "input": {
+            "expected_new_reader": "ACCEPT",
+            "id": "legacy-snapshot3",
+            "new_feature": false,
+            "path": "tests/fc08/corpus/wire/legacy-snapshot3.pb",
+            "production_writer_used": false,
+            "root": "DocumentSnapshot",
+            "sha256": "a9e4060ff6f61c2f5007af60eb8ffb92a1e9e2e367edd1e05a828bde5c0dc36d"
+          },
+          "expected": "ACCEPT",
+          "independent_fixture_proof": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/fixture-proofs/legacy-snapshot3.json",
+            "sha256": "f74777692f1faabaaf6dd5c1c03be18b7b5631ffba00a48a8c5cfa64793f98c5",
+            "size": 2447
+          },
+          "actual": {
+            "mode": "Ingress",
+            "History_owner": false,
+            "category": "",
+            "input_bytes": 132,
+            "normal_ingress_ok": true,
+            "ok": true,
+            "state": 1,
+            "objects": 0,
+            "generation": 0,
+            "ordinal": 0,
+            "records": [],
+            "accepted": true
+          },
+          "raw": {
+            "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/profiles/headless/native/r01-legacy-snapshot3.json",
+            "sha256": "dfc31c2f1ffb0dc60092a936b93ba3a571473076caa800661ee6acc74bc2c3db",
+            "size": 768
+          },
+          "result": "PASS",
+          "classification": "INHERITED_NORMAL_INGRESS_CONTROL",
+          "valid_product_RED": false
+        }
+      ],
+      "interpretation": "The four independently valid Section/17/18 positives fail at actual normal codec/ingress; inherited controls succeed. This is feature-absence R01 RED, not every future workflow executed."
+    }
+  },
+  "R03": "No claim of executed Section temporal/UI/History predecessor workflows when the feature is absent; all missing current observations stay explicit NOT_RUN.",
+  "product_P32_authorized": false
+}

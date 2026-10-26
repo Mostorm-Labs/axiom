@@ -1,0 +1,88 @@
+{
+  "baseline": {
+    "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\windows-native\\tests\\fc08\\axiom_fc08_baseline_probe.exe",
+    "sha256": "6e79160f493660edc0b1be49c2354915baa0e6117cdacb5f75e9d07fcbb70c9e",
+    "size": 9882112,
+    "historical_binding": {
+      "path": "out/fc08/v02-off/windows-native/tests/fc08/axiom_fc08_baseline_probe.exe",
+      "sha256": "6e79160f493660edc0b1be49c2354915baa0e6117cdacb5f75e9d07fcbb70c9e",
+      "size": 9882112,
+      "tag": "v02-off",
+      "profile": "windows-native",
+      "role": "baseline_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    "cache": {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\windows-native\\CMakeCache.txt",
+      "sha256": "c22fd5f920d61c54bca94a2a8ce79a2453e5d9162b9557253b2e87516fead4dc",
+      "size": 31122
+    },
+    "compiler": {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\windows-native\\CMakeFiles\\4.3.3\\CMakeCXXCompiler.cmake",
+      "sha256": "0fe410869376371c16e8b29b3b306ccc7c1273a4c866840bf1eae8e6a554bc96",
+      "size": 6624
+    },
+    "reuse_policy": "Reuse exact verified baseline binary; every new run invokes it again. No historical observation is substituted.",
+    "source_equivalence": "0d3b10bb production tree equals427580ae and current production tree, checked by actual git diff before execution.",
+    "source_files": [
+      {
+        "path": "tests/fc08/native/baseline_probe.cpp",
+        "sha256": "2202525c5a59d35138c5243504bccef1e7adff7924f2b805f95164dea7980327",
+        "size": 1852
+      },
+      {
+        "path": "tests/fc08/native/public_consumer.cpp",
+        "sha256": "eb91514030d768aa32228f59a576416c7e0334665d42266642826e94736690bf",
+        "size": 819
+      },
+      {
+        "path": "tests/fc08/native/headless_probe.cpp",
+        "sha256": "d79326ce9f9d699992ea9649e2b5771976ac38d5a8dc129657ec2c8c57de4529",
+        "size": 4152
+      }
+    ]
+  },
+  "headless": {
+    "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\windows-native\\tests\\fc08\\axiom_fc08_headless_probe.exe",
+    "sha256": "a9b23ab3005586d7d841456a253ef1bc5d906d05a4c947085355ff8cdd651735",
+    "size": 2613760,
+    "historical_binding": {
+      "path": "out/fc08/v02-off/windows-native/tests/fc08/axiom_fc08_headless_probe.exe",
+      "sha256": "a9b23ab3005586d7d841456a253ef1bc5d906d05a4c947085355ff8cdd651735",
+      "size": 2613760,
+      "tag": "v02-off",
+      "profile": "windows-native",
+      "role": "headless_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    "cache": {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\windows-native\\CMakeCache.txt",
+      "sha256": "c22fd5f920d61c54bca94a2a8ce79a2453e5d9162b9557253b2e87516fead4dc",
+      "size": 31122
+    },
+    "compiler": {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\windows-native\\CMakeFiles\\4.3.3\\CMakeCXXCompiler.cmake",
+      "sha256": "0fe410869376371c16e8b29b3b306ccc7c1273a4c866840bf1eae8e6a554bc96",
+      "size": 6624
+    },
+    "reuse_policy": "Reuse exact verified baseline binary; every new run invokes it again. No historical observation is substituted.",
+    "source_equivalence": "0d3b10bb production tree equals427580ae and current production tree, checked by actual git diff before execution.",
+    "source_files": [
+      {
+        "path": "tests/fc08/native/baseline_probe.cpp",
+        "sha256": "2202525c5a59d35138c5243504bccef1e7adff7924f2b805f95164dea7980327",
+        "size": 1852
+      },
+      {
+        "path": "tests/fc08/native/public_consumer.cpp",
+        "sha256": "eb91514030d768aa32228f59a576416c7e0334665d42266642826e94736690bf",
+        "size": 819
+      },
+      {
+        "path": "tests/fc08/native/headless_probe.cpp",
+        "sha256": "d79326ce9f9d699992ea9649e2b5771976ac38d5a8dc129657ec2c8c57de4529",
+        "size": 4152
+      }
+    ]
+  }
+}

@@ -1,0 +1,584 @@
+{
+  "format": "fc08-accepted-bootstrap-preflight-v1",
+  "preflight_name": "EvidenceContractPreflight",
+  "package_revision": "6497f7ed199b98181863f43a04e8a6eecd5f2d60",
+  "package_path": ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/package.json",
+  "qualification_subject_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+  "product_P32_authorized": false,
+  "product_tests_executed": false,
+  "valid_product_RED_observed": false,
+  "actual_commands": [
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "remote",
+        "get-url",
+        "origin"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "https://github.com/Mostorm-Labs/axiom.git\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/Mostorm-Labs/axiom",
+        "--jq",
+        "{full_name:.full_name,id:.id}"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "{\"full_name\":\"Mostorm-Labs/axiom\",\"id\":1306396623}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "266b0a141abbd952c6cdc377915220d887cc0cef\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "status",
+        "--porcelain"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "?? .aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "merge-base",
+        "--is-ancestor",
+        "427580ae13b60a39e88959b282cbffc695c9aabb",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "merge-base",
+        "--is-ancestor",
+        "eb12da1acc4516e115d36767073f8bdc607f8a4d",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "merge-base",
+        "--is-ancestor",
+        "6497f7ed199b98181863f43a04e8a6eecd5f2d60",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/packages/FC-08-P31-READINESS/authority.lock.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "221c8ec230cd81708345dd28c9af97a54b4a1976\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/authorities.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "72d338d66ed3312b91cfb0bc43bd9f1ad82b5fed\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P14.md"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "37c29507fe7b40e5a000646929483ee0456ebfba\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P15.md"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "e13a7280fbae95374ccf2e1b9468495c72602d08\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P16.md"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "494c10076787b4c37e07f7da2bbd073b2c83654a\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P17.md"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "4b76b8bd1aa262492e81abd2437a8fcdf964f4a8\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/packages/FC-08-P31-READINESS/final-binding/seq01-p23-acceptance-v0.1.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "4b907bb694337267c526f6599bf60f12a5ebcd03\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/closure-receipt.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "ad7a14f4bb4b454bd5087ed17b2bec3bd72a6f26\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/review-delta.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "f51be41fdb8a8b99d3ad7c58d0f4570ab18b67c6\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "3402b2634677eddad4cb3d0d6ab1e2d5308ffa1b\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "a5be924d595723ee36116582e46837cacff15986\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/effective-case-catalog.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "020cc2eeb043c30ed4ce5de3715b4f82dbab790d\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/physical-debt.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "8a88d558c4e78e61b13a98e145b84c32c47fcf68\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/source-index.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "9a92917ff83089855ae88c4eb8e029458527a555\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/descriptor-diff.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "3323d78196e161ddf8711ac59926cdd3a1777cd9\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:schema/axiom/v1/descriptor/descriptor.current.pb"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "a5820e336b4108c31f47c8f2ce6889b344e8b201\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:schema/axiom/v1/descriptor/descriptor.current.sha256"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "582e2d3f71e86f330a7b641a041a63ccc8973fcb\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:schema/axiom/v1/descriptor/descriptor.lock.pb"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "9e1f37f4334fc31d8c3c71c08d9d0eac412fe9b2\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:schema/axiom/v1/descriptor/descriptor.lock.sha256"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "51569adce64f9f85eebd111f6cbce85096ad68a2\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P12.md"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "fe9c2d8cfa8f2c0c119ff4c45a2ce5a408184a00\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P13.md"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "47c8d60f2d83a2c597d098ff24e61232f66bd6e8\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P14.md"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "37c29507fe7b40e5a000646929483ee0456ebfba\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P15.md"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "e13a7280fbae95374ccf2e1b9468495c72602d08\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P16.md"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "494c10076787b4c37e07f7da2bbd073b2c83654a\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P17.md"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "4b76b8bd1aa262492e81abd2437a8fcdf964f4a8\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P20.md"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "f3b15876ea50d41d34cf6985f1ba3e40dfa211cc\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "3402b2634677eddad4cb3d0d6ab1e2d5308ffa1b\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "a5be924d595723ee36116582e46837cacff15986\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "diff",
+        "--name-only",
+        "427580ae13b60a39e88959b282cbffc695c9aabb",
+        "--",
+        "runtime",
+        "schema",
+        "apps",
+        "debug_ui",
+        "CMakeLists.txt",
+        "semantic-sdk.lock.json",
+        "r1-full-skia-sdk.lock.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "environment": {
+    "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]",
+    "executable": "D:\\Softwares\\Anaconda\\python.exe",
+    "platform": "Windows-10-10.0.19045-SP0"
+  },
+  "verified_paths": [
+    ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/authority.lock.json",
+    ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/verification.lock.json",
+    ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/execution-contract.json",
+    ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/evidence-contract.json",
+    ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/implementation-context.md",
+    ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/acceptance.json",
+    ".aegis/packages/FC-08-P31-READINESS/authority.lock.json",
+    ".aegis/authorities.json",
+    ".aegis/materialized/FC-08/sources/accepted-exports/P14.md",
+    ".aegis/materialized/FC-08/sources/accepted-exports/P15.md",
+    ".aegis/materialized/FC-08/sources/accepted-exports/P16.md",
+    ".aegis/materialized/FC-08/sources/accepted-exports/P17.md",
+    ".aegis/packages/FC-08-P31-READINESS/final-binding/seq01-p23-acceptance-v0.1.json",
+    ".aegis/materialized/FC-08/sources/accepted-seed/verification/closure-receipt.json",
+    ".aegis/materialized/FC-08/sources/accepted-seed/verification/review-delta.json",
+    ".aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json",
+    ".aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json",
+    ".aegis/materialized/FC-08/sources/accepted-seed/verification/effective-case-catalog.json",
+    ".aegis/materialized/FC-08/sources/accepted-seed/verification/physical-debt.json",
+    ".aegis/materialized/FC-08/source-index.json",
+    ".aegis/materialized/FC-08/descriptor-diff.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-index.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-manifest.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner-manifest.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/oracle-controls.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/baseline-probes.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/seam-map.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profiles.json",
+    "schema/axiom/v1/descriptor/descriptor.current.pb",
+    "schema/axiom/v1/descriptor/descriptor.current.sha256",
+    "schema/axiom/v1/descriptor/descriptor.lock.pb",
+    "schema/axiom/v1/descriptor/descriptor.lock.sha256",
+    ".aegis/materialized/FC-08/sources/accepted-exports/P12.md",
+    ".aegis/materialized/FC-08/sources/accepted-exports/P13.md",
+    ".aegis/materialized/FC-08/sources/accepted-exports/P14.md",
+    ".aegis/materialized/FC-08/sources/accepted-exports/P15.md",
+    ".aegis/materialized/FC-08/sources/accepted-exports/P16.md",
+    ".aegis/materialized/FC-08/sources/accepted-exports/P17.md",
+    ".aegis/materialized/FC-08/sources/accepted-exports/P20.md",
+    ".aegis/packages/FC-08-P20-P31-INPUT-AMENDMENT-v0.2/package.json",
+    ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/acceptance.json",
+    ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/variant-index.json",
+    ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus-manifest.json",
+    ".aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json",
+    ".aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json",
+    ".aegis/materialized/FC-08/source-index.json",
+    ".aegis/materialized/FC-08/descriptor-diff.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner-manifest.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/oracle-controls.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/baseline-probes.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/seam-map.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profiles.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profile-observations.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/inherited-regression.json",
+    ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-index.json",
+    "tests/fc08/reference/oracles.py",
+    "tests/fc08/reference/variants.py",
+    "tests/fc08/reference/wire.py",
+    ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-applicability.json",
+    ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-applicability.schema.json",
+    ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-method-bindings.json",
+    ".aegis/packages/FC-08-P20-P31-INPUT-AMENDMENT-v0.2/package.json",
+    ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-applicability.json",
+    ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-applicability.schema.json",
+    ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-method-bindings.json"
+  ],
+  "checker_sha256": "fdd60fd4325c2a74a487f08d6117bd43e42f285a29ba88fa97061b5ac92506f7",
+  "repository_identity": {
+    "full_name": "Mostorm-Labs/axiom",
+    "id": 1306396623
+  },
+  "observed_head": "266b0a141abbd952c6cdc377915220d887cc0cef",
+  "git_status": "?? .aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/",
+  "corpus_audit": {
+    "format": "fc08-input-amendment-audit-v1",
+    "status": "PASS_CANDIDATE_CONSISTENCY_ONLY",
+    "authority_acceptance": false,
+    "package_preflights_run": false,
+    "SUT_invocations": [],
+    "counts": {
+      "logical_cases": 60,
+      "variants": 302,
+      "families": 10,
+      "profile_cells": 906,
+      "corrected_inputs": 16,
+      "unchanged_expected": 302,
+      "audited_selection_variants": 16
+    },
+    "profile_counts": {
+      "windows-native:APPLICABLE": 302,
+      "web-wasm:APPLICABLE": 302,
+      "headless:APPLICABLE": 148,
+      "headless:NOT_APPLICABLE": 154
+    },
+    "corrected_variant_ids": [
+      "FC08-S01/boundary-full-child-inside",
+      "FC08-S01/boundary-full-child-overflow",
+      "FC08-S02/partial-actual-child",
+      "FC08-S02/broad-phase-only-child",
+      "FC08-S03/outer-partial-inner-full",
+      "FC08-S03/unopened-Group",
+      "FC08-S03/entered-Group",
+      "FC08-S04/concave-notch",
+      "FC08-S05/child",
+      "FC08-S05/blank-interior",
+      "FC08-S05/header",
+      "FC08-S05/border",
+      "FC08-S05/empty-Group-paint",
+      "FC08-S05/empty-Group-identity",
+      "FC08-S06/shift-at-down-release-before-up",
+      "FC08-S06/cancel"
+    ],
+    "selection_expectations_checked": [
+      "FC08-S01/boundary-full-child-inside",
+      "FC08-S01/boundary-full-child-overflow",
+      "FC08-S02/partial-actual-child",
+      "FC08-S02/broad-phase-only-child",
+      "FC08-S03/outer-partial-inner-full",
+      "FC08-S03/unopened-Group",
+      "FC08-S03/entered-Group",
+      "FC08-S04/concave-notch",
+      "FC08-S05/child",
+      "FC08-S05/blank-interior",
+      "FC08-S05/header",
+      "FC08-S05/border",
+      "FC08-S05/empty-Group-paint",
+      "FC08-S05/empty-Group-identity",
+      "FC08-S06/shift-at-down-release-before-up",
+      "FC08-S06/cancel"
+    ],
+    "independent_geometry_witnesses": {
+      "S02_nearest_ellipse_distance_squared": "32/25 > 1",
+      "S04_section_corners_inside": true,
+      "S04_interior_notch_witness": [
+        50,
+        75
+      ],
+      "S04_A_hit": true,
+      "S04_B_hit": false
+    },
+    "independence": "No generator, production codec/planner/normalizer/Runtime imported; independent literal identities and rational geometry. Expected files not regenerated.",
+    "preservation": "git diff against63ea reports zero changes to all previously tracked files; sources/expected/oracles also individually hash verified.",
+    "limitations": [
+      "Candidate audit is not control acceptance or product verification.",
+      "No revised package preflight, product runner or product RED execution before acceptance."
+    ]
+  },
+  "status": "PASS_EVIDENCE_CONTRACT",
+  "exact_blockers": [],
+  "production_source_unchanged": true,
+  "accepted_input_binding": true,
+  "runner_status": "Authorized output of bounded bootstrap; not evidence of product coverage until implemented and qualified"
+}

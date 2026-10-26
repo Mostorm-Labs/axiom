@@ -1,0 +1,55 @@
+{
+  "id": "BOOT-RUNNER-03",
+  "classification": "TASK_PACKAGE_DEFECT / P31_PHASE_DEPENDENCY",
+  "owner": "P31 control review; Verification owner if changing the accepted observation sequence",
+  "status": "BLOCKED_FULL_PRODUCT_RUNNER_BINDING",
+  "source_bindings": [
+    {
+      "path": "runtime/semantic/include/canvas/semantic/object_record.hpp",
+      "sha256": "b3aeab3d789c499445f5d9d5fe232d5d0b7dc6f276519b3a7ce2881eec56ccb6",
+      "size": 1643
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/object_content.hpp",
+      "sha256": "1ac5bcc5753ec3bd7cae048423cf24514cc607aa5334585faa591f62f5b9bb57",
+      "size": 11813
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation.hpp",
+      "sha256": "d44502a81f802c2663728feccf8c90ddc845b0ed454a6999817c401ca9c1c44f",
+      "size": 1089
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_payload.hpp",
+      "sha256": "ebf14a96c6b8346a478bde3cb530bc8dc87dfe8c6edb2fe7f84d04a142d6f592",
+      "size": 3794
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "sha256": "3a1153a2a05309e4f5fc0ef4cae55c8e0d048a18b04dde113fe8820a108e3c79",
+      "size": 11768
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P15.md",
+      "sha256": "95f6650dd26809e60560fbdeeb7fb9751ed42d9555e8a62849f4b38261a40837",
+      "size": 13471
+    }
+  ],
+  "finding": "The new runner genuinely executes normal codec and explicit legacy-bootstrap observations, but does not materialize all accepted product observation seams. Full product-runner completion must not be inferred from R01 success or302-ID enumeration.",
+  "concrete_dependency": "427580ae ObjectKind ends at Group9 and OperationKind at16; ObjectContent/OperationPayload have no Section/17/18 representation, and existing RuntimeFacade has no concrete accepted container command/readback entry. Therefore actual Section command F/U, History, scoped selection, Scene/preview and host workflows cannot be instantiated on this subject. Test adapters may not supply substitute semantics.",
+  "not_a_method_name_test": "P15 expressly calls its suggested public method names non-stable; absence of submitContainerIntent alone is not used as functional RED or the sole blocker. Real rejected bytes and absent canonical types/payloads establish the dependency.",
+  "examples": [
+    "FC08-H01/empty-Section requires actual forward/Undo/Redo and History timeline",
+    "FC08-S01/boundary-full-child-inside requires actual Section producer and scoped selection",
+    "FC08-V04 real Scene prepare failure/recovery needs a committed Section workflow",
+    "FC08-P02/confirmed-utf8-title requires actual native/WASM host container-intent path"
+  ],
+  "coverage_gap_manifest": {
+    "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/unexecuted-applicable-variants.json",
+    "sha256": "77e84350607fd80abdf4426c8a3e80b484c02c044f962701b012a3c2e6dcbd3e",
+    "size": 843118
+  },
+  "decision_required": "Bind a viable complete real-SUT adapter/phase sequence at P31. If full adapters require Section product types/owners to exist, control must explicitly version that bootstrap/product sequencing decision; do not silently waive applicable variants or authorize product changes inside this task.",
+  "continue_execution": false,
+  "product_P32_authorized": false
+}
