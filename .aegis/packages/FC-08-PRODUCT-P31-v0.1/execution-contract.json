@@ -1,0 +1,394 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-execution-closure-contract-v1",
+  "task_id": "FC-08",
+  "stage": "P31_TASK_PACKAGING",
+  "status": "MATERIALIZED_READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "authorization": {
+    "implementation_permission": false,
+    "reason": "This is the product P31 package candidate. Independent control review must accept the exact package and its two preflights before a separate P32 start.",
+    "no_surface_handoff_to_P32_yet": true
+  },
+  "execution_base": {
+    "repository": "Mostorm-Labs/axiom",
+    "conditional_development_anchor": {
+      "revision": "a1e8819abe245ab7487f18771970721f480ff487",
+      "relation": "ancestor"
+    },
+    "materialized_input_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+    "materialized_input_ref": "refs/heads/codex/fc08-verification-materialization",
+    "note": "The input revision is a reconciled descendant of the conditional development anchor, not a qualified product baseline."
+  },
+  "implementation": {
+    "required_changes": [
+      "Complete the accepted additive schema publication: Section kind 10/version 1, ObjectContent.section tag 12, SetSectionContent opcode 17, EditContainerTopology opcode 18, registry entries and current descriptor. Preserve descriptor.lock.pb and descriptor.lock.sha256 byte-for-byte.",
+      "Implement Section/1 and operations 17/18 through the existing canonical model, codecs, validation, OperationEngine staging and atomic apply. Keep the topology effect set closed to IntroduceWrappers, ReleaseWrappers and RelocateObjects with mutually exclusive effect presence and the exact accepted write domains.",
+      "Implement exact canonical collection ordering, key/ID uniqueness, guard dependencies, hierarchy validation, all-or-nothing mutation, and no-op/rejected/already-applied semantics from the frozen W/T/H/K cases.",
+      "Implement real local F/U admission and E01 budget enforcement: construct and independently meter actual F and inverse U; reserve actual ChangeSet/outcome and History resources before canonical publication; bind the prepared command to the existing owner; guarantee zero canonical/History mutation on precommit rejection; preserve fresh operation IDs and monotonic canonical metadata on Undo/Redo.",
+      "Implement Snapshot3 content-derived capabilities, journal operation capability checks, atomic restore/replay, digest compatibility and fail-closed unknown operation behavior. Reading a snapshot does not imply writer capability.",
+      "Add typed public foundation intent/readback and receipt contracts; route through existing CanvasRuntimeFacade/RuntimeComposition owner ingress and Interaction planner/session. No parallel editor, History, membership truth or semantic mutation in shell/debug UI.",
+      "Implement container hierarchy/geometry and derived Scene behavior: world transforms, bounds, child overflow, render order, selection/hit-test containment, opacity, damage, coherent publication/recovery and preview handoff. Section boundary resize must not move child coordinates; preview cannot double-transform or overwrite a newer selection.",
+      "Integrate create/wrap/release/reparent/resize/rename, Group/Section scope, pointer lifecycle and selection through the existing Common Runtime and Windows/Web hosts. Preserve full IDs, owner/lifecycle identity, existing producer behavior and truthful receipt/projection axes.",
+      "Provide an ordinary public-header consumer and actual Windows Native, Web/WASM browser, and headless probes. Add a product runner that executes the frozen 302-variant corpus according to the exact profile applicability and emits fc08-verification-run-v1 records.",
+      "Run all ten blocking E01-E10 families and applicable inherited regressions; publish raw observations, exact invocations, environment/toolchain identities, input/expected hashes, and per-case results at the frozen reviewer-accessible evidence boundary."
+    ],
+    "allowed_paths": [
+      "schema/axiom/v1/proto/auditoryworks/axiom/v1/object.proto",
+      "schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto",
+      "schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto",
+      "schema/axiom/v1/proto/auditoryworks/axiom/v1/section.proto (new)",
+      "schema/axiom/v1/proto/auditoryworks/axiom/v1/container_operations.proto (new)",
+      "schema/axiom/v1/registry/field_registry_v1.yaml",
+      "schema/axiom/v1/registry/object_kind_registry_v1.yaml",
+      "schema/axiom/v1/registry/operation_registry_v1.yaml",
+      "schema/axiom/v1/descriptor/descriptor.current.pb",
+      "schema/axiom/v1/descriptor/descriptor.current.sha256",
+      "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "runtime/foundation/include/canvas/runtime/container_input.hpp (new)",
+      "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp",
+      "runtime/composition/src/canvas_runtime_facade.cpp",
+      "runtime/composition/include/canvas/runtime/runtime_composition.hpp",
+      "runtime/composition/src/runtime_composition.cpp",
+      "runtime/semantic/include/canvas/semantic/**",
+      "runtime/semantic/src/**",
+      "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+      "runtime/interaction/include/canvas/interaction/gesture_arbiter.hpp",
+      "runtime/interaction/include/canvas/interaction/selection_session.hpp",
+      "runtime/interaction/include/canvas/interaction/container_command_planner.hpp (new)",
+      "runtime/interaction/include/canvas/interaction/container_gesture_session.hpp (new)",
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/src/editor_history.cpp",
+      "runtime/interaction/src/gesture_arbiter.cpp",
+      "runtime/interaction/src/selection_session.cpp",
+      "runtime/interaction/src/container_command_planner.cpp (new)",
+      "runtime/interaction/src/container_gesture_session.cpp (new)",
+      "runtime/scene/include/canvas/scene/**",
+      "runtime/scene/src/**",
+      "runtime/input/include/canvas/input/**",
+      "runtime/input/src/**",
+      "runtime/semantic/tests/fc08_*.cpp (new)",
+      "runtime/interaction/tests/fc08_*.cpp (new)",
+      "runtime/composition/tests/fc08_*.cpp (new)",
+      "runtime/scene/tests/fc08_*.cpp (new)",
+      "runtime/input/tests/fc08_*.cpp (new)",
+      "apps/axiom_canvas_demo/platform/windows/**",
+      "apps/axiom_canvas_demo/platform/web/**",
+      "apps/minimal_runtime_host/**",
+      "debug_ui/** (typed command/readback wiring only)",
+      "tests/fc08/CMakeLists.txt",
+      "tests/fc08/native/product_*.cpp (new)",
+      "tests/fc08/web/** (new)",
+      "tests/fc08/product_runner_test.py (new)",
+      "tools/fc08/run_product_verification.py (new)",
+      "tools/fc08/product_runner.py (new)",
+      "verification/fc08/** (new product evidence schema/manifest only)",
+      "CMakeLists.txt",
+      "runtime/**/CMakeLists.txt",
+      "apps/axiom_canvas_demo/**/CMakeLists.txt",
+      "apps/minimal_runtime_host/**/CMakeLists.txt",
+      "debug_ui/**/CMakeLists.txt",
+      ".aegis/results/FC-08-DEV/** (new attempt-scoped evidence only)"
+    ],
+    "forbidden_changes": [
+      "schema/axiom/v1/descriptor/descriptor.lock.pb and schema/axiom/v1/descriptor/descriptor.lock.sha256",
+      "schema/axiom/v1/canonical/**, schema/axiom/v1/registry/shape_kind_registry_v1.yaml, unrelated schema tags, or any unaccepted kind/opcode/field allocation",
+      "Any change to .aegis/authorities.json, .aegis/gates.json, .aegis/evidence.json, .aegis/integrations.json, Project State caches, main/default branch, or global gate/evidence registries",
+      "Any mutation of .aegis/packages/FC-08-P31-READINESS/**, .aegis/packages/FC-08-VERIFY-MATERIALIZE-v0.2/**, accepted P12-P20 exports, the accepted seed archive, effective-case-catalog.json, variant-index.json, corpus-manifest.json, expected fixtures, or frozen oracle source files",
+      "Any mutation of prior .aegis/results/FC-08-VERIFY-MATERIALIZE/**, prior terminal receipts, prior raw logs, or historical baseline failure records",
+      "Any modification/removal/reordering of runtime/semantic/src/qualification_checkpoint.hpp, runtime/interaction/src/qualification_checkpoint.hpp, or the existing Q-SEM-*/Q-HIST-* qualification hook semantics and their default-OFF build policy",
+      "New Frame identity, generic transaction layer, second membership store, parallel ContainerRuntime/History, arbitrary nested operation/JSON Patch, compensation-based pseudo-atomicity, or product semantics implemented in UI",
+      "Full generic FC04 inspector/batch expansion, advanced FC06/FC07 completion, FC10 clipboard expansion, or any predecessor completion claim",
+      "Disabling/hiding existing Text/Image/Shape/Brush/Connector producers, replacing production dependencies with mocks, or changing existing producer semantics to make FC08 tests pass",
+      "Changes to apps/ink_playground/**, pocs/**, unrelated feature code, dependency locks, published SDKs, or toolchain locks",
+      "Physical PH01-PH04 work or claims of physical PASS; those remain FC13 obligations",
+      "Any product P32 implementation before this exact package is accepted through control review and both preflights pass"
+    ],
+    "preserved_work": [
+      "Reuse the exact M01-M04 artifacts and baseline profile observations bound in authority.lock.json and verification.lock.json; do not rerun or overwrite them merely to increase confidence.",
+      "Keep the source-complete descriptor diff additive; update only the current descriptor pair if required by accepted BASE-01 publication.",
+      "Preserve the current qualification hook implementation and all historical failure records; product code may extend adjacent source files only without altering the hook contract.",
+      "Keep all 60 logical cases, all 302 unique variants and the exact accepted CR01 expected values immutable.",
+      "Keep FC01A B01-B10 and applicable selection/connector/control regressions intact; reference genuinely equivalent inherited observations instead of duplicating them.",
+      "Retain INT-01 under FC04/FC10 ownership and PH01-PH04 under FC13 ownership."
+    ]
+  },
+  "preflights": [
+    "RepositoryIdentity",
+    "PackageBindingPreflight",
+    "EvidenceContractPreflight",
+    "ImplementationDesignPreflight",
+    "FC08-RED-01"
+  ],
+  "implementation_design_preflight": {
+    "required": true,
+    "reason": "Cross-module command ownership, atomic publication, History admission, Scene publication, input lifecycle and platform adaptation all change.",
+    "must_record": [
+      "Exact current flow and source anchors",
+      "Target owner/prepare/commit/publication/abort flow",
+      "Affected types and files",
+      "Mapping of each E01-E10 obligation to implementation and tests",
+      "Explicit resource/History reservation point and zero-mutation failure boundary",
+      "Preview-to-committed projection handoff and recovery flow",
+      "Unresolved semantic decisions"
+    ],
+    "continue_condition": "unresolved_semantic_decisions=[], authority_conflict=false, verification_conflict=false, package_scope_conflict=false"
+  },
+  "red_oracle_precondition": {
+    "id": "FC08-RED-01",
+    "red_required": true,
+    "run_before_production_mutation": true,
+    "baseline_subject_revision": "0d3b10bba1ac4a31d669dd4a45f94975ec24f3c3",
+    "baseline_result_refs": [
+      {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/windows-final/results.json",
+        "sha256": "96cbf91673b3bb4709bbfa979a0feb51dddc45d14b25e172caeddd243670ad76"
+      },
+      {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/web-final/results.json",
+        "sha256": "a8274c5d7154339733d7fed8b8556b37789d15a9871c4a0a939b04c856dcc4a4"
+      },
+      {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/headless-final/results.json",
+        "sha256": "1a8fa2979606722494420a8a6fd195c63ee936dc4cdf06611e94d6bdec1a909c"
+      }
+    ],
+    "expected_failure": "The old implementation must fail product-positive Section/1, operation17/18, topology, selection, scene and public-consumer assertions at their real SUT boundary. Existing baseline records classify representative positives as CAPABILITY_ABSENT; that is a RED observation, not a product PASS.",
+    "representative_variants": [
+      {
+        "id": "FC08-W02/SCW01",
+        "baseline_status": "CAPABILITY_ABSENT"
+      },
+      {
+        "id": "FC08-T01/Group-empty-introduce",
+        "baseline_status": "CAPABILITY_ABSENT"
+      },
+      {
+        "id": "FC08-H01/empty-Section",
+        "baseline_status": "CAPABILITY_ABSENT"
+      },
+      {
+        "id": "FC08-S01/boundary-full-child-inside",
+        "baseline_status": "CAPABILITY_ABSENT"
+      },
+      {
+        "id": "FC08-K02/Section-and-Triangle-and-resource",
+        "baseline_status": "CAPABILITY_ABSENT"
+      },
+      {
+        "id": "FC08-P01/create",
+        "baseline_status": "CAPABILITY_ABSENT"
+      },
+      {
+        "id": "FC08-P02/confirmed-utf8-title",
+        "baseline_status": "CAPABILITY_ABSENT"
+      }
+    ],
+    "observation_seam": "Run the new product runner against the unmodified production subject and record the exact case/variant, input/expected hashes, actual SUT invocation and raw observation. Do not use descriptor-only binding, hook observations, or a synthetic oracle trace as the product RED.",
+    "failure_policy": "If the old subject passes a required positive while the accepted capability is still absent, return VERIFICATION_DESIGN_DEFECT; do not weaken/rewrite the frozen oracle."
+  },
+  "tests": {
+    "required": [
+      {
+        "id": "PKG-01",
+        "command_or_oracle": "Validate package-local refs and SHA-256 values, exact repository identity, anchor ancestry and no floating trust labels.",
+        "expected_result": "PASS_PACKAGE_BINDING; no product tests implied.",
+        "blocking_reason": "P32 must not start from mismatched or mutable Authority/Verification bindings."
+      },
+      {
+        "id": "EVID-01",
+        "command_or_oracle": "Validate each E01-E10 requirement/oracle/acceptance/evidence mapping and the frozen fc08-verification-run-v1 result contract.",
+        "expected_result": "PASS_EVIDENCE_CONTRACT; no product tests implied.",
+        "blocking_reason": "Every blocking requirement must have an executable, reviewer-resolvable evidence mapping."
+      },
+      {
+        "id": "FC08-RED-01",
+        "command_or_oracle": "python tools/fc08/run_product_verification.py --design .aegis/materialized/FC-08/executable-verification.json --case all --profile windows-native --output .aegis/results/FC-08-DEV/attempts/<attempt-id>/windows-native (run on old subject before production mutation; repeat for web-wasm and the applicable headless subset).",
+        "expected_result": "Representative product positives fail at the known baseline capability boundary; raw observations and exact case/variant identities are recorded.",
+        "blocking_reason": "Proves the frozen product oracle is sensitive to the current missing behavior before code changes."
+      },
+      {
+        "id": "E01",
+        "command_or_oracle": "Execute all applicable W01-W07 variants with the product runner; compare exact bytes, descriptor delta and inherited fields against hand-authored expectations.",
+        "expected_result": "Every required variant matches; BASE-01 is additive; descriptor.lock is unchanged.",
+        "blocking_reason": "Protocol integrity and backward compatibility."
+      },
+      {
+        "id": "E02",
+        "command_or_oracle": "Execute all applicable T01-T07 variants; compare final object tables and independent parent graph; inject all frozen precommit guard/failure cases.",
+        "expected_result": "Atomic topology and guards match; zero-mutation failures preserve canonical and History state.",
+        "blocking_reason": "Prevent partial membership, cycles, orphan records and stale-guard writes."
+      },
+      {
+        "id": "E03",
+        "command_or_oracle": "Execute all applicable H01-H08 variants through real command/History owners; independently meter actual F/U, reservation and Undo/Redo state.",
+        "expected_result": "E01 admission, byte limits, cursor/redo invariants and H06 dependency guards all pass.",
+        "blocking_reason": "Forward success must never create an impossible or destructive Undo path."
+      },
+      {
+        "id": "E04",
+        "command_or_oracle": "Execute all applicable G01-G06 variants against the independently ordered binary64 reference and fixed P12 quality predicate.",
+        "expected_result": "Exact affine/boundary outputs match; no new tolerances or geometry drift.",
+        "blocking_reason": "Geometry errors are not detected by final document equality alone."
+      },
+      {
+        "id": "E05",
+        "command_or_oracle": "Execute all applicable S01-S06 variants against authored geometry and expected selection-root sets; run applicable inherited FC01A selection regressions.",
+        "expected_result": "Exact containment, Group scope and selection-root normalization match.",
+        "blocking_reason": "Wrong selection roots can cause unintended batch mutation."
+      },
+      {
+        "id": "E06",
+        "command_or_oracle": "Execute all applicable V01-V05 variants against independent world/damage/draw-list/pixel oracles and coherent publication observations.",
+        "expected_result": "Bounds, overflow, opacity, damage and recovery match without partial publication.",
+        "blocking_reason": "Document-state equality cannot detect derived Scene/rendering faults."
+      },
+      {
+        "id": "E07",
+        "command_or_oracle": "Execute all applicable C01-C05 variants with deterministic scheduling and positive completion assertions.",
+        "expected_result": "No double transform or stale callback; recovery eventually produces coherent current projection and preview exit.",
+        "blocking_reason": "Transient errors can disappear from a final-state-only trace."
+      },
+      {
+        "id": "E08",
+        "command_or_oracle": "Execute all applicable L01-L06 variants against real owner ingress, full identities, queue/receipt limits and lifecycle transitions.",
+        "expected_result": "Cancel/stale/late inputs cannot mutate; full identity and receipt behavior match.",
+        "blocking_reason": "Control identity and lifecycle errors can mutate the wrong document/object."
+      },
+      {
+        "id": "E09",
+        "command_or_oracle": "Execute all applicable K01-K06 snapshot/journal/capability variants, including actual old-reader negative behavior where specified.",
+        "expected_result": "Restore/replay is atomic and fail-closed; no unsupported writer claim.",
+        "blocking_reason": "Partial restore/replay is a data-integrity failure."
+      },
+      {
+        "id": "E10",
+        "command_or_oracle": "Execute all applicable P01-P04 through an ordinary public-header consumer, real Windows Native host and actual Chrome/WASM bridge; include INT-01 pre-write rejection and applicable inherited regressions.",
+        "expected_result": "Typed consumer, IDs, readback/receipts and platform behavior match; no mock or demo-only implementation.",
+        "blocking_reason": "Private-only or adapter-incomplete implementations are not usable product behavior."
+      },
+      {
+        "id": "REG-01",
+        "command_or_oracle": "Run all exact applicable inherited regression identities bound by the accepted plan on Windows Native, Web/WASM and headless where applicable.",
+        "expected_result": "All required inherited expectations match; historical FC01A gates are not reopened or rewritten.",
+        "blocking_reason": "FC08 must preserve existing selection, connector, control, snapshot and producer behavior."
+      },
+      {
+        "id": "PROFILE-01",
+        "command_or_oracle": "Record actual locked SDK/compiler, successful build, test invocation, Chrome/WASM browser execution and headless execution.",
+        "expected_result": "All required profiles are real; no Node-only/mock substitution; missing environment is an explicit blocker.",
+        "blocking_reason": "Build-only evidence cannot establish actual platform adapter behavior."
+      }
+    ],
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "Existing CI only when its exact subject/configuration applies and supplies the exact required platform observation; no duplicate run solely for confidence."
+      ]
+    }
+  },
+  "evidence": {
+    "blocking": [
+      {
+        "artifact": "implementation-design-preflight.json",
+        "covers": "Pre-mutation owner/commit/publication/abort flow and obligation mapping."
+      },
+      {
+        "artifact": "red-oracle-preflight.json",
+        "covers": "FC08-RED-01 on the old production subject."
+      },
+      {
+        "artifact": "evidence-manifest.json",
+        "covers": "Exact run, subject, runner/oracle, profile, toolchain, input/expected hashes and raw observations."
+      },
+      {
+        "artifact": "verification-run.json",
+        "covers": "fc08-verification-run-v1 per actual profile invocation."
+      },
+      {
+        "artifact": "families/E01.json through families/E10.json",
+        "covers": "Each frozen blocking obligation family; case/variant-level observations and acceptance."
+      },
+      {
+        "artifact": "profile-observations.json",
+        "covers": "Actual Windows Native, Chrome/WASM and headless realization."
+      },
+      {
+        "artifact": "inherited-regression.json",
+        "covers": "Applicable inherited regression IDs and exact observed results."
+      },
+      {
+        "artifact": "terminal-result.json",
+        "covers": "Exact subject/result/materialized ref/evidence refs and terminal status; no Gate verdict."
+      }
+    ],
+    "corroborative": [
+      "Duplicate CI/local runs on the same subject and configuration.",
+      "Additional screenshots duplicating automated geometry or render observations.",
+      "Full-versus-incremental parity when both paths share the same production compiler.",
+      "Unbounded fuzz campaigns, extra diagnostic traces or provenance-of-provenance.",
+      "Performance thresholds not accepted by current Authority."
+    ],
+    "deferred_to_other_gate": [
+      {
+        "id": "FC08-PH01",
+        "owner": "FC13",
+        "blocks_FC08_DEV": false
+      },
+      {
+        "id": "FC08-PH02",
+        "owner": "FC13",
+        "blocks_FC08_DEV": false
+      },
+      {
+        "id": "FC08-PH03",
+        "owner": "FC13",
+        "blocks_FC08_DEV": false
+      },
+      {
+        "id": "FC08-PH04",
+        "owner": "FC13",
+        "blocks_FC08_DEV": false
+      },
+      {
+        "id": "INT-01",
+        "owner": "FC04/FC10",
+        "disposition": "FC-08 must test pre-write rejection; full integration remains outside this package."
+      }
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "All frozen E01-E10 obligations and all applicable required variants satisfy their exact acceptance criteria; no silent skip, unsupported positive, or placeholder oracle.",
+      "All 60 logical cases and 302 variants remain bound to the immutable accepted catalog and corpus; no expected values or authority hashes changed.",
+      "BASE-01 current descriptor publication is additive and historical descriptor.lock is unchanged.",
+      "Real Windows Native, actual Chrome/WASM Web and applicable headless runs are complete; inherited regressions match.",
+      "All results and raw observations are reviewer-resolvable from a same-repository exact result revision/materialized ref.",
+      "No out-of-scope changes, no predecessor Gate claim, no physical PASS claim, and no P34 PASS claim.",
+      "Return READY_FOR_CONTROL_REVIEW with exact result_revision, materialized_ref and evidence_input_refs."
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "BLOCKED_AUTHORITY",
+      "BLOCKED_MISSING_INPUT",
+      "BLOCKED_ENVIRONMENT",
+      "BLOCKED_VERIFICATION",
+      "BLOCKED_IMPLEMENTATION",
+      "BLOCKED_EXECUTION_DIVERGENCE",
+      "TASK_PACKAGE_DEFECT",
+      "VERIFICATION_DESIGN_DEFECT",
+      "FROZEN_VERIFICATION_FAILURE",
+      "NEW_HIGH_IMPACT_FAILURE_MODE"
+    ],
+    "policy": "Preserve valid work and return the exact missing binding, invocation/log, failing case/variant or owner-layer handoff. Do not weaken the frozen finish line or rewrite expected values."
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "may_claim_P34_PASS": false,
+    "may_claim_DEV_PASS": false,
+    "may_claim_PHYS_PASS": false
+  }
+}

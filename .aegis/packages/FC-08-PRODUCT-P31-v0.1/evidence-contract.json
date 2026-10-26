@@ -1,0 +1,144 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-evidence-contract-v1",
+  "task_id": "FC-08",
+  "gate_pass_authorized": false,
+  "review_boundary": "Exact P32 source commit and reviewer-accessible result revision/materialized ref.",
+  "blocking": [
+    {
+      "obligation": "P32 preflight",
+      "artifact": "implementation-design-preflight.json",
+      "failure_mode": "Unresolved owner/commit/publication boundary causes non-atomic or cross-owner behavior."
+    },
+    {
+      "obligation": "FC08-RED-01",
+      "artifact": "red-oracle-preflight.json",
+      "failure_mode": "The frozen oracle is not sensitive to the known absent baseline capability."
+    },
+    {
+      "obligation": "E01-E10",
+      "artifact": "families/E01.json through families/E10.json",
+      "failure_mode": "Any one of the ten accepted high-impact failure modes remains untested or fails."
+    },
+    {
+      "obligation": "Run identity and case completeness",
+      "artifact": "verification-run.json and evidence-manifest.json",
+      "failure_mode": "Results cannot be tied to exact subject, runner, oracle, profile, inputs, expected values or raw observations."
+    },
+    {
+      "obligation": "Native/Web/headless realization",
+      "artifact": "profile-observations.json",
+      "failure_mode": "Build-only or mock evidence hides platform/adapter defects."
+    },
+    {
+      "obligation": "Inherited behavior",
+      "artifact": "inherited-regression.json",
+      "failure_mode": "Container implementation regresses existing selection, connector, control, producer or snapshot behavior."
+    },
+    {
+      "obligation": "Durable return",
+      "artifact": "terminal-result.json",
+      "failure_mode": "Independent reviewer cannot resolve the exact result/evidence boundary."
+    }
+  ],
+  "per_family_mapping": {
+    "FC08-E01": "families/E01.json",
+    "FC08-E02": "families/E02.json",
+    "FC08-E03": "families/E03.json",
+    "FC08-E04": "families/E04.json",
+    "FC08-E05": "families/E05.json",
+    "FC08-E06": "families/E06.json",
+    "FC08-E07": "families/E07.json",
+    "FC08-E08": "families/E08.json",
+    "FC08-E09": "families/E09.json",
+    "FC08-E10": "families/E10.json"
+  },
+  "required_run_fields": [
+    "design_id",
+    "authority_id",
+    "authority_binding_hash",
+    "verification_manifest_hash",
+    "qualification_subject_revision",
+    "runner_revision",
+    "oracle_revision",
+    "platform_profile",
+    "build_configuration",
+    "toolchain",
+    "source_tree_dirty",
+    "started_at",
+    "ended_at",
+    "invocation",
+    "cases"
+  ],
+  "required_case_fields": [
+    "case_id",
+    "variant_id",
+    "family_id",
+    "input_hash",
+    "expected_hash",
+    "observed_artifact",
+    "observation_basis",
+    "result",
+    "failure_boundary"
+  ],
+  "result_values": [
+    "PASS",
+    "FAIL",
+    "BLOCKED_ENVIRONMENT",
+    "NOT_RUN"
+  ],
+  "rules": [
+    "NOT_RUN is never PASS.",
+    "Expected Unsupported is PASS only when all zero-mutation and receipt assertions also hold.",
+    "No green summary can replace case-level result and raw observation bindings.",
+    "No duplicate proof-of-proof chain; one real trace may satisfy multiple frozen obligations when its exact assertions are mapped.",
+    "No Gate verdict is issued by the execution result."
+  ],
+  "corroborative_only": [
+    "Duplicate CI/local runs on the same subject and configuration.",
+    "Screenshots duplicating automated geometry or rendering observations.",
+    "Full-versus-incremental parity when both paths share the same production compiler.",
+    "Unbounded fuzzing, performance targets not accepted by Authority, and provenance-of-provenance."
+  ],
+  "deferred_to_other_gate": [
+    {
+      "id": "FC08-PH01",
+      "owner": "FC13",
+      "required_in_FC08_DEV": false,
+      "waived": false
+    },
+    {
+      "id": "FC08-PH02",
+      "owner": "FC13",
+      "required_in_FC08_DEV": false,
+      "waived": false
+    },
+    {
+      "id": "FC08-PH03",
+      "owner": "FC13",
+      "required_in_FC08_DEV": false,
+      "waived": false
+    },
+    {
+      "id": "FC08-PH04",
+      "owner": "FC13",
+      "required_in_FC08_DEV": false,
+      "waived": false
+    },
+    {
+      "id": "INT-01",
+      "owner": "FC04/FC10",
+      "required_here": "Explicit pre-write mixed-default-delete rejection only; full integrated behavior remains outside FC-08."
+    }
+  ],
+  "return_fields": [
+    "result_revision",
+    "materialized_ref",
+    "evidence_input_refs",
+    "terminal_state",
+    "exact_blockers",
+    "P34_PASS:false",
+    "DEV_PASS:false",
+    "PHYS_PASS:false"
+  ]
+}
