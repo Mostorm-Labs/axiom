@@ -5,6 +5,14 @@
 #include <exception>
 #include <set>
 #include <utility>
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+#include "qualification_checkpoint.hpp"
+#define FC08_CONTEXT_PARAMETER , const canvas::qualification::ApplyContext* fc08Context
+#define FC08_CONTEXT_ARGUMENT , fc08Context
+#else
+#define FC08_CONTEXT_PARAMETER
+#define FC08_CONTEXT_ARGUMENT
+#endif
 
 namespace canvas::semantic::internal {
 namespace {
@@ -45,11 +53,17 @@ bool preflight(const Store& store, const PreparedApplyPlan& plan) {
 }
 
 template <typename Store>
-AtomicApplyResult applyPreparedPlanInternal(Store& store, const PreparedApplyPlan& plan) {
+AtomicApplyResult applyPreparedPlanInternal(Store& store, const PreparedApplyPlan& plan FC08_CONTEXT_PARAMETER) {
     if (!preflight(store, plan)) {
         return {};
     }
 
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    if ((!plan.creates.empty() || !plan.replacements.empty() || !plan.deletes.empty()) &&
+        canvas::qualification::notify(fc08Context, canvas::qualification::Point::kSemPublish, plan.operation)) {
+        return {};
+    }
+#endif
     for (const ObjectRecord& record : plan.creates) {
         if (!ObjectStoreMutator::insertFresh(store, record)) {
             std::terminate();
@@ -70,21 +84,21 @@ AtomicApplyResult applyPreparedPlanInternal(Store& store, const PreparedApplyPla
 
 } // namespace
 
-AtomicApplyResult applyPreparedPlan(ReferenceObjectStore& store, const PreparedApplyPlan& plan) {
-    return applyPreparedPlanInternal(store, plan);
+AtomicApplyResult applyPreparedPlan(ReferenceObjectStore& store, const PreparedApplyPlan& plan FC08_CONTEXT_PARAMETER) {
+    return applyPreparedPlanInternal(store, plan FC08_CONTEXT_ARGUMENT);
 }
 
-AtomicApplyResult applyPreparedPlan(IndexedObjectStore& store, const PreparedApplyPlan& plan) {
-    return applyPreparedPlanInternal(store, plan);
+AtomicApplyResult applyPreparedPlan(IndexedObjectStore& store, const PreparedApplyPlan& plan FC08_CONTEXT_PARAMETER) {
+    return applyPreparedPlanInternal(store, plan FC08_CONTEXT_ARGUMENT);
 }
 
-AtomicApplyResult applyPreparedPlan(ReferenceObjectStore& store, ResourceManifest& manifest, const PreparedApplyPlan& plan) {
-    auto result = applyPreparedPlan(store, plan);
+AtomicApplyResult applyPreparedPlan(ReferenceObjectStore& store, ResourceManifest& manifest, const PreparedApplyPlan& plan FC08_CONTEXT_PARAMETER) {
+    auto result = applyPreparedPlan(store, plan FC08_CONTEXT_ARGUMENT);
     if (result.status == AtomicApplyStatus::kApplied && plan.manifest.has_value()) manifest = *plan.manifest;
     return result;
 }
-AtomicApplyResult applyPreparedPlan(IndexedObjectStore& store, ResourceManifest& manifest, const PreparedApplyPlan& plan) {
-    auto result = applyPreparedPlan(store, plan);
+AtomicApplyResult applyPreparedPlan(IndexedObjectStore& store, ResourceManifest& manifest, const PreparedApplyPlan& plan FC08_CONTEXT_PARAMETER) {
+    auto result = applyPreparedPlan(store, plan FC08_CONTEXT_ARGUMENT);
     if (result.status == AtomicApplyStatus::kApplied && plan.manifest.has_value()) manifest = *plan.manifest;
     return result;
 }

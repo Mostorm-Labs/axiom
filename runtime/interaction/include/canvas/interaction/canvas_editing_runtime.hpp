@@ -145,6 +145,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
                                 public interaction::InteractionDispatchPort {
   friend class canvas::ink_playground::InkPlaygroundHistoryTestAccess;
   friend class canvas::runtime::CanvasRuntimeFacade;
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+  friend class canvas::qualification::Access;
+  std::shared_ptr<canvas::qualification::State> fc08Qualification_;
+#endif
   public:
   enum class ToolMode : std::uint8_t { kBrush = 0, kObjectEraser = 1, kPartialEraser = 2 };
   explicit CanvasEditingRuntime(render::ViewId viewId = render::ViewId{1});

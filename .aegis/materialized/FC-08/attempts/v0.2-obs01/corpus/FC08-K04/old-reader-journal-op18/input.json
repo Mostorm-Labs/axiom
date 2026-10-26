@@ -1,0 +1,140 @@
+{
+  "checkpoint": {
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 3,
+    "objects": [
+      {
+        "id": {
+          "value": "00000000000000000000000000000005"
+        },
+        "kind_id": 9,
+        "kind_version": 1,
+        "placement": {
+          "order_key": {
+            "value": "00000005"
+          }
+        },
+        "transform": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "tx": 0,
+          "ty": 0
+        },
+        "properties": {},
+        "content": {
+          "group": {}
+        }
+      }
+    ],
+    "manifest": {
+      "schema_version": 1,
+      "manifest_revision": 0
+    },
+    "document_revision": 0,
+    "recovery_frontier": "080110011800",
+    "digest_algorithm": 1,
+    "capability_requirements": "0a147265736f757263652d6d616e69666573742d7631",
+    "document_digest": "6ad9e60509dc3432c0f1d7a5917052cd0c9aca3d9e719e1fef28827f6f03c7a6",
+    "checkpoint_digest": "a4308b5a36679fd485d174d8dacf38711a8bb8cbd67cf3c2460a5ce5efc5355f"
+  },
+  "journal": [
+    {
+      "operation_id": {
+        "value": "000000000000000000000000000003e9"
+      },
+      "document_id": {
+        "value": "00000000000000000000000000000064"
+      },
+      "schema_version": 1,
+      "payload_version": 1,
+      "payload": {
+        "edit_container_topology": {
+          "guard": {
+            "nodes": [
+              {
+                "object_id": {
+                  "value": "00000000000000000000000000000005"
+                },
+                "kind_id": 9,
+                "kind_version": 1,
+                "placement_before": {
+                  "order_key": {
+                    "value": "00000005"
+                  }
+                },
+                "transform_before": {
+                  "a": 1,
+                  "b": 0,
+                  "c": 0,
+                  "d": 1,
+                  "tx": 0,
+                  "ty": 0
+                }
+              }
+            ],
+            "child_sets": [
+              {
+                "complete_members": [
+                  {
+                    "object_id": {
+                      "value": "00000000000000000000000000000005"
+                    },
+                    "order_key": {
+                      "value": "00000005"
+                    }
+                  }
+                ]
+              },
+              {
+                "parent_id": {
+                  "value": "00000000000000000000000000000005"
+                },
+                "complete_members": []
+              }
+            ]
+          },
+          "relocations": [],
+          "order_only_edits": [],
+          "introduce_wrappers": {
+            "containers": [
+              {
+                "id": {
+                  "value": "00000000000000000000000000000006"
+                },
+                "kind_id": 9,
+                "kind_version": 1,
+                "placement": {
+                  "order_key": {
+                    "value": "00000006"
+                  }
+                },
+                "transform": {
+                  "a": 1,
+                  "b": 0,
+                  "c": 0,
+                  "d": 1,
+                  "tx": 0,
+                  "ty": 0
+                },
+                "properties": {},
+                "content": {
+                  "group": {}
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "reader_capabilities": [
+    "resource-manifest-v1"
+  ],
+  "journal_required_capabilities": [
+    "container-topology-v1"
+  ]
+}

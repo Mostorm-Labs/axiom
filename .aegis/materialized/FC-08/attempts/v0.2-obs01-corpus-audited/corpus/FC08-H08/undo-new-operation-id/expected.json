@@ -1,0 +1,55 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "history.size",
+      "expected": 1
+    },
+    {
+      "op": "equal",
+      "path": "history.cursor",
+      "expected": 0
+    },
+    {
+      "op": "equal",
+      "path": "undo_records",
+      "expected": [
+        {
+          "id": {
+            "value": "00000000000000000000000000000009"
+          },
+          "kind_id": 1,
+          "kind_version": 1,
+          "placement": {
+            "order_key": {
+              "value": "00000009"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 0,
+            "ty": 0
+          },
+          "properties": {},
+          "content": {
+            "shape": {
+              "shape_kind": 1,
+              "width": 20.0,
+              "height": 20.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "operation_ids_distinct",
+      "expected": true
+    }
+  ],
+  "source_case": "FC08-H08",
+  "product_expected_only": true
+}

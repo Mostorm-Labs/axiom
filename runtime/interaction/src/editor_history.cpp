@@ -2,6 +2,9 @@
 
 #include <algorithm>
 #include <new>
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+#include "qualification_checkpoint.hpp"
+#endif
 
 namespace canvas::interaction {
 
@@ -111,6 +114,10 @@ bool EditorHistory::recordConditional(semantic::Operation forward,
 std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareRecord(
     const semantic::Operation& forward,const std::vector<semantic::Operation>& inverse,
     std::vector<HistoryExpectation> before,std::vector<HistoryExpectation> after) {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    if (canvas::qualification::observing(fc08Qualification_)) return std::nullopt;
+    canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
+#endif
     if (!supportedForward(forward) || inverse.empty() || forward.id.isZero()) {
         return std::nullopt;
     }
@@ -120,14 +127,32 @@ std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareRecord(
         }
     }
     try {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+        if (canvas::qualification::historyCheckpoint(fc08Qualification_, this,
+            canvas::qualification::Point::kHistBeforeReserve, forward, entries_.size(), cursor_)) return std::nullopt;
+#endif
         entries_.reserve(cursor_+1);
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+        PreparedEntry fc08Prepared{forward,inverse,std::move(before),std::move(after)};
+        if (canvas::qualification::historyCheckpoint(fc08Qualification_, this,
+            canvas::qualification::Point::kHistReady, forward, entries_.size(), cursor_)) return std::nullopt;
+        return fc08Prepared;
+#else
         return PreparedEntry{forward,inverse,std::move(before),std::move(after)};
+#endif
     } catch(const std::bad_alloc&) { return std::nullopt; }
 }
 void EditorHistory::commitPrepared(PreparedEntry&& entry) noexcept {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    if (canvas::qualification::observing(fc08Qualification_)) return;
+#endif
     entries_.resize(cursor_);
     entries_.push_back(std::move(entry));
     cursor_ = entries_.size();
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    canvas::qualification::historyTransition(fc08Qualification_, this,
+        entries_.back().forward.id, entries_.back().forward.document_id, entries_.size(), cursor_);
+#endif
 }
 
 bool EditorHistory::identityKnown(const semantic::OperationId& id) const noexcept {
@@ -165,12 +190,24 @@ bool EditorHistory::submitFresh(std::span<const semantic::Operation> operations,
 }
 
 bool EditorHistory::undo() {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    if (canvas::qualification::observing(fc08Qualification_)) return false;
+    canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
+#endif
     if (!canUndo() || !submitFresh(entries_[cursor_ - 1].inverse, entries_[cursor_ - 1].after)) return false;
     --cursor_;
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    canvas::qualification::historyTransition(fc08Qualification_, this,
+        emittedOperationIds_.back(), entries_[cursor_].forward.document_id, entries_.size(), cursor_);
+#endif
     return true;
 }
 
 bool EditorHistory::redo() {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    if (canvas::qualification::observing(fc08Qualification_)) return false;
+    canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
+#endif
     if (!canRedo()) return false;
     auto forward = entries_[cursor_].forward;
     if (const auto* insert=std::get_if<semantic::InsertObjectsOp>(&forward.payload); insert &&
@@ -178,6 +215,10 @@ bool EditorHistory::redo() {
         forward.payload=semantic::RestoreObjectsOp{insert->objects};
     if (!submitFresh(std::span<const semantic::Operation>(&forward, 1), entries_[cursor_].before)) return false;
     ++cursor_;
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    canvas::qualification::historyTransition(fc08Qualification_, this,
+        emittedOperationIds_.back(), entries_[cursor_ - 1].forward.document_id, entries_.size(), cursor_);
+#endif
     return true;
 }
 

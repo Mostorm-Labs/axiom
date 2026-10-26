@@ -1,0 +1,31 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "child_effective_rgba",
+      "expected": [
+        0,
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "interior_pixel_rgba",
+      "expected": [
+        0,
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "subtree_clip",
+      "expected": false
+    }
+  ],
+  "source_case": "FC08-V02",
+  "product_expected_only": true
+}

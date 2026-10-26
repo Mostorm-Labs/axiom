@@ -1,0 +1,209 @@
+{
+  "format": "fc08-exact-inherited-subset-v2",
+  "goldens": [
+    {
+      "id": "BG-001",
+      "root": "Id128",
+      "input": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-001-id128/expected/canonical.pb",
+        "sha256": "b18a210ac3a675ecb29838963694028d8e14076debbdc1fd17721f9881a135bc"
+      },
+      "case": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-001-id128/case.json",
+        "sha256": "0c380020b35af44f2fa90b350d5a2e59bfaefd1c81c840f3ac43fb6cdd58447f"
+      },
+      "accepted": true,
+      "canonical_hex": "0a1000112233445566778899aabbccddeeff",
+      "category": null
+    },
+    {
+      "id": "BG-002",
+      "root": "OrderKey",
+      "input": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-002-order-key/expected/canonical.pb",
+        "sha256": "2ad6353dbc3ad35bebb001d62894021ae4a315e01970b574843e74a03718b432"
+      },
+      "case": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-002-order-key/case.json",
+        "sha256": "9a81fa34a97b21671bef48503b1d8670feb45a8919e46c2d095a4c6fb7f11409"
+      },
+      "accepted": true,
+      "canonical_hex": "0a030180ff",
+      "category": null
+    },
+    {
+      "id": "BG-004",
+      "root": "Transform2D",
+      "input": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-004-transform2d/expected/canonical.pb",
+        "sha256": "e222ab6a7433d665d8e3fe69dbb3d81c1402b51801438ee0a3c93bb98982049e"
+      },
+      "case": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-004-transform2d/case.json",
+        "sha256": "ccb4ff22a7613fe0e3c2f2da934c0d50db5dbe77ef5d0916860c565e9da6be28"
+      },
+      "accepted": true,
+      "canonical_hex": "09000000000000f03f11000000000000000019000000000000000021000000000000f03f290000000000000000310000000000000000",
+      "category": null
+    },
+    {
+      "id": "BG-007",
+      "root": "Placement",
+      "input": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-007-placement-root/expected/canonical.pb",
+        "sha256": "0daf14ceccfcd7081ff615a70b8633337af0021ac8e76b1164b7eb57132f9f0b"
+      },
+      "case": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-007-placement-root/case.json",
+        "sha256": "a7371dee32d2447225ea61b5ca87fb670b05b7954e7f7d823d8bfdbed5ac9522"
+      },
+      "accepted": true,
+      "canonical_hex": "12030a0101",
+      "category": null
+    },
+    {
+      "id": "BG-008",
+      "root": "Placement",
+      "input": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-008-placement-parented/expected/canonical.pb",
+        "sha256": "fbb862a66bc45dfdda8b0fe50308759c115b4fff8cfdc867e0a4145849a029fc"
+      },
+      "case": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-008-placement-parented/case.json",
+        "sha256": "d5e14f82397ad16a79fa07817c5974ea84184fe7332a09ca450cdbbe5ac8c8b1"
+      },
+      "accepted": true,
+      "canonical_hex": "0a120a1000112233445566778899aabbccddeeff12030a0101",
+      "category": null
+    },
+    {
+      "id": "BG-010",
+      "root": "DocumentSnapshot",
+      "input": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-010-minimal-document-snapshot/expected/canonical.pb",
+        "sha256": "6ef4a17794afe7f249cc0ba60c5e3c208776487df56f15310d57cf5923350837"
+      },
+      "case": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-010-minimal-document-snapshot/case.json",
+        "sha256": "167f2ae158ff404439bf15b2b82277e85661040b0e78c664985addcf880114af"
+      },
+      "accepted": true,
+      "canonical_hex": "0a120a1000112233445566778899aabbccddeeff1001",
+      "category": null
+    },
+    {
+      "id": "BG-N04",
+      "root": "Transform2D",
+      "input": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-N04-transform-duplicate-a/input/value.pb",
+        "sha256": "cedf6a84f55c646b9ed4ad986c4a2524e5fa43daef5b83cb03ff764b3107f054"
+      },
+      "case": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-N04-transform-duplicate-a/case.json",
+        "sha256": "b5464922eb0457c19987377bef11c78789ccb31af406e7fd272fe664c083accf"
+      },
+      "accepted": false,
+      "canonical_hex": null,
+      "category": "DUPLICATE_SINGULAR_FIELD"
+    },
+    {
+      "id": "BG-N06",
+      "root": "Id128",
+      "input": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-N06-id128-unknown-field/input/value.pb",
+        "sha256": "190eb8577c354f7e783649750f4ab33fd8438be8afec122580b174f6d2963233"
+      },
+      "case": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-N06-id128-unknown-field/case.json",
+        "sha256": "1f32e6a5ca2c2e553d1bc864d06c3442a92b0436a26514c175b3e12cd41e6aaa"
+      },
+      "accepted": false,
+      "canonical_hex": null,
+      "category": "UNKNOWN_WIRE_FIELD"
+    },
+    {
+      "id": "BG-N07",
+      "root": "Id128",
+      "input": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-N07-id128-fifteen-byte/input/value.pb",
+        "sha256": "65790e541f7b800b8a19a7516c14e67b5c27f343e32a594498d585ada4c2d264"
+      },
+      "case": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-N07-id128-fifteen-byte/case.json",
+        "sha256": "f745e5ca0670ce9775e95c5bd797a99688c7b4d90c6bba81383d724a54090cc3"
+      },
+      "accepted": false,
+      "canonical_hex": null,
+      "category": "INVALID_ID"
+    },
+    {
+      "id": "BG-N08",
+      "root": "OrderKey",
+      "input": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-N08-order-key-empty/input/value.pb",
+        "sha256": "102b51b9765a56a3e899f7cf0ee38e5251f9c503b357b330a49183eb7b155604"
+      },
+      "case": {
+        "path": "verification/corpus/semantic/v1/wire/bg/BG-N08-order-key-empty/case.json",
+        "sha256": "2dc8ad879ff53ab4e287c9c269cb449043298565154dd796a3052d3e262d896e"
+      },
+      "accepted": false,
+      "canonical_hex": null,
+      "category": "INVARIANT_VIOLATION"
+    }
+  ],
+  "sources": [
+    {
+      "id": "inherited-selection",
+      "source": {
+        "path": "runtime/interaction/tests/selection_session_test.cpp",
+        "sha256": "a04a47c975c766adde66a82dde15fa33e56cf0f8df3b1f10983df02590724031"
+      },
+      "target": "axiom_fc08_selection_regression",
+      "predicates": [
+        "click/toggle deterministic primary",
+        "hidden/locked filter",
+        "deletion prune and existing local cancel"
+      ],
+      "FC08_new_selection_policy_claimed": false
+    },
+    {
+      "id": "inherited-connector",
+      "source": {
+        "path": "runtime/composition/tests/fc05_connector_facade_test.cpp",
+        "sha256": "f4187c4c438e02dab9845e79dc702e8788e608bbbb4ed3a9b9750584c1159329"
+      },
+      "target": "axiom_fc08_connector_regression",
+      "predicates": [
+        "public typed create/routing",
+        "real History Undo/Redo",
+        "generation/canonical invalidation",
+        "close"
+      ],
+      "test_portability_delta": "Only split one mixed size_t/uint64_t auto declaration in build-local copy; original source unchanged"
+    },
+    {
+      "id": "inherited-control",
+      "source": {
+        "path": "runtime/composition/tests/canvas_runtime_facade_test.cpp",
+        "sha256": "233a5139ab19c4e36adc0b4a83574c48e99ce425996ce1c67b8f03370096b656"
+      },
+      "target": "axiom_fc08_control_regression",
+      "predicates": [
+        "real queue/receipt ordering",
+        "close writer lane",
+        "stale target",
+        "full128 readback"
+      ]
+    }
+  ],
+  "mapped_cases": [
+    "FC08-W07",
+    "FC08-K01",
+    "FC08-P04"
+  ],
+  "FC01A_B01_B10": "Retained historical family, not reopened or claimed passed. Only the exact applicable legacy source predicates above are executed; Section-specific geometry remains a future capability obligation.",
+  "mock_History_test_excluded": "runtime/interaction/tests/editor_history_test.cpp uses Submit fake; use public real-owner connector and qualification transitions instead",
+  "reuse_rule": "One raw run may support each mapped assertion on the same profile; no duplicate independence claim",
+  "product_P32_authorized": false
+}

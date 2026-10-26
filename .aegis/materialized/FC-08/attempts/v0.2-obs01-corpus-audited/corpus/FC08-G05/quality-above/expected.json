@@ -1,0 +1,28 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "local_bits",
+      "expected": [
+        "416cccccf0000002",
+        "c16cccccccccccce",
+        "c173333338000000",
+        "4173333333333333",
+        "41ba4cccdde66667",
+        "c1ba4ccccccccccd"
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "quality_ok",
+      "expected": false
+    },
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "UnsupportedPose"
+    }
+  ],
+  "source_case": "FC08-G05",
+  "product_expected_only": true
+}

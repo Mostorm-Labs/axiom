@@ -1,0 +1,16 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "Applied"
+    },
+    {
+      "op": "equal",
+      "path": "unrelated_leaf_content_preserved",
+      "expected": true
+    }
+  ],
+  "source_case": "FC08-T05",
+  "product_expected_only": true
+}

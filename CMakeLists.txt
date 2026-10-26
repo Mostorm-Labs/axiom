@@ -116,6 +116,11 @@ elseif(CANVAS_SKIA_SDK_VARIANT MATCHES "^(debug|asan)$")
 endif()
 
 include(CTest)
+option(AXIOM_FC08_QUALIFICATION_HOOKS "Enable private FC08 owner checkpoints in explicit verification builds" OFF)
+if(AXIOM_FC08_QUALIFICATION_HOOKS AND
+   (NOT BUILD_TESTING OR NOT AXIOM_BUILD_FC08_VERIFICATION))
+  message(FATAL_ERROR "FC08 qualification hooks require BUILD_TESTING and AXIOM_BUILD_FC08_VERIFICATION")
+endif()
 if(AXIOM_BUILD_VERIFICATION)
   add_subdirectory(verification/native/platform)
 endif()

@@ -1,0 +1,19 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "Applied"
+    },
+    {
+      "op": "equal",
+      "path": "retained_leaf_size",
+      "expected": [
+        30.0,
+        40.0
+      ]
+    }
+  ],
+  "source_case": "FC08-H02",
+  "product_expected_only": true
+}

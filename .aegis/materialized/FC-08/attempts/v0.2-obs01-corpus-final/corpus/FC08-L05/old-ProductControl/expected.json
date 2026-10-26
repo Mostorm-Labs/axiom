@@ -1,0 +1,21 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "old_state_meaning_preserved",
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "path": "saved_claim",
+      "expected": false
+    },
+    {
+      "op": "equal",
+      "path": "synced_claim",
+      "expected": false
+    }
+  ],
+  "source_case": "FC08-L05",
+  "product_expected_only": true
+}

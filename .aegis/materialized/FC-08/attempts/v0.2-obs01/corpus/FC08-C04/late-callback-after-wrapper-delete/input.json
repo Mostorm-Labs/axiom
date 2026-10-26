@@ -1,0 +1,63 @@
+{
+  "target": {
+    "runtimeEpoch": 9007199254740993,
+    "viewId": 2,
+    "viewEpoch": 3,
+    "attachmentEpoch": 7
+  },
+  "base_generation": 7,
+  "committed_generation": 8,
+  "base_leaf_x": 10,
+  "preview_dx": 10,
+  "finite_recovery_work": [
+    {
+      "job": 0,
+      "generation": 9
+    },
+    {
+      "job": 1,
+      "generation": 9
+    },
+    {
+      "job": 2,
+      "generation": 9
+    },
+    {
+      "job": 3,
+      "generation": 9
+    }
+  ],
+  "observe_every_handoff": true,
+  "schedule": [
+    {
+      "event": "wrap_committed",
+      "selected": [
+        "S"
+      ]
+    },
+    {
+      "event": "user_selection",
+      "selected": [
+        "T"
+      ]
+    },
+    {
+      "event": "delete-wrapper",
+      "id": {
+        "value": "00000000000000000000000000000006"
+      }
+    },
+    {
+      "event": "late_callback",
+      "selected": [
+        "T"
+      ]
+    },
+    {
+      "event": "later_current_read",
+      "selected": [
+        "T"
+      ]
+    }
+  ]
+}

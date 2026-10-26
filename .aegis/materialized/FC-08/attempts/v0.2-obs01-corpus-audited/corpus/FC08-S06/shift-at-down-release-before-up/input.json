@@ -1,0 +1,306 @@
+{
+  "graph": {
+    "S": {
+      "kind": "Section",
+      "parent": null,
+      "boundary": [
+        -100,
+        -100,
+        300,
+        300
+      ]
+    },
+    "a": {
+      "kind": "Shape",
+      "parent": "S",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        10,
+        10
+      ],
+      "local_rect": [
+        0,
+        0,
+        2,
+        2
+      ]
+    },
+    "b": {
+      "kind": "Shape",
+      "parent": "S",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        50,
+        50
+      ],
+      "local_rect": [
+        0,
+        0,
+        10,
+        10
+      ],
+      "hidden": true
+    },
+    "C": {
+      "kind": "Shape",
+      "parent": "S",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        80,
+        80
+      ],
+      "local_rect": [
+        0,
+        0,
+        5,
+        5
+      ],
+      "locked": true
+    },
+    "X": {
+      "kind": "Shape",
+      "parent": null,
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        200,
+        200
+      ],
+      "local_rect": [
+        0,
+        0,
+        10,
+        10
+      ]
+    }
+  },
+  "kind_geometry": {
+    "a": "rectangle",
+    "b": "ellipse"
+  },
+  "before_selection": [
+    {
+      "value": "0000000000000000000000000000000c"
+    }
+  ],
+  "scope": null,
+  "input": {
+    "source": "mouse",
+    "pointer": 1,
+    "generation": 7,
+    "shift_at_down": true
+  },
+  "primary_before": {
+    "value": "0000000000000000000000000000000c"
+  },
+  "schedule": [
+    "Down+Shift",
+    "Move",
+    "ShiftReleased",
+    "Up"
+  ],
+  "region": [
+    [
+      -1,
+      -1
+    ],
+    [
+      101,
+      -1
+    ],
+    [
+      101,
+      101
+    ],
+    [
+      -1,
+      101
+    ]
+  ],
+  "records": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000003"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "00000003"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 80,
+        "ty": 80
+      },
+      "properties": {
+        "entries": [
+          {
+            "field_id": 2,
+            "value": {
+              "bool_value": true
+            }
+          }
+        ]
+      },
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 5,
+          "height": 5
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000006"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000006"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": -100,
+            "y": -100,
+            "width": 300,
+            "height": 300
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000009"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "00000009"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 10,
+        "ty": 10
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 2,
+          "height": 2
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "0000000000000000000000000000000a"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "0000000a"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 50,
+        "ty": 50
+      },
+      "properties": {
+        "entries": [
+          {
+            "field_id": 1,
+            "value": {
+              "bool_value": false
+            }
+          }
+        ]
+      },
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 10,
+          "height": 10
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "0000000000000000000000000000000c"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "0000000c"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 200,
+        "ty": 200
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 10,
+          "height": 10
+        }
+      }
+    }
+  ]
+}

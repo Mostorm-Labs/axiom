@@ -1,0 +1,16 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "accepted",
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "path": "decoded.title_utf8",
+      "expected": "20090a20"
+    }
+  ],
+  "source_case": "FC08-W02",
+  "product_expected_only": true
+}

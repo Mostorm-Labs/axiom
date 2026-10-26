@@ -1,0 +1,52 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "object_id",
+      "expected": {
+        "value": "10000000000000000020000000000001"
+      }
+    },
+    {
+      "op": "equal",
+      "path": "view_logical",
+      "expected": [
+        50,
+        60
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "world",
+      "expected": [
+        20,
+        20
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "local",
+      "expected": [
+        15,
+        15
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "preedit_operation_count",
+      "expected": 0
+    },
+    {
+      "op": "equal",
+      "path": "confirmed_title",
+      "expected": "中文 é Axiom"
+    },
+    {
+      "op": "equal",
+      "path": "one_coordinate_map",
+      "expected": true
+    }
+  ],
+  "source_case": "FC08-P02",
+  "product_expected_only": true
+}

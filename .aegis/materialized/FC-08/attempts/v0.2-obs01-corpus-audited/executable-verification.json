@@ -1,0 +1,12 @@
+{
+  "format": "fc08-executable-verification-v2",
+  "corpus_manifest": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-audited/corpus-manifest.json",
+  "runner": "tools/fc08/run_verification.py",
+  "oracle": "tests/fc08/reference/oracles.py",
+  "profiles": [
+    "windows-native",
+    "web-wasm",
+    "headless"
+  ],
+  "product_P32_authorized": false
+}

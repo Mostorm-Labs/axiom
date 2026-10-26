@@ -1,0 +1,21 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "history.size",
+      "expected": 0
+    },
+    {
+      "op": "equal",
+      "path": "history.cursor",
+      "expected": 0
+    },
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 0
+    }
+  ],
+  "source_case": "FC08-H01",
+  "product_expected_only": true
+}

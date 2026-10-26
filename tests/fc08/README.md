@@ -1,4 +1,45 @@
-# FC08 verification materialization: terminal blocked result
+# FC08 verification materialization v0.2
+
+The current successor uses exact package
+`a0883474790fb5eb70c49c96907caef80fa6b2ab`. Review the results in
+`.aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/` and the current
+`.aegis/materialized/FC-08/executable-verification.json`.
+
+This work adds default-OFF private OBS-01 instrumentation and verification
+hosts/corpora. It does **not** implement Section, operations17/18 or container
+Facade APIs. Future product records explicitly remain CAPABILITY_ABSENT or
+NOT_REACHED_BASELINE, including H06's admitted-plan boundary. Actual inherited
+codec/import/replay/owner regressions are reported separately. No Gate, DEV or
+PHYS PASS is issued; the product package candidate is unauthorized.
+
+Run the fixed entrypoint in a fresh output directory:
+
+```powershell
+python tools/fc08/run_verification.py --design .aegis/materialized/FC-08/executable-verification.json --case all --profile windows-native --output out/fc08/new-native-run
+python tools/fc08/run_verification.py --design .aegis/materialized/FC-08/executable-verification.json --case all --profile web-wasm --output out/fc08/new-browser-run
+python tools/fc08/run_verification.py --design .aegis/materialized/FC-08/executable-verification.json --case all --profile headless --output out/fc08/new-headless-run
+python tools/fc08/check_materialization.py --repo . --attempt v0.2-obs01
+```
+
+`discover` enumerates exact IDs. `--case FC08-T01` selects every variant of that
+logical case. Exit0 collects materialization observations; inspect each row's
+product_status. An old reader's unknown-field rejection never qualifies a
+future product negative. The WASM runner launches real Chrome; Node is only a
+loopback/CDP transport. Headless replay creates no EditorHistory owner.
+
+Qualification builds require BUILD_TESTING, AXIOM_BUILD_FC08_VERIFICATION and
+AXIOM_FC08_QUALIFICATION_HOOKS. The last option defaults OFF. Exact build
+invocations, locked SDK facts, compiler definition audits, actual binary hashes,
+raw probes, independent controls and original failures are retained in the
+successor attempt. Compiler/SDK installation paths in recorded invocations
+describe this machine and must be resolved locally on another machine.
+
+Earlier corpus attempt directories are authoring history, not accepted goldens.
+Only the manifest selected by executable-verification.json is the current
+candidate. The historical v0.1 record below is preserved, not retroactively
+changed to success.
+
+## Historical v0.1 terminal blocked result
 
 This is verification-only work from exact package
 `db21441a1e978ea30fcfb4185691dadbb6f81f78`. It does not implement FC08.

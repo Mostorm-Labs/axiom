@@ -1,0 +1,184 @@
+{
+  "graph": {
+    "S": {
+      "kind": "Section",
+      "parent": null,
+      "boundary": [
+        1000,
+        1000,
+        100,
+        100
+      ]
+    },
+    "a": {
+      "kind": "Shape",
+      "parent": "S",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        10,
+        10
+      ],
+      "local_rect": [
+        0,
+        0,
+        20,
+        10
+      ]
+    }
+  },
+  "viewport": [
+    0,
+    0,
+    200,
+    200
+  ],
+  "generation": 7,
+  "target": {
+    "runtimeEpoch": 9007199254740993,
+    "viewId": 2,
+    "viewEpoch": 3,
+    "attachmentEpoch": 7
+  },
+  "faults": [
+    {
+      "phase": "spatial-prepare",
+      "once": true
+    }
+  ],
+  "forward": {
+    "operation_id": {
+      "value": "000000000000000000000000000003e9"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "edit_container_topology": {
+        "guard": {
+          "nodes": [
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000009"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "00000009"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              }
+            }
+          ],
+          "child_sets": [
+            {
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000009"
+                  },
+                  "order_key": {
+                    "value": "00000009"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "relocations": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000009"
+            },
+            "placement_after": {
+              "parent_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "order_key": {
+                "value": "00000009"
+              }
+            },
+            "transform_after": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 0,
+              "ty": 0
+            }
+          }
+        ],
+        "order_only_edits": [],
+        "introduce_wrappers": {
+          "containers": [
+            {
+              "id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement": {
+                "order_key": {
+                  "value": "00000006"
+                }
+              },
+              "transform": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              },
+              "properties": {},
+              "content": {
+                "section": {
+                  "boundary": {
+                    "x": -20,
+                    "y": 0,
+                    "width": 120,
+                    "height": 80
+                  },
+                  "title": "",
+                  "padding": 8.0,
+                  "header_height": 20.0
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "schedule": [
+    {
+      "action": "commit-F"
+    },
+    {
+      "action": "projection-prepare-fails",
+      "phase": "spatial-prepare"
+    },
+    {
+      "action": "commit-newer-generation"
+    },
+    {
+      "action": "remove-faults"
+    },
+    {
+      "action": "drain-finite-recovery",
+      "work_items": 64
+    }
+  ]
+}

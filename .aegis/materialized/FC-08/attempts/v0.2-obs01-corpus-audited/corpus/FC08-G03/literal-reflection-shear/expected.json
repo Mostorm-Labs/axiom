@@ -1,0 +1,26 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "world_bits",
+      "expected": [
+        "bff0000000000000",
+        "0000000000000000",
+        "3fe0000000000000",
+        "3ff0000000000000",
+        "4022000000000000",
+        "4000000000000000"
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "world_point",
+      "expected": [
+        8,
+        6
+      ]
+    }
+  ],
+  "source_case": "FC08-G03",
+  "product_expected_only": true
+}

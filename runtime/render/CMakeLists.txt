@@ -110,8 +110,17 @@ if(MSVC)
 else()
     target_compile_options(canvas_runtime_render PRIVATE -Wall -Wextra -Wpedantic -Werror)
     if(EMSCRIPTEN)
-        target_compile_options(canvas_runtime_render PRIVATE
-            -Wno-missing-designated-field-initializers)
+        include(CheckCXXCompilerFlag)
+        include(CMakePushCheckState)
+        cmake_push_check_state(RESET)
+        set(CMAKE_REQUIRED_FLAGS "-Werror")
+        check_cxx_compiler_flag("-Wno-missing-designated-field-initializers"
+            AXIOM_HAVE_MISSING_DESIGNATED_FIELD_SUPPRESSION)
+        cmake_pop_check_state()
+        if(AXIOM_HAVE_MISSING_DESIGNATED_FIELD_SUPPRESSION)
+            target_compile_options(canvas_runtime_render PRIVATE
+                -Wno-missing-designated-field-initializers)
+        endif()
     endif()
 endif()
 

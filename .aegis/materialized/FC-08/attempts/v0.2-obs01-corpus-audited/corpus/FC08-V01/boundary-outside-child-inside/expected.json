@@ -1,0 +1,25 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "child_draw_present",
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "path": "query_ids",
+      "expected": [
+        {
+          "value": "00000000000000000000000000000009"
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "Section_own_boundary_visible",
+      "expected": false
+    }
+  ],
+  "source_case": "FC08-V01",
+  "product_expected_only": true
+}

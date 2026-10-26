@@ -1,0 +1,26 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "HistoryConflict"
+    },
+    {
+      "op": "equal",
+      "path": "history.cursor",
+      "expected": 1
+    },
+    {
+      "op": "equal",
+      "path": "history.size",
+      "expected": 1
+    },
+    {
+      "op": "unchanged",
+      "before": "before_undo",
+      "after": "after_undo"
+    }
+  ],
+  "source_case": "FC08-H02",
+  "product_expected_only": true
+}

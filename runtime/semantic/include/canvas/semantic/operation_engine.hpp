@@ -10,6 +10,11 @@
 #include <cstdint>
 #include <optional>
 
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+#include <memory>
+namespace canvas::qualification { struct State; class Access; }
+#endif
+
 namespace canvas::semantic {
 
 class AppliedOperationLedger;
@@ -37,6 +42,10 @@ struct ApplyResult final {
 };
 
 class OperationEngine final {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    friend class canvas::qualification::Access;
+    std::shared_ptr<canvas::qualification::State> fc08Qualification_;
+#endif
   public:
     [[nodiscard]] PrepareResult prepare(
         const Operation& operation,

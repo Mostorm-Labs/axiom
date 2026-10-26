@@ -1,0 +1,84 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "history_timeline",
+      "expected": [
+        {
+          "size": 1,
+          "cursor": 1
+        },
+        {
+          "size": 1,
+          "cursor": 0
+        },
+        {
+          "size": 1,
+          "cursor": 1
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 3
+    },
+    {
+      "op": "equal",
+      "path": "emitted_operation_ids",
+      "expected": [
+        {
+          "value": "000000000000000000000000000003e9"
+        },
+        {
+          "value": "000000000000000000000000000003ea"
+        },
+        {
+          "value": "000000000000000000000000000003eb"
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "undo_records",
+      "expected": [
+        {
+          "id": {
+            "value": "00000000000000000000000000000006"
+          },
+          "kind_id": 10,
+          "kind_version": 1,
+          "placement": {
+            "order_key": {
+              "value": "00000006"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 0,
+            "ty": 0
+          },
+          "properties": {},
+          "content": {
+            "section": {
+              "boundary": {
+                "x": -20,
+                "y": 0,
+                "width": 120,
+                "height": 80
+              },
+              "title": "",
+              "padding": 8.0,
+              "header_height": 20.0
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "source_case": "FC08-H01",
+  "product_expected_only": true
+}

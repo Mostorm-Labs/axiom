@@ -1,0 +1,20 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "written_ids",
+      "expected": [
+        {
+          "value": "1000000000000000000000000000002a"
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "other_target_unchanged",
+      "expected": true
+    }
+  ],
+  "source_case": "FC08-L02",
+  "product_expected_only": true
+}

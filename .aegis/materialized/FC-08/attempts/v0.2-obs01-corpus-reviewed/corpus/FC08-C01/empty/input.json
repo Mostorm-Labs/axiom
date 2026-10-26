@@ -1,0 +1,53 @@
+{
+  "target": {
+    "runtimeEpoch": 9007199254740993,
+    "viewId": 2,
+    "viewEpoch": 3,
+    "attachmentEpoch": 7
+  },
+  "base_generation": 7,
+  "committed_generation": 8,
+  "base_leaf_x": 10,
+  "preview_dx": 10,
+  "finite_recovery_work": [
+    {
+      "job": 0,
+      "generation": 9
+    },
+    {
+      "job": 1,
+      "generation": 9
+    },
+    {
+      "job": 2,
+      "generation": 9
+    },
+    {
+      "job": 3,
+      "generation": 9
+    }
+  ],
+  "observe_every_handoff": true,
+  "schedule": [
+    {
+      "action": "preview",
+      "x": 20
+    },
+    {
+      "action": "commit",
+      "generation": 8
+    },
+    {
+      "action": "delay-generation",
+      "generation": 8
+    },
+    {
+      "action": "recover",
+      "generation": 9
+    },
+    {
+      "action": "drain-declared-work"
+    }
+  ],
+  "independent_control_trace": []
+}

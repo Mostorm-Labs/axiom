@@ -1,0 +1,21 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "second_commit_delta",
+      "expected": 0
+    },
+    {
+      "op": "equal",
+      "path": "second_history_delta",
+      "expected": 0
+    },
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "Rejected"
+    }
+  ],
+  "source_case": "FC08-H08",
+  "product_expected_only": true
+}

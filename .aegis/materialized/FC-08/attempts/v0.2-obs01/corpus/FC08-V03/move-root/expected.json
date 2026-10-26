@@ -1,0 +1,57 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "child_world_rect",
+      "expected": [
+        20,
+        10,
+        20,
+        10
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "damage_covers",
+      "expected": [
+        [
+          10,
+          10,
+          20,
+          10
+        ],
+        [
+          20,
+          10,
+          20,
+          10
+        ]
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "affected_ids",
+      "expected": [
+        {
+          "value": "00000000000000000000000000000005"
+        },
+        {
+          "value": "00000000000000000000000000000006"
+        },
+        {
+          "value": "00000000000000000000000000000009"
+        },
+        {
+          "value": "00000000000000000000000000000032"
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "render_query_geometry_same_basis",
+      "expected": true
+    }
+  ],
+  "source_case": "FC08-V03",
+  "product_expected_only": true
+}

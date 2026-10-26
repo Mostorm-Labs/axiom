@@ -1,0 +1,21 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 1
+    },
+    {
+      "op": "equal",
+      "path": "new_execution_on_retry",
+      "expected": false
+    },
+    {
+      "op": "equal",
+      "path": "retry_outcome",
+      "expected": "Collision"
+    }
+  ],
+  "source_case": "FC08-L03",
+  "product_expected_only": true
+}

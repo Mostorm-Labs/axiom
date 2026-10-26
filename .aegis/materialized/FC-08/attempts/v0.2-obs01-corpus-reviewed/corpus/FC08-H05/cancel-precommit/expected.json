@@ -1,0 +1,26 @@
+{
+  "predicates": [
+    {
+      "op": "unchanged",
+      "before": "before",
+      "after": "after"
+    },
+    {
+      "op": "equal",
+      "path": "history.size",
+      "expected": 2
+    },
+    {
+      "op": "equal",
+      "path": "history.cursor",
+      "expected": 1
+    },
+    {
+      "op": "equal",
+      "path": "reservation_released_once",
+      "expected": true
+    }
+  ],
+  "source_case": "FC08-H05",
+  "product_expected_only": true
+}

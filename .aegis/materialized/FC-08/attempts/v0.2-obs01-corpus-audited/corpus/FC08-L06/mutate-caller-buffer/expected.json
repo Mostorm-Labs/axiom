@@ -1,0 +1,21 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 1
+    },
+    {
+      "op": "equal",
+      "path": "caller_memory_borrowed",
+      "expected": false
+    },
+    {
+      "op": "equal",
+      "path": "post_close_commit",
+      "expected": false
+    }
+  ],
+  "source_case": "FC08-L06",
+  "product_expected_only": true
+}

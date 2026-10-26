@@ -6,6 +6,9 @@
 #include "canvas/semantic/resource_manifest.hpp"
 
 #include <cstdint>
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+namespace canvas::qualification { struct ApplyContext; }
+#endif
 
 namespace canvas::semantic::internal {
 
@@ -20,20 +23,36 @@ struct AtomicApplyResult final {
 
 [[nodiscard]] AtomicApplyResult applyPreparedPlan(
     ReferenceObjectStore& store,
-    const PreparedApplyPlan& plan);
+    const PreparedApplyPlan& plan
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    , const canvas::qualification::ApplyContext* context = nullptr
+#endif
+    );
 
 [[nodiscard]] AtomicApplyResult applyPreparedPlan(
     IndexedObjectStore& store,
-    const PreparedApplyPlan& plan);
+    const PreparedApplyPlan& plan
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    , const canvas::qualification::ApplyContext* context = nullptr
+#endif
+    );
 
 [[nodiscard]] AtomicApplyResult applyPreparedPlan(
     ReferenceObjectStore& store,
     ResourceManifest& manifest,
-    const PreparedApplyPlan& plan);
+    const PreparedApplyPlan& plan
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    , const canvas::qualification::ApplyContext* context = nullptr
+#endif
+    );
 
 [[nodiscard]] AtomicApplyResult applyPreparedPlan(
     IndexedObjectStore& store,
     ResourceManifest& manifest,
-    const PreparedApplyPlan& plan);
+    const PreparedApplyPlan& plan
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    , const canvas::qualification::ApplyContext* context = nullptr
+#endif
+    );
 
 } // namespace canvas::semantic::internal

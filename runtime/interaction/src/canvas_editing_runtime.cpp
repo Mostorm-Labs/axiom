@@ -1,6 +1,9 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 
 #include "canvas/semantic/brush_engine_codec.hpp"
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+#include "qualification_checkpoint.hpp"
+#endif
 #include "canvas/semantic/commit_publication_projection.hpp"
 #include "canvas/scene/direct_render_scene.hpp"
 #include "canvas/scene/uniform_grid_spatial_index.hpp"
@@ -413,6 +416,9 @@ bool CanvasEditingRuntime::registerInputSource(input::InputSourceId source,
 }
 
 void CanvasEditingRuntime::close() noexcept {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+  canvas::qualification::deactivateGroup(fc08Qualification_.get());
+#endif
   if (closed_) return;
   cancelConnectorRouting();
   if (surfaceTransitionActive_) {
@@ -1247,6 +1253,9 @@ void CanvasEditingRuntime::onSessionCancel(
 }
 
 void CanvasEditingRuntime::cancelAllPointers() noexcept {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+  canvas::qualification::clearGroup(fc08Qualification_.get());
+#endif
   cancelConnectorRouting();
   textPointerKeys_.clear();
   resetTouchTextTap();
@@ -1537,6 +1546,10 @@ bool CanvasEditingRuntime::applyResourceManifestOperation(const semantic::Operat
 
 bool CanvasEditingRuntime::applyLocalHistoryOperation(
     semantic::Operation forward, semantic::Operation inverse) noexcept {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+  if (canvas::qualification::observing(fc08Qualification_)) return false;
+  canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
+#endif
   if (!canonicalWriteAdmission()) return false;
   if (!historySceneReady() || forward.id.isZero() || inverse.id.isZero()) return false;
   const auto prepared=operationEngine_.prepare(forward,{semanticObjects_,appliedOperations_,resourceManifestPort_});
@@ -1561,6 +1574,12 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
   for(const auto id:prepared.plan->deletes)capture(id,nullptr);
   auto historyEntry=history_.prepareRecord(forward,{inverse},std::move(before),std::move(after));
   if(!historyEntry) return false;
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+  const canvas::qualification::ApplyContext fc08Context{fc08Qualification_.get(), this,
+      semanticGeneration_.current().value(), canonicalCommitClock_.lastCommittedOrdinal().value(),
+      canvas::qualification::kApplyPlan | canvas::qualification::kHistoryEntry};
+  if (canvas::qualification::notify(&fc08Context, canvas::qualification::Point::kCmdAdmitted, forward)) return false;
+#endif
   const auto applied = resourceManifestPort_
       ? operationEngine_.apply(forward, semantic::ApplySource::kLocalInteraction, semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_)
       : operationEngine_.apply(forward, semantic::ApplySource::kLocalInteraction, semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);

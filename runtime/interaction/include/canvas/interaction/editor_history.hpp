@@ -9,6 +9,11 @@
 #include <span>
 #include <vector>
 
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+#include <memory>
+namespace canvas::qualification { struct State; class Access; }
+#endif
+
 namespace canvas::interaction {
 
 enum class HistoryAspect : std::uint8_t { kWholeRecord, kTransform, kSize, kPlacement, kProperties, kRichTextContent };
@@ -40,6 +45,10 @@ class HistorySubmitPort {
 };
 
 class EditorHistory final {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    friend class canvas::qualification::Access;
+    std::shared_ptr<canvas::qualification::State> fc08Qualification_;
+#endif
   public:
     struct PreparedEntry final {
         semantic::Operation forward;

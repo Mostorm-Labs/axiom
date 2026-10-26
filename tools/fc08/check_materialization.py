@@ -16,6 +16,7 @@ def main():
     parser.add_argument('--repo',type=Path,required=True)
     parser.add_argument('--output',type=Path)
     parser.add_argument('--manifest',type=Path)
+    parser.add_argument('--attempt',help='Exact successor attempt directory, e.g. v0.2-obs01; omitted preserves the historical v0.1 check')
     args = parser.parse_args()
     repo = args.repo.resolve()
     mat = repo/'.aegis/materialized/FC-08'
@@ -43,7 +44,12 @@ def main():
     unknown = subprocess.check_output([git,'ls-files','--others','--exclude-standard'],cwd=repo,text=True).splitlines()
     prefixes = ('.aegis/materialized/FC-08/','.aegis/results/FC-08-VERIFY-MATERIALIZE/','tests/fc08/','tools/fc08/')
     exception = '.aegis/packages/FC-08-VERIFY-MATERIALIZE/accepted-inputs.zip'
-    forbidden = [p for p in changed+unknown if p != 'CMakeLists.txt' and p != exception and not p.startswith(prefixes)]
+    runtime_allow=[]
+    if args.attempt:
+        contract=json.loads((repo/'.aegis/packages/FC-08-VERIFY-MATERIALIZE-v0.2/execution-contract.json').read_text(encoding='utf-8'))
+        runtime_allow=contract['implementation']['qualification_only_runtime_scope']['allowed_runtime_files']+[
+            'runtime/semantic/CMakeLists.txt','runtime/interaction/CMakeLists.txt','runtime/composition/CMakeLists.txt','runtime/render/CMakeLists.txt']
+    forbidden = [p for p in changed+unknown if p != 'CMakeLists.txt' and p != exception and p not in runtime_allow and not p.startswith(prefixes)]
     if forbidden: errors.append('out-of-scope changes: '+str(forbidden))
     if args.manifest:
         manifest = json.loads(args.manifest.read_text())
@@ -52,6 +58,25 @@ def main():
             actual = hashlib.sha256(subprocess.check_output([git,'show',':'+item['path']],cwd=repo)).hexdigest() if item.get('content_basis') == 'git-index-blob' else sha(path) if path.is_file() else None
             if actual != item['sha256']:
                 errors.append('output manifest mismatch: '+item['path'])
+    if args.attempt:
+        attempt=(results/'attempts'/args.attempt).resolve()
+        if attempt.parent!=(results/'attempts').resolve():raise ValueError('attempt must be an exact directory name')
+        readiness=json.loads((attempt/'readiness.json').read_text(encoding='utf-8'))
+        design=json.loads((mat/'executable-verification.json').read_text(encoding='utf-8'))
+        corpus=json.loads((repo/design['corpus_manifest']).read_text(encoding='utf-8'))
+        for row in corpus['variants']:
+            for item in [row['input'],row['expected'],*[w for w in row['wire'] if 'path' in w]]:
+                if sha(repo/item['path'])!=item['sha256']:errors.append('corpus identity mismatch: '+item['path'])
+        state='INTEGRITY_FAILURE' if errors else readiness['status']
+        output={'format':'fc08-materialization-check-v2','attempt':args.attempt,'status':state,'integrity_errors':errors,
+            'M01_artifact_integrity':not errors,'M02_complete':readiness['M02_artifacts_bound'],
+            'M03_runner_bound':readiness['M03_real_baseline_hooks_and_runner_bound'],
+            'M04_profiles_bound':readiness['M04_profiles_and_retained_regressions_bound'],
+            'ready_for_control_review':not errors and state=='READY_FOR_CONTROL_REVIEW','product_P32_authorized':False,'gate_pass_claimed':False}
+        text=json.dumps(output,indent=2)+'\n'
+        if args.output:args.output.write_text(text,encoding='utf-8')
+        print(text,end='')
+        return 0 if output['ready_for_control_review'] else 1
     terminal = json.loads((results/'terminal-result.json').read_text())
     corpus = json.loads((mat/'corpus-status.json').read_text())
     state = 'INTEGRITY_FAILURE' if errors else terminal['terminal_state']

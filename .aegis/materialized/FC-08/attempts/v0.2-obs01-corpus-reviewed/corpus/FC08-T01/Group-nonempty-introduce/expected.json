@@ -1,0 +1,77 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "canonical.records",
+      "expected": [
+        {
+          "id": {
+            "value": "00000000000000000000000000000006"
+          },
+          "kind_id": 9,
+          "kind_version": 1,
+          "placement": {
+            "order_key": {
+              "value": "00000006"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 0,
+            "ty": 0
+          },
+          "properties": {},
+          "content": {
+            "group": {}
+          }
+        },
+        {
+          "id": {
+            "value": "00000000000000000000000000000009"
+          },
+          "kind_id": 1,
+          "kind_version": 1,
+          "placement": {
+            "parent_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "order_key": {
+              "value": "00000009"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 0,
+            "ty": 0
+          },
+          "properties": {},
+          "content": {
+            "shape": {
+              "shape_kind": 1,
+              "width": 20.0,
+              "height": 20.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "Applied"
+    },
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 1
+    }
+  ],
+  "source_case": "FC08-T01",
+  "product_expected_only": true
+}
