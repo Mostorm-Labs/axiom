@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 BASE = 'af1aff801369052eb7b94716f6b4ab3e899eb3e9'
-PKG = '.aegis/packages/FC-08-SECTION-DE-v0.5'
+PKG = '.aegis/packages/FC-08-SECTION-DE-v0.6'
 RESULT = '.aegis/results/FC-08-SECTION-DE'
 BRANCH = 'refs/heads/codex/fc08-section-scene-host'
 
