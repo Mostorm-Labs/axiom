@@ -1,0 +1,59 @@
+{
+  "format": "aegis-repo-local-execution-package-v1",
+  "package_id": "FC-08-P31-BOOTSTRAP-v0.2",
+  "task_id": "FC-08-P31-BOOTSTRAP",
+  "stage": "P31_VERIFICATION_BOOTSTRAP",
+  "status": "AUTHORIZED_BOUNDED_VERIFICATION_BOOTSTRAP",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "repository_id": 1306396623
+  },
+  "execution_ref": "refs/heads/codex/fc08-p20-p31-closure",
+  "task_anchor": {
+    "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "revision": "0d13b63702facc1534e815643c3bc6085d9c6618",
+    "completed_through": [
+      "Candidate inputs/matrix audited and published; human acceptance now recorded"
+    ],
+    "next_action": "Run both exact revised package preflights, then design binding and actual runner/RED"
+  },
+  "authorized_work": "verification_bootstrap_only",
+  "product_P32_authorized": false,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "parent_product_package": {
+    "path": ".aegis/packages/FC-08-PRODUCT-P31-v0.1/package.json",
+    "sha256": "16bf27433764def988bbff5eb925f08816c42f32842e23a4b33e46976c2df165",
+    "size": 3373,
+    "revision": "f67b9db29090449799bd3e05ef7f1d269dab6d31"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "f82ec1a0fe863d4665e186ed2db2eb639ae2855d01af8b9e452132321ec85ccb"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "863e3de1656275355741018573f3dc3e8045ba27dbe6564e002a3ffdf2fd7ae6"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "0082b69de9b276e819c38b1b4d0968b99394f078c61a1190a5d2a50298401217"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "066a2d5f79c70279b1ceff43ce5c06c8b2cd972e4c666be082dbdfde969ba6c8"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "7c83e12632248f39a00acbc042155a5b4aa5b5acdef749bddee26e8381417edd"
+  },
+  "acceptance_ref": {
+    "path": "acceptance.json",
+    "sha256": "e075131a325c75584a36c5e56eafeaab63457bbe3afb58e4afd132e5065b36e2"
+  }
+}

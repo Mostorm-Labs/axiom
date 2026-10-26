@@ -1,0 +1,66 @@
+{
+  "format": "aegis-execution-closure-contract-v1",
+  "authorized_work": "verification_bootstrap_only",
+  "required_changes": [
+    "Persist exact acceptance and revised immutable input/profile bindings",
+    "Run both exact-revision package preflights in actual worktree with --repo .",
+    "Record accepted owner/source design bindings and real F/U, History reservation, atomic rejection, Scene/recovery and preview handoff",
+    "Establish scoped actual-SUT product runner with independent predicate evaluation and sensitivity tests; retain all302 discovery IDs and no false coverage",
+    "Execute FC08-RED-01 against unmodified427580ae production bytes on Windows Native, actual Chrome/WASM and applicable headless boundary",
+    "Persist all commands, hashes, raw results and exact reviewer-accessible revision, or a precise terminal blocker"
+  ],
+  "allowed_paths": [
+    ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/**",
+    ".aegis/results/FC-08-P20-P31-CLOSURE/**",
+    ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/**",
+    "tools/fc08/accepted_preflight.py",
+    "tools/fc08/product_*.py",
+    "tools/fc08/run_product_verification.py",
+    "tests/fc08/accepted_preflight_test.py",
+    "tests/fc08/product_runner_test.py",
+    "tests/fc08/product/**"
+  ],
+  "forbidden_changes": [
+    "Production runtime/schema/registry/hosts/debug UI/root CMake and SDK locks",
+    "All old packages/results/frozen inputs/expected/oracles/qualification-hook semantics",
+    "Global Aegis registries, main merge, product P32 or DEV/P34/PHYS/release verdicts"
+  ],
+  "red_policy": {
+    "source": "accepted P20 R01/R02/R03 + CR01",
+    "R01": "Actual normal production codec/ingress rejection of independently valid new Section/17/18 positives. Invalid fixture/root, environment/build failure, descriptor/hook/synthetic-only observation never counts as product RED.",
+    "R03": "Missing new workflow/owner is NOT_RUN or NOT_APPLICABLE for predecessor behavior, never advertised as every future temporal behavior observed RED.",
+    "oracle_defect": "Unexpected pass of known-absent positive returns VERIFICATION_DESIGN_DEFECT; no expected rewrite."
+  },
+  "tests": [
+    "Accepted input consistency/independence audit",
+    "Preflight checker negative controls",
+    "Exact PackageBindingPreflight",
+    "Exact EvidenceContractPreflight",
+    "ImplementationDesignPreflight",
+    "Actual runner unit/sensitivity tests",
+    "Actual native/browser/headless RED with normal positive inherited control"
+  ],
+  "hosted_verification": {
+    "required": [],
+    "optional": [
+      "Corroborative CI; no new hosted requirement"
+    ]
+  },
+  "terminal_success": [
+    "Both exact package preflights pass",
+    "Design preflight has no unresolved conflict",
+    "Scoped real runner/tests qualified and real R01 RED recorded on required profiles",
+    "Exact reviewer-accessible result; no product P32 permission"
+  ],
+  "terminal_blockers": [
+    "AUTHORITY_CONFLICT",
+    "VERIFICATION_DESIGN_DEFECT",
+    "TASK_PACKAGE_DEFECT",
+    "BLOCKED_ENVIRONMENT",
+    "MISSING_REAL_OBSERVATION_SEAM",
+    "BLOCKED_EVIDENCE"
+  ],
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "product_P32_authorized": false
+}
