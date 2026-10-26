@@ -81,5 +81,8 @@ class ProductRunnerTest(unittest.TestCase):
     def test_explicit_legacy_import_uses_actual_bootstrap(self):
         self.assertEqual(RUNNER.baseline_observation_mode({'explicit_legacy_import':True},{'root':'DocumentSnapshot'}),'LegacyImport')
 
+    def test_stateful_applicability_is_not_replaced_by_context_free_codec(self):
+        self.assertIsNone(RUNNER.baseline_observation_mode({'before':[{'kind_id':10}],'direction':'normal-wire-ingress'},{'root':'Operation'}))
+
 
 if __name__=='__main__':unittest.main()

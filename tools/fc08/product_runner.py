@@ -188,6 +188,8 @@ def baseline_observation_mode(scenario,wire):
         return None  # Decoder is not a replacement for model-to-writer execution.
     if wire['root']=='DocumentSnapshot':
         return 'LegacyImport' if scenario.get('explicit_legacy_import') is True else None
+    if scenario.get('before'):
+        return None  # No stateful applicability assertion without actual loaded prestate.
     return 'Ingress' if wire['root'] in ['Operation','ObjectRecord'] else None
 
 def execute(args):
