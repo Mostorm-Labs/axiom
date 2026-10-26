@@ -1,0 +1,71 @@
+{
+  "format": "fc08-materialization-profile-recipes-v1",
+  "status": "SOURCE_RESOLVED_RECIPES_NOT_ENVIRONMENT_QUALIFICATION",
+  "source_revision": "a5af5f6d89e8439cc5f70950ba5f1b7986b6ff7b",
+  "read_before_build": [
+    "AGENTS.md",
+    "docs/semantic-sdk-store.md",
+    "docs/architecture/SKIA_SDK_SUPPLY_CHAIN.md"
+  ],
+  "source_blobs": {
+    "AGENTS.md": "1aa99a189613b675d819f4ad2e8217d33eb4c6e4",
+    "CMakeLists.txt": "161511fd4b24505edf52afdef8a6a8427f7cecc3",
+    "CMakePresets.json": "3b070e1f705bba21a95e2d31cb15568867b23ffc",
+    "semantic-sdk.lock.json": "1aa9a0eddc8c7a917287276b466da23c4f9ef589",
+    "tools/setup_build_environment.py": "ae7850456f4152682decb7bd674817d55fe6f020",
+    "tools/semantic/provider.py": "7ed7b1d8916572247921707bfe5f1b9d94eb2d8c"
+  },
+  "semantic_release_set_id": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea",
+  "native_setup": [
+    "python",
+    "tools/setup_build_environment.py",
+    "--core",
+    "--semantic",
+    "--target",
+    "native",
+    "--facts-output",
+    "out/fc08/native-environment.json",
+    "--status"
+  ],
+  "web_setup": [
+    "python",
+    "tools/setup_build_environment.py",
+    "--core",
+    "--semantic",
+    "--target",
+    "web-wasm32",
+    "--facts-output",
+    "out/fc08/web-environment.json",
+    "--status"
+  ],
+  "consumer_cmake_helper": "tools.semantic.cmake_consumer.consumer_cmake_arguments",
+  "required_profiles": [
+    {
+      "id": "windows-native",
+      "host": "real Windows",
+      "semantic_target": "windows-x64-msvc-static",
+      "preset_basis": "g3-windows-release",
+      "need": "Enable actual test hosts in separate FC08 configuration; baseline preset alone has render tests disabled."
+    },
+    {
+      "id": "web-wasm",
+      "host": "real browser via actual WASM adapter",
+      "semantic_target": "web-wasm32",
+      "preset_basis": "g3-web-release",
+      "need": "Record Emscripten, browser version and public adapter invocation; Node-only is insufficient."
+    },
+    {
+      "id": "headless",
+      "host": "supported SDK native host",
+      "semantic_target": "native",
+      "need": "Use actual headless codec/replay path; no Editor History requirement."
+    }
+  ],
+  "unavailable_environment": "Record exact command and error as BLOCKED_ENVIRONMENT; do not replace locked dependencies or declare an unobserved profile bound.",
+  "checks_this_session": {
+    "git_clone": "DNS resolution failed for github.com in container; GitHub connector reads remain available.",
+    "protoc": "not found on PATH",
+    "windows": "not available in this Linux container",
+    "axiom_builds_run": false
+  }
+}
