@@ -1,0 +1,616 @@
+[
+  {
+    "variant_id": "FC08-S01/boundary-full-child-inside",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-inside/input.json",
+      "sha256": "9c9977c1dfca068586503c625a767f956b8795c97613729202ea8bf74c601c5a",
+      "size": 2840
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S01/boundary-full-child-inside/input.json",
+      "sha256": "a44f194efa77f66532af2b648fee16aac8d9f7efbaffb495be26d5f80e660e79",
+      "size": 2840
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-inside/expected.json",
+      "sha256": "4d0051cf58e22de52688039c38a638a45555e7cf3b92cec609fff6b4ca493544",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/records/2/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S01/boundary-full-child-overflow",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-overflow/input.json",
+      "sha256": "26f3e015fba91bc85ff8c086c9022f2e5d854631d59d1cc3a075f3638daebc3d",
+      "size": 2844
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S01/boundary-full-child-overflow/input.json",
+      "sha256": "0df62fcf2755530560ddd65b2f42befb0ba8ad7c6c5f8f5f07dab32c7cd3e1aa",
+      "size": 2844
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-overflow/expected.json",
+      "sha256": "4d0051cf58e22de52688039c38a638a45555e7cf3b92cec609fff6b4ca493544",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/records/2/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S02/partial-actual-child",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S02/partial-actual-child/input.json",
+      "sha256": "a3886a9c7a4a29a5c531ff5111f8cfc7a0465a20af7feeb73c32d068fae85394",
+      "size": 2992
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S02/partial-actual-child/input.json",
+      "sha256": "afec4c271a7ee520ad33d230ba5da035e636c266cf8fb7b61a17cc32a415f42d",
+      "size": 2992
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S02/partial-actual-child/expected.json",
+      "sha256": "5bca5829ae04ee026e29246c08eed774962fd001b8a677f2dd1c7189137ea333",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/records/2/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S02/broad-phase-only-child",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S02/broad-phase-only-child/input.json",
+      "sha256": "a3886a9c7a4a29a5c531ff5111f8cfc7a0465a20af7feeb73c32d068fae85394",
+      "size": 2992
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S02/broad-phase-only-child/input.json",
+      "sha256": "afec4c271a7ee520ad33d230ba5da035e636c266cf8fb7b61a17cc32a415f42d",
+      "size": 2992
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S02/broad-phase-only-child/expected.json",
+      "sha256": "5bca5829ae04ee026e29246c08eed774962fd001b8a677f2dd1c7189137ea333",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/records/2/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S03/outer-partial-inner-full",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/outer-partial-inner-full/input.json",
+      "sha256": "6c85d1c57dffe61faaab551b80d54e8bcfe904263914ed0ed7513b03155f410e",
+      "size": 3816
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S03/outer-partial-inner-full/input.json",
+      "sha256": "6765603ebb2ddd7b7588b5f68e956bd3405621b71ab703568ef518fab64014b1",
+      "size": 3816
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/outer-partial-inner-full/expected.json",
+      "sha256": "ed4e75ce36e92df033c6a3d2d8df85210b53e6edd7b1d8d8af07c3eef5541986",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/records/3/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S03/unopened-Group",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/unopened-Group/input.json",
+      "sha256": "736d9dd06d02b8b5ba940eb9a463821de2e5e1c3d014dd8d36a72081b5fea2bc",
+      "size": 3504
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S03/unopened-Group/input.json",
+      "sha256": "f113200869d45ff3171f9cbb2b8d49b0ef0b60c3dfd435f513e7db602d5115bf",
+      "size": 3504
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/unopened-Group/expected.json",
+      "sha256": "5f4dda53c2feedb017549c96fb42b8265eb12650a6c01e7eb111c8155feba928",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/records/3/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S03/entered-Group",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/entered-Group/input.json",
+      "sha256": "238cba59bf4ae387ba753a678141553ee5826ddcd44b7cc4a8dd88d1284ab28f",
+      "size": 3553
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S03/entered-Group/input.json",
+      "sha256": "b25290228d7fa630208c6697cd6287a098cfde68781f1a7c2cc0c0695e195fd7",
+      "size": 3553
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/entered-Group/expected.json",
+      "sha256": "ed4e75ce36e92df033c6a3d2d8df85210b53e6edd7b1d8d8af07c3eef5541986",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/records/3/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S04/concave-notch",
+    "decision_id": "TRUTH-S04-SEED-RECTANGLES",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S04/concave-notch/input.json",
+      "sha256": "a1efd146a8b44302751adb1f89311bb7f2279e60a8fa7d6e3a63e1f2d26e57f3",
+      "size": 2974
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S04/concave-notch/input.json",
+      "sha256": "0ef0d5262ec27ffc9032be5ec03892706040987c38c3a8124a13b23110e8dc6e",
+      "size": 2968
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S04/concave-notch/expected.json",
+      "sha256": "307ec2085550ec89965d7702893d9f323a4e7c27b03a7d5333fbba268e66b448",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/graph/a/local/4",
+        "old": 10,
+        "new": 9
+      },
+      {
+        "pointer": "/graph/a/local/5",
+        "old": 10,
+        "new": 9
+      },
+      {
+        "pointer": "/graph/b/local/4",
+        "old": 50,
+        "new": 49
+      },
+      {
+        "pointer": "/graph/b/local/5",
+        "old": 50,
+        "new": 49
+      },
+      {
+        "pointer": "/graph/b/local_rect/2",
+        "old": 10,
+        "new": 2
+      },
+      {
+        "pointer": "/graph/b/local_rect/3",
+        "old": 10,
+        "new": 2
+      },
+      {
+        "pointer": "/kind_geometry/b",
+        "old": "ellipse",
+        "new": "rectangle"
+      },
+      {
+        "pointer": "/records/1/transform/tx",
+        "old": 10,
+        "new": 9
+      },
+      {
+        "pointer": "/records/1/transform/ty",
+        "old": 10,
+        "new": 9
+      },
+      {
+        "pointer": "/records/2/content/shape/height",
+        "old": 10,
+        "new": 2
+      },
+      {
+        "pointer": "/records/2/content/shape/width",
+        "old": 10,
+        "new": 2
+      },
+      {
+        "pointer": "/records/2/transform/tx",
+        "old": 50,
+        "new": 49
+      },
+      {
+        "pointer": "/records/2/transform/ty",
+        "old": 50,
+        "new": 49
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S05/child",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/child/input.json",
+      "sha256": "77a5ae695dfed289e53985a4fd253eee0af1bb6ad412d8c025f20901ab9ec957",
+      "size": 2894
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S05/child/input.json",
+      "sha256": "62c334e5912cf9e2f732a4a9cff718785a66ab5e245acc9efe7b9a99a9882674",
+      "size": 2894
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/child/expected.json",
+      "sha256": "81fb006220b17eec8a8bcbfa59b59db942f8953202f700d17cae6c515f158549",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/records/2/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S05/blank-interior",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/blank-interior/input.json",
+      "sha256": "d667d253c14d0aa76b132bbf25ec396dbcf69d5dca923ac70d24d4ad6ad58cc1",
+      "size": 2894
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S05/blank-interior/input.json",
+      "sha256": "99793088cbc1a8582d93a8a95c5627f01c68ea61ee49f52e323e918464894034",
+      "size": 2894
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/blank-interior/expected.json",
+      "sha256": "4b6750237ed62334e81fb855f3be9cbfbfd538aeacb6091075a6537072ec485d",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/records/2/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S05/header",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/header/input.json",
+      "sha256": "91a56fe8aa83b26fcb1b42b6246065016f419dd94ac4db294bc521318b69e52f",
+      "size": 2893
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S05/header/input.json",
+      "sha256": "5061a8c0e762c071f724c5fd03ad979c5c1094de1aeb4630bb154cd6051ee974",
+      "size": 2893
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/header/expected.json",
+      "sha256": "4b6750237ed62334e81fb855f3be9cbfbfd538aeacb6091075a6537072ec485d",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/records/2/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S05/border",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/border/input.json",
+      "sha256": "6b73f4e3e3fa240442cc895bb3a301ea814dd828c3f033e4ac78e85a2545613d",
+      "size": 2893
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S05/border/input.json",
+      "sha256": "9fb3ae2a32705fd1f839a392e0b678fde60a2b6867df7f1eec2e023c0dcb6a1f",
+      "size": 2893
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/border/expected.json",
+      "sha256": "4b6750237ed62334e81fb855f3be9cbfbfd538aeacb6091075a6537072ec485d",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/records/2/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S05/empty-Group-paint",
+    "decision_id": "TRUTH-S05-EMPTY-GRAPH",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/empty-Group-paint/input.json",
+      "sha256": "f3875b2221965e50bcc1c334108f71a00c1e0aac9df4ad52143f06f0a27c7be2",
+      "size": 1889
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S05/empty-Group-paint/input.json",
+      "sha256": "c296c4b9fc243b06516c1961c9333cfc1fe53dd1098e45b77f124b3229df7ea8",
+      "size": 1444
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/empty-Group-paint/expected.json",
+      "sha256": "b7b6dd0b2d68d3f1160a3f20fb602cea17470f812f6a3e775bd83aa8e5e4a821",
+      "size": 344
+    },
+    "changes": [
+      {
+        "pointer": "/graph/G",
+        "new": {
+          "kind": "Group",
+          "parent": null,
+          "local": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        "operation": "add"
+      },
+      {
+        "pointer": "/graph/S",
+        "old": {
+          "kind": "Section",
+          "parent": null,
+          "boundary": [
+            0,
+            0,
+            100,
+            100
+          ]
+        },
+        "operation": "remove"
+      },
+      {
+        "pointer": "/graph/a",
+        "old": {
+          "kind": "Shape",
+          "parent": "S",
+          "local": [
+            1,
+            0,
+            0,
+            1,
+            10,
+            10
+          ],
+          "local_rect": [
+            0,
+            0,
+            2,
+            2
+          ]
+        },
+        "operation": "remove"
+      },
+      {
+        "pointer": "/graph/b",
+        "old": {
+          "kind": "Shape",
+          "parent": "S",
+          "local": [
+            1,
+            0,
+            0,
+            1,
+            40,
+            40
+          ],
+          "local_rect": [
+            0,
+            0,
+            10,
+            10
+          ]
+        },
+        "operation": "remove"
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S05/empty-Group-identity",
+    "decision_id": "TRUTH-S05-EMPTY-GRAPH",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/empty-Group-identity/input.json",
+      "sha256": "cc1eb16c565f63db7f6eae869f3cb77973e422b0af50b17dac1d1c0d0e0a2e4a",
+      "size": 1871
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S05/empty-Group-identity/input.json",
+      "sha256": "91b5a434f75fd228b31de73dde34e2671ac3472a0bfc7b4f6729e60a0b2d0692",
+      "size": 1426
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/empty-Group-identity/expected.json",
+      "sha256": "b13be5c17ae694decafaf2106980a3f5564cebb04186a62bdcbc8ecf818804e0",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/graph/G",
+        "new": {
+          "kind": "Group",
+          "parent": null,
+          "local": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        },
+        "operation": "add"
+      },
+      {
+        "pointer": "/graph/S",
+        "old": {
+          "kind": "Section",
+          "parent": null,
+          "boundary": [
+            0,
+            0,
+            100,
+            100
+          ]
+        },
+        "operation": "remove"
+      },
+      {
+        "pointer": "/graph/a",
+        "old": {
+          "kind": "Shape",
+          "parent": "S",
+          "local": [
+            1,
+            0,
+            0,
+            1,
+            10,
+            10
+          ],
+          "local_rect": [
+            0,
+            0,
+            2,
+            2
+          ]
+        },
+        "operation": "remove"
+      },
+      {
+        "pointer": "/graph/b",
+        "old": {
+          "kind": "Shape",
+          "parent": "S",
+          "local": [
+            1,
+            0,
+            0,
+            1,
+            40,
+            40
+          ],
+          "local_rect": [
+            0,
+            0,
+            10,
+            10
+          ]
+        },
+        "operation": "remove"
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S06/shift-at-down-release-before-up",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S06/shift-at-down-release-before-up/input.json",
+      "sha256": "4ddcbd8ba2045b1e8fbafb5f5e866060ab3933d82579b8b59951f38171c235c2",
+      "size": 5000
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S06/shift-at-down-release-before-up/input.json",
+      "sha256": "cc9b2fe696726f4b7944d81befab86b597af41a43dcc1bb5e98b5249c3c3d1cd",
+      "size": 5000
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S06/shift-at-down-release-before-up/expected.json",
+      "sha256": "bb2d38121d4ceee98a380a4cd76fe1f2001a18fed246a0f7454c4fba51651046",
+      "size": 557
+    },
+    "changes": [
+      {
+        "pointer": "/records/3/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  },
+  {
+    "variant_id": "FC08-S06/cancel",
+    "decision_id": "TRUTH-SHARED-ELLIPSE",
+    "old_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S06/cancel/input.json",
+      "sha256": "bde58f743426d1a554470f327b0332493e020f8406d64e9f9d85a25433af69c0",
+      "size": 5004
+    },
+    "new_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus/FC08-S06/cancel/input.json",
+      "sha256": "99862927d8ddb0fb15512bff4c174bed3cc5a941ffad7f23e411c43319f15aae",
+      "size": 5004
+    },
+    "expected_unchanged": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S06/cancel/expected.json",
+      "sha256": "ed0d01fc03cc503f4b62050daefb8f46711974b943eb9e64e07bb65b0339e4ed",
+      "size": 482
+    },
+    "changes": [
+      {
+        "pointer": "/records/3/content/shape/shape_kind",
+        "old": 1,
+        "new": 2
+      }
+    ]
+  }
+]

@@ -1,0 +1,48 @@
+{
+  "format": "fc08-source-truth-proposal-v1",
+  "status": "PROPOSED_PENDING_ACCEPTANCE",
+  "accepted": false,
+  "owner": "P20 Verification / control review",
+  "sources": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation/source-bindings.json",
+    "sha256": "7bae9f5b5221a392337e2448589d6cec6b3e695eb866fcf9d631115a1f49a816",
+    "size": 3852
+  },
+  "change_ledger": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation/input-change-ledger.json",
+    "sha256": "e9ef9f5c247fbb171cb3f1c44f90f4716a81fd55b9ee80ae8b05068c94fa157c",
+    "size": 15058
+  },
+  "decisions": [
+    {
+      "id": "TRUTH-SHARED-ELLIPSE",
+      "disposition": "PROPOSE_VERSIONED_INPUT_CORRECTION",
+      "rule": "For S01/S02/S03/nonempty S05/S06, preserve authored kind_geometry.b=ellipse and correct canonical record shape_kind to2.",
+      "basis": "selection_variant authors the shared ellipse explicitly; S02 comment and exact AABB-vs-curve obligation distinguish it from rectangle. objects(graph) loses the specialization by using generic record Shape default1. Other shared cases do not constrain a different primitive.",
+      "independent_numeric_witness": {
+        "ellipse_bbox": [
+          40,
+          40,
+          10,
+          10
+        ],
+        "lasso_max": [
+          41,
+          41
+        ],
+        "nearest_normalized_squared_distance": "32/25 > 1"
+      },
+      "ambiguity_policy": "This source-backed choice is a proposal, not inferred authority acceptance."
+    },
+    {
+      "id": "TRUTH-S04-SEED-RECTANGLES",
+      "disposition": "PROPOSE_VERSIONED_INPUT_CORRECTION",
+      "rule": "Use concave-region.json original rectangle bounds: a[9,9,2,2], b[49,49,2,2], graph and canonical records; both shape_kind1.",
+      "basis": "Accepted catalog explicitly names that literal seed; generator imports polygon but substitutes shared shapes/positions. Literal seed is the case-specific authored truth proposed here, ahead of generic generator defaults.",
+      "independent_numeric_witness": "A center(10,10) is inside; B rectangle[49,49,2,2] is strictly inside excluded notch x40..60,y40..110. Section corners are inside but notch crosses interior."
+    }
+  ],
+  "expected_policy": "All 302 expected bindings and bytes unchanged. No expected file recomputed, no old oracle edited, no production SUT consulted.",
+  "unaffected_policy": "No b record in two empty-Group variants: leave those inputs, including unused geometry metadata, byte-identical.",
+  "gate": "Requires explicit control acceptance of this truth proposal and the complete matrix before revised P31 preflights or product RED."
+}
