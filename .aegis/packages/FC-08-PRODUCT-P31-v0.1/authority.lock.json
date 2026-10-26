@@ -168,6 +168,15 @@
       "sha256": "da62f3c6c6a7191b01ba7ba4713290acaea26755ef2971fe62475cb101c9b268",
       "logical_cases": 60,
       "families": 10
+    },
+    "physical_debt": {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/physical-debt.json",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "8a88d558c4e78e61b13a98e145b84c32c47fcf68",
+      "gate": "FC13_PHYS",
+      "status": "DEFERRED_NOT_EXECUTED",
+      "blocks_FC08_DEV": false,
+      "not_waived": true
     }
   },
   "source_complete_materialization": {
@@ -177,7 +186,8 @@
     "terminal_state": "READY_FOR_CONTROL_REVIEW",
     "source_index": {
       "path": ".aegis/materialized/FC-08/source-index.json",
-      "sha256": "bad8a3e85dbd344ac7c6eb0d60aae0c6d01c58a0b8359aa80b53426b7b43a569"
+      "sha256": "bad8a3e85dbd344ac7c6eb0d60aae0c6d01c58a0b8359aa80b53426b7b43a569",
+      "git_blob_sha": "9a92917ff83089855ae88c4eb8e029458527a555"
     },
     "descriptor_diff": {
       "path": ".aegis/materialized/FC-08/descriptor-diff.json",
@@ -185,7 +195,8 @@
       "status": "SOURCE_COMPLETE_ADDITIVE_MATCH",
       "baseline_descriptor_sha256": "4f186b34789910a56d47f132747fbf4e7e505dbfe9cf5b221311e6efa6764ecb",
       "proposed_descriptor_sha256": "9d77afed2f42678b8836e26673707301ca84f431657b79966259d00fe5d33477",
-      "historical_descriptor_lock_unchanged": true
+      "historical_descriptor_lock_unchanged": true,
+      "git_blob_sha": "3323d78196e161ddf8711ac59926cdd3a1777cd9"
     },
     "output_index": {
       "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-index.json",
@@ -202,7 +213,9 @@
       "manifest_sha256": "8b2a36feff98c162a7706e189bade9c0a3b4cb474c4876cafc681e28ed007c15",
       "logical_cases": 60,
       "variants": 302,
-      "expected_and_input_refs_complete": true
+      "expected_and_input_refs_complete": true,
+      "variant_index_git_blob_sha": "",
+      "manifest_git_blob_sha": ""
     },
     "runner": {
       "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner-manifest.json",
@@ -254,5 +267,56 @@
     "INT-01 remains owned by FC04/FC10; FC-08 must explicitly reject mixed-default-delete before any write and must not implement the full integration.",
     "PH01-PH04 are deferred physical obligations owned by FC13; they are retained, not waived.",
     "No predecessor Gate/DEV pass or release/G5 waiver is inferred."
+  ],
+  "accepted_normative_exports": [
+    {
+      "id": "P12",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P12.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "fe9c2d8cfa8f2c0c119ff4c45a2ce5a408184a00",
+      "sha256": "b4cd1c0f685199f6d370242e334645d78881640abe3c807cf480568d8da52cbc"
+    },
+    {
+      "id": "P13",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P13.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "47c8d60f2d83a2c597d098ff24e61232f66bd6e8",
+      "sha256": "6f65325d4282a78774489bddd9f716614994f63757957675b82f3c423983f3fe"
+    },
+    {
+      "id": "P14",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P14.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "37c29507fe7b40e5a000646929483ee0456ebfba",
+      "sha256": "a43d1bad1dc79e54b80ad6a85d0f24c4d6d20fe011f291b90b5a688fcac4c9de"
+    },
+    {
+      "id": "P15",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P15.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "e13a7280fbae95374ccf2e1b9468495c72602d08",
+      "sha256": "95f6650dd26809e60560fbdeeb7fb9751ed42d9555e8a62849f4b38261a40837"
+    },
+    {
+      "id": "P16",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P16.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "494c10076787b4c37e07f7da2bbd073b2c83654a",
+      "sha256": "e07dd7c33029393e033079c62618166589a9ca9c357acce85146b0ac809074f4"
+    },
+    {
+      "id": "P17",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P17.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "4b76b8bd1aa262492e81abd2437a8fcdf964f4a8",
+      "sha256": "400805038f42e4bb10e781d7e3fce17d09bbde491b4b284a282ed63feabac399"
+    },
+    {
+      "id": "P20",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P20.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "f3b15876ea50d41d34cf6985f1ba3e40dfa211cc",
+      "sha256": "5089fe4b71ef130d35e41bbda8826839406a1c546af71be54bdddc26f6eee087"
+    }
   ]
 }
