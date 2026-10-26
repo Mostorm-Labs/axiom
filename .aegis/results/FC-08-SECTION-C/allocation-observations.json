@@ -1,0 +1,145 @@
+{
+  "source_revision": "4a4c0b419a57fdaae12e8d7454f5463361f1c501",
+  "qualification_hooks": "OFF, unchanged",
+  "scope": "single post-initialization C++ operator-new failure along real forward/undo/redo paths; not cold SDK initialization, malloc, arena or all interleavings",
+  "observations": [
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.InsertForward",
+      "scenario": 0,
+      "direction": 0,
+      "rejected_allocations": 255
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.InsertUndo",
+      "scenario": 0,
+      "direction": 1,
+      "rejected_allocations": 251
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.InsertRedo",
+      "scenario": 0,
+      "direction": 2,
+      "rejected_allocations": 258
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.ContentForward",
+      "scenario": 1,
+      "direction": 0,
+      "rejected_allocations": 437
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.ContentUndo",
+      "scenario": 1,
+      "direction": 1,
+      "rejected_allocations": 438
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.ContentRedo",
+      "scenario": 1,
+      "direction": 2,
+      "rejected_allocations": 439
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.DeleteForward",
+      "scenario": 2,
+      "direction": 0,
+      "rejected_allocations": 253
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.DeleteUndo",
+      "scenario": 2,
+      "direction": 1,
+      "rejected_allocations": 256
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.DeleteRedo",
+      "scenario": 2,
+      "direction": 2,
+      "rejected_allocations": 252
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.TopologyForward",
+      "scenario": 3,
+      "direction": 0,
+      "rejected_allocations": 852
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.TopologyUndo",
+      "scenario": 3,
+      "direction": 1,
+      "rejected_allocations": 834
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.RejectedForwardPreservesExistingRedo",
+      "scenario": 4,
+      "direction": 0,
+      "rejected_allocations": 254
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.TopologyRedo",
+      "scenario": 3,
+      "direction": 2,
+      "rejected_allocations": 854
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.DeleteCompoundForward",
+      "scenario": 5,
+      "direction": 0,
+      "rejected_allocations": 531
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.DeleteCompoundUndo",
+      "scenario": 5,
+      "direction": 1,
+      "rejected_allocations": 544
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.DeleteCompoundRedo",
+      "scenario": 5,
+      "direction": 2,
+      "rejected_allocations": 528
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.MoveForward",
+      "scenario": 6,
+      "direction": 0,
+      "rejected_allocations": 186
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.MoveUndo",
+      "scenario": 6,
+      "direction": 1,
+      "rejected_allocations": 187
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.MoveRedo",
+      "scenario": 6,
+      "direction": 2,
+      "rejected_allocations": 188
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.PropertyForward",
+      "scenario": 7,
+      "direction": 0,
+      "rejected_allocations": 182
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.PropertyUndo",
+      "scenario": 7,
+      "direction": 1,
+      "rejected_allocations": 182
+    },
+    {
+      "test": "fc08.section_c_allocation.SectionHistoryAllocation.PropertyRedo",
+      "scenario": 7,
+      "direction": 2,
+      "rejected_allocations": 184
+    }
+  ],
+  "initialization_diagnostic": "Development test-006 was stopped after inverse-first SDK initialization stalled. Both actual directions initialize outside final fault scope. The initial failure and debugger stack remain under development-001.",
+  "fixed_root_causes": [
+    "Oneof discriminator publication before child construction",
+    "Repeated message count published before element construction; safely transfer a constructed element instead"
+  ],
+  "upstream_SDK_source_modified": false
+}

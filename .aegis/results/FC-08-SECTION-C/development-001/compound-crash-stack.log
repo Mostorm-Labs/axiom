@@ -1,0 +1,262 @@
+
+************* Preparing the environment for Debugger Extensions Gallery repositories **************
+   ExtensionRepository : Implicit
+   UseExperimentalFeatureForNugetShare : true
+   AllowNugetExeUpdate : true
+   NonInteractiveNuget : true
+   AllowNugetMSCredentialProviderInstall : true
+   AllowParallelInitializationOfLocalRepositories : true
+
+   EnableRedirectToV8JsProvider : false
+
+   -- Configuring repositories
+      ----> Repository : LocalInstalled, Enabled: true
+      ----> Repository : UserExtensions, Enabled: true
+
+>>>>>>>>>>>>> Preparing the environment for Debugger Extensions Gallery repositories completed, duration 0.000 seconds
+
+************* Waiting for Debugger Extensions Gallery to Initialize **************
+
+>>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.015 seconds
+   ----> Repository : UserExtensions, Enabled: true, Packages count: 0
+   ----> Repository : LocalInstalled, Enabled: true, Packages count: 29
+
+Microsoft (R) Windows Debugger Version 10.0.26100.3323 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+CommandLine: out/fc08-section-c/build/runtime/semantic/tests/axiom_fc08_section_history_allocation_tests.exe --gtest_filter=SectionHistoryAllocation.DeleteCompoundForward
+
+************* Path validation summary **************
+Response                         Time (ms)     Location
+Deferred                                       srv*
+Symbol search path is: srv*
+Executable search path is: 
+ModLoad: 00007ff6`80100000 00007ff6`8041a000   image00007ff6`80100000
+ModLoad: 00007ffa`e5ad0000 00007ffa`e5cc8000   ntdll.dll
+ModLoad: 00007ffa`e55e0000 00007ffa`e56a2000   C:\WINDOWS\System32\KERNEL32.DLL
+ModLoad: 00007ffa`e3170000 00007ffa`e346f000   C:\WINDOWS\System32\KERNELBASE.dll
+ModLoad: 00007ffa`df5a0000 00007ffa`df634000   C:\WINDOWS\SYSTEM32\apphelp.dll
+ModLoad: 00007ffa`e0cf0000 00007ffa`e0ed4000   C:\WINDOWS\SYSTEM32\dbghelp.dll
+ModLoad: 00007ffa`e34a0000 00007ffa`e35a0000   C:\WINDOWS\System32\ucrtbase.dll
+(41470.387e0): Break instruction exception - code 80000003 (first chance)
+ntdll!LdrpDoDebuggerBreak+0x30:
+00007ffa`e5ba07a0 cc              int     3
+0:000> cdb: Reading initial command 'sxe av;g;kb;q'
+Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionHistoryAllocation.DeleteCompoundForward
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionHistoryAllocation
+[ RUN      ] SectionHistoryAllocation.DeleteCompoundForward
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): C++ EH exception - code e06d7363 (first chance)
+(41470.387e0): Access violation - code c0000005 (first chance)
+First chance exceptions are reported before any exception handling.
+This exception may be expected and handled.
+*** WARNING: Unable to verify checksum for C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\out\fc08-section-c\build\runtime\semantic\tests\axiom_fc08_section_history_allocation_tests.exe
+RetAddr               : Args to Child                                                           : Call Site
+00007ff6`802bdba0     : 00000000`00000001 00000000`00000000 00000226`e0ec6040 00007ffa`e5af47b1 : axiom_fc08_section_history_allocation_tests+0x7a446
+00007ff6`8029d714     : 00000060`ce2f9780 00000000`00000000 00000000`00000000 00000000`06040002 : axiom_fc08_section_history_allocation_tests+0x1bdba0
+00007ff6`802bdebe     : 00000226`e0eafdb0 00007ff6`803cdaf6 00005729`8ac5f7d1 00000000`00000800 : axiom_fc08_section_history_allocation_tests+0x19d714
+00007ff6`802bd990     : 00000000`00000000 00007ff6`803f66a0 00005729`8ac5f701 00007ff6`8034d94a : axiom_fc08_section_history_allocation_tests+0x1bdebe
+00007ff6`8034de4a     : 00007ff6`802bd900 00000060`ce2f8dd0 00000060`ce2fad00 00007ff6`803cdaf6 : axiom_fc08_section_history_allocation_tests+0x1bd990
+00007ff6`8034d53c     : 00007ff6`802bd900 00000060`ce2fad00 00000060`ce2fad60 00000000`00000103 : axiom_fc08_section_history_allocation_tests+0x24de4a
+00007ff6`80348aff     : 00000000`00000000 00007ff6`803f66a0 00000060`00000002 00007ffa`e5b22e23 : axiom_fc08_section_history_allocation_tests+0x24d53c
+00007ff6`8034c6b6     : 00000060`ce2fad00 00007ffa`e5b22e9c 00007ff6`8029ab00 00007ffa`e5b22d73 : axiom_fc08_section_history_allocation_tests+0x248aff
+00007ff6`8034c7f6     : 00005729`8ac5f481 00007ffa`e5b223ff 00000000`00000000 00007ff6`8034a520 : axiom_fc08_section_history_allocation_tests+0x24c6b6
+00007ff6`803495d5     : 00000000`00000001 00007ff6`80100000 00007ff6`803cdac4 00000060`ce2f9bf0 : axiom_fc08_section_history_allocation_tests+0x24c7f6
+00007ffa`e5b7293f     : 00000060`ce2fad00 00000000`0010000f 00000060`ce2f9580 00000060`ce2f9580 : axiom_fc08_section_history_allocation_tests+0x2495d5
+00007ffa`e5b00939     : 00000000`00000002 00000000`00000002 00007ff6`80269389 00007ff6`80401f00 : ntdll!RtlpExecuteHandlerForUnwind+0xf
+00007ff6`8034917c     : 00000000`0027ae10 00007ff6`803f66a0 00007ff6`8034cb90 00000060`ce2f98b0 : ntdll!RtlUnwindEx+0x339
+00007ff6`8034ba2a     : 00000000`00000002 00000060`ce2f98f0 00000060`ce2f9940 00007ff6`00000000 : axiom_fc08_section_history_allocation_tests+0x24917c
+00007ff6`8034c78e     : 00000060`ce2fa7b0 00000060`ce2fa240 00000000`00000001 00007ff6`803cd804 : axiom_fc08_section_history_allocation_tests+0x24ba2a
+00007ff6`8034c7f6     : 00005729`8ac5e101 00007ff6`80260b9e 00000000`00000000 00007ff6`8034a520 : axiom_fc08_section_history_allocation_tests+0x24c78e
+00007ff6`803495d5     : 00007ff6`80100000 00000000`00000000 00007ff6`804018e8 00007ff6`80100000 : axiom_fc08_section_history_allocation_tests+0x24c7f6
+00007ffa`e5b728bf     : 00000060`ce2fcc70 00000000`00000000 00000060`ce2fa0f0 00000000`00000000 : axiom_fc08_section_history_allocation_tests+0x2495d5
+00007ffa`e5b22554     : 00000000`00000000 00000060`ce2fa0f0 00000060`ce2fa7b0 00000000`00000001 : ntdll!RtlpExecuteHandlerForException+0xf
+00007ffa`e5b713ce     : 00000000`00000000 00007ffa`e5b01040 00007ff6`803e1308 00007ffa`e5b221c1 : ntdll!RtlDispatchException+0x244
+00007ffa`e31ab699     : 00000226`e0e70000 00007ff6`803e1308 00000060`ce2fabb0 00007ff6`8029ab00 : ntdll!KiUserExceptionDispatch+0x2e
+00007ff6`80348759     : 00000000`00000000 00007ff6`8023b6c2 00000226`e0eaf958 00000226`e0edab80 : KERNELBASE!RaiseException+0x69
+00007ff6`8023b6ef     : 00000226`e0edae40 00000000`00000000 00000000`00000000 00000060`ce2fac90 : axiom_fc08_section_history_allocation_tests+0x248759
+00007ff6`80299702     : 00000060`ce2fc0e0 00000226`e0edadf0 00000000`00000000 00000000`00000000 : axiom_fc08_section_history_allocation_tests+0x13b6ef
+00007ff6`8029ab11     : 00000000`00000000 00000000`0000000f 0000745e`f0ba865f 00007ff6`8029ab00 : axiom_fc08_section_history_allocation_tests+0x199702
+00007ff6`8029da5f     : 00000060`ce2fc0e0 00000060`ce2fcdb8 00000060`ce2face0 00000226`e0eaf940 : axiom_fc08_section_history_allocation_tests+0x19ab11
+00007ff6`8029c842     : 00000000`00000000 00000226`e0eafe00 00000226`e0eafce0 00000226`e0eafb10 : axiom_fc08_section_history_allocation_tests+0x19da5f
+00007ff6`8029f61e     : 00000060`ce2fad60 00000000`00000000 00000060`ce2fad60 00000060`ce2fae00 : axiom_fc08_section_history_allocation_tests+0x19c842
+00007ff6`80269389     : 00000226`e0eafdb0 00000226`e0eafdb0 00000000`00000000 00000226`00000001 : axiom_fc08_section_history_allocation_tests+0x19f61e
+00007ff6`8025ff32     : 00000000`00000000 00000226`e0eabe30 00000060`ce2fd658 00000000`00000007 : axiom_fc08_section_history_allocation_tests+0x169389
+00007ff6`8024e157     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`50000063 : axiom_fc08_section_history_allocation_tests+0x15ff32
+00007ff6`802609ee     : 00000060`ce2fca10 00000060`ce2fcdb0 00000000`00000000 00000060`ce2fd690 : axiom_fc08_section_history_allocation_tests+0x14e157
+00007ff6`80260b9e     : 00000000`00000000 00000001`40000007 00000000`00000002 00000000`26040321 : axiom_fc08_section_history_allocation_tests+0x1609ee
+00007ff6`802450a4     : 00000000`00000000 3ff00000`00000000 00000000`00000000 00000000`00000000 : axiom_fc08_section_history_allocation_tests+0x160b9e
+00007ff6`8024e6f1     : 00000060`ce2fd6a8 00007ff6`80382c80 00000000`00000001 00007ffa`e5afb44d : axiom_fc08_section_history_allocation_tests+0x1450a4
+00007ff6`802457bb     : 00000000`00000005 00000000`00000020 00000000`00000005 00007ff6`80382c80 : axiom_fc08_section_history_allocation_tests+0x14e6f1
+00007ff6`802ea5bb     : 00000002`9cdfc68a 00000226`e0ea7450 00000226`e0ea7450 00000060`ce2fe2f8 : axiom_fc08_section_history_allocation_tests+0x1457bb
+00007ff6`802ea4a6     : 00000226`e0ea55b0 00000226`e0e9a8b0 00007ff6`803ae560 00007ff6`802fe0b9 : axiom_fc08_section_history_allocation_tests+0x1ea5bb
+00007ff6`8030f66b     : 00000226`e0e9baf0 00000226`e0e9baf0 00000226`e0e9baf0 00000226`e0e9c880 : axiom_fc08_section_history_allocation_tests+0x1ea4a6
+00007ff6`8030fa49     : 00127dd3`0106908c 00000226`e0e99ba0 00000226`e0e99ba0 00000226`e0e9c700 : axiom_fc08_section_history_allocation_tests+0x20f66b
+00007ff6`803107ca     : 00000000`00000000 00000000`00000000 00000060`ce2ff4f0 00000226`e0ea76d0 : axiom_fc08_section_history_allocation_tests+0x20fa49
+00007ff6`802ea5fb     : 00000000`00000000 00000000`0000000f 00000000`00000000 00000226`e0e87770 : axiom_fc08_section_history_allocation_tests+0x2107ca
+00007ff6`802ea586     : 0000745e`f0bada8f 00007ffa`e318daf4 00007ff6`803af038 00007ff6`8035c0c0 : axiom_fc08_section_history_allocation_tests+0x1ea5fb
+00007ff6`8030fd6a     : 00000226`00008006 00007ff6`803830a5 00007ff6`803184d0 00000000`00000011 : axiom_fc08_section_history_allocation_tests+0x1ea586
+00007ff6`80376b89     : 00007ff6`80382b20 00007ff6`803be350 00000226`e0e87770 00000000`00000000 : axiom_fc08_section_history_allocation_tests+0x20fd6a
+00007ff6`803479ff     : 00007ff6`00000001 00007ff6`80347a79 00000000`00000000 00000000`00000000 : axiom_fc08_section_history_allocation_tests+0x276b89
+00007ffa`e55f7374     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : axiom_fc08_section_history_allocation_tests+0x2479ff
+00007ffa`e5b1cc91     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : KERNEL32!BaseThreadInitThunk+0x14
+00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!RtlUserThreadStart+0x21
+quit:
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\atlmfc.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\ObjectiveC.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\concurrency.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\cpp_rest.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\stl.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Data.Json.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Geolocation.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Sensors.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Media.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\windows.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\winrt.natvis'

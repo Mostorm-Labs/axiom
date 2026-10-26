@@ -1,0 +1,30 @@
+Test project C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-c/build
+    Start 2: fc08.section_c.SectionHistory.RealPrecommitHistoryEntryExists
+1/1 Test #2: fc08.section_c.SectionHistory.RealPrecommitHistoryEntryExists ...***Failed    0.03 sec
+Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionHistory.RealPrecommitHistoryEntryExists
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionHistory
+[ RUN      ] SectionHistory.RealPrecommitHistoryEntryExists
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_history_test.cpp(9): error: Failed
+Real undoable command admission/inverse preparation is not implemented
+
+[  FAILED  ] SectionHistory.RealPrecommitHistoryEntryExists (0 ms)
+[----------] 1 test from SectionHistory (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SectionHistory.RealPrecommitHistoryEntryExists
+
+ 1 FAILED TEST
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.06 sec
+
+The following tests FAILED:
+	  2 - fc08.section_c.SectionHistory.RealPrecommitHistoryEntryExists (Failed)

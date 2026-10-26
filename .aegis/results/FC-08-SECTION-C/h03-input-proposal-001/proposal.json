@@ -1,0 +1,101 @@
+{
+  "status": "PROPOSED_NOT_ACCEPTED",
+  "scope": "Only H03 input recipe and reconstructed F/U identities; expected values, original fixtures and global catalog remain immutable",
+  "original_guard": "OrderKey::isValid requires last byte != 0; generated fixture includes 255 invalid root keys",
+  "variants": [
+    {
+      "variant_id": "FC08-H03/root-children-65534",
+      "original_input": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65534/input.json",
+        "sha256": "f77b15b0b27e3a5136cbb0b1cc31e26efb729499eef639cdd15ecdfb65ee09c6",
+        "size": 308
+      },
+      "original_wire": [
+        {
+          "label": "F",
+          "root": "Operation",
+          "sha256": "fb9eaa43f11fea93607ca4ee00b28465c7f3f8c2d24a12833488c7c4ac77363b",
+          "size": 7995372,
+          "recipe": "root-children-65534"
+        },
+        {
+          "label": "U",
+          "root": "Operation",
+          "sha256": "cba73f6dfce19467de5efbbe314b6fd8df4dd1a3b3f7f27439f2f2f848877f4e",
+          "size": 7995516,
+          "recipe": "root-children-65534"
+        }
+      ],
+      "unchanged_expected": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65534/expected.json",
+        "sha256": "79d2b28490940471480f11e07fb7bf2885f73bc1b740ed02374454e58cd3fa1f",
+        "size": 279
+      },
+      "invalid_key_examples": [
+        "00000100",
+        "00000200"
+      ],
+      "proposed_key_recipe": "format ordinal as fixed uint32 big-endian 4-byte hex and append 01 to every existing and introduced root OrderKey; preserve IDs, order, kinds, content, counts",
+      "proposed_wire": [
+        {
+          "label": "F",
+          "sha256": "6b16921d644ab5faddafff6d0c260b8141bb7911bbd48aa177d8a7935330d321",
+          "size": 8126441
+        },
+        {
+          "label": "U",
+          "sha256": "e12e57834d9e28337b9a82dc337549ed9cae9f1491ab59a9ad52367b2e2df631",
+          "size": 8126587
+        }
+      ],
+      "proposed_admission_expected": true
+    },
+    {
+      "variant_id": "FC08-H03/root-children-65535",
+      "original_input": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65535/input.json",
+        "sha256": "7d55163ba474acd767dc6a4d9ed3628c62403f01f9e5b7d45228012d6ee2c92a",
+        "size": 309
+      },
+      "original_wire": [
+        {
+          "label": "F",
+          "root": "Operation",
+          "sha256": "75d41a3e30a176a64742a9ba08fb7e4697f9863f45b3be1104691d4676165e5b",
+          "size": 7995494,
+          "recipe": "root-children-65535"
+        },
+        {
+          "label": "U",
+          "root": "Operation",
+          "sha256": "adcd079d651207f8dd872bbbbb89cb7ac1de195816b76a964b5e0b3435b1cfd9",
+          "size": 7995638,
+          "recipe": "root-children-65535"
+        }
+      ],
+      "unchanged_expected": {
+        "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65535/expected.json",
+        "sha256": "e1cc24f9249d0d1d6f7c0cd0e61e5c66f9dadab13392425f90e0c44b577db110",
+        "size": 281
+      },
+      "invalid_key_examples": [
+        "00000100",
+        "00000200"
+      ],
+      "proposed_key_recipe": "format ordinal as fixed uint32 big-endian 4-byte hex and append 01 to every existing and introduced root OrderKey; preserve IDs, order, kinds, content, counts",
+      "proposed_wire": [
+        {
+          "label": "F",
+          "sha256": "45b9719e51f329a61f6f8a2a5267abaced626c62f201e4ef3001f57cf8303f10",
+          "size": 8126565
+        },
+        {
+          "label": "U",
+          "sha256": "ef2259ed16170ebc6ab68e7b75564f7a8ac60e2607d6d763591233304e41faca",
+          "size": 8126711
+        }
+      ],
+      "proposed_admission_expected": false
+    }
+  ]
+}

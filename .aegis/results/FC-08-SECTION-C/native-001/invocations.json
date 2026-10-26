@@ -1,0 +1,88 @@
+{
+  "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+  "commands": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+        "-B",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\native",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        "-DBUILD_TESTING=ON",
+        "-DCANVAS_BUILD_POC01=OFF",
+        "-DCANVAS_BUILD_SEMANTIC=ON",
+        "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+        "-DCANVAS_BUILD_RF01=ON",
+        "-DCANVAS_BUILD_RENDER=ON",
+        "-DCANVAS_RF01_BUILD_TESTS=OFF",
+        "-DCANVAS_RENDER_BUILD_TESTS=OFF",
+        "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
+        "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+        "-DCANVAS_SKIA_SDK_VARIANT=release",
+        "-DCANVAS_SKIA_SDK_ROOT=C:/Users/Chado/.codex/worktrees/fc00x-runtime-minimum-closure/canvas/.deps/skia-sdk/windows-x64-d3d12/release",
+        "-DAXIOM_FC08_QUALIFICATION_HOOKS=OFF",
+        "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+        "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe",
+        "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+        "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+        "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+        "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\native",
+        "--target",
+        "axiom_editor_history_tests",
+        "axiom_fc05_connector_facade_tests",
+        "axiom_fc02_text_tests",
+        "axiom_fc03_image_facade_tests",
+        "axiom_fc00x_runtime_facade_tests",
+        "axiom_brush_batch_frame_retry_tests",
+        "--parallel",
+        "6"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\native",
+        "--show-only=json-v1"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\native",
+        "--tests-from-file",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-SECTION-C\\native-001\\ctest-names.txt",
+        "--output-on-failure",
+        "--timeout",
+        "60",
+        "--output-junit",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-SECTION-C\\native-001\\ctest.xml"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "exit_code": 0,
+  "environment": {
+    "AXIOM_DEPS_DIR": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.deps",
+    "AXIOM_PROTOC": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+    "AXIOM_SEMANTIC_HOST_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85",
+    "AXIOM_SEMANTIC_RUNTIME_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+    "AXIOM_SEMANTIC_SDK_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+    "CMAKE_PREFIX_PATH": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c"
+  }
+}

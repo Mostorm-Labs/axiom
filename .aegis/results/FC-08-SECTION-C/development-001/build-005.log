@@ -1,0 +1,28 @@
+[0/2] Re-checking globbed directories...
+[1/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\rich_text_state.cpp.obj
+[2/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot_bootstrap.cpp.obj
+[3/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\container_operation_mapping.cpp.obj
+[4/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot.cpp.obj
+[5/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\protobuf_object_mapping.cpp.obj
+[6/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\codec.cpp.obj
+[7/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_stroke.pb.cc.obj
+[8/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\common.pb.cc.obj
+[9/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_engine.pb.cc.obj
+[10/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\connector.pb.cc.obj
+[11/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\container_operations.pb.cc.obj
+[12/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\erase_mask.pb.cc.obj
+[13/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\geometry.pb.cc.obj
+[14/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\paint.pb.cc.obj
+[15/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\property.pb.cc.obj
+[16/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\object.pb.cc.obj
+[17/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\operation.pb.cc.obj
+[18/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\section.pb.cc.obj
+[19/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\rich_text.pb.cc.obj
+[20/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\vector_path.pb.cc.obj
+[21/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\snapshot.pb.cc.obj
+[22/24] Building CXX object runtime\semantic\tests\CMakeFiles\axiom_fc08_section_history_tests.dir\fc08_section_history_test.cpp.obj
+FAILED: runtime/semantic/tests/CMakeFiles/axiom_fc08_section_history_tests.dir/fc08_section_history_test.cpp.obj 
+C:\PROGRA~1\MICROS~3\18\COMMUN~1\VC\Tools\MSVC\1451~1.362\bin\Hostx64\x64\cl.exe  /nologo /TP -DAXIOM_SOURCE_ROOT=\"C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas\" -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_RELEASE -D_HAS_ITERATOR_DEBUGGING=0 -D_ITERATOR_DEBUG_LEVEL=0 -IC:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\nlohmann-json\single_include -IC:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\interaction\include -IC:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\interaction\src -IC:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\out\fc08-section-c\build\runtime\semantic\tests\..\generated -IC:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\..\src -IC:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\include -IC:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\foundation\include -external:IC:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\include -external:IC:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest -external:IC:\Users\Chado\AppData\Local\Axiom\sdk\packages\semantic\runtimes\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c\include -external:W0 /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MT /W4 /permissive- /WX /EHsc /showIncludes /Foruntime\semantic\tests\CMakeFiles\axiom_fc08_section_history_tests.dir\fc08_section_history_test.cpp.obj /Fdruntime\semantic\tests\CMakeFiles\axiom_fc08_section_history_tests.dir\ /FS -c C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_history_test.cpp
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_history_test.cpp(133): error C2065: 'FreeEndpoint': undeclared identifier
+[23/24] Linking CXX static library runtime\semantic\canvas_runtime_semantic.lib
+ninja: build stopped: subcommand failed.

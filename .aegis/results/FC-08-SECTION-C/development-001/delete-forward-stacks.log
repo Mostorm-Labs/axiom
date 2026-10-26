@@ -1,0 +1,96 @@
+
+************* Preparing the environment for Debugger Extensions Gallery repositories **************
+   ExtensionRepository : Implicit
+   UseExperimentalFeatureForNugetShare : true
+   AllowNugetExeUpdate : true
+   NonInteractiveNuget : true
+   AllowNugetMSCredentialProviderInstall : true
+   AllowParallelInitializationOfLocalRepositories : true
+
+   EnableRedirectToV8JsProvider : false
+
+   -- Configuring repositories
+      ----> Repository : LocalInstalled, Enabled: true
+      ----> Repository : UserExtensions, Enabled: true
+
+>>>>>>>>>>>>> Preparing the environment for Debugger Extensions Gallery repositories completed, duration 0.000 seconds
+
+************* Waiting for Debugger Extensions Gallery to Initialize **************
+
+>>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.219 seconds
+   ----> Repository : UserExtensions, Enabled: true, Packages count: 0
+   ----> Repository : LocalInstalled, Enabled: true, Packages count: 29
+
+Microsoft (R) Windows Debugger Version 10.0.26100.3323 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+*** wait with pending attach
+
+************* Path validation summary **************
+Response                         Time (ms)     Location
+Deferred                                       srv*
+Symbol search path is: srv*
+Executable search path is: 
+ModLoad: 00007ff6`9ae80000 00007ff6`9b192000   C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\out\fc08-section-c\build\runtime\semantic\tests\axiom_fc08_section_history_allocation_tests.exe
+ModLoad: 00007ffa`e5ad0000 00007ffa`e5cc8000   C:\WINDOWS\SYSTEM32\ntdll.dll
+ModLoad: 00007ffa`e55e0000 00007ffa`e56a2000   C:\WINDOWS\System32\KERNEL32.DLL
+ModLoad: 00007ffa`e3170000 00007ffa`e346f000   C:\WINDOWS\System32\KERNELBASE.dll
+ModLoad: 00007ffa`df5a0000 00007ffa`df634000   C:\WINDOWS\SYSTEM32\apphelp.dll
+ModLoad: 00007ffa`e0cf0000 00007ffa`e0ed4000   C:\WINDOWS\SYSTEM32\dbghelp.dll
+ModLoad: 00007ffa`e34a0000 00007ffa`e35a0000   C:\WINDOWS\System32\ucrtbase.dll
+(437a8.1f1c): Break instruction exception - code 80000003 (first chance)
+ntdll!DbgBreakPoint:
+00007ffa`e5b71020 cc              int     3
+0:001> cdb: Reading initial command '~* kb;qd'
+
+   0  Id: 437a8.afe4 Suspend: 1 Teb: 00000019`2cf58000 Unfrozen
+RetAddr               : Args to Child                                                           : Call Site
+00007ffa`e31c5a1e     : 00000019`2d0fae78 00007ff6`9aff28d7 000001ca`f20502a8 00000000`000000a9 : ntdll!NtDelayExecution+0x14
+*** WARNING: Unable to verify checksum for C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\out\fc08-section-c\build\runtime\semantic\tests\axiom_fc08_section_history_allocation_tests.exe
+00007ff6`9afaa050     : 000001ca`f20502a4 00007ffa`00000000 00000000`c00000bb 00000000`00000000 : KERNELBASE!SleepEx+0x9e
+00007ff6`9aedf8d3     : 00000000`00000001 00007ffa`e5afb3c7 000001ca`f2050000 000001ca`00000000 : axiom_fc08_section_history_allocation_tests+0x12a050
+00007ff6`9aede6d8     : 00000002`f20500f0 00007ffa`e5af0e92 00000000`00000000 00007ffa`e5afb86b : axiom_fc08_section_history_allocation_tests+0x5f8d3
+00007ff6`9afe51b8     : 00000000`00000000 000001ca`f20518c0 00000000`00000012 000001ca`f2050000 : axiom_fc08_section_history_allocation_tests+0x5e6d8
+00007ff6`9afe57c0     : 000001ca`f1f96980 000001ca`f1fc6d70 00000000`0000002d 000001ca`f1f8ac28 : axiom_fc08_section_history_allocation_tests+0x1651b8
+00007ff6`9afe57c0     : 000001ca`f1f9bf20 000001ca`f1f946f0 000001ca`00000000 000001ca`00000001 : axiom_fc08_section_history_allocation_tests+0x1657c0
+00007ff6`9afe57c0     : 000001ca`f1f9c3d0 000001ca`f1f95020 000001ca`00000000 000001ca`00000001 : axiom_fc08_section_history_allocation_tests+0x1657c0
+00007ff6`9afe5fef     : 00000019`2d0fb3f0 00000000`00000000 00000019`00000000 000001ca`00000001 : axiom_fc08_section_history_allocation_tests+0x1657c0
+00007ff6`9afdcb22     : 00000000`00000000 000001ca`f1f76650 00000019`2d0fdc78 00007ff6`9b0c81ce : axiom_fc08_section_history_allocation_tests+0x165fef
+00007ff6`9afcaac7     : 00000000`0000002f 00000000`00000000 000001ca`f1f9ad30 00000019`00e8c7f0 : axiom_fc08_section_history_allocation_tests+0x15cb22
+00007ff6`9afdd5be     : 00000019`2d0fd0a0 00000019`2d0fd440 00000000`00000000 00000019`2d0fd448 : axiom_fc08_section_history_allocation_tests+0x14aac7
+00007ff6`9afdd76e     : 00000000`00000000 00000000`0000007c 000001ca`f1f7db50 000001ca`f2051680 : axiom_fc08_section_history_allocation_tests+0x15d5be
+00007ff6`9afc1b64     : 000001ca`f1f88580 00007ff6`9b03ece5 000001ca`f1f87e10 00000000`00000000 : axiom_fc08_section_history_allocation_tests+0x15d76e
+00007ff6`9afcb061     : 00000019`2d0fdcc8 00000000`00000070 00000000`00000000 00000000`00000010 : axiom_fc08_section_history_allocation_tests+0x141b64
+00007ff6`9afc1eaa     : 00000000`00000070 00000000`00000070 00000000`00000070 00000019`2d0fdc78 : axiom_fc08_section_history_allocation_tests+0x14b061
+00007ff6`9b065ffb     : 00000002`9cc0fd5a 000001ca`f1f760c0 000001ca`f1f760c0 00000019`2d0fe398 : axiom_fc08_section_history_allocation_tests+0x141eaa
+00007ff6`9b065ee6     : 000001ca`f1f8a1f0 000001ca`f1f81690 00007ff6`9b129020 00007ff6`9b079af9 : axiom_fc08_section_history_allocation_tests+0x1e5ffb
+00007ff6`9b08b0ab     : 000001ca`f1f84b30 000001ca`f1f84b30 000001ca`f1f84b30 000001ca`f1f739b0 : axiom_fc08_section_history_allocation_tests+0x1e5ee6
+00007ff6`9b08b489     : 00127cf7`237d1708 000001ca`f1f81810 000001ca`f1f81810 000001ca`f1f73900 : axiom_fc08_section_history_allocation_tests+0x20b0ab
+00007ff6`9b08c20a     : 00000000`00000000 00000000`00000000 00000019`2d0ff590 00000000`00000008 : axiom_fc08_section_history_allocation_tests+0x20b489
+00007ff6`9b06603b     : 00000000`00000000 00000000`0000000f 00000000`00000000 000001ca`f1f72a20 : axiom_fc08_section_history_allocation_tests+0x20c20a
+00007ff6`9b065fc6     : 00001ade`26263ad4 00007ffa`e318daf4 00007ff6`9b129af8 00007ff6`9b0d7b00 : axiom_fc08_section_history_allocation_tests+0x1e603b
+00007ff6`9b08b7aa     : 000001ca`00008006 00007ff6`9b0fdf95 00007ff6`9b093f10 00000000`00000011 : axiom_fc08_section_history_allocation_tests+0x1e5fc6
+00007ff6`9b0f25c9     : 00007ff6`9b0fdad0 00007ff6`9b138e10 000001ca`f1f72a20 00000000`00000000 : axiom_fc08_section_history_allocation_tests+0x20b7aa
+00007ff6`9b0c343f     : 00007ff6`00000001 00007ff6`9b0c34b9 00000000`00000000 00000000`00000000 : axiom_fc08_section_history_allocation_tests+0x2725c9
+00007ffa`e55f7374     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : axiom_fc08_section_history_allocation_tests+0x24343f
+00007ffa`e5b1cc91     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : KERNEL32!BaseThreadInitThunk+0x14
+00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!RtlUserThreadStart+0x21
+
+#  1  Id: 437a8.1f1c Suspend: 1 Teb: 00000019`2cf5e000 Unfrozen
+RetAddr               : Args to Child                                                           : Call Site
+00007ffa`e5b9ca7e     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!DbgBreakPoint
+00007ffa`e55f7374     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!DbgUiRemoteBreakin+0x4e
+00007ffa`e5b1cc91     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : KERNEL32!BaseThreadInitThunk+0x14
+00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!RtlUserThreadStart+0x21
+quit:
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\atlmfc.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\ObjectiveC.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\concurrency.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\cpp_rest.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\stl.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Data.Json.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Geolocation.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Sensors.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Media.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\windows.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\winrt.natvis'
