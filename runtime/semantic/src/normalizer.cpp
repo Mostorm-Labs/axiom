@@ -322,6 +322,12 @@ bool normalizeConnector(ConnectorContent& content) {
     return normalizeEndpoint(content.start) && normalizeEndpoint(content.end);
 }
 
+bool normalizeSection(SectionContent& value) {
+    return normalizeDouble(value.boundary.x) && normalizeDouble(value.boundary.y) &&
+           normalizeDouble(value.boundary.width) && normalizeDouble(value.boundary.height) &&
+           normalizeDouble(value.padding) && normalizeDouble(value.header_height);
+}
+
 bool normalizeContent(ObjectContent& content) {
     return std::visit(
         [](auto& value) -> bool {
@@ -374,6 +380,8 @@ bool normalizeContent(ObjectContent& content) {
                 return true;
             } else if constexpr (std::is_same_v<Item, ConnectorContent>) {
                 return normalizeConnector(value);
+            } else if constexpr (std::is_same_v<Item, SectionContent>) {
+                return normalizeSection(value);
             } else if constexpr (std::is_same_v<Item, StickyContent>) {
                 return normalizeDouble(value.width) && normalizeDouble(value.height);
             } else {
@@ -384,6 +392,12 @@ bool normalizeContent(ObjectContent& content) {
 }
 
 bool normalizeObject(ObjectRecord& object) {
+    if (object.kind == ObjectKind::kSection) {
+        // Reject forbidden Section properties before explicit defaults disappear.
+        for (const auto& entry : object.properties.entries) {
+            if (entry.field_id != 0x3U && entry.field_id != 0x100U) return false;
+        }
+    }
     if (!validObjectId(object.id)) return false;
     if (!normalizeDouble(object.transform.a) || !normalizeDouble(object.transform.b) ||
         !normalizeDouble(object.transform.c) || !normalizeDouble(object.transform.d) ||
@@ -508,6 +522,10 @@ bool normalizeOperationPayload(OperationPayload& payload) {
 }
 
 } // namespace
+
+bool internal::normalizeSectionContent(SectionContent& content) {
+    return normalizeSection(content);
+}
 
 bool internal::normalizeObjectRecord(ObjectRecord& object) {
     return normalizeObject(object);

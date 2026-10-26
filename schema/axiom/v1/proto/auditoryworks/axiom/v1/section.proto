@@ -1,0 +1,14 @@
+// FC-08 Section A: accepted P12/P13 identity publication.
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+import "auditoryworks/axiom/v1/geometry.proto";
+
+// Singular fields have explicit presence under the inherited Edition profile.
+// Semantic requiredness is enforced by the accompanying contract.
+message SectionContent {
+  Rect2 boundary = 1;
+  string title = 2;
+  double padding = 3;
+  double header_height = 4;
+}

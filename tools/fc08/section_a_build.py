@@ -40,7 +40,7 @@ def main():
     selection=['--tests-from-file',out/'ctest-names.txt']
   if code==0:code=run('ctest',['ctest','--test-dir',build,*selection,'--output-on-failure','--output-junit',out/'ctest.xml'])
  (out/'invocations.json').write_text(json.dumps({'phase':a.phase,'cwd':str(ROOT),'commands':commands,'exit_code':code,'SDK_environment':facts['environment'],
-  'MSVC_environment_initialized':bool(env.get('VCToolsInstallDir')),'source_head':subprocess.check_output(['D:/Softwares/Git/cmd/git.exe','rev-parse','HEAD'],cwd=ROOT,text=True).strip()},indent=2)+'\n')
+  'MSVC_environment_initialized':any(k.upper()=='VCTOOLSINSTALLDIR' and v for k,v in env.items()),'source_head':subprocess.check_output(['D:/Softwares/Git/cmd/git.exe','rev-parse','HEAD'],cwd=ROOT,text=True).strip()},indent=2)+'\n')
  raise SystemExit(code)
 
 if __name__=='__main__':main()

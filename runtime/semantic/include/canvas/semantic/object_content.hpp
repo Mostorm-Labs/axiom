@@ -3,6 +3,7 @@
 #include "canvas/semantic/property_value.hpp"
 #include "canvas/semantic/semantic_geometry.hpp"
 #include "canvas/semantic/semantic_id.hpp"
+#include "canvas/semantic/section_content.hpp"
 
 #include <cstdint>
 #include <optional>
@@ -395,6 +396,7 @@ using ObjectContent = std::variant<
     StickyContent,
     GroupContent,
     BrushStrokeContent,
-    DabBrushStrokeContent>;
+    DabBrushStrokeContent,
+    SectionContent>;
 
 } // namespace canvas::semantic

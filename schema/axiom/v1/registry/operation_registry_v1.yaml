@@ -20,6 +20,9 @@ operations:
   - {id: 13, tag: 13, symbol: RemoveEraseMasks, payload: RemoveEraseMasksOp}
   - {id: 14, tag: 14, symbol: EditRichText, payload: EditRichTextOp}
   - {id: 15, tag: 15, symbol: SetConnectorContent, payload: SetConnectorContentOp}
+  - {id: 16, tag: 16, symbol: UpdateResourceManifest, payload: UpdateResourceManifestOp}
+  - {id: 17, tag: 17, symbol: SetSectionContent, payload: SetSectionContentOp}
+  - {id: 18, tag: 18, symbol: EditContainerTopology, payload: EditContainerTopologyOp}
 validation_pipeline:
   - wire_preflight
   - envelope_validation
@@ -37,3 +40,7 @@ versioned_payload_boundary:
     new_object_pair: {id: 5, version: 2, content_tag: 10}
     legacy_object_pair: {id: 5, version: 1, content_tag: 5}
   unknown_versions: reject_before_mutation
+
+fc08_publication:
+  authority: FC08-P12-P13-accepted
+  implementation_status: schema_identity_only_operations_17_18_pending_slice_B

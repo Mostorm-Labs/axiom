@@ -351,6 +351,7 @@ bool validPropertyValue(std::uint32_t field_id, const PropertyValue& value) noex
 }
 
 bool fieldAppliesToObjectKind(ObjectKind kind, std::uint32_t field_id) noexcept {
+    if (kind == ObjectKind::kSection) return field_id == 0x3U || field_id == 0x100U;
     switch (field_id) {
         case 0x00000001U:
         case 0x00000002U:
@@ -555,6 +556,15 @@ bool validStrokeRecord(const StrokeRecord& stroke, bool dab_representation) noex
     return true;
 }
 
+bool validSection(const SectionContent& value) noexcept {
+    const auto& b = value.boundary;
+    return std::isfinite(b.x) && std::isfinite(b.y) && std::isfinite(b.width) && std::isfinite(b.height) &&
+           b.width > 0.0 && b.height > 0.0 && std::isfinite(b.x + b.width) && std::isfinite(b.y + b.height) &&
+           std::isfinite(value.padding) && value.padding >= 0.0 &&
+           std::isfinite(value.header_height) && value.header_height >= 0.0 &&
+           value.title.size() <= kMaxGenericStringBytes && validUtf8(value.title);
+}
+
 bool validObjectKindTriple(const ObjectRecord& object) noexcept {
     if (!validId(object.id)) return false;
     if (object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U) {
@@ -590,12 +600,17 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
             return std::holds_alternative<StickyContent>(object.content);
         case ObjectKind::kGroup:
             return std::holds_alternative<GroupContent>(object.content);
+        case ObjectKind::kSection:
+            return std::holds_alternative<SectionContent>(object.content);
     }
     return false;
 }
 
 bool validObjectRecordStructure(const ObjectRecord& object) {
     if (!validObjectKindTriple(object) || !validPropertyBag(object.kind, object.properties)) return false;
+    if (const auto* section = std::get_if<SectionContent>(&object.content)) {
+        if (!validSection(*section) || !object.erase_masks.empty()) return false;
+    }
     if (!validTransform2D(object.transform)) return false;
     if (geometryUnits(object.content).issue != ValidationIssue::kNone) return false;
     if (object.placement.parent_id.has_value() && !validId(*object.placement.parent_id)) return false;
@@ -703,6 +718,10 @@ ValidationResult invalidPropertyPatch() noexcept {
 }
 
 } // namespace
+
+bool internal::validateSectionContent(const SectionContent& content) noexcept {
+    return validSection(content);
+}
 
 bool internal::validateObjectRecord(const ObjectRecord& object) noexcept {
     return validObjectRecordStructure(object);

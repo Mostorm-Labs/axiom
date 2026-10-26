@@ -1648,6 +1648,21 @@ GoldenCodecObservation SemanticCodec::observeGoldenFixture(
 #else
     const std::string input{bytes.begin(), bytes.end()};
     std::vector<std::uint8_t> canonical;
+    if (root_type == "SectionContent") {
+        using WireSection = auditoryworks::axiom::v1::SectionContent;
+        SnapshotPreflightFailure failure = SnapshotPreflightFailure::kNone;
+        if (!preflightSnapshotMessage(bytes, *WireSection::descriptor(), failure, false))
+            return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kWirePreflight, "MALFORMED_WIRE", {}};
+        WireSection value, normalized;
+        SectionContent mapped;
+        if (!value.ParseFromString(input) || !internal::fromProtobufSectionContent(value, mapped) ||
+            !internal::normalizeSectionContent(mapped) || !internal::validateSectionContent(mapped))
+            return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_SEMANTIC_VALUE", {}};
+        if (!internal::toProtobufSectionContent(mapped, normalized) || !canonicalEncodeMessage(normalized, canonical))
+            return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kCanonicalEncode, "MALFORMED_WIRE", {}};
+        return {true, bytes == canonical ? GoldenCanonicality::kCanonical : GoldenCanonicality::kNonCanonicalInput,
+                GoldenCodecStage::kCanonicalEncode, {}, std::move(canonical)};
+    }
     if (root_type == "ShapeContent" || root_type == "ObjectRecord" || root_type == "Operation") {
         const auto* descriptor = root_type == "ShapeContent" ? auditoryworks::axiom::v1::ShapeContent::descriptor()
             : root_type == "ObjectRecord" ? auditoryworks::axiom::v1::ObjectRecord::descriptor()

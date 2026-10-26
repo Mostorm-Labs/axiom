@@ -1,0 +1,61 @@
+{
+  "subject_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+  "source": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas",
+  "semantic_sources_identical_to_slice_A_start": true,
+  "invocations": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas",
+        "-B",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-a\\baseline-build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DBUILD_TESTING=ON",
+        "-DCANVAS_BUILD_POC01=OFF",
+        "-DCANVAS_BUILD_SEMANTIC=ON",
+        "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+        "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
+        "-DCANVAS_BUILD_RENDER=OFF",
+        "-DCANVAS_BUILD_RF01=OFF",
+        "-DCANVAS_SKIA_SDK_VARIANT=release",
+        "-DAXIOM_FC08_QUALIFICATION_HOOKS=OFF",
+        "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+        "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe",
+        "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+        "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+        "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+        "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-a\\baseline-build",
+        "--target",
+        "canvas_semantic_stateful_kind_applicability_test",
+        "--parallel",
+        "6"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-a\\baseline-build",
+        "-R",
+        "^StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds$",
+        "--output-on-failure",
+        "--output-junit",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-SECTION-A\\baseline-regression-001\\ctest.xml"
+      ],
+      "exit_code": 8
+    }
+  ],
+  "exit_code": 8
+}

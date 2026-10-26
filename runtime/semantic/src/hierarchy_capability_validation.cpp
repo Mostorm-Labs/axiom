@@ -23,7 +23,7 @@ StatefulResult validateStagedHierarchyCapabilities(
         const StatefulResult parent_kind =
             validateRecordStateForOperation(*parent, StateRule::kCreateAbsent);
         if (!parent_kind.ok()) return parent_kind;
-        if (parent->kind == ObjectKind::kGroup) continue;
+        if (parent->kind == ObjectKind::kGroup || parent->kind == ObjectKind::kSection) continue;
         if (parent->kind != ObjectKind::kSticky) {
             return StatefulResult{StatefulIssue::kInvalidApplicability};
         }

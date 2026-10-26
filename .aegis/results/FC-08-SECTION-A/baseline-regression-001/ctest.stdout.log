@@ -1,0 +1,34 @@
+Test project C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-a/baseline-build
+    Start 29: StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds
+1/1 Test #29: StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds ...***Failed    0.02 sec
+Running main() from C:\Users\Chado\.codex\worktrees\fc08-verification-materialization\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from StatefulKindApplicability
+[ RUN      ] StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds
+C:\Users\Chado\.codex\worktrees\fc08-verification-materialization\canvas\runtime\semantic\tests\stateful_kind_applicability_test.cpp(285): error: Expected equality of these values:
+  result.issue
+    Which is: 1-byte object <00>
+  expected
+    Which is: 1-byte object <04>
+1 8
+
+[  FAILED  ] StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds (0 ms)
+[----------] 1 test from StatefulKindApplicability (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds
+
+ 1 FAILED TEST
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.47 sec
+
+The following tests FAILED:
+	 29 - StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds (Failed)

@@ -8,6 +8,7 @@
 #include <locale>
 #include <span>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <type_traits>
 #include <utility>
@@ -541,6 +542,10 @@ Json writeContent(const ObjectContent& value) {
         },
         [](const GroupContent&) {
             Json result = Json::object(); result["group"] = Json::object(); return result;
+        },
+        [](const SectionContent&) -> Json {
+            // The historical G1 projection has no Section representation.
+            throw std::invalid_argument("Section is unsupported by the legacy G1 projection");
         },
         [](const BrushStrokeContent& content) {
             Json message = Json::object();

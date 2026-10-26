@@ -67,11 +67,11 @@ TEST(SemanticTypes, NumericNormalizationRejectsNonFiniteAndCanonicalizesNegative
 }
 
 TEST(SemanticTypes, RegistryIsExplicitAndClosed) {
-    for (std::uint8_t value = 1; value <= 9; ++value) {
+    for (std::uint8_t value = 1; value <= 10; ++value) {
         EXPECT_TRUE(isKnownObjectKind(static_cast<ObjectKind>(value)));
     }
     EXPECT_FALSE(isKnownObjectKind(static_cast<ObjectKind>(0)));
-    EXPECT_FALSE(isKnownObjectKind(static_cast<ObjectKind>(10)));
+    EXPECT_FALSE(isKnownObjectKind(static_cast<ObjectKind>(11)));
 
     for (std::uint8_t value = 1; value <= 15; ++value) {
         EXPECT_TRUE(isKnownOperationKind(static_cast<OperationKind>(value)));

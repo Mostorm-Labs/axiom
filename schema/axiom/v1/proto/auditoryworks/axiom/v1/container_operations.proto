@@ -1,0 +1,77 @@
+// FC-08 Section A: accepted P12/P13 identity publication.
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+import "auditoryworks/axiom/v1/common.proto";
+import "auditoryworks/axiom/v1/geometry.proto";
+import "auditoryworks/axiom/v1/object.proto";
+import "auditoryworks/axiom/v1/section.proto";
+
+message ContainerStructuralExpectation {
+  Id128 object_id = 1;
+  uint32 kind_id = 2;
+  uint32 kind_version = 3;
+  Placement placement_before = 4;
+  Transform2D transform_before = 5;
+}
+
+message ContainerChildExpectation {
+  Id128 object_id = 1;
+  OrderKey order_key = 2;
+}
+
+message ContainerChildrenExpectation {
+  // Absent is document root; a present empty/zero ID is invalid.
+  Id128 parent_id = 1;
+  repeated ContainerChildExpectation complete_members = 2;
+}
+
+message ContainerTopologyGuard {
+  repeated ContainerStructuralExpectation nodes = 1;
+  repeated ContainerChildrenExpectation child_sets = 2;
+}
+
+message ContainerRelocation {
+  Id128 object_id = 1;
+  Placement placement_after = 2;
+  Transform2D transform_after = 3;
+}
+
+message ContainerOrderOnlyEdit {
+  Id128 object_id = 1;
+  OrderKey order_key_after = 2;
+}
+
+message IntroduceWrappersEffect {
+  repeated ObjectRecord containers = 1;
+}
+
+message ReleaseWrappersEffect {
+  repeated ObjectRecord containers_before = 1;
+}
+
+// Selected empty message is a real oneof value, not an absent effect.
+message RelocateObjectsEffect {}
+
+message EditContainerTopologyOp {
+  ContainerTopologyGuard guard = 1;
+  repeated ContainerRelocation relocations = 2;
+  repeated ContainerOrderOnlyEdit order_only_edits = 3;
+  oneof effect {
+    IntroduceWrappersEffect introduce_wrappers = 4;
+    ReleaseWrappersEffect release_wrappers = 5;
+    RelocateObjectsEffect relocate_objects = 6;
+  }
+}
+
+message SectionContentEdit {
+  Id128 object_id = 1;
+  uint32 expected_kind_version = 2;
+  SectionContent expected_content = 3;
+  SectionContent replacement_content = 4;
+}
+
+message SetSectionContentOp {
+  repeated SectionContentEdit items = 1;
+  repeated ContainerStructuralExpectation geometry_basis = 2;
+}

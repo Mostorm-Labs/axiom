@@ -11,6 +11,8 @@ import "auditoryworks/axiom/v1/connector.proto";
 import "auditoryworks/axiom/v1/object.proto";
 import "auditoryworks/axiom/v1/snapshot.proto";
 
+import "auditoryworks/axiom/v1/container_operations.proto";
+
 message InsertObjectsOp { repeated ObjectRecord objects = 1; }
 message DeleteObjectsOp { repeated Id128 object_ids = 1; }
 message RestoreObjectsOp { repeated ObjectRecord objects = 1; }
@@ -57,6 +59,8 @@ message OperationPayload {
     EditRichTextOp edit_rich_text = 14;
     SetConnectorContentOp set_connector_content = 15;
     UpdateResourceManifestOp update_resource_manifest = 16;
+    SetSectionContentOp set_section_content = 17;
+    EditContainerTopologyOp edit_container_topology = 18;
   }
 }
 message Operation {
