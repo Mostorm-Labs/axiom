@@ -39,7 +39,10 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::sectionIntent(
   const auto request=nextRequestId();
   const auto receipt=runtime_?runtime_->submitSectionIntent(intent,request,0xD001U):
       unsupportedReceipt<canvas::runtime::ProductControlReceipt>(request);
-  recordProduct("Section",receipt);return receipt;
+  recordProduct("Section",receipt);
+  if(receipt.state==canvas::runtime::ProductControlState::kQueued&&receipt.control)
+    pendingProduct_.emplace(receipt.control->key,"Section");
+  return receipt;
 }
 
 std::uint64_t DebugControlRouter::productDeadline() const noexcept {
