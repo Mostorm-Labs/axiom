@@ -12,7 +12,8 @@ Json read(const std::filesystem::path& path) { std::ifstream f(path);return Json
 std::vector<std::uint8_t> bytes(const std::filesystem::path& path) { std::ifstream f(path,std::ios::binary);return {std::istreambuf_iterator<char>(f),{}}; }
 std::vector<Json> wireCases() {
  std::vector<Json> rows;
- for(const auto& r:read(root/".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus-manifest.json")["variants"])
+ const auto manifest=read(root/".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus-manifest.json");
+ for(const auto& r:manifest["variants"])
   if(r["case_id"]=="FC08-W03" || r["case_id"]=="FC08-W05")rows.push_back(r);
  return rows;
 }
