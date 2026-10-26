@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="1"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="2"
+	timestamp="2026-10-27T01:59:28"
+	>
+	<testcase name="FC01TriangleConnectorRaster" classname="FC01TriangleConnectorRaster" time="2.7277" status="fail">
+		<failure message="Exit code 0xc0000409"/>
+		<properties/>
+		<system-out>Assertion failed: pixel(*backend.observation(),129,103)==(Rgba{0,255,0,255}), file C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\out\fc08-section-de\baseline-source\runtime\render\tests\skia_headless_backend_test.cpp, line 751
+</system-out>
+	</testcase>
+</testsuite>

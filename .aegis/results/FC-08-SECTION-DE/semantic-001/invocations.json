@@ -1,0 +1,77 @@
+{
+  "commands": [
+    {
+      "name": "build",
+      "argv": [
+        "cmake",
+        "--build",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\build",
+        "--target",
+        "axiom_fc08_section_history_tests",
+        "axiom_fc08_section_history_allocation_tests",
+        "axiom_fc08_section_allocation_tests",
+        "axiom_fc08_section_operation_tests",
+        "axiom_fc08_section_codec_tests",
+        "canvas_semantic_types_test",
+        "canvas_semantic_codec_test",
+        "canvas_semantic_brush_engine_codec_test",
+        "canvas_semantic_brush_snapshot_v2_test",
+        "canvas_semantic_codec_operation_ingress_test",
+        "canvas_semantic_normalization_test",
+        "canvas_semantic_payload_structure_test",
+        "canvas_semantic_leaf_structure_validation_test",
+        "canvas_semantic_fc01_shape2_validation_test",
+        "canvas_semantic_fc01_shape2_apply_test",
+        "canvas_semantic_fc05_connector_sticky_test",
+        "canvas_semantic_stateful_kind_applicability_test",
+        "canvas_semantic_hierarchy_stateful_validation_test",
+        "canvas_semantic_hierarchy_capability_validation_test",
+        "canvas_semantic_delete_closure_test",
+        "canvas_semantic_restore_stateful_validation_test",
+        "canvas_semantic_operation_specific_stateful_validation_test",
+        "canvas_semantic_rich_text_state_plan_test",
+        "canvas_semantic_apply_plan_test",
+        "canvas_semantic_atomic_apply_test",
+        "canvas_semantic_atomic_apply_differential_test",
+        "canvas_semantic_operation_engine_boundary_test",
+        "canvas_semantic_operation_engine_apply_test",
+        "canvas_semantic_operation_engine_generation_change_set_test",
+        "canvas_semantic_operation_engine_canonical_commit_test",
+        "canvas_semantic_g1_06_snapshot_test",
+        "canvas_semantic_g1_06_snapshot_bootstrap_test",
+        "canvas_semantic_indexed_object_store_test",
+        "canvas_semantic_object_store_differential_test",
+        "canvas_semantic_staged_object_view_test",
+        "canvas_semantic_g1_08_locality_test",
+        "canvas_semantic_g1_08_reference_differential_test",
+        "--parallel",
+        "6"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "ctest",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\build",
+        "--tests-from-file",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-SECTION-C-H03-v0.1\\qualified-001\\ctest-names.txt",
+        "--output-on-failure",
+        "--timeout",
+        "120",
+        "--output-junit",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-SECTION-DE\\semantic-001\\ctest.xml"
+      ],
+      "exit_code": 8
+    }
+  ],
+  "environment": {
+    "AXIOM_DEPS_DIR": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.deps",
+    "AXIOM_PROTOC": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+    "AXIOM_SEMANTIC_HOST_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85",
+    "AXIOM_SEMANTIC_RUNTIME_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+    "AXIOM_SEMANTIC_SDK_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+    "CMAKE_PREFIX_PATH": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c"
+  }
+}

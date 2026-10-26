@@ -1,0 +1,20 @@
+{
+  "baseline": "af1aff801369052eb7b94716f6b4ab3e899eb3e9",
+  "source_revision": "f3d9e67508b4b8f6e2ddbf756b51c543efeafa55",
+  "protected_paths": [
+    "schema",
+    "tests/fc08/reference",
+    ".aegis/materialized",
+    "semantic-sdk.lock.json",
+    "r1-full-skia-sdk.lock.json",
+    "runtime/semantic/src/qualification_checkpoint.hpp",
+    "runtime/interaction/src/qualification_checkpoint.hpp"
+  ],
+  "protected_diff": [],
+  "historical_evidence_and_packages_preserved": true,
+  "all_previous_packages_including_product_P31_unchanged": true,
+  "global_registries_and_main_not_changed": true,
+  "only_semantic_delta": "Explicit kSection alongside kGroup in existing non-connectable return-false switch; exhaustive compiler coverage only",
+  "new_semantic_behavior": false,
+  "qualification_hooks": "Native and Web production builds explicit OFF; unchanged source/default; inherited C qualification test build reused separately"
+}

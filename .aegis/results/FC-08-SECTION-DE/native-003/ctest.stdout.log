@@ -1,0 +1,40 @@
+Test project C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-c/native
+      Start  73: FC08SectionGeometry
+ 1/15 Test  #73: FC08SectionGeometry .................   Passed    0.15 sec
+      Start 103: G4EditorHistory
+ 2/15 Test #103: G4EditorHistory .....................   Passed    0.45 sec
+      Start 104: FC01EditorHistoryInverseFamilies
+ 3/15 Test #104: FC01EditorHistoryInverseFamilies ....   Passed    0.19 sec
+      Start 142: FC08SectionConsumer
+ 4/15 Test #142: FC08SectionConsumer .................   Passed    0.42 sec
+      Start 143: FC05ConnectorFacade
+ 5/15 Test #143: FC05ConnectorFacade .................   Passed    0.25 sec
+      Start 144: FC02Text
+ 6/15 Test #144: FC02Text ............................   Passed   25.49 sec
+      Start 145: FC00XBrushBatchEvaluation
+ 7/15 Test #145: FC00XBrushBatchEvaluation ...........   Passed    0.26 sec
+      Start 146: FC00XBrushPressureCapability
+ 8/15 Test #146: FC00XBrushPressureCapability ........   Passed    0.03 sec
+      Start 147: FC00XBrushBatchSemantics
+ 9/15 Test #147: FC00XBrushBatchSemantics ............   Passed    0.05 sec
+      Start 148: FC00XCanonicalBusyPreviewProgress
+10/15 Test #148: FC00XCanonicalBusyPreviewProgress ...   Passed    0.03 sec
+      Start 149: FC00XPreviewBusyCanonicalProgress
+11/15 Test #149: FC00XPreviewBusyCanonicalProgress ...   Passed    0.03 sec
+      Start 150: FC00XBusyCanonicalPendingFeedback
+12/15 Test #150: FC00XBusyCanonicalPendingFeedback ...   Passed    0.03 sec
+      Start 151: FC00XFatalProviderFailure
+13/15 Test #151: FC00XFatalProviderFailure ...........   Passed    0.03 sec
+      Start 155: FC00XRuntimeFacade
+14/15 Test #155: FC00XRuntimeFacade ..................Exit code 0xc0000409***Exception:   2.88 sec
+Assertion failed: facade.mountedCanvasTargets().empty(), file C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\composition\tests\canvas_runtime_facade_test.cpp, line 61
+
+      Start 156: FC03ImageFacade
+15/15 Test #156: FC03ImageFacade .....................   Passed    0.25 sec
+
+93% tests passed, 1 tests failed out of 15
+
+Total Test time (real) =  30.56 sec
+
+The following tests FAILED:
+	155 - FC00XRuntimeFacade (Exit code 0xc0000409)

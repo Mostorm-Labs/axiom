@@ -1,0 +1,21 @@
+{
+  "source_revision": "af1aff801369052eb7b94716f6b4ab3e899eb3e9",
+  "production_tree_clean": true,
+  "same_assertion": "skia_headless_backend_test.cpp:751; pixel(129,103) == RGBA(0,255,0,255)",
+  "original_expected_and_test_source_unchanged": true,
+  "test_source": {
+    "path": "runtime/render/tests/skia_headless_backend_test.cpp",
+    "sha256": "cc1989e1613c7db50b906617ff173845335da6cf8606e048aa85e1b73645e0c4"
+  },
+  "outer_command": "cmd.exe /c call VS18/Community/VC/Auxiliary/Build/vcvars64.bat && python out/fc08-section-de/baseline-raster.py",
+  "scope": "Read-only detached baseline worktree and separate build; no current-source replacement",
+  "result": {
+    "tests": 1,
+    "passed": 0,
+    "failed": [
+      "FC01TriangleConnectorRaster"
+    ],
+    "skipped": []
+  },
+  "ctest_exit_code": 8
+}

@@ -1,0 +1,1316 @@
+{
+  "rows": [
+    {
+      "name": "malformed ID rejected without abort",
+      "ok": true,
+      "actual": {
+        "transportError": "invalid Section envelope"
+      }
+    },
+    {
+      "name": "queued 1",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "1",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 1",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "1",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "1",
+          "failure": 0,
+          "generation": "1",
+          "objectId": "01000000000000000000000000fc0801",
+          "operationId": "00000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "1"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 1",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "1",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "1",
+          "failure": 0,
+          "generation": "1",
+          "objectId": "01000000000000000000000000fc0801",
+          "operationId": "00000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "1"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "queued 2",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "2",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 2",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "2",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "2",
+          "failure": 0,
+          "generation": "2",
+          "objectId": "02000000000000000000000000fc0801",
+          "operationId": "01000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "2"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 2",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "2",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "2",
+          "failure": 0,
+          "generation": "2",
+          "objectId": "02000000000000000000000000fc0801",
+          "operationId": "01000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "2"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "create projection",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "2",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "2",
+        "selectedRoots": [
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "3",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "queued 3",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "3",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 3",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "3",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "3",
+          "failure": 0,
+          "generation": "3",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "02000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "3"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 3",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "3",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "3",
+          "failure": 0,
+          "generation": "3",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "02000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "3"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "wrapper children",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          -46,
+          -8,
+          512,
+          964
+        ],
+        "busy": false,
+        "children": [
+          "01000000000000000000000000fc0801",
+          "02000000000000000000000000fc0801"
+        ],
+        "generation": "3",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "members": [
+          {
+            "kind": 10,
+            "localTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              40
+            ],
+            "objectId": "01000000000000000000000000fc0801",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              40
+            ]
+          },
+          {
+            "kind": 10,
+            "localTransform": [
+              0,
+              2,
+              -2,
+              0,
+              450,
+              300
+            ],
+            "objectId": "02000000000000000000000000fc0801",
+            "worldTransform": [
+              0,
+              2,
+              -2,
+              0,
+              450,
+              300
+            ]
+          }
+        ],
+        "objectId": "03000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "3",
+        "selectedRoots": [
+          "03000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "4",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "wrap world pose",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "3",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "3",
+        "selectedRoots": [
+          "03000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "4",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "queued 4",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "4",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 4",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "4",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "4",
+          "failure": 0,
+          "generation": "4",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "03000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "4"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 4",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "4",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "4",
+          "failure": 0,
+          "generation": "4",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "03000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "4"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "UTF8 title",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          -46,
+          -8,
+          512,
+          964
+        ],
+        "busy": false,
+        "children": [
+          "01000000000000000000000000fc0801",
+          "02000000000000000000000000fc0801"
+        ],
+        "generation": "4",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "members": [
+          {
+            "kind": 10,
+            "localTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              40
+            ],
+            "objectId": "01000000000000000000000000fc0801",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              40
+            ]
+          },
+          {
+            "kind": 10,
+            "localTransform": [
+              0,
+              2,
+              -2,
+              0,
+              450,
+              300
+            ],
+            "objectId": "02000000000000000000000000fc0801",
+            "worldTransform": [
+              0,
+              2,
+              -2,
+              0,
+              450,
+              300
+            ]
+          }
+        ],
+        "objectId": "03000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "4",
+        "selectedRoots": [
+          "03000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "4",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section 世界",
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "queued 5",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "5",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 5",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "5",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "5",
+          "failure": 0,
+          "generation": "5",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "04000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "5"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 5",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "5",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "5",
+          "failure": 0,
+          "generation": "5",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "04000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "5"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "boundary leaves child pose",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "5",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "5",
+        "selectedRoots": [
+          "03000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "4",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "queued 6",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "6",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 6",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "6",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "6",
+          "failure": 0,
+          "generation": "6",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "05000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "6"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 6",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "6",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "6",
+          "failure": 0,
+          "generation": "6",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "05000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "6"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "release preserves children",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "438422629b2dbbbd3f05a0b750728a4a96731263",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 2,
+        "operations": 6,
+        "pointerSamples": 0,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 7,
+        "retries": 2,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 1,
+        "metricsGeneration": 1,
+        "width": 764,
+        "height": 396,
+        "logicalWidth": 764,
+        "logicalHeight": 396,
+        "dpr": 1,
+        "controlState": 9,
+        "tool": 0,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 0,
+          "pointer": 0,
+          "generation": 0
+        },
+        "error": "",
+        "failure": "",
+        "trace": []
+      }
+    },
+    {
+      "name": "queued 7",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "7",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 7",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "7",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "7",
+          "failure": 0,
+          "generation": "7",
+          "objectId": "00000000000000000000000000000000",
+          "operationId": "06000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "7"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 7",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "7",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "7",
+          "failure": 0,
+          "generation": "7",
+          "objectId": "00000000000000000000000000000000",
+          "operationId": "06000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "7"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "rotated reparent world",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "7",
+        "localTransform": [
+          0,
+          -0.5,
+          0.5,
+          0,
+          -130,
+          210
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "7",
+        "selectedRoots": [
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "5",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "independent inverse matrix",
+      "ok": true,
+      "actual": [
+        0,
+        -0.5,
+        0.5,
+        0,
+        -130,
+        210
+      ]
+    },
+    {
+      "name": "duplicate no mutation",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "7",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "7",
+          "failure": 0,
+          "generation": "7",
+          "objectId": "00000000000000000000000000000000",
+          "operationId": "06000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "7"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "queued 8",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "8",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 8",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 5,
+        "requestId": "8",
+        "section": {
+          "canonical": 0,
+          "commitEpoch": "0",
+          "commitOrdinal": "0",
+          "failure": 3,
+          "generation": "7",
+          "objectId": "01000000000000000000000000fc0801",
+          "operationId": "00000000000000000000000000000000",
+          "projection": 0,
+          "sceneRevision": "7"
+        },
+        "state": 4
+      }
+    },
+    {
+      "name": "stale zero mutation",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "7",
+        "localTransform": [
+          0,
+          -0.5,
+          0.5,
+          0,
+          -130,
+          210
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "7",
+        "selectedRoots": [
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "5",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "undo world",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "8",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "8",
+        "selectedRoots": [
+          "01000000000000000000000000fc0801",
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "5",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "redo topology",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          320,
+          240
+        ],
+        "busy": false,
+        "children": [
+          "01000000000000000000000000fc0801"
+        ],
+        "generation": "9",
+        "localTransform": [
+          0,
+          2,
+          -2,
+          0,
+          450,
+          300
+        ],
+        "members": [
+          {
+            "kind": 10,
+            "localTransform": [
+              0,
+              -0.5,
+              0.5,
+              0,
+              -130,
+              210
+            ],
+            "objectId": "01000000000000000000000000fc0801",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              40
+            ]
+          }
+        ],
+        "objectId": "02000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "9",
+        "selectedRoots": [
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "5",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Region B",
+        "worldTransform": [
+          0,
+          2,
+          -2,
+          0,
+          450,
+          300
+        ]
+      }
+    },
+    {
+      "name": "queued 9",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "9",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 9",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "9",
+        "section": {
+          "canonical": 1,
+          "commitEpoch": "0",
+          "commitOrdinal": "0",
+          "failure": 0,
+          "generation": "9",
+          "objectId": "02000000000000000000000000fc0801",
+          "operationId": "00000000000000000000000000000000",
+          "projection": 2,
+          "sceneRevision": "9"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 9",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "9",
+        "section": {
+          "canonical": 1,
+          "commitEpoch": "0",
+          "commitOrdinal": "0",
+          "failure": 0,
+          "generation": "9",
+          "objectId": "02000000000000000000000000fc0801",
+          "operationId": "00000000000000000000000000000000",
+          "projection": 2,
+          "sceneRevision": "9"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "ancestor moves descendants once",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "10",
+        "localTransform": [
+          0,
+          -0.5,
+          0.5,
+          0,
+          -130,
+          210
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "10",
+        "selectedRoots": [
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "6",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          60,
+          80
+        ]
+      }
+    },
+    {
+      "name": "render/fit/tool remains live",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "438422629b2dbbbd3f05a0b750728a4a96731263",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 2,
+        "operations": 10,
+        "pointerSamples": 0,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 16,
+        "retries": 5,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 1,
+        "metricsGeneration": 1,
+        "width": 764,
+        "height": 396,
+        "logicalWidth": 764,
+        "logicalHeight": 396,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 1,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 0.368889,
+          "x": 293.467,
+          "y": 2.48889
+        },
+        "lastPointer": {
+          "source": 0,
+          "pointer": 0,
+          "generation": 0
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          }
+        ]
+      }
+    }
+  ],
+  "final": {
+    "owner": "RuntimeComposition",
+    "revision": "438422629b2dbbbd3f05a0b750728a4a96731263",
+    "dirty": 1,
+    "debugUiEnabled": true,
+    "state": 2,
+    "objects": 2,
+    "operations": 10,
+    "pointerSamples": 0,
+    "rejectedInputs": 0,
+    "activePointers": 0,
+    "presentedFrames": 16,
+    "retries": 5,
+    "pendingFrame": false,
+    "previewActive": false,
+    "surfaceGeneration": 1,
+    "metricsGeneration": 1,
+    "width": 764,
+    "height": 396,
+    "logicalWidth": 764,
+    "logicalHeight": 396,
+    "dpr": 1,
+    "controlState": 1,
+    "tool": 1,
+    "creationMode": false,
+    "creationPreset": 0,
+    "size": 16,
+    "opacity": 1,
+    "camera": {
+      "scale": 0.368889,
+      "x": 293.467,
+      "y": 2.48889
+    },
+    "lastPointer": {
+      "source": 0,
+      "pointer": 0,
+      "generation": 0
+    },
+    "error": "",
+    "failure": "",
+    "trace": [
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      }
+    ]
+  },
+  "section": {
+    "available": true,
+    "boundary": [
+      0,
+      0,
+      320,
+      240
+    ],
+    "busy": false,
+    "children": [
+      "01000000000000000000000000fc0801"
+    ],
+    "generation": "10",
+    "localTransform": [
+      0,
+      2,
+      -2,
+      0,
+      480,
+      340
+    ],
+    "members": [
+      {
+        "kind": 10,
+        "localTransform": [
+          0,
+          -0.5,
+          0.5,
+          0,
+          -130,
+          210
+        ],
+        "objectId": "01000000000000000000000000fc0801",
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          60,
+          80
+        ]
+      }
+    ],
+    "objectId": "02000000000000000000000000fc0801",
+    "projectionReady": true,
+    "sceneRevision": "10",
+    "selectedRoots": [
+      "02000000000000000000000000fc0801"
+    ],
+    "selectionRevision": "6",
+    "target": {
+      "attachmentEpoch": "2",
+      "runtimeEpoch": "1",
+      "viewEpoch": "1",
+      "viewId": "301"
+    },
+    "title": "Region B",
+    "worldTransform": [
+      0,
+      2,
+      -2,
+      0,
+      480,
+      340
+    ]
+  },
+  "physicalInput": "NOT_RUN"
+}
