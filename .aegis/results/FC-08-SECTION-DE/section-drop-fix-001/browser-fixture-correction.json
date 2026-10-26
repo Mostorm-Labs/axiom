@@ -1,0 +1,18 @@
+{
+  "classification": "TEST_ORACLE_FIXTURE_ERROR in new supplementary runner, not a frozen corpus amendment",
+  "failed_run": "section-drop-browser-006",
+  "before_runner_sha256": "ad739faf43869c7964fab706e46b86c5e41ee945fa4900696f1413f5023eb8c0",
+  "after_runner_sha256": "4918691f066470363ba1cc12ba67a0d9dbd3478ccea8a94f6b7cac8d5e0e489c",
+  "basis": "Actual brush is AddStroke with identity ObjectRecord.transform and world-coordinate confirmed samples/outline (brush_commit_adapter.cpp); shape creation carries translation (20,40). The same pointer delta is (330,220).",
+  "independent_expected_real_brush_drop_translation": [
+    330,
+    220
+  ],
+  "after_Section_move": [
+    360,
+    260
+  ],
+  "frozen_expected_oracles_inputs_changed": false,
+  "tolerance_changed": false,
+  "original_failure_preserved": true
+}
