@@ -40,7 +40,10 @@ SemanticChangeFlags replacementFlag(OperationKind kind) {
     case OperationKind::kSetImageContent:
     case OperationKind::kEditRichText:
     case OperationKind::kSetConnectorContent:
+    case OperationKind::kSetSectionContent:
         return SemanticChangeFlags::kContent;
+    case OperationKind::kEditContainerTopology:
+        return SemanticChangeFlags::kPlacement | SemanticChangeFlags::kTransform;
     default:
         return SemanticChangeFlags::kNone;
     }
@@ -84,7 +87,14 @@ std::optional<PreparedChangeSet> prepareChangeSet(const PreparedApplyPlan& plan)
 
     const SemanticChangeFlags replacement_flag = replacementFlag(plan.operation.kind());
     for (const ObjectRecord& replacement : plan.replacements) {
-        prepared.changes.push_back({replacement.id, replacement_flag, {}});
+        auto flag = replacement_flag;
+        if (const auto* topology = std::get_if<EditContainerTopologyOp>(&plan.operation.payload)) {
+            const auto found = std::lower_bound(topology->order_only_edits.begin(), topology->order_only_edits.end(),
+                replacement.id, [](const auto& edit, const ObjectId& id) { return edit.object_id < id; });
+            if (found != topology->order_only_edits.end() && found->object_id == replacement.id)
+                flag = SemanticChangeFlags::kPlacement;
+        }
+        prepared.changes.push_back({replacement.id, flag, {}});
     }
 
     if (plan.operation.kind() == OperationKind::kPatchProperties) {

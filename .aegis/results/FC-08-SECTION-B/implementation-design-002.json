@@ -1,0 +1,18 @@
+{
+  "supersedes_implementation_detail_only": "implementation-design-001 O(document) production storage clone proposal; immutable record retained",
+  "trigger": "Actual unchanged AtomicApplyDifferential.IndexedProductionApplyDoesNotScanAllObjects regression rejected public full-store scan",
+  "resolved_owner_flow": [
+    "PreparedApplyPlan remains existing canonical operation plan",
+    "IndexedObjectStore prepares only touched canonical map nodes and replacement values",
+    "ObjectIndex clones/reserves affected parent child sets; connector reverse index remains unchanged because17/18 never change endpoint content",
+    "Atomic owner emits existing semPublish observation once then publishes reserved nodes and parent index patch without allocation",
+    "Reserved ledger node/generation/ordinal/ChangeSet follow existing writer path; no History owner added"
+  ],
+  "reference_provider": "Independent vector reference storage stages its own copy; production Indexed provider does not copy/scan all canonical records during apply",
+  "remaining_preparation_cost": "Semantic final-graph validation still materializes the resulting graph; parent-set reservation scales with affected sibling sets. G5 performance not claimed.",
+  "shared_lifecycle_fix": "StagedObjectView allocating lookup registration moved out of noexcept find into constructor; derived tracking state is cleaned at destruction/copied correctly. Qualification checkpoints and default-OFF unchanged.",
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

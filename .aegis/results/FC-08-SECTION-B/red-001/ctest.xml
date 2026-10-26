@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="1"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="0"
+	timestamp="2026-10-26T19:24:54"
+	>
+	<testcase name="fc08.section_b.GoogleTestVerification.UninstantiatedParameterizedTestSuite&lt;SectionOperationsWire&gt;" classname="fc08.section_b.GoogleTestVerification.UninstantiatedParameterizedTestSuite&lt;SectionOperationsWire&gt;" time="0.0458631" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = GoogleTestVerification.UninstantiatedParameterizedTestSuite&lt;SectionOperationsWire&gt;
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from GoogleTestVerification
+[ RUN      ] GoogleTestVerification.UninstantiatedParameterizedTestSuite&lt;SectionOperationsWire&gt;
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_operation_test.cpp(20): error: Parameterized test suite SectionOperationsWire is defined via TEST_P, but never instantiated. None of the test cases will run. Either no INSTANTIATE_TEST_SUITE_P is provided or the only ones provided expand to nothing.
+
+Ideally, TEST_P definitions should only ever be included as part of binaries that intend to use them. (As opposed to, for example, being placed in a library that may be linked in to get other utilities.)
+
+To suppress this error for this test suite, insert the following line (in a non-header) in the namespace it is defined in:
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(SectionOperationsWire);
+
+[  FAILED  ] GoogleTestVerification.UninstantiatedParameterizedTestSuite&lt;SectionOperationsWire&gt; (0 ms)
+[----------] 1 test from GoogleTestVerification (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] GoogleTestVerification.UninstantiatedParameterizedTestSuite&lt;SectionOperationsWire&gt;
+
+ 1 FAILED TEST
+</system-out>
+	</testcase>
+</testsuite>

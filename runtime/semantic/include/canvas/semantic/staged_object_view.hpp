@@ -11,7 +11,9 @@ namespace canvas::semantic {
 
 class StagedObjectView final {
   public:
-    explicit StagedObjectView(const ObjectStore& base) : base_(base) {}
+    explicit StagedObjectView(const ObjectStore& base);
+    StagedObjectView(const StagedObjectView&);
+    ~StagedObjectView();
 
     [[nodiscard]] bool contains(const ObjectId& id) const noexcept;
     [[nodiscard]] const ObjectRecord* find(const ObjectId& id) const noexcept;

@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="2"
+	failures="2"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="0"
+	timestamp="2026-10-26T19:51:44"
+	>
+	<testcase name="fc08.section_b.SectionAllocation.ReferenceOwnerRejectsEveryPrecommitAllocationFailure" classname="fc08.section_b.SectionAllocation.ReferenceOwnerRejectsEveryPrecommitAllocationFailure" time="0.0854044" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionAllocation.ReferenceOwnerRejectsEveryPrecommitAllocationFailure
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionAllocation
+[ RUN      ] SectionAllocation.ReferenceOwnerRejectsEveryPrecommitAllocationFailure
+allocation sweep attempt 0
+allocation sweep attempt 1
+allocation sweep attempt 2
+allocation sweep attempt 3
+allocation sweep attempt 4
+allocation sweep attempt 5
+allocation sweep attempt 6
+allocation sweep attempt 7
+allocation sweep attempt 8
+allocation sweep attempt 9
+allocation sweep attempt 10
+allocation sweep attempt 11
+allocation sweep attempt 12
+allocation sweep attempt 13
+allocation sweep attempt 14
+allocation sweep attempt 15
+allocation sweep attempt 16
+allocation sweep attempt 17
+allocation sweep attempt 18
+allocation sweep attempt 19
+allocation sweep attempt 20
+allocation sweep attempt 21
+allocation sweep attempt 22
+allocation sweep attempt 23
+allocation sweep attempt 24
+allocation sweep attempt 25
+allocation sweep attempt 26
+allocation sweep attempt 27
+allocation sweep attempt 28
+allocation sweep attempt 29
+allocation sweep attempt 30
+allocation sweep attempt 31
+allocation sweep attempt 32
+allocation sweep attempt 33
+allocation sweep attempt 34
+allocation sweep attempt 35
+allocation sweep attempt 36
+allocation sweep attempt 37
+allocation sweep attempt 38
+allocation sweep attempt 39
+allocation sweep attempt 40
+allocation sweep attempt 41
+allocation sweep attempt 42
+allocation sweep attempt 43
+allocation sweep attempt 44
+allocation sweep attempt 45
+allocation sweep attempt 46
+allocation sweep attempt 47
+allocation sweep attempt 48
+allocation sweep attempt 49
+allocation sweep attempt 50
+allocation sweep attempt 51
+allocation sweep attempt 52
+allocation sweep attempt 53
+allocation stack operator new
+allocation stack canvas::semantic::internal::toProtobufContainerOperation
+allocation stack std::_Variant_visit_index1&lt;std::variant&lt;canvas::semantic::SolidDash,canvas::semantic::DashPattern&gt; &gt;
+allocation stack canvas::semantic::internal::toProtobufOperation
+allocation stack canvas::semantic::SemanticCodec::encodeProtobufOperation
+allocation stack canvas::semantic::OperationEngine::prepare
+allocation stack canvas::semantic::OperationEngine::apply
+allocation stack std::move&lt;std::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt; &amp; __ptr64&gt;
+allocation stack testing::internal::HandleSehExceptionsInMethodIfSupported&lt;testing::Test,void&gt;
+allocation stack testing::internal::HandleExceptionsInMethodIfSupported&lt;testing::Test,void&gt;
+allocation stack testing::TestInfo::Run
+allocation stack testing::TestSuite::Run
+allocation stack testing::internal::UnitTestImpl::RunAllTests
+allocation stack testing::internal::HandleSehExceptionsInMethodIfSupported&lt;testing::internal::UnitTestImpl,bool&gt;
+allocation stack testing::internal::HandleExceptionsInMethodIfSupported&lt;testing::internal::UnitTestImpl,bool&gt;
+allocation stack testing::UnitTest::Run
+allocation stack main
+allocation stack __scrt_common_main_seh
+allocation stack BaseThreadInitThunk
+allocation stack RtlUserThreadStart
+allocation sweep attempt 54
+allocation sweep attempt 55
+allocation sweep attempt 56
+allocation sweep attempt 57
+allocation sweep attempt 58
+allocation sweep attempt 59
+allocation sweep attempt 60
+allocation sweep attempt 61
+allocation sweep attempt 62
+allocation sweep attempt 63
+allocation sweep attempt 64
+allocation sweep attempt 65
+allocation sweep attempt 66
+allocation sweep attempt 67
+allocation sweep attempt 68
+allocation sweep attempt 69
+allocation sweep attempt 70
+allocation sweep attempt 71
+allocation sweep attempt 72
+allocation sweep attempt 73
+allocation sweep attempt 74
+allocation sweep attempt 75
+allocation sweep attempt 76
+allocation sweep attempt 77
+allocation sweep attempt 78
+allocation sweep attempt 79
+allocation sweep attempt 80
+allocation sweep attempt 81
+allocation sweep attempt 82
+allocation sweep attempt 83
+allocation sweep attempt 84
+allocation sweep attempt 85
+allocation sweep attempt 86
+allocation sweep attempt 87
+allocation sweep attempt 88
+allocation sweep attempt 89
+allocation sweep attempt 90
+allocation sweep attempt 91
+allocation sweep attempt 92
+allocation sweep attempt 93
+allocation sweep attempt 94
+allocation sweep attempt 95
+allocation sweep attempt 96
+allocation sweep attempt 97
+allocation sweep attempt 98
+allocation sweep attempt 99
+allocation sweep attempt 100
+allocation sweep attempt 101
+allocation sweep attempt 102
+allocation sweep attempt 103
+allocation sweep attempt 104
+allocation sweep attempt 105
+allocation sweep attempt 106
+allocation sweep attempt 107
+allocation sweep attempt 108
+allocation sweep attempt 109
+allocation sweep attempt 110
+allocation sweep attempt 111
+allocation sweep attempt 112
+allocation sweep attempt 113
+allocation sweep attempt 114
+allocation sweep attempt 115
+allocation sweep attempt 116
+allocation sweep attempt 117
+allocation sweep attempt 118
+allocation sweep attempt 119
+allocation sweep attempt 120
+allocation sweep attempt 121
+allocation sweep attempt 122
+allocation sweep attempt 123
+allocation sweep attempt 124
+allocation sweep attempt 125
+allocation sweep attempt 126
+allocation sweep attempt 127
+allocation sweep attempt 128
+allocation sweep attempt 129
+allocation sweep attempt 130
+allocation sweep attempt 131
+allocation sweep attempt 132
+allocation sweep attempt 133
+allocation sweep attempt 134
+allocation sweep attempt 135
+allocation sweep attempt 136
+allocation sweep attempt 137
+allocation sweep attempt 138
+allocation sweep attempt 139
+allocation sweep attempt 140
+allocation sweep attempt 141
+allocation sweep attempt 142
+allocation sweep attempt 143
+allocation sweep attempt 144
+allocation sweep attempt 145
+allocation sweep attempt 146
+allocation sweep attempt 147
+allocation sweep attempt 148
+allocation sweep attempt 149
+allocation sweep attempt 150
+allocation sweep attempt 151
+allocation sweep attempt 152
+allocation sweep attempt 153
+allocation sweep attempt 154
+allocation sweep attempt 155
+allocation sweep attempt 156
+allocation sweep attempt 157
+allocation sweep attempt 158
+allocation sweep attempt 159
+allocation sweep attempt 160
+allocation sweep attempt 161
+allocation sweep attempt 162
+allocation sweep attempt 163
+allocation sweep attempt 164
+allocation sweep attempt 165
+allocation sweep attempt 166
+allocation sweep attempt 167
+allocation sweep attempt 168
+allocation sweep attempt 169
+allocation sweep attempt 170
+allocation sweep attempt 171
+allocation sweep attempt 172
+allocation sweep attempt 173
+allocation sweep attempt 174
+allocation sweep attempt 175
+allocation sweep attempt 176
+allocation sweep attempt 177
+allocation sweep attempt 178
+allocation sweep attempt 179
+allocation sweep attempt 180
+allocation sweep attempt 181
+allocation sweep attempt 182
+allocation sweep attempt 183
+allocation sweep attempt 184
+allocation sweep attempt 185
+allocation sweep attempt 186
+allocation sweep attempt 187
+allocation sweep attempt 188
+allocation sweep attempt 189
+allocation sweep attempt 190
+allocation sweep attempt 191
+allocation sweep attempt 192
+allocation sweep attempt 193
+allocation sweep attempt 194
+allocation sweep attempt 195
+allocation sweep attempt 196
+allocation sweep attempt 197
+allocation sweep attempt 198
+allocation sweep attempt 199
+allocation sweep attempt 200
+allocation sweep attempt 201
+allocation sweep attempt 202
+allocation sweep attempt 203
+allocation sweep attempt 204
+allocation sweep attempt 205
+allocation sweep attempt 206
+allocation sweep attempt 207
+allocation sweep attempt 208
+allocation sweep attempt 209
+allocation sweep attempt 210
+allocation sweep attempt 211
+allocation sweep attempt 212
+allocation sweep attempt 213
+allocation sweep attempt 214
+allocation sweep attempt 215
+allocation sweep attempt 216
+allocation sweep attempt 217
+allocation sweep attempt 218
+allocation sweep attempt 219
+allocation sweep attempt 220
+allocation sweep attempt 221
+allocation sweep attempt 222
+allocation sweep attempt 223
+allocation sweep attempt 224
+allocation sweep attempt 225
+allocation sweep attempt 226
+allocation sweep attempt 227
+allocation sweep attempt 228
+allocation sweep attempt 229
+allocation sweep attempt 230
+allocation sweep attempt 231
+allocation sweep attempt 232
+allocation sweep attempt 233
+allocation sweep attempt 234
+allocation sweep attempt 235
+allocation sweep attempt 236
+allocation sweep attempt 237
+allocation sweep attempt 238
+allocation sweep attempt 239
+allocation sweep attempt 240
+allocation sweep attempt 241
+allocation sweep attempt 242
+allocation sweep attempt 243
+allocation sweep attempt 244
+allocation sweep attempt 245
+allocation sweep attempt 246
+allocation sweep attempt 247
+allocation sweep attempt 248
+allocation sweep attempt 249
+allocation sweep attempt 250
+allocation sweep attempt 251
+allocation sweep attempt 252
+allocation sweep attempt 253
+allocation sweep attempt 254
+allocation sweep attempt 255
+allocation sweep attempt 256
+allocation sweep attempt 257
+allocation sweep attempt 258
+allocation sweep attempt 259
+allocation sweep attempt 260
+allocation sweep attempt 261
+allocation sweep attempt 262
+allocation sweep attempt 263
+allocation sweep attempt 264
+allocation sweep attempt 265
+allocation sweep attempt 266
+allocation sweep attempt 267
+allocation sweep attempt 268
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_b.SectionAllocation.IndexedOwnerRejectsEveryPrecommitAllocationFailure" classname="fc08.section_b.SectionAllocation.IndexedOwnerRejectsEveryPrecommitAllocationFailure" time="0.0791192" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionAllocation.IndexedOwnerRejectsEveryPrecommitAllocationFailure
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionAllocation
+[ RUN      ] SectionAllocation.IndexedOwnerRejectsEveryPrecommitAllocationFailure
+allocation sweep attempt 0
+allocation sweep attempt 1
+allocation sweep attempt 2
+allocation sweep attempt 3
+allocation sweep attempt 4
+allocation sweep attempt 5
+allocation sweep attempt 6
+allocation sweep attempt 7
+allocation sweep attempt 8
+allocation sweep attempt 9
+allocation sweep attempt 10
+allocation sweep attempt 11
+allocation sweep attempt 12
+allocation sweep attempt 13
+allocation sweep attempt 14
+allocation sweep attempt 15
+allocation sweep attempt 16
+allocation sweep attempt 17
+allocation sweep attempt 18
+allocation sweep attempt 19
+allocation sweep attempt 20
+allocation sweep attempt 21
+allocation sweep attempt 22
+allocation sweep attempt 23
+allocation sweep attempt 24
+allocation sweep attempt 25
+allocation sweep attempt 26
+allocation sweep attempt 27
+allocation sweep attempt 28
+allocation sweep attempt 29
+allocation sweep attempt 30
+allocation sweep attempt 31
+allocation sweep attempt 32
+allocation sweep attempt 33
+allocation sweep attempt 34
+allocation sweep attempt 35
+allocation sweep attempt 36
+allocation sweep attempt 37
+allocation sweep attempt 38
+allocation sweep attempt 39
+allocation sweep attempt 40
+allocation sweep attempt 41
+allocation sweep attempt 42
+allocation sweep attempt 43
+allocation sweep attempt 44
+allocation sweep attempt 45
+allocation sweep attempt 46
+allocation sweep attempt 47
+allocation sweep attempt 48
+allocation sweep attempt 49
+allocation sweep attempt 50
+allocation sweep attempt 51
+allocation sweep attempt 52
+allocation sweep attempt 53
+allocation stack operator new
+allocation stack canvas::semantic::internal::toProtobufContainerOperation
+allocation stack std::_Variant_visit_index1&lt;std::variant&lt;canvas::semantic::SolidDash,canvas::semantic::DashPattern&gt; &gt;
+allocation stack canvas::semantic::internal::toProtobufOperation
+allocation stack canvas::semantic::SemanticCodec::encodeProtobufOperation
+allocation stack canvas::semantic::OperationEngine::prepare
+allocation stack canvas::semantic::OperationEngine::apply
+allocation stack std::move&lt;std::vector&lt;unsigned char,std::allocator&lt;unsigned char&gt; &gt; &amp; __ptr64&gt;
+allocation stack testing::internal::HandleSehExceptionsInMethodIfSupported&lt;testing::Test,void&gt;
+allocation stack testing::internal::HandleExceptionsInMethodIfSupported&lt;testing::Test,void&gt;
+allocation stack testing::TestInfo::Run
+allocation stack testing::TestSuite::Run
+allocation stack testing::internal::UnitTestImpl::RunAllTests
+allocation stack testing::internal::HandleSehExceptionsInMethodIfSupported&lt;testing::internal::UnitTestImpl,bool&gt;
+allocation stack testing::internal::HandleExceptionsInMethodIfSupported&lt;testing::internal::UnitTestImpl,bool&gt;
+allocation stack testing::UnitTest::Run
+allocation stack main
+allocation stack __scrt_common_main_seh
+allocation stack BaseThreadInitThunk
+allocation stack RtlUserThreadStart
+allocation sweep attempt 54
+allocation sweep attempt 55
+allocation sweep attempt 56
+allocation sweep attempt 57
+allocation sweep attempt 58
+allocation sweep attempt 59
+allocation sweep attempt 60
+allocation sweep attempt 61
+allocation sweep attempt 62
+allocation sweep attempt 63
+allocation sweep attempt 64
+allocation sweep attempt 65
+allocation sweep attempt 66
+allocation sweep attempt 67
+allocation sweep attempt 68
+allocation sweep attempt 69
+allocation sweep attempt 70
+allocation sweep attempt 71
+allocation sweep attempt 72
+allocation sweep attempt 73
+allocation sweep attempt 74
+allocation sweep attempt 75
+allocation sweep attempt 76
+allocation sweep attempt 77
+allocation sweep attempt 78
+allocation sweep attempt 79
+allocation sweep attempt 80
+allocation sweep attempt 81
+allocation sweep attempt 82
+allocation sweep attempt 83
+allocation sweep attempt 84
+allocation sweep attempt 85
+allocation sweep attempt 86
+allocation sweep attempt 87
+allocation sweep attempt 88
+allocation sweep attempt 89
+allocation sweep attempt 90
+allocation sweep attempt 91
+allocation sweep attempt 92
+allocation sweep attempt 93
+allocation sweep attempt 94
+allocation sweep attempt 95
+allocation sweep attempt 96
+allocation sweep attempt 97
+allocation sweep attempt 98
+allocation sweep attempt 99
+allocation sweep attempt 100
+allocation sweep attempt 101
+allocation sweep attempt 102
+allocation sweep attempt 103
+allocation sweep attempt 104
+allocation sweep attempt 105
+allocation sweep attempt 106
+allocation sweep attempt 107
+allocation sweep attempt 108
+allocation sweep attempt 109
+allocation sweep attempt 110
+allocation sweep attempt 111
+allocation sweep attempt 112
+allocation sweep attempt 113
+allocation sweep attempt 114
+allocation sweep attempt 115
+allocation sweep attempt 116
+allocation sweep attempt 117
+allocation sweep attempt 118
+allocation sweep attempt 119
+allocation sweep attempt 120
+allocation sweep attempt 121
+allocation sweep attempt 122
+allocation sweep attempt 123
+allocation sweep attempt 124
+allocation sweep attempt 125
+allocation sweep attempt 126
+allocation sweep attempt 127
+allocation sweep attempt 128
+allocation sweep attempt 129
+allocation sweep attempt 130
+allocation sweep attempt 131
+allocation sweep attempt 132
+allocation sweep attempt 133
+allocation sweep attempt 134
+allocation sweep attempt 135
+allocation sweep attempt 136
+allocation sweep attempt 137
+allocation sweep attempt 138
+allocation sweep attempt 139
+allocation sweep attempt 140
+allocation sweep attempt 141
+allocation sweep attempt 142
+allocation sweep attempt 143
+allocation sweep attempt 144
+allocation sweep attempt 145
+allocation sweep attempt 146
+allocation sweep attempt 147
+allocation sweep attempt 148
+allocation sweep attempt 149
+allocation sweep attempt 150
+allocation sweep attempt 151
+allocation sweep attempt 152
+allocation sweep attempt 153
+allocation sweep attempt 154
+allocation sweep attempt 155
+allocation sweep attempt 156
+allocation sweep attempt 157
+allocation sweep attempt 158
+allocation sweep attempt 159
+allocation sweep attempt 160
+allocation sweep attempt 161
+allocation sweep attempt 162
+allocation sweep attempt 163
+allocation sweep attempt 164
+allocation sweep attempt 165
+allocation sweep attempt 166
+allocation sweep attempt 167
+allocation sweep attempt 168
+allocation sweep attempt 169
+allocation sweep attempt 170
+allocation sweep attempt 171
+allocation sweep attempt 172
+allocation sweep attempt 173
+allocation sweep attempt 174
+allocation sweep attempt 175
+allocation sweep attempt 176
+allocation sweep attempt 177
+allocation sweep attempt 178
+allocation sweep attempt 179
+allocation sweep attempt 180
+allocation sweep attempt 181
+allocation sweep attempt 182
+allocation sweep attempt 183
+allocation sweep attempt 184
+allocation sweep attempt 185
+allocation sweep attempt 186
+allocation sweep attempt 187
+allocation sweep attempt 188
+allocation sweep attempt 189
+allocation sweep attempt 190
+allocation sweep attempt 191
+allocation sweep attempt 192
+allocation sweep attempt 193
+allocation sweep attempt 194
+allocation sweep attempt 195
+allocation sweep attempt 196
+allocation sweep attempt 197
+allocation sweep attempt 198
+allocation sweep attempt 199
+allocation sweep attempt 200
+allocation sweep attempt 201
+allocation sweep attempt 202
+allocation sweep attempt 203
+allocation sweep attempt 204
+allocation sweep attempt 205
+allocation sweep attempt 206
+allocation sweep attempt 207
+allocation sweep attempt 208
+allocation sweep attempt 209
+allocation sweep attempt 210
+allocation sweep attempt 211
+allocation sweep attempt 212
+allocation sweep attempt 213
+allocation sweep attempt 214
+allocation sweep attempt 215
+allocation sweep attempt 216
+allocation sweep attempt 217
+allocation sweep attempt 218
+allocation sweep attempt 219
+allocation sweep attempt 220
+allocation sweep attempt 221
+allocation sweep attempt 222
+allocation sweep attempt 223
+allocation sweep attempt 224
+allocation sweep attempt 225
+allocation sweep attempt 226
+allocation sweep attempt 227
+allocation sweep attempt 228
+allocation sweep attempt 229
+allocation sweep attempt 230
+allocation sweep attempt 231
+allocation sweep attempt 232
+allocation sweep attempt 233
+allocation sweep attempt 234
+allocation sweep attempt 235
+allocation sweep attempt 236
+allocation sweep attempt 237
+allocation sweep attempt 238
+allocation sweep attempt 239
+allocation sweep attempt 240
+allocation sweep attempt 241
+allocation sweep attempt 242
+allocation sweep attempt 243
+allocation sweep attempt 244
+allocation sweep attempt 245
+allocation sweep attempt 246
+allocation sweep attempt 247
+allocation sweep attempt 248
+allocation sweep attempt 249
+allocation sweep attempt 250
+allocation sweep attempt 251
+allocation sweep attempt 252
+allocation sweep attempt 253
+allocation sweep attempt 254
+allocation sweep attempt 255
+allocation sweep attempt 256
+allocation sweep attempt 257
+allocation sweep attempt 258
+allocation sweep attempt 259
+allocation sweep attempt 260
+allocation sweep attempt 261
+allocation sweep attempt 262
+allocation sweep attempt 263
+allocation sweep attempt 264
+allocation sweep attempt 265
+allocation sweep attempt 266
+allocation sweep attempt 267
+allocation sweep attempt 268
+allocation sweep attempt 269
+</system-out>
+	</testcase>
+</testsuite>

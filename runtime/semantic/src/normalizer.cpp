@@ -1,6 +1,7 @@
 #include "canvas/semantic/normalizer.hpp"
 
 #include "object_record_semantics_internal.hpp"
+#include "container_operation_internal.hpp"
 
 #include "canvas/semantic/canonical_numeric.hpp"
 
@@ -502,6 +503,8 @@ bool normalizeOperationPayload(OperationPayload& payload) {
             } else if constexpr (std::is_same_v<Item, EditRichTextOp>) {
                 if (!validObjectId(value.object_id)) return false;
                 return normalizeRichTextDelta(value.delta);
+            } else if constexpr (std::is_same_v<Item, SetSectionContentOp> || std::is_same_v<Item, EditContainerTopologyOp>) {
+                return internal::normalizeContainerOperation(value);
             } else if constexpr (std::is_same_v<Item, UpdateResourceManifestOp>) {
                 if (value.expected_manifest_revision == 0 && value.upserts.empty() && value.removes.empty() && value.reactivations.empty()) return false;
                 for (auto& entry : value.upserts) if (!normalizeResourceManifestEntry(entry)) return false;

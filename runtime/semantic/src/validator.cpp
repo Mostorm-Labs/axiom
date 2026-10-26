@@ -3,6 +3,7 @@
 #include "canvas/semantic/geometry_accounting_v1.hpp"
 
 #include "object_record_semantics_internal.hpp"
+#include "container_operation_internal.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -846,6 +847,8 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
                 if constexpr (std::is_same_v<Payload, SetConnectorContentOp>) {
                     if (!validConnector(payload.content)) return {ValidationIssue::kInvalidLeaf};
                 }
+            } else if constexpr (std::is_same_v<Payload, SetSectionContentOp> || std::is_same_v<Payload, EditContainerTopologyOp>) {
+                if (!internal::validateContainerOperation(payload)) return invalidCollection();
             } else if constexpr (std::is_same_v<Payload, UpdateResourceManifestOp>) {
                 if (payload.upserts.empty() && payload.removes.empty() && payload.reactivations.empty()) return invalidCollection();
                 if (payload.upserts.size() > kMaxKeyedBatchItems || payload.removes.size() > kMaxKeyedBatchItems || payload.reactivations.size() > kMaxKeyedBatchItems) return invalidCollection();

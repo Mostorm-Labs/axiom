@@ -3,6 +3,8 @@
 #include "object_index.hpp"
 #include "object_store_mutator.hpp"
 #include "canvas/semantic/staged_object_view.hpp"
+#include "canvas/semantic/apply_plan.hpp"
+#include <type_traits>
 #include "canvas/semantic/object_content.hpp"
 #include "g1_08_indexed_access_probe_internal.hpp"
 
@@ -117,6 +119,63 @@ bool IndexedObjectStore::indexMatchesRebuildInternal() const {
 
 namespace canvas::semantic::internal {
 
+class PreparedIndexedContainerApply::State final {
+  public:
+    explicit State(IndexedObjectStore& value) : store(value) {}
+    IndexedObjectStore& store;
+    std::map<ObjectId, ObjectRecord> reserved_records;
+    std::vector<ObjectId> replacements;
+    std::vector<ObjectId> deletes;
+    ObjectIndex::ParentPatch parents;
+};
+
+PreparedIndexedContainerApply::PreparedIndexedContainerApply(std::unique_ptr<State> state) : state_(std::move(state)) {}
+PreparedIndexedContainerApply::~PreparedIndexedContainerApply() = default;
+
+void PreparedIndexedContainerApply::publish() noexcept {
+    static_assert(std::is_nothrow_move_assignable_v<ObjectRecord>);
+    auto& records = state_->store.storage_->records;
+    for (const auto& id : state_->replacements) {
+        auto prepared = state_->reserved_records.find(id);
+        records.find(id)->second = std::move(prepared->second);
+        state_->reserved_records.erase(prepared);
+    }
+    while (!state_->reserved_records.empty()) records.insert(state_->reserved_records.extract(state_->reserved_records.begin()));
+    for (const auto& id : state_->deletes) records.erase(id);
+    state_->store.object_index_->publishParentChanges(std::move(state_->parents));
+}
+
+std::unique_ptr<PreparedIndexedContainerApply> ObjectStoreMutator::prepareContainerPlan(
+    IndexedObjectStore& store, const PreparedApplyPlan& plan) {
+    if (plan.operation.kind() != OperationKind::kSetSectionContent && plan.operation.kind() != OperationKind::kEditContainerTopology) return {};
+    auto state = std::make_unique<PreparedIndexedContainerApply::State>(store);
+    std::vector<ObjectIndex::ParentEntry> before, after;
+    for (const auto& record : plan.creates) {
+        if (record.kind != ObjectKind::kGroup && record.kind != ObjectKind::kSection) return {};
+        if (!state->reserved_records.emplace(record.id, record).second) return {};
+        after.push_back({record.id, record.placement});
+    }
+    for (const auto& record : plan.replacements) {
+        const auto* current = store.find(record.id);
+        if (!current || current->kind != record.kind ||
+            (record.kind == ObjectKind::kConnector && current->content != record.content)) return {};
+        if (!state->reserved_records.emplace(record.id, record).second) return {};
+        state->replacements.push_back(record.id);
+        if (current->placement != record.placement) {
+            before.push_back({current->id, current->placement});
+            after.push_back({record.id, record.placement});
+        }
+    }
+    for (const auto& id : plan.deletes) {
+        const auto* current = store.find(id);
+        if (!current || (current->kind != ObjectKind::kGroup && current->kind != ObjectKind::kSection)) return {};
+        before.push_back({id, current->placement});
+        state->deletes.push_back(id);
+    }
+    state->parents = store.object_index_->prepareParentChanges(before, after);
+    return std::unique_ptr<PreparedIndexedContainerApply>(new PreparedIndexedContainerApply(std::move(state)));
+}
+
 namespace {
 struct StagedLookupState {
     const IndexedObjectStore* base = nullptr;
@@ -129,6 +188,10 @@ thread_local std::map<const StagedObjectView*, StagedLookupState> staged_states;
 void noteStagedBase(const StagedObjectView& staged, const ObjectStore& store) {
     auto& state = staged_states[&staged];
     state.base = dynamic_cast<const IndexedObjectStore*>(&store);
+}
+
+void forgetStagedBase(const StagedObjectView& staged) noexcept {
+    staged_states.erase(&staged);
 }
 
 void noteStagedCreate(const StagedObjectView& staged, const ObjectRecord& record) {

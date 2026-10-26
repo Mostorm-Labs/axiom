@@ -78,6 +78,9 @@ TEST(SemanticTypes, RegistryIsExplicitAndClosed) {
     }
     EXPECT_FALSE(isKnownOperationKind(static_cast<OperationKind>(0)));
     EXPECT_TRUE(isKnownOperationKind(static_cast<OperationKind>(16)));
+    EXPECT_TRUE(isKnownOperationKind(static_cast<OperationKind>(17)));
+    EXPECT_TRUE(isKnownOperationKind(static_cast<OperationKind>(18)));
+    EXPECT_FALSE(isKnownOperationKind(static_cast<OperationKind>(19)));
 }
 
 TEST(SemanticTypes, SemanticGenerationIsASeparateStrongRuntimeLocalToken) {
@@ -117,7 +120,10 @@ TEST(SemanticTypes, OperationIdZeroPredicateSupportsConstantEvaluation) {
 TEST(SemanticTypes, OperationCarriesClosedTypedPayloadAndStrongDocumentId) {
     static_assert(!std::is_convertible_v<DocumentId, ObjectId>);
     static_assert(!std::is_convertible_v<ObjectId, DocumentId>);
-    static_assert(std::variant_size_v<OperationPayload> == 16);
+    static_assert(std::variant_size_v<OperationPayload> == 18);
+    static_assert(std::is_same_v<std::variant_alternative_t<15, OperationPayload>, UpdateResourceManifestOp>);
+    static_assert(std::is_same_v<std::variant_alternative_t<16, OperationPayload>, SetSectionContentOp>);
+    static_assert(std::is_same_v<std::variant_alternative_t<17, OperationPayload>, EditContainerTopologyOp>);
 
     Operation operation{};
     operation.payload = DeleteObjectsOp{{ObjectId::fromUint64(7U)}};

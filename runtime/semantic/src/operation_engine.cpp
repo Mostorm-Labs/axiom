@@ -10,6 +10,7 @@
 #include "change_set_builder.hpp"
 
 #include <exception>
+#include <new>
 #include <utility>
 
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
@@ -53,6 +54,9 @@ PrepareResult OperationEngine::prepare(const Operation& operation, const Statefu
     if (!normalized.ok() || !validatePayloadStructure(normalized.value).ok()) {
         return {PrepareDisposition::kRejected, {StatefulIssue::kInvalidApplicability}, std::nullopt};
     }
+    if ((operation.kind() == OperationKind::kSetSectionContent || operation.kind() == OperationKind::kEditContainerTopology) &&
+        !SemanticCodec::encodeProtobufOperation(normalized.value).ok())
+        return {PrepareDisposition::kRejected, {StatefulIssue::kInvalidApplicability}, std::nullopt};
     return prepareApplyPlan(normalized.value, context);
 }
 
@@ -62,7 +66,7 @@ ApplyResult OperationEngine::apply(
     ReferenceObjectStore& objects,
     AppliedOperationLedger& applied_operations,
     SemanticGenerationState& generation,
-    CanonicalCommitClock& canonical_commit_clock) const {
+    CanonicalCommitClock& canonical_commit_clock) const try {
     FC08_ENGINE_SCOPE
     const PrepareResult prepared = prepare(
         operation, StatefulValidationContext{objects, applied_operations});
@@ -95,11 +99,12 @@ ApplyResult OperationEngine::apply(
         return {ApplyDisposition::kRejected, {}, CommitBlockReason::kNone, std::nullopt};
     }
 
+    auto reserved_ledger = applied_operations.reserveContainerEntry(prepared.plan->operation);
     FC08_ENGINE_RESERVED
     if (internal::applyPreparedPlan(objects, *prepared.plan FC08_ATOMIC_ARGUMENT).status != internal::AtomicApplyStatus::kApplied) {
         return {ApplyDisposition::kRejected, {}, CommitBlockReason::kNone, std::nullopt};
     }
-    if (!applied_operations.recordApplied(prepared.plan->operation)) {
+    if (!applied_operations.recordReservedOrApplied(prepared.plan->operation, std::move(reserved_ledger))) {
         std::terminate();
     }
     generation.commitSuccessor(after);
@@ -118,6 +123,10 @@ ApplyResult OperationEngine::apply(
         {},
         CommitBlockReason::kNone,
         std::move(record)};
+} catch (const std::bad_alloc&) {
+    if (operation.kind() == OperationKind::kSetSectionContent || operation.kind() == OperationKind::kEditContainerTopology)
+        return {ApplyDisposition::kRejected, {}, CommitBlockReason::kNone, std::nullopt};
+    throw;
 }
 
 ApplyResult OperationEngine::apply(
@@ -126,7 +135,7 @@ ApplyResult OperationEngine::apply(
     IndexedObjectStore& objects,
     AppliedOperationLedger& applied_operations,
     SemanticGenerationState& generation,
-    CanonicalCommitClock& canonical_commit_clock) const {
+    CanonicalCommitClock& canonical_commit_clock) const try {
     FC08_ENGINE_SCOPE
     const PrepareResult prepared = prepare(
         operation, StatefulValidationContext{objects, applied_operations});
@@ -156,11 +165,12 @@ ApplyResult OperationEngine::apply(
     if (!prepared_changes.has_value()) {
         return {ApplyDisposition::kRejected, {}, CommitBlockReason::kNone, std::nullopt};
     }
+    auto reserved_ledger = applied_operations.reserveContainerEntry(prepared.plan->operation);
     FC08_ENGINE_RESERVED
     if (internal::applyPreparedPlan(objects, *prepared.plan FC08_ATOMIC_ARGUMENT).status != internal::AtomicApplyStatus::kApplied) {
         return {ApplyDisposition::kRejected, {}, CommitBlockReason::kNone, std::nullopt};
     }
-    if (!applied_operations.recordApplied(prepared.plan->operation)) {
+    if (!applied_operations.recordReservedOrApplied(prepared.plan->operation, std::move(reserved_ledger))) {
         std::terminate();
     }
     generation.commitSuccessor(after);
@@ -175,9 +185,13 @@ ApplyResult OperationEngine::apply(
         std::move(change_set)};
     FC08_ENGINE_DONE
     return {ApplyDisposition::kApplied, {}, CommitBlockReason::kNone, std::move(record)};
+} catch (const std::bad_alloc&) {
+    if (operation.kind() == OperationKind::kSetSectionContent || operation.kind() == OperationKind::kEditContainerTopology)
+        return {ApplyDisposition::kRejected, {}, CommitBlockReason::kNone, std::nullopt};
+    throw;
 }
 
-ApplyResult OperationEngine::apply(const Operation& operation, ApplySource source, ReferenceObjectStore& objects, ResourceManifest& manifest, AppliedOperationLedger& applied_operations, SemanticGenerationState& generation, CanonicalCommitClock& canonical_commit_clock) const {
+ApplyResult OperationEngine::apply(const Operation& operation, ApplySource source, ReferenceObjectStore& objects, ResourceManifest& manifest, AppliedOperationLedger& applied_operations, SemanticGenerationState& generation, CanonicalCommitClock& canonical_commit_clock) const try {
     FC08_ENGINE_SCOPE
     const PrepareResult prepared=prepare(operation, StatefulValidationContext{objects,applied_operations,&manifest});
     if(prepared.disposition==PrepareDisposition::kAlreadyApplied)return {ApplyDisposition::kAlreadyApplied,{},CommitBlockReason::kNone,std::nullopt};
@@ -185,11 +199,16 @@ ApplyResult OperationEngine::apply(const Operation& operation, ApplySource sourc
     FC08_ENGINE_STAGED
     if(canonical_commit_clock.runtimeEpoch().value()==0)return {ApplyDisposition::kCommitBlocked,{},CommitBlockReason::kInvalidRuntimeEpoch,std::nullopt};
     const SemanticGeneration before=generation.current(); SemanticGeneration after; if(!generation.prepareSuccessor(after))return {ApplyDisposition::kRejected,{},CommitBlockReason::kNone,std::nullopt}; CommitOrdinal ordinal; if(!canonical_commit_clock.prepareSuccessor(ordinal))return {ApplyDisposition::kCommitBlocked,{},CommitBlockReason::kCommitLaneExhausted,std::nullopt}; auto changes=internal::prepareChangeSet(*prepared.plan); if(!changes)return {ApplyDisposition::kRejected,{},CommitBlockReason::kNone,std::nullopt};
+    auto reserved_ledger = applied_operations.reserveContainerEntry(prepared.plan->operation);
     FC08_ENGINE_RESERVED
-    if(internal::applyPreparedPlan(objects,manifest,*prepared.plan FC08_ATOMIC_ARGUMENT).status!=internal::AtomicApplyStatus::kApplied)return {ApplyDisposition::kRejected,{},CommitBlockReason::kNone,std::nullopt}; if(!applied_operations.recordApplied(prepared.plan->operation))std::terminate(); generation.commitSuccessor(after); canonical_commit_clock.commitSuccessor(ordinal); auto cs=internal::finalizeChangeSet(std::move(*changes),before,after); CanonicalCommitRecord record{prepared.plan->operation.id,source,before,after,CanonicalCommitStamp{canonical_commit_clock.runtimeEpoch(),ordinal},std::move(cs)}; FC08_ENGINE_DONE
+    if(internal::applyPreparedPlan(objects,manifest,*prepared.plan FC08_ATOMIC_ARGUMENT).status!=internal::AtomicApplyStatus::kApplied)return {ApplyDisposition::kRejected,{},CommitBlockReason::kNone,std::nullopt}; if(!applied_operations.recordReservedOrApplied(prepared.plan->operation, std::move(reserved_ledger)))std::terminate(); generation.commitSuccessor(after); canonical_commit_clock.commitSuccessor(ordinal); auto cs=internal::finalizeChangeSet(std::move(*changes),before,after); CanonicalCommitRecord record{prepared.plan->operation.id,source,before,after,CanonicalCommitStamp{canonical_commit_clock.runtimeEpoch(),ordinal},std::move(cs)}; FC08_ENGINE_DONE
     return {ApplyDisposition::kApplied,{},CommitBlockReason::kNone,std::move(record)};
+} catch (const std::bad_alloc&) {
+    if (operation.kind() == OperationKind::kSetSectionContent || operation.kind() == OperationKind::kEditContainerTopology)
+        return {ApplyDisposition::kRejected, {}, CommitBlockReason::kNone, std::nullopt};
+    throw;
 }
-ApplyResult OperationEngine::apply(const Operation& operation, ApplySource source, IndexedObjectStore& objects, ResourceManifest& manifest, AppliedOperationLedger& applied_operations, SemanticGenerationState& generation, CanonicalCommitClock& canonical_commit_clock) const {
+ApplyResult OperationEngine::apply(const Operation& operation, ApplySource source, IndexedObjectStore& objects, ResourceManifest& manifest, AppliedOperationLedger& applied_operations, SemanticGenerationState& generation, CanonicalCommitClock& canonical_commit_clock) const try {
     FC08_ENGINE_SCOPE
     const PrepareResult prepared=prepare(operation, StatefulValidationContext{objects,applied_operations,&manifest});
     if(prepared.disposition==PrepareDisposition::kAlreadyApplied)return {ApplyDisposition::kAlreadyApplied,{},CommitBlockReason::kNone,std::nullopt};
@@ -197,9 +216,14 @@ ApplyResult OperationEngine::apply(const Operation& operation, ApplySource sourc
     FC08_ENGINE_STAGED
     if(canonical_commit_clock.runtimeEpoch().value()==0)return {ApplyDisposition::kCommitBlocked,{},CommitBlockReason::kInvalidRuntimeEpoch,std::nullopt};
     const SemanticGeneration before=generation.current(); SemanticGeneration after; if(!generation.prepareSuccessor(after))return {ApplyDisposition::kRejected,{},CommitBlockReason::kNone,std::nullopt}; CommitOrdinal ordinal; if(!canonical_commit_clock.prepareSuccessor(ordinal))return {ApplyDisposition::kCommitBlocked,{},CommitBlockReason::kCommitLaneExhausted,std::nullopt}; auto changes=internal::prepareChangeSet(*prepared.plan); if(!changes)return {ApplyDisposition::kRejected,{},CommitBlockReason::kNone,std::nullopt};
+    auto reserved_ledger = applied_operations.reserveContainerEntry(prepared.plan->operation);
     FC08_ENGINE_RESERVED
-    if(internal::applyPreparedPlan(objects,manifest,*prepared.plan FC08_ATOMIC_ARGUMENT).status!=internal::AtomicApplyStatus::kApplied)return {ApplyDisposition::kRejected,{},CommitBlockReason::kNone,std::nullopt}; if(!applied_operations.recordApplied(prepared.plan->operation))std::terminate(); generation.commitSuccessor(after); canonical_commit_clock.commitSuccessor(ordinal); auto cs=internal::finalizeChangeSet(std::move(*changes),before,after); CanonicalCommitRecord record{prepared.plan->operation.id,source,before,after,CanonicalCommitStamp{canonical_commit_clock.runtimeEpoch(),ordinal},std::move(cs)}; FC08_ENGINE_DONE
+    if(internal::applyPreparedPlan(objects,manifest,*prepared.plan FC08_ATOMIC_ARGUMENT).status!=internal::AtomicApplyStatus::kApplied)return {ApplyDisposition::kRejected,{},CommitBlockReason::kNone,std::nullopt}; if(!applied_operations.recordReservedOrApplied(prepared.plan->operation, std::move(reserved_ledger)))std::terminate(); generation.commitSuccessor(after); canonical_commit_clock.commitSuccessor(ordinal); auto cs=internal::finalizeChangeSet(std::move(*changes),before,after); CanonicalCommitRecord record{prepared.plan->operation.id,source,before,after,CanonicalCommitStamp{canonical_commit_clock.runtimeEpoch(),ordinal},std::move(cs)}; FC08_ENGINE_DONE
     return {ApplyDisposition::kApplied,{},CommitBlockReason::kNone,std::move(record)};
+} catch (const std::bad_alloc&) {
+    if (operation.kind() == OperationKind::kSetSectionContent || operation.kind() == OperationKind::kEditContainerTopology)
+        return {ApplyDisposition::kRejected, {}, CommitBlockReason::kNone, std::nullopt};
+    throw;
 }
 
 } // namespace canvas::semantic

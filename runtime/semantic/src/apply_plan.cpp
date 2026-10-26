@@ -3,6 +3,7 @@
 #include "canvas/semantic/idempotency.hpp"
 #include "canvas/semantic/staged_object_view.hpp"
 #include "sha256_internal.hpp"
+#include "container_operation_internal.hpp"
 
 #include <algorithm>
 #include <limits>
@@ -83,6 +84,9 @@ PrepareResult prepareApplyPlan(const Operation& operation, const StatefulValidat
         } else if constexpr (std::is_same_v<T, RemoveEraseMasksOp>) { ReplaceObjectsStatePlanInputs out; status=validateRemoveEraseMasksState(payload,context.objects,&out); if(status.ok()) plan.replacements=std::move(out.replacements);
         } else if constexpr (std::is_same_v<T, EditRichTextOp>) { ReplaceObjectsStatePlanInputs out; status=validateEditRichTextStateForDocument(payload,context.objects,&out,operation.document_id); if(status.ok()) plan.replacements=std::move(out.replacements);
         } else if constexpr (std::is_same_v<T, SetConnectorContentOp>) { ReplaceObjectsStatePlanInputs out; status=validateSetConnectorContentState(payload,context.objects,&out); if(status.ok()) plan.replacements=std::move(out.replacements); }
+        else if constexpr (std::is_same_v<T, SetSectionContentOp> || std::is_same_v<T, EditContainerTopologyOp>) {
+            status = internal::prepareContainerOperation(payload, context.objects, plan);
+        }
         else if constexpr (std::is_same_v<T, UpdateResourceManifestOp>) {
             if (context.manifest == nullptr || !validateResourceManifest(*context.manifest) || payload.expected_manifest_revision != context.manifest->manifest_revision) { status = {StatefulIssue::kInvalidApplicability}; return; }
             std::vector<ResourceId> action_ids;

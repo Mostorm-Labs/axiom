@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="6"
+	failures="4"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="0"
+	timestamp="2026-10-26T19:58:53"
+	>
+	<testcase name="fc08.section_b.SectionAllocation.ReferenceOwnerRejectsEveryPrecommitAllocationFailure" classname="fc08.section_b.SectionAllocation.ReferenceOwnerRejectsEveryPrecommitAllocationFailure" time="0.162962" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionAllocation.ReferenceOwnerRejectsEveryPrecommitAllocationFailure
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionAllocation
+[ RUN      ] SectionAllocation.ReferenceOwnerRejectsEveryPrecommitAllocationFailure
+allocation sweep attempt 0
+allocation sweep attempt 1
+allocation sweep attempt 2
+allocation sweep attempt 3
+allocation sweep attempt 4
+allocation sweep attempt 5
+allocation sweep attempt 6
+allocation sweep attempt 7
+allocation sweep attempt 8
+allocation sweep attempt 9
+allocation sweep attempt 10
+allocation sweep attempt 11
+allocation sweep attempt 12
+allocation sweep attempt 13
+allocation sweep attempt 14
+allocation sweep attempt 15
+allocation sweep attempt 16
+allocation sweep attempt 17
+allocation sweep attempt 18
+allocation sweep attempt 19
+allocation sweep attempt 20
+alloc...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_b.SectionAllocation.IndexedOwnerRejectsEveryPrecommitAllocationFailure" classname="fc08.section_b.SectionAllocation.IndexedOwnerRejectsEveryPrecommitAllocationFailure" time="0.176015" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionAllocation.IndexedOwnerRejectsEveryPrecommitAllocationFailure
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionAllocation
+[ RUN      ] SectionAllocation.IndexedOwnerRejectsEveryPrecommitAllocationFailure
+allocation sweep attempt 0
+allocation sweep attempt 1
+allocation sweep attempt 2
+allocation sweep attempt 3
+allocation sweep attempt 4
+allocation sweep attempt 5
+allocation sweep attempt 6
+allocation sweep attempt 7
+allocation sweep attempt 8
+allocation sweep attempt 9
+allocation sweep attempt 10
+allocation sweep attempt 11
+allocation sweep attempt 12
+allocation sweep attempt 13
+allocation sweep attempt 14
+allocation sweep attempt 15
+allocation sweep attempt 16
+allocation sweep attempt 17
+allocation sweep attempt 18
+allocation sweep attempt 19
+allocation sweep attempt 20
+allocatio...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_b.SectionAllocation.ReferenceOwnerWithSectionFill" classname="fc08.section_b.SectionAllocation.ReferenceOwnerWithSectionFill" time="0.0812228" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionAllocation.ReferenceOwnerWithSectionFill
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionAllocation
+[ RUN      ] SectionAllocation.ReferenceOwnerWithSectionFill
+allocation sweep attempt 0
+allocation sweep attempt 1
+allocation sweep attempt 2
+allocation sweep attempt 3
+allocation sweep attempt 4
+allocation sweep attempt 5
+allocation sweep attempt 6
+allocation sweep attempt 7
+allocation sweep attempt 8
+allocation sweep attempt 9
+allocation sweep attempt 10
+allocation sweep attempt 11
+allocation sweep attempt 12
+allocation sweep attempt 13
+allocation sweep attempt 14
+allocation sweep attempt 15
+allocation sweep attempt 16
+allocation sweep attempt 17
+allocation sweep attempt 18
+allocation sweep attempt 19
+allocation sweep attempt 20
+allocation sweep attempt 21
+allocation sweep attempt 22
+allocation sweep attempt 23
+allocation sweep attempt 24
+allocation sweep attempt 25
+allocation sweep attempt 26
+allocation sweep attempt 27
+allocation sweep attempt 28
+allocation sweep attempt 29
+allocation sweep attempt 30
+allocation sweep attempt 31
+allocation sweep attempt 32
+allocation sweep attempt 33
+allocation sweep attempt 34
+allocation sweep attempt 35
+allocation sweep attempt 36
+allocation sweep attempt 37
+allocation sweep attempt 38
+allocation sweep attempt 39
+allocation sweep attempt 40
+allocation sweep attempt 41
+allocation sweep attempt 42
+allocation sweep attempt 43
+allocation sweep attempt 44
+allocation sweep attempt 45
+allocation sweep attempt 46
+allocation sweep attempt 47
+allocation sweep attempt 48
+allocation sweep attempt 49
+allocation sweep attempt 50
+allocation sweep attempt 51
+allocation sweep attempt 52
+allocation sweep attempt 53
+allocation sweep attempt 54
+allocation sweep attempt 55
+allocation sweep attempt 56
+allocation sweep attempt 57
+allocation sweep attempt 58
+allocation sweep attempt 59
+allocation sweep attempt 60
+allocation sweep attempt 61
+allocation sweep attempt 62
+allocation sweep attempt 63
+allocation sweep attempt 64
+allocation sweep attempt 65
+allocation sweep attempt 66
+allocation sweep attempt 67
+unknown file: error: SEH exception with code 0xc0000005 thrown in the test body.
+Stack trace:
+
+
+[  FAILED  ] SectionAllocation.ReferenceOwnerWithSectionFill (42 ms)
+[----------] 1 test from SectionAllocation (42 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (42 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SectionAllocation.ReferenceOwnerWithSectionFill
+
+ 1 FAILED TEST
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_b.SectionAllocation.IndexedOwnerWithSectionFill" classname="fc08.section_b.SectionAllocation.IndexedOwnerWithSectionFill" time="0.0828884" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionAllocation.IndexedOwnerWithSectionFill
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionAllocation
+[ RUN      ] SectionAllocation.IndexedOwnerWithSectionFill
+allocation sweep attempt 0
+allocation sweep attempt 1
+allocation sweep attempt 2
+allocation sweep attempt 3
+allocation sweep attempt 4
+allocation sweep attempt 5
+allocation sweep attempt 6
+allocation sweep attempt 7
+allocation sweep attempt 8
+allocation sweep attempt 9
+allocation sweep attempt 10
+allocation sweep attempt 11
+allocation sweep attempt 12
+allocation sweep attempt 13
+allocation sweep attempt 14
+allocation sweep attempt 15
+allocation sweep attempt 16
+allocation sweep attempt 17
+allocation sweep attempt 18
+allocation sweep attempt 19
+allocation sweep attempt 20
+allocation sweep attempt 21
+allocation sweep attempt 22
+allocation sweep attempt 23
+allocation sweep attempt 24
+allocation sweep attempt 25
+allocation sweep attempt 26
+allocation sweep attempt 27
+allocation sweep attempt 28
+allocation sweep attempt 29
+allocation sweep attempt 30
+allocation sweep attempt 31
+allocation sweep attempt 32
+allocation sweep attempt 33
+allocation sweep attempt 34
+allocation sweep attempt 35
+allocation sweep attempt 36
+allocation sweep attempt 37
+allocation sweep attempt 38
+allocation sweep attempt 39
+allocation sweep attempt 40
+allocation sweep attempt 41
+allocation sweep attempt 42
+allocation sweep attempt 43
+allocation sweep attempt 44
+allocation sweep attempt 45
+allocation sweep attempt 46
+allocation sweep attempt 47
+allocation sweep attempt 48
+allocation sweep attempt 49
+allocation sweep attempt 50
+allocation sweep attempt 51
+allocation sweep attempt 52
+allocation sweep attempt 53
+allocation sweep attempt 54
+allocation sweep attempt 55
+allocation sweep attempt 56
+allocation sweep attempt 57
+allocation sweep attempt 58
+allocation sweep attempt 59
+allocation sweep attempt 60
+allocation sweep attempt 61
+allocation sweep attempt 62
+allocation sweep attempt 63
+allocation sweep attempt 64
+allocation sweep attempt 65
+allocation sweep attempt 66
+allocation sweep attempt 67
+unknown file: error: SEH exception with code 0xc0000005 thrown in the test body.
+Stack trace:
+
+
+[  FAILED  ] SectionAllocation.IndexedOwnerWithSectionFill (40 ms)
+[----------] 1 test from SectionAllocation (40 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (40 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SectionAllocation.IndexedOwnerWithSectionFill
+
+ 1 FAILED TEST
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_b.SectionAllocation.ReferenceOwnerWithGroupMask" classname="fc08.section_b.SectionAllocation.ReferenceOwnerWithGroupMask" time="0.0662018" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionAllocation.ReferenceOwnerWithGroupMask
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionAllocation
+[ RUN      ] SectionAllocation.ReferenceOwnerWithGroupMask
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_allocation_test.cpp(46): error: Value of: SemanticCodec::encodeProtobufOperation(command(scenario)).ok()
+  Actual: false
+Expected: true
+
+[  FAILED  ] SectionAllocation.ReferenceOwnerWithGroupMask (35 ms)
+[----------] 1 test from SectionAllocation (35 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (35 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SectionAllocation.ReferenceOwnerWithGroupMask
+
+ 1 FAILED TEST
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_b.SectionAllocation.IndexedOwnerWithGroupMask" classname="fc08.section_b.SectionAllocation.IndexedOwnerWithGroupMask" time="0.0674414" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionAllocation.IndexedOwnerWithGroupMask
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionAllocation
+[ RUN      ] SectionAllocation.IndexedOwnerWithGroupMask
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_allocation_test.cpp(46): error: Value of: SemanticCodec::encodeProtobufOperation(command(scenario)).ok()
+  Actual: false
+Expected: true
+
+[  FAILED  ] SectionAllocation.IndexedOwnerWithGroupMask (37 ms)
+[----------] 1 test from SectionAllocation (37 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (37 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SectionAllocation.IndexedOwnerWithGroupMask
+
+ 1 FAILED TEST
+</system-out>
+	</testcase>
+</testsuite>

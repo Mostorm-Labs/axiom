@@ -8,6 +8,10 @@ add_library(canvas_runtime_semantic STATIC
     src/object_index.cpp
     src/reference_object_store.cpp
     src/semantic_types.cpp
+    src/container_operation_normalization.cpp
+    src/container_operation_validation.cpp
+    src/container_operation_mapping.cpp
+    src/container_topology_plan.cpp
     src/normalizer.cpp
     src/operation_fingerprint.cpp
     src/operation_state_validator.cpp

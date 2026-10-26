@@ -39,10 +39,18 @@ def main():
     changed=set(git("diff","--name-only",BASE).splitlines()+git("ls-files","--others","--exclude-standard").splitlines())
     assert all(any(fnmatch.fnmatchcase(path,rule) for rule in allowed) for path in changed),sorted(changed)
     assert not git("diff",BASE,"--","runtime/semantic/src/qualification_checkpoint.hpp","schema/axiom/v1/descriptor","semantic-sdk.lock.json","r1-full-skia-sdk.lock.json","tests/fc08/reference",".aegis/packages/FC-08-SECTION-A-v0.1",".aegis/results/FC-08-SECTION-A")
+    corpus=json.loads((ROOT/".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus-manifest.json").read_text())
+    for row in corpus["variants"]:
+     for value in [row["input"],row["expected"],*row.get("wire",[])]:
+      if "path" in value:assert hashlib.sha256((ROOT/value["path"]).read_bytes()).hexdigest()==value["sha256"],value["path"]
+    assert len(corpus["variants"])==302
+
   except (AssertionError,OSError,ValueError,subprocess.CalledProcessError) as e:errors.append(str(e))
   for name in (["PackageBindingPreflight","EvidenceContractPreflight"] if a.action=="preflight" else ["ScopePreservationAudit"]):
    save(name+".json",{"name":name,"status":"PASS_SLICE_B" if not errors else "BLOCKED","package_revision":REV,"source_head":git("rev-parse","HEAD"),"verified_refs":refs,"errors":errors})
   print(json.dumps({"action":a.action,"errors":errors}));return int(bool(errors))
+ source_files=sorted(set(git("ls-files","runtime/semantic").splitlines()+git("ls-files","--others","--exclude-standard","runtime/semantic").splitlines()))
+ source_manifest=[{"path":f,"sha256":hashlib.sha256((ROOT/f).read_bytes()).hexdigest()} for f in source_files if (ROOT/f).is_file()]
  facts=json.loads((ROOT/"out/fc08-section-b/environment.json").read_text());env={**os.environ,**facts["environment"],"PYTHONUTF8":"1"};build=ROOT/"out/fc08-section-b/build";journal=[]
  def run(name,argv):
   r=subprocess.run(list(map(str,argv)),cwd=ROOT,env=env,capture_output=True,text=True,encoding="utf-8",errors="replace")
@@ -56,6 +64,6 @@ def main():
   names=[t["name"] for t in tests if Path(t.get("command",[""])[0]).stem in a.targets];assert names
   (out/"ctest-names.txt").write_text("\n".join(names)+"\n",encoding="utf-8")
   code=run("ctest",["ctest","--test-dir",build,"--tests-from-file",out/"ctest-names.txt","--output-on-failure","--output-junit",out/"ctest.xml"])
- save("invocations.json",{"source_head":git("rev-parse","HEAD"),"cwd":str(ROOT),"commands":journal,"exit_code":code,"SDK_environment":facts["environment"],"dirty_status":git("status","--porcelain")})
+ save("invocations.json",{"source_head":git("rev-parse","HEAD"),"cwd":str(ROOT),"commands":journal,"exit_code":code,"SDK_environment":facts["environment"],"dirty_status":git("status","--porcelain"),"semantic_source_manifest":source_manifest})
  return code
 if __name__=="__main__":raise SystemExit(main())

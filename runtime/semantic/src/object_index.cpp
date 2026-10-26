@@ -4,6 +4,38 @@
 
 namespace canvas::semantic::internal {
 
+ObjectIndex::ParentPatch ObjectIndex::prepareParentChanges(
+    const std::vector<ParentEntry>& before, const std::vector<ParentEntry>& after) const {
+    ParentPatch patch;
+    const auto prepare = [&](const ParentScope& parent) -> ChildSet& {
+        auto [entry, inserted] = patch.try_emplace(parent);
+        if (inserted) {
+            const auto current = children_by_parent_.find(parent);
+            if (current != children_by_parent_.end()) entry->second = current->second;
+        }
+        return entry->second;
+    };
+    for (const auto& entry : before) prepare(entry.placement.parent_id).erase({entry.placement.order_key, entry.id});
+    for (const auto& entry : after) prepare(entry.placement.parent_id).insert({entry.placement.order_key, entry.id});
+    return patch;
+}
+
+void ObjectIndex::publishParentChanges(ParentPatch&& patch) noexcept {
+    while (!patch.empty()) {
+        auto next = patch.begin();
+        const auto current = children_by_parent_.find(next->first);
+        if (next->second.empty()) {
+            if (current != children_by_parent_.end()) children_by_parent_.erase(current);
+        } else if (current != children_by_parent_.end()) {
+            current->second.swap(next->second);
+        } else {
+            children_by_parent_.insert(patch.extract(next));
+            continue;
+        }
+        patch.erase(next);
+    }
+}
+
 void ObjectIndex::insert(const ObjectRecord& record) {
     children_by_parent_[record.placement.parent_id].insert(
         ChildEntry{record.placement.order_key, record.id});

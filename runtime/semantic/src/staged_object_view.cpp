@@ -8,12 +8,31 @@
 
 namespace canvas::semantic {
 
+StagedObjectView::StagedObjectView(const ObjectStore& base) : base_(base) {
+    // Register allocating acceleration state before any noexcept read.
+    internal::noteStagedBase(*this, base_);
+}
+
+StagedObjectView::StagedObjectView(const StagedObjectView& other)
+    : base_(other.base_), creates_(other.creates_), replacements_(other.replacements_), deletes_(other.deletes_) {
+    try {
+        internal::noteStagedBase(*this, base_);
+        for (const auto& [id, record] : creates_) { static_cast<void>(id); internal::noteStagedCreate(*this, record); }
+        for (const auto& [id, record] : replacements_) { static_cast<void>(id); internal::noteStagedReplace(*this, record); }
+        for (const auto& id : deletes_) internal::noteStagedDelete(*this, id);
+    } catch (...) {
+        internal::forgetStagedBase(*this);
+        throw;
+    }
+}
+
+StagedObjectView::~StagedObjectView() { internal::forgetStagedBase(*this); }
+
 bool StagedObjectView::contains(const ObjectId& id) const noexcept {
     return find(id) != nullptr;
 }
 
 const ObjectRecord* StagedObjectView::find(const ObjectId& id) const noexcept {
-    internal::noteStagedBase(*this, base_);
     if (deletes_.contains(id)) return nullptr;
     if (const auto it = replacements_.find(id); it != replacements_.end()) return &it->second;
     if (const auto it = creates_.find(id); it != creates_.end()) return &it->second;
@@ -58,7 +77,6 @@ bool StagedObjectView::childBefore(const ObjectRecord& left, const ObjectRecord&
 
 std::vector<ObjectRecord> StagedObjectView::children(
     const std::optional<ObjectId>& parent_id) const {
-    internal::noteStagedBase(*this, base_);
     std::vector<ObjectRecord> result = base_.children(parent_id);
     result.erase(std::remove_if(result.begin(), result.end(), [&](const ObjectRecord& record) {
                      return deletes_.contains(record.id) ||

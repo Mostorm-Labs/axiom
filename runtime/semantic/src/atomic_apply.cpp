@@ -3,6 +3,8 @@
 #include "object_store_mutator.hpp"
 
 #include <exception>
+#include <new>
+#include <type_traits>
 #include <set>
 #include <utility>
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
@@ -56,6 +58,35 @@ template <typename Store>
 AtomicApplyResult applyPreparedPlanInternal(Store& store, const PreparedApplyPlan& plan FC08_CONTEXT_PARAMETER) {
     if (!preflight(store, plan)) {
         return {};
+    }
+
+    if (plan.operation.kind() == OperationKind::kSetSectionContent || plan.operation.kind() == OperationKind::kEditContainerTopology) {
+        try {
+            if constexpr (std::is_same_v<Store, IndexedObjectStore>) {
+                auto reserved = ObjectStoreMutator::prepareContainerPlan(store, plan);
+                if (!reserved) return {};
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+                if (canvas::qualification::notify(fc08Context, canvas::qualification::Point::kSemPublish, plan.operation)) return {};
+#endif
+                reserved->publish();
+            } else {
+                // Independent reference storage remains correctness-first.
+                Store next = store;
+                for (const auto& record : plan.creates)
+                    if (!ObjectStoreMutator::insertFresh(next, record)) return {};
+                for (const auto& record : plan.replacements)
+                    if (!ObjectStoreMutator::replaceExisting(next, record)) return {};
+                for (const auto& id : plan.deletes)
+                    if (!ObjectStoreMutator::eraseExisting(next, id)) return {};
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+                if (canvas::qualification::notify(fc08Context, canvas::qualification::Point::kSemPublish, plan.operation)) return {};
+#endif
+                ObjectStoreMutator::swapContents(store, next);
+            }
+            return {AtomicApplyStatus::kApplied};
+        } catch (const std::bad_alloc&) {
+            return {};
+        }
     }
 
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)

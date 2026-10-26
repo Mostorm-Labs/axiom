@@ -1,0 +1,83 @@
+Test project C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build
+      Start  2: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/0
+ 1/13 Test  #2: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/0 ....***Failed    0.03 sec
+Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Frozen/SectionOperationsWire.FrozenWireAdmission/0
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Frozen/SectionOperationsWire
+[ RUN      ] Frozen/SectionOperationsWire.FrozenWireAdmission/0
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_operation_test.cpp(25): error: Expected equality of these values:
+  actual.accepted
+    Which is: false
+  expected["predicates"][0]["expected"].get<bool>()
+    Which is: true
+"FC08-W03/root-absent"
+
+[  FAILED  ] Frozen/SectionOperationsWire.FrozenWireAdmission/0, where GetParam() = {"author":"independent field table/literal tables/ordered rational binary64; no DUT output","case_id":"FC08-W03","expected":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W03/root-absent/expected.json","sha256":"42e759eb48d2a1b64a81f589119c4e481a7c2adbbd689fec2768088b51e77351","size":170},"future_seam":"normal semantic ingress and canonical writer","input":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W03/root-absent/input.json","sha256":"db8d294c7593aa01f62cbab54e04a7ca05ce48271b5cb1d6d9bd03c5489682ae","size":1589},"product_status":"REQUIRES_PRODUCT_EXECUTION","variant_id":"FC08-W03/root-absent","wire":[{"label":"input","path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W03/root-absent/input.pb","root":"Operation","sha256":"825994a3a14a87563ebf4c2b8ea33634361888bc3625f1a81daeb00b8a323221","size":212}]} (2 ms)
+[----------] 1 test from Frozen/SectionOperationsWire (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] Frozen/SectionOperationsWire.FrozenWireAdmission/0, where GetParam() = {"author":"independent field table/literal tables/ordered rational binary64; no DUT output","case_id":"FC08-W03","expected":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W03/root-absent/expected.json","sha256":"42e759eb48d2a1b64a81f589119c4e481a7c2adbbd689fec2768088b51e77351","size":170},"future_seam":"normal semantic ingress and canonical writer","input":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W03/root-absent/input.json","sha256":"db8d294c7593aa01f62cbab54e04a7ca05ce48271b5cb1d6d9bd03c5489682ae","size":1589},"product_status":"REQUIRES_PRODUCT_EXECUTION","variant_id":"FC08-W03/root-absent","wire":[{"label":"input","path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W03/root-absent/input.pb","root":"Operation","sha256":"825994a3a14a87563ebf4c2b8ea33634361888bc3625f1a81daeb00b8a323221","size":212}]}
+
+ 1 FAILED TEST
+
+      Start  3: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/1
+ 2/13 Test  #3: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/1 ....   Passed    0.03 sec
+      Start  4: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/2
+ 3/13 Test  #4: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/2 ....   Passed    0.03 sec
+      Start  5: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/3
+ 4/13 Test  #5: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/3 ....   Passed    0.03 sec
+      Start  6: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/4
+ 5/13 Test  #6: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/4 ....***Failed    0.03 sec
+Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Frozen/SectionOperationsWire.FrozenWireAdmission/4
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Frozen/SectionOperationsWire
+[ RUN      ] Frozen/SectionOperationsWire.FrozenWireAdmission/4
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_operation_test.cpp(25): error: Expected equality of these values:
+  actual.accepted
+    Which is: false
+  expected["predicates"][0]["expected"].get<bool>()
+    Which is: true
+"FC08-W03/relocate-empty-with-move"
+
+[  FAILED  ] Frozen/SectionOperationsWire.FrozenWireAdmission/4, where GetParam() = {"author":"independent field table/literal tables/ordered rational binary64; no DUT output","case_id":"FC08-W03","expected":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W03/relocate-empty-with-move/expected.json","sha256":"42e759eb48d2a1b64a81f589119c4e481a7c2adbbd689fec2768088b51e77351","size":170},"future_seam":"normal semantic ingress and canonical writer","input":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W03/relocate-empty-with-move/input.json","sha256":"777a1798eafc539d25b7393e783d82bf0435a30203b639e8a60ae0efad848670","size":2363},"product_status":"REQUIRES_PRODUCT_EXECUTION","variant_id":"FC08-W03/relocate-empty-with-move","wire":[{"label":"input","path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W03/relocate-empty-with-move/input.pb","root":"Operation","sha256":"c8a6ae09d602597201b5e6dce192e71e7a85e2d9da8e380e67823cd7d3e31c69","size":258}]} (1 ms)
+[----------] 1 test from Frozen/SectionOperationsWire (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (1 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] Frozen/SectionOperationsWire.FrozenWireAdmission/4, where GetParam() = {"author":"independent field table/literal tables/ordered rational binary64; no DUT output","case_id":"FC08-W03","expected":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W03/relocate-empty-with-move/expected.json","sha256":"42e759eb48d2a1b64a81f589119c4e481a7c2adbbd689fec2768088b51e77351","size":170},"future_seam":"normal semantic ingress and canonical writer","input":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W03/relocate-empty-with-move/input.json","sha256":"777a1798eafc539d25b7393e783d82bf0435a30203b639e8a60ae0efad848670","size":2363},"product_status":"REQUIRES_PRODUCT_EXECUTION","variant_id":"FC08-W03/relocate-empty-with-move","wire":[{"label":"input","path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-W03/relocate-empty-with-move/input.pb","root":"Operation","sha256":"c8a6ae09d602597201b5e6dce192e71e7a85e2d9da8e380e67823cd7d3e31c69","size":258}]}
+
+ 1 FAILED TEST
+
+      Start  7: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/5
+ 6/13 Test  #7: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/5 ....   Passed    0.03 sec
+      Start  8: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/6
+ 7/13 Test  #8: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/6 ....   Passed    0.04 sec
+      Start  9: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/7
+ 8/13 Test  #9: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/7 ....   Passed    0.04 sec
+      Start 10: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/8
+ 9/13 Test #10: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/8 ....   Passed    0.04 sec
+      Start 11: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/9
+10/13 Test #11: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/9 ....   Passed    0.04 sec
+      Start 12: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/10
+11/13 Test #12: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/10 ...   Passed    0.04 sec
+      Start 13: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/11
+12/13 Test #13: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/11 ...   Passed    0.04 sec
+      Start 14: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/12
+13/13 Test #14: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/12 ...   Passed    0.04 sec
+
+85% tests passed, 2 tests failed out of 13
+
+Total Test time (real) =   0.52 sec
+
+The following tests FAILED:
+	  2 - fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/0 (Failed)
+	  6 - fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAdmission/4 (Failed)

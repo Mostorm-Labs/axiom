@@ -1,0 +1,3822 @@
+{
+  "backtraceGraph" : 
+  {
+    "commands" : 
+    [
+      "add_test"
+    ],
+    "files" : 
+    [
+      "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/runtime/semantic/CMakeLists.txt",
+      "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/runtime/semantic/tests/CMakeLists.txt"
+    ],
+    "nodes" : 
+    [
+      {
+        "file" : 0
+      },
+      {
+        "command" : 0,
+        "file" : 0,
+        "line" : 134,
+        "parent" : 0
+      },
+      {
+        "file" : 1
+      },
+      {
+        "command" : 0,
+        "file" : 1,
+        "line" : 957,
+        "parent" : 2
+      }
+    ]
+  },
+  "kind" : "ctestInfo",
+  "tests" : 
+  [
+    {
+      "backtrace" : 1,
+      "name" : "canvas_semantic_read_view_contract_test",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=SectionSafety.BoundaryEditRequiresExactCompleteGeometryBasis",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionSafety.BoundaryEditRequiresExactCompleteGeometryBasis",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_safety_test.cpp:11"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=SectionSafety.TitleEditDoesNotDemandUnrelatedAncestorBasis",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionSafety.TitleEditDoesNotDemandUnrelatedAncestorBasis",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_safety_test.cpp:24"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=SectionSafety.FinalGraphRejectsCycleAndOrderCollisionWithoutPublishing",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionSafety.FinalGraphRejectsCycleAndOrderCollisionWithoutPublishing",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_safety_test.cpp:31"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=SectionSafety.Operation17EnforcesKeyedBatchLimit",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionSafety.Operation17EnforcesKeyedBatchLimit",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_safety_test.cpp:39"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=SectionSafety.FullEnvelopeOver32MiBRejectsBeforeAnyPublication",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionSafety.FullEnvelopeOver32MiBRejectsBeforeAnyPublication",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_safety_test.cpp:45"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=SectionSafety.UnknownEnvelopeVersionAndMissingEffectReject",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionSafety.UnknownEnvelopeVersionAndMissingEffectReject",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_safety_test.cpp:52"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=SectionSafety.OrderOnlyEditDoesNotPublishTransformImpact",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionSafety.OrderOnlyEditDoesNotPublishTransformImpact",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_safety_test.cpp:58"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/0",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/0",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/1",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/1",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/2",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/2",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/3",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/3",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/4",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/4",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/5",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/5",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/6",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/6",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/7",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/7",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/8",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/8",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/9",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/9",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/10",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/10",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/11",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/11",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/12",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/12",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/13",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/13",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/14",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/14",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/15",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/15",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/16",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/16",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/17",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/17",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/18",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/18",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/19",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/19",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/20",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/20",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/21",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/21",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/22",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/22",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/23",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/23",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/24",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/24",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/25",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/25",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/26",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/26",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/27",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/27",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/28",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/28",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/29",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/29",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/30",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/30",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/31",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/31",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/32",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/32",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/33",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/33",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/34",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/34",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/35",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/35",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/36",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/36",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/37",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/37",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/38",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/38",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/39",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/39",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/40",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/40",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/41",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/41",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/42",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/42",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionOperationsWire.FrozenWireAndModelContract/43",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/43",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:5"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/0",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/0",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/1",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/1",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/2",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/2",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/3",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/3",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/4",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/4",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/5",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/5",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/6",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/6",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/7",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/7",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/8",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/8",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/9",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/9",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/10",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/10",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/11",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/11",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/12",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/12",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/13",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/13",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/14",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/14",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/15",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/15",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/16",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/16",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/17",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/17",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/18",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/18",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/19",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/19",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/20",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/20",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/21",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/21",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/22",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/22",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/23",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/23",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/24",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/24",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/25",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/25",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/26",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/26",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/27",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/27",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.ReferenceOwner/28",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.ReferenceOwner/28",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:74"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/0",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/0",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/1",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/1",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/2",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/2",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/3",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/3",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/4",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/4",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/5",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/5",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/6",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/6",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/7",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/7",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/8",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/8",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/9",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/9",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/10",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/10",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/11",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/11",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/12",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/12",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/13",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/13",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/14",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/14",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/15",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/15",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/16",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/16",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/17",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/17",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/18",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/18",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/19",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/19",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/20",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/20",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/21",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/21",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/22",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/22",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/23",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/23",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/24",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/24",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/25",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/25",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/26",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/26",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/27",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/27",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_operation_tests.exe",
+        "--gtest_filter=Frozen/SectionTopology.IndexedOwner/28",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.Frozen/SectionTopology.IndexedOwner/28",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_operation_test.cpp:75"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_allocation_tests.exe",
+        "--gtest_filter=SectionAllocation.ReferenceOwnerRejectsEveryPrecommitAllocationFailure",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionAllocation.ReferenceOwnerRejectsEveryPrecommitAllocationFailure",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "TIMEOUT",
+          "value" : 30.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_allocation_test.cpp:60"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_allocation_tests.exe",
+        "--gtest_filter=SectionAllocation.IndexedOwnerRejectsEveryPrecommitAllocationFailure",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionAllocation.IndexedOwnerRejectsEveryPrecommitAllocationFailure",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "TIMEOUT",
+          "value" : 30.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_allocation_test.cpp:61"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_allocation_tests.exe",
+        "--gtest_filter=SectionAllocation.ReferenceOwnerWithSectionFill",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionAllocation.ReferenceOwnerWithSectionFill",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "TIMEOUT",
+          "value" : 30.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_allocation_test.cpp:62"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_allocation_tests.exe",
+        "--gtest_filter=SectionAllocation.IndexedOwnerWithSectionFill",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionAllocation.IndexedOwnerWithSectionFill",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "TIMEOUT",
+          "value" : 30.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_allocation_test.cpp:63"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_allocation_tests.exe",
+        "--gtest_filter=SectionAllocation.ReferenceOwnerWithGroupWrapper",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionAllocation.ReferenceOwnerWithGroupWrapper",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "TIMEOUT",
+          "value" : 30.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_allocation_test.cpp:64"
+        }
+      ]
+    },
+    {
+      "command" : 
+      [
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests/axiom_fc08_section_allocation_tests.exe",
+        "--gtest_filter=SectionAllocation.IndexedOwnerWithGroupWrapper",
+        "--gtest_also_run_disabled_tests"
+      ],
+      "name" : "fc08.section_b.SectionAllocation.IndexedOwnerWithGroupWrapper",
+      "properties" : 
+      [
+        {
+          "name" : "SKIP_REGULAR_EXPRESSION",
+          "value" : 
+          [
+            "\\[  SKIPPED \\]"
+          ]
+        },
+        {
+          "name" : "TIMEOUT",
+          "value" : 30.0
+        },
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        },
+        {
+          "name" : "DEF_SOURCE_LINE",
+          "value" : "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\runtime\\semantic\\tests\\fc08_section_allocation_test.cpp:65"
+        }
+      ]
+    },
+    {
+      "name" : "axiom_fc08_section_codec_tests_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_types_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_codec_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_brush_engine_codec_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_brush_snapshot_v2_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_codec_operation_ingress_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_06_snapshot_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_06_snapshot_bootstrap_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_07_replay_inspector_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_07_replay_inspector_cli_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_08_reference_differential_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_08_locality_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_normalization_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_envelope_validation_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_payload_structure_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_04_c_geometry_overflow_source_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_leaf_structure_validation_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_fc01_shape2_validation_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_fc01_shape2_apply_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_fc05_connector_sticky_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_a_lane_no_mutation_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_reference_object_store_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_indexed_object_store_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_object_store_differential_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_stateful_context_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_stateful_kind_applicability_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_staged_object_view_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_connector_stateful_validation_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_idempotency_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_hierarchy_stateful_validation_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_hierarchy_capability_validation_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_delete_closure_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_restore_stateful_validation_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_operation_specific_stateful_validation_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_rich_text_state_plan_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_apply_plan_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_atomic_apply_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_atomic_apply_differential_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_operation_engine_boundary_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_operation_engine_apply_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_operation_engine_apply_differential_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_operation_engine_generation_change_set_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_operation_engine_generation_change_set_differential_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_canonical_commit_clock_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_operation_engine_canonical_commit_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_operation_engine_canonical_commit_differential_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_operation_engine_publication_projection_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_stateful_validation_differential_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_04_b_operation_matrix_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_04_b_no_mutation_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_04_c_fixture_decoder_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_04_c_projection_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_06_projection_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_06_projection_differential_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_06_replay_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_06_replay_differential_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_06_digest_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_04_c_observer_contract_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_04_c_observer_coverage_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_operation_engine_15_operation_conformance_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_g1_06_integration_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "name" : "canvas_semantic_resource_manifest_test_NOT_BUILT",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    },
+    {
+      "backtrace" : 3,
+      "command" : 
+      [
+        "D:/Softwares/Anaconda/python.exe",
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/tools/check_runtime_boundaries.py",
+        "--root",
+        "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas"
+      ],
+      "name" : "canvas_semantic_runtime_boundaries",
+      "properties" : 
+      [
+        {
+          "name" : "WORKING_DIRECTORY",
+          "value" : "C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build/runtime/semantic/tests"
+        }
+      ]
+    }
+  ],
+  "version" : 
+  {
+    "major" : 1,
+    "minor" : 0
+  }
+}

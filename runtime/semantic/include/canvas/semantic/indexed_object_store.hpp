@@ -10,6 +10,7 @@ namespace canvas::semantic {
 namespace internal {
 class ObjectIndex;
 class ObjectStoreMutator;
+class PreparedIndexedContainerApply;
 } // namespace internal
 
 // Production-oriented canonical record store. Its only derived acceleration is
@@ -34,6 +35,7 @@ class IndexedObjectStore final : public ObjectStore {
 
   private:
     friend class internal::ObjectStoreMutator;
+    friend class internal::PreparedIndexedContainerApply;
 
     [[nodiscard]] bool insertFreshInternal(ObjectRecord record);
     [[nodiscard]] bool replaceExistingInternal(ObjectRecord record);
