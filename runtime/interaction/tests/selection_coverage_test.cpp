@@ -89,6 +89,9 @@ TEST(SelectionCoverage, RichTextUsesExistingLineFragmentsAndMissingLayoutIsUnsup
     EXPECT_EQ(intersectSelectionRegion(r,box(5,18),&p),RegionIntersection::kMiss);
     EXPECT_EQ(intersectSelectionRegion(r,box(50,3),&p),RegionIntersection::kMiss);
     EXPECT_EQ(intersectSelectionRegion(r,box(5,3)),RegionIntersection::kUnsupported);
+    semantic::RichTextContent text;text.document.paragraphs={{{}, {}, {{"visible text",{}}}}};r.content=text;
+    p.textLayout=std::make_shared<text::TextLayoutSnapshot>();
+    EXPECT_EQ(intersectSelectionRegion(r,box(5,3),&p),RegionIntersection::kUnsupported);
 }
 TEST(SelectionCoverage, SectionUsesItsAuthoredBoundaryAndGroupHasNoOwnPixels) {
     auto r=object(semantic::ObjectKind::kSection,semantic::SectionContent{{10,20,100,60},"",0,0});

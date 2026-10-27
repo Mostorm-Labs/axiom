@@ -1,5 +1,6 @@
 #include "canvas/runtime/runtime_composition.hpp"
 #include <gtest/gtest.h>
+#include <algorithm>
 
 namespace canvas::ink_playground {
 class InkPlaygroundHistoryTestAccess {
@@ -354,6 +355,40 @@ TEST_F(SelectionInput, RealBrushRegionUsesPublishedVisibleOutlineWithoutDocument
     rectangle(40,480,65,500);EXPECT_TRUE(selected().empty());
     EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);EXPECT_EQ(snapshot().lastAppliedOperation,before.lastAppliedOperation);
     EXPECT_EQ(snapshot().canUndo,before.canUndo);EXPECT_EQ(snapshot().canRedo,before.canRedo);
+}
+
+TEST_F(SelectionInput, SectionAreaPrefersContentAndWholeBoundaryProducesNonredundantRoots) {
+    runtime::SectionIntent section;section.objectId=foundation::ObjectId::fromUint64(9900);section.content.boundary={50,50,500,200};
+    ASSERT_EQ(f.submitSectionIntent(section,++request,9100).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
+    runtime::SectionIntent move;move.action=runtime::SectionAction::kReparent;move.objects={a};move.parentId=section.objectId;
+    ASSERT_EQ(f.submitSectionIntent(move,++request,9100).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
+    const auto before=snapshot();mode(runtime::CanvasSelectionMode::kRectangle);
+    rectangle(90,90,185,165);EXPECT_EQ(selected(),std::vector{a});
+    rectangle(40,40,560,260);auto roots=selected();ASSERT_EQ(roots.size(),3U);
+    EXPECT_NE(std::find(roots.begin(),roots.end(),section.objectId),roots.end());
+    EXPECT_EQ(std::find(roots.begin(),roots.end(),a),roots.end());
+    rectangle(40,40,560,260);EXPECT_EQ(selected(),roots);
+    EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);EXPECT_EQ(snapshot().lastAppliedOperation,before.lastAppliedOperation);
+}
+TEST_F(SelectionInput, ImportedCropFrameExcludesTrimmedSourceAndCropKeepsInputOwnership) {
+    runtime::ImageImportRequest image;image.objectId=foundation::ObjectId::fromUint64(9902);
+    image.bytes={137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,1,0,0,0,1,8,4,0,0,0,181,28,12,2,0,0,0,11,73,68,65,84,120,218,99,100,248,15,0,1,5,1,1,39,24,227,102,0,0,0,0,73,69,78,68,174,66,96,130};
+    image.width=100;image.height=100;image.transform.tx=550;image.transform.ty=300;
+    image.sourceRect=semantic::NormalizedRect{.25,.25,.5,.5};image.contentMode=semantic::ImageContentMode::kStretch;
+    ASSERT_EQ(f.importImage(image).state,runtime::ImageCommandState::kApplied);
+    mode(runtime::CanvasSelectionMode::kRectangle);const auto before=snapshot();
+    rectangle(510,330,530,350);EXPECT_TRUE(selected().empty());
+    rectangle(555,305,645,395);EXPECT_EQ(selected(),std::vector{image.objectId});
+    EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);EXPECT_EQ(snapshot().lastAppliedOperation,before.lastAppliedOperation);
+    const auto begin=f.beginImageCrop({image.objectId});ASSERT_EQ(begin.state,runtime::ImageCommandState::kApplied);
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,570,330));ASSERT_TRUE(pointer(input::PointerPhase::kMove,580,335));
+    EXPECT_FALSE(snapshot().regionSelectionActive);
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,580,335));
+    ASSERT_TRUE(f.readImageCrop().active);EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
+    ASSERT_EQ(f.cancelImageCrop(begin.cropToken).state,runtime::ImageCommandState::kApplied);
+    const auto second=f.beginImageCrop({image.objectId});ASSERT_EQ(second.state,runtime::ImageCommandState::kApplied);
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,570,330));ASSERT_TRUE(pointer(input::PointerPhase::kCancel,570,330));
+    EXPECT_FALSE(f.readImageCrop().active);EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
 }
 
 }

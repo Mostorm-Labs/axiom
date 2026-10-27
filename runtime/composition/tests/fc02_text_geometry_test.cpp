@@ -1737,4 +1737,77 @@ TEST(FC08SectionTextGeometry, LateFontPublicationRefreshesMetadataTitle) {
     EXPECT_EQ(composition.readback().semanticGeneration,generation);EXPECT_TRUE(after.titleLayoutReady);
     EXPECT_GT(after.titleGlyphCount,0U);EXPECT_TRUE(after.titleDiagnostics.empty());
 }
+
+void selectTestRegion(Host& h,float x,float y,float right,float bottom) {
+    ASSERT_EQ(h.facade.setSelectionAcquisitionMode(runtime::CanvasSelectionMode::kRectangle,++h.request,6001).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    const auto send=[&](input::PointerPhase phase,float px,float py) {
+        input::PlatformPointerSample p;p.source=6001;p.pointer=1;p.sequence=++h.request;p.timestampNs=h.request*1000000;
+        p.phase=phase;p.x=px;p.y=py;input::PlatformPointerBatch batch;batch.samples={p};return h.runtime.submit(batch);
+    };
+    ASSERT_TRUE(send(input::PointerPhase::kDown,x,y));ASSERT_TRUE(send(input::PointerPhase::kMove,right,bottom));
+    ASSERT_TRUE(send(input::PointerPhase::kUp,right,bottom));
+}
+TEST(SelectionBatch2Text, RealFontTextRegionUsesPublishedLayoutNotWrapBox) {
+    Host h;ASSERT_TRUE(h.runtime.registerSource(6001));
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kCreate).status,runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,u"Hello").status,runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kApplied);
+    const auto before=h.runtime.readback();const auto target=h.facade.mountedCanvasTargets().front();
+    const auto flags=h.facade.readCanvasControlSnapshot(target);
+    selectTestRegion(h,18,28,85,65);
+    auto state=h.facade.readCanvasControlSnapshot(target);EXPECT_EQ(state.selectionQueryStatus,runtime::SelectionQueryStatus::kComplete);
+    ASSERT_EQ(state.selectedObjectCount,1U);
+    EXPECT_EQ(h.runtime.qualificationRuntime().qualificationObjectRecord(*state.selectedObject)->kind,semantic::ObjectKind::kRichText);
+    selectTestRegion(h,170,35,185,45);EXPECT_EQ(h.facade.readCanvasControlSnapshot(target).selectedObjectCount,0U);
+    const auto after=h.runtime.readback();EXPECT_EQ(after.semanticGeneration,before.semanticGeneration);
+    const auto unchanged=h.facade.readCanvasControlSnapshot(target);EXPECT_EQ(unchanged.lastAppliedOperation,flags.lastAppliedOperation);
+    EXPECT_EQ(unchanged.canUndo,flags.canUndo);EXPECT_EQ(unchanged.canRedo,flags.canRedo);
+}
+TEST(SelectionBatch2Text, RealStickyRichTextChildIsOneUserFacingRoot) {
+    Host h;ASSERT_TRUE(h.runtime.registerSource(6001));
+    semantic::ObjectRecord record;record.id=foundation::ObjectId::fromUint64(9901);record.kind=semantic::ObjectKind::kSticky;
+    record.kind_version=1;record.placement.order_key=semantic::OrderKey({1});record.transform.tx=20;record.transform.ty=30;
+    record.content=semantic::StickyContent{200,200};seedSticky(h,record);
+    runtime::TextIntent edit;edit.kind=runtime::TextIntentKind::kEditAtPoint;edit.object=record.id;edit.viewX=40;edit.viewY=50;
+    edit.clientId=15;edit.requestId=++h.request;edit.target=h.facade.mountedCanvasTargets().front();
+    ASSERT_EQ(h.facade.submitTextIntent(edit).status,runtime::TextStatus::kQueued);ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_EQ(h.facade.textIntentReceipt(15,h.request)->status,runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,u"Sticky label").status,runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.runtime.semanticObjectCount(),2U);const auto before=h.runtime.readback();
+    selectTestRegion(h,10,20,230,240);
+    EXPECT_EQ(h.facade.readSection().selectedRoots,std::vector{record.id});
+    EXPECT_EQ(h.facade.readCanvasControlSnapshot(edit.target).selectionQueryStatus,runtime::SelectionQueryStatus::kComplete);
+    EXPECT_EQ(h.runtime.readback().semanticGeneration,before.semanticGeneration);EXPECT_EQ(h.runtime.semanticObjectCount(),2U);
+}
+
+TEST(SelectionBatch2Text, UnavailableFontGeometryDoesNotBecomeAnEmptySuccessfulQuery) {
+    Host h;ASSERT_TRUE(h.runtime.registerSource(6001));
+    // Retain the admitted font manifest without publishing its bytes in
+    // a fresh composition, rather than manufacture a layout snapshot.
+    runtime::RuntimeComposition cold;ASSERT_TRUE(cold.open());ASSERT_TRUE(cold.bindSurface(256,256));
+    ASSERT_TRUE(cold.bindManifest(h.runtime.resources().manifest,1));ASSERT_TRUE(cold.registerSource(6002));auto& facade=cold.controlFacade();
+    runtime::StickyCreateRequest sticky;sticky.objectId=foundation::ObjectId::fromUint64(9970);sticky.transform.tx=200;sticky.transform.ty=200;sticky.content={30,30};
+    ASSERT_EQ(facade.createSticky(sticky).state,runtime::ConnectorCommandState::kApplied);
+    ASSERT_TRUE(cold.qualificationRuntime().setSelectionMode(true));ASSERT_TRUE(cold.qualificationRuntime().selectAtViewPoint(215,215));
+    semantic::TextStyle style;style.font_resource_id=semantic::ResourceId{foundation::ObjectId::fromUint64(500)};style.font_size=16;style.weight=400;style.color={0,0,0,1};
+    semantic::Paragraph paragraph;paragraph.id=foundation::ObjectId::fromUint64(9972);paragraph.style.alignment=semantic::ParagraphAlignment::kLeft;paragraph.style.line_height=1.2;paragraph.runs={{"missing font geometry",style}};
+    semantic::RichTextContent text;text.document.paragraphs={paragraph};
+    semantic::ObjectRecord record;record.id=foundation::ObjectId::fromUint64(9971);record.kind=semantic::ObjectKind::kRichText;record.kind_version=1;
+    record.content=text;record.transform.tx=100;record.transform.ty=100;record.placement.order_key=semantic::OrderKey({2});
+    semantic::Operation insert{semantic::OperationId{foundation::ObjectId::fromUint64(9973)},semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,semantic::InsertObjectsOp{{record}}};
+    ASSERT_EQ(cold.applyExternalOperation(insert,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    ASSERT_EQ(facade.setSelectionAcquisitionMode(runtime::CanvasSelectionMode::kRectangle,1,6002).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(cold.ownerPump());
+    std::uint64_t seq=0;const auto send=[&](input::PointerPhase phase,float x,float y) {
+        input::PlatformPointerSample p;p.source=6002;p.pointer=1;p.sequence=++seq;p.timestampNs=seq*1000000;p.phase=phase;p.x=x;p.y=y;
+        input::PlatformPointerBatch batch;batch.samples={p};return cold.submit(batch);
+    };
+    ASSERT_TRUE(send(input::PointerPhase::kDown,110,105));ASSERT_TRUE(send(input::PointerPhase::kMove,145,125));ASSERT_TRUE(send(input::PointerPhase::kUp,145,125));
+    const auto state=facade.readCanvasControlSnapshot(facade.mountedCanvasTargets().front());
+    EXPECT_EQ(state.selectionQueryStatus,runtime::SelectionQueryStatus::kPartial);
+    EXPECT_EQ(facade.readSection().selectedRoots,std::vector{sticky.objectId});
+    EXPECT_EQ(state.regionUnsupportedKinds,std::vector<std::uint32_t>{static_cast<unsigned>(semantic::ObjectKind::kRichText)});
+    EXPECT_TRUE(cold.close());
+}
 } // namespace

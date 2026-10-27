@@ -96,6 +96,9 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path) {
     }
     case semantic::ObjectKind::kRichText: {
         if(!r.textLayout)return Hit::kUnsupported;
+        if(r.textLayout->lines.empty())if(const auto* text=std::get_if<semantic::RichTextContent>(&r.content))
+            for(const auto& paragraph:text->document.paragraphs)for(const auto& run:paragraph.runs)
+                if(!run.text.empty())return Hit::kUnsupported;
         for(const auto& line:r.textLayout->lines)if(line.utf8End>line.utf8Start) {
             const auto& b=line.bounds;if(!unite(path,rectangle(b.left,b.top,b.right-b.left,b.bottom-b.top)))return Hit::kInvalid;
         }

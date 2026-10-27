@@ -1,5 +1,6 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "canvas/interaction/region_selection_geometry.hpp"
+#include "canvas/text/text_layout.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -108,6 +109,23 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
     const auto read=runtimeSceneHost_->read();
     result.status=Status::kComplete;
     std::vector<foundation::ObjectId> sectionBackgrounds;
+    // Missing text metrics imply unknown extent, so the spatial index cannot
+    // prove NoHit. Keep this explicitly incomplete until the font/layout arrives.
+    for(const auto& r:projected.records()) {
+        if(r.kind!=semantic::ObjectKind::kRichText||(r.textLayout&&!r.textLayout->lines.empty())||
+            !textWritable(r.objectId)||resolveSelectionRoot(r.objectId).isZero())continue;
+        if(r.placement.parent_id)if(const auto* parent=semanticObjects_.find(*r.placement.parent_id);
+            parent&&parent->kind==semantic::ObjectKind::kSticky)continue;
+        const auto* text=std::get_if<semantic::RichTextContent>(&r.content);if(!text){result.status=Status::kFailed;return result;}
+        const bool hasText=std::any_of(text->document.paragraphs.begin(),text->document.paragraphs.end(),[](const auto& paragraph){
+            return std::any_of(paragraph.runs.begin(),paragraph.runs.end(),[](const auto& run){return !run.text.empty();});
+        });
+        if(hasText) {
+            result.status=Status::kPartial;
+            const auto kind=static_cast<std::uint32_t>(r.kind);
+            if(std::find(result.unsupportedKinds.begin(),result.unsupportedKinds.end(),kind)==result.unsupportedKinds.end())result.unsupportedKinds.push_back(kind);
+        }
+    }
     for (auto it=queried.value().backToFront.rbegin();it!=queried.value().backToFront.rend();++it) {
         const auto* record=read.find(*it);
         if (!record) {result.status=Status::kStale;return result;}
