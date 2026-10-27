@@ -1,0 +1,94 @@
+{
+  "preflight": "PackageBindingPreflight",
+  "status": "BLOCKED_VERIFICATION",
+  "checker_scope": "Task-local P31 structural evaluation only; not product verification, Authority approval, or Gate review.",
+  "package_sha256": "dbc25490a18414a9fb0b85ce57eb8a95011f1b22e149b7d32e91836782ce785b",
+  "bindings_sha256": "e462ab2211ecf014f4d558425e75394d49227c69836088997bcf0dc1331a5bd2",
+  "source_revision": "a85a8077a58fce97c617badc7116794f6bc1a15b",
+  "checks": [
+    {
+      "check": "source_identity",
+      "status": "PASS",
+      "detail": {
+        "subject": "a85a8077a58fce97c617badc7116794f6bc1a15b",
+        "actual_head": "a85a8077a58fce97c617badc7116794f6bc1a15b"
+      }
+    },
+    {
+      "check": "supplied_documents_immutable",
+      "status": "PASS",
+      "detail": [
+        {
+          "path": "01-test-binding-correction.md",
+          "sha256": "59830a81b75ac97791b4befe2c5e85a94d5a5c38d896f39ca3f2b4cf3bfd6d68",
+          "bytes": 2733
+        },
+        {
+          "path": "02-codex-p31-correction-prompt.md",
+          "sha256": "6162c10d8a579a0be1bb7bcd206ce03a7a5106260c9ecc4abcd99263380a64e2",
+          "bytes": 2661
+        },
+        {
+          "path": "README.md",
+          "sha256": "bf608d24ae58bc41e01e5045c6da7b086c52268151c9f997c75d481edc904dad",
+          "bytes": 948
+        }
+      ]
+    },
+    {
+      "check": "current_D07_acceptance_link",
+      "status": "PASS",
+      "detail": {
+        "page": "3f94c57a590c81b8ad8ceb2239759cba",
+        "last_edited": "2026-10-27T13:51:32.912Z"
+      }
+    },
+    {
+      "check": "independent_test_unchanged",
+      "status": "PASS",
+      "detail": {
+        "id": "fc04.d07.D07.TwoIndependentCommandsNeedTwoUndoUnits",
+        "role": "blocking-characterization",
+        "source": "verification/fc04_d07/audit_test.cpp",
+        "source_sha256": "38514fcabee961469a089f49d6a1509e89c7f0030a0725fa4aca1299e2a21c3d",
+        "test_body_sha256": "30519104d7f6f2d874b1c551c6a28635a5e631dc2a4d03b72f69602bcd61a6e4",
+        "expected": "Two independent calls create two Undo units; first Undo leaves first mutation; second restores initial objects; two Redo calls restore both."
+      }
+    },
+    {
+      "check": "negative_control_separated",
+      "status": "PASS",
+      "detail": {
+        "historical_id": "fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED",
+        "role": "negative-control",
+        "historical_assertion_preserved": true,
+        "test_body_sha256": "5a635f1c230c8935ac65652135fe2d6247573b4f6f4d104fb7a5c09211671169",
+        "historical_expected_observation": "FAIL at records-equal-after-one-Undo assertion; this demonstrates the fallback limitation, not grouped-intent conformance.",
+        "current_characterization_oracle": "fc04.d07.D07.TwoIndependentCommandsNeedTwoUndoUnits",
+        "positive_grouped_acceptance": false
+      }
+    },
+    {
+      "check": "real_explicit_intent_owner_bound",
+      "status": "BLOCKED",
+      "detail": "No production group entry. EditorHistory::PreparedEntry has one forward Operation; executeUndoable takes one Operation. CanvasEditingRuntime::submit(span, source) rejects multi-Operation/local-interaction batches. See source-bindings.json."
+    },
+    {
+      "check": "OOM_still_blocking",
+      "status": "PASS",
+      "detail": {
+        "id": "FC04D07PostcommitReceiptGrowthFault",
+        "role": "blocking-product-regression",
+        "expected": "No termination or canonical commit stranded without History; all existing fault assertions preserved."
+      }
+    }
+  ],
+  "command": [
+    "D:\\Softwares\\Anaconda\\python.exe",
+    "-X",
+    "utf8",
+    "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\.aegis\\results\\FC04-D07-P31-CORRECTION-v0.2\\preflight.py",
+    "PackageBindingPreflight"
+  ],
+  "exit_code": 2
+}

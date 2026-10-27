@@ -1,0 +1,88 @@
+Test project C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/out/fc04-d07-selection/build
+      Start  1: fc04.d07.D07.ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation
+ 1/14 Test  #1: fc04.d07.D07.ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation .................   Passed    0.08 sec
+      Start  2: fc04.d07.D07.HomogeneousMultiTargetValidationRejectsWholeOperationAndPreservesRedo
+ 2/14 Test  #2: fc04.d07.D07.HomogeneousMultiTargetValidationRejectsWholeOperationAndPreservesRedo ...........   Passed    0.02 sec
+      Start  3: fc04.d07.D07.RealPrecommitAdmissionRejectionHasZeroMutationAndPreservesRedo
+ 3/14 Test  #3: fc04.d07.D07.RealPrecommitAdmissionRejectionHasZeroMutationAndPreservesRedo ..................   Passed    0.02 sec
+      Start  4: fc04.d07.D07.TransformBatchHasOneUndoWithChangedSelectionAndFreshRedoIdentity
+ 4/14 Test  #4: fc04.d07.D07.TransformBatchHasOneUndoWithChangedSelectionAndFreshRedoIdentity ................   Passed    0.03 sec
+      Start  5: fc04.d07.D07.PropertiesBatchHasOneUndoWithChangedSelection
+ 5/14 Test  #5: fc04.d07.D07.PropertiesBatchHasOneUndoWithChangedSelection ...................................   Passed    0.03 sec
+      Start  6: fc04.d07.D07.IndependentCommandsExposeAppliedPrefixAtEveryTwoOperationRejectionBoundary
+ 6/14 Test  #6: fc04.d07.D07.IndependentCommandsExposeAppliedPrefixAtEveryTwoOperationRejectionBoundary ......   Passed    0.03 sec
+      Start  7: fc04.d07.D07.ManualCanonicalCompensationRestoresProjectionButDoesNotRewindMetadataOrEvents
+ 7/14 Test  #7: fc04.d07.D07.ManualCanonicalCompensationRestoresProjectionButDoesNotRewindMetadataOrEvents ...   Passed    0.03 sec
+      Start  8: fc04.d07.D07.RealScenePublicationFaultsRetainCommittedHistoryAndRecoverCoherently
+ 8/14 Test  #8: fc04.d07.D07.RealScenePublicationFaultsRetainCommittedHistoryAndRecoverCoherently ............   Passed    0.05 sec
+      Start  9: fc04.d07.D07.TwoIndependentCommandsNeedTwoUndoUnits
+ 9/14 Test  #9: fc04.d07.D07.TwoIndependentCommandsNeedTwoUndoUnits ..........................................   Passed    0.03 sec
+      Start 10: fc04.d07.D07.CapturedExpectationsRejectUndoConflictWithoutCursorOrRedoMutation
+10/14 Test #10: fc04.d07.D07.CapturedExpectationsRejectUndoConflictWithoutCursorOrRedoMutation ...............   Passed    0.04 sec
+      Start 11: fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED
+11/14 Test #11: fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED .......................................***Failed    0.04 sec
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = D07.RequiredMultiIntentEntryIsUnavailable_RED
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from D07
+[ RUN      ] D07.RequiredMultiIntentEntryIsUnavailable_RED
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\verification\fc04_d07\audit_test.cpp(436): error: Value of: accepted
+  Actual: false
+Expected: true
+D07 not closed: the available real Runtime batch port rejects this coherent forward sequence; no production IntentPlan entry found. This is not a defect in its fail-closed guard.
+
+[  FAILED  ] D07.RequiredMultiIntentEntryIsUnavailable_RED (0 ms)
+[----------] 1 test from D07 (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] D07.RequiredMultiIntentEntryIsUnavailable_RED
+
+ 1 FAILED TEST
+
+      Start 12: fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED
+12/14 Test #12: fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED .................................***Failed    0.04 sec
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from D07
+[ RUN      ] D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\verification\fc04_d07\audit_test.cpp(445): error: Expected equality of these values:
+  read().objects
+    Which is: { 464-byte object <01-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 42-00 00-00 FB-7F 00-00 00-00 00-00 00-00 00-00 00-9A 86-42 EB-23 8A-AE E0-11 14-F7 C8-02 00-00 E1-11 14-F7 C8-02 00-00 ... 00-00 00-00 00-00 34-40 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 A0-41 00-00 A0-41 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 464-byte object <02-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 8A-01 00-00 00-00 00-00 40-66 13-F7 C8-02 00-00 00-00 00-00 00-00 00-00 10-11 14-F7 C8-02 00-00 11-11 14-F7 C8-02 00-00 ... 00-00 00-00 00-40 6F-40 00-00 00-00 00-00 3E-40 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 464-byte object <03-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-37 12-F7 01-00 00-00 00-00 00-00 00-00 00-00 30-77 13-F7 C8-02 00-00 00-31 12-F7 C8-02 00-00 D0-11 14-F7 C8-02 00-00 D1-11 14-F7 C8-02 00-00 ... 00-00 00-00 00-00 F0-3F 00-00 00-00 00-40 6F-40 00-00 00-00 00-00 3E-40 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+  before.objects
+    Which is: { 464-byte object <01-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 42-00 00-00 FB-7F 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 70-11 14-F7 C8-02 00-00 71-11 14-F7 C8-02 00-00 ... 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 464-byte object <02-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 8A-01 00-00 00-00 00-00 40-66 13-F7 C8-02 00-00 00-00 00-00 00-00 00-00 60-13 14-F7 C8-02 00-00 61-13 14-F7 C8-02 00-00 ... 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 464-byte object <03-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 00-00 00-00 00-00 00-00 30-77 13-F7 C8-02 00-00 00-00 00-00 00-00 00-00 40-10 14-F7 C8-02 00-00 41-10 14-F7 C8-02 00-00 ... 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+D07 not closed: sequencing ordinary commands is not a HistoryGroup and cannot be used as the missing coordinator.
+
+[  FAILED  ] D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED (3 ms)
+[----------] 1 test from D07 (3 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (3 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED
+
+ 1 FAILED TEST
+
+      Start 13: FC04D07PostcommitFault
+13/14 Test #13: FC04D07PostcommitFault .......................................................................   Passed    0.12 sec
+      Start 14: FC04D07PostcommitReceiptGrowthFault
+14/14 Test #14: FC04D07PostcommitReceiptGrowthFault ..........................................................***Failed    0.03 sec
+POSTCOMMIT_ALLOCATION_INJECTED before_generation=1 generation=2 ordinal=2 history=0 scene=1 tx=0 objects=3
+TERMINATE_REACHED before_generation=1 generation=2 ordinal=2 history=0 scene=1 tx=0 objects=3
+
+
+79% tests passed, 3 tests failed out of 14
+
+Total Test time (real) =   0.65 sec
+
+The following tests FAILED:
+	 11 - fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED (Failed)
+	 12 - fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED (Failed)
+	 14 - FC04D07PostcommitReceiptGrowthFault (Failed)
+Errors while running CTest

@@ -1,0 +1,66 @@
+{
+  "task_id": "FC04-D07-P31-CORRECTION",
+  "terminal_status": "BLOCKED_VERIFICATION",
+  "continue_execution": false,
+  "starting_head": "a85a8077a58fce97c617badc7116794f6bc1a15b",
+  "branch": "codex/fc04-d07-selection-audit",
+  "worktree": "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas",
+  "package": ".aegis/packages/FC04-D07-P31-CORRECTION-v0.2",
+  "package_sha256": "dbc25490a18414a9fb0b85ce57eb8a95011f1b22e149b7d32e91836782ce785b",
+  "binding_sha256": "e462ab2211ecf014f4d558425e75394d49227c69836088997bcf0dc1331a5bd2",
+  "package_manifest_sha256": "f77af169aecb48614469b9c2f38791c60584d5839abb67146878593a8fef025d",
+  "preflights": {
+    "PackageBindingPreflight": {
+      "status": "BLOCKED_VERIFICATION",
+      "exit_code": 2
+    },
+    "EvidenceContractPreflight": {
+      "status": "BLOCKED_VERIFICATION",
+      "exit_code": 2
+    },
+    "D07Preflight": {
+      "status": "BLOCKED_VERIFICATION",
+      "exit_code": 2
+    }
+  },
+  "fresh_native_tests": {
+    "d07": {
+      "tests": 14,
+      "passed": 11,
+      "failed": [
+        "fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED",
+        "fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED",
+        "FC04D07PostcommitReceiptGrowthFault"
+      ],
+      "skipped": 0,
+      "exit_code": 8
+    },
+    "selection": {
+      "tests": 160,
+      "passed": 160,
+      "failed": [],
+      "skipped": 0,
+      "exit_code": 0
+    }
+  },
+  "production_and_test_source_changes": [],
+  "full_Product_build": "NOT_RUN no source changed; exact prior binaries hash-verified before reuse",
+  "Windows_physical": "NOT_RUN",
+  "Chrome_WASM": "NOT_RUN",
+  "D06_B": "OPEN",
+  "blocker": {
+    "id": "D07-P31-CORRECTION-002",
+    "classification": "BLOCKED_VERIFICATION",
+    "reason": "Required real explicit multi-Operation intent/group entry absent; positive SUT binding unavailable.",
+    "owner_gap": [
+      "EditorHistory",
+      "CanvasEditingRuntime command admission/publication"
+    ],
+    "authority_acceptance_link": "CONFIRMED",
+    "authority_conflict_established": false
+  },
+  "product_repair_started": false,
+  "D07_implementation_pass": false,
+  "main_merged": false,
+  "result_revision": "Containing Git commit; exact final hash returned separately"
+}

@@ -1,0 +1,25 @@
+runtime/interaction\include\canvas\interaction\canvas_editing_runtime.hpp:142:                                public interaction::HistorySubmitPort,
+runtime/interaction\include\canvas\interaction\canvas_editing_runtime.hpp:647:  [[nodiscard]] interaction::SubmitResult submitAdmitted(const semantic::Operation&,
+runtime/interaction\include\canvas\interaction\canvas_editing_runtime.hpp:649:  void publishAdmitted() noexcept override;
+runtime/interaction\src\canvas_editing_runtime.cpp:1585:  if (interaction::isContainerCommand(forward, semanticObjects_)) return history_.executeUndoable(forward);
+runtime/interaction\src\canvas_editing_runtime.cpp:3347:interaction::SubmitResult CanvasEditingRuntime::submitAdmitted(
+runtime/interaction\src\canvas_editing_runtime.cpp:3388:void CanvasEditingRuntime::publishAdmitted() noexcept {
+runtime/interaction\include\canvas\interaction\editor_history.hpp:33:class HistorySubmitPort {
+runtime/interaction\include\canvas\interaction\editor_history.hpp:35:    [[nodiscard]] virtual SubmitResult submitAdmitted(const semantic::Operation&,
+runtime/interaction\include\canvas\interaction\editor_history.hpp:39:    virtual void publishAdmitted() noexcept {}
+runtime/interaction\include\canvas\interaction\editor_history.hpp:40:    virtual ~HistorySubmitPort() = default;
+runtime/interaction\include\canvas\interaction\editor_history.hpp:72:    [[nodiscard]] bool executeUndoable(const semantic::Operation&);
+runtime/interaction\include\canvas\interaction\editor_history.hpp:73:    explicit EditorHistory(HistorySubmitPort& submit) noexcept : submit_(submit) {}
+runtime/interaction\include\canvas\interaction\editor_history.hpp:100:    HistorySubmitPort& submit_;
+runtime/interaction\src\canvas_section_commands.cpp:453:        const bool accepted=history_.executeUndoable(std::move(operation));
+runtime/interaction\src\canvas_section_commands.cpp:459:        publishAdmitted();canonicalPresentationDirty_=true;
+runtime/interaction\src\editor_history.cpp:194:bool EditorHistory::executeUndoable(const semantic::Operation& forward) try {
+runtime/interaction\src\editor_history.cpp:196:    if (!submit_.submitAdmitted(forward, semantic::ApplySource::kLocalInteraction, admission).accepted) return false;
+runtime/interaction\src\editor_history.cpp:198:    submit_.publishAdmitted();
+runtime/interaction\src\editor_history.cpp:234:        if (!submit_.submitAdmitted(fresh.front(), semantic::ApplySource::kUndoRedo, admission).accepted) return false;
+runtime/interaction\src\editor_history.cpp:251:    if (entries_[cursor_].admissionRequired) submit_.publishAdmitted();
+runtime/interaction\src\editor_history.cpp:271:    if (entries_[cursor_ - 1].admissionRequired) submit_.publishAdmitted();
+runtime/composition\tests\fc02_text_test.cpp:118:struct HistoryPort final : canvas::interaction::HistorySubmitPort {
+runtime/interaction\tests\editor_history_test.cpp:12:using canvas::interaction::HistorySubmitPort;
+runtime/interaction\tests\editor_history_test.cpp:41:struct Submit final : HistorySubmitPort {
+runtime/composition\tests\runtime_composition_test.cpp:997:  auto& historyPort = static_cast<canvas::interaction::HistorySubmitPort&>(lostRuntime);
