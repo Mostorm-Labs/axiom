@@ -184,8 +184,20 @@ void creation_session_indexed_reference_camera_matrix() {
           assert(std::abs(shape->height-(expectedEnd.y-start.y))<1e-4);
         } else {
           const auto connector=std::get<canvas::semantic::ConnectorContent>(committed->record.content);
-          const auto point=std::get<canvas::semantic::FreePointEndpoint>(connector.end.value).point;
-          assert(std::abs(point.x-expectedEnd.x)<1e-4 && std::abs(point.y-expectedEnd.y)<1e-4);
+          if(const auto* free=std::get_if<canvas::semantic::FreePointEndpoint>(&connector.end.value)) {
+            assert(std::abs(free->point.x-expectedEnd.x)<1e-4 && std::abs(free->point.y-expectedEnd.y)<1e-4);
+          } else {
+            // FC05 persists an attachment when snapping finds a target. The
+            // independent coordinates are checked on preview.end above, and
+            // commit==preview remains required. Check the canonical identity
+            // against the independent X-then-Y candidate, not a fake free point.
+            const auto* attached=std::get_if<canvas::semantic::AttachedEndpoint>(&connector.end.value);
+            const auto& expected=expectedX?expectedX:expectedY;
+            assert(attached&&expected);
+            assert(attached->target_object_id==expected->candidate.targetObjectId);
+            const auto* anchor=std::get_if<canvas::semantic::AutoPerimeterAnchor>(&attached->anchor);
+            assert(anchor&&!anchor->hint);
+          }
         }
         // Nonzero rotation remains a world-axis constraint. Its logical length
         // is zoom*world length; DPR only selects physical raster density.

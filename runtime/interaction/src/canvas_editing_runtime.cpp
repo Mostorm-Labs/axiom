@@ -2028,10 +2028,16 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
     // the top and left ports inside the outline whenever a stroke expands the
     // visual bounds, which makes those two ports look offset from the object.
     const auto& bounds = cropBounds ? cropBounds->visual : record->visualBounds;
+    // Acute stroke joins can expand visual bounds asymmetrically. Keep the
+    // transverse port axes at the authored geometry center, as the semantic
+    // StablePort anchors do; only the outward gap follows the visible outline.
+    const auto& axes = cropBounds ? cropBounds->geometry : record->geometryBounds;
+    const float axisX=(axes.left+axes.right)*0.5F;
+    const float axisY=(axes.top+axes.bottom)*0.5F;
     constexpr float kAttachmentGap = 28.0F;
     const auto screenCenter = [&] {
-      const float x = static_cast<float>((bounds.left + bounds.right) * 0.5);
-      const float y = static_cast<float>((bounds.top + bounds.bottom) * 0.5);
+      const float x = axisX;
+      const float y = axisY;
       const auto world = render::ScreenPoint{
           static_cast<float>(record->transform.a * x + record->transform.c * y + record->transform.tx),
           static_cast<float>(record->transform.b * x + record->transform.d * y + record->transform.ty)};
@@ -2063,10 +2069,10 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
       }
       attachmentPoints.push_back({screen, true, hovered});
     };
-    point((bounds.left + bounds.right) * 0.5F, bounds.top);
-    point(bounds.right, (bounds.top + bounds.bottom) * 0.5F);
-    point((bounds.left + bounds.right) * 0.5F, bounds.bottom);
-    point(bounds.left, (bounds.top + bounds.bottom) * 0.5F);
+    point(axisX, bounds.top);
+    point(bounds.right, axisY);
+    point(axisX, bounds.bottom);
+    point(bounds.left, axisY);
   }
   if (transformDrag_.active()) attachmentPoints.clear();
   auto overlayBounds=cropBounds ? cropBounds->visual : record->visualBounds;
