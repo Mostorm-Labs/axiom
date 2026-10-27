@@ -7,6 +7,7 @@ add_library(canvas_runtime_interaction STATIC
     src/interaction_runtime.cpp
     src/interaction_dispatch_runtime.cpp
     src/selection_session.cpp
+    src/region_selection_session.cpp
     src/transform_session.cpp
     src/transform_handle_drag.cpp
     src/session_manager.cpp
@@ -36,6 +37,7 @@ endif()
 add_library(canvas_runtime_editor STATIC
     src/canvas_editing_runtime.cpp
     src/canvas_section_commands.cpp
+    src/region_selection_geometry.cpp
     src/canvas_text_geometry.cpp
     src/canvas_connector_routing.cpp
     src/brush_commit_adapter.cpp)
@@ -209,4 +211,16 @@ if(BUILD_TESTING)
       target_compile_options(axiom_content_revision_style_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
     endif()
     add_test(NAME FC00XContentRevisionStyle COMMAND axiom_content_revision_style_tests)
+endif()
+
+if(BUILD_TESTING)
+    add_executable(axiom_region_selection_tests tests/region_selection_session_test.cpp)
+    target_link_libraries(axiom_region_selection_tests PRIVATE canvas_runtime_editor)
+    target_compile_features(axiom_region_selection_tests PRIVATE cxx_std_20)
+    if(MSVC)
+        target_compile_options(axiom_region_selection_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
+    else()
+        target_compile_options(axiom_region_selection_tests PRIVATE -Wall -Wextra -Wpedantic -Werror -UNDEBUG)
+    endif()
+    add_test(NAME FC01ARegionSelection COMMAND axiom_region_selection_tests)
 endif()
