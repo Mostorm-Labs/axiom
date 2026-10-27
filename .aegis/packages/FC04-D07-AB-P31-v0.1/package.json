@@ -1,0 +1,31 @@
+{
+  "schema_version": "aegis-targeted-p31-v1",
+  "task_id": "FC04-D07-AB-P32",
+  "stage": "P32",
+  "stage_owner": "aegis-implementation",
+  "from_surface": "CONTROL_REASONING",
+  "to_surface": "CODE_EXECUTION",
+  "preferred_executor": "codex",
+  "repository": {"provider":"github","full_name":"Mostorm-Labs/axiom"},
+  "execution_ref": "refs/heads/codex/fc04-d07-selection-audit",
+  "worktree": "C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas",
+  "task_anchor": {"revision":"832866a2d001a247c4eb374c1fb1899258a6f6cf","relation":"ancestor"},
+  "feature_anchor": {"revision":"c7f874395d55952e9d5288e2a336a21747f37f11","relation":"ancestor"},
+  "resume_cursor": null,
+  "authority": {
+    "accepted_local_D07": ".aegis/results/FC04-D07-REPAIR-PREFLIGHT/authority-inputs/current-d07-authority.json",
+    "accepted_scope": ".aegis/results/FC04-D07-REPAIR-PREFLIGHT/authority-inputs/scope-acceptance.json",
+    "integration_07_14": ".aegis/results/FC04-D07-REPAIR-PREFLIGHT/authority-inputs/07-14-current.json",
+    "verification_correction": ".aegis/packages/FC04-D07-P31-CORRECTION-v0.2/test-bindings.json",
+    "prior_report": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/report.md",
+    "identity_lock": "source-lock.json"
+  },
+  "closure": "closure.md",
+  "design": "design.md",
+  "verification": "test-matrix.json",
+  "product_P32_authorized_if_preflights_pass": true,
+  "implementation_scope": ["D07-A explicit intent/group", "D07-B bounded OOM/failure containment"],
+  "forbidden": ["public ABI", "wire/schema changes", "global canonical transaction", "D06-B", "main merge"],
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW"
+}

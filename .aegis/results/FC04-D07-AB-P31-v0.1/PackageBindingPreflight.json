@@ -1,0 +1,73 @@
+{
+  "preflight": "PackageBindingPreflight",
+  "status": "PASS",
+  "exit_code": 0,
+  "scope": "P31 structural binding/design preflight only; no product behavior verified",
+  "subject": "832866a2d001a247c4eb374c1fb1899258a6f6cf",
+  "actual_head": "832866a2d001a247c4eb374c1fb1899258a6f6cf",
+  "package_sha256": "56962b59726eca31f3cb015779234df84926bbbac427b382e285aea8dd70aa77",
+  "source_lock_sha256": "30e86e585ff3d2718c312ad07167792cfe4f1ab7f8bf2a315fd094957ca3095c",
+  "checks": [
+    {
+      "name": "repository",
+      "status": "PASS",
+      "detail": "https://github.com/mostorm-labs/axiom"
+    },
+    {
+      "name": "anchor_ancestry",
+      "status": "PASS",
+      "detail": {
+        "head": "832866a2d001a247c4eb374c1fb1899258a6f6cf",
+        "subject": "832866a2d001a247c4eb374c1fb1899258a6f6cf",
+        "feature": "c7f874395d55952e9d5288e2a336a21747f37f11"
+      }
+    },
+    {
+      "name": "source_and_prior_evidence_exact",
+      "status": "PASS",
+      "detail": 40
+    },
+    {
+      "name": "package_identity",
+      "status": "PASS",
+      "detail": [
+        {
+          "path": "package.json",
+          "sha256": "56962b59726eca31f3cb015779234df84926bbbac427b382e285aea8dd70aa77"
+        },
+        {
+          "path": "closure.md",
+          "sha256": "eeedbfc76d8c6926400953cf76c2c854452ebd134291cd8e474b36263fb4cde6"
+        },
+        {
+          "path": "design.md",
+          "sha256": "a5ad30afdee8e05fa24d474f5eddecd3d57ab7ab79ffeec874688bbfac66d57c"
+        },
+        {
+          "path": "test-matrix.json",
+          "sha256": "e68471894983bfce9964e24e913e110ad11d82f655300a7f9222c8026e4a7abc"
+        },
+        {
+          "path": "preflight.py",
+          "sha256": "9e0e9296454030d7a5e180c01d79639bec529e6fd8bcbd48060ecc8b637f96a0"
+        }
+      ]
+    },
+    {
+      "name": "accepted_current_authority",
+      "status": "PASS",
+      "detail": "Live current and acceptance snapshots are recorded under result/authority."
+    },
+    {
+      "name": "product_authorization_scope",
+      "status": "PASS",
+      "detail": [
+        "D07-A explicit intent/group",
+        "D07-B bounded OOM/failure containment"
+      ]
+    }
+  ],
+  "P32_producer": "NOT_IMPLEMENTED",
+  "P32_product_tests": "NOT_RUN",
+  "p32_technical_gate": "Prove true no-fail commit, per-operation publication and actual injected boundaries; return blocker if impossible."
+}

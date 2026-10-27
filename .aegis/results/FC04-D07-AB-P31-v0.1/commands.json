@@ -1,0 +1,74 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "D:/Softwares/Anaconda/python.exe",
+        "-X",
+        "utf8",
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\.aegis\\packages\\FC04-D07-AB-P31-v0.1\\preflight.py",
+        "PackageBindingPreflight"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas",
+      "exit_code": 0,
+      "raw": "raw/PackageBindingPreflight.log"
+    },
+    {
+      "argv": [
+        "D:/Softwares/Anaconda/python.exe",
+        "-X",
+        "utf8",
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\.aegis\\packages\\FC04-D07-AB-P31-v0.1\\preflight.py",
+        "EvidenceContractPreflight"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas",
+      "exit_code": 0,
+      "raw": "raw/EvidenceContractPreflight.log"
+    },
+    {
+      "argv": [
+        "D:/Softwares/Anaconda/python.exe",
+        "-X",
+        "utf8",
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\.aegis\\packages\\FC04-D07-AB-P31-v0.1\\preflight.py",
+        "DesignPreflight"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas",
+      "exit_code": 0,
+      "raw": "raw/DesignPreflight.log"
+    },
+    {
+      "argv": [
+        "D:/Softwares/Anaconda/python.exe",
+        "-X",
+        "utf8",
+        "tools/check_runtime_abi_manifest.py",
+        "--root",
+        "."
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas",
+      "exit_code": 0,
+      "raw": "raw/runtime-abi.log"
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "diff",
+        "--exit-code",
+        "832866a2d001a247c4eb374c1fb1899258a6f6cf",
+        "--",
+        "runtime",
+        "apps",
+        "debug_ui",
+        "verification",
+        "tests",
+        "tools",
+        "CMakeLists.txt",
+        "semantic-sdk.lock.json",
+        "r1-full-skia-sdk.lock.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas",
+      "exit_code": 0,
+      "raw": "raw/product-source-diff.log"
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "subject": "832866a2d001a247c4eb374c1fb1899258a6f6cf",
+  "source_files": [
+    {
+      "path": "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+      "sha256": "efd85fa656e73cd3da41ca6a7710bdd1395a2eed410d703bfea9fe34b34cc110"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "5b6ae235647e40de7c8d8e919fb7b808883722d07a900243f894e60163a2807b"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/interaction_ports.hpp",
+      "sha256": "cdade54871a0a31c0fead41862614a6a05d0818a959df4e0d58c180bbe596d13"
+    },
+    {
+      "path": "runtime/interaction/src/editor_history.cpp",
+      "sha256": "967d6e1e7762dbab0ce665531d47378ebd8752dfcf2753e352f81e1acb8145b9"
+    },
+    {
+      "path": "runtime/interaction/src/undoable_command.cpp",
+      "sha256": "52634b9d12deba83ca9acb762105d6bc497c9b474edb5a96c007b41e9e838a4d"
+    },
+    {
+      "path": "runtime/interaction/src/undoable_command.hpp",
+      "sha256": "bc8cc39f117583b2c4485f468551a7a1c3a4f5e71e7ebcf3af5030a6497eebf1"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "f043e44a34a8e7ea48668e0c7823ddeecab99cb8d3fbcb9581ee4c14c582830d"
+    },
+    {
+      "path": "runtime/interaction/CMakeLists.txt",
+      "sha256": "58d8c278d061d42b45401e0a5cfce6dd8d92719955e883f672d534096cd4ae01"
+    },
+    {
+      "path": "runtime/semantic/src/operation_engine.cpp",
+      "sha256": "c39b86cfa7b2823364ca9d32937a675986badc8ad7b753361551dc1022716ef3"
+    },
+    {
+      "path": "runtime/semantic/src/atomic_apply.cpp",
+      "sha256": "ef51597354531ae6bc0376c29e0b0173295d6646cc2c28efdfa11a5e00923711"
+    },
+    {
+      "path": "runtime/semantic/src/atomic_apply.hpp",
+      "sha256": "9668c3b97908683e05b149f34446a8102bd463e3369eb393a1e908f097a5fba2"
+    },
+    {
+      "path": "runtime/semantic/src/indexed_object_store.cpp",
+      "sha256": "d65c3e8dd30434ef9692a12e3217ae796fa3e251c68a98104ddf4ddddc561eb4"
+    },
+    {
+      "path": "runtime/semantic/src/object_store_mutator.hpp",
+      "sha256": "50f854a03142d3620c51d6d1e3654859a9bac10adc4d4477cae221884a7bf664"
+    },
+    {
+      "path": "runtime/semantic/src/applied_operation_ledger.cpp",
+      "sha256": "9bd861a467c1e2854f42daec8932fc16de7375e6fb6a5bb37f2a9a19391c9bce"
+    },
+    {
+      "path": "runtime/semantic/src/change_set_builder.cpp",
+      "sha256": "723cfb8cc389eb5d55e08f7b281be3e307b6fdfb1fb2539a5c902d63b275b33a"
+    },
+    {
+      "path": "runtime/semantic/src/change_set_builder.hpp",
+      "sha256": "040fcac6e07bed2737438115b636e30439cecf8c70934d67b44ad81510e46c33"
+    },
+    {
+      "path": "runtime/semantic/src/object_index.cpp",
+      "sha256": "86b4ba612433e649873d96a808a777026bc4d0b6a2e65c3234d8023ee8317648"
+    },
+    {
+      "path": "runtime/semantic/src/object_index.hpp",
+      "sha256": "8a31d7f4ca33c8d4fd51689f90f5873b9c24710b57460e2ba054b7dcc3d5f6c2"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_engine.hpp",
+      "sha256": "06a8643f7f02e0750d182d6a5f69dc52d994791572a99f20824c91f760cd57e8"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/indexed_object_store.hpp",
+      "sha256": "36ef957ed1ee78af7ffa076472ce73a26b556b94b5a3013774d59b8eb4987064"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/applied_operation_ledger.hpp",
+      "sha256": "74ff656cea68bab24d7f7b36b7826376085c9b4b1db04e705d50ad4448cb1e00"
+    },
+    {
+      "path": "runtime/scene/src/incremental_runtime_coordinator.cpp",
+      "sha256": "0d2754361f3de7a36a66c03c8bc1c63c08a45ce20dcc9f3525a66f0481a6cbf6"
+    },
+    {
+      "path": "verification/fc04_d07/audit_test.cpp",
+      "sha256": "38514fcabee961469a089f49d6a1509e89c7f0030a0725fa4aca1299e2a21c3d"
+    },
+    {
+      "path": "verification/fc04_d07/postcommit_fault.cpp",
+      "sha256": "ca3f811e1dd140ea250795821dca8eeaa7a5115a368e6bef8fceadcbe1772577"
+    },
+    {
+      "path": "verification/fc04_d07/CMakeLists.txt",
+      "sha256": "c6034597ad706bdaadf5a7b70ea3b69b4226e0362524c92c692a733a13d454d9"
+    },
+    {
+      "path": "tools/check_runtime_abi_manifest.py",
+      "sha256": "3a99729696fb4d3b52591a901784c1e19a8332c6e5a49eecedd8f935aec1ca19"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "293eb486a33f33cfc97758219775f6e52569235cc894c1c37662dc82d1133185"
+    },
+    {
+      "path": ".aegis/packages/FC04-D07-P31-CORRECTION-v0.2/test-bindings.json",
+      "sha256": "e462ab2211ecf014f4d558425e75394d49227c69836088997bcf0dc1331a5bd2"
+    },
+    {
+      "path": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/report.md",
+      "sha256": "e3f7bb708c05f0f6085fa679e2f43f72f33f8214ddf2567144db3e538e187a9a"
+    },
+    {
+      "path": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/result.json",
+      "sha256": "6d2b66a0db0ae8fe4cfb6ba63e75385414800fb01ca3c1ea2fcd2bc1a881ee80"
+    },
+    {
+      "path": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/d07-names.txt",
+      "sha256": "f371a988523dee69fc40b2ec7debca417c125c251ce01ab1d0dd29f63e3cf040"
+    },
+    {
+      "path": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/selection-names.txt",
+      "sha256": "87348d78b29571bb98ff479e51158a4c6e9383b96ef107d71def5c1c56aeb298"
+    },
+    {
+      "path": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/d07.xml",
+      "sha256": "3d8b9454ed176f1cc4008ff7c509663b1d6846dc76f11d6c754edb8af778662c"
+    },
+    {
+      "path": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/selection.xml",
+      "sha256": "dd81c18892b7c90017fc132fd5da5f5afc00f44e7986008c47e7f6ff30c84568"
+    },
+    {
+      "path": ".aegis/results/FC04-D07-AUDIT/commands.json",
+      "sha256": "77a7d2d4d2dc16effa5ba6c06e1b79651a2028ffd6521ebaa5536a9708d8fc4c"
+    },
+    {
+      "path": ".aegis/results/FC04-D07-REPAIR-PREFLIGHT/authority-inputs/current-d07-authority.json",
+      "sha256": "64fd3bd78f2017db0cccc138b207581c47f1ae6c1c2e0112f0eaff926a03df23"
+    },
+    {
+      "path": ".aegis/results/FC04-D07-REPAIR-PREFLIGHT/authority-inputs/scope-acceptance.json",
+      "sha256": "9b6e9074e45ead16fa4498ac20d23505c5efd1dbb1db31dd6281df6a45f739f1"
+    },
+    {
+      "path": ".aegis/results/FC04-D07-REPAIR-PREFLIGHT/authority-inputs/07-14-current.json",
+      "sha256": "68b74cbf46d2167626e030d6892872f59c7da85ea664282061982f7bf76d07cc"
+    }
+  ],
+  "package_files": [
+    {
+      "path": "package.json",
+      "sha256": "56962b59726eca31f3cb015779234df84926bbbac427b382e285aea8dd70aa77"
+    },
+    {
+      "path": "closure.md",
+      "sha256": "eeedbfc76d8c6926400953cf76c2c854452ebd134291cd8e474b36263fb4cde6"
+    },
+    {
+      "path": "design.md",
+      "sha256": "a5ad30afdee8e05fa24d474f5eddecd3d57ab7ab79ffeec874688bbfac66d57c"
+    },
+    {
+      "path": "test-matrix.json",
+      "sha256": "e68471894983bfce9964e24e913e110ad11d82f655300a7f9222c8026e4a7abc"
+    },
+    {
+      "path": "preflight.py",
+      "sha256": "9e0e9296454030d7a5e180c01d79639bec529e6fd8bcbd48060ecc8b637f96a0"
+    }
+  ]
+}

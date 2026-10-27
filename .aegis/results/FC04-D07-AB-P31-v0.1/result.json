@@ -1,0 +1,69 @@
+{
+  "task": "FC04-D07-AB-P31",
+  "status": "P31_PREFLIGHT_PASS",
+  "product_P32_authorized": true,
+  "subject": "832866a2d001a247c4eb374c1fb1899258a6f6cf",
+  "branch": "codex/fc04-d07-selection-audit",
+  "worktree": "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas",
+  "package": ".aegis/packages/FC04-D07-AB-P31-v0.1/package.json",
+  "package_sha256": "56962b59726eca31f3cb015779234df84926bbbac427b382e285aea8dd70aa77",
+  "source_lock_sha256": "30e86e585ff3d2718c312ad07167792cfe4f1ab7f8bf2a315fd094957ca3095c",
+  "preflights": {
+    "PackageBindingPreflight": {
+      "status": "PASS",
+      "exit_code": 0
+    },
+    "EvidenceContractPreflight": {
+      "status": "PASS",
+      "exit_code": 0
+    },
+    "DesignPreflight": {
+      "status": "PASS",
+      "exit_code": 0
+    }
+  },
+  "preflight_scope": "P31 binding/evidence/design completeness only; no production behavior proven",
+  "fresh_runtime_C_ABI_manifest": "PASS exit 0; raw/runtime-abi.log",
+  "source_and_test_changes": [],
+  "product_build_this_turn": "NOT_RUN",
+  "P32_tests_this_turn": "NOT_RUN",
+  "prior_results_reused_and_hash_verified": {
+    "d07": {
+      "tests": 14,
+      "passed": 11,
+      "failed": [
+        "fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED",
+        "fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED",
+        "FC04D07PostcommitReceiptGrowthFault"
+      ],
+      "skipped": 0,
+      "exit_code": 8
+    },
+    "selection": {
+      "tests": 160,
+      "passed": 160,
+      "failed": [],
+      "skipped": 0,
+      "exit_code": 0
+    }
+  },
+  "planned_real_group_entry": "NOT_IMPLEMENTED",
+  "postcommit_oom": "UNRESOLVED; original controlled exit 86",
+  "implementation_critical_proofs": [
+    "actual whole-intent precommit reservation/no-fail write segment",
+    "per-Operation publication plus no partial local observer state",
+    "real forward-boundary failure injections",
+    "real one-Undo group and fresh-ID Redo",
+    "postcommit OOM containment"
+  ],
+  "stop_if_unprovable": [
+    "NEW_HIGH_IMPACT_FAILURE_MODE",
+    "AUTHORITY_CONFLICT",
+    "TASK_PACKAGE_DEFECT"
+  ],
+  "D07_product_pass": false,
+  "D06_B": "OPEN",
+  "PHYS_pass": false,
+  "main_merged": false,
+  "result_revision": "containing Git commit; returned separately"
+}
