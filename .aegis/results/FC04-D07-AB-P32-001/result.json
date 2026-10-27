@@ -1,0 +1,76 @@
+{
+  "task": "FC04-D07-AB-P32",
+  "terminal_status": "TASK_PACKAGE_DEFECT",
+  "continue_execution": false,
+  "source_anchor": "832866a2d001a247c4eb374c1fb1899258a6f6cf",
+  "package_revision": "5db29ce84c30b14da2133d137f4e69b79ffe4a55",
+  "branch": "codex/fc04-d07-selection-audit",
+  "worktree": "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas",
+  "result_revision": "containing Git commit; final hash returned separately",
+  "native_d07": {
+    "count": 17,
+    "passed": 16,
+    "failed": [
+      "fc04.d07.D07.ExplicitIntentGroupProducesOneUndoUnit"
+    ],
+    "skipped": 0,
+    "exit_code": 8
+  },
+  "native_selection": {
+    "count": 160,
+    "passed": 160,
+    "failed": [],
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "single_command_oom": {
+    "baseline_exit": 86,
+    "fixed_exit": 0
+  },
+  "product_abi": {
+    "status": "PASS",
+    "exit_code": 0
+  },
+  "web": {
+    "web-batch1": {
+      "exitCode": 0,
+      "assertions": 19,
+      "failed": 0,
+      "error": null,
+      "execution": "actual Chrome/WASM with CDP mouse delivery; synthetic facts, no PHYS claim"
+    },
+    "web-batch2": {
+      "exitCode": 0,
+      "assertions": 28,
+      "failed": 0,
+      "error": null,
+      "execution": "actual Chrome/WASM with CDP mouse delivery; synthetic facts, no PHYS claim"
+    },
+    "web-batch3": {
+      "exitCode": 0,
+      "assertions": 38,
+      "failed": 0,
+      "error": null,
+      "execution": "actual Chrome/WASM with CDP mouse delivery; synthetic facts, no PHYS claim"
+    }
+  },
+  "grouped_intent": "NOT_IMPLEMENTED",
+  "P32_product_PASS": false,
+  "blocker": {
+    "owner": "P31/Scene integration scope",
+    "evidence_test": "fc04.d07.D07.LiveSceneApplyIsNotUnpublishedPreparation",
+    "issue": "No bound real prepare-only Scene publication seam; P31 requires it and excludes its owner files.",
+    "authority_conflict_established": false,
+    "resolution": "Targeted P31 correction for existing Scene owner prepare/publish/abort, or a proven existing equivalent; preserve per-operation notifications and D07 failure semantics."
+  },
+  "product_paths": [
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+    "runtime/interaction/src/canvas_editing_runtime.cpp"
+  ],
+  "verification_paths": [
+    "verification/fc04_d07/audit_test.cpp"
+  ],
+  "physical_input": "NOT_RUN",
+  "D06_B": "OPEN",
+  "main_merged": false
+}

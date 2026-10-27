@@ -1,0 +1,42 @@
+{
+  "emsdk_version": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 6.0.6 (ce75e06884093bcefb86a6b8fd56a5d62a4cc245)",
+  "configure": [
+    "cmake",
+    "-S",
+    ".",
+    "-B",
+    "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\fc04-d07-ab-p32\\web-build-606",
+    "-G",
+    "Ninja",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DCMAKE_TOOLCHAIN_FILE=C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+    "-DBUILD_TESTING=OFF",
+    "-DCANVAS_BUILD_POC01=OFF",
+    "-DCANVAS_BUILD_SEMANTIC=ON",
+    "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+    "-DCANVAS_BUILD_RENDER=ON",
+    "-DCANVAS_BUILD_RF01=ON",
+    "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+    "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
+    "-DAXIOM_BUILD_DEBUG_UI=ON",
+    "-DAXIOM_DEBUG_UI_PROFILE=full",
+    "-DAXIOM_FC08_QUALIFICATION_HOOKS=OFF",
+    "-DCANVAS_SKIA_SDK_VARIANT=release",
+    "-DCANVAS_SKIA_SDK_ROOT=C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/.deps/skia-sdk/web-wasm-webgl2/release",
+    "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+    "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe",
+    "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+    "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+    "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+    "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"
+  ],
+  "build": [
+    "cmake",
+    "--build",
+    "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\fc04-d07-ab-p32\\web-build-606",
+    "--target",
+    "axiom_canvas_demo_web",
+    "--parallel",
+    "6"
+  ]
+}

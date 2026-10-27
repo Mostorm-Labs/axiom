@@ -649,7 +649,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   void publishAdmitted() noexcept override;
   void cancel(std::uint64_t) noexcept override;
 
-  std::optional<semantic::CanonicalCommitRecord> historyCommitForPublication_;
+  bool historyPublicationPending_ = false;
   std::unique_ptr<input::InputRouter> input_;
   std::unique_ptr<ink::InkEngine> ink_;
   std::unique_ptr<ink::PreviewModel> preview_;

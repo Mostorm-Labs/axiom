@@ -1,0 +1,29 @@
+{
+  "from": "aegis-implementation/P32",
+  "to": "aegis/CONTROL_REVIEW",
+  "status": "TASK_PACKAGE_DEFECT",
+  "continue_execution": false,
+  "task": "FC04-D07-AB-P32",
+  "next_owner": "P31 control, with Scene owner input",
+  "unresolved": {
+    "owner": "P31/Scene integration scope",
+    "evidence_test": "fc04.d07.D07.LiveSceneApplyIsNotUnpublishedPreparation",
+    "issue": "No bound real prepare-only Scene publication seam; P31 requires it and excludes its owner files.",
+    "authority_conflict_established": false,
+    "resolution": "Targeted P31 correction for existing Scene owner prepare/publish/abort, or a proven existing equivalent; preserve per-operation notifications and D07 failure semantics."
+  },
+  "preserve": [
+    "real single-command OOM fix",
+    "existing 11 D07 passes",
+    "160 Selection passes",
+    "historical evidence",
+    "group RED"
+  ],
+  "not_closed": [
+    "D07-A",
+    "group OOM/containment",
+    "D06-B",
+    "Gate",
+    "PHYS"
+  ]
+}

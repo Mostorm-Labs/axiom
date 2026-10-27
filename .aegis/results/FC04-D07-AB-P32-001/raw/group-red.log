@@ -1,0 +1,22 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = D07.ExplicitIntentGroupProducesOneUndoUnit
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from D07
+[ RUN      ] D07.ExplicitIntentGroupProducesOneUndoUnit
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\verification\fc04_d07\audit_test.cpp(428): error: Failed
+Production CanvasEditingRuntime explicit intent entry is not implemented
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\verification\fc04_d07\audit_test.cpp(434): error: Expected: submitRealExplicitIntent(rt(), operations) doesn't generate new fatal failures in the current thread.
+  Actual: it does.
+
+[  FAILED  ] D07.ExplicitIntentGroupProducesOneUndoUnit (0 ms)
+[----------] 1 test from D07 (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] D07.ExplicitIntentGroupProducesOneUndoUnit
+
+ 1 FAILED TEST

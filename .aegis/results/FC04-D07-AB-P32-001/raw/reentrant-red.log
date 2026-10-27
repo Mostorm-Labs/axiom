@@ -1,0 +1,28 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = D07.ScenePublicationRejectsReentrantCanonicalWrite
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from D07
+[ RUN      ] D07.ScenePublicationRejectsReentrantCanonicalWrite
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\verification\fc04_d07\audit_test.cpp(468): error: Expected equality of these values:
+  attempt.disposition
+    Which is: 1-byte object <00>
+  semantic::ApplyDisposition::kRejected
+    Which is: 1-byte object <02>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\verification\fc04_d07\audit_test.cpp(469): error: Expected equality of these values:
+  rt().semanticGeneration().value()
+    Which is: 3
+  before.generation + 1U
+    Which is: 2
+
+[  FAILED  ] D07.ScenePublicationRejectsReentrantCanonicalWrite (2 ms)
+[----------] 1 test from D07 (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] D07.ScenePublicationRejectsReentrantCanonicalWrite
+
+ 1 FAILED TEST

@@ -3347,7 +3347,7 @@ interaction::SubmitResult CanvasEditingRuntime::submitConditional(
 interaction::SubmitResult CanvasEditingRuntime::submitAdmitted(
     const semantic::Operation& operation, semantic::ApplySource source,
     semantic::OperationAdmission& admission) {
-  if (historyCommitForPublication_ || !canonicalWriteAdmission() || !historySceneReady() ||
+  if (historyPublicationPending_ || !canonicalWriteAdmission() || !historySceneReady() ||
       (source != semantic::ApplySource::kLocalInteraction && source != semantic::ApplySource::kUndoRedo) ||
       !interaction::supportsUndoableCommand(operation.kind())) return interaction::SubmitResult::rejected();
   auto* commandAdmission = &admission;
@@ -3378,18 +3378,37 @@ interaction::SubmitResult CanvasEditingRuntime::submitAdmitted(
   if (applied.disposition != semantic::ApplyDisposition::kApplied) return interaction::SubmitResult::rejected();
   // Canonical is committed. A derived publication failure is recovered by the
   // existing Scene owner; it must not reject the retained History intention.
-  observeApplied(operation, applied);
+  static_assert(std::is_nothrow_move_assignable_v<semantic::CanonicalCommitRecord>);
+  static_assert(std::is_nothrow_move_constructible_v<semantic::CanonicalCommitRecord>);
+  // One owned record serves both the outcome and pending Scene publication.
+  // Moving it cannot allocate after canonical commit, while preserving the
+  // existing single-command observer order.
+  lastAppliedCommit_ = std::move(*applied.commit_record);
+  historyPublicationPending_ = true;
+  const auto& commit = *lastAppliedCommit_;
+  selection_.onChangeSet(commit.change_set);
+  if (selection_.primary().isZero()) selectionView_.reset();
+  if (localOperationSink_ != nullptr &&
+      semantic::localBridgePublicationDisposition(commit) ==
+          semantic::LocalBridgePublicationDisposition::kEligible && !publicationCallbackActive_) {
+    publicationCallbackActive_ = true;
+    localOperationSink_->applied(operation, commit);
+    publicationCallbackActive_ = false;
+  }
   ++submittedOperationCount_;
   canonicalPresentationDirty_ = true;
-  historyCommitForPublication_ = std::move(applied.commit_record);
   return interaction::SubmitResult::acceptedResult();
 }
 
 void CanvasEditingRuntime::publishAdmitted() noexcept {
   if(sectionDefersPublication_)return;
-  if (!historyCommitForPublication_) return;
-  auto commit=std::move(*historyCommitForPublication_);
-  historyCommitForPublication_.reset();
+  if (!historyPublicationPending_ || !lastAppliedCommit_) return;
+  historyPublicationPending_ = false;
+  const auto& commit = *lastAppliedCommit_;
+  // The Scene owner can call observers synchronously. Prevent reentrant
+  // canonical writes while it consumes the retained commit record.
+  const bool previouslyPublishing = publicationCallbackActive_;
+  publicationCallbackActive_ = true;
   try {
     if (sceneCoordinator_ && sceneCompiler_) {
       const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current(), resourceManifestPort_);
@@ -3398,6 +3417,7 @@ void CanvasEditingRuntime::publishAdmitted() noexcept {
       (void)sceneCoordinator_->apply(*sceneCompiler_, input);
     }
   } catch (const std::bad_alloc&) { /* Applied is retained; the existing owner recovers on next frame. */ }
+  publicationCallbackActive_ = previouslyPublishing;
 }
 
 semantic::OperationId CanvasEditingRuntime::allocateOperationId() {

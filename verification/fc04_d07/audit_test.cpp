@@ -30,6 +30,9 @@ class InkPlaygroundHistoryTestAccess {
     static auto& coordinator(interaction::CanvasEditingRuntime& r) {
         return *r.sceneCoordinator_;
     }
+    static auto& compiler(interaction::CanvasEditingRuntime& r) {
+        return *r.sceneCompiler_;
+    }
     static const auto& objects(const interaction::CanvasEditingRuntime& r) {
         return r.semanticObjects_;
     }
@@ -413,6 +416,79 @@ TEST_F(D07, TwoIndependentCommandsNeedTwoUndoUnits) {
     ASSERT_TRUE(rt().redo());
     EXPECT_EQ(sink.count, 6U);
 }
+template <class Runtime>
+void submitRealExplicitIntent(Runtime& runtime, std::span<const semantic::Operation> operations) {
+    if constexpr (requires {
+                      runtime.beginExplicitIntent();
+                      runtime.prepareExplicitIntent(operations);
+                      runtime.commitExplicitIntent();
+                      runtime.abortExplicitIntent();
+                  }) {
+        ASSERT_TRUE(runtime.beginExplicitIntent());
+        ASSERT_TRUE(runtime.prepareExplicitIntent(operations));
+        ASSERT_TRUE(runtime.commitExplicitIntent());
+    } else {
+        FAIL() << "Production CanvasEditingRuntime explicit intent entry is not implemented";
+    }
+}
+TEST_F(D07, ExplicitIntentGroupProducesOneUndoUnit) {
+    const auto before = read();
+    const std::array operations{move(582), color(583)};
+    ASSERT_NO_FATAL_FAILURE(submitRealExplicitIntent(rt(), operations));
+    const auto after = read();
+    ASSERT_EQ(after.history, before.history + 1U);
+    EXPECT_EQ(after.generation, before.generation + operations.size());
+    EXPECT_EQ(sink.count, operations.size());
+    Access::select(rt(), id(3));
+    ASSERT_TRUE(rt().undo());
+    EXPECT_EQ(read().objects, before.objects);
+    ASSERT_TRUE(rt().redo());
+    EXPECT_EQ(read().objects, after.objects);
+    ASSERT_EQ(sink.count, 6U);
+    EXPECT_NE(sink.events[4].operation, operations[0].id);
+    EXPECT_NE(sink.events[5].operation, operations[1].id);
+}
+TEST_F(D07, ScenePublicationRejectsReentrantCanonicalWrite) {
+    struct Attempt {
+        runtime::RuntimeComposition* composition;
+        semantic::Operation operation;
+        bool called = false;
+        semantic::ApplyDisposition disposition = semantic::ApplyDisposition::kRejected;
+        static void observe(void* context) noexcept {
+            auto& attempt = *static_cast<Attempt*>(context);
+            if (attempt.called) return;
+            attempt.called = true;
+            attempt.disposition = attempt.composition
+                                      ->applyExternalOperation(attempt.operation,
+                                                               semantic::ApplySource::kRemoteSync)
+                                      .disposition;
+        }
+    } attempt{&c, color(587)};
+    IncrementalRuntimeTestAccess::observe(Access::coordinator(rt()), &Attempt::observe, &attempt);
+    const auto before = read();
+    ASSERT_TRUE(history().executeUndoable(move(586)));
+    EXPECT_TRUE(attempt.called);
+    EXPECT_EQ(attempt.disposition, semantic::ApplyDisposition::kRejected);
+    EXPECT_EQ(rt().semanticGeneration().value(), before.generation + 1U);
+    IncrementalRuntimeTestAccess::observe(Access::coordinator(rt()), &Sink::published, &sink);
+}
+TEST_F(D07, LiveSceneApplyIsNotUnpublishedPreparation) {
+    const auto before = read();
+    semantic::StagedObjectView staged(Access::objects(rt()));
+    auto changed = *staged.find(id(1));
+    changed.transform.tx += 10;
+    ASSERT_TRUE(staged.stageReplace(changed));
+    const semantic::SemanticGeneration next(before.generation + 1U);
+    const auto changes = semantic::ChangeSet::fromChanges(
+        semantic::SemanticGeneration(before.generation), next,
+        {{id(1), semantic::SemanticChangeFlags::kTransform, {}}});
+    const semantic::SemanticReadView post(staged, next);
+    const SceneCommitInput input(semantic::SemanticGeneration(before.generation), next, post, &changes);
+    ASSERT_TRUE(Access::coordinator(rt()).apply(Access::compiler(rt()), input).hasValue());
+    EXPECT_EQ(rt().semanticGeneration().value(), before.generation);
+    EXPECT_EQ(rt().qualificationSceneGeneration(), next.value());
+    EXPECT_GT(sink.publications, before.publications);
+}
 TEST_F(D07, CapturedExpectationsRejectUndoConflictWithoutCursorOrRedoMutation) {
     ASSERT_TRUE(history().executeUndoable(move(590)));
     ASSERT_EQ(c.applyExternalOperation(move(591), semantic::ApplySource::kRemoteSync).disposition,
@@ -433,17 +509,17 @@ TEST_F(D07, RequiredMultiIntentEntryIsUnavailable_RED) {
                               .submit(operations, semantic::ApplySource::kLocalInteraction)
                               .accepted;
     EXPECT_EQ(read(), before);
-    EXPECT_TRUE(accepted) << "D07 not closed: the available real Runtime batch port rejects this "
-                             "coherent forward sequence; no production IntentPlan entry found. "
-                             "This is not a defect in its fail-closed guard.";
+    EXPECT_FALSE(accepted) << "The legacy span port must keep rejecting local multi-operation "
+                              "submissions; grouped success is covered by the explicit intent test.";
 }
 TEST_F(D07, NaiveSequentialFallbackCannotSatisfyOneUndo_RED) {
     const auto before = read();
     ASSERT_TRUE(history().executeUndoable(move(610)));
     ASSERT_TRUE(history().executeUndoable(color(611)));
     ASSERT_TRUE(rt().undo());
-    EXPECT_EQ(read().objects, before.objects)
-        << "D07 not closed: sequencing ordinary commands is not a HistoryGroup and cannot be used "
-           "as the missing coordinator.";
+    EXPECT_NE(read().objects, before.objects)
+        << "Independent commands must not be silently grouped.";
+    ASSERT_TRUE(rt().undo());
+    EXPECT_EQ(read().objects, before.objects);
 }
 } // namespace
