@@ -1,4 +1,5 @@
 #include "canvas/render/skia_headless_backend.hpp"
+#include "skia_geometry_internal.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "canvas/render/image_crop_geometry.hpp"
 #include "canvas/render/skia_text_resources.hpp"
@@ -150,20 +151,7 @@ semantic::ColorValue propertyColor(const RuntimeSceneRecord& record,
 
 void drawPath(SkCanvas& canvas, const semantic::VectorPathGeometry& geometry,
               const SkPaint& paint) {
-    SkPathBuilder path(geometry.fill_rule == semantic::FillRule::kEvenOdd
-                           ? SkPathFillType::kEvenOdd
-                           : SkPathFillType::kWinding);
-    for (const auto& command : geometry.commands) {
-        std::visit([&](const auto& value) {
-            using T = std::decay_t<decltype(value)>;
-            if constexpr (std::is_same_v<T, semantic::MoveTo>) path.moveTo(skScalar(value.point.x), skScalar(value.point.y));
-            else if constexpr (std::is_same_v<T, semantic::LineTo>) path.lineTo(skScalar(value.end.x), skScalar(value.end.y));
-            else if constexpr (std::is_same_v<T, semantic::QuadTo>) path.quadTo(skScalar(value.control.x), skScalar(value.control.y), skScalar(value.end.x), skScalar(value.end.y));
-            else if constexpr (std::is_same_v<T, semantic::CubicTo>) path.cubicTo(skScalar(value.control1.x), skScalar(value.control1.y), skScalar(value.control2.x), skScalar(value.control2.y), skScalar(value.end.x), skScalar(value.end.y));
-            else if constexpr (std::is_same_v<T, semantic::ClosePath>) path.close();
-        }, command);
-    }
-    canvas.drawPath(path.detach(), paint);
+    canvas.drawPath(internal::semanticPath(geometry),paint);
 }
 
 void drawSolidRect(SkCanvas& canvas, const foundation::WorldRect& bounds,
@@ -356,26 +344,8 @@ float objectOpacity(const RuntimeSceneRecord& record) {
         if (entry.field_id==3U) if (const auto* value=std::get_if<float>(&entry.value)) return *value;
     return 1.0F;
 }
-SkPaint strokePaint(const semantic::SolidStroke& stroke, bool antiAlias = false) {
-    SkPaint paint; paint.setAntiAlias(antiAlias); paint.setColor4f(color(stroke.color));
-    paint.setStyle(SkPaint::kStroke_Style); paint.setStrokeWidth(skScalar(stroke.width));
-    switch(stroke.cap) {
-        case semantic::StrokeCap::kButt: paint.setStrokeCap(SkPaint::kButt_Cap); break;
-        case semantic::StrokeCap::kRound: paint.setStrokeCap(SkPaint::kRound_Cap); break;
-        case semantic::StrokeCap::kSquare: paint.setStrokeCap(SkPaint::kSquare_Cap); break;
-    }
-    std::visit([&](const auto& join) {
-        using Join=std::decay_t<decltype(join)>;
-        if constexpr(std::is_same_v<Join,semantic::RoundJoin>) paint.setStrokeJoin(SkPaint::kRound_Join);
-        else if constexpr(std::is_same_v<Join,semantic::BevelJoin>) paint.setStrokeJoin(SkPaint::kBevel_Join);
-        else {paint.setStrokeJoin(SkPaint::kMiter_Join);paint.setStrokeMiter(skScalar(join.limit));}
-    },stroke.join);
-    if(const auto* dash=std::get_if<semantic::DashPattern>(&stroke.dash)) {
-        std::vector<SkScalar> intervals;intervals.reserve(dash->segments.size());
-        for(const auto value:dash->segments) intervals.push_back(skScalar(value));
-        paint.setPathEffect(SkDashPathEffect::Make(SkSpan<const SkScalar>(intervals.data(),intervals.size()),skScalar(dash->offset)));
-    }
-    return paint;
+SkPaint strokePaint(const semantic::SolidStroke& stroke,bool antiAlias=false) {
+    return internal::geometryStrokePaint(stroke,antiAlias);
 }
 
 void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageResourceResolver* images,

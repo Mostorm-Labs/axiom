@@ -4,6 +4,7 @@ option(CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH
     "Build the shared Skia programmable-DAB renderer" OFF)
 
 add_library(canvas_runtime_render STATIC
+    src/selection_region_geometry.cpp
     src/visibility_resolver.cpp
     src/direct_reference_source.cpp
     src/frame_plan.cpp

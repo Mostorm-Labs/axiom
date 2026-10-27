@@ -99,8 +99,9 @@ void concave_and_even_odd_self_intersection_are_not_bounding_boxes() {
     assert(intersectSelectionRegion(small,repeated)==RegionIntersection::kHit);
     const std::vector<RegionPoint> invalid{{0,0},{5,5},{10,10}};
     assert(intersectSelectionRegion(small,invalid)==RegionIntersection::kInvalid);
+    // Batch2 now owns VectorStroke geometry: mismatched Shape content is invalid.
     small.kind=semantic::ObjectKind::kVectorStroke;
-    assert(intersectSelectionRegion(small,repeated)==RegionIntersection::kUnsupported);
+    assert(intersectSelectionRegion(small,repeated)==RegionIntersection::kInvalid);
 }
 void existing_image_and_sticky_frames_use_affine_rectangular_geometry() {
     const std::vector<RegionPoint> corner{{0,0},{5,0},{5,5},{0,5}};

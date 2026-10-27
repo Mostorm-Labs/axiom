@@ -107,6 +107,7 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
     if (runtimeSceneHost_->semanticGeneration()!=generation||projected.generation()!=generation) {result.status=Status::kStale;return result;}
     const auto read=runtimeSceneHost_->read();
     result.status=Status::kComplete;
+    std::vector<foundation::ObjectId> sectionBackgrounds;
     for (auto it=queried.value().backToFront.rbegin();it!=queried.value().backToFront.rend();++it) {
         const auto* record=read.find(*it);
         if (!record) {result.status=Status::kStale;return result;}
@@ -126,16 +127,22 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
         const auto* projection=projected.find(id);
         if (!projection) {result.status=Status::kStale;return result;}
         auto object=*canonical;object.transform=projection->transform;
-        const auto intersection=intersectSelectionRegion(object,world);
+        const auto intersection=intersectSelectionRegion(object,world,projection);
         if (intersection==RegionIntersection::kInvalid) {result.status=Status::kFailed;return result;}
         if (intersection==RegionIntersection::kUnsupported) {
             result.status=Status::kPartial;
             const auto kind=static_cast<std::uint32_t>(object.kind);
             if (std::find(result.unsupportedKinds.begin(),result.unsupportedKinds.end(),kind)==result.unsupportedKinds.end())
                 result.unsupportedKinds.push_back(kind);
-        } else if (intersection==RegionIntersection::kHit&&std::find(result.roots.begin(),result.roots.end(),root)==result.roots.end())
-            result.roots.push_back(root);
+        } else if(intersection==RegionIntersection::kHit) {
+            auto& targets=object.kind==semantic::ObjectKind::kSection&&selectionRegionInsideSection(object,world)?sectionBackgrounds:result.roots;
+            if(std::find(targets.begin(),targets.end(),root)==targets.end())targets.push_back(root);
+        }
     }
+    if(result.roots.empty())result.roots=std::move(sectionBackgrounds);
+    const auto roots=selection_.resolveRoots(result.roots,semanticObjects_);
+    if(!roots){result.status=Status::kStale;return result;}
+    result.roots=*roots;
     if (read.revision()!=queried.value().revision||runtimeSceneHost_->revision()!=read.revision()||semanticGeneration_.current()!=generation)
         result.status=Status::kStale;
     return result;

@@ -184,14 +184,14 @@ TEST_F(SelectionInput, SecondFingerNavigationCancelsRegionBeforeTakingOver) {
     (void)pointer(input::PointerPhase::kUp,620,240,false,2,9100,input::PointerTool::kFinger);
     EXPECT_EQ(selected(),std::vector{a});EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
 }
-TEST_F(SelectionInput, MissingRegionProviderIsPartialAndNeverPublishesEmptySuccess) {
+TEST_F(SelectionInput, SectionRegionBackgroundIsSelectableWithoutContent) {
     runtime::SectionIntent create;create.objectId=foundation::ObjectId::fromUint64(9302);
     create.transform.tx=20;create.transform.ty=300;create.content.boundary={0,0,100,100};
     ASSERT_EQ(f.submitSectionIntent(create,++request,9100).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
     click(140,130);mode(runtime::CanvasSelectionMode::kRectangle);const auto before=snapshot();
-    rectangle(10,290,130,410);EXPECT_EQ(selected(),std::vector{a});
-    EXPECT_EQ(snapshot().selectionQueryStatus,runtime::SelectionQueryStatus::kPartial);
-    EXPECT_EQ(snapshot().regionUnsupportedKinds,std::vector<std::uint32_t>{10});
+    rectangle(10,290,130,410);EXPECT_EQ(selected(),std::vector{create.objectId});
+    EXPECT_EQ(snapshot().selectionQueryStatus,runtime::SelectionQueryStatus::kComplete);
+    EXPECT_TRUE(snapshot().regionUnsupportedKinds.empty());
     EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
 }
 TEST_F(SelectionInput, MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade) {
@@ -339,6 +339,21 @@ TEST_F(SelectionInput, SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSele
     ASSERT_EQ(c.applyExternalOperation(op,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
     click(140,130);EXPECT_EQ(selected(),std::vector{section});
     click(300,130);EXPECT_EQ(selected(),std::vector{b});EXPECT_TRUE(snapshot().selectedLocked);
+}
+
+TEST_F(SelectionInput, RealBrushRegionUsesPublishedVisibleOutlineWithoutDocumentWrites) {
+    ASSERT_EQ(f.setTool(4101,++request,f.readRuntimeState().identity.runtimeGeneration,9100).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,50,300));ASSERT_TRUE(pointer(input::PointerPhase::kMove,500,500));
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,500,500));ASSERT_EQ(c.semanticObjectCount(),4U);
+    mode(runtime::CanvasSelectionMode::kRectangle);const auto before=snapshot();
+    rectangle(40,290,510,510);EXPECT_EQ(snapshot().selectionQueryStatus,runtime::SelectionQueryStatus::kComplete);
+    ASSERT_EQ(selected().size(),1U);
+    const auto object=c.qualificationRuntime().qualificationObjectRecord(selected().front());ASSERT_TRUE(object);
+    EXPECT_EQ(object->kind,semantic::ObjectKind::kVectorStroke);
+    rectangle(40,480,65,500);EXPECT_TRUE(selected().empty());
+    EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);EXPECT_EQ(snapshot().lastAppliedOperation,before.lastAppliedOperation);
+    EXPECT_EQ(snapshot().canUndo,before.canUndo);EXPECT_EQ(snapshot().canRedo,before.canRedo);
 }
 
 }
