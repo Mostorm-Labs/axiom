@@ -1,0 +1,86 @@
+{
+  "task": "SELECTION-BATCH2",
+  "status": "BOUNDED_IMPLEMENTATION_COMPLETE_WITH_EXPLICIT_UNSUPPORTED_PROFILES",
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/selection-hierarchy-coverage-batch2",
+  "base": "5daf623eba9a943706d813f8e197e00a9f6a8b2e",
+  "source_subject": "6ab8d388e425a8c28a136dadf661ac7ad31f48aa",
+  "source_tree": "f43ba894461b6575038ca5f0b1499495c7a1bedc",
+  "receipt": "Evidence-only descendant commit containing this directory; final HEAD returned separately",
+  "main_rechecked": "2fee75f66a7f96f6aac834228ede372a9abda59a",
+  "zip_sha256": "3c8177e4cf7262f3175f4102ce8b6bd5c162bbe27b35ed510584bd5f20e19bc9",
+  "batch1_reconciliation": {
+    "actual_branch": "codex/selection-unified-batch1",
+    "head": "5daf623eba9a943706d813f8e197e00a9f6a8b2e",
+    "required_chain": "PRESENT",
+    "public_primitives": [
+      "SelectionSession.applyAcquisition Replace/Add",
+      "RegionSelectionSession",
+      "querySelectionRegion narrow phase",
+      "real ingress Shift-at-Down",
+      "safe region cancellation independent of legacy cancel",
+      "existing Facade/DebugUI/Native/Web inputs"
+    ],
+    "missing_batch1_prerequisites": [],
+    "intentional_debt": "precise other-object providers and hierarchy refinements are authorized Batch2 work",
+    "baseline": "10 registered selection/geometry/Section/transform/Crop/Connector/navigation CTests PASS; source identical to tested batch1 implementation, receipt-only delta"
+  },
+  "verification": {
+    "native_ctests": {
+      "registered": 77,
+      "passed": 77,
+      "skipped": 0,
+      "exit_code": 0,
+      "selection_input_gtests": 27,
+      "coverage_gtests": 12,
+      "execution": "MSVC19.51 Release /MT /WX; real HWND/WndProc with synthetic input, not PHYS"
+    },
+    "actual_chrome": {
+      "checks": 28,
+      "failed": 0,
+      "exit_code": 0,
+      "execution": "actual Chrome155/WASM/WebGL2, headless SwiftShader, CDP DOM mouse facts; DPR1/2; typed existing Section/Facade transport; no physical DebugUI/IME claim"
+    },
+    "python": {
+      "tests": 18,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "module_boundaries": {
+      "contract_files": 102,
+      "exit_code": 0
+    }
+  },
+  "coverage_notes": "../../../docs/planning/selection-batch2/06-implementation-notes.md",
+  "unsupported": [
+    "textured/chalk/membrane/unsupported-package DabBrush pixel-alpha geometry",
+    "pending or unavailable Connector route",
+    "missing or diagnostic-bearing text metrics: Partial/Unsupported; never successful empty query"
+  ],
+  "not_run": [
+    "physical mouse/pen/touch and real IME",
+    "other platforms",
+    "glyph-alpha text oracle",
+    "full multi-object editing/Group expansion",
+    "Snap/Alignment product expansion",
+    "G5 performance/fault qualification",
+    "full302 runner"
+  ],
+  "invariants": {
+    "selection_only_changes_canonical": false,
+    "selection_only_adds_operations_or_history": false,
+    "legacy_cancel_toggle_reinterpreted": false,
+    "schema_semantic_implementation_sdk_locks_changed": false,
+    "five_supplied_documents_byte_identical": true,
+    "historical_results_or_global_aegis_registries_changed": false,
+    "main_merged": false,
+    "pushed": false,
+    "pr_created": false,
+    "gate_dev_phys_release_claim": false
+  },
+  "remaining_product_test_failures": [],
+  "review": "review-disposition.json",
+  "commands": "commands.json",
+  "source_files": "source-files.json",
+  "artifacts": "build-artifacts.json"
+}

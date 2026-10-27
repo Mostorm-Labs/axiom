@@ -1,0 +1,22 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SelectionInput.RealBrushRegionUsesPublishedVisibleOutlineWithoutDocumentWrites
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SelectionInput
+[ RUN      ] SelectionInput.RealBrushRegionUsesPublishedVisibleOutlineWithoutDocumentWrites
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(345): error: Expected equality of these values:
+  f.setTool(4100,++request,f.readRuntimeState().identity.runtimeGeneration,9100).state
+    Which is: 1-byte object <02>
+  runtime::ProductControlState::kQueued
+    Which is: 1-byte object <01>
+
+[  FAILED  ] SelectionInput.RealBrushRegionUsesPublishedVisibleOutlineWithoutDocumentWrites (1 ms)
+[----------] 1 test from SelectionInput (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (1 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionInput.RealBrushRegionUsesPublishedVisibleOutlineWithoutDocumentWrites
+
+ 1 FAILED TEST

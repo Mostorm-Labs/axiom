@@ -1,0 +1,38 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SelectionBatch2Text.*
+[==========] Running 3 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 3 tests from SelectionBatch2Text
+[ RUN      ] SelectionBatch2Text.RealFontTextRegionUsesPublishedLayoutNotWrapBox
+[       OK ] SelectionBatch2Text.RealFontTextRegionUsesPublishedLayoutNotWrapBox (5 ms)
+[ RUN      ] SelectionBatch2Text.RealStickyRichTextChildIsOneUserFacingRoot
+[       OK ] SelectionBatch2Text.RealStickyRichTextChildIsOneUserFacingRoot (11 ms)
+[ RUN      ] SelectionBatch2Text.UnavailableFontGeometryDoesNotBecomeAnEmptySuccessfulQuery
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(1808): error: Expected equality of these values:
+  state.selectionQueryStatus
+    Which is: 1-byte object <01>
+  runtime::SelectionQueryStatus::kPartial
+    Which is: 1-byte object <02>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(1809): error: Expected equality of these values:
+  facade.readSection().selectedRoots
+    Which is: {}
+  std::vector{sticky.objectId}
+    Which is: { 16-byte object <F2-26 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(1810): error: Expected equality of these values:
+  state.regionUnsupportedKinds
+    Which is: {}
+  std::vector<std::uint32_t>{static_cast<unsigned>(semantic::ObjectKind::kRichText)}
+    Which is: { 4 }
+
+[  FAILED  ] SelectionBatch2Text.UnavailableFontGeometryDoesNotBecomeAnEmptySuccessfulQuery (2 ms)
+[----------] 3 tests from SelectionBatch2Text (18 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test suite ran. (18 ms total)
+[  PASSED  ] 2 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionBatch2Text.UnavailableFontGeometryDoesNotBecomeAnEmptySuccessfulQuery
+
+ 1 FAILED TEST

@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="55"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="91"
+	timestamp="2026-10-27T16:03:59"
+	>
+	<testcase name="DUIM1Control" classname="DUIM1Control" time="0.0452348" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC08SectionGeometry" classname="FC08SectionGeometry" time="0.115604" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 3 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 3 tests from FC08SectionGeometry
+[ RUN      ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren
+[       OK ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren (0 ms)
+[ RUN      ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose
+[       OK ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose (0 ms)
+[ RUN      ] FC08SectionGeometry.PublicationFailureRetainsOldSceneAndRecoveryDoesNotClipChildren
+[       OK ] FC08SectionGeometry.PublicationFailureRetainsOldSceneAndRecoveryDoesNotClipChildren (0 ms)
+[----------] 3 tests from FC08SectionGeometry (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 3 tests.
+</system-out>
+	</testcase>
+	<testcase name="FC03ImageScene" classname="FC03ImageScene" time="0.2402" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_fc01_derived_geometry" classname="canvas_fc01_derived_geometry" time="0.0786534" status="run">
+		<properties/>
+		<system-out>PASS SH2 frozen geometry, resized/None and affine hit probes: 2100
+</system-out>
+	</testcase>
+	<testcase name="G4SelectionSession" classname="G4SelectionSession" time="0.0551029" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4TransformSession" classname="G4TransformSession" time="0.0479068" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G46TransformHandleDrag" classname="G46TransformHandleDrag" time="0.047558" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4EditorHistory" classname="G4EditorHistory" time="0.205273" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC01EditorHistoryInverseFamilies" classname="FC01EditorHistoryInverseFamilies" time="0.0189758" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4SessionConflict" classname="G4SessionConflict" time="0.0464872" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4SessionLifecycle" classname="G4SessionLifecycle" time="0.0456321" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4GestureArbiter" classname="G4GestureArbiter" time="0.0464068" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4MultiContactCoordinator" classname="G4MultiContactCoordinator" time="0.0497194" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4ViewportGesture" classname="G4ViewportGesture" time="0.0449365" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="C0CanvasInteractionCoordinator" classname="C0CanvasInteractionCoordinator" time="0.0489783" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="C0ViewportInteractionController" classname="C0ViewportInteractionController" time="0.0453103" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC01ARegionSelection" classname="FC01ARegionSelection" time="0.0473061" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="SelectionBatch2Coverage" classname="SelectionBatch2Coverage" time="0.123332" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 12 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 12 tests from SelectionCoverage
+[ RUN      ] SelectionCoverage.VectorPathCurveAndEvenOddHoleUseGeometryNotControlBounds
+[       OK ] SelectionCoverage.VectorPathCurveAndEvenOddHoleUseGeometryNotControlBounds (0 ms)
+[ RUN      ] SelectionCoverage.LegacyVectorStrokeUsesFiniteWidthSegmentsNotLargeAabb
+[       OK ] SelectionCoverage.LegacyVectorStrokeUsesFiniteWidthSegmentsNotLargeAabb (0 ms)
+[ RUN      ] SelectionCoverage.CanonicalBrushOutlineAndFilledEraseHoleFollowVisibleGeometry
+[       OK ] SelectionCoverage.CanonicalBrushOutlineAndFilledEraseHoleFollowVisibleGeometry (0 ms)
+[ RUN      ] SelectionCoverage.SweptEraseUsesTheRendererMaxRadiusCubicStroke
+[       OK ] SelectionCoverage.SweptEraseUsesTheRendererMaxRadiusCubicStroke (0 ms)
+[ RUN      ] SelectionCoverage.LegacyDabsAr...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="C1CommonIngress" classname="C1CommonIngress" time="0.0156883" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G45BrushOutlineSkiaPath" classname="G45BrushOutlineSkiaPath" time="0.059036" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3HeadlessSkia" classname="G3HeadlessSkia" time="0.177804" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC05ConnectorPendingRaster" classname="FC05ConnectorPendingRaster" time="0.0172737" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC05StickyFractionalProduction" classname="FC05StickyFractionalProduction" time="0.0174518" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC01TriangleConnectorRaster" classname="FC01TriangleConnectorRaster" time="0.0386622" status="run">
+		<properties/>
+		<system-out>PASS FC01 raster Triangle fill/stroke/opacity/None and Connector width/opacity
+</system-out>
+	</testcase>
+	<testcase name="G46EditingOverlay" classname="G46EditingOverlay" time="0.0437153" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC01ASelectionInputIntegration" classname="FC01ASelectionInputIntegration" time="10.1811" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 26 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 26 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (277 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (419 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (287 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (139 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitReg...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC08SectionConsumer" classname="FC08SectionConsumer" time="2.26526" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 14 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 8 tests from FC08SectionConsumer
+[ RUN      ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory
+[       OK ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory (3 ms)
+[ RUN      ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically
+[       OK ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically (1 ms)
+[ RUN      ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts (1 ms)
+[ RUN      ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing
+[       OK ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCanc...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC05ConnectorFacade" classname="FC05ConnectorFacade" time="0.219537" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=4 scene_records=4
+[axiom] present begin frame=2 objects=4 scene_records=4
+[axiom] present begin frame=3 objects=5 scene_records=5
+PASS FC05 public routing, invalidation, derived History, failure and lifecycle
+</system-out>
+	</testcase>
+	<testcase name="FC02Text" classname="FC02Text" time="25.2817" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 78 tests from 10 test suites.
+[----------] Global test environment set-up.
+[----------] 5 tests from FC02Snapshot
+[ RUN      ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication
+[       OK ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication (0 ms)
+[ RUN      ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue
+[       OK ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue (0 ms)
+[ RUN      ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest
+[       OK ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest (1 ms)
+[ RUN      ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore
+[       OK ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore (2 ms)
+[ RUN      ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapability
+[       OK ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCa...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC00XBrushBatchEvaluation" classname="FC00XBrushBatchEvaluation" time="0.251379" status="run">
+		<properties/>
+		<system-out>64 confirmed points: appendEvaluations=1 maxInput=64
+</system-out>
+	</testcase>
+	<testcase name="FC00XBrushPressureCapability" classname="FC00XBrushPressureCapability" time="0.0203345" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+unavailable device pressure: expected brush missing-pressure policy=0.5 actual=0.500
+</system-out>
+	</testcase>
+	<testcase name="FC00XBrushBatchSemantics" classname="FC00XBrushBatchSemantics" time="0.0480436" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=3 obj...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC00XCanonicalBusyPreviewProgress" classname="FC00XCanonicalBusyPreviewProgress" time="0.0217361" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: fixture backbuffer busy framegen=1 providergen=1
+busy=canonical boundary=acquire progressed=1 canonical=0 preview=1
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: fixture present busy framegen=1 providergen=1
+busy=canonical boundary=present progressed=1 canonical=0 preview=1
+[axiom] present begin frame=2 objects=0 scene_records=0
+</system-out>
+	</testcase>
+	<testcase name="FC00XPreviewBusyCanonicalProgress" classname="FC00XPreviewBusyCanonicalProgress" time="0.0207198" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+busy=preview boundary=acquire progressed=1 canonical=1 preview=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+busy=preview boundary=present progressed=1 canonical=1 preview=0
+</system-out>
+	</testcase>
+	<testcase name="FC00XBusyCanonicalPendingFeedback" classname="FC00XBusyCanonicalPendingFeedback" time="0.0205247" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present skia failed: fixture backbuffer busy framegen=1 providergen=1
+</system-out>
+	</testcase>
+	<testcase name="FC00XFatalProviderFailure" classname="FC00XFatalProviderFailure" time="0.0216103" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: fixture device lost framegen=1 providergen=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: fixture device failure framegen=1 providergen=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+</system-out>
+	</testcase>
+	<testcase name="FC00XRuntimeFacade" classname="FC00XRuntimeFacade" time="0.319516" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC03ImageFacade" classname="FC03ImageFacade" time="0.254901" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+</system-out>
+	</testcase>
+	<testcase name="FC08MinimalSectionDebugUi" classname="FC08MinimalSectionDebugUi" time="0.305856" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=0 scene_records=0
+request=1 state=0
+owner_state=1 owner_section_failure=0
+request=1 state=1 section_failure=0
+owner_state=1 owner_section_failure=0
+PASS: real Section widgets through MinimalRuntimeFacade create/wrap/release and Undo/Redo
+</system-out>
+	</testcase>
+	<testcase name="FC02WindowsTextToolEntry" classname="FC02WindowsTextToolEntry" time="0.801419" status="run">
+		<properties/>
+		<system-out>after Text widget: tool=4 phase=0 objects=0
+after canvas click: tool=4 phase=1 canvas_focus=1 objects=0
+PASS: real Text widget / host canvas entry
+</system-out>
+	</testcase>
+	<testcase name="FC02WindowsTextToolFocus" classname="FC02WindowsTextToolFocus" time="0.602142" status="run">
+		<properties/>
+		<system-out>after Text widget: tool=4 phase=0 objects=0
+after canvas click: tool=4 phase=1 canvas_focus=1 objects=0
+PASS: real Text widget / host canvas entry
+</system-out>
+	</testcase>
+	<testcase name="FC02WindowsTextToolTouchFocus" classname="FC02WindowsTextToolTouchFocus" time="0.48066" status="run">
+		<properties/>
+		<system-out>after Text widget: tool=4 phase=0 objects=0
+after canvas click: tool=4 phase=1 canvas_focus=1 objects=0
+PASS: real Text widget / host canvas entry
+</system-out>
+	</testcase>
+	<testcase name="FC02WindowsTextToolAfterInk" classname="FC02WindowsTextToolAfterInk" time="0.664974" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=2 objects=1 scene_gen=1
+[axiom] scene apply pointer=2 ok=1 objects=2 scene_gen=2
+[axiom] finish begin pointer=3 objects=2 scene_gen=2
+[axiom] scene apply pointer=3 ok=1 objects=3 scene_gen=3
+[axiom] finish begin pointer=4 objects=3 scene_gen=3
+[axiom] scene apply pointer=4 ok=1 objects=4 scene_gen=4
+[axiom] finish begin pointer=5 objects=4 scene_gen=4
+[axiom] scene apply pointer=5 ok=1 objects=5 scene_gen=5
+[axiom] finish begin pointer=6 objects=5 scene_gen=5
+[axiom] scene apply pointer=6 ok=1 objects=6 scene_gen=6
+[axiom] finish begin pointer=7 objects=6 scene_gen=6
+[axiom] scene apply pointer=7 ok=1 objects=7 scene_gen=7
+[axiom] finish begin pointer=8 objects=7 scene_gen=7
+[axiom] scene apply pointer=8 ok=1 objects=8 scene_gen=8
+[axiom] finish begin pointer=9 objects=8 scene_gen=8
+[axiom] scene apply pointer=9 ok=1 objects=9 scene_gen=9
+[axiom] finish begin pointer=10 ob...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC02WindowsTextFormatControls" classname="FC02WindowsTextFormatControls" time="1.05886" status="run">
+		<properties/>
+		<system-out>after Text widget: tool=4 phase=0 objects=0
+after canvas click: tool=4 phase=1 canvas_focus=1 objects=0
+format Bold=1 selection=3
+format Bold=0 selection=3
+format Bold=1 selection=3
+format Italic=1 selection=3
+format Italic=0 selection=3
+format Italic=1 selection=3
+format Underline=1 selection=3
+format Underline=0 selection=3
+format Underline=1 selection=3
+format Strike=1 selection=3
+format Strike=0 selection=3
+format Strike=1 selection=3
+format Bulleted list=1 selection=3
+format Bulleted list=0 selection=3
+format Bulleted list=1 selection=3
+PASS: five real format widgets keep Runtime readback across frames
+</system-out>
+	</testcase>
+	<testcase name="FC02WindowsInkDoubleClick" classname="FC02WindowsInkDoubleClick" time="0.581337" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=1 scene_gen=2
+[axiom] scene apply pointer=1 ok=1 objects=2 scene_gen=3
+Ink double-click: text_phase=0 objects=2
+</system-out>
+	</testcase>
+	<testcase name="FC02WindowsShapeLabelEntry" classname="FC02WindowsShapeLabelEntry" time="1.77392" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=8 objects=2 scene_records=2
+[axiom] present begin frame=12 objects=3 scene_records=3
+Shape preset 0: live reedit pixels/caret and whole-label Facade format pass
+Shape preset 1: live reedit pixels/caret and whole-label Facade format pass
+Shape preset 2: live reedit pixels/caret and whole-label Facade format pass
+Real Debug UI Bold widget: selected Shape label updated without an editor session
+</system-out>
+	</testcase>
+	<testcase name="FC02WindowsTouchShapeLabelEntry" classname="FC02WindowsTouchShapeLabelEntry" time="42.5179" status="run">
+		<properties/>
+		<system-out>Touch double-tap Shape 0: empty entry, reentry, focus and no extra commit pass
+Touch double-tap Shape 1: empty entry, reentry, focus and no extra commit pass
+Touch double-tap Shape 2: empty entry, reentry, focus and no extra commit pass
+</system-out>
+	</testcase>
+	<testcase name="FC00XWindowsTouchIngress" classname="FC00XWindowsTouchIngress" time="0.442344" status="run">
+		<properties/>
+		<system-out>WM_POINTERDOWN -&gt; Runtime: expected=1 actual=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+PASS single/history/promotion/one-coordinate-map objects=1 operations=1 trace=4 viewport=0 scale=1.000000
+[axiom] finish begin pointer=2 objects=1 scene_gen=1
+[axiom] scene apply pointer=2 ok=1 objects=2 scene_gen=2
+PASS generation-reuse/stale-key/stale-native-cancel/stale-down objects=2 operations=2 trace=7 viewport=0 scale=1.000000
+PASS 250ms-chord/zoom/one-up/other-continues objects=2 operations=2 trace=14 viewport=0 scale=1.300000
+PASS focus/capture/cancel-camera-baseline objects=2 operations=2 trace=19 viewport=0 scale=1.950000
+[axiom] finish begin pointer=6 objects=2 scene_gen=2
+[axiom] scene apply pointer=6 ok=1 objects=3 scene_gen=3
+[axiom] finish begin pointer=7 objects=3 scene_gen=3
+[axiom] scene apply pointer=7 ok=1 objects=4 scene_gen=4
+PASS 251ms-second-ink objects=4 operations=4 trace=23 viewport=0 scale=1.950000
+PASS unknown-metadata/device...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC00XWindowsMouseHistory" classname="FC00XWindowsMouseHistory" time="0.371266" status="run">
+		<properties/>
+		<system-out>Runtime confirmed trace: expected=5 actual=5
+[axiom] finish begin pointer=2 objects=1 scene_gen=1
+[axiom] scene apply pointer=2 ok=1 objects=2 scene_gen=2
+[axiom] finish begin pointer=3 objects=2 scene_gen=2
+[axiom] scene apply pointer=3 ok=1 objects=3 scene_gen=3
+[axiom] finish begin pointer=4 objects=3 scene_gen=3
+[axiom] scene apply pointer=4 ok=1 objects=4 scene_gen=4
+[axiom] finish begin pointer=5 objects=4 scene_gen=4
+[axiom] scene apply pointer=5 ok=1 objects=5 scene_gen=5
+</system-out>
+	</testcase>
+	<testcase name="FC01AWindowsSelectionInput" classname="FC01AWindowsSelectionInput" time="0.484629" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC00XWindowsPreviewOrigin" classname="FC00XWindowsPreviewOrigin" time="0.241028" status="run">
+		<properties/>
+		<system-out>[d3d12] resize owner=0 old=0x0 new=640x480 gen=0\n[d3d12] resize ready owner=0 gen=1\nPreview origin: expected=(228,211) actual=(228,211)
+</system-out>
+	</testcase>
+	<testcase name="FC00XPreviewCanonicalCoordinates" classname="FC00XPreviewCanonicalCoordinates" time="0.0827185" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=7 objects=0 scene_gen=0
+[axiom] scene apply pointer=7 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+DPR=2 zoom=1.55 pan=(24,-17): previewY=239.500 canonicalY=239.500
+</system-out>
+	</testcase>
+	<testcase name="PX0Workbench" classname="PX0Workbench" time="0.0347985" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="DebugUiSimplifiedControls" classname="DebugUiSimplifiedControls" time="0.0301622" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="PX0ControlRouter" classname="PX0ControlRouter" time="0.201849" status="run">
+		<properties/>
+		<system-out>SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\out\selection-batch1\native\debug_ui\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\out\selection-batch1\native\debug_ui\icudtl.dat.
+</system-out>
+	</testcase>
+</testsuite>

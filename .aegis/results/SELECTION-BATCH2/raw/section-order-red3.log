@@ -1,0 +1,30 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SelectionBatch2Runtime.RealShapeCreationLeavesSectionTopologyAdmissible
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SelectionBatch2Runtime
+[ RUN      ] SelectionBatch2Runtime.RealShapeCreationLeavesSectionTopologyAdmissible
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(423): error: Expected: (second->placement.order_key) != (third->placement.order_key), actual: 24-byte object <60-A8 A9-3C 9C-01 00-00 63-A8 A9-3C 9C-01 00-00 63-A8 A9-3C 9C-01 00-00> vs 24-byte object <20-A6 A9-3C 9C-01 00-00 23-A6 A9-3C 9C-01 00-00 23-A6 A9-3C 9C-01 00-00>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(427): error: Expected equality of these values:
+  receipt->section->failure
+    Which is: 1-byte object <08>
+  runtime::SectionFailure::kNone
+    Which is: 1-byte object <00>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(427): error: Expected equality of these values:
+  c.semanticObjectCount()
+    Which is: 3
+  4U
+    Which is: 4
+
+[  FAILED  ] SelectionBatch2Runtime.RealShapeCreationLeavesSectionTopologyAdmissible (292 ms)
+[----------] 1 test from SelectionBatch2Runtime (292 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (292 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionBatch2Runtime.RealShapeCreationLeavesSectionTopologyAdmissible
+
+ 1 FAILED TEST

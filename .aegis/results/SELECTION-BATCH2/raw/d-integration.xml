@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="2"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="36"
+	timestamp="2026-10-27T14:48:31"
+	>
+	<testcase name="FC01ASelectionInputIntegration" classname="FC01ASelectionInputIntegration" time="10.0123" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 25 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 25 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (278 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (423 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (288 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (139 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt (576 ms)
+[ RUN      ] SelectionInput.EllipseTriangleCornersAndZoomDprHaveSamePreciseResult
+[axiom] present begin frame=3 objects=3 scene_records=3
+[       OK ] SelectionInput.EllipseTriangleCornersAndZoomDprHaveSamePreciseResult (1109 ms)
+[ RUN      ] SelectionInput.NewSelectionAndDeletionCannotBeOverwrittenByOldRegion
+[axiom] present begin frame=3 objects=4 scene_records=4
+[       OK ] SelectionInput.NewSelectionAndDeletionCannotBeOverwrittenByOldRegion (426 ms)
+[ RUN      ] SelectionInput.MetricsAndSourceLossCancelOnlyOwnedRegion
+[       OK ] SelectionInput.MetricsAndSourceLossCancelOnlyOwnedRegion (286 ms)
+[ RUN      ] SelectionInput.RegionDoesNotConsumeRedoOrChangeCanonicalOutcome
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=4 scene_records=4
+[       OK ] SelectionInput.RegionDoesNotConsumeRedoOrChangeCanonicalOutcome (556 ms)
+[ RUN      ] SelectionInput.DeletingOriginalSelectionDoesNotRestoreDeletedIdentity
+[axiom] present begin frame=3 objects=2 scene_records=2
+[       OK ] SelectionInput.DeletingOriginalSelectionDoesNotRestoreDeletedIdentity (378 ms)
+[ RUN      ] SelectionInput.SceneMutationRequeriesAtUpButCameraMutationCancels
+[axiom] present begin frame=3 objects=3 scene_records=3
+[       OK ] SelectionInput.SceneMutationRequeriesAtUpButCameraMutationCancels (334 ms)
+[ RUN      ] SelectionInput.SecondFingerNavigationCancelsRegionBeforeTakingOver
+[       OK ] SelectionInput.SecondFingerNavigationCancelsRegionBeforeTakingOver (276 ms)
+[ RUN      ] SelectionInput.SectionRegionBackgroundIsSelectableWithoutContent
+[       OK ] SelectionInput.SectionRegionBackgroundIsSelectableWithoutContent (279 ms)
+[ RUN      ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade
+[       OK ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade (140 ms)
+[ RUN      ] SelectionInput.MultipleRootsHaveNoSingleObjectHandlesOrPorts
+[       OK ] SelectionInput.MultipleRootsHaveNoSingleObjectHandlesOrPorts (141 ms)
+[ RUN      ] SelectionInput.FitSelectionIncludesAllRootsWithoutChangingDocument
+[axiom] present begin frame=2 objects=3 scene_records=3
+[       OK ] SelectionInput.FitSelectionIncludesAllRootsWithoutChangingDocument (234 ms)
+[ RUN      ] SelectionInput.MixedSelectionDoesNotExposePrimaryConnectorAsSingleEditableTarget
+[       OK ] SelectionInput.MixedSelectionDoesNotExposePrimaryConnectorAsSingleEditableTarget (138 ms)
+[ RUN      ] SelectionInput.RegionExcludesHiddenAndLockedWhilePointCanInspectLockedObject
+[       OK ] SelectionInput.RegionExcludesHiddenAndLockedWhilePointCanInspectLockedObject (188 ms)
+[ RUN      ] SelectionInput.AddResolvesRetainedRootsAfterExternalReparent
+[       OK ] SelectionInput.AddResolvesRetainedRootsAfterExternalReparent (417 ms)
+[ RUN      ] SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement
+[axiom] present begin frame=3 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=3 scene_records=3
+[       OK ] SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement (469 ms)
+[ RUN      ] SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation
+[       OK ] SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation (138 ms)
+[ RUN      ] SelectionInput.SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSelectable
+[       OK ] SelectionInput.SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSelectable (1340 ms)
+[ RUN      ] SelectionInput.RealBrushRegionUsesPublishedVisibleOutlineWithoutDocumentWrites
+[axiom] finish begin pointer=1 objects=3 scene_gen=1
+[axiom] scene apply pointer=1 ok=1 objects=4 scene_gen=2
+[       OK ] SelectionInput.RealBrushRegionUsesPublishedVisibleOutlineWithoutDocumentWrites (387 ms)
+[ RUN      ] SelectionInput.SectionAreaPrefersContentAndWholeBoundaryProducesNonredundantRoots
+[       OK ] SelectionInput.SectionAreaPrefersContentAndWholeBoundaryProducesNonredundantRoots (458 ms)
+[ RUN      ] SelectionInput.ImportedCropFrameExcludesTrimmedSourceAndCropKeepsInputOwnership
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(386): error: Value of: f.readImageCrop().active
+  Actual: false
+Expected: true
+
+[  FAILED  ] SelectionInput.ImportedCropFrameExcludesTrimmedSourceAndCropKeepsInputOwnership (281 ms)
+[----------] 25 tests from SelectionInput (9692 ms total)
+
+[----------] Global test environment tear-down
+[==========] 25 tests from 1 test suite ran. (9692 ms total)
+[  PASSED  ] 24 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionInput.ImportedCropFrameExcludesTrimmedSourceAndCropKeepsInputOwnership
+
+ 1 FAILED TEST
+</system-out>
+	</testcase>
+	<testcase name="FC02Text" classname="FC02Text" time="25.4646" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 75 tests from 10 test suites.
+[----------] Global test environment set-up.
+[----------] 5 tests from FC02Snapshot
+[ RUN      ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication
+[       OK ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication (0 ms)
+[ RUN      ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue
+[       OK ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue (0 ms)
+[ RUN      ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest
+[       OK ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest (1 ms)
+[ RUN      ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore
+[       OK ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore (2 ms)
+[ RUN      ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapability
+[       OK ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCa...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

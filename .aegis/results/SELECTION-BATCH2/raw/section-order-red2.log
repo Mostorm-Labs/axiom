@@ -1,0 +1,22 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SelectionBatch2Runtime.RealShapeCreationLeavesSectionTopologyAdmissible
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SelectionBatch2Runtime
+[ RUN      ] SelectionBatch2Runtime.RealShapeCreationLeavesSectionTopologyAdmissible
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(419): error: Expected equality of these values:
+  roots.size()
+    Which is: 0
+  1U
+    Which is: 1
+
+[  FAILED  ] SelectionBatch2Runtime.RealShapeCreationLeavesSectionTopologyAdmissible (50 ms)
+[----------] 1 test from SelectionBatch2Runtime (50 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (50 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionBatch2Runtime.RealShapeCreationLeavesSectionTopologyAdmissible
+
+ 1 FAILED TEST

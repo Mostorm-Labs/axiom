@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="3"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="36"
+	timestamp="2026-10-27T15:00:45"
+	>
+	<testcase name="SelectionBatch2Coverage" classname="SelectionBatch2Coverage" time="0.121081" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 10 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 10 tests from SelectionCoverage
+[ RUN      ] SelectionCoverage.VectorPathCurveAndEvenOddHoleUseGeometryNotControlBounds
+[       OK ] SelectionCoverage.VectorPathCurveAndEvenOddHoleUseGeometryNotControlBounds (0 ms)
+[ RUN      ] SelectionCoverage.LegacyVectorStrokeUsesFiniteWidthSegmentsNotLargeAabb
+[       OK ] SelectionCoverage.LegacyVectorStrokeUsesFiniteWidthSegmentsNotLargeAabb (0 ms)
+[ RUN      ] SelectionCoverage.CanonicalBrushOutlineAndFilledEraseHoleFollowVisibleGeometry
+[       OK ] SelectionCoverage.CanonicalBrushOutlineAndFilledEraseHoleFollowVisibleGeometry (0 ms)
+[ RUN      ] SelectionCoverage.SweptEraseUsesTheRendererMaxRadiusCubicStroke
+[       OK ] SelectionCoverage.SweptEraseUsesTheRendererMaxRadiusCubicStroke (0 ms)
+[ RUN      ] SelectionCoverage.LegacyDabsAr...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC01ASelectionInputIntegration" classname="FC01ASelectionInputIntegration" time="10.3724" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 25 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 25 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (288 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (433 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (297 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (145 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitReg...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC02Text" classname="FC02Text" time="25.3276" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 76 tests from 10 test suites.
+[----------] Global test environment set-up.
+[----------] 5 tests from FC02Snapshot
+[ RUN      ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication
+[       OK ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication (0 ms)
+[ RUN      ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue
+[       OK ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue (0 ms)
+[ RUN      ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest
+[       OK ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest (1 ms)
+[ RUN      ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore
+[       OK ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore (2 ms)
+[ RUN      ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapability
+[       OK ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCa...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

@@ -1,0 +1,28 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SelectionBatch2Text.UnfilledShapeVisibleLabelParticipatesInRegionSelection
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SelectionBatch2Text
+[ RUN      ] SelectionBatch2Text.UnfilledShapeVisibleLabelParticipatesInRegionSelection
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(94): error: Expected equality of these values:
+  h.runtime.applyExternalOperation(seed, semantic::ApplySource::kRemoteSync).disposition
+    Which is: 1-byte object <02>
+  semantic::ApplyDisposition::kApplied
+    Which is: 1-byte object <00>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\fc02_text_geometry_test.cpp(1860): error: Expected equality of these values:
+  h.facade.readSection().selectedRoots
+    Which is: {}
+  std::vector{record.id}
+    Which is: { 16-byte object <2B-03 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+
+[  FAILED  ] SelectionBatch2Text.UnfilledShapeVisibleLabelParticipatesInRegionSelection (2 ms)
+[----------] 1 test from SelectionBatch2Text (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionBatch2Text.UnfilledShapeVisibleLabelParticipatesInRegionSelection
+
+ 1 FAILED TEST

@@ -1,0 +1,121 @@
+Test project C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/out/selection-batch1/native
+      Start   1: DUIM1Control
+ 1/55 Test   #1: DUIM1Control ........................   Passed    0.10 sec
+      Start  73: FC08SectionGeometry
+ 2/55 Test  #73: FC08SectionGeometry .................   Passed    0.12 sec
+      Start  84: FC03ImageScene
+ 3/55 Test  #84: FC03ImageScene ......................   Passed    0.32 sec
+      Start  96: canvas_fc01_derived_geometry
+ 4/55 Test  #96: canvas_fc01_derived_geometry ........   Passed    0.15 sec
+      Start  99: G4SelectionSession
+ 5/55 Test  #99: G4SelectionSession ..................   Passed    0.12 sec
+      Start 100: G4TransformSession
+ 6/55 Test #100: G4TransformSession ..................   Passed    0.11 sec
+      Start 101: G46TransformHandleDrag
+ 7/55 Test #101: G46TransformHandleDrag ..............   Passed    0.11 sec
+      Start 103: G4EditorHistory
+ 8/55 Test #103: G4EditorHistory .....................   Passed    0.26 sec
+      Start 104: FC01EditorHistoryInverseFamilies
+ 9/55 Test #104: FC01EditorHistoryInverseFamilies ....   Passed    0.02 sec
+      Start 105: G4SessionConflict
+10/55 Test #105: G4SessionConflict ...................   Passed    0.11 sec
+      Start 106: G4SessionLifecycle
+11/55 Test #106: G4SessionLifecycle ..................   Passed    0.11 sec
+      Start 107: G4GestureArbiter
+12/55 Test #107: G4GestureArbiter ....................   Passed    0.10 sec
+      Start 108: G4MultiContactCoordinator
+13/55 Test #108: G4MultiContactCoordinator ...........   Passed    0.11 sec
+      Start 109: G4ViewportGesture
+14/55 Test #109: G4ViewportGesture ...................   Passed    0.10 sec
+      Start 110: C0CanvasInteractionCoordinator
+15/55 Test #110: C0CanvasInteractionCoordinator ......   Passed    0.12 sec
+      Start 111: C0ViewportInteractionController
+16/55 Test #111: C0ViewportInteractionController .....   Passed    0.12 sec
+      Start 114: FC01ARegionSelection
+17/55 Test #114: FC01ARegionSelection ................   Passed    0.06 sec
+      Start 115: SelectionBatch2Coverage
+18/55 Test #115: SelectionBatch2Coverage .............   Passed    0.14 sec
+      Start 119: C1CommonIngress
+19/55 Test #119: C1CommonIngress .....................   Passed    0.08 sec
+      Start 137: G45BrushOutlineSkiaPath
+20/55 Test #137: G45BrushOutlineSkiaPath .............   Passed    0.13 sec
+      Start 145: G3HeadlessSkia
+21/55 Test #145: G3HeadlessSkia ......................   Passed    0.25 sec
+      Start 146: FC05ConnectorPendingRaster
+22/55 Test #146: FC05ConnectorPendingRaster ..........   Passed    0.02 sec
+      Start 147: FC05StickyFractionalProduction
+23/55 Test #147: FC05StickyFractionalProduction ......   Passed    0.02 sec
+      Start 148: FC01TriangleConnectorRaster
+24/55 Test #148: FC01TriangleConnectorRaster .........Exit code 0xc0000409***Exception:   2.73 sec
+Assertion failed: pixel(*backend.observation(),129,103)==(Rgba{0,255,0,255}), file C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\render\tests\skia_headless_backend_test.cpp, line 751
+
+      Start 155: G46EditingOverlay
+25/55 Test #155: G46EditingOverlay ...................   Passed    0.11 sec
+      Start 160: FC01ASelectionInputIntegration
+26/55 Test #160: FC01ASelectionInputIntegration ......   Passed   10.64 sec
+      Start 161: FC08SectionConsumer
+27/55 Test #161: FC08SectionConsumer .................   Passed    2.42 sec
+      Start 162: FC05ConnectorFacade
+28/55 Test #162: FC05ConnectorFacade .................   Passed    0.28 sec
+      Start 163: FC02Text
+29/55 Test #163: FC02Text ............................   Passed   26.08 sec
+      Start 164: FC00XBrushBatchEvaluation
+30/55 Test #164: FC00XBrushBatchEvaluation ...........   Passed    0.32 sec
+      Start 165: FC00XBrushPressureCapability
+31/55 Test #165: FC00XBrushPressureCapability ........   Passed    0.02 sec
+      Start 166: FC00XBrushBatchSemantics
+32/55 Test #166: FC00XBrushBatchSemantics ............   Passed    0.05 sec
+      Start 167: FC00XCanonicalBusyPreviewProgress
+33/55 Test #167: FC00XCanonicalBusyPreviewProgress ...   Passed    0.02 sec
+      Start 168: FC00XPreviewBusyCanonicalProgress
+34/55 Test #168: FC00XPreviewBusyCanonicalProgress ...   Passed    0.02 sec
+      Start 169: FC00XBusyCanonicalPendingFeedback
+35/55 Test #169: FC00XBusyCanonicalPendingFeedback ...   Passed    0.02 sec
+      Start 170: FC00XFatalProviderFailure
+36/55 Test #170: FC00XFatalProviderFailure ...........   Passed    0.03 sec
+      Start 174: FC00XRuntimeFacade
+37/55 Test #174: FC00XRuntimeFacade ..................   Passed    0.41 sec
+      Start 175: FC03ImageFacade
+38/55 Test #175: FC03ImageFacade .....................   Passed    0.30 sec
+      Start 176: FC08MinimalSectionDebugUi
+39/55 Test #176: FC08MinimalSectionDebugUi ...........   Passed    0.32 sec
+      Start 181: FC02WindowsTextToolEntry
+40/55 Test #181: FC02WindowsTextToolEntry ............   Passed    0.83 sec
+      Start 182: FC02WindowsTextToolFocus
+41/55 Test #182: FC02WindowsTextToolFocus ............   Passed    0.55 sec
+      Start 183: FC02WindowsTextToolTouchFocus
+42/55 Test #183: FC02WindowsTextToolTouchFocus .......   Passed    0.58 sec
+      Start 184: FC02WindowsTextToolAfterInk
+43/55 Test #184: FC02WindowsTextToolAfterInk .........   Passed    0.67 sec
+      Start 185: FC02WindowsTextFormatControls
+44/55 Test #185: FC02WindowsTextFormatControls .......   Passed    0.69 sec
+      Start 186: FC02WindowsInkDoubleClick
+45/55 Test #186: FC02WindowsInkDoubleClick ...........   Passed    0.60 sec
+      Start 187: FC02WindowsShapeLabelEntry
+46/55 Test #187: FC02WindowsShapeLabelEntry ..........   Passed    1.89 sec
+      Start 188: FC02WindowsTouchShapeLabelEntry
+47/55 Test #188: FC02WindowsTouchShapeLabelEntry .....   Passed   42.40 sec
+      Start 190: FC00XWindowsTouchIngress
+48/55 Test #190: FC00XWindowsTouchIngress ............   Passed    0.46 sec
+      Start 191: FC00XWindowsMouseHistory
+49/55 Test #191: FC00XWindowsMouseHistory ............   Passed    0.45 sec
+      Start 192: FC01AWindowsSelectionInput
+50/55 Test #192: FC01AWindowsSelectionInput ..........   Passed    0.49 sec
+      Start 193: FC00XWindowsPreviewOrigin
+51/55 Test #193: FC00XWindowsPreviewOrigin ...........   Passed    0.23 sec
+      Start 194: FC00XPreviewCanonicalCoordinates
+52/55 Test #194: FC00XPreviewCanonicalCoordinates ....   Passed    0.08 sec
+      Start 200: PX0Workbench
+53/55 Test #200: PX0Workbench ........................   Passed    0.09 sec
+      Start 201: DebugUiSimplifiedControls
+54/55 Test #201: DebugUiSimplifiedControls ...........   Passed    0.03 sec
+      Start 205: PX0ControlRouter
+55/55 Test #205: PX0ControlRouter ....................   Passed    0.26 sec
+
+98% tests passed, 1 tests failed out of 55
+
+Total Test time (real) =  96.95 sec
+
+The following tests FAILED:
+	148 - FC01TriangleConnectorRaster (Exit code 0xc0000409)
+Errors while running CTest

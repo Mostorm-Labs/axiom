@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="10"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="10"
+	timestamp="2026-10-27T14:06:33"
+	>
+	<testcase name="FC08SectionGeometry" classname="FC08SectionGeometry" time="0.0872607" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 3 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 3 tests from FC08SectionGeometry
+[ RUN      ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren
+[       OK ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren (0 ms)
+[ RUN      ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose
+[       OK ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose (0 ms)
+[ RUN      ] FC08SectionGeometry.PublicationFailureRetainsOldSceneAndRecoveryDoesNotClipChildren
+[       OK ] FC08SectionGeometry.PublicationFailureRetainsOldSceneAndRecoveryDoesNotClipChildren (0 ms)
+[----------] 3 tests from FC08SectionGeometry (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 3 tests.
+</system-out>
+	</testcase>
+	<testcase name="G4SelectionSession" classname="G4SelectionSession" time="0.0826937" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4TransformSession" classname="G4TransformSession" time="0.0879893" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G46TransformHandleDrag" classname="G46TransformHandleDrag" time="0.0978063" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4ViewportGesture" classname="G4ViewportGesture" time="0.102259" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC01ARegionSelection" classname="FC01ARegionSelection" time="0.096682" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC01ASelectionInputIntegration" classname="FC01ASelectionInputIntegration" time="7.28399" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 21 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 21 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (323 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (440 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (285 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (141 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitReg...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC08SectionConsumer" classname="FC08SectionConsumer" time="2.21827" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 14 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 8 tests from FC08SectionConsumer
+[ RUN      ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory
+[       OK ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory (2 ms)
+[ RUN      ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically
+[       OK ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically (1 ms)
+[ RUN      ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts (1 ms)
+[ RUN      ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing
+[       OK ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCanc...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC05ConnectorFacade" classname="FC05ConnectorFacade" time="0.0947841" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=4 scene_records=4
+[axiom] present begin frame=2 objects=4 scene_records=4
+[axiom] present begin frame=3 objects=5 scene_records=5
+PASS FC05 public routing, invalidation, derived History, failure and lifecycle
+</system-out>
+	</testcase>
+	<testcase name="FC03ImageFacade" classname="FC03ImageFacade" time="0.110101" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+</system-out>
+	</testcase>
+</testsuite>

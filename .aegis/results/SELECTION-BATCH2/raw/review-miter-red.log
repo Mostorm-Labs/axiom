@@ -1,0 +1,22 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SelectionInput.MiterStrokeOutsideNominalBoundsStillReachesPreciseRegionQuery
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SelectionInput
+[ RUN      ] SelectionInput.MiterStrokeOutsideNominalBoundsStillReachesPreciseRegionQuery
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(403): error: Expected equality of these values:
+  selected()
+    Which is: {}
+  std::vector{triangle.id}
+    Which is: { 16-byte object <E8-26 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+
+[  FAILED  ] SelectionInput.MiterStrokeOutsideNominalBoundsStillReachesPreciseRegionQuery (187 ms)
+[----------] 1 test from SelectionInput (187 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (187 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionInput.MiterStrokeOutsideNominalBoundsStillReachesPreciseRegionQuery
+
+ 1 FAILED TEST
