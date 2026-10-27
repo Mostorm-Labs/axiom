@@ -1,0 +1,104 @@
+{
+  "primary_scene_owners": [
+    "runtime/scene/include/canvas/scene/incremental_runtime_coordinator.hpp",
+    "runtime/scene/src/incremental_runtime_coordinator.cpp",
+    "runtime/scene/include/canvas/scene/scene_binding.hpp",
+    "runtime/scene/src/scene_binding.cpp",
+    "runtime/scene/include/canvas/scene/scene.hpp",
+    "runtime/scene/src/scene.cpp",
+    "runtime/scene/include/canvas/scene/scene_types.hpp"
+  ],
+  "focused_verification": [
+    "runtime/scene/tests/incremental_runtime_atomic_publication_test.cpp",
+    "runtime/scene/tests/incremental_runtime_coordinator_test.cpp",
+    "runtime/scene/tests/scene_atomicity_test.cpp",
+    "runtime/scene/tests/scene_binding_test.cpp",
+    "runtime/scene/tests/incremental_runtime_recovery_test.cpp",
+    "runtime/scene/tests/incremental_runtime_test_access.hpp",
+    "runtime/scene/tests/CMakeLists.txt",
+    "verification/fc04_d07/audit_test.cpp",
+    "verification/fc04_d07/postcommit_fault.cpp",
+    "verification/fc04_d07/CMakeLists.txt"
+  ],
+  "inherited_scope": ".aegis/packages/FC04-D07-AB-P31-v0.1/closure.md#exact-allowed-source-surface",
+  "inherited_locked_source_paths": [
+    ".aegis/packages/FC04-D07-P31-CORRECTION-v0.2/test-bindings.json",
+    ".aegis/results/FC04-D07-AUDIT/commands.json",
+    ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/d07-names.txt",
+    ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/d07.xml",
+    ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/selection-names.txt",
+    ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/selection.xml",
+    ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/report.md",
+    ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/result.json",
+    ".aegis/results/FC04-D07-REPAIR-PREFLIGHT/authority-inputs/07-14-current.json",
+    ".aegis/results/FC04-D07-REPAIR-PREFLIGHT/authority-inputs/current-d07-authority.json",
+    ".aegis/results/FC04-D07-REPAIR-PREFLIGHT/authority-inputs/scope-acceptance.json",
+    "AGENTS.md",
+    "r1-full-skia-sdk.lock.json",
+    "runtime/interaction/CMakeLists.txt",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+    "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+    "runtime/interaction/include/canvas/interaction/interaction_ports.hpp",
+    "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "runtime/interaction/src/editor_history.cpp",
+    "runtime/interaction/src/undoable_command.cpp",
+    "runtime/interaction/src/undoable_command.hpp",
+    "runtime/scene/src/incremental_runtime_coordinator.cpp",
+    "runtime/semantic/include/canvas/semantic/applied_operation_ledger.hpp",
+    "runtime/semantic/include/canvas/semantic/indexed_object_store.hpp",
+    "runtime/semantic/include/canvas/semantic/operation_engine.hpp",
+    "runtime/semantic/src/applied_operation_ledger.cpp",
+    "runtime/semantic/src/atomic_apply.cpp",
+    "runtime/semantic/src/atomic_apply.hpp",
+    "runtime/semantic/src/change_set_builder.cpp",
+    "runtime/semantic/src/change_set_builder.hpp",
+    "runtime/semantic/src/indexed_object_store.cpp",
+    "runtime/semantic/src/object_index.cpp",
+    "runtime/semantic/src/object_index.hpp",
+    "runtime/semantic/src/object_store_mutator.hpp",
+    "runtime/semantic/src/operation_engine.cpp",
+    "semantic-sdk.lock.json",
+    "tools/check_runtime_abi_manifest.py",
+    "verification/fc04_d07/CMakeLists.txt",
+    "verification/fc04_d07/audit_test.cpp",
+    "verification/fc04_d07/postcommit_fault.cpp"
+  ],
+  "activated_conditional_owners": [
+    "runtime/scene/include/canvas/scene/scene_record_store.hpp",
+    "runtime/scene/src/scene_record_store.cpp",
+    "runtime/scene/src/direct_render_scene.cpp"
+  ],
+  "readonly_participants": [
+    "runtime/scene/include/canvas/scene/render_scene.hpp",
+    "runtime/scene/src/shadow_render_scene.cpp",
+    "runtime/scene/include/canvas/scene/spatial_index.hpp",
+    "runtime/scene/src/linear_spatial_index.cpp",
+    "runtime/scene/src/uniform_grid_spatial_index.cpp",
+    "runtime/scene/include/canvas/scene/damage_tracker.hpp",
+    "runtime/scene/src/damage_tracker.cpp",
+    "runtime/scene/include/canvas/scene/scene_delta.hpp",
+    "runtime/scene/src/scene_delta.cpp",
+    "runtime/scene/include/canvas/scene/spatial_delta.hpp",
+    "runtime/scene/src/spatial_delta.cpp",
+    "runtime/scene/include/canvas/scene/direct_render_scene.hpp",
+    "runtime/interaction/include/canvas/interaction/local_operation_sink.hpp"
+  ],
+  "conditional_findings": [
+    {
+      "paths": [
+        "runtime/scene/include/canvas/scene/scene_record_store.hpp",
+        "runtime/scene/src/scene_record_store.cpp"
+      ],
+      "finding": "SceneRecordStore::commit is noexcept but inserts into live map/arena/order index and copies record content; allocation must be prepared before canonical mutation. Its existing PreparedUpdate owns the precomputed resources.",
+      "source": "runtime/scene/src/scene_record_store.cpp"
+    },
+    {
+      "paths": [
+        "runtime/scene/src/direct_render_scene.cpp"
+      ],
+      "finding": "DirectRenderScene::commit is noexcept but localized insert/update performs live map insertion, vector push and record copies. Prepare these resources, do not add a public virtual ABI.",
+      "source": "runtime/scene/src/direct_render_scene.cpp"
+    }
+  ],
+  "other_conditional_paths": "Not authorized until separately justified and source-locked. Unlisted new owners require returning to P31."
+}

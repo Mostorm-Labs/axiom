@@ -1,0 +1,247 @@
+{
+  "subject_revision": "15e76458f3872be4d1b51d4aac05eb8402719014",
+  "scope": "D07-A explicit intent and D07-B containment; planned product assertions are NOT_RUN until real P32 execution",
+  "frozen_regressions": {
+    "selection_160": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/selection-names.txt",
+    "d07_original_14": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/d07-names.txt",
+    "historical_raw": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/d07.xml",
+    "preserved_passing_count": 11,
+    "no_skips": true,
+    "discovery": "ctest --show-only=json-v1; compare exact ID sets and reject missing/empty matches"
+  },
+  "tests": [
+    {
+      "id": "fc04.d07.D07.ExplicitIntentGroupProducesOneUndoUnit",
+      "kind": "new-positive",
+      "sut": "real production CanvasEditingRuntime intent producer + EditorHistory + Semantic + Scene",
+      "assertions": [
+        "explicit group with ordered SetTransforms and PatchProperties, same target",
+        "one coherent success and one new Undo unit",
+        "selection changed before Undo; exact target restored",
+        "Redo restores semantic meaning with fresh per-operation IDs",
+        "per-operation generation/stamp/change-set and ordered bridge records",
+        "no partial observer snapshot"
+      ]
+    },
+    {
+      "id": "fc04.d07.D07.ExplicitIntentLifecycleAndStaging",
+      "kind": "new-positive-and-rejections",
+      "sut": "real production producer/semantic planner",
+      "assertions": [
+        "begin/prepare/commit/abort ownership and single consumption",
+        "staged dependent operations validate against sequential state",
+        "abort and invalid later candidate leave document, generation, ledger, history cursor/redo, scene and observer unchanged",
+        "stale basis, duplicate IDs, cross-document, unsupported operation, empty/malformed/reentrant groups reject before write"
+      ]
+    },
+    {
+      "id": "fc04.d07.D07.ExplicitIntentFailureContainment",
+      "kind": "new-fault-injection",
+      "sut": "real production owner and actual boundary checkpoints",
+      "assertions": [
+        "fault each forward operation and each History/store/index/ledger/ChangeSet/result/scene publication reservation boundary",
+        "record actual phase, before/after canonical generation and records, ledger, history cursor/redo, Scene/index and per-operation observers",
+        "no recoverable failure after a mutated prefix is relabeled precommit failure",
+        "interleaving/reentrant external input cannot change group basis",
+        "no test-only fake coordinator or moved failpoint"
+      ]
+    },
+    {
+      "id": "fc04.d07.D07.ExplicitIntentUndoRedoFailureContainment",
+      "kind": "new-fault-injection",
+      "sut": "real EditorHistory and production Runtime/Scene",
+      "assertions": [
+        "injection for Undo and Redo preflight, reservations and per-operation boundaries",
+        "reject conflict with unchanged history cursor and redo",
+        "fresh operation IDs on successful redo"
+      ]
+    },
+    {
+      "id": "fc04.d07.D07.TwoIndependentCommandsNeedTwoUndoUnits",
+      "kind": "existing-protected",
+      "sut": "existing real EditorHistory + Runtime",
+      "assertions": [
+        "unchanged meaning: separate commands remain two History units, one undo leaves first result, second restores initial, two redo succeed"
+      ]
+    },
+    {
+      "id": "fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED",
+      "kind": "rebound-negative-control",
+      "sut": "existing real standalone command path",
+      "assertions": [
+        "one undo does not restore the whole independent sequence",
+        "second undo restores it",
+        "historical RED results retained byte-for-byte; corrected executable mapping documented"
+      ]
+    },
+    {
+      "id": "fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED",
+      "kind": "rebound-legacy-gap-probe",
+      "sut": "existing legacy span submit",
+      "assertions": [
+        "legacy span local multi-operation request remains rejected and zero mutation",
+        "the new real grouped success is verified only by the explicit-intent positive test",
+        "historical RED results retained"
+      ]
+    },
+    {
+      "id": "FC04D07PostcommitReceiptGrowthFault",
+      "kind": "existing-blocking-oom",
+      "sut": "actual CanvasEditingRuntime + EditorHistory + production canonical store",
+      "assertions": [
+        "controlled real allocation fault does not terminate or strand canonical commit without History",
+        "coherent Scene recovery and truthful result",
+        "retain fault injection; no WILL_FAIL/skip"
+      ]
+    },
+    {
+      "id": "FC04D07PostcommitFault",
+      "kind": "existing-protected-oom",
+      "sut": "actual Runtime and Scene owner",
+      "assertions": [
+        "derived Scene publication fault retains History and recovery remains coherent"
+      ]
+    }
+  ],
+  "required_commands": [
+    {
+      "purpose": "SDK setup",
+      "argv": [
+        "python",
+        "tools/setup_build_environment.py",
+        "--core",
+        "--semantic",
+        "--facts-output",
+        "out/build-environment.json",
+        "--status"
+      ]
+    },
+    {
+      "purpose": "SDK offline",
+      "argv": [
+        "python",
+        "tools/setup_build_environment.py",
+        "--semantic",
+        "--offline",
+        "--status"
+      ]
+    },
+    {
+      "purpose": "build targets",
+      "argv": [
+        "cmake",
+        "--build",
+        "<current-build>",
+        "--target",
+        "axiom_fc04_d07_audit_tests",
+        "axiom_fc04_d07_postcommit_fault",
+        "<existing-selection-targets-from-prior-commands>"
+      ]
+    },
+    {
+      "purpose": "real D07 exact IDs",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "<current-build>",
+        "--tests-from-file",
+        "<exact-revised-names>",
+        "--no-tests=error",
+        "--output-on-failure",
+        "--output-junit",
+        "<D07.xml>"
+      ]
+    },
+    {
+      "purpose": "Selection 160 exact IDs",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "<current-build>",
+        "--tests-from-file",
+        "<absolute-frozen-160-list>",
+        "--no-tests=error",
+        "--output-on-failure",
+        "--output-junit",
+        "<selection.xml>"
+      ]
+    },
+    {
+      "purpose": "Public ABI",
+      "argv": [
+        "python",
+        "tools/check_runtime_abi_manifest.py",
+        "--root",
+        "."
+      ]
+    }
+  ],
+  "test_creation_status": "NOT_RUN_PENDING_P32",
+  "no_zero_match_as_pass": true,
+  "cross_platform": "Windows native mandatory; build/run Web/headless where applicable and record actual environment and coverage; never substitute synthetic platform claims",
+  "prior_real_oom_exit": 86,
+  "scene_oracles": [
+    {
+      "id": "SCENE-PREP-01",
+      "kind": "real-owner-positive",
+      "assertions": [
+        "real coordinator prepare changes no visible Scene/RuntimeScene records, revision/generation, queries, hit-test, draw-list, damage/invalidation or observer counts"
+      ]
+    },
+    {
+      "id": "SCENE-PREP-02",
+      "kind": "abort-no-mutation",
+      "assertions": [
+        "abort after prepare leaves Document, Scene, RuntimeScene, History cursor and redo unchanged; staged resources released"
+      ]
+    },
+    {
+      "id": "SCENE-PREP-03",
+      "kind": "participant-failure-injection",
+      "assertions": [
+        "each real participant prepare/reservation failure leaves visible state unchanged; actual fault phase recorded"
+      ]
+    },
+    {
+      "id": "SCENE-PREP-04",
+      "kind": "no-fail-commit",
+      "assertions": [
+        "successful commit publishes coherent post-intent state; no fallible allocation/recoverable rejection remains after canonical mutation begins; per-Operation metadata and ordered DataBridge notifications remain intact"
+      ]
+    },
+    {
+      "id": "SCENE-PREP-05",
+      "kind": "stale-basis-rejection",
+      "assertions": [
+        "stale Scene revision/semantic generation rejects before canonical mutation; Document, Scene, History cursor and redo unchanged"
+      ]
+    },
+    {
+      "id": "SCENE-PREP-06",
+      "kind": "single-operation-regression",
+      "assertions": [
+        "existing apply/synchronize/recover behavior and callback order remain compatible"
+      ]
+    },
+    {
+      "id": "D07-GROUP-POSITIVE",
+      "kind": "explicit-intent-real-owner",
+      "assertions": [
+        "multiple typed Operations through real explicit Intent owner; one user-visible Undo; Undo after selection change restores original targets; Redo restores forward meaning with fresh IDs; no partial Scene/observer state"
+      ]
+    },
+    {
+      "id": "D07-OOM-BLOCKING",
+      "kind": "fault-injection",
+      "assertions": [
+        "preserve single-command receipt-growth OOM fix; no canonical mutation stranded without History; History, Scene and redo invariants hold"
+      ]
+    }
+  ],
+  "scene_case_binding": {
+    "test_source": "runtime/scene/tests/incremental_runtime_atomic_publication_test.cpp",
+    "existing_test_target": "canvas_g2_a6_atomic_publication",
+    "requirements": "Each SCENE-PREP-01..06 must have an individually identifiable real-owner assertion and raw result; real participants and real fault boundaries, no fake Scene preparer; P32 may wire additional exact tests in the permitted files. Do not treat a discovered aggregate as six passes without per-case evidence.",
+    "status": "PLANNED_NOT_RUN"
+  }
+}
