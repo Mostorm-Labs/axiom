@@ -32,4 +32,8 @@ struct ValidationResult final {
 
 [[nodiscard]] ValidationResult validatePayloadStructure(const Operation& operation) noexcept;
 
+// Read-only view of the same applicability predicate used by validation.
+// This publishes no new property, default, mutation or registry semantics.
+[[nodiscard]] bool propertyAppliesToObjectKind(ObjectKind, std::uint32_t fieldId) noexcept;
+
 } // namespace canvas::semantic

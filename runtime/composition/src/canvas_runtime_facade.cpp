@@ -148,6 +148,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     out.canUndo = runtime.canUndo(); out.canRedo = runtime.canRedo();
     out.semanticGeneration = runtime.semanticGeneration().value();
     out.selectedObjectCount = static_cast<std::uint32_t>(runtime.selectedObjectCount());
+    out.selectionSummary=runtime.selectionSummary();
     out.selectionAcquisitionMode=runtime.selectionAcquisitionMode();
     out.selectionRevision=runtime.selection_.revision();
     out.regionSelectionActive=runtime.regionSelectionActive();
@@ -425,7 +426,7 @@ RuntimeStateSnapshot CanvasRuntimeFacade::readRuntimeState() const noexcept {
   out.history = {runtime_.canUndo(), runtime_.canRedo()};
   out.selection = {runtime_.selectionMode(), static_cast<std::uint32_t>(runtime_.selectedObjectCount()),
                    runtime_.selectedPrimaryObjectValue(), runtime_.snapCandidateCount()};
-  const auto snapshot = readCanvasControlSnapshot(target());
+  auto snapshot = readCanvasControlSnapshot(target());
   out.control.creationPreset = static_cast<std::uint8_t>(snapshot.creationPreset);
   out.control.creationMode = snapshot.creationMode;
   out.control.semanticGeneration = snapshot.semanticGeneration;
@@ -443,6 +444,7 @@ RuntimeStateSnapshot CanvasRuntimeFacade::readRuntimeState() const noexcept {
   out.control.selectionQueryStatus=snapshot.selectionQueryStatus;
   out.control.regionUnsupportedKindCount=static_cast<std::uint8_t>(std::min(snapshot.regionUnsupportedKinds.size(),out.control.regionUnsupportedKinds.size()));
   std::copy_n(snapshot.regionUnsupportedKinds.begin(),out.control.regionUnsupportedKindCount,out.control.regionUnsupportedKinds.begin());
+  out.control.selectionRevision=snapshot.selectionRevision;
   return out;
 }
 CanvasControlSnapshot CanvasRuntimeFacade::readCanvasControlSnapshot(const CanvasTargetKey& target) const noexcept {

@@ -242,8 +242,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     canonicalPresentationDirty_ = true;
   }
   [[nodiscard]] std::size_t selectedObjectCount() const noexcept {
-    return selection_.summary().count;
+    return selection_.selected().size();
   }
+  [[nodiscard]] runtime::SelectionSummary selectionSummary() const noexcept;
   [[nodiscard]] foundation::ObjectId selectedPrimaryObject() const noexcept {
     return selection_.primary();
   }

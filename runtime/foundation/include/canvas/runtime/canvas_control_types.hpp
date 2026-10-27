@@ -4,6 +4,7 @@
 #include "canvas/runtime/section_input.hpp"
 #include "canvas/runtime/canvas_target.hpp"
 #include "canvas/runtime/selection_acquisition.hpp"
+#include "canvas/runtime/selection_summary.hpp"
 
 #include <array>
 #include <cstdint>
@@ -230,6 +231,7 @@ struct CanvasControlSnapshot final {
   bool regionSelectionActive = false;
   std::uint32_t regionCandidateCount = 0;
   std::vector<std::uint32_t> regionUnsupportedKinds;
+  SelectionSummary selectionSummary{};
 };
 
 }  // namespace canvas::runtime

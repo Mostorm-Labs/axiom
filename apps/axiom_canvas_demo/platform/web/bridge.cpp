@@ -461,6 +461,37 @@ EMSCRIPTEN_KEEPALIVE const char* axiom_web_snapshot(std::uintptr_t h) {
             v->lastControl = receipt->state;
     }
     const auto s = comp.surfaceSnapshot();
+    const auto& summary=control.selectionSummary;
+    const auto identifier=[](const canvas::foundation::ObjectId& id) {
+        std::ostringstream value;value<<std::hex<<std::setfill('0');
+        for(const auto b:id.bytes)value<<std::setw(2)<<static_cast<unsigned>(b);
+        return value.str();
+    };
+    nlohmann::json projection{{"status",static_cast<unsigned>(summary.status)},{"reason",static_cast<unsigned>(summary.reason)},
+        {"count",summary.count},{"primary",identifier(summary.primary)},{"groupScope",nullptr},{"roots",nlohmann::json::array()},
+        {"kindCounts",nlohmann::json::array()},{"selectionRevision",std::to_string(summary.selectionRevision)},
+        {"semanticGeneration",std::to_string(summary.semanticGeneration)},{"sceneGeneration",std::to_string(summary.sceneGeneration)},
+        {"sceneRevision",std::to_string(summary.sceneRevision)},{"bounds",{{"status",static_cast<unsigned>(summary.bounds.status)},
+            {"reason",static_cast<unsigned>(summary.bounds.reason)},{"world",nullptr}}},
+        {"properties",nlohmann::json::array()},{"actions",nlohmann::json::array()}};
+    for(const auto id:summary.roots)projection["roots"].push_back(identifier(id));
+    if(summary.groupScope)projection["groupScope"]=identifier(*summary.groupScope);
+    for(const auto& count:summary.kindCounts)projection["kindCounts"].push_back({{"kind",count.kind},{"count",count.count}});
+    if(summary.bounds.world) {
+        const auto& b=*summary.bounds.world;projection["bounds"]["world"]={b.left,b.top,b.right,b.bottom};
+    }
+    for(const auto& property:summary.properties) {
+        nlohmann::json row{{"fieldId",property.fieldId},{"state",static_cast<unsigned>(property.state)},
+            {"reason",static_cast<unsigned>(property.reason)},{"applicableRoots",property.applicableRoots},
+            {"knownRoots",property.knownRoots},{"applicableValuesMixed",property.applicableValuesMixed},{"value",nullptr}};
+        if(property.value) {
+            if(const auto* boolean=std::get_if<bool>(&*property.value))row["value"]=*boolean;
+            else if(const auto* scalar=std::get_if<float>(&*property.value))row["value"]=*scalar;
+        }
+        projection["properties"].push_back(std::move(row));
+    }
+    for(std::size_t i=0;i<summary.actions.size();++i)projection["actions"].push_back({{"action",i},
+        {"state",static_cast<unsigned>(summary.actions[i].state)},{"reason",static_cast<unsigned>(summary.actions[i].reason)}});
     std::ostringstream out;
     out << std::boolalpha << "{\"owner\":\"RuntimeComposition\",\"revision\":\""
         << AXIOM_BUILD_SOURCE_REVISION << "\",\"dirty\":" << AXIOM_BUILD_DIRTY
@@ -493,7 +524,7 @@ EMSCRIPTEN_KEEPALIVE const char* axiom_web_snapshot(std::uintptr_t h) {
         << "},\"lastPointer\":{\"source\":" << v->lastPointer.source
         << ",\"pointer\":" << v->lastPointer.pointer
         << ",\"generation\":" << v->lastPointer.generation
-        << "},\"error\":" << std::quoted(v->error) << "}";
+        << "},\"error\":" << std::quoted(v->error) << ",\"selectionSummary\":" << projection.dump() << "}";
     json = out.str();
     return json.c_str();
 }

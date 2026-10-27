@@ -11,6 +11,20 @@
 #include <type_traits>
 
 namespace canvas::semantic {
+std::optional<PropertyValue> propertyDefaultValue(std::uint32_t fieldId) noexcept {
+    switch (fieldId) {
+        case 0x00000001U: return PropertyValue{true};
+        case 0x00000002U: return PropertyValue{false};
+        case 0x00000003U: return PropertyValue{1.0F};
+        case 0x00000004U: return PropertyValue{BlendModeValue::kNormal};
+        case 0x00000100U: return PropertyValue{FillStyleValue{NoFill{}}};
+        case 0x00000101U: return PropertyValue{StrokeStyleValue{NoStroke{}}};
+        case 0x00000200U:
+        case 0x00000201U: return PropertyValue{ConnectorDecorationValue::kNone};
+        default: return std::nullopt;
+    }
+}
+
 namespace {
 
 bool normalizeDouble(double& value) noexcept {
@@ -96,29 +110,8 @@ bool normalizePropertyValue(PropertyValue& value) {
 }
 
 bool isExplicitDefaultProperty(const PropertyEntry& entry) noexcept {
-    switch (entry.field_id) {
-        case 0x00000001U:
-            return std::holds_alternative<bool>(entry.value) && std::get<bool>(entry.value);
-        case 0x00000002U:
-            return std::holds_alternative<bool>(entry.value) && !std::get<bool>(entry.value);
-        case 0x00000003U:
-            return std::holds_alternative<float>(entry.value) && std::get<float>(entry.value) == 1.0F;
-        case 0x00000004U:
-            return std::holds_alternative<BlendModeValue>(entry.value) &&
-                   std::get<BlendModeValue>(entry.value) == BlendModeValue::kNormal;
-        case 0x00000100U:
-            return std::holds_alternative<FillStyleValue>(entry.value) &&
-                   std::holds_alternative<NoFill>(std::get<FillStyleValue>(entry.value));
-        case 0x00000101U:
-            return std::holds_alternative<StrokeStyleValue>(entry.value) &&
-                   std::holds_alternative<NoStroke>(std::get<StrokeStyleValue>(entry.value));
-        case 0x00000200U:
-        case 0x00000201U:
-            return std::holds_alternative<ConnectorDecorationValue>(entry.value) &&
-                   std::get<ConnectorDecorationValue>(entry.value) == ConnectorDecorationValue::kNone;
-        default:
-            return false;
-    }
+    const auto defaultValue = propertyDefaultValue(entry.field_id);
+    return defaultValue && *defaultValue == entry.value;
 }
 
 template <typename Vector, typename Compare>

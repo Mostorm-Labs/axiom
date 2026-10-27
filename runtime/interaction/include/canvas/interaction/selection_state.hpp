@@ -1,16 +1,14 @@
 #pragma once
 
 #include "canvas/foundation/object_id.hpp"
+#include "canvas/runtime/selection_summary.hpp"
 
 #include <span>
 #include <vector>
 
 namespace canvas::interaction {
 
-struct SelectionSummary final {
-    std::size_t count = 0;
-    foundation::ObjectId primary{};
-};
+using SelectionSummary = runtime::SelectionSummary;
 
 class SelectionState final {
   public:

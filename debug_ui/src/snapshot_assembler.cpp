@@ -77,16 +77,35 @@ DebugSnapshot DebugSnapshotAssembler::capture(const DebugSnapshotSources& source
     snapshot.stamp.snapshotSequence = snapshotSequence_;
     const auto leading = sources.runtime->readRuntimeState();
     readNonProduct(sources, snapshot);
+    try {
+      snapshot.selectionSummary = sources.runtime->readSelectionSummary();
+    } catch (const std::bad_alloc&) {
+      snapshot.selectionSummary = {};
+      snapshot.selectionSummary.reason = canvas::runtime::SelectionReason::kResourceUnavailable;
+    }
     const auto trailing = sources.runtime->readRuntimeState();
     snapshot.product.availability = DebugAvailability::kAvailable;
     snapshot.product.value = trailing;
-    if (sameIdentity(leading.identity, trailing.identity)) {
+    const auto& summary = snapshot.selectionSummary;
+    const bool summaryMatches = summary.status != canvas::runtime::SelectionSummaryStatus::kAvailable ||
+        (summary.selectionRevision == trailing.control.selectionRevision &&
+         summary.semanticGeneration == trailing.control.semanticGeneration);
+    if (sameIdentity(leading.identity, trailing.identity) && summaryMatches &&
+        leading.control.selectionRevision == trailing.control.selectionRevision) {
       snapshot.coherence = SnapshotCoherence::kCoherent;
       finalizeStamp(snapshot);
       return snapshot;
     }
     if (attempt == 1) {
       snapshot.coherence = SnapshotCoherence::kMixedGeneration;
+      // Do not publish IDs/capabilities borrowed from a different product read.
+      snapshot.selectionSummary = {};
+      auto& stale = snapshot.selectionSummary;
+      stale.status = canvas::runtime::SelectionSummaryStatus::kStale;
+      stale.reason = canvas::runtime::SelectionReason::kStaleSnapshot;
+      stale.bounds.reason = stale.reason;
+      for (auto& property : stale.properties) property.reason = stale.reason;
+      for (auto& action : stale.actions) action.reason = stale.reason;
       finalizeStamp(snapshot);
       return snapshot;
     }

@@ -10,6 +10,7 @@ class MinimalRuntimeFacade final : public runtime::RuntimeFacade,
                                    public runtime::PlatformDiagnostics {
  public:
   explicit MinimalRuntimeFacade(MinimalRuntimeHost& host) noexcept;
+  [[nodiscard]] runtime::SelectionSummary readSelectionSummary() const override;
   [[nodiscard]] runtime::SectionSnapshot readSection(foundation::ObjectId = {}) const override;
   runtime::TextReceipt submitTextIntent(const runtime::TextIntent&) override;
   runtime::TextReceipt submitTextInput(const runtime::TextInputEvent&) override;

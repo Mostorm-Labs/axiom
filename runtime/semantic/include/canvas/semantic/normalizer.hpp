@@ -4,6 +4,8 @@
 #include "canvas/semantic/semantic_error.hpp"
 
 #include <array>
+#include <cstdint>
+#include <optional>
 #include <string_view>
 
 namespace canvas::semantic {
@@ -41,5 +43,9 @@ struct NormalizeResult final {
 };
 
 [[nodiscard]] NormalizeResult normalizeOperation(const Operation& input);
+
+// The same accepted defaults that canonical normalization elides from a bag.
+// Callers must check the field's applicability to the object's kind separately.
+[[nodiscard]] std::optional<PropertyValue> propertyDefaultValue(std::uint32_t fieldId) noexcept;
 
 } // namespace canvas::semantic

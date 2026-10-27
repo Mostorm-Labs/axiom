@@ -139,9 +139,40 @@ void missing_or_cyclic_ancestors_are_explicitly_incomplete() {
     store.add(99,K::kGroup,id(99));assert(!s.resolveRoots(std::vector{id(1)},store));
     assert(s.selected().empty());
 }
+
+void typed_summary_normalizes_without_mutating_selection() {
+    using K=canvas::semantic::ObjectKind;using Status=canvas::runtime::SelectionSummaryStatus;
+    HierarchyFixture store;store.add(1,K::kSection);store.add(2,K::kShape,id(1));store.add(4,K::kShape);
+    SelectionSession session;auto empty=session.summary(store);
+    assert(empty.status==Status::kAvailable&&empty.count==0&&empty.primary.isZero()&&empty.roots.empty()&&empty.kindCounts.empty());
+    assert(empty.selectionRevision==session.revision());
+    assert(session.applyAcquisition(std::vector{id(2),id(4),id(1),id(2)},SelectionCombineMode::kReplace,session.revision()));
+    const auto before=std::vector<ObjectId>(session.selected().begin(),session.selected().end());const auto revision=session.revision();
+    const auto summary=session.summary(store);
+    assert(summary.status==Status::kAvailable&&summary.count==2&&summary.primary==id(4));
+    assert((summary.roots==std::vector{id(4),id(1)}));assert(summary.kindCounts.size()==2);
+    assert(summary.kindCounts[0].kind==static_cast<unsigned>(K::kShape)&&summary.kindCounts[0].count==1);
+    assert(summary.kindCounts[1].kind==static_cast<unsigned>(K::kSection)&&summary.kindCounts[1].count==1);
+    assert(session.revision()==revision&&std::vector<ObjectId>(session.selected().begin(),session.selected().end())==before);
+    store.records.erase(store.records.begin()+1);const auto invalid=session.summary(store);
+    assert(invalid.status==Status::kInvalid&&invalid.count==0&&invalid.roots.empty()&&invalid.primary.isZero());
+}
+void typed_summary_reuses_group_scope_and_sticky_identity() {
+    using K=canvas::semantic::ObjectKind;HierarchyFixture store;SelectionSession session;
+    store.add(1,K::kGroup);store.add(2,K::kGroup,id(1));store.add(3,K::kShape,id(2));store.add(4,K::kShape);
+    store.add(5,K::kSticky,id(1));store.add(6,K::kRichText,id(5));
+    assert(session.applyAcquisition(std::vector{id(3),id(6)},SelectionCombineMode::kReplace,session.revision()));
+    assert((session.summary(store).roots==std::vector{id(1)}));
+    assert(session.enterGroupScope(id(1),store));
+    assert(session.applyAcquisition(std::vector{id(3),id(6),id(4)},SelectionCombineMode::kReplace,session.revision()));
+    const auto s=session.summary(store);assert((s.roots==std::vector{id(2),id(5)})&&s.groupScope==id(1));
+    assert(s.primary==id(2)&&s.count==2&&s.selectionRevision==session.revision());
+}
 } // namespace
 
 int main() {
+    typed_summary_normalizes_without_mutating_selection();
+    typed_summary_reuses_group_scope_and_sticky_identity();
     click_and_toggle_keep_local_deterministic_state();
     marquee_filters_hidden_and_locked_without_canonical_writes();
     deleted_object_is_pruned_and_cancel_clears_only_local_state();

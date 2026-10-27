@@ -1,0 +1,65 @@
+{
+  "task": "SELECTION-BATCH3",
+  "authorization": "Direct user instruction, supplied accepted package, read-only summary and existing consumers only",
+  "repository": "Mostorm-Labs/axiom",
+  "base": "0eb11b25d60f2b6f932f12735de4779d2a3f2f21",
+  "branch": "codex/selection-summary-batch3",
+  "main": "2fee75f66a7f96f6aac834228ede372a9abda59a",
+  "fetch": "initial OpenSSL TLS failure; retry with Windows schannel succeeded without disabling certificate verification",
+  "zip_sha256": "46fd8942bd4a473bfb3a91d801a56f41f7b61ae0d3d29596d775a83ad1c0abd5",
+  "documents": [
+    {
+      "path": "README.md",
+      "sha256": "22fd2539220449608954ed1edaecbe7fb59d9b4bf78e2cbf1ab2b12c406de18b"
+    },
+    {
+      "path": "01-scope-and-behavior.md",
+      "sha256": "ac2f446e14b4ef4491412302f719853cdbd7c6220bd67731f351d74d4079d38f"
+    },
+    {
+      "path": "02-source-audit.md",
+      "sha256": "04ceee492bb768d8ab3890584e1b26740394caab546e246e786a3c42a388435d"
+    },
+    {
+      "path": "03-implementation-plan.md",
+      "sha256": "ac602d2e6bc5db9e4a3e802aebd06e5aba97859e0d562211aba0bff3e5be0c47"
+    },
+    {
+      "path": "04-codex-prompt.md",
+      "sha256": "88b7e2b65836449b241beb2cc5807eedb5d154a8c56c25238ee9c6d47be55079"
+    }
+  ],
+  "prior_batches": {
+    "batch1": {
+      "branch": "codex/selection-unified-batch1",
+      "head": "5daf623eba9a943706d813f8e197e00a9f6a8b2e",
+      "status": "implemented, local only, ancestor of base",
+      "pr": "none found by exact-head GitHub search"
+    },
+    "batch2": {
+      "branch": "codex/selection-hierarchy-coverage-batch2",
+      "head": "0eb11b25d60f2b6f932f12735de4779d2a3f2f21",
+      "status": "implemented, local only; 77 Native,28 actual Chrome,18 Python,102 boundary checks in existing receipt",
+      "pr": "none found by exact-head GitHub search"
+    }
+  },
+  "continue_until_terminal_state": true,
+  "forbidden": [
+    "new canonical schema/kind/operation",
+    "bulk properties",
+    "Group/Ungroup implementation",
+    "new Wrap-in-Section mutation",
+    "Snap/Alignment",
+    "second selection store or UI authoritative IDs",
+    "automatic main merge"
+  ],
+  "required": [
+    "typed deterministic summary through existing owner",
+    "normalized roots/kinds/primary",
+    "one coherent Scene generation bounds",
+    "grounded capabilities and explicit supported properties",
+    "facade/DebugUI/action consumption",
+    "real tests/no-write and existing workflows"
+  ],
+  "physical_hosted": "not required for coding closure; report actual range/NOT_RUN"
+}

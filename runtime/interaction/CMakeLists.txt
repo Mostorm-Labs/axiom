@@ -38,6 +38,7 @@ add_library(canvas_runtime_editor STATIC
     src/canvas_editing_runtime.cpp
     src/canvas_section_commands.cpp
     src/canvas_region_selection.cpp
+    src/canvas_selection_summary.cpp
     src/region_selection_geometry.cpp
     src/canvas_text_geometry.cpp
     src/canvas_connector_routing.cpp

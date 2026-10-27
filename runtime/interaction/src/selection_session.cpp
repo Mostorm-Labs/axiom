@@ -4,6 +4,24 @@
 #include <cstdint>
 
 namespace canvas::interaction {
+SelectionSummary SelectionSession::summary(const semantic::ObjectStore& store) const {
+    SelectionSummary out;out.selectionRevision=revision_;out.groupScope=groupScope_;
+    const auto roots=resolveRoots(selected(),store);
+    if(!roots) {
+        out.status=runtime::SelectionSummaryStatus::kInvalid;
+        out.reason=runtime::SelectionReason::kInvalidHierarchy;return out;
+    }
+    out.roots=*roots;out.count=out.roots.size();
+    out.primary=out.roots.empty()?foundation::ObjectId{}:out.roots.front();
+    for(const auto id:out.roots) {
+        const auto kind=static_cast<std::uint32_t>(store.find(id)->kind);
+        const auto entry=std::lower_bound(out.kindCounts.begin(),out.kindCounts.end(),kind,
+            [](const auto& count,auto value){return count.kind<value;});
+        if(entry==out.kindCounts.end()||entry->kind!=kind)out.kindCounts.insert(entry,{kind,1});
+        else ++entry->count;
+    }
+    out.status=runtime::SelectionSummaryStatus::kAvailable;out.reason=runtime::SelectionReason::kNone;return out;
+}
 foundation::ObjectId SelectionSession::resolveHit(foundation::ObjectId id,const semantic::ObjectStore& store) const {
     if(const auto* child=store.find(id);child&&child->kind==semantic::ObjectKind::kRichText&&child->placement.parent_id) {
         if(const auto* parent=store.find(*child->placement.parent_id);parent&&parent->kind==semantic::ObjectKind::kSticky)id=parent->id;

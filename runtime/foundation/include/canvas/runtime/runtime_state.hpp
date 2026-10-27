@@ -57,6 +57,7 @@ struct RuntimeControlState final {
   std::uint64_t presentedSemanticGeneration = 0;
   std::uint8_t axisLocalDurable = 0;
   std::uint8_t axisCloudSynced = 0;
+  std::uint64_t selectionRevision = 0;
   CanvasSelectionMode selectionAcquisitionMode = CanvasSelectionMode::kPoint;
   SelectionQueryStatus selectionQueryStatus = SelectionQueryStatus::kIdle;
   std::array<std::uint32_t,10> regionUnsupportedKinds{};

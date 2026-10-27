@@ -7,6 +7,7 @@
 #include "canvas/runtime/surface_debug_control.hpp"
 
 #include <cstdint>
+#include <array>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -92,13 +93,14 @@ class DebugControlRouter final {
  private:
   struct FrameContext final {
     DebugSnapshotStamp stamp{};
-    std::uint32_t selectedObjectCount = 0;
-    std::uint64_t primaryObject = 0;
+    std::uint64_t selectionRevision = 0, semanticGeneration = 0, sceneRevision = 0;
+    std::array<canvas::runtime::SelectionCapability,static_cast<std::size_t>(canvas::runtime::SelectionAction::kCount)> actions{};
   };
   struct PendingAxiom final { std::string action; };
   struct PendingSurface final { std::string action; };
 
   [[nodiscard]] std::uint64_t nextRequestId() noexcept;
+  [[nodiscard]] bool canSubmitSelection(canvas::runtime::SelectionAction) const noexcept;
   [[nodiscard]] std::uint64_t productDeadline() const noexcept;
   [[nodiscard]] std::uint64_t uiDeadline() const noexcept {
     return frame_.stamp.sequence + 120U;

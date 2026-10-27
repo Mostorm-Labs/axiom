@@ -60,8 +60,19 @@ void DebugControlRouter::beginFrame(const DebugSnapshot& snapshot) noexcept {
       snapshot.platform.value.canonicalSurfaceGeneration != 0) {
     frame_.stamp.surfaceGeneration = snapshot.platform.value.canonicalSurfaceGeneration;
   }
-  frame_.selectedObjectCount = snapshot.product.value.selection.selectedObjectCount;
-  frame_.primaryObject = snapshot.product.value.selection.primaryObject;
+  const auto& summary=snapshot.selectionSummary;
+  frame_.selectionRevision=summary.selectionRevision;frame_.semanticGeneration=summary.semanticGeneration;frame_.sceneRevision=summary.sceneRevision;
+  frame_.actions=summary.actions;
+}
+
+bool DebugControlRouter::canSubmitSelection(canvas::runtime::SelectionAction action) const noexcept {
+  const auto i=static_cast<std::size_t>(action);
+  if(!runtime_||i>=frame_.actions.size()||!frame_.actions[i].available())return false;
+  try {
+    const auto current=runtime_->readSelectionSummary();
+    return current.status==canvas::runtime::SelectionSummaryStatus::kAvailable&&current.capability(action).available()&&
+      current.selectionRevision==frame_.selectionRevision&&current.semanticGeneration==frame_.semanticGeneration&&current.sceneRevision==frame_.sceneRevision;
+  } catch(const std::bad_alloc&) { return false; }
 }
 
 std::uint64_t DebugControlRouter::nextRequestId() noexcept {
@@ -395,7 +406,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::localRejected(
 
 canvas::runtime::ProductControlReceipt DebugControlRouter::fitToSelection() noexcept {
   const auto id = nextRequestId();
-  if (frame_.selectedObjectCount == 0) {
+  if (!canSubmitSelection(canvas::runtime::SelectionAction::kFit)) {
     const auto receipt = localRejected(id);
     recordProduct("fit-selection", receipt);
     return receipt;
@@ -408,13 +419,13 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::fitToSelection() noex
 
 canvas::runtime::ProductControlReceipt DebugControlRouter::fitPrimaryObject() noexcept {
   const auto id = nextRequestId();
-  if (frame_.primaryObject == 0) {
+  if (!canSubmitSelection(canvas::runtime::SelectionAction::kFitPrimary)) {
     const auto receipt = localRejected(id);
     recordProduct("fit-primary", receipt);
     return receipt;
   }
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
-                                     : runtime_->fitToObject(frame_.primaryObject, id, frame_.stamp.runtimeGeneration, 0xD001U);
+                                     : runtime_->fitToSelection(id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("fit-primary", receipt);
   return receipt;
 }
@@ -422,12 +433,18 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::fitPrimaryObject() no
 canvas::runtime::ProductControlReceipt DebugControlRouter::selectedAction(
     canvas::runtime::CanvasControlPayloadKind kind, bool flag) noexcept {
   const auto requestId = nextRequestId();
-  if (runtime_ == nullptr || frame_.selectedObjectCount == 0) {
+  using A=canvas::runtime::SelectionAction;using K=canvas::runtime::CanvasControlPayloadKind;
+  const auto action=kind==K::kDeleteSelected?A::kDelete:kind==K::kSelectedOrder?A::kOrder:
+      kind==K::kUnlockSelected?A::kUnlock:kind==K::kSelectedLock?(flag?A::kLock:A::kUnlock):A::kCount;
+  if (!canSubmitSelection(action)) {
     const auto receipt = localRejected(requestId);
     recordProduct("selected-action", receipt);
     return receipt;
   }
   const auto targets = runtime_->mountedCanvasTargets();
+  if(targets.empty()||targets.front().runtimeEpoch!=frame_.stamp.runtimeGeneration) {
+    const auto receipt=localRejected(requestId);recordProduct("selected-action",receipt);return receipt;
+  }
   canvas::runtime::CanvasControlRequest request{};
   request.clientId = 0xD001U;
   request.requestId = requestId;

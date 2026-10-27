@@ -36,6 +36,7 @@ class SelectionSession final {
     }
     [[nodiscard]] foundation::ObjectId primary() const noexcept { return state_.primary(); }
     [[nodiscard]] SelectionSummary summary() const noexcept { return state_.summary(); }
+    [[nodiscard]] SelectionSummary summary(const semantic::ObjectStore&) const;
 
   private:
     HitTestService hitTest_;

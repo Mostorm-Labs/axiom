@@ -1,4 +1,5 @@
 #include "canvas/debug_ui/builtin_panels.hpp"
+#include "selection_summary_view.hpp"
 #include "imgui.h"
 
 namespace canvas::debug_ui {
@@ -32,10 +33,7 @@ void product(DebugPanelContext& c) {
                 s.product.value.tool.brushId,
                 s.product.value.tool.brushRevision,
                 s.product.value.tool.eraserId);
-    ImGui::Text("selection %s / objects %u / primary %llu",
-                s.product.value.selection.enabled ? "enabled" : "disabled",
-                s.product.value.selection.selectedObjectCount,
-                static_cast<unsigned long long>(s.product.value.selection.primaryObject));
+    panel_detail::renderSelectionSummary(s.selectionSummary,false);
     ImGui::Text("camera %.3f at %.3f, %.3f / undo %s / redo %s",
                 s.product.value.camera.scale,
                 s.product.value.camera.translationX,

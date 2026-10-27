@@ -1,6 +1,7 @@
 #include "canvas/debug_ui/builtin_panels.hpp"
 #include "canvas/debug_ui/ui_session_state.hpp"
 #include "widgets.hpp"
+#include "selection_summary_view.hpp"
 
 #include <algorithm>
 #include <array>
@@ -17,8 +18,7 @@ void textFormat(DebugPanelContext& c) {
     const auto text = c.controls.textEditor();
     if (text.phase == canvas::runtime::TextPhase::kClosed && text.formatObject.isZero()) return;
     ImGui::SeparatorText("Text format");
-    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c) || c.snapshot.product.value.control.selectedLocked ||
-                        c.snapshot.product.value.selection.selectedObjectCount>1);
+    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c) || c.snapshot.product.value.control.selectedLocked);
     const std::array<std::pair<const char*, double>, 4> sizes{{{"Title",32},{"Heading",24},{"Subheading",20},{"Body",16}}};
     const double currentSize = text.format.fontSize.value_or(16);
     char customSize[48]{};
@@ -177,28 +177,26 @@ void tools(DebugPanelContext& c) {
         }
         ImGui::EndDisabled();
     }
-    if (state.selection.selectedObjectCount != 0) {
-        ImGui::SeparatorText("Selected object");
-        ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c));
+    panel_detail::renderSelectionSummary(c.snapshot.selectionSummary,c.ui.advancedControls());
+    if (c.snapshot.selectionSummary.count != 0) {
+        ImGui::SeparatorText("Selection actions");
         bool objectFirst=true;
         const bool sectionSelected=state.control.selectedKind==static_cast<std::uint32_t>(canvas::semantic::ObjectKind::kSection);
-        ImGui::BeginDisabled(sectionSelected||state.selection.selectedObjectCount>1);
-        if (panel_detail::flowButton(state.control.selectedLocked ? "Unlock" : "Lock", objectFirst)) {
+        using Action=canvas::runtime::SelectionAction;
+        const auto lockAction=state.control.selectedLocked?Action::kUnlock:Action::kLock;
+        if (panel_detail::selectionActionButton(c,state.control.selectedLocked ? "Unlock" : "Lock", objectFirst,lockAction)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedLock,
                                             !state.control.selectedLocked); c.ui.markControlSubmitted();
         }
-        ImGui::EndDisabled();
-        ImGui::BeginDisabled(state.control.selectedLocked);
-        if (panel_detail::flowButton(sectionSelected?"Release selected Section":"Delete selected", objectFirst)) {
+        if (panel_detail::selectionActionButton(c,sectionSelected?"Release selected Section":"Delete selected", objectFirst,Action::kDelete)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kDeleteSelected); c.ui.markControlSubmitted();
         }
-        ImGui::BeginDisabled(sectionSelected||state.selection.selectedObjectCount>1);
-        if (panel_detail::flowButton("Bring front", objectFirst)) {
+        if (panel_detail::selectionActionButton(c,"Bring front", objectFirst,Action::kOrder)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedOrder, true); c.ui.markControlSubmitted();
         }
-        ImGui::EndDisabled();
         const auto selectedConnector = c.controls.selectedConnector();
         if (selectedConnector.available) {
+            ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c)||!c.snapshot.selectionSummary.capability(Action::kAppearance).available());
             if (selectedConnector.content.routing == canvas::semantic::ConnectorRouting::kStraight &&
                 panel_detail::flowButton("Convert to orthogonal", objectFirst)) {
                 (void)c.controls.setConnectorRouting(canvas::semantic::ConnectorRouting::kOrthogonal, true); c.ui.markControlSubmitted();
@@ -206,9 +204,8 @@ void tools(DebugPanelContext& c) {
             ImGui::Text("Route: %s", canvas::runtime::connectorRouteStatusName(selectedConnector.routeStatus));
             if (c.ui.advancedControls()) ImGui::Text("Search: %u states / %u predicates",
                 selectedConnector.work.expanded, selectedConnector.work.predicates);
+            ImGui::EndDisabled();
         }
-        ImGui::EndDisabled();
-        ImGui::EndDisabled();
     }
     textFormat(c);
     if (c.ui.advancedControls()) {
@@ -337,14 +334,14 @@ void view(DebugPanelContext& context) {
         context.ui.markControlSubmitted();
     }
     ImGui::EndDisabled();
-    ImGui::BeginDisabled(!available || snapshot.product.value.selection.selectedObjectCount == 0);
+    ImGui::BeginDisabled(!available || !snapshot.selectionSummary.capability(canvas::runtime::SelectionAction::kFit).available());
     if (panel_detail::flowButton("Fit Selection", first)) {
         (void)context.controls.fitToSelection();
         context.ui.markControlSubmitted();
     }
     ImGui::EndDisabled();
     if (context.ui.advancedControls()) {
-    ImGui::BeginDisabled(!available || snapshot.product.value.selection.primaryObject == 0);
+    ImGui::BeginDisabled(!available || !snapshot.selectionSummary.capability(canvas::runtime::SelectionAction::kFitPrimary).available());
     if (ImGui::Button("Fit Primary Object")) {
         (void)context.controls.fitPrimaryObject();
         context.ui.markControlSubmitted();

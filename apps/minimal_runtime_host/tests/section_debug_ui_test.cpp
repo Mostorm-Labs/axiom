@@ -64,6 +64,10 @@ int main() {
   assert(section.target==facade.mountedCanvasTargets().front());
   assert(section.content.boundary.width==320&&section.content.boundary.height==240);
   assert(section.selectedRoots==std::vector{section.objectId});
+  const auto summary=facade.readSelectionSummary();
+  assert(summary.status==runtime::SelectionSummaryStatus::kAvailable);
+  assert(summary.roots==section.selectedRoots&&summary.primary==section.objectId);
+  assert(controller.snapshot().selectionSummary==summary);
   assert(canonicalPixels()!=emptyCanvas); // a real visible Section, not only a receipt
   const auto activity=controller.snapshot().activity;
   assert(!activity.entries.empty()&&activity.entries.back().state==debug_ui::DebugActivityState::kApplied);

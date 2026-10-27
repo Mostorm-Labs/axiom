@@ -2,6 +2,7 @@
 
 #include "canvas/runtime/product_control.hpp"
 #include "canvas/runtime/runtime_state.hpp"
+#include "canvas/runtime/selection_summary.hpp"
 #include "canvas/runtime/text_input.hpp"
 #include "canvas/runtime/image_input.hpp"
 #include "canvas/runtime/connector_sticky_input.hpp"
@@ -15,6 +16,7 @@ namespace canvas::runtime {
 class RuntimeFacade {
  public:
   virtual ~RuntimeFacade() = default;
+  [[nodiscard]] virtual SelectionSummary readSelectionSummary() const { return {}; }
   [[nodiscard]] virtual SectionSnapshot readSection(foundation::ObjectId = {}) const { return {}; }
   [[nodiscard]] ProductControlReceipt submitSectionIntent(const SectionIntent& intent,
       std::uint64_t requestId,std::uint64_t clientId=1) noexcept {
