@@ -1,0 +1,55 @@
+124:   ~SchedulingHelper() {
+125:     if (mode_ == base_internal::SCHEDULE_KERNEL_ONLY) {
+126:       base_internal::SchedulingGuard::EnableRescheduling(guard_result_);
+127:     }
+128:   }
+129: 
+130:  private:
+131:   base_internal::SchedulingMode mode_;
+132:   bool guard_result_ = false;
+133: };
+134: 
+135: // Bit patterns for call_once state machine values.  Internal implementation
+136: // detail, not for use by clients.
+137: //
+138: // The bit patterns are arbitrarily chosen from unlikely values, to aid in
+139: // debugging.  However, kOnceInit must be 0, so that a zero-initialized
+140: // once_flag will be valid for immediate use.
+141: enum {
+142:   kOnceInit = 0,
+143:   kOnceRunning = 0x65C2937B,
+144:   kOnceWaiter = 0x05A308D2,
+145:   // A very small constant is chosen for kOnceDone so that it fit in a single
+146:   // compare with immediate instruction for most common ISAs.  This is verified
+147:   // for x86, POWER and ARM.
+148:   kOnceDone = 221,    // Random Number
+149: };
+150: 
+151: template <typename Callable, typename... Args>
+152:     void
+153:     CallOnceImpl(std::atomic<uint32_t>* absl_nonnull control,
+154:                  base_internal::SchedulingMode scheduling_mode, Callable&& fn,
+155:                  Args&&... args) {
+156: #ifndef NDEBUG
+157:   {
+158:     uint32_t old_control = control->load(std::memory_order_relaxed);
+159:     if (old_control != kOnceInit &&
+160:         old_control != kOnceRunning &&
+161:         old_control != kOnceWaiter &&
+162:         old_control != kOnceDone) {
+163:       ABSL_RAW_LOG(FATAL, "Unexpected value for control word: 0x%lx",
+164:                    static_cast<unsigned long>(old_control));  // NOLINT
+165:     }
+166:   }
+167: #endif  // NDEBUG
+168:   static const base_internal::SpinLockWaitTransition trans[] = {
+169:       {kOnceInit, kOnceRunning, true},
+170:       {kOnceRunning, kOnceWaiter, false},
+171:       {kOnceDone, kOnceDone, true}};
+172: 
+173:   // Must do this before potentially modifying control word's state.
+174:   base_internal::SchedulingHelper maybe_disable_scheduling(scheduling_mode);
+175:   // Short circuit the simplest case to avoid procedure call overhead.
+176:   // The base_internal::SpinLockWait() call returns either kOnceInit or
+177:   // kOnceDone. If it returns kOnceDone, it must have loaded the control word
+178:   // with std::memory_order_acquire and seen a value of kOnceDone.

@@ -1,0 +1,16 @@
+{
+  "task": "FC04-D07-ROUTE-A-INVESTIGATION",
+  "terminal_status": "SDK_EXCEPTION_SAFETY_FIX_REQUIRES_UPSTREAM_RELEASE",
+  "continue_execution": false,
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/fc04-d07-selection-audit",
+  "incident_baseline": "3615a38422a103024bc23924c570e3c585656670",
+  "feature_baseline": "c7f874395d55952e9d5288e2a336a21747f37f11",
+  "decision": "The locked Abseil/Protobuf combination requires a coordinated upstream source and immutable Semantic SDK release; Runtime-only handling is not safe or authorized.",
+  "product_source_modified": false,
+  "sdk_source_modified": false,
+  "dependency_locks_modified": false,
+  "installed_sdk_modified": false,
+  "next_owner": "control review and Semantic SDK owner",
+  "not_closed": ["D07-A", "D07-B", "D06-B", "Gate", "P34", "PHYS"]
+}

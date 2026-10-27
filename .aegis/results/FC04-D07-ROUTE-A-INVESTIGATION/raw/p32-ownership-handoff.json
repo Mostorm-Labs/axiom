@@ -1,0 +1,21 @@
+{
+  "from": "aegis-implementation/P32",
+  "to": "aegis/CONTROL_REVIEW",
+  "next_owner": "control with Semantic SDK / verification owner",
+  "task": "FC04-D07-AB-P32",
+  "status": "NEW_HIGH_IMPACT_FAILURE_MODE",
+  "continue_execution": false,
+  "package_ref": {
+    "revision": "c86fe624755794cf2fedd39fc46b2dc955ded1bd",
+    "path": ".aegis/packages/FC04-D07-AB-P31-v0.2/package.json",
+    "sha256": "b653d8847493f724c60c6921d2e807321174c89b8e310f272ccda5d789143da8"
+  },
+  "unresolved": {
+    "issue": "A real precommit allocation failure in locked Protobuf descriptor initialization leaves subsequent real F/U measurement waiting in Abseil call_once.",
+    "out_of_scope_owner": "runtime/semantic/src/codec.cpp and the locked Semantic SDK Protobuf/Abseil implementation",
+    "evidence": ["raw/prepare-sweep-timeout.log", "raw/fault-index-100-stack.log", "raw/prepare-sweep-hang-stack.log", "raw/sdk-absl-call-once-excerpt.txt"],
+    "decision_needed": "Establish an exception-safe, reviewable measurement/retry approach and corresponding verification within explicitly authorized owners, without bypassing the actual failure or rebuilding the SDK as an ad-hoc workaround."
+  },
+  "preserve": ["the v0.1 single-command OOM fix", "the partial Scene and explicit Intent work", "all historical evidence", "the real fault reproduction"],
+  "not_closed": ["D07-A", "D07-B", "complete Scene preparation matrix", "Selection 160 at this revision", "Web at this revision", "D06-B", "Gate", "PHYS"]
+}
