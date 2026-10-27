@@ -24,16 +24,20 @@ int main() {
   down.samples.push_back({11, 7, 1, 100, 10, 20, 0.4F, 1.0F, 2.0F, {},
                           {.tool = PointerTool::kFinger, .coalescedHistory = true},
                           SampleProvenance::kConfirmedCurrent, PointerPhase::kDown});
+  assert(down.samples.front().modifiers == PointerModifiers::kNone);
+  down.samples.front().modifiers = PointerModifiers::kShift;
   const auto first = ingress.submit(down);
   assert(first.accepted && first.began == 1 && first.normalized.samples.size() == 1);
   const auto key = first.normalized.samples.front().key;
   assert(key.valid() && first.normalized.samples.front().capabilities.coalescedHistory);
+  assert(first.normalized.samples.front().modifiers == PointerModifiers::kShift);
 
   PlatformPointerBatch move{};
   move.samples.push_back({11, 7, 2, 200, 11, 21, 0.5F, 1.0F, 2.0F, {}, {},
                           SampleProvenance::kCoalescedHistory, PointerPhase::kMove});
   const auto second = ingress.submit(move);
   assert(second.accepted && second.normalized.samples.front().key == key);
+  assert(second.normalized.samples.front().modifiers == PointerModifiers::kNone);
 
   PlatformPointerBatch up{};
   up.samples.push_back({11, 7, 3, 300, 12, 22, 0.6F, 1.0F, 2.0F, {}, {},

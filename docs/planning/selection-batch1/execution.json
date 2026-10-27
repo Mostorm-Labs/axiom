@@ -1,0 +1,76 @@
+{
+  "task": "SELECTION-BATCH1",
+  "repository": "Mostorm-Labs/axiom",
+  "base": "2fee75f66a7f96f6aac834228ede372a9abda59a",
+  "execution_ref": "refs/heads/codex/selection-unified-batch1",
+  "authorization": "Direct user confirmation of supplied design and all four implementation tasks, 2026-10-27",
+  "source_zip_sha256": "a6dfb09ceff176e39f664b95fbd937b7a526d8d3e16374869345b468e46f193e",
+  "documents": [
+    {
+      "path": "01-confirmed-design.md",
+      "sha256": "f15f71747987c160091425bf0aed5d171d0046eb2cacef8dc566797e6739b32f"
+    },
+    {
+      "path": "02-source-gap-audit.md",
+      "sha256": "add7094950bad001cf0e7b6e2bd254734a48bc52bd9fddee23d84ce2e51fe975"
+    },
+    {
+      "path": "03-implementation-plan.md",
+      "sha256": "73240b1f1dc87e3e5c647316318ea8d9899ea4adfaede4dbcc1156cec326ebea"
+    },
+    {
+      "path": "04-codex-prompt.md",
+      "sha256": "deb5625249d3fedbbf3b2557cd6263928e712befb85edaa4c032c73f8c2fb1e0"
+    },
+    {
+      "path": "05-source-references.md",
+      "sha256": "4840d2ad639c8d990e2003f04661cfb5f5f97c278e2f36dbde27c324a453b1f4"
+    },
+    {
+      "path": "README.md",
+      "sha256": "78cce5c5a1337977f768b31de0d6db8f8e313de74ac80b21e57208e89d9376bc"
+    }
+  ],
+  "scope": [
+    "SelectionSession Replace/Add; trailing default modifiers through ingress",
+    "Transient region session and precise Shape region intersection in editor layer",
+    "Real Runtime input integration, cancellation/fences/tool preservation",
+    "Facade, actual Windows/Web Minimal Hosts, Debug UI, transient overlay, multi-selection editing guards"
+  ],
+  "forbidden": [
+    "canonical schema/operations/History changes",
+    "Section semantic changes",
+    "SDK locks or historical evidence changes",
+    "global cancel/toggle reinterpretation",
+    "implicit primary-only multi-edit",
+    "automatic main merge"
+  ],
+  "verification": {
+    "required": [
+      "registered nonzero focused Native CTests",
+      "precise independent geometry fixtures",
+      "real RuntimeComposition input integration and zero document writes",
+      "relevant existing regressions and platform builds"
+    ],
+    "platform_execution": "Actual Windows pointer delivery and actual Chrome/WASM where available; missing platforms explicitly NOT_RUN, never pass",
+    "physical_acceptance": "User input only; synthetic events are not physical PASS"
+  },
+  "closure": {
+    "continue_until_terminal_state": true,
+    "success": "Four task implementations committed, executed tests/coverage/gaps reported with exact base/head; no Gate claim",
+    "blockers": [
+      "unresolved semantic conflict limited to affected path",
+      "missing required input",
+      "environment prevents required core tests",
+      "unresolved regression"
+    ]
+  },
+  "design_preflight": {
+    "selection_owner": "Existing SelectionSession only",
+    "region_owner": "New leaf transient session; editor composes Scene query/reduction/publication",
+    "publication": "Up once with expected revision; abort clears only transient region",
+    "unresolved_semantic_decisions": [],
+    "authority_conflict": false
+  },
+  "status": "User-authorized implementation record, not a machine-preflight or Gate certificate"
+}

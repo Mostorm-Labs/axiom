@@ -3,6 +3,7 @@
 #include "canvas/input/pointer_capabilities.hpp"
 #include "canvas/input/pointer_key.hpp"
 #include "canvas/input/pointer_phase.hpp"
+#include "canvas/input/pointer_modifiers.hpp"
 #include "canvas/input/sample_provenance.hpp"
 
 #include <cstdint>
@@ -24,6 +25,7 @@ struct PlatformPointerSample final {
   PointerCapabilities capabilities{};
   SampleProvenance provenance = SampleProvenance::kConfirmedCurrent;
   PointerPhase phase = PointerPhase::kMove;
+  PointerModifiers modifiers = PointerModifiers::kNone;
 };
 
 struct PlatformPointerBatch final {

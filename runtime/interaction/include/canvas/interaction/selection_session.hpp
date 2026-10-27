@@ -9,11 +9,17 @@
 
 namespace canvas::interaction {
 
+enum class SelectionCombineMode : std::uint8_t { kReplace, kAdd };
+
 class SelectionSession final {
   public:
     [[nodiscard]] bool click(foundation::ObjectId objectId);
     [[nodiscard]] bool toggle(foundation::ObjectId objectId);
     [[nodiscard]] bool marquee(std::span<const HitCandidate> candidates);
+    // The caller resolves live, in-scope roots on one coherent scene read.
+    // Revision fencing prevents an old acquisition from replacing newer state.
+    [[nodiscard]] bool applyAcquisition(std::span<const foundation::ObjectId> resolvedFrontToBack,
+                                       SelectionCombineMode mode, std::uint64_t expectedRevision);
     void onChangeSet(const semantic::ChangeSet& changes);
     void cancel() noexcept;
     [[nodiscard]] foundation::ObjectId resolveHit(foundation::ObjectId,const semantic::ObjectStore&) const;

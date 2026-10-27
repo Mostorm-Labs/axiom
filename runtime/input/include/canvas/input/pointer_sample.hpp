@@ -2,6 +2,7 @@
 #include "canvas/input/pointer_capabilities.hpp"
 #include "canvas/input/pointer_phase.hpp"
 #include "canvas/input/pointer_key.hpp"
+#include "canvas/input/pointer_modifiers.hpp"
 
 #include <cstdint>
 
@@ -17,5 +18,6 @@ struct PointerSample final {
   ContactGeometry contact{};
   PointerCapabilities capabilities{};
   PointerPhase phase = PointerPhase::kMove;
+  PointerModifiers modifiers = PointerModifiers::kNone;
 };
 }  // namespace canvas::input

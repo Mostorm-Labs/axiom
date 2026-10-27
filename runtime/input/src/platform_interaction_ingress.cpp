@@ -15,6 +15,7 @@ PointerSample PlatformInteractionIngress::normalize(
   normalized.contact = sample.contact;
   normalized.capabilities = sample.capabilities;
   normalized.phase = sample.phase;
+  normalized.modifiers = sample.modifiers;
   return normalized;
 }
 

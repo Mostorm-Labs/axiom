@@ -56,6 +56,22 @@ bool SelectionSession::marquee(std::span<const HitCandidate> candidates) {
     return true;
 }
 
+bool SelectionSession::applyAcquisition(std::span<const foundation::ObjectId> roots,
+                                        SelectionCombineMode mode, std::uint64_t expectedRevision) {
+    if (expectedRevision != revision_ ||
+        (mode != SelectionCombineMode::kReplace && mode != SelectionCombineMode::kAdd) ||
+        std::any_of(roots.begin(), roots.end(), [](auto id) { return id.isZero(); })) return false;
+    auto next = mode == SelectionCombineMode::kAdd ? state_.selected_ : std::vector<foundation::ObjectId>{};
+    for (auto id : roots) {
+        if (std::find(next.begin(), next.end(), id) == next.end()) next.push_back(id);
+    }
+    if (next != state_.selected_) {
+        state_.selected_ = std::move(next);
+        ++revision_;
+    }
+    return true;
+}
+
 void SelectionSession::onChangeSet(const semantic::ChangeSet& changes) {
     bool changed=false;
     for (const semantic::ObjectSemanticChange& change : changes.objects()) {
