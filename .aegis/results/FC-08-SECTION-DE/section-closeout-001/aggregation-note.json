@@ -1,0 +1,5 @@
+{
+  "cause": "Initial summary guard counted its own newly generated untracked closeout evidence as a dirty source tree",
+  "effect": "No product source change; successful Python/audit artifacts committed separately",
+  "correction": "Validate tracked cleanliness and exact tested production-tree equivalence; preserve evidence"
+}
