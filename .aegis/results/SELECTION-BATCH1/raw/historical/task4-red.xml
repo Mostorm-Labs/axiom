@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="1"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="4"
+	timestamp="2026-10-27T11:38:37"
+	>
+	<testcase name="FC01ASelectionInputIntegration" classname="FC01ASelectionInputIntegration" time="4.56215" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 15 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 15 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (299 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (294 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (296 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (149 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt (594 ms)
+[ RUN      ] SelectionInput.EllipseTriangleCornersAndZoomDprHaveSamePreciseResult
+[axiom] present begin frame=3 objects=3 scene_records=3
+[       OK ] SelectionInput.EllipseTriangleCornersAndZoomDprHaveSamePreciseResult (494 ms)
+[ RUN      ] SelectionInput.NewSelectionAndDeletionCannotBeOverwrittenByOldRegion
+[       OK ] SelectionInput.NewSelectionAndDeletionCannotBeOverwrittenByOldRegion (295 ms)
+[ RUN      ] SelectionInput.MetricsAndSourceLossCancelOnlyOwnedRegion
+[       OK ] SelectionInput.MetricsAndSourceLossCancelOnlyOwnedRegion (295 ms)
+[ RUN      ] SelectionInput.RegionDoesNotConsumeRedoOrChangeCanonicalOutcome
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=4 scene_records=4
+[       OK ] SelectionInput.RegionDoesNotConsumeRedoOrChangeCanonicalOutcome (443 ms)
+[ RUN      ] SelectionInput.DeletingOriginalSelectionDoesNotRestoreDeletedIdentity
+[       OK ] SelectionInput.DeletingOriginalSelectionDoesNotRestoreDeletedIdentity (291 ms)
+[ RUN      ] SelectionInput.SceneMutationRequeriesAtUpButCameraMutationCancels
+[axiom] present begin frame=3 objects=3 scene_records=3
+[       OK ] SelectionInput.SceneMutationRequeriesAtUpButCameraMutationCancels (198 ms)
+[ RUN      ] SelectionInput.SecondFingerNavigationCancelsRegionBeforeTakingOver
+[       OK ] SelectionInput.SecondFingerNavigationCancelsRegionBeforeTakingOver (293 ms)
+[ RUN      ] SelectionInput.MissingRegionProviderIsPartialAndNeverPublishesEmptySuccess
+[       OK ] SelectionInput.MissingRegionProviderIsPartialAndNeverPublishesEmptySuccess (296 ms)
+[ RUN      ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(186): error: Expected equality of these values:
+  receipt-&gt;error
+    Which is: 1-byte object &lt;00&gt;
+  runtime::CanvasControlError::kUnsupported
+    Which is: 1-byte object &lt;08&gt;
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(186): error: Expected equality of these values:
+  receipt-&gt;error
+    Which is: 1-byte object &lt;00&gt;
+  runtime::CanvasControlError::kUnsupported
+    Which is: 1-byte object &lt;08&gt;
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(186): error: Expected equality of these values:
+  receipt-&gt;error
+    Which is: 1-byte object &lt;00&gt;
+  runtime::CanvasControlError::kUnsupported
+    Which is: 1-byte object &lt;08&gt;
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(186): error: Expected equality of these values:
+  receipt-&gt;error
+    Which is: 1-byte object &lt;00&gt;
+  runtime::CanvasControlError::kUnsupported
+    Which is: 1-byte object &lt;08&gt;
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(186): error: Expected equality of these values:
+  receipt-&gt;error
+    Which is: 1-byte object &lt;00&gt;
+  runtime::CanvasControlError::kUnsupported
+    Which is: 1-byte object &lt;08&gt;
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(186): error: Expected equality of these values:
+  receipt-&gt;error
+    Which is: 1-byte object &lt;00&gt;
+  runtime::CanvasControlError::kUnsupported
+    Which is: 1-byte object &lt;08&gt;
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(189): error: Value of: editor.setSelectedObjectSize(400,300)
+  Actual: true
+Expected: false
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(189): error: Value of: editor.setSelectedTransform({1,0,0,1,10,10})
+  Actual: true
+Expected: false
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(190): error: Value of: editor.patchSelectedProperty(2,semantic::PropertyValue{true})
+  Actual: true
+Expected: false
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(192): error: Expected equality of these values:
+  snapshot().semanticGeneration
+    Which is: 10
+  before.semanticGeneration
+    Which is: 1
+
+[  FAILED  ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade (3 ms)
+[ RUN      ] SelectionInput.MultipleRootsHaveNoSingleObjectHandlesOrPorts
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(198): error: Expected equality of these values:
+  overlay-&gt;handle(render::HandleKind::kTopLeft).kind
+    Which is: 1-byte object &lt;01&gt;
+  render::HandleKind::kNone
+    Which is: 1-byte object &lt;00&gt;
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(199): error: Value of: overlay-&gt;attachmentPoints().empty()
+  Actual: false
+Expected: true
+
+[  FAILED  ] SelectionInput.MultipleRootsHaveNoSingleObjectHandlesOrPorts (0 ms)
+[----------] 15 tests from SelectionInput (4247 ms total)
+
+[----------] Global test environment tear-down
+[==========] 15 tests from 1 test suite ran. (4247 ms total)
+[  PASSED  ] 13 tests.
+[  FAILED  ] 2 tests, listed below:
+[  FAILED  ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade
+[  FAILED  ] SelectionInput.MultipleRootsHaveNoSingleObjectHandlesOrPorts
+
+ 2 FAILED TESTS
+</system-out>
+	</testcase>
+</testsuite>

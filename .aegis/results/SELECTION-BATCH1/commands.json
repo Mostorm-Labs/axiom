@@ -1,0 +1,223 @@
+{
+  "native": [
+    {
+      "name": "reviewed-native-configure",
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "out/selection-batch1/native",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        "-DBUILD_TESTING=ON",
+        "-DCANVAS_BUILD_POC01=OFF",
+        "-DCANVAS_BUILD_SEMANTIC=ON",
+        "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+        "-DCANVAS_BUILD_RENDER=ON",
+        "-DCANVAS_BUILD_RF01=ON",
+        "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
+        "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+        "-DCANVAS_SKIA_SDK_VARIANT=release",
+        "-DCANVAS_SKIA_SDK_ROOT=C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/.deps/skia-sdk/windows-x64-d3d12/release",
+        "-DAXIOM_BUILD_DEBUG_UI=ON",
+        "-DAXIOM_DEBUG_UI_PROFILE=full",
+        "-DAXIOM_FC08_QUALIFICATION_HOOKS=OFF",
+        "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+        "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe",
+        "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+        "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+        "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+        "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "reviewed-native-regression-build",
+      "argv": [
+        "cmake",
+        "--build",
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\selection-batch1\\native",
+        "--target",
+        "axiom_minimal_runtime_host_windows",
+        "axiom_selection_session_tests",
+        "axiom_region_selection_tests",
+        "axiom_selection_input_integration_tests",
+        "axiom_transform_session_tests",
+        "axiom_transform_handle_drag_tests",
+        "axiom_editor_history_tests",
+        "axiom_session_conflict_tests",
+        "axiom_session_lifecycle_tests",
+        "axiom_gesture_arbiter_tests",
+        "axiom_viewport_gesture_tests",
+        "axiom_platform_interaction_ingress_tests",
+        "axiom_multi_contact_coordinator_tests",
+        "axiom_c0_canvas_interaction_coordinator_tests",
+        "axiom_c0_viewport_interaction_controller_tests",
+        "axiom_fc08_section_consumer_tests",
+        "axiom_fc08_section_geometry_tests",
+        "axiom_fc00x_runtime_facade_tests",
+        "axiom_brush_batch_frame_retry_tests",
+        "axiom_fc02_text_tests",
+        "axiom_fc03_image_facade_tests",
+        "axiom_fc05_connector_facade_tests",
+        "axiom_minimal_windows_input_pipeline_tests",
+        "axiom_minimal_windows_touch_pipeline_tests",
+        "axiom_minimal_windows_text_tool_entry_tests",
+        "axiom_minimal_section_debug_ui_tests",
+        "axiom_debug_ui_control_router_tests",
+        "axiom_debug_ui_workbench_tests",
+        "axiom_dui_m1_control_tests",
+        "axiom_render_editing_overlay_tests",
+        "--parallel",
+        "6"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "reviewed-native-regression-ctest",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\selection-batch1\\native",
+        "--tests-from-file",
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\selection-batch1\\reviewed-native-ctest-names.txt",
+        "--no-tests=error",
+        "--output-on-failure",
+        "--timeout",
+        "90",
+        "--output-junit",
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\selection-batch1\\reviewed-native-regression.xml"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "web": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "out/selection-batch1/web",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        "-DBUILD_TESTING=ON",
+        "-DCANVAS_BUILD_POC01=OFF",
+        "-DCANVAS_BUILD_SEMANTIC=ON",
+        "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+        "-DCANVAS_BUILD_RENDER=ON",
+        "-DCANVAS_BUILD_RF01=ON",
+        "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
+        "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+        "-DCANVAS_SKIA_SDK_VARIANT=release",
+        "-DAXIOM_BUILD_DEBUG_UI=ON",
+        "-DAXIOM_DEBUG_UI_PROFILE=full",
+        "-DAXIOM_FC08_QUALIFICATION_HOOKS=OFF",
+        "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+        "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+        "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+        "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF",
+        "-DCANVAS_RF01_BUILD_TESTS=OFF",
+        "-DCANVAS_RENDER_BUILD_TESTS=OFF",
+        "-DCANVAS_SKIA_SDK_ROOT=C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/.deps/skia-sdk/web-wasm-webgl2/release",
+        "-DCMAKE_TOOLCHAIN_FILE=C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+        "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+        "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe",
+        "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+        "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+        "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+        "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "out/selection-batch1/web",
+        "--target",
+        "axiom_canvas_demo_web",
+        "--parallel",
+        "6"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\toolchains\\emsdk-6.0.6\\node\\24.19.0_64bit\\node.exe",
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\apps\\axiom_canvas_demo\\tests\\web_selection_batch1.mjs",
+        "--repo",
+        ".",
+        "--chrome",
+        "C:/Program Files/Google/Chrome/Application/chrome.exe",
+        "--python",
+        "D:/Softwares/Anaconda/python.exe",
+        "--git",
+        "D:/Softwares/Git/cmd/git.exe",
+        "--output",
+        "out/selection-batch1/browser-006"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "python_and_boundaries": [
+    {
+      "argv": [
+        "D:/Softwares/Anaconda/python.exe",
+        "-X",
+        "utf8",
+        "-m",
+        "unittest",
+        "verification.tests.test_current_semantic_descriptor",
+        "verification.tests.test_semantic_contract",
+        "verification.tests.test_fc02_host_contract",
+        "verification.tests.test_host_text_font_resource",
+        "-v"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "D:/Softwares/Anaconda/python.exe",
+        "-X",
+        "utf8",
+        "tools/check_runtime_boundaries.py",
+        "--root",
+        "."
+      ],
+      "exit_code": 0
+    }
+  ],
+  "native_wrapper": "cmd.exe /d /c call \"C:/Program Files/Microsoft Visual Studio/18/Community/VC/Auxiliary/Build/vcvars64.bat\" >nul && D:/Softwares/Anaconda/python.exe -X utf8 out/selection-batch1/reviewed_native.py",
+  "web_wrapper": "D:/Softwares/Anaconda/python.exe -X utf8 out/selection-batch1/reviewed_web.py",
+  "note": "Reproduction scripts consume emitted locked SDK facts and consumer_cmake_arguments. Native discovery rejects zero tests/missing targets. Paths are this machine. No SDK source rebuild.",
+  "artifact_whitespace_checks": [
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exit_code": 2,
+      "classification": "Only raw emitter whitespace; preserved byte-for-byte, not a product/test failure"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--check",
+        "--",
+        ".",
+        ":(exclude).aegis/results/SELECTION-BATCH1/raw/**"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

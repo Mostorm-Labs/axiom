@@ -1,0 +1,83 @@
+Test project C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/out/selection-batch1/native
+    Start 159: FC01ASelectionInputIntegration
+1/1 Test #159: FC01ASelectionInputIntegration ...***Failed    7.12 sec
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 21 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 21 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (282 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (420 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (285 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (137 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt (551 ms)
+[ RUN      ] SelectionInput.EllipseTriangleCornersAndZoomDprHaveSamePreciseResult
+[axiom] present begin frame=3 objects=3 scene_records=3
+[       OK ] SelectionInput.EllipseTriangleCornersAndZoomDprHaveSamePreciseResult (1096 ms)
+[ RUN      ] SelectionInput.NewSelectionAndDeletionCannotBeOverwrittenByOldRegion
+[       OK ] SelectionInput.NewSelectionAndDeletionCannotBeOverwrittenByOldRegion (287 ms)
+[ RUN      ] SelectionInput.MetricsAndSourceLossCancelOnlyOwnedRegion
+[       OK ] SelectionInput.MetricsAndSourceLossCancelOnlyOwnedRegion (284 ms)
+[ RUN      ] SelectionInput.RegionDoesNotConsumeRedoOrChangeCanonicalOutcome
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=4 scene_records=4
+[       OK ] SelectionInput.RegionDoesNotConsumeRedoOrChangeCanonicalOutcome (556 ms)
+[ RUN      ] SelectionInput.DeletingOriginalSelectionDoesNotRestoreDeletedIdentity
+[       OK ] SelectionInput.DeletingOriginalSelectionDoesNotRestoreDeletedIdentity (291 ms)
+[ RUN      ] SelectionInput.SceneMutationRequeriesAtUpButCameraMutationCancels
+[axiom] present begin frame=3 objects=3 scene_records=3
+[       OK ] SelectionInput.SceneMutationRequeriesAtUpButCameraMutationCancels (331 ms)
+[ RUN      ] SelectionInput.SecondFingerNavigationCancelsRegionBeforeTakingOver
+[       OK ] SelectionInput.SecondFingerNavigationCancelsRegionBeforeTakingOver (274 ms)
+[ RUN      ] SelectionInput.MissingRegionProviderIsPartialAndNeverPublishesEmptySuccess
+[       OK ] SelectionInput.MissingRegionProviderIsPartialAndNeverPublishesEmptySuccess (276 ms)
+[ RUN      ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade
+[       OK ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade (140 ms)
+[ RUN      ] SelectionInput.MultipleRootsHaveNoSingleObjectHandlesOrPorts
+[       OK ] SelectionInput.MultipleRootsHaveNoSingleObjectHandlesOrPorts (140 ms)
+[ RUN      ] SelectionInput.FitSelectionIncludesAllRootsWithoutChangingDocument
+[axiom] present begin frame=2 objects=3 scene_records=3
+[       OK ] SelectionInput.FitSelectionIncludesAllRootsWithoutChangingDocument (232 ms)
+[ RUN      ] SelectionInput.MixedSelectionDoesNotExposePrimaryConnectorAsSingleEditableTarget
+[       OK ] SelectionInput.MixedSelectionDoesNotExposePrimaryConnectorAsSingleEditableTarget (138 ms)
+[ RUN      ] SelectionInput.RegionExcludesHiddenAndLockedWhilePointCanInspectLockedObject
+[       OK ] SelectionInput.RegionExcludesHiddenAndLockedWhilePointCanInspectLockedObject (187 ms)
+[ RUN      ] SelectionInput.AddResolvesRetainedRootsAfterExternalReparent
+[       OK ] SelectionInput.AddResolvesRetainedRootsAfterExternalReparent (276 ms)
+[ RUN      ] SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement
+[axiom] present begin frame=3 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=3 scene_records=3
+[       OK ] SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement (466 ms)
+[ RUN      ] SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(295): error: Value of: snapshot().selectedLocked
+  Actual: false
+Expected: true
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(295): error: Value of: snapshot().selectedLocked
+  Actual: false
+Expected: true
+
+[  FAILED  ] SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation (138 ms)
+[----------] 21 tests from SelectionInput (6797 ms total)
+
+[----------] Global test environment tear-down
+[==========] 21 tests from 1 test suite ran. (6797 ms total)
+[  PASSED  ] 20 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation
+
+ 1 FAILED TEST
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   7.44 sec
+
+The following tests FAILED:
+	159 - FC01ASelectionInputIntegration (Failed)
+Errors while running CTest

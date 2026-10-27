@@ -1,0 +1,66 @@
+{
+  "task": "SELECTION-BATCH1",
+  "status": "BOUNDED_IMPLEMENTATION_COMPLETE",
+  "branch": "codex/selection-unified-batch1",
+  "base": "2fee75f66a7f96f6aac834228ede372a9abda59a",
+  "source_subject": "cde786d6c06a0e37538075c83e5bd4548ea6b162",
+  "source_tree": "fbbe02b09261cc13dae57c9649b505ed1f69bc26",
+  "receipt": "Git commit containing this evidence directory; documentation/evidence-only descendant, exact HEAD reported in final reply",
+  "main_rechecked": "2fee75f66a7f96f6aac834228ede372a9abda59a",
+  "source_zip_sha256": "a6dfb09ceff176e39f664b95fbd937b7a526d8d3e16374869345b468e46f193e",
+  "files": "source-files.json",
+  "commands": "commands.json",
+  "artifacts": "build-artifacts.json",
+  "verification": {
+    "native_ctests": {
+      "registered": 47,
+      "passed": 47,
+      "skipped": 0,
+      "exit_code": 0,
+      "input_integration_gtests": 21,
+      "execution": "MSVC19.51 Release /MT /WX; HWND/WndProc synthetic input, not physical"
+    },
+    "web": {
+      "checks": 19,
+      "failed": 0,
+      "exit_code": 0,
+      "execution": "Actual Chrome WebGL2 WASM, CDP DOM input; host control transport selects tools, not physical Debug UI clicks. DPR2 and independent pixels."
+    },
+    "python": {
+      "tests": 18,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "runtime_boundaries": {
+      "contract_files": 102,
+      "exit_code": 0
+    }
+  },
+  "coverage": {
+    "rectangle_ellipse_triangle": "Native/actual Chrome real-ingress E2E and independent precise geometry",
+    "image_sticky": "Affine frame geometry unit cases only; full resource/child-text E2E NOT_RUN",
+    "group": "Existing scope/root reduction, external reparent Add regression; full provider coverage deferred",
+    "unsupported_region": "Section, standalone RichText, Connector, vector/dab/erased strokes and full Group providers: Partial preserves formal selection",
+    "multi_selection": "Read-only outlines, all-root Fit and lock-safe deletion; primary-only mutation APIs reject multi-selection"
+  },
+  "not_run": [
+    "physical mouse/pen/touch/IME",
+    "other platforms",
+    "full Image-resource/Sticky-child E2E",
+    "complete container providers",
+    "multi-object transforms/batch formatting/order/lock",
+    "new Group/Ungroup",
+    "Snap/Alignment",
+    "G5 performance/fault qualification",
+    "full302 runner"
+  ],
+  "invariants": {
+    "canonical_schema_semantic_implementation_sdk_locks_unchanged": true,
+    "six_supplied_markdown_byte_identical": true,
+    "global_aegis_registries_changed": false,
+    "main_merged": false,
+    "pushed": false,
+    "gate_dev_phys_release_claim": false
+  },
+  "review": "review-disposition.json"
+}

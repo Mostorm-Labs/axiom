@@ -1,0 +1,37 @@
++ git fetch --depth=1 origin 063de7e9578f82b369302001269680b4b1553359
+fatal: unable to access 'https://github.com/google/googletest.git/': OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443 
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\tools\bootstrap_deps.py", line 592, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\tools\bootstrap_deps.py", line 571, in main
+    bootstrap_core(lock, args.github_api_archives, args.raw_core_fallback)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\tools\bootstrap_deps.py", line 416, in bootstrap_core
+    clone_pinned(directory, dependency["url"], dependency["commit"])
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\tools\bootstrap_deps.py", line 51, in clone_pinned
+    run("git", "fetch", "--depth=1", "origin", revision, cwd=destination)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\tools\bootstrap_deps.py", line 34, in run
+    subprocess.run(args, cwd=cwd, check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Softwares\Anaconda\Lib\subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '('git', 'fetch', '--depth=1', 'origin', '063de7e9578f82b369302001269680b4b1553359')' returned non-zero exit status 128.
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\tools\setup_build_environment.py", line 230, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\tools\setup_build_environment.py", line 214, in main
+    facts = setup_environment(core=args.core, semantic=args.semantic or args.status or args.lock is not None,
+                              target=args.target, store_root=args.store, mirror=args.mirror,
+                              offline=args.offline, lock_path=args.lock)
+  File "C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\tools\setup_build_environment.py", line 132, in setup_environment
+    subprocess.run([sys.executable, "tools/bootstrap_deps.py", "--core"], cwd=root, check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Softwares\Anaconda\Lib\subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['D:\\Softwares\\Anaconda\\python.exe', 'tools/bootstrap_deps.py', '--core']' returned non-zero exit status 1.
