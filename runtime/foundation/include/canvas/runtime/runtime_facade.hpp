@@ -141,6 +141,14 @@ class RuntimeFacade {
     request.eraserId = eraserId;
     return submitProductControl(request);
   }
+  [[nodiscard]] ProductControlReceipt setSelectionAcquisitionMode(CanvasSelectionMode mode,
+      std::uint64_t requestId,std::uint64_t clientId=1) noexcept {
+    const auto targets=mountedCanvasTargets();
+    if(targets.empty()) return {requestId,ProductControlState::kRejected,0,std::nullopt};
+    CanvasControlRequest request{};request.clientId=clientId;request.requestId=requestId;request.target=targets.front();
+    request.payload.kind=CanvasControlPayloadKind::kSelectionAcquisitionMode;
+    request.payload.selectionAcquisitionMode=mode;return submitCanvasControl(request);
+  }
   [[nodiscard]] virtual ProductControlReceipt setSelectionMode(
       bool enabled, std::uint64_t requestId,
       std::uint64_t runtimeGeneration, std::uint64_t clientId = 1) noexcept {

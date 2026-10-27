@@ -8,10 +8,13 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <vector>
 
 namespace canvas::runtime {
 
 enum class CanvasToolKind : std::uint8_t { kInk, kSelect, kEraser, kPan, kText };
+enum class CanvasSelectionMode : std::uint8_t { kPoint, kRectangle, kFreeform };
+enum class SelectionQueryStatus : std::uint8_t { kIdle, kComplete, kPartial, kStale, kFailed, kInvalid, kCancelled };
 enum class CanvasCreationPreset : std::uint8_t {
   kRectangle,
   kEllipse,
@@ -89,6 +92,7 @@ enum class CanvasControlPayloadKind : std::uint8_t {
   kDeleteSelected,
   kUnlockSelected,
   kSection,
+  kSelectionAcquisitionMode,
 };
 
 enum class CanvasFitTarget : std::uint8_t { kContent, kSelection, kObject, kWorldRect };
@@ -113,6 +117,7 @@ struct CanvasControlPayload final {
   foundation::ObjectId objectId{};
   std::array<float, 4> worldRect{};
   SectionIntent section{};
+  CanvasSelectionMode selectionAcquisitionMode = CanvasSelectionMode::kPoint;
 };
 
 struct CanvasControlRequest final {
@@ -220,6 +225,12 @@ struct CanvasControlSnapshot final {
   std::uint8_t axisCloudSynced = 0;
   std::string unsupportedReason;
   std::optional<CanvasControlReceipt> lastReceipt;
+  CanvasSelectionMode selectionAcquisitionMode = CanvasSelectionMode::kPoint;
+  SelectionQueryStatus selectionQueryStatus = SelectionQueryStatus::kIdle;
+  std::uint64_t selectionRevision = 0;
+  bool regionSelectionActive = false;
+  std::uint32_t regionCandidateCount = 0;
+  std::vector<std::uint32_t> regionUnsupportedKinds;
 };
 
 }  // namespace canvas::runtime

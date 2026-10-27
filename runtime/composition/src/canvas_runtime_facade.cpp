@@ -33,6 +33,8 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
             CanvasControlError::kInvalidValue;
         return {error,"",result};
       }
+      case CanvasControlPayloadKind::kSelectionAcquisitionMode:
+        applied=runtime.setSelectionAcquisitionMode(p.selectionAcquisitionMode);break;
       case CanvasControlPayloadKind::kSelectTool:
         if (p.tool == CanvasToolKind::kSelect) applied = runtime.setSelectionMode(true);
         else if (p.tool == CanvasToolKind::kPan) applied = runtime.setPanTool(true);
@@ -140,6 +142,11 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     out.canUndo = runtime.canUndo(); out.canRedo = runtime.canRedo();
     out.semanticGeneration = runtime.semanticGeneration().value();
     out.selectedObjectCount = static_cast<std::uint32_t>(runtime.selectedObjectCount());
+    out.selectionAcquisitionMode=runtime.selectionAcquisitionMode();
+    out.selectionRevision=runtime.selection_.revision();
+    out.regionSelectionActive=runtime.regionSelectionActive();
+    out.regionCandidateCount=static_cast<std::uint32_t>(runtime.regionCandidates_.size());
+    out.selectionQueryStatus=runtime.regionQueryStatus_;out.regionUnsupportedKinds=runtime.regionUnsupportedKinds_;
     if (out.selectedObjectCount != 0U) out.selectedObject = runtime.selectedPrimaryObject();
     out.creationPreset = static_cast<CanvasCreationPreset>(runtime.creationPreset());
     out.creationActive = runtime.creationActive();
@@ -279,7 +286,7 @@ void CanvasRuntimeFacade::setTarget(CanvasTargetKey target) noexcept {
   std::scoped_lock lock(ingressMutex_);
   if (binding_ == nullptr) return;
   const auto previous = binding_->target();
-  if (previous != target && service_ != nullptr) service_->destroyTarget(previous);
+  if (previous != target) {runtime_.cancelRegionSelection();if (service_ != nullptr) service_->destroyTarget(previous);}
   binding_->setTarget(target);
 }
 const CanvasTargetKey& CanvasRuntimeFacade::target() const noexcept { return binding_->target(); }

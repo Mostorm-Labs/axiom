@@ -474,7 +474,7 @@ bool CanvasEditingRuntime::selection(const input::PointerSample& sample,
   // that commit result; keep the same boundary after routing through the
   // shared Runtime so a rejected no-op release cannot poison the input lane.
   if (!sample.predicted) {
-    (void)selectionPointer(sample.key, sample.phase, sample.x, sample.y);
+    (void)acquisitionPointer(sample);
   }
   return true;
 }
@@ -580,14 +580,14 @@ bool CanvasEditingRuntime::cancel(interaction::DispatchMode mode,
       return eraserCancel(session);
     case interaction::DispatchMode::kSelection:
       if (selectionMode_) {
-        (void)selectionPointer(sample.key, input::PointerPhase::kCancel,
-                                sample.x, sample.y);
+        auto cancelled=sample;cancelled.phase=input::PointerPhase::kCancel;
+        (void)acquisitionPointer(cancelled);
       }
       return true;
     case interaction::DispatchMode::kCreation:
       creations_.erase(sample.key);
       creationFences_.erase(sample.key);
-      if (creations_.empty() && !selectionTransformActive()) (void)clearTransientOverlay();
+      if (creations_.empty() && !selectionTransformActive() && !regionSelectionActive()) (void)clearTransientOverlay();
       canonicalPresentationDirty_ = true;
       return true;
     case interaction::DispatchMode::kPan:
@@ -745,8 +745,24 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   if (selectionMode_ || creationMode_ || creationActive() || panTool_) {
     for (const auto& sample : routedSamples) {
       if (!sample.key.valid()) continue;
+      if (selectionMode_ && (sample.capabilities.tool==input::PointerTool::kFinger ||
+          coordinator_->hasContact(sample.key))) {
+        const auto routing=coordinator_->route(sample);
+        for (const auto& key:routing.cancelPointers) {
+          auto cancelSample=sample;cancelSample.key=key;cancelSample.phase=input::PointerPhase::kCancel;
+          (void)dispatchRuntime_.cancel(cancelSample);
+        }
+        if (routing.becameViewport) resetTouchTextTap();
+        if (routing.endedViewport) viewportController_->endGesture();
+        if (routing.viewportClaimed) {
+          const auto contacts=coordinator_->viewportSamples();
+          if (contacts.size()>=2U) (void)viewportController_->updateGesture(contacts[0],contacts[1]);
+          canonicalPresentationDirty_=true;
+        }
+        if (!routing.routesToInk) continue;
+      }
       if (!dispatchRuntime_.submit(sample)) return false;
-      if (selectionMode_ && !textTool_ &&
+      if (selectionMode_ && selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint && !textTool_ &&
           (!interaction_->textSession() ||
            interaction_->textSession()->read().phase == runtime::TextPhase::kClosed))
         (void)observeTouchTextTap(sample);
@@ -1264,7 +1280,7 @@ void CanvasEditingRuntime::onSessionCancel(
     panPointers_.erase(sample.key);
     creations_.erase(sample.key);
     creationFences_.erase(sample.key);
-    if (creations_.empty() && !selectionTransformActive()) (void)clearTransientOverlay();
+    if (creations_.empty() && !selectionTransformActive() && !regionSelectionActive()) (void)clearTransientOverlay();
     canonicalPresentationDirty_ = true;
   }
 }
@@ -1274,6 +1290,7 @@ void CanvasEditingRuntime::cancelAllPointers() noexcept {
   canvas::qualification::clearGroup(fc08Qualification_.get());
 #endif
   cancelConnectorRouting();
+  cancelRegionSelection();acquisitionClickPointers_.clear();
   textPointerKeys_.clear();
   resetTouchTextTap();
   shapeExpandPointerKeys_.clear();
@@ -1426,6 +1443,7 @@ bool CanvasEditingRuntime::setSelectionMode(bool enabled) noexcept {
   }
   if (selectionMode_ != enabled) {
     dispatchRuntime_.cancelAll();
+    coordinator_->reset();viewportController_->endGesture();
     resetTouchTextTap();
   }
   selectionMode_ = enabled;
@@ -1434,7 +1452,8 @@ bool CanvasEditingRuntime::setSelectionMode(bool enabled) noexcept {
     creations_.clear();
     creationFences_.clear();
   }
-  if (!enabled) { cancelSelectionTransform(); selection_.cancel(); selectionView_.reset(); }
+  if (!enabled) { cancelSelectionTransform(); cancelRegionSelection(); acquisitionClickPointers_.clear(); selectionView_.reset(); }
+  if (enabled) panTool_=false;
   if (!enabled) connectorPointerKeys_.clear();
   canonicalPresentationDirty_ = true;
   return true;
@@ -1455,17 +1474,7 @@ bool CanvasEditingRuntime::selectAtViewPoint(float x, float y) noexcept {
     return true;
   }
   auto selectedId = tested.value().frontToBack.front();
-  // A Sticky's RichText child is a canonical implementation detail.  The
-  // user-facing selection belongs to the Sticky parent so its selection
-  // chrome and label affordances (including expand) use one identity.
-  if (const auto* hit = semanticObjects_.find(selectedId);
-      hit != nullptr && hit->kind == semantic::ObjectKind::kRichText &&
-      hit->placement.parent_id) {
-    if (const auto* parent = semanticObjects_.find(*hit->placement.parent_id);
-        parent != nullptr && parent->kind == semantic::ObjectKind::kSticky)
-      selectedId = parent->id;
-  }
-  selectedId=selection_.resolveHit(selectedId,semanticObjects_);
+  selectedId=resolveSelectionRoot(selectedId);
   if(selectedId.isZero())return false;
   const bool selected = selection_.click(selectedId);
   if (selected) {
@@ -1947,14 +1956,7 @@ bool CanvasEditingRuntime::toggleSelectionAtViewPoint(float x, float y) noexcept
       canvas::HitTestFilter{canvas::HitTestKindMask::kAll, true}, 1U});
   if (!tested || tested.value().frontToBack.empty()) return false;
   auto selectedId = tested.value().frontToBack.front();
-  if (const auto* hit = semanticObjects_.find(selectedId);
-      hit != nullptr && hit->kind == semantic::ObjectKind::kRichText &&
-      hit->placement.parent_id) {
-    if (const auto* parent = semanticObjects_.find(*hit->placement.parent_id);
-        parent != nullptr && parent->kind == semantic::ObjectKind::kSticky)
-      selectedId = parent->id;
-  }
-  selectedId=selection_.resolveHit(selectedId,semanticObjects_);
+  selectedId=resolveSelectionRoot(selectedId);
   if(selectedId.isZero()||!selection_.toggle(selectedId)) return false;
   snapGuides_.clear();
   canonicalPresentationDirty_ = true;
@@ -4146,7 +4148,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   // immediately; brush previews remain gated by platform-qualified feedback
   // through pendingCanonicalIdentities_.
   if (pendingCanonicalIdentities_.empty() && transientOverlayHandoffPending_ &&
-      !creationActive() && !selectionTransformActive()) {
+      !creationActive() && !selectionTransformActive() && !regionSelectionActive()) {
     (void)clearTransientOverlay();
   }
   // The deterministic local raster host has no separate platform feedback
@@ -4246,7 +4248,7 @@ bool CanvasEditingRuntime::receivePlatformPresented(
   // create a brush/ARC handoff identity. Retire their last transient frame
   // only after this canonical frame has been accepted, so the compositor
   // never exposes the old canonical position between pointer-up and redraw.
-  if (retire && !selectionTransformActive() && !creationActive()) {
+  if (retire && !selectionTransformActive() && !creationActive() && !regionSelectionActive()) {
     (void)clearTransientOverlay();
   }
   if (retire && transientOverlayHandoffPending_ && pendingCanonicalIdentities_.empty()) {
@@ -4263,7 +4265,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
   transientOverlayDirty_ = true;
   if (!surface_.available || frameId == 0U || previewProvider_ == nullptr ||
       runtimeSceneHost_ == nullptr || sceneCoordinator_ == nullptr ||
-      (!creationActive() && !selectionTransformActive() && selectionOverlay() == nullptr)) {
+      (!creationActive() && !selectionTransformActive() && !regionSelectionActive() && selectionOverlay() == nullptr)) {
     return false;
   }
   if (frameIdHighWater_ == std::numeric_limits<std::uint64_t>::max()) return false;
@@ -4492,7 +4494,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
 
 bool CanvasEditingRuntime::retryTransientOverlayFrame() noexcept {
   if (!transientOverlayDirty_) return true;
-  if (!creationActive() && !selectionTransformActive()) return clearTransientOverlay();
+  if (!creationActive() && !selectionTransformActive() && !regionSelectionActive()) return clearTransientOverlay();
   return presentTransientOverlayFrame(nextCanonicalFrameId());
 }
 
@@ -4512,7 +4514,7 @@ bool CanvasEditingRuntime::clearTransientOverlay() noexcept {
   // transparent clear is queued. Hide first so the stale frame cannot flash
   // during a shape move or eraser handoff.
   previewProvider_->setOverlayVisible(false);
-  if (!previewActive() && !selectionTransformActive() && !creationActive()) {
+  if (!previewActive() && !selectionTransformActive() && !creationActive() && !regionSelectionActive()) {
     selectionView_.reset();
   }
   const auto result = previewRenderer_.clearPreview(
