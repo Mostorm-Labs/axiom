@@ -130,6 +130,23 @@ class Scene final {
     friend class SceneBinding;
     friend class IncrementalRuntimeCoordinator;
 
+    struct PreparedIntent final {
+        SceneRevision basis;
+        semantic::SemanticGeneration basisGeneration;
+        SceneRecordStore::PreparedUpdate records;
+        std::unique_ptr<IPreparedRenderSceneUpdate> render;
+        std::unique_ptr<IPreparedSpatialUpdate> spatial;
+        PreparedDamage damage;
+        std::vector<SceneRecord> publishedRecords;
+        WorldRect bounds;
+        SceneInvalidationOutput invalidation;
+        semantic::SemanticGeneration generation;
+    };
+    foundation::Result<std::unique_ptr<PreparedIntent>> prepareIntent(
+        CompiledSceneSnapshot snapshot, semantic::SemanticGeneration generation);
+    [[nodiscard]] bool intentBasisMatches(const PreparedIntent&) const noexcept;
+    void commitIntent(std::unique_ptr<PreparedIntent>) noexcept;
+
     void setPublicationGate(ScenePublicationGate* gate) noexcept { _publicationGate = gate; }
     bool stagePublicationSnapshot(std::span<const SceneRecord> records);
     void publishStagedSnapshot() noexcept;

@@ -156,6 +156,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   virtual ~CanvasEditingRuntime() = default;
   void close() noexcept;
   [[nodiscard]] bool closed() const noexcept { return closed_; }
+  [[nodiscard]] bool beginExplicitIntent() noexcept;
+  [[nodiscard]] bool prepareExplicitIntent(std::span<const semantic::Operation> operations);
+  [[nodiscard]] bool commitExplicitIntent() noexcept;
+  void abortExplicitIntent() noexcept;
   [[nodiscard]] bool registerInputSource(input::InputSourceId source,
                                          std::string_view platform) noexcept;
   [[nodiscard]] bool unregisterInputSource(input::InputSourceId source,
@@ -606,6 +610,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] std::uint64_t localOperationOrdinal() const noexcept;
   [[nodiscard]] bool historySceneReady() const noexcept;
   [[nodiscard]] bool canonicalWriteAdmission() const noexcept;
+  [[nodiscard]] bool prepareExplicitIntentInternal(std::span<const semantic::Operation>, bool);
+  [[nodiscard]] bool submitHistoryIntent(std::span<const semantic::Operation>,
+      std::span<const HistoryExpectation>, EditorHistory::IntentCommit, void*);
   bool textReady() const noexcept override;
   std::vector<std::uint32_t> textGraphemes(const std::u16string&) const override;
   runtime::TextGeometrySnapshot textGeometry(const runtime::CanvasTargetKey&);
@@ -787,6 +794,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<semantic::ObjectRecord> imageCropPresentation_;
   std::function<void(const input::PointerSample&)> imageCropPointer_;
   interaction::EditorHistory history_;
+  std::unique_ptr<semantic::PreparedOperationIntent> explicitIntent_;
+  std::optional<interaction::EditorHistory::PreparedEntry> explicitIntentHistory_;
+  bool explicitIntentActive_ = false;
   render::SkiaRenderer skiaRenderer_;
   render::SkiaRenderer previewRenderer_;
   mutable std::mutex previewRenderMutex_;

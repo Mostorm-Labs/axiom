@@ -7,11 +7,14 @@
 #include "canvas/semantic/validator.hpp"
 
 #include "atomic_apply.hpp"
+#include "object_store_mutator.hpp"
 #include "canvas/semantic/staged_object_view.hpp"
 #include "change_set_builder.hpp"
 
 #include <exception>
 #include <new>
+#include <limits>
+#include <set>
 #include <utility>
 
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
@@ -45,6 +48,102 @@
 
 
 namespace canvas::semantic {
+class PreparedOperationIntent::State final {
+  public:
+    State(IndexedObjectStore& store, AppliedOperationLedger& ledger)
+        : staged(store), objects(store), applied(ledger) {}
+    StagedObjectView staged;
+    IndexedObjectStore& objects;
+    AppliedOperationLedger& applied;
+    SemanticGeneration basis;
+    CommitOrdinal ordinal;
+    RuntimeEpoch epoch;
+    std::vector<PreparedApplyPlan> plans;
+    std::vector<std::unique_ptr<internal::PreparedIndexedContainerApply>> storage;
+    std::vector<std::map<OperationId, AppliedOperationEntry>::node_type> ledger;
+    std::vector<CanonicalCommitRecord> records;
+    bool consumed = false;
+};
+
+PreparedOperationIntent::PreparedOperationIntent(std::unique_ptr<State> state)
+    : state_(std::move(state)) {}
+PreparedOperationIntent::~PreparedOperationIntent() = default;
+const StagedObjectView& PreparedOperationIntent::postState() const noexcept { return state_->staged; }
+const std::vector<PreparedApplyPlan>& PreparedOperationIntent::plans() const noexcept { return state_->plans; }
+const std::vector<CanonicalCommitRecord>& PreparedOperationIntent::records() const noexcept { return state_->records; }
+CanonicalCommitRecord PreparedOperationIntent::takeLastRecord() noexcept {
+    return std::move(state_->records.back());
+}
+
+std::unique_ptr<PreparedOperationIntent> OperationEngine::prepareIntent(
+    std::span<const Operation> operations, ApplySource source, IndexedObjectStore& objects,
+    ResourceManifest& manifest, AppliedOperationLedger& applied,
+    const SemanticGenerationState& generation, const CanonicalCommitClock& clock) const try {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    // The new path must never bypass the existing qualification checkpoints.
+    // Its hook-aware implementation is not yet available.
+    (void)operations; (void)source; (void)objects; (void)manifest; (void)applied;
+    (void)generation; (void)clock;
+    return {};
+#else
+    if (operations.empty() || clock.runtimeEpoch().value() == 0 ||
+        operations.size() > std::numeric_limits<std::uint64_t>::max() - generation.current().value() ||
+        operations.size() > std::numeric_limits<std::uint64_t>::max() - clock.lastCommittedOrdinal().value()) return {};
+    auto state = std::make_unique<PreparedOperationIntent::State>(objects, applied);
+    state->basis = generation.current();
+    state->ordinal = clock.lastCommittedOrdinal();
+    state->epoch = clock.runtimeEpoch();
+    state->plans.reserve(operations.size());
+    state->storage.reserve(operations.size());
+    state->ledger.reserve(operations.size());
+    state->records.reserve(operations.size());
+    std::set<OperationId> ids;
+    for (const auto& operation : operations) {
+        // The currently proved reservation path covers these existing typed
+        // mutations; other kinds fail closed instead of committing a prefix.
+        if ((operation.kind() != OperationKind::kSetTransforms &&
+             operation.kind() != OperationKind::kPatchProperties) ||
+            !ids.insert(operation.id).second) return {};
+        auto prepared = prepare(operation, {state->staged, applied, &manifest});
+        if (prepared.disposition != PrepareDisposition::kPrepared || !prepared.plan ||
+            prepared.plan->manifest || !prepared.plan->creates.empty() || !prepared.plan->deletes.empty()) return {};
+        auto storage = internal::ObjectStoreMutator::prepareContainerPlan(objects, *prepared.plan, true);
+        auto changes = internal::prepareChangeSet(*prepared.plan);
+        auto reservation = applied.reserveContainerEntry(prepared.plan->operation, true);
+        if (!storage || !changes || !reservation) return {};
+        for (const auto& item : prepared.plan->replacements)
+            if (!state->staged.stageReplace(item)) return {};
+        const auto i = state->plans.size();
+        const auto before = SemanticGeneration(state->basis.value() + i);
+        const auto after = SemanticGeneration(before.value() + 1U);
+        const auto ordinal = CommitOrdinal(state->ordinal.value() + i + 1U);
+        state->records.push_back(CanonicalCommitRecord{
+            prepared.plan->operation.id, source, before, after,
+            CanonicalCommitStamp{state->epoch, ordinal},
+            internal::finalizeChangeSet(std::move(*changes), before, after)});
+        state->plans.push_back(std::move(*prepared.plan));
+        state->storage.push_back(std::move(storage));
+        state->ledger.push_back(std::move(*reservation));
+    }
+    return std::unique_ptr<PreparedOperationIntent>(new PreparedOperationIntent(std::move(state)));
+#endif
+} catch (const std::bad_alloc&) { return {}; }
+
+bool OperationEngine::commitIntent(PreparedOperationIntent& intent, SemanticGenerationState& generation,
+                                   CanonicalCommitClock& clock) const noexcept {
+    auto& s = *intent.state_;
+    if (s.consumed || generation.current() != s.basis || clock.runtimeEpoch() != s.epoch ||
+        clock.lastCommittedOrdinal() != s.ordinal) return false;
+    s.consumed = true;
+    for (std::size_t i = 0; i < s.plans.size(); ++i) {
+        s.storage[i]->publish();
+        if (!s.applied.recordReservedOrApplied(s.plans[i].operation, std::move(s.ledger[i])))
+            std::terminate();
+        generation.commitSuccessor(s.records[i].after_generation);
+        clock.commitSuccessor(s.records[i].commit_stamp.ordinal);
+    }
+    return true;
+}
 namespace {
 bool admitPlan(OperationAdmission* admission, const PreparedApplyPlan& plan,
                const StatefulValidationContext& context,

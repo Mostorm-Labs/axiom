@@ -350,7 +350,7 @@ void Scene::publishStagedSnapshot() noexcept {
     _stablePublishedRecords = std::move(_publishedRecords);
     _stablePublishedBounds = _publishedBounds;
     _stableInvalidationGeneration = _invalidationGeneration;
-    _stablePublishedInvalidation = _publishedInvalidation;
+    _stablePublishedInvalidation = std::move(_publishedInvalidation);
     _publishedRecords.swap(_stagedPublishedRecords);
     _publishedSnapshotValid = true;
     _publishedBounds = _pendingBounds;
@@ -359,6 +359,75 @@ void Scene::publishStagedSnapshot() noexcept {
     _semanticGeneration = _pendingSemanticGeneration;
     _publishedInvalidation = std::move(_pendingInvalidation);
     _pendingBoundsStaged = false;
+}
+
+foundation::Result<std::unique_ptr<Scene::PreparedIntent>> Scene::prepareIntent(
+    CompiledSceneSnapshot snapshot, semantic::SemanticGeneration generation) {
+    using Result = foundation::Result<std::unique_ptr<PreparedIntent>>;
+    if (snapshot.sourceRevision.isZero() || snapshot.sourceRevision <= _revision ||
+        generation <= _semanticGeneration || snapshot.sourceRevision.value() != generation.value()) {
+        return Result::failure(makeError(foundation::ErrorCode::kInvalidRevision,
+                                         "Invalid prepared Scene generation"));
+    }
+    try {
+        auto records = _records.prepareReplace(snapshot.records);
+        if (!records) return Result::failure(records.error());
+        auto render = _renderScene->prepareReplace(records.value().records(), snapshot.sourceRevision);
+        if (!render) return Result::failure(render.error());
+        if (!render.value()) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Empty prepared render update"));
+        auto spatialRecords = makeSpatialRecords(records.value().records());
+        auto spatial = _spatialIndex->prepareReplace(spatialRecords, snapshot.sourceRevision);
+        if (!spatial) return Result::failure(spatial.error());
+        if (!spatial.value()) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Empty prepared spatial update"));
+        const auto bounds = records.value().contentBounds();
+        const auto previousBounds = _records.contentBounds();
+        auto damage = _damageTracker.prepareReplace(_revision, snapshot.sourceRevision,
+                                                     previousBounds, bounds);
+        if (!damage) return Result::failure(damage.error());
+        std::vector<SceneRecord> published(records.value().records().begin(),
+                                           records.value().records().end());
+        SceneInvalidationOutput invalidation{snapshot.sourceRevision,
+            {DamageRect{foundation::unionRects(previousBounds, bounds), DamageReason::kFullRebuild}},
+            true};
+        return Result::success(std::make_unique<PreparedIntent>(PreparedIntent{
+            _revision, _semanticGeneration, std::move(records.value()), std::move(render.value()),
+            std::move(spatial.value()), std::move(damage.value()), std::move(published), bounds,
+            std::move(invalidation), generation}));
+    } catch (const std::bad_alloc&) {
+        return Result::failure(makeError(foundation::ErrorCode::kOutOfMemory,
+                                          "Unable to prepare Scene intent"));
+    }
+}
+
+bool Scene::intentBasisMatches(const PreparedIntent& prepared) const noexcept {
+    return _revision == prepared.basis && _semanticGeneration == prepared.basisGeneration;
+}
+
+void Scene::commitIntent(std::unique_ptr<PreparedIntent> prepared) noexcept {
+    _records.commit(std::move(prepared->records));
+    _renderScene->commit(std::move(prepared->render));
+    _spatialIndex->commit(std::move(prepared->spatial));
+    _damageTracker.commit(std::move(prepared->damage));
+    _stablePublishedRecords = std::move(_publishedRecords);
+    _stablePublishedBounds = _publishedBounds;
+    _stableInvalidationGeneration = _invalidationGeneration;
+    _stablePublishedInvalidation = std::move(_publishedInvalidation);
+    _publishedRecords = std::move(prepared->publishedRecords);
+    _publishedSnapshotValid = true;
+    _revision = SceneRevision(prepared->generation.value());
+    _semanticGeneration = prepared->generation;
+    _publishedSemanticGeneration = prepared->generation;
+    _publishedBounds = prepared->bounds;
+    _invalidationGeneration = _revision;
+    _publishedInvalidation = std::move(prepared->invalidation);
+    ++_commitDiagnostics.transactionCount;
+    _commitDiagnostics.recordStoreStage = 1;
+    _commitDiagnostics.renderSceneStage = 2;
+    _commitDiagnostics.spatialIndexStage = 3;
+    _commitDiagnostics.damageStage = 4;
+    _commitDiagnostics.revisionStage = 5;
 }
 
 foundation::Result<SceneApplyReceipt> Scene::replace(CompiledSceneSnapshot snapshot) {

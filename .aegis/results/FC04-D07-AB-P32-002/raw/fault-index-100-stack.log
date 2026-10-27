@@ -1,0 +1,196 @@
+Opened log file '.aegis/results/FC04-D07-AB-P32-002/raw/fault-index-100-stack.log'
+
+************* Preparing the environment for Debugger Extensions Gallery repositories **************
+   ExtensionRepository : Implicit
+   UseExperimentalFeatureForNugetShare : true
+   AllowNugetExeUpdate : true
+   NonInteractiveNuget : true
+   AllowNugetMSCredentialProviderInstall : true
+   AllowParallelInitializationOfLocalRepositories : true
+
+   EnableRedirectToV8JsProvider : false
+
+   -- Configuring repositories
+      ----> Repository : LocalInstalled, Enabled: true
+      ----> Repository : UserExtensions, Enabled: true
+
+>>>>>>>>>>>>> Preparing the environment for Debugger Extensions Gallery repositories completed, duration 0.000 seconds
+
+************* Waiting for Debugger Extensions Gallery to Initialize **************
+
+>>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.016 seconds
+   ----> Repository : UserExtensions, Enabled: true, Packages count: 0
+   ----> Repository : LocalInstalled, Enabled: true, Packages count: 29
+
+Microsoft (R) Windows Debugger Version 10.0.26100.3323 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+CommandLine: out/fc04-d07-ab-p32/build/axiom_fc04_d07_postcommit_fault.exe trace-prepare-sweep
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\atlmfc.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\ObjectiveC.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\concurrency.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\cpp_rest.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\stl.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Data.Json.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Geolocation.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Sensors.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Media.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\windows.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\winrt.natvis'
+
+************* Path validation summary **************
+Response                         Time (ms)     Location
+Deferred                                       srv*
+Symbol search path is: srv*
+Executable search path is: 
+ModLoad: 00007ff7`9dfe0000 00007ff7`9e9bb000   axiom_fc04_d07_postcommit_fault.exe
+ModLoad: 00007ffb`1e970000 00007ffb`1eb68000   ntdll.dll
+ModLoad: 00007ffb`1cc30000 00007ffb`1ccf2000   C:\WINDOWS\System32\KERNEL32.DLL
+ModLoad: 00007ffb`1c1a0000 00007ffb`1c49f000   C:\WINDOWS\System32\KERNELBASE.dll
+ModLoad: 00007ffb`19b90000 00007ffb`19d74000   C:\WINDOWS\SYSTEM32\dbghelp.dll
+ModLoad: 00007ffb`1c010000 00007ffb`1c110000   C:\WINDOWS\System32\ucrtbase.dll
+(726c.72a8): Break instruction exception - code 80000003 (first chance)
+ntdll!LdrpDoDebuggerBreak+0x30:
+00007ffb`1ea407a0 cc              int     3
+0:000> g;kv;q
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): C++ EH exception - code e06d7363 (first chance)
+(726c.72a8): Break instruction exception - code 80000003 (first chance)
+*** WARNING: Unable to verify checksum for axiom_fc04_d07_postcommit_fault.exe
+Child-SP          RetAddr               : Args to Child                                                           : Call Site
+000000d3`9578c1b0 00007ff7`9dfe5627     : 000002ac`05000003 000002ac`8b910150 00000000`00000038 00000001`0000007f : axiom_fc04_d07_postcommit_fault!operator new+0x95
+000000d3`9578c200 00007ff7`9e068f91     : 000002ac`8b910150 00000000`00000059 00000000`0000015c 000002ac`8b910150 : axiom_fc04_d07_postcommit_fault!google::protobuf::internal::ArenaStringPtr::Mutable+0x37
+000000d3`9578c230 00007ff7`9dfe5b29     : 000002ac`8b94d920 000002ac`8b94d950 000002ac`8b94d770 000002ac`8b910756 : axiom_fc04_d07_postcommit_fault!google::protobuf::internal::TcParser::FastBS1+0x121
+000000d3`9578c2c0 00007ff7`9dfe6717     : 00000000`00000001 000002ac`8b910000 00000000`00000005 00007ffb`1e99b44d : axiom_fc04_d07_postcommit_fault!google::protobuf::internal::MergeFromImpl<0>+0x169
+000000d3`9578c3b0 00007ff7`9e0a1d84     : 000002ac`8b910000 00007ffb`1ea6a4d6 000002ac`8b910000 00000000`00000000 : axiom_fc04_d07_postcommit_fault!google::protobuf::MessageLite::ParseFromArray+0x57
+000000d3`9578c410 00007ff7`9dfebb11     : 00000000`00000000 00000000`00000000 000002ac`8b910000 00000000`50000163 : axiom_fc04_d07_postcommit_fault!google::protobuf::EncodedDescriptorDatabase::Add+0x44
+000000d3`9578c560 00007ff7`9e052af6     : 00000000`00000000 00000000`00000000 00000000`00000290 00007ff7`9e9457b8 : axiom_fc04_d07_postcommit_fault!google::protobuf::DescriptorPool::InternalAddGeneratedFile+0x91
+000000d3`9578c5c0 00007ff7`9e052cdb     : 00000000`00000000 00000000`a20400a6 000002ac`8b94b6c0 000002ac`06040002 : axiom_fc04_d07_postcommit_fault!google::protobuf::internal::AddDescriptors+0x66
+000000d3`9578c620 00007ff7`9e052c49     : 00000004`00000080 00007ffb`1e996d0f 000002ac`8b910000 00000000`50000063 : axiom_fc04_d07_postcommit_fault!google::protobuf::internal::AssignDescriptorsOnceInnerCall+0xdb
+000000d3`9578c6c0 00007ff7`9e03f14f     : 00000000`00000003 00007ffb`1e99b44d 000002ac`8b910000 00000000`40000062 : axiom_fc04_d07_postcommit_fault!google::protobuf::internal::AssignDescriptorsOnceInnerCall+0x49
+000000d3`9578c710 00007ff7`9e03dff0     : 00000000`40000060 00000000`00000000 00000000`00000050 00000000`00000048 : axiom_fc04_d07_postcommit_fault!absl::lts_20250512::base_internal::CallOnceImpl<`google::protobuf::Reflection::GetTcParseTable'::`1'::<lambda_1> >+0x22f
+000000d3`9578c750 00007ff7`9dfeb9fd     : 00000000`00000048 00000000`00000050 00000000`00000000 00007ff7`9e018a2c : axiom_fc04_d07_postcommit_fault!google::protobuf::Message::GetMetadataImpl+0x90
+000000d3`9578c7a0 00007ff7`9e052c3d     : 00007ff7`9e80c438 000000d3`9578c9c0 000000d3`9578e0e0 000002ac`8b949bb0 : axiom_fc04_d07_postcommit_fault!google::protobuf::DescriptorPool::generated_pool+0x4d
+000000d3`9578c7f0 00007ff7`9e03f14f     : 000000d3`9578e0e0 000002ac`8b940000 00007ff7`9e817a48 00007ff7`9e10f57c : axiom_fc04_d07_postcommit_fault!google::protobuf::internal::AssignDescriptorsOnceInnerCall+0x3d
+000000d3`9578c840 00007ff7`9e03df48     : 000002ac`8b94d570 000002ac`8b94d828 000002ac`8b94d5b0 00007ff7`9e5d2fd4 : axiom_fc04_d07_postcommit_fault!absl::lts_20250512::base_internal::CallOnceImpl<`google::protobuf::Reflection::GetTcParseTable'::`1'::<lambda_1> >+0x22f
+000000d3`9578c880 00007ff7`9e554608     : 000002ac`8b94d570 000002ac`8b94d8d0 000002ac`8b94d828 00007ff7`9e570fd5 : axiom_fc04_d07_postcommit_fault!google::protobuf::Message::GetMetadata+0x88
+000000d3`9578c8d0 00007ff7`9e55543f     : 000000d3`9578ca40 000002ac`8b9320e0 000000d3`9578cae0 000000d3`9578dde0 : axiom_fc04_d07_postcommit_fault!google::protobuf::Message::GetDescriptor+0x6a8
+000000d3`9578c9e0 00007ff7`9e1b88eb     : 000002ac`8b9320e0 000002ac`8b9320e0 000000d3`9578dde0 000002ac`8b949bd8 : axiom_fc04_d07_postcommit_fault!canvas::semantic::SemanticCodec::measureProtobufOperation+0x14f
+000000d3`9578ccf0 00007ff7`9e16ca0a     : 000000d3`9578de20 000000d3`9578deb0 00000000`00000000 000002ac`8b947850 : axiom_fc04_d07_postcommit_fault!canvas::interaction::prepareUndoableCommand+0xd3b
+000000d3`9578dce0 00007ff7`9e16c73e     : 00007ff7`00000000 00007ff7`9e15cba7 000000d3`9578ea01 000002ac`8b932110 : axiom_fc04_d07_postcommit_fault!canvas::interaction::CanvasEditingRuntime::prepareExplicitIntentInternal+0x2aa
+000000d3`9578ea50 00007ff7`9e11316a     : 000002ac`8b9376c0 00007ff7`9e948020 00000000`00000064 000000d3`9578eaf0 : axiom_fc04_d07_postcommit_fault!canvas::interaction::CanvasEditingRuntime::prepareExplicitIntent+0x1e
+000000d3`9578ea90 00007ff7`9e5ae80f     : 00007ff7`9e82adc0 00007ff7`9e5ae889 00000000`00000000 00000000`00000000 : axiom_fc04_d07_postcommit_fault!main+0xf4a
+(Inline Function) --------`--------     : --------`-------- --------`-------- --------`-------- --------`-------- : axiom_fc04_d07_postcommit_fault!invoke_main+0x22 (Inline Function @ 00007ff7`9e5ae80f)
+000000d3`9578fe60 00007ffb`1cc47374     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : axiom_fc04_d07_postcommit_fault!__scrt_common_main_seh+0x10f
+000000d3`9578fea0 00007ffb`1e9bcc91     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : KERNEL32!BaseThreadInitThunk+0x14
+000000d3`9578fed0 00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!RtlUserThreadStart+0x21
+quit:
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\atlmfc.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\ObjectiveC.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\concurrency.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\cpp_rest.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\stl.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Data.Json.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Geolocation.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Sensors.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Media.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\windows.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\winrt.natvis'

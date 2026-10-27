@@ -143,15 +143,31 @@ std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareValidatedRecor
 #endif
         entries_.reserve(cursor_+1);
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
-        PreparedEntry fc08Prepared{forward,inverse,std::move(before),std::move(after),admitted};
+        PreparedEntry fc08Prepared{forward,inverse,std::move(before),std::move(after),admitted,{}};
         if (canvas::qualification::historyCheckpoint(fc08Qualification_, this,
             canvas::qualification::Point::kHistReady, forward, entries_.size(), cursor_)) return std::nullopt;
         return fc08Prepared;
 #else
-        return PreparedEntry{forward,inverse,std::move(before),std::move(after),admitted};
+        return PreparedEntry{forward,inverse,std::move(before),std::move(after),admitted,{}};
 #endif
     } catch(const std::bad_alloc&) { return std::nullopt; }
 }
+std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareIntentRecord(
+    std::vector<semantic::Operation> forwards, std::vector<semantic::Operation> inverses,
+    std::vector<HistoryExpectation> before, std::vector<HistoryExpectation> after) try {
+    if (forwards.empty() || inverses.empty()) return std::nullopt;
+    for (const auto& op : forwards)
+        if (!supportsUndoableCommand(op.kind()) || op.id.isZero() ||
+            op.document_id != forwards.front().document_id) return std::nullopt;
+    for (const auto& op : inverses)
+        if (!supportsUndoableCommand(op.kind()) || op.id.isZero() ||
+            op.document_id != forwards.front().document_id) return std::nullopt;
+    entries_.reserve(cursor_ + 1U);
+    auto first = forwards.front();
+    return PreparedEntry{std::move(first), std::move(inverses), std::move(before),
+                         std::move(after), true, std::move(forwards)};
+} catch (const std::bad_alloc&) { return std::nullopt; }
+
 void EditorHistory::commitPrepared(PreparedEntry&& entry) noexcept {
     static_assert(std::is_nothrow_move_constructible_v<PreparedEntry>);
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
@@ -206,6 +222,9 @@ bool EditorHistory::identityKnown(const semantic::OperationId& id) const noexcep
     }
     for (const auto& entry : entries_) {
         if (entry.forward.id == id) return true;
+        for (const auto& forward : entry.intentForwards) {
+            if (forward.id == id) return true;
+        }
         for (const auto& inverse : entry.inverse) {
             if (inverse.id == id) return true;
         }
@@ -237,12 +256,44 @@ bool EditorHistory::submitFresh(std::span<const semantic::Operation> operations,
     return true;
 } catch (const std::bad_alloc&) { return false; }
 
+bool EditorHistory::submitFreshIntent(std::span<const semantic::Operation> operations,
+                                      std::span<const HistoryExpectation> expectations,
+                                      bool redo) try {
+    if (!intentSubmit_ || operations.empty()) return false;
+    std::vector<semantic::Operation> fresh(operations.begin(), operations.end());
+    std::vector<semantic::OperationId> allocated;
+    allocated.reserve(fresh.size());
+    for (auto& operation : fresh) {
+        const auto id = submit_.allocateOperationId();
+        if (id.isZero() || identityKnown(id) ||
+            std::find(allocated.begin(), allocated.end(), id) != allocated.end()) return false;
+        operation.id = id;
+        allocated.push_back(id);
+    }
+    emittedOperationIds_.reserve(emittedOperationIds_.size() + allocated.size());
+    struct Commit final {
+        EditorHistory* history;
+        const std::vector<semantic::OperationId>* ids;
+        bool redo;
+        static void apply(void* context) noexcept {
+            auto& self = *static_cast<Commit*>(context);
+            self.history->emittedOperationIds_.insert(self.history->emittedOperationIds_.end(),
+                                                       self.ids->begin(), self.ids->end());
+            if (self.redo) ++self.history->cursor_; else --self.history->cursor_;
+        }
+    } commit{this, &allocated, redo};
+    return intentSubmit_(intentContext_, fresh, expectations, &Commit::apply, &commit);
+} catch (const std::bad_alloc&) { return false; }
+
 bool EditorHistory::undo() {
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
     if (canvas::qualification::observing(fc08Qualification_)) return false;
     canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
 #endif
-    if (!canUndo() || !submitFresh(entries_[cursor_ - 1].inverse, entries_[cursor_ - 1].after, entries_[cursor_ - 1].admissionRequired)) return false;
+    if (!canUndo()) return false;
+    if (!entries_[cursor_ - 1].intentForwards.empty())
+        return submitFreshIntent(entries_[cursor_ - 1].inverse, entries_[cursor_ - 1].after, false);
+    if (!submitFresh(entries_[cursor_ - 1].inverse, entries_[cursor_ - 1].after, entries_[cursor_ - 1].admissionRequired)) return false;
     --cursor_;
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
     canvas::qualification::historyTransition(fc08Qualification_, this,
@@ -258,6 +309,8 @@ bool EditorHistory::redo() try {
     canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
 #endif
     if (!canRedo()) return false;
+    if (!entries_[cursor_].intentForwards.empty())
+        return submitFreshIntent(entries_[cursor_].intentForwards, entries_[cursor_].before, true);
     auto forward = entries_[cursor_].forward;
     if (const auto* insert=std::get_if<semantic::InsertObjectsOp>(&forward.payload); insert &&
         std::all_of(insert->objects.begin(),insert->objects.end(),[](const auto& object){return object.kind==semantic::ObjectKind::kRichText || object.kind==semantic::ObjectKind::kImage;}))

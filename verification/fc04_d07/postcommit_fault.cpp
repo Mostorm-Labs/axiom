@@ -6,6 +6,11 @@
 #include <cstdlib>
 #include <exception>
 #include <new>
+#include <array>
+#include <string_view>
+#if defined(_WIN32)
+#include <intrin.h>
+#endif
 
 namespace canvas::ink_playground {
 class InkPlaygroundHistoryTestAccess {
@@ -23,6 +28,11 @@ canvas::interaction::CanvasEditingRuntime* subject = nullptr;
 std::uint64_t before = 0;
 bool armed = false;
 bool injected = false;
+bool sweepArmed = false;
+bool sweepInjected = false;
+std::size_t sweepCountdown = 0;
+std::size_t sweepIndex = 0;
+bool sweepTrace = false;
 void observe(const char* label) noexcept {
     const auto* object =
         subject->qualificationObjectRecord(canvas::foundation::ObjectId::fromUint64(1));
@@ -41,6 +51,17 @@ void observe(const char* label) noexcept {
 }
 } // namespace
 void* operator new(std::size_t size) {
+    if (sweepArmed) {
+        if (sweepCountdown == 0) {
+#if defined(_WIN32)
+            if (sweepTrace && sweepIndex == 100) __debugbreak();
+#endif
+            sweepArmed = false;
+            sweepInjected = true;
+            throw std::bad_alloc();
+        }
+        --sweepCountdown;
+    }
     if (armed && subject && subject->semanticGeneration().value() > before) {
         armed = false;
         injected = true;
@@ -57,7 +78,7 @@ void operator delete(void* p) noexcept {
 void operator delete(void* p, std::size_t) noexcept {
     std::free(p);
 }
-int main(int argc, char**) {
+int main(int argc, char** argv) {
     using namespace canvas;
     std::set_terminate([] {
         if (subject)
@@ -89,6 +110,57 @@ int main(int argc, char**) {
                                 1,
                                 1,
                                 semantic::SetTransformsOp{{{id(1), {1, 0, 0, 1, 200, 30}}}}};
+    if (argc > 1 && std::string_view(argv[1]) == "explicit-intent-noalloc") {
+        semantic::Operation color{semantic::OperationId{id(502)}, semantic::DocumentId{id(1)},
+            1, 1, semantic::PatchPropertiesOp{{{id(1), 3,
+                semantic::PropertyPatchAction::kSet, semantic::PropertyValue{0.5F}}}}};
+        const std::array operations{command, color};
+        if (!subject->beginExplicitIntent() || !subject->prepareExplicitIntent(operations)) return 4;
+        armed = true;
+        const bool accepted = subject->commitExplicitIntent();
+        armed = false;
+        observe("INTENT_RETURNED");
+        const bool safe = accepted && !injected &&
+            subject->semanticGeneration().value() == before + 2U &&
+            subject->qualificationSceneGeneration() == before + 2U &&
+            ink_playground::InkPlaygroundHistoryTestAccess::history(*subject).size() == 1U;
+        subject = nullptr;
+        return safe ? 0 : 1;
+    }
+    if (argc > 1 && (std::string_view(argv[1]) == "explicit-intent-prepare-sweep" ||
+                     std::string_view(argv[1]) == "trace-prepare-sweep")) {
+        sweepTrace = std::string_view(argv[1]) == "trace-prepare-sweep";
+        semantic::Operation color{semantic::OperationId{id(502)}, semantic::DocumentId{id(1)},
+            1, 1, semantic::PatchPropertiesOp{{{id(1), 3,
+                semantic::PropertyPatchAction::kSet, semantic::PropertyValue{0.5F}}}}};
+        const std::array operations{command, color};
+        const auto originalOrdinal = subject->canonicalCommitOrdinal();
+        for (std::size_t n = 0; n < 4096; ++n) {
+            std::fprintf(stderr, "PREPARE_SWEEP_INDEX=%zu\n", n);
+            std::fflush(stderr);
+            if (!subject->beginExplicitIntent()) return 5;
+            sweepCountdown = n;
+            sweepIndex = n;
+            sweepInjected = false;
+            sweepArmed = true;
+            const bool prepared = subject->prepareExplicitIntent(operations);
+            sweepArmed = false;
+            subject->abortExplicitIntent();
+            const auto* actual = subject->qualificationObjectRecord(id(1));
+            if (subject->semanticGeneration().value() != before ||
+                subject->canonicalCommitOrdinal() != originalOrdinal ||
+                subject->qualificationSceneGeneration() != before ||
+                ink_playground::InkPlaygroundHistoryTestAccess::history(*subject).size() != 0U ||
+                !actual || actual->transform.tx != object.transform.tx) return 6;
+            if (!sweepInjected) {
+                std::fprintf(stderr, "PREPARE_SWEEP allocations=%zu prepared=%d\n", n, prepared);
+                subject = nullptr;
+                return prepared ? 0 : 7;
+            }
+        }
+        subject = nullptr;
+        return 8;
+    }
     if (argc > 1) {
         auto a = object, b = object;
         a.id = id(2);

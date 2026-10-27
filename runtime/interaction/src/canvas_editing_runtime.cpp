@@ -389,6 +389,12 @@ CanvasEditingRuntime::CanvasEditingRuntime(render::ViewId viewId)
       history_(*this), ownerThread_(std::this_thread::get_id()) {
   appBinding_->setSessionCancelSink(this);
   sceneCoordinator_->setDeferredConnectorRouting(true);
+  history_.setIntentSubmitter(this, [](void* context, std::span<const semantic::Operation> operations,
+      std::span<const HistoryExpectation> expectations, EditorHistory::IntentCommit commit,
+      void* commitContext) {
+    return static_cast<CanvasEditingRuntime*>(context)->submitHistoryIntent(
+        operations, expectations, commit, commitContext);
+  });
 }
 
 void CanvasEditingRuntime::bindResourceServices(
@@ -433,6 +439,7 @@ void CanvasEditingRuntime::close() noexcept {
   canvas::qualification::deactivateGroup(fc08Qualification_.get());
 #endif
   if (closed_) return;
+  abortExplicitIntent();
   cancelConnectorRouting();
   if (surfaceTransitionActive_) {
     surfaceAbortRequested_ = true;
@@ -1524,6 +1531,140 @@ semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
 bool CanvasEditingRuntime::canonicalWriteAdmission() const noexcept {
   return !closed_ && !surfaceTransitionActive_ && surface_.available &&
          std::this_thread::get_id() == ownerThread_ && !publicationCallbackActive_;
+}
+
+bool CanvasEditingRuntime::beginExplicitIntent() noexcept {
+  if (explicitIntentActive_ || !canonicalWriteAdmission() || !historySceneReady() ||
+      historyPublicationPending_ || !resourceManifestPort_ || !sceneCoordinator_ || !sceneCompiler_)
+    return false;
+  explicitIntentActive_ = true;
+  return true;
+}
+
+bool CanvasEditingRuntime::prepareExplicitIntent(std::span<const semantic::Operation> operations) {
+  if (prepareExplicitIntentInternal(operations, true)) return true;
+  abortExplicitIntent();
+  return false;
+}
+
+bool CanvasEditingRuntime::prepareExplicitIntentInternal(
+    std::span<const semantic::Operation> operations, bool recordHistory) try {
+  if (!explicitIntentActive_ || explicitIntent_ || operations.empty() || !canonicalWriteAdmission())
+    return false;
+  for (const auto& op : operations) if (op.document_id != documentId_) return false;
+  auto prepared = operationEngine_.prepareIntent(operations,
+      recordHistory ? semantic::ApplySource::kLocalInteraction : semantic::ApplySource::kUndoRedo,
+      semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
+  if (!prepared) return false;
+  semantic::StagedObjectView before(semanticObjects_);
+  std::vector<semantic::Operation> forwards, inverses;
+  std::vector<HistoryExpectation> beforeExpectations, afterExpectations;
+  std::vector<semantic::ObjectSemanticChange> changes;
+  for (const auto& plan : prepared->plans()) {
+    semantic::StagedObjectView after(static_cast<const semantic::ObjectStore&>(before));
+    for (const auto& record : plan.replacements) if (!after.stageReplace(record)) return false;
+    auto command = prepareUndoableCommand(plan, {before, appliedOperations_, resourceManifestPort_}, after);
+    if (!command) return false;
+    forwards.push_back(command->forward);
+    inverses.push_back(std::move(command->inverse));
+    for (auto& item : command->before) {
+      const auto* original = semanticObjects_.find(item.objectId);
+      item.record = original ? std::optional<semantic::ObjectRecord>(*original) : std::nullopt;
+      beforeExpectations.push_back(std::move(item));
+    }
+    for (auto& item : command->after) {
+      const auto* final = prepared->postState().find(item.objectId);
+      item.record = final ? std::optional<semantic::ObjectRecord>(*final) : std::nullopt;
+      afterExpectations.push_back(std::move(item));
+    }
+    for (const auto& record : plan.replacements) if (!before.stageReplace(record)) return false;
+  }
+  std::reverse(inverses.begin(), inverses.end());
+  for (const auto& record : prepared->records())
+    for (const auto& item : record.change_set.objects()) changes.push_back(item);
+  const auto first = prepared->records().front().before_generation;
+  const auto last = prepared->records().back().after_generation;
+  const auto merged = semantic::ChangeSet::fromChanges(first, last, std::move(changes));
+  const semantic::SemanticReadView finalView(prepared->postState(), last, resourceManifestPort_);
+  const SceneCommitInput input(first, last, finalView, &merged);
+  std::optional<EditorHistory::PreparedEntry> entry;
+  if (recordHistory) {
+    entry = history_.prepareIntentRecord(std::move(forwards), std::move(inverses),
+                                         std::move(beforeExpectations), std::move(afterExpectations));
+    if (!entry) return false;
+  }
+  if (!sceneCoordinator_->prepareIntent(*sceneCompiler_, input)) return false;
+  explicitIntentHistory_ = std::move(entry);
+  explicitIntent_ = std::move(prepared);
+  return true;
+} catch (const std::bad_alloc&) { return false; }
+
+bool CanvasEditingRuntime::commitExplicitIntent() noexcept {
+  if (!explicitIntentActive_ || !explicitIntent_ || !explicitIntentHistory_ ||
+      !canonicalWriteAdmission() || !sceneCoordinator_->intentBasisMatches()) {
+    abortExplicitIntent();
+    return false;
+  }
+  publicationCallbackActive_ = true;
+  if (!operationEngine_.commitIntent(*explicitIntent_, semanticGeneration_, canonicalCommitClock_)) {
+    publicationCallbackActive_ = false;
+    abortExplicitIntent();
+    return false;
+  }
+  history_.commitPrepared(std::move(*explicitIntentHistory_));
+  explicitIntentHistory_.reset();
+  sceneCoordinator_->commitIntent();
+  const auto& records = explicitIntent_->records();
+  const auto& plans = explicitIntent_->plans();
+  for (std::size_t i = 0; i < records.size(); ++i) {
+    selection_.onChangeSet(records[i].change_set);
+    if (localOperationSink_ && semantic::localBridgePublicationDisposition(records[i]) ==
+        semantic::LocalBridgePublicationDisposition::kEligible)
+      localOperationSink_->applied(plans[i].operation, records[i]);
+    ++submittedOperationCount_;
+  }
+  lastAppliedCommit_ = explicitIntent_->takeLastRecord();
+  explicitIntent_.reset();
+  explicitIntentActive_ = false;
+  canonicalPresentationDirty_ = true;
+  publicationCallbackActive_ = false;
+  return true;
+}
+
+void CanvasEditingRuntime::abortExplicitIntent() noexcept {
+  if (sceneCoordinator_) sceneCoordinator_->abortIntent();
+  explicitIntent_.reset();
+  explicitIntentHistory_.reset();
+  explicitIntentActive_ = false;
+}
+
+bool CanvasEditingRuntime::submitHistoryIntent(std::span<const semantic::Operation> operations,
+    std::span<const HistoryExpectation> expectations, EditorHistory::IntentCommit commit,
+    void* commitContext) {
+  if (!historyExpectationsMatch(semanticObjects_, expectations) || !beginExplicitIntent()) return false;
+  if (!prepareExplicitIntentInternal(operations, false) || !sceneCoordinator_->intentBasisMatches() ||
+      !canonicalWriteAdmission()) { abortExplicitIntent(); return false; }
+  publicationCallbackActive_ = true;
+  if (!operationEngine_.commitIntent(*explicitIntent_, semanticGeneration_, canonicalCommitClock_)) {
+    publicationCallbackActive_ = false; abortExplicitIntent(); return false;
+  }
+  commit(commitContext);
+  sceneCoordinator_->commitIntent();
+  const auto& records = explicitIntent_->records();
+  const auto& plans = explicitIntent_->plans();
+  for (std::size_t i = 0; i < records.size(); ++i) {
+    selection_.onChangeSet(records[i].change_set);
+    if (localOperationSink_ && semantic::localBridgePublicationDisposition(records[i]) ==
+        semantic::LocalBridgePublicationDisposition::kEligible)
+      localOperationSink_->applied(plans[i].operation, records[i]);
+    ++submittedOperationCount_;
+  }
+  lastAppliedCommit_ = explicitIntent_->takeLastRecord();
+  explicitIntent_.reset();
+  explicitIntentActive_ = false;
+  canonicalPresentationDirty_ = true;
+  publicationCallbackActive_ = false;
+  return true;
 }
 
 bool CanvasEditingRuntime::textReady() const noexcept {

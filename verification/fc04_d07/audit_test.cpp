@@ -439,6 +439,13 @@ TEST_F(D07, ExplicitIntentGroupProducesOneUndoUnit) {
     ASSERT_EQ(after.history, before.history + 1U);
     EXPECT_EQ(after.generation, before.generation + operations.size());
     EXPECT_EQ(sink.count, operations.size());
+    EXPECT_EQ(sink.publications, before.publications + 1U);
+    EXPECT_TRUE(sink.publicationCoherent);
+    EXPECT_EQ(sink.events[0].generation, before.generation + 1U);
+    EXPECT_EQ(sink.events[1].generation, before.generation + 2U);
+    EXPECT_LT(sink.events[0].ordinal, sink.events[1].ordinal);
+    EXPECT_EQ(sink.events[0].scene, after.generation);
+    EXPECT_EQ(sink.events[1].scene, after.generation);
     Access::select(rt(), id(3));
     ASSERT_TRUE(rt().undo());
     EXPECT_EQ(read().objects, before.objects);
@@ -447,6 +454,28 @@ TEST_F(D07, ExplicitIntentGroupProducesOneUndoUnit) {
     ASSERT_EQ(sink.count, 6U);
     EXPECT_NE(sink.events[4].operation, operations[0].id);
     EXPECT_NE(sink.events[5].operation, operations[1].id);
+}
+TEST_F(D07, ExplicitIntentRejectsInvalidLaterOperationWithoutMutation) {
+    const auto before = read();
+    const std::array operations{move(584), color(585, true)};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    EXPECT_FALSE(rt().prepareExplicitIntent(operations));
+    EXPECT_EQ(read(), before);
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    rt().abortExplicitIntent();
+    EXPECT_EQ(read(), before);
+}
+TEST_F(D07, ExplicitIntentRejectsStaleBasisWithoutAdditionalMutation) {
+    const std::array operations{move(593), color(594)};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    ASSERT_TRUE(rt().prepareExplicitIntent(operations));
+    ASSERT_EQ(c.applyExternalOperation(move(595), semantic::ApplySource::kRemoteSync).disposition,
+              semantic::ApplyDisposition::kApplied);
+    const auto changed = read();
+    EXPECT_FALSE(rt().commitExplicitIntent());
+    EXPECT_EQ(read(), changed);
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    rt().abortExplicitIntent();
 }
 TEST_F(D07, ScenePublicationRejectsReentrantCanonicalWrite) {
     struct Attempt {
@@ -488,6 +517,34 @@ TEST_F(D07, LiveSceneApplyIsNotUnpublishedPreparation) {
     EXPECT_EQ(rt().semanticGeneration().value(), before.generation);
     EXPECT_EQ(rt().qualificationSceneGeneration(), next.value());
     EXPECT_GT(sink.publications, before.publications);
+}
+template <class Coordinator, class Compiler, class Check>
+void assertSceneIntentPreparationIsInvisible(Coordinator& coordinator, const Compiler& compiler,
+                                             const SceneCommitInput& input, Check check) {
+    if constexpr (requires { coordinator.prepareIntent(compiler, input); coordinator.abortIntent(); }) {
+        ASSERT_TRUE(coordinator.prepareIntent(compiler, input));
+        check();
+        coordinator.abortIntent();
+    } else {
+        FAIL() << "Real IncrementalRuntimeCoordinator intent preparation is not implemented";
+    }
+}
+TEST_F(D07, SceneIntentPrepareAndAbortAreInvisible) {
+    const auto before = read();
+    semantic::StagedObjectView staged(Access::objects(rt()));
+    auto changed = *staged.find(id(1));
+    changed.transform.tx += 10;
+    ASSERT_TRUE(staged.stageReplace(changed));
+    const semantic::SemanticGeneration next(before.generation + 1U);
+    const auto changes = semantic::ChangeSet::fromChanges(
+        semantic::SemanticGeneration(before.generation), next,
+        {{id(1), semantic::SemanticChangeFlags::kTransform, {}}});
+    const semantic::SemanticReadView post(staged, next);
+    const SceneCommitInput input(semantic::SemanticGeneration(before.generation), next, post, &changes);
+    ASSERT_NO_FATAL_FAILURE(assertSceneIntentPreparationIsInvisible(
+        Access::coordinator(rt()), Access::compiler(rt()), input,
+        [&] { EXPECT_EQ(read(), before); }));
+    EXPECT_EQ(read(), before);
 }
 TEST_F(D07, CapturedExpectationsRejectUndoConflictWithoutCursorOrRedoMutation) {
     ASSERT_TRUE(history().executeUndoable(move(590)));

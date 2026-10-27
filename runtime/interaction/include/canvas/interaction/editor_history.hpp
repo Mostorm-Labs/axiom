@@ -63,14 +63,25 @@ class EditorHistory final {
         std::vector<HistoryExpectation> before;
         std::vector<HistoryExpectation> after;
         bool admissionRequired = false;
+        std::vector<semantic::Operation> intentForwards;
     };
     [[nodiscard]] std::optional<PreparedEntry> prepareRecord(
         const semantic::Operation& forward, const std::vector<semantic::Operation>& inverse,
         std::vector<HistoryExpectation> before, std::vector<HistoryExpectation> after);
     void commitPrepared(PreparedEntry&&) noexcept;
+    [[nodiscard]] std::optional<PreparedEntry> prepareIntentRecord(
+        std::vector<semantic::Operation> forwards, std::vector<semantic::Operation> inverses,
+        std::vector<HistoryExpectation> before, std::vector<HistoryExpectation> after);
     // The existing submit owner invokes precommit admission on the actual plan.
     [[nodiscard]] bool executeUndoable(const semantic::Operation&);
     explicit EditorHistory(HistorySubmitPort& submit) noexcept : submit_(submit) {}
+    using IntentCommit = void (*)(void*) noexcept;
+    using IntentSubmit = bool (*)(void*, std::span<const semantic::Operation>,
+                                  std::span<const HistoryExpectation>, IntentCommit, void*);
+    void setIntentSubmitter(void* context, IntentSubmit submit) noexcept {
+        intentContext_ = context;
+        intentSubmit_ = submit;
+    }
 
     // The inverse is the semantic preimage captured by the owning command.
     // Both values are retained as immutable local intention data; neither is
@@ -95,9 +106,13 @@ class EditorHistory final {
 
     [[nodiscard]] bool submitFresh(std::span<const semantic::Operation> operations,
                                   std::span<const HistoryExpectation> expectations, bool admissionRequired = false);
+    [[nodiscard]] bool submitFreshIntent(std::span<const semantic::Operation>,
+                                         std::span<const HistoryExpectation>, bool redo);
     [[nodiscard]] bool identityKnown(const semantic::OperationId& id) const noexcept;
 
     HistorySubmitPort& submit_;
+    void* intentContext_ = nullptr;
+    IntentSubmit intentSubmit_ = nullptr;
     std::vector<Entry> entries_;
     std::size_t cursor_ = 0;
     std::vector<semantic::OperationId> emittedOperationIds_;

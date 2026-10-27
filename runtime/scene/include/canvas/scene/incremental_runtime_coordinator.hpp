@@ -55,6 +55,14 @@ class IncrementalRuntimeCoordinator final {
         const ISemanticSceneCompiler& compiler,
         const SceneCommitInput& input);
 
+    // Private product-owned preparation for one explicit local intent. No
+    // canonical or visible Scene state changes until commitIntent().
+    [[nodiscard]] bool prepareIntent(const ISemanticSceneCompiler& compiler,
+                                     const SceneCommitInput& input);
+    [[nodiscard]] bool intentBasisMatches() const noexcept;
+    void commitIntent() noexcept;
+    void abortIntent() noexcept;
+
     [[nodiscard]] const RuntimeScene& runtimeScene() const noexcept {
         return runtimeScene_;
     }
@@ -102,6 +110,8 @@ class IncrementalRuntimeCoordinator final {
     text::RichTextLayoutService* textLayoutService_ = nullptr;
     std::optional<RuntimeCheckpoint> checkpointFailure_;
     std::optional<RuntimeScene::PreparedPublication> pendingPublication_;
+    std::optional<RuntimeScene::PreparedPublication> intentRuntime_;
+    std::unique_ptr<Scene::PreparedIntent> intentScene_;
     ScenePublicationGate publicationGate_;
     semantic::SemanticGeneration pendingGeneration_{};
     SceneRevision pendingRevision_{};
