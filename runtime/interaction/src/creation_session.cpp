@@ -13,9 +13,13 @@ semantic::OrderKey makeOrder(std::uint64_t seed) {
   // Creation tools append user-authored objects above existing content. Keep
   // the key deterministic and valid while reserving the high lane for new
   // brush/shape commits.
-  return semantic::OrderKey{{0xFEU,
-      static_cast<std::uint8_t>(1U + ((seed >> 8U) & 0xFEU)),
-      static_cast<std::uint8_t>(1U + (seed & 0xFEU))}};
+  // Retain all seed bits: masking with FE collapsed adjacent even/odd
+  // identities, making the resulting siblings inadmissible to topology edits.
+  // The maximum legacy prefix keeps newly created content above old keys too.
+  std::vector<std::uint8_t> bytes{0xFEU,0xFFU,0xFFU};
+  for (int shift=56;shift>=0;shift-=8)bytes.push_back(static_cast<std::uint8_t>(seed>>shift));
+  bytes.push_back(1U); // OrderKey forbids a zero final byte.
+  return semantic::OrderKey{std::move(bytes)};
 }
 }
 

@@ -403,4 +403,31 @@ TEST_F(SelectionInput, MiterStrokeOutsideNominalBoundsStillReachesPreciseRegionQ
     EXPECT_EQ(snapshot().selectionQueryStatus,runtime::SelectionQueryStatus::kComplete);EXPECT_EQ(selected(),std::vector{triangle.id});
 }
 
+TEST(SelectionBatch2Runtime, RealShapeCreationLeavesSectionTopologyAdmissible) {
+    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));ASSERT_TRUE(c.registerSource(6008));
+    auto& f=c.controlFacade();std::uint64_t sequence=0,request=0;
+    const auto pointer=[&](input::PointerPhase phase,float x,float y) {
+        input::PlatformPointerSample p;p.source=6008;p.pointer=1;p.sequence=++sequence;p.timestampNs=sequence*1000000;p.phase=phase;p.x=x;p.y=y;
+        input::PlatformPointerBatch batch;batch.samples={p};return c.submit(batch);
+    };
+    for(unsigned i=0;i<3;++i) {
+        runtime::CanvasControlRequest q;q.target=f.mountedCanvasTargets().front();q.clientId=6008;q.requestId=++request;
+        q.payload.kind=runtime::CanvasControlPayloadKind::kSelectCreationPreset;q.payload.creationPreset=static_cast<runtime::CanvasCreationPreset>(i);
+        ASSERT_EQ(f.submitCanvasControl(q).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
+        const float x=100+static_cast<float>(i)*160;
+        ASSERT_TRUE(pointer(input::PointerPhase::kDown,x,100));ASSERT_TRUE(pointer(input::PointerPhase::kMove,x+80,160));ASSERT_TRUE(pointer(input::PointerPhase::kUp,x+80,160));
+    }
+    ASSERT_EQ(c.semanticObjectCount(),3U);
+    const auto* second=c.qualificationRuntime().qualificationObjectRecord(foundation::ObjectId::fromUint64((std::uint64_t{1}<<48)+2));
+    const auto* third=c.qualificationRuntime().qualificationObjectRecord(foundation::ObjectId::fromUint64((std::uint64_t{1}<<48)+3));
+    ASSERT_NE(second,nullptr);ASSERT_NE(third,nullptr);EXPECT_NE(second->placement.order_key,third->placement.order_key);
+    EXPECT_LT(second->placement.order_key,third->placement.order_key);
+    EXPECT_GT(second->placement.order_key,semantic::OrderKey({0xFEU,0xFFU,0xFFU}));
+    runtime::SectionIntent create;create.objectId=foundation::ObjectId::fromUint64(6009);create.content.boundary={40,40,520,200};
+    ASSERT_EQ(f.submitSectionIntent(create,++request,6008).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
+    const auto receipt=f.canvasControlReceipt({6008,request});ASSERT_TRUE(receipt&&receipt->section);
+    EXPECT_EQ(receipt->section->failure,runtime::SectionFailure::kNone);EXPECT_EQ(c.semanticObjectCount(),4U);
+    EXPECT_TRUE(c.close());
+}
+
 }
