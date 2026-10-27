@@ -1,0 +1,249 @@
+Test project C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-b/build
+        Start   2: fc08.section_b.SectionSafety.BoundaryEditRequiresExactCompleteGeometryBasis
+  1/109 Test   #2: fc08.section_b.SectionSafety.BoundaryEditRequiresExactCompleteGeometryBasis .............   Passed    0.04 sec
+        Start   3: fc08.section_b.SectionSafety.TitleEditDoesNotDemandUnrelatedAncestorBasis
+  2/109 Test   #3: fc08.section_b.SectionSafety.TitleEditDoesNotDemandUnrelatedAncestorBasis ...............   Passed    0.04 sec
+        Start   4: fc08.section_b.SectionSafety.FinalGraphRejectsCycleAndOrderCollisionWithoutPublishing
+  3/109 Test   #4: fc08.section_b.SectionSafety.FinalGraphRejectsCycleAndOrderCollisionWithoutPublishing ...   Passed    0.04 sec
+        Start   5: fc08.section_b.SectionSafety.Operation17EnforcesKeyedBatchLimit
+  4/109 Test   #5: fc08.section_b.SectionSafety.Operation17EnforcesKeyedBatchLimit .........................   Passed    0.08 sec
+        Start   6: fc08.section_b.SectionSafety.FullEnvelopeOver32MiBRejectsBeforeAnyPublication
+  5/109 Test   #6: fc08.section_b.SectionSafety.FullEnvelopeOver32MiBRejectsBeforeAnyPublication ...........   Passed    0.27 sec
+        Start   7: fc08.section_b.SectionSafety.UnknownEnvelopeVersionAndMissingEffectReject
+  6/109 Test   #7: fc08.section_b.SectionSafety.UnknownEnvelopeVersionAndMissingEffectReject ...............   Passed    0.04 sec
+        Start   8: fc08.section_b.SectionSafety.OrderOnlyEditDoesNotPublishTransformImpact
+  7/109 Test   #8: fc08.section_b.SectionSafety.OrderOnlyEditDoesNotPublishTransformImpact .................***Failed    0.04 sec
+Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionSafety.OrderOnlyEditDoesNotPublishTransformImpact
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionSafety
+[ RUN      ] SectionSafety.OrderOnlyEditDoesNotPublishTransformImpact
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_safety_test.cpp(67): error: Expected equality of these values:
+  changes[1].flags
+    Which is: 1-byte object <0C>
+  SemanticChangeFlags::kPlacement
+    Which is: 1-byte object <04>
+
+[  FAILED  ] SectionSafety.OrderOnlyEditDoesNotPublishTransformImpact (1 ms)
+[----------] 1 test from SectionSafety (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (1 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SectionSafety.OrderOnlyEditDoesNotPublishTransformImpact
+
+ 1 FAILED TEST
+
+        Start   9: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/0
+  8/109 Test   #9: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/0 ................   Passed    0.04 sec
+        Start  10: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/1
+  9/109 Test  #10: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/1 ................   Passed    0.05 sec
+        Start  11: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/2
+ 10/109 Test  #11: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/2 ................   Passed    0.04 sec
+        Start  12: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/3
+ 11/109 Test  #12: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/3 ................   Passed    0.04 sec
+        Start  13: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/4
+ 12/109 Test  #13: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/4 ................   Passed    0.04 sec
+        Start  14: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/5
+ 13/109 Test  #14: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/5 ................   Passed    0.04 sec
+        Start  15: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/6
+ 14/109 Test  #15: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/6 ................   Passed    0.04 sec
+        Start  16: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/7
+ 15/109 Test  #16: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/7 ................   Passed    0.04 sec
+        Start  17: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/8
+ 16/109 Test  #17: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/8 ................   Passed    0.04 sec
+        Start  18: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/9
+ 17/109 Test  #18: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/9 ................   Passed    0.04 sec
+        Start  19: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/10
+ 18/109 Test  #19: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/10 ...............   Passed    0.04 sec
+        Start  20: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/11
+ 19/109 Test  #20: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/11 ...............   Passed    0.04 sec
+        Start  21: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/12
+ 20/109 Test  #21: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/12 ...............   Passed    0.04 sec
+        Start  22: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/13
+ 21/109 Test  #22: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/13 ...............   Passed    0.04 sec
+        Start  23: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/14
+ 22/109 Test  #23: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/14 ...............   Passed    0.04 sec
+        Start  24: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/15
+ 23/109 Test  #24: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/15 ...............   Passed    0.04 sec
+        Start  25: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/16
+ 24/109 Test  #25: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/16 ...............   Passed    0.04 sec
+        Start  26: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/17
+ 25/109 Test  #26: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/17 ...............   Passed    0.04 sec
+        Start  27: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/18
+ 26/109 Test  #27: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/18 ...............   Passed    0.04 sec
+        Start  28: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/19
+ 27/109 Test  #28: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/19 ...............   Passed    0.04 sec
+        Start  29: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/20
+ 28/109 Test  #29: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/20 ...............   Passed    0.04 sec
+        Start  30: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/21
+ 29/109 Test  #30: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/21 ...............   Passed    0.04 sec
+        Start  31: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/22
+ 30/109 Test  #31: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/22 ...............   Passed    0.04 sec
+        Start  32: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/23
+ 31/109 Test  #32: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/23 ...............   Passed    0.04 sec
+        Start  33: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/24
+ 32/109 Test  #33: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/24 ...............   Passed    0.04 sec
+        Start  34: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/25
+ 33/109 Test  #34: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/25 ...............   Passed    0.04 sec
+        Start  35: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/26
+ 34/109 Test  #35: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/26 ...............   Passed    0.04 sec
+        Start  36: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/27
+ 35/109 Test  #36: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/27 ...............   Passed    0.04 sec
+        Start  37: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/28
+ 36/109 Test  #37: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/28 ...............   Passed    0.05 sec
+        Start  38: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/29
+ 37/109 Test  #38: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/29 ...............   Passed    0.04 sec
+        Start  39: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/30
+ 38/109 Test  #39: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/30 ...............   Passed    0.05 sec
+        Start  40: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/31
+ 39/109 Test  #40: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/31 ...............   Passed    0.04 sec
+        Start  41: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/32
+ 40/109 Test  #41: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/32 ...............   Passed    0.05 sec
+        Start  42: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/33
+ 41/109 Test  #42: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/33 ...............   Passed    0.04 sec
+        Start  43: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/34
+ 42/109 Test  #43: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/34 ...............   Passed    0.05 sec
+        Start  44: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/35
+ 43/109 Test  #44: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/35 ...............   Passed    0.04 sec
+        Start  45: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/36
+ 44/109 Test  #45: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/36 ...............   Passed    0.04 sec
+        Start  46: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/37
+ 45/109 Test  #46: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/37 ...............   Passed    0.04 sec
+        Start  47: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/38
+ 46/109 Test  #47: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/38 ...............   Passed    0.04 sec
+        Start  48: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/39
+ 47/109 Test  #48: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/39 ...............   Passed    0.04 sec
+        Start  49: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/40
+ 48/109 Test  #49: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/40 ...............   Passed    0.04 sec
+        Start  50: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/41
+ 49/109 Test  #50: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/41 ...............   Passed    0.04 sec
+        Start  51: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/42
+ 50/109 Test  #51: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/42 ...............   Passed    0.04 sec
+        Start  52: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/43
+ 51/109 Test  #52: fc08.section_b.Frozen/SectionOperationsWire.FrozenWireAndModelContract/43 ...............   Passed    0.04 sec
+        Start  53: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/0
+ 52/109 Test  #53: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/0 ..................................   Passed    0.04 sec
+        Start  54: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/1
+ 53/109 Test  #54: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/1 ..................................   Passed    0.04 sec
+        Start  55: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/2
+ 54/109 Test  #55: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/2 ..................................   Passed    0.04 sec
+        Start  56: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/3
+ 55/109 Test  #56: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/3 ..................................   Passed    0.04 sec
+        Start  57: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/4
+ 56/109 Test  #57: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/4 ..................................   Passed    0.04 sec
+        Start  58: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/5
+ 57/109 Test  #58: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/5 ..................................   Passed    0.04 sec
+        Start  59: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/6
+ 58/109 Test  #59: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/6 ..................................   Passed    0.04 sec
+        Start  60: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/7
+ 59/109 Test  #60: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/7 ..................................   Passed    0.04 sec
+        Start  61: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/8
+ 60/109 Test  #61: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/8 ..................................   Passed    0.04 sec
+        Start  62: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/9
+ 61/109 Test  #62: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/9 ..................................   Passed    0.04 sec
+        Start  63: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/10
+ 62/109 Test  #63: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/10 .................................   Passed    0.04 sec
+        Start  64: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/11
+ 63/109 Test  #64: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/11 .................................   Passed    0.04 sec
+        Start  65: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/12
+ 64/109 Test  #65: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/12 .................................   Passed    0.04 sec
+        Start  66: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/13
+ 65/109 Test  #66: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/13 .................................   Passed    0.04 sec
+        Start  67: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/14
+ 66/109 Test  #67: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/14 .................................   Passed    0.04 sec
+        Start  68: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/15
+ 67/109 Test  #68: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/15 .................................   Passed    0.04 sec
+        Start  69: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/16
+ 68/109 Test  #69: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/16 .................................   Passed    0.04 sec
+        Start  70: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/17
+ 69/109 Test  #70: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/17 .................................   Passed    0.04 sec
+        Start  71: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/18
+ 70/109 Test  #71: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/18 .................................   Passed    0.04 sec
+        Start  72: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/19
+ 71/109 Test  #72: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/19 .................................   Passed    0.04 sec
+        Start  73: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/20
+ 72/109 Test  #73: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/20 .................................   Passed    0.04 sec
+        Start  74: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/21
+ 73/109 Test  #74: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/21 .................................   Passed    0.04 sec
+        Start  75: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/22
+ 74/109 Test  #75: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/22 .................................   Passed    0.04 sec
+        Start  76: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/23
+ 75/109 Test  #76: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/23 .................................   Passed    0.04 sec
+        Start  77: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/24
+ 76/109 Test  #77: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/24 .................................   Passed    0.04 sec
+        Start  78: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/25
+ 77/109 Test  #78: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/25 .................................   Passed    0.04 sec
+        Start  79: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/26
+ 78/109 Test  #79: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/26 .................................   Passed    0.04 sec
+        Start  80: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/27
+ 79/109 Test  #80: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/27 .................................   Passed    0.04 sec
+        Start  81: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/28
+ 80/109 Test  #81: fc08.section_b.Frozen/SectionTopology.ReferenceOwner/28 .................................   Passed    0.04 sec
+        Start  82: fc08.section_b.Frozen/SectionTopology.IndexedOwner/0
+ 81/109 Test  #82: fc08.section_b.Frozen/SectionTopology.IndexedOwner/0 ....................................   Passed    0.04 sec
+        Start  83: fc08.section_b.Frozen/SectionTopology.IndexedOwner/1
+ 82/109 Test  #83: fc08.section_b.Frozen/SectionTopology.IndexedOwner/1 ....................................   Passed    0.04 sec
+        Start  84: fc08.section_b.Frozen/SectionTopology.IndexedOwner/2
+ 83/109 Test  #84: fc08.section_b.Frozen/SectionTopology.IndexedOwner/2 ....................................   Passed    0.04 sec
+        Start  85: fc08.section_b.Frozen/SectionTopology.IndexedOwner/3
+ 84/109 Test  #85: fc08.section_b.Frozen/SectionTopology.IndexedOwner/3 ....................................   Passed    0.04 sec
+        Start  86: fc08.section_b.Frozen/SectionTopology.IndexedOwner/4
+ 85/109 Test  #86: fc08.section_b.Frozen/SectionTopology.IndexedOwner/4 ....................................   Passed    0.04 sec
+        Start  87: fc08.section_b.Frozen/SectionTopology.IndexedOwner/5
+ 86/109 Test  #87: fc08.section_b.Frozen/SectionTopology.IndexedOwner/5 ....................................   Passed    0.04 sec
+        Start  88: fc08.section_b.Frozen/SectionTopology.IndexedOwner/6
+ 87/109 Test  #88: fc08.section_b.Frozen/SectionTopology.IndexedOwner/6 ....................................   Passed    0.04 sec
+        Start  89: fc08.section_b.Frozen/SectionTopology.IndexedOwner/7
+ 88/109 Test  #89: fc08.section_b.Frozen/SectionTopology.IndexedOwner/7 ....................................   Passed    0.04 sec
+        Start  90: fc08.section_b.Frozen/SectionTopology.IndexedOwner/8
+ 89/109 Test  #90: fc08.section_b.Frozen/SectionTopology.IndexedOwner/8 ....................................   Passed    0.04 sec
+        Start  91: fc08.section_b.Frozen/SectionTopology.IndexedOwner/9
+ 90/109 Test  #91: fc08.section_b.Frozen/SectionTopology.IndexedOwner/9 ....................................   Passed    0.04 sec
+        Start  92: fc08.section_b.Frozen/SectionTopology.IndexedOwner/10
+ 91/109 Test  #92: fc08.section_b.Frozen/SectionTopology.IndexedOwner/10 ...................................   Passed    0.04 sec
+        Start  93: fc08.section_b.Frozen/SectionTopology.IndexedOwner/11
+ 92/109 Test  #93: fc08.section_b.Frozen/SectionTopology.IndexedOwner/11 ...................................   Passed    0.04 sec
+        Start  94: fc08.section_b.Frozen/SectionTopology.IndexedOwner/12
+ 93/109 Test  #94: fc08.section_b.Frozen/SectionTopology.IndexedOwner/12 ...................................   Passed    0.04 sec
+        Start  95: fc08.section_b.Frozen/SectionTopology.IndexedOwner/13
+ 94/109 Test  #95: fc08.section_b.Frozen/SectionTopology.IndexedOwner/13 ...................................   Passed    0.04 sec
+        Start  96: fc08.section_b.Frozen/SectionTopology.IndexedOwner/14
+ 95/109 Test  #96: fc08.section_b.Frozen/SectionTopology.IndexedOwner/14 ...................................   Passed    0.04 sec
+        Start  97: fc08.section_b.Frozen/SectionTopology.IndexedOwner/15
+ 96/109 Test  #97: fc08.section_b.Frozen/SectionTopology.IndexedOwner/15 ...................................   Passed    0.04 sec
+        Start  98: fc08.section_b.Frozen/SectionTopology.IndexedOwner/16
+ 97/109 Test  #98: fc08.section_b.Frozen/SectionTopology.IndexedOwner/16 ...................................   Passed    0.04 sec
+        Start  99: fc08.section_b.Frozen/SectionTopology.IndexedOwner/17
+ 98/109 Test  #99: fc08.section_b.Frozen/SectionTopology.IndexedOwner/17 ...................................   Passed    0.04 sec
+        Start 100: fc08.section_b.Frozen/SectionTopology.IndexedOwner/18
+ 99/109 Test #100: fc08.section_b.Frozen/SectionTopology.IndexedOwner/18 ...................................   Passed    0.04 sec
+        Start 101: fc08.section_b.Frozen/SectionTopology.IndexedOwner/19
+100/109 Test #101: fc08.section_b.Frozen/SectionTopology.IndexedOwner/19 ...................................   Passed    0.04 sec
+        Start 102: fc08.section_b.Frozen/SectionTopology.IndexedOwner/20
+101/109 Test #102: fc08.section_b.Frozen/SectionTopology.IndexedOwner/20 ...................................   Passed    0.04 sec
+        Start 103: fc08.section_b.Frozen/SectionTopology.IndexedOwner/21
+102/109 Test #103: fc08.section_b.Frozen/SectionTopology.IndexedOwner/21 ...................................   Passed    0.04 sec
+        Start 104: fc08.section_b.Frozen/SectionTopology.IndexedOwner/22
+103/109 Test #104: fc08.section_b.Frozen/SectionTopology.IndexedOwner/22 ...................................   Passed    0.04 sec
+        Start 105: fc08.section_b.Frozen/SectionTopology.IndexedOwner/23
+104/109 Test #105: fc08.section_b.Frozen/SectionTopology.IndexedOwner/23 ...................................   Passed    0.04 sec
+        Start 106: fc08.section_b.Frozen/SectionTopology.IndexedOwner/24
+105/109 Test #106: fc08.section_b.Frozen/SectionTopology.IndexedOwner/24 ...................................   Passed    0.04 sec
+        Start 107: fc08.section_b.Frozen/SectionTopology.IndexedOwner/25
+106/109 Test #107: fc08.section_b.Frozen/SectionTopology.IndexedOwner/25 ...................................   Passed    0.04 sec
+        Start 108: fc08.section_b.Frozen/SectionTopology.IndexedOwner/26
+107/109 Test #108: fc08.section_b.Frozen/SectionTopology.IndexedOwner/26 ...................................   Passed    0.04 sec
+        Start 109: fc08.section_b.Frozen/SectionTopology.IndexedOwner/27
+108/109 Test #109: fc08.section_b.Frozen/SectionTopology.IndexedOwner/27 ...................................   Passed    0.04 sec
+        Start 110: fc08.section_b.Frozen/SectionTopology.IndexedOwner/28
+109/109 Test #110: fc08.section_b.Frozen/SectionTopology.IndexedOwner/28 ...................................   Passed    0.04 sec
+
+99% tests passed, 1 tests failed out of 109
+
+Total Test time (real) =   4.66 sec
+
+The following tests FAILED:
+	  8 - fc08.section_b.SectionSafety.OrderOnlyEditDoesNotPublishTransformImpact (Failed)

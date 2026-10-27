@@ -1,6 +1,7 @@
 #include "canvas/runtime/canvas_runtime_facade.hpp"
 #include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/scene/derived_geometry.hpp"
+#include "canvas/scene/hierarchy_geometry.hpp"
 
 namespace canvas::runtime {
 namespace {
@@ -88,7 +89,7 @@ ConnectorCommandReceipt CanvasRuntimeFacade::setConnectorRouting(const Connector
     if(content!=before) {
       auto candidate=*current;candidate.content=content;
       if(request.routing==semantic::ConnectorRouting::kOrthogonal) {
-        const auto route=scene::connectorGeometry(candidate,runtime_.textObjects());
+        const auto route=scene::connectorGeometry(candidate,scene::projectWorldObjects(runtime_.textObjects()));
         const auto failure=route?routeFailure(route->status):ConnectorFailureReason::kInvalidEndpoint;
         if(failure!=ConnectorFailureReason::kNone)return rejectConnector(failure);
       }

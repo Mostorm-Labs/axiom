@@ -4,6 +4,71 @@
 
 namespace canvas::semantic::internal {
 
+ObjectIndex::ParentPatch ObjectIndex::prepareParentChanges(
+    const std::vector<ParentEntry>& before, const std::vector<ParentEntry>& after) const {
+    ParentPatch patch;
+    const auto prepare = [&](const ParentScope& parent) -> ChildSet& {
+        auto [entry, inserted] = patch.try_emplace(parent);
+        if (inserted) {
+            const auto current = children_by_parent_.find(parent);
+            if (current != children_by_parent_.end()) entry->second = current->second;
+        }
+        return entry->second;
+    };
+    for (const auto& entry : before) prepare(entry.placement.parent_id).erase({entry.placement.order_key, entry.id});
+    for (const auto& entry : after) prepare(entry.placement.parent_id).insert({entry.placement.order_key, entry.id});
+    return patch;
+}
+
+void ObjectIndex::publishParentChanges(ParentPatch&& patch) noexcept {
+    while (!patch.empty()) {
+        auto next = patch.begin();
+        const auto current = children_by_parent_.find(next->first);
+        if (next->second.empty()) {
+            if (current != children_by_parent_.end()) children_by_parent_.erase(current);
+        } else if (current != children_by_parent_.end()) {
+            current->second.swap(next->second);
+        } else {
+            children_by_parent_.insert(patch.extract(next));
+            continue;
+        }
+        patch.erase(next);
+    }
+}
+
+ObjectIndex::ConnectorPatch ObjectIndex::prepareConnectorChanges(
+    const std::vector<ObjectRecord>& before, const std::vector<ObjectRecord>& after) const {
+    ConnectorPatch patch;
+    const auto edit = [&](const ObjectRecord& record, bool insert) {
+        const auto* connector = std::get_if<ConnectorContent>(&record.content);
+        if (!connector) return;
+        for (const auto* endpoint : {&connector->start, &connector->end}) {
+            if (const auto* target = std::get_if<AttachedEndpoint>(&endpoint->value)) {
+                auto [it, fresh] = patch.try_emplace(target->target_object_id);
+                if (fresh) {
+                    const auto current = connectors_by_target_.find(target->target_object_id);
+                    if (current != connectors_by_target_.end()) it->second = current->second;
+                }
+                if (insert) it->second.insert(record.id); else it->second.erase(record.id);
+            }
+        }
+    };
+    for (const auto& r : before) edit(r, false);
+    for (const auto& r : after) edit(r, true);
+    return patch;
+}
+void ObjectIndex::publishConnectorChanges(ConnectorPatch&& patch) noexcept {
+    while (!patch.empty()) {
+        auto next = patch.begin();
+        const auto current = connectors_by_target_.find(next->first);
+        if (next->second.empty()) {
+            if (current != connectors_by_target_.end()) connectors_by_target_.erase(current);
+        } else if (current != connectors_by_target_.end()) current->second.swap(next->second);
+        else { connectors_by_target_.insert(patch.extract(next)); continue; }
+        patch.erase(next);
+    }
+}
+
 void ObjectIndex::insert(const ObjectRecord& record) {
     children_by_parent_[record.placement.parent_id].insert(
         ChildEntry{record.placement.order_key, record.id});

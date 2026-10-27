@@ -32,6 +32,7 @@ bool isKnownKind(SceneObjectKind kind) {
     case SceneObjectKind::kDabStroke:
     case SceneObjectKind::kConnector:
     case SceneObjectKind::kSticky:
+    case SceneObjectKind::kSection:
         return true;
     }
     return false;

@@ -1,0 +1,66 @@
+{
+  "recipe_name": "restore-over-limit",
+  "recipe": {
+    "recipe": "restore-over-limit",
+    "first_RichText_bytes": 16777000,
+    "second_RichText_bytes": 16776915,
+    "actual_restore_bytes": 33554433,
+    "closure_ids": [
+      1,
+      2,
+      30,
+      31,
+      40
+    ],
+    "outside_endpoint_retained": 12,
+    "outside_object": {
+      "id": {
+        "value": "0000000000000000000000000000000c"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "0000000c"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20.0,
+          "height": 20.0
+        }
+      }
+    },
+    "font_resource": 512,
+    "command_admitted": false
+  },
+  "reconstruct": "tests/fc08/reference/fixtures.py:budget_recipe",
+  "font_manifest_context": {
+    "schema_version": 1,
+    "manifest_revision": 0,
+    "entries": [
+      {
+        "resource_id": {
+          "value": "00000000000000000000000000000200"
+        },
+        "resource_kind": 2,
+        "resource_revision": 1,
+        "content_hash": "sha256:2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+        "byte_length": 16437364,
+        "decode_version": 1,
+        "layout_version": 1,
+        "metadata": "080110001801"
+      }
+    ]
+  }
+}

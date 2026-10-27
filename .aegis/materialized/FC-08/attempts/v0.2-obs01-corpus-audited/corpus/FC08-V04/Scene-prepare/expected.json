@@ -1,0 +1,31 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "canonical_F_commits",
+      "expected": 1
+    },
+    {
+      "op": "equal",
+      "path": "history_F_units",
+      "expected": 1
+    },
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "Committed"
+    },
+    {
+      "op": "equal",
+      "path": "final_generation",
+      "expected": 9
+    },
+    {
+      "op": "equal",
+      "path": "partial_scene_observed",
+      "expected": false
+    }
+  ],
+  "source_case": "FC08-V04",
+  "product_expected_only": true
+}

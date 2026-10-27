@@ -1,0 +1,70 @@
+[
+  {
+    "variant_id": "FC08-T06/disjoint-order-edits",
+    "input_ref": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-T06/disjoint-order-edits/input.json",
+      "sha256": "414894b40acc1c580c37ce9e433a97a475aef801ef1dbe67195bfe6a872f282e",
+      "size": 28761
+    },
+    "expected_ref": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-T06/disjoint-order-edits/expected.json",
+      "sha256": "eabfbcfe043ddc67d450679d517089f16df075069e2783a649ba65994da189a1",
+      "size": 4120
+    },
+    "forward_order_only_edits": [
+      {
+        "object_id": {
+          "value": "00000000000000000000000000000007"
+        },
+        "order_key_after": {
+          "value": "40"
+        }
+      },
+      {
+        "object_id": {
+          "value": "00000000000000000000000000000008"
+        },
+        "order_key_after": {
+          "value": "50"
+        }
+      }
+    ],
+    "redo_order_only_edits": [],
+    "classification": "C_HISTORY_FIXTURE_REVIEW_REQUIRED",
+    "B_scope": "All frozen forward expected predicates are asserted; additional inverse/redo assertions are not a frozen T06 forward predicate and remain NOT_RUN for C. Original failed exploratory output retained. No input/expected amendment performed."
+  },
+  {
+    "variant_id": "FC08-T06/payload-permutation",
+    "input_ref": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-T06/payload-permutation/input.json",
+      "sha256": "1018fcf87d2717595fd90447573acd650d8cb617acd87df2d3ee74e24e67bb2f",
+      "size": 28761
+    },
+    "expected_ref": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-T06/payload-permutation/expected.json",
+      "sha256": "eabfbcfe043ddc67d450679d517089f16df075069e2783a649ba65994da189a1",
+      "size": 4120
+    },
+    "forward_order_only_edits": [
+      {
+        "object_id": {
+          "value": "00000000000000000000000000000008"
+        },
+        "order_key_after": {
+          "value": "50"
+        }
+      },
+      {
+        "object_id": {
+          "value": "00000000000000000000000000000007"
+        },
+        "order_key_after": {
+          "value": "40"
+        }
+      }
+    ],
+    "redo_order_only_edits": [],
+    "classification": "C_HISTORY_FIXTURE_REVIEW_REQUIRED",
+    "B_scope": "All frozen forward expected predicates are asserted; additional inverse/redo assertions are not a frozen T06 forward predicate and remain NOT_RUN for C. Original failed exploratory output retained. No input/expected amendment performed."
+  }
+]

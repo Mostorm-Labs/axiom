@@ -1,0 +1,6 @@
+{
+  "owners": "EditorHistory retains local intention; Interaction builds actual inverses; OperationEngine controls canonical admission/atomic publish; Scene postcommit handling remains existing owner",
+  "target": "PreparedApplyPlan produces staged ObjectStore read view; admission prepares real F/U and History before the same single canonical op publishes; generation/clock basis checked; no parallel runtime/history",
+  "source": "Exact B result reused; no bootstrap replay",
+  "T06": "Actual History redo must contain all original OrderOnlyEdits; independent expected values unchanged"
+}

@@ -18,6 +18,9 @@ class AppliedOperationLedger final : public AppliedOperationView {
     friend class OperationEngine;
 
     [[nodiscard]] bool recordApplied(const Operation& canonical_operation);
+    using ReservedEntry = std::map<OperationId, AppliedOperationEntry>::node_type;
+    [[nodiscard]] std::optional<ReservedEntry> reserveContainerEntry(const Operation&, bool required = false);
+    [[nodiscard]] bool recordReservedOrApplied(const Operation&, std::optional<ReservedEntry>);
 
     std::map<OperationId, AppliedOperationEntry> entries_;
 };

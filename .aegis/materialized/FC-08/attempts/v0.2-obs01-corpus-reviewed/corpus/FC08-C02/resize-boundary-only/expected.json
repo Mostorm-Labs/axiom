@@ -1,0 +1,25 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "descendant_origins",
+      "expected": [
+        [
+          10,
+          5
+        ],
+        [
+          30,
+          15
+        ]
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "render_query_basis_equal",
+      "expected": true
+    }
+  ],
+  "source_case": "FC08-C02",
+  "product_expected_only": true
+}

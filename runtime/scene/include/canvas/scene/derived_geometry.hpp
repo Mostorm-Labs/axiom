@@ -27,7 +27,8 @@ struct ConnectorGeometry final {
     }
 };
 struct ArrowHeadGeometry final { foundation::WorldPoint tip{}, left{}, right{}; };
-using DerivedGeometry = std::variant<std::monostate, TriangleGeometry, ConnectorGeometry>;
+struct SectionBoundaryGeometry final { foundation::WorldRect boundary{}; bool operator==(const SectionBoundaryGeometry&) const = default; };
+using DerivedGeometry = std::variant<std::monostate, TriangleGeometry, ConnectorGeometry, SectionBoundaryGeometry>;
 [[nodiscard]] DerivedGeometry deriveGeometry(const semantic::ObjectRecord&) noexcept;
 [[nodiscard]] std::optional<TriangleGeometry> triangleGeometry(const semantic::ShapeContent&) noexcept;
 [[nodiscard]] std::optional<ConnectorGeometry> connectorGeometry(

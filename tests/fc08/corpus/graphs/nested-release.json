@@ -1,0 +1,49 @@
+{
+  "before": {
+    "A": {
+      "parent": null,
+      "tx": 10
+    },
+    "B": {
+      "parent": "A",
+      "tx": 20
+    },
+    "C": {
+      "parent": "B",
+      "tx": 30
+    },
+    "D": {
+      "parent": "C",
+      "tx": 40
+    }
+  },
+  "remove": [
+    "A",
+    "C"
+  ],
+  "frontier": [
+    "B",
+    "D"
+  ],
+  "after": {
+    "B": {
+      "parent": null,
+      "tx": 30
+    },
+    "D": {
+      "parent": "B",
+      "tx": 70
+    }
+  },
+  "world_x_before": {
+    "A": 10,
+    "B": 30,
+    "C": 60,
+    "D": 100
+  },
+  "world_x_after": {
+    "B": 30,
+    "D": 100
+  },
+  "inverse": "Restore exact records A/C and original B/D placement+transform+keys; one Introduce effect, no selection-antichain filter on structural compensation."
+}

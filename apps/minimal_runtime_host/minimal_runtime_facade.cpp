@@ -7,6 +7,10 @@ namespace canvas::minimal_runtime_host {
 MinimalRuntimeFacade::MinimalRuntimeFacade(MinimalRuntimeHost& host) noexcept
     : host_(host) {}
 
+runtime::SectionSnapshot MinimalRuntimeFacade::readSection(foundation::ObjectId id) const {
+  return host_.composition().controlFacade().readSection(id);
+}
+
 runtime::RuntimeStateSnapshot MinimalRuntimeFacade::readRuntimeState() const noexcept {
   return host_.composition().controlFacade().readRuntimeState();
 }

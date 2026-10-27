@@ -1,0 +1,48 @@
+[
+  {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests/fc08",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "started_at": "2026-10-25T20:02:15.889512+00:00",
+    "ended_at": "2026-10-25T20:02:16.150685+00:00",
+    "log": ".aegis/results/FC-08-VERIFY-MATERIALIZE/final-verification/reference-and-source-tests.log"
+  },
+  {
+    "argv": [
+      "ctest",
+      "--test-dir",
+      "out/fc08/windows-native",
+      "-R",
+      "^FC08BaselineProbeDiscovery$",
+      "--output-on-failure"
+    ],
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "started_at": "2026-10-25T20:02:16.150829+00:00",
+    "ended_at": "2026-10-25T20:02:16.295792+00:00",
+    "log": ".aegis/results/FC-08-VERIFY-MATERIALIZE/final-verification/native-discovery.log"
+  },
+  {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "tools/fc08/check_materialization.py",
+      "--repo",
+      "."
+    ],
+    "exit_code": 2,
+    "expected_exit_code": 2,
+    "started_at": "2026-10-25T20:02:16.295908+00:00",
+    "ended_at": "2026-10-25T20:02:16.811913+00:00",
+    "log": ".aegis/results/FC-08-VERIFY-MATERIALIZE/final-verification/terminal-integrity.log"
+  }
+]

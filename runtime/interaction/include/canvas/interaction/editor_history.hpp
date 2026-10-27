@@ -9,9 +9,16 @@
 #include <span>
 #include <vector>
 
-namespace canvas::interaction {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+#include <memory>
+namespace canvas::qualification { struct State; class Access; }
+#endif
 
-enum class HistoryAspect : std::uint8_t { kWholeRecord, kTransform, kSize, kPlacement, kProperties, kRichTextContent };
+namespace canvas::semantic { class OperationAdmission; }
+namespace canvas::interaction {
+class HistoryCommandAdmission;
+
+enum class HistoryAspect : std::uint8_t { kWholeRecord, kTransform, kSize, kPlacement, kProperties, kRichTextContent, kTopology };
 struct HistoryExpectation final {
     semantic::ObjectId objectId{};
     std::optional<semantic::ObjectRecord> record;
@@ -25,6 +32,11 @@ struct HistoryExpectation final {
 // changed exclusively by the submit port with ordinary typed Operations.
 class HistorySubmitPort {
   public:
+    [[nodiscard]] virtual SubmitResult submitAdmitted(const semantic::Operation&,
+        semantic::ApplySource, semantic::OperationAdmission&) { return SubmitResult::rejected(); }
+    // Called only after the reserved entry/cursor has committed. Derived Scene
+    // publication remains in the existing owner and cannot reject canonical.
+    virtual void publishAdmitted() noexcept {}
     virtual ~HistorySubmitPort() = default;
     [[nodiscard]] virtual semantic::OperationId allocateOperationId() = 0;
     [[nodiscard]] virtual SubmitResult submit(
@@ -40,17 +52,24 @@ class HistorySubmitPort {
 };
 
 class EditorHistory final {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    friend class canvas::qualification::Access;
+    std::shared_ptr<canvas::qualification::State> fc08Qualification_;
+#endif
   public:
     struct PreparedEntry final {
         semantic::Operation forward;
         std::vector<semantic::Operation> inverse;
         std::vector<HistoryExpectation> before;
         std::vector<HistoryExpectation> after;
+        bool admissionRequired = false;
     };
     [[nodiscard]] std::optional<PreparedEntry> prepareRecord(
         const semantic::Operation& forward, const std::vector<semantic::Operation>& inverse,
         std::vector<HistoryExpectation> before, std::vector<HistoryExpectation> after);
     void commitPrepared(PreparedEntry&&) noexcept;
+    // The existing submit owner invokes precommit admission on the actual plan.
+    [[nodiscard]] bool executeUndoable(const semantic::Operation&);
     explicit EditorHistory(HistorySubmitPort& submit) noexcept : submit_(submit) {}
 
     // The inverse is the semantic preimage captured by the owning command.
@@ -68,10 +87,14 @@ class EditorHistory final {
     [[nodiscard]] std::size_t size() const noexcept { return entries_.size(); }
 
   private:
+    friend class HistoryCommandAdmission;
+    [[nodiscard]] std::optional<PreparedEntry> prepareValidatedRecord(
+        const semantic::Operation&, const std::vector<semantic::Operation>&,
+        std::vector<HistoryExpectation>, std::vector<HistoryExpectation>, bool admitted);
     using Entry = PreparedEntry;
 
     [[nodiscard]] bool submitFresh(std::span<const semantic::Operation> operations,
-                                  std::span<const HistoryExpectation> expectations);
+                                  std::span<const HistoryExpectation> expectations, bool admissionRequired = false);
     [[nodiscard]] bool identityKnown(const semantic::OperationId& id) const noexcept;
 
     HistorySubmitPort& submit_;

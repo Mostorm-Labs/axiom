@@ -1,0 +1,26 @@
+{
+  "status": "REUSED_EXACT_PRODUCTION_SOURCE_BINDING",
+  "production_source_revision": "4a4c0b419a57fdaae12e8d7454f5463361f1c501",
+  "current_result_source": "7570a816b058f7df2f67ef7fcdcbf22835e93ce8",
+  "unchanged_product_paths": [
+    "runtime/semantic/src",
+    "runtime/semantic/include",
+    "runtime/interaction",
+    "runtime/foundation",
+    "runtime/composition",
+    "runtime/scene",
+    "runtime/render",
+    "runtime/text",
+    "schema",
+    "semantic-sdk.lock.json",
+    "r1-full-skia-sdk.lock.json"
+  ],
+  "evidence": {
+    "path": ".aegis/results/FC-08-SECTION-C/qualified-native/subject-binding.json",
+    "sha256": "a4a3cebcd2150a1586fd9da63623105b84cadc7290b2a1c24aaaaf43375eb9cb"
+  },
+  "old_native_tests": 13,
+  "old_native_passed": 13,
+  "new_native_run_claimed": false,
+  "reason": "Only versioned fixture inputs and verification consumers changed; Runtime and native host behavior are byte-for-byte preserved."
+}

@@ -1,0 +1,44 @@
+{
+  "status": "FIXED_R01_POSITIVE_INDEPENDENTLY_RECONSTRUCTED_AND_DECODED",
+  "wire": {
+    "path": "tests/fc08/corpus/wire/legacy-snapshot2.pb",
+    "sha256": "9f169ee33252ce0ffaaf77424c7dbe17f535f1a9e29b0a9e266fb9fd9f6f729a",
+    "size": 22
+  },
+  "typed_input": {
+    "path": "tests/fc08/corpus/wire/legacy-snapshot2.input.json",
+    "sha256": "a7f49c3a0fb0d913cf899c274e8e59d03fcde535d2c744410769cf2fb0796fff",
+    "size": 180
+  },
+  "reference_writer": {
+    "path": "tests/fc08/reference/wire.py",
+    "sha256": "122a8f587e5a984a3ffb3d545c8854ee81e6ce4a022cff52b73b86f1ad0e1ae6",
+    "size": 5114
+  },
+  "descriptor": {
+    "path": ".aegis/materialized/FC-08/proposed-descriptor/descriptor.pb",
+    "sha256": "9d77afed2f42678b8836e26673707301ca84f431657b79966259d00fe5d33477",
+    "size": 29761
+  },
+  "protoc": {
+    "path": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+    "sha256": "9a4fe52db00facbf858dc5af9addb50b551429004044e8a24f137de38c5b209f",
+    "size": 13261199
+  },
+  "decode": {
+    "argv": [
+      "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+      "--descriptor_set_in=C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\materialized\\FC-08\\proposed-descriptor\\descriptor.pb",
+      "--decode=auditoryworks.axiom.v1.DocumentSnapshot"
+    ],
+    "stdin": {
+      "path": "tests/fc08/corpus/wire/legacy-snapshot2.pb",
+      "sha256": "9f169ee33252ce0ffaaf77424c7dbe17f535f1a9e29b0a9e266fb9fd9f6f729a",
+      "size": 22
+    },
+    "exit_code": 0,
+    "stdout": "document_id {\r\n  value: \"\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000d\"\r\n}\r\nschema_version: 2\r\n",
+    "stderr": ""
+  },
+  "production_codec_used_as_expected": false
+}

@@ -1,0 +1,88 @@
+{
+  "task": "FC-08 Section bounded D/E",
+  "status": "READY_FOR_CONTROL_REVIEW_WITH_BASELINE_VERIFICATION_DEBT",
+  "repository": "Mostorm-Labs/axiom",
+  "result_revision": "f3d9e67508b4b8f6e2ddbf756b51c543efeafa55",
+  "source_revision": "f3d9e67508b4b8f6e2ddbf756b51c543efeafa55",
+  "materialized_ref": "refs/heads/codex/fc08-section-scene-host",
+  "task_anchor": "af1aff801369052eb7b94716f6b4ab3e899eb3e9",
+  "package_ref": {
+    "path": ".aegis/packages/FC-08-SECTION-DE-v0.5/package.json",
+    "sha256": "0b4bb80b9ee642195a3891fc32becff82d53af2b4f03491d8eafcc7f29c7a656",
+    "revision": "fd179205395cac82425b23d8be62e538c04edd72"
+  },
+  "required_authorization_decision": "NONE_PENDING_FOR_D_E; direct user instruction materialized, old P31/evidence unchanged",
+  "implementation_design": {
+    "path": ".aegis/results/FC-08-SECTION-DE/ImplementationDesignPreflight.final.json",
+    "sha256": "158ac567883cb4e0391f7599f24611ae26f74f3833a950bc64943877542a6ded"
+  },
+  "evidence_manifest": {
+    "path": ".aegis/results/FC-08-SECTION-DE/evidence-manifest.json",
+    "sha256": "9a42d5658f7967dc3ee0d90b159e5d60b82da40bc524f961edac6e747984bbd9"
+  },
+  "changed_files": {
+    "path": ".aegis/results/FC-08-SECTION-DE/changed-files.json",
+    "sha256": "b5189a45168f09069e0a97804959a814d550651e22ca0165de17d64d52d2453e"
+  },
+  "artifacts": {
+    "path": ".aegis/results/FC-08-SECTION-DE/artifacts.json",
+    "sha256": "5b0aae4e1da37c6c0d378008bdc0985eca899020da8a81f7603c37097a6c1d89"
+  },
+  "results": {
+    "native": {
+      "tests": 38,
+      "passed": 37,
+      "failed": [
+        "FC01TriangleConnectorRaster"
+      ],
+      "skipped": [],
+      "ctest_exit_code": 8,
+      "new_failures": []
+    },
+    "semantic": {
+      "tests": 690,
+      "passed": 689,
+      "failed": [
+        "StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds"
+      ],
+      "skipped": [],
+      "ctest_exit_code": 8,
+      "new_failures": []
+    },
+    "python_contracts": {
+      "tests": 10,
+      "passed": 10,
+      "skipped": 0
+    },
+    "runtime_boundaries": {
+      "contract_files": 101,
+      "status": "PASS"
+    },
+    "chrome_wasm": {
+      "checks": 42,
+      "passed": 42,
+      "source": "f3d9e67508b4b8f6e2ddbf756b51c543efeafa55",
+      "dirty": 0
+    },
+    "production_builds": {
+      "windows": 0,
+      "web": 0
+    }
+  },
+  "blocking_new_implementation_failures": [],
+  "baseline_verification_debt": [
+    "StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds",
+    "FC01TriangleConnectorRaster"
+  ],
+  "physical": "PHYSICAL_PENDING",
+  "full302_runner": "NOT_COMPLETE; NOT promoted from scoped tests",
+  "not_claimed": [
+    "DEV PASS",
+    "P34 PASS",
+    "PHYS PASS",
+    "Release readiness",
+    "hosted CI",
+    "G5 performance"
+  ],
+  "next_smallest_slice": "Complete real frozen-case observation bindings and physical Windows/Web regression without expanding product semantics"
+}

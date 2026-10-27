@@ -2,6 +2,11 @@
 
 #include <algorithm>
 #include <new>
+#include <type_traits>
+#include "undoable_command.hpp"
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+#include "qualification_checkpoint.hpp"
+#endif
 
 namespace canvas::interaction {
 
@@ -14,6 +19,9 @@ bool historyExpectationsMatch(const semantic::ObjectStore& store,
             current->kind_version != expected.record->kind_version) return false;
         const auto& record = *expected.record;
         switch (expected.aspect) {
+            case HistoryAspect::kTopology:
+                if (current->placement != record.placement || current->transform != record.transform) return false;
+                break;
             case HistoryAspect::kRichTextContent: if (current->content != record.content) return false; break;
             case HistoryAspect::kWholeRecord: if (*current != record) return false; break;
             case HistoryAspect::kTransform: if (current->transform != record.transform) return false; break;
@@ -111,24 +119,85 @@ bool EditorHistory::recordConditional(semantic::Operation forward,
 std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareRecord(
     const semantic::Operation& forward,const std::vector<semantic::Operation>& inverse,
     std::vector<HistoryExpectation> before,std::vector<HistoryExpectation> after) {
-    if (!supportedForward(forward) || inverse.empty() || forward.id.isZero()) {
+    return prepareValidatedRecord(forward, inverse, std::move(before), std::move(after), false);
+}
+std::optional<EditorHistory::PreparedEntry> EditorHistory::prepareValidatedRecord(
+    const semantic::Operation& forward, const std::vector<semantic::Operation>& inverse,
+    std::vector<HistoryExpectation> before, std::vector<HistoryExpectation> after, bool admitted) {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    if (canvas::qualification::observing(fc08Qualification_)) return std::nullopt;
+    canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
+#endif
+    if (!(admitted ? supportsUndoableCommand(forward.kind()) : supportedForward(forward)) || inverse.empty() || forward.id.isZero()) {
         return std::nullopt;
     }
     for (const auto& item : inverse) {
-        if (!supportedInverse(item) || item.document_id != forward.document_id || item.id.isZero()) {
+        if (!(admitted ? supportsUndoableCommand(item.kind()) : supportedInverse(item)) || item.document_id != forward.document_id || item.id.isZero()) {
             return std::nullopt;
         }
     }
     try {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+        if (canvas::qualification::historyCheckpoint(fc08Qualification_, this,
+            canvas::qualification::Point::kHistBeforeReserve, forward, entries_.size(), cursor_)) return std::nullopt;
+#endif
         entries_.reserve(cursor_+1);
-        return PreparedEntry{forward,inverse,std::move(before),std::move(after)};
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+        PreparedEntry fc08Prepared{forward,inverse,std::move(before),std::move(after),admitted};
+        if (canvas::qualification::historyCheckpoint(fc08Qualification_, this,
+            canvas::qualification::Point::kHistReady, forward, entries_.size(), cursor_)) return std::nullopt;
+        return fc08Prepared;
+#else
+        return PreparedEntry{forward,inverse,std::move(before),std::move(after),admitted};
+#endif
     } catch(const std::bad_alloc&) { return std::nullopt; }
 }
 void EditorHistory::commitPrepared(PreparedEntry&& entry) noexcept {
+    static_assert(std::is_nothrow_move_constructible_v<PreparedEntry>);
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    if (canvas::qualification::observing(fc08Qualification_)) return;
+#endif
     entries_.resize(cursor_);
     entries_.push_back(std::move(entry));
     cursor_ = entries_.size();
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    canvas::qualification::historyTransition(fc08Qualification_, this,
+        entries_.back().forward.id, entries_.back().forward.document_id, entries_.size(), cursor_);
+#endif
 }
+
+class HistoryCommandAdmission final : public semantic::OperationAdmission {
+  public:
+    explicit HistoryCommandAdmission(EditorHistory* history,
+        std::span<const HistoryExpectation> expected = {}) : history_(history), expected_(expected) {}
+    bool admit(const semantic::PreparedApplyPlan& plan,
+        const semantic::StatefulValidationContext& context,
+        const semantic::StagedObjectView& after) override {
+        if (called_ || (!expected_.empty() &&
+            (!historyExpectationsMatch(context.objects, expected_) || !historyFootprintMatches(plan, expected_)))) return false;
+        called_ = true;
+        auto command = prepareUndoableCommand(plan, context, after);
+        if (!command) return false;
+        if (history_) {
+            entry = history_->prepareValidatedRecord(command->forward, {command->inverse},
+                std::move(command->before), std::move(command->after), true);
+            return entry.has_value();
+        }
+        return true;
+    }
+    std::optional<EditorHistory::PreparedEntry> entry;
+  private:
+    EditorHistory* history_;
+    std::span<const HistoryExpectation> expected_;
+    bool called_ = false;
+};
+bool EditorHistory::executeUndoable(const semantic::Operation& forward) try {
+    HistoryCommandAdmission admission(this);
+    if (!submit_.submitAdmitted(forward, semantic::ApplySource::kLocalInteraction, admission).accepted) return false;
+    if (admission.entry) commitPrepared(std::move(*admission.entry));
+    submit_.publishAdmitted();
+    return true;
+} catch (const std::bad_alloc&) { return false; }
 
 bool EditorHistory::identityKnown(const semantic::OperationId& id) const noexcept {
     if (std::find(emittedOperationIds_.begin(), emittedOperationIds_.end(), id) !=
@@ -145,7 +214,7 @@ bool EditorHistory::identityKnown(const semantic::OperationId& id) const noexcep
 }
 
 bool EditorHistory::submitFresh(std::span<const semantic::Operation> operations,
-                               std::span<const HistoryExpectation> expectations) {
+                               std::span<const HistoryExpectation> expectations, bool admissionRequired) try {
     std::vector<semantic::Operation> fresh(operations.begin(), operations.end());
     std::vector<semantic::OperationId> allocated;
     allocated.reserve(fresh.size());
@@ -159,26 +228,48 @@ bool EditorHistory::submitFresh(std::span<const semantic::Operation> operations,
         allocated.push_back(id);
     }
     emittedOperationIds_.reserve(emittedOperationIds_.size()+allocated.size());
-    if (!submit_.submitConditional(fresh, semantic::ApplySource::kUndoRedo, expectations).accepted) return false;
+    if (admissionRequired) {
+        if (fresh.size() != 1U) return false;
+        HistoryCommandAdmission admission(nullptr, expectations);
+        if (!submit_.submitAdmitted(fresh.front(), semantic::ApplySource::kUndoRedo, admission).accepted) return false;
+    } else if (!submit_.submitConditional(fresh, semantic::ApplySource::kUndoRedo, expectations).accepted) return false;
     emittedOperationIds_.insert(emittedOperationIds_.end(), allocated.begin(), allocated.end());
     return true;
-}
+} catch (const std::bad_alloc&) { return false; }
 
 bool EditorHistory::undo() {
-    if (!canUndo() || !submitFresh(entries_[cursor_ - 1].inverse, entries_[cursor_ - 1].after)) return false;
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    if (canvas::qualification::observing(fc08Qualification_)) return false;
+    canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
+#endif
+    if (!canUndo() || !submitFresh(entries_[cursor_ - 1].inverse, entries_[cursor_ - 1].after, entries_[cursor_ - 1].admissionRequired)) return false;
     --cursor_;
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    canvas::qualification::historyTransition(fc08Qualification_, this,
+        emittedOperationIds_.back(), entries_[cursor_].forward.document_id, entries_.size(), cursor_);
+#endif
+    if (entries_[cursor_].admissionRequired) submit_.publishAdmitted();
     return true;
 }
 
-bool EditorHistory::redo() {
+bool EditorHistory::redo() try {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    if (canvas::qualification::observing(fc08Qualification_)) return false;
+    canvas::qualification::FaultScope fc08Scope{fc08Qualification_.get()};
+#endif
     if (!canRedo()) return false;
     auto forward = entries_[cursor_].forward;
     if (const auto* insert=std::get_if<semantic::InsertObjectsOp>(&forward.payload); insert &&
         std::all_of(insert->objects.begin(),insert->objects.end(),[](const auto& object){return object.kind==semantic::ObjectKind::kRichText || object.kind==semantic::ObjectKind::kImage;}))
         forward.payload=semantic::RestoreObjectsOp{insert->objects};
-    if (!submitFresh(std::span<const semantic::Operation>(&forward, 1), entries_[cursor_].before)) return false;
+    if (!submitFresh(std::span<const semantic::Operation>(&forward, 1), entries_[cursor_].before, entries_[cursor_].admissionRequired)) return false;
     ++cursor_;
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    canvas::qualification::historyTransition(fc08Qualification_, this,
+        emittedOperationIds_.back(), entries_[cursor_ - 1].forward.document_id, entries_.size(), cursor_);
+#endif
+    if (entries_[cursor_ - 1].admissionRequired) submit_.publishAdmitted();
     return true;
-}
+} catch (const std::bad_alloc&) { return false; }
 
 } // namespace canvas::interaction

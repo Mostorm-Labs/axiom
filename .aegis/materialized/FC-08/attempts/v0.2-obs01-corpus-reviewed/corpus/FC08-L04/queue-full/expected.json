@@ -1,0 +1,26 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "new_request_committed",
+      "expected": false
+    },
+    {
+      "op": "equal",
+      "path": "terminal_delivered",
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "path": "queue_bounded",
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "path": "reservation_released_once",
+      "expected": true
+    }
+  ],
+  "source_case": "FC08-L04",
+  "product_expected_only": true
+}

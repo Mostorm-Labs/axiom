@@ -1,0 +1,88 @@
+{
+  "status": "SECTION_A_IMPLEMENTED_NATIVE_TESTED_WITH_PREEXISTING_REGRESSION",
+  "result_revision": "ad256785add190e7a83ef89122b7d9473e63064c",
+  "materialized_ref": "refs/heads/codex/fc08-section-foundation",
+  "source_baseline": "9d731f40515d69959c3d3941d889e062aa6bcdcf",
+  "authorization": {
+    "package_revision": "48282ee83f70dcbfa0b7db3c7d252797fcb91fe9",
+    "package_path": ".aegis/packages/FC-08-SECTION-A-v0.1/package.json",
+    "package_sha256": "d83cbc26289764a96a5d4e0c2152d281fa8c3ea331163195f29e3b3fc2cb9683",
+    "scope_amendment_revision": "62d9c619a261f11c3eabf086f85d948931a58783",
+    "source": "Direct user implementation direction, bounded A only; original P31 false flag unchanged"
+  },
+  "preflights": {
+    "package": {
+      "path": "qualified-preflight-001/package.json",
+      "exit_code": 0
+    },
+    "evidence": {
+      "path": "qualified-preflight-001/evidence.json",
+      "exit_code": 0
+    },
+    "scope_preservation": {
+      "path": "qualified-scope-audit.json",
+      "exit_code": 0
+    }
+  },
+  "results": {
+    "Section_A": {
+      "tests": 48,
+      "failures": 0,
+      "skipped": 0
+    },
+    "selected_native_regressions_including_A": {
+      "name": "Win32-ninja",
+      "tests": "401",
+      "failures": "1",
+      "disabled": "0",
+      "skipped": "0",
+      "hostname": "HIMEKO",
+      "time": "12",
+      "timestamp": "2026-10-26T18:01:20"
+    },
+    "python": {
+      "tests": 10,
+      "failures": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "strict_build": {
+      "configure_exit": 0,
+      "build_exit": 0,
+      "MSVC": "19.51.36246 x64",
+      "flags": [
+        "/W4",
+        "/WX",
+        "/MT"
+      ]
+    },
+    "raw_CTest_exit_code": 8
+  },
+  "classification": [
+    {
+      "id": "BASELINE_SHAPE_RICHTEXT_TEST_EXPECTATION_CONFLICT",
+      "test": "StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds",
+      "status": "FAIL_PREEXISTING",
+      "baseline_subject": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "semantic_source_equal_to_A_start": true,
+      "baseline_exit_code": 8,
+      "owner": "Existing Shape/RichText validation test contract, outside bounded Section A",
+      "action": "Retained unchanged; no Section implementation failure found in this matrix; no all-regression-pass claim"
+    }
+  ],
+  "not_run": [
+    "Operation17/18 canonical payloads, guard validation, staged execution",
+    "Real forward/inverse sizing and History admission/Undo/Redo",
+    "Section snapshot capability, recovery, digest/projection and Scene publication",
+    "Section geometry, child scope, public facade and Windows/Web interaction",
+    "Full302 actual product runner and Chrome/WASM/physical Section validation"
+  ],
+  "next_smallest_slice": "B: implement accepted SetSectionContent17 and closed EditContainerTopology18 effects/guards in existing Semantic OperationEngine and staged apply, with zero-mutation rejection tests. Requires its own bounded execution authorization; A package does not authorize B-E.",
+  "claims": {
+    "DEV_PASS": false,
+    "P34_PASS": false,
+    "PHYS_PASS": false,
+    "release_ready": false,
+    "full_product_runner_complete": false
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "format": "fc08-scoped-governance-acceptance-receipt-v1",
+  "not_an_aegis_execution_package": true,
+  "decision_record_id": "FC08-P23-ACCEPTANCE-v0.1",
+  "date": "2026-10-26",
+  "date_timezone": "Asia/Tokyo",
+  "authority": {
+    "id": "fc08-container-extension-semantic-v0.1",
+    "scope": "semantic:axiom/fc08-container-extension",
+    "kind": "semantic-schema-operation",
+    "version": "v0.1",
+    "status": "Current",
+    "surface": "Notion",
+    "ref": "https://app.notion.com/p/4044c57a590c81a8813bcad8c57ff6ee"
+  },
+  "acceptance_verdict": "ACCEPTED_SCOPE_LIMITED",
+  "acceptance_basis": {
+    "actor": "user-via-explicit-contextual-continuation",
+    "message": "好的 继续下一步",
+    "selected_context": "Execute FC-08 Scoped P23 Acceptance for D01-D08 against the prepared input; retain BASE-01 machine publication condition.",
+    "approval_token": null,
+    "independent_human_audit_claimed": false
+  },
+  "accepted_input": {
+    "id": "FC08-P23-ACCEPTANCE-PREPARATION-v0.1",
+    "file": "accepted_input/FC08_P23_Acceptance_Preparation_v0.1.zip",
+    "zip_sha256": "78fcf37e795c0001ec46566c13944110d7989c434b0f7ff1f7f92321325bac87",
+    "manifest_sha256": "f93b286dfd93607342219f879747b2fa207b0eefaad068cbf4e16cfff0b99035",
+    "files_sha256": {
+      "README.md": "2a15bf977bb6c5e6faeba250e0a02e7d3ee9698c4aa01860c8e961f64d69a7ac",
+      "audit/candidate_static_check.json": "1841db1100797c2412bf0d0ac9a3ee6bca08bb477d9d930ccf1a529a1fc30d68",
+      "audit/check_candidate.py": "a3a084c8d0931316ca3094ac7f706a637bdcecc377a76d8073248cd1a14163e2",
+      "audit/current_object.message.pb": "80718d55a6cdc73040b6a07ec0293338402ff25ec6bb2427cf0a254c8d65e737",
+      "audit/current_operation.message.pb": "7d019f761de6c65c52c80a9d25c3a743dacabd70afd69c669abd6ad320fc7c97",
+      "audit/current_shape.fragment.b64": "0689e269c1e3798fde889c9506509494d0109229e642655341d2b37618e85103",
+      "audit/current_shape.message.pb": "e643558afdbc4a30843fa0eb3a4bb58c4ba1800be1347f0d13628cfc8a25ea3a",
+      "audit/historical_object.message.pb": "80718d55a6cdc73040b6a07ec0293338402ff25ec6bb2427cf0a254c8d65e737",
+      "audit/historical_operation.message.pb": "5b0f49c90c85ef81600cb865a849223acc31788ce271e6520a35e10f6e9d55e5",
+      "audit/inspect_scoped.py": "0dc9e0dabdfd0771d928e0d97537a5c4bc63ea458f6fb3197b8c1e9072758f36",
+      "audit/scoped_descriptor_audit.json": "fd30e95fbedbb3803dcf3738df827f97b93dd20856025c44fd673d7984b6f6d6",
+      "capability_binding.md": "795bed80c7aa264dac8e8f779c2d0e8fd771f47b43c637a4b524d3b3c744c881",
+      "idl/container_operations.proto": "905389d433c7bb96863ae26e08108fa834c7063246d0f6713a15d5cc76ead84d",
+      "idl/outer_mapping.txt": "e874f307001020394657b745fc2c0e4cd7b8ec6d320e5f39dc7ccc8182bfab15",
+      "idl/section.proto": "6b2bff0e7298ef06a3740f7317c2b67fee937210f70e631f1f9f0776ab47f927",
+      "registry_delta.json": "607a5971f9aca871dcc0555381954ef15bff660c074745b91e2c29dd70bbe9f5",
+      "wire_profile.md": "9791533f4e101b67c6d92a6a62dcfd65b667d25ae3da52526daccf2e442c7747"
+    },
+    "original_bytes_unchanged": true,
+    "original_proposed_status_preserved_as_history": true
+  },
+  "accepted_sources": [
+    {
+      "ref": "https://app.notion.com/p/4044c57a590c819db830d875ad4bdbab",
+      "role": "preparation and CAP-01..06",
+      "read_version_last_edited_at": "2026-10-25T17:16:31.874Z"
+    },
+    {
+      "ref": "https://app.notion.com/p/4044c57a590c812cbfdfef7e95eb57e2",
+      "role": "exact wire appendix",
+      "read_version_last_edited_at": "2026-10-25T17:13:50.455Z"
+    },
+    {
+      "ref": "https://app.notion.com/p/4044c57a590c8192b9cbc6dd108a408e",
+      "role": "P12 v0.2 technical clauses; section 7.2 append interpretation superseded only by CAP-01..06",
+      "read_version_last_edited_at": "2026-10-25T17:05:45.229Z"
+    },
+    {
+      "ref": "https://app.notion.com/p/4044c57a590c81d2a4d7cf6cd20c0402",
+      "role": "P13 v0.2 + E01 technical clauses",
+      "read_version_last_edited_at": "2026-10-25T17:05:52.726Z"
+    }
+  ],
+  "notion_version_limit": "Timestamps identify inspected versions, not immutable content hashes. Future page edits are not implicitly accepted. Repository materialization must bind the accepted actual technical content and reconcile discrepancies.",
+  "decisions": [
+    {
+      "id": "FC08-P23-D01",
+      "verdict": "ACCEPTED",
+      "scope": "Section/1 identity and exact SectionContent schema; kind 10 and ObjectContent tag 12."
+    },
+    {
+      "id": "FC08-P23-D02",
+      "verdict": "ACCEPTED",
+      "scope": "Alternating Group/Section hierarchy, independent boundary and inherited affine semantics; preserve Sticky 0..1 RichText and existing reference rules."
+    },
+    {
+      "id": "FC08-P23-D03",
+      "verdict": "ACCEPTED",
+      "scope": "Section fillStyle and opacity applicability only; inherited defaults and Clear; no subtree opacity or Section lock/visibility."
+    },
+    {
+      "id": "FC08-P23-D04",
+      "verdict": "ACCEPTED",
+      "scope": "SetSectionContent 17 and EditContainerTopology 18, exact bound IDL, three exclusive effects, guards and atomic final-state publication; preserve operations 1..16."
+    },
+    {
+      "id": "FC08-P23-D05",
+      "verdict": "ACCEPTED",
+      "scope": "CAP-01..06: content-derived sorted unique unsigned-ASCII capabilities, Snapshot3 and separate log/writer admission; no silent legacy rehash."
+    },
+    {
+      "id": "FC08-P23-D06",
+      "verdict": "ACCEPTED",
+      "scope": "P12 section 6 PoseConstruction/1 as read, without changing canonical exact equality or numeric constants."
+    },
+    {
+      "id": "FC08-P23-D07",
+      "verdict": "ACCEPTED",
+      "scope": "P13 E01 UB-01..06 and 10.1: full forward/inverse budget admission and History reservation before locally undoable commit; not a headless replay condition."
+    },
+    {
+      "id": "FC08-P23-D08",
+      "verdict": "ACCEPTED_SCOPE_LIMITED",
+      "scope": "Scoped extension and downstream obligations only; preserve FC01A locks, task order, physical debt and INT-01 ownership."
+    }
+  ],
+  "assignments": {
+    "object_kind": {
+      "id": 10,
+      "version": 1,
+      "branch": "section",
+      "content_tag": 12
+    },
+    "operations": [
+      {
+        "id": 17,
+        "payload_tag": 17,
+        "name": "SetSectionContent",
+        "schema_version": 1,
+        "payload_version": 1
+      },
+      {
+        "id": 18,
+        "payload_tag": 18,
+        "name": "EditContainerTopology",
+        "schema_version": 1,
+        "payload_version": 1
+      }
+    ],
+    "files": [
+      "idl/section.proto",
+      "idl/container_operations.proto"
+    ],
+    "capabilities": [
+      "section-v1",
+      "container-topology-v1"
+    ],
+    "section_property_field_ids": [
+      3,
+      256
+    ]
+  },
+  "ap01": "CLOSED_BY_ACCEPTANCE",
+  "ap02": "CLOSED_FOR_SEMANTIC_ACCEPTANCE",
+  "retained_conditions": [
+    {
+      "id": "BASE-01",
+      "status": "OPEN_MACHINE_PUBLICATION_PRECONDITION",
+      "owner": "authorized schema/codec materialization owner",
+      "closure": "Preserve accepted ShapeContent.label=4 and historical descriptor.lock; generate a source-complete successor with the pinned toolchain, separating inherited alignment from FC08 delta. No production publish or executable package consumption claim before required materialization checks."
+    },
+    {
+      "id": "SOURCE-DRIFT",
+      "status": "RETAINED_NOT_WAIVED",
+      "owner": "snapshot/capability compatibility owner",
+      "closure": "Observed unsorted implementation is not a second canonical profile. Any stored drifted snapshot repair requires explicit scoped handling; no silent reorder or rehash."
+    },
+    {
+      "id": "INT-01",
+      "status": "OPEN_CROSS_FC_INTEGRATION",
+      "owner": "FC-04 / FC-10",
+      "closure": "Mixed safe Section removal and destructive default deletion remain an integration obligation; reject unsupported combined commands before mutation."
+    }
+  ],
+  "repository": {
+    "observation_revision": "e5e630c5662167763fc7ba66b94c35881b1e1470",
+    "accepted_revision": null,
+    "written": false,
+    "authority_registry_updated": false,
+    "notion_current_not_repo_current": true
+  },
+  "verification": {
+    "input_checks_ref": "acceptance-input-check.json",
+    "input_checks_sha256": "995aede9b8eac75fa80694a1969e1758ac3912918862706edc2409137421df2a",
+    "input_files_verified": 17,
+    "scoped_checks_passed": 8,
+    "axiom_tests_run": false,
+    "protoc_compilation_run": false,
+    "full_descriptor_audit_run": false,
+    "physical_tests_run": false,
+    "p20_frozen": false,
+    "p34_verdict": null
+  },
+  "execution": {
+    "p14_p17_executed_this_turn": false,
+    "p31_p32_authorized": false,
+    "historical_locks_changed": false,
+    "next": "FC08 P14-P17 architecture and platform contract design; P20 and materialization under their own stage contracts."
+  }
+}

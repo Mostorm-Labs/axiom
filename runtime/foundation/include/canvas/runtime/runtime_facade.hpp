@@ -8,12 +8,27 @@
 
 #include <utility>
 #include <vector>
+#include <new>
 
 namespace canvas::runtime {
 
 class RuntimeFacade {
  public:
   virtual ~RuntimeFacade() = default;
+  [[nodiscard]] virtual SectionSnapshot readSection(foundation::ObjectId = {}) const { return {}; }
+  [[nodiscard]] ProductControlReceipt submitSectionIntent(const SectionIntent& intent,
+      std::uint64_t requestId,std::uint64_t clientId=1) noexcept {
+    if(requestId==0||clientId==0||intent.objects.size()>65535||intent.content.title.size()>1048576)
+      return {requestId,ProductControlState::kRejected,0,std::nullopt};
+    try {
+    CanvasControlRequest request{};request.clientId=clientId;request.requestId=requestId;
+    const auto targets=mountedCanvasTargets();
+    if(targets.empty())return {requestId,ProductControlState::kRejected,0,std::nullopt};
+    request.target=targets.front();
+    request.payload.kind=CanvasControlPayloadKind::kSection;request.payload.section=intent;
+    return submitCanvasControl(request);
+    } catch(const std::bad_alloc&) {return {requestId,ProductControlState::kRejected,0,std::nullopt};}
+  }
   [[nodiscard]] virtual TextReceipt submitTextIntent(const TextIntent&) { return {}; }
   [[nodiscard]] virtual TextReceipt submitTextInput(const TextInputEvent&) { return {}; }
   [[nodiscard]] virtual TextEditorSnapshot readTextEditor() const { return {}; }

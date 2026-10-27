@@ -1,0 +1,123 @@
+[0/2] Re-checking globbed directories...
+[1/6] Building CXX object tests/fc08/CMakeFiles/axiom_fc08_control_regression.dir/__/__/runtime/composition/tests/canvas_runtime_facade_test.cpp.o
+FAILED: tests/fc08/CMakeFiles/axiom_fc08_control_regression.dir/__/__/runtime/composition/tests/canvas_runtime_facade_test.cpp.o 
+C:\Users\Chado\AppData\Local\Axiom\toolchains\emsdk-6.0.6\upstream\emscripten\em++.exe -DAXIOM_FC08_QUALIFICATION_HOOKS=1 -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_RELEASE -IC:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include -IC:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/interaction/include -IC:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/scene/include -IC:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/text/include -IC:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/foundation/include -IC:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/input/include -IC:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/render/include -IC:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/ink/include -IC:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/.deps/nlohmann-json/single_include -IC:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/control/include -O3 -DNDEBUG -std=c++20 -UNDEBUG -Wall -Wextra -Wpedantic -Werror -MD -MT tests/fc08/CMakeFiles/axiom_fc08_control_regression.dir/__/__/runtime/composition/tests/canvas_runtime_facade_test.cpp.o -MF tests\fc08\CMakeFiles\axiom_fc08_control_regression.dir\__\__\runtime\composition\tests\canvas_runtime_facade_test.cpp.o.d -o tests/fc08/CMakeFiles/axiom_fc08_control_regression.dir/__/__/runtime/composition/tests/canvas_runtime_facade_test.cpp.o -c C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:20:40: error: calling a private constructor of class 'canvas::runtime::CanvasRuntimeFacade'
+   20 |   canvas::runtime::CanvasRuntimeFacade facade(runtime, {1U, 1U, 1U, 1U});
+      |                                        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:35:3: note: declared private here
+   35 |   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
+      |   ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:30:17: error: 'process' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+   30 |   assert(facade.process(1U) == 1U);
+      |                 ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:101:29: note: declared private here
+  101 |   [[nodiscard]] std::size_t process(std::uint64_t ownerSequence) noexcept;
+      |                             ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:41:29: error: 'target' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+   41 |     request.target = facade.target();
+      |                             ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:103:40: note: declared private here
+  103 |   [[nodiscard]] const CanvasTargetKey& target() const noexcept;
+      |                                        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:47:17: error: 'process' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+   47 |   assert(facade.process(2U) == 1U);
+      |                 ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:101:29: note: declared private here
+  101 |   [[nodiscard]] std::size_t process(std::uint64_t ownerSequence) noexcept;
+      |                             ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:55:33: error: 'target' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+   55 |   closedRequest.target = facade.target();
+      |                                 ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:103:40: note: declared private here
+  103 |   [[nodiscard]] const CanvasTargetKey& target() const noexcept;
+      |                                        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:64:40: error: calling a private constructor of class 'canvas::runtime::CanvasRuntimeFacade'
+   64 |   canvas::runtime::CanvasRuntimeFacade orderedFacade(orderedRuntime, {1U, 1U, 1U, 1U});
+      |                                        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:35:3: note: declared private here
+   35 |   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
+      |   ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:66:78: error: 'target' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+   66 |   select.clientId = 3U; select.requestId = 1U; select.target = orderedFacade.target();
+      |                                                                              ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:103:40: note: declared private here
+  103 |   [[nodiscard]] const CanvasTargetKey& target() const noexcept;
+      |                                        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:70:24: error: 'process' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+   70 |   assert(orderedFacade.process(1U) == 1U);
+      |                        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:101:29: note: declared private here
+  101 |   [[nodiscard]] std::size_t process(std::uint64_t ownerSequence) noexcept;
+      |                             ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:83:40: error: calling a private constructor of class 'canvas::runtime::CanvasRuntimeFacade'
+   83 |   canvas::runtime::CanvasRuntimeFacade styleFacade(styleRuntime, {1U, 1U, 1U, 1U});
+      |                                        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:35:3: note: declared private here
+   35 |   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
+      |   ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:84:73: error: 'target' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+   84 |   const auto before = styleFacade.readCanvasControlSnapshot(styleFacade.target());
+      |                                                                         ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:103:40: note: declared private here
+  103 |   [[nodiscard]] const CanvasTargetKey& target() const noexcept;
+      |                                        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:89:79: error: 'target' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+   89 |   opacity.clientId = 4U; opacity.requestId = 1U; opacity.target = styleFacade.target();
+      |                                                                               ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:103:40: note: declared private here
+  103 |   [[nodiscard]] const CanvasTargetKey& target() const noexcept;
+      |                                        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:95:22: error: 'process' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+   95 |   assert(styleFacade.process(1U) == 1U);
+      |                      ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:101:29: note: declared private here
+  101 |   [[nodiscard]] std::size_t process(std::uint64_t ownerSequence) noexcept;
+      |                             ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:96:80: error: 'target' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+   96 |   const auto styleSnapshot = styleFacade.readCanvasControlSnapshot(styleFacade.target());
+      |                                                                                ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:103:40: note: declared private here
+  103 |   [[nodiscard]] const CanvasTargetKey& target() const noexcept;
+      |                                        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:103:40: error: calling a private constructor of class 'canvas::runtime::CanvasRuntimeFacade'
+  103 |   canvas::runtime::CanvasRuntimeFacade legacyFacade(legacyRuntime, {1U, 1U, 1U, 1U});
+      |                                        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:35:3: note: declared private here
+   35 |   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
+      |   ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:109:23: error: 'process' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+  109 |   assert(legacyFacade.process(1U) == 1U);
+      |                       ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:101:29: note: declared private here
+  101 |   [[nodiscard]] std::size_t process(std::uint64_t ownerSequence) noexcept;
+      |                             ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:114:23: error: 'process' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+  114 |   assert(legacyFacade.process(2U) == 1U);
+      |                       ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:101:29: note: declared private here
+  101 |   [[nodiscard]] std::size_t process(std::uint64_t ownerSequence) noexcept;
+      |                             ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:117:10: error: 'setTarget' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+  117 |   facade.setTarget({1U, 1U, 1U, 2U});
+      |          ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:102:8: note: declared private here
+  102 |   void setTarget(CanvasTargetKey target) noexcept;
+      |        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:132:40: error: calling a private constructor of class 'canvas::runtime::CanvasRuntimeFacade'
+  132 |   canvas::runtime::CanvasRuntimeFacade identityFacade(identityRuntime, {7U, 2U, 3U, 4U});
+      |                                        ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:35:3: note: declared private here
+   35 |   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
+      |   ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/tests/canvas_runtime_facade_test.cpp:152:86: error: 'target' is a private member of 'canvas::runtime::CanvasRuntimeFacade'
+  152 |   const auto firstReadback = identityFacade.readCanvasControlSnapshot(identityFacade.target());
+      |                                                                                      ^
+C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/runtime/composition/include\canvas/runtime/canvas_runtime_facade.hpp:103:40: note: declared private here
+  103 |   [[nodiscard]] const CanvasTargetKey& target() const noexcept;
+      |                                        ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+[2/6] Building CXX object tests/fc08/CMakeFiles/axiom_fc08_connector_regression.dir/connector_regression_portable.cpp.o
+[3/6] Building CXX object tests/fc08/CMakeFiles/axiom_fc08_headless_probe.dir/native/headless_probe.cpp.o
+ninja: build stopped: subcommand failed.

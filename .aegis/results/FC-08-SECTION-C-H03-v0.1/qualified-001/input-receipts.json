@@ -1,0 +1,76 @@
+[
+  {
+    "variant_id": "FC08-H03/root-children-65534",
+    "input_version": "H03-v0.1",
+    "overlay_sha256": "71249644f37d2a7c1c3bb4b6492be28fe6f4bea79cb805a13c026994b1b39657",
+    "original_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65534/input.json",
+      "sha256": "f77b15b0b27e3a5136cbb0b1cc31e26efb729499eef639cdd15ecdfb65ee09c6",
+      "size": 308
+    },
+    "expected": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65534/expected.json",
+      "sha256": "79d2b28490940471480f11e07fb7bf2885f73bc1b740ed02374454e58cd3fa1f",
+      "size": 279
+    },
+    "wire_hashes": [
+      {
+        "label": "F",
+        "sha256": "6b16921d644ab5faddafff6d0c260b8141bb7911bbd48aa177d8a7935330d321",
+        "size": 8126441
+      },
+      {
+        "label": "U",
+        "sha256": "e12e57834d9e28337b9a82dc337549ed9cae9f1491ab59a9ad52367b2e2df631",
+        "size": 8126587
+      },
+      {
+        "label": "independent-before-seed",
+        "sha256": "97dc3c1b3e790f3d1c720ecf0d1df803f213871030ecc1f238570cc6018d3475",
+        "size": 7798600
+      }
+    ],
+    "root_members_before": 65534,
+    "inverse_complete_root_members": 65535,
+    "all_key_lengths": 5,
+    "all_key_terminal_byte": 1,
+    "SUT_inverse": "Actual EditorHistory retained inverse only; reference U file is never submitted"
+  },
+  {
+    "variant_id": "FC08-H03/root-children-65535",
+    "input_version": "H03-v0.1",
+    "overlay_sha256": "71249644f37d2a7c1c3bb4b6492be28fe6f4bea79cb805a13c026994b1b39657",
+    "original_input": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65535/input.json",
+      "sha256": "7d55163ba474acd767dc6a4d9ed3628c62403f01f9e5b7d45228012d6ee2c92a",
+      "size": 309
+    },
+    "expected": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65535/expected.json",
+      "sha256": "e1cc24f9249d0d1d6f7c0cd0e61e5c66f9dadab13392425f90e0c44b577db110",
+      "size": 281
+    },
+    "wire_hashes": [
+      {
+        "label": "F",
+        "sha256": "45b9719e51f329a61f6f8a2a5267abaced626c62f201e4ef3001f57cf8303f10",
+        "size": 8126565
+      },
+      {
+        "label": "U",
+        "sha256": "ef2259ed16170ebc6ab68e7b75564f7a8ac60e2607d6d763591233304e41faca",
+        "size": 8126711
+      },
+      {
+        "label": "independent-before-seed",
+        "sha256": "0fb22472704633fdba93d48ac82c786576faa87598d2e46a04ed370858c39d1a",
+        "size": 7798719
+      }
+    ],
+    "root_members_before": 65535,
+    "inverse_complete_root_members": 65536,
+    "all_key_lengths": 5,
+    "all_key_terminal_byte": 1,
+    "SUT_inverse": "Actual EditorHistory retained inverse only; reference U file is never submitted"
+  }
+]

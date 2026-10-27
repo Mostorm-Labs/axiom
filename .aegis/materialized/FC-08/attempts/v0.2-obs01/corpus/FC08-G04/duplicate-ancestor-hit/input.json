@@ -1,0 +1,295 @@
+{
+  "before": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000005"
+      },
+      "kind_id": 9,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000005"
+        }
+      },
+      "transform": {
+        "a": -1,
+        "b": 0.5,
+        "c": 0.25,
+        "d": 2,
+        "tx": 100,
+        "ty": 50
+      },
+      "properties": {},
+      "content": {
+        "group": {}
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000006"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000005"
+        },
+        "order_key": {
+          "value": "00000006"
+        }
+      },
+      "transform": {
+        "a": 0,
+        "b": 1,
+        "c": -1,
+        "d": 0,
+        "tx": 10,
+        "ty": 5
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": -20,
+            "y": 0,
+            "width": 120,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000009"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "00000009"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 3,
+        "ty": 4
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20,
+          "height": 10
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "0000000000000000000000000000000a"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "0000000a"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 5000,
+        "ty": 5000
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20,
+          "height": 10
+        }
+      }
+    }
+  ],
+  "after": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000005"
+      },
+      "kind_id": 9,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000005"
+        }
+      },
+      "transform": {
+        "a": -1.0,
+        "b": 0.5,
+        "c": 0.25,
+        "d": 2.0,
+        "tx": 110.0,
+        "ty": 65.0
+      },
+      "properties": {},
+      "content": {
+        "group": {}
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000006"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000005"
+        },
+        "order_key": {
+          "value": "00000006"
+        }
+      },
+      "transform": {
+        "a": 0,
+        "b": 1,
+        "c": -1,
+        "d": 0,
+        "tx": 10,
+        "ty": 5
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": -20,
+            "y": 0,
+            "width": 120,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000009"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "00000009"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 3,
+        "ty": 4
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20,
+          "height": 10
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "0000000000000000000000000000000a"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "0000000a"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 5000,
+        "ty": 5000
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20,
+          "height": 10
+        }
+      }
+    }
+  ],
+  "intent": {
+    "selected": [
+      {
+        "value": "00000000000000000000000000000005"
+      },
+      {
+        "value": "00000000000000000000000000000006"
+      }
+    ],
+    "world_delta": [
+      1,
+      0,
+      0,
+      1,
+      10,
+      15
+    ],
+    "normalization": "selection roots"
+  },
+  "bounds": {
+    "a": [
+      0,
+      0,
+      20,
+      10
+    ],
+    "b": [
+      0,
+      0,
+      20,
+      10
+    ]
+  },
+  "quality_members": [
+    {
+      "value": "00000000000000000000000000000009"
+    },
+    {
+      "value": "0000000000000000000000000000000a"
+    }
+  ],
+  "hidden_members": [],
+  "bounds_available": true
+}

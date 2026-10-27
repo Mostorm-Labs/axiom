@@ -1,6 +1,7 @@
 #pragma once
 
 #include "canvas/semantic/object_record.hpp"
+#include "canvas/semantic/container_operation.hpp"
 #include "canvas/semantic/resource_manifest_operation.hpp"
 
 #include <cstdint>
@@ -47,6 +48,7 @@ using OperationPayload = std::variant<
     InsertObjectsOp, DeleteObjectsOp, RestoreObjectsOp, SetPlacementsOp,
     SetTransformsOp, PatchPropertiesOp, SetObjectSizeOp,
     SetVectorPathGeometryOp, SetImageContentOp, AddStrokeOp, SplitStrokesOp,
-    AddEraseMasksOp, RemoveEraseMasksOp, EditRichTextOp, SetConnectorContentOp, UpdateResourceManifestOp>;
+    AddEraseMasksOp, RemoveEraseMasksOp, EditRichTextOp, SetConnectorContentOp, UpdateResourceManifestOp,
+    SetSectionContentOp, EditContainerTopologyOp>;
 
 } // namespace canvas::semantic

@@ -27,7 +27,7 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
     def test_existing_message_fields_and_enums_are_preserved(self):
         before = descriptor.parse_descriptor((DIRECTORY / "descriptor.lock.pb").read_bytes())
         after = descriptor.parse_descriptor((DIRECTORY / "descriptor.current.pb").read_bytes())
-        self.assertEqual(before.keys(), after.keys())
+        self.assertTrue(before.keys() <= after.keys())
         for name, original in before.items():
             with self.subTest(file=name):
                 current = after[name]
@@ -44,7 +44,7 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
         new_messages = {}
         extra_fields = {}
         for name, current in after.items():
-            original = {message.name: message for message in before[name].messages}
+            original = {message.name: message for message in before[name].messages} if name in before else {}
             added = {message.name for message in current.messages} - original.keys()
             if added:
                 new_messages[Path(name).name] = added
@@ -54,6 +54,13 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
                     if fields:
                         extra_fields[(Path(name).name, message.name)] = {field.number for field in fields}
         self.assertEqual(new_messages, {
+            "section.proto": {"SectionContent"},
+            "container_operations.proto": {
+                "ContainerStructuralExpectation", "ContainerChildExpectation", "ContainerChildrenExpectation",
+                "ContainerTopologyGuard", "ContainerRelocation", "ContainerOrderOnlyEdit",
+                "IntroduceWrappersEffect", "ReleaseWrappersEffect", "RelocateObjectsEffect",
+                "EditContainerTopologyOp", "SectionContentEdit", "SetSectionContentOp",
+            },
             "rich_text.proto": {"RichTextLayoutV2", "RichTextStateV2", "SetRichTextLayoutStep", "RestoreRichTextStateStep"},
             "operation.proto": {"ResourceExpectation", "ReactivateResource", "UpdateResourceManifestOp"},
             "snapshot.proto": {"ImageResourceMetadataV1", "FontResourceMetadataV1",
@@ -61,7 +68,9 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
                 "ResourceManifest", "RecoveryFrontierV1", "CapabilityRequirementsV1"},
         })
         self.assertEqual(extra_fields, {
-            ("operation.proto", "OperationPayload"): {16},
+            ("operation.proto", "OperationPayload"): {16, 17, 18},
+            ("object.proto", "ObjectContent"): {12},
+            ("object.proto", "ShapeContent"): {4},  # Existing FC02 label; accepted M01 BASE-01 source alignment.
             ("rich_text.proto", "TextStyle"): {7},
             ("rich_text.proto", "ParagraphStyle"): {5},
             ("rich_text.proto", "RichTextContent"): {2},
@@ -69,6 +78,11 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
             ("rich_text.proto", "RichTextDelta"): {3},
             ("snapshot.proto", "DocumentSnapshot"): set(range(4, 11)),
         })
+
+    def test_fc08_publication_matches_the_independent_accepted_descriptor(self):
+        expected = descriptor.parse_descriptor((ROOT / ".aegis/materialized/FC-08/proposed-descriptor/descriptor.pb").read_bytes())
+        actual = descriptor.parse_descriptor((DIRECTORY / "descriptor.current.pb").read_bytes())
+        self.assertEqual(actual, expected)
 
     def test_corrupt_current_or_historical_artifacts_are_rejected(self):
         with tempfile.TemporaryDirectory() as directory:

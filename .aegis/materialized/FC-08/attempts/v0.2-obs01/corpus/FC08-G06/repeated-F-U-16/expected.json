@@ -1,0 +1,35 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "local_bits",
+      "expected": [
+        "3fe41d41d41d41d4",
+        "bf9d41d41d41d410",
+        "3fe15f15f15f15f2",
+        "3ff52e52e52e52e5",
+        "c027f15f15f15f17",
+        "402835a35a35a359"
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "undo_bits",
+      "expected": [
+        "3fe6666666666666",
+        "3fb999999999999a",
+        "3fc999999999999a",
+        "3ff4cccccccccccd",
+        "3fd3333333333333",
+        "bfe6666666666666"
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "repeat_drift",
+      "expected": false
+    }
+  ],
+  "source_case": "FC08-G06",
+  "product_expected_only": true
+}

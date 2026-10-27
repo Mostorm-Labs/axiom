@@ -1,0 +1,196 @@
+{
+  "format": "fc08-control-check-invocations-v1",
+  "observed_at": "2026-10-26T08:12:27.283413+00:00",
+  "observed_head": "eb12da1acc4516e115d36767073f8bdc607f8a4d",
+  "observed_branch": "codex/fc08-p20-p31-closure",
+  "git_status": "?? .aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/\n",
+  "environment": {
+    "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]",
+    "python_executable": "D:\\Softwares\\Anaconda\\python.exe",
+    "python_utf8": "1",
+    "jsonschema": "4.23.0",
+    "os": "Windows-10-10.0.19045-SP0",
+    "machine": "AMD64",
+    "git": "git version 2.31.1.windows.1",
+    "cpp_toolchain": "NOT_INVOKED; no product build authorized before input acceptance",
+    "browser": "NOT_INVOKED; no browser environment qualification claimed"
+  },
+  "tools": [
+    {
+      "path": "tools/fc08/propose_input_amendment.py",
+      "sha256": "077b4318c3afac09a6b5aa8f810839b18446a0fef655668bde6ac1bfa7e4d452",
+      "size": 30230
+    },
+    {
+      "path": "tools/fc08/audit_input_amendment.py",
+      "sha256": "a026723b646f41877246efca775679011f67b9ea9c56d005b09dc69011eaa0bb",
+      "size": 14847
+    },
+    {
+      "path": "tests/fc08/input_amendment_audit_test.py",
+      "sha256": "47bf886ae093b65be7f6c7f8be7d10b7f421b4a286f65ac2da87ad42ef102a2f",
+      "size": 3792
+    }
+  ],
+  "commands": [
+    {
+      "label": "materialize-resume",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        "tools/fc08/propose_input_amendment.py",
+        "--repo",
+        "."
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:12:14.518003+00:00",
+      "end_utc": "2026-10-26T08:12:16.969156+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/materialize-resume.stdout.log",
+        "sha256": "540fa766875d4e01fbd4ef6b8fc5ce538fc8b00e8c1fe76ef75f46e9c2d23b30",
+        "size": 417
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/materialize-resume.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "label": "audit",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        "tools/fc08/audit_input_amendment.py",
+        "--repo",
+        ".",
+        "--output",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-P20-P31-CLOSURE\\attempts\\control-001\\run-002\\audit.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:12:16.970643+00:00",
+      "end_utc": "2026-10-26T08:12:20.359854+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/audit.stdout.log",
+        "sha256": "8c0a8e08303a71a438f2afc12d6667154878f2e9ae6bdb77bb72af6094bc2e90",
+        "size": 2552
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/audit.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "label": "audit-tool-tests",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/fc08",
+        "-p",
+        "input_amendment_audit_test.py",
+        "-v"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:12:20.361052+00:00",
+      "end_utc": "2026-10-26T08:12:26.908032+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/audit-tool-tests.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/audit-tool-tests.stderr.log",
+        "sha256": "6fa9aeefffa9489ccf899706c024be9417a76bcef3432eb81b1c9ed587b9a21d",
+        "size": 1277
+      }
+    },
+    {
+      "label": "repository-identity",
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "-C",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+        "remote",
+        "get-url",
+        "origin"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:12:26.914683+00:00",
+      "end_utc": "2026-10-26T08:12:27.018624+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/repository-identity.stdout.log",
+        "sha256": "624c45d5d0b15072398d0abd504220e92ad1dd05cb93b625c4082733ec5ad188",
+        "size": 42
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/repository-identity.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "label": "ancestry",
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "-C",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+        "merge-base",
+        "--is-ancestor",
+        "63ea152b2944d21120c968d5e11e166d1096b44f",
+        "HEAD"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:12:27.019834+00:00",
+      "end_utc": "2026-10-26T08:12:27.127078+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/ancestry.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/ancestry.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "label": "preservation",
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "-C",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+        "diff",
+        "63ea152b2944d21120c968d5e11e166d1096b44f",
+        "--name-only",
+        "--diff-filter=CDMRTUXB"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:12:27.127440+00:00",
+      "end_utc": "2026-10-26T08:12:27.283033+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/preservation.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P20-P31-CLOSURE/attempts/control-001/run-002/preservation.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    }
+  ],
+  "all_commands_exit_zero": true,
+  "package_preflights": "NOT_RUN_PENDING_INPUT_ACCEPTANCE",
+  "ImplementationDesignPreflight": "NOT_RUN_PENDING_INPUT_ACCEPTANCE",
+  "FC08-RED-01": "NOT_RUN_PENDING_INPUT_ACCEPTANCE",
+  "SUT_invocations": [],
+  "nonclaim": "Candidate audit and its unit tests do not establish Axiom product PASS or RED."
+}

@@ -1,0 +1,47 @@
+{
+  "source_revision": "c4fde4d4b1843673a71cce0546921f4494b16635",
+  "allowed_files": [
+    "runtime/semantic/include/canvas/semantic/**",
+    "runtime/semantic/src/**",
+    "runtime/semantic/tests/**",
+    "runtime/semantic/CMakeLists.txt",
+    "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+    "runtime/interaction/src/editor_history.cpp",
+    "runtime/interaction/src/undoable_command.*",
+    "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "runtime/interaction/CMakeLists.txt",
+    "runtime/interaction/tests/fc08*",
+    "tools/fc08/section_c*.py",
+    ".aegis/packages/FC-08-SECTION-C-v0.1/**",
+    ".aegis/results/FC-08-SECTION-C/**"
+  ],
+  "required": [
+    "17/18 real inverse construction using accepted guards/poststate; reused Insert/Restore/Delete/SetTransforms/PatchProperties when explicitly used as local FC08 undoable commands",
+    "Complete forward/inverse budget and inverse applicability/restoration before existing History prepares its retained entry",
+    "Single-op existing Semantic owner admission seam, basis checks and reserved atomic publish; no new canonical transaction/wire framework",
+    "Existing EditorHistory Execute/Undo/Redo path, no duplicate History for AlreadyApplied, no redo truncation on rejection",
+    "Route Runtime FC08 local and History submissions through this admission; no new facade/UI/Scene product capability",
+    "Relevant legacy regression, actual RED and source/evidence preservation audit; durable exact result"
+  ],
+  "forbidden": [
+    "Frozen corpus/expected/reference oracles/prior evidence including A/B",
+    "Historical/current descriptors/schema/SDK locks",
+    "Qualification checkpoint code/default policy",
+    "Global Aegis registries/default branch",
+    "New ContainerRuntime/History/selection/membership store or generic operation transaction",
+    "D/E feature implementation or unqualified Gate/PHYS/runner claims"
+  ],
+  "terminal_success": [
+    "C functional and budget/rejection/History tests pass",
+    "Impacted existing regressions pass except independently reproduced baseline failures",
+    "Materialized exact result and explicit limits/debts"
+  ],
+  "terminal_blockers": [
+    "AUTHORITY_CONFLICT",
+    "VERIFICATION_ORACLE_CONFLICT",
+    "ENVIRONMENT_BLOCKER",
+    "IMPLEMENTATION_FAILURE"
+  ],
+  "continue_until_terminal_state": true
+}

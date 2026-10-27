@@ -4,6 +4,7 @@
 #include "canvas/scene/scene_impact.hpp"
 #include "canvas/scene/bounds_system.hpp"
 #include "canvas/text/text_layout.hpp"
+#include "canvas/scene/hierarchy_geometry.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -14,35 +15,19 @@
 #include <utility>
 
 namespace canvas {
-namespace {
-semantic::Transform2D compose(const semantic::Transform2D& parent,
-                              const semantic::Transform2D& child) noexcept {
-    return {parent.a * child.a + parent.c * child.b,
-            parent.b * child.a + parent.d * child.b,
-            parent.a * child.c + parent.c * child.d,
-            parent.b * child.c + parent.d * child.d,
-            parent.a * child.tx + parent.c * child.ty + parent.tx,
-            parent.b * child.tx + parent.d * child.ty + parent.ty};
-}
-}
 RuntimeSceneProjection projectRuntimeScene(
     std::span<const semantic::ObjectRecord> source,
     semantic::SemanticGeneration generation, text::RichTextLayoutService* textService, bool deferRoutes) {
     RuntimeSceneProjection projection;
     projection.generation = generation;
+    const auto worldSource=scene::projectWorldObjects(source);
     projection.records.reserve(source.size());
-    for (const semantic::ObjectRecord& record : source) {
+    for (const semantic::ObjectRecord& record : worldSource) {
         auto projectedRecord = record;
-        if (record.kind == semantic::ObjectKind::kRichText && record.placement.parent_id) {
-            const auto parent = std::find_if(source.begin(), source.end(), [&](const auto& candidate) {
-                return candidate.id == *record.placement.parent_id;
-            });
-            if (parent != source.end()) projectedRecord.transform = compose(parent->transform, record.transform);
-        }
         auto derivedGeometry = scene::deriveGeometry(projectedRecord);
         if (record.kind == semantic::ObjectKind::kConnector) {
             if (const auto route = scene::connectorGeometry(record,
-                    std::vector<semantic::ObjectRecord>(source.begin(), source.end()), deferRoutes); route) {
+                    worldSource, deferRoutes); route) {
                 derivedGeometry = *route;
             }
         }
@@ -105,6 +90,12 @@ RuntimeSceneProjection projectRuntimeScene(
             // Sticky text is an optional RichText child; projection resolves it
             // through the child record when present. The parent remains a
             // drawable background command.
+        } else if (textService != nullptr && record.kind == semantic::ObjectKind::kSection) {
+            auto& derived=projection.records.back();
+            derived.textLayout=textService->resolveSectionTitle(record.id,
+                std::get<semantic::SectionContent>(record.content));
+            derived.referenceGeometryDigest=derived.textLayout->digest;
+            for(const auto& font:derived.textLayout->fonts)derived.directDependencies.push_back(font.resourceId.value);
         } else if (record.kind == semantic::ObjectKind::kImage) {
             auto& derived = projection.records.back();
             const auto imageBounds = computeBounds(record, nullptr);
@@ -126,15 +117,7 @@ RuntimeSceneProjection projectRuntimeScene(
             if (!image.resource_id.value.isZero()) derived.directDependencies.push_back(image.resource_id.value);
         }
     }
-    std::sort(projection.records.begin(), projection.records.end(),
-              [](const RuntimeSceneRecord& left, const RuntimeSceneRecord& right) {
-                  if (right.placement.parent_id && *right.placement.parent_id == left.objectId) return true;
-                  if (left.placement.parent_id && *left.placement.parent_id == right.objectId) return false;
-                  if (left.placement.order_key != right.placement.order_key) {
-                      return left.placement.order_key < right.placement.order_key;
-                  }
-                  return left.objectId < right.objectId;
-              });
+    scene::projectGroupBounds(projection.records);
     return projection;
 }
 
@@ -150,6 +133,10 @@ bool isInkRecord(const SceneRecord& record) noexcept {
 }
 
 bool backToFrontLess(const SceneRecord& left, const SceneRecord& right) noexcept {
+    if(left.hierarchyOrder&&right.hierarchyOrder) {
+        const bool a=isInkRecord(left),b=isInkRecord(right);if(a!=b)return !a;
+        return left.hierarchyOrder<right.hierarchyOrder;
+    }
     if (left.kind == SceneObjectKind::kSticky && right.kind == SceneObjectKind::kRichText) return true;
     if (left.kind == SceneObjectKind::kRichText && right.kind == SceneObjectKind::kSticky) return false;
     const bool leftInk = isInkRecord(left);
@@ -160,6 +147,10 @@ bool backToFrontLess(const SceneRecord& left, const SceneRecord& right) noexcept
 }
 
 bool frontToBackLess(const SceneRecord& left, const SceneRecord& right) noexcept {
+    if(left.hierarchyOrder&&right.hierarchyOrder) {
+        const bool a=isInkRecord(left),b=isInkRecord(right);if(a!=b)return a;
+        return left.hierarchyOrder>right.hierarchyOrder;
+    }
     const bool leftInk = isInkRecord(left);
     const bool rightInk = isInkRecord(right);
     if (leftInk != rightInk) return leftInk;
@@ -182,6 +173,7 @@ bool isSupportedRuntimeKind(semantic::ObjectKind kind) noexcept {
     case semantic::ObjectKind::kConnector:
     case semantic::ObjectKind::kSticky:
     case semantic::ObjectKind::kGroup:
+    case semantic::ObjectKind::kSection:
         return true;
     }
     return false;
@@ -243,6 +235,8 @@ std::uint32_t kindBit(SceneObjectKind kind) {
         return static_cast<std::uint32_t>(HitTestKindMask::kConnector);
     case SceneObjectKind::kSticky:
         return static_cast<std::uint32_t>(HitTestKindMask::kSticky);
+    case SceneObjectKind::kSection:
+        return static_cast<std::uint32_t>(HitTestKindMask::kSection);
     }
     return 0U;
 }

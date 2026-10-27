@@ -1,0 +1,380 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-verification-lock-v1",
+  "task_id": "FC-08",
+  "status": "INPUTS_ACCEPTED_FOR_VERIFICATION_BOOTSTRAP_ONLY",
+  "gate_target": {
+    "id": "FC08-DEV-AUTOMATED",
+    "scope": "development_only",
+    "authority_note": "This is the P20 proposed automated DEV target; this package does not issue a Gate verdict."
+  },
+  "design": {
+    "id": "FC08-P20-v0.1+CR01",
+    "catalog_path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/effective-case-catalog.json",
+    "catalog_sha256": "da62f3c6c6a7191b01ba7ba4713290acaea26755ef2971fe62475cb101c9b268",
+    "logical_case_count": 60,
+    "obligation_family_count": 10,
+    "variant_index": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/variant-index.json",
+      "sha256": "29d8400a7f96968b576f77803f287fe8911a8557421fe412fe80607bb4ad7f8e",
+      "unique_variants": 302
+    },
+    "corpus_manifest": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus-manifest.json",
+      "sha256": "1f472bc4eb916816de87191d20ed67d3ce59e5e5edfca3d414a2d4a880a70452",
+      "size": 396551
+    },
+    "reviewed_obligations": {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json",
+      "git_blob_sha": "3402b2634677eddad4cb3d0d6ab1e2d5308ffa1b"
+    },
+    "result_contract": {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json",
+      "git_blob_sha": "a5be924d595723ee36116582e46837cacff15986",
+      "format": "fc08-verification-run-v1",
+      "required_run_fields": [
+        "design_id",
+        "authority_id",
+        "authority_binding_hash",
+        "verification_manifest_hash",
+        "qualification_subject_revision",
+        "runner_revision",
+        "oracle_revision",
+        "platform_profile",
+        "build_configuration",
+        "toolchain",
+        "source_tree_dirty",
+        "started_at",
+        "ended_at",
+        "invocation",
+        "cases"
+      ],
+      "required_case_fields": [
+        "case_id",
+        "variant_id",
+        "family_id",
+        "input_hash",
+        "expected_hash",
+        "observed_artifact",
+        "observation_basis",
+        "result",
+        "failure_boundary"
+      ],
+      "result_values": [
+        "PASS",
+        "FAIL",
+        "BLOCKED_ENVIRONMENT",
+        "NOT_RUN"
+      ]
+    }
+  },
+  "frozen_execution_inputs": {
+    "source_index": {
+      "path": ".aegis/materialized/FC-08/source-index.json",
+      "sha256": "bad8a3e85dbd344ac7c6eb0d60aae0c6d01c58a0b8359aa80b53426b7b43a569"
+    },
+    "descriptor_diff": {
+      "path": ".aegis/materialized/FC-08/descriptor-diff.json",
+      "sha256": "cbe2c13724bd097a609110fb911bb50f6af55cbd43672d1191bb7f2b7b004db1",
+      "expected_status": "SOURCE_COMPLETE_ADDITIVE_MATCH"
+    },
+    "runner_manifest": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner-manifest.json",
+      "sha256": "7b65745272241679b9b420b6a90e911ec8f6a07a5a94b69eb528a44c39aba2d5"
+    },
+    "oracle_controls": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/oracle-controls.json",
+      "sha256": "fd9b9e1610fb399da82bae7b535768a7dfc01876c18985ce0b4351f0805d8c81"
+    },
+    "baseline_probes": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/baseline-probes.json",
+      "sha256": "a64393a2e06955562779092ce7808691263ee14c47e611f6c3ae5c1549f2e3b1"
+    },
+    "seam_map": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/seam-map.json",
+      "sha256": "e32926881505362accde5e742840cf1c6c5d90ed4127a729b022f4770e50b4d4"
+    },
+    "profiles": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profiles.json",
+      "sha256": "cd559faacada19bf4cb3acb2d03cc1b916c19b5dc46eb94cef5e1b54b0781c94"
+    },
+    "profile_observations": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profile-observations.json",
+      "sha256": "9445bec732c3fb4bcb6a57aeb5245b157fa2550c27c6c492bd7d49b222dd1b42"
+    },
+    "inherited_regression_baseline": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/inherited-regression.json",
+      "sha256": "1f0a17a080d12e5c788fbd7ad6688349fd42a42347044c70ca4240091bf16db1"
+    },
+    "materialization_output_index": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-index.json",
+      "sha256": "6b5fc14f0a2703a25f101f28aa96746b146ff53df693779e90f05abba25685fc"
+    }
+  },
+  "oracle_independence": {
+    "reference_oracles": {
+      "path": "tests/fc08/reference/oracles.py",
+      "sha256": "408e4ee929f6673bdb0b7871525ea5250f50b63f7984553fefc56db3a0fda79e"
+    },
+    "reference_variants": {
+      "path": "tests/fc08/reference/variants.py",
+      "sha256": "506ffe7281c3ea861726b8813398641c425d49c9e6cb742aa0e97eecd293f29c"
+    },
+    "reference_wire": {
+      "path": "tests/fc08/reference/wire.py",
+      "sha256": "122a8f587e5a984a3ffb3d545c8854ee81e6ce4a022cff52b73b86f1ad0e1ae6"
+    },
+    "rule": "Expected values are frozen before production mutation. The production SUT, codec, normalizer, OrderKey allocator, planner, Scene compiler or runtime round-trip must not be used as the sole expected-value oracle."
+  },
+  "obligations": [
+    {
+      "id": "FC08-E01",
+      "requirement": "Schema, wire and inherited publication; preserve accepted source fields and exact Section/1 and Operation 17/18 bytes.",
+      "oracle": "Hand-authored typed expectations and byte fixtures, accepted-IDL descriptor delta, and preimage comparison.",
+      "acceptance": "Every applicable W01-W07 variant matches frozen expectation; exact accepted descriptor is additive; inherited fields and historical descriptor.lock remain unchanged; no silent skip or unsupported positive.",
+      "evidence_required": [
+        "families/E01.json"
+      ],
+      "case_ids": [
+        "FC08-W01",
+        "FC08-W02",
+        "FC08-W03",
+        "FC08-W04",
+        "FC08-W05",
+        "FC08-W06",
+        "FC08-W07"
+      ],
+      "failure_mode": "Protocol corruption or loss of inherited fields.",
+      "classification": "blocking_DEV"
+    },
+    {
+      "id": "FC08-E02",
+      "requirement": "Atomic topology, complete guarded graph writes and all-or-nothing rejection.",
+      "oracle": "Literal final-object tables, independent flat-map/parent-graph reference traversal, and precommit failure snapshots.",
+      "acceptance": "Every applicable T01-T07 variant matches; no partial membership, cycles, orphan records, stale-guard writes, or canonical/History mutation on precommit rejection.",
+      "evidence_required": [
+        "families/E02.json"
+      ],
+      "case_ids": [
+        "FC08-T01",
+        "FC08-T02",
+        "FC08-T03",
+        "FC08-T04",
+        "FC08-T05",
+        "FC08-T06",
+        "FC08-T07"
+      ],
+      "failure_mode": "Partial membership, cycles, orphan records, or lost concurrent changes.",
+      "classification": "blocking_DEV"
+    },
+    {
+      "id": "FC08-E03",
+      "requirement": "Real F/U admission, byte budgets, History reservation, Undo/Redo and failure atomicity.",
+      "oracle": "Actual forward/inverse wire values metered independently; saved canonical touched fields; staged inverse applicability; bounded precommit fault schedule.",
+      "acceptance": "Every applicable H01-H08 variant matches; real F and U each obey accepted limits, required resources are reserved before commit, History/redo remain unchanged on rejection, Undo/Redo use fresh operation IDs and preserve monotonic canonical metadata.",
+      "evidence_required": [
+        "families/E03.json"
+      ],
+      "case_ids": [
+        "FC08-H01",
+        "FC08-H02",
+        "FC08-H03",
+        "FC08-H04",
+        "FC08-H05",
+        "FC08-H06",
+        "FC08-H07",
+        "FC08-H08"
+      ],
+      "failure_mode": "Forward succeeds but Undo is impossible, redo is destructive, or duplicate History is emitted.",
+      "classification": "blocking_DEV"
+    },
+    {
+      "id": "FC08-E04",
+      "requirement": "Affine reparent, Section boundary resize and numeric quality boundary.",
+      "oracle": "Independently ordered IEEE-754 binary64 reference with authored dyadic literals and precomputed non-dyadic reference components.",
+      "acceptance": "Every applicable G01-G06 variant matches exact ordered arithmetic and accepted P12 quality predicate; no cumulative transform drift, resize-induced child movement, or hidden tolerance change.",
+      "evidence_required": [
+        "families/E04.json"
+      ],
+      "case_ids": [
+        "FC08-G01",
+        "FC08-G02",
+        "FC08-G03",
+        "FC08-G04",
+        "FC08-G05",
+        "FC08-G06"
+      ],
+      "failure_mode": "Reparent jump, cumulative transform drift, or resize moving contents.",
+      "classification": "blocking_DEV"
+    },
+    {
+      "id": "FC08-E05",
+      "requirement": "Container selection producer, Section full-containment and existing Group scope.",
+      "oracle": "Authored polygons and expected ID/root sets, exact containment, and child-first point cases.",
+      "acceptance": "Every applicable S01-S06 variant matches; concave containment uses the actual region rather than only corners/AABB; common FC01A set algebra and Group scope remain intact.",
+      "evidence_required": [
+        "families/E05.json"
+      ],
+      "case_ids": [
+        "FC08-S01",
+        "FC08-S02",
+        "FC08-S03",
+        "FC08-S04",
+        "FC08-S05",
+        "FC08-S06"
+      ],
+      "failure_mode": "Wrong selected root causes unintended batch edit/delete.",
+      "classification": "blocking_DEV"
+    },
+    {
+      "id": "FC08-E06",
+      "requirement": "Scene, world geometry, bounds, render order, damage, opacity and recovery.",
+      "oracle": "Literal world/damage expectations, coherent observer snapshots, draw list and interior-pixel reference.",
+      "acceptance": "Every applicable V01-V05 variant matches; child overflow remains visible/queryable, opacity and clipping are correct, and failed projection cannot duplicate a canonical commit or report false cancellation.",
+      "evidence_required": [
+        "families/E06.json"
+      ],
+      "case_ids": [
+        "FC08-V01",
+        "FC08-V02",
+        "FC08-V03",
+        "FC08-V04",
+        "FC08-V05"
+      ],
+      "failure_mode": "Overflow becomes invisible, hit index is stale, or publication is partial.",
+      "classification": "blocking_DEV"
+    },
+    {
+      "id": "FC08-E07",
+      "requirement": "Preview handoff and delayed local effects.",
+      "oracle": "Deterministic scheduled observation trace with fixed valid/invalid timelines and positive completion assertions.",
+      "acceptance": "Every applicable C01-C05 variant matches; no transient double-transform or late callback overwrites current selection; recovery completes with a coherent projection and preview exits when required.",
+      "evidence_required": [
+        "families/E07.json"
+      ],
+      "case_ids": [
+        "FC08-C01",
+        "FC08-C02",
+        "FC08-C03",
+        "FC08-C04",
+        "FC08-C05"
+      ],
+      "failure_mode": "Double-drawn transform or stale local callback overwrites new selection.",
+      "classification": "blocking_DEV"
+    },
+    {
+      "id": "FC08-E08",
+      "requirement": "Control identity, lifecycle, ingress, cancellation and queue/receipt boundaries.",
+      "oracle": "Controlled ingress/owner scheduling with independent state, counter and receipt snapshots.",
+      "acceptance": "Every applicable L01-L06 variant matches; full identities are preserved, stale/cancelled inputs cannot commit, and queue/receipt limits fail closed without partial mutation.",
+      "evidence_required": [
+        "families/E08.json"
+      ],
+      "case_ids": [
+        "FC08-L01",
+        "FC08-L02",
+        "FC08-L03",
+        "FC08-L04",
+        "FC08-L05",
+        "FC08-L06"
+      ],
+      "failure_mode": "Wrong object/document mutation or late Up after cancellation.",
+      "classification": "blocking_DEV"
+    },
+    {
+      "id": "FC08-E09",
+      "requirement": "Snapshot, journal replay, capability/version and writer compatibility.",
+      "oracle": "Fixed capability/version truth table, canonical digest inputs, and independent state before/after unknown input.",
+      "acceptance": "Every applicable K01-K06 variant matches; restore/replay is atomic, unknown operation or missing capability fails closed, old-reader/writer claims are tied to actual behavior, and writer admission cannot be inferred from snapshot read success.",
+      "evidence_required": [
+        "families/E09.json"
+      ],
+      "case_ids": [
+        "FC08-K01",
+        "FC08-K02",
+        "FC08-K03",
+        "FC08-K04",
+        "FC08-K05",
+        "FC08-K06"
+      ],
+      "failure_mode": "Silent partial load/replay or invalid writer participation.",
+      "classification": "blocking_DEV"
+    },
+    {
+      "id": "FC08-E10",
+      "requirement": "Public consumer and platform integration.",
+      "oracle": "Ordinary compiled consumer and actual Windows/WASM adapter probes compared with literal expectations, plus applicable retained regressions.",
+      "acceptance": "Every applicable P01-P04 variant matches; full IDs and typed readback/receipt behavior survive the public facade and platform bridge; mixed-default-delete rejects before write; actual browser execution is recorded.",
+      "evidence_required": [
+        "families/E10.json"
+      ],
+      "case_ids": [
+        "FC08-P01",
+        "FC08-P02",
+        "FC08-P03",
+        "FC08-P04"
+      ],
+      "failure_mode": "Demo-only implementation, truncated IDs, or partially executed mixed Delete.",
+      "classification": "blocking_DEV"
+    }
+  ],
+  "profile_policy": {
+    "required_profiles": [
+      "windows-native",
+      "web-wasm",
+      "headless"
+    ],
+    "execution_rule": "Use the exact accepted external matrix for every variant/profile; original variant index remains unchanged. NOT_APPLICABLE, NOT_RUN and BLOCKED_ENVIRONMENT are distinct.",
+    "browser_rule": "P02 and public Web adapter cases require actual Chrome/WASM execution. Node-only, mock bridge, or build-only evidence cannot substitute.",
+    "independence_rule": "Windows and Web repeats establish profile realization and adapter parity, not two independent semantic oracles.",
+    "exact_matrix": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-applicability.json",
+      "sha256": "61dc6757053034b7a11f84028e0c23017e351d0c2edd9c0e4f78e6012de6e8d4",
+      "size": 551932,
+      "matrix_version": "1"
+    },
+    "schema": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-applicability.schema.json",
+      "sha256": "d87bcc1ef05edbf3a2990a893b599633aa294e3fb1f165f6a58400569252927d",
+      "size": 11987,
+      "schema_version": "1"
+    },
+    "methods": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-method-bindings.json",
+      "sha256": "fa6324b0f78c9c3b4655c418e87de1fc418465f951419f66c030d9aec2b3e019",
+      "size": 850014
+    }
+  },
+  "shared_acceptance_rules": [
+    "NOT_RUN is never PASS; no required positive may be skipped as Unsupported.",
+    "An expected Unsupported negative is PASS only when every zero-mutation and receipt assertion also holds.",
+    "Every result binds exact subject revision, runner revision, oracle revision, profile, toolchain, invocation, input/expected hashes and raw observed artifacts.",
+    "The evidence head and qualification subject revision are separate when evidence-only commits differ.",
+    "No expected value may be derived from the product SUT or recorded from its output.",
+    "No summary label, discovery count, build success or qualification hook observation substitutes for product behavior."
+  ],
+  "retained_obligations": {
+    "base_01": "Preserve accepted source fields and historical descriptor.lock; publish only the source-complete additive current descriptor.",
+    "int_01": "FC04/FC10 retains full integration ownership; FC08 must explicitly reject mixed-default-delete before any write.",
+    "physical_debt": {
+      "owner": "FC13",
+      "ids": [
+        "FC08-PH01",
+        "FC08-PH02",
+        "FC08-PH03",
+        "FC08-PH04"
+      ],
+      "status": "DEFERRED_NOT_EXECUTED",
+      "blocks_fc08_dev": false,
+      "waived": false
+    }
+  },
+  "product_P32_authorized": false,
+  "accepted_input_amendment": {
+    "path": ".aegis/packages/FC-08-P20-P31-INPUT-AMENDMENT-v0.2/package.json",
+    "sha256": "52fc554901368ec1e4ece9ef2950f03eefdbd55cbf67def6ff68785b47f85a8c",
+    "size": 3972,
+    "revision": "eb12da1acc4516e115d36767073f8bdc607f8a4d"
+  },
+  "historical_materialization_only": "Old runner/probe artifacts remain bound as historical observations, never substituted for new product RED."
+}

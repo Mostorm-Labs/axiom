@@ -1,0 +1,370 @@
+{
+  "before": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000006"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000006"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": 0,
+            "y": 0,
+            "width": 100,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000009"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "00000009"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20.0,
+          "height": 20.0
+        }
+      }
+    }
+  ],
+  "after": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000006"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000006"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": 0,
+            "y": -10,
+            "width": 100,
+            "height": 90
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000009"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "00000009"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20.0,
+          "height": 20.0
+        }
+      }
+    }
+  ],
+  "undo_after": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000006"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000006"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": 0,
+            "y": 0,
+            "width": 100,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    }
+  ],
+  "forward": {
+    "operation_id": {
+      "value": "000000000000000000000000000003e9"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "set_section_content": {
+        "items": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "expected_kind_version": 1,
+            "expected_content": {
+              "boundary": {
+                "x": 0,
+                "y": 0,
+                "width": 100,
+                "height": 80
+              },
+              "title": "",
+              "padding": 8.0,
+              "header_height": 20.0
+            },
+            "replacement_content": {
+              "boundary": {
+                "x": 0,
+                "y": -10,
+                "width": 100,
+                "height": 90
+              },
+              "title": "",
+              "padding": 8.0,
+              "header_height": 20.0
+            }
+          }
+        ],
+        "geometry_basis": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "kind_id": 10,
+            "kind_version": 1,
+            "placement_before": {
+              "order_key": {
+                "value": "00000006"
+              }
+            },
+            "transform_before": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 0,
+              "ty": 0
+            }
+          }
+        ]
+      }
+    }
+  },
+  "inverse": {
+    "operation_id": {
+      "value": "000000000000000000000000000003ea"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "set_section_content": {
+        "items": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "expected_kind_version": 1,
+            "expected_content": {
+              "boundary": {
+                "x": -20.0,
+                "y": -10.0,
+                "width": 120.0,
+                "height": 90.0
+              },
+              "title": "",
+              "padding": 8.0,
+              "header_height": 20.0
+            },
+            "replacement_content": {
+              "boundary": {
+                "x": -20,
+                "y": 0,
+                "width": 120,
+                "height": 80
+              },
+              "title": "",
+              "padding": 8.0,
+              "header_height": 20.0
+            }
+          }
+        ],
+        "geometry_basis": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "kind_id": 10,
+            "kind_version": 1,
+            "placement_before": {
+              "order_key": {
+                "value": "00000006"
+              }
+            },
+            "transform_before": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 0,
+              "ty": 0
+            }
+          }
+        ]
+      }
+    }
+  },
+  "redo": {
+    "operation_id": {
+      "value": "000000000000000000000000000003eb"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "set_section_content": {
+        "items": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "expected_kind_version": 1,
+            "expected_content": {
+              "boundary": {
+                "x": -20,
+                "y": 0,
+                "width": 120,
+                "height": 80
+              },
+              "title": "",
+              "padding": 8.0,
+              "header_height": 20.0
+            },
+            "replacement_content": {
+              "boundary": {
+                "x": -20.0,
+                "y": -10.0,
+                "width": 120.0,
+                "height": 90.0
+              },
+              "title": "",
+              "padding": 8.0,
+              "header_height": 20.0
+            }
+          }
+        ],
+        "geometry_basis": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "kind_id": 10,
+            "kind_version": 1,
+            "placement_before": {
+              "order_key": {
+                "value": "00000006"
+              }
+            },
+            "transform_before": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 0,
+              "ty": 0
+            }
+          }
+        ]
+      }
+    }
+  }
+}

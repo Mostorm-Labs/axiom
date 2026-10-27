@@ -1,0 +1,44 @@
+{
+  "status": "FIXED_R01_POSITIVE_INDEPENDENTLY_RECONSTRUCTED_AND_DECODED",
+  "wire": {
+    "path": "tests/fc08/corpus/wire/section-snapshot3.pb",
+    "sha256": "1fd6a786c299e067d13a92cddac7e7159ad661df2e8c4c8f3302e8593918f571",
+    "size": 298
+  },
+  "typed_input": {
+    "path": "tests/fc08/corpus/wire/section-snapshot3.input.json",
+    "sha256": "0545380c362a3f4c20b72990611d10c08fd067aaab6b1fb454462cdf06ea3403",
+    "size": 1357
+  },
+  "reference_writer": {
+    "path": "tests/fc08/reference/wire.py",
+    "sha256": "122a8f587e5a984a3ffb3d545c8854ee81e6ce4a022cff52b73b86f1ad0e1ae6",
+    "size": 5114
+  },
+  "descriptor": {
+    "path": ".aegis/materialized/FC-08/proposed-descriptor/descriptor.pb",
+    "sha256": "9d77afed2f42678b8836e26673707301ca84f431657b79966259d00fe5d33477",
+    "size": 29761
+  },
+  "protoc": {
+    "path": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+    "sha256": "9a4fe52db00facbf858dc5af9addb50b551429004044e8a24f137de38c5b209f",
+    "size": 13261199
+  },
+  "decode": {
+    "argv": [
+      "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+      "--descriptor_set_in=C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\materialized\\FC-08\\proposed-descriptor\\descriptor.pb",
+      "--decode=auditoryworks.axiom.v1.DocumentSnapshot"
+    ],
+    "stdin": {
+      "path": "tests/fc08/corpus/wire/section-snapshot3.pb",
+      "sha256": "1fd6a786c299e067d13a92cddac7e7159ad661df2e8c4c8f3302e8593918f571",
+      "size": 298
+    },
+    "exit_code": 0,
+    "stdout": "document_id {\r\n  value: \"\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000d\"\r\n}\r\nschema_version: 3\r\nobjects {\r\n  id {\r\n    value: \"\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\n\"\r\n  }\r\n  kind_id: 10\r\n  kind_version: 1\r\n  placement {\r\n    order_key {\r\n      value: \"\\020\"\r\n    }\r\n  }\r\n  transform {\r\n    a: 1\r\n    b: 0\r\n    c: 0\r\n    d: 1\r\n    tx: 0\r\n    ty: 0\r\n  }\r\n  properties {\r\n  }\r\n  content {\r\n    section {\r\n      boundary {\r\n        x: -20\r\n        y: 0\r\n        width: 120\r\n        height: 80\r\n      }\r\n      title: \"\"\r\n      padding: 8\r\n      header_height: 20\r\n    }\r\n  }\r\n}\r\nmanifest {\r\n  schema_version: 1\r\n  manifest_revision: 0\r\n}\r\ndocument_revision: 0\r\nrecovery_frontier: \"\\010\\001\\020\\001\\030\\000\"\r\ndigest_algorithm: 1\r\ndocument_digest: \"\\360\\022r\\022\\351\\272\\321\\3043\\'\\036\\266r\\336\\037\\253\\236\\022\\202\\037\\250\\177D\\225la\\315Z\\3568\\014\\227\"\r\ncapability_requirements: \"\\n\\024resource-manifest-v1\\n\\nsection-v1\"\r\ncheckpoint_digest: \"\\225\\264\\354v\\230\\340X\\311\\262%JK\\324\\003JH\\0137\\006F\\224\\\"\\206Q\\362)T|\\333\\217])\"\r\n",
+    "stderr": ""
+  },
+  "production_codec_used_as_expected": false
+}

@@ -1,0 +1,86 @@
+{
+  "format": "fc08-materialization-source-acquisition-v1",
+  "stage": "M01 source acquisition is work, not claimed complete",
+  "seed_delivery": {
+    "file": "accepted-inputs.zip",
+    "sha256": "378447a1590bd4f00b563b2025cbd186c564def565f8e323acb282ff1c2d5bfb",
+    "transport": "Included at the package path in the companion ZIP. Hydrate this exact file before local preflight; do not substitute a generated empty archive.",
+    "remote_hydration_required": true
+  },
+  "accepted_technical_sources": [
+    {
+      "id": "P12",
+      "provider": "Notion",
+      "url": "https://app.notion.com/p/4044c57a590c8192b9cbc6dd108a408e",
+      "accepted_version": "v0.2",
+      "trusted_sections": "sections2..7 with D05/CAP precedence",
+      "observed_last_edit": "2026-10-25T17:26:15.718Z",
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift."
+    },
+    {
+      "id": "P13",
+      "provider": "Notion",
+      "url": "https://app.notion.com/p/4044c57a590c81d2a4d7cf6cd20c0402",
+      "accepted_version": "v0.2+E01",
+      "trusted_sections": "sections1..13 including UB01..06 and 10.1",
+      "observed_last_edit": "2026-10-25T17:26:27.069Z",
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift."
+    },
+    {
+      "id": "P14",
+      "provider": "Notion",
+      "url": "https://app.notion.com/p/4044c57a590c81c99f68d25e076eed2d",
+      "accepted_version": "v0.1",
+      "trusted_sections": "technical architecture sections",
+      "observed_last_edit": null,
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift."
+    },
+    {
+      "id": "P15",
+      "provider": "Notion",
+      "url": "https://app.notion.com/p/4044c57a590c81c7b484eb243f2685c3",
+      "accepted_version": "v0.1+C01",
+      "trusted_sections": "technical sections including8.1",
+      "observed_last_edit": null,
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift."
+    },
+    {
+      "id": "P16",
+      "provider": "Notion",
+      "url": "https://app.notion.com/p/4044c57a590c81249863c8461f266b09",
+      "accepted_version": "v0.1+C02",
+      "trusted_sections": "technical flows including9.1",
+      "observed_last_edit": null,
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift."
+    },
+    {
+      "id": "P17",
+      "provider": "Notion",
+      "url": "https://app.notion.com/p/4044c57a590c817ebf4ef0b7727c6c34",
+      "accepted_version": "v0.1+closure",
+      "trusted_sections": "platform and receipt contract",
+      "observed_last_edit": null,
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift."
+    },
+    {
+      "id": "P20 execution",
+      "provider": "Notion",
+      "url": "https://app.notion.com/p/4044c57a590c81a884e7d17b561dd486",
+      "accepted_version": "v0.1+CR01",
+      "trusted_sections": "execution and CR01 delta",
+      "observed_last_edit": "2026-10-25T18:14:31.105Z",
+      "export_rule": "Capture exact accepted technical content and provenance; ignore later progress headers as normative changes. Compute export hash and bind it in source-index. Compare any body changes to the scoped acceptance; fail closed on substantive drift."
+    }
+  ],
+  "acceptance_roots": [
+    "authority/semantic-acceptance.json",
+    "authority/execution-sequencing-acceptance.json",
+    "verification/closure-receipt.json"
+  ],
+  "inherited_source_root": {
+    "repository": "Mostorm-Labs/axiom",
+    "revision": "a5af5f6d89e8439cc5f70950ba5f1b7986b6ff7b",
+    "classification": "Implementation reality plus explicitly accepted authority sources; code alone is not semantic authority"
+  },
+  "source_output": "Immutable exports under .aegis/materialized/FC-08/sources with per-file hashes. Remote source access is permitted only for this explicit acquisition/reconciliation work, not unlimited rediscovery."
+}

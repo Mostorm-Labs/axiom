@@ -1,0 +1,33 @@
+{
+  "result_revision": "7c09dc7f8fd43e975228e719698a8546f822ef7a",
+  "materialized_ref": "refs/heads/codex/fc08-section-scene-host",
+  "scope": "Create Section Minimal Host adapter + terminal UI receipts; existing D/E authorization",
+  "historical_user_failure": "FAIL preserved",
+  "native_ctest": {
+    "tests": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0
+  },
+  "chrome_wasm": {
+    "checks": 42,
+    "passed": 42,
+    "dirty": 0
+  },
+  "windows_build_exit_code": 0,
+  "web_build_exit_code": 0,
+  "runtime_schema_frozen_data_changed": false,
+  "ui_test": "Real ImGui widget through actual Windows MinimalRuntimeFacade, not direct Composition-only API",
+  "physical_retest": "PHYSICAL_PENDING",
+  "running_window": {
+    "path": ".aegis/results/FC-08-SECTION-DE/create-button-fix-001/running-windows-002.json",
+    "sha256": "d4b4f7aec17cf353b5658ef563e5ddbbf365692c6280c6bd7a77a9e061eed8e9"
+  },
+  "manifest": {
+    "path": ".aegis/results/FC-08-SECTION-DE/create-button-fix-001/evidence-manifest.json",
+    "sha256": "75dce1f4286a617599a58aa250f18122051d0af4387a0a073e8db80da763434e"
+  },
+  "full302_runner": "NOT_COMPLETE unchanged",
+  "prior_baseline_failures": "Preserved; not reclassified or rerun as PASS",
+  "gate_claim": false
+}

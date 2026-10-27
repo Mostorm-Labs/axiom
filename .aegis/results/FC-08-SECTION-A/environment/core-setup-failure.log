@@ -1,0 +1,54 @@
++ git fetch --depth=1 origin 063de7e9578f82b369302001269680b4b1553359
+From https://github.com/google/googletest
+ * branch              063de7e9578f82b369302001269680b4b1553359 -> FETCH_HEAD
++ git checkout --detach FETCH_HEAD
+HEAD is now at 063de7e9 Prepare for v1.18.0 (#5055)
++ git fetch --depth=1 origin 55f93686c01528224f448c19128836e7df245f72
+From https://github.com/nlohmann/json
+ * branch                55f93686c01528224f448c19128836e7df245f72 -> FETCH_HEAD
++ git checkout --detach FETCH_HEAD
+HEAD is now at 55f93686c Merge branch 'release/3.12.0'
++ git fetch --depth=1 origin e626a72bc2321cd320e953a0ccf1584cad60f363
+From https://github.com/Cyan4973/xxHash
+ * branch            e626a72bc2321cd320e953a0ccf1584cad60f363 -> FETCH_HEAD
++ git checkout --detach FETCH_HEAD
+HEAD is now at e626a72 Merge pull request #991 from Cyan4973/dev
++ git fetch --depth=1 origin f1cc2ae15e53a861a874c3034aae6798fde194ab
+error: unable to write file .git/objects/pack/pack-029d08823bd8a8eab510ad6ac75c823cfd3ed31e.pack: Permission denied
+fatal: cannot store pack file
+fatal: index-pack failed
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\tools\bootstrap_deps.py", line 592, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\tools\bootstrap_deps.py", line 571, in main
+    bootstrap_core(lock, args.github_api_archives, args.raw_core_fallback)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\tools\bootstrap_deps.py", line 416, in bootstrap_core
+    clone_pinned(directory, dependency["url"], dependency["commit"])
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\tools\bootstrap_deps.py", line 51, in clone_pinned
+    run("git", "fetch", "--depth=1", "origin", revision, cwd=destination)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\tools\bootstrap_deps.py", line 34, in run
+    subprocess.run(args, cwd=cwd, check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Softwares\Anaconda\Lib\subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '('git', 'fetch', '--depth=1', 'origin', 'f1cc2ae15e53a861a874c3034aae6798fde194ab')' returned non-zero exit status 128.
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\tools\setup_build_environment.py", line 230, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\tools\setup_build_environment.py", line 214, in main
+    facts = setup_environment(core=args.core, semantic=args.semantic or args.status or args.lock is not None,
+                              target=args.target, store_root=args.store, mirror=args.mirror,
+                              offline=args.offline, lock_path=args.lock)
+  File "C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\tools\setup_build_environment.py", line 132, in setup_environment
+    subprocess.run([sys.executable, "tools/bootstrap_deps.py", "--core"], cwd=root, check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Softwares\Anaconda\Lib\subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['D:\\Softwares\\Anaconda\\python.exe', 'tools/bootstrap_deps.py', '--core']' returned non-zero exit status 1.

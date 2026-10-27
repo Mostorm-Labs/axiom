@@ -1,0 +1,327 @@
+{
+  "format": "fc08-bootstrap-exact-invocations-v1",
+  "runner_revision": "266b0a141abbd952c6cdc377915220d887cc0cef",
+  "package_revision": "6497f7ed199b98181863f43a04e8a6eecd5f2d60",
+  "qualification_subject_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+  "invocations": [
+    {
+      "name": "semantic-offline",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        "tools/setup_build_environment.py",
+        "--semantic",
+        "--offline",
+        "--status"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:51:33.128175+00:00",
+      "end_utc": "2026-10-26T08:51:40.107991+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/semantic-offline.stdout.log",
+        "sha256": "30a8502a06951ca00e8052a8ba16fbcf6efcc72e16b3e344fd40272265bed193",
+        "size": 3911
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/semantic-offline.stderr.log",
+        "sha256": "646803b0d5cbc918d551ae8e1b3ca774a2f2761909a70c9b20e46747c0123474",
+        "size": 936
+      }
+    },
+    {
+      "name": "protoc-version",
+      "argv": [
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+        "--version"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:51:40.127599+00:00",
+      "end_utc": "2026-10-26T08:51:40.162679+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/protoc-version.stdout.log",
+        "sha256": "a3b15e31941cee5d6284757462fb817bc185f3a766f4af1d2a32b922a418231f",
+        "size": 15
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/protoc-version.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "name": "verification-tool-tests",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/fc08",
+        "-p",
+        "*_test.py",
+        "-v"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:51:40.168882+00:00",
+      "end_utc": "2026-10-26T08:51:46.827582+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/verification-tool-tests.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/verification-tool-tests.stderr.log",
+        "sha256": "a399032e6548ea5372790d79d457db2fadee9cccbe2a80f970858f30bb75bf20",
+        "size": 5678
+      }
+    },
+    {
+      "name": "package-preflight",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        "tools/fc08/accepted_preflight.py",
+        "--repo",
+        ".",
+        "--package-revision",
+        "6497f7ed199b98181863f43a04e8a6eecd5f2d60",
+        "--package-path",
+        ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/package.json",
+        "--phase",
+        "package",
+        "--output",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-P31-BOOTSTRAP\\attempts\\bootstrap-003\\qualified-001\\package-preflight.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:51:46.835868+00:00",
+      "end_utc": "2026-10-26T08:51:58.327676+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/package-preflight.stdout.log",
+        "sha256": "e3bb05cb35b91c4b8cd8147710f44448f3b7e91edecfdfd84d2859807b7e409e",
+        "size": 57
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/package-preflight.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "name": "evidence-preflight",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        "tools/fc08/accepted_preflight.py",
+        "--repo",
+        ".",
+        "--package-revision",
+        "6497f7ed199b98181863f43a04e8a6eecd5f2d60",
+        "--package-path",
+        ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/package.json",
+        "--phase",
+        "evidence",
+        "--output",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-P31-BOOTSTRAP\\attempts\\bootstrap-003\\qualified-001\\evidence-preflight.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:51:58.335156+00:00",
+      "end_utc": "2026-10-26T08:52:08.677766+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/evidence-preflight.stdout.log",
+        "sha256": "28e8c7d7618ca8748980465fdc63714468193d83ed7c61af94bd114c2eea969b",
+        "size": 59
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/evidence-preflight.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "name": "design-preflight",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        "tools/fc08/product_design.py",
+        "--repo",
+        ".",
+        "--output",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-P31-BOOTSTRAP\\attempts\\bootstrap-003\\qualified-001\\implementation-design-preflight.json"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:52:08.683905+00:00",
+      "end_utc": "2026-10-26T08:52:10.899508+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/design-preflight.stdout.log",
+        "sha256": "7af7e17e12001ff5a2095d9d0078af142d82edea5cc807ad8a1779d7289a3c3e",
+        "size": 30
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/design-preflight.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "name": "product-windows-native",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        "tools/fc08/run_product_verification.py",
+        "--design",
+        ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/verification.lock.json",
+        "--case",
+        "all",
+        "--native-build",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\windows-native",
+        "--web-build",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm",
+        "--protoc",
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+        "--node",
+        "C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/node/24.19.0_64bit/node.exe",
+        "--chrome",
+        "C:/Program Files/Google/Chrome/Application/chrome.exe",
+        "--profile",
+        "windows-native",
+        "--output",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-P31-BOOTSTRAP\\attempts\\bootstrap-003\\qualified-001\\profiles\\windows-native"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:52:10.907204+00:00",
+      "end_utc": "2026-10-26T08:52:14.592852+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/product-windows-native.stdout.log",
+        "sha256": "a441cd20857ba98e21fb1826fdbdcb5d1eb07dc85e5fb4daed5c259deded54a7",
+        "size": 279
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/product-windows-native.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "name": "product-web-wasm",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        "tools/fc08/run_product_verification.py",
+        "--design",
+        ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/verification.lock.json",
+        "--case",
+        "all",
+        "--native-build",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\windows-native",
+        "--web-build",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm",
+        "--protoc",
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+        "--node",
+        "C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/node/24.19.0_64bit/node.exe",
+        "--chrome",
+        "C:/Program Files/Google/Chrome/Application/chrome.exe",
+        "--profile",
+        "web-wasm",
+        "--output",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-P31-BOOTSTRAP\\attempts\\bootstrap-003\\qualified-001\\profiles\\web-wasm"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:52:14.599939+00:00",
+      "end_utc": "2026-10-26T08:52:21.448370+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/product-web-wasm.stdout.log",
+        "sha256": "9251c40b5273d00b945bf0d1260db645b1e5992f4b9be904825c2591de11c354",
+        "size": 267
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/product-web-wasm.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "name": "product-headless",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        "tools/fc08/run_product_verification.py",
+        "--design",
+        ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/verification.lock.json",
+        "--case",
+        "all",
+        "--native-build",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\windows-native",
+        "--web-build",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\web-wasm",
+        "--protoc",
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+        "--node",
+        "C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/node/24.19.0_64bit/node.exe",
+        "--chrome",
+        "C:/Program Files/Google/Chrome/Application/chrome.exe",
+        "--profile",
+        "headless",
+        "--output",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-P31-BOOTSTRAP\\attempts\\bootstrap-003\\qualified-001\\profiles\\headless"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:52:21.456164+00:00",
+      "end_utc": "2026-10-26T08:52:26.205958+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/product-headless.stdout.log",
+        "sha256": "44f570b3889c5ceee6c225e9413bb315b4fe9eff1ae5dd0c5c1a6aaddccefc13",
+        "size": 267
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/product-headless.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    },
+    {
+      "name": "preservation",
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "diff",
+        "0d13b63702facc1534e815643c3bc6085d9c6618",
+        "--name-only",
+        "--diff-filter=CDMRTUXB"
+      ],
+      "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+      "start_utc": "2026-10-26T08:52:26.223106+00:00",
+      "end_utc": "2026-10-26T08:52:26.482395+00:00",
+      "exit_code": 0,
+      "stdout": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/preservation.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      },
+      "stderr": {
+        "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/preservation.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size": 0
+      }
+    }
+  ],
+  "all_commands_exit_zero": true,
+  "verification_tool_tests": 39,
+  "verification_tool_tests_are_not_Axiom_tests": true,
+  "old_tracked_files_unchanged": true,
+  "environment": {
+    "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]",
+    "python_executable": "D:\\Softwares\\Anaconda\\python.exe",
+    "SDK_environment": {
+      "AXIOM_DEPS_DIR": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.deps",
+      "AXIOM_PROTOC": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+      "AXIOM_SEMANTIC_HOST_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85",
+      "AXIOM_SEMANTIC_RUNTIME_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+      "AXIOM_SEMANTIC_SDK_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+      "CMAKE_PREFIX_PATH": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c"
+    }
+  },
+  "product_P32_authorized": false,
+  "P34_PASS": false
+}

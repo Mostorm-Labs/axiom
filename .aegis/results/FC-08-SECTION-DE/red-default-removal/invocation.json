@@ -1,0 +1,6 @@
+{
+  "observation": "Actual public DeleteSelected removed Section and its Sticky child; expected non-destructive release",
+  "exit_code": 1,
+  "command": "axiom_fc08_section_consumer_tests.exe --gtest_filter=FC08SectionConsumer.DefaultSectionRemovalReleasesChildren",
+  "subject": "D/E before default-removal repair"
+}

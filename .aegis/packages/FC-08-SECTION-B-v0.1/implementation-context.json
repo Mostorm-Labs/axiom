@@ -1,0 +1,5 @@
+{
+  "existing_flow": "OperationEngine.prepare normalizes/validates then prepareApplyPlan performs idempotency before guards; existing StagedObjectView and canonical store/index owners remain authoritative",
+  "B_changes": "Private typed operation helpers, existing plan create/replace/delete vectors; pre-allocated ledger node and staged canonical store/index for no-partial-publish on new operations only",
+  "history_boundary": "Headless canonical operation execution. Local undoable F/U sizing/reservation remains C. No command or history success claimed here."
+}

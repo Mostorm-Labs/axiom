@@ -1,0 +1,61 @@
+{
+  "recorded_at_utc": "2026-10-27T02:26:53.508429+00:00",
+  "user_authorization": "收尾section，将section的改动合并到main",
+  "integration_authorized": true,
+  "implementation_closeout": "BOUNDED_SECTION_IMPLEMENTATION_READY_FOR_MAIN_INTEGRATION",
+  "feature_head_before_summary": "a980927844e9185e5ea5f84588d184911f568278",
+  "tested_production_revision": "68565bdd2eeff0594052c3f3f867831ff48db1ce",
+  "main_before_integration": "a1e8819abe245ab7487f18771970721f480ff487",
+  "feature_branch": "codex/fc08-section-scene-host",
+  "merge_method": "merge commit (preserve exact package/anchor ancestry)",
+  "feature_commits_before_summary": 55,
+  "main_has_no_unincorporated_delta": true,
+  "production_equals_tested_source": true,
+  "SDK_and_historical_descriptor_locks_unchanged": true,
+  "inherited_execution_authority_successor": {
+    "revision": "a5af5f6d89e8439cc5f70950ba5f1b7986b6ff7b",
+    "file": ".aegis/authorities.json",
+    "reason": "Previously accepted FC-08 sequencing exception; preserved prerequisite history, not altered for this merge"
+  },
+  "evidence": {
+    "implementation": {
+      "path": ".aegis/results/FC-08-SECTION-DE/section-drop-fix-001/result.json",
+      "sha256": "910311c7cd676e5e0d783a1dad8bc37d1f1b071784bdd56941288cd141a91e14"
+    },
+    "physical": {
+      "path": ".aegis/results/FC-08-SECTION-DE/section-drop-physical-retest-001/user-retest.json",
+      "sha256": "5a2227419658329f5b10a28c7aa6dcdffd65a476b951f13a60b19a7f630ac17d"
+    },
+    "original_semantic_history": {
+      "path": ".aegis/results/FC-08-SECTION-C-H03-v0.1/terminal-result.json",
+      "sha256": "af41a8bcf7d46ab7fbe277816084f73f6157ed09440434759c331a2acdaa321d"
+    }
+  },
+  "results": {
+    "native_focused_regressions": {
+      "tests": 24,
+      "passed": 24,
+      "skipped": 0
+    },
+    "actual_Chrome_WASM": {
+      "checks": 111,
+      "passed": 111,
+      "dirty": 0
+    },
+    "Windows_manual": [
+      "drop in follows Section: PASS reported by user",
+      "drop out detaches: PASS reported by user"
+    ],
+    "fresh_closeout_python": "10 contract tests and 101 runtime boundary files PASS"
+  },
+  "carryover": [
+    "Full302 product runner remains NOT_COMPLETE",
+    "Web and unconfirmed Windows physical/Undo/nested/metrics coverage remain pending",
+    "StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds: preserved baseline failure",
+    "FC01TriangleConnectorRaster: independently reproduced baseline pixel failure",
+    "PH01-PH04 remain FC13 debt; mixed destructive removal INT-01 remains FC04/FC10 ownership"
+  ],
+  "gate_claim": false,
+  "DEV_P34_PHYS_release_approval": false,
+  "historical_failures_and_pending_records_preserved": true
+}

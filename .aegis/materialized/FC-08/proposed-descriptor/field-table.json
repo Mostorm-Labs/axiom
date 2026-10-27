@@ -1,0 +1,4417 @@
+{
+  "auditoryworks/axiom/v1/brush_engine.proto": {
+    "enums": [],
+    "messages": [
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "position",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          },
+          {
+            "label": 1,
+            "name": "pressure",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "BrushConfirmedSample"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "snapshot_version",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "package_id",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "package_revision",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "pipeline_version",
+            "number": 4,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "defaults_version",
+            "number": 5,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "profile_id",
+            "number": 6,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 3,
+            "name": "stages",
+            "number": 7,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BrushStageBinding"
+          },
+          {
+            "label": 1,
+            "name": "vector",
+            "number": 8,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BrushVectorParameters"
+          },
+          {
+            "label": 1,
+            "name": "paint",
+            "number": 9,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BrushSolidPaint"
+          },
+          {
+            "label": 3,
+            "name": "resources",
+            "number": 10,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BrushResourceBinding"
+          },
+          {
+            "label": 1,
+            "name": "seed",
+            "number": 11,
+            "oneof_index": null,
+            "type": 6,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "signal_schema_version",
+            "number": 12,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "material_mode",
+            "number": 13,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "marker_head_angle",
+            "number": 14,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "marker_head_width",
+            "number": 15,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "BrushExecutionSnapshot"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "resource_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "content_sha256",
+            "number": 2,
+            "oneof_index": null,
+            "type": 12,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "kind",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "decode_version",
+            "number": 4,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "channel",
+            "number": 5,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "color_space",
+            "number": 6,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "sampling",
+            "number": 7,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "wrap",
+            "number": 8,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          }
+        ],
+        "name": "BrushResourceBinding"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "red",
+            "number": 1,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "green",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "blue",
+            "number": 3,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "alpha",
+            "number": 4,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "opacity",
+            "number": 5,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "blend",
+            "number": 6,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "color_space",
+            "number": 7,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          }
+        ],
+        "name": "BrushSolidPaint"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "stage_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "declared_mode",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "active",
+            "number": 3,
+            "oneof_index": null,
+            "type": 8,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "node_id",
+            "number": 4,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "node_version",
+            "number": 5,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          }
+        ],
+        "name": "BrushStageBinding"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "stroke",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BrushStrokeRecord"
+          }
+        ],
+        "name": "BrushStrokeContent"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "snapshot",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BrushExecutionSnapshot"
+          },
+          {
+            "label": 3,
+            "name": "confirmed_samples",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BrushConfirmedSample"
+          },
+          {
+            "label": 1,
+            "name": "vector_output",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BrushVectorOutput"
+          }
+        ],
+        "name": "BrushStrokeRecord"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "outline",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          },
+          {
+            "label": 1,
+            "name": "fill_rule",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "closed",
+            "number": 3,
+            "oneof_index": null,
+            "type": 8,
+            "type_name": ""
+          }
+        ],
+        "name": "BrushVectorOutput"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "size",
+            "number": 1,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "thinning",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "smoothing",
+            "number": 3,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "streamline",
+            "number": 4,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "pressure_source",
+            "number": 5,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "missing_pressure",
+            "number": 6,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "easing_id",
+            "number": 7,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "start_cap",
+            "number": 8,
+            "oneof_index": null,
+            "type": 8,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "end_cap",
+            "number": 9,
+            "oneof_index": null,
+            "type": 8,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "start_taper",
+            "number": 10,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "end_taper",
+            "number": 11,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "BrushVectorParameters"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "stroke",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.DabBrushStrokeRecord"
+          }
+        ],
+        "name": "DabBrushStrokeContent"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "snapshot",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BrushExecutionSnapshot"
+          },
+          {
+            "label": 3,
+            "name": "confirmed_samples",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BrushConfirmedSample"
+          },
+          {
+            "label": 1,
+            "name": "dab_output",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.DabStrokeData"
+          },
+          {
+            "label": 1,
+            "name": "dab_digest",
+            "number": 4,
+            "oneof_index": null,
+            "type": 6,
+            "type_name": ""
+          }
+        ],
+        "name": "DabBrushStrokeRecord"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/brush_engine.proto"
+  },
+  "auditoryworks/axiom/v1/brush_stroke.proto": {
+    "enums": [
+      {
+        "name": "BrushBlendMode",
+        "values": [
+          [
+            "BRUSH_BLEND_INVALID",
+            0
+          ],
+          [
+            "BRUSH_BLEND_NORMAL",
+            1
+          ],
+          [
+            "BRUSH_BLEND_HIGHLIGHTER",
+            2
+          ]
+        ]
+      }
+    ],
+    "messages": [
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "brush_family_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "brush_version",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "color",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ColorValue"
+          },
+          {
+            "label": 1,
+            "name": "nominal_size",
+            "number": 4,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "opacity",
+            "number": 5,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "pressure",
+            "number": 6,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.PressureMapping"
+          },
+          {
+            "label": 1,
+            "name": "tilt",
+            "number": 7,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.TiltMapping"
+          },
+          {
+            "label": 1,
+            "name": "smoothing",
+            "number": 8,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SmoothingSettings"
+          },
+          {
+            "label": 1,
+            "name": "spacing",
+            "number": 9,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SpacingSettings"
+          },
+          {
+            "label": 1,
+            "name": "texture_resource_id",
+            "number": 10,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "blend_mode",
+            "number": 11,
+            "oneof_index": null,
+            "type": 14,
+            "type_name": ".auditoryworks.axiom.v1.BrushBlendMode"
+          }
+        ],
+        "name": "BrushDescriptor"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "x",
+            "number": 1,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "y",
+            "number": 2,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          }
+        ],
+        "name": "CurvePoint01"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "center",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          },
+          {
+            "label": 1,
+            "name": "size",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "rotation",
+            "number": 3,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "opacity",
+            "number": 4,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          }
+        ],
+        "name": "DabInstance"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "stroke",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.StrokeRecord"
+          }
+        ],
+        "name": "DabStrokeContent"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "dabs",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.DabInstance"
+          }
+        ],
+        "name": "DabStrokeData"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "points",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.CurvePoint01"
+          }
+        ],
+        "name": "PiecewiseLinearCurve01"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "enabled",
+            "number": 1,
+            "oneof_index": null,
+            "type": 8,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "size_curve",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.PiecewiseLinearCurve01"
+          },
+          {
+            "label": 1,
+            "name": "opacity_curve",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.PiecewiseLinearCurve01"
+          }
+        ],
+        "name": "PressureMapping"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "amount",
+            "number": 1,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          }
+        ],
+        "name": "SmoothingSettings"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "normalized_spacing",
+            "number": 1,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          }
+        ],
+        "name": "SpacingSettings"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "brush",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BrushDescriptor"
+          },
+          {
+            "label": 1,
+            "name": "deterministic_seed",
+            "number": 2,
+            "oneof_index": null,
+            "type": 6,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "vector",
+            "number": 3,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.VectorStrokeData"
+          },
+          {
+            "label": 1,
+            "name": "dab",
+            "number": 4,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.DabStrokeData"
+          }
+        ],
+        "name": "StrokeRecord"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "position",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          },
+          {
+            "label": 1,
+            "name": "pressure",
+            "number": 2,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "tilt",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          }
+        ],
+        "name": "StrokeSample"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "enabled",
+            "number": 1,
+            "oneof_index": null,
+            "type": 8,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "size_influence",
+            "number": 2,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "angle_influence",
+            "number": 3,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          }
+        ],
+        "name": "TiltMapping"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "stroke",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.StrokeRecord"
+          }
+        ],
+        "name": "VectorStrokeContent"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "samples",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.StrokeSample"
+          }
+        ],
+        "name": "VectorStrokeData"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/brush_stroke.proto"
+  },
+  "auditoryworks/axiom/v1/common.proto": {
+    "enums": [],
+    "messages": [
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "value",
+            "number": 1,
+            "oneof_index": null,
+            "type": 12,
+            "type_name": ""
+          }
+        ],
+        "name": "Id128"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "value",
+            "number": 1,
+            "oneof_index": null,
+            "type": 12,
+            "type_name": ""
+          }
+        ],
+        "name": "OrderKey"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/common.proto"
+  },
+  "auditoryworks/axiom/v1/connector.proto": {
+    "enums": [
+      {
+        "name": "ConnectorRouting",
+        "values": [
+          [
+            "CONNECTOR_ROUTING_INVALID",
+            0
+          ],
+          [
+            "CONNECTOR_ROUTING_STRAIGHT",
+            1
+          ],
+          [
+            "CONNECTOR_ROUTING_ORTHOGONAL",
+            2
+          ]
+        ]
+      }
+    ],
+    "messages": [
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "auto_perimeter",
+            "number": 1,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.AutoPerimeterAnchor"
+          },
+          {
+            "label": 1,
+            "name": "stable_port",
+            "number": 2,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.StablePortAnchor"
+          }
+        ],
+        "name": "AnchorRef"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "target_object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "anchor",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.AnchorRef"
+          }
+        ],
+        "name": "AttachedEndpoint"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "hint",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          }
+        ],
+        "name": "AutoPerimeterAnchor"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "start",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ConnectorEndpoint"
+          },
+          {
+            "label": 1,
+            "name": "end",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ConnectorEndpoint"
+          },
+          {
+            "label": 1,
+            "name": "routing",
+            "number": 3,
+            "oneof_index": null,
+            "type": 14,
+            "type_name": ".auditoryworks.axiom.v1.ConnectorRouting"
+          }
+        ],
+        "name": "ConnectorContent"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "free_point",
+            "number": 1,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.FreePointEndpoint"
+          },
+          {
+            "label": 1,
+            "name": "attached",
+            "number": 2,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.AttachedEndpoint"
+          }
+        ],
+        "name": "ConnectorEndpoint"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "point",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          }
+        ],
+        "name": "FreePointEndpoint"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "port_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          }
+        ],
+        "name": "StablePortAnchor"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/connector.proto"
+  },
+  "auditoryworks/axiom/v1/container_operations.proto": {
+    "enums": [],
+    "messages": [
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "order_key",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.OrderKey"
+          }
+        ],
+        "name": "ContainerChildExpectation"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "parent_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 3,
+            "name": "complete_members",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ContainerChildExpectation"
+          }
+        ],
+        "name": "ContainerChildrenExpectation"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "order_key_after",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.OrderKey"
+          }
+        ],
+        "name": "ContainerOrderOnlyEdit"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "placement_after",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Placement"
+          },
+          {
+            "label": 1,
+            "name": "transform_after",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Transform2D"
+          }
+        ],
+        "name": "ContainerRelocation"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "kind_id",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "kind_version",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "placement_before",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Placement"
+          },
+          {
+            "label": 1,
+            "name": "transform_before",
+            "number": 5,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Transform2D"
+          }
+        ],
+        "name": "ContainerStructuralExpectation"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "nodes",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ContainerStructuralExpectation"
+          },
+          {
+            "label": 3,
+            "name": "child_sets",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ContainerChildrenExpectation"
+          }
+        ],
+        "name": "ContainerTopologyGuard"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "guard",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ContainerTopologyGuard"
+          },
+          {
+            "label": 3,
+            "name": "relocations",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ContainerRelocation"
+          },
+          {
+            "label": 3,
+            "name": "order_only_edits",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ContainerOrderOnlyEdit"
+          },
+          {
+            "label": 1,
+            "name": "introduce_wrappers",
+            "number": 4,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.IntroduceWrappersEffect"
+          },
+          {
+            "label": 1,
+            "name": "release_wrappers",
+            "number": 5,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ReleaseWrappersEffect"
+          },
+          {
+            "label": 1,
+            "name": "relocate_objects",
+            "number": 6,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RelocateObjectsEffect"
+          }
+        ],
+        "name": "EditContainerTopologyOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "containers",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ObjectRecord"
+          }
+        ],
+        "name": "IntroduceWrappersEffect"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "containers_before",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ObjectRecord"
+          }
+        ],
+        "name": "ReleaseWrappersEffect"
+      },
+      {
+        "fields": [],
+        "name": "RelocateObjectsEffect"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "expected_kind_version",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "expected_content",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SectionContent"
+          },
+          {
+            "label": 1,
+            "name": "replacement_content",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SectionContent"
+          }
+        ],
+        "name": "SectionContentEdit"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "items",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SectionContentEdit"
+          },
+          {
+            "label": 3,
+            "name": "geometry_basis",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ContainerStructuralExpectation"
+          }
+        ],
+        "name": "SetSectionContentOp"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/container_operations.proto"
+  },
+  "auditoryworks/axiom/v1/erase_mask.proto": {
+    "enums": [],
+    "messages": [
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "p0",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.EraseKnot"
+          },
+          {
+            "label": 1,
+            "name": "p1",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.EraseKnot"
+          },
+          {
+            "label": 1,
+            "name": "control1",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          },
+          {
+            "label": 1,
+            "name": "control2",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          }
+        ],
+        "name": "EraseCubicSegment"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "position",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          },
+          {
+            "label": 1,
+            "name": "radius",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "EraseKnot"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "swept_circle",
+            "number": 1,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SweptCircleMask"
+          },
+          {
+            "label": 1,
+            "name": "filled_path",
+            "number": 2,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.FilledPathMask"
+          }
+        ],
+        "name": "EraseMaskGeometry"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "mask_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "geometry",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.EraseMaskGeometry"
+          }
+        ],
+        "name": "EraseMaskRecord"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "path",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.VectorPathGeometry"
+          }
+        ],
+        "name": "FilledPathMask"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "segments",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.EraseCubicSegment"
+          }
+        ],
+        "name": "SweptCircleMask"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/erase_mask.proto"
+  },
+  "auditoryworks/axiom/v1/geometry.proto": {
+    "enums": [],
+    "messages": [
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "x",
+            "number": 1,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "y",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "width",
+            "number": 3,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "height",
+            "number": 4,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "NormalizedRect"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "x",
+            "number": 1,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "y",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "width",
+            "number": 3,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "height",
+            "number": 4,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "Rect2"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "a",
+            "number": 1,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "b",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "c",
+            "number": 3,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "d",
+            "number": 4,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "tx",
+            "number": 5,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "ty",
+            "number": 6,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "Transform2D"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "x",
+            "number": 1,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "y",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "Vec2"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/geometry.proto"
+  },
+  "auditoryworks/axiom/v1/object.proto": {
+    "enums": [
+      {
+        "name": "ImageContentMode",
+        "values": [
+          [
+            "IMAGE_CONTENT_MODE_INVALID",
+            0
+          ],
+          [
+            "IMAGE_CONTENT_MODE_FIT",
+            1
+          ],
+          [
+            "IMAGE_CONTENT_MODE_FILL",
+            2
+          ],
+          [
+            "IMAGE_CONTENT_MODE_STRETCH",
+            3
+          ]
+        ]
+      }
+    ],
+    "messages": [
+      {
+        "fields": [],
+        "name": "GroupContent"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "resource_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "intrinsic_width",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "intrinsic_height",
+            "number": 3,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "source_rect",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.NormalizedRect"
+          },
+          {
+            "label": 1,
+            "name": "content_mode",
+            "number": 5,
+            "oneof_index": null,
+            "type": 14,
+            "type_name": ".auditoryworks.axiom.v1.ImageContentMode"
+          },
+          {
+            "label": 1,
+            "name": "width",
+            "number": 6,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "height",
+            "number": 7,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "ImageContent"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "shape",
+            "number": 1,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ShapeContent"
+          },
+          {
+            "label": 1,
+            "name": "image",
+            "number": 2,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ImageContent"
+          },
+          {
+            "label": 1,
+            "name": "vector_path",
+            "number": 3,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.VectorPathContent"
+          },
+          {
+            "label": 1,
+            "name": "rich_text",
+            "number": 4,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RichTextContent"
+          },
+          {
+            "label": 1,
+            "name": "vector_stroke",
+            "number": 5,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.VectorStrokeContent"
+          },
+          {
+            "label": 1,
+            "name": "dab_stroke",
+            "number": 6,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.DabStrokeContent"
+          },
+          {
+            "label": 1,
+            "name": "connector",
+            "number": 7,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ConnectorContent"
+          },
+          {
+            "label": 1,
+            "name": "sticky",
+            "number": 8,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.StickyContent"
+          },
+          {
+            "label": 1,
+            "name": "group",
+            "number": 9,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.GroupContent"
+          },
+          {
+            "label": 1,
+            "name": "brush_stroke",
+            "number": 10,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BrushStrokeContent"
+          },
+          {
+            "label": 1,
+            "name": "dab_brush_stroke",
+            "number": 11,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.DabBrushStrokeContent"
+          },
+          {
+            "label": 1,
+            "name": "section",
+            "number": 12,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SectionContent"
+          }
+        ],
+        "name": "ObjectContent"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "kind_id",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "kind_version",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "placement",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Placement"
+          },
+          {
+            "label": 1,
+            "name": "transform",
+            "number": 5,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Transform2D"
+          },
+          {
+            "label": 1,
+            "name": "properties",
+            "number": 6,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.PropertyBag"
+          },
+          {
+            "label": 1,
+            "name": "content",
+            "number": 7,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ObjectContent"
+          },
+          {
+            "label": 3,
+            "name": "erase_masks",
+            "number": 8,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.EraseMaskRecord"
+          }
+        ],
+        "name": "ObjectRecord"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "parent_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "order_key",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.OrderKey"
+          }
+        ],
+        "name": "Placement"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "shape_kind",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "width",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "height",
+            "number": 3,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "label",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RichTextContent"
+          }
+        ],
+        "name": "ShapeContent"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "width",
+            "number": 1,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "height",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "StickyContent"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/object.proto"
+  },
+  "auditoryworks/axiom/v1/operation.proto": {
+    "enums": [
+      {
+        "name": "PropertyPatchAction",
+        "values": [
+          [
+            "PROPERTY_PATCH_INVALID",
+            0
+          ],
+          [
+            "PROPERTY_PATCH_SET",
+            1
+          ],
+          [
+            "PROPERTY_PATCH_CLEAR",
+            2
+          ]
+        ]
+      }
+    ],
+    "messages": [
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "items",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.EraseMaskAddItem"
+          }
+        ],
+        "name": "AddEraseMasksOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ObjectRecord"
+          }
+        ],
+        "name": "AddStrokeOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "object_ids",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          }
+        ],
+        "name": "DeleteObjectsOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "delta",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RichTextDelta"
+          }
+        ],
+        "name": "EditRichTextOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 3,
+            "name": "masks",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.EraseMaskRecord"
+          }
+        ],
+        "name": "EraseMaskAddItem"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 3,
+            "name": "mask_ids",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          }
+        ],
+        "name": "EraseMaskRemoveItem"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "objects",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ObjectRecord"
+          }
+        ],
+        "name": "InsertObjectsOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "width",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "height",
+            "number": 3,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "ObjectSizeItem"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "operation_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "document_id",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "schema_version",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "payload_version",
+            "number": 4,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "payload",
+            "number": 5,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.OperationPayload"
+          }
+        ],
+        "name": "Operation"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "insert_objects",
+            "number": 1,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.InsertObjectsOp"
+          },
+          {
+            "label": 1,
+            "name": "delete_objects",
+            "number": 2,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.DeleteObjectsOp"
+          },
+          {
+            "label": 1,
+            "name": "restore_objects",
+            "number": 3,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RestoreObjectsOp"
+          },
+          {
+            "label": 1,
+            "name": "set_placements",
+            "number": 4,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SetPlacementsOp"
+          },
+          {
+            "label": 1,
+            "name": "set_transforms",
+            "number": 5,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SetTransformsOp"
+          },
+          {
+            "label": 1,
+            "name": "patch_properties",
+            "number": 6,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.PatchPropertiesOp"
+          },
+          {
+            "label": 1,
+            "name": "set_object_size",
+            "number": 7,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SetObjectSizeOp"
+          },
+          {
+            "label": 1,
+            "name": "set_vector_path_geometry",
+            "number": 8,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SetVectorPathGeometryOp"
+          },
+          {
+            "label": 1,
+            "name": "set_image_content",
+            "number": 9,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SetImageContentOp"
+          },
+          {
+            "label": 1,
+            "name": "add_stroke",
+            "number": 10,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.AddStrokeOp"
+          },
+          {
+            "label": 1,
+            "name": "split_strokes",
+            "number": 11,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SplitStrokesOp"
+          },
+          {
+            "label": 1,
+            "name": "add_erase_masks",
+            "number": 12,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.AddEraseMasksOp"
+          },
+          {
+            "label": 1,
+            "name": "remove_erase_masks",
+            "number": 13,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RemoveEraseMasksOp"
+          },
+          {
+            "label": 1,
+            "name": "edit_rich_text",
+            "number": 14,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.EditRichTextOp"
+          },
+          {
+            "label": 1,
+            "name": "set_connector_content",
+            "number": 15,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SetConnectorContentOp"
+          },
+          {
+            "label": 1,
+            "name": "update_resource_manifest",
+            "number": 16,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.UpdateResourceManifestOp"
+          },
+          {
+            "label": 1,
+            "name": "set_section_content",
+            "number": 17,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SetSectionContentOp"
+          },
+          {
+            "label": 1,
+            "name": "edit_container_topology",
+            "number": 18,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.EditContainerTopologyOp"
+          }
+        ],
+        "name": "OperationPayload"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "patches",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.PropertyPatch"
+          }
+        ],
+        "name": "PatchPropertiesOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "placement",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Placement"
+          }
+        ],
+        "name": "PlacementItem"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "field_id",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "action",
+            "number": 3,
+            "oneof_index": null,
+            "type": 14,
+            "type_name": ".auditoryworks.axiom.v1.PropertyPatchAction"
+          },
+          {
+            "label": 1,
+            "name": "value",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.PropertyValue"
+          }
+        ],
+        "name": "PropertyPatch"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "entry",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ResourceManifestEntry"
+          },
+          {
+            "label": 1,
+            "name": "expected_removal_operation_id",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "expected_preimage",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ResourceManifestEntry"
+          },
+          {
+            "label": 1,
+            "name": "expected_lineage_token",
+            "number": 4,
+            "oneof_index": null,
+            "type": 12,
+            "type_name": ""
+          }
+        ],
+        "name": "ReactivateResource"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "items",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.EraseMaskRemoveItem"
+          }
+        ],
+        "name": "RemoveEraseMasksOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "resource_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "state",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "revision",
+            "number": 3,
+            "oneof_index": null,
+            "type": 4,
+            "type_name": ""
+          }
+        ],
+        "name": "ResourceExpectation"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "objects",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ObjectRecord"
+          }
+        ],
+        "name": "RestoreObjectsOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "content",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ConnectorContent"
+          }
+        ],
+        "name": "SetConnectorContentOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "content",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ImageContent"
+          }
+        ],
+        "name": "SetImageContentOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "items",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ObjectSizeItem"
+          }
+        ],
+        "name": "SetObjectSizeOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "items",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.PlacementItem"
+          }
+        ],
+        "name": "SetPlacementsOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "items",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.TransformItem"
+          }
+        ],
+        "name": "SetTransformsOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "geometry",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.VectorPathGeometry"
+          }
+        ],
+        "name": "SetVectorPathGeometryOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "splits",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.StrokeSplit"
+          }
+        ],
+        "name": "SplitStrokesOp"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "source_stroke_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 3,
+            "name": "replacements",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ObjectRecord"
+          }
+        ],
+        "name": "StrokeSplit"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "object_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "transform",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Transform2D"
+          }
+        ],
+        "name": "TransformItem"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "upserts",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ResourceManifestEntry"
+          },
+          {
+            "label": 3,
+            "name": "removes",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 3,
+            "name": "expectations",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ResourceExpectation"
+          },
+          {
+            "label": 3,
+            "name": "reactivations",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ReactivateResource"
+          },
+          {
+            "label": 1,
+            "name": "expected_manifest_revision",
+            "number": 5,
+            "oneof_index": null,
+            "type": 4,
+            "type_name": ""
+          }
+        ],
+        "name": "UpdateResourceManifestOp"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/operation.proto"
+  },
+  "auditoryworks/axiom/v1/paint.proto": {
+    "enums": [
+      {
+        "name": "BlendModeValue",
+        "values": [
+          [
+            "BLEND_MODE_INVALID",
+            0
+          ],
+          [
+            "BLEND_MODE_NORMAL",
+            1
+          ]
+        ]
+      },
+      {
+        "name": "ConnectorDecorationValue",
+        "values": [
+          [
+            "CONNECTOR_DECORATION_INVALID",
+            0
+          ],
+          [
+            "CONNECTOR_DECORATION_NONE",
+            1
+          ],
+          [
+            "CONNECTOR_DECORATION_ARROW",
+            2
+          ]
+        ]
+      },
+      {
+        "name": "StrokeCap",
+        "values": [
+          [
+            "STROKE_CAP_INVALID",
+            0
+          ],
+          [
+            "STROKE_CAP_BUTT",
+            1
+          ],
+          [
+            "STROKE_CAP_ROUND",
+            2
+          ],
+          [
+            "STROKE_CAP_SQUARE",
+            3
+          ]
+        ]
+      }
+    ],
+    "messages": [
+      {
+        "fields": [],
+        "name": "BevelJoin"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "r",
+            "number": 1,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "g",
+            "number": 2,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "b",
+            "number": 3,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "a",
+            "number": 4,
+            "oneof_index": null,
+            "type": 2,
+            "type_name": ""
+          }
+        ],
+        "name": "ColorValue"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "segments",
+            "number": 1,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "offset",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "DashPattern"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "none",
+            "number": 1,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.NoFill"
+          },
+          {
+            "label": 1,
+            "name": "solid",
+            "number": 2,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SolidFill"
+          }
+        ],
+        "name": "FillStyleValue"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "limit",
+            "number": 1,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "MiterJoin"
+      },
+      {
+        "fields": [],
+        "name": "NoFill"
+      },
+      {
+        "fields": [],
+        "name": "NoStroke"
+      },
+      {
+        "fields": [],
+        "name": "RoundJoin"
+      },
+      {
+        "fields": [],
+        "name": "SolidDash"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "color",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ColorValue"
+          }
+        ],
+        "name": "SolidFill"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "color",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ColorValue"
+          },
+          {
+            "label": 1,
+            "name": "width",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "cap",
+            "number": 3,
+            "oneof_index": null,
+            "type": 14,
+            "type_name": ".auditoryworks.axiom.v1.StrokeCap"
+          },
+          {
+            "label": 1,
+            "name": "join",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.StrokeJoin"
+          },
+          {
+            "label": 1,
+            "name": "dash",
+            "number": 5,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.StrokeDash"
+          }
+        ],
+        "name": "SolidStroke"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "solid",
+            "number": 1,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SolidDash"
+          },
+          {
+            "label": 1,
+            "name": "pattern",
+            "number": 2,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.DashPattern"
+          }
+        ],
+        "name": "StrokeDash"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "miter",
+            "number": 1,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.MiterJoin"
+          },
+          {
+            "label": 1,
+            "name": "round",
+            "number": 2,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RoundJoin"
+          },
+          {
+            "label": 1,
+            "name": "bevel",
+            "number": 3,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.BevelJoin"
+          }
+        ],
+        "name": "StrokeJoin"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "none",
+            "number": 1,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.NoStroke"
+          },
+          {
+            "label": 1,
+            "name": "solid",
+            "number": 2,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SolidStroke"
+          }
+        ],
+        "name": "StrokeStyleValue"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/paint.proto"
+  },
+  "auditoryworks/axiom/v1/property.proto": {
+    "enums": [
+      {
+        "name": "PropertyValueKind",
+        "values": [
+          [
+            "PROPERTY_VALUE_INVALID",
+            0
+          ],
+          [
+            "PROPERTY_VALUE_BOOL",
+            1
+          ],
+          [
+            "PROPERTY_VALUE_F32",
+            2
+          ],
+          [
+            "PROPERTY_VALUE_COLOR",
+            3
+          ],
+          [
+            "PROPERTY_VALUE_FILL_STYLE",
+            4
+          ],
+          [
+            "PROPERTY_VALUE_STROKE_STYLE",
+            5
+          ],
+          [
+            "PROPERTY_VALUE_BLEND_MODE",
+            6
+          ],
+          [
+            "PROPERTY_VALUE_CONNECTOR_DECORATION",
+            7
+          ]
+        ]
+      }
+    ],
+    "messages": [
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "entries",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.PropertyEntry"
+          }
+        ],
+        "name": "PropertyBag"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "field_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "value",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.PropertyValue"
+          }
+        ],
+        "name": "PropertyEntry"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "bool_value",
+            "number": 1,
+            "oneof_index": 0,
+            "type": 8,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "f32_value",
+            "number": 2,
+            "oneof_index": 0,
+            "type": 2,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "color_value",
+            "number": 3,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ColorValue"
+          },
+          {
+            "label": 1,
+            "name": "fill_style",
+            "number": 4,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.FillStyleValue"
+          },
+          {
+            "label": 1,
+            "name": "stroke_style",
+            "number": 5,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.StrokeStyleValue"
+          },
+          {
+            "label": 1,
+            "name": "blend_mode",
+            "number": 6,
+            "oneof_index": 0,
+            "type": 14,
+            "type_name": ".auditoryworks.axiom.v1.BlendModeValue"
+          },
+          {
+            "label": 1,
+            "name": "connector_decoration",
+            "number": 7,
+            "oneof_index": 0,
+            "type": 14,
+            "type_name": ".auditoryworks.axiom.v1.ConnectorDecorationValue"
+          }
+        ],
+        "name": "PropertyValue"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/property.proto"
+  },
+  "auditoryworks/axiom/v1/rich_text.proto": {
+    "enums": [
+      {
+        "name": "ParagraphAlignment",
+        "values": [
+          [
+            "INVALID",
+            0
+          ],
+          [
+            "LEFT",
+            1
+          ],
+          [
+            "CENTER",
+            2
+          ],
+          [
+            "RIGHT",
+            3
+          ],
+          [
+            "JUSTIFY",
+            4
+          ]
+        ]
+      }
+    ],
+    "messages": [
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "paragraph_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "start_scalar",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "scalar_count",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          }
+        ],
+        "name": "DeleteTextStep"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "paragraph_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "scalar_offset",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "text",
+            "number": 3,
+            "oneof_index": null,
+            "type": 9,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "style",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.TextStyle"
+          }
+        ],
+        "name": "InsertTextStep"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "first_paragraph_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "second_paragraph_id",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          }
+        ],
+        "name": "MergeParagraphStep"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "paragraph_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "style",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ParagraphStyle"
+          },
+          {
+            "label": 3,
+            "name": "runs",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.TextRun"
+          }
+        ],
+        "name": "Paragraph"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "alignment",
+            "number": 1,
+            "oneof_index": null,
+            "type": 14,
+            "type_name": ".auditoryworks.axiom.v1.ParagraphAlignment"
+          },
+          {
+            "label": 1,
+            "name": "line_height",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "spacing_before",
+            "number": 3,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "spacing_after",
+            "number": 4,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "bulleted",
+            "number": 5,
+            "oneof_index": null,
+            "type": 8,
+            "type_name": ""
+          }
+        ],
+        "name": "ParagraphStyle"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "state",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RichTextStateV2"
+          }
+        ],
+        "name": "RestoreRichTextStateStep"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "document",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RichTextDocument"
+          },
+          {
+            "label": 1,
+            "name": "layout",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RichTextLayoutV2"
+          }
+        ],
+        "name": "RichTextContent"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "delta_version",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 3,
+            "name": "steps",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RichTextStep"
+          },
+          {
+            "label": 1,
+            "name": "expected_state_digest",
+            "number": 3,
+            "oneof_index": null,
+            "type": 12,
+            "type_name": ""
+          }
+        ],
+        "name": "RichTextDelta"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "paragraphs",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Paragraph"
+          }
+        ],
+        "name": "RichTextDocument"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "wrap_width",
+            "number": 1,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "RichTextLayoutV2"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "kind_version",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "document",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RichTextDocument"
+          },
+          {
+            "label": 1,
+            "name": "layout",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RichTextLayoutV2"
+          }
+        ],
+        "name": "RichTextStateV2"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "insert_text",
+            "number": 1,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.InsertTextStep"
+          },
+          {
+            "label": 1,
+            "name": "delete_text",
+            "number": 2,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.DeleteTextStep"
+          },
+          {
+            "label": 1,
+            "name": "split_paragraph",
+            "number": 3,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SplitParagraphStep"
+          },
+          {
+            "label": 1,
+            "name": "merge_paragraph",
+            "number": 4,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.MergeParagraphStep"
+          },
+          {
+            "label": 1,
+            "name": "set_inline_style",
+            "number": 5,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SetInlineStyleStep"
+          },
+          {
+            "label": 1,
+            "name": "set_paragraph_style",
+            "number": 6,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SetParagraphStyleStep"
+          },
+          {
+            "label": 1,
+            "name": "set_layout",
+            "number": 7,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.SetRichTextLayoutStep"
+          },
+          {
+            "label": 1,
+            "name": "restore_state",
+            "number": 8,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RestoreRichTextStateStep"
+          }
+        ],
+        "name": "RichTextStep"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "paragraph_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "start_scalar",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "scalar_count",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "style",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.TextStyle"
+          }
+        ],
+        "name": "SetInlineStyleStep"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "paragraph_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "style",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ParagraphStyle"
+          }
+        ],
+        "name": "SetParagraphStyleStep"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "target_kind_version",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "layout",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.RichTextLayoutV2"
+          }
+        ],
+        "name": "SetRichTextLayoutStep"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "paragraph_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "scalar_offset",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "new_paragraph_id",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          }
+        ],
+        "name": "SplitParagraphStep"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "text",
+            "number": 1,
+            "oneof_index": null,
+            "type": 9,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "style",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.TextStyle"
+          }
+        ],
+        "name": "TextRun"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "font_resource_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "font_size",
+            "number": 2,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "weight",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "italic",
+            "number": 4,
+            "oneof_index": null,
+            "type": 8,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "underline",
+            "number": 5,
+            "oneof_index": null,
+            "type": 8,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "color",
+            "number": 6,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ColorValue"
+          },
+          {
+            "label": 1,
+            "name": "strikethrough",
+            "number": 7,
+            "oneof_index": null,
+            "type": 8,
+            "type_name": ""
+          }
+        ],
+        "name": "TextStyle"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/rich_text.proto"
+  },
+  "auditoryworks/axiom/v1/section.proto": {
+    "enums": [],
+    "messages": [
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "boundary",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Rect2"
+          },
+          {
+            "label": 1,
+            "name": "title",
+            "number": 2,
+            "oneof_index": null,
+            "type": 9,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "padding",
+            "number": 3,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "header_height",
+            "number": 4,
+            "oneof_index": null,
+            "type": 1,
+            "type_name": ""
+          }
+        ],
+        "name": "SectionContent"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/section.proto"
+  },
+  "auditoryworks/axiom/v1/snapshot.proto": {
+    "enums": [],
+    "messages": [
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "schema_version",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "asset_role",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "pixel_width",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "pixel_height",
+            "number": 4,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "color_policy",
+            "number": 5,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          }
+        ],
+        "name": "BrushResourceMetadataV1"
+      },
+      {
+        "fields": [
+          {
+            "label": 3,
+            "name": "required_ids",
+            "number": 1,
+            "oneof_index": null,
+            "type": 9,
+            "type_name": ""
+          }
+        ],
+        "name": "CapabilityRequirementsV1"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "document_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "schema_version",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 3,
+            "name": "objects",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ObjectRecord"
+          },
+          {
+            "label": 1,
+            "name": "manifest",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ResourceManifest"
+          },
+          {
+            "label": 1,
+            "name": "document_revision",
+            "number": 5,
+            "oneof_index": null,
+            "type": 4,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "recovery_frontier",
+            "number": 6,
+            "oneof_index": null,
+            "type": 12,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "digest_algorithm",
+            "number": 7,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "document_digest",
+            "number": 8,
+            "oneof_index": null,
+            "type": 12,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "capability_requirements",
+            "number": 9,
+            "oneof_index": null,
+            "type": 12,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "checkpoint_digest",
+            "number": 10,
+            "oneof_index": null,
+            "type": 12,
+            "type_name": ""
+          }
+        ],
+        "name": "DocumentSnapshot"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "schema_version",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "collection_index",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "layout_profile",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          }
+        ],
+        "name": "FontResourceMetadataV1"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "schema_version",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "pixel_width",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "pixel_height",
+            "number": 3,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "color_policy",
+            "number": 4,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          }
+        ],
+        "name": "ImageResourceMetadataV1"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "version",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "kind",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "sequence",
+            "number": 3,
+            "oneof_index": null,
+            "type": 4,
+            "type_name": ""
+          }
+        ],
+        "name": "RecoveryFrontierV1"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "schema_version",
+            "number": 1,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 3,
+            "name": "entries",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ResourceManifestEntry"
+          },
+          {
+            "label": 1,
+            "name": "manifest_revision",
+            "number": 3,
+            "oneof_index": null,
+            "type": 4,
+            "type_name": ""
+          },
+          {
+            "label": 3,
+            "name": "retired_entries",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ResourceManifestTombstone"
+          }
+        ],
+        "name": "ResourceManifest"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "resource_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "resource_kind",
+            "number": 2,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "resource_revision",
+            "number": 3,
+            "oneof_index": null,
+            "type": 4,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "content_hash",
+            "number": 4,
+            "oneof_index": null,
+            "type": 9,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "byte_length",
+            "number": 5,
+            "oneof_index": null,
+            "type": 4,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "decode_version",
+            "number": 6,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "layout_version",
+            "number": 7,
+            "oneof_index": null,
+            "type": 13,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "metadata",
+            "number": 8,
+            "oneof_index": null,
+            "type": 12,
+            "type_name": ""
+          }
+        ],
+        "name": "ResourceManifestEntry"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "resource_id",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "retired_revision",
+            "number": 2,
+            "oneof_index": null,
+            "type": 4,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "last_content_hash",
+            "number": 3,
+            "oneof_index": null,
+            "type": 9,
+            "type_name": ""
+          },
+          {
+            "label": 1,
+            "name": "removal_operation_id",
+            "number": 4,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Id128"
+          },
+          {
+            "label": 1,
+            "name": "preimage",
+            "number": 5,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ResourceManifestEntry"
+          },
+          {
+            "label": 1,
+            "name": "lineage_token",
+            "number": 6,
+            "oneof_index": null,
+            "type": 12,
+            "type_name": ""
+          }
+        ],
+        "name": "ResourceManifestTombstone"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/snapshot.proto"
+  },
+  "auditoryworks/axiom/v1/vector_path.proto": {
+    "enums": [
+      {
+        "name": "FillRule",
+        "values": [
+          [
+            "FILL_RULE_INVALID",
+            0
+          ],
+          [
+            "FILL_RULE_NON_ZERO",
+            1
+          ],
+          [
+            "FILL_RULE_EVEN_ODD",
+            2
+          ]
+        ]
+      }
+    ],
+    "messages": [
+      {
+        "fields": [],
+        "name": "ClosePath"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "control1",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          },
+          {
+            "label": 1,
+            "name": "control2",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          },
+          {
+            "label": 1,
+            "name": "end",
+            "number": 3,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          }
+        ],
+        "name": "CubicTo"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "end",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          }
+        ],
+        "name": "LineTo"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "point",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          }
+        ],
+        "name": "MoveTo"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "move_to",
+            "number": 1,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.MoveTo"
+          },
+          {
+            "label": 1,
+            "name": "line_to",
+            "number": 2,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.LineTo"
+          },
+          {
+            "label": 1,
+            "name": "quad_to",
+            "number": 3,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.QuadTo"
+          },
+          {
+            "label": 1,
+            "name": "cubic_to",
+            "number": 4,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.CubicTo"
+          },
+          {
+            "label": 1,
+            "name": "close_path",
+            "number": 5,
+            "oneof_index": 0,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.ClosePath"
+          }
+        ],
+        "name": "PathCommand"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "control",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          },
+          {
+            "label": 1,
+            "name": "end",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.Vec2"
+          }
+        ],
+        "name": "QuadTo"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "geometry",
+            "number": 1,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.VectorPathGeometry"
+          }
+        ],
+        "name": "VectorPathContent"
+      },
+      {
+        "fields": [
+          {
+            "label": 1,
+            "name": "fill_rule",
+            "number": 1,
+            "oneof_index": null,
+            "type": 14,
+            "type_name": ".auditoryworks.axiom.v1.FillRule"
+          },
+          {
+            "label": 3,
+            "name": "commands",
+            "number": 2,
+            "oneof_index": null,
+            "type": 11,
+            "type_name": ".auditoryworks.axiom.v1.PathCommand"
+          }
+        ],
+        "name": "VectorPathGeometry"
+      }
+    ],
+    "name": "auditoryworks/axiom/v1/vector_path.proto"
+  }
+}

@@ -1,0 +1,542 @@
+{
+  "before": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000009"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000009"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20.0,
+          "height": 20.0
+        }
+      }
+    }
+  ],
+  "forward": {
+    "operation_id": {
+      "value": "000000000000000000000000000003e9"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "edit_container_topology": {
+        "guard": {
+          "nodes": [
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000009"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "00000009"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              }
+            }
+          ],
+          "child_sets": [
+            {
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000009"
+                  },
+                  "order_key": {
+                    "value": "00000009"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "relocations": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000009"
+            },
+            "placement_after": {
+              "parent_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "order_key": {
+                "value": "00000009"
+              }
+            },
+            "transform_after": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 0,
+              "ty": 0
+            }
+          }
+        ],
+        "order_only_edits": [],
+        "introduce_wrappers": {
+          "containers": [
+            {
+              "id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement": {
+                "order_key": {
+                  "value": "00000006"
+                }
+              },
+              "transform": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              },
+              "properties": {},
+              "content": {
+                "section": {
+                  "boundary": {
+                    "x": -20,
+                    "y": 0,
+                    "width": 120,
+                    "height": 80
+                  },
+                  "title": "",
+                  "padding": 8.0,
+                  "header_height": 20.0
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "inverse": {
+    "operation_id": {
+      "value": "000000000000000000000000000003ea"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "edit_container_topology": {
+        "guard": {
+          "nodes": [
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "00000006"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000009"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000006"
+                },
+                "order_key": {
+                  "value": "00000009"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              }
+            }
+          ],
+          "child_sets": [
+            {
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000006"
+                  },
+                  "order_key": {
+                    "value": "00000006"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000009"
+                  },
+                  "order_key": {
+                    "value": "00000009"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "relocations": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000009"
+            },
+            "placement_after": {
+              "order_key": {
+                "value": "00000009"
+              }
+            },
+            "transform_after": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 0,
+              "ty": 0
+            }
+          }
+        ],
+        "order_only_edits": [],
+        "release_wrappers": {
+          "containers_before": [
+            {
+              "id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement": {
+                "order_key": {
+                  "value": "00000006"
+                }
+              },
+              "transform": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              },
+              "properties": {},
+              "content": {
+                "section": {
+                  "boundary": {
+                    "x": -20,
+                    "y": 0,
+                    "width": 120,
+                    "height": 80
+                  },
+                  "title": "",
+                  "padding": 8.0,
+                  "header_height": 20.0
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "redo": {
+    "operation_id": {
+      "value": "000000000000000000000000000003eb"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "edit_container_topology": {
+        "guard": {
+          "nodes": [
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000009"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "00000009"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              }
+            }
+          ],
+          "child_sets": [
+            {
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000009"
+                  },
+                  "order_key": {
+                    "value": "00000009"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "relocations": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000009"
+            },
+            "placement_after": {
+              "parent_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "order_key": {
+                "value": "00000009"
+              }
+            },
+            "transform_after": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 0,
+              "ty": 0
+            }
+          }
+        ],
+        "order_only_edits": [],
+        "introduce_wrappers": {
+          "containers": [
+            {
+              "id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement": {
+                "order_key": {
+                  "value": "00000006"
+                }
+              },
+              "transform": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              },
+              "properties": {},
+              "content": {
+                "section": {
+                  "boundary": {
+                    "x": -20,
+                    "y": 0,
+                    "width": 120,
+                    "height": 80
+                  },
+                  "title": "",
+                  "padding": 8.0,
+                  "header_height": 20.0
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "after": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000006"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000006"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": -20,
+            "y": 0,
+            "width": 120,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000009"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "00000009"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20.0,
+          "height": 20.0
+        }
+      }
+    }
+  ],
+  "undo_after": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000009"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000009"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20.0,
+          "height": 20.0
+        }
+      }
+    }
+  ],
+  "target": {
+    "runtimeEpoch": 9007199254740993,
+    "viewId": 2,
+    "viewEpoch": 3,
+    "attachmentEpoch": 7
+  },
+  "owner_thread": "qualification-owner",
+  "request_key": {
+    "client": "fc08",
+    "sequence": 1
+  },
+  "pointer": {
+    "source": "touch",
+    "pointerId": 9007199254740995,
+    "generation": 4
+  },
+  "selected": [
+    {
+      "value": "00000000000000000000000000000009"
+    }
+  ],
+  "selection_revision": 11,
+  "observe_every_handoff": true,
+  "caller_payload_bytes": "0a120a10000000000000000000000000000003e912120a1000000000000000000000000000000064180120012a8e0392018a030a7c0a5a0a120a100000000000000000000000000000000910011801220812060a04000000092a3609000000000000f03f11000000000000000019000000000000000021000000000000f03f290000000000000000310000000000000000121e121c0a120a100000000000000000000000000000000912060a0400000009126a0a120a1000000000000000000000000000000009121c0a120a100000000000000000000000000000000612060a04000000091a3609000000000000f03f11000000000000000019000000000000000021000000000000f03f290000000000000000310000000000000000229d010a9a010a120a1000000000000000000000000000000006100a1801220812060a04000000062a3609000000000000f03f11000000000000000019000000000000000021000000000000f03f29000000000000000031000000000000000032003a3c623a0a240900000000000034c0110000000000000000190000000000005e402100000000000054401200190000000000002040210000000000003440",
+  "schedule": [
+    {
+      "action": "enqueue-owned-value",
+      "thread": "owner"
+    },
+    {
+      "action": "release-caller-bytes"
+    },
+    {
+      "action": "owner-drain"
+    }
+  ]
+}

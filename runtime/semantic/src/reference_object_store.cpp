@@ -85,6 +85,10 @@ bool ReferenceObjectStore::eraseExistingInternal(const ObjectId& id) {
 
 namespace canvas::semantic::internal {
 
+void ObjectStoreMutator::swapContents(ReferenceObjectStore& a, ReferenceObjectStore& b) noexcept {
+    a.records_.swap(b.records_);
+}
+
 bool ObjectStoreMutator::insertFresh(ReferenceObjectStore& store, ObjectRecord record) {
     return store.insertFreshInternal(std::move(record));
 }

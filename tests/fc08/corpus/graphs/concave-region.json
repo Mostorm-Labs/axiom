@@ -1,0 +1,62 @@
+{
+  "section_boundary": [
+    0,
+    0,
+    100,
+    100
+  ],
+  "polygon_even_odd": [
+    [
+      -10,
+      -10
+    ],
+    [
+      110,
+      -10
+    ],
+    [
+      110,
+      110
+    ],
+    [
+      60,
+      110
+    ],
+    [
+      60,
+      40
+    ],
+    [
+      40,
+      40
+    ],
+    [
+      40,
+      110
+    ],
+    [
+      -10,
+      110
+    ]
+  ],
+  "child_A_rect": [
+    9,
+    9,
+    2,
+    2
+  ],
+  "child_B_rect": [
+    49,
+    49,
+    2,
+    2
+  ],
+  "expected": {
+    "all_section_corners_inside": true,
+    "full_section_containment": false,
+    "selected_ids": [
+      "A"
+    ]
+  },
+  "reason": "The notch excludes a middle part of the section; corner or AABB checks alone are inadequate."
+}

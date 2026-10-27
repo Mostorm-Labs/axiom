@@ -1,0 +1,55 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-p31-readiness-snapshot-v1",
+  "task_id": "FC-08-P31-READINESS",
+  "stage": "P31",
+  "status": "MATERIALIZATION_READINESS_ONLY",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "repository_id": 1306396623
+  },
+  "execution_authority_mode": "hybrid",
+  "materialization_ref": "control/fc08-p31-readiness",
+  "execution_ref": null,
+  "task_anchor": {
+    "revision": "a1e8819abe245ab7487f18771970721f480ff487",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "authorized_scope": "Control-plane preparation only",
+  "product_P31_status": "BLOCKED_MISSING_INPUT",
+  "P32_authorized": false,
+  "may_start_code_execution": false,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "e3c253ac40e51f677e9816aa62844f7ad3a95f077949a43f12c75900a5330c31"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "2a453ee0d9eab7c8c3be6a46da1e4e7c2657e8a8ebed4931dd169cef6f890314"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "4b2f8d670333c8299f9c0b1b68ee9c4eb2c237ccd3819f96913d558adfa877f3"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "f580c8b840b5aeccd9f6928cc41bef69c6261a67c6327dc4d95758731b9a2da6"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "0cdfbaaa9ae0dae384c27b787dd37017a41e7595ca6ebb747bcea3de05c28646"
+  },
+  "readiness_ref": {
+    "path": "readiness.json",
+    "sha256": "b4a442e7939ff74e29a51152fa65e6fd40e852888768bf748fdab3f0770351cb"
+  },
+  "source_input_index_ref": {
+    "path": "source-input-index.json",
+    "sha256": "592dcbb4f294c31737224aa7142ad334c72408d1eae2b4455c7736215fa03968"
+  },
+  "note": "These locks bind the preparation scope. The verification lock is explicitly incomplete for product execution. Do not treat this snapshot as an approved FC-08 P32 package."
+}

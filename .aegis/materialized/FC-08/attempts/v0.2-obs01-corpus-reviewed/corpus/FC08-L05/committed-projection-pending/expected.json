@@ -1,0 +1,31 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "canonicalOutcome",
+      "expected": "Committed"
+    },
+    {
+      "op": "equal",
+      "path": "projectionOutcome",
+      "expected": "Pending"
+    },
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 1
+    },
+    {
+      "op": "equal",
+      "path": "saved_claim",
+      "expected": false
+    },
+    {
+      "op": "equal",
+      "path": "synced_claim",
+      "expected": false
+    }
+  ],
+  "source_case": "FC08-L05",
+  "product_expected_only": true
+}

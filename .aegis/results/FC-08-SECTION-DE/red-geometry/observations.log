@@ -1,0 +1,78 @@
+Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 2 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 2 tests from FC08SectionGeometry
+[ RUN      ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\scene\tests\fc08_section_geometry_test.cpp(25): error: Expected equality of these values:
+  s->transform.tx
+    Which is: 10
+  60
+
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\scene\tests\fc08_section_geometry_test.cpp(25): error: Expected equality of these values:
+  s->transform.ty
+    Which is: 20
+  220
+
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\scene\tests\fc08_section_geometry_test.cpp(26): error: Expected equality of these values:
+  s->geometryBounds.left
+    Which is: 0
+  -10
+
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\scene\tests\fc08_section_geometry_test.cpp(26): error: Expected equality of these values:
+  s->geometryBounds.bottom
+    Which is: 0
+  40
+
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\scene\tests\fc08_section_geometry_test.cpp(27): error: Expected equality of these values:
+  s->worldBounds.left
+    Which is: 10
+  -20
+
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\scene\tests\fc08_section_geometry_test.cpp(27): error: Expected equality of these values:
+  s->worldBounds.right
+    Which is: 10
+  100
+
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\scene\tests\fc08_section_geometry_test.cpp(29): error: Expected equality of these values:
+  child->transform.tx
+    Which is: 150
+  50
+
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\scene\tests\fc08_section_geometry_test.cpp(29): error: Expected equality of these values:
+  child->transform.ty
+    Which is: 5
+  520
+
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\scene\tests\fc08_section_geometry_test.cpp(30): error: Expected equality of these values:
+  child->worldBounds.left
+    Which is: 150
+  30
+
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\scene\tests\fc08_section_geometry_test.cpp(30): error: Expected equality of these values:
+  child->worldBounds.bottom
+    Which is: 15
+  560
+
+[  FAILED  ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren (0 ms)
+[ RUN      ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\scene\tests\fc08_section_geometry_test.cpp(45): error: Expected equality of these values:
+  after.find(section.id)->worldBounds.left
+    Which is: 100
+  60
+
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\scene\tests\fc08_section_geometry_test.cpp(46): error: Expected equality of these values:
+  after.find(child.id)->worldBounds.left
+    Which is: 30
+  160
+
+[  FAILED  ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose (0 ms)
+[----------] 2 tests from FC08SectionGeometry (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 2 tests, listed below:
+[  FAILED  ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren
+[  FAILED  ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose
+
+ 2 FAILED TESTS

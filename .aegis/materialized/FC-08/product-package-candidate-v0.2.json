@@ -1,0 +1,36 @@
+{
+  "status": "NON_AUTHORIZED_CANDIDATE_FOR_CONTROL_REVIEW",
+  "product_P32_authorized": false,
+  "implementation_permission": false,
+  "package_basis": {
+    "path": ".aegis/packages/FC-08-VERIFY-MATERIALIZE-v0.2/package.json",
+    "sha256": "152faa67e265f91f2c131036fd6b73bf2ddb0a8ca8488e94fe5d8d0d5953cc4a",
+    "size": 3530
+  },
+  "design": {
+    "path": ".aegis/materialized/FC-08/executable-verification.json",
+    "sha256": "0e242028b66d11e55a5b62ef79564c3d7265eb68889c3f1a04a874fe6b34c51c",
+    "size": 356
+  },
+  "corpus": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus-manifest.json",
+    "sha256": "8b2a36feff98c162a7706e189bade9c0a3b4cb474c4876cafc681e28ed007c15",
+    "size": 396115
+  },
+  "runner": {
+    "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner-manifest.json",
+    "sha256": "7b65745272241679b9b420b6a90e911ec8f6a07a5a94b69eb528a44c39aba2d5",
+    "size": 3352
+  },
+  "seams": {
+    "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/seam-map.json",
+    "sha256": "e32926881505362accde5e742840cf1c6c5d90ed4127a729b022f4770e50b4d4",
+    "size": 287843
+  },
+  "profiles": {
+    "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profiles.json",
+    "sha256": "cd559faacada19bf4cb3acb2d03cc1b916c19b5dc46eb94cef5e1b54b0781c94",
+    "size": 19595
+  },
+  "future_required_execution": "All accepted FC08 positives incl H06 and P01/P02 typed platform bindings remain required after actual product implementation. No zero-case or unsupported-as-positive shortcut."
+}

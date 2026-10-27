@@ -6,6 +6,8 @@
 
 #include "protobuf_codec_internal.hpp"
 #include "protobuf_object_mapping.hpp"
+#include "container_operation_mapping.hpp"
+#include "container_operation_internal.hpp"
 
 #include <algorithm>
 #include <array>
@@ -1419,6 +1421,8 @@ CodecResult SemanticCodec::encodeProtobufOperation(OperationKind kind) {
         case OperationKind::kEditRichText: operation.mutable_payload()->mutable_edit_rich_text(); break;
         case OperationKind::kSetConnectorContent: operation.mutable_payload()->mutable_set_connector_content(); break;
         case OperationKind::kUpdateResourceManifest: operation.mutable_payload()->mutable_update_resource_manifest(); break;
+        case OperationKind::kSetSectionContent: operation.mutable_payload()->mutable_set_section_content(); break;
+        case OperationKind::kEditContainerTopology: operation.mutable_payload()->mutable_edit_container_topology(); break;
     }
     std::string bytes;
     if (!operation.SerializeToString(&bytes)) return {SemanticError::kMalformedWire, {}};
@@ -1442,9 +1446,34 @@ CodecResult SemanticCodec::encodeProtobufOperation(const Operation& operation) {
     if (!validatePayloadStructure(normalized.value).ok()) return {SemanticError::kInvalidSemanticValue, {}};
     auditoryworks::axiom::v1::Operation wire;
     if (!internal::toProtobufOperation(normalized.value, wire)) return {SemanticError::kInvalidSemanticValue, {}};
+    if ((operation.kind() == OperationKind::kSetSectionContent || operation.kind() == OperationKind::kEditContainerTopology) &&
+        wire.ByteSizeLong() > kMaxOperationBytes) return {SemanticError::kLimitExceeded, {}};
     std::vector<std::uint8_t> bytes;
     if (!canonicalEncodeMessage(wire, bytes)) return {SemanticError::kMalformedWire, {}};
     return {SemanticError::kNone, std::move(bytes)};
+#endif
+}
+
+OperationMeasure SemanticCodec::measureProtobufOperation(const Operation& operation) {
+#if !defined(CANVAS_SEMANTIC_PROTOBUF)
+    (void)operation;
+    return {SemanticError::kRuntimeUnavailable, 0};
+#else
+    const auto normalized = normalizeOperation(operation);
+    if (!normalized.ok() || !validatePayloadStructure(normalized.value).ok())
+        return {SemanticError::kInvalidSemanticValue, 0};
+    if (!validateEnvelope(normalized.value, OperationFieldPresence{true, true}).ok())
+        return {SemanticError::kUnsupportedVersion, 0};
+    auditoryworks::axiom::v1::Operation wire;
+    if (!internal::toProtobufOperation(normalized.value, wire))
+        return {SemanticError::kInvalidSemanticValue, 0};
+    const auto bytes = wire.ByteSizeLong();
+    if (bytes > kMaxOperationBytes) return {SemanticError::kLimitExceeded, bytes};
+    std::vector<std::uint8_t> encoded;
+    if (!canonicalEncodeMessage(wire, encoded)) return {SemanticError::kMalformedWire, bytes};
+    std::string category;
+    if (rawOperationLimitViolation(encoded, category)) return {SemanticError::kLimitExceeded, bytes};
+    return {SemanticError::kNone, encoded.size()};
 #endif
 }
 
@@ -1548,6 +1577,17 @@ DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::u
            if (payload_ok) for (const auto& wire : item.expectations()) { ResourceExpectation expectation; ObjectId id; if (!wire.has_resource_id() || !mapId(wire.resource_id(), id) || !wire.has_state() || !wire.has_revision()) { payload_ok = false; break; } expectation.resource_id = ResourceId{id}; expectation.state = static_cast<ResourceExpectationState>(wire.state()); expectation.revision = wire.revision(); value.expectations.push_back(std::move(expectation)); }
            if (payload_ok) for (const auto& wire : item.reactivations()) { ReactivateResource reactivation; ObjectId removal; if (!wire.has_entry() || !internal::fromProtobufResourceManifestEntry(wire.entry(), reactivation.entry) || !wire.has_expected_removal_operation_id() || !mapId(wire.expected_removal_operation_id(), removal) || !wire.has_expected_preimage() || !internal::fromProtobufResourceManifestEntry(wire.expected_preimage(), reactivation.expected_preimage) || !wire.has_expected_lineage_token()) { payload_ok = false; break; } reactivation.expected_removal_operation_id = OperationId{removal}; const auto token = wire.expected_lineage_token(); reactivation.expected_lineage_token.assign(token.begin(), token.end()); value.reactivations.push_back(std::move(reactivation)); }
            operation.payload = std::move(value); break; }
+        case auditoryworks::axiom::v1::OperationPayload::kSetSectionContent:
+        case auditoryworks::axiom::v1::OperationPayload::kEditContainerTopology:
+            payload_ok = internal::fromProtobufContainerOperation(decoded.payload(), operation.payload);
+            // Raw ingress must already use canonical keyed collections. Model writers normalize separately.
+            if (payload_ok) payload_ok = std::visit([](const auto& value) {
+                using T = std::decay_t<decltype(value)>;
+                if constexpr (std::is_same_v<T, SetSectionContentOp> || std::is_same_v<T, EditContainerTopologyOp>)
+                    return internal::validateContainerOperation(value);
+                else return false;
+            }, operation.payload);
+            break;
         case auditoryworks::axiom::v1::OperationPayload::PAYLOAD_NOT_SET:
             return DecodedOperation({}, presence, {}, SemanticError::kMalformedWire);
     }
@@ -1605,6 +1645,8 @@ DecodedOperation SemanticCodec::decodeOperation(const std::vector<std::uint8_t>&
         case OperationKind::kEditRichText: operation.payload = EditRichTextOp{}; break;
         case OperationKind::kSetConnectorContent: operation.payload = SetConnectorContentOp{}; break;
         case OperationKind::kUpdateResourceManifest: operation.payload = UpdateResourceManifestOp{}; break;
+        case OperationKind::kSetSectionContent: operation.payload = SetSectionContentOp{}; break;
+        case OperationKind::kEditContainerTopology: operation.payload = EditContainerTopologyOp{}; break;
     }
     return {std::move(operation), {}, std::move(fields), SemanticError::kNone};
 }
@@ -1648,6 +1690,21 @@ GoldenCodecObservation SemanticCodec::observeGoldenFixture(
 #else
     const std::string input{bytes.begin(), bytes.end()};
     std::vector<std::uint8_t> canonical;
+    if (root_type == "SectionContent") {
+        using WireSection = auditoryworks::axiom::v1::SectionContent;
+        SnapshotPreflightFailure failure = SnapshotPreflightFailure::kNone;
+        if (!preflightSnapshotMessage(bytes, *WireSection::descriptor(), failure, false))
+            return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kWirePreflight, "MALFORMED_WIRE", {}};
+        WireSection value, normalized;
+        SectionContent mapped;
+        if (!value.ParseFromString(input) || !internal::fromProtobufSectionContent(value, mapped) ||
+            !internal::normalizeSectionContent(mapped) || !internal::validateSectionContent(mapped))
+            return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kValidate, "INVALID_SEMANTIC_VALUE", {}};
+        if (!internal::toProtobufSectionContent(mapped, normalized) || !canonicalEncodeMessage(normalized, canonical))
+            return {false, GoldenCanonicality::kCanonical, GoldenCodecStage::kCanonicalEncode, "MALFORMED_WIRE", {}};
+        return {true, bytes == canonical ? GoldenCanonicality::kCanonical : GoldenCanonicality::kNonCanonicalInput,
+                GoldenCodecStage::kCanonicalEncode, {}, std::move(canonical)};
+    }
     if (root_type == "ShapeContent" || root_type == "ObjectRecord" || root_type == "Operation") {
         const auto* descriptor = root_type == "ShapeContent" ? auditoryworks::axiom::v1::ShapeContent::descriptor()
             : root_type == "ObjectRecord" ? auditoryworks::axiom::v1::ObjectRecord::descriptor()

@@ -1,0 +1,38 @@
+{
+  "design": "FC08-P20-v0.1+CR01 plus accepted eb12 input/matrix amendment",
+  "accepted_amendment": {
+    "path": ".aegis/packages/FC-08-P20-P31-INPUT-AMENDMENT-v0.2/package.json",
+    "sha256": "52fc554901368ec1e4ece9ef2950f03eefdbd55cbf67def6ff68785b47f85a8c"
+  },
+  "bootstrap_acceptance": {
+    "path": ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/acceptance.json",
+    "sha256": "e075131a325c75584a36c5e56eafeaab63457bbe3afb58e4afd132e5065b36e2"
+  },
+  "bootstrap_result": {
+    "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/terminal-result.json",
+    "sha256": "0ac93d550b8877e5fe33461efe8615d2cfa049380dc07e96379a6b5cfd901bab"
+  },
+  "successful_preflights": [
+    {
+      "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/package-preflight.json",
+      "sha256": "1a614835e326fbb0d25a3b5dcf2564e3822b5aec255dc3c3785b73844f96f045"
+    },
+    {
+      "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/evidence-preflight.json",
+      "sha256": "8de5fe1a7f092f9775aba56d6e2dcd3b7cae87b191ec773cb01c5b2ea033a152"
+    },
+    {
+      "path": ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/qualified-001/implementation-design-preflight.json",
+      "sha256": "b16ffcf072d4083c2fb287a05fc2eba81a145a2a4fef7136a14a8c76ca71e19b"
+    }
+  ],
+  "A_oracle": {
+    "requirement": "Accepted Section/1 identity, content domain and lossless canonical codec",
+    "inputs": "Frozen W02 41 variants; exact independent Section record/insert carriers; existing codec/normalizer/validation regressions",
+    "oracle": "Unmodified frozen expected booleans, independent raw wire and literal model preimages; no DUT-written expected",
+    "execution": "Real SemanticCodec / normal operation ingress / normalizer / validation. SCW06 uses model-to-writer, not invented raw permissiveness.",
+    "evidence": "Exact CTest cases/exit codes/raw logs, descriptor reproducibility and preservation, compiler/SDK identities"
+  },
+  "remaining_E01_E10": "Retained. B-E operations/History/Scene/host assertions stay NOT_RUN, not prerequisites to writing A.",
+  "full_product_runner_complete": false
+}

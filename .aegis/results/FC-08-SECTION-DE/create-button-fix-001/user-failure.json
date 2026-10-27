@@ -1,0 +1,9 @@
+{
+  "source_revision": "f3d9e67508b4b8f6e2ddbf756b51c543efeafa55",
+  "receipt_revision": "b4c98d7cad5c3668f2fd9dd598b889b7688f78ad",
+  "user_actual": "create section按钮根本就没用",
+  "status": "FAIL",
+  "root_cause_hypothesis": "MinimalRuntimeFacade inherits default readSection, giving selectionRevision 0 to the real UI; actual Interaction selection revision is 1, so request is rejected Stale",
+  "authorization": "User failure correction within existing bounded D/E host scope; no semantic or Runtime interface change",
+  "test": "Actual DebugController -> real ImGui Create Section -> MinimalRuntimeFacade -> existing Composition/History"
+}

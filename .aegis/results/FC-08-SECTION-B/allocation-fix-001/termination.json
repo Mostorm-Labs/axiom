@@ -1,0 +1,9 @@
+{
+  "classification": "SDK_INITIALIZATION_FAULT_SWEEP_HANG",
+  "terminated_owned_processes": [
+    12448,
+    271320
+  ],
+  "observation": "Zero CPU progress while allocation sweep includes one-time Protobuf descriptor initialization; controller/test verified to this build tree before termination",
+  "verdict": "NOT_PASS; controlled warm-up experiment follows. No product/oracle/hook bypass."
+}

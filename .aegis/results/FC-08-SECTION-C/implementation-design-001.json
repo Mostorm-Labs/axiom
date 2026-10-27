@@ -1,0 +1,23 @@
+{
+  "source": "c4fde4d4b1843673a71cce0546921f4494b16635",
+  "owners": "Existing Semantic OperationEngine / StagedObjectView / store-index reservation; existing Interaction EditorHistory and CanvasEditingRuntime submit port",
+  "flow": [
+    "normalize/validate/prepare real F and idempotency",
+    "derive read-only staged S1 through existing StagedObjectView ObjectStore boundary",
+    "Interaction admission constructs real U from S/S1; normalizes and prepares U on S1; checks restored touched state and full F/U byte/profile limits",
+    "EditorHistory reserves and retains actual pair/expectations before publication; failure leaves cursor/redo intact",
+    "existing Semantic writer checks generation/ordinal basis, reserves store/index/ledger/outcome and commits only F; History commits already reserved entry",
+    "Undo/Redo allocate fresh IDs, recheck retained expectations, F/U applicability and budgets in same owner admission; do not reconstruct lossy old state"
+  ],
+  "reused_ops": "Local FC08 single-op paths Insert/Restore/Delete/SetTransforms/PatchProperties; existing headless/remote operations remain canonical-only without local History requirement",
+  "T06": "C actual History replay of saved F compared to unchanged independent expected. Old incomplete redo carrier remains unqualified history and unchanged.",
+  "non_scope": [
+    "Scene/geometry/facade/UI feature support",
+    "new generic transaction or membership framework",
+    "full302/Gate/PHYS claims"
+  ],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

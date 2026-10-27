@@ -76,6 +76,11 @@ struct StickyReferenceCommand final {
 struct GroupReferenceCommand final {
     bool operator==(const GroupReferenceCommand&) const = default;
 };
+struct SectionReferenceCommand final {
+    semantic::SectionContent content;
+    std::shared_ptr<const text::TextLayoutSnapshot> titleLayout = nullptr;
+    bool operator==(const SectionReferenceCommand&) const = default;
+};
 
 using ReferenceCommand = std::variant<
     ShapeReferenceCommand,
@@ -88,7 +93,8 @@ using ReferenceCommand = std::variant<
     StickyReferenceCommand,
     GroupReferenceCommand,
     BrushStrokeReferenceCommand,
-    DabBrushStrokeReferenceCommand>;
+    DabBrushStrokeReferenceCommand,
+    SectionReferenceCommand>;
 
 struct ReferenceTraversalEntry final {
     RuntimeSceneRecord record;

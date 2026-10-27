@@ -1,0 +1,59 @@
+{
+  "status": "PASS_LOCAL_C_OWNER_BINDINGS",
+  "source_revision": "4a4c0b419a57fdaae12e8d7454f5463361f1c501",
+  "package_revision": "5a67b3db427e355fc7cfd07ca5a0f67bb5e06a0c",
+  "bindings": [
+    {
+      "owner": "Canonical owner",
+      "path": "runtime/semantic/src/operation_engine.cpp",
+      "line": 49,
+      "sha256": "c39b86cfa7b2823364ca9d32937a675986badc8ad7b753361551dc1022716ef3"
+    },
+    {
+      "owner": "Atomic storage/index owner",
+      "path": "runtime/semantic/src/indexed_object_store.cpp",
+      "line": 150,
+      "sha256": "d65c3e8dd30434ef9692a12e3217ae796fa3e251c68a98104ddf4ddddc561eb4"
+    },
+    {
+      "owner": "Inverse preparation, not canonical ownership",
+      "path": "runtime/interaction/src/undoable_command.cpp",
+      "line": 119,
+      "sha256": "75744c68f423bcf142bf5f7b08c990a381ea6bd69a173b3312fecf153710b225"
+    },
+    {
+      "owner": "Existing local History owner",
+      "path": "runtime/interaction/src/editor_history.cpp",
+      "line": 169,
+      "sha256": "967d6e1e7762dbab0ce665531d47378ebd8752dfcf2753e352f81e1acb8145b9"
+    },
+    {
+      "owner": "Existing Runtime submit owner",
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "line": 3259,
+      "sha256": "bd958c6b7c3ea5170267454890bb8572dd0ef2f54492cb129e72f0b3695c527e"
+    },
+    {
+      "owner": "Post-History derived publication",
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "line": 3300,
+      "sha256": "bd958c6b7c3ea5170267454890bb8572dd0ef2f54492cb129e72f0b3695c527e"
+    }
+  ],
+  "flow": [
+    "Prepare normalized real F and genuine staged S1",
+    "Construct actual U from S/S1; validate applicability and exact restoration through real OperationEngine",
+    "Measure actual complete F/U and nested profile limits; reserve existing History entry and emitted-ID capacity",
+    "Check unchanged generation/ordinal basis; reserve actual store/index/ledger/ChangeSet before publication",
+    "Publish canonical F; commit already retained History/cursor; then existing Scene owner publication",
+    "Undo/Redo use saved actual pair, fresh IDs, current expectation/footprint and F/U budget revalidation"
+  ],
+  "rejection": "No canonical write, History cursor or redo-tail change on precommit rejection; unrelated real intervening commit remains preserved",
+  "Scene_boundary": "Only existing publication ordering wired; Section geometry/Scene capability remains D",
+  "frozen_input_conflict": "H03 original recipe produces terminal-zero OrderKeys; proposal pending, no input/expected/oracle changed",
+  "does_not_establish": [
+    "full FC08 product runner",
+    "D/E",
+    "DEV/P34/PHYS/release"
+  ]
+}

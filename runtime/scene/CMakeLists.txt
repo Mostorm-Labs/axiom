@@ -6,6 +6,7 @@ add_library(canvas_runtime_scene STATIC
     src/incremental_runtime_coordinator.cpp
     src/incremental_runtime_full_materialization_bridge.cpp
     src/bounds_system.cpp
+    src/hierarchy_geometry.cpp
     src/reference_geometry.cpp
     src/derived_geometry.cpp
     src/connector_router.cpp
@@ -26,6 +27,11 @@ target_include_directories(canvas_runtime_scene PUBLIC include
 target_link_libraries(canvas_runtime_scene PUBLIC canvas_runtime_foundation
                       canvas_runtime_semantic canvas_runtime_text)
 target_compile_features(canvas_runtime_scene PUBLIC cxx_std_20)
+if(MSVC)
+    set_property(SOURCE src/hierarchy_geometry.cpp APPEND PROPERTY COMPILE_OPTIONS /fp:strict)
+else()
+    set_property(SOURCE src/hierarchy_geometry.cpp APPEND PROPERTY COMPILE_OPTIONS -ffp-contract=off)
+endif()
 
 add_executable(axiom_fc05_route_probe tools/fc05_route_probe.cpp)
 target_link_libraries(axiom_fc05_route_probe PRIVATE canvas_runtime_scene)

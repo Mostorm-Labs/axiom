@@ -1,0 +1,97 @@
+{
+  "graph": {
+    "G": {
+      "kind": "Group",
+      "parent": null,
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    }
+  },
+  "kind_geometry": {
+    "a": "rectangle",
+    "b": "ellipse"
+  },
+  "before_selection": [],
+  "scope": null,
+  "input": {
+    "source": "mouse",
+    "pointer": 1,
+    "generation": 7,
+    "shift_at_down": false
+  },
+  "action": "click",
+  "click": null,
+  "setup": [
+    {
+      "action": "insert-child",
+      "id": {
+        "value": "00000000000000000000000000000009"
+      },
+      "rect": [
+        320,
+        320,
+        10,
+        10
+      ]
+    },
+    {
+      "action": "delete-child",
+      "id": {
+        "value": "00000000000000000000000000000009"
+      }
+    }
+  ],
+  "identity_target": {
+    "value": "00000000000000000000000000000005"
+  },
+  "region": [
+    [
+      -1,
+      -1
+    ],
+    [
+      101,
+      -1
+    ],
+    [
+      101,
+      101
+    ],
+    [
+      -1,
+      101
+    ]
+  ],
+  "records": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000005"
+      },
+      "kind_id": 9,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000005"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "group": {}
+      }
+    }
+  ]
+}

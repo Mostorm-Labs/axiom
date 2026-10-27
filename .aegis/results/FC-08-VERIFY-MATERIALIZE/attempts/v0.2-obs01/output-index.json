@@ -1,0 +1,65 @@
+{
+  "format": "fc08-materialization-output-navigation-v2",
+  "required_artifacts": {
+    "source-index.json": {
+      "path": ".aegis/materialized/FC-08/source-index.json",
+      "sha256": "bad8a3e85dbd344ac7c6eb0d60aae0c6d01c58a0b8359aa80b53426b7b43a569"
+    },
+    "descriptor-diff.json": {
+      "path": ".aegis/materialized/FC-08/descriptor-diff.json",
+      "sha256": "cbe2c13724bd097a609110fb911bb50f6af55cbd43672d1191bb7f2b7b004db1"
+    },
+    "descriptor-build-log.txt": {
+      "path": ".aegis/materialized/FC-08/descriptor-build-log.txt",
+      "sha256": "88033705f5aca7a9d834b49f5702493243b3b66d392e319f9dbb2731d531a1be"
+    },
+    "variant-index.json": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/variant-index.json",
+      "sha256": "29d8400a7f96968b576f77803f287fe8911a8557421fe412fe80607bb4ad7f8e"
+    },
+    "corpus-manifest.json": {
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus-manifest.json",
+      "sha256": "8b2a36feff98c162a7706e189bade9c0a3b4cb474c4876cafc681e28ed007c15"
+    },
+    "runner-manifest.json": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner-manifest.json",
+      "sha256": "7b65745272241679b9b420b6a90e911ec8f6a07a5a94b69eb528a44c39aba2d5"
+    },
+    "oracle-controls.json": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/oracle-controls.json",
+      "sha256": "fd9b9e1610fb399da82bae7b535768a7dfc01876c18985ce0b4351f0805d8c81"
+    },
+    "baseline-probes.json": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/baseline-probes.json",
+      "sha256": "a64393a2e06955562779092ce7808691263ee14c47e611f6c3ae5c1549f2e3b1"
+    },
+    "seam-map.json": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/seam-map.json",
+      "sha256": "e32926881505362accde5e742840cf1c6c5d90ed4127a729b022f4770e50b4d4"
+    },
+    "profiles.json": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profiles.json",
+      "sha256": "cd559faacada19bf4cb3acb2d03cc1b916c19b5dc46eb94cef5e1b54b0781c94"
+    },
+    "profile-observations.json": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profile-observations.json",
+      "sha256": "9445bec732c3fb4bcb6a57aeb5245b157fa2550c27c6c492bd7d49b222dd1b42"
+    },
+    "inherited-regression.json": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/inherited-regression.json",
+      "sha256": "1f0a17a080d12e5c788fbd7ad6688349fd42a42347044c70ca4240091bf16db1"
+    }
+  },
+  "product_candidate": {
+    "path": ".aegis/materialized/FC-08/product-package-candidate-v0.2.json",
+    "sha256": "d6d20651bc7d6b912a9aa634a1f3c3576f4fe075fbe1a206f58f578d65122bdf"
+  },
+  "readiness": {
+    "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/readiness.json",
+    "sha256": "cc17744acb2d7c16361729d485e697f949de5955393fb861178ee6561fc68069"
+  },
+  "historical_terminal_preserved": ".aegis/results/FC-08-VERIFY-MATERIALIZE/terminal-result.json@5f216a8e331a98ccccfc7a0616991bb60e1ea312",
+  "current_corpus_only": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus-manifest.json",
+  "earlier_attempt_directories": "Preserved authoring history; not accepted goldens or current readiness",
+  "product_P32_authorized": false
+}

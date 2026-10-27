@@ -1,0 +1,44 @@
+{
+  "accepted_existing_message_additions": {
+    "auditoryworks/axiom/v1/object.proto:ObjectContent": [
+      {
+        "label": 1,
+        "name": "section",
+        "number": 12,
+        "oneof_index": 0,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.SectionContent"
+      }
+    ],
+    "auditoryworks/axiom/v1/operation.proto:OperationPayload": [
+      {
+        "label": 1,
+        "name": "set_section_content",
+        "number": 17,
+        "oneof_index": 0,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.SetSectionContentOp"
+      },
+      {
+        "label": 1,
+        "name": "edit_container_topology",
+        "number": 18,
+        "oneof_index": 0,
+        "type": 11,
+        "type_name": ".auditoryworks.axiom.v1.EditContainerTopologyOp"
+      }
+    ]
+  },
+  "baseline_sha256": "4f186b34789910a56d47f132747fbf4e7e505dbfe9cf5b221311e6efa6764ecb",
+  "historical_descriptor_unchanged": true,
+  "new_files": [
+    "auditoryworks/axiom/v1/container_operations.proto",
+    "auditoryworks/axiom/v1/section.proto"
+  ],
+  "preserved_inherited_fields": true,
+  "proposed_sha256": "9d77afed2f42678b8836e26673707301ca84f431657b79966259d00fe5d33477",
+  "protoc_sha256": "9a4fe52db00facbf858dc5af9addb50b551429004044e8a24f137de38c5b209f",
+  "protoc_version": "libprotoc 36.0",
+  "starting_revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78",
+  "status": "SOURCE_COMPLETE_ADDITIVE_MATCH"
+}

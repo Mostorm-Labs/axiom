@@ -1,0 +1,337 @@
+{
+  "effective_design_id": "FC08-P20-v0.1+CR01",
+  "families": [
+    {
+      "id": "FC08-E01",
+      "name": "Schema, wire and inherited publication",
+      "requirements": [
+        "D01",
+        "D03",
+        "D04",
+        "BASE-01"
+      ],
+      "invariant": "All case expectations in this family hold at their specified observation boundary.",
+      "failure_mode": "Protocol corruption or dropped existing fields",
+      "impact": "Protocol corruption or dropped existing fields",
+      "existing_independent_coverage": [
+        "Existing codec and descriptor infrastructure plus inherited goldens; no new17/18 vectors in inspected baseline."
+      ],
+      "new_evidence_unique_detection_value": "Hand-authored typed expectations and byte fixtures, accepted-IDL descriptor delta, preimage comparison",
+      "blocking_justification": "Registry/codec/BASE-01 incompatibility cannot be detected by two copies of the same runtime codec.",
+      "classification": "blocking_DEV",
+      "oracle": "Hand-authored typed expectations and byte fixtures, accepted-IDL descriptor delta, preimage comparison",
+      "fixture_ids": [
+        "FC08-W01",
+        "FC08-W02",
+        "FC08-W03",
+        "FC08-W04",
+        "FC08-W05",
+        "FC08-W06",
+        "FC08-W07"
+      ],
+      "execution_method": "Contract in execution.md, method E01",
+      "artifact": "results/E01.json (one run may satisfy multiple families without duplicate execution)",
+      "gate_criterion": "Every applicable required fixture and expanded variant matches expected; no silent skip, no unsupported positive, zero violations.",
+      "closure_disposition": "RETAINED_BLOCKING_FOR_STATED_FAILURE_MODE",
+      "review_reason": "Wire/tag/presence and inherited descriptor loss require accepted-table/byte comparison; runtime roundtrip alone is insufficient. W07 regression is reused with K01/P04 when identity matches.",
+      "independent_report_per_family_required": false
+    },
+    {
+      "id": "FC08-E02",
+      "name": "Atomic topology and guards",
+      "requirements": [
+        "D02",
+        "D04",
+        "P13 sections3-7"
+      ],
+      "invariant": "All case expectations in this family hold at their specified observation boundary.",
+      "failure_mode": "Partial membership, cycles, orphan records or lost concurrent changes",
+      "impact": "Partial membership, cycles, orphan records or lost concurrent changes",
+      "existing_independent_coverage": [
+        "Reference/indexed storage parity covers storage/index consistency, not correct new effect semantics."
+      ],
+      "new_evidence_unique_detection_value": "Literal final-object tables, independent parent graph/reference traversal, precommit failure snapshots",
+      "blocking_justification": "New guarded effects and their failure boundaries otherwise have no independent semantic oracle.",
+      "classification": "blocking_DEV",
+      "oracle": "Literal final-object tables, independent parent graph/reference traversal, precommit failure snapshots",
+      "fixture_ids": [
+        "FC08-T01",
+        "FC08-T02",
+        "FC08-T03",
+        "FC08-T04",
+        "FC08-T05",
+        "FC08-T06",
+        "FC08-T07"
+      ],
+      "execution_method": "Contract in execution.md, method E02",
+      "artifact": "results/E02.json (one run may satisfy multiple families without duplicate execution)",
+      "gate_criterion": "Every applicable required fixture and expanded variant matches expected; no silent skip, no unsupported positive, zero violations.",
+      "closure_disposition": "RETAINED_BLOCKING_FOR_STATED_FAILURE_MODE",
+      "review_reason": "Final graph/state oracle and precommit atomicity observations detect partial membership and stale guards, which storage parity alone cannot.",
+      "independent_report_per_family_required": false
+    },
+    {
+      "id": "FC08-E03",
+      "name": "History and E01 budget admission",
+      "requirements": [
+        "D07",
+        "P13 E01"
+      ],
+      "invariant": "All case expectations in this family hold at their specified observation boundary.",
+      "failure_mode": "Forward succeeds but Undo impossible, destructive redo, duplicate history",
+      "impact": "Forward succeeds but Undo impossible, destructive redo, duplicate history",
+      "existing_independent_coverage": [
+        "Existing PreparedEntry and conditional-submit seams, not verified complete inverse-budget coverage."
+      ],
+      "new_evidence_unique_detection_value": "Saved canonical touched fields, independent actual wire/count meter, staged S1 inverse applicability and bounded fault schedule",
+      "blocking_justification": "Positive final-state tests do not detect reverse overbudget or allocation/cursor failure before commit.",
+      "classification": "blocking_DEV",
+      "oracle": "Saved canonical touched fields, independent actual wire/count meter, staged S1 inverse applicability and bounded fault schedule",
+      "fixture_ids": [
+        "FC08-H01",
+        "FC08-H02",
+        "FC08-H03",
+        "FC08-H04",
+        "FC08-H05",
+        "FC08-H06",
+        "FC08-H07",
+        "FC08-H08"
+      ],
+      "execution_method": "Contract in execution.md, method E03",
+      "artifact": "results/E03.json (one run may satisfy multiple families without duplicate execution)",
+      "gate_criterion": "Every applicable required fixture and expanded variant matches expected; no silent skip, no unsupported positive, zero violations.",
+      "closure_disposition": "RETAINED_BLOCKING_FOR_STATED_FAILURE_MODE",
+      "review_reason": "Actual F/U budget and precise history transitions detect inverse-only failure; semantic apply success alone cannot.",
+      "independent_report_per_family_required": false
+    },
+    {
+      "id": "FC08-E04",
+      "name": "Affine and boundary construction",
+      "requirements": [
+        "D02",
+        "D06"
+      ],
+      "invariant": "All case expectations in this family hold at their specified observation boundary.",
+      "failure_mode": "Reparent jump, cumulative transform drift, resize moving contents",
+      "impact": "Reparent jump, cumulative transform drift, resize moving contents",
+      "existing_independent_coverage": [
+        "Existing local-to-parent types; renderer parity alone may share wrong matrices."
+      ],
+      "new_evidence_unique_detection_value": "Independent ordered binary64 arithmetic plus exact dyadic literals and P12 quality predicate",
+      "blocking_justification": "Cross-parent affine construction and independent boundary introduce new geometric failure modes.",
+      "classification": "blocking_DEV",
+      "oracle": "Independent ordered binary64 arithmetic plus exact dyadic literals and P12 quality predicate",
+      "fixture_ids": [
+        "FC08-G01",
+        "FC08-G02",
+        "FC08-G03",
+        "FC08-G04",
+        "FC08-G05",
+        "FC08-G06"
+      ],
+      "execution_method": "Contract in execution.md, method E04",
+      "artifact": "results/E04.json (one run may satisfy multiple families without duplicate execution)",
+      "gate_criterion": "Every applicable required fixture and expanded variant matches expected; no silent skip, no unsupported positive, zero violations.",
+      "closure_disposition": "RETAINED_BLOCKING_FOR_STATED_FAILURE_MODE",
+      "review_reason": "Independent ordered binary64/literal geometry detects common-mode pose errors; cannot derive expected from the production planner.",
+      "independent_report_per_family_required": false
+    },
+    {
+      "id": "FC08-E05",
+      "name": "Container selection producer",
+      "requirements": [
+        "D08",
+        "P10/P11",
+        "FC01A retained"
+      ],
+      "invariant": "All case expectations in this family hold at their specified observation boundary.",
+      "failure_mode": "Wrong selected root causes unintended batch edit/delete",
+      "impact": "Wrong selected root causes unintended batch edit/delete",
+      "existing_independent_coverage": [
+        "Retain common FC01A set algebra/cancel/geometry coverage; do not duplicate whole suite."
+      ],
+      "new_evidence_unique_detection_value": "Authored polygons/ID sets and scope mapping, exact containment, child-first point cases",
+      "blocking_justification": "Section full-containment and nested producer projection are not proven by old nine-kind common substrate alone.",
+      "classification": "blocking_DEV",
+      "oracle": "Authored polygons/ID sets and scope mapping, exact containment, child-first point cases",
+      "fixture_ids": [
+        "FC08-S01",
+        "FC08-S02",
+        "FC08-S03",
+        "FC08-S04",
+        "FC08-S05",
+        "FC08-S06"
+      ],
+      "execution_method": "Contract in execution.md, method E05",
+      "artifact": "results/E05.json (one run may satisfy multiple families without duplicate execution)",
+      "gate_criterion": "Every applicable required fixture and expanded variant matches expected; no silent skip, no unsupported positive, zero violations.",
+      "closure_disposition": "RETAINED_BLOCKING_FOR_STATED_FAILURE_MODE",
+      "review_reason": "Authored region footprints/expected roots detect wrong-target mutation risk; preserve old selection algebra.",
+      "independent_report_per_family_required": false
+    },
+    {
+      "id": "FC08-E06",
+      "name": "Scene, bounds, render and recovery",
+      "requirements": [
+        "P14 sections4-6",
+        "P16 F08"
+      ],
+      "invariant": "All case expectations in this family hold at their specified observation boundary.",
+      "failure_mode": "Overflow invisible, stale hit index, half publication or false commit failure",
+      "impact": "Overflow invisible, stale hit index, half publication or false commit failure",
+      "existing_independent_coverage": [
+        "Existing Scene publication/recovery machinery; current generic tests do not establish new container dependency closure."
+      ],
+      "new_evidence_unique_detection_value": "Literal world/damage expectations, coherent-observer snapshots, draw list and interior-pixel reference",
+      "blocking_justification": "Final Document correctness cannot detect derived culling/opacity/index faults.",
+      "classification": "blocking_DEV",
+      "oracle": "Literal world/damage expectations, coherent-observer snapshots, draw list and interior-pixel reference",
+      "fixture_ids": [
+        "FC08-V01",
+        "FC08-V02",
+        "FC08-V03",
+        "FC08-V04",
+        "FC08-V05"
+      ],
+      "execution_method": "Contract in execution.md, method E06",
+      "artifact": "results/E06.json (one run may satisfy multiple families without duplicate execution)",
+      "gate_criterion": "Every applicable required fixture and expanded variant matches expected; no silent skip, no unsupported positive, zero violations.",
+      "closure_disposition": "RETAINED_BLOCKING_FOR_STATED_FAILURE_MODE",
+      "review_reason": "Rendered/query/damage publication detects overflow/opacity/index faults not visible in Document correctness.",
+      "independent_report_per_family_required": false
+    },
+    {
+      "id": "FC08-E07",
+      "name": "Preview handoff and delayed local effects",
+      "requirements": [
+        "ARC-CR-C01/C02"
+      ],
+      "invariant": "All case expectations in this family hold at their specified observation boundary.",
+      "failure_mode": "Double-drawn transform or late callback overwrites new selection",
+      "impact": "Double-drawn transform or late callback overwrites new selection",
+      "existing_independent_coverage": [
+        "Architecture clarifications are design facts; final-state-only checks miss transient violations."
+      ],
+      "new_evidence_unique_detection_value": "Deterministic scheduled observation trace with fixed valid/invalid timelines",
+      "blocking_justification": "A distinct temporal observation at publication is necessary; no extra screenshot run is required as another proof.",
+      "classification": "blocking_DEV",
+      "oracle": "Deterministic scheduled observation trace with fixed valid/invalid timelines",
+      "fixture_ids": [
+        "FC08-C01",
+        "FC08-C02",
+        "FC08-C03",
+        "FC08-C04",
+        "FC08-C05"
+      ],
+      "execution_method": "Contract in execution.md, method E07",
+      "artifact": "results/E07.json (one run may satisfy multiple families without duplicate execution)",
+      "gate_criterion": "Every applicable required fixture and expanded variant matches expected; no silent skip, no unsupported positive, zero violations.",
+      "closure_disposition": "RETAINED_BLOCKING_FOR_STATED_FAILURE_MODE",
+      "review_reason": "Every observable handoff and explicit positive completion detect transient double transform and stale local callbacks; final document alone cannot.",
+      "independent_report_per_family_required": false
+    },
+    {
+      "id": "FC08-E08",
+      "name": "Control identity and lifecycle",
+      "requirements": [
+        "P15 sections5-7",
+        "P17"
+      ],
+      "invariant": "All case expectations in this family hold at their specified observation boundary.",
+      "failure_mode": "Wrong object/document mutation or late Up after cancellation",
+      "impact": "Wrong object/document mutation or late Up after cancellation",
+      "existing_independent_coverage": [
+        "Existing control bounded queues/high-water and pointer lifecycle; bind retained tests where equivalent."
+      ],
+      "new_evidence_unique_detection_value": "Controlled ingress/owner scheduling with independent state/counter/receipt snapshots",
+      "blocking_justification": "New intent and ticket paths must obey existing boundaries; software fault schedules close gap before physical gate.",
+      "classification": "blocking_DEV",
+      "oracle": "Controlled ingress/owner scheduling with independent state/counter/receipt snapshots",
+      "fixture_ids": [
+        "FC08-L01",
+        "FC08-L02",
+        "FC08-L03",
+        "FC08-L04",
+        "FC08-L05",
+        "FC08-L06"
+      ],
+      "execution_method": "Contract in execution.md, method E08",
+      "artifact": "results/E08.json (one run may satisfy multiple families without duplicate execution)",
+      "gate_criterion": "Every applicable required fixture and expanded variant matches expected; no silent skip, no unsupported positive, zero violations.",
+      "closure_disposition": "RETAINED_BLOCKING_FOR_STATED_FAILURE_MODE",
+      "review_reason": "New intent/ticket owner identities and cancellation paths need realization probes; equivalent unchanged inherited cases may be referenced instead of duplicated.",
+      "independent_report_per_family_required": false
+    },
+    {
+      "id": "FC08-E09",
+      "name": "Snapshot, log and writer compatibility",
+      "requirements": [
+        "D05",
+        "CAP01-06"
+      ],
+      "invariant": "All case expectations in this family hold at their specified observation boundary.",
+      "failure_mode": "Silent partial load/replay or invalid writer participation",
+      "impact": "Silent partial load/replay or invalid writer participation",
+      "existing_independent_coverage": [
+        "Retained snapshot/resource/legacy tests; new capabilities and opcodes remain distinct."
+      ],
+      "new_evidence_unique_detection_value": "Fixed capability/version truth table, canonical digest input, independent state before/after unknown input",
+      "blocking_justification": "State-read success cannot prove log or writer support; fail-closed is data-integrity critical.",
+      "classification": "blocking_DEV",
+      "oracle": "Fixed capability/version truth table, canonical digest input, independent state before/after unknown input",
+      "fixture_ids": [
+        "FC08-K01",
+        "FC08-K02",
+        "FC08-K03",
+        "FC08-K04",
+        "FC08-K05",
+        "FC08-K06"
+      ],
+      "execution_method": "Contract in execution.md, method E09",
+      "artifact": "results/E09.json (one run may satisfy multiple families without duplicate execution)",
+      "gate_criterion": "Every applicable required fixture and expanded variant matches expected; no silent skip, no unsupported positive, zero violations.",
+      "closure_disposition": "RETAINED_BLOCKING_FOR_STATED_FAILURE_MODE",
+      "review_reason": "State, journal and writer capabilities are distinct failure surfaces; actual old-reader negative probe may reuse R01; a capability toggle alone does not prove old binary behavior.",
+      "independent_report_per_family_required": false
+    },
+    {
+      "id": "FC08-E10",
+      "name": "Public consumer and platform integration",
+      "requirements": [
+        "P17",
+        "INT-01"
+      ],
+      "invariant": "All case expectations in this family hold at their specified observation boundary.",
+      "failure_mode": "Demo-only implementation, truncated bridge IDs or partially executed mixed Delete",
+      "impact": "Demo-only implementation, truncated bridge IDs or partially executed mixed Delete",
+      "existing_independent_coverage": [
+        "Existing public facade/host substrate; build-only cannot prove actual adapter behavior."
+      ],
+      "new_evidence_unique_detection_value": "Ordinary compiled consumer plus native/WASM bridge probes compared to literal expectations; retained scoped regressions",
+      "blocking_justification": "Platform adapters and UI command aggregation create distinct entry failure modes not detected by raw semantic tests.",
+      "classification": "blocking_DEV",
+      "oracle": "Ordinary compiled consumer plus native/WASM bridge probes compared to literal expectations; retained scoped regressions",
+      "fixture_ids": [
+        "FC08-P01",
+        "FC08-P02",
+        "FC08-P03",
+        "FC08-P04"
+      ],
+      "execution_method": "Contract in execution.md, method E10",
+      "artifact": "results/E10.json (one run may satisfy multiple families without duplicate execution)",
+      "gate_criterion": "Every applicable required fixture and expanded variant matches expected; no silent skip, no unsupported positive, zero violations.",
+      "closure_disposition": "RETAINED_BLOCKING_FOR_STATED_FAILURE_MODE",
+      "review_reason": "Ordinary consumer and actual native/WASM browser adapters catch private-only paths and identity loss. Cross-platform repeats do not create a second semantic oracle.",
+      "independent_report_per_family_required": false
+    }
+  ],
+  "corroborative_only": [
+    "duplicate CI/local runs",
+    "full-versus-incremental parity sharing compiler",
+    "extra screenshots duplicating automated geometry",
+    "unbounded fuzz campaigns",
+    "performance targets not accepted upstream",
+    "provenance-of-provenance"
+  ],
+  "physical_debt": "PH01-PH04 deferred to FC13; not DEV blocking"
+}

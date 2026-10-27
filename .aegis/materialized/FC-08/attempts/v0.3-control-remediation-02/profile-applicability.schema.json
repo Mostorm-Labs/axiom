@@ -1,0 +1,397 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:axiom:fc08:profile-applicability:1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "status",
+    "variants",
+    "method_bindings"
+  ],
+  "properties": {
+    "format": {
+      "const": "fc08-profile-applicability-v1"
+    },
+    "status": {
+      "const": "PROPOSED_PENDING_ACCEPTANCE"
+    },
+    "method_bindings": {
+      "type": "object"
+    },
+    "variants": {
+      "type": "array",
+      "minItems": 302,
+      "maxItems": 302,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "variant_id",
+          "case_id",
+          "family_id",
+          "input_sha256",
+          "expected_sha256",
+          "profiles"
+        ],
+        "properties": {
+          "variant_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "case_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "family_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "input_sha256": {
+            "type": "string",
+            "minLength": 1
+          },
+          "expected_sha256": {
+            "type": "string",
+            "minLength": 1
+          },
+          "profiles": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "windows-native",
+              "web-wasm",
+              "headless"
+            ],
+            "properties": {
+              "windows-native": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "applicability",
+                  "result",
+                  "environment",
+                  "reason",
+                  "execution_requirement",
+                  "method_id",
+                  "evidence_role"
+                ],
+                "properties": {
+                  "applicability": {
+                    "enum": [
+                      "APPLICABLE",
+                      "NOT_APPLICABLE"
+                    ]
+                  },
+                  "result": {
+                    "enum": [
+                      "NOT_RUN",
+                      "NOT_APPLICABLE",
+                      "BLOCKED_ENVIRONMENT",
+                      "PASS",
+                      "FAIL"
+                    ]
+                  },
+                  "environment": {
+                    "enum": [
+                      "NOT_ASSESSED",
+                      "NOT_REQUIRED",
+                      "AVAILABLE",
+                      "MISSING"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "execution_requirement": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "method_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "evidence_role": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "applicability": {
+                          "const": "NOT_APPLICABLE"
+                        }
+                      }
+                    },
+                    "then": {
+                      "properties": {
+                        "result": {
+                          "const": "NOT_APPLICABLE"
+                        },
+                        "environment": {
+                          "const": "NOT_REQUIRED"
+                        }
+                      }
+                    },
+                    "else": {
+                      "properties": {
+                        "result": {
+                          "not": {
+                            "const": "NOT_APPLICABLE"
+                          }
+                        },
+                        "environment": {
+                          "not": {
+                            "const": "NOT_REQUIRED"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "if": {
+                      "properties": {
+                        "result": {
+                          "const": "BLOCKED_ENVIRONMENT"
+                        }
+                      }
+                    },
+                    "then": {
+                      "properties": {
+                        "applicability": {
+                          "const": "APPLICABLE"
+                        },
+                        "environment": {
+                          "const": "MISSING"
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              "web-wasm": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "applicability",
+                  "result",
+                  "environment",
+                  "reason",
+                  "execution_requirement",
+                  "method_id",
+                  "evidence_role"
+                ],
+                "properties": {
+                  "applicability": {
+                    "enum": [
+                      "APPLICABLE",
+                      "NOT_APPLICABLE"
+                    ]
+                  },
+                  "result": {
+                    "enum": [
+                      "NOT_RUN",
+                      "NOT_APPLICABLE",
+                      "BLOCKED_ENVIRONMENT",
+                      "PASS",
+                      "FAIL"
+                    ]
+                  },
+                  "environment": {
+                    "enum": [
+                      "NOT_ASSESSED",
+                      "NOT_REQUIRED",
+                      "AVAILABLE",
+                      "MISSING"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "execution_requirement": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "method_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "evidence_role": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "applicability": {
+                          "const": "NOT_APPLICABLE"
+                        }
+                      }
+                    },
+                    "then": {
+                      "properties": {
+                        "result": {
+                          "const": "NOT_APPLICABLE"
+                        },
+                        "environment": {
+                          "const": "NOT_REQUIRED"
+                        }
+                      }
+                    },
+                    "else": {
+                      "properties": {
+                        "result": {
+                          "not": {
+                            "const": "NOT_APPLICABLE"
+                          }
+                        },
+                        "environment": {
+                          "not": {
+                            "const": "NOT_REQUIRED"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "if": {
+                      "properties": {
+                        "result": {
+                          "const": "BLOCKED_ENVIRONMENT"
+                        }
+                      }
+                    },
+                    "then": {
+                      "properties": {
+                        "applicability": {
+                          "const": "APPLICABLE"
+                        },
+                        "environment": {
+                          "const": "MISSING"
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              "headless": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "applicability",
+                  "result",
+                  "environment",
+                  "reason",
+                  "execution_requirement",
+                  "method_id",
+                  "evidence_role"
+                ],
+                "properties": {
+                  "applicability": {
+                    "enum": [
+                      "APPLICABLE",
+                      "NOT_APPLICABLE"
+                    ]
+                  },
+                  "result": {
+                    "enum": [
+                      "NOT_RUN",
+                      "NOT_APPLICABLE",
+                      "BLOCKED_ENVIRONMENT",
+                      "PASS",
+                      "FAIL"
+                    ]
+                  },
+                  "environment": {
+                    "enum": [
+                      "NOT_ASSESSED",
+                      "NOT_REQUIRED",
+                      "AVAILABLE",
+                      "MISSING"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "execution_requirement": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "method_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "evidence_role": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "applicability": {
+                          "const": "NOT_APPLICABLE"
+                        }
+                      }
+                    },
+                    "then": {
+                      "properties": {
+                        "result": {
+                          "const": "NOT_APPLICABLE"
+                        },
+                        "environment": {
+                          "const": "NOT_REQUIRED"
+                        }
+                      }
+                    },
+                    "else": {
+                      "properties": {
+                        "result": {
+                          "not": {
+                            "const": "NOT_APPLICABLE"
+                          }
+                        },
+                        "environment": {
+                          "not": {
+                            "const": "NOT_REQUIRED"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "if": {
+                      "properties": {
+                        "result": {
+                          "const": "BLOCKED_ENVIRONMENT"
+                        }
+                      }
+                    },
+                    "then": {
+                      "properties": {
+                        "applicability": {
+                          "const": "APPLICABLE"
+                        },
+                        "environment": {
+                          "const": "MISSING"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

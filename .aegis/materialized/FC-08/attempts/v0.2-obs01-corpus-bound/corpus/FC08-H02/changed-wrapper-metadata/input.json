@@ -1,0 +1,1249 @@
+{
+  "before": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000007"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "10"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 10,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": -20,
+            "y": 0,
+            "width": 120,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000008"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "30"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 100,
+        "ty": 50
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": -20,
+            "y": 0,
+            "width": 120,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000009"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000007"
+        },
+        "order_key": {
+          "value": "10"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 2,
+        "ty": 3
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 2,
+          "height": 2
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "0000000000000000000000000000000a"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000008"
+        },
+        "order_key": {
+          "value": "10"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 4,
+        "ty": 5
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 2,
+          "height": 2
+        }
+      }
+    }
+  ],
+  "forward": {
+    "operation_id": {
+      "value": "000000000000000000000000000003e9"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "edit_container_topology": {
+        "guard": {
+          "nodes": [
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000007"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "10"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 10,
+                "ty": 0
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000008"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "30"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 100,
+                "ty": 50
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000009"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000007"
+                },
+                "order_key": {
+                  "value": "10"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 2,
+                "ty": 3
+              }
+            },
+            {
+              "object_id": {
+                "value": "0000000000000000000000000000000a"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000008"
+                },
+                "order_key": {
+                  "value": "10"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 4,
+                "ty": 5
+              }
+            }
+          ],
+          "child_sets": [
+            {
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000007"
+                  },
+                  "order_key": {
+                    "value": "10"
+                  }
+                },
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000008"
+                  },
+                  "order_key": {
+                    "value": "30"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000007"
+              },
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000009"
+                  },
+                  "order_key": {
+                    "value": "10"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000008"
+              },
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "0000000000000000000000000000000a"
+                  },
+                  "order_key": {
+                    "value": "10"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "relocations": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000009"
+            },
+            "placement_after": {
+              "parent_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "order_key": {
+                "value": "10"
+              }
+            },
+            "transform_after": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 12,
+              "ty": 3
+            }
+          },
+          {
+            "object_id": {
+              "value": "0000000000000000000000000000000a"
+            },
+            "placement_after": {
+              "parent_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "order_key": {
+                "value": "30"
+              }
+            },
+            "transform_after": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 104,
+              "ty": 55
+            }
+          }
+        ],
+        "order_only_edits": [],
+        "introduce_wrappers": {
+          "containers": [
+            {
+              "id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement": {
+                "order_key": {
+                  "value": "20"
+                }
+              },
+              "transform": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              },
+              "properties": {},
+              "content": {
+                "section": {
+                  "boundary": {
+                    "x": 12,
+                    "y": 3,
+                    "width": 94,
+                    "height": 54
+                  },
+                  "title": "",
+                  "padding": 0.0,
+                  "header_height": 0.0
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "inverse": {
+    "operation_id": {
+      "value": "000000000000000000000000000003ea"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "edit_container_topology": {
+        "guard": {
+          "nodes": [
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "20"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000007"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "10"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 10,
+                "ty": 0
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000008"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "30"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 100,
+                "ty": 50
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000009"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000006"
+                },
+                "order_key": {
+                  "value": "10"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 12,
+                "ty": 3
+              }
+            },
+            {
+              "object_id": {
+                "value": "0000000000000000000000000000000a"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000006"
+                },
+                "order_key": {
+                  "value": "30"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 104,
+                "ty": 55
+              }
+            }
+          ],
+          "child_sets": [
+            {
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000006"
+                  },
+                  "order_key": {
+                    "value": "20"
+                  }
+                },
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000007"
+                  },
+                  "order_key": {
+                    "value": "10"
+                  }
+                },
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000008"
+                  },
+                  "order_key": {
+                    "value": "30"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000009"
+                  },
+                  "order_key": {
+                    "value": "10"
+                  }
+                },
+                {
+                  "object_id": {
+                    "value": "0000000000000000000000000000000a"
+                  },
+                  "order_key": {
+                    "value": "30"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000007"
+              },
+              "complete_members": []
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000008"
+              },
+              "complete_members": []
+            }
+          ]
+        },
+        "relocations": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000009"
+            },
+            "placement_after": {
+              "parent_id": {
+                "value": "00000000000000000000000000000007"
+              },
+              "order_key": {
+                "value": "10"
+              }
+            },
+            "transform_after": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 2,
+              "ty": 3
+            }
+          },
+          {
+            "object_id": {
+              "value": "0000000000000000000000000000000a"
+            },
+            "placement_after": {
+              "parent_id": {
+                "value": "00000000000000000000000000000008"
+              },
+              "order_key": {
+                "value": "10"
+              }
+            },
+            "transform_after": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 4,
+              "ty": 5
+            }
+          }
+        ],
+        "order_only_edits": [],
+        "release_wrappers": {
+          "containers_before": [
+            {
+              "id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement": {
+                "order_key": {
+                  "value": "20"
+                }
+              },
+              "transform": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              },
+              "properties": {},
+              "content": {
+                "section": {
+                  "boundary": {
+                    "x": 12,
+                    "y": 3,
+                    "width": 94,
+                    "height": 54
+                  },
+                  "title": "",
+                  "padding": 0.0,
+                  "header_height": 0.0
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "redo": {
+    "operation_id": {
+      "value": "000000000000000000000000000003eb"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "edit_container_topology": {
+        "guard": {
+          "nodes": [
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000007"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "10"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 10,
+                "ty": 0
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000008"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "30"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 100,
+                "ty": 50
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000009"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000007"
+                },
+                "order_key": {
+                  "value": "10"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 2,
+                "ty": 3
+              }
+            },
+            {
+              "object_id": {
+                "value": "0000000000000000000000000000000a"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000008"
+                },
+                "order_key": {
+                  "value": "10"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 4,
+                "ty": 5
+              }
+            }
+          ],
+          "child_sets": [
+            {
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000007"
+                  },
+                  "order_key": {
+                    "value": "10"
+                  }
+                },
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000008"
+                  },
+                  "order_key": {
+                    "value": "30"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000007"
+              },
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000009"
+                  },
+                  "order_key": {
+                    "value": "10"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000008"
+              },
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "0000000000000000000000000000000a"
+                  },
+                  "order_key": {
+                    "value": "10"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "relocations": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000009"
+            },
+            "placement_after": {
+              "parent_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "order_key": {
+                "value": "10"
+              }
+            },
+            "transform_after": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 12,
+              "ty": 3
+            }
+          },
+          {
+            "object_id": {
+              "value": "0000000000000000000000000000000a"
+            },
+            "placement_after": {
+              "parent_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "order_key": {
+                "value": "30"
+              }
+            },
+            "transform_after": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 104,
+              "ty": 55
+            }
+          }
+        ],
+        "order_only_edits": [],
+        "introduce_wrappers": {
+          "containers": [
+            {
+              "id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement": {
+                "order_key": {
+                  "value": "20"
+                }
+              },
+              "transform": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              },
+              "properties": {},
+              "content": {
+                "section": {
+                  "boundary": {
+                    "x": 12,
+                    "y": 3,
+                    "width": 94,
+                    "height": 54
+                  },
+                  "title": "",
+                  "padding": 0.0,
+                  "header_height": 0.0
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "after": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000006"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "20"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": 12,
+            "y": 3,
+            "width": 94,
+            "height": 54
+          },
+          "title": "",
+          "padding": 0.0,
+          "header_height": 0.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000007"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "10"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 10,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": -20,
+            "y": 0,
+            "width": 120,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000008"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "30"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 100,
+        "ty": 50
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": -20,
+            "y": 0,
+            "width": 120,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000009"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "10"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 12,
+        "ty": 3
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 2,
+          "height": 2
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "0000000000000000000000000000000a"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "30"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 104,
+        "ty": 55
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 2,
+          "height": 2
+        }
+      }
+    }
+  ],
+  "undo_after": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000007"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "10"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 10,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": -20,
+            "y": 0,
+            "width": 120,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000008"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "30"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 100,
+        "ty": 50
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": -20,
+            "y": 0,
+            "width": 120,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000009"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000007"
+        },
+        "order_key": {
+          "value": "10"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 2,
+        "ty": 3
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 2,
+          "height": 2
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "0000000000000000000000000000000a"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000008"
+        },
+        "order_key": {
+          "value": "10"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 4,
+        "ty": 5
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 2,
+          "height": 2
+        }
+      }
+    }
+  ],
+  "world_origins": {
+    "a": [
+      12,
+      3
+    ],
+    "b": [
+      104,
+      55
+    ]
+  },
+  "schedule": [
+    {
+      "action": "forward"
+    },
+    {
+      "action": "intervening",
+      "kind": "changed-wrapper-metadata"
+    },
+    {
+      "action": "undo"
+    }
+  ],
+  "intervening_operation": {
+    "operation_id": {
+      "value": "000000000000000000000000000007d1"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "set_section_content": {
+        "items": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "expected_kind_version": 1,
+            "expected_content": {
+              "boundary": {
+                "x": 12,
+                "y": 3,
+                "width": 94,
+                "height": 54
+              },
+              "title": "",
+              "padding": 0.0,
+              "header_height": 0.0
+            },
+            "replacement_content": {
+              "boundary": {
+                "x": 12,
+                "y": 3,
+                "width": 94,
+                "height": 54
+              },
+              "title": "changed after F",
+              "padding": 0.0,
+              "header_height": 0.0
+            }
+          }
+        ],
+        "geometry_basis": []
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "ready",
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "path": "new_effect_count",
+      "expected": 1
+    },
+    {
+      "op": "equal",
+      "path": "committed_prefix_preserved",
+      "expected": true
+    }
+  ],
+  "source_case": "FC08-K04",
+  "product_expected_only": true
+}

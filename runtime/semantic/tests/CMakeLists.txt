@@ -1,4 +1,72 @@
 add_executable(canvas_semantic_types_test semantic_types_test.cpp)
+
+if(CANVAS_SEMANTIC_ENABLE_PROTOBUF)
+  add_executable(axiom_fc08_section_history_tests fc08_section_history_test.cpp
+    ../../interaction/src/editor_history.cpp ../../interaction/src/undoable_command.cpp)
+  target_link_libraries(axiom_fc08_section_history_tests PRIVATE canvas_runtime_semantic GTest::gtest_main protobuf::libprotobuf)
+  target_include_directories(axiom_fc08_section_history_tests PRIVATE
+    "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include"
+    "${PROJECT_SOURCE_DIR}/runtime/interaction/include" "${PROJECT_SOURCE_DIR}/runtime/interaction/src"
+    ${CMAKE_CURRENT_BINARY_DIR}/../generated ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+  target_compile_definitions(axiom_fc08_section_history_tests PRIVATE AXIOM_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+  if(MSVC)
+    target_compile_options(axiom_fc08_section_history_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_fc08_section_history_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  include(GoogleTest)
+  gtest_discover_tests(axiom_fc08_section_history_tests TEST_PREFIX "fc08.section_c." NO_PRETTY_VALUES)
+  add_executable(axiom_fc08_section_history_allocation_tests fc08_section_history_allocation_test.cpp
+    ../../interaction/src/editor_history.cpp ../../interaction/src/undoable_command.cpp)
+  target_link_libraries(axiom_fc08_section_history_allocation_tests PRIVATE canvas_runtime_semantic GTest::gtest_main protobuf::libprotobuf)
+  target_include_directories(axiom_fc08_section_history_allocation_tests PRIVATE
+    "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include"
+    "${PROJECT_SOURCE_DIR}/runtime/interaction/include" "${PROJECT_SOURCE_DIR}/runtime/interaction/src"
+    ${CMAKE_CURRENT_BINARY_DIR}/../generated ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+  target_compile_definitions(axiom_fc08_section_history_allocation_tests PRIVATE AXIOM_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+  if(MSVC)
+    target_compile_options(axiom_fc08_section_history_allocation_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_fc08_section_history_allocation_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  include(GoogleTest)
+  gtest_discover_tests(axiom_fc08_section_history_allocation_tests TEST_PREFIX "fc08.section_c_allocation." NO_PRETTY_VALUES)
+  add_executable(axiom_fc08_section_operation_tests fc08_section_operation_test.cpp fc08_section_safety_test.cpp)
+  target_link_libraries(axiom_fc08_section_operation_tests PRIVATE canvas_runtime_semantic GTest::gtest_main protobuf::libprotobuf)
+  target_include_directories(axiom_fc08_section_operation_tests PRIVATE
+    "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include"
+    ${CMAKE_CURRENT_BINARY_DIR}/../generated ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+  target_compile_definitions(axiom_fc08_section_operation_tests PRIVATE AXIOM_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+  if(MSVC)
+    target_compile_options(axiom_fc08_section_operation_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_fc08_section_operation_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  include(GoogleTest)
+  gtest_discover_tests(axiom_fc08_section_operation_tests TEST_PREFIX "fc08.section_b." NO_PRETTY_VALUES)
+  add_executable(axiom_fc08_section_allocation_tests fc08_section_allocation_test.cpp)
+  target_link_libraries(axiom_fc08_section_allocation_tests PRIVATE canvas_runtime_semantic GTest::gtest_main)
+  target_include_directories(axiom_fc08_section_allocation_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src)
+  if(MSVC)
+    target_compile_options(axiom_fc08_section_allocation_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_fc08_section_allocation_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  gtest_discover_tests(axiom_fc08_section_allocation_tests TEST_PREFIX "fc08.section_b." PROPERTIES TIMEOUT 30)
+  add_executable(axiom_fc08_section_codec_tests fc08_section_codec_test.cpp)
+  target_link_libraries(axiom_fc08_section_codec_tests PRIVATE canvas_runtime_semantic GTest::gtest_main protobuf::libprotobuf)
+  target_include_directories(axiom_fc08_section_codec_tests PRIVATE
+    "${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include"
+    ${CMAKE_CURRENT_BINARY_DIR}/../generated)
+  target_compile_definitions(axiom_fc08_section_codec_tests PRIVATE AXIOM_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
+  if(MSVC)
+    target_compile_options(axiom_fc08_section_codec_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_fc08_section_codec_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  include(GoogleTest)
+  gtest_discover_tests(axiom_fc08_section_codec_tests TEST_PREFIX "fc08.section_a." NO_PRETTY_VALUES)
+endif()
 target_link_libraries(canvas_semantic_types_test PRIVATE canvas_runtime_semantic GTest::gtest_main)
 
 if(MSVC)
@@ -215,6 +283,7 @@ gtest_discover_tests(canvas_semantic_envelope_validation_test)
 add_executable(canvas_semantic_payload_structure_test
   payload_structure_test.cpp
   ../src/validator.cpp
+  ../src/container_operation_validation.cpp
   ../src/resource_manifest.cpp
   ../src/sha256_internal.cpp)
 target_include_directories(canvas_semantic_payload_structure_test
@@ -250,6 +319,7 @@ gtest_discover_tests(canvas_semantic_g1_04_c_geometry_overflow_source_test)
 add_executable(canvas_semantic_leaf_structure_validation_test
   leaf_structure_validation_test.cpp
   ../src/validator.cpp
+  ../src/container_operation_validation.cpp
   ../src/resource_manifest.cpp
   ../src/sha256_internal.cpp)
 target_include_directories(canvas_semantic_leaf_structure_validation_test

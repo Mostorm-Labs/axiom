@@ -1,0 +1,86 @@
+Test project C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-c/native
+      Start   1: DUIM1Control
+ 1/38 Test   #1: DUIM1Control ................................   Passed    0.03 sec
+      Start  73: FC08SectionGeometry
+ 2/38 Test  #73: FC08SectionGeometry .........................   Passed    0.13 sec
+      Start  74: canvas_rf01_scene_atomicity
+ 3/38 Test  #74: canvas_rf01_scene_atomicity .................   Passed    0.25 sec
+      Start  78: canvas_g2_a1_runtime_record_projection
+ 4/38 Test  #78: canvas_g2_a1_runtime_record_projection ......   Passed    0.06 sec
+      Start  79: canvas_g2_a2_bounds_system
+ 5/38 Test  #79: canvas_g2_a2_bounds_system ..................   Passed    0.06 sec
+      Start  80: FC05Route
+ 6/38 Test  #80: FC05Route ...................................   Passed    0.13 sec
+      Start  81: canvas_fc02_shape_label_scene
+ 7/38 Test  #81: canvas_fc02_shape_label_scene ...............   Passed    0.07 sec
+      Start  84: FC03ImageScene
+ 8/38 Test  #84: FC03ImageScene ..............................   Passed    0.27 sec
+      Start  86: canvas_g2_a3_full_incremental_equivalence
+ 9/38 Test  #86: canvas_g2_a3_full_incremental_equivalence ...   Passed    0.08 sec
+      Start  88: canvas_g2_a6_incremental_equivalence
+10/38 Test  #88: canvas_g2_a6_incremental_equivalence ........   Passed    0.40 sec
+      Start  89: canvas_g2_a6_atomic_publication
+11/38 Test  #89: canvas_g2_a6_atomic_publication .............   Passed    0.31 sec
+      Start  90: canvas_g2_a6_recovery
+12/38 Test  #90: canvas_g2_a6_recovery .......................   Passed    0.19 sec
+      Start  96: canvas_fc01_derived_geometry
+13/38 Test  #96: canvas_fc01_derived_geometry ................   Passed    0.09 sec
+      Start  99: G4SelectionSession
+14/38 Test  #99: G4SelectionSession ..........................   Passed    0.07 sec
+      Start 101: G46TransformHandleDrag
+15/38 Test #101: G46TransformHandleDrag ......................   Passed    0.08 sec
+      Start 103: G4EditorHistory
+16/38 Test #103: G4EditorHistory .............................   Passed    0.23 sec
+      Start 104: FC01EditorHistoryInverseFamilies
+17/38 Test #104: FC01EditorHistoryInverseFamilies ............   Passed    0.03 sec
+      Start 143: G3HeadlessSkia
+18/38 Test #143: G3HeadlessSkia ..............................   Passed    0.23 sec
+      Start 144: FC05ConnectorPendingRaster
+19/38 Test #144: FC05ConnectorPendingRaster ..................   Passed    0.04 sec
+      Start 145: FC05StickyFractionalProduction
+20/38 Test #145: FC05StickyFractionalProduction ..............   Passed    0.02 sec
+      Start 146: FC01TriangleConnectorRaster
+21/38 Test #146: FC01TriangleConnectorRaster .................Exit code 0xc0000409***Exception:   2.24 sec
+Assertion failed: pixel(*backend.observation(),129,103)==(Rgba{0,255,0,255}), file C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\render\tests\skia_headless_backend_test.cpp, line 751
+
+      Start 154: G3Visibility
+22/38 Test #154: G3Visibility ................................   Passed    0.67 sec
+      Start 155: G3DirectReference
+23/38 Test #155: G3DirectReference ...........................   Passed    0.14 sec
+      Start 158: FC08SectionConsumer
+24/38 Test #158: FC08SectionConsumer .........................   Passed    0.33 sec
+      Start 159: FC05ConnectorFacade
+25/38 Test #159: FC05ConnectorFacade .........................   Passed    0.24 sec
+      Start 160: FC02Text
+26/38 Test #160: FC02Text ....................................   Passed   26.86 sec
+      Start 161: FC00XBrushBatchEvaluation
+27/38 Test #161: FC00XBrushBatchEvaluation ...................   Passed    0.27 sec
+      Start 162: FC00XBrushPressureCapability
+28/38 Test #162: FC00XBrushPressureCapability ................   Passed    0.03 sec
+      Start 163: FC00XBrushBatchSemantics
+29/38 Test #163: FC00XBrushBatchSemantics ....................   Passed    0.05 sec
+      Start 164: FC00XCanonicalBusyPreviewProgress
+30/38 Test #164: FC00XCanonicalBusyPreviewProgress ...........   Passed    0.03 sec
+      Start 165: FC00XPreviewBusyCanonicalProgress
+31/38 Test #165: FC00XPreviewBusyCanonicalProgress ...........   Passed    0.03 sec
+      Start 166: FC00XBusyCanonicalPendingFeedback
+32/38 Test #166: FC00XBusyCanonicalPendingFeedback ...........   Passed    0.03 sec
+      Start 167: FC00XFatalProviderFailure
+33/38 Test #167: FC00XFatalProviderFailure ...................   Passed    0.03 sec
+      Start 171: FC00XRuntimeFacade
+34/38 Test #171: FC00XRuntimeFacade ..........................   Passed    0.34 sec
+      Start 172: FC03ImageFacade
+35/38 Test #172: FC03ImageFacade .............................   Passed    0.24 sec
+      Start 195: PX0Workbench
+36/38 Test #195: PX0Workbench ................................   Passed    0.04 sec
+      Start 196: DebugUiSimplifiedControls
+37/38 Test #196: DebugUiSimplifiedControls ...................   Passed    0.04 sec
+      Start 200: PX0ControlRouter
+38/38 Test #200: PX0ControlRouter ............................   Passed    0.22 sec
+
+97% tests passed, 1 tests failed out of 38
+
+Total Test time (real) =  34.63 sec
+
+The following tests FAILED:
+	146 - FC01TriangleConnectorRaster (Exit code 0xc0000409)

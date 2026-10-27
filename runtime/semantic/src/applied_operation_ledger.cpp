@@ -17,4 +17,17 @@ bool AppliedOperationLedger::recordApplied(const Operation& canonical_operation)
         .second;
 }
 
+std::optional<AppliedOperationLedger::ReservedEntry> AppliedOperationLedger::reserveContainerEntry(const Operation& operation, bool required) {
+    if (!required && operation.kind() != OperationKind::kSetSectionContent && operation.kind() != OperationKind::kEditContainerTopology)
+        return std::nullopt;
+    std::map<OperationId, AppliedOperationEntry> reservation;
+    reservation.emplace(operation.id, AppliedOperationEntry{operation, std::nullopt});
+    return reservation.extract(operation.id);
+}
+
+bool AppliedOperationLedger::recordReservedOrApplied(const Operation& operation, std::optional<ReservedEntry> reserved) {
+    if (!reserved) return recordApplied(operation);
+    return entries_.insert(std::move(*reserved)).inserted;
+}
+
 } // namespace canvas::semantic

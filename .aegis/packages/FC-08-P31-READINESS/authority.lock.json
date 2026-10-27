@@ -1,0 +1,37 @@
+{
+  "schema": "fc08-p31-readiness-authority-binding-v1",
+  "binding_scope": "P31 control preparation only; not an implementation-complete Authority export",
+  "current_semantic_authority": {
+    "id": "fc08-container-extension-semantic-v0.1",
+    "scope": "semantic:axiom/fc08-container-extension",
+    "status": "Current",
+    "provider": "Notion",
+    "ref": "https://app.notion.com/p/4044c57a590c81a8813bcad8c57ff6ee",
+    "accepted_version": "v0.1",
+    "observed_last_edited_at": "2026-10-25T17:25:13.030Z",
+    "accepted_input_manifest_sha256": "f93b286dfd93607342219f879747b2fa207b0eefaad068cbf4e16cfff0b99035"
+  },
+  "execution_policy": {
+    "id": "fc-feature-completion-execution-v0.3",
+    "status": "Current",
+    "source": "https://app.notion.com/p/3f74c57a590c812a8260dcf23b659ed0",
+    "repository_ref": ".aegis/authorities.json@a1e8819abe245ab7487f18771970721f480ff487",
+    "repository_blob_sha": "8ed76b1128437b0aa2a3c966180b81001fbc3a59",
+    "rule": "Early FC-08 design does not accelerate FC-08 implementation; predecessor DEV or a scoped accepted sequencing decision must be bound."
+  },
+  "architecture": {
+    "ref": "https://app.notion.com/p/4044c57a590c81829a18c198cc4cdd47",
+    "version": "P14-P17 v0.1 + ARC-CR-C01/C02",
+    "status": "Closed for P20"
+  },
+  "preserved_decisions": [
+    "D01-D08 accepted within their original scope",
+    "Section kind10/version1/content tag12; operations17/18",
+    "No Frame alias, generic transaction, or second membership store",
+    "CAP-01..06 sorted-unique capabilities; E01 Command/History admission",
+    "BASE-01, INT-01 and FC-13 physical debt remain open in their owning scopes"
+  ],
+  "source_complete_normative_export": "PENDING_M01; do not substitute this summary for P10-P17 or accepted wire contracts",
+  "global_authority_registry_changed": false,
+  "supersession_performed": false
+}

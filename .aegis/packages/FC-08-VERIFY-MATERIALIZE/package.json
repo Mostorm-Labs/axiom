@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-p31-bounded-materialization-package-v1",
+  "task_id": "FC-08-VERIFY-MATERIALIZE",
+  "stage": "P31",
+  "version": "v0.1",
+  "status": "FROZEN_FOR_BOUNDED_MATERIALIZATION_WITH_EXPLICIT_INPUT_HYDRATION",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "repository_id": 1306396623
+  },
+  "execution_authority_mode": "hybrid",
+  "materialization_ref": "refs/heads/control/fc08-p31-readiness",
+  "execution_ref": "refs/heads/codex/fc08-verification-materialization",
+  "task_anchor": {
+    "revision": "a5af5f6d89e8439cc5f70950ba5f1b7986b6ff7b",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "authorized_work": "verification_materialization_only",
+  "P32_authorized": true,
+  "product_P32_authorized": false,
+  "authorization_note": "P32 flag applies ONLY to this verification machinery/materialization task. It is not the FC08 product execution package. Input hydration and both preflights are mandatory before code mutation.",
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "inputs_transport": "Supply the companion ZIP together with this exact remote package. Six canonical package refs are repo-materialized; accepted-inputs.zip is an explicit hashed attachment hydration requirement, not claimed resident in the repo.",
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "87603920606a44ca13390a86e1e0626d1858df9ccf98026038a7b5aa72ef11c1"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "f49fa9a03ac494d5e73566077eb52d62c0a5dd444a0f90deab880931e1ef6eac"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "ebc5accf71301001baa150f150e26f8ffe7848811acd54505d32deea28f37f76"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "fb47760127ff71bd99b8af1618a4f31f1e9d32dd3a1a3256f58f92e5c5c8d2e3"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "4e8d12d7a27f941d0c51b9d92c9089c3d3f09c46ca61116e7aeef3756bc9b850"
+  },
+  "accepted_inputs_ref": {
+    "path": "accepted-inputs.zip",
+    "sha256": "378447a1590bd4f00b563b2025cbd186c564def565f8e323acb282ff1c2d5bfb"
+  },
+  "source_acquisition_ref": {
+    "path": "source-acquisition.json",
+    "sha256": "2e63183326a0ecfd8a94229fb79ab39232a2739a19e759675359228fccfa8975"
+  },
+  "profile_recipes_ref": {
+    "path": "profile-recipes.json",
+    "sha256": "4774f663eeef2e14f9d7b7a4bef6234fb4092e39aef5d8729bf410e40b106d6b"
+  },
+  "tool_ref": {
+    "path": "tools/preflight.py",
+    "sha256": "f9f3ce3abdc086dac3064ead3f43bf53ce5f1eddb0a61fed49a32398394eab20"
+  },
+  "preflight_commands": [
+    "python .aegis/packages/FC-08-VERIFY-MATERIALIZE/tools/preflight.py --phase package --repo .",
+    "python .aegis/packages/FC-08-VERIFY-MATERIALIZE/tools/preflight.py --phase evidence --repo ."
+  ]
+}

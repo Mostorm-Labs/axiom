@@ -1,0 +1,25 @@
+CMake Error at C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake:103 (message):
+  Failed to fetch Emscripten version information with command
+  "'C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/upstream/emscripten/emcc.exe'
+  -v"!
+
+  Process returned with error code 1.
+
+  Output:
+
+  Traceback (most recent call last):
+
+    File "C:\Users\Chado\AppData\Local\Axiom\toolchains\emsdk-6.0.6\upstream\emscripten\emcc.py", line 37, in <module>
+      assert sys.version_info >= (3, 10), f'emscripten requires python 3.10 or above ({sys.executable} {sys.version})'
+
+  AssertionError: emscripten requires python 3.10 or above
+  (D:\GitRepos\skia\third_party\externals\emsdk\python\3.9.2-nuget_64bit\python.exe
+  3.9.2 (tags/v3.9.2:1a79785, Feb 19 2021, 13:44:55) [MSC v.1928 64 bit
+  (AMD64)])
+
+Call Stack (most recent call first):
+  D:/Softwares/CMake/share/cmake-4.3/Modules/CMakeDetermineSystem.cmake:146 (include)
+  CMakeLists.txt:3 (project)
+
+
+CMake Error: CMake was unable to find a build program corresponding to "Ninja".  CMAKE_MAKE_PROGRAM is not set.  You probably need to select a different build tool.

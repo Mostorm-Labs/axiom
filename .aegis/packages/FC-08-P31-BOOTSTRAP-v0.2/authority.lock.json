@@ -1,0 +1,333 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-authority-lock-v1",
+  "task_id": "FC-08",
+  "binding_scope": "FC-08 product P32 execution contract; no product implementation is authorized by this preparation commit alone.",
+  "current_authorities": {
+    "semantic": {
+      "id": "fc08-container-extension-semantic-v0.1",
+      "scope": "semantic:axiom/fc08-container-extension",
+      "status": "Current",
+      "provider": "Notion",
+      "ref": "https://app.notion.com/p/4044c57a590c81a8813bcad8c57ff6ee",
+      "accepted_version": "v0.1",
+      "accepted_input_manifest_sha256": "f93b286dfd93607342219f879747b2fa207b0eefaad068cbf4e16cfff0b99035",
+      "repository_binding_source": {
+        "path": ".aegis/packages/FC-08-P31-READINESS/authority.lock.json",
+        "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+        "git_blob_sha": "221c8ec230cd81708345dd28c9af97a54b4a1976",
+        "note": "This earlier file was preparation-only; its accepted semantic source identity is retained, while its incomplete M01-M04 status is not reused."
+      }
+    },
+    "execution_policy": {
+      "id": "fc-feature-completion-execution-v0.4",
+      "scope": "execution:FC/feature-completion",
+      "version": "v0.4",
+      "status": "Current",
+      "provider": "Notion",
+      "ref": "https://app.notion.com/p/4044c57a590c81a8b2aec982fad25107",
+      "registry_binding": {
+        "path": ".aegis/authorities.json",
+        "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+        "git_blob_sha": "72d338d66ed3312b91cfb0bc43bd9f1ad82b5fed",
+        "record_id": "fc-feature-completion-execution-v0.4"
+      }
+    },
+    "architecture": {
+      "id": "FC08-P14-P17-v0.1+ARC-CR-C01/C02",
+      "status": "Closed for P20",
+      "provider": "Notion",
+      "ref": "https://app.notion.com/p/4044c57a590c81829a18c198cc4cdd47",
+      "accepted_exports": [
+        {
+          "id": "P14",
+          "path": ".aegis/materialized/FC-08/sources/accepted-exports/P14.md",
+          "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+          "git_blob_sha": "37c29507fe7b40e5a000646929483ee0456ebfba",
+          "sha256": "a43d1bad1dc79e54b80ad6a85d0f24c4d6d20fe011f291b90b5a688fcac4c9de"
+        },
+        {
+          "id": "P15",
+          "path": ".aegis/materialized/FC-08/sources/accepted-exports/P15.md",
+          "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+          "git_blob_sha": "e13a7280fbae95374ccf2e1b9468495c72602d08",
+          "sha256": "95f6650dd26809e60560fbdeeb7fb9751ed42d9555e8a62849f4b38261a40837"
+        },
+        {
+          "id": "P16",
+          "path": ".aegis/materialized/FC-08/sources/accepted-exports/P16.md",
+          "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+          "git_blob_sha": "494c10076787b4c37e07f7da2bbd073b2c83654a",
+          "sha256": "e07dd7c33029393e033079c62618166589a9ca9c357acce85146b0ac809074f4"
+        },
+        {
+          "id": "P17",
+          "path": ".aegis/materialized/FC-08/sources/accepted-exports/P17.md",
+          "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+          "git_blob_sha": "4b76b8bd1aa262492e81abd2437a8fcdf964f4a8",
+          "sha256": "400805038f42e4bb10e781d7e3fce17d09bbde491b4b284a282ed63feabac399"
+        }
+      ]
+    },
+    "semantic_decisions": {
+      "accepted_scope": "P23 D01-D08 remain unchanged; the scoped execution-policy amendment changes sequencing applicability only.",
+      "section_identity": {
+        "object_kind": 10,
+        "kind_version": 1,
+        "object_content_field": "section",
+        "object_content_tag": 12,
+        "section_content_version": 1,
+        "group_identity": "Existing accepted Group identity; preserve empty GroupContent."
+      },
+      "operations": [
+        {
+          "name": "SetSectionContent",
+          "opcode": 17,
+          "write_domain": "Complete SectionContent on existing Section objects; bounded multi-target batch only."
+        },
+        {
+          "name": "EditContainerTopology",
+          "opcode": 18,
+          "effects": [
+            "IntroduceWrappers",
+            "ReleaseWrappers",
+            "RelocateObjects"
+          ],
+          "write_domain": "Introduce/restore or non-destructively remove Group/Section wrappers; change existing roots' Placement+Transform; update affected sibling OrderKey only."
+        }
+      ],
+      "invariant_constraints": [
+        "The three topology effects are mutually exclusive within one operation.",
+        "Do not add arbitrary leaf/subtree deletion, arbitrary nested operations, generic JSON Patch, or compensation-based pseudo-atomicity.",
+        "Do not add Frame, a second membership truth, a parallel ContainerRuntime/History, or canonical selection/preview state.",
+        "CAP-01..CAP-06 remain sorted and unique; snapshot state capability and journal operation capability are checked independently.",
+        "Unknown operation/capability fails closed; no partial restore/replay followed by a Ready state.",
+        "Real F/U admission is one owner-bound command: actual forward/inverse bytes and History capacity are reserved before canonical publication; rejection leaves canonical state and History cursor/redo unchanged."
+      ]
+    }
+  },
+  "sequence_acceptance": {
+    "record_id": "FC08-SEQ01-P23-ACCEPTANCE-v0.1",
+    "stage": "P23",
+    "status": "ACCEPTED_SCOPE_LIMITED",
+    "path": ".aegis/packages/FC-08-P31-READINESS/final-binding/seq01-p23-acceptance-v0.1.json",
+    "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+    "git_blob_sha": "4b907bb694337267c526f6599bf60f12a5ebcd03",
+    "accepted_decisions": [
+      "SEQ-D01",
+      "SEQ-D02",
+      "SEQ-D03",
+      "SEQ-D04",
+      "SEQ-D05",
+      "SEQ-D06"
+    ],
+    "resolved_state": "SEQ-01 CLOSED_BY_SCOPED_EXECUTION_AMENDMENT",
+    "effect": "Permits capability-bound FC-08 implementation without asserting FC-04/FC-06/FC-07/FC-05 completion; M01-M04 and a separate exact product P31 package plus both preflights remain prerequisites.",
+    "does_not_authorize_P32_by_itself": true
+  },
+  "verification_design": {
+    "id": "FC08-P20-v0.1+CR01",
+    "status": "DESIGN_FROZEN_WITH_MATERIALIZATION_PRECONDITIONS",
+    "closure_receipt": {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/closure-receipt.json",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "ad7a14f4bb4b454bd5087ed17b2bec3bd72a6f26",
+      "verdict": "PASS_WITH_FINDINGS"
+    },
+    "review_delta": {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/review-delta.json",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "f51be41fdb8a8b99d3ad7c58d0f4570ab18b67c6",
+      "id": "FC08-P20-CR01",
+      "changed_case_ids": [
+        "FC08-H01",
+        "FC08-H04",
+        "FC08-G02",
+        "FC08-G05",
+        "FC08-C01",
+        "FC08-C03",
+        "FC08-P04"
+      ]
+    },
+    "reviewed_obligations": {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "3402b2634677eddad4cb3d0d6ab1e2d5308ffa1b",
+      "family_count": 10
+    },
+    "result_contract": {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "a5be924d595723ee36116582e46837cacff15986",
+      "format": "fc08-verification-run-v1"
+    },
+    "effective_catalog": {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/effective-case-catalog.json",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "020cc2eeb043c30ed4ce5de3715b4f82dbab790d",
+      "sha256": "da62f3c6c6a7191b01ba7ba4713290acaea26755ef2971fe62475cb101c9b268",
+      "logical_cases": 60,
+      "families": 10
+    },
+    "physical_debt": {
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/physical-debt.json",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "8a88d558c4e78e61b13a98e145b84c32c47fcf68",
+      "gate": "FC13_PHYS",
+      "status": "DEFERRED_NOT_EXECUTED",
+      "blocks_FC08_DEV": false,
+      "not_waived": true
+    }
+  },
+  "source_complete_materialization": {
+    "revision": "0d3b10bba1ac4a31d669dd4a45f94975ec24f3c3",
+    "materialized_ref": "refs/heads/codex/fc08-verification-materialization",
+    "terminal_receipt_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+    "terminal_state": "READY_FOR_CONTROL_REVIEW",
+    "source_index": {
+      "path": ".aegis/materialized/FC-08/source-index.json",
+      "sha256": "bad8a3e85dbd344ac7c6eb0d60aae0c6d01c58a0b8359aa80b53426b7b43a569",
+      "git_blob_sha": "9a92917ff83089855ae88c4eb8e029458527a555"
+    },
+    "descriptor_diff": {
+      "path": ".aegis/materialized/FC-08/descriptor-diff.json",
+      "sha256": "cbe2c13724bd097a609110fb911bb50f6af55cbd43672d1191bb7f2b7b004db1",
+      "status": "SOURCE_COMPLETE_ADDITIVE_MATCH",
+      "baseline_descriptor_sha256": "4f186b34789910a56d47f132747fbf4e7e505dbfe9cf5b221311e6efa6764ecb",
+      "proposed_descriptor_sha256": "9d77afed2f42678b8836e26673707301ca84f431657b79966259d00fe5d33477",
+      "historical_descriptor_lock_unchanged": true,
+      "git_blob_sha": "3323d78196e161ddf8711ac59926cdd3a1777cd9"
+    },
+    "output_index": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-index.json",
+      "sha256": "6b5fc14f0a2703a25f101f28aa96746b146ff53df693779e90f05abba25685fc"
+    },
+    "output_manifest": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-manifest.json",
+      "sha256": "51fb71bab9e0cbb2a5215974aa224af9dff1d6dc6b3615b35fa6a67f9efd8421"
+    },
+    "corpus": {
+      "variant_index_path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/variant-index.json",
+      "variant_index_sha256": "29d8400a7f96968b576f77803f287fe8911a8557421fe412fe80607bb4ad7f8e",
+      "manifest_path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus-manifest.json",
+      "manifest_sha256": "8b2a36feff98c162a7706e189bade9c0a3b4cb474c4876cafc681e28ed007c15",
+      "logical_cases": 60,
+      "variants": 302,
+      "expected_and_input_refs_complete": true,
+      "variant_index_git_blob_sha": "38b5fba9474f2f0f8ee453fdbf8a9485856dd314",
+      "manifest_git_blob_sha": "3b6f9399872a4a06beccaac50aef277447c32ddb"
+    },
+    "runner": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner-manifest.json",
+      "sha256": "7b65745272241679b9b420b6a90e911ec8f6a07a5a94b69eb528a44c39aba2d5"
+    },
+    "oracle_controls": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/oracle-controls.json",
+      "sha256": "fd9b9e1610fb399da82bae7b535768a7dfc01876c18985ce0b4351f0805d8c81"
+    },
+    "baseline_probes": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/baseline-probes.json",
+      "sha256": "a64393a2e06955562779092ce7808691263ee14c47e611f6c3ae5c1549f2e3b1"
+    },
+    "seam_map": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/seam-map.json",
+      "sha256": "e32926881505362accde5e742840cf1c6c5d90ed4127a729b022f4770e50b4d4",
+      "h06": "NOT_REACHED_BASELINE: no resumable admitted F/U plan boundary; remains mandatory for future product execution"
+    },
+    "profiles": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profiles.json",
+      "sha256": "cd559faacada19bf4cb3acb2d03cc1b916c19b5dc46eb94cef5e1b54b0781c94",
+      "observations_path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profile-observations.json",
+      "observations_sha256": "9445bec732c3fb4bcb6a57aeb5245b157fa2550c27c6c492bd7d49b222dd1b42",
+      "inherited_regression_path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/inherited-regression.json",
+      "inherited_regression_sha256": "1f0a17a080d12e5c788fbd7ad6688349fd42a42347044c70ca4240091bf16db1"
+    }
+  },
+  "schema_baseline": {
+    "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+    "current_descriptor": {
+      "path": "schema/axiom/v1/descriptor/descriptor.current.pb",
+      "git_blob_sha": "a5820e336b4108c31f47c8f2ce6889b344e8b201"
+    },
+    "current_descriptor_sha256_file": {
+      "path": "schema/axiom/v1/descriptor/descriptor.current.sha256",
+      "git_blob_sha": "582e2d3f71e86f330a7b641a041a63ccc8973fcb"
+    },
+    "historical_descriptor_lock": {
+      "path": "schema/axiom/v1/descriptor/descriptor.lock.pb",
+      "git_blob_sha": "9e1f37f4334fc31d8c3c71c08d9d0eac412fe9b2"
+    },
+    "historical_descriptor_lock_sha256_file": {
+      "path": "schema/axiom/v1/descriptor/descriptor.lock.sha256",
+      "git_blob_sha": "51569adce64f9f85eebd111f6cbce85096ad68a2"
+    }
+  },
+  "retained_conditions": [
+    "BASE-01 is a source-complete additive descriptor/publication prerequisite; publish the accepted current descriptor without rewriting historical descriptor.lock.",
+    "INT-01 remains owned by FC04/FC10; FC-08 must explicitly reject mixed-default-delete before any write and must not implement the full integration.",
+    "PH01-PH04 are deferred physical obligations owned by FC13; they are retained, not waived.",
+    "No predecessor Gate/DEV pass or release/G5 waiver is inferred."
+  ],
+  "accepted_normative_exports": [
+    {
+      "id": "P12",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P12.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "fe9c2d8cfa8f2c0c119ff4c45a2ce5a408184a00",
+      "sha256": "b4cd1c0f685199f6d370242e334645d78881640abe3c807cf480568d8da52cbc"
+    },
+    {
+      "id": "P13",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P13.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "47c8d60f2d83a2c597d098ff24e61232f66bd6e8",
+      "sha256": "6f65325d4282a78774489bddd9f716614994f63757957675b82f3c423983f3fe"
+    },
+    {
+      "id": "P14",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P14.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "37c29507fe7b40e5a000646929483ee0456ebfba",
+      "sha256": "a43d1bad1dc79e54b80ad6a85d0f24c4d6d20fe011f291b90b5a688fcac4c9de"
+    },
+    {
+      "id": "P15",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P15.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "e13a7280fbae95374ccf2e1b9468495c72602d08",
+      "sha256": "95f6650dd26809e60560fbdeeb7fb9751ed42d9555e8a62849f4b38261a40837"
+    },
+    {
+      "id": "P16",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P16.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "494c10076787b4c37e07f7da2bbd073b2c83654a",
+      "sha256": "e07dd7c33029393e033079c62618166589a9ca9c357acce85146b0ac809074f4"
+    },
+    {
+      "id": "P17",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P17.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "4b76b8bd1aa262492e81abd2437a8fcdf964f4a8",
+      "sha256": "400805038f42e4bb10e781d7e3fce17d09bbde491b4b284a282ed63feabac399"
+    },
+    {
+      "id": "P20",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P20.md",
+      "revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob_sha": "f3b15876ea50d41d34cf6985f1ba3e40dfa211cc",
+      "sha256": "5089fe4b71ef130d35e41bbda8826839406a1c546af71be54bdddc26f6eee087"
+    }
+  ],
+  "accepted_verification_input_amendment": {
+    "path": ".aegis/packages/FC-08-P20-P31-INPUT-AMENDMENT-v0.2/package.json",
+    "sha256": "52fc554901368ec1e4ece9ef2950f03eefdbd55cbf67def6ff68785b47f85a8c",
+    "size": 3972,
+    "revision": "eb12da1acc4516e115d36767073f8bdc607f8a4d"
+  },
+  "human_input_acceptance": {
+    "path": ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/acceptance.json",
+    "sha256": "e075131a325c75584a36c5e56eafeaab63457bbe3afb58e4afd132e5065b36e2",
+    "size": 699
+  }
+}

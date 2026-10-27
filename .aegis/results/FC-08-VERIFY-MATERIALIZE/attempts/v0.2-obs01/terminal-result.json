@@ -1,0 +1,69 @@
+{
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_id": "FC-08-VERIFY-MATERIALIZE",
+  "stage": "P33",
+  "return_surface": "CONTROL_REVIEW",
+  "package_revision": "a0883474790fb5eb70c49c96907caef80fa6b2ab",
+  "package_sha256": "152faa67e265f91f2c131036fd6b73bf2ddb0a8ca8488e94fe5d8d0d5953cc4a",
+  "starting_revision": "a0883474790fb5eb70c49c96907caef80fa6b2ab",
+  "accepted_cursor": "5f216a8e331a98ccccfc7a0616991bb60e1ea312",
+  "task_anchor": "a5af5f6d89e8439cc5f70950ba5f1b7986b6ff7b",
+  "result_revision": "0d3b10bba1ac4a31d669dd4a45f94975ec24f3c3",
+  "materialized_ref": "refs/heads/codex/fc08-verification-materialization",
+  "materialization_policy": "An evidence-only descendant carries this receipt; result_revision identifies the exact qualified source/artifact subject. Source/corpus/runner bytes are unchanged by the receipt commit.",
+  "output_manifest_ref": {
+    "revision": "0d3b10bba1ac4a31d669dd4a45f94975ec24f3c3",
+    "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-manifest.json",
+    "sha256": "51fb71bab9e0cbb2a5215974aa224af9dff1d6dc6b3615b35fa6a67f9efd8421"
+  },
+  "evidence_input_refs": [
+    {
+      "path": ".aegis/packages/FC-08-VERIFY-MATERIALIZE-v0.2/package.json",
+      "sha256": "152faa67e265f91f2c131036fd6b73bf2ddb0a8ca8488e94fe5d8d0d5953cc4a"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/source-index.json",
+      "sha256": "bad8a3e85dbd344ac7c6eb0d60aae0c6d01c58a0b8359aa80b53426b7b43a569"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/executable-verification.json",
+      "sha256": "0e242028b66d11e55a5b62ef79564c3d7265eb68889c3f1a04a874fe6b34c51c"
+    },
+    {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-index.json",
+      "sha256": "6b5fc14f0a2703a25f101f28aa96746b146ff53df693779e90f05abba25685fc"
+    }
+  ],
+  "actual_invocations": [
+    {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profiles.json",
+      "sha256": "cd559faacada19bf4cb3acb2d03cc1b916c19b5dc46eb94cef5e1b54b0781c94"
+    },
+    {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner-manifest.json",
+      "sha256": "7b65745272241679b9b420b6a90e911ec8f6a07a5a94b69eb528a44c39aba2d5"
+    },
+    {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/qualification/python-tests-final.json",
+      "sha256": "ecc4a2fd3799b93f6e41a70b2605133c9e5b66a32ef1570424526a66ddc35258"
+    },
+    {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/package-preflight-final.json",
+      "sha256": "c302f06d74a5dba9285c8b662c811802bb8942846e8cd4ef7f616fb55a845957"
+    },
+    {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/evidence-preflight-final.json",
+      "sha256": "204ef68889e1a5b98c47df96122592deb939335247356ba023d8348bac257028"
+    }
+  ],
+  "terminal_state": "READY_FOR_CONTROL_REVIEW",
+  "exact_blockers": [],
+  "remaining_product_obligations": "Section/1,17/18, typed public/platform container APIs, F/U admission and H06 are deliberately absent and nonpassing. PH01-PH04 remain FC13 debt.",
+  "product_P32_authorized": false,
+  "P34_PASS": false,
+  "DEV_PASS": false,
+  "PHYS_PASS": false
+}

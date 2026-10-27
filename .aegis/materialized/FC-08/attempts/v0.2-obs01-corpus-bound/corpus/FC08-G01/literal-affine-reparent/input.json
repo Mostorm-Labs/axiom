@@ -1,0 +1,730 @@
+{
+  "before": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000003"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "00000003"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 3,
+        "ty": 4
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20.0,
+          "height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000005"
+      },
+      "kind_id": 9,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000005"
+        }
+      },
+      "transform": {
+        "a": 0,
+        "b": 2,
+        "c": -2,
+        "d": 0,
+        "tx": 100,
+        "ty": 50
+      },
+      "properties": {},
+      "content": {
+        "group": {}
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000006"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000005"
+        },
+        "order_key": {
+          "value": "00000006"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 10,
+        "ty": 5
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": 0,
+            "y": 0,
+            "width": 100,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    }
+  ],
+  "forward": {
+    "operation_id": {
+      "value": "000000000000000000000000000003e9"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "edit_container_topology": {
+        "guard": {
+          "nodes": [
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000003"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000006"
+                },
+                "order_key": {
+                  "value": "00000003"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 3,
+                "ty": 4
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000005"
+              },
+              "kind_id": 9,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "00000005"
+                }
+              },
+              "transform_before": {
+                "a": 0,
+                "b": 2,
+                "c": -2,
+                "d": 0,
+                "tx": 100,
+                "ty": 50
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement_before": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000005"
+                },
+                "order_key": {
+                  "value": "00000006"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 10,
+                "ty": 5
+              }
+            }
+          ],
+          "child_sets": [
+            {
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000005"
+                  },
+                  "order_key": {
+                    "value": "00000005"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000005"
+              },
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000006"
+                  },
+                  "order_key": {
+                    "value": "00000006"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000003"
+                  },
+                  "order_key": {
+                    "value": "00000003"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "relocations": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "placement_after": {
+              "order_key": {
+                "value": "00000006"
+              }
+            },
+            "transform_after": {
+              "a": 0,
+              "b": 2,
+              "c": -2,
+              "d": 0,
+              "tx": 90,
+              "ty": 70
+            }
+          }
+        ],
+        "order_only_edits": [],
+        "relocate_objects": {}
+      }
+    }
+  },
+  "inverse": {
+    "operation_id": {
+      "value": "000000000000000000000000000003ea"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "edit_container_topology": {
+        "guard": {
+          "nodes": [
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000003"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000006"
+                },
+                "order_key": {
+                  "value": "00000003"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 3,
+                "ty": 4
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000005"
+              },
+              "kind_id": 9,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "00000005"
+                }
+              },
+              "transform_before": {
+                "a": 0,
+                "b": 2,
+                "c": -2,
+                "d": 0,
+                "tx": 100,
+                "ty": 50
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "00000006"
+                }
+              },
+              "transform_before": {
+                "a": 0,
+                "b": 2,
+                "c": -2,
+                "d": 0,
+                "tx": 90,
+                "ty": 70
+              }
+            }
+          ],
+          "child_sets": [
+            {
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000005"
+                  },
+                  "order_key": {
+                    "value": "00000005"
+                  }
+                },
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000006"
+                  },
+                  "order_key": {
+                    "value": "00000006"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000005"
+              },
+              "complete_members": []
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000003"
+                  },
+                  "order_key": {
+                    "value": "00000003"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "relocations": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "placement_after": {
+              "parent_id": {
+                "value": "00000000000000000000000000000005"
+              },
+              "order_key": {
+                "value": "00000006"
+              }
+            },
+            "transform_after": {
+              "a": 1,
+              "b": 0,
+              "c": 0,
+              "d": 1,
+              "tx": 10,
+              "ty": 5
+            }
+          }
+        ],
+        "order_only_edits": [],
+        "relocate_objects": {}
+      }
+    }
+  },
+  "redo": {
+    "operation_id": {
+      "value": "000000000000000000000000000003eb"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "edit_container_topology": {
+        "guard": {
+          "nodes": [
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000003"
+              },
+              "kind_id": 1,
+              "kind_version": 1,
+              "placement_before": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000006"
+                },
+                "order_key": {
+                  "value": "00000003"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 3,
+                "ty": 4
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000005"
+              },
+              "kind_id": 9,
+              "kind_version": 1,
+              "placement_before": {
+                "order_key": {
+                  "value": "00000005"
+                }
+              },
+              "transform_before": {
+                "a": 0,
+                "b": 2,
+                "c": -2,
+                "d": 0,
+                "tx": 100,
+                "ty": 50
+              }
+            },
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement_before": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000005"
+                },
+                "order_key": {
+                  "value": "00000006"
+                }
+              },
+              "transform_before": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 10,
+                "ty": 5
+              }
+            }
+          ],
+          "child_sets": [
+            {
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000005"
+                  },
+                  "order_key": {
+                    "value": "00000005"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000005"
+              },
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000006"
+                  },
+                  "order_key": {
+                    "value": "00000006"
+                  }
+                }
+              ]
+            },
+            {
+              "parent_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "complete_members": [
+                {
+                  "object_id": {
+                    "value": "00000000000000000000000000000003"
+                  },
+                  "order_key": {
+                    "value": "00000003"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "relocations": [
+          {
+            "object_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "placement_after": {
+              "order_key": {
+                "value": "00000006"
+              }
+            },
+            "transform_after": {
+              "a": 0,
+              "b": 2,
+              "c": -2,
+              "d": 0,
+              "tx": 90,
+              "ty": 70
+            }
+          }
+        ],
+        "order_only_edits": [],
+        "relocate_objects": {}
+      }
+    }
+  },
+  "after": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000003"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "00000003"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 3,
+        "ty": 4
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20.0,
+          "height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000005"
+      },
+      "kind_id": 9,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000005"
+        }
+      },
+      "transform": {
+        "a": 0,
+        "b": 2,
+        "c": -2,
+        "d": 0,
+        "tx": 100,
+        "ty": 50
+      },
+      "properties": {},
+      "content": {
+        "group": {}
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000006"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000006"
+        }
+      },
+      "transform": {
+        "a": 0,
+        "b": 2,
+        "c": -2,
+        "d": 0,
+        "tx": 90,
+        "ty": 70
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": 0,
+            "y": 0,
+            "width": 100,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    }
+  ],
+  "undo_after": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000003"
+      },
+      "kind_id": 1,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "order_key": {
+          "value": "00000003"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 3,
+        "ty": 4
+      },
+      "properties": {},
+      "content": {
+        "shape": {
+          "shape_kind": 1,
+          "width": 20.0,
+          "height": 20.0
+        }
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000005"
+      },
+      "kind_id": 9,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000005"
+        }
+      },
+      "transform": {
+        "a": 0,
+        "b": 2,
+        "c": -2,
+        "d": 0,
+        "tx": 100,
+        "ty": 50
+      },
+      "properties": {},
+      "content": {
+        "group": {}
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000006"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000005"
+        },
+        "order_key": {
+          "value": "00000006"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 10,
+        "ty": 5
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": 0,
+            "y": 0,
+            "width": 100,
+            "height": 80
+          },
+          "title": "",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    }
+  ]
+}

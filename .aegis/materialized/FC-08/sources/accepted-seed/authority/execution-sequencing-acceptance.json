@@ -1,0 +1,132 @@
+{
+  "record_id": "FC08-SEQ01-P23-ACCEPTANCE-v0.1",
+  "record_kind": "scoped_execution_policy_acceptance",
+  "date": "2026-10-26",
+  "timezone": "Asia/Tokyo",
+  "stage": "P23",
+  "status": "ACCEPTED_SCOPE_LIMITED",
+  "acceptance_basis": "User explicitly selected the six-clause scoped P23 acceptance next step and requested continuation in this conversation. No independent review signature is claimed.",
+  "authority_id": "fc-feature-completion-execution-v0.4",
+  "scope": "execution:FC/feature-completion",
+  "version": "v0.4",
+  "authority_ref": "https://app.notion.com/p/4044c57a590c81a8b2aec982fad25107",
+  "supersedes": "fc-feature-completion-execution-v0.3",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "repository_id": 1306396623
+  },
+  "materialized_ref": "refs/heads/control/fc08-p31-readiness",
+  "pre_acceptance_control_revision": "91700fc26f4c23e27d9e158f2f74fcac45695dc6",
+  "accepted_candidate": {
+    "id": "FC08-SEQ01-P23-CANDIDATE-v0.1",
+    "revision": "91700fc26f4c23e27d9e158f2f74fcac45695dc6",
+    "path": ".aegis/packages/FC-08-P31-READINESS/final-binding/seq01-reconciliation-v0.1.json",
+    "git_blob": "3959857949edb2898085b823adfa2b46d92e53e9",
+    "sha256": "a6b3439e3de8c35e5b687cb3eb27e17894cb9e14ea7704aafbd89805fc5daf0e",
+    "zip_sha256": "8c487764ff048fe140adb5b437bc4e253857eaa371a8f99badaa24240b9d416a",
+    "manifest_sha256": "08b3a08b83e4707f7876df26a5f72b0f242ecf3ac9219cbd1745108c333b5603"
+  },
+  "decisions": [
+    {
+      "id": "SEQ-D01",
+      "text": "Allow capability-bound early FC08 development without making whole FC04/FC06/FC07 DEV closure an ordinal prerequisite. No predecessor, including FC05, is declared complete; actually consumed prerequisites remain bound.",
+      "verdict": "ACCEPTED_SCOPE_LIMITED"
+    },
+    {
+      "id": "SEQ-D02",
+      "text": "Use a1e8819abe245ab7487f18771970721f480ff487 or a reconciled descendant as a conditional development input, not a qualified product baseline; freeze exact ancestry and refs in P31.",
+      "verdict": "ACCEPTED_SCOPE_LIMITED"
+    },
+    {
+      "id": "SEQ-D03",
+      "text": "Permit P31 to authorize minimal M01-M04 control/test materialization and scoped BASE-01 alignment. Preserve historical descriptor.lock, accepted fields and expected values; do not require future feature GREEN before implementation.",
+      "verdict": "ACCEPTED_SCOPE_LIMITED"
+    },
+    {
+      "id": "SEQ-D04",
+      "text": "Keep implementation to accepted FC08 semantics, closed architecture and frozen verification. No full generic FC04 inspector, advanced FC06/FC07 feature or FC10 clipboard expansion; no hiding existing producers or replacing production dependencies with mocks.",
+      "verdict": "ACCEPTED_SCOPE_LIMITED"
+    },
+    {
+      "id": "SEQ-D05",
+      "text": "Retain all ten FC08 DEV obligations and sixty logical cases with CR01, applicable inherited regression, independent P34, BASE-01, INT-01 and FC12/FC13 debts; no predecessor PASS or release/G5 waiver.",
+      "verdict": "ACCEPTED_SCOPE_LIMITED"
+    },
+    {
+      "id": "SEQ-D06",
+      "text": "Acceptance resolves sequence policy only. M01-M04, the final exact package and PackageBindingPreflight/EvidenceContractPreflight remain necessary before a separate P32 start; preparation flags cannot self-unlock.",
+      "verdict": "ACCEPTED_SCOPE_LIMITED"
+    }
+  ],
+  "dependency_matrix": {
+    "source_path": ".aegis/packages/FC-08-P31-READINESS/final-binding/seq01-reconciliation-v0.1.json",
+    "source_revision": "91700fc26f4c23e27d9e158f2f74fcac45695dc6",
+    "source_sha256": "a6b3439e3de8c35e5b687cb3eb27e17894cb9e14ea7704aafbd89805fc5daf0e",
+    "ids": [
+      "DEP-01",
+      "DEP-02",
+      "DEP-03",
+      "DEP-04",
+      "DEP-05",
+      "DEP-06"
+    ],
+    "role": "Applicability binding, not producer capability PASS"
+  },
+  "limited_supersession": {
+    "policy_replaced": "Only FC-08 early-design-only/no-acceleration and ordinal ordering restrictions. Other policy inherited from v0.3 and its accepted predecessors.",
+    "semantic_D08": "Ordering reference receives this explicit exception; D01-D07 and all other D08 responsibilities remain unchanged.",
+    "predecessor_registry_revision": "91700fc26f4c23e27d9e158f2f74fcac45695dc6",
+    "predecessor_registry_blob": "8ed76b1128437b0aa2a3c966180b81001fbc3a59",
+    "predecessor_registry_sha256": "ca1875d06fae9cbbd2c398b4af6bd46a82082eac41e6e590ed5161ffea902dcf",
+    "old_frozen_packages": "Not retroactively rebound; original preparation entry and locks unchanged"
+  },
+  "post_decision": {
+    "SEQ-01": "CLOSED_BY_SCOPED_EXECUTION_AMENDMENT",
+    "M01": "PARTIAL",
+    "M02": "PARTIAL",
+    "M03": "UNBOUND",
+    "M04": "UNBOUND",
+    "product_P31_status": "BLOCKED_MISSING_INPUT",
+    "P32_authorized": false,
+    "may_start_product_code_execution": false,
+    "BASE-01": "RETAINED_MACHINE_PUBLICATION_PRECONDITION",
+    "INT-01": "RETAINED_FC04_FC10",
+    "FC13": "PHYSICAL_DEBT_RETAINED"
+  },
+  "preserved_verification": {
+    "design_id": "FC08-P20-v0.1+CR01",
+    "effective_catalog_sha256": "da62f3c6c6a7191b01ba7ba4713290acaea26755ef2971fe62475cb101c9b268",
+    "obligation_families": 10,
+    "logical_cases": 60,
+    "executed_this_turn": false
+  },
+  "handoff": {
+    "to": "aegis-implementation",
+    "stage": "P31",
+    "next_action": "Bind this exact accepted policy, continue the existing preparation at M01-M04 under a bounded materialization contract, then run PackageBindingPreflight and EvidenceContractPreflight before a separate product P32 authorization.",
+    "repeat_SEQ01_review": false,
+    "repeat_P10_P20": false,
+    "surface_handoff_to_P32": false
+  },
+  "publication_boundary": {
+    "allowed_control_files": [
+      ".aegis/authorities.json",
+      ".aegis/packages/FC-08-P31-READINESS/final-binding/seq01-p23-acceptance-v0.1.json"
+    ],
+    "main_merge_authorized": false,
+    "derived_state_cache": "Not hand-edited; refresh from source at subsequent P31 binding.",
+    "product_code_changed": false,
+    "production_proto_or_schema_registry_changed": false,
+    "historical_gates_or_evidence_changed": false
+  },
+  "nonclaims": {
+    "predecessor_GATE_PASS": false,
+    "FC08_DEV_PASS": false,
+    "physical_PASS": false,
+    "release_or_G5_authorized": false,
+    "product_preflights_passed": false,
+    "M01_M04_complete": false,
+    "Axiom_tests_executed": false
+  }
+}

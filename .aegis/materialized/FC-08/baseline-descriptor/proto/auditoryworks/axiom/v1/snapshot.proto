@@ -1,0 +1,50 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+import "auditoryworks/axiom/v1/common.proto";
+import "auditoryworks/axiom/v1/object.proto";
+
+message ImageResourceMetadataV1 { uint32 schema_version = 1; uint32 pixel_width = 2; uint32 pixel_height = 3; uint32 color_policy = 4; }
+message FontResourceMetadataV1 { uint32 schema_version = 1; uint32 collection_index = 2; uint32 layout_profile = 3; }
+message BrushResourceMetadataV1 { uint32 schema_version = 1; uint32 asset_role = 2; uint32 pixel_width = 3; uint32 pixel_height = 4; uint32 color_policy = 5; }
+
+message DocumentSnapshot {
+  Id128 document_id = 1;
+  uint32 schema_version = 2;
+  repeated ObjectRecord objects = 3;
+  ResourceManifest manifest = 4;
+  uint64 document_revision = 5;
+  bytes recovery_frontier = 6;
+  uint32 digest_algorithm = 7;
+  bytes document_digest = 8;
+  bytes capability_requirements = 9;
+  bytes checkpoint_digest = 10;
+}
+
+
+message ResourceManifestEntry {
+  Id128 resource_id = 1;
+  uint32 resource_kind = 2;
+  uint64 resource_revision = 3;
+  string content_hash = 4;
+  uint64 byte_length = 5;
+  uint32 decode_version = 6;
+  uint32 layout_version = 7;
+  bytes metadata = 8;
+}
+message ResourceManifestTombstone {
+  Id128 resource_id = 1;
+  uint64 retired_revision = 2;
+  string last_content_hash = 3;
+  Id128 removal_operation_id = 4;
+  ResourceManifestEntry preimage = 5;
+  bytes lineage_token = 6;
+}
+message ResourceManifest {
+  uint32 schema_version = 1;
+  repeated ResourceManifestEntry entries = 2;
+  uint64 manifest_revision = 3;
+  repeated ResourceManifestTombstone retired_entries = 4;
+}
+message RecoveryFrontierV1 { uint32 version = 1; uint32 kind = 2; uint64 sequence = 3; }
+message CapabilityRequirementsV1 { repeated string required_ids = 1; }

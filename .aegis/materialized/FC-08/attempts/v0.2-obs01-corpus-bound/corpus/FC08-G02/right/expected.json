@@ -1,0 +1,82 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "canonical.records",
+      "expected": [
+        {
+          "id": {
+            "value": "00000000000000000000000000000006"
+          },
+          "kind_id": 10,
+          "kind_version": 1,
+          "placement": {
+            "order_key": {
+              "value": "00000006"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 0,
+            "ty": 0
+          },
+          "properties": {},
+          "content": {
+            "section": {
+              "boundary": {
+                "x": 0,
+                "y": 0,
+                "width": 120,
+                "height": 80
+              },
+              "title": "",
+              "padding": 8.0,
+              "header_height": 20.0
+            }
+          }
+        },
+        {
+          "id": {
+            "value": "00000000000000000000000000000009"
+          },
+          "kind_id": 1,
+          "kind_version": 1,
+          "placement": {
+            "parent_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "order_key": {
+              "value": "00000009"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 0,
+            "ty": 0
+          },
+          "properties": {},
+          "content": {
+            "shape": {
+              "shape_kind": 1,
+              "width": 20.0,
+              "height": 20.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "op": "unchanged",
+      "before": "descendants_before",
+      "after": "descendants_after"
+    }
+  ],
+  "source_case": "FC08-G02",
+  "product_expected_only": true
+}

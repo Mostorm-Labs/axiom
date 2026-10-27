@@ -1,0 +1,159 @@
+{
+  "format": "fc08-materialization-terminal-v1",
+  "task_id": "FC-08-VERIFY-MATERIALIZE",
+  "repository": "Mostorm-Labs/axiom",
+  "package_revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78",
+  "starting_revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78",
+  "task_anchor": "a5af5f6d89e8439cc5f70950ba5f1b7986b6ff7b",
+  "materialized_ref": "refs/heads/codex/fc08-verification-materialization",
+  "terminal_state": "BLOCKED_EVIDENCE",
+  "terminal_class": "TASK_PACKAGE_DEFECT",
+  "continue_execution": false,
+  "return_surface": "CONTROL_REVIEW",
+  "steps": {
+    "M01": {
+      "status": "SOURCE_EXPORTS_AND_DESCRIPTORS_VERIFIED",
+      "artifacts": [
+        "source-index.json",
+        "descriptor-diff.json",
+        "descriptor-build-log.txt"
+      ]
+    },
+    "M02": {
+      "status": "PARTIAL_NOT_ACCEPTED",
+      "artifact": "wire-variant-index.partial.json",
+      "all_variants_complete": false
+    },
+    "M03": {
+      "status": "BLOCKED_REQUIRED_OBSERVATION_SEAM",
+      "raw_ingress": "actual Windows native probes captured",
+      "R02": "fixed bad/good controls evaluated; no product behavior claim",
+      "runner_complete": false
+    },
+    "M04": {
+      "status": "INCOMPLETE_AFTER_M03_TERMINAL",
+      "windows_native": "actual build/discovery and raw ingress probes executed",
+      "headless": "shared native raw codec observations; no EditorHistory instantiated by the raw path",
+      "web_wasm": "build attempt failed; browser not invoked",
+      "inherited_regression": "NOT_EXECUTED"
+    }
+  },
+  "exact_blockers": [
+    {
+      "id": "OBS-01",
+      "class": "TASK_PACKAGE_DEFECT",
+      "evidence_status": "BLOCKED_EVIDENCE",
+      "owning_stage": "P31 package/observation-binding scope; return to CONTROL_REVIEW",
+      "affected_cases": [
+        "FC08-T07/after-staging",
+        "FC08-T07/after-reservation",
+        "FC08-T07/before-canonical-publication",
+        "FC08-H05",
+        "FC08-H06"
+      ],
+      "required_capability": "Deterministic real-owner checkpoint observation/fault scheduling across canonical staging, History/outcome reservation and canonical publication, with coherent before/after canonical and History vectors.",
+      "observed_gap": "OperationEngine exposes prepare/apply but no checkpoint callback or owner-bound commitPrepared. EditorHistory exposes prepareRecord/commitPrepared without a fault/observation callback. Existing Scene IncrementalRuntimeTestAccess hooks observe downstream projection only, not these pre-canonical-commit stages.",
+      "why_CAPABILITY_ABSENT_is_not_used_to_close_this_gap": "Missing future Container typed APIs are separately permitted as nonpassing CAPABILITY_ABSENT product records. The package separately requires actual observation/fault bindings, and M04 explicitly requires a terminal return when a necessary observation hook cannot be bound without forbidden source mutation. This report does not reinterpret that distinct requirement as a blanket feature-absence waiver.",
+      "rejected_substitutions": [
+        "Stopping before an external apply call does not inject failure after internal reservation or immediately before canonical publication.",
+        "Scene publication fault hooks exercise the post-canonical domain and cannot establish precommit zero-mutation.",
+        "A fake submit port/coordinator or direct store mutation substitutes product behavior and is forbidden.",
+        "A global nth-allocation failure has no accepted stable checkpoint identity across native/WASM and cannot supply the required declared phase observation."
+      ],
+      "scope_boundary": {
+        "allowed": [
+          "tests/fc08/**",
+          "tools/fc08/**",
+          ".aegis/materialized/FC-08/**",
+          ".aegis/results/FC-08-VERIFY-MATERIALIZE/**",
+          "guarded opt-in CMake glue"
+        ],
+        "needed_owner_locations": [
+          "runtime/semantic/**",
+          "runtime/interaction/**",
+          "runtime/composition/**"
+        ],
+        "production_edits_performed": false
+      },
+      "closure_contract_ref": ".aegis/packages/FC-08-VERIFY-MATERIALIZE/implementation-context.md#task-m04",
+      "exact_contract_clause": "If a necessary product observation hook is absent and cannot be bound without unauthorized source mutation, return the exact interface gap as TASK_PACKAGE_DEFECT/MISSING_REQUIRED_INPUT rather than adding behavior.",
+      "source_bindings": [
+        {
+          "revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78",
+          "path": "runtime/semantic/include/canvas/semantic/operation_engine.hpp",
+          "sha256": "cfbb04764567e618834ad4bd232c354d25655a65befcba503ce7e48865ef9af3",
+          "blob": "b15b1f8b44ac43d7a9682445f92de75b3f936229"
+        },
+        {
+          "revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78",
+          "path": "runtime/semantic/src/operation_engine.cpp",
+          "sha256": "9619748086ce02caacbe2bc7072c4474149f233433d8ba63f6db4640fc2e0f73",
+          "blob": "6a99b4086bcd883c0e692a4a854d69d56bdb23bf"
+        },
+        {
+          "revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78",
+          "path": "runtime/semantic/src/atomic_apply.cpp",
+          "sha256": "67e3d81e23ef73494c7a6fbedccddcafe234bceb31d01cc5ed073be7dada8eaf",
+          "blob": "ea41d9b5170584699d0565b43f3645d662ce4bf4"
+        },
+        {
+          "revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78",
+          "path": "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+          "sha256": "eb886f3db3b5b5c9e96fd893d41eea96dbafd6e5552a92c74d55ad06fa3738a1",
+          "blob": "f57290aa4c2b1fcff1a16861c63bcac5c024c39c"
+        },
+        {
+          "revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78",
+          "path": "runtime/interaction/src/editor_history.cpp",
+          "sha256": "b3ff2013cd663f386119a38332e320b7ad0215f805ec0f783ba26115de918aa4",
+          "blob": "8b0f26f1791b2b6aac90cd85d8b8844a1ae8aa9a"
+        },
+        {
+          "revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78",
+          "path": "runtime/scene/tests/incremental_runtime_test_access.hpp",
+          "sha256": "b4a70788b230e978a9a9c60389a563e980f9dfe58bb21f674e4bdfc8c4af59aa",
+          "blob": "7b5d75b7e6233f6f33e779973af53a98f4753583"
+        }
+      ],
+      "requested_package_resolution": "Provide a same-repository revised package that binds an existing qualified seam, or narrowly authorizes qualification-only hooks at the named real owner checkpoints. Alternatively explicitly resolve how these exact observation obligations remain represented under the future-capability policy; do not silently drop them. No FC08 product behavior is authorized by this request."
+    }
+  ],
+  "product_P32_authorized": false,
+  "FC08_DEV_P34_PHYS_pass_claimed": false,
+  "result_revision_binding": "Resolve the exact commit containing output-manifest.json; final execution return carries that immutable Git revision. A branch label is not the result identity.",
+  "actual_invocations": [
+    {
+      "ref": ".aegis/results/FC-08-VERIFY-MATERIALIZE/entry-reconciliation.json",
+      "kind": "repository/entry preflights; both --repo . in real worktree"
+    },
+    {
+      "ref": ".aegis/materialized/FC-08/descriptor-build-log.txt",
+      "kind": "locked native protoc exact argv"
+    },
+    {
+      "ref": ".aegis/results/FC-08-VERIFY-MATERIALIZE/builds/windows-native/invocations.json",
+      "kind": "actual SDK/configure/build/discovery"
+    },
+    {
+      "ref": ".aegis/results/FC-08-VERIFY-MATERIALIZE/builds/web-wasm/invocations.json",
+      "kind": "actual failed Web build attempt; not qualified"
+    },
+    {
+      "ref": ".aegis/materialized/FC-08/baseline-probes.json",
+      "kind": "actual old-baseline raw ingress"
+    },
+    {
+      "ref": ".aegis/results/FC-08-VERIFY-MATERIALIZE/final-verification/invocations.json",
+      "kind": "durable final integrity/tests; checker exit2 is explicit terminal block"
+    }
+  ],
+  "evidence_input_refs": {
+    "package": {
+      "revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78",
+      "path": ".aegis/packages/FC-08-VERIFY-MATERIALIZE/package.json",
+      "sha256": "2f29ba1a9f45ab9846893af6f2bb682b64dc06ad115c51b0003e2b34b9056652"
+    },
+    "accepted_inputs_sha256": "378447a1590bd4f00b563b2025cbd186c564def565f8e323acb282ff1c2d5bfb",
+    "source_index": ".aegis/materialized/FC-08/source-index.json"
+  }
+}

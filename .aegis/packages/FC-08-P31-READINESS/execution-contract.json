@@ -1,0 +1,90 @@
+{
+  "schema": "fc08-p31-readiness-closure-contract-v1",
+  "stage": "P31",
+  "authorization": "CONTROL_PREPARATION_ONLY",
+  "P32_authorized": false,
+  "implementation": {
+    "required_changes": [
+      "Materialize this readiness snapshot on an isolated control branch",
+      "Bind exact accepted P23 and P20+CR01 input identities",
+      "Record actual repository baseline and ancestry without claiming qualification",
+      "Record M01-M04 and execution-sequence readiness without changing upstream decisions"
+    ],
+    "allowed_paths": [
+      ".aegis/packages/FC-08-P31-READINESS/**"
+    ],
+    "forbidden_changes": [
+      "runtime/**",
+      "apps/**",
+      "debug_ui/**",
+      "schema/**",
+      "CMakeLists.txt",
+      "Existing .aegis registries, packages, results, Gates or verification locks",
+      "Production code, proto, descriptor generation/publication or semantic algorithm changes",
+      "Automatic P32 start, feature-order acceleration, merge to main, or fabricated evidence"
+    ]
+  },
+  "tests": {
+    "required": [
+      {
+        "id": "PREP-IDENTITY",
+        "command_or_oracle": "Read all four source archives; recompute manifest/SHA256SUMS and CRC; preserve their original bytes",
+        "expected_result": "All listed file hashes match; nested original inputs match external input identities",
+        "blocking_reason": "Wrong input bytes would bind a different design"
+      },
+      {
+        "id": "PREP-CATALOG",
+        "command_or_oracle": "Verify effective catalog has 60 unique logical IDs, covered exactly once by ten obligation families, with CR01 delta preserved",
+        "expected_result": "No dropped, duplicated or invented case family",
+        "blocking_reason": "Scope loss during packaging"
+      },
+      {
+        "id": "PREP-BOUNDARY",
+        "command_or_oracle": "Inspect package hashes, exact baseline/ancestry evidence, authorized paths and non-executable flags",
+        "expected_result": "Only new readiness files; every local package ref resolves; P32 remains false",
+        "blocking_reason": "Prevent an incomplete binding from becoming implementation authorization"
+      }
+    ]
+  },
+  "hosted_verification": {
+    "required": [],
+    "optional": [
+      "Control-file syntax checks if already available; never use these as FC-08 product evidence"
+    ]
+  },
+  "evidence": {
+    "blocking": [
+      "Exact repository/ref for the readiness files",
+      "Content hashes for all package-local refs",
+      "Explicit unresolved readiness list"
+    ],
+    "corroborative": [
+      "Extra CI repeats",
+      "Screenshots of documentation"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "Readiness package and its limits are durably resolvable",
+      "Input identities and local package references are consistent",
+      "Unresolved product implementation bindings remain visible",
+      "No production, global Gate or main-branch mutation"
+    ]
+  },
+  "terminal_blockers": {
+    "explicit_classes": [
+      "BLOCKED_REPOSITORY_IDENTITY",
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "INPUT_HASH_MISMATCH",
+      "ENVIRONMENT_BLOCKER",
+      "PACKAGE_SCOPE_CONFLICT"
+    ]
+  },
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW",
+    "may_claim_P34_PASS": false
+  },
+  "product_execution_unlock": "Requires a separate completed FC-08 implementation package after exact M01-M04 and sequence bindings; this package cannot unlock itself."
+}

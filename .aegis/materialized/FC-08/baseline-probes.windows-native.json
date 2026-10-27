@@ -1,0 +1,212 @@
+{
+  "subject_revision": "db21441a1e978ea30fcfb4185691dadbb6f81f78",
+  "binary_sha256": "cd367eaa0caf7d5c8634b994ed563f66b28a457be31cc16117f1afcbc697dc0b",
+  "observations": [
+    {
+      "expected_new_reader": "ACCEPT",
+      "id": "section-record",
+      "new_feature": true,
+      "path": "tests/fc08/corpus/wire/section-record.pb",
+      "production_writer_used": false,
+      "root": "ObjectRecord",
+      "sha256": "75b9a5ded3dcb9f24ad0db4c1f32b51eef74335f413852a48f1103b88ae9920a",
+      "argv": [
+        "out\\fc08\\windows-native\\tests\\fc08\\axiom_fc08_baseline_probe.exe",
+        "ObjectRecord",
+        "tests/fc08/corpus/wire/section-record.pb"
+      ],
+      "exit_code": 0,
+      "actual": {
+        "root": "ObjectRecord",
+        "input_bytes": 151,
+        "accepted": false,
+        "stage": 1,
+        "category": "MALFORMED_WIRE"
+      },
+      "raw_artifact": ".aegis/results/FC-08-VERIFY-MATERIALIZE/baseline/windows-native/section-record.json",
+      "stderr": ""
+    },
+    {
+      "expected_new_reader": "ACCEPT",
+      "id": "section-snapshot3",
+      "new_feature": true,
+      "path": "tests/fc08/corpus/wire/section-snapshot3.pb",
+      "production_writer_used": false,
+      "root": "DocumentSnapshot",
+      "sha256": "1fd6a786c299e067d13a92cddac7e7159ad661df2e8c4c8f3302e8593918f571",
+      "argv": [
+        "out\\fc08\\windows-native\\tests\\fc08\\axiom_fc08_baseline_probe.exe",
+        "DocumentSnapshot",
+        "tests/fc08/corpus/wire/section-snapshot3.pb"
+      ],
+      "exit_code": 0,
+      "actual": {
+        "root": "DocumentSnapshot",
+        "input_bytes": 298,
+        "accepted": true,
+        "stage": 6,
+        "category": "",
+        "normal_ingress_ok": false,
+        "semantic_error": 8
+      },
+      "raw_artifact": ".aegis/results/FC-08-VERIFY-MATERIALIZE/baseline/windows-native/section-snapshot3.json",
+      "stderr": ""
+    },
+    {
+      "expected_new_reader": "ACCEPT",
+      "id": "op17-content",
+      "new_feature": true,
+      "path": "tests/fc08/corpus/wire/op17-content.pb",
+      "production_writer_used": false,
+      "root": "Operation",
+      "sha256": "4ef678aad6bc6b314b0ad5fe44d178770b12fededcee93145f0a988fd4c88aea",
+      "argv": [
+        "out\\fc08\\windows-native\\tests\\fc08\\axiom_fc08_baseline_probe.exe",
+        "Operation",
+        "tests/fc08/corpus/wire/op17-content.pb"
+      ],
+      "exit_code": 0,
+      "actual": {
+        "root": "Operation",
+        "input_bytes": 208,
+        "accepted": false,
+        "stage": 1,
+        "category": "MALFORMED_WIRE",
+        "normal_ingress_ok": false,
+        "semantic_error": 8
+      },
+      "raw_artifact": ".aegis/results/FC-08-VERIFY-MATERIALIZE/baseline/windows-native/op17-content.json",
+      "stderr": ""
+    },
+    {
+      "expected_new_reader": "ACCEPT",
+      "id": "op18-introduce",
+      "new_feature": true,
+      "path": "tests/fc08/corpus/wire/op18-introduce.pb",
+      "production_writer_used": false,
+      "root": "Operation",
+      "sha256": "825994a3a14a87563ebf4c2b8ea33634361888bc3625f1a81daeb00b8a323221",
+      "argv": [
+        "out\\fc08\\windows-native\\tests\\fc08\\axiom_fc08_baseline_probe.exe",
+        "Operation",
+        "tests/fc08/corpus/wire/op18-introduce.pb"
+      ],
+      "exit_code": 0,
+      "actual": {
+        "root": "Operation",
+        "input_bytes": 212,
+        "accepted": false,
+        "stage": 1,
+        "category": "MALFORMED_WIRE",
+        "normal_ingress_ok": false,
+        "semantic_error": 8
+      },
+      "raw_artifact": ".aegis/results/FC-08-VERIFY-MATERIALIZE/baseline/windows-native/op18-introduce.json",
+      "stderr": ""
+    },
+    {
+      "expected_new_reader": "ACCEPT",
+      "id": "legacy-insert",
+      "new_feature": false,
+      "path": "tests/fc08/corpus/wire/legacy-insert.pb",
+      "production_writer_used": false,
+      "root": "Operation",
+      "sha256": "44552a83022422b70ba7162d4361b2dad7e4e0b003e9fd3addf209612ed5ef8c",
+      "argv": [
+        "out\\fc08\\windows-native\\tests\\fc08\\axiom_fc08_baseline_probe.exe",
+        "Operation",
+        "tests/fc08/corpus/wire/legacy-insert.pb"
+      ],
+      "exit_code": 0,
+      "actual": {
+        "root": "Operation",
+        "input_bytes": 163,
+        "accepted": true,
+        "stage": 6,
+        "category": "",
+        "normal_ingress_ok": true,
+        "semantic_error": 0
+      },
+      "raw_artifact": ".aegis/results/FC-08-VERIFY-MATERIALIZE/baseline/windows-native/legacy-insert.json",
+      "stderr": ""
+    },
+    {
+      "expected_new_reader": "ACCEPT",
+      "id": "legacy-snapshot1",
+      "new_feature": false,
+      "path": "tests/fc08/corpus/wire/legacy-snapshot1.pb",
+      "production_writer_used": false,
+      "root": "DocumentSnapshot",
+      "sha256": "7993293111cb8b8bc4d24df0934771febe03ac8e163aeb227de2908e322cee3d",
+      "argv": [
+        "out\\fc08\\windows-native\\tests\\fc08\\axiom_fc08_baseline_probe.exe",
+        "DocumentSnapshot",
+        "tests/fc08/corpus/wire/legacy-snapshot1.pb"
+      ],
+      "exit_code": 0,
+      "actual": {
+        "root": "DocumentSnapshot",
+        "input_bytes": 137,
+        "accepted": true,
+        "stage": 6,
+        "category": "",
+        "normal_ingress_ok": true,
+        "semantic_error": 0
+      },
+      "raw_artifact": ".aegis/results/FC-08-VERIFY-MATERIALIZE/baseline/windows-native/legacy-snapshot1.json",
+      "stderr": ""
+    },
+    {
+      "expected_new_reader": "ACCEPT",
+      "id": "legacy-snapshot2",
+      "new_feature": false,
+      "path": "tests/fc08/corpus/wire/legacy-snapshot2.pb",
+      "production_writer_used": false,
+      "root": "DocumentSnapshot",
+      "sha256": "9f169ee33252ce0ffaaf77424c7dbe17f535f1a9e29b0a9e266fb9fd9f6f729a",
+      "argv": [
+        "out\\fc08\\windows-native\\tests\\fc08\\axiom_fc08_baseline_probe.exe",
+        "DocumentSnapshot",
+        "tests/fc08/corpus/wire/legacy-snapshot2.pb"
+      ],
+      "exit_code": 0,
+      "actual": {
+        "root": "DocumentSnapshot",
+        "input_bytes": 22,
+        "accepted": true,
+        "stage": 6,
+        "category": "",
+        "normal_ingress_ok": true,
+        "semantic_error": 0
+      },
+      "raw_artifact": ".aegis/results/FC-08-VERIFY-MATERIALIZE/baseline/windows-native/legacy-snapshot2.json",
+      "stderr": ""
+    },
+    {
+      "expected_new_reader": "ACCEPT",
+      "id": "legacy-snapshot3",
+      "new_feature": false,
+      "path": "tests/fc08/corpus/wire/legacy-snapshot3.pb",
+      "production_writer_used": false,
+      "root": "DocumentSnapshot",
+      "sha256": "a9e4060ff6f61c2f5007af60eb8ffb92a1e9e2e367edd1e05a828bde5c0dc36d",
+      "argv": [
+        "out\\fc08\\windows-native\\tests\\fc08\\axiom_fc08_baseline_probe.exe",
+        "DocumentSnapshot",
+        "tests/fc08/corpus/wire/legacy-snapshot3.pb"
+      ],
+      "exit_code": 0,
+      "actual": {
+        "root": "DocumentSnapshot",
+        "input_bytes": 132,
+        "accepted": true,
+        "stage": 6,
+        "category": "",
+        "normal_ingress_ok": true,
+        "semantic_error": 0
+      },
+      "raw_artifact": ".aegis/results/FC-08-VERIFY-MATERIALIZE/baseline/windows-native/legacy-snapshot3.json",
+      "stderr": ""
+    }
+  ]
+}

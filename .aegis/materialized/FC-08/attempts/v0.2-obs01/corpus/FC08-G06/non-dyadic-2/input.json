@@ -1,0 +1,116 @@
+{
+  "arithmetic": "exact rational -> RN ties-even binary64 after each elementary op; no FMA",
+  "checks": [
+    {
+      "after": [
+        -3.299999999999997,
+        9.899999999999991
+      ],
+      "before": [
+        -3.3,
+        9.9
+      ],
+      "point": [
+        0,
+        0
+      ],
+      "quality_ok": true
+    },
+    {
+      "after": [
+        20.700000000000003,
+        1.8999999999999932
+      ],
+      "before": [
+        20.7,
+        1.9000000000000004
+      ],
+      "point": [
+        20,
+        0
+      ],
+      "quality_ok": true
+    },
+    {
+      "after": [
+        26.700000000000003,
+        9.899999999999991
+      ],
+      "before": [
+        26.7,
+        9.9
+      ],
+      "point": [
+        20,
+        10
+      ],
+      "quality_ok": true
+    },
+    {
+      "after": [
+        2.700000000000003,
+        17.89999999999999
+      ],
+      "before": [
+        2.7,
+        17.9
+      ],
+      "point": [
+        0,
+        10
+      ],
+      "quality_ok": true
+    }
+  ],
+  "inverse_bits": [
+    "3febb13b13b13b14",
+    "bfe589d89d89d89d",
+    "3ff0ec4ec4ec4ec5",
+    "3fd2762762762762",
+    "c040b62762762763",
+    "4054789d89d89d89"
+  ],
+  "local_after_bits": [
+    "3fe3b13b13b13b14",
+    "bfed89d89d89d89d",
+    "3ff5d89d89d89d8a",
+    "bfc6276276276275",
+    "c039cec4ec4ec4ed",
+    "4055bd89d89d89d8"
+  ],
+  "new_world_bits": [
+    "3ff3333333333333",
+    "bfd9999999999998",
+    "3fe3333333333333",
+    "3fe9999999999999",
+    "c00a666666666660",
+    "4023ccccccccccc8"
+  ],
+  "old_world": [
+    1.2,
+    -0.4,
+    0.6,
+    0.8,
+    -3.3,
+    9.9
+  ],
+  "parent": [
+    0.3,
+    0.7,
+    -1.1,
+    0.9,
+    100.1,
+    -50.3
+  ],
+  "repeat_F_U": 16,
+  "undo_expected_bits": [
+    "3ff3333333333333",
+    "bfd999999999999a",
+    "3fe3333333333333",
+    "3fe999999999999a",
+    "c00a666666666666",
+    "4023cccccccccccd"
+  ],
+  "variant_id": "FC08-G06/non-dyadic-2",
+  "iterations": 1
+}

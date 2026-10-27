@@ -5,9 +5,12 @@
 #include "canvas/semantic/resource_manifest.hpp"
 
 namespace auditoryworks::axiom::v1 { class ObjectRecord; class Operation; }
+namespace auditoryworks::axiom::v1 { class SectionContent; }
 namespace auditoryworks::axiom::v1 { class ResourceManifest; class ResourceManifestEntry; class ResourceManifestTombstone; }
 
 namespace canvas::semantic::internal {
+[[nodiscard]] bool toProtobufSectionContent(const SectionContent&, auditoryworks::axiom::v1::SectionContent&);
+[[nodiscard]] bool fromProtobufSectionContent(const auditoryworks::axiom::v1::SectionContent&, SectionContent&);
 [[nodiscard]] bool toProtobufOperation(const Operation&, auditoryworks::axiom::v1::Operation&);
 [[nodiscard]] bool toProtobufResourceManifestEntry(const ResourceManifestEntry&, auditoryworks::axiom::v1::ResourceManifestEntry&);
 [[nodiscard]] bool fromProtobufResourceManifestEntry(const auditoryworks::axiom::v1::ResourceManifestEntry&, ResourceManifestEntry&);

@@ -1,0 +1,17 @@
+{
+  "classification": "preflight checker unit tests only; no Axiom/product test or FC08 RED",
+  "argv": [
+    "D:\\Softwares\\Anaconda\\python.exe",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests/fc08",
+    "-p",
+    "bootstrap_preflight_test.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "test_changed_frozen_bytes_are_not_accepted (bootstrap_preflight_test.BootstrapPreflightTests.test_changed_frozen_bytes_are_not_accepted) ... ok\ntest_consistent_scratch_geometry_is_not_rejected (bootstrap_preflight_test.BootstrapPreflightTests.test_consistent_scratch_geometry_is_not_rejected) ... ok\ntest_explicit_bindings_are_retained_without_guessing (bootstrap_preflight_test.BootstrapPreflightTests.test_explicit_bindings_are_retained_without_guessing) ... ok\ntest_frozen_shape_geometry_contradiction_is_rejected (bootstrap_preflight_test.BootstrapPreflightTests.test_frozen_shape_geometry_contradiction_is_rejected) ... ok\ntest_package_path_cannot_escape_root (bootstrap_preflight_test.BootstrapPreflightTests.test_package_path_cannot_escape_root) ... ok\ntest_wire_presence_is_not_an_applicability_contract (bootstrap_preflight_test.BootstrapPreflightTests.test_wire_presence_is_not_an_applicability_contract) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.156s\n\nOK\n"
+}

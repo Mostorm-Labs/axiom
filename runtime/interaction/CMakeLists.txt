@@ -11,6 +11,7 @@ add_library(canvas_runtime_interaction STATIC
     src/transform_handle_drag.cpp
     src/session_manager.cpp
     src/editor_history.cpp
+    src/undoable_command.cpp
     src/interaction_dependency_footprint.cpp)
 target_sources(canvas_runtime_interaction PRIVATE src/gesture_arbiter.cpp)
 target_sources(canvas_runtime_interaction PRIVATE src/multi_contact_coordinator.cpp)
@@ -34,9 +35,15 @@ endif()
 # cycle. It never includes Playground or Debug UI.
 add_library(canvas_runtime_editor STATIC
     src/canvas_editing_runtime.cpp
+    src/canvas_section_commands.cpp
     src/canvas_text_geometry.cpp
     src/canvas_connector_routing.cpp
     src/brush_commit_adapter.cpp)
+if(MSVC)
+    set_property(SOURCE src/canvas_section_commands.cpp APPEND PROPERTY COMPILE_OPTIONS /fp:strict)
+else()
+    set_property(SOURCE src/canvas_section_commands.cpp APPEND PROPERTY COMPILE_OPTIONS -ffp-contract=off)
+endif()
 target_include_directories(canvas_runtime_editor PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/runtime/scene/include

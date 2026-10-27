@@ -1,0 +1,65 @@
+[
+  {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "tools/skia/fetch.py",
+      "--profile",
+      "tools/skia/profiles/r1-full-v1.json",
+      "--lock",
+      "r1-full-skia-sdk.lock.json",
+      "--target",
+      "web-wasm-webgl2",
+      "--variant",
+      "release"
+    ],
+    "exit_code": 0,
+    "log": ".aegis/results/FC-08-VERIFY-MATERIALIZE/builds/web-wasm/skia-consumer.log"
+  },
+  {
+    "argv": [
+      "cmake",
+      "-S",
+      ".",
+      "-B",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\web-wasm",
+      "-G",
+      "Ninja",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DBUILD_TESTING=ON",
+      "-DCANVAS_BUILD_POC01=OFF",
+      "-DCANVAS_BUILD_SEMANTIC=ON",
+      "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+      "-DCANVAS_BUILD_RF01=ON",
+      "-DCANVAS_BUILD_RENDER=ON",
+      "-DCANVAS_RF01_BUILD_TESTS=OFF",
+      "-DCANVAS_RENDER_BUILD_TESTS=OFF",
+      "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
+      "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+      "-DCANVAS_SKIA_SDK_VARIANT=release",
+      "-DCANVAS_SKIA_SDK_ROOT=C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/.deps/skia-sdk/web-wasm-webgl2/release",
+      "-DAXIOM_BUILD_FC08_VERIFICATION=ON",
+      "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+      "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe",
+      "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+      "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+      "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_TOOLCHAIN_FILE=D:/GitRepos/skia/third_party/externals/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake"
+    ],
+    "exit_code": 0,
+    "log": ".aegis/results/FC-08-VERIFY-MATERIALIZE/builds/web-wasm/configure.log"
+  },
+  {
+    "argv": [
+      "cmake",
+      "--build",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\web-wasm",
+      "--target",
+      "axiom_fc08_baseline_probe",
+      "--parallel",
+      "6"
+    ],
+    "exit_code": 1,
+    "log": ".aegis/results/FC-08-VERIFY-MATERIALIZE/builds/web-wasm/build-probe.log"
+  }
+]

@@ -1,0 +1,576 @@
+{
+  "format": "fc08-bootstrap-implementation-design-preflight-v1",
+  "status": "PASS_BOOTSTRAP_DESIGN_BINDING",
+  "basis": "Exact accepted P20 correction/profile matrix plus unchanged P12-P17 ownership. This is verification-bootstrap design, not implementation of future Section transactions.",
+  "production_subject_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+  "source_bindings": {
+    "public_facade": {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "sha256": "3a1153a2a05309e4f5fc0ef4cae55c8e0d048a18b04dde113fe8820a108e3c79",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "c017779b8dab74d234e090a6db0e83da8e61465e",
+      "anchors": {
+        "class RuntimeFacade": [
+          14
+        ]
+      }
+    },
+    "owner_admission": {
+      "path": "runtime/composition/src/canvas_runtime_facade.cpp",
+      "sha256": "25c1ff792ffc7243b1cc3fbd18bf5f940b1c1b43e453f2334929079c2eece3ad",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "865e7ac7c9a7466f79bd94f481ece1b625f2efd7",
+      "anchors": {
+        "CanvasRuntimeFacade::submitCanvasControl": [
+          274
+        ],
+        "service_->enqueue": [
+          283
+        ]
+      }
+    },
+    "owner_pump": {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "4ab5d1349f399f4e54ec4564bdbf7bc439cc40d75c50b52919d07e101c346c84",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "9f5138dd7e3e8872917ee39919d5631e82f4e2b7",
+      "anchors": {
+        "RuntimeComposition::ownerPump": [
+          317
+        ],
+        "controlFacade_->process": [
+          220,
+          323
+        ]
+      }
+    },
+    "canonical_engine": {
+      "path": "runtime/semantic/src/operation_engine.cpp",
+      "sha256": "05726fecf7ecf8d6938ccf7dc24c1891814c9add0d3793d0a467abd5c7b2b88a",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "63bb2868ba91d4a2787d412dfeea54ea907ae494",
+      "anchors": {
+        "OperationEngine::prepare": [
+          46
+        ],
+        "OperationEngine::apply": [
+          59,
+          123,
+          180,
+          192
+        ],
+        "prepareChangeSet": [
+          93,
+          155,
+          187,
+          199
+        ],
+        "recordApplied": [
+          102,
+          163,
+          189,
+          201
+        ],
+        "commitSuccessor": [
+          105,
+          106,
+          166,
+          167,
+          189,
+          201
+        ]
+      }
+    },
+    "atomic_apply": {
+      "path": "runtime/semantic/src/atomic_apply.cpp",
+      "sha256": "039e8c17e75d4c29bb858b335d4a065ddbf58e01fc12718c43ccde6334e80ce2",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "51f0e44f2fd35f55a326ba55770f3790dd305ca8",
+      "anchors": {
+        "applyPreparedPlanInternal": [
+          56,
+          88,
+          92
+        ],
+        "if (!preflight": [
+          57
+        ],
+        "ObjectStoreMutator::insertFresh": [
+          68
+        ],
+        "ObjectStoreMutator::replaceExisting": [
+          73
+        ],
+        "ObjectStoreMutator::eraseExisting": [
+          78
+        ]
+      }
+    },
+    "real_History": {
+      "path": "runtime/interaction/src/editor_history.cpp",
+      "sha256": "c4d684db6d4961b3b9150e78f03b11e7c931ad4bac05145b6187ea73d4cf0271",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "5c56f7d521d44463b8f7a9b0eab6f1e9a9e0f1cb",
+      "anchors": {
+        "EditorHistory::prepareRecord": [
+          114
+        ],
+        "entries_.reserve": [
+          134
+        ],
+        "EditorHistory::commitPrepared": [
+          145
+        ],
+        "EditorHistory::undo": [
+          192
+        ],
+        "EditorHistory::redo": [
+          206
+        ]
+      }
+    },
+    "existing_command_seam": {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "1d4145aa4dc179d1016d7add695c0ee49428b8888569e24c373d01220e697650",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "907e1ff706fb76df05e0070b32d4901729a50045",
+      "anchors": {
+        "CanvasEditingRuntime::applyLocalHistoryOperation": [
+          1547
+        ],
+        "history_.prepareRecord": [
+          1575
+        ],
+        "history_.commitPrepared": [
+          1587
+        ],
+        "sceneCoordinator_->apply": [
+          1484,
+          1538,
+          1593,
+          2754,
+          2973,
+          3226,
+          3314
+        ]
+      }
+    },
+    "Scene_publication": {
+      "path": "runtime/scene/src/incremental_runtime_coordinator.cpp",
+      "sha256": "a508259e7744821387325b3cb78043cedd27248ae7561873f535501d534c2646",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "8a32cdf8c1e6432a2394f2b9a3cb723fc7d57a48",
+      "anchors": {
+        "IncrementalRuntimeCoordinator::apply": [
+          179
+        ],
+        "runtimeScene_.prepareIncremental": [
+          217
+        ],
+        "IncrementalRuntimeCoordinator::publishPending": [
+          124,
+          264,
+          390,
+          440
+        ],
+        "IncrementalRuntimeCoordinator::recover": [
+          284
+        ],
+        "abortPublication": [
+          143,
+          213,
+          219,
+          223,
+          233,
+          242,
+          249,
+          268,
+          314,
+          321,
+          391,
+          441
+        ]
+      }
+    },
+    "frame_presentation": {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "4ab5d1349f399f4e54ec4564bdbf7bc439cc40d75c50b52919d07e101c346c84",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "9f5138dd7e3e8872917ee39919d5631e82f4e2b7",
+      "anchors": {
+        "RuntimeComposition::serviceFrameOpportunity": [
+          371
+        ],
+        "RuntimeComposition::finishFrameOpportunity": [
+          440
+        ],
+        "pendingPreviewIdentity_": [
+          71,
+          382,
+          383,
+          384,
+          391,
+          418,
+          429,
+          445,
+          463,
+          473,
+          551
+        ]
+      }
+    },
+    "preview_handoff": {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "1d4145aa4dc179d1016d7add695c0ee49428b8888569e24c373d01220e697650",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "907e1ff706fb76df05e0070b32d4901729a50045",
+      "anchors": {
+        "CanvasEditingRuntime::acknowledgePreviewPresentation": [
+          2868
+        ],
+        "canonicalVisibilitySink_->canonicalVisible": [
+          2894,
+          4104
+        ],
+        "previewController_->retireSession": [
+          2442,
+          2574,
+          2590,
+          2601,
+          2765,
+          2780,
+          2899,
+          3020,
+          4036,
+          4109
+        ]
+      }
+    },
+    "existing_selection": {
+      "path": "runtime/interaction/src/selection_session.cpp",
+      "sha256": "ce6c9ba21164c71224d1cef651589354e38fb41a0ed6f0624c43d636ab279482",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "280b337d3e4dcbec944d23d0ade7569ba3047ff3",
+      "anchors": {
+        "SelectionSession::click": [
+          8
+        ],
+        "SelectionSession::marquee": [
+          25
+        ]
+      }
+    },
+    "control_queue": {
+      "path": "runtime/control/src/canvas_control_service.cpp",
+      "sha256": "c5badd0a7d18776d000554299774c441271f438c71e3a9a829fbdd52d20e8c44",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "8fa7c947625fb9b0fd3e9939763b5e9eec889a31",
+      "anchors": {
+        "CanvasControlService::enqueue": [
+          63
+        ]
+      }
+    },
+    "snapshot_ingress": {
+      "path": "runtime/semantic/src/snapshot.cpp",
+      "sha256": "2169719e063c43abead7878dc4ee1c93d3f81a61f8428a9627c5ba00ce4bea57",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "a03e2d17b623b7487e13e43aafff90cfb25979c9",
+      "anchors": {
+        "SnapshotCodec::decode": [
+          209
+        ]
+      }
+    },
+    "bootstrap_owner": {
+      "path": "runtime/semantic/src/snapshot_bootstrap.cpp",
+      "sha256": "1cbbc0b0b41d3920478b904230d6ec720269d21c1b795a6db143d5a795abf800",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "caa90077db567547459781e150d9901eb33e142a",
+      "anchors": {
+        "SnapshotBootstrapper::restore": [
+          196,
+          201,
+          207,
+          215,
+          222,
+          229,
+          237,
+          244
+        ]
+      }
+    },
+    "replay_without_History": {
+      "path": "runtime/semantic/src/replay.cpp",
+      "sha256": "3160c367c045d6e4b80cd9eb15193c5e68b2a448a113d95c46af60f35c63a89a",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "ac016f6bb5368d3aa2ac20c6e4a915d9668e5650",
+      "anchors": {
+        "ReplayCoordinator::replayAndFinalize": [
+          50,
+          61
+        ]
+      }
+    },
+    "Windows_host": {
+      "path": "apps/minimal_runtime_host/windows_main.cpp",
+      "sha256": "9c78ad587ffd097ee5e6accfa4be8965fc6bac267659fde3b15f27794910ec72",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "6541a66e2a57581ab2129eeddaa69282618c6259",
+      "anchors": {
+        "state.host->composition()": [
+          94,
+          183,
+          184,
+          269,
+          489,
+          496,
+          498,
+          501,
+          508,
+          514
+        ],
+        "composition.finishFrameOpportunity": [
+          110,
+          179
+        ]
+      }
+    },
+    "Web_host": {
+      "path": "apps/axiom_canvas_demo/platform/web/bridge.cpp",
+      "sha256": "7a037357ac1218c116c7e0005ed903bd14e9024abb2429930207bbfacd274765",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "14bac321fa11e5298bddb4aef6159b948cee92ee",
+      "anchors": {
+        "lifecycle.composition()": [
+          87,
+          93,
+          107,
+          153,
+          155,
+          158,
+          179,
+          180,
+          200,
+          212,
+          252,
+          307,
+          316,
+          346,
+          440
+        ],
+        "serviceFrameOpportunity": [
+          307
+        ]
+      }
+    }
+  },
+  "current_flow": [
+    "RuntimeFacade -> CanvasRuntimeFacade control admission -> RuntimeComposition ownerPump",
+    "CanvasEditingRuntime::applyLocalHistoryOperation prepares F, captures images, accepts supplied inverse and prepares original EditorHistory entry",
+    "OperationEngine::apply performs real prepare again, stages actual ChangeSet, atomic apply, ledger/generation/clock/commit record",
+    "EditorHistory::commitPrepared consumes its prepared entry; Scene coordinator derives/publishes or recovers from authoritative committed poststate",
+    "RuntimeComposition frame opportunity/finish and Interaction canonical-visibility acknowledgement retire compatible preview"
+  ],
+  "authority_bound_target_sequence": [
+    "Construct one immutable F with accepted guards using existing Interaction owner",
+    "Prepare F on coherent S -> read-only S1 -> construct real U from exact pre/postimages",
+    "Normalize/meter actual F and U and validate U applicability/restoration on S1; reserve actual History/terminal/ChangeSet resources",
+    "Bind F/U/resources to same real owner and basis; revalidation invalidates old admission and U; no automatic semantic rebase",
+    "Reject/cancel before first write with canonical/index/manifest/ledger/generation/clock/History/cursor/redo unchanged",
+    "Publish canonical once; consume reserved History and receipt without postcommit allocation/failure injection",
+    "Scene prepare/publication/recovery preserves canonical success; no resubmission; compatible preview retired at coherent publication handoff"
+  ],
+  "target_authority_refs": [
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P13.md",
+      "sha256": "6f65325d4282a78774489bddd9f716614994f63757957675b82f3c423983f3fe"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P15.md",
+      "sha256": "95f6650dd26809e60560fbdeeb7fb9751ed42d9555e8a62849f4b38261a40837"
+    }
+  ],
+  "existing_vs_future_findings": [
+    "Current prepareRecord reserves actual entries capacity; this is not proof of accepted FC08 real F/U budget/admitted-plan reservation",
+    "Existing applyLocalHistoryOperation supplies an inverse and re-prepares at apply; future owner-bound admitted F/U seam is deliberately absent",
+    "Existing atomic writes/ledger/clock/Scene and preview anchors are resolved; future Section/subtree publication assertions have not been run",
+    "Qualification checkpoints remain unchanged/default OFF and cannot substitute for functional RED"
+  ],
+  "obligation_to_owner_bindings": {
+    "FC08-E01": {
+      "case_ids": [
+        "FC08-W01",
+        "FC08-W02",
+        "FC08-W03",
+        "FC08-W04",
+        "FC08-W05",
+        "FC08-W06",
+        "FC08-W07"
+      ],
+      "roles": [
+        "canonical_engine",
+        "snapshot_ingress"
+      ],
+      "test_binding": "Accepted corpus/matrix and frozen predicates; new actual-runner observations must declare supported and missing fields per variant. Existing owner source identity is not product PASS."
+    },
+    "FC08-E02": {
+      "case_ids": [
+        "FC08-T01",
+        "FC08-T02",
+        "FC08-T03",
+        "FC08-T04",
+        "FC08-T05",
+        "FC08-T06",
+        "FC08-T07"
+      ],
+      "roles": [
+        "canonical_engine",
+        "atomic_apply"
+      ],
+      "test_binding": "Accepted corpus/matrix and frozen predicates; new actual-runner observations must declare supported and missing fields per variant. Existing owner source identity is not product PASS."
+    },
+    "FC08-E03": {
+      "case_ids": [
+        "FC08-H01",
+        "FC08-H02",
+        "FC08-H03",
+        "FC08-H04",
+        "FC08-H05",
+        "FC08-H06",
+        "FC08-H07",
+        "FC08-H08"
+      ],
+      "roles": [
+        "existing_command_seam",
+        "real_History",
+        "canonical_engine"
+      ],
+      "test_binding": "Accepted corpus/matrix and frozen predicates; new actual-runner observations must declare supported and missing fields per variant. Existing owner source identity is not product PASS."
+    },
+    "FC08-E04": {
+      "case_ids": [
+        "FC08-G01",
+        "FC08-G02",
+        "FC08-G03",
+        "FC08-G04",
+        "FC08-G05",
+        "FC08-G06"
+      ],
+      "roles": [
+        "existing_command_seam",
+        "Scene_publication"
+      ],
+      "test_binding": "Accepted corpus/matrix and frozen predicates; new actual-runner observations must declare supported and missing fields per variant. Existing owner source identity is not product PASS."
+    },
+    "FC08-E05": {
+      "case_ids": [
+        "FC08-S01",
+        "FC08-S02",
+        "FC08-S03",
+        "FC08-S04",
+        "FC08-S05",
+        "FC08-S06"
+      ],
+      "roles": [
+        "existing_selection",
+        "Scene_publication"
+      ],
+      "test_binding": "Accepted corpus/matrix and frozen predicates; new actual-runner observations must declare supported and missing fields per variant. Existing owner source identity is not product PASS."
+    },
+    "FC08-E06": {
+      "case_ids": [
+        "FC08-V01",
+        "FC08-V02",
+        "FC08-V03",
+        "FC08-V04",
+        "FC08-V05"
+      ],
+      "roles": [
+        "Scene_publication",
+        "frame_presentation"
+      ],
+      "test_binding": "Accepted corpus/matrix and frozen predicates; new actual-runner observations must declare supported and missing fields per variant. Existing owner source identity is not product PASS."
+    },
+    "FC08-E07": {
+      "case_ids": [
+        "FC08-C01",
+        "FC08-C02",
+        "FC08-C03",
+        "FC08-C04",
+        "FC08-C05"
+      ],
+      "roles": [
+        "preview_handoff",
+        "frame_presentation",
+        "Scene_publication"
+      ],
+      "test_binding": "Accepted corpus/matrix and frozen predicates; new actual-runner observations must declare supported and missing fields per variant. Existing owner source identity is not product PASS."
+    },
+    "FC08-E08": {
+      "case_ids": [
+        "FC08-L01",
+        "FC08-L02",
+        "FC08-L03",
+        "FC08-L04",
+        "FC08-L05",
+        "FC08-L06"
+      ],
+      "roles": [
+        "control_queue",
+        "owner_admission",
+        "owner_pump"
+      ],
+      "test_binding": "Accepted corpus/matrix and frozen predicates; new actual-runner observations must declare supported and missing fields per variant. Existing owner source identity is not product PASS."
+    },
+    "FC08-E09": {
+      "case_ids": [
+        "FC08-K01",
+        "FC08-K02",
+        "FC08-K03",
+        "FC08-K04",
+        "FC08-K05",
+        "FC08-K06"
+      ],
+      "roles": [
+        "snapshot_ingress",
+        "bootstrap_owner",
+        "replay_without_History"
+      ],
+      "test_binding": "Accepted corpus/matrix and frozen predicates; new actual-runner observations must declare supported and missing fields per variant. Existing owner source identity is not product PASS."
+    },
+    "FC08-E10": {
+      "case_ids": [
+        "FC08-P01",
+        "FC08-P02",
+        "FC08-P03",
+        "FC08-P04"
+      ],
+      "roles": [
+        "public_facade",
+        "Windows_host",
+        "Web_host"
+      ],
+      "test_binding": "Accepted corpus/matrix and frozen predicates; new actual-runner observations must declare supported and missing fields per variant. Existing owner source identity is not product PASS."
+    }
+  },
+  "unresolved_semantic_decisions": [],
+  "unresolved_verification_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "resolved_existing_owner_bindings": true,
+  "may_continue_product_P32": false,
+  "may_continue_verification_bootstrap": true,
+  "acceptance": {
+    "path": ".aegis/packages/FC-08-P31-BOOTSTRAP-v0.2/acceptance.json",
+    "sha256": "e075131a325c75584a36c5e56eafeaab63457bbe3afb58e4afd132e5065b36e2"
+  },
+  "test_plan": [
+    "Use frozen independent predicates, never record expected from SUT",
+    "Actually invoke normal codec/ingress in Native and Chrome/WASM; report earliest real failure",
+    "Keep missing UI/History/Scene observation fields NOT_RUN; no manufactured canonical state or traces",
+    "Native/headless binaries and actual browser WASM remain separate, with explicit actual environment and subject bindings"
+  ],
+  "verification_adapter_owner": "New Python runner and browser transport own invocation/evidence only; no substitute Section, topology, F/U, History, layout, Scene or selection implementation."
+}

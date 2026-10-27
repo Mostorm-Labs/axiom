@@ -1,0 +1,45 @@
+{
+  "format": "fc08-verification-run-v1",
+  "required_run_fields": [
+    "design_id",
+    "authority_id",
+    "authority_binding_hash",
+    "verification_manifest_hash",
+    "qualification_subject_revision",
+    "runner_revision",
+    "oracle_revision",
+    "platform_profile",
+    "build_configuration",
+    "toolchain",
+    "source_tree_dirty",
+    "started_at",
+    "ended_at",
+    "invocation",
+    "cases"
+  ],
+  "required_case_fields": [
+    "case_id",
+    "variant_id",
+    "family_id",
+    "input_hash",
+    "expected_hash",
+    "observed_artifact",
+    "observation_basis",
+    "result",
+    "failure_boundary"
+  ],
+  "results": [
+    "PASS",
+    "FAIL",
+    "BLOCKED_ENVIRONMENT",
+    "NOT_RUN"
+  ],
+  "rules": [
+    "NOT_RUN is never PASS; a required positive cannot be skipped as Unsupported.",
+    "Expected Unsupported in a negative fixture is PASS only if all zero-mutation and receipt assertions also hold.",
+    "Evidence head and subject revision must be separate when evidence-only commits differ.",
+    "Missing fields/artifacts cannot be replaced by a green summary label.",
+    "One trace may satisfy multiple obligations; do not demand redundant executions.",
+    "Axioms check exact public/canonical values, not merely internal self-reported success."
+  ]
+}

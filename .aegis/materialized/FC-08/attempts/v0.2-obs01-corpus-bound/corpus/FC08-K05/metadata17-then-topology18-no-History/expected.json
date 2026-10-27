@@ -1,0 +1,88 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "canonical.records",
+      "expected": [
+        {
+          "id": {
+            "value": "00000000000000000000000000000005"
+          },
+          "kind_id": 9,
+          "kind_version": 1,
+          "placement": {
+            "order_key": {
+              "value": "00000005"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 0,
+            "ty": 0
+          },
+          "properties": {},
+          "content": {
+            "group": {}
+          }
+        },
+        {
+          "id": {
+            "value": "00000000000000000000000000000006"
+          },
+          "kind_id": 10,
+          "kind_version": 1,
+          "placement": {
+            "parent_id": {
+              "value": "00000000000000000000000000000005"
+            },
+            "order_key": {
+              "value": "00000006"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 0,
+            "ty": 0
+          },
+          "properties": {},
+          "content": {
+            "section": {
+              "boundary": {
+                "x": -20,
+                "y": 0,
+                "width": 120,
+                "height": 80
+              },
+              "title": "新标题 é",
+              "padding": 8.0,
+              "header_height": 20.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "ledger_count",
+      "expected": 2
+    },
+    {
+      "op": "equal",
+      "path": "History_owner",
+      "expected": false
+    },
+    {
+      "op": "equal",
+      "path": "local_history_entries",
+      "expected": 0
+    }
+  ],
+  "source_case": "FC08-K05",
+  "product_expected_only": true
+}

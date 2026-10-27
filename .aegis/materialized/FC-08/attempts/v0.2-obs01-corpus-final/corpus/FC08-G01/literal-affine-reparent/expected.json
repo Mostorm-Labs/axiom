@@ -1,0 +1,31 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "S_local_bits",
+      "expected": [
+        "0000000000000000",
+        "4000000000000000",
+        "c000000000000000",
+        "0000000000000000",
+        "4056800000000000",
+        "4051800000000000"
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "C_world_origin",
+      "expected": [
+        82.0,
+        76.0
+      ]
+    },
+    {
+      "op": "unchanged",
+      "before": "C_local_before",
+      "after": "C_local_after"
+    }
+  ],
+  "source_case": "FC08-G01",
+  "product_expected_only": true
+}

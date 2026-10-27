@@ -1,0 +1,260 @@
+[
+  {
+    "method": "Runtime.executionContextCreated",
+    "params": {
+      "context": {
+        "id": 1,
+        "origin": "://",
+        "name": "",
+        "uniqueId": "-6522023541784241364.-4937426326873272048",
+        "auxData": {
+          "isDefault": true,
+          "type": "default",
+          "frameId": "A16A3C966C1F713964206F95D8AFE43A"
+        }
+      }
+    }
+  },
+  {
+    "method": "Page.frameStartedNavigating",
+    "params": {
+      "frameId": "A16A3C966C1F713964206F95D8AFE43A",
+      "url": "http://127.0.0.1:3010/index.html?rev=fc08-section-de",
+      "loaderId": "B05CEE7CF702168B5661981D7B9B029E",
+      "navigationType": "differentDocument"
+    }
+  },
+  {
+    "method": "Page.frameStartedLoading",
+    "params": {
+      "frameId": "A16A3C966C1F713964206F95D8AFE43A"
+    }
+  },
+  {
+    "method": "Runtime.executionContextsCleared",
+    "params": {}
+  },
+  {
+    "method": "Runtime.executionContextsCleared",
+    "params": {}
+  },
+  {
+    "method": "Page.frameNavigated",
+    "params": {
+      "frame": {
+        "id": "A16A3C966C1F713964206F95D8AFE43A",
+        "loaderId": "B05CEE7CF702168B5661981D7B9B029E",
+        "url": "http://127.0.0.1:3010/index.html?rev=fc08-section-de",
+        "domainAndRegistry": "",
+        "securityOrigin": "http://127.0.0.1:3010",
+        "securityOriginDetails": {
+          "isLocalhost": true
+        },
+        "mimeType": "text/html",
+        "adFrameStatus": {
+          "adFrameType": "none"
+        },
+        "secureContextType": "SecureLocalhost",
+        "crossOriginIsolatedContextType": "NotIsolated",
+        "gatedAPIFeatures": []
+      },
+      "type": "Navigation"
+    }
+  },
+  {
+    "method": "Runtime.executionContextCreated",
+    "params": {
+      "context": {
+        "id": 2,
+        "origin": "http://127.0.0.1:3010",
+        "name": "",
+        "uniqueId": "9096976693195746199.8308851388816773748",
+        "auxData": {
+          "isDefault": true,
+          "type": "default",
+          "frameId": "A16A3C966C1F713964206F95D8AFE43A"
+        }
+      }
+    }
+  },
+  {
+    "method": "Page.domContentEventFired",
+    "params": {
+      "timestamp": 5219749.368456
+    }
+  },
+  {
+    "method": "Page.loadEventFired",
+    "params": {
+      "timestamp": 5219749.406627
+    }
+  },
+  {
+    "method": "Page.frameStoppedLoading",
+    "params": {
+      "frameId": "A16A3C966C1F713964206F95D8AFE43A"
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "error",
+      "args": [
+        {
+          "type": "string",
+          "value": "[axiom] present begin frame=1 objects=0 scene_records=0"
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1793036013584.26,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "put_char",
+            "scriptId": "8",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.js?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 18703
+          },
+          {
+            "functionName": "write",
+            "scriptId": "8",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.js?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 17975
+          },
+          {
+            "functionName": "write",
+            "scriptId": "8",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.js?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 45849
+          },
+          {
+            "functionName": "doWritev",
+            "scriptId": "8",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.js?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 108434
+          },
+          {
+            "functionName": "_fd_write",
+            "scriptId": "8",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.js?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 108882
+          },
+          {
+            "functionName": "$func13218",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.wasm?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 7942465
+          },
+          {
+            "functionName": "$func6811",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.wasm?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 4702402
+          },
+          {
+            "functionName": "$func904",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.wasm?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 336814
+          },
+          {
+            "functionName": "$func1604",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.wasm?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 773622
+          },
+          {
+            "functionName": "$Xd",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.wasm?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 7564286
+          },
+          {
+            "functionName": "tick",
+            "scriptId": "4",
+            "url": "http://127.0.0.1:3010/host.js?rev=fc08-section-de",
+            "lineNumber": 60,
+            "columnNumber": 30
+          }
+        ]
+      }
+    }
+  },
+  {
+    "method": "Runtime.consoleAPICalled",
+    "params": {
+      "type": "error",
+      "args": [
+        {
+          "type": "string",
+          "value": "Aborted(undefined)"
+        }
+      ],
+      "executionContextId": 2,
+      "timestamp": 1793036013628.345,
+      "stackTrace": {
+        "callFrames": [
+          {
+            "functionName": "abort",
+            "scriptId": "8",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.js?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 8352
+          },
+          {
+            "functionName": "___cxa_throw",
+            "scriptId": "8",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.js?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 12095
+          },
+          {
+            "functionName": "$func1483",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.wasm?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 668141
+          },
+          {
+            "functionName": "$oe",
+            "scriptId": "9",
+            "url": "http://127.0.0.1:3010/axiom_canvas_demo_web.wasm?rev=fc08-section-de",
+            "lineNumber": 0,
+            "columnNumber": 6258046
+          },
+          {
+            "functionName": "call",
+            "scriptId": "10",
+            "url": "",
+            "lineNumber": 3,
+            "columnNumber": 137
+          },
+          {
+            "functionName": "command",
+            "scriptId": "10",
+            "url": "",
+            "lineNumber": 7,
+            "columnNumber": 82
+          },
+          {
+            "functionName": "",
+            "scriptId": "10",
+            "url": "",
+            "lineNumber": 15,
+            "columnNumber": 10
+          }
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "result_revision": "68565bdd2eeff0594052c3f3f867831ff48db1ce",
+  "materialized_ref": "refs/heads/codex/fc08-section-scene-host",
+  "package": {
+    "path": ".aegis/packages/FC-08-SECTION-DE-v0.6/package.json",
+    "sha256": "68ae9a2705def664726441fa109dcc8e4dedc5e9ac469a56243a4cd409411d7e",
+    "revision": "c0419fd33d8525923fb07fa2e266592dc906fc8a"
+  },
+  "status": "READY_FOR_USER_RETEST_AND_CONTROL_REVIEW",
+  "native_ctest": {
+    "tests": 24,
+    "passed": 24,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "actual_Chrome_WASM": {
+    "checks": 111,
+    "passed": 111,
+    "compiled_dirty": 0
+  },
+  "python_contracts": {
+    "tests": 10,
+    "passed": 10
+  },
+  "runtime_boundary_contract_files": 101,
+  "production_builds": {
+    "Windows": 0,
+    "Web": 0
+  },
+  "atomicity": "one RelocateObjects carries final confirmed pose and membership; one-step real History inverse",
+  "user_CreateSection_retest": "PASS at 7c09dc7f",
+  "user_Drop_before_fix": "FAIL retained",
+  "physical_after_fix": "PHYSICAL_PENDING",
+  "runtime_interface_changed": false,
+  "semantic_schema_frozen_inputs_changed": false,
+  "full302_runner": "NOT_COMPLETE unchanged",
+  "gate_claim": false,
+  "running_window": {
+    "path": ".aegis/results/FC-08-SECTION-DE/section-drop-fix-001/running-windows.json",
+    "sha256": "1904af540c8609df905bf9e9320b41cd2a0362fa31c16df7eaac808a34ef7edd"
+  },
+  "evidence_manifest": {
+    "path": ".aegis/results/FC-08-SECTION-DE/section-drop-fix-001/evidence-manifest.json",
+    "sha256": "dbba36255b97f8fd9a1b97e8480ef47be786791a3ed6d1e906e048556a6eb0d9"
+  }
+}

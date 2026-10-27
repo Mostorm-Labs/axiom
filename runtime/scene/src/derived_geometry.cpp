@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <cmath>
 namespace canvas::scene {
-DerivedGeometry deriveGeometry(const semantic::ObjectRecord&r) noexcept { if(const auto*s=std::get_if<semantic::ShapeContent>(&r.content)) if(r.kind==semantic::ObjectKind::kShape&&(r.kind_version==2U || r.kind_version==3U)) if(auto g=triangleGeometry(*s)) return *g; if(r.kind==semantic::ObjectKind::kConnector&&r.kind_version==1U) if(auto g=connectorGeometry(r)) return *g; return {}; }
+DerivedGeometry deriveGeometry(const semantic::ObjectRecord&r) noexcept { if(const auto* section=std::get_if<semantic::SectionContent>(&r.content)) { const auto& b=section->boundary; return SectionBoundaryGeometry{{static_cast<float>(b.x),static_cast<float>(b.y),static_cast<float>(b.x+b.width),static_cast<float>(b.y+b.height)}}; } if(const auto*s=std::get_if<semantic::ShapeContent>(&r.content)) if(r.kind==semantic::ObjectKind::kShape&&(r.kind_version==2U || r.kind_version==3U)) if(auto g=triangleGeometry(*s)) return *g; if(r.kind==semantic::ObjectKind::kConnector&&r.kind_version==1U) if(auto g=connectorGeometry(r)) return *g; return {}; }
 std::optional<TriangleGeometry> triangleGeometry(const semantic::ShapeContent& s) noexcept {
  if(!std::isfinite(s.width)||!std::isfinite(s.height)||s.width<=0||s.height<=0||s.shape_kind!=3U)return std::nullopt;
  return TriangleGeometry{{static_cast<float>(s.width/2),0},{static_cast<float>(s.width),static_cast<float>(s.height)},{0,static_cast<float>(s.height)},{0,0,static_cast<float>(s.width),static_cast<float>(s.height)}};

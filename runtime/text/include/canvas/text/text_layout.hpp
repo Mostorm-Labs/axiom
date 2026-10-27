@@ -124,6 +124,8 @@ class RichTextLayoutService final {
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
     resolve(foundation::ObjectId, const semantic::RichTextContent&);
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolveSectionTitle(foundation::ObjectId, const semantic::SectionContent&);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
     resolveNatural(foundation::ObjectId, const semantic::RichTextContent&);
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
     resolveShapeNatural(foundation::ObjectId, const semantic::RichTextContent&,

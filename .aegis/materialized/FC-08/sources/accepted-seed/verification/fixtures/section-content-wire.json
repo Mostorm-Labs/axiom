@@ -1,0 +1,56 @@
+{
+  "authority": "accepted AP02 SectionContent, inherited geometry.proto Rect2 tags1..4",
+  "production_codec_used": false,
+  "cases": [
+    {
+      "id": "SCW01",
+      "message_type": "SectionContent",
+      "wire_hex": "0a240900000000000034c0110000000000000000190000000000005e402100000000000054401200190000000000002040210000000000003440",
+      "size_bytes": 58,
+      "expected": "ACCEPT",
+      "scope": "single message fixture; wrapper/admission checks remain separate"
+    },
+    {
+      "id": "SCW02",
+      "message_type": "SectionContent",
+      "wire_hex": "0a240900000000000034c0110000000000000000190000000000005e40210000000000005440190000000000002040210000000000003440",
+      "size_bytes": 56,
+      "expected": "REJECT_REQUIRED_TITLE",
+      "scope": "single message fixture; wrapper/admission checks remain separate"
+    },
+    {
+      "id": "SCW03",
+      "message_type": "SectionContent",
+      "wire_hex": "0a240900000000000034c01100000000000000001900000000000000002100000000000054401200190000000000002040210000000000003440",
+      "size_bytes": 58,
+      "expected": "REJECT_WIDTH",
+      "scope": "single message fixture; wrapper/admission checks remain separate"
+    },
+    {
+      "id": "SCW04",
+      "message_type": "SectionContent",
+      "wire_hex": "0a240900000000000034c0110000000000000000190000000000005e40210000000000005440120019000000000000f0bf210000000000003440",
+      "size_bytes": 58,
+      "expected": "REJECT_PADDING",
+      "scope": "single message fixture; wrapper/admission checks remain separate"
+    },
+    {
+      "id": "SCW05",
+      "message_type": "SectionContent",
+      "wire_hex": "0a240900000000000034c0110000000000000000190000000000005e402100000000000054401200190000000000002040210000000000003440120178",
+      "size_bytes": 61,
+      "expected": "REJECT_DUPLICATE_SINGULAR",
+      "scope": "single message fixture; wrapper/admission checks remain separate"
+    },
+    {
+      "id": "SCW06",
+      "message_type": "SectionContent",
+      "wire_hex": "0a240900000000000034c0110000000000000080190000000000005e402100000000000054401200190000000000002040210000000000003440",
+      "size_bytes": 58,
+      "expected": "Encoder normalizes semantic y=-0 to +0, producing SCW01 canonical bytes. The supplied negative-zero source bytes are illustrative, not a new wire-ingress acceptance rule.",
+      "scope": "single message fixture; wrapper/admission checks remain separate",
+      "direction": "semantic-model to canonical writer",
+      "canonical_expected_id": "SCW01"
+    }
+  ]
+}

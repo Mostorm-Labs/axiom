@@ -161,17 +161,22 @@ void tools(DebugPanelContext& c) {
         ImGui::SeparatorText("Selected object");
         ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c));
         bool objectFirst=true;
+        const bool sectionSelected=state.control.selectedKind==static_cast<std::uint32_t>(canvas::semantic::ObjectKind::kSection);
+        ImGui::BeginDisabled(sectionSelected);
         if (panel_detail::flowButton(state.control.selectedLocked ? "Unlock" : "Lock", objectFirst)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedLock,
                                             !state.control.selectedLocked); c.ui.markControlSubmitted();
         }
+        ImGui::EndDisabled();
         ImGui::BeginDisabled(state.control.selectedLocked);
-        if (panel_detail::flowButton("Delete selected", objectFirst)) {
+        if (panel_detail::flowButton(sectionSelected?"Release selected Section":"Delete selected", objectFirst)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kDeleteSelected); c.ui.markControlSubmitted();
         }
+        ImGui::BeginDisabled(sectionSelected);
         if (panel_detail::flowButton("Bring front", objectFirst)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedOrder, true); c.ui.markControlSubmitted();
         }
+        ImGui::EndDisabled();
         const auto selectedConnector = c.controls.selectedConnector();
         if (selectedConnector.available) {
             if (selectedConnector.content.routing == canvas::semantic::ConnectorRouting::kStraight &&
@@ -329,6 +334,69 @@ void view(DebugPanelContext& context) {
     if (!context.controls.hasRuntimeOwner())
         ImGui::TextUnformatted("View controls: Unsupported (Runtime owner unbound)");
 }
+void sections(DebugPanelContext& c) {
+    using A=canvas::runtime::SectionAction;
+    ImGui::SeparatorText("Section");
+    const auto section=c.controls.sectionSnapshot();
+    const auto submit=[&](canvas::runtime::SectionIntent intent) {
+        intent.expectedSemanticGeneration=section.semanticGeneration;
+        intent.selectionRevision=section.selectionRevision;
+        (void)c.controls.sectionIntent(intent);c.ui.markControlSubmitted();
+    };
+    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c)||section.busy);
+    bool first=true;
+    if(panel_detail::flowButton("Create Section",first))submit({});
+    ImGui::BeginDisabled(section.selectedRoots.empty());
+    if(panel_detail::flowButton("Wrap selection",first)) {
+        canvas::runtime::SectionIntent intent;intent.action=A::kWrap;intent.objects=section.selectedRoots;submit(intent);
+    }
+    static std::optional<canvas::foundation::ObjectId> moveTarget;
+    static canvas::runtime::CanvasTargetKey moveTargetBinding{};
+    if(moveTargetBinding!=section.target){moveTarget.reset();moveTargetBinding=section.target;}
+    if(moveTarget&&panel_detail::flowButton("Move into target Section",first)) {
+        canvas::runtime::SectionIntent intent;intent.action=A::kReparent;intent.objects=section.selectedRoots;intent.parentId=moveTarget;submit(intent);
+    }
+    if(panel_detail::flowButton("Move to root",first)) {
+        canvas::runtime::SectionIntent intent;intent.action=A::kReparent;intent.objects=section.selectedRoots;submit(intent);
+    }
+    ImGui::EndDisabled();
+    if(section.available) {
+        ImGui::Text("Members: %zu",section.directChildren.size());
+        if(ImGui::Button("Use as move target"))moveTarget=section.objectId;
+        if(ImGui::Button("Select children")) {
+            canvas::runtime::SectionIntent intent;intent.action=A::kSelectChildren;intent.objectId=section.objectId;submit(intent);
+        }
+        ImGui::SameLine();
+        if(ImGui::Button("Release Section")) {
+            canvas::runtime::SectionIntent intent;intent.action=A::kRelease;intent.objectId=section.objectId;submit(intent);
+        }
+        static canvas::foundation::ObjectId editingId;
+        static std::array<char,4096> title{};
+        static canvas::semantic::Rect2 boundary{};
+        static std::uint64_t generation=0;
+        static canvas::runtime::CanvasTargetKey editingBinding{};
+        if(editingBinding!=section.target||editingId!=section.objectId||generation!=section.semanticGeneration) {
+            editingBinding=section.target;
+            editingId=section.objectId;generation=section.semanticGeneration;
+            title.fill(0);
+            if(section.content.title.size()<title.size())std::copy(section.content.title.begin(),section.content.title.end(),title.begin());
+            boundary=section.content.boundary;
+        }
+        ImGui::BeginDisabled(section.content.title.size()>=title.size());
+        ImGui::InputText("Section title",title.data(),title.size());
+        if(ImGui::Button("Rename Section")) {
+            canvas::runtime::SectionIntent intent;intent.action=A::kRename;intent.objectId=section.objectId;intent.content.title=title.data();submit(intent);
+        }
+        ImGui::EndDisabled();
+        ImGui::InputDouble("Boundary X",&boundary.x);ImGui::InputDouble("Boundary Y",&boundary.y);
+        ImGui::InputDouble("Boundary width",&boundary.width);ImGui::InputDouble("Boundary height",&boundary.height);
+        if(ImGui::Button("Resize boundary")) {
+            canvas::runtime::SectionIntent intent;intent.action=A::kResize;intent.objectId=section.objectId;intent.content.boundary=boundary;submit(intent);
+        }
+        if(!section.projectionReady)ImGui::TextUnformatted("Section projection pending");
+    }
+    ImGui::EndDisabled();
+}
 void history(DebugPanelContext& c) {
     ImGui::SeparatorText("History");
     const bool enabled = panel_detail::canSubmitProduct(c);
@@ -344,6 +412,7 @@ void history(DebugPanelContext& c) {
 void registerControlDebugPanels(PanelRegistry& registry) noexcept {
     (void)registry.add({WorkspaceId::kControl, PanelSlot::kTools, 0, nullptr, tools});
     (void)registry.add({WorkspaceId::kControl, PanelSlot::kTools, 10, nullptr, images});
+    (void)registry.add({WorkspaceId::kControl, PanelSlot::kTools, 20, nullptr, sections});
     (void)registry.add({WorkspaceId::kControl, PanelSlot::kView, 0, nullptr, view});
     (void)registry.add({WorkspaceId::kControl, PanelSlot::kHistory, 0, nullptr, history});
 }

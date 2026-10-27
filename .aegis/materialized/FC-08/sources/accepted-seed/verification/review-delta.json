@@ -1,0 +1,70 @@
+{
+  "id": "FC08-P20-CR01",
+  "parent_design_id": "FC08-P20-v0.1",
+  "parent_manifest_sha256": "1e705746182e83ca90803966d7d8c3110688152c424d65c3944a545db89d83b6",
+  "effective_design_id": "FC08-P20-v0.1+CR01",
+  "changes": [
+    {
+      "id": "VR-C01",
+      "kind": "TEST_EXPECTATION_CLARIFICATION",
+      "scope": [
+        "H01",
+        "execution-observation-vector"
+      ],
+      "resolution": "Separate History entry count, cursor transitions and monotonically increasing canonical metadata. Undo/Redo do not append ordinary history entries.",
+      "status": "CLOSED_IN_REVIEW"
+    },
+    {
+      "id": "VR-C02",
+      "kind": "ORACLE_BOUNDARY_CLARIFICATION",
+      "scope": [
+        "H04",
+        "G02",
+        "G05",
+        "W02"
+      ],
+      "resolution": "Differentiate raw validity from command E01 admission; precise boundary-only changes; both numeric positive and rejection variants; SCW06 is writer-side only. No upstream semantic change.",
+      "status": "CLOSED_IN_REVIEW"
+    },
+    {
+      "id": "VR-C03",
+      "kind": "NONVACUOUS_OBSERVATION_CLARIFICATION",
+      "scope": [
+        "C01",
+        "C03",
+        "R02"
+      ],
+      "resolution": "Add final-correct adversarial traces and positive completion assertions; empty/unavailable/truncated positive observations are not green. No new performance threshold.",
+      "status": "CLOSED_IN_REVIEW"
+    },
+    {
+      "id": "VR-C04",
+      "kind": "EVIDENCE_BINDING_CLARIFICATION",
+      "scope": [
+        "W07",
+        "K01",
+        "P04",
+        "M01-M04",
+        "R01-R03"
+      ],
+      "resolution": "Reuse genuinely equivalent observations with explicit mapping; fixed 60 case families/required variants; controlled mechanical materialization with independent expected values before corresponding production mutation. No new evidence family or recursive proof.",
+      "status": "CLOSED_IN_REVIEW"
+    }
+  ],
+  "changed_case_ids": [
+    "FC08-H01",
+    "FC08-H04",
+    "FC08-G02",
+    "FC08-G05",
+    "FC08-C01",
+    "FC08-C03",
+    "FC08-P04"
+  ],
+  "logical_case_count": 60,
+  "family_count": 10,
+  "new_case_ids": [],
+  "upstream_authority_changed": false,
+  "e01_changed": false,
+  "physical_gate_changed": false,
+  "production_code_changed": false
+}

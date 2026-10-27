@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="2"
+	failures="2"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="0"
+	timestamp="2026-10-26T23:26:17"
+	>
+	<testcase name="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0" classname="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0" time="0.371662" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Accepted/SectionHistoryBudget
+[ RUN      ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_history_test.cpp(352): error: Value of: seed.ok()
+  Actual: false
+Expected: true
+seed decode error=10 bytes=7733066
+Google Test trace:
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_history_test.cpp(343): FC08-H03/root-children-65534
+
+[  FAILED  ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0, where GetParam() = {"author":"independent field table/literal tables/ordered rational binary64; no DUT output","case_id":"FC08-H03","expected":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65534/expected.json","sha256":"79d2b28490940471480f11e07fb7bf2885f73bc1b740ed02374454e58cd3fa1f","size":279},"future_seam":"typed undoable container command and EditorHistory","input":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65534/input.json","sha256":"f77b15b0b27e3a5136cbb0b1cc31e26efb729499eef639cdd15ecdfb65ee09c6","size":308},"product_status":"REQUIRES_PRODUCT_EXECUTION","variant_id":"FC08-H03/root-children-65534","wire":[{"label":"F","recipe":"root-children-65534","root":"Operation","sha256":"fb9eaa43f11fea93607ca4ee00b28465c7f3f8c2d24a12833488c7c4ac77363b","size":7995372},{"label":"U","recipe":"root-children-65534","root":"Operation","sha256":"cba73f6dfce19467de5efbbe314b6fd8df4dd1a3b3f7f27439f2f2f848877f4e","size":7995516}]} (242 ms)
+[----------] 1 test from Accepted/SectionHistoryBudget (242 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (242 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0, where GetParam() = {"author":"independent field table/literal tables/ordered rational binary64; no DUT output","case_id":"FC08-H03","expected":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65534/expected.json","sha256":"79d2b28490940471480f11e07fb7bf2885f73bc1b740ed02374454e58cd3fa1f","size":279},"future_seam":"typed undoable container command and EditorHistory","input":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65534/input.json","sha256":"f77b15b0b27e3a5136cbb0b1cc31e26efb729499eef639cdd15ecdfb65ee09c6","size":308},"product_status":"REQUIRES_PRODUCT_EXECUTION","variant_id":"FC08-H03/root-children-65534","wire":[{"label":"F","recipe":"root-children-65534","root":"Operation","sha256":"fb9eaa43f11fea93607ca4ee00b28465c7f3f8c2d24a12833488c7c4ac77363b","size":7995372},{"label":"U","recipe":"root-children-65534","root":"Operation","sha256":"cba73f6dfce19467de5efbbe314b6fd8df4dd1a3b3f7f27439f2f2f848877f4e","size":7995516}]}
+
+ 1 FAILED TEST
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1" classname="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1" time="0.278671" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Accepted/SectionHistoryBudget
+[ RUN      ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_history_test.cpp(352): error: Value of: seed.ok()
+  Actual: false
+Expected: true
+seed decode error=10 bytes=7733184
+Google Test trace:
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_history_test.cpp(343): FC08-H03/root-children-65535
+
+[  FAILED  ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1, where GetParam() = {"author":"independent field table/literal tables/ordered rational binary64; no DUT output","case_id":"FC08-H03","expected":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65535/expected.json","sha256":"e1cc24f9249d0d1d6f7c0cd0e61e5c66f9dadab13392425f90e0c44b577db110","size":281},"future_seam":"typed undoable container command and EditorHistory","input":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65535/input.json","sha256":"7d55163ba474acd767dc6a4d9ed3628c62403f01f9e5b7d45228012d6ee2c92a","size":309},"product_status":"REQUIRES_PRODUCT_EXECUTION","variant_id":"FC08-H03/root-children-65535","wire":[{"label":"F","recipe":"root-children-65535","root":"Operation","sha256":"75d41a3e30a176a64742a9ba08fb7e4697f9863f45b3be1104691d4676165e5b","size":7995494},{"label":"U","recipe":"root-children-65535","root":"Operation","sha256":"adcd079d651207f8dd872bbbbb89cb7ac1de195816b76a964b5e0b3435b1cfd9","size":7995638}]} (239 ms)
+[----------] 1 test from Accepted/SectionHistoryBudget (239 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (239 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1, where GetParam() = {"author":"independent field table/literal tables/ordered rational binary64; no DUT output","case_id":"FC08-H03","expected":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65535/expected.json","sha256":"e1cc24f9249d0d1d6f7c0cd0e61e5c66f9dadab13392425f90e0c44b577db110","size":281},"future_seam":"typed undoable container command and EditorHistory","input":{"path":".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-H03/root-children-65535/input.json","sha256":"7d55163ba474acd767dc6a4d9ed3628c62403f01f9e5b7d45228012d6ee2c92a","size":309},"product_status":"REQUIRES_PRODUCT_EXECUTION","variant_id":"FC08-H03/root-children-65535","wire":[{"label":"F","recipe":"root-children-65535","root":"Operation","sha256":"75d41a3e30a176a64742a9ba08fb7e4697f9863f45b3be1104691d4676165e5b","size":7995494},{"label":"U","recipe":"root-children-65535","root":"Operation","sha256":"adcd079d651207f8dd872bbbbb89cb7ac1de195816b76a964b5e0b3435b1cfd9","size":7995638}]}
+
+ 1 FAILED TEST
+</system-out>
+	</testcase>
+</testsuite>

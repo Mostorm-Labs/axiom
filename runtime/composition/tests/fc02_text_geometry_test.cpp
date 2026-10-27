@@ -1687,4 +1687,54 @@ TEST(FC02Formatting, ImportedFamiliesAreNamedSelectableAndActuallyRender) {
         ASSERT_EQ(h.intent(TextIntentKind::kSelectAll).status, TextStatus::kObserved);
     }
 }
+TEST(FC08SectionTextGeometry, WrappedShapeEditingFollowsAncestorWorldPose) {
+    Host h(true);auto record=labelShape();seedShape(h,record);
+    const auto edit=[&](float x,float y) {
+        runtime::TextIntent intent;intent.clientId=15;intent.requestId=++h.request;
+        intent.target=h.facade.mountedCanvasTargets().front();intent.kind=runtime::TextIntentKind::kEditAtPoint;
+        intent.viewX=x;intent.viewY=y;
+        EXPECT_EQ(h.facade.submitTextIntent(intent).status,runtime::TextStatus::kQueued);
+        EXPECT_TRUE(h.runtime.ownerPump());EXPECT_EQ(h.facade.textIntentReceipt(15,h.request)->status,runtime::TextStatus::kApplied);
+    };
+    edit(120,90);ASSERT_EQ(h.input(runtime::TextInputKind::kReplace,u"Section child text").status,runtime::TextStatus::kApplied);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kApplied);
+    edit(120,90);const auto before=h.facade.readTextGeometry();ASSERT_TRUE(before.available);
+    ASSERT_EQ(h.intent(runtime::TextIntentKind::kFinish).status,runtime::TextStatus::kApplied);
+    runtime::SectionIntent wrap;wrap.action=runtime::SectionAction::kWrap;wrap.objects={record.id};
+    wrap.objectId=foundation::ObjectId::fromUint64(6001);
+    ASSERT_EQ(h.facade.submitSectionIntent(wrap,1,8806).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(h.runtime.ownerPump());
+    runtime::CanvasControlRequest move;move.clientId=8806;move.requestId=2;move.target=h.facade.mountedCanvasTargets()[0];
+    move.payload.kind=runtime::CanvasControlPayloadKind::kSelectedTransform;move.payload.transform={1,0,0,1,30,40};
+    ASSERT_EQ(h.facade.submitCanvasControl(move).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(h.runtime.ownerPump());
+    edit(150,130);const auto after=h.facade.readTextGeometry();ASSERT_TRUE(after.available);
+    EXPECT_NEAR(after.caret[0]-before.caret[0],30,0.01F);EXPECT_NEAR(after.caret[1]-before.caret[1],40,0.01F);
+}
+TEST(FC08SectionTextGeometry, MetadataTitleUsesRegisteredFontAndDrawsGlyphPixels) {
+    Host h(true);
+    runtime::SectionIntent intent;intent.objectId=foundation::ObjectId::fromUint64(6002);
+    intent.content.title="Section title";intent.transform.tx=10;intent.transform.ty=10;
+    ASSERT_EQ(h.facade.submitSectionIntent(intent,1,8807).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    const auto before=h.facade.readSection(intent.objectId);
+    EXPECT_TRUE(before.titleLayoutReady);EXPECT_GT(before.titleGlyphCount,0U);EXPECT_TRUE(before.titleDiagnostics.empty());
+    runtime::RuntimeFrameOpportunity frame;ASSERT_TRUE(h.runtime.serviceFrameOpportunity(false,frame));
+    std::vector<std::uint8_t> titlePixels(256*256*4);ASSERT_TRUE(h.runtime.readCanonicalRgba(titlePixels));
+    intent.action=runtime::SectionAction::kRename;intent.content.title="";
+    ASSERT_EQ(h.facade.submitSectionIntent(intent,2,8807).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());ASSERT_TRUE(h.runtime.serviceFrameOpportunity(false,frame));
+    std::vector<std::uint8_t> blankPixels(titlePixels.size());ASSERT_TRUE(h.runtime.readCanonicalRgba(blankPixels));
+    EXPECT_NE(titlePixels,blankPixels)<<"Plain metadata titles must produce glyph pixels";
+}
+TEST(FC08SectionTextGeometry, LateFontPublicationRefreshesMetadataTitle) {
+    runtime::RuntimeComposition composition;ASSERT_TRUE(composition.open());ASSERT_TRUE(composition.bindSurface(256,256));
+    auto& facade=composition.controlFacade();runtime::SectionIntent intent;
+    intent.objectId=foundation::ObjectId::fromUint64(6003);intent.content.title="Late font";
+    ASSERT_EQ(facade.submitSectionIntent(intent,1,8807).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(composition.ownerPump());EXPECT_FALSE(facade.readSection(intent.objectId).titleLayoutReady);
+    const auto generation=composition.readback().semanticGeneration;
+    ASSERT_TRUE(minimal_runtime_host::bindHostTextFonts(composition,FC02_HOST_FONT,FC02_FONT_CATALOG_ROOT));
+    const auto after=facade.readSection(intent.objectId);
+    EXPECT_EQ(composition.readback().semanticGeneration,generation);EXPECT_TRUE(after.titleLayoutReady);
+    EXPECT_GT(after.titleGlyphCount,0U);EXPECT_TRUE(after.titleDiagnostics.empty());
+}
 } // namespace

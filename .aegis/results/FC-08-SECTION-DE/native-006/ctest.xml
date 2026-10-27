@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="38"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="35"
+	timestamp="2026-10-27T01:53:39"
+	>
+	<testcase name="DUIM1Control" classname="DUIM1Control" time="0.126613" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC08SectionGeometry" classname="FC08SectionGeometry" time="0.133007" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 3 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 3 tests from FC08SectionGeometry
+[ RUN      ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren
+[       OK ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren (0 ms)
+[ RUN      ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose
+[       OK ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose (0 ms)
+[ RUN      ] FC08SectionGeometry.PublicationFailureRetainsOldSceneAndRecoveryDoesNotClipChildren
+[       OK ] FC08SectionGeometry.PublicationFailureRetainsOldSceneAndRecoveryDoesNotClipChildren (0 ms)
+[----------] 3 tests from FC08SectionGeometry (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 3 tests.
+</system-out>
+	</testcase>
+	<testcase name="canvas_rf01_scene_atomicity" classname="canvas_rf01_scene_atomicity" time="0.326954" status="run">
+		<properties/>
+		<system-out>RF01-0 Scene atomicity tests passed
+</system-out>
+	</testcase>
+	<testcase name="canvas_g2_a1_runtime_record_projection" classname="canvas_g2_a1_runtime_record_projection" time="0.14352" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a2_bounds_system" classname="canvas_g2_a2_bounds_system" time="0.128567" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC05Route" classname="FC05Route" time="0.203021" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 16 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 16 tests from FC05Route
+[ RUN      ] FC05Route.ClearParallelPortsUseTheMiddleLaneInOneQuantum
+[       OK ] FC05Route.ClearParallelPortsUseTheMiddleLaneInOneQuantum (0 ms)
+[ RUN      ] FC05Route.DeferredPreviewKeepsReadyPolylineAndPendingOrthogonalShape
+[       OK ] FC05Route.DeferredPreviewKeepsReadyPolylineAndPendingOrthogonalShape (0 ms)
+[ RUN      ] FC05Route.AlignedPortsStayStraightAndCenterLaneNeverCrossesAnObstacle
+[       OK ] FC05Route.AlignedPortsStayStraightAndCenterLaneNeverCrossesAnObstacle (0 ms)
+[ RUN      ] FC05Route.AlignedTriangleVerticalPortsPreferStraightAcrossEscapeAlternatives
+[       OK ] FC05Route.AlignedTriangleVerticalPortsPreferStraightAcrossEscapeAlternatives (0 ms)
+[ RUN      ] FC05Route.CollinearEndpointsDetourAroundBlockingObject
+[       OK ] FC05Route....
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="canvas_fc02_shape_label_scene" classname="canvas_fc02_shape_label_scene" time="0.156269" status="run">
+		<properties/>
+		<system-out>SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\out\fc08-section-c\native\runtime\scene\tests\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\out\fc08-section-c\native\runtime\scene\tests\icudtl.dat.
+</system-out>
+	</testcase>
+	<testcase name="FC03ImageScene" classname="FC03ImageScene" time="0.349033" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a3_full_incremental_equivalence" classname="canvas_g2_a3_full_incremental_equivalence" time="0.182446" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a6_incremental_equivalence" classname="canvas_g2_a6_incremental_equivalence" time="0.481984" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a6_atomic_publication" classname="canvas_g2_a6_atomic_publication" time="0.3634" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_g2_a6_recovery" classname="canvas_g2_a6_recovery" time="0.295158" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="canvas_fc01_derived_geometry" classname="canvas_fc01_derived_geometry" time="0.174508" status="run">
+		<properties/>
+		<system-out>PASS SH2 frozen geometry, resized/None and affine hit probes: 2100
+</system-out>
+	</testcase>
+	<testcase name="G4SelectionSession" classname="G4SelectionSession" time="0.128844" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G46TransformHandleDrag" classname="G46TransformHandleDrag" time="0.251305" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G4EditorHistory" classname="G4EditorHistory" time="0.502882" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC01EditorHistoryInverseFamilies" classname="FC01EditorHistoryInverseFamilies" time="0.227775" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G3HeadlessSkia" classname="G3HeadlessSkia" time="0.344132" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC05ConnectorPendingRaster" classname="FC05ConnectorPendingRaster" time="0.0301439" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC05StickyFractionalProduction" classname="FC05StickyFractionalProduction" time="0.0279419" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC01TriangleConnectorRaster" classname="FC01TriangleConnectorRaster" time="2.15784" status="fail">
+		<failure message="Exit code 0xc0000409"/>
+		<properties/>
+		<system-out>Assertion failed: pixel(*backend.observation(),129,103)==(Rgba{0,255,0,255}), file C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\render\tests\skia_headless_backend_test.cpp, line 751
+</system-out>
+	</testcase>
+	<testcase name="G3Visibility" classname="G3Visibility" time="0.724976" status="run">
+		<properties/>
+		<system-out>{"total_scene_records":100000,"visible_records":500,"candidates_examined":500,"semantic_object_iterations":0}
+</system-out>
+	</testcase>
+	<testcase name="G3DirectReference" classname="G3DirectReference" time="0.228434" status="run">
+		<properties/>
+		<system-out>{"nine_kind_entries":9,"group_zero_pixels":true,"order_exact":true,"canonical_bytes":2932,"digest":"fnv1a64:e6bc41c591b52e08","world_to_view":[1.93782,-0.494808,0.494808,1.93782,396.166,309.236]}
+{"digest_replay":true,"mutation_sensitivity":true,"identity":true,"order":true,"transform":true,"property":true,"content":true,"dependency":true,"erase_mask":true,"camera":true,"clip":true}
+{"total_scene_records":100000,"visible_ids":500,"find_lookups":500,"record_iterations":0,"semantic_iterations":0}
+PASS Shape label changes canonical reference bytes
+</system-out>
+	</testcase>
+	<testcase name="FC08SectionConsumer" classname="FC08SectionConsumer" time="0.333041" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 8 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 8 tests from FC08SectionConsumer
+[ RUN      ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory
+[       OK ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory (2 ms)
+[ RUN      ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically
+[       OK ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically (1 ms)
+[ RUN      ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts (1 ms)
+[ RUN      ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing
+[       OK ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWrites...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC05ConnectorFacade" classname="FC05ConnectorFacade" time="0.243622" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=4 scene_records=4
+[axiom] present begin frame=2 objects=4 scene_records=4
+[axiom] present begin frame=3 objects=5 scene_records=5
+PASS FC05 public routing, invalidation, derived History, failure and lifecycle
+</system-out>
+	</testcase>
+	<testcase name="FC02Text" classname="FC02Text" time="25.7432" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 73 tests from 9 test suites.
+[----------] Global test environment set-up.
+[----------] 5 tests from FC02Snapshot
+[ RUN      ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication
+[       OK ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication (0 ms)
+[ RUN      ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue
+[       OK ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue (0 ms)
+[ RUN      ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest
+[       OK ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest (1 ms)
+[ RUN      ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore
+[       OK ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore (2 ms)
+[ RUN      ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapability
+[       OK ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapabilit...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC00XBrushBatchEvaluation" classname="FC00XBrushBatchEvaluation" time="0.269905" status="run">
+		<properties/>
+		<system-out>64 confirmed points: appendEvaluations=1 maxInput=64
+</system-out>
+	</testcase>
+	<testcase name="FC00XBrushPressureCapability" classname="FC00XBrushPressureCapability" time="0.0272407" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+unavailable device pressure: expected brush missing-pressure policy=0.5 actual=0.500
+</system-out>
+	</testcase>
+	<testcase name="FC00XBrushBatchSemantics" classname="FC00XBrushBatchSemantics" time="0.0534481" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=3 obj...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC00XCanonicalBusyPreviewProgress" classname="FC00XCanonicalBusyPreviewProgress" time="0.031921" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: fixture backbuffer busy framegen=1 providergen=1
+busy=canonical boundary=acquire progressed=1 canonical=0 preview=1
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: fixture present busy framegen=1 providergen=1
+busy=canonical boundary=present progressed=1 canonical=0 preview=1
+[axiom] present begin frame=2 objects=0 scene_records=0
+</system-out>
+	</testcase>
+	<testcase name="FC00XPreviewBusyCanonicalProgress" classname="FC00XPreviewBusyCanonicalProgress" time="0.0260364" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+busy=preview boundary=acquire progressed=1 canonical=1 preview=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+busy=preview boundary=present progressed=1 canonical=1 preview=0
+</system-out>
+	</testcase>
+	<testcase name="FC00XBusyCanonicalPendingFeedback" classname="FC00XBusyCanonicalPendingFeedback" time="0.0260322" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present skia failed: fixture backbuffer busy framegen=1 providergen=1
+</system-out>
+	</testcase>
+	<testcase name="FC00XFatalProviderFailure" classname="FC00XFatalProviderFailure" time="0.0269303" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: fixture device lost framegen=1 providergen=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present skia failed: fixture device failure framegen=1 providergen=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+</system-out>
+	</testcase>
+	<testcase name="FC00XRuntimeFacade" classname="FC00XRuntimeFacade" time="0.345625" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC03ImageFacade" classname="FC03ImageFacade" time="0.25703" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+</system-out>
+	</testcase>
+	<testcase name="PX0Workbench" classname="PX0Workbench" time="0.268611" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="DebugUiSimplifiedControls" classname="DebugUiSimplifiedControls" time="0.0369523" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="PX0ControlRouter" classname="PX0ControlRouter" time="0.300187" status="run">
+		<properties/>
+		<system-out>SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\out\fc08-section-c\native\debug_ui\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\out\fc08-section-c\native\debug_ui\icudtl.dat.
+</system-out>
+	</testcase>
+</testsuite>

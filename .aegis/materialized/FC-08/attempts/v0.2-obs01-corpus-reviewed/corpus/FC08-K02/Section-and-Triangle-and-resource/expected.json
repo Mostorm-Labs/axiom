@@ -1,0 +1,20 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "ready",
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "path": "required_capabilities",
+      "expected": [
+        "resource-manifest-v1",
+        "section-v1",
+        "shape2-triangle-v1"
+      ]
+    }
+  ],
+  "source_case": "FC08-K02",
+  "product_expected_only": true
+}

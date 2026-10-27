@@ -1,0 +1,44 @@
+{
+  "status": "FIXED_R01_POSITIVE_INDEPENDENTLY_RECONSTRUCTED_AND_DECODED",
+  "wire": {
+    "path": "tests/fc08/corpus/wire/legacy-snapshot1.pb",
+    "sha256": "7993293111cb8b8bc4d24df0934771febe03ac8e163aeb227de2908e322cee3d",
+    "size": 137
+  },
+  "typed_input": {
+    "path": "tests/fc08/corpus/wire/legacy-snapshot1.input.json",
+    "sha256": "44bc76ee220b2128e1ca061ef59115df2484afdf8601d74526c9be347e259737",
+    "size": 744
+  },
+  "reference_writer": {
+    "path": "tests/fc08/reference/wire.py",
+    "sha256": "122a8f587e5a984a3ffb3d545c8854ee81e6ce4a022cff52b73b86f1ad0e1ae6",
+    "size": 5114
+  },
+  "descriptor": {
+    "path": ".aegis/materialized/FC-08/proposed-descriptor/descriptor.pb",
+    "sha256": "9d77afed2f42678b8836e26673707301ca84f431657b79966259d00fe5d33477",
+    "size": 29761
+  },
+  "protoc": {
+    "path": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+    "sha256": "9a4fe52db00facbf858dc5af9addb50b551429004044e8a24f137de38c5b209f",
+    "size": 13261199
+  },
+  "decode": {
+    "argv": [
+      "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+      "--descriptor_set_in=C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\materialized\\FC-08\\proposed-descriptor\\descriptor.pb",
+      "--decode=auditoryworks.axiom.v1.DocumentSnapshot"
+    ],
+    "stdin": {
+      "path": "tests/fc08/corpus/wire/legacy-snapshot1.pb",
+      "sha256": "7993293111cb8b8bc4d24df0934771febe03ac8e163aeb227de2908e322cee3d",
+      "size": 137
+    },
+    "exit_code": 0,
+    "stdout": "document_id {\r\n  value: \"\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000d\"\r\n}\r\nschema_version: 1\r\nobjects {\r\n  id {\r\n    value: \"\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\000\\024\"\r\n  }\r\n  kind_id: 1\r\n  kind_version: 1\r\n  placement {\r\n    order_key {\r\n      value: \"\\020\"\r\n    }\r\n  }\r\n  transform {\r\n    a: 1\r\n    b: 0\r\n    c: 0\r\n    d: 1\r\n    tx: 0\r\n    ty: 0\r\n  }\r\n  properties {\r\n  }\r\n  content {\r\n    shape {\r\n      shape_kind: 1\r\n      width: 20\r\n      height: 20\r\n    }\r\n  }\r\n}\r\n",
+    "stderr": ""
+  },
+  "production_codec_used_as_expected": false
+}

@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "D:\\Softwares\\Anaconda\\python.exe",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests/fc08",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "environment_keys": [
+    "AXIOM_DEPS_DIR",
+    "AXIOM_PROTOC",
+    "AXIOM_SEMANTIC_HOST_ROOT",
+    "AXIOM_SEMANTIC_RUNTIME_ROOT",
+    "AXIOM_SEMANTIC_SDK_ROOT",
+    "CMAKE_PREFIX_PATH"
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "test_complete_size_recipes_are_real_encoded_bytes (test_corpus.CorpusContracts.test_complete_size_recipes_are_real_encoded_bytes) ... ok\ntest_literal_preimages_and_fresh_ids (test_corpus.CorpusContracts.test_literal_preimages_and_fresh_ids) ... ok\ntest_numeric_poses_are_constructed_not_arbitrary_error_samples (test_corpus.CorpusContracts.test_numeric_poses_are_constructed_not_arbitrary_error_samples) ... ok\ntest_literal_affine_and_concave_geometry (test_reference.FixedReferenceControls.test_literal_affine_and_concave_geometry) ... ok\ntest_r02_checks_each_boundary_and_requires_completion (test_reference.FixedReferenceControls.test_r02_checks_each_boundary_and_requires_completion) ... ok\ntest_complete_source_bound_descriptors_preserve_inherited_fields (test_source_materialization.SourceMaterialization.test_complete_source_bound_descriptors_preserve_inherited_fields) ... ok\ntest_exports_have_exact_hashes_and_acceptance_events (test_source_materialization.SourceMaterialization.test_exports_have_exact_hashes_and_acceptance_events) ... ok\n\n----------------------------------------------------------------------\nRan 7 tests in 157.355s\n\nOK\n"
+}

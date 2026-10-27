@@ -1,4 +1,5 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
+#include "canvas/scene/hierarchy_geometry.hpp"
 namespace canvas::interaction {
 struct CanvasEditingRuntime::ConnectorPreviewRouting {
     std::uint64_t generation=0;
@@ -26,7 +27,15 @@ scene::ConnectorGeometry CanvasEditingRuntime::previewConnectorGeometry(const se
         auto next=std::make_shared<ConnectorPreviewRouting>();next->generation=semanticGeneration_.current().value();
         next->selected=selection_.primary();next->transform=current;next->creation=creation;
         next->source=semanticObjects_.allObjects();
-        if(transform)for(auto& object:next->source)if(object.id==next->selected)object.transform=*transform;
+        if(transform)for(auto& object:next->source)if(object.id==next->selected) {
+            semantic::Transform2D inverseParent{};
+            if(object.placement.parent_id) {
+                const auto* parent=sceneCoordinator_->runtimeScene().find(*object.placement.parent_id);
+                if(!parent||!scene::inverseTransform(parent->transform,inverseParent))break;
+            }
+            object.transform=scene::composeTransform(inverseParent,*transform);
+        }
+        next->source=scene::projectWorldObjects(next->source);
         if(creation)next->queue.push_back(*creation);
         else for(const auto& object:next->source) {
             if(const auto* c=std::get_if<semantic::ConnectorContent>(&object.content);
@@ -37,7 +46,9 @@ scene::ConnectorGeometry CanvasEditingRuntime::previewConnectorGeometry(const se
     }
     const auto found=connectorPreviewRouting_->results.find(record.id);
     if(found!=connectorPreviewRouting_->results.end())return found->second;
-    auto route=*scene::connectorGeometry(record,connectorPreviewRouting_->source,true);
+    auto connector=record;
+    for(const auto& world:connectorPreviewRouting_->source)if(world.id==record.id){connector=world;break;}
+    auto route=*scene::connectorGeometry(connector,connectorPreviewRouting_->source,true);
     if(route.status!=runtime::ConnectorRouteStatus::kPending)
         connectorPreviewRouting_->results.emplace(record.id,route);
     return route;
@@ -71,7 +82,7 @@ bool CanvasEditingRuntime::serviceConnectorRouting() noexcept {
     const auto generation=semanticGeneration_.current();
     if(connectorRoutingGeneration_!=generation.value()) {
         cancelConnectorRouting();
-        connectorRoutingSource_=semanticObjects_.allObjects();
+        connectorRoutingSource_=scene::projectWorldObjects(semanticObjects_.allObjects());
         connectorRoutingGeneration_=generation.value();
         for(std::size_t i=0;i<connectorRoutingSource_.size();++i) {
             const auto* c=std::get_if<semantic::ConnectorContent>(&connectorRoutingSource_[i].content);

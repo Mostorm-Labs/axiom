@@ -1,3 +1,13 @@
+add_executable(axiom_fc08_section_geometry_tests fc08_section_geometry_test.cpp)
+target_link_libraries(axiom_fc08_section_geometry_tests PRIVATE canvas_runtime_scene GTest::gtest_main)
+target_include_directories(axiom_fc08_section_geometry_tests PRIVATE ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
+if(MSVC)
+    target_compile_options(axiom_fc08_section_geometry_tests PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+    target_compile_options(axiom_fc08_section_geometry_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+add_test(NAME FC08SectionGeometry COMMAND axiom_fc08_section_geometry_tests)
+
 add_executable(canvas_rf01_scene_atomicity_test scene_atomicity_test.cpp)
 target_link_libraries(canvas_rf01_scene_atomicity_test
     PRIVATE canvas_runtime_scene_fakes canvas_runtime_semantic)

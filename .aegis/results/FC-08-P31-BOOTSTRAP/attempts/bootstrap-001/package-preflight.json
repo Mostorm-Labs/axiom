@@ -1,0 +1,1357 @@
+{
+  "format": "fc08-product-bootstrap-preflight-v1",
+  "phase": "package",
+  "preflight_name": "PackageBindingPreflight",
+  "status": "BLOCKED_VERIFICATION",
+  "package_revision": "f67b9db29090449799bd3e05ef7f1d269dab6d31",
+  "package_files": {
+    "package.json": {
+      "path": ".aegis/packages/FC-08-PRODUCT-P31-v0.1/package.json",
+      "sha256": "16bf27433764def988bbff5eb925f08816c42f32842e23a4b33e46976c2df165",
+      "bytes": 3373
+    },
+    "authority.lock.json": {
+      "path": ".aegis/packages/FC-08-PRODUCT-P31-v0.1/authority.lock.json",
+      "sha256": "c29d7d2e0785cf2108acb618ff42571a545426880a0c388ab27512f4ff8e814a",
+      "bytes": 15687
+    },
+    "verification.lock.json": {
+      "path": ".aegis/packages/FC-08-PRODUCT-P31-v0.1/verification.lock.json",
+      "sha256": "ebddb0403215cca82641005e9819f61fbe0ed4d12ca4728325a0807ab4485a23",
+      "bytes": 15887
+    },
+    "execution-contract.json": {
+      "path": ".aegis/packages/FC-08-PRODUCT-P31-v0.1/execution-contract.json",
+      "sha256": "ba108a14b241308585a3c03304210d4544a2621529316782aa001dacf3201085",
+      "bytes": 24833
+    },
+    "evidence-contract.json": {
+      "path": ".aegis/packages/FC-08-PRODUCT-P31-v0.1/evidence-contract.json",
+      "sha256": "ccfb6068e6e05d9623672d1f9d150eae47c311e89cc6ffddbb8c404b9d3f0f60",
+      "bytes": 4560
+    },
+    "implementation-context.md": {
+      "path": ".aegis/packages/FC-08-PRODUCT-P31-v0.1/implementation-context.md",
+      "sha256": "d1c58bf27c4b36e798878160e72dda80f225092087b88fdbaa0deb6f2baa2530",
+      "bytes": 4573
+    }
+  },
+  "observed_head": "f67b9db29090449799bd3e05ef7f1d269dab6d31",
+  "qualification_subject_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+  "materialization_subject": "0d3b10bba1ac4a31d669dd4a45f94975ec24f3c3",
+  "repository_identity": {
+    "full_name": "Mostorm-Labs/axiom",
+    "id": 1306396623
+  },
+  "repository_identity_ok": true,
+  "package_byte_bindings_ok": true,
+  "frozen_input_bytes_ok": true,
+  "verified_refs": [
+    {
+      "label": "authority.current_authorities.semantic.repository_binding_source",
+      "path": ".aegis/packages/FC-08-P31-READINESS/authority.lock.json",
+      "matched": true
+    },
+    {
+      "label": "authority.current_authorities.execution_policy.registry_binding",
+      "path": ".aegis/authorities.json",
+      "matched": true
+    },
+    {
+      "label": "authority.current_authorities.architecture.accepted_exports.0",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P14.md",
+      "matched": true
+    },
+    {
+      "label": "authority.current_authorities.architecture.accepted_exports.1",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P15.md",
+      "matched": true
+    },
+    {
+      "label": "authority.current_authorities.architecture.accepted_exports.2",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P16.md",
+      "matched": true
+    },
+    {
+      "label": "authority.current_authorities.architecture.accepted_exports.3",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P17.md",
+      "matched": true
+    },
+    {
+      "label": "authority.sequence_acceptance",
+      "path": ".aegis/packages/FC-08-P31-READINESS/final-binding/seq01-p23-acceptance-v0.1.json",
+      "matched": true
+    },
+    {
+      "label": "authority.verification_design.closure_receipt",
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/closure-receipt.json",
+      "matched": true
+    },
+    {
+      "label": "authority.verification_design.review_delta",
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/review-delta.json",
+      "matched": true
+    },
+    {
+      "label": "authority.verification_design.reviewed_obligations",
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json",
+      "matched": true
+    },
+    {
+      "label": "authority.verification_design.result_contract",
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json",
+      "matched": true
+    },
+    {
+      "label": "authority.verification_design.effective_catalog",
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/effective-case-catalog.json",
+      "matched": true
+    },
+    {
+      "label": "authority.verification_design.physical_debt",
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/physical-debt.json",
+      "matched": true
+    },
+    {
+      "label": "authority.source_complete_materialization.source_index",
+      "path": ".aegis/materialized/FC-08/source-index.json",
+      "matched": true
+    },
+    {
+      "label": "authority.source_complete_materialization.descriptor_diff",
+      "path": ".aegis/materialized/FC-08/descriptor-diff.json",
+      "matched": true
+    },
+    {
+      "label": "authority.source_complete_materialization.output_index",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-index.json",
+      "matched": true
+    },
+    {
+      "label": "authority.source_complete_materialization.output_manifest",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-manifest.json",
+      "matched": true
+    },
+    {
+      "label": "authority.source_complete_materialization.runner",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner-manifest.json",
+      "matched": true
+    },
+    {
+      "label": "authority.source_complete_materialization.oracle_controls",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/oracle-controls.json",
+      "matched": true
+    },
+    {
+      "label": "authority.source_complete_materialization.baseline_probes",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/baseline-probes.json",
+      "matched": true
+    },
+    {
+      "label": "authority.source_complete_materialization.seam_map",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/seam-map.json",
+      "matched": true
+    },
+    {
+      "label": "authority.source_complete_materialization.profiles",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profiles.json",
+      "matched": true
+    },
+    {
+      "label": "authority.schema_baseline.current_descriptor",
+      "path": "schema/axiom/v1/descriptor/descriptor.current.pb",
+      "matched": true
+    },
+    {
+      "label": "authority.schema_baseline.current_descriptor_sha256_file",
+      "path": "schema/axiom/v1/descriptor/descriptor.current.sha256",
+      "matched": true
+    },
+    {
+      "label": "authority.schema_baseline.historical_descriptor_lock",
+      "path": "schema/axiom/v1/descriptor/descriptor.lock.pb",
+      "matched": true
+    },
+    {
+      "label": "authority.schema_baseline.historical_descriptor_lock_sha256_file",
+      "path": "schema/axiom/v1/descriptor/descriptor.lock.sha256",
+      "matched": true
+    },
+    {
+      "label": "authority.accepted_normative_exports.0",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P12.md",
+      "matched": true
+    },
+    {
+      "label": "authority.accepted_normative_exports.1",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P13.md",
+      "matched": true
+    },
+    {
+      "label": "authority.accepted_normative_exports.2",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P14.md",
+      "matched": true
+    },
+    {
+      "label": "authority.accepted_normative_exports.3",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P15.md",
+      "matched": true
+    },
+    {
+      "label": "authority.accepted_normative_exports.4",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P16.md",
+      "matched": true
+    },
+    {
+      "label": "authority.accepted_normative_exports.5",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P17.md",
+      "matched": true
+    },
+    {
+      "label": "authority.accepted_normative_exports.6",
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P20.md",
+      "matched": true
+    },
+    {
+      "label": "verification.design.variant_index",
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/variant-index.json",
+      "matched": true
+    },
+    {
+      "label": "verification.design.corpus_manifest",
+      "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus-manifest.json",
+      "matched": true
+    },
+    {
+      "label": "verification.design.reviewed_obligations",
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json",
+      "matched": true
+    },
+    {
+      "label": "verification.design.result_contract",
+      "path": ".aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json",
+      "matched": true
+    },
+    {
+      "label": "verification.frozen_execution_inputs.source_index",
+      "path": ".aegis/materialized/FC-08/source-index.json",
+      "matched": true
+    },
+    {
+      "label": "verification.frozen_execution_inputs.descriptor_diff",
+      "path": ".aegis/materialized/FC-08/descriptor-diff.json",
+      "matched": true
+    },
+    {
+      "label": "verification.frozen_execution_inputs.runner_manifest",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner-manifest.json",
+      "matched": true
+    },
+    {
+      "label": "verification.frozen_execution_inputs.oracle_controls",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/oracle-controls.json",
+      "matched": true
+    },
+    {
+      "label": "verification.frozen_execution_inputs.baseline_probes",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/baseline-probes.json",
+      "matched": true
+    },
+    {
+      "label": "verification.frozen_execution_inputs.seam_map",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/seam-map.json",
+      "matched": true
+    },
+    {
+      "label": "verification.frozen_execution_inputs.profiles",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profiles.json",
+      "matched": true
+    },
+    {
+      "label": "verification.frozen_execution_inputs.profile_observations",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profile-observations.json",
+      "matched": true
+    },
+    {
+      "label": "verification.frozen_execution_inputs.inherited_regression_baseline",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/inherited-regression.json",
+      "matched": true
+    },
+    {
+      "label": "verification.frozen_execution_inputs.materialization_output_index",
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-index.json",
+      "matched": true
+    },
+    {
+      "label": "verification.oracle_independence.reference_oracles",
+      "path": "tests/fc08/reference/oracles.py",
+      "matched": true
+    },
+    {
+      "label": "verification.oracle_independence.reference_variants",
+      "path": "tests/fc08/reference/variants.py",
+      "matched": true
+    },
+    {
+      "label": "verification.oracle_independence.reference_wire",
+      "path": "tests/fc08/reference/wire.py",
+      "matched": true
+    }
+  ],
+  "source_shape_registry": {
+    "path": "schema/axiom/v1/registry/shape_kind_registry_v1.yaml",
+    "sha256": "b726c4edf5cf04cacec7ef98722d19403bce42681a51094e74ebb992e8bbc7b4"
+  },
+  "product_runner_present": false,
+  "product_runner_diagnosis": "Authorized repair target, not by itself the terminal blocker. Real runner establishment is stopped by the unresolved frozen verification bindings above.",
+  "exact_profile_bindings_present": false,
+  "exact_blockers": [
+    {
+      "id": "BOOT-VER-01",
+      "classification": "VERIFICATION_DESIGN_DEFECT",
+      "owner": "P20 Verification / control review",
+      "finding": "Frozen reference geometry and canonical shape record disagree. Cannot repair in SUT adapter or silently rewrite an accepted fixture.",
+      "affected": [
+        {
+          "variant_id": "FC08-S01/boundary-full-child-inside",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-inside/input.json",
+            "sha256": "9c9977c1dfca068586503c625a767f956b8795c97613729202ea8bf74c601c5a",
+            "size": 2840
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-inside/expected.json",
+            "sha256": "4d0051cf58e22de52688039c38a638a45555e7cf3b92cec609fff6b4ca493544",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S01/boundary-full-child-overflow",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-overflow/input.json",
+            "sha256": "26f3e015fba91bc85ff8c086c9022f2e5d854631d59d1cc3a075f3638daebc3d",
+            "size": 2844
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-overflow/expected.json",
+            "sha256": "4d0051cf58e22de52688039c38a638a45555e7cf3b92cec609fff6b4ca493544",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S02/partial-actual-child",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S02/partial-actual-child/input.json",
+            "sha256": "a3886a9c7a4a29a5c531ff5111f8cfc7a0465a20af7feeb73c32d068fae85394",
+            "size": 2992
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S02/partial-actual-child/expected.json",
+            "sha256": "5bca5829ae04ee026e29246c08eed774962fd001b8a677f2dd1c7189137ea333",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S02/broad-phase-only-child",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S02/broad-phase-only-child/input.json",
+            "sha256": "a3886a9c7a4a29a5c531ff5111f8cfc7a0465a20af7feeb73c32d068fae85394",
+            "size": 2992
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S02/broad-phase-only-child/expected.json",
+            "sha256": "5bca5829ae04ee026e29246c08eed774962fd001b8a677f2dd1c7189137ea333",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S03/outer-partial-inner-full",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/outer-partial-inner-full/input.json",
+            "sha256": "6c85d1c57dffe61faaab551b80d54e8bcfe904263914ed0ed7513b03155f410e",
+            "size": 3816
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/outer-partial-inner-full/expected.json",
+            "sha256": "ed4e75ce36e92df033c6a3d2d8df85210b53e6edd7b1d8d8af07c3eef5541986",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/3/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S03/unopened-Group",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/unopened-Group/input.json",
+            "sha256": "736d9dd06d02b8b5ba940eb9a463821de2e5e1c3d014dd8d36a72081b5fea2bc",
+            "size": 3504
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/unopened-Group/expected.json",
+            "sha256": "5f4dda53c2feedb017549c96fb42b8265eb12650a6c01e7eb111c8155feba928",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/3/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S03/entered-Group",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/entered-Group/input.json",
+            "sha256": "238cba59bf4ae387ba753a678141553ee5826ddcd44b7cc4a8dd88d1284ab28f",
+            "size": 3553
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/entered-Group/expected.json",
+            "sha256": "ed4e75ce36e92df033c6a3d2d8df85210b53e6edd7b1d8d8af07c3eef5541986",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/3/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S04/concave-notch",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S04/concave-notch/input.json",
+            "sha256": "a1efd146a8b44302751adb1f89311bb7f2279e60a8fa7d6e3a63e1f2d26e57f3",
+            "size": 2974
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S04/concave-notch/expected.json",
+            "sha256": "307ec2085550ec89965d7702893d9f323a4e7c27b03a7d5333fbba268e66b448",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S05/child",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/child/input.json",
+            "sha256": "77a5ae695dfed289e53985a4fd253eee0af1bb6ad412d8c025f20901ab9ec957",
+            "size": 2894
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/child/expected.json",
+            "sha256": "81fb006220b17eec8a8bcbfa59b59db942f8953202f700d17cae6c515f158549",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S05/blank-interior",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/blank-interior/input.json",
+            "sha256": "d667d253c14d0aa76b132bbf25ec396dbcf69d5dca923ac70d24d4ad6ad58cc1",
+            "size": 2894
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/blank-interior/expected.json",
+            "sha256": "4b6750237ed62334e81fb855f3be9cbfbfd538aeacb6091075a6537072ec485d",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S05/header",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/header/input.json",
+            "sha256": "91a56fe8aa83b26fcb1b42b6246065016f419dd94ac4db294bc521318b69e52f",
+            "size": 2893
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/header/expected.json",
+            "sha256": "4b6750237ed62334e81fb855f3be9cbfbfd538aeacb6091075a6537072ec485d",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S05/border",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/border/input.json",
+            "sha256": "6b73f4e3e3fa240442cc895bb3a301ea814dd828c3f033e4ac78e85a2545613d",
+            "size": 2893
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/border/expected.json",
+            "sha256": "4b6750237ed62334e81fb855f3be9cbfbfd538aeacb6091075a6537072ec485d",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S06/shift-at-down-release-before-up",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S06/shift-at-down-release-before-up/input.json",
+            "sha256": "4ddcbd8ba2045b1e8fbafb5f5e866060ab3933d82579b8b59951f38171c235c2",
+            "size": 5000
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S06/shift-at-down-release-before-up/expected.json",
+            "sha256": "bb2d38121d4ceee98a380a4cd76fe1f2001a18fed246a0f7454c4fba51651046",
+            "size": 557
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/3/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S06/cancel",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S06/cancel/input.json",
+            "sha256": "bde58f743426d1a554470f327b0332493e020f8406d64e9f9d85a25433af69c0",
+            "size": 5004
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S06/cancel/expected.json",
+            "sha256": "ed0d01fc03cc503f4b62050daefb8f46711974b943eb9e64e07bb65b0339e4ed",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/3/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        }
+      ],
+      "resolution_required": "Decide the intended canonical geometry and review the exact input/oracle delta. Preserve current bytes until authorized."
+    },
+    {
+      "id": "BOOT-PKG-02",
+      "classification": "TASK_PACKAGE_DEFECT",
+      "owner": "P31 control review, P20 if applicability truth is unresolved",
+      "finding": "verification.lock.profile_policy requires exact headless applicability from variant-index/corpus manifest; neither file supplies that mapping.",
+      "missing_profile_variant_ids": [
+        "FC08-W01/base-source-complete",
+        "FC08-W01/additive-overlay",
+        "FC08-W02/SCW01",
+        "FC08-W02/SCW02",
+        "FC08-W02/SCW03",
+        "FC08-W02/SCW04",
+        "FC08-W02/SCW05",
+        "FC08-W02/SCW06",
+        "FC08-W02/missing-boundary",
+        "FC08-W02/missing-title",
+        "FC08-W02/missing-padding",
+        "FC08-W02/missing-header_height",
+        "FC08-W02/missing-x",
+        "FC08-W02/missing-y",
+        "FC08-W02/missing-width",
+        "FC08-W02/missing-height",
+        "FC08-W02/x-nan",
+        "FC08-W02/x-posinf",
+        "FC08-W02/x-neginf",
+        "FC08-W02/y-nan",
+        "FC08-W02/y-posinf",
+        "FC08-W02/y-neginf",
+        "FC08-W02/width-nan",
+        "FC08-W02/width-posinf",
+        "FC08-W02/width-neginf",
+        "FC08-W02/height-nan",
+        "FC08-W02/height-posinf",
+        "FC08-W02/height-neginf",
+        "FC08-W02/padding-nan",
+        "FC08-W02/padding-posinf",
+        "FC08-W02/padding-neginf",
+        "FC08-W02/header_height-nan",
+        "FC08-W02/header_height-posinf",
+        "FC08-W02/header_height-neginf",
+        "FC08-W02/width-zero",
+        "FC08-W02/width-negative",
+        "FC08-W02/height-zero",
+        "FC08-W02/height-negative",
+        "FC08-W02/padding-negative",
+        "FC08-W02/header_height-negative",
+        "FC08-W02/invalid-utf8",
+        "FC08-W02/whitespace",
+        "FC08-W02/combining",
+        "FC08-W03/root-absent",
+        "FC08-W03/parent-empty",
+        "FC08-W03/parent-zero",
+        "FC08-W03/effect-absent",
+        "FC08-W03/relocate-empty-with-move",
+        "FC08-W03/relocate-empty-without-move",
+        "FC08-W03/duplicate-effect",
+        "FC08-W03/duplicate-singular",
+        "FC08-W04/model-permutation-nodes",
+        "FC08-W04/model-permutation-child_sets",
+        "FC08-W04/model-permutation-complete_members",
+        "FC08-W04/model-permutation-relocations",
+        "FC08-W04/model-permutation-order_only_edits",
+        "FC08-W04/model-permutation-containers",
+        "FC08-W04/model-permutation-containers_before",
+        "FC08-W04/model-permutation-items",
+        "FC08-W04/model-permutation-geometry_basis",
+        "FC08-W04/duplicate-nodes",
+        "FC08-W04/duplicate-child_sets",
+        "FC08-W04/duplicate-complete_members",
+        "FC08-W04/duplicate-relocations",
+        "FC08-W04/duplicate-order_only_edits",
+        "FC08-W04/duplicate-containers",
+        "FC08-W04/duplicate-containers_before",
+        "FC08-W04/duplicate-items",
+        "FC08-W04/duplicate-geometry_basis",
+        "FC08-W04/wire-noncanonical",
+        "FC08-W04/wire-duplicate",
+        "FC08-W04/root-first",
+        "FC08-W04/members-by-id",
+        "FC08-W05/introduce-shape",
+        "FC08-W05/release-shape",
+        "FC08-W05/multiple-effects",
+        "FC08-W05/leaf-content-field",
+        "FC08-W05/resource-field",
+        "FC08-W06/fill-set",
+        "FC08-W06/fill-clear",
+        "FC08-W06/opacity-set",
+        "FC08-W06/opacity-clear",
+        "FC08-W06/locked",
+        "FC08-W06/visible",
+        "FC08-W06/stroke",
+        "FC08-W06/blend",
+        "FC08-W06/erase-masks",
+        "FC08-W07/legacy-codec",
+        "FC08-W07/legacy-snapshot",
+        "FC08-W07/legacy-operation-replay",
+        "FC08-T01/Group-empty-introduce",
+        "FC08-T01/Group-empty-release",
+        "FC08-T01/Group-nonempty-introduce",
+        "FC08-T01/Group-nonempty-release",
+        "FC08-T01/Section-empty-introduce",
+        "FC08-T01/Section-empty-release",
+        "FC08-T01/Section-nonempty-introduce",
+        "FC08-T01/Section-nonempty-release",
+        "FC08-T02/explicit-cross-parent",
+        "FC08-T03/release-A-C",
+        "FC08-T03/inverse-introduce-A-C",
+        "FC08-T04/alternating-chain",
+        "FC08-T04/self-parent",
+        "FC08-T04/cycle",
+        "FC08-T04/missing-parent",
+        "FC08-T04/leaf-parent",
+        "FC08-T04/sticky-two-children",
+        "FC08-T04/sticky-nontext",
+        "FC08-T05/mutate-parent",
+        "FC08-T05/mutate-members",
+        "FC08-T05/mutate-order",
+        "FC08-T05/mutate-wrapper-title",
+        "FC08-T05/omit-ancestor",
+        "FC08-T05/omit-child-set",
+        "FC08-T05/unrelated-leaf-content",
+        "FC08-T06/disjoint-order-edits",
+        "FC08-T06/payload-permutation",
+        "FC08-T06/sibling-key-collision",
+        "FC08-T06/overlapping-write-id",
+        "FC08-T07/before-validation",
+        "FC08-T07/after-staging",
+        "FC08-T07/after-reservation",
+        "FC08-T07/before-canonical-publication",
+        "FC08-H01/empty-Group",
+        "FC08-H01/nonempty-Group",
+        "FC08-H01/empty-Section",
+        "FC08-H01/nonempty-Section",
+        "FC08-H01/cross-parent-wrap",
+        "FC08-H01/nested-release",
+        "FC08-H01/resize",
+        "FC08-H01/rename",
+        "FC08-H01/padding",
+        "FC08-H01/header",
+        "FC08-H01/fill",
+        "FC08-H01/opacity",
+        "FC08-H01/NoChange",
+        "FC08-H01/AlreadyApplied",
+        "FC08-H01/Rejected",
+        "FC08-H02/new-member",
+        "FC08-H02/deleted-original-parent",
+        "FC08-H02/changed-wrapper-metadata",
+        "FC08-H02/retained-leaf-content",
+        "FC08-H03/root-children-65534",
+        "FC08-H03/root-children-65535",
+        "FC08-H04/operation-33554431",
+        "FC08-H04/operation-33554432",
+        "FC08-H04/operation-33554433",
+        "FC08-H04/keyed-65535",
+        "FC08-H04/keyed-65536",
+        "FC08-H04/record-16777216",
+        "FC08-H04/record-16777217",
+        "FC08-H04/string-1048576",
+        "FC08-H04/string-1048577",
+        "FC08-H04/key-32",
+        "FC08-H04/key-33",
+        "FC08-H05/history-allocation-failure",
+        "FC08-H05/outcome-reservation-failure",
+        "FC08-H05/cancel-precommit",
+        "FC08-H05/failure-with-redo-tail",
+        "FC08-H06/guarded-dependency-changed",
+        "FC08-H06/unrelated-state-changed",
+        "FC08-H07/restore-under-limit",
+        "FC08-H07/restore-over-limit",
+        "FC08-H08/same-id-same-payload-stale-guard",
+        "FC08-H08/same-id-changed-payload",
+        "FC08-H08/NoChange",
+        "FC08-H08/undo-new-operation-id",
+        "FC08-G01/literal-affine-reparent",
+        "FC08-G02/left",
+        "FC08-G02/top",
+        "FC08-G02/right",
+        "FC08-G02/bottom",
+        "FC08-G03/literal-reflection-shear",
+        "FC08-G03/rotated-nested",
+        "FC08-G03/hidden-outside-visible-bounds",
+        "FC08-G03/bounds-unavailable",
+        "FC08-G04/move",
+        "FC08-G04/rotate",
+        "FC08-G04/scale",
+        "FC08-G04/duplicate-ancestor-hit",
+        "FC08-G05/singular-parent",
+        "FC08-G05/nonfinite-intermediate",
+        "FC08-G05/quality-below",
+        "FC08-G05/quality-at",
+        "FC08-G05/quality-above",
+        "FC08-G06/non-dyadic-1",
+        "FC08-G06/non-dyadic-2",
+        "FC08-G06/repeated-F-U-16",
+        "FC08-S01/boundary-full-child-inside",
+        "FC08-S01/boundary-full-child-overflow",
+        "FC08-S02/partial-actual-child",
+        "FC08-S02/broad-phase-only-child",
+        "FC08-S03/outer-partial-inner-full",
+        "FC08-S03/unopened-Group",
+        "FC08-S03/entered-Group",
+        "FC08-S04/concave-notch",
+        "FC08-S05/child",
+        "FC08-S05/blank-interior",
+        "FC08-S05/header",
+        "FC08-S05/border",
+        "FC08-S05/empty-Group-paint",
+        "FC08-S05/empty-Group-identity",
+        "FC08-S06/shift-at-down-release-before-up",
+        "FC08-S06/cancel",
+        "FC08-V01/boundary-outside-child-inside",
+        "FC08-V02/own-opacity-quarter",
+        "FC08-V02/own-opacity-change",
+        "FC08-V02/own-fill-change",
+        "FC08-V03/move-root",
+        "FC08-V03/reparent-leaf",
+        "FC08-V03/resize-child",
+        "FC08-V04/Scene-prepare",
+        "FC08-V04/bounds-prepare",
+        "FC08-V04/spatial-prepare",
+        "FC08-V04/publication-prepare",
+        "FC08-V05/stale-title-result",
+        "FC08-V05/stale-target-result",
+        "FC08-V05/current-resource-refresh",
+        "FC08-C01/normal-handoff",
+        "FC08-C01/fault-then-recovery",
+        "FC08-C01/all-unavailable",
+        "FC08-C01/empty",
+        "FC08-C01/truncated",
+        "FC08-C02/move-whole-subtree",
+        "FC08-C02/resize-boundary-only",
+        "FC08-C03/g1-delayed-g2-recovery",
+        "FC08-C03/late-g1-after-g2",
+        "FC08-C04/late-callback-after-T",
+        "FC08-C04/late-callback-after-wrapper-delete",
+        "FC08-C05/view-B",
+        "FC08-C05/detach-remount",
+        "FC08-L01/cancel-then-late-Up",
+        "FC08-L01/capture-loss-then-late-Up",
+        "FC08-L01/commit-then-cancel",
+        "FC08-L02/same-low64-different-high64",
+        "FC08-L02/stale-target",
+        "FC08-L02/stale-view",
+        "FC08-L02/stale-attachment",
+        "FC08-L02/stale-pointer",
+        "FC08-L02/stale-selection",
+        "FC08-L03/same-key-same-payload",
+        "FC08-L03/same-key-changed-payload",
+        "FC08-L03/evicted-after-ack",
+        "FC08-L03/new-target-epoch",
+        "FC08-L04/queue-full",
+        "FC08-L04/receipt-full",
+        "FC08-L04/terminal-through-backlog",
+        "FC08-L04/denied-outcome-slot",
+        "FC08-L05/canonical-reject",
+        "FC08-L05/committed-projection-pending",
+        "FC08-L05/projection-recovered",
+        "FC08-L05/old-ProductControl",
+        "FC08-L05/old-ApplyResult",
+        "FC08-L06/non-owner-ingress",
+        "FC08-L06/mutate-caller-buffer",
+        "FC08-L06/release-caller-buffer",
+        "FC08-L06/detach-queued",
+        "FC08-L06/close-queued",
+        "FC08-L06/detach-staging",
+        "FC08-L06/close-staging",
+        "FC08-L06/write-behind-disabled-UI",
+        "FC08-K01/snapshot1-explicit-import",
+        "FC08-K01/snapshot2-explicit-import",
+        "FC08-K01/snapshot3-without-Section",
+        "FC08-K02/Section-and-Triangle-and-resource",
+        "FC08-K03/missing-section-capability",
+        "FC08-K03/duplicate-capability",
+        "FC08-K03/swapped-capability",
+        "FC08-K03/unknown-capability",
+        "FC08-K03/Section-in-snapshot1",
+        "FC08-K03/Section-in-snapshot2",
+        "FC08-K03/Section-version2",
+        "FC08-K04/old-reader-journal-op18",
+        "FC08-K04/capable-reader-journal-op18",
+        "FC08-K05/metadata17-then-topology18-no-History",
+        "FC08-K06/checkpoint-after-last-Section",
+        "FC08-K06/journal-still-needs-topology",
+        "FC08-K06/writer-support-downgraded",
+        "FC08-P01/create",
+        "FC08-P01/wrap",
+        "FC08-P01/release",
+        "FC08-P01/reparent",
+        "FC08-P01/resize",
+        "FC08-P01/rename",
+        "FC08-P01/undo",
+        "FC08-P01/redo",
+        "FC08-P02/large-identity",
+        "FC08-P02/confirmed-utf8-title",
+        "FC08-P02/preedit-only",
+        "FC08-P02/coordinate-literal",
+        "FC08-P02/metrics-change",
+        "FC08-P02/terminal-input",
+        "FC08-P03/one-Section-default",
+        "FC08-P03/all-Sections-default",
+        "FC08-P03/Group-default",
+        "FC08-P03/leaf-default",
+        "FC08-P03/Section-leaf-default",
+        "FC08-P03/explicit-Group-Section-release",
+        "FC08-P04/touched-codec",
+        "FC08-P04/touched-History",
+        "FC08-P04/touched-control",
+        "FC08-P04/applicable-selection"
+      ],
+      "declared_global_profiles": [
+        "windows-native",
+        "web-wasm",
+        "headless"
+      ],
+      "profile_policy": {
+        "required_profiles": [
+          "windows-native",
+          "web-wasm",
+          "headless"
+        ],
+        "execution_rule": "Use the frozen variant-index/corpus manifest to determine exact profile applicability. Windows Native and Web/WASM run every applicable semantic/command/projection variant; headless runs its exact accepted snapshot/replay/semantic subset. Discovery is complete in all profiles, but do not force non-applicable History/UI cases into the headless profile.",
+        "browser_rule": "P02 and public Web adapter cases require actual Chrome/WASM execution. Node-only, mock bridge, or build-only evidence cannot substitute.",
+        "independence_rule": "Windows and Web repeats establish profile realization and adapter parity, not two independent semantic oracles."
+      },
+      "resolution_required": "Bind an exact per-variant profile applicability table with reasons/authority. Do not infer headless coverage from wire presence or mark absent entries PASS."
+    }
+  ],
+  "actual_commands": [
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "remote",
+        "get-url",
+        "origin"
+      ],
+      "exit_code": 0,
+      "stdout": "https://github.com/Mostorm-Labs/axiom.git\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/Mostorm-Labs/axiom",
+        "--jq",
+        "{full_name:.full_name,id:.id}"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"full_name\":\"Mostorm-Labs/axiom\",\"id\":1306396623}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "f67b9db29090449799bd3e05ef7f1d269dab6d31\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "merge-base",
+        "--is-ancestor",
+        "427580ae13b60a39e88959b282cbffc695c9aabb",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "merge-base",
+        "--is-ancestor",
+        "0d3b10bba1ac4a31d669dd4a45f94975ec24f3c3",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "merge-base",
+        "--is-ancestor",
+        "a1e8819abe245ab7487f18771970721f480ff487",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "merge-base",
+        "--is-ancestor",
+        "f67b9db29090449799bd3e05ef7f1d269dab6d31",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "show",
+        "f67b9db29090449799bd3e05ef7f1d269dab6d31:.aegis/packages/FC-08-PRODUCT-P31-v0.1/package.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema_version\": \"0.1\",\n  \"format\": \"aegis-repo-local-execution-package-v1\",\n  \"package_id\": \"FC-08-PRODUCT-P31-v0.1\",\n  \"task_id\": \"FC-08\",\n  \"stage\": \"P31\",\n  \"status\": \"MATERIALIZED_READY_FOR_INDEPENDENT_CONTROL_REVIEW\",\n  \"repository\": {\n    \"provider\": \"github\",\n    \"full_name\": \"Mostorm-Labs/axiom\",\n    \"repository_id\": 1306396623\n  },\n  \"execution_authority_mode\": \"repo_materialized\",\n  \"package_materialization_ref\": \"refs/heads/control/fc08-product-p31-package\",\n  \"execution_ref\": null,\n  \"task_anchor\": {\n    \"revision\": \"a1e8819abe245ab7487f18771970721f480ff487\",\n    \"relation\": \"ancestor\"\n  },\n  \"resume_cursor\": null,\n  \"authorized_scope\": \"FC-08 product implementation only after independent P31 package acceptance and both package preflights; current package preparation does not start P32.\",\n  \"product_P31_status\": \"MATERIALIZED_READY_FOR_INDEPENDENT_CONTROL_REVIEW\",\n  \"P32_authorized\": false,\n  \"may_start_code_execution\": false,\n  \"continue_until_terminal_state\": true,\n  \"return_surface\": \"CONTROL_REVIEW\",\n  \"gate_target\": {\n    \"id\": \"FC08-DEV-AUTOMATED\",\n    \"scope\": \"development_only\",\n    \"gate_verdict_authorized\": false\n  },\n  \"authority_lock_ref\": {\n    \"path\": \"authority.lock.json\",\n    \"sha256\": \"c29d7d2e0785cf2108acb618ff42571a545426880a0c388ab27512f4ff8e814a\"\n  },\n  \"verification_lock_ref\": {\n    \"path\": \"verification.lock.json\",\n    \"sha256\": \"ebddb0403215cca82641005e9819f61fbe0ed4d12ca4728325a0807ab4485a23\"\n  },\n  \"execution_contract_ref\": {\n    \"path\": \"execution-contract.json\",\n    \"sha256\": \"ba108a14b241308585a3c03304210d4544a2621529316782aa001dacf3201085\"\n  },\n  \"implementation_context_ref\": {\n    \"path\": \"implementation-context.md\",\n    \"sha256\": \"d1c58bf27c4b36e798878160e72dda80f225092087b88fdbaa0deb6f2baa2530\"\n  },\n  \"evidence_contract_ref\": {\n    \"path\": \"evidence-contract.json\",\n    \"sha256\": \"ccfb6068e6e05d9623672d1f9d150eae47c311e89cc6ffddbb8c404b9d3f0f60\"\n  },\n  \"source_binding_refs\": {\n    \"prior_result_revision\": \"0d3b10bba1ac4a31d669dd4a45f94975ec24f3c3\",\n    \"prior_materialized_ref\": \"refs/heads/codex/fc08-verification-materialization\",\n    \"output_index\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-index.json\",\n      \"sha256\": \"6b5fc14f0a2703a25f101f28aa96746b146ff53df693779e90f05abba25685fc\"\n    },\n    \"output_manifest\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-manifest.json\",\n      \"sha256\": \"51fb71bab9e0cbb2a5215974aa224af9dff1d6dc6b3615b35fa6a67f9efd8421\"\n    }\n  },\n  \"required_preflights\": [\n    \"RepositoryIdentity\",\n    \"PackageBindingPreflight\",\n    \"EvidenceContractPreflight\",\n    \"ImplementationDesignPreflight\",\n    \"FC08-RED-01\"\n  ],\n  \"terminal_target\": \"READY_FOR_CONTROL_REVIEW with all frozen E01-E10 obligations satisfied, or an explicit terminal blocker; no P34 verdict.\",\n  \"nonclaims\": [\n    \"This package does not authorize P32 until independent control review accepts the exact package and preflight records.\",\n    \"No product code, product test, DEV PASS, P34 PASS, PHYS PASS, or release PASS is claimed.\",\n    \"M01-M04 baseline materialization is not product implementation evidence.\",\n    \"PH01-PH04 remain FC13 debt; INT-01 remains FC04/FC10-owned beyond the required pre-write rejection test.\"\n  ],\n  \"source_baseline_revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "show",
+        "f67b9db29090449799bd3e05ef7f1d269dab6d31:.aegis/packages/FC-08-PRODUCT-P31-v0.1/authority.lock.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema_version\": \"0.1\",\n  \"format\": \"aegis-authority-lock-v1\",\n  \"task_id\": \"FC-08\",\n  \"binding_scope\": \"FC-08 product P32 execution contract; no product implementation is authorized by this preparation commit alone.\",\n  \"current_authorities\": {\n    \"semantic\": {\n      \"id\": \"fc08-container-extension-semantic-v0.1\",\n      \"scope\": \"semantic:axiom/fc08-container-extension\",\n      \"status\": \"Current\",\n      \"provider\": \"Notion\",\n      \"ref\": \"https://app.notion.com/p/4044c57a590c81a8813bcad8c57ff6ee\",\n      \"accepted_version\": \"v0.1\",\n      \"accepted_input_manifest_sha256\": \"f93b286dfd93607342219f879747b2fa207b0eefaad068cbf4e16cfff0b99035\",\n      \"repository_binding_source\": {\n        \"path\": \".aegis/packages/FC-08-P31-READINESS/authority.lock.json\",\n        \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n        \"git_blob_sha\": \"221c8ec230cd81708345dd28c9af97a54b4a1976\",\n        \"note\": \"This earlier file was preparation-only; its accepted semantic source identity is retained, while its incomplete M01-M04 status is not reused.\"\n      }\n    },\n    \"execution_policy\": {\n      \"id\": \"fc-feature-completion-execution-v0.4\",\n      \"scope\": \"execution:FC/feature-completion\",\n      \"version\": \"v0.4\",\n      \"status\": \"Current\",\n      \"provider\": \"Notion\",\n      \"ref\": \"https://app.notion.com/p/4044c57a590c81a8b2aec982fad25107\",\n      \"registry_binding\": {\n        \"path\": \".aegis/authorities.json\",\n        \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n        \"git_blob_sha\": \"72d338d66ed3312b91cfb0bc43bd9f1ad82b5fed\",\n        \"record_id\": \"fc-feature-completion-execution-v0.4\"\n      }\n    },\n    \"architecture\": {\n      \"id\": \"FC08-P14-P17-v0.1+ARC-CR-C01/C02\",\n      \"status\": \"Closed for P20\",\n      \"provider\": \"Notion\",\n      \"ref\": \"https://app.notion.com/p/4044c57a590c81829a18c198cc4cdd47\",\n      \"accepted_exports\": [\n        {\n          \"id\": \"P14\",\n          \"path\": \".aegis/materialized/FC-08/sources/accepted-exports/P14.md\",\n          \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n          \"git_blob_sha\": \"37c29507fe7b40e5a000646929483ee0456ebfba\",\n          \"sha256\": \"a43d1bad1dc79e54b80ad6a85d0f24c4d6d20fe011f291b90b5a688fcac4c9de\"\n        },\n        {\n          \"id\": \"P15\",\n          \"path\": \".aegis/materialized/FC-08/sources/accepted-exports/P15.md\",\n          \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n          \"git_blob_sha\": \"e13a7280fbae95374ccf2e1b9468495c72602d08\",\n          \"sha256\": \"95f6650dd26809e60560fbdeeb7fb9751ed42d9555e8a62849f4b38261a40837\"\n        },\n        {\n          \"id\": \"P16\",\n          \"path\": \".aegis/materialized/FC-08/sources/accepted-exports/P16.md\",\n          \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n          \"git_blob_sha\": \"494c10076787b4c37e07f7da2bbd073b2c83654a\",\n          \"sha256\": \"e07dd7c33029393e033079c62618166589a9ca9c357acce85146b0ac809074f4\"\n        },\n        {\n          \"id\": \"P17\",\n          \"path\": \".aegis/materialized/FC-08/sources/accepted-exports/P17.md\",\n          \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n          \"git_blob_sha\": \"4b76b8bd1aa262492e81abd2437a8fcdf964f4a8\",\n          \"sha256\": \"400805038f42e4bb10e781d7e3fce17d09bbde491b4b284a282ed63feabac399\"\n        }\n      ]\n    },\n    \"semantic_decisions\": {\n      \"accepted_scope\": \"P23 D01-D08 remain unchanged; the scoped execution-policy amendment changes sequencing applicability only.\",\n      \"section_identity\": {\n        \"object_kind\": 10,\n        \"kind_version\": 1,\n        \"object_content_field\": \"section\",\n        \"object_content_tag\": 12,\n        \"section_content_version\": 1,\n        \"group_identity\": \"Existing accepted Group identity; preserve empty GroupContent.\"\n      },\n      \"operations\": [\n        {\n          \"name\": \"SetSectionContent\",\n          \"opcode\": 17,\n          \"write_domain\": \"Complete SectionContent on existing Section objects; bounded multi-target batch only.\"\n        },\n        {\n          \"name\": \"EditContainerTopology\",\n          \"opcode\": 18,\n          \"effects\": [\n            \"IntroduceWrappers\",\n            \"ReleaseWrappers\",\n            \"RelocateObjects\"\n          ],\n          \"write_domain\": \"Introduce/restore or non-destructively remove Group/Section wrappers; change existing roots' Placement+Transform; update affected sibling OrderKey only.\"\n        }\n      ],\n      \"invariant_constraints\": [\n        \"The three topology effects are mutually exclusive within one operation.\",\n        \"Do not add arbitrary leaf/subtree deletion, arbitrary nested operations, generic JSON Patch, or compensation-based pseudo-atomicity.\",\n        \"Do not add Frame, a second membership truth, a parallel ContainerRuntime/History, or canonical selection/preview state.\",\n        \"CAP-01..CAP-06 remain sorted and unique; snapshot state capability and journal operation capability are checked independently.\",\n        \"Unknown operation/capability fails closed; no partial restore/replay followed by a Ready state.\",\n        \"Real F/U admission is one owner-bound command: actual forward/inverse bytes and History capacity are reserved before canonical publication; rejection leaves canonical state and History cursor/redo unchanged.\"\n      ]\n    }\n  },\n  \"sequence_acceptance\": {\n    \"record_id\": \"FC08-SEQ01-P23-ACCEPTANCE-v0.1\",\n    \"stage\": \"P23\",\n    \"status\": \"ACCEPTED_SCOPE_LIMITED\",\n    \"path\": \".aegis/packages/FC-08-P31-READINESS/final-binding/seq01-p23-acceptance-v0.1.json\",\n    \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n    \"git_blob_sha\": \"4b907bb694337267c526f6599bf60f12a5ebcd03\",\n    \"accepted_decisions\": [\n      \"SEQ-D01\",\n      \"SEQ-D02\",\n      \"SEQ-D03\",\n      \"SEQ-D04\",\n      \"SEQ-D05\",\n      \"SEQ-D06\"\n    ],\n    \"resolved_state\": \"SEQ-01 CLOSED_BY_SCOPED_EXECUTION_AMENDMENT\",\n    \"effect\": \"Permits capability-bound FC-08 implementation without asserting FC-04/FC-06/FC-07/FC-05 completion; M01-M04 and a separate exact product P31 package plus both preflights remain prerequisites.\",\n    \"does_not_authorize_P32_by_itself\": true\n  },\n  \"verification_design\": {\n    \"id\": \"FC08-P20-v0.1+CR01\",\n    \"status\": \"DESIGN_FROZEN_WITH_MATERIALIZATION_PRECONDITIONS\",\n    \"closure_receipt\": {\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-seed/verification/closure-receipt.json\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"ad7a14f4bb4b454bd5087ed17b2bec3bd72a6f26\",\n      \"verdict\": \"PASS_WITH_FINDINGS\"\n    },\n    \"review_delta\": {\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-seed/verification/review-delta.json\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"f51be41fdb8a8b99d3ad7c58d0f4570ab18b67c6\",\n      \"id\": \"FC08-P20-CR01\",\n      \"changed_case_ids\": [\n        \"FC08-H01\",\n        \"FC08-H04\",\n        \"FC08-G02\",\n        \"FC08-G05\",\n        \"FC08-C01\",\n        \"FC08-C03\",\n        \"FC08-P04\"\n      ]\n    },\n    \"reviewed_obligations\": {\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"3402b2634677eddad4cb3d0d6ab1e2d5308ffa1b\",\n      \"family_count\": 10\n    },\n    \"result_contract\": {\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"a5be924d595723ee36116582e46837cacff15986\",\n      \"format\": \"fc08-verification-run-v1\"\n    },\n    \"effective_catalog\": {\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-seed/verification/effective-case-catalog.json\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"020cc2eeb043c30ed4ce5de3715b4f82dbab790d\",\n      \"sha256\": \"da62f3c6c6a7191b01ba7ba4713290acaea26755ef2971fe62475cb101c9b268\",\n      \"logical_cases\": 60,\n      \"families\": 10\n    },\n    \"physical_debt\": {\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-seed/verification/physical-debt.json\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"8a88d558c4e78e61b13a98e145b84c32c47fcf68\",\n      \"gate\": \"FC13_PHYS\",\n      \"status\": \"DEFERRED_NOT_EXECUTED\",\n      \"blocks_FC08_DEV\": false,\n      \"not_waived\": true\n    }\n  },\n  \"source_complete_materialization\": {\n    \"revision\": \"0d3b10bba1ac4a31d669dd4a45f94975ec24f3c3\",\n    \"materialized_ref\": \"refs/heads/codex/fc08-verification-materialization\",\n    \"terminal_receipt_revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n    \"terminal_state\": \"READY_FOR_CONTROL_REVIEW\",\n    \"source_index\": {\n      \"path\": \".aegis/materialized/FC-08/source-index.json\",\n      \"sha256\": \"bad8a3e85dbd344ac7c6eb0d60aae0c6d01c58a0b8359aa80b53426b7b43a569\",\n      \"git_blob_sha\": \"9a92917ff83089855ae88c4eb8e029458527a555\"\n    },\n    \"descriptor_diff\": {\n      \"path\": \".aegis/materialized/FC-08/descriptor-diff.json\",\n      \"sha256\": \"cbe2c13724bd097a609110fb911bb50f6af55cbd43672d1191bb7f2b7b004db1\",\n      \"status\": \"SOURCE_COMPLETE_ADDITIVE_MATCH\",\n      \"baseline_descriptor_sha256\": \"4f186b34789910a56d47f132747fbf4e7e505dbfe9cf5b221311e6efa6764ecb\",\n      \"proposed_descriptor_sha256\": \"9d77afed2f42678b8836e26673707301ca84f431657b79966259d00fe5d33477\",\n      \"historical_descriptor_lock_unchanged\": true,\n      \"git_blob_sha\": \"3323d78196e161ddf8711ac59926cdd3a1777cd9\"\n    },\n    \"output_index\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-index.json\",\n      \"sha256\": \"6b5fc14f0a2703a25f101f28aa96746b146ff53df693779e90f05abba25685fc\"\n    },\n    \"output_manifest\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-manifest.json\",\n      \"sha256\": \"51fb71bab9e0cbb2a5215974aa224af9dff1d6dc6b3615b35fa6a67f9efd8421\"\n    },\n    \"corpus\": {\n      \"variant_index_path\": \".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/variant-index.json\",\n      \"variant_index_sha256\": \"29d8400a7f96968b576f77803f287fe8911a8557421fe412fe80607bb4ad7f8e\",\n      \"manifest_path\": \".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus-manifest.json\",\n      \"manifest_sha256\": \"8b2a36feff98c162a7706e189bade9c0a3b4cb474c4876cafc681e28ed007c15\",\n      \"logical_cases\": 60,\n      \"variants\": 302,\n      \"expected_and_input_refs_complete\": true,\n      \"variant_index_git_blob_sha\": \"38b5fba9474f2f0f8ee453fdbf8a9485856dd314\",\n      \"manifest_git_blob_sha\": \"3b6f9399872a4a06beccaac50aef277447c32ddb\"\n    },\n    \"runner\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner-manifest.json\",\n      \"sha256\": \"7b65745272241679b9b420b6a90e911ec8f6a07a5a94b69eb528a44c39aba2d5\"\n    },\n    \"oracle_controls\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/oracle-controls.json\",\n      \"sha256\": \"fd9b9e1610fb399da82bae7b535768a7dfc01876c18985ce0b4351f0805d8c81\"\n    },\n    \"baseline_probes\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/baseline-probes.json\",\n      \"sha256\": \"a64393a2e06955562779092ce7808691263ee14c47e611f6c3ae5c1549f2e3b1\"\n    },\n    \"seam_map\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/seam-map.json\",\n      \"sha256\": \"e32926881505362accde5e742840cf1c6c5d90ed4127a729b022f4770e50b4d4\",\n      \"h06\": \"NOT_REACHED_BASELINE: no resumable admitted F/U plan boundary; remains mandatory for future product execution\"\n    },\n    \"profiles\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profiles.json\",\n      \"sha256\": \"cd559faacada19bf4cb3acb2d03cc1b916c19b5dc46eb94cef5e1b54b0781c94\",\n      \"observations_path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profile-observations.json\",\n      \"observations_sha256\": \"9445bec732c3fb4bcb6a57aeb5245b157fa2550c27c6c492bd7d49b222dd1b42\",\n      \"inherited_regression_path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/inherited-regression.json\",\n      \"inherited_regression_sha256\": \"1f0a17a080d12e5c788fbd7ad6688349fd42a42347044c70ca4240091bf16db1\"\n    }\n  },\n  \"schema_baseline\": {\n    \"source_revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n    \"current_descriptor\": {\n      \"path\": \"schema/axiom/v1/descriptor/descriptor.current.pb\",\n      \"git_blob_sha\": \"a5820e336b4108c31f47c8f2ce6889b344e8b201\"\n    },\n    \"current_descriptor_sha256_file\": {\n      \"path\": \"schema/axiom/v1/descriptor/descriptor.current.sha256\",\n      \"git_blob_sha\": \"582e2d3f71e86f330a7b641a041a63ccc8973fcb\"\n    },\n    \"historical_descriptor_lock\": {\n      \"path\": \"schema/axiom/v1/descriptor/descriptor.lock.pb\",\n      \"git_blob_sha\": \"9e1f37f4334fc31d8c3c71c08d9d0eac412fe9b2\"\n    },\n    \"historical_descriptor_lock_sha256_file\": {\n      \"path\": \"schema/axiom/v1/descriptor/descriptor.lock.sha256\",\n      \"git_blob_sha\": \"51569adce64f9f85eebd111f6cbce85096ad68a2\"\n    }\n  },\n  \"retained_conditions\": [\n    \"BASE-01 is a source-complete additive descriptor/publication prerequisite; publish the accepted current descriptor without rewriting historical descriptor.lock.\",\n    \"INT-01 remains owned by FC04/FC10; FC-08 must explicitly reject mixed-default-delete before any write and must not implement the full integration.\",\n    \"PH01-PH04 are deferred physical obligations owned by FC13; they are retained, not waived.\",\n    \"No predecessor Gate/DEV pass or release/G5 waiver is inferred.\"\n  ],\n  \"accepted_normative_exports\": [\n    {\n      \"id\": \"P12\",\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-exports/P12.md\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"fe9c2d8cfa8f2c0c119ff4c45a2ce5a408184a00\",\n      \"sha256\": \"b4cd1c0f685199f6d370242e334645d78881640abe3c807cf480568d8da52cbc\"\n    },\n    {\n      \"id\": \"P13\",\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-exports/P13.md\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"47c8d60f2d83a2c597d098ff24e61232f66bd6e8\",\n      \"sha256\": \"6f65325d4282a78774489bddd9f716614994f63757957675b82f3c423983f3fe\"\n    },\n    {\n      \"id\": \"P14\",\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-exports/P14.md\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"37c29507fe7b40e5a000646929483ee0456ebfba\",\n      \"sha256\": \"a43d1bad1dc79e54b80ad6a85d0f24c4d6d20fe011f291b90b5a688fcac4c9de\"\n    },\n    {\n      \"id\": \"P15\",\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-exports/P15.md\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"e13a7280fbae95374ccf2e1b9468495c72602d08\",\n      \"sha256\": \"95f6650dd26809e60560fbdeeb7fb9751ed42d9555e8a62849f4b38261a40837\"\n    },\n    {\n      \"id\": \"P16\",\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-exports/P16.md\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"494c10076787b4c37e07f7da2bbd073b2c83654a\",\n      \"sha256\": \"e07dd7c33029393e033079c62618166589a9ca9c357acce85146b0ac809074f4\"\n    },\n    {\n      \"id\": \"P17\",\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-exports/P17.md\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"4b76b8bd1aa262492e81abd2437a8fcdf964f4a8\",\n      \"sha256\": \"400805038f42e4bb10e781d7e3fce17d09bbde491b4b284a282ed63feabac399\"\n    },\n    {\n      \"id\": \"P20\",\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-exports/P20.md\",\n      \"revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n      \"git_blob_sha\": \"f3b15876ea50d41d34cf6985f1ba3e40dfa211cc\",\n      \"sha256\": \"5089fe4b71ef130d35e41bbda8826839406a1c546af71be54bdddc26f6eee087\"\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "show",
+        "f67b9db29090449799bd3e05ef7f1d269dab6d31:.aegis/packages/FC-08-PRODUCT-P31-v0.1/verification.lock.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema_version\": \"0.1\",\n  \"format\": \"aegis-verification-lock-v1\",\n  \"task_id\": \"FC-08\",\n  \"status\": \"FROZEN_FOR_P31_CONTROL_REVIEW\",\n  \"gate_target\": {\n    \"id\": \"FC08-DEV-AUTOMATED\",\n    \"scope\": \"development_only\",\n    \"authority_note\": \"This is the P20 proposed automated DEV target; this package does not issue a Gate verdict.\"\n  },\n  \"design\": {\n    \"id\": \"FC08-P20-v0.1+CR01\",\n    \"catalog_path\": \".aegis/materialized/FC-08/sources/accepted-seed/verification/effective-case-catalog.json\",\n    \"catalog_sha256\": \"da62f3c6c6a7191b01ba7ba4713290acaea26755ef2971fe62475cb101c9b268\",\n    \"logical_case_count\": 60,\n    \"obligation_family_count\": 10,\n    \"variant_index\": {\n      \"path\": \".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/variant-index.json\",\n      \"sha256\": \"29d8400a7f96968b576f77803f287fe8911a8557421fe412fe80607bb4ad7f8e\",\n      \"unique_variants\": 302\n    },\n    \"corpus_manifest\": {\n      \"path\": \".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus-manifest.json\",\n      \"sha256\": \"8b2a36feff98c162a7706e189bade9c0a3b4cb474c4876cafc681e28ed007c15\",\n      \"complete_input_expected_refs\": true\n    },\n    \"reviewed_obligations\": {\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json\",\n      \"git_blob_sha\": \"3402b2634677eddad4cb3d0d6ab1e2d5308ffa1b\"\n    },\n    \"result_contract\": {\n      \"path\": \".aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json\",\n      \"git_blob_sha\": \"a5be924d595723ee36116582e46837cacff15986\",\n      \"format\": \"fc08-verification-run-v1\",\n      \"required_run_fields\": [\n        \"design_id\",\n        \"authority_id\",\n        \"authority_binding_hash\",\n        \"verification_manifest_hash\",\n        \"qualification_subject_revision\",\n        \"runner_revision\",\n        \"oracle_revision\",\n        \"platform_profile\",\n        \"build_configuration\",\n        \"toolchain\",\n        \"source_tree_dirty\",\n        \"started_at\",\n        \"ended_at\",\n        \"invocation\",\n        \"cases\"\n      ],\n      \"required_case_fields\": [\n        \"case_id\",\n        \"variant_id\",\n        \"family_id\",\n        \"input_hash\",\n        \"expected_hash\",\n        \"observed_artifact\",\n        \"observation_basis\",\n        \"result\",\n        \"failure_boundary\"\n      ],\n      \"result_values\": [\n        \"PASS\",\n        \"FAIL\",\n        \"BLOCKED_ENVIRONMENT\",\n        \"NOT_RUN\"\n      ]\n    }\n  },\n  \"frozen_execution_inputs\": {\n    \"source_index\": {\n      \"path\": \".aegis/materialized/FC-08/source-index.json\",\n      \"sha256\": \"bad8a3e85dbd344ac7c6eb0d60aae0c6d01c58a0b8359aa80b53426b7b43a569\"\n    },\n    \"descriptor_diff\": {\n      \"path\": \".aegis/materialized/FC-08/descriptor-diff.json\",\n      \"sha256\": \"cbe2c13724bd097a609110fb911bb50f6af55cbd43672d1191bb7f2b7b004db1\",\n      \"expected_status\": \"SOURCE_COMPLETE_ADDITIVE_MATCH\"\n    },\n    \"runner_manifest\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner-manifest.json\",\n      \"sha256\": \"7b65745272241679b9b420b6a90e911ec8f6a07a5a94b69eb528a44c39aba2d5\"\n    },\n    \"oracle_controls\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/oracle-controls.json\",\n      \"sha256\": \"fd9b9e1610fb399da82bae7b535768a7dfc01876c18985ce0b4351f0805d8c81\"\n    },\n    \"baseline_probes\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/baseline-probes.json\",\n      \"sha256\": \"a64393a2e06955562779092ce7808691263ee14c47e611f6c3ae5c1549f2e3b1\"\n    },\n    \"seam_map\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/seam-map.json\",\n      \"sha256\": \"e32926881505362accde5e742840cf1c6c5d90ed4127a729b022f4770e50b4d4\"\n    },\n    \"profiles\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profiles.json\",\n      \"sha256\": \"cd559faacada19bf4cb3acb2d03cc1b916c19b5dc46eb94cef5e1b54b0781c94\"\n    },\n    \"profile_observations\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/profile-observations.json\",\n      \"sha256\": \"9445bec732c3fb4bcb6a57aeb5245b157fa2550c27c6c492bd7d49b222dd1b42\"\n    },\n    \"inherited_regression_baseline\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/inherited-regression.json\",\n      \"sha256\": \"1f0a17a080d12e5c788fbd7ad6688349fd42a42347044c70ca4240091bf16db1\"\n    },\n    \"materialization_output_index\": {\n      \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-index.json\",\n      \"sha256\": \"6b5fc14f0a2703a25f101f28aa96746b146ff53df693779e90f05abba25685fc\"\n    }\n  },\n  \"oracle_independence\": {\n    \"reference_oracles\": {\n      \"path\": \"tests/fc08/reference/oracles.py\",\n      \"sha256\": \"408e4ee929f6673bdb0b7871525ea5250f50b63f7984553fefc56db3a0fda79e\"\n    },\n    \"reference_variants\": {\n      \"path\": \"tests/fc08/reference/variants.py\",\n      \"sha256\": \"506ffe7281c3ea861726b8813398641c425d49c9e6cb742aa0e97eecd293f29c\"\n    },\n    \"reference_wire\": {\n      \"path\": \"tests/fc08/reference/wire.py\",\n      \"sha256\": \"122a8f587e5a984a3ffb3d545c8854ee81e6ce4a022cff52b73b86f1ad0e1ae6\"\n    },\n    \"rule\": \"Expected values are frozen before production mutation. The production SUT, codec, normalizer, OrderKey allocator, planner, Scene compiler or runtime round-trip must not be used as the sole expected-value oracle.\"\n  },\n  \"obligations\": [\n    {\n      \"id\": \"FC08-E01\",\n      \"requirement\": \"Schema, wire and inherited publication; preserve accepted source fields and exact Section/1 and Operation 17/18 bytes.\",\n      \"oracle\": \"Hand-authored typed expectations and byte fixtures, accepted-IDL descriptor delta, and preimage comparison.\",\n      \"acceptance\": \"Every applicable W01-W07 variant matches frozen expectation; exact accepted descriptor is additive; inherited fields and historical descriptor.lock remain unchanged; no silent skip or unsupported positive.\",\n      \"evidence_required\": [\n        \"families/E01.json\"\n      ],\n      \"case_ids\": [\n        \"FC08-W01\",\n        \"FC08-W02\",\n        \"FC08-W03\",\n        \"FC08-W04\",\n        \"FC08-W05\",\n        \"FC08-W06\",\n        \"FC08-W07\"\n      ],\n      \"failure_mode\": \"Protocol corruption or loss of inherited fields.\",\n      \"classification\": \"blocking_DEV\"\n    },\n    {\n      \"id\": \"FC08-E02\",\n      \"requirement\": \"Atomic topology, complete guarded graph writes and all-or-nothing rejection.\",\n      \"oracle\": \"Literal final-object tables, independent flat-map/parent-graph reference traversal, and precommit failure snapshots.\",\n      \"acceptance\": \"Every applicable T01-T07 variant matches; no partial membership, cycles, orphan records, stale-guard writes, or canonical/History mutation on precommit rejection.\",\n      \"evidence_required\": [\n        \"families/E02.json\"\n      ],\n      \"case_ids\": [\n        \"FC08-T01\",\n        \"FC08-T02\",\n        \"FC08-T03\",\n        \"FC08-T04\",\n        \"FC08-T05\",\n        \"FC08-T06\",\n        \"FC08-T07\"\n      ],\n      \"failure_mode\": \"Partial membership, cycles, orphan records, or lost concurrent changes.\",\n      \"classification\": \"blocking_DEV\"\n    },\n    {\n      \"id\": \"FC08-E03\",\n      \"requirement\": \"Real F/U admission, byte budgets, History reservation, Undo/Redo and failure atomicity.\",\n      \"oracle\": \"Actual forward/inverse wire values metered independently; saved canonical touched fields; staged inverse applicability; bounded precommit fault schedule.\",\n      \"acceptance\": \"Every applicable H01-H08 variant matches; real F and U each obey accepted limits, required resources are reserved before commit, History/redo remain unchanged on rejection, Undo/Redo use fresh operation IDs and preserve monotonic canonical metadata.\",\n      \"evidence_required\": [\n        \"families/E03.json\"\n      ],\n      \"case_ids\": [\n        \"FC08-H01\",\n        \"FC08-H02\",\n        \"FC08-H03\",\n        \"FC08-H04\",\n        \"FC08-H05\",\n        \"FC08-H06\",\n        \"FC08-H07\",\n        \"FC08-H08\"\n      ],\n      \"failure_mode\": \"Forward succeeds but Undo is impossible, redo is destructive, or duplicate History is emitted.\",\n      \"classification\": \"blocking_DEV\"\n    },\n    {\n      \"id\": \"FC08-E04\",\n      \"requirement\": \"Affine reparent, Section boundary resize and numeric quality boundary.\",\n      \"oracle\": \"Independently ordered IEEE-754 binary64 reference with authored dyadic literals and precomputed non-dyadic reference components.\",\n      \"acceptance\": \"Every applicable G01-G06 variant matches exact ordered arithmetic and accepted P12 quality predicate; no cumulative transform drift, resize-induced child movement, or hidden tolerance change.\",\n      \"evidence_required\": [\n        \"families/E04.json\"\n      ],\n      \"case_ids\": [\n        \"FC08-G01\",\n        \"FC08-G02\",\n        \"FC08-G03\",\n        \"FC08-G04\",\n        \"FC08-G05\",\n        \"FC08-G06\"\n      ],\n      \"failure_mode\": \"Reparent jump, cumulative transform drift, or resize moving contents.\",\n      \"classification\": \"blocking_DEV\"\n    },\n    {\n      \"id\": \"FC08-E05\",\n      \"requirement\": \"Container selection producer, Section full-containment and existing Group scope.\",\n      \"oracle\": \"Authored polygons and expected ID/root sets, exact containment, and child-first point cases.\",\n      \"acceptance\": \"Every applicable S01-S06 variant matches; concave containment uses the actual region rather than only corners/AABB; common FC01A set algebra and Group scope remain intact.\",\n      \"evidence_required\": [\n        \"families/E05.json\"\n      ],\n      \"case_ids\": [\n        \"FC08-S01\",\n        \"FC08-S02\",\n        \"FC08-S03\",\n        \"FC08-S04\",\n        \"FC08-S05\",\n        \"FC08-S06\"\n      ],\n      \"failure_mode\": \"Wrong selected root causes unintended batch edit/delete.\",\n      \"classification\": \"blocking_DEV\"\n    },\n    {\n      \"id\": \"FC08-E06\",\n      \"requirement\": \"Scene, world geometry, bounds, render order, damage, opacity and recovery.\",\n      \"oracle\": \"Literal world/damage expectations, coherent observer snapshots, draw list and interior-pixel reference.\",\n      \"acceptance\": \"Every applicable V01-V05 variant matches; child overflow remains visible/queryable, opacity and clipping are correct, and failed projection cannot duplicate a canonical commit or report false cancellation.\",\n      \"evidence_required\": [\n        \"families/E06.json\"\n      ],\n      \"case_ids\": [\n        \"FC08-V01\",\n        \"FC08-V02\",\n        \"FC08-V03\",\n        \"FC08-V04\",\n        \"FC08-V05\"\n      ],\n      \"failure_mode\": \"Overflow becomes invisible, hit index is stale, or publication is partial.\",\n      \"classification\": \"blocking_DEV\"\n    },\n    {\n      \"id\": \"FC08-E07\",\n      \"requirement\": \"Preview handoff and delayed local effects.\",\n      \"oracle\": \"Deterministic scheduled observation trace with fixed valid/invalid timelines and positive completion assertions.\",\n      \"acceptance\": \"Every applicable C01-C05 variant matches; no transient double-transform or late callback overwrites current selection; recovery completes with a coherent projection and preview exits when required.\",\n      \"evidence_required\": [\n        \"families/E07.json\"\n      ],\n      \"case_ids\": [\n        \"FC08-C01\",\n        \"FC08-C02\",\n        \"FC08-C03\",\n        \"FC08-C04\",\n        \"FC08-C05\"\n      ],\n      \"failure_mode\": \"Double-drawn transform or stale local callback overwrites new selection.\",\n      \"classification\": \"blocking_DEV\"\n    },\n    {\n      \"id\": \"FC08-E08\",\n      \"requirement\": \"Control identity, lifecycle, ingress, cancellation and queue/receipt boundaries.\",\n      \"oracle\": \"Controlled ingress/owner scheduling with independent state, counter and receipt snapshots.\",\n      \"acceptance\": \"Every applicable L01-L06 variant matches; full identities are preserved, stale/cancelled inputs cannot commit, and queue/receipt limits fail closed without partial mutation.\",\n      \"evidence_required\": [\n        \"families/E08.json\"\n      ],\n      \"case_ids\": [\n        \"FC08-L01\",\n        \"FC08-L02\",\n        \"FC08-L03\",\n        \"FC08-L04\",\n        \"FC08-L05\",\n        \"FC08-L06\"\n      ],\n      \"failure_mode\": \"Wrong object/document mutation or late Up after cancellation.\",\n      \"classification\": \"blocking_DEV\"\n    },\n    {\n      \"id\": \"FC08-E09\",\n      \"requirement\": \"Snapshot, journal replay, capability/version and writer compatibility.\",\n      \"oracle\": \"Fixed capability/version truth table, canonical digest inputs, and independent state before/after unknown input.\",\n      \"acceptance\": \"Every applicable K01-K06 variant matches; restore/replay is atomic, unknown operation or missing capability fails closed, old-reader/writer claims are tied to actual behavior, and writer admission cannot be inferred from snapshot read success.\",\n      \"evidence_required\": [\n        \"families/E09.json\"\n      ],\n      \"case_ids\": [\n        \"FC08-K01\",\n        \"FC08-K02\",\n        \"FC08-K03\",\n        \"FC08-K04\",\n        \"FC08-K05\",\n        \"FC08-K06\"\n      ],\n      \"failure_mode\": \"Silent partial load/replay or invalid writer participation.\",\n      \"classification\": \"blocking_DEV\"\n    },\n    {\n      \"id\": \"FC08-E10\",\n      \"requirement\": \"Public consumer and platform integration.\",\n      \"oracle\": \"Ordinary compiled consumer and actual Windows/WASM adapter probes compared with literal expectations, plus applicable retained regressions.\",\n      \"acceptance\": \"Every applicable P01-P04 variant matches; full IDs and typed readback/receipt behavior survive the public facade and platform bridge; mixed-default-delete rejects before write; actual browser execution is recorded.\",\n      \"evidence_required\": [\n        \"families/E10.json\"\n      ],\n      \"case_ids\": [\n        \"FC08-P01\",\n        \"FC08-P02\",\n        \"FC08-P03\",\n        \"FC08-P04\"\n      ],\n      \"failure_mode\": \"Demo-only implementation, truncated IDs, or partially executed mixed Delete.\",\n      \"classification\": \"blocking_DEV\"\n    }\n  ],\n  \"profile_policy\": {\n    \"required_profiles\": [\n      \"windows-native\",\n      \"web-wasm\",\n      \"headless\"\n    ],\n    \"execution_rule\": \"Use the frozen variant-index/corpus manifest to determine exact profile applicability. Windows Native and Web/WASM run every applicable semantic/command/projection variant; headless runs its exact accepted snapshot/replay/semantic subset. Discovery is complete in all profiles, but do not force non-applicable History/UI cases into the headless profile.\",\n    \"browser_rule\": \"P02 and public Web adapter cases require actual Chrome/WASM execution. Node-only, mock bridge, or build-only evidence cannot substitute.\",\n    \"independence_rule\": \"Windows and Web repeats establish profile realization and adapter parity, not two independent semantic oracles.\"\n  },\n  \"shared_acceptance_rules\": [\n    \"NOT_RUN is never PASS; no required positive may be skipped as Unsupported.\",\n    \"An expected Unsupported negative is PASS only when every zero-mutation and receipt assertion also holds.\",\n    \"Every result binds exact subject revision, runner revision, oracle revision, profile, toolchain, invocation, input/expected hashes and raw observed artifacts.\",\n    \"The evidence head and qualification subject revision are separate when evidence-only commits differ.\",\n    \"No expected value may be derived from the product SUT or recorded from its output.\",\n    \"No summary label, discovery count, build success or qualification hook observation substitutes for product behavior.\"\n  ],\n  \"retained_obligations\": {\n    \"base_01\": \"Preserve accepted source fields and historical descriptor.lock; publish only the source-complete additive current descriptor.\",\n    \"int_01\": \"FC04/FC10 retains full integration ownership; FC08 must explicitly reject mixed-default-delete before any write.\",\n    \"physical_debt\": {\n      \"owner\": \"FC13\",\n      \"ids\": [\n        \"FC08-PH01\",\n        \"FC08-PH02\",\n        \"FC08-PH03\",\n        \"FC08-PH04\"\n      ],\n      \"status\": \"DEFERRED_NOT_EXECUTED\",\n      \"blocks_fc08_dev\": false,\n      \"waived\": false\n    }\n  },\n  \"product_P32_authorized\": false\n}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "show",
+        "f67b9db29090449799bd3e05ef7f1d269dab6d31:.aegis/packages/FC-08-PRODUCT-P31-v0.1/execution-contract.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema_version\": \"0.1\",\n  \"format\": \"aegis-execution-closure-contract-v1\",\n  \"task_id\": \"FC-08\",\n  \"stage\": \"P31_TASK_PACKAGING\",\n  \"status\": \"MATERIALIZED_READY_FOR_INDEPENDENT_CONTROL_REVIEW\",\n  \"authorization\": {\n    \"implementation_permission\": false,\n    \"reason\": \"This is the product P31 package candidate. Independent control review must accept the exact package and its two preflights before a separate P32 start.\",\n    \"no_surface_handoff_to_P32_yet\": true\n  },\n  \"execution_base\": {\n    \"repository\": \"Mostorm-Labs/axiom\",\n    \"conditional_development_anchor\": {\n      \"revision\": \"a1e8819abe245ab7487f18771970721f480ff487\",\n      \"relation\": \"ancestor\"\n    },\n    \"materialized_input_revision\": \"427580ae13b60a39e88959b282cbffc695c9aabb\",\n    \"materialized_input_ref\": \"refs/heads/codex/fc08-verification-materialization\",\n    \"note\": \"The input revision is a reconciled descendant of the conditional development anchor, not a qualified product baseline.\"\n  },\n  \"implementation\": {\n    \"required_changes\": [\n      \"Complete the accepted additive schema publication: Section kind 10/version 1, ObjectContent.section tag 12, SetSectionContent opcode 17, EditContainerTopology opcode 18, registry entries and current descriptor. Preserve descriptor.lock.pb and descriptor.lock.sha256 byte-for-byte.\",\n      \"Implement Section/1 and operations 17/18 through the existing canonical model, codecs, validation, OperationEngine staging and atomic apply. Keep the topology effect set closed to IntroduceWrappers, ReleaseWrappers and RelocateObjects with mutually exclusive effect presence and the exact accepted write domains.\",\n      \"Implement exact canonical collection ordering, key/ID uniqueness, guard dependencies, hierarchy validation, all-or-nothing mutation, and no-op/rejected/already-applied semantics from the frozen W/T/H/K cases.\",\n      \"Implement real local F/U admission and E01 budget enforcement: construct and independently meter actual F and inverse U; reserve actual ChangeSet/outcome and History resources before canonical publication; bind the prepared command to the existing owner; guarantee zero canonical/History mutation on precommit rejection; preserve fresh operation IDs and monotonic canonical metadata on Undo/Redo.\",\n      \"Implement Snapshot3 content-derived capabilities, journal operation capability checks, atomic restore/replay, digest compatibility and fail-closed unknown operation behavior. Reading a snapshot does not imply writer capability.\",\n      \"Add typed public foundation intent/readback and receipt contracts; route through existing CanvasRuntimeFacade/RuntimeComposition owner ingress and Interaction planner/session. No parallel editor, History, membership truth or semantic mutation in shell/debug UI.\",\n      \"Implement container hierarchy/geometry and derived Scene behavior: world transforms, bounds, child overflow, render order, selection/hit-test containment, opacity, damage, coherent publication/recovery and preview handoff. Section boundary resize must not move child coordinates; preview cannot double-transform or overwrite a newer selection.\",\n      \"Integrate create/wrap/release/reparent/resize/rename, Group/Section scope, pointer lifecycle and selection through the existing Common Runtime and Windows/Web hosts. Preserve full IDs, owner/lifecycle identity, existing producer behavior and truthful receipt/projection axes.\",\n      \"Provide an ordinary public-header consumer and actual Windows Native, Web/WASM browser, and headless probes. Add a product runner that executes the frozen 302-variant corpus according to the exact profile applicability and emits fc08-verification-run-v1 records.\",\n      \"Run all ten blocking E01-E10 families and applicable inherited regressions; publish raw observations, exact invocations, environment/toolchain identities, input/expected hashes, and per-case results at the frozen reviewer-accessible evidence boundary.\"\n    ],\n    \"allowed_paths\": [\n      \"schema/axiom/v1/proto/auditoryworks/axiom/v1/object.proto\",\n      \"schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto\",\n      \"schema/axiom/v1/proto/auditoryworks/axiom/v1/snapshot.proto\",\n      \"schema/axiom/v1/proto/auditoryworks/axiom/v1/section.proto (new)\",\n      \"schema/axiom/v1/proto/auditoryworks/axiom/v1/container_operations.proto (new)\",\n      \"schema/axiom/v1/registry/field_registry_v1.yaml\",\n      \"schema/axiom/v1/registry/object_kind_registry_v1.yaml\",\n      \"schema/axiom/v1/registry/operation_registry_v1.yaml\",\n      \"schema/axiom/v1/descriptor/descriptor.current.pb\",\n      \"schema/axiom/v1/descriptor/descriptor.current.sha256\",\n      \"runtime/foundation/include/canvas/runtime/runtime_facade.hpp\",\n      \"runtime/foundation/include/canvas/runtime/container_input.hpp (new)\",\n      \"runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp\",\n      \"runtime/composition/src/canvas_runtime_facade.cpp\",\n      \"runtime/composition/include/canvas/runtime/runtime_composition.hpp\",\n      \"runtime/composition/src/runtime_composition.cpp\",\n      \"runtime/semantic/include/canvas/semantic/**\",\n      \"runtime/semantic/src/**\",\n      \"runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp\",\n      \"runtime/interaction/include/canvas/interaction/editor_history.hpp\",\n      \"runtime/interaction/include/canvas/interaction/gesture_arbiter.hpp\",\n      \"runtime/interaction/include/canvas/interaction/selection_session.hpp\",\n      \"runtime/interaction/include/canvas/interaction/container_command_planner.hpp (new)\",\n      \"runtime/interaction/include/canvas/interaction/container_gesture_session.hpp (new)\",\n      \"runtime/interaction/src/canvas_editing_runtime.cpp\",\n      \"runtime/interaction/src/editor_history.cpp\",\n      \"runtime/interaction/src/gesture_arbiter.cpp\",\n      \"runtime/interaction/src/selection_session.cpp\",\n      \"runtime/interaction/src/container_command_planner.cpp (new)\",\n      \"runtime/interaction/src/container_gesture_session.cpp (new)\",\n      \"runtime/scene/include/canvas/scene/**\",\n      \"runtime/scene/src/**\",\n      \"runtime/input/include/canvas/input/**\",\n      \"runtime/input/src/**\",\n      \"runtime/semantic/tests/fc08_*.cpp (new)\",\n      \"runtime/interaction/tests/fc08_*.cpp (new)\",\n      \"runtime/composition/tests/fc08_*.cpp (new)\",\n      \"runtime/scene/tests/fc08_*.cpp (new)\",\n      \"runtime/input/tests/fc08_*.cpp (new)\",\n      \"apps/axiom_canvas_demo/platform/windows/**\",\n      \"apps/axiom_canvas_demo/platform/web/**\",\n      \"apps/minimal_runtime_host/**\",\n      \"debug_ui/** (typed command/readback wiring only)\",\n      \"tests/fc08/CMakeLists.txt\",\n      \"tests/fc08/native/product_*.cpp (new)\",\n      \"tests/fc08/web/** (new)\",\n      \"tests/fc08/product_runner_test.py (new)\",\n      \"tools/fc08/run_product_verification.py (new)\",\n      \"tools/fc08/product_runner.py (new)\",\n      \"verification/fc08/** (new product evidence schema/manifest only)\",\n      \"CMakeLists.txt\",\n      \"runtime/**/CMakeLists.txt\",\n      \"apps/axiom_canvas_demo/**/CMakeLists.txt\",\n      \"apps/minimal_runtime_host/**/CMakeLists.txt\",\n      \"debug_ui/**/CMakeLists.txt\",\n      \".aegis/results/FC-08-DEV/** (new attempt-scoped evidence only)\"\n    ],\n    \"forbidden_changes\": [\n      \"schema/axiom/v1/descriptor/descriptor.lock.pb and schema/axiom/v1/descriptor/descriptor.lock.sha256\",\n      \"schema/axiom/v1/canonical/**, schema/axiom/v1/registry/shape_kind_registry_v1.yaml, unrelated schema tags, or any unaccepted kind/opcode/field allocation\",\n      \"Any change to .aegis/authorities.json, .aegis/gates.json, .aegis/evidence.json, .aegis/integrations.json, Project State caches, main/default branch, or global gate/evidence registries\",\n      \"Any mutation of .aegis/packages/FC-08-P31-READINESS/**, .aegis/packages/FC-08-VERIFY-MATERIALIZE-v0.2/**, accepted P12-P20 exports, the accepted seed archive, effective-case-catalog.json, variant-index.json, corpus-manifest.json, expected fixtures, or frozen oracle source files\",\n      \"Any mutation of prior .aegis/results/FC-08-VERIFY-MATERIALIZE/**, prior terminal receipts, prior raw logs, or historical baseline failure records\",\n      \"Any modification/removal/reordering of runtime/semantic/src/qualification_checkpoint.hpp, runtime/interaction/src/qualification_checkpoint.hpp, or the existing Q-SEM-*/Q-HIST-* qualification hook semantics and their default-OFF build policy\",\n      \"New Frame identity, generic transaction layer, second membership store, parallel ContainerRuntime/History, arbitrary nested operation/JSON Patch, compensation-based pseudo-atomicity, or product semantics implemented in UI\",\n      \"Full generic FC04 inspector/batch expansion, advanced FC06/FC07 completion, FC10 clipboard expansion, or any predecessor completion claim\",\n      \"Disabling/hiding existing Text/Image/Shape/Brush/Connector producers, replacing production dependencies with mocks, or changing existing producer semantics to make FC08 tests pass\",\n      \"Changes to apps/ink_playground/**, pocs/**, unrelated feature code, dependency locks, published SDKs, or toolchain locks\",\n      \"Physical PH01-PH04 work or claims of physical PASS; those remain FC13 obligations\",\n      \"Any product P32 implementation before this exact package is accepted through control review and both preflights pass\"\n    ],\n    \"preserved_work\": [\n      \"Reuse the exact M01-M04 artifacts and baseline profile observations bound in authority.lock.json and verification.lock.json; do not rerun or overwrite them merely to increase confidence.\",\n      \"Keep the source-complete descriptor diff additive; update only the current descriptor pair if required by accepted BASE-01 publication.\",\n      \"Preserve the current qualification hook implementation and all historical failure records; product code may extend adjacent source files only without altering the hook contract.\",\n      \"Keep all 60 logical cases, all 302 unique variants and the exact accepted CR01 expected values immutable.\",\n      \"Keep FC01A B01-B10 and applicable selection/connector/control regressions intact; reference genuinely equivalent inherited observations instead of duplicating them.\",\n      \"Retain INT-01 under FC04/FC10 ownership and PH01-PH04 under FC13 ownership.\"\n    ]\n  },\n  \"preflights\": [\n    \"RepositoryIdentity\",\n    \"PackageBindingPreflight\",\n    \"EvidenceContractPreflight\",\n    \"ImplementationDesignPreflight\",\n    \"FC08-RED-01\"\n  ],\n  \"implementation_design_preflight\": {\n    \"required\": true,\n    \"reason\": \"Cross-module command ownership, atomic publication, History admission, Scene publication, input lifecycle and platform adaptation all change.\",\n    \"must_record\": [\n      \"Exact current flow and source anchors\",\n      \"Target owner/prepare/commit/publication/abort flow\",\n      \"Affected types and files\",\n      \"Mapping of each E01-E10 obligation to implementation and tests\",\n      \"Explicit resource/History reservation point and zero-mutation failure boundary\",\n      \"Preview-to-committed projection handoff and recovery flow\",\n      \"Unresolved semantic decisions\"\n    ],\n    \"continue_condition\": \"unresolved_semantic_decisions=[], authority_conflict=false, verification_conflict=false, package_scope_conflict=false\"\n  },\n  \"red_oracle_precondition\": {\n    \"id\": \"FC08-RED-01\",\n    \"red_required\": true,\n    \"run_before_production_mutation\": true,\n    \"baseline_subject_revision\": \"0d3b10bba1ac4a31d669dd4a45f94975ec24f3c3\",\n    \"baseline_result_refs\": [\n      {\n        \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/windows-final/results.json\",\n        \"sha256\": \"96cbf91673b3bb4709bbfa979a0feb51dddc45d14b25e172caeddd243670ad76\"\n      },\n      {\n        \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/web-final/results.json\",\n        \"sha256\": \"a8274c5d7154339733d7fed8b8556b37789d15a9871c4a0a939b04c856dcc4a4\"\n      },\n      {\n        \"path\": \".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/headless-final/results.json\",\n        \"sha256\": \"1a8fa2979606722494420a8a6fd195c63ee936dc4cdf06611e94d6bdec1a909c\"\n      }\n    ],\n    \"expected_failure\": \"The old implementation must fail product-positive Section/1, operation17/18, topology, selection, scene and public-consumer assertions at their real SUT boundary. Existing baseline records classify representative positives as CAPABILITY_ABSENT; that is a RED observation, not a product PASS.\",\n    \"representative_variants\": [\n      {\n        \"id\": \"FC08-W02/SCW01\",\n        \"baseline_status\": \"CAPABILITY_ABSENT\"\n      },\n      {\n        \"id\": \"FC08-T01/Group-empty-introduce\",\n        \"baseline_status\": \"CAPABILITY_ABSENT\"\n      },\n      {\n        \"id\": \"FC08-H01/empty-Section\",\n        \"baseline_status\": \"CAPABILITY_ABSENT\"\n      },\n      {\n        \"id\": \"FC08-S01/boundary-full-child-inside\",\n        \"baseline_status\": \"CAPABILITY_ABSENT\"\n      },\n      {\n        \"id\": \"FC08-K02/Section-and-Triangle-and-resource\",\n        \"baseline_status\": \"CAPABILITY_ABSENT\"\n      },\n      {\n        \"id\": \"FC08-P01/create\",\n        \"baseline_status\": \"CAPABILITY_ABSENT\"\n      },\n      {\n        \"id\": \"FC08-P02/confirmed-utf8-title\",\n        \"baseline_status\": \"CAPABILITY_ABSENT\"\n      }\n    ],\n    \"observation_seam\": \"Run the new product runner against the unmodified production subject and record the exact case/variant, input/expected hashes, actual SUT invocation and raw observation. Do not use descriptor-only binding, hook observations, or a synthetic oracle trace as the product RED.\",\n    \"failure_policy\": \"If the old subject passes a required positive while the accepted capability is still absent, return VERIFICATION_DESIGN_DEFECT; do not weaken/rewrite the frozen oracle.\"\n  },\n  \"tests\": {\n    \"required\": [\n      {\n        \"id\": \"PKG-01\",\n        \"command_or_oracle\": \"Validate package-local refs and SHA-256 values, exact repository identity, anchor ancestry and no floating trust labels.\",\n        \"expected_result\": \"PASS_PACKAGE_BINDING; no product tests implied.\",\n        \"blocking_reason\": \"P32 must not start from mismatched or mutable Authority/Verification bindings.\"\n      },\n      {\n        \"id\": \"EVID-01\",\n        \"command_or_oracle\": \"Validate each E01-E10 requirement/oracle/acceptance/evidence mapping and the frozen fc08-verification-run-v1 result contract.\",\n        \"expected_result\": \"PASS_EVIDENCE_CONTRACT; no product tests implied.\",\n        \"blocking_reason\": \"Every blocking requirement must have an executable, reviewer-resolvable evidence mapping.\"\n      },\n      {\n        \"id\": \"FC08-RED-01\",\n        \"command_or_oracle\": \"python tools/fc08/run_product_verification.py --design .aegis/materialized/FC-08/executable-verification.json --case all --profile windows-native --output .aegis/results/FC-08-DEV/attempts/<attempt-id>/windows-native (run on old subject before production mutation; repeat for web-wasm and the applicable headless subset).\",\n        \"expected_result\": \"Representative product positives fail at the known baseline capability boundary; raw observations and exact case/variant identities are recorded.\",\n        \"blocking_reason\": \"Proves the frozen product oracle is sensitive to the current missing behavior before code changes.\"\n      },\n      {\n        \"id\": \"E01\",\n        \"command_or_oracle\": \"Execute all applicable W01-W07 variants with the product runner; compare exact bytes, descriptor delta and inherited fields against hand-authored expectations.\",\n        \"expected_result\": \"Every required variant matches; BASE-01 is additive; descriptor.lock is unchanged.\",\n        \"blocking_reason\": \"Protocol integrity and backward compatibility.\"\n      },\n      {\n        \"id\": \"E02\",\n        \"command_or_oracle\": \"Execute all applicable T01-T07 variants; compare final object tables and independent parent graph; inject all frozen precommit guard/failure cases.\",\n        \"expected_result\": \"Atomic topology and guards match; zero-mutation failures preserve canonical and History state.\",\n        \"blocking_reason\": \"Prevent partial membership, cycles, orphan records and stale-guard writes.\"\n      },\n      {\n        \"id\": \"E03\",\n        \"command_or_oracle\": \"Execute all applicable H01-H08 variants through real command/History owners; independently meter actual F/U, reservation and Undo/Redo state.\",\n        \"expected_result\": \"E01 admission, byte limits, cursor/redo invariants and H06 dependency guards all pass.\",\n        \"blocking_reason\": \"Forward success must never create an impossible or destructive Undo path.\"\n      },\n      {\n        \"id\": \"E04\",\n        \"command_or_oracle\": \"Execute all applicable G01-G06 variants against the independently ordered binary64 reference and fixed P12 quality predicate.\",\n        \"expected_result\": \"Exact affine/boundary outputs match; no new tolerances or geometry drift.\",\n        \"blocking_reason\": \"Geometry errors are not detected by final document equality alone.\"\n      },\n      {\n        \"id\": \"E05\",\n        \"command_or_oracle\": \"Execute all applicable S01-S06 variants against authored geometry and expected selection-root sets; run applicable inherited FC01A selection regressions.\",\n        \"expected_result\": \"Exact containment, Group scope and selection-root normalization match.\",\n        \"blocking_reason\": \"Wrong selection roots can cause unintended batch mutation.\"\n      },\n      {\n        \"id\": \"E06\",\n        \"command_or_oracle\": \"Execute all applicable V01-V05 variants against independent world/damage/draw-list/pixel oracles and coherent publication observations.\",\n        \"expected_result\": \"Bounds, overflow, opacity, damage and recovery match without partial publication.\",\n        \"blocking_reason\": \"Document-state equality cannot detect derived Scene/rendering faults.\"\n      },\n      {\n        \"id\": \"E07\",\n        \"command_or_oracle\": \"Execute all applicable C01-C05 variants with deterministic scheduling and positive completion assertions.\",\n        \"expected_result\": \"No double transform or stale callback; recovery eventually produces coherent current projection and preview exit.\",\n        \"blocking_reason\": \"Transient errors can disappear from a final-state-only trace.\"\n      },\n      {\n        \"id\": \"E08\",\n        \"command_or_oracle\": \"Execute all applicable L01-L06 variants against real owner ingress, full identities, queue/receipt limits and lifecycle transitions.\",\n        \"expected_result\": \"Cancel/stale/late inputs cannot mutate; full identity and receipt behavior match.\",\n        \"blocking_reason\": \"Control identity and lifecycle errors can mutate the wrong document/object.\"\n      },\n      {\n        \"id\": \"E09\",\n        \"command_or_oracle\": \"Execute all applicable K01-K06 snapshot/journal/capability variants, including actual old-reader negative behavior where specified.\",\n        \"expected_result\": \"Restore/replay is atomic and fail-closed; no unsupported writer claim.\",\n        \"blocking_reason\": \"Partial restore/replay is a data-integrity failure.\"\n      },\n      {\n        \"id\": \"E10\",\n        \"command_or_oracle\": \"Execute all applicable P01-P04 through an ordinary public-header consumer, real Windows Native host and actual Chrome/WASM bridge; include INT-01 pre-write rejection and applicable inherited regressions.\",\n        \"expected_result\": \"Typed consumer, IDs, readback/receipts and platform behavior match; no mock or demo-only implementation.\",\n        \"blocking_reason\": \"Private-only or adapter-incomplete implementations are not usable product behavior.\"\n      },\n      {\n        \"id\": \"REG-01\",\n        \"command_or_oracle\": \"Run all exact applicable inherited regression identities bound by the accepted plan on Windows Native, Web/WASM and headless where applicable.\",\n        \"expected_result\": \"All required inherited expectations match; historical FC01A gates are not reopened or rewritten.\",\n        \"blocking_reason\": \"FC08 must preserve existing selection, connector, control, snapshot and producer behavior.\"\n      },\n      {\n        \"id\": \"PROFILE-01\",\n        \"command_or_oracle\": \"Record actual locked SDK/compiler, successful build, test invocation, Chrome/WASM browser execution and headless execution.\",\n        \"expected_result\": \"All required profiles are real; no Node-only/mock substitution; missing environment is an explicit blocker.\",\n        \"blocking_reason\": \"Build-only evidence cannot establish actual platform adapter behavior.\"\n      }\n    ],\n    \"hosted_verification\": {\n      \"required\": [],\n      \"optional\": [\n        \"Existing CI only when its exact subject/configuration applies and supplies the exact required platform observation; no duplicate run solely for confidence.\"\n      ]\n    }\n  },\n  \"evidence\": {\n    \"blocking\": [\n      {\n        \"artifact\": \"implementation-design-preflight.json\",\n        \"covers\": \"Pre-mutation owner/commit/publication/abort flow and obligation mapping.\"\n      },\n      {\n        \"artifact\": \"red-oracle-preflight.json\",\n        \"covers\": \"FC08-RED-01 on the old production subject.\"\n      },\n      {\n        \"artifact\": \"evidence-manifest.json\",\n        \"covers\": \"Exact run, subject, runner/oracle, profile, toolchain, input/expected hashes and raw observations.\"\n      },\n      {\n        \"artifact\": \"verification-run.json\",\n        \"covers\": \"fc08-verification-run-v1 per actual profile invocation.\"\n      },\n      {\n        \"artifact\": \"families/E01.json through families/E10.json\",\n        \"covers\": \"Each frozen blocking obligation family; case/variant-level observations and acceptance.\"\n      },\n      {\n        \"artifact\": \"profile-observations.json\",\n        \"covers\": \"Actual Windows Native, Chrome/WASM and headless realization.\"\n      },\n      {\n        \"artifact\": \"inherited-regression.json\",\n        \"covers\": \"Applicable inherited regression IDs and exact observed results.\"\n      },\n      {\n        \"artifact\": \"terminal-result.json\",\n        \"covers\": \"Exact subject/result/materialized ref/evidence refs and terminal status; no Gate verdict.\"\n      }\n    ],\n    \"corroborative\": [\n      \"Duplicate CI/local runs on the same subject and configuration.\",\n      \"Additional screenshots duplicating automated geometry or render observations.\",\n      \"Full-versus-incremental parity when both paths share the same production compiler.\",\n      \"Unbounded fuzz campaigns, extra diagnostic traces or provenance-of-provenance.\",\n      \"Performance thresholds not accepted by current Authority.\"\n    ],\n    \"deferred_to_other_gate\": [\n      {\n        \"id\": \"FC08-PH01\",\n        \"owner\": \"FC13\",\n        \"blocks_FC08_DEV\": false\n      },\n      {\n        \"id\": \"FC08-PH02\",\n        \"owner\": \"FC13\",\n        \"blocks_FC08_DEV\": false\n      },\n      {\n        \"id\": \"FC08-PH03\",\n        \"owner\": \"FC13\",\n        \"blocks_FC08_DEV\": false\n      },\n      {\n        \"id\": \"FC08-PH04\",\n        \"owner\": \"FC13\",\n        \"blocks_FC08_DEV\": false\n      },\n      {\n        \"id\": \"INT-01\",\n        \"owner\": \"FC04/FC10\",\n        \"disposition\": \"FC-08 must test pre-write rejection; full integration remains outside this package.\"\n      }\n    ]\n  },\n  \"terminal_success\": {\n    \"all_of\": [\n      \"All frozen E01-E10 obligations and all applicable required variants satisfy their exact acceptance criteria; no silent skip, unsupported positive, or placeholder oracle.\",\n      \"All 60 logical cases and 302 variants remain bound to the immutable accepted catalog and corpus; no expected values or authority hashes changed.\",\n      \"BASE-01 current descriptor publication is additive and historical descriptor.lock is unchanged.\",\n      \"Real Windows Native, actual Chrome/WASM Web and applicable headless runs are complete; inherited regressions match.\",\n      \"All results and raw observations are reviewer-resolvable from a same-repository exact result revision/materialized ref.\",\n      \"No out-of-scope changes, no predecessor Gate claim, no physical PASS claim, and no P34 PASS claim.\",\n      \"Return READY_FOR_CONTROL_REVIEW with exact result_revision, materialized_ref and evidence_input_refs.\"\n    ]\n  },\n  \"terminal_blockers\": {\n    \"explicit_classes\": [\n      \"BLOCKED_REPOSITORY_IDENTITY\",\n      \"BLOCKED_AUTHORITY\",\n      \"BLOCKED_MISSING_INPUT\",\n      \"BLOCKED_ENVIRONMENT\",\n      \"BLOCKED_VERIFICATION\",\n      \"BLOCKED_IMPLEMENTATION\",\n      \"BLOCKED_EXECUTION_DIVERGENCE\",\n      \"TASK_PACKAGE_DEFECT\",\n      \"VERIFICATION_DESIGN_DEFECT\",\n      \"FROZEN_VERIFICATION_FAILURE\",\n      \"NEW_HIGH_IMPACT_FAILURE_MODE\"\n    ],\n    \"policy\": \"Preserve valid work and return the exact missing binding, invocation/log, failing case/variant or owner-layer handoff. Do not weaken the frozen finish line or rewrite expected values.\"\n  },\n  \"return_policy\": {\n    \"continue_until_terminal_state\": true,\n    \"return_surface\": \"CONTROL_REVIEW\",\n    \"may_claim_P34_PASS\": false,\n    \"may_claim_DEV_PASS\": false,\n    \"may_claim_PHYS_PASS\": false\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "show",
+        "f67b9db29090449799bd3e05ef7f1d269dab6d31:.aegis/packages/FC-08-PRODUCT-P31-v0.1/evidence-contract.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"schema_version\": \"0.1\",\n  \"format\": \"aegis-evidence-contract-v1\",\n  \"task_id\": \"FC-08\",\n  \"gate_pass_authorized\": false,\n  \"review_boundary\": \"Exact P32 source commit and reviewer-accessible result revision/materialized ref.\",\n  \"blocking\": [\n    {\n      \"obligation\": \"P32 preflight\",\n      \"artifact\": \"implementation-design-preflight.json\",\n      \"failure_mode\": \"Unresolved owner/commit/publication boundary causes non-atomic or cross-owner behavior.\"\n    },\n    {\n      \"obligation\": \"FC08-RED-01\",\n      \"artifact\": \"red-oracle-preflight.json\",\n      \"failure_mode\": \"The frozen oracle is not sensitive to the known absent baseline capability.\"\n    },\n    {\n      \"obligation\": \"E01-E10\",\n      \"artifact\": \"families/E01.json through families/E10.json\",\n      \"failure_mode\": \"Any one of the ten accepted high-impact failure modes remains untested or fails.\"\n    },\n    {\n      \"obligation\": \"Run identity and case completeness\",\n      \"artifact\": \"verification-run.json and evidence-manifest.json\",\n      \"failure_mode\": \"Results cannot be tied to exact subject, runner, oracle, profile, inputs, expected values or raw observations.\"\n    },\n    {\n      \"obligation\": \"Native/Web/headless realization\",\n      \"artifact\": \"profile-observations.json\",\n      \"failure_mode\": \"Build-only or mock evidence hides platform/adapter defects.\"\n    },\n    {\n      \"obligation\": \"Inherited behavior\",\n      \"artifact\": \"inherited-regression.json\",\n      \"failure_mode\": \"Container implementation regresses existing selection, connector, control, producer or snapshot behavior.\"\n    },\n    {\n      \"obligation\": \"Durable return\",\n      \"artifact\": \"terminal-result.json\",\n      \"failure_mode\": \"Independent reviewer cannot resolve the exact result/evidence boundary.\"\n    }\n  ],\n  \"per_family_mapping\": {\n    \"FC08-E01\": \"families/E01.json\",\n    \"FC08-E02\": \"families/E02.json\",\n    \"FC08-E03\": \"families/E03.json\",\n    \"FC08-E04\": \"families/E04.json\",\n    \"FC08-E05\": \"families/E05.json\",\n    \"FC08-E06\": \"families/E06.json\",\n    \"FC08-E07\": \"families/E07.json\",\n    \"FC08-E08\": \"families/E08.json\",\n    \"FC08-E09\": \"families/E09.json\",\n    \"FC08-E10\": \"families/E10.json\"\n  },\n  \"required_run_fields\": [\n    \"design_id\",\n    \"authority_id\",\n    \"authority_binding_hash\",\n    \"verification_manifest_hash\",\n    \"qualification_subject_revision\",\n    \"runner_revision\",\n    \"oracle_revision\",\n    \"platform_profile\",\n    \"build_configuration\",\n    \"toolchain\",\n    \"source_tree_dirty\",\n    \"started_at\",\n    \"ended_at\",\n    \"invocation\",\n    \"cases\"\n  ],\n  \"required_case_fields\": [\n    \"case_id\",\n    \"variant_id\",\n    \"family_id\",\n    \"input_hash\",\n    \"expected_hash\",\n    \"observed_artifact\",\n    \"observation_basis\",\n    \"result\",\n    \"failure_boundary\"\n  ],\n  \"result_values\": [\n    \"PASS\",\n    \"FAIL\",\n    \"BLOCKED_ENVIRONMENT\",\n    \"NOT_RUN\"\n  ],\n  \"rules\": [\n    \"NOT_RUN is never PASS.\",\n    \"Expected Unsupported is PASS only when all zero-mutation and receipt assertions also hold.\",\n    \"No green summary can replace case-level result and raw observation bindings.\",\n    \"No duplicate proof-of-proof chain; one real trace may satisfy multiple frozen obligations when its exact assertions are mapped.\",\n    \"No Gate verdict is issued by the execution result.\"\n  ],\n  \"corroborative_only\": [\n    \"Duplicate CI/local runs on the same subject and configuration.\",\n    \"Screenshots duplicating automated geometry or rendering observations.\",\n    \"Full-versus-incremental parity when both paths share the same production compiler.\",\n    \"Unbounded fuzzing, performance targets not accepted by Authority, and provenance-of-provenance.\"\n  ],\n  \"deferred_to_other_gate\": [\n    {\n      \"id\": \"FC08-PH01\",\n      \"owner\": \"FC13\",\n      \"required_in_FC08_DEV\": false,\n      \"waived\": false\n    },\n    {\n      \"id\": \"FC08-PH02\",\n      \"owner\": \"FC13\",\n      \"required_in_FC08_DEV\": false,\n      \"waived\": false\n    },\n    {\n      \"id\": \"FC08-PH03\",\n      \"owner\": \"FC13\",\n      \"required_in_FC08_DEV\": false,\n      \"waived\": false\n    },\n    {\n      \"id\": \"FC08-PH04\",\n      \"owner\": \"FC13\",\n      \"required_in_FC08_DEV\": false,\n      \"waived\": false\n    },\n    {\n      \"id\": \"INT-01\",\n      \"owner\": \"FC04/FC10\",\n      \"required_here\": \"Explicit pre-write mixed-default-delete rejection only; full integrated behavior remains outside FC-08.\"\n    }\n  ],\n  \"return_fields\": [\n    \"result_revision\",\n    \"materialized_ref\",\n    \"evidence_input_refs\",\n    \"terminal_state\",\n    \"exact_blockers\",\n    \"P34_PASS:false\",\n    \"DEV_PASS:false\",\n    \"PHYS_PASS:false\"\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "show",
+        "f67b9db29090449799bd3e05ef7f1d269dab6d31:.aegis/packages/FC-08-PRODUCT-P31-v0.1/implementation-context.md"
+      ],
+      "exit_code": 0,
+      "stdout": "# FC-08 product P31 \u2014 implementation context\n\n## Package and repository position\n\n- Repository: `Mostorm-Labs/axiom` (repository ID `1306396623`).\n- Product P31 package: `.aegis/packages/FC-08-PRODUCT-P31-v0.1/package.json`.\n- Materialized package branch: `refs/heads/control/fc08-product-p31-package`.\n- Trusted task anchor: `a1e8819abe245ab7487f18771970721f480ff487` (`relation: ancestor`).\n- Reconciled preparation subject: `427580ae13b60a39e88959b282cbffc695c9aabb`, a descendant of the anchor. The product baseline is not qualified merely because M01-M04 completed.\n- This package is pending independent control review. It does not authorize P32 by itself; no product code has been changed in this P31 package commit.\n\n## Current flow and ownership\n\nUse the existing runtime owners; do not create a parallel container runtime or a second membership truth:\n\n`Product Shell / Debug UI / ordinary consumer`\n\u2192 typed public `RuntimeFacade` intent and immutable readback\n\u2192 `CanvasRuntimeFacade / RuntimeComposition` owner admission and ordered ingress\n\u2192 Interaction planner/session plus existing `EditorHistory` and real E01 command admission\n\u2192 Semantic `OperationEngine` validation, staged graph and atomic apply\n\u2192 Scene coherent publication, derived geometry/query/render/damage\n\u2192 Windows/Web host presentation of receipt/readback.\n\nThe owner map and exact source anchors are frozen by P14-P17 and ARC-CR-C01/C02 in `authority.lock.json`. The accepted wire and semantic meaning are frozen by the accepted P12/P13 exports and the P23 D01-D08 semantic authority. If implementation finds an unresolved meaning, stop and route to the owning Authority/Verification layer; do not infer a new semantic rule.\n\n## Known incomplete boundary\n\n- The accepted current descriptor diff is source-complete and additive, but the production source tree still lacks the accepted `section.proto` and `container_operations.proto` files and the runtime implementation for Section/1 and opcodes 17/18.\n- Existing baseline observations explicitly classify representative product positives as `CAPABILITY_ABSENT`. These are valid RED observations, not product PASS.\n- The qualification-only `Q-SEM-*` / `Q-HIST-*` hooks bind existing baseline stages only. They do not implement or prove future F/U admission or H06.\n- The accepted materialization has all 60 logical cases, 302 unique variants, independent reference helpers, exact inputs/expected refs and real baseline profile bindings. Do not modify the corpus, expected values, P20 CR01 or historical failure records.\n\n## First action after P31 package acceptance\n\n1. Resolve the exact same-repository package materialization ref and verify the anchor is an ancestor of the accepted starting revision.\n2. Run `PackageBindingPreflight` and `EvidenceContractPreflight` against this exact package. Do not use floating labels or infer permission from a prior readiness snapshot.\n3. Complete `ImplementationDesignPreflight` for the semantic staged apply, real F/U + History reservation, owner-bound Composition admission, Scene publication/recovery, preview handoff and Windows/Web adapter flow.\n4. Run `FC08-RED-01` against the unmodified production subject using the frozen case/variant IDs before production mutation. If the old implementation passes a required positive while the capability is absent, return `VERIFICATION_DESIGN_DEFECT`; do not weaken the oracle.\n5. Implement evidence-gated vertical slices and continue through every frozen E01-E10 requirement until success or an explicit terminal blocker.\n\n## Non-negotiable boundaries\n\n- Preserve the historical `descriptor.lock.pb` and `descriptor.lock.sha256`; only the current descriptor pair may be updated for the accepted additive publication.\n- Keep Section identity `kind=10/version=1/content tag=12`, opcodes 17/18, the three mutually exclusive topology effects, CAP-01..06 and fail-closed snapshot/journal capability behavior.\n- Real F/U and History resources must be reserved before canonical publication. Rejected precommit operations must not mutate canonical state or History cursor/redo.\n- Keep INT-01 under FC04/FC10 ownership and explicitly reject mixed-default-delete before write. PH01-PH04 remain FC13 physical debt.\n- Do not expand into a generic FC04 inspector, advanced FC06/FC07 feature completion, FC10 clipboard, Frame, arbitrary transaction, or mock production dependencies.\n- Do not modify `.aegis/authorities.json`, Gate/Evidence/Integration registries, the accepted catalog/corpus, prior materialization results, or qualification hook semantics.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/packages/FC-08-P31-READINESS/authority.lock.json"
+      ],
+      "exit_code": 0,
+      "stdout": "221c8ec230cd81708345dd28c9af97a54b4a1976\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/authorities.json"
+      ],
+      "exit_code": 0,
+      "stdout": "72d338d66ed3312b91cfb0bc43bd9f1ad82b5fed\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P14.md"
+      ],
+      "exit_code": 0,
+      "stdout": "37c29507fe7b40e5a000646929483ee0456ebfba\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P15.md"
+      ],
+      "exit_code": 0,
+      "stdout": "e13a7280fbae95374ccf2e1b9468495c72602d08\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P16.md"
+      ],
+      "exit_code": 0,
+      "stdout": "494c10076787b4c37e07f7da2bbd073b2c83654a\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P17.md"
+      ],
+      "exit_code": 0,
+      "stdout": "4b76b8bd1aa262492e81abd2437a8fcdf964f4a8\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/packages/FC-08-P31-READINESS/final-binding/seq01-p23-acceptance-v0.1.json"
+      ],
+      "exit_code": 0,
+      "stdout": "4b907bb694337267c526f6599bf60f12a5ebcd03\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/closure-receipt.json"
+      ],
+      "exit_code": 0,
+      "stdout": "ad7a14f4bb4b454bd5087ed17b2bec3bd72a6f26\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/review-delta.json"
+      ],
+      "exit_code": 0,
+      "stdout": "f51be41fdb8a8b99d3ad7c58d0f4570ab18b67c6\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json"
+      ],
+      "exit_code": 0,
+      "stdout": "3402b2634677eddad4cb3d0d6ab1e2d5308ffa1b\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json"
+      ],
+      "exit_code": 0,
+      "stdout": "a5be924d595723ee36116582e46837cacff15986\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/effective-case-catalog.json"
+      ],
+      "exit_code": 0,
+      "stdout": "020cc2eeb043c30ed4ce5de3715b4f82dbab790d\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/physical-debt.json"
+      ],
+      "exit_code": 0,
+      "stdout": "8a88d558c4e78e61b13a98e145b84c32c47fcf68\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/source-index.json"
+      ],
+      "exit_code": 0,
+      "stdout": "9a92917ff83089855ae88c4eb8e029458527a555\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/descriptor-diff.json"
+      ],
+      "exit_code": 0,
+      "stdout": "3323d78196e161ddf8711ac59926cdd3a1777cd9\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:schema/axiom/v1/descriptor/descriptor.current.pb"
+      ],
+      "exit_code": 0,
+      "stdout": "a5820e336b4108c31f47c8f2ce6889b344e8b201\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:schema/axiom/v1/descriptor/descriptor.current.sha256"
+      ],
+      "exit_code": 0,
+      "stdout": "582e2d3f71e86f330a7b641a041a63ccc8973fcb\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:schema/axiom/v1/descriptor/descriptor.lock.pb"
+      ],
+      "exit_code": 0,
+      "stdout": "9e1f37f4334fc31d8c3c71c08d9d0eac412fe9b2\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:schema/axiom/v1/descriptor/descriptor.lock.sha256"
+      ],
+      "exit_code": 0,
+      "stdout": "51569adce64f9f85eebd111f6cbce85096ad68a2\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P12.md"
+      ],
+      "exit_code": 0,
+      "stdout": "fe9c2d8cfa8f2c0c119ff4c45a2ce5a408184a00\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P13.md"
+      ],
+      "exit_code": 0,
+      "stdout": "47c8d60f2d83a2c597d098ff24e61232f66bd6e8\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P14.md"
+      ],
+      "exit_code": 0,
+      "stdout": "37c29507fe7b40e5a000646929483ee0456ebfba\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P15.md"
+      ],
+      "exit_code": 0,
+      "stdout": "e13a7280fbae95374ccf2e1b9468495c72602d08\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P16.md"
+      ],
+      "exit_code": 0,
+      "stdout": "494c10076787b4c37e07f7da2bbd073b2c83654a\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P17.md"
+      ],
+      "exit_code": 0,
+      "stdout": "4b76b8bd1aa262492e81abd2437a8fcdf964f4a8\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-exports/P20.md"
+      ],
+      "exit_code": 0,
+      "stdout": "f3b15876ea50d41d34cf6985f1ba3e40dfa211cc\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/reviewed-obligations.json"
+      ],
+      "exit_code": 0,
+      "stdout": "3402b2634677eddad4cb3d0d6ab1e2d5308ffa1b\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "D:/Softwares/Git/cmd/git.exe",
+        "rev-parse",
+        "427580ae13b60a39e88959b282cbffc695c9aabb:.aegis/materialized/FC-08/sources/accepted-seed/verification/result-contract.json"
+      ],
+      "exit_code": 0,
+      "stdout": "a5be924d595723ee36116582e46837cacff15986\n",
+      "stderr": ""
+    }
+  ],
+  "environment": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]",
+    "executable": "D:\\Softwares\\Anaconda\\python.exe"
+  },
+  "product_tests_executed": false,
+  "valid_product_RED_observed": false,
+  "product_P32_authorized": false,
+  "P34_PASS": false
+}

@@ -1,0 +1,44 @@
+{
+  "overlay": {
+    "path": ".aegis/packages/FC-08-SECTION-C-H03-v0.1/input-overlay.json",
+    "sha256": "71249644f37d2a7c1c3bb4b6492be28fe6f4bea79cb805a13c026994b1b39657"
+  },
+  "immutable_corpus": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus-manifest.json",
+    "sha256": "1f472bc4eb916816de87191d20ed67d3ce59e5e5edfca3d414a2d4a880a70452"
+  },
+  "independent_inputs": [
+    {
+      "path": "tests/fc08/reference/fixtures.py",
+      "sha256": "db147d36b585957cbc8f739bdf6d3575c762cf259204ce22ef890639633a9bfc"
+    },
+    {
+      "path": "tests/fc08/reference/wire.py",
+      "sha256": "122a8f587e5a984a3ffb3d545c8854ee81e6ce4a022cff52b73b86f1ad0e1ae6"
+    },
+    {
+      "path": "tests/fc08/reference/oracles.py",
+      "sha256": "408e4ee929f6673bdb0b7871525ea5250f50b63f7984553fefc56db3a0fda79e"
+    }
+  ],
+  "obligations": [
+    {
+      "requirement": "Accepted 65534/65535 initial scenes are legal; active F and reference U match approved proposal identities",
+      "oracle": "Accepted proposal SHA/F/U hashes plus unchanged original expected values and independent Writer",
+      "acceptance": "Both F/U hashes and complete valid initial scene match bound recipe; old malformed variants remain historically rejected",
+      "evidence_required": "Exact input/expected/wire hashes, raw diagnostics and generator observations"
+    },
+    {
+      "requirement": "Real bidirectional C command admission at the existing boundary",
+      "oracle": "Existing OperationEngine and EditorHistory, unchanged independent H03 expected predicates",
+      "acceptance": "65534 roots admits F and real Undo/Redo; 65535 roots rejects before canonical/History publication because inverse guard collection exceeds limit",
+      "evidence_required": "Actual source-bound SUT results, cursor/redo/ledger/generation/ordinal observations, raw command exits and JUnit"
+    },
+    {
+      "requirement": "Preserve verified work and compatibility",
+      "oracle": "Exact parent C production-source hashes and prior immutable evidence; selected native semantic regression",
+      "acceptance": "Production sources unchanged; no new failures except independently documented baseline failure",
+      "evidence_required": "Preservation audit, exact revisions and reproducible build/test commands"
+    }
+  ]
+}

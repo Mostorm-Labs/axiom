@@ -1,0 +1,3319 @@
+{
+  "rows": [
+    {
+      "name": "malformed ID rejected without abort",
+      "ok": true,
+      "actual": {
+        "transportError": "invalid Section envelope"
+      }
+    },
+    {
+      "name": "queued 1",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "1",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 1",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "1",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "1",
+          "failure": 0,
+          "generation": "1",
+          "objectId": "01000000000000000000000000fc0801",
+          "operationId": "00000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "1"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 1",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "1",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "1",
+          "failure": 0,
+          "generation": "1",
+          "objectId": "01000000000000000000000000fc0801",
+          "operationId": "00000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "1"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "queued 2",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "2",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 2",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "2",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "2",
+          "failure": 0,
+          "generation": "2",
+          "objectId": "02000000000000000000000000fc0801",
+          "operationId": "01000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "2"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 2",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "2",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "2",
+          "failure": 0,
+          "generation": "2",
+          "objectId": "02000000000000000000000000fc0801",
+          "operationId": "01000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "2"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "real registered-font title glyphs",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "2",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "2",
+        "selectedRoots": [
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "3",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 4,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "create projection",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "2",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "2",
+        "selectedRoots": [
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "3",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 4,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "queued 3",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "3",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 3",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "3",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "3",
+          "failure": 0,
+          "generation": "3",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "02000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "3"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 3",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "3",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "3",
+          "failure": 0,
+          "generation": "3",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "02000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "3"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "wrapper children",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          -46,
+          -8,
+          512,
+          964
+        ],
+        "busy": false,
+        "children": [
+          "01000000000000000000000000fc0801",
+          "02000000000000000000000000fc0801"
+        ],
+        "generation": "3",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "members": [
+          {
+            "kind": 10,
+            "localTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              40
+            ],
+            "objectId": "01000000000000000000000000fc0801",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              40
+            ]
+          },
+          {
+            "kind": 10,
+            "localTransform": [
+              0,
+              2,
+              -2,
+              0,
+              450,
+              300
+            ],
+            "objectId": "02000000000000000000000000fc0801",
+            "worldTransform": [
+              0,
+              2,
+              -2,
+              0,
+              450,
+              300
+            ]
+          }
+        ],
+        "objectId": "03000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "3",
+        "selectedRoots": [
+          "03000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "4",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "wrap world pose",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "3",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "3",
+        "selectedRoots": [
+          "03000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "4",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 4,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "queued 4",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "4",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 4",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "4",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "4",
+          "failure": 0,
+          "generation": "4",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "03000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "4"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 4",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "4",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "4",
+          "failure": 0,
+          "generation": "4",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "03000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "4"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "UTF8 title",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          -46,
+          -8,
+          512,
+          964
+        ],
+        "busy": false,
+        "children": [
+          "01000000000000000000000000fc0801",
+          "02000000000000000000000000fc0801"
+        ],
+        "generation": "4",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "members": [
+          {
+            "kind": 10,
+            "localTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              40
+            ],
+            "objectId": "01000000000000000000000000fc0801",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              40
+            ]
+          },
+          {
+            "kind": 10,
+            "localTransform": [
+              0,
+              2,
+              -2,
+              0,
+              450,
+              300
+            ],
+            "objectId": "02000000000000000000000000fc0801",
+            "worldTransform": [
+              0,
+              2,
+              -2,
+              0,
+              450,
+              300
+            ]
+          }
+        ],
+        "objectId": "03000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "4",
+        "selectedRoots": [
+          "03000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "4",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section 世界",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 10,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "queued 5",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "5",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 5",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "5",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "5",
+          "failure": 0,
+          "generation": "5",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "04000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "5"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 5",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "5",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "5",
+          "failure": 0,
+          "generation": "5",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "04000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "5"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "boundary leaves child pose",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "5",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "5",
+        "selectedRoots": [
+          "03000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "4",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 4,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "queued 6",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "6",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 6",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "6",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "6",
+          "failure": 0,
+          "generation": "6",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "05000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "6"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 6",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "6",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "6",
+          "failure": 0,
+          "generation": "6",
+          "objectId": "03000000000000000000000000fc0801",
+          "operationId": "05000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "6"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "release preserves children",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "c0419fd33d8525923fb07fa2e266592dc906fc8a",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 2,
+        "operations": 6,
+        "pointerSamples": 0,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 7,
+        "retries": 5,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 1,
+        "metricsGeneration": 1,
+        "width": 764,
+        "height": 396,
+        "logicalWidth": 764,
+        "logicalHeight": 396,
+        "dpr": 1,
+        "controlState": 9,
+        "tool": 0,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 0,
+          "pointer": 0,
+          "generation": 0
+        },
+        "error": "",
+        "failure": "",
+        "trace": []
+      }
+    },
+    {
+      "name": "queued 7",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "7",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 7",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "7",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "7",
+          "failure": 0,
+          "generation": "7",
+          "objectId": "00000000000000000000000000000000",
+          "operationId": "06000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "7"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 7",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "7",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "7",
+          "failure": 0,
+          "generation": "7",
+          "objectId": "00000000000000000000000000000000",
+          "operationId": "06000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "7"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "rotated reparent world",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "7",
+        "localTransform": [
+          0,
+          -0.5,
+          0.5,
+          0,
+          -130,
+          210
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "7",
+        "selectedRoots": [
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "5",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 4,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "independent inverse matrix",
+      "ok": true,
+      "actual": [
+        0,
+        -0.5,
+        0.5,
+        0,
+        -130,
+        210
+      ]
+    },
+    {
+      "name": "duplicate no mutation",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "7",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "7",
+          "failure": 0,
+          "generation": "7",
+          "objectId": "00000000000000000000000000000000",
+          "operationId": "06000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "7"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "queued 8",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "8",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 8",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 5,
+        "requestId": "8",
+        "section": {
+          "canonical": 0,
+          "commitEpoch": "0",
+          "commitOrdinal": "0",
+          "failure": 3,
+          "generation": "7",
+          "objectId": "01000000000000000000000000fc0801",
+          "operationId": "00000000000000000000000000000000",
+          "projection": 0,
+          "sceneRevision": "7"
+        },
+        "state": 4
+      }
+    },
+    {
+      "name": "stale zero mutation",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "7",
+        "localTransform": [
+          0,
+          -0.5,
+          0.5,
+          0,
+          -130,
+          210
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "7",
+        "selectedRoots": [
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "5",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 4,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "undo world",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "8",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "8",
+        "selectedRoots": [
+          "01000000000000000000000000fc0801",
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "5",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 4,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ]
+      }
+    },
+    {
+      "name": "redo topology",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          320,
+          240
+        ],
+        "busy": false,
+        "children": [
+          "01000000000000000000000000fc0801"
+        ],
+        "generation": "9",
+        "localTransform": [
+          0,
+          2,
+          -2,
+          0,
+          450,
+          300
+        ],
+        "members": [
+          {
+            "kind": 10,
+            "localTransform": [
+              0,
+              -0.5,
+              0.5,
+              0,
+              -130,
+              210
+            ],
+            "objectId": "01000000000000000000000000fc0801",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              40
+            ]
+          }
+        ],
+        "objectId": "02000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "9",
+        "selectedRoots": [
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "5",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Region B",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 8,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          0,
+          2,
+          -2,
+          0,
+          450,
+          300
+        ]
+      }
+    },
+    {
+      "name": "queued 9",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "9",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 9",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "9",
+        "section": {
+          "canonical": 1,
+          "commitEpoch": "0",
+          "commitOrdinal": "0",
+          "failure": 0,
+          "generation": "9",
+          "objectId": "02000000000000000000000000fc0801",
+          "operationId": "00000000000000000000000000000000",
+          "projection": 2,
+          "sceneRevision": "9"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 9",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "9",
+        "section": {
+          "canonical": 1,
+          "commitEpoch": "0",
+          "commitOrdinal": "0",
+          "failure": 0,
+          "generation": "9",
+          "objectId": "02000000000000000000000000fc0801",
+          "operationId": "00000000000000000000000000000000",
+          "projection": 2,
+          "sceneRevision": "9"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "ancestor moves descendants once",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          120,
+          100
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "10",
+        "localTransform": [
+          0,
+          -0.5,
+          0.5,
+          0,
+          -130,
+          210
+        ],
+        "members": [],
+        "objectId": "01000000000000000000000000fc0801",
+        "projectionReady": true,
+        "sceneRevision": "10",
+        "selectedRoots": [
+          "02000000000000000000000000fc0801"
+        ],
+        "selectionRevision": "6",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "区域 A",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 4,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          60,
+          80
+        ]
+      }
+    },
+    {
+      "name": "render/fit/tool remains live",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "c0419fd33d8525923fb07fa2e266592dc906fc8a",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 2,
+        "operations": 10,
+        "pointerSamples": 0,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 16,
+        "retries": 10,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 1,
+        "metricsGeneration": 1,
+        "width": 764,
+        "height": 396,
+        "logicalWidth": 764,
+        "logicalHeight": 396,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 1,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 0.368889,
+          "x": 293.467,
+          "y": 2.48889
+        },
+        "lastPointer": {
+          "source": 0,
+          "pointer": 0,
+          "generation": 0
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          }
+        ]
+      }
+    },
+    {
+      "name": "queued 10",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "10",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 10",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "10",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "11",
+          "failure": 0,
+          "generation": "11",
+          "objectId": "02000000000000000000000000fc0801",
+          "operationId": "0b000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "11"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 10",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "10",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "11",
+          "failure": 0,
+          "generation": "11",
+          "objectId": "02000000000000000000000000fc0801",
+          "operationId": "0b000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "11"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "queued 11",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "11",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 11",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "11",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "12",
+          "failure": 0,
+          "generation": "12",
+          "objectId": "01000000000000000000000000fc0801",
+          "operationId": "0c000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "12"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 11",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "11",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "12",
+          "failure": 0,
+          "generation": "12",
+          "objectId": "01000000000000000000000000fc0801",
+          "operationId": "0c000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "12"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "drop fixture starts empty",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "c0419fd33d8525923fb07fa2e266592dc906fc8a",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 0,
+        "operations": 12,
+        "pointerSamples": 0,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 18,
+        "retries": 10,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 1,
+        "metricsGeneration": 1,
+        "width": 764,
+        "height": 396,
+        "logicalWidth": 764,
+        "logicalHeight": 396,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 1,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 0.368889,
+          "x": 293.467,
+          "y": 2.48889
+        },
+        "lastPointer": {
+          "source": 0,
+          "pointer": 0,
+          "generation": 0
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          }
+        ]
+      }
+    },
+    {
+      "name": "queued 12",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "12",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 12",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "12",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "13",
+          "failure": 0,
+          "generation": "13",
+          "objectId": "ffffffffffffffffffffffffffffff01",
+          "operationId": "0d000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "13"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 12",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "12",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "13",
+          "failure": 0,
+          "generation": "13",
+          "objectId": "ffffffffffffffffffffffffffffff01",
+          "operationId": "0d000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "13"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 0",
+      "ok": true,
+      "actual": {
+        "x": 20,
+        "y": 40,
+        "phase": 0,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 1",
+      "ok": true,
+      "actual": {
+        "x": 100,
+        "y": 100,
+        "phase": 1,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 2",
+      "ok": true,
+      "actual": {
+        "x": 100,
+        "y": 100,
+        "phase": 2,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 0",
+      "ok": true,
+      "actual": {
+        "x": 60,
+        "y": 70,
+        "phase": 0,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 2",
+      "ok": true,
+      "actual": {
+        "x": 60,
+        "y": 70,
+        "phase": 2,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 0",
+      "ok": true,
+      "actual": {
+        "x": 60,
+        "y": 70,
+        "phase": 0,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 1",
+      "ok": true,
+      "actual": {
+        "x": 390,
+        "y": 290,
+        "phase": 1,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "crossing is transient false",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": true,
+        "children": [],
+        "generation": "14",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ],
+        "members": [],
+        "objectId": "ffffffffffffffffffffffffffffff01",
+        "projectionReady": true,
+        "sceneRevision": "14",
+        "selectedRoots": [
+          "01000000000001000000000000000000"
+        ],
+        "selectionRevision": "10",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ]
+      }
+    },
+    {
+      "name": "confirmed pointer 2",
+      "ok": true,
+      "actual": {
+        "x": 390,
+        "y": 290,
+        "phase": 2,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "one atomic membership/pose drop false",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": false,
+        "children": [
+          "01000000000001000000000000000000"
+        ],
+        "generation": "15",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ],
+        "members": [
+          {
+            "kind": 1,
+            "localTransform": [
+              1,
+              0,
+              0,
+              1,
+              49.999969482421875,
+              60
+            ],
+            "objectId": "01000000000001000000000000000000",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              349.9999694824219,
+              260
+            ]
+          }
+        ],
+        "objectId": "ffffffffffffffffffffffffffffff01",
+        "projectionReady": true,
+        "sceneRevision": "15",
+        "selectedRoots": [
+          "01000000000001000000000000000000"
+        ],
+        "selectionRevision": "10",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ]
+      }
+    },
+    {
+      "name": "last confirmed preview pose false",
+      "ok": true,
+      "actual": [
+        1,
+        0,
+        0,
+        1,
+        349.9999694824219,
+        260
+      ]
+    },
+    {
+      "name": "one-step drop undo false",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "16",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ],
+        "members": [],
+        "objectId": "ffffffffffffffffffffffffffffff01",
+        "projectionReady": true,
+        "sceneRevision": "16",
+        "selectedRoots": [
+          "01000000000001000000000000000000"
+        ],
+        "selectionRevision": "10",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ]
+      }
+    },
+    {
+      "name": "one-step drop redo false",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": false,
+        "children": [
+          "01000000000001000000000000000000"
+        ],
+        "generation": "17",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ],
+        "members": [
+          {
+            "kind": 1,
+            "localTransform": [
+              1,
+              0,
+              0,
+              1,
+              49.999969482421875,
+              60
+            ],
+            "objectId": "01000000000001000000000000000000",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              349.9999694824219,
+              260
+            ]
+          }
+        ],
+        "objectId": "ffffffffffffffffffffffffffffff01",
+        "projectionReady": true,
+        "sceneRevision": "17",
+        "selectedRoots": [
+          "01000000000001000000000000000000"
+        ],
+        "selectionRevision": "10",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ]
+      }
+    },
+    {
+      "name": "queued 13",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "13",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 13",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "13",
+        "section": {
+          "canonical": 1,
+          "commitEpoch": "0",
+          "commitOrdinal": "0",
+          "failure": 0,
+          "generation": "17",
+          "objectId": "ffffffffffffffffffffffffffffff01",
+          "operationId": "00000000000000000000000000000000",
+          "projection": 2,
+          "sceneRevision": "17"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 13",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "13",
+        "section": {
+          "canonical": 1,
+          "commitEpoch": "0",
+          "commitOrdinal": "0",
+          "failure": 0,
+          "generation": "17",
+          "objectId": "ffffffffffffffffffffffffffffff01",
+          "operationId": "00000000000000000000000000000000",
+          "projection": 2,
+          "sceneRevision": "17"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 0",
+      "ok": true,
+      "actual": {
+        "x": 310,
+        "y": 210,
+        "phase": 0,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 1",
+      "ok": true,
+      "actual": {
+        "x": 340,
+        "y": 250,
+        "phase": 1,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 2",
+      "ok": true,
+      "actual": {
+        "x": 340,
+        "y": 250,
+        "phase": 2,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "Section pointer drag carries member once false",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": false,
+        "children": [
+          "01000000000001000000000000000000"
+        ],
+        "generation": "18",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          330,
+          240
+        ],
+        "members": [
+          {
+            "kind": 1,
+            "localTransform": [
+              1,
+              0,
+              0,
+              1,
+              49.999969482421875,
+              60
+            ],
+            "objectId": "01000000000001000000000000000000",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              379.9999694824219,
+              300
+            ]
+          }
+        ],
+        "objectId": "ffffffffffffffffffffffffffffff01",
+        "projectionReady": true,
+        "sceneRevision": "18",
+        "selectedRoots": [
+          "ffffffffffffffffffffffffffffff01"
+        ],
+        "selectionRevision": "11",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          330,
+          240
+        ]
+      }
+    },
+    {
+      "name": "confirmed pointer 0",
+      "ok": true,
+      "actual": {
+        "x": 420,
+        "y": 330,
+        "phase": 0,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 2",
+      "ok": true,
+      "actual": {
+        "x": 420,
+        "y": 330,
+        "phase": 2,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 0",
+      "ok": true,
+      "actual": {
+        "x": 420,
+        "y": 330,
+        "phase": 0,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 1",
+      "ok": true,
+      "actual": {
+        "x": 100,
+        "y": 120,
+        "phase": 1,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 2",
+      "ok": true,
+      "actual": {
+        "x": 100,
+        "y": 120,
+        "phase": 2,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "drop out is one commit false",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "19",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          330,
+          240
+        ],
+        "members": [],
+        "objectId": "ffffffffffffffffffffffffffffff01",
+        "projectionReady": true,
+        "sceneRevision": "19",
+        "selectedRoots": [
+          "01000000000001000000000000000000"
+        ],
+        "selectionRevision": "12",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          330,
+          240
+        ]
+      }
+    },
+    {
+      "name": "drop out undo restores membership false",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": false,
+        "children": [
+          "01000000000001000000000000000000"
+        ],
+        "generation": "20",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          330,
+          240
+        ],
+        "members": [
+          {
+            "kind": 1,
+            "localTransform": [
+              1,
+              0,
+              0,
+              1,
+              49.999969482421875,
+              60
+            ],
+            "objectId": "01000000000001000000000000000000",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              379.9999694824219,
+              300
+            ]
+          }
+        ],
+        "objectId": "ffffffffffffffffffffffffffffff01",
+        "projectionReady": true,
+        "sceneRevision": "20",
+        "selectedRoots": [
+          "01000000000001000000000000000000"
+        ],
+        "selectionRevision": "12",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          330,
+          240
+        ]
+      }
+    },
+    {
+      "name": "bounded fixture undo cleanup false",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "c0419fd33d8525923fb07fa2e266592dc906fc8a",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 0,
+        "operations": 24,
+        "pointerSamples": 16,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 42,
+        "retries": 12,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 1,
+        "metricsGeneration": 1,
+        "width": 764,
+        "height": 396,
+        "logicalWidth": 764,
+        "logicalHeight": 396,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 1,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 284,
+          "y": -664
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 71,
+          "generation": 6
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          }
+        ]
+      }
+    },
+    {
+      "name": "queued 14",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "14",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 14",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "14",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "25",
+          "failure": 0,
+          "generation": "25",
+          "objectId": "ffffffffffffffffffffffffffffff02",
+          "operationId": "1a000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "25"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 14",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "14",
+        "section": {
+          "canonical": 2,
+          "commitEpoch": "1",
+          "commitOrdinal": "25",
+          "failure": 0,
+          "generation": "25",
+          "objectId": "ffffffffffffffffffffffffffffff02",
+          "operationId": "1a000000000000800000000000000000",
+          "projection": 2,
+          "sceneRevision": "25"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 0",
+      "ok": true,
+      "actual": {
+        "x": 20,
+        "y": 40,
+        "phase": 0,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 1",
+      "ok": true,
+      "actual": {
+        "x": 100,
+        "y": 100,
+        "phase": 1,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 2",
+      "ok": true,
+      "actual": {
+        "x": 100,
+        "y": 100,
+        "phase": 2,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 0",
+      "ok": true,
+      "actual": {
+        "x": 60,
+        "y": 70,
+        "phase": 0,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 2",
+      "ok": true,
+      "actual": {
+        "x": 60,
+        "y": 70,
+        "phase": 2,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 0",
+      "ok": true,
+      "actual": {
+        "x": 60,
+        "y": 70,
+        "phase": 0,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 1",
+      "ok": true,
+      "actual": {
+        "x": 390,
+        "y": 290,
+        "phase": 1,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "crossing is transient true",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": true,
+        "children": [],
+        "generation": "26",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ],
+        "members": [],
+        "objectId": "ffffffffffffffffffffffffffffff02",
+        "projectionReady": true,
+        "sceneRevision": "26",
+        "selectedRoots": [
+          "1a000000000000000000000000000000"
+        ],
+        "selectionRevision": "16",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ]
+      }
+    },
+    {
+      "name": "confirmed pointer 2",
+      "ok": true,
+      "actual": {
+        "x": 390,
+        "y": 290,
+        "phase": 2,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "one atomic membership/pose drop true",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": false,
+        "children": [
+          "1a000000000000000000000000000000"
+        ],
+        "generation": "27",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ],
+        "members": [
+          {
+            "kind": 5,
+            "localTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              20
+            ],
+            "objectId": "1a000000000000000000000000000000",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              330,
+              220
+            ]
+          }
+        ],
+        "objectId": "ffffffffffffffffffffffffffffff02",
+        "projectionReady": true,
+        "sceneRevision": "27",
+        "selectedRoots": [
+          "1a000000000000000000000000000000"
+        ],
+        "selectionRevision": "16",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ]
+      }
+    },
+    {
+      "name": "last confirmed preview pose true",
+      "ok": true,
+      "actual": [
+        1,
+        0,
+        0,
+        1,
+        330,
+        220
+      ]
+    },
+    {
+      "name": "one-step drop undo true",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "28",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ],
+        "members": [],
+        "objectId": "ffffffffffffffffffffffffffffff02",
+        "projectionReady": true,
+        "sceneRevision": "28",
+        "selectedRoots": [
+          "1a000000000000000000000000000000"
+        ],
+        "selectionRevision": "16",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ]
+      }
+    },
+    {
+      "name": "one-step drop redo true",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": false,
+        "children": [
+          "1a000000000000000000000000000000"
+        ],
+        "generation": "29",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ],
+        "members": [
+          {
+            "kind": 5,
+            "localTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              20
+            ],
+            "objectId": "1a000000000000000000000000000000",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              330,
+              220
+            ]
+          }
+        ],
+        "objectId": "ffffffffffffffffffffffffffffff02",
+        "projectionReady": true,
+        "sceneRevision": "29",
+        "selectedRoots": [
+          "1a000000000000000000000000000000"
+        ],
+        "selectionRevision": "16",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          300,
+          200
+        ]
+      }
+    },
+    {
+      "name": "queued 15",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "15",
+        "state": 0
+      }
+    },
+    {
+      "name": "terminal 15",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "15",
+        "section": {
+          "canonical": 1,
+          "commitEpoch": "0",
+          "commitOrdinal": "0",
+          "failure": 0,
+          "generation": "29",
+          "objectId": "ffffffffffffffffffffffffffffff02",
+          "operationId": "00000000000000000000000000000000",
+          "projection": 2,
+          "sceneRevision": "29"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "applied 15",
+      "ok": true,
+      "actual": {
+        "clientId": "880099",
+        "error": 0,
+        "requestId": "15",
+        "section": {
+          "canonical": 1,
+          "commitEpoch": "0",
+          "commitOrdinal": "0",
+          "failure": 0,
+          "generation": "29",
+          "objectId": "ffffffffffffffffffffffffffffff02",
+          "operationId": "00000000000000000000000000000000",
+          "projection": 2,
+          "sceneRevision": "29"
+        },
+        "state": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 0",
+      "ok": true,
+      "actual": {
+        "x": 310,
+        "y": 210,
+        "phase": 0,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 1",
+      "ok": true,
+      "actual": {
+        "x": 340,
+        "y": 250,
+        "phase": 1,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 2",
+      "ok": true,
+      "actual": {
+        "x": 340,
+        "y": 250,
+        "phase": 2,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "Section pointer drag carries member once true",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": false,
+        "children": [
+          "1a000000000000000000000000000000"
+        ],
+        "generation": "30",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          330,
+          240
+        ],
+        "members": [
+          {
+            "kind": 5,
+            "localTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              20
+            ],
+            "objectId": "1a000000000000000000000000000000",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              360,
+              260
+            ]
+          }
+        ],
+        "objectId": "ffffffffffffffffffffffffffffff02",
+        "projectionReady": true,
+        "sceneRevision": "30",
+        "selectedRoots": [
+          "ffffffffffffffffffffffffffffff02"
+        ],
+        "selectionRevision": "17",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          330,
+          240
+        ]
+      }
+    },
+    {
+      "name": "confirmed pointer 0",
+      "ok": true,
+      "actual": {
+        "x": 420,
+        "y": 330,
+        "phase": 0,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 2",
+      "ok": true,
+      "actual": {
+        "x": 420,
+        "y": 330,
+        "phase": 2,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 0",
+      "ok": true,
+      "actual": {
+        "x": 420,
+        "y": 330,
+        "phase": 0,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 1",
+      "ok": true,
+      "actual": {
+        "x": 100,
+        "y": 120,
+        "phase": 1,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "confirmed pointer 2",
+      "ok": true,
+      "actual": {
+        "x": 100,
+        "y": 120,
+        "phase": 2,
+        "accepted": 1
+      }
+    },
+    {
+      "name": "drop out is one commit true",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": false,
+        "children": [],
+        "generation": "31",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          330,
+          240
+        ],
+        "members": [],
+        "objectId": "ffffffffffffffffffffffffffffff02",
+        "projectionReady": true,
+        "sceneRevision": "31",
+        "selectedRoots": [
+          "1a000000000000000000000000000000"
+        ],
+        "selectionRevision": "18",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          330,
+          240
+        ]
+      }
+    },
+    {
+      "name": "drop out undo restores membership true",
+      "ok": true,
+      "actual": {
+        "available": true,
+        "boundary": [
+          0,
+          0,
+          240,
+          220
+        ],
+        "busy": false,
+        "children": [
+          "1a000000000000000000000000000000"
+        ],
+        "generation": "32",
+        "localTransform": [
+          1,
+          0,
+          0,
+          1,
+          330,
+          240
+        ],
+        "members": [
+          {
+            "kind": 5,
+            "localTransform": [
+              1,
+              0,
+              0,
+              1,
+              30,
+              20
+            ],
+            "objectId": "1a000000000000000000000000000000",
+            "worldTransform": [
+              1,
+              0,
+              0,
+              1,
+              360,
+              260
+            ]
+          }
+        ],
+        "objectId": "ffffffffffffffffffffffffffffff02",
+        "projectionReady": true,
+        "sceneRevision": "32",
+        "selectedRoots": [
+          "1a000000000000000000000000000000"
+        ],
+        "selectionRevision": "18",
+        "target": {
+          "attachmentEpoch": "2",
+          "runtimeEpoch": "1",
+          "viewEpoch": "1",
+          "viewId": "301"
+        },
+        "title": "Section",
+        "titleDiagnostics": [],
+        "titleGlyphCount": 7,
+        "titleLayoutReady": true,
+        "worldTransform": [
+          1,
+          0,
+          0,
+          1,
+          330,
+          240
+        ]
+      }
+    },
+    {
+      "name": "bounded fixture undo cleanup true",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "c0419fd33d8525923fb07fa2e266592dc906fc8a",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 0,
+        "operations": 36,
+        "pointerSamples": 32,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 62,
+        "retries": 12,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 1,
+        "metricsGeneration": 1,
+        "width": 764,
+        "height": 396,
+        "logicalWidth": 764,
+        "logicalHeight": 396,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 1,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 284,
+          "y": -664
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 71,
+          "generation": 12
+        },
+        "error": "",
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          }
+        ]
+      }
+    }
+  ],
+  "final": {
+    "owner": "RuntimeComposition",
+    "revision": "c0419fd33d8525923fb07fa2e266592dc906fc8a",
+    "dirty": 1,
+    "debugUiEnabled": true,
+    "state": 2,
+    "objects": 0,
+    "operations": 36,
+    "pointerSamples": 32,
+    "rejectedInputs": 0,
+    "activePointers": 0,
+    "presentedFrames": 62,
+    "retries": 12,
+    "pendingFrame": false,
+    "previewActive": false,
+    "surfaceGeneration": 1,
+    "metricsGeneration": 1,
+    "width": 764,
+    "height": 396,
+    "logicalWidth": 764,
+    "logicalHeight": 396,
+    "dpr": 1,
+    "controlState": 1,
+    "tool": 1,
+    "creationMode": false,
+    "creationPreset": 0,
+    "size": 16,
+    "opacity": 1,
+    "camera": {
+      "scale": 1,
+      "x": 284,
+      "y": -664
+    },
+    "lastPointer": {
+      "source": 1,
+      "pointer": 71,
+      "generation": 12
+    },
+    "error": "",
+    "failure": "",
+    "trace": [
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      },
+      {
+        "kind": "cancel-all",
+        "reason": "facade-control"
+      }
+    ]
+  },
+  "section": {
+    "available": false,
+    "boundary": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "busy": false,
+    "children": [],
+    "generation": "36",
+    "localTransform": [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "members": [],
+    "objectId": "00000000000000000000000000000000",
+    "projectionReady": false,
+    "sceneRevision": "36",
+    "selectedRoots": [],
+    "selectionRevision": "19",
+    "target": {
+      "attachmentEpoch": "2",
+      "runtimeEpoch": "1",
+      "viewEpoch": "1",
+      "viewId": "301"
+    },
+    "title": "",
+    "titleDiagnostics": [],
+    "titleGlyphCount": 0,
+    "titleLayoutReady": false,
+    "worldTransform": [
+      1,
+      0,
+      0,
+      1,
+      0,
+      0
+    ]
+  },
+  "physicalInput": "NOT_RUN"
+}

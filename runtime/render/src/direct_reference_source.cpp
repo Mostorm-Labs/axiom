@@ -221,6 +221,9 @@ void encodeContent(CanonicalWriter& out, const semantic::ObjectContent& content,
             out.boolean(value.stroke.vector_output.closed);
             out.u64(value.stroke.vector_output.outline.size());
             for (const auto& point : value.stroke.vector_output.outline) out.vec2(point);
+        } else if constexpr (std::is_same_v<T, semantic::SectionContent>) {
+            out.f64(value.boundary.x);out.f64(value.boundary.y);out.f64(value.boundary.width);out.f64(value.boundary.height);
+            out.string(value.title);out.f64(value.padding);out.f64(value.header_height);
         } else if constexpr (std::is_same_v<T, semantic::DabBrushStrokeContent>) {
             out.u32(value.stroke.snapshot.snapshot_version);
             out.u32(value.stroke.snapshot.package_revision);
@@ -447,6 +450,10 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
     case semantic::ObjectKind::kGroup:
         if (std::holds_alternative<semantic::GroupContent>(record.content))
             return foundation::Result<ReferenceCommand>::success(GroupReferenceCommand{});
+        break;
+    case semantic::ObjectKind::kSection:
+        if (const auto* value=std::get_if<semantic::SectionContent>(&record.content))
+            return foundation::Result<ReferenceCommand>::success(SectionReferenceCommand{*value,record.textLayout});
         break;
     }
     return mismatch();

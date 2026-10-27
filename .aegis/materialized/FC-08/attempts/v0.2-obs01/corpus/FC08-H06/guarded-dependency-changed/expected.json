@@ -1,0 +1,16 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "Rejected"
+    },
+    {
+      "op": "unchanged",
+      "before": "before_resume",
+      "after": "after_resume"
+    }
+  ],
+  "source_case": "FC08-H06",
+  "product_expected_only": true
+}

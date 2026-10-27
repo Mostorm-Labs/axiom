@@ -1,0 +1,70 @@
+{
+  "before": [],
+  "wire_root": "Operation",
+  "wire_model": {
+    "operation_id": {
+      "value": "000000000000000000000000000003e9"
+    },
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 1,
+    "payload_version": 1,
+    "payload": {
+      "edit_container_topology": {
+        "guard": {
+          "nodes": [],
+          "child_sets": [
+            {
+              "complete_members": [],
+              "parent_id": {
+                "value": ""
+              }
+            }
+          ]
+        },
+        "relocations": [],
+        "order_only_edits": [],
+        "introduce_wrappers": {
+          "containers": [
+            {
+              "id": {
+                "value": "0000000000000000000000000000000a"
+              },
+              "kind_id": 10,
+              "kind_version": 1,
+              "placement": {
+                "order_key": {
+                  "value": "10"
+                }
+              },
+              "transform": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              },
+              "properties": {},
+              "content": {
+                "section": {
+                  "boundary": {
+                    "x": -20,
+                    "y": 0,
+                    "width": 120,
+                    "height": 80
+                  },
+                  "title": "",
+                  "padding": 8.0,
+                  "header_height": 20.0
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "direction": "normal-wire-ingress"
+}

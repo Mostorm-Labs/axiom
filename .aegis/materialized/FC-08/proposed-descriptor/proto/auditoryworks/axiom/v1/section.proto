@@ -1,0 +1,16 @@
+// FC-08 P23 acceptance input v0.1. PROPOSED; NOT an accepted wire release.
+// Target path after separate authorization:
+// schema/axiom/v1/proto/auditoryworks/axiom/v1/section.proto
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+import "auditoryworks/axiom/v1/geometry.proto";
+
+// Singular fields have explicit presence under the inherited Edition profile.
+// Semantic requiredness is enforced by the accompanying contract.
+message SectionContent {
+  Rect2 boundary = 1;
+  string title = 2;
+  double padding = 3;
+  double header_height = 4;
+}

@@ -1,0 +1,29 @@
+{
+  "status": "RETURN_CONTROL_REVIEW",
+  "items": [
+    {
+      "classification": "VERIFICATION_INPUT_INVALID",
+      "ids": [
+        "FC08-H03/root-children-65534",
+        "FC08-H03/root-children-65535"
+      ],
+      "actual": "Frozen recipe uses integer OrderKeys ending in 00 at every 256th ordinal; the existing codec rejects initial state before F/U admission. Second recipe also gives the new wrapper a terminal-zero key.",
+      "source_binding": "runtime/semantic/include/canvas/semantic/order_key.hpp:OrderKey::isValid",
+      "decision": "Accept or reject the separately versioned H03 key-only correction proposal; original inputs and both expected files remain immutable.",
+      "proposal": "h03-input-proposal-001/proposal.json",
+      "proposal_sha256": "d31824ed2e41c9f72d71b3566efe2cf340f92c7eb1d7cefe0ee5bd3800cc660c",
+      "acceptance": "PENDING_USER_CONTROL_DECISION"
+    },
+    {
+      "classification": "PRESERVED_BASELINE_FAILURE",
+      "test": "StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds",
+      "evidence": ".aegis/results/FC-08-SECTION-B/terminal-result.json",
+      "actual": "Existing Shape RichText-target expectation mismatch; independently reproduced before C; not changed here."
+    }
+  ],
+  "not_blockers_disguised_as_pass": [
+    "Full302 product runner and D/E are NOT_RUN",
+    "SDK cold-initialization allocation recovery is unqualified",
+    "PH01-PH04 remain FC13; INT-01 retains FC04/FC10 ownership"
+  ]
+}

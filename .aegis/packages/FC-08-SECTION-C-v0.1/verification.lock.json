@@ -1,0 +1,27 @@
+{
+  "accepted_corpus": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus-manifest.json",
+    "sha256": "1f472bc4eb916816de87191d20ed67d3ce59e5e5edfca3d414a2d4a880a70452"
+  },
+  "B_limitations": {
+    "path": ".aegis/results/FC-08-SECTION-B/fixture-limitations.json",
+    "sha256": "bd46f27af7214500ae0dc8b32580b651f33534b7a771821733f7ef36bf655963"
+  },
+  "T06_resolution": "Historical incomplete redo carrier stays immutable and is not a qualified oracle. The C command/History entry uses the exact frozen forward, constructs real U, emits saved full F with fresh ID on Redo, and compares resulting records to unmodified independent expected forward/undo_after. No accepted-input amendment or old-carrier PASS. This follows already accepted P13 exact-forward replay, not a new semantic choice.",
+  "obligations": [
+    {
+      "requirement": "Real inverse applicable to staged S1 and exact touched-state restoration; fresh IDs and monotonic metadata on Undo/Redo",
+      "oracle": "Frozen T01-T06/H family independent before/after expectations and real command/EditorHistory tests; no fixture inverse substituted for product generation",
+      "acceptance": "Forward/Undo/Redo restore exact expected touched state; relevant concurrent changes reject without advancing cursor/redo",
+      "evidence_required": "Case/variant IDs and raw outputs against real OperationEngine, stores and EditorHistory"
+    },
+    {
+      "requirement": "Complete F and U payload profile/bytes and actual History reservation before publication for FC08 new/reused command routes",
+      "oracle": "Actual canonical encoding size plus independent thresholds, large inverse/small-forward examples and C++ allocation rejection sweeps",
+      "acceptance": "Either direction over33554432/keyed limit, invalid inverse, reservation failure or stale basis rejects prewrite and preserves store/index/ledger/generation/History/redo",
+      "evidence_required": "Real source-bound tests, explicit reason/byte results, raw failure traces and regression logs"
+    }
+  ],
+  "profiles": "Native Windows headless blocking; actual host compile/regression where available. D/E, complete302 browser runner and PHYS NOT_RUN",
+  "known_baseline_failure": "A/B Shape/RichTextTarget state-rule expectation failure remains unchanged"
+}

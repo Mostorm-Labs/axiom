@@ -1,0 +1,70 @@
+{
+  "allowed_files": [
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/section.proto",
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/container_operations.proto",
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/object.proto",
+    "schema/axiom/v1/proto/auditoryworks/axiom/v1/operation.proto",
+    "schema/axiom/v1/registry/object_kind_registry_v1.yaml",
+    "schema/axiom/v1/registry/operation_registry_v1.yaml",
+    "schema/axiom/v1/registry/field_registry_v1.yaml",
+    "schema/axiom/v1/descriptor/descriptor.current.pb",
+    "schema/axiom/v1/descriptor/descriptor.current.sha256",
+    "runtime/semantic/include/canvas/semantic/section_content.hpp",
+    "runtime/semantic/include/canvas/semantic/object_content.hpp",
+    "runtime/semantic/include/canvas/semantic/object_record.hpp",
+    "runtime/semantic/src/semantic_types.cpp",
+    "runtime/semantic/src/protobuf_object_mapping.cpp",
+    "runtime/semantic/src/protobuf_object_mapping.hpp",
+    "runtime/semantic/src/codec.cpp",
+    "runtime/semantic/src/normalizer.cpp",
+    "runtime/semantic/src/validator.cpp",
+    "runtime/semantic/src/hierarchy_capability_validation.cpp",
+    "runtime/semantic/src/operation_specific_validation.cpp",
+    "runtime/semantic/src/snapshot.cpp",
+    "runtime/semantic/src/snapshot_digest.cpp",
+    "runtime/semantic/src/snapshot_bootstrap.cpp",
+    "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+    "runtime/semantic/src/stateful_validation.cpp",
+    "runtime/semantic/src/field_registry_v1.cpp",
+    "runtime/semantic/tests/CMakeLists.txt",
+    "runtime/semantic/tests/fc08_section_codec_test.cpp",
+    "runtime/semantic/tests/semantic_types_test.cpp",
+    "verification/tests/test_current_semantic_descriptor.py",
+    "verification/tools/validate_semantic_contract.py",
+    "tools/fc08/section_slice.py",
+    "tools/fc08/section_a_*.py",
+    ".aegis/packages/FC-08-SECTION-A-v0.1/**",
+    ".aegis/results/FC-08-SECTION-A/**"
+  ],
+  "source_revision": "9d731f40515d69959c3d3941d889e062aa6bcdcf",
+  "required": [
+    "Publish accepted additive IDL and registry identities; preserve existing fields and historical descriptor locks",
+    "Add SectionContent and ObjectKind10/version1 to existing canonical model, mapper, normalizer and domain validation",
+    "Enforce mandatory presence, valid UTF8, finite/positive boundary dimensions, finite endpoints, nonnegative padding/header, negative-zero normalization and Section property/mask applicability",
+    "Run real RED before implementation and GREEN on A frozen inputs plus touched existing regressions",
+    "Persist exact revision, raw results and explicit B-E NOT_RUN"
+  ],
+  "schema_vs_behavior": "Publish accepted17/18 IDL tags only; canonical operation variants/OperationEngine17/18 behavior belong to B and remain unsupported in A.",
+  "forbidden": [
+    "Historical descriptor.lock files",
+    "Frozen FC08 inputs/expected/oracles/prior results",
+    "Qualification hook semantics/default OFF",
+    "Global Aegis registries/default branch",
+    "RuntimeFacade/History/Scene/host implementation in this A slice",
+    "SDK lock/source rebuild",
+    "Unrelated producer behavior changes"
+  ],
+  "terminal_success": [
+    "A real tests and relevant regressions pass",
+    "Current descriptor additive/reproducible; historical locks unchanged",
+    "No forbidden source/evidence changes",
+    "Reviewer-accessible exact result"
+  ],
+  "terminal_blockers": [
+    "AUTHORITY_CONFLICT",
+    "ENVIRONMENT_BLOCKER",
+    "FROZEN_VERIFICATION_FAILURE",
+    "UNRESOLVED_SEMANTIC_DECISION"
+  ],
+  "continue_until_terminal_state": true
+}

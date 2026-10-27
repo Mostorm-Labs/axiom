@@ -1,0 +1,87 @@
+{
+  "format": "fc08-verification-input-amendment-v1",
+  "package_id": "FC-08-P20-P31-INPUT-AMENDMENT-v0.2",
+  "status": "PROPOSED_PENDING_ACCEPTANCE",
+  "accepted": false,
+  "authorized_scope": "P20/P31 input-truth and profile-binding remediation only; no product P32 or registry amendment.",
+  "parent_product_package": {
+    "path": ".aegis/packages/FC-08-PRODUCT-P31-v0.1/package.json",
+    "sha256": "16bf27433764def988bbff5eb925f08816c42f32842e23a4b33e46976c2df165",
+    "size": 3373,
+    "revision": "f67b9db29090449799bd3e05ef7f1d269dab6d31"
+  },
+  "bootstrap_receipt_revision": "63ea152b2944d21120c968d5e11e166d1096b44f",
+  "production_subject_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+  "supersedes_unaccepted_candidate": {
+    "path": ".aegis/packages/FC-08-P20-P31-INPUT-AMENDMENT-v0.1/package.json",
+    "sha256": "b80301d5b81cec10724a427f25c0650c5b638adbb8b4ead522a20d0bfa3196d6",
+    "size": 3729
+  },
+  "materialized_ref": "refs/heads/codex/fc08-p20-p31-closure",
+  "source_truth_decision": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/source-of-truth-decision.json",
+    "sha256": "4ff75d97ac6a530c6bea41bc8f5a3641b001923ed12892eb97503cddfd619a6d",
+    "size": 3177
+  },
+  "source_bindings": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/source-bindings.json",
+    "sha256": "7bae9f5b5221a392337e2448589d6cec6b3e695eb866fcf9d631115a1f49a816",
+    "size": 3852
+  },
+  "change_ledger": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/input-change-ledger.json",
+    "sha256": "91ceb928381b04a1b1ae980dffd03c02771361b21291128f08ab0a917dfd78ca",
+    "size": 19488
+  },
+  "corpus": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus-manifest.json",
+    "sha256": "1f472bc4eb916816de87191d20ed67d3ce59e5e5edfca3d414a2d4a880a70452",
+    "size": 396551
+  },
+  "variant_index": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/variant-index.json",
+    "sha256": "29d8400a7f96968b576f77803f287fe8911a8557421fe412fe80607bb4ad7f8e",
+    "size": 28216
+  },
+  "matrix_schema": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-applicability.schema.json",
+    "sha256": "d87bcc1ef05edbf3a2990a893b599633aa294e3fb1f165f6a58400569252927d",
+    "size": 11987,
+    "schema_version": "1"
+  },
+  "matrix": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-applicability.json",
+    "sha256": "61dc6757053034b7a11f84028e0c23017e351d0c2edd9c0e4f78e6012de6e8d4",
+    "size": 551932,
+    "matrix_version": "1"
+  },
+  "method_bindings": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/profile-method-bindings.json",
+    "sha256": "fa6324b0f78c9c3b4655c418e87de1fc418465f951419f66c030d9aec2b3e019",
+    "size": 850014
+  },
+  "counts": {
+    "logical_cases": 60,
+    "unique_variants": 302,
+    "obligation_families": 10,
+    "profile_cells": 906,
+    "corrected_inputs": 16
+  },
+  "unchanged_expected_count": 302,
+  "product_P32_authorized": false,
+  "preservation_policy": "Old materialization, all expected files, oracle implementations, accepted source catalog and historical results remain byte-identical.",
+  "acceptance_required": [
+    "Explicit P20 truth decision acceptance",
+    "Explicit acceptance of exact matrix/schema/method bindings"
+  ],
+  "after_acceptance_sequence": [
+    "corpus consistency and independence audits",
+    "PackageBindingPreflight at exact revised package revision",
+    "EvidenceContractPreflight at same revision",
+    "ImplementationDesignPreflight",
+    "actual product runner and tests at exact revision",
+    "FC08-RED-01 against unmodified production subject",
+    "independent P31 control review"
+  ],
+  "preflight_policy": "This proposal does not silently rebind old f67 package locks. Revised exact package and successful preflights remain required after acceptance."
+}

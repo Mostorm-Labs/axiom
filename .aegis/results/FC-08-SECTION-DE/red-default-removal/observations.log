@@ -1,0 +1,22 @@
+Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = FC08SectionConsumer.DefaultSectionRemovalReleasesChildren
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from FC08SectionConsumer
+[ RUN      ] FC08SectionConsumer.DefaultSectionRemovalReleasesChildren
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\composition\tests\fc08_section_consumer_test.cpp(118): error: Expected equality of these values:
+  c.semanticObjectCount()
+    Which is: 0
+  1U
+    Which is: 1
+
+[  FAILED  ] FC08SectionConsumer.DefaultSectionRemovalReleasesChildren (2 ms)
+[----------] 1 test from FC08SectionConsumer (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] FC08SectionConsumer.DefaultSectionRemovalReleasesChildren
+
+ 1 FAILED TEST

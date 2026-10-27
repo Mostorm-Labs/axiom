@@ -1,0 +1,49 @@
+{
+  "C01": {
+    "base_leaf_x": 10,
+    "preview_dx": 10,
+    "committed_leaf_x": 20,
+    "good_trace": [
+      {
+        "scene": "g",
+        "preview": "active",
+        "presented_x": 20
+      },
+      {
+        "scene": "g+1",
+        "preview": "retired",
+        "presented_x": 20
+      }
+    ],
+    "bad_trace": [
+      {
+        "scene": "g",
+        "preview": "active",
+        "presented_x": 20
+      },
+      {
+        "scene": "g+1",
+        "preview": "active_old_delta",
+        "presented_x": 30
+      }
+    ],
+    "assertion": "Reject bad trace at first mismatched publication; final correct frame cannot erase intermediate failure."
+  },
+  "C02": {
+    "steps": [
+      "Wrap canonical committed; selection=S once",
+      "new valid local selection=T",
+      "Scene recovery covers Wrap at newer generation",
+      "old Wrap receipt callback delivered"
+    ],
+    "expected_final_selection": [
+      "T"
+    ],
+    "forbidden_callback_writes": [
+      "selection",
+      "primary",
+      "scope"
+    ]
+  },
+  "no_claim": "These are independent acceptance timelines, not observations from Axiom."
+}

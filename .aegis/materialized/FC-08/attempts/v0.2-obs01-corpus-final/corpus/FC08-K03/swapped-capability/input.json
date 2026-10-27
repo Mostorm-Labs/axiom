@@ -1,0 +1,89 @@
+{
+  "wire_root": "DocumentSnapshot",
+  "wire_model": {
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 3,
+    "objects": [
+      {
+        "id": {
+          "value": "0000000000000000000000000000000a"
+        },
+        "kind_id": 10,
+        "kind_version": 1,
+        "placement": {
+          "order_key": {
+            "value": "10"
+          }
+        },
+        "transform": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "tx": 0,
+          "ty": 0
+        },
+        "properties": {},
+        "content": {
+          "section": {
+            "boundary": {
+              "x": -20,
+              "y": 0,
+              "width": 120,
+              "height": 80
+            },
+            "title": "",
+            "padding": 8.0,
+            "header_height": 20.0
+          }
+        }
+      },
+      {
+        "id": {
+          "value": "00000000000000000000000000000014"
+        },
+        "kind_id": 1,
+        "kind_version": 2,
+        "placement": {
+          "order_key": {
+            "value": "10"
+          }
+        },
+        "transform": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "tx": 0,
+          "ty": 0
+        },
+        "properties": {},
+        "content": {
+          "shape": {
+            "shape_kind": 3,
+            "width": 20.0,
+            "height": 20.0
+          }
+        }
+      }
+    ],
+    "manifest": {
+      "schema_version": 1,
+      "manifest_revision": 0
+    },
+    "document_revision": 0,
+    "recovery_frontier": "080110011800",
+    "digest_algorithm": 1,
+    "capability_requirements": "0a0a73656374696f6e2d76310a147265736f757263652d6d616e69666573742d76310a127368617065322d747269616e676c652d7631",
+    "document_digest": "e9f0f1fdb52ef72ff36a37cb00ce216a04019b6e936d9a1fc14eb6729be15c67",
+    "checkpoint_digest": "3b3623d9cab1fc775e691df710291ac9da506e461ea061a80df5d37a1be23e04"
+  },
+  "runtime_capabilities": [
+    "resource-manifest-v1",
+    "section-v1",
+    "shape2-triangle-v1",
+    "container-topology-v1"
+  ]
+}

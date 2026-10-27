@@ -1,0 +1,39 @@
+{
+  "C01_bad": {
+    "first_failure": 1,
+    "reason": "wrong intermediate presented position"
+  },
+  "C01_good": null,
+  "C02_bad": {
+    "first_failure": 2,
+    "reason": "late callback overwrote current selection"
+  },
+  "C02_good": null,
+  "C02_good_trace": [
+    {
+      "event": "wrap_committed",
+      "selected": [
+        "S"
+      ]
+    },
+    {
+      "event": "user_selection",
+      "selected": [
+        "T"
+      ]
+    },
+    {
+      "event": "old_projection_callback",
+      "selected": [
+        "T"
+      ]
+    },
+    {
+      "event": "later_current_read",
+      "selected": [
+        "T"
+      ]
+    }
+  ],
+  "classification": "R02 oracle sensitivity only; not observed product traces"
+}

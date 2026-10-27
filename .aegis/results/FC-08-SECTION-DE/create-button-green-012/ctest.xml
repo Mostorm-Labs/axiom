@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="8"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="2"
+	timestamp="2026-10-27T02:32:28"
+	>
+	<testcase name="FC08SectionConsumer" classname="FC08SectionConsumer" time="0.345799" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 8 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 8 tests from FC08SectionConsumer
+[ RUN      ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory
+[       OK ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory (2 ms)
+[ RUN      ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically
+[       OK ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically (1 ms)
+[ RUN      ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts (1 ms)
+[ RUN      ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing
+[       OK ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWrites...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC08MinimalSectionDebugUi" classname="FC08MinimalSectionDebugUi" time="0.280161" status="run">
+		<properties/>
+		<system-out>request=1 state=0
+owner_state=1 owner_section_failure=0
+request=1 state=1 section_failure=0
+owner_state=1 owner_section_failure=0
+PASS: real Section widgets through MinimalRuntimeFacade create/wrap/release and Undo/Redo
+</system-out>
+	</testcase>
+	<testcase name="FC02MinimalTextConsumer" classname="FC02MinimalTextConsumer" time="0.940145" status="run">
+		<properties/>
+		<system-out>FC02 ordinary Minimal RuntimeFacade consumer: PASS
+</system-out>
+	</testcase>
+	<testcase name="FC03WindowsImageDebugUi" classname="FC03WindowsImageDebugUi" time="0.457866" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=2 scene_records=2
+[axiom] present begin frame=6 objects=2 scene_records=2
+[axiom] present begin frame=7 objects=2 scene_records=2
+[axiom] present begin frame=8 objects=2 scene_records=2
+[axiom] present begin frame=9 objects=2 scene_records=2
+[axiom] present begin frame=10 objects=2 scene_records=2
+[axiom] present begin frame=11 objects=2 scene_records=2
+</system-out>
+	</testcase>
+	<testcase name="FC00XMinimalRuntimeHost" classname="FC00XMinimalRuntimeHost" time="0.364428" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=7 objects=1 scene_records=1
+[axiom] present begin frame=8 objects=1 scene_records=1
+</system-out>
+	</testcase>
+	<testcase name="PX0Workbench" classname="PX0Workbench" time="0.209318" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="DebugUiSimplifiedControls" classname="DebugUiSimplifiedControls" time="0.0378826" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="PX0ControlRouter" classname="PX0ControlRouter" time="0.221679" status="run">
+		<properties/>
+		<system-out>SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\out\fc08-section-c\native\debug_ui\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\out\fc08-section-c\native\debug_ui\icudtl.dat.
+</system-out>
+	</testcase>
+</testsuite>

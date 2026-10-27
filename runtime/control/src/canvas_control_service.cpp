@@ -34,9 +34,14 @@ void CanvasControlService::remember(CanvasControlReceipt receipt) {
   receipts_[key] = std::move(receipt);
   receiptOrder_.push_back(key);
   while (receiptOrder_.size() > receiptCapacity_) {
-    const auto old = receiptOrder_.front();
-    receiptOrder_.pop_front();
+    const auto eligible=std::find_if(receiptOrder_.begin(),receiptOrder_.end(),[&](auto old){
+      return receipts_.at(old).state!=CanvasControlReceiptState::kQueued;
+    });
+    if(eligible==receiptOrder_.end())break; // a queued command retains its reserved terminal slot
+    const auto old = *eligible;
+    receiptOrder_.erase(eligible);
     receipts_.erase(old);
+    sectionRequests_.erase(old);
   }
 }
 
@@ -69,6 +74,14 @@ CanvasControlReceipt CanvasControlService::enqueue(const CanvasControlRequest& r
     return makeReceipt(key, CanvasControlReceiptState::kExpired);
   }
   if (client != clientHighWater_.end() && request.requestId <= client->second) {
+    if(const auto prior=sectionRequests_.find(key);prior!=sectionRequests_.end()) {
+      if(prior->second.target==request.target && request.payload.kind==CanvasControlPayloadKind::kSection &&
+         prior->second.payload.section==request.payload.section && prior->second.deadlineSequence==request.deadlineSequence)
+        return receipts_.at(key);
+      auto collision=makeReceipt(key,CanvasControlReceiptState::kRejected,CanvasControlError::kInvalidValue);
+      SectionOutcome outcome;outcome.failure=SectionFailure::kCollision;collision.section=outcome;
+      return collision;
+    }
     return makeReceipt(key, CanvasControlReceiptState::kDuplicate);
   }
   if (client == clientHighWater_.end() &&
@@ -76,8 +89,11 @@ CanvasControlReceipt CanvasControlService::enqueue(const CanvasControlRequest& r
     return makeReceipt(key, CanvasControlReceiptState::kQueueFull,
                        CanvasControlError::kQueueFull, 0U, "client registry full");
   }
-  const auto capture = port_.snapshot(request.target);
-  if (wasDestroyed(request.target) || !port_.isTargetCurrent(request.target)) {
+  const auto capture = isSelectionScoped(request.payload.kind)?port_.snapshot(request.target):CanvasControlSnapshot{};
+  // Section carries explicit owned targets. Its producer lane does not read
+  // mutable Runtime state; the owner rechecks lifecycle/context at execution.
+  if (wasDestroyed(request.target) ||
+      (request.payload.kind!=CanvasControlPayloadKind::kSection&&!port_.isTargetCurrent(request.target))) {
     CanvasControlReceipt receipt = makeReceipt(key, CanvasControlReceiptState::kStaleTarget,
                                                CanvasControlError::kStaleTarget);
     remember(receipt);
@@ -91,6 +107,11 @@ CanvasControlReceipt CanvasControlService::enqueue(const CanvasControlRequest& r
     clientHighWater_[request.clientId] = request.requestId;
     return receipt;
   }
+  if(request.payload.kind==CanvasControlPayloadKind::kSection &&
+      static_cast<std::size_t>(std::count_if(receipts_.begin(),receipts_.end(),[](const auto& row){return row.second.state==CanvasControlReceiptState::kQueued;}))>=receiptCapacity_)
+    return makeReceipt(key,CanvasControlReceiptState::kQueueFull,CanvasControlError::kQueueFull);
+  if(request.payload.kind==CanvasControlPayloadKind::kSection)
+    sectionRequests_.emplace(key,request);
   clientHighWater_[request.clientId] = request.requestId;
   queue_.push_back(request);
   if (isSelectionScoped(request.payload.kind)) capturedSnapshots_[key] = capture;
@@ -170,6 +191,7 @@ std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence,std
         key, state,
         result.error);
     receipt.detail = result.detail == nullptr ? "" : result.detail;
+    receipt.section=result.section;
     receipt.appliedRevision = port_.snapshot(request.target).controlRevision;
     {
       std::scoped_lock lock(mutex_);

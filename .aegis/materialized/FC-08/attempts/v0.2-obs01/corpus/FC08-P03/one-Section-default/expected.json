@@ -1,0 +1,35 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "removed_ids",
+      "expected": [
+        {
+          "value": "00000000000000000000000000000006"
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "retained_ids",
+      "expected": [
+        {
+          "value": "00000000000000000000000000000005"
+        },
+        {
+          "value": "00000000000000000000000000000009"
+        },
+        {
+          "value": "0000000000000000000000000000000a"
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 1
+    }
+  ],
+  "source_case": "FC08-P03",
+  "product_expected_only": true
+}

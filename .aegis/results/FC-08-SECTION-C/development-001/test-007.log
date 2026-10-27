@@ -1,0 +1,216 @@
+Test project C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-c/build
+      Start  2: fc08.section_c.SectionHistory.RealPrecommitHistoryEntryExists
+ 1/83 Test  #2: fc08.section_c.SectionHistory.RealPrecommitHistoryEntryExists ...............................   Passed    0.07 sec
+      Start  3: fc08.section_c.SectionHistory.SetSectionContentUsesRealInverseAndPreservesRedoOnRejection
+ 2/83 Test  #3: fc08.section_c.SectionHistory.SetSectionContentUsesRealInverseAndPreservesRedoOnRejection ...   Passed    0.06 sec
+      Start  4: fc08.section_c.SectionHistory.SectionBoundaryInverseUsesRealPostStateGeometryBasis
+ 3/83 Test  #4: fc08.section_c.SectionHistory.SectionBoundaryInverseUsesRealPostStateGeometryBasis ..........   Passed    0.06 sec
+      Start  5: fc08.section_c.SectionHistory.DeleteUsesActualClosureAndRestoreAndConnectorIndex
+ 4/83 Test  #5: fc08.section_c.SectionHistory.DeleteUsesActualClosureAndRestoreAndConnectorIndex ............   Passed    0.05 sec
+      Start  6: fc08.section_c.SectionHistory.LateChildMakesUndoRejectWithoutAbsorbingIt
+ 5/83 Test  #6: fc08.section_c.SectionHistory.LateChildMakesUndoRejectWithoutAbsorbingIt ....................   Passed    0.06 sec
+      Start  7: fc08.section_c.SectionHistory.ReusedMoveAndPropertiesRoundTripThroughRealHistory
+ 6/83 Test  #7: fc08.section_c.SectionHistory.ReusedMoveAndPropertiesRoundTripThroughRealHistory ............***Failed    0.06 sec
+Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionHistory.ReusedMoveAndPropertiesRoundTripThroughRealHistory
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionHistory
+[ RUN      ] SectionHistory.ReusedMoveAndPropertiesRoundTripThroughRealHistory
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_history_test.cpp(161): error: Value of: rt.history.executeUndoable(operation(InsertObjectsOp{{r}}))
+  Actual: false
+Expected: true
+
+[  FAILED  ] SectionHistory.ReusedMoveAndPropertiesRoundTripThroughRealHistory (0 ms)
+[----------] 1 test from SectionHistory (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SectionHistory.ReusedMoveAndPropertiesRoundTripThroughRealHistory
+
+ 1 FAILED TEST
+
+      Start  8: fc08.section_c.SectionHistory.SmallDeleteWithOversizedRealInverseRejectsBeforeWrite
+ 7/83 Test  #8: fc08.section_c.SectionHistory.SmallDeleteWithOversizedRealInverseRejectsBeforeWrite .........   Passed    0.48 sec
+      Start  9: fc08.section_c.SectionHistory.CompleteMeasurementMatchesFrozenCanonicalWire
+ 8/83 Test  #9: fc08.section_c.SectionHistory.CompleteMeasurementMatchesFrozenCanonicalWire .................   Passed    0.06 sec
+      Start 10: fc08.section_c.SectionHistory.OverLimitStringIsRejectedAndNoOpDoesNotCreateHistory
+ 9/83 Test #10: fc08.section_c.SectionHistory.OverLimitStringIsRejectedAndNoOpDoesNotCreateHistory ..........   Passed    0.06 sec
+      Start 11: fc08.section_c.SectionHistory.OldPostcommitRecordCannotAdmitTopology
+10/83 Test #11: fc08.section_c.SectionHistory.OldPostcommitRecordCannotAdmitTopology ........................   Passed    0.06 sec
+      Start 12: fc08.section_c.SectionHistory.TopologyUndoRedoPreservesUnrelatedLeafContent
+11/83 Test #12: fc08.section_c.SectionHistory.TopologyUndoRedoPreservesUnrelatedLeafContent .................***Failed    0.05 sec
+Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionHistory.TopologyUndoRedoPreservesUnrelatedLeafContent
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionHistory
+[ RUN      ] SectionHistory.TopologyUndoRedoPreservesUnrelatedLeafContent
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_history_test.cpp(220): error: Expected: (leaf) != (values.end()), actual: 8-byte object <10-22 8E-79 F2-01 00-00> vs 8-byte object <10-22 8E-79 F2-01 00-00>
+
+[  FAILED  ] SectionHistory.TopologyUndoRedoPreservesUnrelatedLeafContent (3 ms)
+[----------] 1 test from SectionHistory (3 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (3 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SectionHistory.TopologyUndoRedoPreservesUnrelatedLeafContent
+
+ 1 FAILED TEST
+
+      Start 13: fc08.section_c.SectionHistory.KeyedBatchOverLimitRejectsBeforeWrite
+12/83 Test #13: fc08.section_c.SectionHistory.KeyedBatchOverLimitRejectsBeforeWrite .........................   Passed    0.08 sec
+      Start 14: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/0
+13/83 Test #14: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/0 .................................   Passed    0.16 sec
+      Start 15: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/1
+14/83 Test #15: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/1 .................................   Passed    0.15 sec
+      Start 16: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/2
+15/83 Test #16: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/2 .................................   Passed    0.05 sec
+      Start 17: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/3
+16/83 Test #17: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/3 .................................   Passed    0.05 sec
+      Start 18: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/4
+17/83 Test #18: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/4 .................................   Passed    0.06 sec
+      Start 19: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/5
+18/83 Test #19: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/5 .................................   Passed    0.05 sec
+      Start 20: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/6
+19/83 Test #20: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/6 .................................   Passed    0.04 sec
+      Start 21: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/7
+20/83 Test #21: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/7 .................................   Passed    0.05 sec
+      Start 22: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/8
+21/83 Test #22: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/8 .................................   Passed    0.05 sec
+      Start 23: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/9
+22/83 Test #23: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/9 .................................   Passed    0.05 sec
+      Start 24: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/10
+23/83 Test #24: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/10 ................................   Passed    0.05 sec
+      Start 25: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/11
+24/83 Test #25: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/11 ................................   Passed    0.05 sec
+      Start 26: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/12
+25/83 Test #26: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/12 ................................   Passed    0.05 sec
+      Start 27: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/13
+26/83 Test #27: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/13 ................................   Passed    0.05 sec
+      Start 28: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/14
+27/83 Test #28: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/14 ................................   Passed    0.05 sec
+      Start 29: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/15
+28/83 Test #29: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/15 ................................   Passed    0.06 sec
+      Start 30: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/16
+29/83 Test #30: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/16 ................................   Passed    0.05 sec
+      Start 31: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/17
+30/83 Test #31: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/17 ................................   Passed    0.04 sec
+      Start 32: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/18
+31/83 Test #32: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/18 ................................   Passed    0.05 sec
+      Start 33: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/19
+32/83 Test #33: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/19 ................................   Passed    0.06 sec
+      Start 34: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/20
+33/83 Test #34: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/20 ................................   Passed    0.05 sec
+      Start 35: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/21
+34/83 Test #35: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/21 ................................   Passed    0.07 sec
+      Start 36: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/22
+35/83 Test #36: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/22 ................................   Passed    0.06 sec
+      Start 37: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/23
+36/83 Test #37: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/23 ................................   Passed    0.05 sec
+      Start 38: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/24
+37/83 Test #38: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/24 ................................   Passed    0.06 sec
+      Start 39: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/25
+38/83 Test #39: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/25 ................................   Passed    0.07 sec
+      Start 40: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/26
+39/83 Test #40: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/26 ................................   Passed    0.08 sec
+      Start 41: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/27
+40/83 Test #41: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/27 ................................   Passed    0.09 sec
+      Start 42: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/28
+41/83 Test #42: fc08.section_c.Frozen/SectionHistoryFrozen.ReferenceOwner/28 ................................   Passed    0.13 sec
+      Start 43: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/0
+42/83 Test #43: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/0 ...................................   Passed    0.10 sec
+      Start 44: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/1
+43/83 Test #44: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/1 ...................................   Passed    0.08 sec
+      Start 45: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/2
+44/83 Test #45: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/2 ...................................   Passed    0.08 sec
+      Start 46: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/3
+45/83 Test #46: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/3 ...................................   Passed    0.08 sec
+      Start 47: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/4
+46/83 Test #47: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/4 ...................................   Passed    0.09 sec
+      Start 48: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/5
+47/83 Test #48: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/5 ...................................   Passed    0.15 sec
+      Start 49: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/6
+48/83 Test #49: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/6 ...................................   Passed    0.25 sec
+      Start 50: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/7
+49/83 Test #50: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/7 ...................................   Passed    0.31 sec
+      Start 51: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/8
+50/83 Test #51: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/8 ...................................   Passed    0.26 sec
+      Start 52: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/9
+51/83 Test #52: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/9 ...................................   Passed    0.35 sec
+      Start 53: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/10
+52/83 Test #53: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/10 ..................................   Passed    0.36 sec
+      Start 54: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/11
+53/83 Test #54: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/11 ..................................   Passed    0.27 sec
+      Start 55: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/12
+54/83 Test #55: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/12 ..................................   Passed    0.25 sec
+      Start 56: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/13
+55/83 Test #56: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/13 ..................................   Passed    0.21 sec
+      Start 57: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/14
+56/83 Test #57: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/14 ..................................   Passed    0.21 sec
+      Start 58: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/15
+57/83 Test #58: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/15 ..................................   Passed    0.18 sec
+      Start 59: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/16
+58/83 Test #59: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/16 ..................................   Passed    0.15 sec
+      Start 60: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/17
+59/83 Test #60: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/17 ..................................   Passed    0.06 sec
+      Start 61: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/18
+60/83 Test #61: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/18 ..................................   Passed    0.08 sec
+      Start 62: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/19
+61/83 Test #62: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/19 ..................................   Passed    0.09 sec
+      Start 63: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/20
+62/83 Test #63: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/20 ..................................   Passed    0.09 sec
+      Start 64: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/21
+63/83 Test #64: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/21 ..................................   Passed    0.07 sec
+      Start 65: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/22
+64/83 Test #65: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/22 ..................................   Passed    0.06 sec
+      Start 66: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/23
+65/83 Test #66: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/23 ..................................   Passed    0.07 sec
+      Start 67: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/24
+66/83 Test #67: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/24 ..................................   Passed    0.06 sec
+      Start 68: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/25
+67/83 Test #68: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/25 ..................................   Passed    0.06 sec
+      Start 69: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/26
+68/83 Test #69: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/26 ..................................   Passed    0.08 sec
+      Start 70: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/27
+69/83 Test #70: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/27 ..................................   Passed    0.06 sec
+      Start 71: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/28
+70/83 Test #71: fc08.section_c.Frozen/SectionHistoryFrozen.IndexedOwner/28 ..................................   Passed    0.05 sec
+      Start 72: fc08.section_c_allocation.SectionHistoryAllocation.InsertForward
+71/83 Test #72: fc08.section_c_allocation.SectionHistoryAllocation.InsertForward ............................   Passed    0.04 sec
+      Start 73: fc08.section_c_allocation.SectionHistoryAllocation.InsertUndo
+72/83 Test #73: fc08.section_c_allocation.SectionHistoryAllocation.InsertUndo ...............................   Passed    0.07 sec
+      Start 74: fc08.section_c_allocation.SectionHistoryAllocation.InsertRedo
+73/83 Test #74: fc08.section_c_allocation.SectionHistoryAllocation.InsertRedo ...............................   Passed    0.08 sec
+      Start 75: fc08.section_c_allocation.SectionHistoryAllocation.ContentForward
+74/83 Test #75: fc08.section_c_allocation.SectionHistoryAllocation.ContentForward ...........................   Passed    0.09 sec
+      Start 76: fc08.section_c_allocation.SectionHistoryAllocation.ContentUndo
+75/83 Test #76: fc08.section_c_allocation.SectionHistoryAllocation.ContentUndo ..............................   Passed    0.15 sec
+      Start 77: fc08.section_c_allocation.SectionHistoryAllocation.ContentRedo
+76/83 Test #77: fc08.section_c_allocation.SectionHistoryAllocation.ContentRedo ..............................   Passed    0.17 sec
+      Start 78: fc08.section_c_allocation.SectionHistoryAllocation.DeleteForward
+77/83 Test #78: fc08.section_c_allocation.SectionHistoryAllocation.DeleteForward ............................   Passed    0.07 sec
+      Start 79: fc08.section_c_allocation.SectionHistoryAllocation.DeleteUndo
+78/83 Test #79: fc08.section_c_allocation.SectionHistoryAllocation.DeleteUndo ...............................   Passed    0.10 sec
+      Start 80: fc08.section_c_allocation.SectionHistoryAllocation.DeleteRedo
+79/83 Test #80: fc08.section_c_allocation.SectionHistoryAllocation.DeleteRedo ...............................   Passed    0.13 sec
+      Start 81: fc08.section_c_allocation.SectionHistoryAllocation.TopologyForward
+80/83 Test #81: fc08.section_c_allocation.SectionHistoryAllocation.TopologyForward ..........................   Passed    0.17 sec
+      Start 82: fc08.section_c_allocation.SectionHistoryAllocation.TopologyUndo
+81/83 Test #82: fc08.section_c_allocation.SectionHistoryAllocation.TopologyUndo .............................   Passed    0.28 sec
+      Start 83: fc08.section_c_allocation.SectionHistoryAllocation.RejectedForwardPreservesExistingRedo
+82/83 Test #83: fc08.section_c_allocation.SectionHistoryAllocation.RejectedForwardPreservesExistingRedo .....   Passed    0.12 sec
+      Start 84: fc08.section_c_allocation.SectionHistoryAllocation.TopologyRedo
+83/83 Test #84: fc08.section_c_allocation.SectionHistoryAllocation.TopologyRedo .............................   Passed    0.50 sec
+
+98% tests passed, 2 tests failed out of 83
+
+Total Test time (real) =   9.35 sec
+
+The following tests FAILED:
+	  7 - fc08.section_c.SectionHistory.ReusedMoveAndPropertiesRoundTripThroughRealHistory (Failed)
+	 12 - fc08.section_c.SectionHistory.TopologyUndoRedoPreservesUnrelatedLeafContent (Failed)
+Errors while running CTest

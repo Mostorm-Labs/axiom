@@ -1,0 +1,48 @@
+Test project C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-c/native
+    Start 158: FC08SectionConsumer
+1/1 Test #158: FC08SectionConsumer ..............***Failed    0.57 sec
+Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 8 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 8 tests from FC08SectionConsumer
+[ RUN      ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory
+[       OK ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory (4 ms)
+[ RUN      ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically
+[       OK ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically (1 ms)
+[ RUN      ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts (1 ms)
+[ RUN      ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing
+[       OK ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing (4 ms)
+[ RUN      ] FC08SectionConsumer.DefaultSectionRemovalReleasesChildren
+[       OK ] FC08SectionConsumer.DefaultSectionRemovalReleasesChildren (0 ms)
+[ RUN      ] FC08SectionConsumer.MixedRemovalAndInvalidResizePreserveRedo
+[       OK ] FC08SectionConsumer.MixedRemovalAndInvalidResizePreserveRedo (1 ms)
+[ RUN      ] FC08SectionConsumer.ExistingGroupScopeResolvesSectionWithoutNewMembershipModel
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\composition\tests\fc08_section_consumer_test.cpp(171): error: Expected equality of these values:
+  f.readSection(createNested.objectId).selectedRoots
+    Which is: { 16-byte object <AB-16 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+  std::vector{group.id}
+    Which is: { 16-byte object <A8-16 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+Created child follows existing root-first Group selection
+
+[  FAILED  ] FC08SectionConsumer.ExistingGroupScopeResolvesSectionWithoutNewMembershipModel (1 ms)
+[ RUN      ] FC08SectionConsumer.ProducerOnlyQueuesAndClosingRetiresPendingRequest
+[       OK ] FC08SectionConsumer.ProducerOnlyQueuesAndClosingRetiresPendingRequest (6 ms)
+[----------] 8 tests from FC08SectionConsumer (22 ms total)
+
+[----------] Global test environment tear-down
+[==========] 8 tests from 1 test suite ran. (22 ms total)
+[  PASSED  ] 7 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] FC08SectionConsumer.ExistingGroupScopeResolvesSectionWithoutNewMembershipModel
+
+ 1 FAILED TEST
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.64 sec
+
+The following tests FAILED:
+	158 - FC08SectionConsumer (Failed)

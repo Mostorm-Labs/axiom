@@ -8,6 +8,10 @@ add_library(canvas_runtime_semantic STATIC
     src/object_index.cpp
     src/reference_object_store.cpp
     src/semantic_types.cpp
+    src/container_operation_normalization.cpp
+    src/container_operation_validation.cpp
+    src/container_operation_mapping.cpp
+    src/container_topology_plan.cpp
     src/normalizer.cpp
     src/operation_fingerprint.cpp
     src/operation_state_validator.cpp
@@ -33,6 +37,10 @@ add_library(canvas_runtime_semantic STATIC
     src/change_set_builder.cpp
     src/operation_engine.cpp)
 target_include_directories(canvas_runtime_semantic PUBLIC include)
+if(AXIOM_FC08_QUALIFICATION_HOOKS)
+  # Header layout and private access must agree in every linked owner/consumer.
+  target_compile_definitions(canvas_runtime_semantic PUBLIC AXIOM_FC08_QUALIFICATION_HOOKS=1)
+endif()
 target_link_libraries(canvas_runtime_semantic PUBLIC canvas_runtime_foundation)
 target_compile_features(canvas_runtime_semantic PUBLIC cxx_std_20)
 

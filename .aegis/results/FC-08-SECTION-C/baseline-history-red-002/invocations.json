@@ -1,0 +1,431 @@
+{
+  "subject_revision": "c4fde4d4b1843673a71cce0546921f4494b16635",
+  "actual_SUT": "Baseline EditorHistory::prepareRecord and baseline semantic operation-kind dispatch; not whole FC08 product RED-01",
+  "baseline_source_manifest": [
+    {
+      "path": "runtime/foundation/include/canvas/foundation/object_id.hpp",
+      "sha256": "920d6010ecbd589f671839077cba89c5a87894852853c45d2435fd9b67a07cbf"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/result.hpp",
+      "sha256": "2e2f864d739f06adeccc1dcb3f02882e922b9b55b15697dab073ff1a32ff11e0"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/revision.hpp",
+      "sha256": "3f2fc03cacbffc713c1e90944f5a51250b2308b7dcb191747d9f76415551dd21"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/stable_order_key.hpp",
+      "sha256": "a41f9f0ae9671d191cec4ab26a19e0922f9af0036b33d4c340c5105a63087371"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/foundation/world_geometry.hpp",
+      "sha256": "3e88f282bc1fef37dba23e15b4326148fc104441a5eabf4fcf2da1eb5b4a85cf"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/canvas_control_types.hpp",
+      "sha256": "64fa990a853fe74bb240a0f570094346dd575fc12b17bc8bd67400d28f6111e8"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/connector_route.hpp",
+      "sha256": "3d885c535370d95572d59277b25e257bb4eb528a50d728e8e67b4a75b44a1824"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/connector_sticky_input.hpp",
+      "sha256": "5a5e0f7d664683b83131b2ec5cdb896b6ec16052f3924c073f2f179406b23f23"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/debug_control.hpp",
+      "sha256": "3c9897b917777dd8a7230dd29b014c12eea1f3d5b89dc1086e6706c04cd25023"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/diagnostics.hpp",
+      "sha256": "5c3db185f8c9a30a9894010e3d52890e17b5478c8318a5380a274acfce70600b"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/feature_diagnostics.hpp",
+      "sha256": "1a099613090a53196d2b475a0279034d5b45ba4b01050dfb9380f8ccd0a51052"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/image_input.hpp",
+      "sha256": "af9e027227eb9ec178e1eacf6272545b18787ccad90ac186215b88c697449bf0"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/product_control.hpp",
+      "sha256": "a5113203433de3fc8ea0eb4f9460b8649825cec95c7e124f11b5dc06989fb4ea"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/resource_provider.hpp",
+      "sha256": "d3b7e79fd3ac19f00d8a56542b2eb36fec4b37ece7e4b4ef5a6c569a1b4e3d5c"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "sha256": "3a1153a2a05309e4f5fc0ef4cae55c8e0d048a18b04dde113fe8820a108e3c79"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_state.hpp",
+      "sha256": "09aa4f0a74b30a21e81392f13eaca441b608dd78238763b1948df710c0a83678"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/surface_debug_control.hpp",
+      "sha256": "ab497eb4ec2f835dde304b47ba4fb2d2d25868912d5688090e0eab22338142bf"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/telemetry.hpp",
+      "sha256": "5d0e0126d36326272ac703b9c53999dd14c324369cf1f1c7d6012c5d230c66ca"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/text_input.hpp",
+      "sha256": "a92bd5774df4cf6a9d78162ca0141ee731db7d4407ab52ce283b6f90cc8fd2e4"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/brush_commit_adapter.hpp",
+      "sha256": "10a35e1e9123bddc74db711dcde0cab3508aa12ee5e18d7d8b7a49ea121cf128"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "sha256": "f6b4204f2c33274da87d4ca5da74ea93c4a8e6c6ed107dde0b2b6865ab5b4c63"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_interaction_coordinator.hpp",
+      "sha256": "2f6532a88e2e61a814dd9446d7d74046c811422b2ae09121a849af05bf5329f8"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/creation_session.hpp",
+      "sha256": "923254210a6653e65e09235a1051e7acb5b3cdebe8c1d4e2446c5616fce63592"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+      "sha256": "ca20db41ce7586995bd0f343c12d49a4258a16c25887af536d58f8b63c455e3a"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/editor_session.hpp",
+      "sha256": "49673f0dd6e9c28c387189ad7a9c388fe464553b834ade5b9d4472e96da23358"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/eraser_session.hpp",
+      "sha256": "57773a898dcbf2bca4fe0dba13295334b5f88cffc6ad9b2c8907325d33fad293"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/gesture_arbiter.hpp",
+      "sha256": "96c4707b3f8a02201ca58f83fecbefc5ba8288cc1a5428a70eb2aa988323ef52"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/hit_test_service.hpp",
+      "sha256": "9aea853c8544c2a45de2af10c621b5b8323ddeece5e03e766d57628bee633b20"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/interaction_dependency_footprint.hpp",
+      "sha256": "a05d83fd112214a0db3a905ddf3a72176e89a9514b592e736be84bf312a2975d"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/interaction_dispatch_runtime.hpp",
+      "sha256": "7e28a1810f1a43b77ed6944f95371eedf65daec87dc1da41d549d4f1b694a7df"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/interaction_ports.hpp",
+      "sha256": "cdade54871a0a31c0fead41862614a6a05d0818a959df4e0d58c180bbe596d13"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/interaction_runtime.hpp",
+      "sha256": "723fef043290f33ed2c5f6fd0c0833461ec7a35fd73a6896ed654dc40acaf27b"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/local_operation_sink.hpp",
+      "sha256": "e44cdc4d04ad9346e5dfde178e4c73e7b6c6f4c2db7cafd89837f910ad4aa9c7"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/multi_contact_coordinator.hpp",
+      "sha256": "25010abfb126e1f4a1fde8b6eedb9306451c131c4b6f9a932edfc9f3862c1726"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/multi_contact_policy.hpp",
+      "sha256": "d91f075c58ef1456dad3aa92bebdbe99e7e91766f320964abfaf5b9fe724e508"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/selection_session.hpp",
+      "sha256": "53c9c8affd6f44af21e3223fe7b3f2dfa68733a0607bb84e4c74b5e99c92df4d"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/selection_state.hpp",
+      "sha256": "14770c626c3ec02706dc202f375eba986f52b8377000d45f1b9ab19639c84388"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/session_manager.hpp",
+      "sha256": "39aea55bed6dad8d95f37fed20d3b92e07053cb19e7123d8f8f0afe78e811d9f"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/text_edit_session.hpp",
+      "sha256": "55d4061ae6de88595c85d552f87173f365745ed900c5fb1d663a10b48eea8330"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/transform_handle_drag.hpp",
+      "sha256": "f81344e90a84bc15951b838e047705ecdf2dc302618a4e0d64e5a72113e81fa0"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/transform_session.hpp",
+      "sha256": "adc28109cbde2ce6179cb49f54e5df8222ef16de7f5f18119a4db4f57ec8be54"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/viewport_constraints.hpp",
+      "sha256": "7306b07315827292421a93b6bbcfabac8979a569746d93eadfa7808e9394d0dc"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/viewport_gesture.hpp",
+      "sha256": "96bda1efa94de8a22d13d00413db1f6d83894a5c39afd5bcbcf65dbc7caf548c"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/viewport_interaction_controller.hpp",
+      "sha256": "8ca7d9ff44584a0ed6c8b6655d04514587564c2bef5e7e5d30af7012aa77fd5e"
+    },
+    {
+      "path": "runtime/interaction/src/editor_history.cpp",
+      "sha256": "c4d684db6d4961b3b9150e78f03b11e7c931ad4bac05145b6187ea73d4cf0271"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/applied_operation_ledger.hpp",
+      "sha256": "4e72db2726594e4fe304f267c4bfb012a1c2c6df0e381cf9d5564589691bab4a"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/apply_plan.hpp",
+      "sha256": "8e4ae585b0b819a24d544422b9bddcd4f5e5591d28958f41b5eababc6c99f779"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/apply_source.hpp",
+      "sha256": "26790e4b2ccf450fa9c54320a84567dd77defc71bed693c5721c932ff7de645e"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/brush_engine_codec.hpp",
+      "sha256": "59308d7c59167f008061724e304ea6d37ca289ee18b7ea8ae60617b11937811d"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/canonical_commit_clock.hpp",
+      "sha256": "bfaf96d6e269df2fcf400974a0512cfc4c8a3f5fe4c06274cf5a0b156b20aefd"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/canonical_commit_record.hpp",
+      "sha256": "5bd230541142e861e899463d772d793937a3cf21de3018fb8b0f61ffaaea2f7c"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/canonical_commit_stamp.hpp",
+      "sha256": "f8cdbaae910ce881ac2762c8a78b3f99a7a26913c9a9857619d2804e2f838ae4"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/canonical_numeric.hpp",
+      "sha256": "3cb6127719dc5a28b9b83591d0a2fb236f08edcd432892e461b9279ac1a29cc0"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/change_set.hpp",
+      "sha256": "9fdaa2c20b8cc926f953db5f726a673478401ccd91fe855018ce6586e2e37a6c"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/codec.hpp",
+      "sha256": "9e618b973edbb54f2e72406c338e09870af44f917d015b3ae4ad603c75451bb3"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/commit_publication_projection.hpp",
+      "sha256": "3dc24186eaf53d955b9c60a8ebe52add95059c578dbe964ffa0cbc233f534700"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/connector_validation.hpp",
+      "sha256": "68cc9433fc94d80ca33c72b06679e68603e6433e97dc311c4cddd6cff61c3497"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/container_operation.hpp",
+      "sha256": "0aecd9d69a785608791c7ddb8973e38a602fc58e8bc392060dd9854c462d563b"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/delete_closure.hpp",
+      "sha256": "5e10421f607ecdc9f065723b7207cf9142d0bf35fbe290d1aadc71d851fa72ef"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/document_id.hpp",
+      "sha256": "d0d591439e33d9f7e4775862d374199dfdc8f70a8187f8a1850f2fe8dbc0f529"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/document_runtime_state.hpp",
+      "sha256": "11689ae8aa1abe07a005a078d4d205d2ba07a89515b53e1393f7c5c56e39ff7d"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/erase_mask.hpp",
+      "sha256": "12ef049625c7eb49382ef843795868db678cf8dd29e01a0bf0810bc49dd82303"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/geometry_accounting_v1.hpp",
+      "sha256": "48ee6311ab79601e99ef908026533e0741186de4d48075922e391fc91d527d4e"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/hierarchy_capability_validation.hpp",
+      "sha256": "b890b40d87dfd26806fe2cde526ab07701e6867e23a684fbfa235151238a1785"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/hierarchy_validation.hpp",
+      "sha256": "8ca26b5ec9e697018565e670766f2523d9cb1bfbc5343044a78b5d520905d88f"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/idempotency.hpp",
+      "sha256": "752f4203184fb9f5072efbe5c7ea6292b65456c612d22a7c34ae6aa7919fcbe1"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/indexed_object_store.hpp",
+      "sha256": "36ef957ed1ee78af7ffa076472ce73a26b556b94b5a3013774d59b8eb4987064"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/normalizer.hpp",
+      "sha256": "07c2348604d5009140bad3acb0776d12fc3aadb53140de55c50ec365ef80be28"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/object_content.hpp",
+      "sha256": "e315832038c8c674ae30ba43b506c3056fd63957cca9da5f061ecbd054d08e83"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/object_record.hpp",
+      "sha256": "f70a0e3e9c5d548e13fabb1858ba345475706b6f053d9410a339cc271d285e61"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/object_store.hpp",
+      "sha256": "183eabb287effcad62569e1e091c8e9edaec3702a2fecbfedd07058901b6e4dc"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation.hpp",
+      "sha256": "0f14eee73da2c138590f782f8bf3c9ef341e99f920011cf5a7a8e9f006cbf691"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_engine.hpp",
+      "sha256": "38d875e31d908378825648d1f4774c96666929e9726ff2da1814bb9980f26414"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_fingerprint.hpp",
+      "sha256": "574d42e9f20f8a263288ce99eaa154a54600c293c22f73e06bc3578d3d0acf58"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_id.hpp",
+      "sha256": "e371e634bfbda42b6eef4b524e602d5499ce8822486aacfb4976026ebb12d6eb"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_payload.hpp",
+      "sha256": "faed5dd5785a2b9f11fb320eb2720494dc9b4caf371cfd6f9d92c3b1b2be17ae"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_specific_validation.hpp",
+      "sha256": "45df9740a7bdc45f05db4c8304dfbcadad088cc6c536ad6ec02ca5047d553d3c"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_state_validator.hpp",
+      "sha256": "3d4d5ceadbbe57b8eac00164fde4732eab66ea717ad9042f75f89685246c8181"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/order_key.hpp",
+      "sha256": "806c4c781aff2cd1b9e14ad92a9cc7a58504b826315a6e429dcea58fe760871c"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/property_value.hpp",
+      "sha256": "d5c3b8f837b0f250451386fcef3268d3eb0a47cc41fb398ffe39ce4b7bd2c3c1"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/reference_object_store.hpp",
+      "sha256": "571cd5f5a27fc50360e63fde217b2d909626575895779961e646935cff12e8d9"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/replay.hpp",
+      "sha256": "e205fa70f904c106fe8cb052b936e3977cb71332608c166b3ec4dfa62dc013f9"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/resource_manifest.hpp",
+      "sha256": "690b6f27e0474eb8ab07a55cca44443731826686bd60c7c3547445626569780c"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/resource_manifest_operation.hpp",
+      "sha256": "05c2de2048acf150353232f631ca172f15927752ec219d4fb48fe4b2c39879fa"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/restore_planner.hpp",
+      "sha256": "077be388d2369617bf000cece3270c827d45653ce4d9468ec0a222ce65a5f6a6"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/rich_text_state.hpp",
+      "sha256": "ec11f1ceab86289f2f3ba4b317d17502083d865f28358128f9f86b61de5ecdfa"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/section_content.hpp",
+      "sha256": "47dfd55c6c6a90a07c6c2af5a99a09721d2429cf8a46b51da35024828d6bc6b8"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/semantic_error.hpp",
+      "sha256": "8d31576b5fd2a996adde25360b818cdb5dfbe1f32a731d9131e79829c06822b2"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/semantic_generation.hpp",
+      "sha256": "6bd5b97677300d6f4d7f5ea52a8d724fcd9dfd866e6efacdd5a9cb0d25246b5e"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/semantic_geometry.hpp",
+      "sha256": "0f8a3a258b001958ab3a0698d5fdea4c8f50f9b8050fe617c174f1f8d75e3c0a"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/semantic_id.hpp",
+      "sha256": "5a3cfeec2bdf6c0e914a870bd866ac850e2d47dd776254338596d56370c446e3"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/semantic_read_view.hpp",
+      "sha256": "903e7c014dadd3fc83ca867a1fbd75ed2740e3ef0949b6db1ce8b276d9471f99"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+      "sha256": "a380540aee3799e7bad1c795551431a7ea46f7e4dd37619f91fda5a3c01da50a"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/snapshot_bootstrap.hpp",
+      "sha256": "0b592334665083f5b04af3f37c5b24cd4c3b2dd0443e2b8c471539ffe4f61d4f"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/staged_object_view.hpp",
+      "sha256": "5154b5e52b3e0f2f1a0bdb6118536f970e7b16d6aeaec80336e246e3d639da66"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/stateful_validation.hpp",
+      "sha256": "7d3817be918f9f4c7ad71d18dc72b17c0972005aea7e4b700af5ec11bf069d7e"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/validator.hpp",
+      "sha256": "f28895e38eb41522beef64f7a130d1460ec2d1b7cec457804051b9cb1c0a2493"
+    },
+    {
+      "path": "runtime/semantic/src/semantic_types.cpp",
+      "sha256": "2a101c2140267405bfc243b7a22719f786c77a5d98c89b310e8a53af1cecb623"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "cl.exe",
+        "/nologo",
+        "/std:c++20",
+        "/O2",
+        "/DNDEBUG",
+        "/MT",
+        "/W4",
+        "/WX",
+        "/permissive-",
+        "/EHsc",
+        "/IC:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\baseline-history-source\\runtime\\semantic\\include",
+        "/IC:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\baseline-history-source\\runtime\\interaction\\include",
+        "/IC:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\baseline-history-source\\runtime\\foundation\\include",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-SECTION-C\\baseline-history-red-002\\test.cpp",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\baseline-history-source\\runtime\\interaction\\src\\editor_history.cpp",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\baseline-history-source\\runtime\\semantic\\src\\semantic_types.cpp",
+        "/FoC:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\baseline-history-source\\",
+        "/FeC:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\baseline-history-source/baseline_history_red.exe"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\baseline-history-source\\baseline_history_red.exe"
+      ],
+      "exit_code": 1
+    }
+  ],
+  "exit_code": 1,
+  "timing": "additional immutable-baseline observation after implementation; original red-001 was capability-presence probe only"
+}

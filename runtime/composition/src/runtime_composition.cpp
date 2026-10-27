@@ -544,7 +544,7 @@ bool RuntimeComposition::adoptPreparedSurface(
 bool RuntimeComposition::stop() noexcept {
   if (std::this_thread::get_id() != ownerThread_ ||
       (state_ != RuntimeCompositionState::kReady && state_ != RuntimeCompositionState::kLost)) return false;
-  if (controlFacade_) controlFacade_->discardImageCrop();
+  if (controlFacade_) {controlFacade_->discardImageCrop();controlFacade_->setTarget({});}
   resources_.invalidate();
   notifications_.clear();
   pendingPreviewCapture_.reset();
@@ -559,7 +559,7 @@ bool RuntimeComposition::detach() noexcept {
   notifications_.clear();
   return true;
 }
-bool RuntimeComposition::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (controlFacade_ != nullptr) controlFacade_->discardImageCrop(); if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
+bool RuntimeComposition::close() noexcept { if (std::this_thread::get_id() != ownerThread_) return false; if (state_ == RuntimeCompositionState::kClosed) return true; if (controlFacade_ != nullptr) {controlFacade_->discardImageCrop();controlFacade_->setTarget({});} if (state_ == RuntimeCompositionState::kReady || state_ == RuntimeCompositionState::kLost) (void)stop(); else runtime_->close(); resources_.invalidate(); notifications_.clear(); state_ = RuntimeCompositionState::kClosed; return true; }
 std::uint64_t RuntimeComposition::canonicalPresentCount() const noexcept {
   const auto* provider = runtime_->activeSurfaceProvider();
   return provider == nullptr ? 0U : provider->presentCount();

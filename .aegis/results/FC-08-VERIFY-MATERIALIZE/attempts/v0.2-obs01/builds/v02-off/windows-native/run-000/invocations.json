@@ -1,0 +1,66 @@
+[
+  {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "tools/skia/fetch.py",
+      "--profile",
+      "tools/skia/profiles/r1-full-v1.json",
+      "--lock",
+      "r1-full-skia-sdk.lock.json",
+      "--target",
+      "windows-x64-d3d12",
+      "--variant",
+      "release"
+    ],
+    "exit_code": 0,
+    "log": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/builds/v02-off/windows-native/run-000/skia-consumer.log"
+  },
+  {
+    "argv": [
+      "cmake",
+      "-S",
+      ".",
+      "-B",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\windows-native",
+      "-G",
+      "Ninja",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DBUILD_TESTING=ON",
+      "-DCANVAS_BUILD_POC01=OFF",
+      "-DCANVAS_BUILD_SEMANTIC=ON",
+      "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+      "-DCANVAS_BUILD_RF01=ON",
+      "-DCANVAS_BUILD_RENDER=ON",
+      "-DCANVAS_RF01_BUILD_TESTS=OFF",
+      "-DCANVAS_RENDER_BUILD_TESTS=OFF",
+      "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
+      "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+      "-DCANVAS_SKIA_SDK_VARIANT=release",
+      "-DCANVAS_SKIA_SDK_ROOT=C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/.deps/skia-sdk/windows-x64-d3d12/release",
+      "-DAXIOM_BUILD_FC08_VERIFICATION=ON",
+      "-DAXIOM_FC08_QUALIFICATION_HOOKS=OFF",
+      "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+      "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe",
+      "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+      "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+      "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"
+    ],
+    "exit_code": 0,
+    "log": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/builds/v02-off/windows-native/run-000/configure.log"
+  },
+  {
+    "argv": [
+      "cmake",
+      "--build",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-off\\windows-native",
+      "--target",
+      "axiom_fc08_baseline_probe",
+      "axiom_fc08_hook_probe",
+      "--parallel",
+      "6"
+    ],
+    "exit_code": 1,
+    "log": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/builds/v02-off/windows-native/run-000/build-probe.log"
+  }
+]

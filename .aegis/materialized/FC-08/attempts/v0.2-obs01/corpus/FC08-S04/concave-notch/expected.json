@@ -1,0 +1,27 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "selected",
+      "expected": [
+        {
+          "value": "00000000000000000000000000000009"
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "primary",
+      "expected": {
+        "value": "00000000000000000000000000000009"
+      }
+    },
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 0
+    }
+  ],
+  "source_case": "FC08-S04",
+  "product_expected_only": true
+}

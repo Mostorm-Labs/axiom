@@ -1,0 +1,30 @@
+{
+  "accepted_P20": {
+    "path": ".aegis/materialized/FC-08/sources/accepted-exports/P20.md",
+    "sha256": "5089fe4b71ef130d35e41bbda8826839406a1c546af71be54bdddc26f6eee087"
+  },
+  "obligations": [
+    {
+      "id": "D-GEOMETRY",
+      "requirement": "Full ancestor transform once, own Section boundary, descendants outside boundary visible, hierarchy order, coherent publication/recovery",
+      "oracle": "Literal affine coordinates/bounds and actual Scene/full-incremental equivalence tests",
+      "acceptance": "Focused native tests pass",
+      "evidence_required": "RED plus raw native results"
+    },
+    {
+      "id": "E-COMMAND",
+      "requirement": "Create/wrap/release/reparent/resize/rename/select via public facade and existing History; zero-write rejection",
+      "oracle": "Real Composition/Facade/Semantic/History observations; independent literal world coordinates and preimages",
+      "acceptance": "Real consumer tests and impacted regressions pass except preserved baseline defect",
+      "evidence_required": "Native public consumer command/results"
+    },
+    {
+      "id": "E-HOST",
+      "requirement": "Basic Windows/Web Section controls use same public intent/readback with no host semantic construction",
+      "oracle": "Build actual hosts and actual Chrome/WASM Section execution where environment permits",
+      "acceptance": "Both builds and scripted common command regressions; physical input explicitly pending",
+      "evidence_required": "Build/toolchain/browser raw results or precise environment blocker"
+    }
+  ],
+  "full_302_runner": "NOT claimed; frozen inputs and expected unchanged"
+}

@@ -1,0 +1,23 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "snapshot_required_capabilities",
+      "expected": [
+        "resource-manifest-v1"
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "journal_still_requires_topology",
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "path": "writer_admitted",
+      "expected": true
+    }
+  ],
+  "source_case": "FC08-K06",
+  "product_expected_only": true
+}

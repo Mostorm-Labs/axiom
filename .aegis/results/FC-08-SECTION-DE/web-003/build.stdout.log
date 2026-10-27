@@ -1,0 +1,30 @@
+[0/2] Re-checking globbed directories...
+[1/205] Generating generated/auditoryworks/axiom/v1/brush_engine.pb.cc, generated/auditoryworks/axiom/v1/brush_stroke.pb.cc, generated/auditoryworks/axiom/v1/common.pb.cc, generated/auditoryworks/axiom/v1/connector.pb.cc, generated/auditoryworks/axiom/v1/container_operations.pb.cc, generated/auditoryworks/axiom/v1/erase_mask.pb.cc, generated/auditoryworks/axiom/v1/geometry.pb.cc, generated/auditoryworks/axiom/v1/object.pb.cc, generated/auditoryworks/axiom/v1/operation.pb.cc, generated/auditoryworks/axiom/v1/paint.pb.cc, generated/auditoryworks/axiom/v1/property.pb.cc, generated/auditoryworks/axiom/v1/rich_text.pb.cc, generated/auditoryworks/axiom/v1/section.pb.cc, generated/auditoryworks/axiom/v1/snapshot.pb.cc, generated/auditoryworks/axiom/v1/vector_path.pb.cc, generated/auditoryworks/axiom/v1/brush_engine.pb.h, generated/auditoryworks/axiom/v1/brush_stroke.pb.h, generated/auditoryworks/axiom/v1/common.pb.h, generated/auditoryworks/axiom/v1/connector.pb.h, generated/auditoryworks/axiom/v1/container_operations.pb.h, generated/auditoryworks/axiom/v1/erase_mask.pb.h, generated/auditoryworks/axiom/v1/geometry.pb.h, generated/auditoryworks/axiom/v1/object.pb.h, generated/auditoryworks/axiom/v1/operation.pb.h, generated/auditoryworks/axiom/v1/paint.pb.h, generated/auditoryworks/axiom/v1/property.pb.h, generated/auditoryworks/axiom/v1/rich_text.pb.h, generated/auditoryworks/axiom/v1/section.pb.h, generated/auditoryworks/axiom/v1/snapshot.pb.h, generated/auditoryworks/axiom/v1/vector_path.pb.h
+[2/205] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/build_info.cpp.o
+[3/205] Building CXX object runtime/scene/tests/CMakeFiles/canvas_g2_a5_spatial_index_differential_test.dir/__/src/linear_spatial_index.cpp.o
+[4/205] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/canvas_control_service.cpp.o
+[5/205] Building CXX object runtime/scene/tests/CMakeFiles/canvas_g2_a5_spatial_index_differential_test.dir/spatial_index_differential_test.cpp.o
+[6/205] Building CXX object runtime/scene/tests/CMakeFiles/canvas_g2_a5_spatial_index_differential_test.dir/__/src/uniform_grid_spatial_index.cpp.o
+[7/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/object_index.cpp.o
+[8/205] Linking CXX static library runtime\control\libcanvas_runtime_control.a
+[9/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/applied_operation_ledger.cpp.o
+[10/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/sha256_internal.cpp.o
+[11/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/resource_manifest.cpp.o
+[12/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/idempotency.cpp.o
+[13/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/semantic_types.cpp.o
+[14/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/container_operation_validation.cpp.o
+[15/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/change_set.cpp.o
+[16/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/indexed_object_store.cpp.o
+[17/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/connector_validation.cpp.o
+FAILED: runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/connector_validation.cpp.o 
+C:\Users\Chado\AppData\Local\Axiom\toolchains\emsdk-6.0.6\upstream\emscripten\em++.exe -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_RELEASE -IC:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/out/fc08-section-de/web/runtime/semantic/generated -IC:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/runtime/foundation/include -isystem C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/connector_validation.cpp.o -MF runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\connector_validation.cpp.o.d -o runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/connector_validation.cpp.o -c C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/runtime/semantic/src/connector_validation.cpp
+C:/Users/Chado/.codex/worktrees/fc08-p31-bootstrap/canvas/runtime/semantic/src/connector_validation.cpp:101:13: error: enumeration value 'kSection' not handled in switch [-Werror,-Wswitch]
+  101 |     switch (kind) {
+      |             ^~~~
+1 error generated.
+[18/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/container_operation_normalization.cpp.o
+[19/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/reference_object_store.cpp.o
+[20/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/container_topology_plan.cpp.o
+[21/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/container_operation_mapping.cpp.o
+[22/205] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/normalizer.cpp.o
+ninja: build stopped: subcommand failed.

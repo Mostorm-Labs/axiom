@@ -1,0 +1,116 @@
+{
+  "arithmetic": "exact rational -> RN ties-even binary64 after each elementary op; no FMA",
+  "checks": [
+    {
+      "after": [
+        0.3000000000000007,
+        -0.7000000000000011
+      ],
+      "before": [
+        0.3,
+        -0.7
+      ],
+      "point": [
+        0,
+        0
+      ],
+      "quality_ok": true
+    },
+    {
+      "after": [
+        14.300000000000002,
+        1.2999999999999998
+      ],
+      "before": [
+        14.3,
+        1.3
+      ],
+      "point": [
+        20,
+        0
+      ],
+      "quality_ok": true
+    },
+    {
+      "after": [
+        16.300000000000004,
+        14.299999999999999
+      ],
+      "before": [
+        16.3,
+        14.3
+      ],
+      "point": [
+        20,
+        10
+      ],
+      "quality_ok": true
+    },
+    {
+      "after": [
+        2.3000000000000025,
+        12.299999999999999
+      ],
+      "before": [
+        2.3,
+        12.3
+      ],
+      "point": [
+        0,
+        10
+      ],
+      "quality_ok": true
+    }
+  ],
+  "inverse_bits": [
+    "3feb6db6db6db6db",
+    "bfc8618618618618",
+    "3fd2492492492492",
+    "3ff0c30c30c30c31",
+    "c0280ea0ea0ea0eb",
+    "4029ca5ca5ca5ca5"
+  ],
+  "local_after_bits": [
+    "3fe41d41d41d41d4",
+    "bf9d41d41d41d410",
+    "3fe15f15f15f15f2",
+    "3ff52e52e52e52e5",
+    "c027f15f15f15f17",
+    "402835a35a35a359"
+  ],
+  "new_world_bits": [
+    "3fe6666666666667",
+    "3fb999999999999d",
+    "3fc99999999999a0",
+    "3ff4cccccccccccd",
+    "3fd3333333333340",
+    "bfe6666666666670"
+  ],
+  "old_world": [
+    0.7,
+    0.1,
+    0.2,
+    1.3,
+    0.3,
+    -0.7
+  ],
+  "parent": [
+    1.1,
+    0.2,
+    -0.3,
+    0.9,
+    17.1,
+    -9.2
+  ],
+  "repeat_F_U": 16,
+  "undo_expected_bits": [
+    "3fe6666666666666",
+    "3fb999999999999a",
+    "3fc999999999999a",
+    "3ff4cccccccccccd",
+    "3fd3333333333333",
+    "bfe6666666666666"
+  ],
+  "variant_id": "FC08-G06/non-dyadic-1",
+  "iterations": 1
+}

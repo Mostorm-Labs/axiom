@@ -1,0 +1,71 @@
+{
+  "graph": {
+    "S": {
+      "kind": "Section",
+      "parent": null,
+      "boundary": [
+        1000,
+        1000,
+        100,
+        100
+      ]
+    },
+    "a": {
+      "kind": "Shape",
+      "parent": "S",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        10,
+        10
+      ],
+      "local_rect": [
+        0,
+        0,
+        20,
+        10
+      ]
+    }
+  },
+  "viewport": [
+    0,
+    0,
+    200,
+    200
+  ],
+  "generation": 7,
+  "target": {
+    "runtimeEpoch": 9007199254740993,
+    "viewId": 2,
+    "viewEpoch": 3,
+    "attachmentEpoch": 7
+  },
+  "faults": [],
+  "title_utf8": "原始标题",
+  "resource_revision": 1,
+  "schedule": [
+    {
+      "action": "delay-layout",
+      "title": "原始标题",
+      "target": {
+        "runtimeEpoch": 9007199254740993,
+        "viewId": 2,
+        "viewEpoch": 3,
+        "attachmentEpoch": 7
+      },
+      "resource_revision": 1
+    },
+    {
+      "action": "resource-refresh",
+      "revision": 2
+    },
+    {
+      "action": "deliver-old-layout"
+    },
+    {
+      "action": "deliver-current-layout"
+    }
+  ]
+}

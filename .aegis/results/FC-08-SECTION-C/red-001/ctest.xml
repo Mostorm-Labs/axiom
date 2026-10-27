@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="1"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="0"
+	timestamp="2026-10-26T20:50:37"
+	>
+	<testcase name="fc08.section_c.SectionHistory.RealPrecommitHistoryEntryExists" classname="fc08.section_c.SectionHistory.RealPrecommitHistoryEntryExists" time="0.026251" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionHistory.RealPrecommitHistoryEntryExists
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionHistory
+[ RUN      ] SectionHistory.RealPrecommitHistoryEntryExists
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\semantic\tests\fc08_section_history_test.cpp(9): error: Failed
+Real undoable command admission/inverse preparation is not implemented
+
+[  FAILED  ] SectionHistory.RealPrecommitHistoryEntryExists (0 ms)
+[----------] 1 test from SectionHistory (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SectionHistory.RealPrecommitHistoryEntryExists
+
+ 1 FAILED TEST
+</system-out>
+	</testcase>
+</testsuite>

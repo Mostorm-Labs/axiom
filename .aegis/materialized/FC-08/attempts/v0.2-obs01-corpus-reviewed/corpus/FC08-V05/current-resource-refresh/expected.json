@@ -1,0 +1,26 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "stale_result_published",
+      "expected": false
+    },
+    {
+      "op": "equal",
+      "path": "current_layout_visible",
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "path": "refresh_history_delta",
+      "expected": 0
+    },
+    {
+      "op": "equal",
+      "path": "refresh_document_delta",
+      "expected": 0
+    }
+  ],
+  "source_case": "FC08-V05",
+  "product_expected_only": true
+}

@@ -1,0 +1,55 @@
+{
+  "profiles": [
+    {
+      "id": "windows-native",
+      "compiler_facts": {
+        "CMAKE_CXX_COMPILER": "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+        "CMAKE_CXX_COMPILER_ID": "MSVC",
+        "CMAKE_CXX_COMPILER_VERSION": "19.51.36246.0",
+        "CMAKE_CXX_COMPILER_ARCHITECTURE_ID": "x64"
+      },
+      "cmake_compiler_facts_sha256": "0fe410869376371c16e8b29b3b306ccc7c1273a4c866840bf1eae8e6a554bc96",
+      "commands_ref": ".aegis/results/FC-08-VERIFY-MATERIALIZE/builds/windows-native/invocations.json",
+      "configure_observed": true,
+      "build_succeeded": true,
+      "full_FC08_profile_qualified": false,
+      "binary_path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\windows-native\\tests\\fc08\\axiom_fc08_baseline_probe.exe",
+      "binary_sha256": "cd367eaa0caf7d5c8634b994ed563f66b28a457be31cc16117f1afcbc697dc0b",
+      "discovery_ref": ".aegis/results/FC-08-VERIFY-MATERIALIZE/builds/windows-native/discovery.log",
+      "qualification_scope": "actual public base facade open/read and raw codec ingress only",
+      "resource_warning": "icudtl.dat missing beside the probe executable; title/font behavior was not qualified"
+    },
+    {
+      "id": "web-wasm",
+      "compiler_facts": {
+        "CMAKE_CXX_COMPILER": "D:/GitRepos/skia/third_party/externals/emsdk/upstream/emscripten/em++.bat",
+        "CMAKE_CXX_COMPILER_ID": "Clang",
+        "CMAKE_CXX_COMPILER_VERSION": "17.0.0",
+        "CMAKE_CXX_COMPILER_ARCHITECTURE_ID": ""
+      },
+      "cmake_compiler_facts_sha256": "48b5ab78ad2aab5999847fb3564b3b59dbc35c878fa32b0fe13566323cae35d1",
+      "commands_ref": ".aegis/results/FC-08-VERIFY-MATERIALIZE/builds/web-wasm/invocations.json",
+      "configure_observed": true,
+      "build_succeeded": false,
+      "full_FC08_profile_qualified": false,
+      "browser_invoked": false,
+      "failed_attempt": "ambient older EMSDK selected; unsupported warning option under -Werror",
+      "corrective_environment_action_not_executed": "Select verified locked-compatible Emscripten explicitly and configure a separate fresh build directory; do not reuse the recorded failed cache.",
+      "not_a_semantic_RED": true
+    },
+    {
+      "id": "headless",
+      "host": "Windows-10-10.0.19045-SP0",
+      "observation_reuse": ".aegis/materialized/FC-08/baseline-probes.json",
+      "scope": "Native raw codec probe branches instantiate no EditorHistory or RuntimeComposition; same invocation is reused, not counted twice.",
+      "FC08_K05_product_sequence": "CAPABILITY_ABSENT_NONPASSING_PRODUCT",
+      "full_FC08_profile_qualified": false
+    }
+  ],
+  "host": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.13.9 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 19:09:58) [MSC v.1929 64 bit (AMD64)]",
+    "machine": "AMD64"
+  },
+  "product_P32_authorized": false
+}

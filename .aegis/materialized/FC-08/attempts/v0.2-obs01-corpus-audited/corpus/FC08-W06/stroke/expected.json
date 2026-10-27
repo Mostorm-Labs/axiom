@@ -1,0 +1,21 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "accepted",
+      "expected": false
+    },
+    {
+      "op": "unchanged",
+      "before": "before_child_properties",
+      "after": "after_child_properties"
+    },
+    {
+      "op": "unchanged",
+      "before": "before",
+      "after": "after"
+    }
+  ],
+  "source_case": "FC08-W06",
+  "product_expected_only": true
+}

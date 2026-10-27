@@ -1,0 +1,20 @@
+{
+  "predicates": [
+    {
+      "op": "c02",
+      "path": "trace"
+    },
+    {
+      "op": "equal",
+      "path": "primary",
+      "expected": "T"
+    },
+    {
+      "op": "equal",
+      "path": "scope",
+      "expected": null
+    }
+  ],
+  "source_case": "FC08-C04",
+  "product_expected_only": true
+}

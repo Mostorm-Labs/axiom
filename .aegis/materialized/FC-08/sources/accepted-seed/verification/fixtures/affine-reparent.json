@@ -1,0 +1,112 @@
+{
+  "matrix_layout": "[a,b,c,d,tx,ty]; x=a*x+c*y+tx; y=b*x+d*y+ty",
+  "before": {
+    "G": {
+      "parent": null,
+      "local": [
+        0,
+        2,
+        -2,
+        0,
+        100,
+        50
+      ]
+    },
+    "S": {
+      "parent": "G",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        10,
+        5
+      ],
+      "boundary": [
+        0,
+        0,
+        100,
+        80
+      ]
+    },
+    "C": {
+      "parent": "S",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        3,
+        4
+      ]
+    }
+  },
+  "after": {
+    "S": {
+      "parent": null,
+      "local": [
+        0,
+        2,
+        -2,
+        0,
+        90,
+        70
+      ]
+    },
+    "C": {
+      "parent": "S",
+      "local": [
+        1,
+        0,
+        0,
+        1,
+        3,
+        4
+      ]
+    }
+  },
+  "expected_world_origin": {
+    "S": [
+      90,
+      70
+    ],
+    "C": [
+      82,
+      76
+    ]
+  },
+  "reflection_shear": {
+    "parent": [
+      -1,
+      0,
+      0.5,
+      1,
+      8,
+      -4
+    ],
+    "child": [
+      1,
+      0,
+      0,
+      1,
+      2,
+      6
+    ],
+    "expected_world": [
+      -1,
+      0,
+      0.5,
+      1,
+      9,
+      2
+    ],
+    "point": [
+      3,
+      4
+    ],
+    "expected_point": [
+      8,
+      6
+    ]
+  }
+}

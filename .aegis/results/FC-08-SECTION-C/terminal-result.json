@@ -1,0 +1,54 @@
+{
+  "task": "FC-08 Section slice C",
+  "status": "IMPLEMENTATION_MATERIALIZED_VERIFICATION_INPUT_BLOCKED",
+  "result_revision": "4a4c0b419a57fdaae12e8d7454f5463361f1c501",
+  "materialized_ref": "refs/heads/codex/fc08-section-history",
+  "package": {
+    "revision": "5a67b3db427e355fc7cfd07ca5a0f67bb5e06a0c",
+    "path": ".aegis/packages/FC-08-SECTION-C-v0.1/package.json",
+    "sha256": "ed127493889d543e57808cae37a596272da50bab3cdb7481d76d4c1eab5a054c",
+    "authorization": "Direct user instruction to continue C; bounded product_P32_authorized=true for C only. Original P31 remains immutable."
+  },
+  "tests": {
+    "complete_selected_native_matrix": {
+      "tests": 689,
+      "passed": 686,
+      "failed": 3,
+      "skipped": 0,
+      "exit_code": 8,
+      "failures": [
+        "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0",
+        "fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1",
+        "StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds"
+      ]
+    },
+    "C_functional_subset": {
+      "tests": 139,
+      "passed": 137,
+      "failed_input_blockers": 2,
+      "implementation_failures": 0
+    },
+    "existing_Windows_Runtime_regressions": {
+      "tests": 13,
+      "passed": 13,
+      "skipped": 0
+    },
+    "Python_contract": {
+      "tests": 10,
+      "passed": 10,
+      "skipped": 0
+    },
+    "runtime_boundary_checker": "PASS",
+    "local_package_preflights": "PASS_SLICE_C"
+  },
+  "T06": "Actual retained full F replayed by real EditorHistory and compared with unchanged expected; old omitted redo carriers remain unchanged/unqualified.",
+  "baseline_RED": "red-001 is capability-presence probe, not product RED-01; additional immutable-baseline History observation is under baseline-history-red-002 (performed after implementation).",
+  "pending_decision": "H03 input correction proposal is not accepted; frozen positive case remains BLOCKED, not PASS.",
+  "next_smallest_work": "Resolve versioned H03 verification input decision and rerun that acceptance subset; subsequent separately authorized D is Section geometry/world transforms/selection scope/Scene publication.",
+  "not_run": [
+    "D/E feature work",
+    "actual Chrome/WASM C qualification",
+    "full302 product runner",
+    "DEV/P34/PHYS/release"
+  ]
+}

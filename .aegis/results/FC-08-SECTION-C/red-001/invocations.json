@@ -1,0 +1,877 @@
+{
+  "source_head": "ce7a81e706fd77cad3268d520bfae05e6ceb4cd6",
+  "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+  "commands": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+        "-B",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+        "-DBUILD_TESTING=ON",
+        "-DCANVAS_BUILD_POC01=OFF",
+        "-DCANVAS_BUILD_SEMANTIC=ON",
+        "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+        "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
+        "-DCANVAS_BUILD_RENDER=OFF",
+        "-DCANVAS_BUILD_RF01=OFF",
+        "-DCANVAS_SKIA_SDK_VARIANT=release",
+        "-DAXIOM_FC08_QUALIFICATION_HOOKS=OFF",
+        "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+        "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe",
+        "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+        "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+        "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+        "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\build",
+        "--target",
+        "axiom_fc08_section_history_tests",
+        "--parallel",
+        "6"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\build",
+        "--show-only=json-v1"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-c\\build",
+        "--tests-from-file",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-SECTION-C\\red-001\\ctest-names.txt",
+        "--output-on-failure",
+        "--output-junit",
+        "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-SECTION-C\\red-001\\ctest.xml"
+      ],
+      "exit_code": 8
+    }
+  ],
+  "exit_code": 8,
+  "SDK_environment": {
+    "AXIOM_DEPS_DIR": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.deps",
+    "AXIOM_PROTOC": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85\\bin\\protoc.exe",
+    "AXIOM_SEMANTIC_HOST_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\host-tools\\fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85",
+    "AXIOM_SEMANTIC_RUNTIME_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+    "AXIOM_SEMANTIC_SDK_ROOT": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+    "CMAKE_PREFIX_PATH": "C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c"
+  },
+  "dirty_status": "?? .aegis/results/FC-08-SECTION-C/red-001/",
+  "semantic_source_manifest": [
+    {
+      "path": "runtime/semantic/CMakeLists.txt",
+      "sha256": "9d2dbf0501cba089e00bea29d5319c0d42a64e8cc71efee427e352f40e61c456"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/applied_operation_ledger.hpp",
+      "sha256": "4e72db2726594e4fe304f267c4bfb012a1c2c6df0e381cf9d5564589691bab4a"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/apply_plan.hpp",
+      "sha256": "8e4ae585b0b819a24d544422b9bddcd4f5e5591d28958f41b5eababc6c99f779"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/apply_source.hpp",
+      "sha256": "26790e4b2ccf450fa9c54320a84567dd77defc71bed693c5721c932ff7de645e"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/brush_engine_codec.hpp",
+      "sha256": "59308d7c59167f008061724e304ea6d37ca289ee18b7ea8ae60617b11937811d"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/canonical_commit_clock.hpp",
+      "sha256": "bfaf96d6e269df2fcf400974a0512cfc4c8a3f5fe4c06274cf5a0b156b20aefd"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/canonical_commit_record.hpp",
+      "sha256": "5bd230541142e861e899463d772d793937a3cf21de3018fb8b0f61ffaaea2f7c"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/canonical_commit_stamp.hpp",
+      "sha256": "f8cdbaae910ce881ac2762c8a78b3f99a7a26913c9a9857619d2804e2f838ae4"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/canonical_numeric.hpp",
+      "sha256": "3cb6127719dc5a28b9b83591d0a2fb236f08edcd432892e461b9279ac1a29cc0"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/change_set.hpp",
+      "sha256": "9fdaa2c20b8cc926f953db5f726a673478401ccd91fe855018ce6586e2e37a6c"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/codec.hpp",
+      "sha256": "9e618b973edbb54f2e72406c338e09870af44f917d015b3ae4ad603c75451bb3"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/commit_publication_projection.hpp",
+      "sha256": "3dc24186eaf53d955b9c60a8ebe52add95059c578dbe964ffa0cbc233f534700"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/connector_validation.hpp",
+      "sha256": "68cc9433fc94d80ca33c72b06679e68603e6433e97dc311c4cddd6cff61c3497"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/container_operation.hpp",
+      "sha256": "0aecd9d69a785608791c7ddb8973e38a602fc58e8bc392060dd9854c462d563b"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/delete_closure.hpp",
+      "sha256": "5e10421f607ecdc9f065723b7207cf9142d0bf35fbe290d1aadc71d851fa72ef"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/document_id.hpp",
+      "sha256": "d0d591439e33d9f7e4775862d374199dfdc8f70a8187f8a1850f2fe8dbc0f529"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/document_runtime_state.hpp",
+      "sha256": "11689ae8aa1abe07a005a078d4d205d2ba07a89515b53e1393f7c5c56e39ff7d"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/erase_mask.hpp",
+      "sha256": "12ef049625c7eb49382ef843795868db678cf8dd29e01a0bf0810bc49dd82303"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/geometry_accounting_v1.hpp",
+      "sha256": "48ee6311ab79601e99ef908026533e0741186de4d48075922e391fc91d527d4e"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/hierarchy_capability_validation.hpp",
+      "sha256": "b890b40d87dfd26806fe2cde526ab07701e6867e23a684fbfa235151238a1785"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/hierarchy_validation.hpp",
+      "sha256": "8ca26b5ec9e697018565e670766f2523d9cb1bfbc5343044a78b5d520905d88f"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/idempotency.hpp",
+      "sha256": "752f4203184fb9f5072efbe5c7ea6292b65456c612d22a7c34ae6aa7919fcbe1"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/indexed_object_store.hpp",
+      "sha256": "36ef957ed1ee78af7ffa076472ce73a26b556b94b5a3013774d59b8eb4987064"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/normalizer.hpp",
+      "sha256": "07c2348604d5009140bad3acb0776d12fc3aadb53140de55c50ec365ef80be28"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/object_content.hpp",
+      "sha256": "e315832038c8c674ae30ba43b506c3056fd63957cca9da5f061ecbd054d08e83"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/object_record.hpp",
+      "sha256": "f70a0e3e9c5d548e13fabb1858ba345475706b6f053d9410a339cc271d285e61"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/object_store.hpp",
+      "sha256": "183eabb287effcad62569e1e091c8e9edaec3702a2fecbfedd07058901b6e4dc"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation.hpp",
+      "sha256": "0f14eee73da2c138590f782f8bf3c9ef341e99f920011cf5a7a8e9f006cbf691"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_engine.hpp",
+      "sha256": "38d875e31d908378825648d1f4774c96666929e9726ff2da1814bb9980f26414"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_fingerprint.hpp",
+      "sha256": "574d42e9f20f8a263288ce99eaa154a54600c293c22f73e06bc3578d3d0acf58"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_id.hpp",
+      "sha256": "e371e634bfbda42b6eef4b524e602d5499ce8822486aacfb4976026ebb12d6eb"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_payload.hpp",
+      "sha256": "faed5dd5785a2b9f11fb320eb2720494dc9b4caf371cfd6f9d92c3b1b2be17ae"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_specific_validation.hpp",
+      "sha256": "45df9740a7bdc45f05db4c8304dfbcadad088cc6c536ad6ec02ca5047d553d3c"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/operation_state_validator.hpp",
+      "sha256": "3d4d5ceadbbe57b8eac00164fde4732eab66ea717ad9042f75f89685246c8181"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/order_key.hpp",
+      "sha256": "806c4c781aff2cd1b9e14ad92a9cc7a58504b826315a6e429dcea58fe760871c"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/property_value.hpp",
+      "sha256": "d5c3b8f837b0f250451386fcef3268d3eb0a47cc41fb398ffe39ce4b7bd2c3c1"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/reference_object_store.hpp",
+      "sha256": "571cd5f5a27fc50360e63fde217b2d909626575895779961e646935cff12e8d9"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/replay.hpp",
+      "sha256": "e205fa70f904c106fe8cb052b936e3977cb71332608c166b3ec4dfa62dc013f9"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/resource_manifest.hpp",
+      "sha256": "690b6f27e0474eb8ab07a55cca44443731826686bd60c7c3547445626569780c"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/resource_manifest_operation.hpp",
+      "sha256": "05c2de2048acf150353232f631ca172f15927752ec219d4fb48fe4b2c39879fa"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/restore_planner.hpp",
+      "sha256": "077be388d2369617bf000cece3270c827d45653ce4d9468ec0a222ce65a5f6a6"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/rich_text_state.hpp",
+      "sha256": "ec11f1ceab86289f2f3ba4b317d17502083d865f28358128f9f86b61de5ecdfa"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/section_content.hpp",
+      "sha256": "47dfd55c6c6a90a07c6c2af5a99a09721d2429cf8a46b51da35024828d6bc6b8"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/semantic_error.hpp",
+      "sha256": "8d31576b5fd2a996adde25360b818cdb5dfbe1f32a731d9131e79829c06822b2"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/semantic_generation.hpp",
+      "sha256": "6bd5b97677300d6f4d7f5ea52a8d724fcd9dfd866e6efacdd5a9cb0d25246b5e"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/semantic_geometry.hpp",
+      "sha256": "0f8a3a258b001958ab3a0698d5fdea4c8f50f9b8050fe617c174f1f8d75e3c0a"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/semantic_id.hpp",
+      "sha256": "5a3cfeec2bdf6c0e914a870bd866ac850e2d47dd776254338596d56370c446e3"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/semantic_read_view.hpp",
+      "sha256": "903e7c014dadd3fc83ca867a1fbd75ed2740e3ef0949b6db1ce8b276d9471f99"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/snapshot.hpp",
+      "sha256": "a380540aee3799e7bad1c795551431a7ea46f7e4dd37619f91fda5a3c01da50a"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/snapshot_bootstrap.hpp",
+      "sha256": "0b592334665083f5b04af3f37c5b24cd4c3b2dd0443e2b8c471539ffe4f61d4f"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/staged_object_view.hpp",
+      "sha256": "5154b5e52b3e0f2f1a0bdb6118536f970e7b16d6aeaec80336e246e3d639da66"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/stateful_validation.hpp",
+      "sha256": "7d3817be918f9f4c7ad71d18dc72b17c0972005aea7e4b700af5ec11bf069d7e"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/validator.hpp",
+      "sha256": "f28895e38eb41522beef64f7a130d1460ec2d1b7cec457804051b9cb1c0a2493"
+    },
+    {
+      "path": "runtime/semantic/src/applied_operation_ledger.cpp",
+      "sha256": "e301ffa873aa234550e39453a804ada2cf102aef922c5ee532a1d22b9d76133d"
+    },
+    {
+      "path": "runtime/semantic/src/apply_plan.cpp",
+      "sha256": "575b6f272a1db9a0044c2fe6341c6d4d33914fde9b0a85a08824c6517e712c15"
+    },
+    {
+      "path": "runtime/semantic/src/atomic_apply.cpp",
+      "sha256": "5a53a06fff84d792b20379999237cff26cd83d1b56e2f6806a8ff3bc9f20c066"
+    },
+    {
+      "path": "runtime/semantic/src/atomic_apply.hpp",
+      "sha256": "bf8d5c88cb15f3c1e4b5b905069a123ac956f175997998cdf88a180616974d3f"
+    },
+    {
+      "path": "runtime/semantic/src/brush_engine_codec.cpp",
+      "sha256": "6b95a34b335ae431e1278c98cf4304c6a9a650aef13606c6016449803d5cff04"
+    },
+    {
+      "path": "runtime/semantic/src/change_set.cpp",
+      "sha256": "ad7d8a283f194d889f7be3d079f1fb0ed6460a0759361550019b6eaec8989beb"
+    },
+    {
+      "path": "runtime/semantic/src/change_set_builder.cpp",
+      "sha256": "723cfb8cc389eb5d55e08f7b281be3e307b6fdfb1fb2539a5c902d63b275b33a"
+    },
+    {
+      "path": "runtime/semantic/src/change_set_builder.hpp",
+      "sha256": "040fcac6e07bed2737438115b636e30439cecf8c70934d67b44ad81510e46c33"
+    },
+    {
+      "path": "runtime/semantic/src/codec.cpp",
+      "sha256": "fe986c8977b84c89845848b9549bf52f74e72e97f2699bbd57bcf1c270ab5c08"
+    },
+    {
+      "path": "runtime/semantic/src/connector_validation.cpp",
+      "sha256": "24a31a8667f9705aac18bb953c770c4f73fe0c7248141a3e220a39cbdeb8e99d"
+    },
+    {
+      "path": "runtime/semantic/src/container_operation_internal.hpp",
+      "sha256": "27d10ac45c98cce0e62c4799b00175d4a25f38d8d9101063b0f5dae742480669"
+    },
+    {
+      "path": "runtime/semantic/src/container_operation_mapping.cpp",
+      "sha256": "d9839f505e722ec2937ad32a88993ae0679c11692e592649966f23a964244804"
+    },
+    {
+      "path": "runtime/semantic/src/container_operation_mapping.hpp",
+      "sha256": "ae350cff56b7527c4aacfe7cf80cdca019a97b0a22aacbcde3cc57b967acaec1"
+    },
+    {
+      "path": "runtime/semantic/src/container_operation_normalization.cpp",
+      "sha256": "34f7ac84b9f47ddeeb89c5406d94aaa78523777b418911601879c97435f7c8c0"
+    },
+    {
+      "path": "runtime/semantic/src/container_operation_validation.cpp",
+      "sha256": "6692180d94d79c64a85303eba76a7c3304301c0d96e2d59106fbfc0a06523e64"
+    },
+    {
+      "path": "runtime/semantic/src/container_topology_plan.cpp",
+      "sha256": "031204417995b738ff5d0dd19d4fec51a2c89db8f65f738971a694470a3c0eab"
+    },
+    {
+      "path": "runtime/semantic/src/delete_closure.cpp",
+      "sha256": "28b71bf0891416bd6ab2a877175f72aecb74137afe0dcba1e1f3edcfea3ebbcb"
+    },
+    {
+      "path": "runtime/semantic/src/delete_closure_internal.hpp",
+      "sha256": "db56b0ba6dd903dad34f65016cdb4e35a5c57527de453e73250b910194987866"
+    },
+    {
+      "path": "runtime/semantic/src/g1_08_indexed_access_probe_internal.hpp",
+      "sha256": "3126ae44228c6ec98882d15d83262b448952abb04237c010b1efc5244c1c0399"
+    },
+    {
+      "path": "runtime/semantic/src/hierarchy_capability_validation.cpp",
+      "sha256": "1467e9beeeb42164a5a88dd69830d1c231bc9bc13bb912c4e792209d6ab2dfd9"
+    },
+    {
+      "path": "runtime/semantic/src/hierarchy_validation.cpp",
+      "sha256": "890478f6196658936900ff06c2ed0e98779e17d651f3617610da678abb35f1f5"
+    },
+    {
+      "path": "runtime/semantic/src/idempotency.cpp",
+      "sha256": "62f6dd472531c6f23743430eea84db583feb1fb35fd3c429c18d56cbf7050b57"
+    },
+    {
+      "path": "runtime/semantic/src/indexed_object_store.cpp",
+      "sha256": "f37c4de76d6801dd33ce5dbaac2e7525b758332f5d6baa0c3641c17675455955"
+    },
+    {
+      "path": "runtime/semantic/src/normalizer.cpp",
+      "sha256": "3b28cfc1e51462558b6f9812382082fdeb1f9a6855535331ac4d1cdeb4a19a1b"
+    },
+    {
+      "path": "runtime/semantic/src/object_index.cpp",
+      "sha256": "38c97ce6cbec459d5672ee6633f1f6679164cb385614d1e869a25bc5253c29ab"
+    },
+    {
+      "path": "runtime/semantic/src/object_index.hpp",
+      "sha256": "9f8dfc3875a6faa43351f25e3f62db1688b6000fa8c1c1bc5ba5eaeff018711b"
+    },
+    {
+      "path": "runtime/semantic/src/object_record_semantics_internal.hpp",
+      "sha256": "39fa9aad1848829c5ba472c988c5ef075d4ccb42b8bfe68eb9dd76e446e99f23"
+    },
+    {
+      "path": "runtime/semantic/src/object_store_mutator.hpp",
+      "sha256": "d852e77323eeb86a4a5d3d79d779b540d5fb7ec49eeedf8e5948327ed8735aca"
+    },
+    {
+      "path": "runtime/semantic/src/operation_engine.cpp",
+      "sha256": "414d33c97846cb76ed8b3c124555125143af1208f5e172117bbe698d86ee9c53"
+    },
+    {
+      "path": "runtime/semantic/src/operation_fingerprint.cpp",
+      "sha256": "877ce0fec1cd2c84091acc646a7afe8d75c02dad4872a1861230e07e4bda0ae9"
+    },
+    {
+      "path": "runtime/semantic/src/operation_specific_validation.cpp",
+      "sha256": "5ba7783244dcc1cffc700735e58e578aa83fff314110e5502c89249ca50af8ae"
+    },
+    {
+      "path": "runtime/semantic/src/operation_state_validator.cpp",
+      "sha256": "c9b5e1845eb192f5cc9d5d40949518aa821d728de7753ed8a02c13b314cb3f20"
+    },
+    {
+      "path": "runtime/semantic/src/protobuf_codec_internal.hpp",
+      "sha256": "993ba838045377c8b60614a53027b00dc15dc2f135c2c93f5fe60efde96cfb39"
+    },
+    {
+      "path": "runtime/semantic/src/protobuf_object_mapping.cpp",
+      "sha256": "1c77cdb8a4b37a05b27c393e57620eb5b9962f0740cac0b81f36d289313ce913"
+    },
+    {
+      "path": "runtime/semantic/src/protobuf_object_mapping.hpp",
+      "sha256": "285835a149658476f4c2df9fac16dc360d66999af3e69127f821962413ea04da"
+    },
+    {
+      "path": "runtime/semantic/src/qualification_checkpoint.hpp",
+      "sha256": "f069e4d30cba1961205685714e5191092f84d9474939867009621a409b7b5eb1"
+    },
+    {
+      "path": "runtime/semantic/src/reference_object_store.cpp",
+      "sha256": "288014e1723a98654785400d3f550aad7374db1091a963076b2ea4f4c4adedf7"
+    },
+    {
+      "path": "runtime/semantic/src/replay.cpp",
+      "sha256": "3160c367c045d6e4b80cd9eb15193c5e68b2a448a113d95c46af60f35c63a89a"
+    },
+    {
+      "path": "runtime/semantic/src/resource_manifest.cpp",
+      "sha256": "d74e8198d59cb4fef2b713b0ffa7724dca3ac0a3754c4508044b5c4c7f48deb0"
+    },
+    {
+      "path": "runtime/semantic/src/restore_planner.cpp",
+      "sha256": "f4d4b4f00d140656af87ba655d98fdad9dcf2e1f010804b934911799e65f3469"
+    },
+    {
+      "path": "runtime/semantic/src/rich_text_state.cpp",
+      "sha256": "861f58df8cfb5bf6210d6c8223b517bfc4682d440d8a9801a3947df81bcbe6a2"
+    },
+    {
+      "path": "runtime/semantic/src/rich_text_state_plan.cpp",
+      "sha256": "2db1b26bd25e4cb3e05257b195665b79248616da2fdd6f48cdc0bdb1816216b2"
+    },
+    {
+      "path": "runtime/semantic/src/rich_text_state_plan.hpp",
+      "sha256": "b920103e952cfeac0f076eea0b62504cd8069eb57e97e25206d4bd58c826017c"
+    },
+    {
+      "path": "runtime/semantic/src/semantic_types.cpp",
+      "sha256": "2a101c2140267405bfc243b7a22719f786c77a5d98c89b310e8a53af1cecb623"
+    },
+    {
+      "path": "runtime/semantic/src/sha256_internal.cpp",
+      "sha256": "8e5d96a682b77a2ae6332d42d9d50a10980c393afee4bae2f134c7e1a8bcf799"
+    },
+    {
+      "path": "runtime/semantic/src/sha256_internal.hpp",
+      "sha256": "17082077a89c8dc77b4acd8be7f7c182b43c7db778177b18255dc693a0f9d082"
+    },
+    {
+      "path": "runtime/semantic/src/snapshot.cpp",
+      "sha256": "39701f39005b66b62c9b8eeac31b0b06004d9dd895992347fd92e4dea89f9c72"
+    },
+    {
+      "path": "runtime/semantic/src/snapshot_bootstrap.cpp",
+      "sha256": "1cbbc0b0b41d3920478b904230d6ec720269d21c1b795a6db143d5a795abf800"
+    },
+    {
+      "path": "runtime/semantic/src/staged_object_view.cpp",
+      "sha256": "17de644c253d4c18f06eb8a5b6643f4dd432ec83465f96c1d59ed1539a06554d"
+    },
+    {
+      "path": "runtime/semantic/src/stateful_validation.cpp",
+      "sha256": "684274e168bc0fa984885b4b44c633ecc16d37b3479553a251e8e3efdfa9a522"
+    },
+    {
+      "path": "runtime/semantic/src/validator.cpp",
+      "sha256": "cbf43a030b5fef97d13f45615976763a621741eceae060b9b636d52de807e345"
+    },
+    {
+      "path": "runtime/semantic/tests/CMakeLists.txt",
+      "sha256": "dbfcca8b47953d8a75376576fdb71bd84b3523a7eb9958e179ea6a8a297eca6a"
+    },
+    {
+      "path": "runtime/semantic/tests/a_lane_no_mutation_test.cpp",
+      "sha256": "518d6b1bb6d50448dfb721080a8a9ad8d9622a5eea38866f0811700f236b68b5"
+    },
+    {
+      "path": "runtime/semantic/tests/apply_plan_test.cpp",
+      "sha256": "75750e06c54fbe4cbf2564a32cf4d7b9e7dc7835104e2e6aa2f36cbb91465f5b"
+    },
+    {
+      "path": "runtime/semantic/tests/atomic_apply_differential_test.cpp",
+      "sha256": "becac659f805746a745e3b91873ed19e1c084864ebcce4a0648c02419b96c182"
+    },
+    {
+      "path": "runtime/semantic/tests/atomic_apply_test.cpp",
+      "sha256": "600a7e8efbb9d04d5d31a9f99a7d7be1d5e50fb53ab879df72b6170d44fa31eb"
+    },
+    {
+      "path": "runtime/semantic/tests/brush_engine_codec_test.cpp",
+      "sha256": "a8bfe437cf28a7a226c68fa1a7c100e94a144b02cd1a979d07a0fef3513fb8e1"
+    },
+    {
+      "path": "runtime/semantic/tests/brush_snapshot_v2_test.cpp",
+      "sha256": "933caef8d2032e3ebc333f9e7f45fc0c6e966c381c69be812ce865dd119d64a5"
+    },
+    {
+      "path": "runtime/semantic/tests/canonical_commit_clock_test.cpp",
+      "sha256": "22dc776965526397cdd43f1e435506194115089f5db778f6a7d6168c9979a0aa"
+    },
+    {
+      "path": "runtime/semantic/tests/codec_negative_test.cpp",
+      "sha256": "c07f1ae7458ebf08026da8003a603e660e37175d47cdcffdf45638a83c0ffa6c"
+    },
+    {
+      "path": "runtime/semantic/tests/codec_operation_ingress_test.cpp",
+      "sha256": "15946a092ab0ca3990e0cc42a4eea65fca99a22933cd34a06897df34abb3011a"
+    },
+    {
+      "path": "runtime/semantic/tests/codec_test.cpp",
+      "sha256": "0c2d132c2f17b82cf8845089c73c6b07d24f5af7a5ded38300dba17d70de3e07"
+    },
+    {
+      "path": "runtime/semantic/tests/connector_stateful_validation_test.cpp",
+      "sha256": "0bd9f80843b359427fbc9a36776aee9f78485166a019d170333e4279196869d4"
+    },
+    {
+      "path": "runtime/semantic/tests/delete_closure_test.cpp",
+      "sha256": "87c4807aa4029934dbedda417e6be1ac6718d6d3eefe516e00ecbfbea3d0bb40"
+    },
+    {
+      "path": "runtime/semantic/tests/envelope_validation_test.cpp",
+      "sha256": "bb0cfe875c84ee416109b3b0bb885d4121ee922b880f35ebf679a9f467be596a"
+    },
+    {
+      "path": "runtime/semantic/tests/fc01_shape2_apply_test.cpp",
+      "sha256": "22f3754dab30e31cd4c4bbd2b0cf338df1d0598061fa4f3f6ffea0e7010e9232"
+    },
+    {
+      "path": "runtime/semantic/tests/fc01_shape2_validation_test.cpp",
+      "sha256": "28384c1efd3565955a46553dae1fd1a465fc651da3aac5b57517d68349402967"
+    },
+    {
+      "path": "runtime/semantic/tests/fc05_connector_sticky_test.cpp",
+      "sha256": "d4d3f5eea6b0cedf06daa5d5addb8e4d2c1356de442d4d7cac22755bd8ad02fe"
+    },
+    {
+      "path": "runtime/semantic/tests/fc08_container_fixture.hpp",
+      "sha256": "219c3faefc169e5a5b447b4fea151e4a150247e7279970f394c6aed291f09669"
+    },
+    {
+      "path": "runtime/semantic/tests/fc08_section_allocation_test.cpp",
+      "sha256": "78c64343ab21d8d272e589b295a0f4c9244da6a08c5372ccc03756639ad6531e"
+    },
+    {
+      "path": "runtime/semantic/tests/fc08_section_codec_test.cpp",
+      "sha256": "a5695d1b53ea50ef78e2c851d1d88bc79c3f7e05af221de5243755d267e5a9d7"
+    },
+    {
+      "path": "runtime/semantic/tests/fc08_section_history_test.cpp",
+      "sha256": "fc5c48d1fdf26c5f09febfc8d8ead66dbf1229ba54d850ada369f94d5a55dff1"
+    },
+    {
+      "path": "runtime/semantic/tests/fc08_section_operation_test.cpp",
+      "sha256": "a0b48960202a7b284598fc479e74e1b13650a2af23c93f8565c0fac2218a7148"
+    },
+    {
+      "path": "runtime/semantic/tests/fc08_section_safety_test.cpp",
+      "sha256": "da4772b68a77fa64e634ab18a36ad6f87bbe1b0910c79b2d4208ac4812d71daa"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_04_b_no_mutation_test.cpp",
+      "sha256": "82c791ad5f86d0cfd28440823648db89f38c473a5af3fa810ccec712f61eb131"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_04_b_operation_matrix_test.cpp",
+      "sha256": "0a04b7b9916323a8f741cb0a51b12a3d9a556f9512bc6377b32058cadc57511d"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_04_c_fixture_decoder_test.cpp",
+      "sha256": "df725d74bf0141e339da6c00ce42185203870dab9944819a56561a02195bbd1b"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_04_c_geometry_overflow_source_test.cpp",
+      "sha256": "e3b9fb2eb302126d39eadb9ab8c3232f1d948a5280e2e84449576b886b85d429"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_04_c_observer_contract_test.cpp",
+      "sha256": "7c4048965eaa6213aba6816c0c0f8851aa5cde0f00600a6e4e827efc4835645f"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_04_c_observer_coverage_test.cpp",
+      "sha256": "1d07d7740ac5e306be6fedc7ad771147bf2b531881ae48d845325230c3693173"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_04_c_projection_test.cpp",
+      "sha256": "eec7e50043e1ca40ba0d041b30dad51504d92f7a8e82d365a2b4df31dcf613cf"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_06_digest_test.cpp",
+      "sha256": "b5d8fb271569a3ef33e29f0e525b34c649b2683e1bed6577ec1afb71670b9af9"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_06_integration_test.cpp",
+      "sha256": "f279298d8b83ba998bcb433fb70916432825e8fbaf043f8043b7e227e404568d"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_06_projection_differential_test.cpp",
+      "sha256": "51978cf198d86856687afed3d7c5eed86c6bd3003b85545efbdc5b157666423c"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_06_projection_test.cpp",
+      "sha256": "0d7ae05c094b9579f0f6be3a1bba0800ee90757d953cf547abb9caca6313abe8"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_06_replay_differential_test.cpp",
+      "sha256": "82bef243a619171a8460a11538ca501f07c174bfd69bafb842025ac087e02142"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_06_replay_test.cpp",
+      "sha256": "187104a5bfda50295d12cc69d26c4bc9d0210f8fd4b69b22ae238d4a8574241e"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_06_snapshot_bootstrap_test.cpp",
+      "sha256": "3f627a0d3ecde31718aee1c34fae578c54d90764c8085b6638966edf4c767276"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_06_snapshot_test.cpp",
+      "sha256": "11dcd0c0b6130bfff1bc9e69725caddd3fac94e25dba65f1f3d6400e48079881"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_07_replay_inspector_cli_test.cpp",
+      "sha256": "873cfe026de9366c9824ffe0b50357b8107f464c3437f0f1ace473b25595ed13"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_07_replay_inspector_test.cpp",
+      "sha256": "054ed7abba57cb67350fe80a6ea719936556a9d7e0aeedb778082e9b57708aac"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_08_locality_test.cpp",
+      "sha256": "4d8ef220499b0a3cc147bf38375d36fb509cefb0bc319fd3ee7c3d07b0d29c32"
+    },
+    {
+      "path": "runtime/semantic/tests/g1_08_reference_differential_test.cpp",
+      "sha256": "9059bb3d8f2ba05e0e75c03d0b6ff2634b141461bb7fde759beec9d006f27cd5"
+    },
+    {
+      "path": "runtime/semantic/tests/hierarchy_capability_validation_test.cpp",
+      "sha256": "593dcc61f74dcc37e7ac47b3f0fc640c89438d7b0fbb371e0303ff1c93306cac"
+    },
+    {
+      "path": "runtime/semantic/tests/hierarchy_stateful_validation_test.cpp",
+      "sha256": "b8dd3e603abea6a68499caf6a98a3fff568b8ab87dfe03c11883f1c4eb8c99fc"
+    },
+    {
+      "path": "runtime/semantic/tests/idempotency_test.cpp",
+      "sha256": "ae5187ab9be9ce33d8231dcdc6899798ad01de886d90ab82b30a128ea17cfdcb"
+    },
+    {
+      "path": "runtime/semantic/tests/indexed_object_store_test.cpp",
+      "sha256": "006dd85bf49731bb5e09af5132cefc5177169a99f65bdd56945d34dd08a33a3b"
+    },
+    {
+      "path": "runtime/semantic/tests/leaf_structure_validation_test.cpp",
+      "sha256": "4118382f2eb7d033dff48c8e59558a7159940a8c9f424da0a7b6e45e1eec40b7"
+    },
+    {
+      "path": "runtime/semantic/tests/normalization_test.cpp",
+      "sha256": "cae514d41924f1ac492635eca32623f9c5af7528164ec4508c0d3939d6e75b63"
+    },
+    {
+      "path": "runtime/semantic/tests/object_store_differential_test.cpp",
+      "sha256": "7a88f4906aa571dfe763e9894fd5ffc5867c9c751e451aee8d62a846f72858e7"
+    },
+    {
+      "path": "runtime/semantic/tests/operation_engine_15_operation_conformance_test.cpp",
+      "sha256": "6143f876e647d3076d4896caf0aaf1dce9198570a12daa8e46bdc903ac4fc18e"
+    },
+    {
+      "path": "runtime/semantic/tests/operation_engine_apply_differential_test.cpp",
+      "sha256": "94c0dba934000246836bfc822eb41d40ac5eec8aff09c88bd4ad544e5dfbf7b0"
+    },
+    {
+      "path": "runtime/semantic/tests/operation_engine_apply_test.cpp",
+      "sha256": "b86e5bcafa67de19ee098d0f3ba5130de65a6f16ce1b5125ddfdd8e6c05ed253"
+    },
+    {
+      "path": "runtime/semantic/tests/operation_engine_axis_publication_truth_test.cpp",
+      "sha256": "3212ba58a47a8e4bbc8940f6bc3051215654e93aebeaae7a02ad9da5bd6e4cd2"
+    },
+    {
+      "path": "runtime/semantic/tests/operation_engine_boundary_test.cpp",
+      "sha256": "b9923f43c54671919f3b92be78df9f79cbf66252ed09f87b9366527e6b9670a6"
+    },
+    {
+      "path": "runtime/semantic/tests/operation_engine_canonical_commit_differential_test.cpp",
+      "sha256": "c4cada0abdc91c5d5f87f5cd860bc90ebde329d1a871619cebc02f683daefddc"
+    },
+    {
+      "path": "runtime/semantic/tests/operation_engine_canonical_commit_test.cpp",
+      "sha256": "14a4919a40d687a74054911f6c2c67da5e0c54627dabfab3527fd04e537fd4a6"
+    },
+    {
+      "path": "runtime/semantic/tests/operation_engine_generation_change_set_differential_test.cpp",
+      "sha256": "a418034f076a7faffb17d2fe3e3a43fa8d279378ebd97239846ad019bfede948"
+    },
+    {
+      "path": "runtime/semantic/tests/operation_engine_generation_change_set_test.cpp",
+      "sha256": "2a04019811b1c6c55856c87fb31f1f1bccbb9f6ddc6c98fe4e265176caa0f69d"
+    },
+    {
+      "path": "runtime/semantic/tests/operation_engine_publication_projection_test.cpp",
+      "sha256": "b7bac84f48bd96f1979fa95c11c26bba62498d1215cecd7ad34c35e071d74239"
+    },
+    {
+      "path": "runtime/semantic/tests/operation_specific_stateful_validation_test.cpp",
+      "sha256": "b6c31f669fa133a1232f4a9ee9e693d8016a16dac9a8944d1e17e79e912cf7c9"
+    },
+    {
+      "path": "runtime/semantic/tests/payload_structure_test.cpp",
+      "sha256": "00debcb26375692b407fa93f92d46a3a54a975f7fe2139d70079c5559e34bdfe"
+    },
+    {
+      "path": "runtime/semantic/tests/reference_object_store_test.cpp",
+      "sha256": "580551f6d8c92f98e8c0e6378d5f35f32f08b86d9def4926fe4c0bd40a11a561"
+    },
+    {
+      "path": "runtime/semantic/tests/resource_manifest_test.cpp",
+      "sha256": "acfc2ce4e03c42ec92aa84475fc822501c37d1caf026377e30aacda51edfdf92"
+    },
+    {
+      "path": "runtime/semantic/tests/restore_stateful_validation_test.cpp",
+      "sha256": "b342b40cac7a8abc3d37b42460ee2473a1dd7a3260759f03927f50ac83454316"
+    },
+    {
+      "path": "runtime/semantic/tests/rich_text_state_plan_test.cpp",
+      "sha256": "eda013eefc24191b6331aaba6175d03297ae193b7607f6246d63592d63d31151"
+    },
+    {
+      "path": "runtime/semantic/tests/semantic_read_view_contract_test.cpp",
+      "sha256": "702adcbda2381deb8a5102c1387f6c9e950e415575d5da9bcd5765e02e06aacf"
+    },
+    {
+      "path": "runtime/semantic/tests/semantic_types_test.cpp",
+      "sha256": "72381ace4d1fe891c78b7377843dfc3fabb7f25a87b361d35ff5dc6c636c6eb8"
+    },
+    {
+      "path": "runtime/semantic/tests/staged_object_view_test.cpp",
+      "sha256": "dca15cd0ae2e83eb65fecc8e09cec7134d3539624ec8cf38b2b89ded41bd2db9"
+    },
+    {
+      "path": "runtime/semantic/tests/stateful_context_test.cpp",
+      "sha256": "300d4dc7eebb1fe62e8046ce728002bbf4270fd5248d07d8f91a783ed9444e2d"
+    },
+    {
+      "path": "runtime/semantic/tests/stateful_kind_applicability_test.cpp",
+      "sha256": "084eb45879bac1eba54d6920b20dc57d8efa7bd9a9717a1038ab31d256de2e97"
+    },
+    {
+      "path": "runtime/semantic/tests/stateful_validation_differential_test.cpp",
+      "sha256": "aa5ae0e8167461751488480f4df0126c640e383fe312488f6aea38bff2fe4ff2"
+    },
+    {
+      "path": "runtime/semantic/tools/CMakeLists.txt",
+      "sha256": "6a2e7164cc27deaee530f23279c87d017702227a00aeab68d1cca7fbf1c361d1"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_04_c_fixture_decoder.cpp",
+      "sha256": "38072715a826a10da760d315cf2d6020d5fad8aa0c91023124b0c376e5e63560"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_04_c_fixture_decoder.hpp",
+      "sha256": "cadece40629ffefdd28d9c63c7d46405e159f093b637dc33e6e370e1ad728ede"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_04_c_fixture_runtime.cpp",
+      "sha256": "1118b82f1400120bcee299002b732ed68c9ba0bc59685fbdfb205593238d335a"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_04_c_fixture_runtime.hpp",
+      "sha256": "0a87ea9a1f6f6ffd2f855fe98c943e871083581956915117ae3bcd1866e18801"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_04_c_observation_export.cpp",
+      "sha256": "c2a6af26f748d0cec89276d76a3c1da0cee1a65d5fc685f97b7edfa8c73a80e8"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_04_c_observer.cpp",
+      "sha256": "566dcc6038c918ec984b8852d6e7e7f22136a47c50d4353d42f44aad44f6fee4"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_04_c_projection.cpp",
+      "sha256": "dc2ed7a829bf92c4bc855acdeff1e65a6dbd0d5d632ae88791aa478dede88dc4"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_04_c_projection.hpp",
+      "sha256": "be36f503ac311a08e186ced8d91e372b7bcd1f2080608c06b4cb4bbe5af9a4cc"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_06_digest.cpp",
+      "sha256": "e0740b1cf56fb068ed2593201d5a7475af956ca496c1ff623e654500f2d0b6bf"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_06_digest.hpp",
+      "sha256": "50006c7ae8a231072dbd9e9ba97ea6413d5b8ddacee58ba4f8d7f4f2e4d9c19a"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_06_projection.cpp",
+      "sha256": "1932440f03fed113760f0cc9272cab329047cf739a1812b910d16e07c347f5e5"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_06_projection.hpp",
+      "sha256": "2cca0832130c5f0e7dace298e4433e3ac50a725923f0e16333567ed1f08a4957"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_07_replay_corpus.cpp",
+      "sha256": "6823070750944ff7c8c12b20aa6243a03f9ace85c4094730210f291163b2cae2"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_07_replay_corpus.hpp",
+      "sha256": "a1e82b2bf22c003d4cf29f238e676073c9dcd6bf72d3304b204e1b5cb25e9c1b"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_07_replay_inspector.cpp",
+      "sha256": "46ba2691b46985e74b411bef8db76d52d1538c20b77c1900ced8dac6cea3dd56"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_07_replay_inspector.hpp",
+      "sha256": "1056389cf5bbc0da8818c99e2ae0d096aaf42aa0979a43cbe1f7dc1125669da8"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_07_replay_inspector_main.cpp",
+      "sha256": "3834f17ce942050dd4405bb65e50eb0d2b7af74b85c3a3ac5bc20df5b05fac9c"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_08_locality_workload.cpp",
+      "sha256": "76cc47a2d213d9986b913b46bfa708cdb3b4c3c506ed7c397f656e5c61a1547e"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_08_locality_workload.hpp",
+      "sha256": "0ec6aa8fd31de815b8472f285c3494969dba43f2d56a5653c857667d6a67a3af"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_08_verifier.cpp",
+      "sha256": "62d7d1f88f33130b027806cdafcfc1d78107dc5d0b1f265e82776b7706335b7b"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_08_verifier.hpp",
+      "sha256": "8cfb5d25df8e92713c84d5ef9163f27240013f76ccc5c250f1f307a907674a96"
+    },
+    {
+      "path": "runtime/semantic/tools/g1_08_verifier_main.cpp",
+      "sha256": "479d312a42949783f243c63cbc89f96d314b971fa7bf744b9669b30a9ad7bcbe"
+    },
+    {
+      "path": "runtime/semantic/tools/golden_probe.cpp",
+      "sha256": "b493b5934a6df0777e06fd22838c9a132978e8e3eb38dfcf987bd0452099a0bf"
+    }
+  ]
+}

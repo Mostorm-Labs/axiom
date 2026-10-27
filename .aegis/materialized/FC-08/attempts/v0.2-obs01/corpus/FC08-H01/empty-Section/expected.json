@@ -1,0 +1,49 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "history_timeline",
+      "expected": [
+        {
+          "size": 1,
+          "cursor": 1
+        },
+        {
+          "size": 1,
+          "cursor": 0
+        },
+        {
+          "size": 1,
+          "cursor": 1
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 3
+    },
+    {
+      "op": "equal",
+      "path": "emitted_operation_ids",
+      "expected": [
+        {
+          "value": "000000000000000000000000000003e9"
+        },
+        {
+          "value": "000000000000000000000000000003ea"
+        },
+        {
+          "value": "000000000000000000000000000003eb"
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "undo_records",
+      "expected": []
+    }
+  ],
+  "source_case": "FC08-H01",
+  "product_expected_only": true
+}

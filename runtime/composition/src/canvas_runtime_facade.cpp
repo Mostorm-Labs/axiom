@@ -23,6 +23,16 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     bool applied = false;
 
     switch (p.kind) {
+      case CanvasControlPayloadKind::kSection:
+      {
+        const auto result=runtime.executeSectionIntent(p.section);
+        const auto error=result.failure==SectionFailure::kNone?CanvasControlError::kNone:
+            result.failure==SectionFailure::kBusy?CanvasControlError::kBusy:
+            result.failure==SectionFailure::kStale?CanvasControlError::kStaleTarget:
+            result.failure==SectionFailure::kUnsupported?CanvasControlError::kUnsupported:
+            CanvasControlError::kInvalidValue;
+        return {error,"",result};
+      }
       case CanvasControlPayloadKind::kSelectTool:
         if (p.tool == CanvasToolKind::kSelect) applied = runtime.setSelectionMode(true);
         else if (p.tool == CanvasToolKind::kPan) applied = runtime.setPanTool(true);
@@ -75,7 +85,11 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
       case CanvasControlPayloadKind::kSelectedOrder: applied = runtime.setSelectedOrder(p.flag); break;
       case CanvasControlPayloadKind::kSelectedLock: applied = runtime.patchSelectedProperty(2U, semantic::PropertyValue{p.flag}); break;
       case CanvasControlPayloadKind::kSelectedVisible: applied = runtime.patchSelectedProperty(1U, semantic::PropertyValue{p.flag}); break;
-      case CanvasControlPayloadKind::kDeleteSelected: applied = runtime.deleteSelectedObjects(); break;
+      case CanvasControlPayloadKind::kDeleteSelected:
+        if(const auto section=runtime.removeSelectedSections())
+          return {section->failure==SectionFailure::kNone?CanvasControlError::kNone:CanvasControlError::kUnsupported,
+                  section->failure==SectionFailure::kUnsupportedMixedRemoval?"UnsupportedMixedRemoval":"",*section};
+        applied = runtime.deleteSelectedObjects(); break;
       case CanvasControlPayloadKind::kUnlockSelected: applied = runtime.unlockSelectedObjects(); break;
       case CanvasControlPayloadKind::kInkOptions: {
         const auto defaults = runtime.brushCatalogDefaults(runtime.selectedBrushProfile(), runtime.selectedBrushRevision());
@@ -262,6 +276,7 @@ void CanvasRuntimeFacade::refreshTarget() const noexcept {
   if (binding_) binding_->setTarget(binding_->target());
 }
 void CanvasRuntimeFacade::setTarget(CanvasTargetKey target) noexcept {
+  std::scoped_lock lock(ingressMutex_);
   if (binding_ == nullptr) return;
   const auto previous = binding_->target();
   if (previous != target && service_ != nullptr) service_->destroyTarget(previous);
@@ -272,6 +287,11 @@ bool CanvasRuntimeFacade::isTargetCurrent(const CanvasTargetKey& target) const n
   return binding_->isTargetCurrent(target);
 }
 ProductControlReceipt CanvasRuntimeFacade::submitCanvasControl(const CanvasControlRequest& request) noexcept {
+  try {
+  if(request.payload.kind==CanvasControlPayloadKind::kSection &&
+     (request.target.runtimeEpoch==0||request.clientId==0||request.requestId==0||request.payload.section.objects.size()>65535||request.payload.section.content.title.size()>1048576))
+    return {request.requestId,ProductControlState::kRejected,request.target.runtimeEpoch,std::nullopt};
+  std::scoped_lock ingressLock(ingressMutex_);
   if (request.target != target()) {
     CanvasControlReceipt stale{{request.clientId, request.requestId},
                                CanvasControlReceiptState::kStaleTarget,
@@ -279,9 +299,9 @@ ProductControlReceipt CanvasRuntimeFacade::submitCanvasControl(const CanvasContr
     return {request.requestId, ProductControlState::kRejected,
             request.target.runtimeEpoch, stale};
   }
-  std::scoped_lock ingressLock(ingressMutex_);
+  const bool retained=service_->receipt({request.clientId,request.requestId}).has_value();
   const auto receipt = service_->enqueue(request);
-  if(receipt.state==CanvasControlReceiptState::kQueued){
+  if(receipt.state==CanvasControlReceiptState::kQueued&&!retained){
     if(pendingWork_.load()>=256){service_->rejectPending({request.clientId,request.requestId},CanvasControlError::kQueueFull);return {request.requestId,ProductControlState::kRejected,request.target.runtimeEpoch,std::nullopt};}
     ingress_.push_back(request);++pendingWork_;
   }
@@ -290,12 +310,16 @@ ProductControlReceipt CanvasRuntimeFacade::submitCanvasControl(const CanvasContr
         : receipt.state == CanvasControlReceiptState::kApplied ? ProductControlState::kApplied
         : ProductControlState::kRejected, request.target.runtimeEpoch, receipt};
   return out;
+  } catch(const std::bad_alloc&) {
+    try {service_->rejectPending({request.clientId,request.requestId},CanvasControlError::kQueueFull);}catch(const std::bad_alloc&){}
+    return {request.requestId,ProductControlState::kRejected,request.target.runtimeEpoch,std::nullopt};
+  }
 }
 CanvasControlApplyResult CanvasRuntimeFacade::applyControl(
     const CanvasControlRequest& request) {
   if (!ownerThread() || runtime_.closed())
     return {CanvasControlError::kPermissionDenied, "owner or lifecycle admission failed"};
-  if (imageCrop_) discardImageCrop();
+  if (imageCrop_ && request.payload.kind!=CanvasControlPayloadKind::kSection) discardImageCrop();
   return binding_->apply(request);
 }
 CanvasControlSnapshot CanvasRuntimeFacade::snapshotControl(
@@ -408,13 +432,19 @@ CanvasControlSnapshot CanvasRuntimeFacade::readCanvasControlSnapshot(const Canva
   return service_->snapshot(target);
 }
 std::vector<CanvasTargetKey> CanvasRuntimeFacade::mountedCanvasTargets() const {
-  return runtime_.closed() ? std::vector<CanvasTargetKey>{} : std::vector<CanvasTargetKey>{target()};
+  std::scoped_lock lock(ingressMutex_);
+  return target().runtimeEpoch==0||(ownerThread()&&runtime_.closed())?std::vector<CanvasTargetKey>{}:std::vector<CanvasTargetKey>{target()};
 }
 std::vector<BrushPresetRef> CanvasRuntimeFacade::brushPresets() const {
   return {{"vector-solid-v1",1U},{"marker-flat-v1",1U},{"chalk-grain-v1",4U},{"membrane-v1",1U}};
 }
 std::optional<CanvasControlReceipt> CanvasRuntimeFacade::canvasControlReceipt(CanvasControlReceiptKey key) const noexcept {
-  return service_->receipt(key);
+  auto receipt=service_->receipt(key);
+  if(receipt&&receipt->section&&ownerThread()&&runtime_.historySceneReady()&&
+     receipt->section->canonical==SectionCanonicalOutcome::kCommitted&&
+     runtime_.semanticGeneration().value()>=receipt->section->semanticGeneration)
+      receipt->section->projection=SectionProjectionOutcome::kReady;
+  return receipt;
 }
 std::size_t CanvasRuntimeFacade::process(std::uint64_t ownerSequence) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || processing_.exchange(true)) return 0;

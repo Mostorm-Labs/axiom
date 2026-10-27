@@ -11,6 +11,7 @@ namespace canvas::semantic { class StagedObjectView; class ObjectStore; }
 namespace canvas::semantic::internal {
 
 void noteStagedBase(const canvas::semantic::StagedObjectView& staged, const canvas::semantic::ObjectStore& store);
+void forgetStagedBase(const canvas::semantic::StagedObjectView&) noexcept;
 void noteStagedCreate(const canvas::semantic::StagedObjectView& staged, const ObjectRecord& record);
 void noteStagedReplace(const canvas::semantic::StagedObjectView& staged, const ObjectRecord& record);
 void noteStagedDelete(const canvas::semantic::StagedObjectView& staged, const ObjectId& id);

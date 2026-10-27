@@ -1,0 +1,415 @@
+{
+  "format": "fc08-real-profile-bindings-v2",
+  "builds": [
+    {
+      "tag": "v02-on",
+      "profile": "windows-native",
+      "invocations": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/builds/v02-on/windows-native/run-008/invocations.json",
+        "sha256": "1d8a7854cf1561051d30bb5cbeee01316baadd146ab23da215ede2fdb747ff9c",
+        "size": 4349
+      }
+    },
+    {
+      "tag": "v02-on",
+      "profile": "web-wasm",
+      "invocations": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/builds/v02-on/web-wasm/run-006/invocations.json",
+        "sha256": "51ea2b03da25fdf6cbc1c897aa35f3dca65bfd8dfe31297654eb4789f0e62af3",
+        "size": 3263
+      }
+    },
+    {
+      "tag": "v02-off",
+      "profile": "windows-native",
+      "invocations": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/builds/v02-off/windows-native/run-004/invocations.json",
+        "sha256": "ffeeb408497b0be0c90b01f75d95e4ed63f6fb41f2a5bf769819ad218ffce3cd",
+        "size": 4361
+      }
+    },
+    {
+      "tag": "v02-off",
+      "profile": "web-wasm",
+      "invocations": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/builds/v02-off/web-wasm/run-003/invocations.json",
+        "sha256": "9b67bce09cf1daca701f5a8a6fc245d49079610cd2ebcab168aa2d35193df291",
+        "size": 3270
+      }
+    }
+  ],
+  "binaries": [
+    {
+      "path": "out/fc08/v02-on/windows-native/tests/fc08/axiom_fc08_baseline_probe.exe",
+      "sha256": "cd3207d0668a60e2e35ebd6b51774788b19507045f414235e74e1d76b1f7fb9a",
+      "size": 9887744,
+      "tag": "v02-on",
+      "profile": "windows-native",
+      "role": "baseline_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-on/windows-native/tests/fc08/axiom_fc08_hook_probe.exe",
+      "sha256": "ea4bf8c48434e74684c8109295787f8f278af4a7fd29c3fc24f7622cbee173a7",
+      "size": 9811456,
+      "tag": "v02-on",
+      "profile": "windows-native",
+      "role": "hook_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact",
+      "checkpoint_string_present": true
+    },
+    {
+      "path": "out/fc08/v02-on/windows-native/tests/fc08/axiom_fc08_headless_probe.exe",
+      "sha256": "3b77ca42aa15e4bec0b860847d4401f00fbd6201089cae4ae774bb9cef383289",
+      "size": 2615296,
+      "tag": "v02-on",
+      "profile": "windows-native",
+      "role": "headless_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-on/windows-native/tests/fc08/axiom_fc08_selection_regression.exe",
+      "sha256": "e0b8c764cb7fbaf353166eaa603578f949006e55fd782270737915843ff121fc",
+      "size": 202752,
+      "tag": "v02-on",
+      "profile": "windows-native",
+      "role": "selection_regression",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-on/windows-native/tests/fc08/axiom_fc08_connector_regression.exe",
+      "sha256": "e48db5970ba66b954d9b25247816c035f9011c49968eefd7578c3ec1dffd0273",
+      "size": 9742336,
+      "tag": "v02-on",
+      "profile": "windows-native",
+      "role": "connector_regression",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-on/windows-native/tests/fc08/axiom_fc08_control_regression.exe",
+      "sha256": "572cef5ea240417c884d3f7034279e52a594ee841df087794676714a320e5919",
+      "size": 9522176,
+      "tag": "v02-on",
+      "profile": "windows-native",
+      "role": "control_regression",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-on/web-wasm/tests/fc08/axiom_fc08_baseline_probe.wasm",
+      "sha256": "b7731947e881c89188091cf00162e6937e810e7573b5fbee1fca4d80b916a172",
+      "size": 9429996,
+      "tag": "v02-on",
+      "profile": "web-wasm",
+      "role": "baseline_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-on/web-wasm/tests/fc08/axiom_fc08_hook_probe.wasm",
+      "sha256": "1fbc0da4b134e13d0f923bc3906944b966938084827a5b31cc1e71086db935cc",
+      "size": 9369761,
+      "tag": "v02-on",
+      "profile": "web-wasm",
+      "role": "hook_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-on/web-wasm/tests/fc08/axiom_fc08_headless_probe.wasm",
+      "sha256": "06422bacaf71f913c5797be89f9ee26cbb3ab87aad8da63eaf6e721fabe5d438",
+      "size": 2410645,
+      "tag": "v02-on",
+      "profile": "web-wasm",
+      "role": "headless_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-on/web-wasm/tests/fc08/axiom_fc08_selection_regression.wasm",
+      "sha256": "f229236df8ea0d6010857ac234a17b38e528177e7676797998a80496d8343f4a",
+      "size": 30359,
+      "tag": "v02-on",
+      "profile": "web-wasm",
+      "role": "selection_regression",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-on/web-wasm/tests/fc08/axiom_fc08_connector_regression.wasm",
+      "sha256": "0f7871c4c82dfe9ad11b2029425b1f75572beb3496ea524fc2813b932e81c7e7",
+      "size": 9290598,
+      "tag": "v02-on",
+      "profile": "web-wasm",
+      "role": "connector_regression",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-on/web-wasm/tests/fc08/axiom_fc08_control_regression.wasm",
+      "sha256": "d4e1992f730a3b9f9044f9b7fd96ca14f9160fa666fc4ef90d9083c13f0838e5",
+      "size": 7692097,
+      "tag": "v02-on",
+      "profile": "web-wasm",
+      "role": "control_regression",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-off/windows-native/tests/fc08/axiom_fc08_baseline_probe.exe",
+      "sha256": "6e79160f493660edc0b1be49c2354915baa0e6117cdacb5f75e9d07fcbb70c9e",
+      "size": 9882112,
+      "tag": "v02-off",
+      "profile": "windows-native",
+      "role": "baseline_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-off/windows-native/tests/fc08/axiom_fc08_hook_probe.exe",
+      "sha256": "84291bb2a2e30247714cd4668e1c780d9584eaf82224209d02b9ef863a31e1d3",
+      "size": 9767936,
+      "tag": "v02-off",
+      "profile": "windows-native",
+      "role": "hook_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact",
+      "checkpoint_string_present": false
+    },
+    {
+      "path": "out/fc08/v02-off/windows-native/tests/fc08/axiom_fc08_headless_probe.exe",
+      "sha256": "a9b23ab3005586d7d841456a253ef1bc5d906d05a4c947085355ff8cdd651735",
+      "size": 2613760,
+      "tag": "v02-off",
+      "profile": "windows-native",
+      "role": "headless_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-off/windows-native/tests/fc08/axiom_fc08_selection_regression.exe",
+      "sha256": "c098929a6ccf25f9ab98d2df9d7dc3e579da354f72c15cb947951da28e5665be",
+      "size": 202752,
+      "tag": "v02-off",
+      "profile": "windows-native",
+      "role": "selection_regression",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-off/windows-native/tests/fc08/axiom_fc08_connector_regression.exe",
+      "sha256": "2a4fda82f8ed5bd9a7e8c80fa6615af4fc3d67ab638d82cb653b9ce25c22e5b3",
+      "size": 9736704,
+      "tag": "v02-off",
+      "profile": "windows-native",
+      "role": "connector_regression",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-off/windows-native/tests/fc08/axiom_fc08_control_regression.exe",
+      "sha256": "7957594d176c3da3e16e3f941fc2821b36488be9db078c8036db20408b7b67c8",
+      "size": 9516544,
+      "tag": "v02-off",
+      "profile": "windows-native",
+      "role": "control_regression",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-off/web-wasm/tests/fc08/axiom_fc08_baseline_probe.wasm",
+      "sha256": "fe7ddb4dc98fee2c7ee404d41042186d4269f1f99675ace1f8b628d36f540d54",
+      "size": 9425486,
+      "tag": "v02-off",
+      "profile": "web-wasm",
+      "role": "baseline_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-off/web-wasm/tests/fc08/axiom_fc08_hook_probe.wasm",
+      "sha256": "4efce071eade600fa675d523824c33e436147435329db18b641d10f67feea0b9",
+      "size": 9333394,
+      "tag": "v02-off",
+      "profile": "web-wasm",
+      "role": "hook_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-off/web-wasm/tests/fc08/axiom_fc08_headless_probe.wasm",
+      "sha256": "8b2d58363f9bc83bb35f3b275767721a0841c193dda9356b38b7853760cf7400",
+      "size": 2409226,
+      "tag": "v02-off",
+      "profile": "web-wasm",
+      "role": "headless_probe",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-off/web-wasm/tests/fc08/axiom_fc08_selection_regression.wasm",
+      "sha256": "f229236df8ea0d6010857ac234a17b38e528177e7676797998a80496d8343f4a",
+      "size": 30359,
+      "tag": "v02-off",
+      "profile": "web-wasm",
+      "role": "selection_regression",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-off/web-wasm/tests/fc08/axiom_fc08_connector_regression.wasm",
+      "sha256": "f1d6d2d3b96622c25d4c26556691d4d45fbd71bdf0fdefd6bda80e15f1ad98fa",
+      "size": 9286086,
+      "tag": "v02-off",
+      "profile": "web-wasm",
+      "role": "connector_regression",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    },
+    {
+      "path": "out/fc08/v02-off/web-wasm/tests/fc08/axiom_fc08_control_regression.wasm",
+      "sha256": "c6891b23ff9e76e792d4471df38b5b25a1783b382b0255d7c0bec61a43e26995",
+      "size": 7687575,
+      "tag": "v02-off",
+      "profile": "web-wasm",
+      "role": "control_regression",
+      "identity_kind": "observed local binary identity; reproducible from retained exact build invocation, not a repository binary artifact"
+    }
+  ],
+  "SDK_facts": [
+    {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/environment/native-sdk-facts.json",
+      "sha256": "0f17f33456383554c3874067d6af7a177ca2b9209fb12515ccdc8866aa5ab2cc",
+      "size": 4697
+    },
+    {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/environment/web-sdk-facts.json",
+      "sha256": "a60b05cc918408a97dc6be938e7cba315ea01d55b60851d6ca13e0a2b7c49f60",
+      "size": 4582
+    }
+  ],
+  "actual_consumer_compilers": [
+    {
+      "tag": "v02-on",
+      "profile": "windows-native",
+      "CMAKE_CXX_COMPILER": "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+      "CMAKE_CXX_COMPILER_ID": "MSVC",
+      "CMAKE_CXX_COMPILER_VERSION": "19.51.36246.0",
+      "raw_CMake_fact": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/environment/compiler-v02-on-windows-native.cmake",
+        "sha256": "0fe410869376371c16e8b29b3b306ccc7c1273a4c866840bf1eae8e6a554bc96",
+        "size": 6624
+      }
+    },
+    {
+      "tag": "v02-on",
+      "profile": "web-wasm",
+      "CMAKE_CXX_COMPILER": "C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/upstream/emscripten/em++.exe",
+      "CMAKE_CXX_COMPILER_ID": "Clang",
+      "CMAKE_CXX_COMPILER_VERSION": "24.0.0",
+      "raw_CMake_fact": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/environment/compiler-v02-on-web-wasm.cmake",
+        "sha256": "28e9635b770d15d9c00c3e1fd82a13652f876c48b403cd3ae26050ee5f999083",
+        "size": 6530
+      }
+    },
+    {
+      "tag": "v02-off",
+      "profile": "windows-native",
+      "CMAKE_CXX_COMPILER": "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe",
+      "CMAKE_CXX_COMPILER_ID": "MSVC",
+      "CMAKE_CXX_COMPILER_VERSION": "19.51.36246.0",
+      "raw_CMake_fact": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/environment/compiler-v02-off-windows-native.cmake",
+        "sha256": "0fe410869376371c16e8b29b3b306ccc7c1273a4c866840bf1eae8e6a554bc96",
+        "size": 6624
+      }
+    },
+    {
+      "tag": "v02-off",
+      "profile": "web-wasm",
+      "CMAKE_CXX_COMPILER": "C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/upstream/emscripten/em++.exe",
+      "CMAKE_CXX_COMPILER_ID": "Clang",
+      "CMAKE_CXX_COMPILER_VERSION": "24.0.0",
+      "raw_CMake_fact": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/environment/compiler-v02-off-web-wasm.cmake",
+        "sha256": "28e9635b770d15d9c00c3e1fd82a13652f876c48b403cd3ae26050ee5f999083",
+        "size": 6530
+      }
+    }
+  ],
+  "machine": {
+    "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/environment/machine.json",
+    "sha256": "2b6494e777b925be789e5629e8dd72ec864cd33a9a45b0208f9c5aeca4bfc9e5",
+    "size": 283
+  },
+  "locked_Skia_producer_toolchains": {
+    "windows-x64-d3d12": {
+      "clang": "clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)",
+      "linker": "LLD 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)",
+      "llvm": "22.1.8",
+      "msvc_toolset": "14.51.36231",
+      "windows_sdk": "10.0.26100.0"
+    },
+    "web-wasm-webgl2": {
+      "clang": "shared:INFO: (Emscripten: Running sanity checks)",
+      "emscripten": "6.0.6",
+      "linker": "shared:INFO: (Emscripten: Running sanity checks)",
+      "llvm": "22.1.8",
+      "pthread": false
+    }
+  },
+  "compiler_identity_note": "Actual consumer compiler facts and locked producer metadata are recorded separately; no assertion that their LLVM identities are equal. The selected Web Emscripten version is the lock-declared 6.0.6; real link/load/execution is recorded.",
+  "browser_ON": {
+    "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/web-final/browser/profile.json",
+    "sha256": "e4a8d4ed6248b041711f50b528a892b3d56e25549df2c1611b1b5844b70b2410",
+    "size": 318794
+  },
+  "browser_OFF": {
+    "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/browser/off-final/profile.json",
+    "sha256": "a95e07ce12f0207ecd17a2c6cddc605549edbc2b37c8133d9fc210c3e1b1b608",
+    "size": 15837
+  },
+  "profile_realizations": [
+    {
+      "id": "windows-native",
+      "discovery": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/windows-final/discovery.json",
+        "sha256": "332e4f3efcfdfab3723e359f953f60bed0f5f986117becee0dfc9186021f7e1d",
+        "size": 10562
+      },
+      "actual_result": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/windows-final/results.json",
+        "sha256": "96cbf91673b3bb4709bbfa979a0feb51dddc45d14b25e172caeddd243670ad76",
+        "size": 432974
+      },
+      "retained_regression": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/windows-final/inherited/inherited-regression.json",
+        "sha256": "1453e383e842e37355758b5f97a6af05e22ba3dfae5f99ca60ff0e4de4f50dcc",
+        "size": 5329
+      }
+    },
+    {
+      "id": "web-wasm",
+      "discovery": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/web-final/discovery.json",
+        "sha256": "8e53301d0d11633c0549fffa13f46b5067d53f254e610c8eb6491e33ef14925d",
+        "size": 10556
+      },
+      "actual_result": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/web-final/results.json",
+        "sha256": "a8274c5d7154339733d7fed8b8556b37789d15a9871c4a0a939b04c856dcc4a4",
+        "size": 432968
+      },
+      "retained_regression": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/web-final/inherited/inherited-regression.json",
+        "sha256": "4d3cdf268c11b7af3f8e3ebfbe7528bb8912481dc71bfac33178ee4d8d0ed4ff",
+        "size": 5323
+      }
+    },
+    {
+      "id": "headless",
+      "discovery": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/headless-final/discovery.json",
+        "sha256": "2d1a7a589eb4e8ec0bb6dfbb26c2199bab02d1b7b89be646076f7dc3cd66ebfd",
+        "size": 10556
+      },
+      "actual_result": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/headless-final/results.json",
+        "sha256": "1a8fa2979606722494420a8a6fd195c63ee936dc4cdf06611e94d6bdec1a909c",
+        "size": 480359
+      },
+      "retained_regression": {
+        "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/runner/headless-final/inherited/inherited-regression.json",
+        "sha256": "3d5b14913cd05cf637bb5c065907361ea6ba230115738d3149217dd050c553ee",
+        "size": 5323
+      }
+    }
+  ],
+  "headless": "semantic-only executable linked only to canvas_runtime_semantic; no EditorHistory owner",
+  "old_web_failure_preserved": ".aegis/results/FC-08-VERIFY-MATERIALIZE/builds/web-wasm/build-probe.log@5f216a8e331a98ccccfc7a0616991bb60e1ea312",
+  "product_PASS": false,
+  "PHYS_PASS": false
+}

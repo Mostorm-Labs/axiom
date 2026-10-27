@@ -109,6 +109,9 @@ struct RuntimeSurfaceSnapshot final {
 
 class RuntimeComposition final {
   friend class CanvasRuntimeFacade;
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+  friend class canvas::qualification::Access;
+#endif
  public:
   explicit RuntimeComposition(render::ViewId viewId = render::ViewId{1});
   ~RuntimeComposition();

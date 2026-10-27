@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="1"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="1"
+	timestamp="2026-10-27T02:59:40"
+	>
+	<testcase name="FC08SectionConsumer" classname="FC08SectionConsumer" time="1.43465" status="fail">
+		<failure message="Failed"/>
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 12 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 8 tests from FC08SectionConsumer
+[ RUN      ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory
+[       OK ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory (4 ms)
+[ RUN      ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically
+[       OK ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically (1 ms)
+[ RUN      ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts (1 ms)
+[ RUN      ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing
+[       OK ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing (4 ms)
+[ RUN      ] FC08SectionConsumer.DefaultSectionRemovalReleasesChildren
+[       OK ] FC08SectionConsumer.DefaultSectionRemovalReleasesChildren (0 ms)
+[ RUN      ] FC08SectionConsumer.MixedRemovalAndInvalidResizePreserveRedo
+[       OK ] FC08SectionConsumer.MixedRemovalAndInvalidResizePreserveRedo (2 ms)
+[ RUN      ] FC08SectionConsumer.ExistingGroupScopeResolvesSectionWithoutNewMembershipModel
+[       OK ] FC08SectionConsumer.ExistingGroupScopeResolvesSectionWithoutNewMembershipModel (2 ms)
+[ RUN      ] FC08SectionConsumer.ProducerOnlyQueuesAndClosingRetiresPendingRequest
+[       OK ] FC08SectionConsumer.ProducerOnlyQueuesAndClosingRetiresPendingRequest (9 ms)
+[----------] 8 tests from FC08SectionConsumer (27 ms total)
+
+[----------] 4 tests from SectionDropTest
+[ RUN      ] SectionDropTest.ShapeDropUpdatesMembershipAndFollowsSectionWithOneStepHistory
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\composition\tests\fc08_section_consumer_test.cpp(256): error: Expected equality of these values:
+  s.directChildren
+    Which is: {}
+  std::vector{actor}
+    Which is: { 16-byte object &lt;C9-19 00-00 00-00 00-00 00-00 00-00 00-00 00-00&gt; }
+
+[  FAILED  ] SectionDropTest.ShapeDropUpdatesMembershipAndFollowsSectionWithOneStepHistory (245 ms)
+[ RUN      ] SectionDropTest.StrokeDropUpdatesMembershipAndFollowsSectionWithOneStepHistory
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\composition\tests\fc08_section_consumer_test.cpp(256): error: Expected equality of these values:
+  s.directChildren
+    Which is: {}
+  std::vector{actor}
+    Which is: { 16-byte object &lt;C9-19 00-00 00-00 00-00 00-00 00-00 00-00 00-00&gt; }
+
+[  FAILED  ] SectionDropTest.StrokeDropUpdatesMembershipAndFollowsSectionWithOneStepHistory (218 ms)
+[ RUN      ] SectionDropTest.ActualAffineBoundaryAndFinalPreviewPoseDetermineDrop
+C:\Users\Chado\.codex\worktrees\fc08-p31-bootstrap\canvas\runtime\composition\tests\fc08_section_consumer_test.cpp(283): error: Expected equality of these values:
+  s.members.size()
+    Which is: 0
+  1U
+    Which is: 1
+
+[  FAILED  ] SectionDropTest.ActualAffineBoundaryAndFinalPreviewPoseDetermineDrop (373 ms)
+[ RUN      ] SectionDropTest.CancelAndLateUpNeverChangeMembershipOrHistory
+[axiom] ingress rejected samples=0
+[       OK ] SectionDropTest.CancelAndLateUpNeverChangeMembershipOrHistory (172 ms)
+[----------] 4 tests from SectionDropTest (1009 ms total)
+
+[----------] Global test environment tear-down
+[==========] 12 tests from 2 test suites ran. (1036 ms total)
+[  PASSED  ] 9 tests.
+[  FAILED  ] 3 tests, listed below:
+[  FAILED  ] SectionDropTest.ShapeDropUpdatesMembershipAndFollowsSectionWithOneStepHistory
+[  FAILED  ] SectionDropTest.StrokeDropUpdatesMembershipAndFollowsSectionWithOneStepHistory
+[  FAILED  ] SectionDropTest.ActualAffineBoundaryAndFinalPreviewPoseDetermineDrop
+
+ 3 FAILED TESTS
+</system-out>
+	</testcase>
+</testsuite>

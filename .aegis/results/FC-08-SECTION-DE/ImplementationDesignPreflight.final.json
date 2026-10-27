@@ -1,0 +1,129 @@
+{
+  "source_revision": "f3d9e67508b4b8f6e2ddbf756b51c543efeafa55",
+  "package": {
+    "path": ".aegis/packages/FC-08-SECTION-DE-v0.5/package.json",
+    "sha256": "0b4bb80b9ee642195a3891fc32becff82d53af2b4f03491d8eafcc7f29c7a656"
+  },
+  "findings": "Existing owners retained; no unresolved authority or semantic decision for this bounded D/E slice",
+  "owner_source_bindings": {
+    "semantic_staged_apply": [
+      {
+        "path": "runtime/semantic/src/operation_engine.cpp",
+        "sha256": "c39b86cfa7b2823364ca9d32937a675986badc8ad7b753361551dc1022716ef3"
+      }
+    ],
+    "forward_inverse_and_history_admission": [
+      {
+        "path": "runtime/interaction/src/undoable_command.cpp",
+        "sha256": "52634b9d12deba83ca9acb762105d6bc497c9b474edb5a96c007b41e9e838a4d"
+      },
+      {
+        "path": "runtime/interaction/src/editor_history.cpp",
+        "sha256": "967d6e1e7762dbab0ce665531d47378ebd8752dfcf2753e352f81e1acb8145b9"
+      }
+    ],
+    "section_planner_and_prepared_selection_consequence": [
+      {
+        "path": "runtime/interaction/src/canvas_section_commands.cpp",
+        "sha256": "34463facd0ab43e4ce73c4ef4f94cd98c86d11b9f9c0abbc5631264d0024f09d"
+      },
+      {
+        "path": "runtime/interaction/src/selection_session.cpp",
+        "sha256": "a81923e7b615f5a6360b5c1af04eaa289c4c9f0faa89bca3297bfb028cc66096"
+      }
+    ],
+    "scene_projection_and_recovery": [
+      {
+        "path": "runtime/scene/src/hierarchy_geometry.cpp",
+        "sha256": "4ae0cbe30f43b7d5e9f940be949983f6b5d5d077a5c8aa10a3249392436dc77d"
+      },
+      {
+        "path": "runtime/scene/src/scene.cpp",
+        "sha256": "f92ade084a10744451cb63ed9d4849635c4809c3d89ffb3bd3c426a6539b9bca"
+      },
+      {
+        "path": "runtime/scene/src/runtime_scene_projection.cpp",
+        "sha256": "b1965d2d049c5668681e24e1a3b949009a74e8014a4f497c87324fd27939de4b"
+      },
+      {
+        "path": "runtime/scene/src/incremental_runtime_coordinator.cpp",
+        "sha256": "0d2754361f3de7a36a66c03c8bc1c63c08a45ce20dcc9f3525a66f0481a6cbf6"
+      }
+    ],
+    "public_command_queue_and_composition": [
+      {
+        "path": "runtime/foundation/include/canvas/runtime/section_input.hpp",
+        "sha256": "57ae8ca06c72c25d06c654b21da7fb67756c809a18175866b1a4fb9ff4b8c878"
+      },
+      {
+        "path": "runtime/control/src/canvas_control_service.cpp",
+        "sha256": "7c4df8a7a46d59d53045b1395b04889c37b88850a096c848bb1f87fce012982b"
+      },
+      {
+        "path": "runtime/composition/src/canvas_runtime_facade.cpp",
+        "sha256": "d7ceaf5b7c7677070ab2f953f3639fb29741519a8be8c740c9a4e9332a85b9e5"
+      },
+      {
+        "path": "runtime/composition/src/canvas_runtime_section.cpp",
+        "sha256": "69fc554fdcb160a9317c9a00bcd2d3b9ee932508d4fda62514f4957a9ab75674"
+      }
+    ],
+    "title_shaping": [
+      {
+        "path": "runtime/text/src/text_layout.cpp",
+        "sha256": "b6a85573b8b2a0b3ad72517aea9f3adaae5e3512c8e8083319c380f4c41e89a0"
+      }
+    ],
+    "host_consumers_only": [
+      {
+        "path": "debug_ui/src/panels/control.cpp",
+        "sha256": "ba26e7b3029705a2873f1e58742017b46dfcb33d13e860fe7d016246876cd5b3"
+      },
+      {
+        "path": "debug_ui/src/control_router.cpp",
+        "sha256": "15e04b2629f41a4583238406a220659d8fce569f66df4dac32267cc70bf6a241"
+      },
+      {
+        "path": "apps/axiom_canvas_demo/platform/web/section_bridge.inl",
+        "sha256": "6092cb13eae701a7504c66bfe63f73f2746f24e1b5d8e698a9043f04cca3a618"
+      }
+    ]
+  },
+  "commit_flow": "Public bounded request -> owner Interaction -> actual C F/U admission and real History reservation -> staged Semantic commit -> prepared existing SelectionSession consequence -> existing Scene publication",
+  "publication_failure": "Canonical Committed + projection Pending, then coherent existing recovery; no command resubmission",
+  "rejection": "Precommit busy/stale/invalid/numeric/History rejection has no canonical/History/redo write",
+  "pose": "One ancestor composition; binary64 ordered PoseConstruction with contraction disabled, explicit quality rejection; no child movement for boundary resize",
+  "preview": "Existing transient lane and handoff, Section boundary content override only; descendants projected from one ancestor override",
+  "evidence": [
+    {
+      "path": ".aegis/results/FC-08-SECTION-DE/red-geometry/invocation.json",
+      "sha256": "0d56af9d7b76af1e48874ebae0e864cee59d2b9ac7e7e1561c999e33430f6dbf"
+    },
+    {
+      "path": ".aegis/results/FC-08-SECTION-DE/red-consumer/invocation.json",
+      "sha256": "34126c586dbc1b6105d1be656e33cc30fa8835d4368b53d7951a082915be276a"
+    },
+    {
+      "path": ".aegis/results/FC-08-SECTION-DE/red-default-removal/invocation.json",
+      "sha256": "21835096f3779b0f9c6707a791a92eb037a9506d569ca6ea4f2a5abf95789bf4"
+    },
+    {
+      "path": ".aegis/results/FC-08-SECTION-DE/red-group-consequence/ctest.xml",
+      "sha256": "528d26b80432f49fd5c42259fedb66d1d842e2ad1bae4978c6491c5cc61041cb"
+    },
+    {
+      "path": ".aegis/results/FC-08-SECTION-DE/native-exact-008/ctest.xml",
+      "sha256": "f7d80a4253470dffcfe9be0d85170a8e1ab52fbcd2f9a198ecd68a568c37bc25"
+    },
+    {
+      "path": ".aegis/results/FC-08-SECTION-DE/browser-exact-004/observations.json",
+      "sha256": "266dc6c49fb7b8900e240b49f1fc139c54b4f83c5ecb21f04ebb90ec33c52b35"
+    }
+  ],
+  "not_claimed": [
+    "Full302 qualification",
+    "allocation/fault qualification completion",
+    "independent Gate",
+    "physical input"
+  ]
+}

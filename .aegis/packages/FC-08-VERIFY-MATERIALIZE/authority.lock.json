@@ -1,0 +1,51 @@
+{
+  "format": "aegis-authority-lock-v1",
+  "task_id": "FC-08-VERIFY-MATERIALIZE",
+  "status": "CURRENT_ACCEPTED_FOR_MATERIALIZATION_SCOPE",
+  "execution_authority_mode": "hybrid",
+  "trusted_sources": [
+    {
+      "provider": "github",
+      "id": "fc-feature-completion-execution-v0.4",
+      "revision": "a5af5f6d89e8439cc5f70950ba5f1b7986b6ff7b",
+      "source_path": ".aegis/packages/FC-08-P31-READINESS/final-binding/seq01-p23-acceptance-v0.1.json",
+      "local_archive_member": "authority/execution-sequencing-acceptance.json",
+      "content_sha256": "b449d111a4899d0c416bdcf77b451dc5a10064f79a68852681663013156609ae",
+      "trusted_sections": [
+        "SEQ-D01..SEQ-D06",
+        "DEP-01..DEP-06",
+        "limited_supersession"
+      ]
+    },
+    {
+      "provider": "notion-accepted-artifact",
+      "id": "fc08-container-extension-semantic-v0.1",
+      "revision": "FC08-P23-ACCEPTANCE-v0.1",
+      "ref": "https://app.notion.com/p/4044c57a590c81a8813bcad8c57ff6ee",
+      "local_archive_member": "authority/semantic-acceptance.json",
+      "content_sha256": "43893116526e47753735e7e11e22807c8e54edaf803d3acb5c11dbb7a6d81e76",
+      "trusted_sections": [
+        "D01..D08",
+        "CAP-01..CAP-06",
+        "accepted input files"
+      ]
+    }
+  ],
+  "precedence": [
+    "execution v0.4 replaces FC08 order only",
+    "semantic D05 CAP sorted-unique supersedes historical P12 tail-append wording",
+    "P23 typed wire binding replaces earlier helper naming",
+    "P20 CR01 supersedes only the named seven case expressions"
+  ],
+  "scope": "Acquire and materialize already accepted truth; no new semantic decision and no product mutation. Further accepted source export is an explicit M01 work output, not a claim that it is already locally complete.",
+  "preserve": [
+    "P10/P11",
+    "P12/P13 E01",
+    "P14/P17 C01/C02",
+    "FC08-P20-v0.1+CR01",
+    "BASE-01",
+    "INT-01",
+    "FC13 physical debt"
+  ],
+  "source_acquisition_contract": "source-acquisition.json"
+}

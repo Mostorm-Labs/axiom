@@ -331,6 +331,7 @@ ImageCommandReceipt CanvasRuntimeFacade::beginImageCrop(const ImageCropBeginRequ
   const auto content = std::get<semantic::ImageContent>(object->content);
   imageCrop_ = ImageCropSession{nextImageCropToken_++, request.objectId, content, content};
   runtime_.imageCropPresentation_ = *object;
+  if(const auto* world=runtime_.sceneCoordinator_->runtimeScene().find(object->id))runtime_.imageCropPresentation_->transform=world->transform;
   runtime_.imageCropPointer_ = [this](const input::PointerSample& sample) { imageCropPointer(sample); };
   runtime_.markCanonicalPresentationDirty();
   ImageCommandReceipt out = applied(request.objectId, runtime_, content, false);
@@ -502,6 +503,7 @@ SelectedImageSnapshot CanvasRuntimeFacade::readSelectedImage() const {
   out.available = true; out.objectId = object->id;
   out.content = std::get<semantic::ImageContent>(object->content);
   out.transform = object->transform;
+  if(const auto* world=runtime_.sceneCoordinator_->runtimeScene().find(object->id))out.transform=world->transform;
   out.editable = composition_ && composition_->canMutate() && runtime_.textWritable(object->id);
   return out;
 }

@@ -1,0 +1,266 @@
+{
+  "status": "ACTUAL_BROWSER_WASM_EXECUTION_RECORDED",
+  "browser": {
+    "Browser": "Chrome/155.0.8059.86",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "V8-Version": "15.5.35.25",
+    "WebKit-Version": "537.36 (@804d6b05f089b27af8342622a36558c49401a1d4)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:13666/devtools/browser/1875e22c-d838-48ab-91f9-c30ac7d99ece"
+  },
+  "chrome_executable": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+  "chrome_argv": [
+    "--headless=new",
+    "--disable-gpu",
+    "--no-first-run",
+    "--no-default-browser-check",
+    "--remote-debugging-port=0",
+    "--user-data-dir=C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\chrome-1792979131004",
+    "about:blank"
+  ],
+  "chrome_pid": 269532,
+  "node_version": "v24.19.0",
+  "base_url": "http://127.0.0.1:13665/",
+  "programs": [
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-on\\web-wasm\\tests\\fc08\\axiom_fc08_baseline_probe.js",
+      "sha256": "36a6f63034bd63178d389c5142d0dc8815f0e89406002edbf00968a4ec4b29ef",
+      "size": 77139
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-on\\web-wasm\\tests\\fc08\\axiom_fc08_baseline_probe.wasm",
+      "sha256": "b7731947e881c89188091cf00162e6937e810e7573b5fbee1fca4d80b916a172",
+      "size": 9429996
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-on\\web-wasm\\tests\\fc08\\axiom_fc08_hook_probe.js",
+      "sha256": "f4611999a4485e599031ea9c13d4c1591b4f603f2b666efeb537484755811bbd",
+      "size": 76689
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-on\\web-wasm\\tests\\fc08\\axiom_fc08_hook_probe.wasm",
+      "sha256": "1fbc0da4b134e13d0f923bc3906944b966938084827a5b31cc1e71086db935cc",
+      "size": 9369761
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-on\\web-wasm\\tests\\fc08\\axiom_fc08_headless_probe.js",
+      "sha256": "647f54412ba381951a9827e166a08f21e14449157cfb866943200895525c8908",
+      "size": 75453
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-on\\web-wasm\\tests\\fc08\\axiom_fc08_headless_probe.wasm",
+      "sha256": "8cc5031de71094644db72a2ced487dc0ed923b4fda61897ba0dbebc859f92b4c",
+      "size": 2409694
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-on\\web-wasm\\tests\\fc08\\axiom_fc08_selection_regression.js",
+      "sha256": "dccfaeb9e837b17277c31b8ab62305ac8992c596a413cc2a2428666c16ef2d3e",
+      "size": 8681
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-on\\web-wasm\\tests\\fc08\\axiom_fc08_selection_regression.wasm",
+      "sha256": "f229236df8ea0d6010857ac234a17b38e528177e7676797998a80496d8343f4a",
+      "size": 30359
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-on\\web-wasm\\tests\\fc08\\axiom_fc08_connector_regression.js",
+      "sha256": "dac69d9f47ca8300876734d77b10bcb7dcae9bef16da4485e28191834a8d3a11",
+      "size": 76381
+    },
+    {
+      "path": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\out\\fc08\\v02-on\\web-wasm\\tests\\fc08\\axiom_fc08_connector_regression.wasm",
+      "sha256": "0f7871c4c82dfe9ad11b2029425b1f75572beb3496ea524fc2813b932e81c7e7",
+      "size": 9290598
+    }
+  ],
+  "invocations": [
+    {
+      "id": "discovery",
+      "program": "baseline",
+      "argv": [
+        "--discover"
+      ],
+      "started_at": "2026-10-26T01:45:32.754Z",
+      "ended_at": "2026-10-26T01:45:32.856Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\discovery.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\discovery.json"
+    },
+    {
+      "id": "live-hooks",
+      "program": "hooks",
+      "argv": [],
+      "started_at": "2026-10-26T01:45:32.856Z",
+      "ended_at": "2026-10-26T01:45:33.328Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\live-hooks.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\live-hooks.json"
+    },
+    {
+      "id": "inherited-selection",
+      "program": "selection",
+      "argv": [],
+      "started_at": "2026-10-26T01:45:33.328Z",
+      "ended_at": "2026-10-26T01:45:33.342Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\inherited-selection.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\inherited-selection.json"
+    },
+    {
+      "id": "inherited-connector",
+      "program": "connector",
+      "argv": [],
+      "started_at": "2026-10-26T01:45:33.342Z",
+      "ended_at": "2026-10-26T01:45:33.471Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\inherited-connector.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\inherited-connector.json"
+    },
+    {
+      "id": "section-record",
+      "program": "baseline",
+      "argv": [
+        "ObjectRecord",
+        "/fixture.pb"
+      ],
+      "started_at": "2026-10-26T01:45:33.472Z",
+      "ended_at": "2026-10-26T01:45:33.774Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\section-record.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\section-record.json"
+    },
+    {
+      "id": "section-snapshot3",
+      "program": "baseline",
+      "argv": [
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "started_at": "2026-10-26T01:45:33.775Z",
+      "ended_at": "2026-10-26T01:45:34.165Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\section-snapshot3.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\section-snapshot3.json"
+    },
+    {
+      "id": "op17-content",
+      "program": "baseline",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "started_at": "2026-10-26T01:45:34.165Z",
+      "ended_at": "2026-10-26T01:45:35.362Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\op17-content.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\op17-content.json"
+    },
+    {
+      "id": "op18-introduce",
+      "program": "baseline",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "started_at": "2026-10-26T01:45:35.362Z",
+      "ended_at": "2026-10-26T01:45:35.965Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\op18-introduce.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\op18-introduce.json"
+    },
+    {
+      "id": "legacy-insert",
+      "program": "baseline",
+      "argv": [
+        "Operation",
+        "/fixture.pb"
+      ],
+      "started_at": "2026-10-26T01:45:35.966Z",
+      "ended_at": "2026-10-26T01:45:36.869Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-insert.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-insert.json"
+    },
+    {
+      "id": "legacy-replay",
+      "program": "headless",
+      "argv": [
+        "Replay",
+        "Operation",
+        "/fixture.pb"
+      ],
+      "started_at": "2026-10-26T01:45:36.869Z",
+      "ended_at": "2026-10-26T01:45:37.259Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-replay.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-replay.json"
+    },
+    {
+      "id": "legacy-snapshot1",
+      "program": "baseline",
+      "argv": [
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "started_at": "2026-10-26T01:45:37.259Z",
+      "ended_at": "2026-10-26T01:45:37.758Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-snapshot1.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-snapshot1.json"
+    },
+    {
+      "id": "legacy-snapshot1-import",
+      "program": "headless",
+      "argv": [
+        "LegacyImport",
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "started_at": "2026-10-26T01:45:37.758Z",
+      "ended_at": "2026-10-26T01:45:38.274Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-snapshot1-import.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-snapshot1-import.json"
+    },
+    {
+      "id": "legacy-snapshot2",
+      "program": "baseline",
+      "argv": [
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "started_at": "2026-10-26T01:45:38.274Z",
+      "ended_at": "2026-10-26T01:45:38.886Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-snapshot2.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-snapshot2.json"
+    },
+    {
+      "id": "legacy-snapshot2-import",
+      "program": "headless",
+      "argv": [
+        "LegacyImport",
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "started_at": "2026-10-26T01:45:38.886Z",
+      "ended_at": "2026-10-26T01:45:39.206Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-snapshot2-import.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-snapshot2-import.json"
+    },
+    {
+      "id": "legacy-snapshot3",
+      "program": "baseline",
+      "argv": [
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "started_at": "2026-10-26T01:45:39.208Z",
+      "ended_at": "2026-10-26T01:45:39.577Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-snapshot3.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-snapshot3.json"
+    },
+    {
+      "id": "legacy-snapshot3-import",
+      "program": "headless",
+      "argv": [
+        "LegacyImport",
+        "DocumentSnapshot",
+        "/fixture.pb"
+      ],
+      "started_at": "2026-10-26T01:45:39.577Z",
+      "ended_at": "2026-10-26T01:45:39.707Z",
+      "raw_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-snapshot3-import.raw.json",
+      "observed_artifact": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-verification-materialization\\canvas\\.aegis\\results\\FC-08-VERIFY-MATERIALIZE\\attempts\\v0.2-obs01\\browser\\run-001\\legacy-snapshot3-import.json"
+    }
+  ],
+  "physical_PASS": false,
+  "product_PASS": false
+}

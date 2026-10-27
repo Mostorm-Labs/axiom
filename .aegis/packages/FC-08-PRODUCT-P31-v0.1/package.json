@@ -1,0 +1,79 @@
+{
+  "schema_version": "0.1",
+  "format": "aegis-repo-local-execution-package-v1",
+  "package_id": "FC-08-PRODUCT-P31-v0.1",
+  "task_id": "FC-08",
+  "stage": "P31",
+  "status": "MATERIALIZED_READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "repository_id": 1306396623
+  },
+  "execution_authority_mode": "repo_materialized",
+  "package_materialization_ref": "refs/heads/control/fc08-product-p31-package",
+  "execution_ref": null,
+  "task_anchor": {
+    "revision": "a1e8819abe245ab7487f18771970721f480ff487",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "authorized_scope": "FC-08 product implementation only after independent P31 package acceptance and both package preflights; current package preparation does not start P32.",
+  "product_P31_status": "MATERIALIZED_READY_FOR_INDEPENDENT_CONTROL_REVIEW",
+  "P32_authorized": false,
+  "may_start_code_execution": false,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "gate_target": {
+    "id": "FC08-DEV-AUTOMATED",
+    "scope": "development_only",
+    "gate_verdict_authorized": false
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "c29d7d2e0785cf2108acb618ff42571a545426880a0c388ab27512f4ff8e814a"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "ebddb0403215cca82641005e9819f61fbe0ed4d12ca4728325a0807ab4485a23"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "ba108a14b241308585a3c03304210d4544a2621529316782aa001dacf3201085"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "d1c58bf27c4b36e798878160e72dda80f225092087b88fdbaa0deb6f2baa2530"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "ccfb6068e6e05d9623672d1f9d150eae47c311e89cc6ffddbb8c404b9d3f0f60"
+  },
+  "source_binding_refs": {
+    "prior_result_revision": "0d3b10bba1ac4a31d669dd4a45f94975ec24f3c3",
+    "prior_materialized_ref": "refs/heads/codex/fc08-verification-materialization",
+    "output_index": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-index.json",
+      "sha256": "6b5fc14f0a2703a25f101f28aa96746b146ff53df693779e90f05abba25685fc"
+    },
+    "output_manifest": {
+      "path": ".aegis/results/FC-08-VERIFY-MATERIALIZE/attempts/v0.2-obs01/output-manifest.json",
+      "sha256": "51fb71bab9e0cbb2a5215974aa224af9dff1d6dc6b3615b35fa6a67f9efd8421"
+    }
+  },
+  "required_preflights": [
+    "RepositoryIdentity",
+    "PackageBindingPreflight",
+    "EvidenceContractPreflight",
+    "ImplementationDesignPreflight",
+    "FC08-RED-01"
+  ],
+  "terminal_target": "READY_FOR_CONTROL_REVIEW with all frozen E01-E10 obligations satisfied, or an explicit terminal blocker; no P34 verdict.",
+  "nonclaims": [
+    "This package does not authorize P32 until independent control review accepts the exact package and preflight records.",
+    "No product code, product test, DEV PASS, P34 PASS, PHYS PASS, or release PASS is claimed.",
+    "M01-M04 baseline materialization is not product implementation evidence.",
+    "PH01-PH04 remain FC13 debt; INT-01 remains FC04/FC10-owned beyond the required pre-write rejection test."
+  ],
+  "source_baseline_revision": "427580ae13b60a39e88959b282cbffc695c9aabb"
+}

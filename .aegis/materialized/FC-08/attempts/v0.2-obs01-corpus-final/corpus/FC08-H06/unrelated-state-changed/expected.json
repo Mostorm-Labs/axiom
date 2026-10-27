@@ -1,0 +1,21 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "Applied"
+    },
+    {
+      "op": "equal",
+      "path": "revalidated_basis_and_U",
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 1
+    }
+  ],
+  "source_case": "FC08-H06",
+  "product_expected_only": true
+}

@@ -1,0 +1,16 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "immutable_bytes_preserved",
+      "expected": true
+    },
+    {
+      "op": "equal",
+      "path": "legacy_state_matched",
+      "expected": true
+    }
+  ],
+  "source_case": "FC08-W07",
+  "product_expected_only": true
+}

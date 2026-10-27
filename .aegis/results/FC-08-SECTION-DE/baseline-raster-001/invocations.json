@@ -1,0 +1,109 @@
+[
+  {
+    "name": "worktree",
+    "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+    "argv": [
+      "git",
+      "worktree",
+      "add",
+      "--detach",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-de\\baseline-source",
+      "af1aff801369052eb7b94716f6b4ab3e899eb3e9"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "link-core",
+    "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+    "argv": [
+      "powershell",
+      "-NoProfile",
+      "-Command",
+      "New-Item -ItemType Junction -Path \"C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-de\\baseline-source\\.deps\" -Target \"C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.deps\""
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "configure",
+    "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+    "argv": [
+      "cmake",
+      "-S",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-de\\baseline-source",
+      "-B",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-de\\baseline-build",
+      "-G",
+      "Ninja",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DBUILD_TESTING=ON",
+      "-DCANVAS_BUILD_POC01=OFF",
+      "-DCANVAS_BUILD_SEMANTIC=ON",
+      "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+      "-DCANVAS_BUILD_RF01=ON",
+      "-DCANVAS_RF01_BUILD_TESTS=OFF",
+      "-DCANVAS_BUILD_RENDER=ON",
+      "-DCANVAS_RENDER_BUILD_TESTS=ON",
+      "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
+      "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+      "-DCANVAS_SKIA_SDK_VARIANT=release",
+      "-DCANVAS_SKIA_SDK_ROOT=C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/.deps/skia-sdk/windows-x64-d3d12/release",
+      "-DAXIOM_FC08_QUALIFICATION_HOOKS=OFF",
+      "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+      "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe",
+      "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+      "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+      "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "build",
+    "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+    "argv": [
+      "cmake",
+      "--build",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-de\\baseline-build",
+      "--target",
+      "axiom_render_headless_skia_tests",
+      "--parallel",
+      "6"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "raster",
+    "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas",
+    "argv": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-de\\baseline-build",
+      "-R",
+      "^FC01TriangleConnectorRaster$",
+      "--output-on-failure",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\.aegis\\results\\FC-08-SECTION-DE\\baseline-raster-001\\ctest.xml"
+    ],
+    "exit_code": 8
+  },
+  {
+    "name": "identity",
+    "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-de\\baseline-source",
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "preservation",
+    "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\fc08-p31-bootstrap\\canvas\\out\\fc08-section-de\\baseline-source",
+    "argv": [
+      "git",
+      "diff",
+      "--exit-code"
+    ],
+    "exit_code": 0
+  }
+]

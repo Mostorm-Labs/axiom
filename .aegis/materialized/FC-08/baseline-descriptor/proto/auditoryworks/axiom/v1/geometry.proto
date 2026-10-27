@@ -1,0 +1,30 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+message Vec2 {
+  double x = 1;
+  double y = 2;
+}
+
+message Rect2 {
+  double x = 1;
+  double y = 2;
+  double width = 3;
+  double height = 4;
+}
+
+message NormalizedRect {
+  double x = 1;
+  double y = 2;
+  double width = 3;
+  double height = 4;
+}
+
+message Transform2D {
+  double a = 1;
+  double b = 2;
+  double c = 3;
+  double d = 4;
+  double tx = 5;
+  double ty = 6;
+}

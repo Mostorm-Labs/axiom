@@ -1,0 +1,198 @@
+{
+  "status": "RESOLVED_CONTINUE_EXECUTION",
+  "package_revision": "a0883474790fb5eb70c49c96907caef80fa6b2ab",
+  "starting_revision": "a0883474790fb5eb70c49c96907caef80fa6b2ab",
+  "cursor_classification": "DESCENDANT_CURSOR_PACKAGE_ONLY_DELTA",
+  "resume_cursor": "5f216a8e331a98ccccfc7a0616991bb60e1ea312",
+  "M01_reuse": "source hashes verified unchanged; no descriptor or source reacquisition",
+  "exact_insertion_anchors": {
+    "runtime/semantic/src/operation_engine.cpp": {
+      "sha256_before": "9619748086ce02caacbe2bc7072c4474149f233433d8ba63f6db4640fc2e0f73",
+      "anchors": [
+        "after real successful prepare",
+        "after real prepareChangeSet before applyPreparedPlan",
+        "after full commit record before successful return"
+      ]
+    },
+    "runtime/semantic/src/atomic_apply.cpp": {
+      "sha256_before": "67e3d81e23ef73494c7a6fbedccddcafe234bceb31d01cc5ed073be7dada8eaf",
+      "anchors": [
+        "after preflight, immediately before first ObjectStoreMutator write; none between writes"
+      ]
+    },
+    "runtime/interaction/src/editor_history.cpp": {
+      "sha256_before": "b3ff2013cd663f386119a38332e320b7ad0215f805ec0f783ba26115de918aa4",
+      "anchors": [
+        "before entries_.reserve",
+        "after real reservation and temporary PreparedEntry construction",
+        "after commitPrepared/undo/redo cursor transition"
+      ]
+    },
+    "runtime/interaction/src/canvas_editing_runtime.cpp": {
+      "sha256_before": "a3aa2c4ae6714fad7984b983f3a3588dd2c002567424a2d651d7cfa153a0c8cd",
+      "anchors": [
+        "applyLocalHistoryOperation: after history_.prepareRecord success, before apply",
+        "close/cancelAllPointers: clear qualification faults"
+      ]
+    },
+    "runtime/composition/include/canvas/runtime/runtime_composition.hpp": {
+      "sha256_before": "0bc5dab18603419e7bdf1db7711bb795e1cf5e99a248ffd0c13bd8d638fd0761",
+      "anchors": [
+        "private qualification friend read/registration only"
+      ]
+    }
+  },
+  "qualification_only_scope": {
+    "id": "FC08-P31-OBS01-REPAIR-v0.2",
+    "root_cause": "TASK_PACKAGE_DEFECT",
+    "reviewed_result_revision": "5f216a8e331a98ccccfc7a0616991bb60e1ea312",
+    "historical_terminal_state": "BLOCKED_EVIDENCE",
+    "reported_blocker": "OBS-01",
+    "scope_defect_disposition": "RESOLVED_BY_THIS_P31_SCOPE_AMENDMENT",
+    "hook_implementation_and_evidence": "NOT_EXECUTED_BY_CONTROL_REVIEW",
+    "change_scope": "Only bind the already-frozen observations and recorded build compatibility; no P20 expectation or product authority change.",
+    "qualification_switch": {
+      "name": "AXIOM_FC08_QUALIFICATION_HOOKS",
+      "default": "OFF",
+      "requires": "BUILD_TESTING and the explicit FC08 qualification build",
+      "normal_build": "Hook state/calls/control API excluded; no public RuntimeFacade or wire/ABI changes. Propagate the same definition to all affected targets/consumers to avoid ODR mismatch."
+    },
+    "allowed_runtime_files": [
+      "runtime/semantic/include/canvas/semantic/operation_engine.hpp",
+      "runtime/semantic/src/operation_engine.cpp",
+      "runtime/semantic/src/atomic_apply.hpp",
+      "runtime/semantic/src/atomic_apply.cpp",
+      "runtime/semantic/src/qualification_checkpoint.hpp",
+      "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+      "runtime/interaction/src/editor_history.cpp",
+      "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "runtime/interaction/src/qualification_checkpoint.hpp",
+      "runtime/composition/include/canvas/runtime/runtime_composition.hpp",
+      "runtime/composition/src/runtime_composition.cpp"
+    ],
+    "selection_of_files": "Use only necessary listed files; record exact insertion anchors in ImplementationDesignPreflight. Composition edits are limited to private test access/owner registration/readback. No module refactor or default behavior change.",
+    "checkpoints": [
+      {
+        "id": "Q-SEM-STAGED",
+        "owner": "OperationEngine::apply",
+        "position": "After successful real prepare/plan staging, before any canonical mutation. Do not turn read-only prepare() into a writer.",
+        "mode": "observe_or_precommit_reject",
+        "cases": [
+          "FC08-T07/after-staging"
+        ]
+      },
+      {
+        "id": "Q-SEM-RESERVED",
+        "owner": "OperationEngine::apply",
+        "position": "After actual ChangeSet/outcome preparation that exists on this path, before applyPreparedPlan. Declare exactly which resources are prepared; this is not evidence that the future FC08 F/U admission exists.",
+        "mode": "observe_or_precommit_reject",
+        "cases": [
+          "FC08-T07/after-reservation"
+        ]
+      },
+      {
+        "id": "Q-SEM-PUBLISH",
+        "owner": "internal::applyPreparedPlanInternal",
+        "position": "After internal preflight, immediately before the first ObjectStoreMutator write, while live objects/manifest/ledger/generation/clock are still before-state. No callback between individual writes.",
+        "mode": "observe_or_precommit_reject",
+        "cases": [
+          "FC08-T07/before-canonical-publication"
+        ]
+      },
+      {
+        "id": "Q-HIST-BEFORE-RESERVE",
+        "owner": "EditorHistory::prepareRecord",
+        "position": "After input admission and immediately before entries_.reserve; failure uses the existing nullopt path and preserves cursor/redo.",
+        "mode": "observe_or_precommit_reject",
+        "cases": [
+          "FC08-H05"
+        ]
+      },
+      {
+        "id": "Q-HIST-READY",
+        "owner": "EditorHistory::prepareRecord",
+        "position": "After real reservation and successful construction of the temporary PreparedEntry, before returning it or publishing History. Failure discards the temporary; no cursor or redo change.",
+        "mode": "observe_or_precommit_reject",
+        "cases": [
+          "FC08-H05"
+        ]
+      },
+      {
+        "id": "Q-CMD-ADMITTED",
+        "owner": "CanvasEditingRuntime existing prepareRecord -> apply sequence",
+        "position": "After actual History entry preparation and before OperationEngine::apply. Correlate the same command/operation/owner and record the actual prepared basis. Do not add commitPrepared to OperationEngine or implement the future AdmittedUndoableCommand.",
+        "mode": "observe_or_precommit_reject",
+        "cases": [
+          "FC08-T07/after-reservation",
+          "FC08-H05",
+          "FC08-H06"
+        ]
+      },
+      {
+        "id": "Q-SEM-DONE",
+        "owner": "OperationEngine::apply return boundary",
+        "position": "After objects/manifest/ledger/generation/clock and commit record are fully published, before downstream Scene processing.",
+        "mode": "observe_only_no_failure",
+        "cases": [
+          "FC08-T07",
+          "FC08-H05",
+          "FC08-H06"
+        ]
+      },
+      {
+        "id": "Q-HIST-DONE",
+        "owner": "EditorHistory::commitPrepared/undo/redo completion",
+        "position": "After an existing History transition; observe cursor, entry identity and redo suffix without adding or changing entries.",
+        "mode": "observe_only_no_failure",
+        "cases": [
+          "FC08-H05",
+          "FC08-H06"
+        ]
+      }
+    ],
+    "hook_constraints": [
+      "Use instance-scoped lifetime-safe registration and full operation/request/owner identity, not process-wide mutable nth-allocation state. Clear armed faults at completion/cancel/detach; no cross-owner leakage.",
+      "Observer callbacks are bounded, noexcept, non-reentrant and read-only. They do not receive mutable stores or submit ports. Capture coherent before/after values through existing reads or qualification-only friend read access; no direct canonical or History writes.",
+      "A selected one-shot precommit rejection follows an existing failure return and destroys temporary preparation. After the first live mutation there is no injected failure, pause, observer of a partial state, or rollback-by-test.",
+      "Observe actual reached phases; never emit a future phase merely because its name is requested. Distinguish resources actually reserved from the future accepted E01 outcome/F/U reservation.",
+      "Scheduling H06 uses separate legitimate owner operations at existing safe boundaries, not reentrant writes from an observer. If a resumable admitted-plan boundary is absent, mark that future product execution nonpassing rather than implement it inside the hook.",
+      "No fake submit/coordinator, no direct store mutation, no new ObjectKind/opcode17/18, no production container intent/API, no changing existing apply/History algorithms to make a probe pass."
+    ],
+    "materialization_vs_product": [
+      "Bind and exercise hooks on valid existing operations and real EditorHistory/Runtime owners. These are instrumented-baseline observations, never FC08 product PASS.",
+      "For FC08-only target/API/F-U rebinding phases absent in the baseline, preserve the exact case/variant and accepted future seam with CAPABILITY_ABSENT/NOT_REACHED_BASELINE. Such records do not satisfy product positives and cannot hide a missing observation seam for an existing stage.",
+      "M03 may close when its real baseline bindings, live qualification hooks, complete oracle/discovery and explicit future-capability mapping are complete; it does not require implementing the future product first. H06 remains fully required for the later product package."
+    ],
+    "web_build_correction": {
+      "observed_log": ".aegis/results/FC-08-VERIFY-MATERIALIZE/builds/web-wasm/build-probe.log@5f216a8e331a98ccccfc7a0616991bb60e1ea312",
+      "source_path": "runtime/render/CMakeLists.txt",
+      "error": "unknown warning option '-Wno-missing-designated-field-initializers' under -Werror",
+      "allowed": "Use the repository-compatible locked SDK/toolchain; when necessary gate only this optional suppression with a real compiler capability check. Preserve supported compiler behavior and all normal warnings-as-errors.",
+      "forbidden": [
+        "Removing -Werror",
+        "Blanket -Wno-unknown-warning-option",
+        "Changing SDK locks or rebuilding dependencies",
+        "Changing render source or semantics",
+        "Claiming browser qualification from a failed build"
+      ],
+      "evidence": "Retain old failure as history; record actual compiler check, configure/build and browser load/discovery on the resumed result. No new FC08 product requirement."
+    }
+  },
+  "registration": "instance-owned shared state; lifetime-safe weak scoped registration; owned observer; no mutable store access",
+  "correlation": "full operation/document identity, full owner identity and epoch; raw calls carry no invented request identity",
+  "normal_build": "default-OFF controls/state/calls excluded; PUBLIC compile definition propagates through Semantic dependencies to consumers",
+  "failure_unwind": "existing rejection/nullopt/false before first canonical write; destroy temporaries, preserve logical History cursor/redo/entries",
+  "test_plan": [
+    "real native hook-binding RED before instrumentation",
+    "passive OFF/ON canonical and History equality",
+    "each reached phase one-shot failure preserves full observed vector incl redo",
+    "postcommit observation, owner isolation, completion/cancel/close cleanup",
+    "complete remaining M02/M03 and Windows/browser-WASM/headless profiles/regression"
+  ],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false,
+  "product_P32_authorized": false
+}

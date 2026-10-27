@@ -1,0 +1,1180 @@
+{
+  "format": "fc08-bootstrap-implementation-design-preflight-v1",
+  "status": "BLOCKED_VERIFICATION",
+  "basis": "Read-only existing-owner/source binding plus frozen P13/P15 target contract; no architecture redesign or product implementation",
+  "production_subject_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+  "source_bindings": {
+    "public_facade": {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "sha256": "3a1153a2a05309e4f5fc0ef4cae55c8e0d048a18b04dde113fe8820a108e3c79",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "c017779b8dab74d234e090a6db0e83da8e61465e",
+      "anchors": {
+        "class RuntimeFacade": [
+          14
+        ]
+      }
+    },
+    "owner_admission": {
+      "path": "runtime/composition/src/canvas_runtime_facade.cpp",
+      "sha256": "25c1ff792ffc7243b1cc3fbd18bf5f940b1c1b43e453f2334929079c2eece3ad",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "865e7ac7c9a7466f79bd94f481ece1b625f2efd7",
+      "anchors": {
+        "CanvasRuntimeFacade::submitCanvasControl": [
+          274
+        ],
+        "service_->enqueue": [
+          283
+        ]
+      }
+    },
+    "owner_pump": {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "4ab5d1349f399f4e54ec4564bdbf7bc439cc40d75c50b52919d07e101c346c84",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "9f5138dd7e3e8872917ee39919d5631e82f4e2b7",
+      "anchors": {
+        "RuntimeComposition::ownerPump": [
+          317
+        ],
+        "controlFacade_->process": [
+          220,
+          323
+        ]
+      }
+    },
+    "canonical_engine": {
+      "path": "runtime/semantic/src/operation_engine.cpp",
+      "sha256": "05726fecf7ecf8d6938ccf7dc24c1891814c9add0d3793d0a467abd5c7b2b88a",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "63bb2868ba91d4a2787d412dfeea54ea907ae494",
+      "anchors": {
+        "OperationEngine::prepare": [
+          46
+        ],
+        "OperationEngine::apply": [
+          59,
+          123,
+          180,
+          192
+        ],
+        "prepareChangeSet": [
+          93,
+          155,
+          187,
+          199
+        ],
+        "recordApplied": [
+          102,
+          163,
+          189,
+          201
+        ],
+        "commitSuccessor": [
+          105,
+          106,
+          166,
+          167,
+          189,
+          201
+        ]
+      }
+    },
+    "atomic_apply": {
+      "path": "runtime/semantic/src/atomic_apply.cpp",
+      "sha256": "039e8c17e75d4c29bb858b335d4a065ddbf58e01fc12718c43ccde6334e80ce2",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "51f0e44f2fd35f55a326ba55770f3790dd305ca8",
+      "anchors": {
+        "applyPreparedPlanInternal": [
+          56,
+          88,
+          92
+        ],
+        "if (!preflight": [
+          57
+        ],
+        "ObjectStoreMutator::insertFresh": [
+          68
+        ],
+        "ObjectStoreMutator::replaceExisting": [
+          73
+        ],
+        "ObjectStoreMutator::eraseExisting": [
+          78
+        ]
+      }
+    },
+    "real_History": {
+      "path": "runtime/interaction/src/editor_history.cpp",
+      "sha256": "c4d684db6d4961b3b9150e78f03b11e7c931ad4bac05145b6187ea73d4cf0271",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "5c56f7d521d44463b8f7a9b0eab6f1e9a9e0f1cb",
+      "anchors": {
+        "EditorHistory::prepareRecord": [
+          114
+        ],
+        "entries_.reserve": [
+          134
+        ],
+        "EditorHistory::commitPrepared": [
+          145
+        ],
+        "EditorHistory::undo": [
+          192
+        ],
+        "EditorHistory::redo": [
+          206
+        ]
+      }
+    },
+    "existing_command_seam": {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "1d4145aa4dc179d1016d7add695c0ee49428b8888569e24c373d01220e697650",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "907e1ff706fb76df05e0070b32d4901729a50045",
+      "anchors": {
+        "CanvasEditingRuntime::applyLocalHistoryOperation": [
+          1547
+        ],
+        "history_.prepareRecord": [
+          1575
+        ],
+        "history_.commitPrepared": [
+          1587
+        ],
+        "sceneCoordinator_->apply": [
+          1484,
+          1538,
+          1593,
+          2754,
+          2973,
+          3226,
+          3314
+        ]
+      }
+    },
+    "Scene_publication": {
+      "path": "runtime/scene/src/incremental_runtime_coordinator.cpp",
+      "sha256": "a508259e7744821387325b3cb78043cedd27248ae7561873f535501d534c2646",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "8a32cdf8c1e6432a2394f2b9a3cb723fc7d57a48",
+      "anchors": {
+        "IncrementalRuntimeCoordinator::apply": [
+          179
+        ],
+        "runtimeScene_.prepareIncremental": [
+          217
+        ],
+        "IncrementalRuntimeCoordinator::publishPending": [
+          124,
+          264,
+          390,
+          440
+        ],
+        "IncrementalRuntimeCoordinator::recover": [
+          284
+        ],
+        "abortPublication": [
+          143,
+          213,
+          219,
+          223,
+          233,
+          242,
+          249,
+          268,
+          314,
+          321,
+          391,
+          441
+        ]
+      }
+    },
+    "frame_presentation": {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "sha256": "4ab5d1349f399f4e54ec4564bdbf7bc439cc40d75c50b52919d07e101c346c84",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "9f5138dd7e3e8872917ee39919d5631e82f4e2b7",
+      "anchors": {
+        "RuntimeComposition::serviceFrameOpportunity": [
+          371
+        ],
+        "RuntimeComposition::finishFrameOpportunity": [
+          440
+        ],
+        "pendingPreviewIdentity_": [
+          71,
+          382,
+          383,
+          384,
+          391,
+          418,
+          429,
+          445,
+          463,
+          473,
+          551
+        ]
+      }
+    },
+    "preview_handoff": {
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "sha256": "1d4145aa4dc179d1016d7add695c0ee49428b8888569e24c373d01220e697650",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "907e1ff706fb76df05e0070b32d4901729a50045",
+      "anchors": {
+        "CanvasEditingRuntime::acknowledgePreviewPresentation": [
+          2868
+        ],
+        "canonicalVisibilitySink_->canonicalVisible": [
+          2894,
+          4104
+        ],
+        "previewController_->retireSession": [
+          2442,
+          2574,
+          2590,
+          2601,
+          2765,
+          2780,
+          2899,
+          3020,
+          4036,
+          4109
+        ]
+      }
+    },
+    "existing_selection": {
+      "path": "runtime/interaction/src/selection_session.cpp",
+      "sha256": "ce6c9ba21164c71224d1cef651589354e38fb41a0ed6f0624c43d636ab279482",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "280b337d3e4dcbec944d23d0ade7569ba3047ff3",
+      "anchors": {
+        "SelectionSession::click": [
+          8
+        ],
+        "SelectionSession::marquee": [
+          25
+        ]
+      }
+    },
+    "control_queue": {
+      "path": "runtime/control/src/canvas_control_service.cpp",
+      "sha256": "c5badd0a7d18776d000554299774c441271f438c71e3a9a829fbdd52d20e8c44",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "8fa7c947625fb9b0fd3e9939763b5e9eec889a31",
+      "anchors": {
+        "CanvasControlService::enqueue": [
+          63
+        ]
+      }
+    },
+    "snapshot_ingress": {
+      "path": "runtime/semantic/src/snapshot.cpp",
+      "sha256": "2169719e063c43abead7878dc4ee1c93d3f81a61f8428a9627c5ba00ce4bea57",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "a03e2d17b623b7487e13e43aafff90cfb25979c9",
+      "anchors": {
+        "SnapshotCodec::decode": [
+          209
+        ]
+      }
+    },
+    "bootstrap_owner": {
+      "path": "runtime/semantic/src/snapshot_bootstrap.cpp",
+      "sha256": "1cbbc0b0b41d3920478b904230d6ec720269d21c1b795a6db143d5a795abf800",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "caa90077db567547459781e150d9901eb33e142a",
+      "anchors": {
+        "SnapshotBootstrapper::restore": [
+          196,
+          201,
+          207,
+          215,
+          222,
+          229,
+          237,
+          244
+        ]
+      }
+    },
+    "replay_without_History": {
+      "path": "runtime/semantic/src/replay.cpp",
+      "sha256": "3160c367c045d6e4b80cd9eb15193c5e68b2a448a113d95c46af60f35c63a89a",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "ac016f6bb5368d3aa2ac20c6e4a915d9668e5650",
+      "anchors": {
+        "ReplayCoordinator::replayAndFinalize": [
+          50,
+          61
+        ]
+      }
+    },
+    "Windows_host": {
+      "path": "apps/minimal_runtime_host/windows_main.cpp",
+      "sha256": "9c78ad587ffd097ee5e6accfa4be8965fc6bac267659fde3b15f27794910ec72",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "6541a66e2a57581ab2129eeddaa69282618c6259",
+      "anchors": {
+        "state.host->composition()": [
+          94,
+          183,
+          184,
+          269,
+          489,
+          496,
+          498,
+          501,
+          508,
+          514
+        ],
+        "composition.finishFrameOpportunity": [
+          110,
+          179
+        ]
+      }
+    },
+    "Web_host": {
+      "path": "apps/axiom_canvas_demo/platform/web/bridge.cpp",
+      "sha256": "7a037357ac1218c116c7e0005ed903bd14e9024abb2429930207bbfacd274765",
+      "source_revision": "427580ae13b60a39e88959b282cbffc695c9aabb",
+      "git_blob": "14bac321fa11e5298bddb4aef6159b948cee92ee",
+      "anchors": {
+        "lifecycle.composition()": [
+          87,
+          93,
+          107,
+          153,
+          155,
+          158,
+          179,
+          180,
+          200,
+          212,
+          252,
+          307,
+          316,
+          346,
+          440
+        ],
+        "serviceFrameOpportunity": [
+          307
+        ]
+      }
+    }
+  },
+  "current_flow": [
+    "RuntimeFacade -> CanvasRuntimeFacade control admission -> RuntimeComposition ownerPump",
+    "CanvasEditingRuntime::applyLocalHistoryOperation prepares F, captures images, accepts supplied inverse and prepares original EditorHistory entry",
+    "OperationEngine::apply performs real prepare again, stages actual ChangeSet, atomic apply, ledger/generation/clock/commit record",
+    "EditorHistory::commitPrepared consumes its prepared entry; Scene coordinator derives/publishes or recovers from authoritative committed poststate",
+    "RuntimeComposition frame opportunity/finish and Interaction canonical-visibility acknowledgement retire compatible preview"
+  ],
+  "authority_bound_target_sequence": [
+    "Construct one immutable F with accepted guards using existing Interaction owner",
+    "Prepare F on coherent S -> read-only S1 -> construct real U from exact pre/postimages",
+    "Normalize/meter actual F and U and validate U applicability/restoration on S1; reserve actual History/terminal/ChangeSet resources",
+    "Bind F/U/resources to same real owner and basis; revalidation invalidates old admission and U; no automatic semantic rebase",
+    "Reject/cancel before first write with canonical/index/manifest/ledger/generation/clock/History/cursor/redo unchanged",
+    "Publish canonical once; consume reserved History and receipt without postcommit allocation/failure injection",
+    "Scene prepare/publication/recovery preserves canonical success; no resubmission; compatible preview retired at coherent publication handoff"
+  ],
+  "target_authority_refs": [
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P13.md",
+      "sha256": "6f65325d4282a78774489bddd9f716614994f63757957675b82f3c423983f3fe"
+    },
+    {
+      "path": ".aegis/materialized/FC-08/sources/accepted-exports/P15.md",
+      "sha256": "95f6650dd26809e60560fbdeeb7fb9751ed42d9555e8a62849f4b38261a40837"
+    }
+  ],
+  "existing_vs_future_findings": [
+    "Current prepareRecord reserves actual entries capacity; this is not proof of accepted FC08 real F/U budget/admitted-plan reservation",
+    "Existing applyLocalHistoryOperation supplies an inverse and re-prepares at apply; future owner-bound admitted F/U seam is deliberately absent",
+    "Existing atomic writes/ledger/clock/Scene and preview anchors are resolved; future Section/subtree publication assertions have not been run",
+    "Qualification checkpoints remain unchanged/default OFF and cannot substitute for functional RED"
+  ],
+  "obligation_to_owner_bindings": {
+    "FC08-E01": {
+      "case_ids": [
+        "FC08-W01",
+        "FC08-W02",
+        "FC08-W03",
+        "FC08-W04",
+        "FC08-W05",
+        "FC08-W06",
+        "FC08-W07"
+      ],
+      "roles": [
+        "canonical_engine",
+        "snapshot_ingress"
+      ],
+      "test_binding": "Frozen corpus and expected refs; actual product adapters not established due blockers"
+    },
+    "FC08-E02": {
+      "case_ids": [
+        "FC08-T01",
+        "FC08-T02",
+        "FC08-T03",
+        "FC08-T04",
+        "FC08-T05",
+        "FC08-T06",
+        "FC08-T07"
+      ],
+      "roles": [
+        "canonical_engine",
+        "atomic_apply"
+      ],
+      "test_binding": "Frozen corpus and expected refs; actual product adapters not established due blockers"
+    },
+    "FC08-E03": {
+      "case_ids": [
+        "FC08-H01",
+        "FC08-H02",
+        "FC08-H03",
+        "FC08-H04",
+        "FC08-H05",
+        "FC08-H06",
+        "FC08-H07",
+        "FC08-H08"
+      ],
+      "roles": [
+        "existing_command_seam",
+        "real_History",
+        "canonical_engine"
+      ],
+      "test_binding": "Frozen corpus and expected refs; actual product adapters not established due blockers"
+    },
+    "FC08-E04": {
+      "case_ids": [
+        "FC08-G01",
+        "FC08-G02",
+        "FC08-G03",
+        "FC08-G04",
+        "FC08-G05",
+        "FC08-G06"
+      ],
+      "roles": [
+        "existing_command_seam",
+        "Scene_publication"
+      ],
+      "test_binding": "Frozen corpus and expected refs; actual product adapters not established due blockers"
+    },
+    "FC08-E05": {
+      "case_ids": [
+        "FC08-S01",
+        "FC08-S02",
+        "FC08-S03",
+        "FC08-S04",
+        "FC08-S05",
+        "FC08-S06"
+      ],
+      "roles": [
+        "existing_selection",
+        "Scene_publication"
+      ],
+      "test_binding": "Frozen corpus and expected refs; actual product adapters not established due blockers"
+    },
+    "FC08-E06": {
+      "case_ids": [
+        "FC08-V01",
+        "FC08-V02",
+        "FC08-V03",
+        "FC08-V04",
+        "FC08-V05"
+      ],
+      "roles": [
+        "Scene_publication",
+        "frame_presentation"
+      ],
+      "test_binding": "Frozen corpus and expected refs; actual product adapters not established due blockers"
+    },
+    "FC08-E07": {
+      "case_ids": [
+        "FC08-C01",
+        "FC08-C02",
+        "FC08-C03",
+        "FC08-C04",
+        "FC08-C05"
+      ],
+      "roles": [
+        "preview_handoff",
+        "frame_presentation",
+        "Scene_publication"
+      ],
+      "test_binding": "Frozen corpus and expected refs; actual product adapters not established due blockers"
+    },
+    "FC08-E08": {
+      "case_ids": [
+        "FC08-L01",
+        "FC08-L02",
+        "FC08-L03",
+        "FC08-L04",
+        "FC08-L05",
+        "FC08-L06"
+      ],
+      "roles": [
+        "control_queue",
+        "owner_admission",
+        "owner_pump"
+      ],
+      "test_binding": "Frozen corpus and expected refs; actual product adapters not established due blockers"
+    },
+    "FC08-E09": {
+      "case_ids": [
+        "FC08-K01",
+        "FC08-K02",
+        "FC08-K03",
+        "FC08-K04",
+        "FC08-K05",
+        "FC08-K06"
+      ],
+      "roles": [
+        "snapshot_ingress",
+        "bootstrap_owner",
+        "replay_without_History"
+      ],
+      "test_binding": "Frozen corpus and expected refs; actual product adapters not established due blockers"
+    },
+    "FC08-E10": {
+      "case_ids": [
+        "FC08-P01",
+        "FC08-P02",
+        "FC08-P03",
+        "FC08-P04"
+      ],
+      "roles": [
+        "public_facade",
+        "Windows_host",
+        "Web_host"
+      ],
+      "test_binding": "Frozen corpus and expected refs; actual product adapters not established due blockers"
+    }
+  },
+  "unresolved_semantic_decisions": [],
+  "unresolved_verification_decisions": [
+    {
+      "id": "BOOT-VER-01",
+      "classification": "VERIFICATION_DESIGN_DEFECT",
+      "owner": "P20 Verification / control review",
+      "finding": "Frozen reference geometry and canonical shape record disagree. Cannot repair in SUT adapter or silently rewrite an accepted fixture.",
+      "affected": [
+        {
+          "variant_id": "FC08-S01/boundary-full-child-inside",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-inside/input.json",
+            "sha256": "9c9977c1dfca068586503c625a767f956b8795c97613729202ea8bf74c601c5a",
+            "size": 2840
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-inside/expected.json",
+            "sha256": "4d0051cf58e22de52688039c38a638a45555e7cf3b92cec609fff6b4ca493544",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S01/boundary-full-child-overflow",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-overflow/input.json",
+            "sha256": "26f3e015fba91bc85ff8c086c9022f2e5d854631d59d1cc3a075f3638daebc3d",
+            "size": 2844
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S01/boundary-full-child-overflow/expected.json",
+            "sha256": "4d0051cf58e22de52688039c38a638a45555e7cf3b92cec609fff6b4ca493544",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S02/partial-actual-child",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S02/partial-actual-child/input.json",
+            "sha256": "a3886a9c7a4a29a5c531ff5111f8cfc7a0465a20af7feeb73c32d068fae85394",
+            "size": 2992
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S02/partial-actual-child/expected.json",
+            "sha256": "5bca5829ae04ee026e29246c08eed774962fd001b8a677f2dd1c7189137ea333",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S02/broad-phase-only-child",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S02/broad-phase-only-child/input.json",
+            "sha256": "a3886a9c7a4a29a5c531ff5111f8cfc7a0465a20af7feeb73c32d068fae85394",
+            "size": 2992
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S02/broad-phase-only-child/expected.json",
+            "sha256": "5bca5829ae04ee026e29246c08eed774962fd001b8a677f2dd1c7189137ea333",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S03/outer-partial-inner-full",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/outer-partial-inner-full/input.json",
+            "sha256": "6c85d1c57dffe61faaab551b80d54e8bcfe904263914ed0ed7513b03155f410e",
+            "size": 3816
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/outer-partial-inner-full/expected.json",
+            "sha256": "ed4e75ce36e92df033c6a3d2d8df85210b53e6edd7b1d8d8af07c3eef5541986",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/3/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S03/unopened-Group",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/unopened-Group/input.json",
+            "sha256": "736d9dd06d02b8b5ba940eb9a463821de2e5e1c3d014dd8d36a72081b5fea2bc",
+            "size": 3504
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/unopened-Group/expected.json",
+            "sha256": "5f4dda53c2feedb017549c96fb42b8265eb12650a6c01e7eb111c8155feba928",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/3/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S03/entered-Group",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/entered-Group/input.json",
+            "sha256": "238cba59bf4ae387ba753a678141553ee5826ddcd44b7cc4a8dd88d1284ab28f",
+            "size": 3553
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S03/entered-Group/expected.json",
+            "sha256": "ed4e75ce36e92df033c6a3d2d8df85210b53e6edd7b1d8d8af07c3eef5541986",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/3/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S04/concave-notch",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S04/concave-notch/input.json",
+            "sha256": "a1efd146a8b44302751adb1f89311bb7f2279e60a8fa7d6e3a63e1f2d26e57f3",
+            "size": 2974
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S04/concave-notch/expected.json",
+            "sha256": "307ec2085550ec89965d7702893d9f323a4e7c27b03a7d5333fbba268e66b448",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S05/child",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/child/input.json",
+            "sha256": "77a5ae695dfed289e53985a4fd253eee0af1bb6ad412d8c025f20901ab9ec957",
+            "size": 2894
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/child/expected.json",
+            "sha256": "81fb006220b17eec8a8bcbfa59b59db942f8953202f700d17cae6c515f158549",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S05/blank-interior",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/blank-interior/input.json",
+            "sha256": "d667d253c14d0aa76b132bbf25ec396dbcf69d5dca923ac70d24d4ad6ad58cc1",
+            "size": 2894
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/blank-interior/expected.json",
+            "sha256": "4b6750237ed62334e81fb855f3be9cbfbfd538aeacb6091075a6537072ec485d",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S05/header",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/header/input.json",
+            "sha256": "91a56fe8aa83b26fcb1b42b6246065016f419dd94ac4db294bc521318b69e52f",
+            "size": 2893
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/header/expected.json",
+            "sha256": "4b6750237ed62334e81fb855f3be9cbfbfd538aeacb6091075a6537072ec485d",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S05/border",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/border/input.json",
+            "sha256": "6b73f4e3e3fa240442cc895bb3a301ea814dd828c3f033e4ac78e85a2545613d",
+            "size": 2893
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S05/border/expected.json",
+            "sha256": "4b6750237ed62334e81fb855f3be9cbfbfd538aeacb6091075a6537072ec485d",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/2/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S06/shift-at-down-release-before-up",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S06/shift-at-down-release-before-up/input.json",
+            "sha256": "4ddcbd8ba2045b1e8fbafb5f5e866060ab3933d82579b8b59951f38171c235c2",
+            "size": 5000
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S06/shift-at-down-release-before-up/expected.json",
+            "sha256": "bb2d38121d4ceee98a380a4cd76fe1f2001a18fed246a0f7454c4fba51651046",
+            "size": 557
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/3/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        },
+        {
+          "variant_id": "FC08-S06/cancel",
+          "input": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S06/cancel/input.json",
+            "sha256": "bde58f743426d1a554470f327b0332493e020f8406d64e9f9d85a25433af69c0",
+            "size": 5004
+          },
+          "expected": {
+            "path": ".aegis/materialized/FC-08/attempts/v0.2-obs01-corpus-bound/corpus/FC08-S06/cancel/expected.json",
+            "sha256": "ed0d01fc03cc503f4b62050daefb8f46711974b943eb9e64e07bb65b0339e4ed",
+            "size": 482
+          },
+          "object_name": "b",
+          "object_id": "0000000000000000000000000000000a",
+          "canonical_shape_kind": 1,
+          "canonical_geometry": "rectangle",
+          "reference_geometry": "ellipse",
+          "canonical_pointer": "/records/3/content/shape/shape_kind",
+          "reference_pointer": "/kind_geometry/b"
+        }
+      ],
+      "resolution_required": "Decide the intended canonical geometry and review the exact input/oracle delta. Preserve current bytes until authorized."
+    },
+    {
+      "id": "BOOT-PKG-02",
+      "classification": "TASK_PACKAGE_DEFECT",
+      "owner": "P31 control review, P20 if applicability truth is unresolved",
+      "finding": "verification.lock.profile_policy requires exact headless applicability from variant-index/corpus manifest; neither file supplies that mapping.",
+      "missing_profile_variant_ids": [
+        "FC08-W01/base-source-complete",
+        "FC08-W01/additive-overlay",
+        "FC08-W02/SCW01",
+        "FC08-W02/SCW02",
+        "FC08-W02/SCW03",
+        "FC08-W02/SCW04",
+        "FC08-W02/SCW05",
+        "FC08-W02/SCW06",
+        "FC08-W02/missing-boundary",
+        "FC08-W02/missing-title",
+        "FC08-W02/missing-padding",
+        "FC08-W02/missing-header_height",
+        "FC08-W02/missing-x",
+        "FC08-W02/missing-y",
+        "FC08-W02/missing-width",
+        "FC08-W02/missing-height",
+        "FC08-W02/x-nan",
+        "FC08-W02/x-posinf",
+        "FC08-W02/x-neginf",
+        "FC08-W02/y-nan",
+        "FC08-W02/y-posinf",
+        "FC08-W02/y-neginf",
+        "FC08-W02/width-nan",
+        "FC08-W02/width-posinf",
+        "FC08-W02/width-neginf",
+        "FC08-W02/height-nan",
+        "FC08-W02/height-posinf",
+        "FC08-W02/height-neginf",
+        "FC08-W02/padding-nan",
+        "FC08-W02/padding-posinf",
+        "FC08-W02/padding-neginf",
+        "FC08-W02/header_height-nan",
+        "FC08-W02/header_height-posinf",
+        "FC08-W02/header_height-neginf",
+        "FC08-W02/width-zero",
+        "FC08-W02/width-negative",
+        "FC08-W02/height-zero",
+        "FC08-W02/height-negative",
+        "FC08-W02/padding-negative",
+        "FC08-W02/header_height-negative",
+        "FC08-W02/invalid-utf8",
+        "FC08-W02/whitespace",
+        "FC08-W02/combining",
+        "FC08-W03/root-absent",
+        "FC08-W03/parent-empty",
+        "FC08-W03/parent-zero",
+        "FC08-W03/effect-absent",
+        "FC08-W03/relocate-empty-with-move",
+        "FC08-W03/relocate-empty-without-move",
+        "FC08-W03/duplicate-effect",
+        "FC08-W03/duplicate-singular",
+        "FC08-W04/model-permutation-nodes",
+        "FC08-W04/model-permutation-child_sets",
+        "FC08-W04/model-permutation-complete_members",
+        "FC08-W04/model-permutation-relocations",
+        "FC08-W04/model-permutation-order_only_edits",
+        "FC08-W04/model-permutation-containers",
+        "FC08-W04/model-permutation-containers_before",
+        "FC08-W04/model-permutation-items",
+        "FC08-W04/model-permutation-geometry_basis",
+        "FC08-W04/duplicate-nodes",
+        "FC08-W04/duplicate-child_sets",
+        "FC08-W04/duplicate-complete_members",
+        "FC08-W04/duplicate-relocations",
+        "FC08-W04/duplicate-order_only_edits",
+        "FC08-W04/duplicate-containers",
+        "FC08-W04/duplicate-containers_before",
+        "FC08-W04/duplicate-items",
+        "FC08-W04/duplicate-geometry_basis",
+        "FC08-W04/wire-noncanonical",
+        "FC08-W04/wire-duplicate",
+        "FC08-W04/root-first",
+        "FC08-W04/members-by-id",
+        "FC08-W05/introduce-shape",
+        "FC08-W05/release-shape",
+        "FC08-W05/multiple-effects",
+        "FC08-W05/leaf-content-field",
+        "FC08-W05/resource-field",
+        "FC08-W06/fill-set",
+        "FC08-W06/fill-clear",
+        "FC08-W06/opacity-set",
+        "FC08-W06/opacity-clear",
+        "FC08-W06/locked",
+        "FC08-W06/visible",
+        "FC08-W06/stroke",
+        "FC08-W06/blend",
+        "FC08-W06/erase-masks",
+        "FC08-W07/legacy-codec",
+        "FC08-W07/legacy-snapshot",
+        "FC08-W07/legacy-operation-replay",
+        "FC08-T01/Group-empty-introduce",
+        "FC08-T01/Group-empty-release",
+        "FC08-T01/Group-nonempty-introduce",
+        "FC08-T01/Group-nonempty-release",
+        "FC08-T01/Section-empty-introduce",
+        "FC08-T01/Section-empty-release",
+        "FC08-T01/Section-nonempty-introduce",
+        "FC08-T01/Section-nonempty-release",
+        "FC08-T02/explicit-cross-parent",
+        "FC08-T03/release-A-C",
+        "FC08-T03/inverse-introduce-A-C",
+        "FC08-T04/alternating-chain",
+        "FC08-T04/self-parent",
+        "FC08-T04/cycle",
+        "FC08-T04/missing-parent",
+        "FC08-T04/leaf-parent",
+        "FC08-T04/sticky-two-children",
+        "FC08-T04/sticky-nontext",
+        "FC08-T05/mutate-parent",
+        "FC08-T05/mutate-members",
+        "FC08-T05/mutate-order",
+        "FC08-T05/mutate-wrapper-title",
+        "FC08-T05/omit-ancestor",
+        "FC08-T05/omit-child-set",
+        "FC08-T05/unrelated-leaf-content",
+        "FC08-T06/disjoint-order-edits",
+        "FC08-T06/payload-permutation",
+        "FC08-T06/sibling-key-collision",
+        "FC08-T06/overlapping-write-id",
+        "FC08-T07/before-validation",
+        "FC08-T07/after-staging",
+        "FC08-T07/after-reservation",
+        "FC08-T07/before-canonical-publication",
+        "FC08-H01/empty-Group",
+        "FC08-H01/nonempty-Group",
+        "FC08-H01/empty-Section",
+        "FC08-H01/nonempty-Section",
+        "FC08-H01/cross-parent-wrap",
+        "FC08-H01/nested-release",
+        "FC08-H01/resize",
+        "FC08-H01/rename",
+        "FC08-H01/padding",
+        "FC08-H01/header",
+        "FC08-H01/fill",
+        "FC08-H01/opacity",
+        "FC08-H01/NoChange",
+        "FC08-H01/AlreadyApplied",
+        "FC08-H01/Rejected",
+        "FC08-H02/new-member",
+        "FC08-H02/deleted-original-parent",
+        "FC08-H02/changed-wrapper-metadata",
+        "FC08-H02/retained-leaf-content",
+        "FC08-H03/root-children-65534",
+        "FC08-H03/root-children-65535",
+        "FC08-H04/operation-33554431",
+        "FC08-H04/operation-33554432",
+        "FC08-H04/operation-33554433",
+        "FC08-H04/keyed-65535",
+        "FC08-H04/keyed-65536",
+        "FC08-H04/record-16777216",
+        "FC08-H04/record-16777217",
+        "FC08-H04/string-1048576",
+        "FC08-H04/string-1048577",
+        "FC08-H04/key-32",
+        "FC08-H04/key-33",
+        "FC08-H05/history-allocation-failure",
+        "FC08-H05/outcome-reservation-failure",
+        "FC08-H05/cancel-precommit",
+        "FC08-H05/failure-with-redo-tail",
+        "FC08-H06/guarded-dependency-changed",
+        "FC08-H06/unrelated-state-changed",
+        "FC08-H07/restore-under-limit",
+        "FC08-H07/restore-over-limit",
+        "FC08-H08/same-id-same-payload-stale-guard",
+        "FC08-H08/same-id-changed-payload",
+        "FC08-H08/NoChange",
+        "FC08-H08/undo-new-operation-id",
+        "FC08-G01/literal-affine-reparent",
+        "FC08-G02/left",
+        "FC08-G02/top",
+        "FC08-G02/right",
+        "FC08-G02/bottom",
+        "FC08-G03/literal-reflection-shear",
+        "FC08-G03/rotated-nested",
+        "FC08-G03/hidden-outside-visible-bounds",
+        "FC08-G03/bounds-unavailable",
+        "FC08-G04/move",
+        "FC08-G04/rotate",
+        "FC08-G04/scale",
+        "FC08-G04/duplicate-ancestor-hit",
+        "FC08-G05/singular-parent",
+        "FC08-G05/nonfinite-intermediate",
+        "FC08-G05/quality-below",
+        "FC08-G05/quality-at",
+        "FC08-G05/quality-above",
+        "FC08-G06/non-dyadic-1",
+        "FC08-G06/non-dyadic-2",
+        "FC08-G06/repeated-F-U-16",
+        "FC08-S01/boundary-full-child-inside",
+        "FC08-S01/boundary-full-child-overflow",
+        "FC08-S02/partial-actual-child",
+        "FC08-S02/broad-phase-only-child",
+        "FC08-S03/outer-partial-inner-full",
+        "FC08-S03/unopened-Group",
+        "FC08-S03/entered-Group",
+        "FC08-S04/concave-notch",
+        "FC08-S05/child",
+        "FC08-S05/blank-interior",
+        "FC08-S05/header",
+        "FC08-S05/border",
+        "FC08-S05/empty-Group-paint",
+        "FC08-S05/empty-Group-identity",
+        "FC08-S06/shift-at-down-release-before-up",
+        "FC08-S06/cancel",
+        "FC08-V01/boundary-outside-child-inside",
+        "FC08-V02/own-opacity-quarter",
+        "FC08-V02/own-opacity-change",
+        "FC08-V02/own-fill-change",
+        "FC08-V03/move-root",
+        "FC08-V03/reparent-leaf",
+        "FC08-V03/resize-child",
+        "FC08-V04/Scene-prepare",
+        "FC08-V04/bounds-prepare",
+        "FC08-V04/spatial-prepare",
+        "FC08-V04/publication-prepare",
+        "FC08-V05/stale-title-result",
+        "FC08-V05/stale-target-result",
+        "FC08-V05/current-resource-refresh",
+        "FC08-C01/normal-handoff",
+        "FC08-C01/fault-then-recovery",
+        "FC08-C01/all-unavailable",
+        "FC08-C01/empty",
+        "FC08-C01/truncated",
+        "FC08-C02/move-whole-subtree",
+        "FC08-C02/resize-boundary-only",
+        "FC08-C03/g1-delayed-g2-recovery",
+        "FC08-C03/late-g1-after-g2",
+        "FC08-C04/late-callback-after-T",
+        "FC08-C04/late-callback-after-wrapper-delete",
+        "FC08-C05/view-B",
+        "FC08-C05/detach-remount",
+        "FC08-L01/cancel-then-late-Up",
+        "FC08-L01/capture-loss-then-late-Up",
+        "FC08-L01/commit-then-cancel",
+        "FC08-L02/same-low64-different-high64",
+        "FC08-L02/stale-target",
+        "FC08-L02/stale-view",
+        "FC08-L02/stale-attachment",
+        "FC08-L02/stale-pointer",
+        "FC08-L02/stale-selection",
+        "FC08-L03/same-key-same-payload",
+        "FC08-L03/same-key-changed-payload",
+        "FC08-L03/evicted-after-ack",
+        "FC08-L03/new-target-epoch",
+        "FC08-L04/queue-full",
+        "FC08-L04/receipt-full",
+        "FC08-L04/terminal-through-backlog",
+        "FC08-L04/denied-outcome-slot",
+        "FC08-L05/canonical-reject",
+        "FC08-L05/committed-projection-pending",
+        "FC08-L05/projection-recovered",
+        "FC08-L05/old-ProductControl",
+        "FC08-L05/old-ApplyResult",
+        "FC08-L06/non-owner-ingress",
+        "FC08-L06/mutate-caller-buffer",
+        "FC08-L06/release-caller-buffer",
+        "FC08-L06/detach-queued",
+        "FC08-L06/close-queued",
+        "FC08-L06/detach-staging",
+        "FC08-L06/close-staging",
+        "FC08-L06/write-behind-disabled-UI",
+        "FC08-K01/snapshot1-explicit-import",
+        "FC08-K01/snapshot2-explicit-import",
+        "FC08-K01/snapshot3-without-Section",
+        "FC08-K02/Section-and-Triangle-and-resource",
+        "FC08-K03/missing-section-capability",
+        "FC08-K03/duplicate-capability",
+        "FC08-K03/swapped-capability",
+        "FC08-K03/unknown-capability",
+        "FC08-K03/Section-in-snapshot1",
+        "FC08-K03/Section-in-snapshot2",
+        "FC08-K03/Section-version2",
+        "FC08-K04/old-reader-journal-op18",
+        "FC08-K04/capable-reader-journal-op18",
+        "FC08-K05/metadata17-then-topology18-no-History",
+        "FC08-K06/checkpoint-after-last-Section",
+        "FC08-K06/journal-still-needs-topology",
+        "FC08-K06/writer-support-downgraded",
+        "FC08-P01/create",
+        "FC08-P01/wrap",
+        "FC08-P01/release",
+        "FC08-P01/reparent",
+        "FC08-P01/resize",
+        "FC08-P01/rename",
+        "FC08-P01/undo",
+        "FC08-P01/redo",
+        "FC08-P02/large-identity",
+        "FC08-P02/confirmed-utf8-title",
+        "FC08-P02/preedit-only",
+        "FC08-P02/coordinate-literal",
+        "FC08-P02/metrics-change",
+        "FC08-P02/terminal-input",
+        "FC08-P03/one-Section-default",
+        "FC08-P03/all-Sections-default",
+        "FC08-P03/Group-default",
+        "FC08-P03/leaf-default",
+        "FC08-P03/Section-leaf-default",
+        "FC08-P03/explicit-Group-Section-release",
+        "FC08-P04/touched-codec",
+        "FC08-P04/touched-History",
+        "FC08-P04/touched-control",
+        "FC08-P04/applicable-selection"
+      ],
+      "declared_global_profiles": [
+        "windows-native",
+        "web-wasm",
+        "headless"
+      ],
+      "profile_policy": {
+        "required_profiles": [
+          "windows-native",
+          "web-wasm",
+          "headless"
+        ],
+        "execution_rule": "Use the frozen variant-index/corpus manifest to determine exact profile applicability. Windows Native and Web/WASM run every applicable semantic/command/projection variant; headless runs its exact accepted snapshot/replay/semantic subset. Discovery is complete in all profiles, but do not force non-applicable History/UI cases into the headless profile.",
+        "browser_rule": "P02 and public Web adapter cases require actual Chrome/WASM execution. Node-only, mock bridge, or build-only evidence cannot substitute.",
+        "independence_rule": "Windows and Web repeats establish profile realization and adapter parity, not two independent semantic oracles."
+      },
+      "resolution_required": "Bind an exact per-variant profile applicability table with reasons/authority. Do not infer headless coverage from wire presence or mark absent entries PASS."
+    }
+  ],
+  "authority_conflict": false,
+  "verification_conflict": true,
+  "package_scope_conflict": false,
+  "resolved_existing_owner_bindings": true,
+  "may_continue_product_P32": false
+}

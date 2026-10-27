@@ -1,0 +1,21 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "canonical.records",
+      "expected": []
+    },
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "Applied"
+    },
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 1
+    }
+  ],
+  "source_case": "FC08-T01",
+  "product_expected_only": true
+}

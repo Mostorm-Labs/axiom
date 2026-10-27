@@ -1,0 +1,31 @@
+{
+  "inherited_A": {
+    "path": ".aegis/packages/FC-08-SECTION-A-v0.1/verification.lock.json",
+    "sha256": "1ba1055e957c2459acfe5872ca06003680da792e7ace80a95545bb22f0d74a8d"
+  },
+  "A_terminal": {
+    "path": ".aegis/results/FC-08-SECTION-A/terminal-result.json",
+    "sha256": "1892b4117a5efb834cf837551bd86e89428d1dfaf51c158f2a9e937ea99691e4"
+  },
+  "accepted_corpus": {
+    "path": ".aegis/materialized/FC-08/attempts/v0.3-control-remediation-02/corpus-manifest.json",
+    "sha256": "1f472bc4eb916816de87191d20ed67d3ce59e5e5edfca3d414a2d4a880a70452"
+  },
+  "obligations": [
+    {
+      "requirement": "17/18 wire presence/domain/canonical collections and accepted limits",
+      "oracle": "Frozen W03-W06 independent input/expected and canonical bytes plus explicit negative literals; existing old-operation regressions",
+      "acceptance": "All B-applicable semantic predicates pass through real codec and OperationEngine; omitted command/History/profile assertions remain NOT_RUN",
+      "evidence_required": "Per-case XML, exact source/test IDs and input/expected hashes, argv and raw results"
+    },
+    {
+      "requirement": "Exact guards, hierarchy, non-destructive wrapper release, final-graph validation, idempotency ordering, coherent publication",
+      "oracle": "Frozen T01-T06 semantic predicates and hand-authored direct/indexed/reference differential tests; reject and failure injection tests inspect actual stores/ledger/generation/commit",
+      "acceptance": "No partial canonical mutation or ledger/generation advancement on rejection; preserved leaf content; single coherent ChangeSet on success",
+      "evidence_required": "Real tests before/after and source-bound logs; no fake product adapter"
+    }
+  ],
+  "full_302_runner_complete": false,
+  "required_platform": "Windows native headless semantic execution; Chrome/WASM corroborative for this B scope",
+  "prior_regression_failure": "StatefulKindApplicability.StateRuleMatrixMatchesOracleForAllKinds is preserved baseline failure, not relabeled PASS"
+}

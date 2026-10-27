@@ -1,0 +1,93 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "canonical.records",
+      "expected": [
+        {
+          "id": {
+            "value": "00000000000000000000000000000002"
+          },
+          "kind_id": 10,
+          "kind_version": 1,
+          "placement": {
+            "order_key": {
+              "value": "00000002"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 30,
+            "ty": 0
+          },
+          "properties": {},
+          "content": {
+            "section": {
+              "boundary": {
+                "x": -20,
+                "y": 0,
+                "width": 120,
+                "height": 80
+              },
+              "title": "",
+              "padding": 8.0,
+              "header_height": 20.0
+            }
+          }
+        },
+        {
+          "id": {
+            "value": "00000000000000000000000000000004"
+          },
+          "kind_id": 10,
+          "kind_version": 1,
+          "placement": {
+            "parent_id": {
+              "value": "00000000000000000000000000000002"
+            },
+            "order_key": {
+              "value": "00000004"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 70,
+            "ty": 0
+          },
+          "properties": {},
+          "content": {
+            "section": {
+              "boundary": {
+                "x": -20,
+                "y": 0,
+                "width": 120,
+                "height": 80
+              },
+              "title": "",
+              "padding": 8.0,
+              "header_height": 20.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "Applied"
+    },
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 1
+    }
+  ],
+  "source_case": "FC08-T03",
+  "product_expected_only": true
+}

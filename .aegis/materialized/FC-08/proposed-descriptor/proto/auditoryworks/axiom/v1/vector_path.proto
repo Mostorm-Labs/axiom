@@ -1,0 +1,22 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+import "auditoryworks/axiom/v1/geometry.proto";
+
+enum FillRule { FILL_RULE_INVALID = 0; FILL_RULE_NON_ZERO = 1; FILL_RULE_EVEN_ODD = 2; }
+message MoveTo { Vec2 point = 1; }
+message LineTo { Vec2 end = 1; }
+message QuadTo { Vec2 control = 1; Vec2 end = 2; }
+message CubicTo { Vec2 control1 = 1; Vec2 control2 = 2; Vec2 end = 3; }
+message ClosePath {}
+message PathCommand {
+  oneof command {
+    MoveTo move_to = 1;
+    LineTo line_to = 2;
+    QuadTo quad_to = 3;
+    CubicTo cubic_to = 4;
+    ClosePath close_path = 5;
+  }
+}
+message VectorPathGeometry { FillRule fill_rule = 1; repeated PathCommand commands = 2; }
+message VectorPathContent { VectorPathGeometry geometry = 1; }

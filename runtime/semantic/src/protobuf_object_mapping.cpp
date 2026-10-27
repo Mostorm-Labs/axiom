@@ -1,4 +1,6 @@
 #include "protobuf_object_mapping.hpp"
+#include "protobuf_owned_append.hpp"
+#include "container_operation_mapping.hpp"
 
 #if defined(CANVAS_SEMANTIC_PROTOBUF)
 #include "auditoryworks/axiom/v1/brush_stroke.pb.h"
@@ -15,6 +17,7 @@
 
 #include <algorithm>
 #include <string>
+#include <memory>
 
 namespace canvas::semantic::internal {
 namespace {
@@ -118,7 +121,7 @@ bool mapFromProtobufResourceManifest(const p::ResourceManifest& source, Resource
 void setGeometry(const VectorPathGeometry& source, p::VectorPathGeometry* destination) {
     destination->set_fill_rule(static_cast<p::FillRule>(source.fill_rule));
     for (const auto& command : source.commands) std::visit([destination](const auto& value) {
-        using Item=std::decay_t<decltype(value)>; auto* command=destination->add_commands();
+        using Item=std::decay_t<decltype(value)>; auto* command=appendOwned(destination->mutable_commands());
         if constexpr(std::is_same_v<Item,MoveTo>) setVec(value.point,command->mutable_move_to()->mutable_point());
         else if constexpr(std::is_same_v<Item,LineTo>) setVec(value.end,command->mutable_line_to()->mutable_end());
         else if constexpr(std::is_same_v<Item,QuadTo>) { auto* q=command->mutable_quad_to();setVec(value.control,q->mutable_control());setVec(value.end,q->mutable_end()); }
@@ -147,15 +150,25 @@ bool getTextStyle(const p::TextStyle& source,TextStyle& destination){if(!source.
 void setParagraphStyle(const ParagraphStyle& source,p::ParagraphStyle* destination){destination->set_alignment(static_cast<p::ParagraphAlignment>(source.alignment));destination->set_line_height(source.line_height);destination->set_spacing_before(source.spacing_before);destination->set_spacing_after(source.spacing_after);if(source.bulleted)destination->set_bulleted(true);}
 bool getParagraphStyle(const p::ParagraphStyle& source,ParagraphStyle& destination){if(!source.has_alignment()||!source.has_line_height()||!source.has_spacing_before()||!source.has_spacing_after())return false;destination={static_cast<ParagraphAlignment>(source.alignment()),source.line_height(),source.spacing_before(),source.spacing_after()};if(source.has_bulleted()&&!source.bulleted())return false;destination.bulleted=source.bulleted();return true;}
 
-void setRichText(const RichTextContent& source,p::ObjectContent* destination){auto* rich=destination->mutable_rich_text();if(source.layout)rich->mutable_layout()->set_wrap_width(source.layout->wrap_width);auto* doc=rich->mutable_document();for(const auto& paragraph:source.document.paragraphs){auto* pgr=doc->add_paragraphs();setId(paragraph.id,&*pgr->mutable_paragraph_id());setParagraphStyle(paragraph.style,pgr->mutable_style());for(const auto& run:paragraph.runs){auto* r=pgr->add_runs();r->set_text(run.text);setTextStyle(run.style,r->mutable_style());}}}
+void setRichText(const RichTextContent& source,p::ObjectContent* destination){auto* rich=destination->mutable_rich_text();if(source.layout)rich->mutable_layout()->set_wrap_width(source.layout->wrap_width);auto* doc=rich->mutable_document();for(const auto& paragraph:source.document.paragraphs){auto* pgr=appendOwned(doc->mutable_paragraphs());setId(paragraph.id,&*pgr->mutable_paragraph_id());setParagraphStyle(paragraph.style,pgr->mutable_style());for(const auto& run:paragraph.runs){auto* r=appendOwned(pgr->mutable_runs());r->set_text(run.text);setTextStyle(run.style,r->mutable_style());}}}
 bool getRichText(const p::ObjectContent& source,RichTextContent& destination){if(!source.rich_text().has_document())return false;destination.layout.reset();if(source.rich_text().has_layout()){if(!source.rich_text().layout().has_wrap_width())return false;destination.layout=RichTextLayout{source.rich_text().layout().wrap_width()};}destination.document.paragraphs.clear();for(const auto& paragraph:source.rich_text().document().paragraphs()){if(!paragraph.has_paragraph_id()||!paragraph.has_style())return false;Paragraph mapped;if(!getId(paragraph.paragraph_id(),mapped.id)||!getParagraphStyle(paragraph.style(),mapped.style))return false;for(const auto& run:paragraph.runs()){if(!run.has_text()||!run.has_style())return false;TextRun item;item.text=run.text();if(!getTextStyle(run.style(),item.style))return false;mapped.runs.push_back(std::move(item));}destination.document.paragraphs.push_back(std::move(mapped));}return true;}
 
-void setBrush(const BrushDescriptor& source,p::BrushDescriptor* destination){destination->set_brush_family_id(source.brush_family_id);destination->set_brush_version(source.brush_version);setColor(source.color,destination->mutable_color());destination->set_nominal_size(source.nominal_size);destination->set_opacity(source.opacity);destination->mutable_pressure()->set_enabled(source.pressure.enabled);if(source.pressure.size_curve){auto* c=destination->mutable_pressure()->mutable_size_curve();for(auto point:source.pressure.size_curve->points){auto* pnt=c->add_points();pnt->set_x(point.x);pnt->set_y(point.y);}}if(source.pressure.opacity_curve){auto* c=destination->mutable_pressure()->mutable_opacity_curve();for(auto point:source.pressure.opacity_curve->points){auto* pnt=c->add_points();pnt->set_x(point.x);pnt->set_y(point.y);}}destination->mutable_tilt()->set_enabled(source.tilt.enabled);destination->mutable_tilt()->set_size_influence(source.tilt.size_influence);destination->mutable_tilt()->set_angle_influence(source.tilt.angle_influence);destination->mutable_smoothing()->set_amount(source.smoothing.amount);destination->mutable_spacing()->set_normalized_spacing(source.spacing.normalized_spacing);destination->set_blend_mode(static_cast<p::BrushBlendMode>(source.blend_mode));if(source.texture_resource_id)setId(source.texture_resource_id->value,destination->mutable_texture_resource_id());}
+void setBrush(const BrushDescriptor& source,p::BrushDescriptor* destination){destination->set_brush_family_id(source.brush_family_id);destination->set_brush_version(source.brush_version);setColor(source.color,destination->mutable_color());destination->set_nominal_size(source.nominal_size);destination->set_opacity(source.opacity);destination->mutable_pressure()->set_enabled(source.pressure.enabled);if(source.pressure.size_curve){auto* c=destination->mutable_pressure()->mutable_size_curve();for(auto point:source.pressure.size_curve->points){auto* pnt=appendOwned(c->mutable_points());pnt->set_x(point.x);pnt->set_y(point.y);}}if(source.pressure.opacity_curve){auto* c=destination->mutable_pressure()->mutable_opacity_curve();for(auto point:source.pressure.opacity_curve->points){auto* pnt=appendOwned(c->mutable_points());pnt->set_x(point.x);pnt->set_y(point.y);}}destination->mutable_tilt()->set_enabled(source.tilt.enabled);destination->mutable_tilt()->set_size_influence(source.tilt.size_influence);destination->mutable_tilt()->set_angle_influence(source.tilt.angle_influence);destination->mutable_smoothing()->set_amount(source.smoothing.amount);destination->mutable_spacing()->set_normalized_spacing(source.spacing.normalized_spacing);destination->set_blend_mode(static_cast<p::BrushBlendMode>(source.blend_mode));if(source.texture_resource_id)setId(source.texture_resource_id->value,destination->mutable_texture_resource_id());}
 bool getBrush(const p::BrushDescriptor& source,BrushDescriptor& destination){if(!source.has_brush_family_id()||!source.has_brush_version()||!source.has_color()||!source.has_nominal_size()||!source.has_opacity()||!source.has_pressure()||!source.has_tilt()||!source.has_smoothing()||!source.has_spacing()||!source.has_blend_mode())return false;const auto& pressure=source.pressure();const auto& tilt=source.tilt();if(!pressure.has_enabled()||!tilt.has_enabled()||!tilt.has_size_influence()||!tilt.has_angle_influence()||!source.smoothing().has_amount()||!source.spacing().has_normalized_spacing())return false;if(pressure.has_size_curve())for(const auto& point:pressure.size_curve().points())if(!point.has_x()||!point.has_y())return false;if(pressure.has_opacity_curve())for(const auto& point:pressure.opacity_curve().points())if(!point.has_x()||!point.has_y())return false;destination.brush_family_id=source.brush_family_id();destination.brush_version=source.brush_version();if(!getColor(source.color(),destination.color))return false;destination.nominal_size=source.nominal_size();destination.opacity=source.opacity();destination.pressure.enabled=pressure.enabled();destination.pressure.size_curve.reset();destination.pressure.opacity_curve.reset();if(pressure.has_size_curve()){PiecewiseLinearCurve01 c;for(auto point:pressure.size_curve().points())c.points.push_back({point.x(),point.y()});destination.pressure.size_curve=c;}if(pressure.has_opacity_curve()){PiecewiseLinearCurve01 c;for(auto point:pressure.opacity_curve().points())c.points.push_back({point.x(),point.y()});destination.pressure.opacity_curve=c;}destination.tilt={tilt.enabled(),tilt.size_influence(),tilt.angle_influence()};destination.smoothing={source.smoothing().amount()};destination.spacing={source.spacing().normalized_spacing()};destination.blend_mode=static_cast<BrushBlendMode>(source.blend_mode());destination.texture_resource_id.reset();if(source.has_texture_resource_id()){ObjectId id;if(!getId(source.texture_resource_id(),id))return false;destination.texture_resource_id=ResourceId{id};}return true;}
-void setStroke(const StrokeRecord& source,p::StrokeRecord* destination){setBrush(source.brush,destination->mutable_brush());destination->set_deterministic_seed(source.deterministic_seed);std::visit([destination](const auto& data){using Item=std::decay_t<decltype(data)>;if constexpr(std::is_same_v<Item,VectorStrokeData>){auto* vector=destination->mutable_vector();for(auto sample:data.samples){auto* s=vector->add_samples();setVec(sample.position,s->mutable_position());s->set_pressure(sample.pressure);setVec(sample.tilt,s->mutable_tilt());}}else{auto* d=destination->mutable_dab();for(auto dab:data.dabs){auto* x=d->add_dabs();setVec(dab.center,x->mutable_center());x->set_size(dab.size);x->set_rotation(dab.rotation);x->set_opacity(dab.opacity);}}},source.data);}
+void setStroke(const StrokeRecord& source,p::StrokeRecord* destination){setBrush(source.brush,destination->mutable_brush());destination->set_deterministic_seed(source.deterministic_seed);std::visit([destination](const auto& data){using Item=std::decay_t<decltype(data)>;if constexpr(std::is_same_v<Item,VectorStrokeData>){auto* vector=destination->mutable_vector();for(auto sample:data.samples){auto* s=appendOwned(vector->mutable_samples());setVec(sample.position,s->mutable_position());s->set_pressure(sample.pressure);setVec(sample.tilt,s->mutable_tilt());}}else{auto* d=destination->mutable_dab();for(auto dab:data.dabs){auto* x=appendOwned(d->mutable_dabs());setVec(dab.center,x->mutable_center());x->set_size(dab.size);x->set_rotation(dab.rotation);x->set_opacity(dab.opacity);}}},source.data);}
 bool getStroke(const p::StrokeRecord& source,StrokeRecord& destination){if(!source.has_brush()||!source.has_deterministic_seed())return false;if(!getBrush(source.brush(),destination.brush))return false;destination.deterministic_seed=source.deterministic_seed();if(source.has_vector()){VectorStrokeData data;for(auto sample:source.vector().samples()){if(!sample.has_position()||!sample.has_pressure()||!sample.has_tilt())return false;Vec2 p,t;if(!getVec(sample.position(),p)||!getVec(sample.tilt(),t))return false;data.samples.push_back({p,sample.pressure(),t});}destination.data=data;}else if(source.has_dab()){DabStrokeData data;for(auto dab:source.dab().dabs()){if(!dab.has_center()||!dab.has_size()||!dab.has_rotation()||!dab.has_opacity())return false;Vec2 p;if(!getVec(dab.center(),p))return false;data.dabs.push_back({p,dab.size(),dab.rotation(),dab.opacity()});}destination.data=data;}else return false;return true;}
 
-void setFill(const FillStyleValue& source, p::FillStyleValue* destination) { std::visit([destination](const auto& value){using T=std::decay_t<decltype(value)>;if constexpr(std::is_same_v<T,NoFill>) destination->mutable_none(); else {auto*s=destination->mutable_solid();setColor(value.color,s->mutable_color());}},source); }
+void setFill(const FillStyleValue& source, p::FillStyleValue* destination) {
+    std::visit([destination](const auto& value) {
+        using T=std::decay_t<decltype(value)>;
+        if constexpr(std::is_same_v<T,NoFill>) destination->set_allocated_none(std::make_unique<p::NoFill>().release());
+        else {
+            auto solid=std::make_unique<p::SolidFill>();
+            setColor(value.color,solid->mutable_color());
+            destination->set_allocated_solid(solid.release());
+        }
+    },source);
+}
 bool getFill(const p::FillStyleValue& source, FillStyleValue& destination) { if(source.has_none()){destination=NoFill{};return true;} if(source.has_solid()&&source.solid().has_color()){ColorValue c;if(!getColor(source.solid().color(),c))return false;destination=SolidFill{c};return true;}return false; }
 void setJoin(const StrokeJoin& source,p::StrokeJoin* destination){std::visit([destination](const auto& value){using T=std::decay_t<decltype(value)>;if constexpr(std::is_same_v<T,MiterJoin>)destination->mutable_miter()->set_limit(value.limit);else if constexpr(std::is_same_v<T,RoundJoin>)destination->mutable_round();else destination->mutable_bevel();},source);}
 bool getJoin(const p::StrokeJoin& source,StrokeJoin& destination){if(source.has_miter()){if(!source.miter().has_limit())return false;destination=MiterJoin{source.miter().limit()};return true;}if(source.has_round()){destination=RoundJoin{};return true;}if(source.has_bevel()){destination=BevelJoin{};return true;}return false;}
@@ -163,19 +176,43 @@ void setDash(const StrokeDash& source,p::StrokeDash* destination){std::visit([de
 bool getDash(const p::StrokeDash& source,StrokeDash& destination){if(source.has_solid()){destination=SolidDash{};return true;}if(source.has_pattern()){if(!source.pattern().has_offset())return false;DashPattern d;d.offset=source.pattern().offset();d.segments.assign(source.pattern().segments().begin(),source.pattern().segments().end());destination=std::move(d);return true;}return false;}
 void setStrokeStyle(const StrokeStyleValue& source,p::StrokeStyleValue* destination){std::visit([destination](const auto& value){using T=std::decay_t<decltype(value)>;if constexpr(std::is_same_v<T,NoStroke>)destination->mutable_none();else{auto*s=destination->mutable_solid();setColor(value.color,s->mutable_color());s->set_width(value.width);s->set_cap(static_cast<p::StrokeCap>(value.cap));setJoin(value.join,s->mutable_join());setDash(value.dash,s->mutable_dash());}},source);}
 bool getStrokeStyle(const p::StrokeStyleValue& source,StrokeStyleValue& destination){if(source.has_none()){destination=NoStroke{};return true;}if(!source.has_solid()||!source.solid().has_color()||!source.solid().has_join()||!source.solid().has_dash()||!source.solid().has_width()||!source.solid().has_cap())return false;ColorValue c;if(!getColor(source.solid().color(),c))return false;StrokeJoin j;if(!getJoin(source.solid().join(),j))return false;StrokeDash d;if(!getDash(source.solid().dash(),d))return false;destination=SolidStroke{c,source.solid().width(),static_cast<StrokeCap>(source.solid().cap()),std::move(j),std::move(d)};return true;}
-bool setProperty(const PropertyValue& source,p::PropertyValue* destination){return std::visit([destination](const auto& value){using Item=std::decay_t<decltype(value)>;if constexpr(std::is_same_v<Item,bool>)destination->set_bool_value(value);else if constexpr(std::is_same_v<Item,float>)destination->set_f32_value(value);else if constexpr(std::is_same_v<Item,ColorValue>)setColor(value,destination->mutable_color_value());else if constexpr(std::is_same_v<Item,FillStyleValue>)setFill(value,destination->mutable_fill_style());else if constexpr(std::is_same_v<Item,StrokeStyleValue>)setStrokeStyle(value,destination->mutable_stroke_style());else if constexpr(std::is_same_v<Item,BlendModeValue>)destination->set_blend_mode(static_cast<p::BlendModeValue>(value));else if constexpr(std::is_same_v<Item,ConnectorDecorationValue>)destination->set_connector_decoration(static_cast<p::ConnectorDecorationValue>(value));else return false;return true;},source);}
+bool setProperty(const PropertyValue& source,p::PropertyValue* destination){return std::visit([destination](const auto& value){using Item=std::decay_t<decltype(value)>;if constexpr(std::is_same_v<Item,bool>)destination->set_bool_value(value);else if constexpr(std::is_same_v<Item,float>)destination->set_f32_value(value);else if constexpr(std::is_same_v<Item,ColorValue>)setColor(value,destination->mutable_color_value());else if constexpr(std::is_same_v<Item,FillStyleValue>){auto fill=std::make_unique<p::FillStyleValue>();setFill(value,fill.get());destination->set_allocated_fill_style(fill.release());}else if constexpr(std::is_same_v<Item,StrokeStyleValue>)setStrokeStyle(value,destination->mutable_stroke_style());else if constexpr(std::is_same_v<Item,BlendModeValue>)destination->set_blend_mode(static_cast<p::BlendModeValue>(value));else if constexpr(std::is_same_v<Item,ConnectorDecorationValue>)destination->set_connector_decoration(static_cast<p::ConnectorDecorationValue>(value));else return false;return true;},source);}
 bool getProperty(const p::PropertyValue& source,PropertyValue& destination){switch(source.value_case()){case p::PropertyValue::kBoolValue:destination=source.bool_value();return true;case p::PropertyValue::kF32Value:destination=source.f32_value();return true;case p::PropertyValue::kColorValue:{ColorValue c;if(!getColor(source.color_value(),c))return false;destination=c;return true;}case p::PropertyValue::kFillStyle:{FillStyleValue v;if(!getFill(source.fill_style(),v))return false;destination=std::move(v);return true;}case p::PropertyValue::kStrokeStyle:{StrokeStyleValue v;if(!getStrokeStyle(source.stroke_style(),v))return false;destination=std::move(v);return true;}case p::PropertyValue::kBlendMode:destination=static_cast<BlendModeValue>(source.blend_mode());return true;case p::PropertyValue::kConnectorDecoration:destination=static_cast<ConnectorDecorationValue>(source.connector_decoration());return true;default:return false;}}
-void setEndpoint(const ConnectorEndpoint& source,p::ConnectorEndpoint* destination){std::visit([destination](const auto& value){using T=std::decay_t<decltype(value)>;if constexpr(std::is_same_v<T,FreePointEndpoint>){setVec(value.point,destination->mutable_free_point()->mutable_point());}else{auto*a=destination->mutable_attached();setId(value.target_object_id,a->mutable_target_object_id());std::visit([a](const auto& anchor){using A=std::decay_t<decltype(anchor)>;if constexpr(std::is_same_v<A,AutoPerimeterAnchor>){auto*x=a->mutable_anchor()->mutable_auto_perimeter();if(anchor.hint)setVec(*anchor.hint,x->mutable_hint());}else a->mutable_anchor()->mutable_stable_port()->set_port_id(anchor.port_id);},value.anchor);}},source.value);}
+void setEndpoint(const ConnectorEndpoint& source,p::ConnectorEndpoint* destination) {
+    std::visit([destination](const auto& value) {
+        using T=std::decay_t<decltype(value)>;
+        if constexpr(std::is_same_v<T,FreePointEndpoint>) {
+            auto endpoint=std::make_unique<p::FreePointEndpoint>();
+            setVec(value.point,endpoint->mutable_point());
+            destination->set_allocated_free_point(endpoint.release());
+        } else {
+            auto endpoint=std::make_unique<p::AttachedEndpoint>();
+            setId(value.target_object_id,endpoint->mutable_target_object_id());
+            std::visit([&](const auto& anchor) {
+                using A=std::decay_t<decltype(anchor)>;
+                if constexpr(std::is_same_v<A,AutoPerimeterAnchor>) {
+                    auto ref=std::make_unique<p::AutoPerimeterAnchor>();
+                    if(anchor.hint)setVec(*anchor.hint,ref->mutable_hint());
+                    endpoint->mutable_anchor()->set_allocated_auto_perimeter(ref.release());
+                } else {
+                    auto ref=std::make_unique<p::StablePortAnchor>(); ref->set_port_id(anchor.port_id);
+                    endpoint->mutable_anchor()->set_allocated_stable_port(ref.release());
+                }
+            },value.anchor);
+            destination->set_allocated_attached(endpoint.release());
+        }
+    },source.value);
+}
 bool getEndpoint(const p::ConnectorEndpoint& source,ConnectorEndpoint& destination){if(source.has_free_point()){if(!source.free_point().has_point())return false;Vec2 p;if(!getVec(source.free_point().point(),p))return false;destination.value=FreePointEndpoint{p};return true;}if(!source.has_attached()||!source.attached().has_target_object_id()||!source.attached().has_anchor())return false;ObjectId id;if(!getId(source.attached().target_object_id(),id))return false;const auto&a=source.attached().anchor();if(a.has_auto_perimeter()){std::optional<Vec2> hint;if(a.auto_perimeter().has_hint()){Vec2 h;if(!getVec(a.auto_perimeter().hint(),h))return false;hint=h;}destination.value=AttachedEndpoint{id,AutoPerimeterAnchor{hint}};return true;}if(a.has_stable_port()){if(!a.stable_port().has_port_id())return false;destination.value=AttachedEndpoint{id,StablePortAnchor{a.stable_port().port_id()}};return true;}return false;}
 
 void setBrushSnapshot(const BrushExecutionSnapshot& source, p::BrushExecutionSnapshot* destination) {
     destination->set_snapshot_version(source.snapshot_version); setId(source.package_id, destination->mutable_package_id());
     destination->set_package_revision(source.package_revision); destination->set_pipeline_version(source.pipeline_version);
     destination->set_defaults_version(source.defaults_version); destination->set_profile_id(source.profile_id);
-    for (const auto& stage : source.stages) { auto* out = destination->add_stages(); out->set_stage_id(stage.stage_id); out->set_declared_mode(stage.declared_mode); out->set_active(stage.active); out->set_node_id(stage.node_id); out->set_node_version(stage.node_version); }
+    for (const auto& stage : source.stages) { auto* out = appendOwned(destination->mutable_stages()); out->set_stage_id(stage.stage_id); out->set_declared_mode(stage.declared_mode); out->set_active(stage.active); out->set_node_id(stage.node_id); out->set_node_version(stage.node_version); }
     auto* v = destination->mutable_vector(); v->set_size(source.vector.size); v->set_thinning(source.vector.thinning); v->set_smoothing(source.vector.smoothing); v->set_streamline(source.vector.streamline); v->set_pressure_source(source.vector.pressure_source); v->set_missing_pressure(source.vector.missing_pressure); v->set_easing_id(source.vector.easing_id); v->set_start_cap(source.vector.start_cap); v->set_end_cap(source.vector.end_cap); v->set_start_taper(source.vector.start_taper); v->set_end_taper(source.vector.end_taper);
     auto* paint = destination->mutable_paint(); paint->set_red(source.paint.red); paint->set_green(source.paint.green); paint->set_blue(source.paint.blue); paint->set_alpha(source.paint.alpha); paint->set_opacity(source.paint.opacity); paint->set_blend(source.paint.blend); paint->set_color_space(source.paint.color_space);
-    for (const auto& resource : source.resources) { auto* out = destination->add_resources(); setId(resource.resource_id, out->mutable_resource_id()); out->set_content_sha256(resource.content_sha256); out->set_kind(resource.kind); out->set_decode_version(resource.decode_version); out->set_channel(resource.channel); out->set_color_space(resource.color_space); out->set_sampling(resource.sampling); out->set_wrap(resource.wrap); }
+    for (const auto& resource : source.resources) { auto* out = appendOwned(destination->mutable_resources()); setId(resource.resource_id, out->mutable_resource_id()); out->set_content_sha256(resource.content_sha256); out->set_kind(resource.kind); out->set_decode_version(resource.decode_version); out->set_channel(resource.channel); out->set_color_space(resource.color_space); out->set_sampling(resource.sampling); out->set_wrap(resource.wrap); }
     destination->set_seed(source.seed); destination->set_signal_schema_version(source.signal_schema_version);
     destination->set_material_mode(source.material_mode); destination->set_marker_head_angle(source.marker_head_angle); destination->set_marker_head_width(source.marker_head_width);
 }
@@ -198,10 +235,31 @@ bool getBrushSnapshot(const p::BrushExecutionSnapshot& source, BrushExecutionSna
     destination.marker_head_width = source.has_marker_head_width() ? source.marker_head_width() : 1.0;
     return true;
 }
-void setBrushStroke(const BrushStrokeContent& source, p::ObjectContent* destination) { auto* out=destination->mutable_brush_stroke()->mutable_stroke(); setBrushSnapshot(source.stroke.snapshot,out->mutable_snapshot()); for(const auto& sample:source.stroke.confirmed_samples){auto* x=out->add_confirmed_samples();setVec(sample.position,x->mutable_position());if(sample.pressure)x->set_pressure(*sample.pressure);}auto* result=out->mutable_vector_output();for(const auto& point:source.stroke.vector_output.outline)setVec(point,result->add_outline());result->set_fill_rule(source.stroke.vector_output.fill_rule);result->set_closed(source.stroke.vector_output.closed); }
+void setBrushStroke(const BrushStrokeContent& source, p::ObjectContent* destination) { auto* out=destination->mutable_brush_stroke()->mutable_stroke(); setBrushSnapshot(source.stroke.snapshot,out->mutable_snapshot()); for(const auto& sample:source.stroke.confirmed_samples){auto* x=appendOwned(out->mutable_confirmed_samples());setVec(sample.position,x->mutable_position());if(sample.pressure)x->set_pressure(*sample.pressure);}auto* result=out->mutable_vector_output();for(const auto& point:source.stroke.vector_output.outline)setVec(point,appendOwned(result->mutable_outline()));result->set_fill_rule(source.stroke.vector_output.fill_rule);result->set_closed(source.stroke.vector_output.closed); }
 bool getBrushStroke(const p::ObjectContent& source, BrushStrokeContent& destination) { if(!source.brush_stroke().has_stroke()||!source.brush_stroke().stroke().has_snapshot()||!source.brush_stroke().stroke().has_vector_output())return false; const auto& in=source.brush_stroke().stroke(); if(!getBrushSnapshot(in.snapshot(),destination.stroke.snapshot))return false; destination.stroke.confirmed_samples.clear();for(const auto& sample:in.confirmed_samples()){if(!sample.has_position())return false;BrushConfirmedSample out{};if(!getVec(sample.position(),out.position))return false;if(sample.has_pressure())out.pressure=sample.pressure();destination.stroke.confirmed_samples.push_back(std::move(out));}const auto& result=in.vector_output();if(!result.has_fill_rule()||!result.has_closed())return false;destination.stroke.vector_output={};destination.stroke.vector_output.fill_rule=result.fill_rule();destination.stroke.vector_output.closed=result.closed();for(const auto& point:result.outline()){Vec2 out;if(!getVec(point,out))return false;destination.stroke.vector_output.outline.push_back(out);}return true;}
-void setDabBrushStroke(const DabBrushStrokeContent& source, p::ObjectContent* destination) { auto* out=destination->mutable_dab_brush_stroke()->mutable_stroke(); setBrushSnapshot(source.stroke.snapshot,out->mutable_snapshot()); for(const auto& sample:source.stroke.confirmed_samples){auto* x=out->add_confirmed_samples();setVec(sample.position,x->mutable_position());if(sample.pressure)x->set_pressure(*sample.pressure);}for(const auto& dab:source.stroke.dab_output.dabs){auto* x=out->mutable_dab_output()->add_dabs();setVec(dab.center,x->mutable_center());x->set_size(dab.size);x->set_rotation(dab.rotation);x->set_opacity(dab.opacity);}out->set_dab_digest(source.stroke.dab_digest); }
+void setDabBrushStroke(const DabBrushStrokeContent& source, p::ObjectContent* destination) { auto* out=destination->mutable_dab_brush_stroke()->mutable_stroke(); setBrushSnapshot(source.stroke.snapshot,out->mutable_snapshot()); for(const auto& sample:source.stroke.confirmed_samples){auto* x=appendOwned(out->mutable_confirmed_samples());setVec(sample.position,x->mutable_position());if(sample.pressure)x->set_pressure(*sample.pressure);}for(const auto& dab:source.stroke.dab_output.dabs){auto* x=appendOwned(out->mutable_dab_output()->mutable_dabs());setVec(dab.center,x->mutable_center());x->set_size(dab.size);x->set_rotation(dab.rotation);x->set_opacity(dab.opacity);}out->set_dab_digest(source.stroke.dab_digest); }
 bool getDabBrushStroke(const p::ObjectContent& source, DabBrushStrokeContent& destination) { if(!source.dab_brush_stroke().has_stroke()||!source.dab_brush_stroke().stroke().has_snapshot()||!source.dab_brush_stroke().stroke().has_dab_output()||!source.dab_brush_stroke().stroke().has_dab_digest())return false; const auto& in=source.dab_brush_stroke().stroke();if(!getBrushSnapshot(in.snapshot(),destination.stroke.snapshot))return false;destination.stroke.dab_digest=in.dab_digest();destination.stroke.confirmed_samples.clear();for(const auto& sample:in.confirmed_samples()){if(!sample.has_position())return false;BrushConfirmedSample out{};if(!getVec(sample.position(),out.position))return false;if(sample.has_pressure())out.pressure=sample.pressure();destination.stroke.confirmed_samples.push_back(std::move(out));}destination.stroke.dab_output.dabs.clear();for(const auto& dab:in.dab_output().dabs()){if(!dab.has_center()||!dab.has_size()||!dab.has_rotation()||!dab.has_opacity())return false;Vec2 center;if(!getVec(dab.center(),center))return false;destination.stroke.dab_output.dabs.push_back({center,dab.size(),dab.rotation(),dab.opacity()});}return true;}
+}
+
+bool toProtobufSectionContent(const SectionContent& source, p::SectionContent& destination) {
+    auto* boundary = destination.mutable_boundary();
+    boundary->set_x(source.boundary.x); boundary->set_y(source.boundary.y);
+    boundary->set_width(source.boundary.width); boundary->set_height(source.boundary.height);
+    destination.set_title(source.title);
+    destination.set_padding(source.padding); destination.set_header_height(source.header_height);
+    return true;
+}
+
+bool fromProtobufSectionContent(const p::SectionContent& source, SectionContent& destination) {
+    if (!source.has_boundary() || !source.has_title() || !source.has_padding() || !source.has_header_height()) return false;
+    const auto& boundary = source.boundary();
+    if (!boundary.has_x() || !boundary.has_y() || !boundary.has_width() || !boundary.has_height()) return false;
+    destination.boundary = {boundary.x(), boundary.y(), boundary.width(), boundary.height()};
+    const auto title = source.title();
+    destination.title.assign(title.data(), title.size());
+    destination.padding = source.padding();
+    destination.header_height = source.header_height();
+    return true;
 }
 
 bool toProtobufObjectRecord(const ObjectRecord& source, p::ObjectRecord& destination) {
@@ -212,15 +270,29 @@ bool toProtobufObjectRecord(const ObjectRecord& source, p::ObjectRecord& destina
     }
     destination.mutable_placement()->mutable_order_key()->set_value(std::string(reinterpret_cast<const char*>(source.placement.order_key.bytes().data()),source.placement.order_key.bytes().size()));
     auto* t=destination.mutable_transform();t->set_a(source.transform.a);t->set_b(source.transform.b);t->set_c(source.transform.c);t->set_d(source.transform.d);t->set_tx(source.transform.tx);t->set_ty(source.transform.ty);
-    auto* bag=destination.mutable_properties();for(const auto& entry:source.properties.entries){auto* item=bag->add_entries();item->set_field_id(entry.field_id);if(!setProperty(entry.value,item->mutable_value()))return false;}
-    auto* content=destination.mutable_content();std::visit([content](const auto& value){using Item=std::decay_t<decltype(value)>;if constexpr(std::is_same_v<Item,ShapeContent>){auto* x=content->mutable_shape();x->set_shape_kind(value.shape_kind);x->set_width(value.width);x->set_height(value.height);if(value.label){p::ObjectContent label;setRichText(*value.label,&label);*x->mutable_label()=label.rich_text();}}else if constexpr(std::is_same_v<Item,ImageContent>){auto*x=content->mutable_image();setId(value.resource_id.value,x->mutable_resource_id());x->set_intrinsic_width(value.intrinsic_width);x->set_intrinsic_height(value.intrinsic_height);if(value.source_rect){auto*r=x->mutable_source_rect();r->set_x(value.source_rect->x);r->set_y(value.source_rect->y);r->set_width(value.source_rect->width);r->set_height(value.source_rect->height);}x->set_content_mode(static_cast<p::ImageContentMode>(value.content_mode));x->set_width(value.width);x->set_height(value.height);}else if constexpr(std::is_same_v<Item,VectorPathContent>)setGeometry(value.geometry,content->mutable_vector_path()->mutable_geometry());else if constexpr(std::is_same_v<Item,RichTextContent>)setRichText(value,content);else if constexpr(std::is_same_v<Item,VectorStrokeContent>)setStroke(value.stroke,content->mutable_vector_stroke()->mutable_stroke());else if constexpr(std::is_same_v<Item,DabStrokeContent>)setStroke(value.stroke,content->mutable_dab_stroke()->mutable_stroke());else if constexpr(std::is_same_v<Item,ConnectorContent>){auto*c=content->mutable_connector();setEndpoint(value.start,c->mutable_start());setEndpoint(value.end,c->mutable_end());c->set_routing(static_cast<p::ConnectorRouting>(value.routing));}else if constexpr(std::is_same_v<Item,StickyContent>){content->mutable_sticky()->set_width(value.width);content->mutable_sticky()->set_height(value.height);}else if constexpr(std::is_same_v<Item,BrushStrokeContent>)setBrushStroke(value,content);else if constexpr(std::is_same_v<Item,DabBrushStrokeContent>)setDabBrushStroke(value,content);else content->mutable_group();},source.content);
-    for(const auto& mask:source.erase_masks){auto* m=destination.add_erase_masks();setId(mask.id,m->mutable_mask_id());auto*g=m->mutable_geometry();std::visit([g](const auto& value){using Item=std::decay_t<decltype(value)>;if constexpr(std::is_same_v<Item,SweptCircleMask>){auto*s=g->mutable_swept_circle();for(auto segment:value.segments){auto*x=s->add_segments();setVec(segment.p0.position,x->mutable_p0()->mutable_position());x->mutable_p0()->set_radius(segment.p0.radius);setVec(segment.p1.position,x->mutable_p1()->mutable_position());x->mutable_p1()->set_radius(segment.p1.radius);setVec(segment.control1,x->mutable_control1());setVec(segment.control2,x->mutable_control2());}}else setGeometry(value.path,g->mutable_filled_path()->mutable_path());},mask.geometry);}
+    auto* bag=destination.mutable_properties();for(const auto& entry:source.properties.entries){auto* item=appendOwned(bag->mutable_entries());item->set_field_id(entry.field_id);if(!setProperty(entry.value,item->mutable_value()))return false;}
+    auto* content=destination.mutable_content();
+    std::visit([content](const auto& value) {
+        using T=std::decay_t<decltype(value)>;
+        if constexpr (std::is_same_v<T,ShapeContent>) content->set_allocated_shape(std::make_unique<p::ShapeContent>().release());
+        else if constexpr (std::is_same_v<T,ImageContent>) content->set_allocated_image(std::make_unique<p::ImageContent>().release());
+        else if constexpr (std::is_same_v<T,VectorPathContent>) content->set_allocated_vector_path(std::make_unique<p::VectorPathContent>().release());
+        else if constexpr (std::is_same_v<T,RichTextContent>) content->set_allocated_rich_text(std::make_unique<p::RichTextContent>().release());
+        else if constexpr (std::is_same_v<T,VectorStrokeContent>) content->set_allocated_vector_stroke(std::make_unique<p::VectorStrokeContent>().release());
+        else if constexpr (std::is_same_v<T,DabStrokeContent>) content->set_allocated_dab_stroke(std::make_unique<p::DabStrokeContent>().release());
+        else if constexpr (std::is_same_v<T,ConnectorContent>) content->set_allocated_connector(std::make_unique<p::ConnectorContent>().release());
+        else if constexpr (std::is_same_v<T,StickyContent>) content->set_allocated_sticky(std::make_unique<p::StickyContent>().release());
+        else if constexpr (std::is_same_v<T,BrushStrokeContent>) content->set_allocated_brush_stroke(std::make_unique<p::BrushStrokeContent>().release());
+        else if constexpr (std::is_same_v<T,DabBrushStrokeContent>) content->set_allocated_dab_brush_stroke(std::make_unique<p::DabBrushStrokeContent>().release());
+    },source.content);
+    std::visit([content](const auto& value){using Item=std::decay_t<decltype(value)>;if constexpr(std::is_same_v<Item,ShapeContent>){auto* x=content->mutable_shape();x->set_shape_kind(value.shape_kind);x->set_width(value.width);x->set_height(value.height);if(value.label){p::ObjectContent label;setRichText(*value.label,&label);x->set_allocated_label(label.release_rich_text());}}else if constexpr(std::is_same_v<Item,ImageContent>){auto*x=content->mutable_image();setId(value.resource_id.value,x->mutable_resource_id());x->set_intrinsic_width(value.intrinsic_width);x->set_intrinsic_height(value.intrinsic_height);if(value.source_rect){auto*r=x->mutable_source_rect();r->set_x(value.source_rect->x);r->set_y(value.source_rect->y);r->set_width(value.source_rect->width);r->set_height(value.source_rect->height);}x->set_content_mode(static_cast<p::ImageContentMode>(value.content_mode));x->set_width(value.width);x->set_height(value.height);}else if constexpr(std::is_same_v<Item,VectorPathContent>)setGeometry(value.geometry,content->mutable_vector_path()->mutable_geometry());else if constexpr(std::is_same_v<Item,RichTextContent>)setRichText(value,content);else if constexpr(std::is_same_v<Item,VectorStrokeContent>)setStroke(value.stroke,content->mutable_vector_stroke()->mutable_stroke());else if constexpr(std::is_same_v<Item,DabStrokeContent>)setStroke(value.stroke,content->mutable_dab_stroke()->mutable_stroke());else if constexpr(std::is_same_v<Item,ConnectorContent>){auto*c=content->mutable_connector();setEndpoint(value.start,c->mutable_start());setEndpoint(value.end,c->mutable_end());c->set_routing(static_cast<p::ConnectorRouting>(value.routing));}else if constexpr(std::is_same_v<Item,StickyContent>){content->mutable_sticky()->set_width(value.width);content->mutable_sticky()->set_height(value.height);}else if constexpr(std::is_same_v<Item,BrushStrokeContent>)setBrushStroke(value,content);else if constexpr(std::is_same_v<Item,DabBrushStrokeContent>)setDabBrushStroke(value,content);else if constexpr(std::is_same_v<Item,SectionContent>){auto section=std::make_unique<p::SectionContent>();(void)toProtobufSectionContent(value,*section);content->set_allocated_section(section.release());}else content->set_allocated_group(std::make_unique<p::GroupContent>().release());},source.content);
+    for(const auto& mask:source.erase_masks){auto* m=destination.add_erase_masks();setId(mask.id,m->mutable_mask_id());auto*g=m->mutable_geometry();std::visit([g](const auto& value){using Item=std::decay_t<decltype(value)>;if constexpr(std::is_same_v<Item,SweptCircleMask>){auto*s=g->mutable_swept_circle();for(auto segment:value.segments){auto*x=appendOwned(s->mutable_segments());setVec(segment.p0.position,x->mutable_p0()->mutable_position());x->mutable_p0()->set_radius(segment.p0.radius);setVec(segment.p1.position,x->mutable_p1()->mutable_position());x->mutable_p1()->set_radius(segment.p1.radius);setVec(segment.control1,x->mutable_control1());setVec(segment.control2,x->mutable_control2());}}else setGeometry(value.path,g->mutable_filled_path()->mutable_path());},mask.geometry);}
     return true;
 }
 
 bool fromProtobufObjectRecord(const p::ObjectRecord& source, ObjectRecord& destination) {
     if(!source.has_id()||!source.has_kind_id()||!source.has_kind_version()||!source.has_placement()||!source.has_transform()||!source.has_properties()||!source.has_content())return false;
-    if(!getId(source.id(),destination.id)||destination.id.isZero()||!isKnownObjectKind(static_cast<ObjectKind>(source.kind_id())))return false;
+    if(source.kind_id()>255U||!getId(source.id(),destination.id)||destination.id.isZero()||!isKnownObjectKind(static_cast<ObjectKind>(source.kind_id())))return false;
     destination.kind=static_cast<ObjectKind>(source.kind_id()); destination.kind_version=source.kind_version(); destination.placement.parent_id.reset();
     if(source.placement().has_parent_id()){ObjectId parent;if(!getId(source.placement().parent_id(),parent))return false;destination.placement.parent_id=parent;}
     if(!source.placement().has_order_key()||!source.placement().order_key().has_value())return false;
@@ -239,6 +311,7 @@ bool fromProtobufObjectRecord(const p::ObjectRecord& source, ObjectRecord& desti
       case p::ObjectContent::kConnector:{ConnectorContent x;if(!source.content().connector().has_start()||!source.content().connector().has_end()||!source.content().connector().has_routing()||!getEndpoint(source.content().connector().start(),x.start)||!getEndpoint(source.content().connector().end(),x.end))return false;x.routing=static_cast<ConnectorRouting>(source.content().connector().routing());destination.content=std::move(x);break;}
       case p::ObjectContent::kSticky:{const auto& x=source.content().sticky();if(!x.has_width()||!x.has_height())return false;destination.content=StickyContent{x.width(),x.height()};break;}
       case p::ObjectContent::kGroup: destination.content=GroupContent{}; break;
+      case p::ObjectContent::kSection: { SectionContent value; if(!fromProtobufSectionContent(source.content().section(),value))return false;destination.content=std::move(value);break; }
       case p::ObjectContent::kBrushStroke: { BrushStrokeContent value; if(!getBrushStroke(source.content(),value))return false; destination.content=std::move(value); break; }
       case p::ObjectContent::kDabBrushStroke: { DabBrushStrokeContent value; if(!getDabBrushStroke(source.content(),value))return false; destination.content=std::move(value); break; }
       default:return false;
@@ -254,33 +327,44 @@ bool toProtobufOperation(const Operation& source, p::Operation& destination) {
     destination.set_schema_version(source.schema_version);
     destination.set_payload_version(source.payload_version);
     auto* payload = destination.mutable_payload();
+    // Publish oneof discriminators only after their owned message exists.
+    // The locked generated mutable_* accessor sets the discriminator before
+    // allocation, which is unsafe if a local precommit allocation throws.
+    std::visit([payload](const auto& value) {
+        using T = std::decay_t<decltype(value)>;
+        if constexpr (std::is_same_v<T, InsertObjectsOp>) payload->set_allocated_insert_objects(std::make_unique<p::InsertObjectsOp>().release());
+        else if constexpr (std::is_same_v<T, RestoreObjectsOp>) payload->set_allocated_restore_objects(std::make_unique<p::RestoreObjectsOp>().release());
+        else if constexpr (std::is_same_v<T, DeleteObjectsOp>) payload->set_allocated_delete_objects(std::make_unique<p::DeleteObjectsOp>().release());
+        else if constexpr (std::is_same_v<T, SetTransformsOp>) payload->set_allocated_set_transforms(std::make_unique<p::SetTransformsOp>().release());
+        else if constexpr (std::is_same_v<T, PatchPropertiesOp>) payload->set_allocated_patch_properties(std::make_unique<p::PatchPropertiesOp>().release());
+    }, source.payload);
     return std::visit([&](const auto& value) -> bool {
         using T = std::decay_t<decltype(value)>;
         if constexpr (std::is_same_v<T, InsertObjectsOp> || std::is_same_v<T, RestoreObjectsOp>) {
             for (const auto& object : value.objects) {
-                auto* out = [&] { if constexpr(std::is_same_v<T, InsertObjectsOp>) return payload->mutable_insert_objects()->add_objects(); else return payload->mutable_restore_objects()->add_objects(); }();
+                auto* out = [&] { if constexpr(std::is_same_v<T, InsertObjectsOp>) return appendOwned(payload->mutable_insert_objects()->mutable_objects()); else return appendOwned(payload->mutable_restore_objects()->mutable_objects()); }();
                 if (!toProtobufObjectRecord(object, *out)) return false;
             }
         } else if constexpr (std::is_same_v<T, DeleteObjectsOp>) {
-            for (const auto& id : value.object_ids) setId(id, payload->mutable_delete_objects()->add_object_ids());
+            for (const auto& id : value.object_ids) setId(id, appendOwned(payload->mutable_delete_objects()->mutable_object_ids()));
         } else if constexpr (std::is_same_v<T, SetPlacementsOp>) {
             for (const auto& item : value.items) {
-                auto* out = payload->mutable_set_placements()->add_items(); setId(item.object_id,out->mutable_object_id());
+                auto* out = appendOwned(payload->mutable_set_placements()->mutable_items()); setId(item.object_id,out->mutable_object_id());
                 if(item.placement.parent_id) setId(*item.placement.parent_id,out->mutable_placement()->mutable_parent_id());
                 const auto& key=item.placement.order_key.bytes(); out->mutable_placement()->mutable_order_key()->set_value(std::string(reinterpret_cast<const char*>(key.data()),key.size()));
             }
         } else if constexpr (std::is_same_v<T, SetTransformsOp>) {
             for (const auto& item : value.items) {
-                auto* out = payload->mutable_set_transforms()->add_items(); setId(item.object_id,out->mutable_object_id());
+                auto* out = appendOwned(payload->mutable_set_transforms()->mutable_items()); setId(item.object_id,out->mutable_object_id());
                 auto* t=out->mutable_transform(); t->set_a(item.transform.a);t->set_b(item.transform.b);t->set_c(item.transform.c);t->set_d(item.transform.d);t->set_tx(item.transform.tx);t->set_ty(item.transform.ty);
             }
         } else if constexpr (std::is_same_v<T, PatchPropertiesOp>) {
             for (const auto& item : value.patches) {
-                auto* out=payload->mutable_patch_properties()->add_patches();setId(item.object_id,out->mutable_object_id());out->set_field_id(item.field_id);out->set_action(static_cast<p::PropertyPatchAction>(item.action));
+                auto* out=appendOwned(payload->mutable_patch_properties()->mutable_patches());setId(item.object_id,out->mutable_object_id());out->set_field_id(item.field_id);out->set_action(static_cast<p::PropertyPatchAction>(item.action));
                 if(const auto* property=std::get_if<PropertyValue>(&item.value)) if(!setProperty(*property,out->mutable_value())) return false;
             }
         } else if constexpr (std::is_same_v<T, SetObjectSizeOp>) {
-            for(const auto& item:value.items) {auto* out=payload->mutable_set_object_size()->add_items();setId(item.object_id,out->mutable_object_id());out->set_width(item.width);out->set_height(item.height);}
+            for(const auto& item:value.items) {auto* out=appendOwned(payload->mutable_set_object_size()->mutable_items());setId(item.object_id,out->mutable_object_id());out->set_width(item.width);out->set_height(item.height);}
         } else if constexpr (std::is_same_v<T, SetVectorPathGeometryOp>) {
             auto* out=payload->mutable_set_vector_path_geometry();setId(value.object_id,out->mutable_object_id());setGeometry(value.geometry,out->mutable_geometry());
         } else if constexpr (std::is_same_v<T, SetImageContentOp>) {
@@ -290,18 +374,18 @@ bool toProtobufOperation(const Operation& source, p::Operation& destination) {
         } else if constexpr (std::is_same_v<T, AddStrokeOp>) {
             if (!toProtobufObjectRecord(value.object, *payload->mutable_add_stroke()->mutable_object())) return false;
         } else if constexpr (std::is_same_v<T, SplitStrokesOp>) {
-            for(const auto& item:value.splits) {auto* out=payload->mutable_split_strokes()->add_splits();setId(item.source_stroke_id,out->mutable_source_stroke_id());for(const auto& record:item.replacements) if(!toProtobufObjectRecord(record,*out->add_replacements()))return false;}
+            for(const auto& item:value.splits) {auto* out=appendOwned(payload->mutable_split_strokes()->mutable_splits());setId(item.source_stroke_id,out->mutable_source_stroke_id());for(const auto& record:item.replacements) if(!toProtobufObjectRecord(record,*appendOwned(out->mutable_replacements())))return false;}
         } else if constexpr (std::is_same_v<T, AddEraseMasksOp>) {
             for(const auto& item:value.items) {
-                auto* out=payload->mutable_add_erase_masks()->add_items();setId(item.object_id,out->mutable_object_id());
+                auto* out=appendOwned(payload->mutable_add_erase_masks()->mutable_items());setId(item.object_id,out->mutable_object_id());
                 ObjectRecord record{};record.id=item.object_id;record.kind=ObjectKind::kShape;record.kind_version=1;record.placement.order_key=OrderKey({1});record.content=ShapeContent{1,1,1};record.erase_masks=item.masks;
-                p::ObjectRecord mapped;if(!toProtobufObjectRecord(record,mapped))return false;for(const auto& mask:mapped.erase_masks())*out->add_masks()=mask;
+                p::ObjectRecord mapped;if(!toProtobufObjectRecord(record,mapped))return false;for(const auto& mask:mapped.erase_masks())*appendOwned(out->mutable_masks())=mask;
             }
         } else if constexpr (std::is_same_v<T, RemoveEraseMasksOp>) {
-            for(const auto& item:value.items) {auto* out=payload->mutable_remove_erase_masks()->add_items();setId(item.object_id,out->mutable_object_id());for(const auto& id:item.mask_ids)setId(id,out->add_mask_ids());}
+            for(const auto& item:value.items) {auto* out=appendOwned(payload->mutable_remove_erase_masks()->mutable_items());setId(item.object_id,out->mutable_object_id());for(const auto& id:item.mask_ids)setId(id,appendOwned(out->mutable_mask_ids()));}
         } else if constexpr (std::is_same_v<T, EditRichTextOp>) {
             auto* out=payload->mutable_edit_rich_text();setId(value.object_id,out->mutable_object_id());auto* delta=out->mutable_delta();delta->set_delta_version(value.delta.delta_version);if(!value.delta.expected_state_digest.empty())delta->set_expected_state_digest(std::string(value.delta.expected_state_digest.begin(),value.delta.expected_state_digest.end()));
-            for(const auto& step:value.delta.steps) std::visit([&](const auto& v){using S=std::decay_t<decltype(v)>;auto* x=delta->add_steps();
+            for(const auto& step:value.delta.steps) std::visit([&](const auto& v){using S=std::decay_t<decltype(v)>;auto* x=appendOwned(delta->mutable_steps());
                 if constexpr(std::is_same_v<S,InsertTextStep>){auto* y=x->mutable_insert_text();setId(v.paragraph_id,y->mutable_paragraph_id());y->set_scalar_offset(v.scalar_offset);y->set_text(v.text);setTextStyle(v.style,y->mutable_style());}
                 else if constexpr(std::is_same_v<S,DeleteTextStep>){auto* y=x->mutable_delete_text();setId(v.paragraph_id,y->mutable_paragraph_id());y->set_start_scalar(v.start_scalar);y->set_scalar_count(v.scalar_count);}
                 else if constexpr(std::is_same_v<S,SplitParagraphStep>){auto* y=x->mutable_split_paragraph();setId(v.paragraph_id,y->mutable_paragraph_id());y->set_scalar_offset(v.scalar_offset);setId(v.new_paragraph_id,y->mutable_new_paragraph_id());}
@@ -311,23 +395,25 @@ bool toProtobufOperation(const Operation& source, p::Operation& destination) {
                 else if constexpr(std::is_same_v<S,SetRichTextLayoutStep>){auto* y=x->mutable_set_layout();y->set_target_kind_version(v.target_kind_version);if(v.layout)y->mutable_layout()->set_wrap_width(v.layout->wrap_width);}
                 else {auto* y=x->mutable_restore_state()->mutable_state();y->set_kind_version(v.state.kind_version);p::ObjectContent c;setRichText(v.state.content,&c);*y->mutable_document()=c.rich_text().document();if(c.rich_text().has_layout())*y->mutable_layout()=c.rich_text().layout();}
             },step);
+        } else if constexpr (std::is_same_v<T, SetSectionContentOp> || std::is_same_v<T, EditContainerTopologyOp>) {
+            if (!toProtobufContainerOperation(source.payload, *payload)) return false;
         } else if constexpr (std::is_same_v<T, SetConnectorContentOp>) {
             auto* out=payload->mutable_set_connector_content();setId(value.object_id,out->mutable_object_id());setEndpoint(value.content.start,out->mutable_content()->mutable_start());setEndpoint(value.content.end,out->mutable_content()->mutable_end());out->mutable_content()->set_routing(static_cast<p::ConnectorRouting>(value.content.routing));
         } else if constexpr (std::is_same_v<T, UpdateResourceManifestOp>) {
             auto* out = payload->mutable_update_resource_manifest();
             out->set_expected_manifest_revision(value.expected_manifest_revision);
             for (const auto& entry : value.upserts) {
-                if (!mapToProtobufResourceManifestEntry(entry, *out->add_upserts())) return false;
+                if (!mapToProtobufResourceManifestEntry(entry, *appendOwned(out->mutable_upserts()))) return false;
             }
-            for (const auto& id : value.removes) setId(id.value, out->add_removes());
+            for (const auto& id : value.removes) setId(id.value, appendOwned(out->mutable_removes()));
             for (const auto& expectation : value.expectations) {
-                auto* item = out->add_expectations();
+                auto* item = appendOwned(out->mutable_expectations());
                 setId(expectation.resource_id.value, item->mutable_resource_id());
                 item->set_state(static_cast<std::uint32_t>(expectation.state));
                 item->set_revision(expectation.revision);
             }
             for (const auto& reactivation : value.reactivations) {
-                auto* item = out->add_reactivations();
+                auto* item = appendOwned(out->mutable_reactivations());
                 if (!mapToProtobufResourceManifestEntry(reactivation.entry, *item->mutable_entry()) ||
                     !mapToProtobufResourceManifestEntry(reactivation.expected_preimage, *item->mutable_expected_preimage())) return false;
                 setId(reactivation.expected_removal_operation_id.value(), item->mutable_expected_removal_operation_id());

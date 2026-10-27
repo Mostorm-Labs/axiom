@@ -1,0 +1,276 @@
+{
+  "checkpoint": {
+    "document_id": {
+      "value": "00000000000000000000000000000064"
+    },
+    "schema_version": 3,
+    "objects": [
+      {
+        "id": {
+          "value": "00000000000000000000000000000006"
+        },
+        "kind_id": 10,
+        "kind_version": 1,
+        "placement": {
+          "order_key": {
+            "value": "00000006"
+          }
+        },
+        "transform": {
+          "a": 1,
+          "b": 0,
+          "c": 0,
+          "d": 1,
+          "tx": 0,
+          "ty": 0
+        },
+        "properties": {},
+        "content": {
+          "section": {
+            "boundary": {
+              "x": -20,
+              "y": 0,
+              "width": 120,
+              "height": 80
+            },
+            "title": "",
+            "padding": 8.0,
+            "header_height": 20.0
+          }
+        }
+      }
+    ],
+    "manifest": {
+      "schema_version": 1,
+      "manifest_revision": 0
+    },
+    "document_revision": 0,
+    "recovery_frontier": "080110011800",
+    "digest_algorithm": 1,
+    "capability_requirements": "0a147265736f757263652d6d616e69666573742d76310a0a73656374696f6e2d7631",
+    "document_digest": "ddd92153bf40b70eaac0af48fafc772d202ea75b3e3eba324115a4ea45c87baa",
+    "checkpoint_digest": "90cf61d0d729606db64efa7db983e0a1333f9c4c987ba92fc746aa0b83d0f989"
+  },
+  "journal": [
+    {
+      "operation_id": {
+        "value": "000000000000000000000000000003e9"
+      },
+      "document_id": {
+        "value": "00000000000000000000000000000064"
+      },
+      "schema_version": 1,
+      "payload_version": 1,
+      "payload": {
+        "set_section_content": {
+          "items": [
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "expected_kind_version": 1,
+              "expected_content": {
+                "boundary": {
+                  "x": -20,
+                  "y": 0,
+                  "width": 120,
+                  "height": 80
+                },
+                "title": "",
+                "padding": 8.0,
+                "header_height": 20.0
+              },
+              "replacement_content": {
+                "boundary": {
+                  "x": -20,
+                  "y": 0,
+                  "width": 120,
+                  "height": 80
+                },
+                "title": "新标题 é",
+                "padding": 8.0,
+                "header_height": 20.0
+              }
+            }
+          ],
+          "geometry_basis": []
+        }
+      }
+    },
+    {
+      "operation_id": {
+        "value": "000000000000000000000000000003ea"
+      },
+      "document_id": {
+        "value": "00000000000000000000000000000064"
+      },
+      "schema_version": 1,
+      "payload_version": 1,
+      "payload": {
+        "edit_container_topology": {
+          "guard": {
+            "nodes": [
+              {
+                "object_id": {
+                  "value": "00000000000000000000000000000006"
+                },
+                "kind_id": 10,
+                "kind_version": 1,
+                "placement_before": {
+                  "order_key": {
+                    "value": "00000006"
+                  }
+                },
+                "transform_before": {
+                  "a": 1,
+                  "b": 0,
+                  "c": 0,
+                  "d": 1,
+                  "tx": 0,
+                  "ty": 0
+                }
+              }
+            ],
+            "child_sets": [
+              {
+                "complete_members": [
+                  {
+                    "object_id": {
+                      "value": "00000000000000000000000000000006"
+                    },
+                    "order_key": {
+                      "value": "00000006"
+                    }
+                  }
+                ]
+              },
+              {
+                "parent_id": {
+                  "value": "00000000000000000000000000000006"
+                },
+                "complete_members": []
+              }
+            ]
+          },
+          "relocations": [
+            {
+              "object_id": {
+                "value": "00000000000000000000000000000006"
+              },
+              "placement_after": {
+                "parent_id": {
+                  "value": "00000000000000000000000000000005"
+                },
+                "order_key": {
+                  "value": "00000006"
+                }
+              },
+              "transform_after": {
+                "a": 1,
+                "b": 0,
+                "c": 0,
+                "d": 1,
+                "tx": 0,
+                "ty": 0
+              }
+            }
+          ],
+          "order_only_edits": [],
+          "introduce_wrappers": {
+            "containers": [
+              {
+                "id": {
+                  "value": "00000000000000000000000000000005"
+                },
+                "kind_id": 9,
+                "kind_version": 1,
+                "placement": {
+                  "order_key": {
+                    "value": "00000005"
+                  }
+                },
+                "transform": {
+                  "a": 1,
+                  "b": 0,
+                  "c": 0,
+                  "d": 1,
+                  "tx": 0,
+                  "ty": 0
+                },
+                "properties": {},
+                "content": {
+                  "group": {}
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "History_owner": false,
+  "local_reservation": false,
+  "expected_records": [
+    {
+      "id": {
+        "value": "00000000000000000000000000000005"
+      },
+      "kind_id": 9,
+      "kind_version": 1,
+      "placement": {
+        "order_key": {
+          "value": "00000005"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "group": {}
+      }
+    },
+    {
+      "id": {
+        "value": "00000000000000000000000000000006"
+      },
+      "kind_id": 10,
+      "kind_version": 1,
+      "placement": {
+        "parent_id": {
+          "value": "00000000000000000000000000000005"
+        },
+        "order_key": {
+          "value": "00000006"
+        }
+      },
+      "transform": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "tx": 0,
+        "ty": 0
+      },
+      "properties": {},
+      "content": {
+        "section": {
+          "boundary": {
+            "x": -20,
+            "y": 0,
+            "width": 120,
+            "height": 80
+          },
+          "title": "新标题 é",
+          "padding": 8.0,
+          "header_height": 20.0
+        }
+      }
+    }
+  ]
+}

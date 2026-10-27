@@ -1,0 +1,39 @@
+{
+  "checker": {
+    "path": "tools/fc08/bootstrap_preflight.py",
+    "sha256": "b2fde60a385ae27225966cd9300479c6f3f7dd9d63d8f70c277032d80e6726c7"
+  },
+  "checker_tests": {
+    "path": "tests/fc08/bootstrap_preflight_test.py",
+    "sha256": "f3015b4d86fba4101f8e2b4bb71e0f8f282f1f5bf88e40aa3e34d5d76ba3600a"
+  },
+  "preflight_commands": [
+    [
+      "python",
+      "tools/fc08/bootstrap_preflight.py",
+      "--repo",
+      ".",
+      "--package-revision",
+      "f67b9db29090449799bd3e05ef7f1d269dab6d31",
+      "--phase",
+      "package",
+      "--report",
+      "<fresh-attempt>/package-preflight.json"
+    ],
+    [
+      "python",
+      "tools/fc08/bootstrap_preflight.py",
+      "--repo",
+      ".",
+      "--package-revision",
+      "f67b9db29090449799bd3e05ef7f1d269dab6d31",
+      "--phase",
+      "evidence",
+      "--report",
+      "<fresh-attempt>/evidence-preflight.json"
+    ]
+  ],
+  "command_contract": "Execute inside the real worktree. Exit2 is BLOCKED_VERIFICATION, not product RED or a passing package preflight. Reports preserve exact frozen subject/package identities.",
+  "tests_are_Axiom_product_tests": false,
+  "new_product_runner_allowed_after": "Only after unresolved frozen truth/applicability bindings have been resolved by the owning control stage; no product implementation permitted."
+}

@@ -1,0 +1,181 @@
+{
+  "record_id": "FC08-SEQ01-P21-v0.1",
+  "record_kind": "governance_review_with_proposed_policy_delta_not_acceptance",
+  "date": "2026-10-26",
+  "stage": "P21",
+  "review_status": "READY_WITH_FINDINGS",
+  "review_complete": true,
+  "sequence_resolution": "SCOPED_P23_DECISION_PREPARED_NOT_ACCEPTED",
+  "product_eligibility_status": "BLOCKED_UNRESOLVED_DECISION",
+  "product_P31_missing_inputs": [
+    "M01",
+    "M02",
+    "M03",
+    "M04"
+  ],
+  "P32_authorized": false,
+  "may_start_code_execution": false,
+  "report_ref": "https://app.notion.com/p/4044c57a590c818ca7e1c1789eb16c7a",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "observed_main_revision": "a1e8819abe245ab7487f18771970721f480ff487",
+  "observed_control_revision": "44bae7336877ace1e6c0a6e631c0519d89e5d309",
+  "materialization_branch": "control/fc08-p31-readiness",
+  "readiness_package_revision": "b69c87c7477a17f62086b06d61137a22cdc4b1dd",
+  "preflight_ref": ".aegis/packages/FC-08-P31-READINESS/final-binding/preflight-v0.1.json@44bae7336877ace1e6c0a6e631c0519d89e5d309",
+  "current_execution_authority": {
+    "id": "fc-feature-completion-execution-v0.3",
+    "scope": "execution:FC/feature-completion",
+    "ref": "https://app.notion.com/p/3f74c57a590c812a8260dcf23b659ed0",
+    "repository_blob_sha": "8ed76b1128437b0aa2a3c966180b81001fbc3a59",
+    "unchanged": true
+  },
+  "current_semantic_authority": {
+    "id": "fc08-container-extension-semantic-v0.1",
+    "ref": "https://app.notion.com/p/4044c57a590c81a8813bcad8c57ff6ee",
+    "D01_D08_unchanged": true
+  },
+  "qualification_lookup": {
+    "bound_predecessor_gate_and_integration_refs": [],
+    "matched_accepted_sequence_successor": null,
+    "new_notion_queries": [
+      "FC-06 P34",
+      "FC-07 DEV",
+      "Feature Completion Execution v0.4"
+    ],
+    "prior_registry_check": "Reused exact preflight; observed main is unchanged.",
+    "limit": "Bounded lookup; absence of a binding is not proof of absent code, a failed Gate, or nonexistence of external records."
+  },
+  "dependency_matrix": [
+    {
+      "id": "DEP-01",
+      "capability": "Accepted canonical/resource substrate",
+      "disposition": "Bind exact inherited authority and BASE-01. Section and opcodes17/18 are FC08 deliverables, not prerequisites that must already pass.",
+      "verification_refs": [
+        "W01-W07",
+        "T01-T07",
+        "K01-K06"
+      ]
+    },
+    {
+      "id": "DEP-02",
+      "capability": "Common selection, Group scope, owner input and identity",
+      "disposition": "Retain applicable FC01A semantics. Full FC04 aggregate inspector/batch-style closure is not a demonstrated technical prerequisite; required FC08 public readback and selection are not omitted.",
+      "verification_refs": [
+        "S01-S06",
+        "C01-C05",
+        "L01-L06",
+        "P01-P04"
+      ]
+    },
+    {
+      "id": "DEP-03",
+      "capability": "History and coherent derived publication",
+      "disposition": "Existing interfaces are integration seams, not proof that E01/C01/C02 is implemented. Preserve all FC08 obligations.",
+      "verification_refs": [
+        "H01-H08",
+        "G01-G06",
+        "V01-V05",
+        "C01-C05"
+      ]
+    },
+    {
+      "id": "DEP-04",
+      "capability": "Currently instantiated object producers and resources",
+      "disposition": "Preserve actually consumed text/image/sticky/brush/shape behavior. Missing whole-feature closure does not imply all capabilities are absent; necessary out-of-scope gaps remain with their owner.",
+      "verification_refs": [
+        "W07",
+        "S01-S06",
+        "V01-V05",
+        "K01",
+        "P04"
+      ]
+    },
+    {
+      "id": "DEP-05",
+      "capability": "Existing Connector references, deletion closure and route invalidation",
+      "disposition": "Full future FC06 feature completion is not justified as an ordinal prerequisite. Existing endpoint/route behavior cannot be mocked, detached or disabled to pass FC08.",
+      "verification_refs": [
+        "H07",
+        "W07",
+        "K01",
+        "P04"
+      ]
+    },
+    {
+      "id": "DEP-06",
+      "capability": "Existing creation snapping",
+      "disposition": "Preserve existing SnapResolver integration. Full FC07 align/distribute/layout is not required by the accepted FC08 contract; no FC07 completion claim.",
+      "verification_refs": [
+        "P04"
+      ]
+    }
+  ],
+  "preparation_boundary": {
+    "existing_allowed_nonproduction_preparation": "SEQ-01 does not prohibit all source export, fixture inventory or profile binding work within an already authorized control scope.",
+    "new_test_or_descriptor_mutation": "Requires an explicit bounded P31 materialization contract; this review grants no such execution package.",
+    "product_mutation": "Requires an accepted sequence exception or existing qualification binding, then complete product P31 and both preflights."
+  },
+  "proposal": {
+    "candidate_id": "FC08-SEQ01-P23-CANDIDATE-v0.1",
+    "status": "PROPOSED_NOT_ACCEPTED",
+    "scope": "execution:FC/feature-completion",
+    "supersession_if_accepted": "Replace only FC08 ordering restrictions in current execution policy; preserve unrelated policy, history and semantic D01-D07. Add an explicit applicability exception to D08 ordering reference.",
+    "decisions": [
+      {
+        "id": "SEQ-D01",
+        "text": "Allow capability-bound early FC08 development without making whole FC04/FC06/FC07 DEV closure an ordinal prerequisite. No predecessor, including FC05, is declared complete; actually consumed prerequisites remain bound."
+      },
+      {
+        "id": "SEQ-D02",
+        "text": "Use a1e8819abe245ab7487f18771970721f480ff487 or a reconciled descendant as a conditional development input, not a qualified product baseline; freeze exact ancestry and refs in P31."
+      },
+      {
+        "id": "SEQ-D03",
+        "text": "Permit P31 to authorize minimal M01-M04 control/test materialization and scoped BASE-01 alignment. Preserve historical descriptor.lock, accepted fields and expected values; do not require future feature GREEN before implementation."
+      },
+      {
+        "id": "SEQ-D04",
+        "text": "Keep implementation to accepted FC08 semantics, closed architecture and frozen verification. No full generic FC04 inspector, advanced FC06/FC07 feature or FC10 clipboard expansion; no hiding existing producers or replacing production dependencies with mocks."
+      },
+      {
+        "id": "SEQ-D05",
+        "text": "Retain all ten FC08 DEV obligations and sixty logical cases with CR01, applicable inherited regression, independent P34, BASE-01, INT-01 and FC12/FC13 debts; no predecessor PASS or release/G5 waiver."
+      },
+      {
+        "id": "SEQ-D06",
+        "text": "Acceptance resolves sequence policy only. M01-M04, the final exact package and PackageBindingPreflight/EvidenceContractPreflight remain necessary before a separate P32 start; preparation flags cannot self-unlock."
+      }
+    ],
+    "activation": "Only a later explicit scoped P23 acceptance can activate these clauses and update the single Current execution authority."
+  },
+  "handoff": {
+    "next_stage": "Scoped P23 decision on SEQ-D01 through SEQ-D06 as one bounded set",
+    "on_acceptance": "Mark SEQ-01 closed by the exact accepted sequencing amendment; return to existing P31 preparation for M01-M04 and final binding without repeating P10-P20.",
+    "on_nonacceptance": "Retain execution v0.3 and bind applicable predecessor qualification; do not infer permission from this proposal.",
+    "surface_handoff_to_P32": false
+  },
+  "source_blobs": {
+    "runtime/foundation/include/canvas/runtime/runtime_facade.hpp": "c017779b8dab74d234e090a6db0e83da8e61465e",
+    "runtime/interaction/include/canvas/interaction/editor_history.hpp": "f57290aa4c2b1fcff1a16861c63bcac5c024c39c",
+    "runtime/interaction/include/canvas/interaction/creation_session.hpp": "69d3c708b7addfcad85266751b7e844fee04e93f",
+    "runtime/scene/include/canvas/scene/incremental_runtime_coordinator.hpp": "f108888ef190497da0d99329e28cd6b95a158b8c",
+    ".aegis/packages/FC-05-P31/authority.lock.json": "bb23b64f288ab0b1f591297d9042a56521a0b399"
+  },
+  "verification_identity_preserved": {
+    "design_id": "FC08-P20-v0.1+CR01",
+    "effective_catalog_sha256": "da62f3c6c6a7191b01ba7ba4713290acaea26755ef2971fe62475cb101c9b268",
+    "new_or_modified_case_expectations": false
+  },
+  "nonclaims": {
+    "P23_accepted": false,
+    "Axiom_tests_executed": false,
+    "Gate_PASS": false,
+    "product_code_changed": false,
+    "global_authority_registry_changed": false,
+    "M01_M04_closed": false,
+    "independent_reviewer_or_subagent": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "source_revision": "fecd797a3f6a6fb9c27ac6d96f7edeafdfb9dc4c",
+  "owner": "Existing Semantic OperationEngine/PreparedApplyPlan/StagedObjectView/ObjectStore/AppliedOperationLedger",
+  "target_flow": [
+    "typed or real protobuf ingress; normalize and structural validation; enforce full forward byte budget for17/18",
+    "idempotency before guards in prepareApplyPlan",
+    "private operation-specific prepare checks exact guards and final graph; writes only existing plan creates/replacements/deletes",
+    "prepare ChangeSet, reserve ledger map node, stage canonical store and index allocations",
+    "publish store/index through existing atomic owner then publish reserved ledger node, monotonic generation/ordinal and one ChangeSet"
+  ],
+  "abort_flow": "Discard temporary plan/store/index/ledger node; no canonical/ledger/generation changes. No publish-and-compensate. These new operations only; old operations1-16 retain paths.",
+  "publication_note": "Correctness-first staged storage is prepared inside the existing owner for17/18, with O(document) copy cost to record for later optimization; no new transaction/runtime/history framework.",
+  "scope": "Canonical headless semantics only. F/U and EditorHistory C; Scene/geometry D; facade/host E remain NOT_RUN.",
+  "required_tests": [
+    "Frozen W03/W04/W05 and relevant W06 semantic admission",
+    "Frozen T01-T06 applicable canonical/guards plus literal stateful and indexed/reference tests",
+    "allocation rejection and precommit nonmutation, coherent ChangeSet and idempotent retry",
+    "existing regression matrix including unchanged baseline failure"
+  ],
+  "unresolved_semantic_decisions": [],
+  "authority_conflict": false,
+  "verification_conflict": false,
+  "package_scope_conflict": false
+}

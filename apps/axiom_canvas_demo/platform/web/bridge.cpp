@@ -535,3 +535,4 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_debug_image_result(
 }
 
 #include "text_bridge.inl"
+#include "section_bridge.inl"

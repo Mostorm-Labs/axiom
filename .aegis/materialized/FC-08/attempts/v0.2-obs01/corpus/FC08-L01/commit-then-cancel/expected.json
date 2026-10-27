@@ -1,0 +1,26 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 1
+    },
+    {
+      "op": "equal",
+      "path": "history_delta",
+      "expected": 1
+    },
+    {
+      "op": "equal",
+      "path": "session_active",
+      "expected": false
+    },
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "Committed"
+    }
+  ],
+  "source_case": "FC08-L01",
+  "product_expected_only": true
+}

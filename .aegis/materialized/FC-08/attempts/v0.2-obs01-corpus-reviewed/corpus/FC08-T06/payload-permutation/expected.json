@@ -1,0 +1,186 @@
+{
+  "predicates": [
+    {
+      "op": "equal",
+      "path": "canonical.records",
+      "expected": [
+        {
+          "id": {
+            "value": "00000000000000000000000000000006"
+          },
+          "kind_id": 10,
+          "kind_version": 1,
+          "placement": {
+            "order_key": {
+              "value": "20"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 0,
+            "ty": 0
+          },
+          "properties": {},
+          "content": {
+            "section": {
+              "boundary": {
+                "x": 12,
+                "y": 3,
+                "width": 94,
+                "height": 54
+              },
+              "title": "",
+              "padding": 0.0,
+              "header_height": 0.0
+            }
+          }
+        },
+        {
+          "id": {
+            "value": "00000000000000000000000000000007"
+          },
+          "kind_id": 10,
+          "kind_version": 1,
+          "placement": {
+            "order_key": {
+              "value": "40"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 10,
+            "ty": 0
+          },
+          "properties": {},
+          "content": {
+            "section": {
+              "boundary": {
+                "x": -20,
+                "y": 0,
+                "width": 120,
+                "height": 80
+              },
+              "title": "",
+              "padding": 8.0,
+              "header_height": 20.0
+            }
+          }
+        },
+        {
+          "id": {
+            "value": "00000000000000000000000000000008"
+          },
+          "kind_id": 10,
+          "kind_version": 1,
+          "placement": {
+            "order_key": {
+              "value": "50"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 100,
+            "ty": 50
+          },
+          "properties": {},
+          "content": {
+            "section": {
+              "boundary": {
+                "x": -20,
+                "y": 0,
+                "width": 120,
+                "height": 80
+              },
+              "title": "",
+              "padding": 8.0,
+              "header_height": 20.0
+            }
+          }
+        },
+        {
+          "id": {
+            "value": "00000000000000000000000000000009"
+          },
+          "kind_id": 1,
+          "kind_version": 1,
+          "placement": {
+            "parent_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "order_key": {
+              "value": "10"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 12,
+            "ty": 3
+          },
+          "properties": {},
+          "content": {
+            "shape": {
+              "shape_kind": 1,
+              "width": 2,
+              "height": 2
+            }
+          }
+        },
+        {
+          "id": {
+            "value": "0000000000000000000000000000000a"
+          },
+          "kind_id": 1,
+          "kind_version": 1,
+          "placement": {
+            "parent_id": {
+              "value": "00000000000000000000000000000006"
+            },
+            "order_key": {
+              "value": "30"
+            }
+          },
+          "transform": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1,
+            "tx": 104,
+            "ty": 55
+          },
+          "properties": {},
+          "content": {
+            "shape": {
+              "shape_kind": 1,
+              "width": 2,
+              "height": 2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "op": "equal",
+      "path": "outcome",
+      "expected": "Applied"
+    },
+    {
+      "op": "equal",
+      "path": "canonical_commit_delta",
+      "expected": 1
+    }
+  ],
+  "source_case": "FC08-T06",
+  "product_expected_only": true
+}

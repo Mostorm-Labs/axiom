@@ -10,11 +10,26 @@
 #include <cstdint>
 #include <optional>
 
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+#include <memory>
+namespace canvas::qualification { struct State; class Access; }
+#endif
+
 namespace canvas::semantic {
 
 class AppliedOperationLedger;
 class IndexedObjectStore;
 class ReferenceObjectStore;
+class StagedObjectView;
+
+// Serialized precommit admission. A local command reserves its real inverse
+// and History entry here; canonical/replay callers keep the ordinary path.
+class OperationAdmission {
+  public:
+    virtual ~OperationAdmission() = default;
+    [[nodiscard]] virtual bool admit(const PreparedApplyPlan&,
+        const StatefulValidationContext&, const StagedObjectView&) = 0;
+};
 
 enum class ApplyDisposition : std::uint8_t {
     kApplied = 0,
@@ -37,6 +52,10 @@ struct ApplyResult final {
 };
 
 class OperationEngine final {
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+    friend class canvas::qualification::Access;
+    std::shared_ptr<canvas::qualification::State> fc08Qualification_;
+#endif
   public:
     [[nodiscard]] PrepareResult prepare(
         const Operation& operation,
@@ -48,7 +67,8 @@ class OperationEngine final {
         ReferenceObjectStore& objects,
         AppliedOperationLedger& applied_operations,
         SemanticGenerationState& generation,
-        CanonicalCommitClock& canonical_commit_clock) const;
+        CanonicalCommitClock& canonical_commit_clock,
+        OperationAdmission* admission = nullptr) const;
 
     [[nodiscard]] ApplyResult apply(
         const Operation& operation,
@@ -56,7 +76,8 @@ class OperationEngine final {
         IndexedObjectStore& objects,
         AppliedOperationLedger& applied_operations,
         SemanticGenerationState& generation,
-        CanonicalCommitClock& canonical_commit_clock) const;
+        CanonicalCommitClock& canonical_commit_clock,
+        OperationAdmission* admission = nullptr) const;
 
     [[nodiscard]] ApplyResult apply(
         const Operation& operation,
@@ -65,7 +86,8 @@ class OperationEngine final {
         ResourceManifest& manifest,
         AppliedOperationLedger& applied_operations,
         SemanticGenerationState& generation,
-        CanonicalCommitClock& canonical_commit_clock) const;
+        CanonicalCommitClock& canonical_commit_clock,
+        OperationAdmission* admission = nullptr) const;
 
     [[nodiscard]] ApplyResult apply(
         const Operation& operation,
@@ -74,7 +96,8 @@ class OperationEngine final {
         ResourceManifest& manifest,
         AppliedOperationLedger& applied_operations,
         SemanticGenerationState& generation,
-        CanonicalCommitClock& canonical_commit_clock) const;
+        CanonicalCommitClock& canonical_commit_clock,
+        OperationAdmission* admission = nullptr) const;
 };
 
 } // namespace canvas::semantic
