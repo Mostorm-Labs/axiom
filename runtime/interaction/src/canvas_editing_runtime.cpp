@@ -1464,10 +1464,9 @@ bool CanvasEditingRuntime::selectAtViewPoint(float x, float y) noexcept {
   if (!selectionMode_ || runtimeSceneHost_ == nullptr ||
       !std::isfinite(x) || !std::isfinite(y)) return false;
   const auto content = viewportController_->viewToContent(x, y);
-  const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
-      foundation::WorldPoint{content.first, content.second}, 4.0F,
-      canvas::HitTestFilter{canvas::HitTestKindMask::kAll, true}, 1U});
-  if (!tested || tested.value().frontToBack.empty()) {
+  const auto tested = selectionPointHits({content.first,content.second});
+  if (!tested) return false;
+  if (tested.value().frontToBack.empty()) {
     selection_.cancel();
     selectionView_.reset();
     snapGuides_.clear();
@@ -1962,9 +1961,7 @@ bool CanvasEditingRuntime::toggleSelectionAtViewPoint(float x, float y) noexcept
   if (!selectionMode_ || runtimeSceneHost_ == nullptr ||
       !std::isfinite(x) || !std::isfinite(y)) return false;
   const auto content = viewportController_->viewToContent(x, y);
-  const auto tested = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
-      foundation::WorldPoint{content.first, content.second}, 4.0F,
-      canvas::HitTestFilter{canvas::HitTestKindMask::kAll, true}, 1U});
+  const auto tested = selectionPointHits({content.first,content.second});
   if (!tested || tested.value().frontToBack.empty()) return false;
   auto selectedId = tested.value().frontToBack.front();
   selectedId=resolveSelectionRoot(selectedId);
@@ -2174,8 +2171,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
         : selectionOverlay()->hitTest({x,y});
     bool moveSelected = false;
     if (editingHandle_ == render::HandleKind::kNone && runtimeSceneHost_ != nullptr) {
-      const auto hit = runtimeSceneHost_->hitTest(canvas::HitTestRequest{
-          {world.first,world.second},4.0F,{canvas::HitTestKindMask::kAll,true},1U});
+      const auto hit = selectionPointHits({world.first,world.second});
       if (hit && !hit.value().frontToBack.empty()) {
         auto hitId = hit.value().frontToBack.front();
         if (const auto* hitRecord = semanticObjects_.find(hitId);

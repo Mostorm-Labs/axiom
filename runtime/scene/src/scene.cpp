@@ -800,6 +800,7 @@ foundation::Result<HitTestResult> Scene::hitTest(const HitTestRequest& request) 
             const SceneRecord* rightRecord = _records.find(right);
             return frontToBackLess(*leftRecord, *rightRecord);
         });
+        std::vector<ObjectId> sectionBackgrounds;
         for (ObjectId objectId : candidates) {
             ++result.diagnostics.preciseTests;
             auto precise = _renderScene->preciseHitTest(
@@ -810,11 +811,22 @@ foundation::Result<HitTestResult> Scene::hitTest(const HitTestRequest& request) 
             if (!precise.value().hit) {
                 continue;
             }
-            result.frontToBack.push_back(objectId);
             ++result.diagnostics.preciseHits;
+            // Section interiors are a fallback target, not an occlusion mask.
+            // A true border hit keeps normal front-to-back priority.
+            if (_records.find(objectId)->kind==SceneObjectKind::kSection &&
+                precise.value().distance>request.tolerance) {
+                sectionBackgrounds.push_back(objectId);
+                continue;
+            }
+            result.frontToBack.push_back(objectId);
             if (result.frontToBack.size() >= request.maximumResults) {
                 break;
             }
+        }
+        for (auto id:sectionBackgrounds) {
+            if(result.frontToBack.size()>=request.maximumResults)break;
+            result.frontToBack.push_back(id);
         }
         return foundation::Result<HitTestResult>::success(std::move(result));
     } catch (const std::bad_alloc&) {

@@ -274,6 +274,15 @@ TEST_F(SelectionInput, AddResolvesRetainedRootsAfterExternalReparent) {
     EXPECT_EQ(snapshot().selectionQueryStatus,runtime::SelectionQueryStatus::kComplete);
     // Clicking an already acquired Group never leaves its old child selected too.
     click(140,130,true);EXPECT_EQ(selected(),(std::vector{groupId,b}));
+    runtime::SectionIntent enter;enter.action=runtime::SectionAction::kEnterGroupScope;enter.objectId=groupId;
+    ASSERT_EQ(f.submitSectionIntent(enter,++request,9100).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
+    semantic::Operation overlap{semantic::OperationId{foundation::ObjectId::fromUint64(9704)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,semantic::SetTransformsOp{{{b,{1,0,0,1,100,100}}}}};
+    ASSERT_EQ(c.applyExternalOperation(overlap,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    overlap.id=semantic::OperationId{foundation::ObjectId::fromUint64(9705)};
+    overlap.payload=semantic::SetPlacementsOp{{{b,{{},semantic::OrderKey({5})}}}};
+    ASSERT_EQ(c.applyExternalOperation(overlap,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    click(140,130);EXPECT_EQ(selected(),std::vector{a});
 }
 TEST_F(SelectionInput, StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement) {
     auto& editor=c.qualificationRuntime();
@@ -309,4 +318,27 @@ TEST_F(SelectionInput, MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHis
         ASSERT_TRUE(c.qualificationRuntime().qualificationObjectRecord(a));ASSERT_TRUE(c.qualificationRuntime().qualificationObjectRecord(b));
     }
 }
+TEST_F(SelectionInput, SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSelectable) {
+    const auto section=foundation::ObjectId::fromUint64(9800);
+    runtime::SectionIntent create;create.objectId=section;create.content.boundary={50,50,500,200};
+    ASSERT_EQ(f.submitSectionIntent(create,++request,9100).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
+    click(140,130);EXPECT_EQ(selected(),std::vector{a});
+    // A Section created later is above unrelated content in paint order.
+    click(300,130);EXPECT_EQ(selected(),std::vector{b});
+    click(70,210);EXPECT_EQ(selected(),std::vector{section});
+    click(140,130);EXPECT_EQ(selected(),std::vector{a});
+    click(50,200);EXPECT_EQ(selected(),std::vector{section});
+    const auto before=snapshot();ASSERT_TRUE(pointer(input::PointerPhase::kDown,50,200));
+    ASSERT_TRUE(pointer(input::PointerPhase::kMove,40,200));ASSERT_TRUE(pointer(input::PointerPhase::kCancel,40,200));
+    EXPECT_EQ(selected(),std::vector{section});EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
+    // Hidden children are skipped; existing point inspection of locked ones remains.
+    semantic::Operation op{semantic::OperationId{foundation::ObjectId::fromUint64(9801)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,
+        semantic::PatchPropertiesOp{{{a,1,semantic::PropertyPatchAction::kSet,semantic::PropertyValue{false}},
+            {b,2,semantic::PropertyPatchAction::kSet,semantic::PropertyValue{true}}}}};
+    ASSERT_EQ(c.applyExternalOperation(op,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    click(140,130);EXPECT_EQ(selected(),std::vector{section});
+    click(300,130);EXPECT_EQ(selected(),std::vector{b});EXPECT_TRUE(snapshot().selectedLocked);
+}
+
 }

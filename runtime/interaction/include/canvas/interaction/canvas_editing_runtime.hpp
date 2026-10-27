@@ -835,6 +835,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     std::vector<std::uint32_t> unsupportedKinds;
   };
   [[nodiscard]] RegionSelectionContext regionContext() const noexcept;
+  [[nodiscard]] foundation::Result<HitTestResult> selectionPointHits(foundation::WorldPoint) const;
   [[nodiscard]] RegionQueryResult querySelectionRegion(std::span<const RegionPoint>) const;
   [[nodiscard]] bool regionSelectionPointer(const input::PointerSample&) noexcept;
   [[nodiscard]] foundation::ObjectId resolveSelectionRoot(foundation::ObjectId) const;

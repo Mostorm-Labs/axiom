@@ -50,6 +50,15 @@ foundation::ObjectId CanvasEditingRuntime::resolveSelectionRoot(foundation::Obje
     }
     return selection_.resolveHit(id,semanticObjects_);
 }
+foundation::Result<HitTestResult> CanvasEditingRuntime::selectionPointHits(foundation::WorldPoint point) const {
+    if(!runtimeSceneHost_||!historySceneReady())return foundation::Result<HitTestResult>::failure(
+        {foundation::ErrorCode::kInvalidRevision,"Selection requires a coherent published Scene"});
+    auto result=runtimeSceneHost_->hitTest({point,4,{HitTestKindMask::kAll,true},std::max<std::size_t>(1,semanticObjects_.size())});
+    if(!result)return result;
+    auto& ids=result.value().frontToBack;
+    ids.erase(std::remove_if(ids.begin(),ids.end(),[&](auto id){return resolveSelectionRoot(id).isZero();}),ids.end());
+    return result;
+}
 bool CanvasEditingRuntime::publishSelectionAcquisition(std::span<const foundation::ObjectId> acquired,
     SelectionCombineMode mode,std::uint64_t expectedRevision) {
     if (selection_.revision()!=expectedRevision) return false;
@@ -186,7 +195,7 @@ bool CanvasEditingRuntime::acquisitionPointer(const input::PointerSample& sample
                 return selectionPointer(sample.key,sample.phase,sample.x,sample.y);
     }
     const auto w=viewportController_->viewToContent(sample.x,sample.y);
-    const auto hit=runtimeSceneHost_->hitTest({{w.first,w.second},4,{HitTestKindMask::kAll,true},1});
+    const auto hit=selectionPointHits({w.first,w.second});
     if (!hit) {regionQueryStatus_=runtime::SelectionQueryStatus::kFailed;return true;}
     if (hit.value().frontToBack.empty()) return regionSelectionPointer(sample);
     if (input::hasShift(sample.modifiers)||selection_.selected().size()>1) {
