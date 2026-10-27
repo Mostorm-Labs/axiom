@@ -1,0 +1,68 @@
+{
+  "task": "SELECTION-BATCH2",
+  "repository": "Mostorm-Labs/axiom",
+  "authorization": "Direct user instruction to execute supplied accepted package slices A-D",
+  "base": "5daf623eba9a943706d813f8e197e00a9f6a8b2e",
+  "branch": "codex/selection-hierarchy-coverage-batch2",
+  "zip_sha256": "3c8177e4cf7262f3175f4102ce8b6bd5c162bbe27b35ed510584bd5f20e19bc9",
+  "documents": [
+    {
+      "path": "01-scope-and-behavior.md",
+      "sha256": "7a4fa0b5be8f50852da7a985baee0d268e66958bea00d035ac5fa25af579c2e0"
+    },
+    {
+      "path": "02-source-audit.md",
+      "sha256": "f7dadf5c5b5d603d761e3147797ee1341bc1293a7dd8b6b76441b1fb59a9d7ed"
+    },
+    {
+      "path": "03-implementation-plan.md",
+      "sha256": "f7430a66c00c22afcc7b9210aefc1221cfb5d748ce6d23cb018730da35e0e686"
+    },
+    {
+      "path": "04-codex-prompt.md",
+      "sha256": "c4430ec6bbfa5f42d929552a5c80750975cef8d5f654931cc3d878bc1b8965d3"
+    },
+    {
+      "path": "README.md",
+      "sha256": "2d9edfb3682a0836cd853b783c9378a934ba056e029a8876a553a1c424ce0135"
+    }
+  ],
+  "batch1_reconciliation": {
+    "actual_branch": "codex/selection-unified-batch1",
+    "head": "5daf623eba9a943706d813f8e197e00a9f6a8b2e",
+    "required_chain": "PRESENT",
+    "public_primitives": [
+      "SelectionSession.applyAcquisition Replace/Add",
+      "RegionSelectionSession",
+      "querySelectionRegion narrow phase",
+      "real ingress Shift-at-Down",
+      "safe region cancellation independent of legacy cancel",
+      "existing Facade/DebugUI/Native/Web inputs"
+    ],
+    "missing_batch1_prerequisites": [],
+    "intentional_debt": "precise other-object providers and hierarchy refinements are authorized Batch2 work",
+    "baseline": "10 registered selection/geometry/Section/transform/Crop/Connector/navigation CTests PASS; source identical to tested batch1 implementation, receipt-only delta"
+  },
+  "scope": [
+    "A hierarchy operation roots",
+    "B Section point/region target priority",
+    "C delivered-object narrow phase, explicit unsupported when no reliable oracle",
+    "D no-mutation/platform/regressions"
+  ],
+  "forbidden": [
+    "schema/new ObjectKinds/Section canonical mutation changes",
+    "full multi-edit/Group expansion/Snap/Alignment",
+    "legacy cancel/toggle global reinterpretation",
+    "SDK lock or frozen historical evidence changes",
+    "automatic main merge/Gate claim"
+  ],
+  "continue_until_terminal_state": true,
+  "terminal_success": "A-D executable work and named object oracle matrix PASS/unsupported/blocked, actual tests and exact revisions returned",
+  "terminal_blockers": [
+    "BLOCKED_REPOSITORY_IDENTITY",
+    "BLOCKED_UPSTREAM_BATCH1_INCOMPLETE",
+    "BLOCKED_SELECTION_POLICY_AUTHORITY",
+    "BLOCKED_GEOMETRY_ORACLE",
+    "BLOCKED_BUILD_OR_PLATFORM_ENVIRONMENT"
+  ]
+}

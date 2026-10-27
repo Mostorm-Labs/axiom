@@ -5,6 +5,9 @@
 
 namespace canvas::interaction {
 foundation::ObjectId SelectionSession::resolveHit(foundation::ObjectId id,const semantic::ObjectStore& store) const {
+    if(const auto* child=store.find(id);child&&child->kind==semantic::ObjectKind::kRichText&&child->placement.parent_id) {
+        if(const auto* parent=store.find(*child->placement.parent_id);parent&&parent->kind==semantic::ObjectKind::kSticky)id=parent->id;
+    }
     auto result=id;auto current=id;bool within=!groupScope_;
     for(std::size_t i=0;i<=store.size();++i) {
         if(groupScope_&&current==*groupScope_){within=true;break;}
@@ -16,6 +19,37 @@ foundation::ObjectId SelectionSession::resolveHit(foundation::ObjectId id,const 
         if(!r->placement.parent_id)break;current=*r->placement.parent_id;
     }
     return within?result:foundation::ObjectId{};
+}
+std::optional<std::vector<foundation::ObjectId>> SelectionSession::resolveRoots(
+    std::span<const foundation::ObjectId> ids,const semantic::ObjectStore& store) const {
+    if(groupScope_) {
+        const auto* scope=store.find(*groupScope_);
+        if(!scope||scope->kind!=semantic::ObjectKind::kGroup)return std::nullopt;
+    }
+    std::vector<foundation::ObjectId> resolved;
+    for(auto id:ids) {
+        const auto* record=store.find(id);if(!record)return std::nullopt;
+        // Reject incomplete/cyclic ancestry rather than silently manufacturing roots.
+        std::size_t depth=0;
+        while(record->placement.parent_id) {
+            if(++depth>store.size())return std::nullopt;
+            record=store.find(*record->placement.parent_id);if(!record)return std::nullopt;
+        }
+        if(groupScope_==id)continue;
+        const auto root=resolveHit(id,store);
+        if(!root.isZero()&&std::find(resolved.begin(),resolved.end(),root)==resolved.end())resolved.push_back(root);
+    }
+    auto roots=resolved;
+    roots.erase(std::remove_if(roots.begin(),roots.end(),[&](auto id) {
+        const auto* record=store.find(id);
+        while(record->placement.parent_id) {
+            const auto parent=*record->placement.parent_id;
+            if(std::find(resolved.begin(),resolved.end(),parent)!=resolved.end())return true;
+            record=store.find(parent);
+        }
+        return false;
+    }),roots.end());
+    return roots;
 }
 bool SelectionSession::enterGroupScope(foundation::ObjectId id,const semantic::ObjectStore& store) {
     const auto* group=store.find(id);

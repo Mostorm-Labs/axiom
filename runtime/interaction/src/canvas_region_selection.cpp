@@ -53,30 +53,11 @@ foundation::ObjectId CanvasEditingRuntime::resolveSelectionRoot(foundation::Obje
 bool CanvasEditingRuntime::publishSelectionAcquisition(std::span<const foundation::ObjectId> acquired,
     SelectionCombineMode mode,std::uint64_t expectedRevision) {
     if (selection_.revision()!=expectedRevision) return false;
-    std::vector<foundation::ObjectId> resolved;
-    const auto append=[&](auto ids) {
-        for (auto id:ids) {
-            const auto root=resolveSelectionRoot(id);
-            if (root.isZero()) return false;
-            if (std::find(resolved.begin(),resolved.end(),root)==resolved.end()) resolved.push_back(root);
-        }
-        return true;
-    };
-    // Re-resolve retained roots as well as new hits on this same current view.
-    // External topology edits do not necessarily advance the selection revision.
-    if (mode==SelectionCombineMode::kAdd&&!append(selection_.selected())) return false;
-    if (!append(acquired)) return false;
-    auto roots=resolved;
-    roots.erase(std::remove_if(roots.begin(),roots.end(),[&](auto id) {
-        const auto* record=semanticObjects_.find(id);
-        for (std::size_t depth=0;record&&record->placement.parent_id&&depth<semanticObjects_.size();++depth) {
-            const auto parent=*record->placement.parent_id;
-            if (std::find(resolved.begin(),resolved.end(),parent)!=resolved.end()) return true;
-            record=semanticObjects_.find(parent);
-        }
-        return false;
-    }),roots.end());
-    return selection_.applyAcquisition(roots,SelectionCombineMode::kReplace,expectedRevision);
+    std::vector<foundation::ObjectId> combined;
+    if(mode==SelectionCombineMode::kAdd)combined.assign(selection_.selected().begin(),selection_.selected().end());
+    combined.insert(combined.end(),acquired.begin(),acquired.end());
+    const auto roots=selection_.resolveRoots(combined,semanticObjects_);
+    return roots&&selection_.applyAcquisition(*roots,SelectionCombineMode::kReplace,expectedRevision);
 }
 bool CanvasEditingRuntime::setSelectionAcquisitionMode(runtime::CanvasSelectionMode mode) noexcept {
     if (mode>runtime::CanvasSelectionMode::kFreeform||closed_||imageCropPointer_||

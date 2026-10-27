@@ -20,6 +20,9 @@ class SelectionSession final {
     // Revision fencing prevents an old acquisition from replacing newer state.
     [[nodiscard]] bool applyAcquisition(std::span<const foundation::ObjectId> resolvedFrontToBack,
                                        SelectionCombineMode mode, std::uint64_t expectedRevision);
+    // Pure projection: nullopt means a missing/cyclic hierarchy, not an empty hit.
+    [[nodiscard]] std::optional<std::vector<foundation::ObjectId>> resolveRoots(
+        std::span<const foundation::ObjectId>, const semantic::ObjectStore&) const;
     void onChangeSet(const semantic::ChangeSet& changes);
     void cancel() noexcept;
     [[nodiscard]] foundation::ObjectId resolveHit(foundation::ObjectId,const semantic::ObjectStore&) const;
