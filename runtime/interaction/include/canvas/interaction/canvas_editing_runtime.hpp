@@ -838,6 +838,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] RegionQueryResult querySelectionRegion(std::span<const RegionPoint>) const;
   [[nodiscard]] bool regionSelectionPointer(const input::PointerSample&) noexcept;
   [[nodiscard]] foundation::ObjectId resolveSelectionRoot(foundation::ObjectId) const;
+  [[nodiscard]] bool publishSelectionAcquisition(std::span<const foundation::ObjectId>,
+      SelectionCombineMode, std::uint64_t expectedRevision);
   [[nodiscard]] bool acquisitionPointer(const input::PointerSample&) noexcept;
   [[nodiscard]] bool renderAcquisitionOverlay() noexcept;
   [[nodiscard]] bool singleSelectionAffordances() const noexcept {

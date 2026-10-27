@@ -178,10 +178,10 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
         : runtime.toolMode() == canvas::interaction::CanvasEditingRuntime::ToolMode::kObjectEraser ||
           runtime.toolMode() == canvas::interaction::CanvasEditingRuntime::ToolMode::kPartialEraser
             ? CanvasToolKind::kEraser : CanvasToolKind::kInk;
+    out.selectedLocked = runtime.selectedObjectLocked();
     if (const auto record = runtime.selectedObjectRecord()) {
       out.selectedKind = static_cast<std::uint32_t>(record->kind);
       out.selectedVersion = record->kind_version;
-      out.selectedLocked = runtime.selectedObjectLocked();
       const auto& transform = record->transform;
       out.selectedTransform = {transform.a, transform.b, transform.c, transform.d,
                                transform.tx, transform.ty};

@@ -50,6 +50,34 @@ foundation::ObjectId CanvasEditingRuntime::resolveSelectionRoot(foundation::Obje
     }
     return selection_.resolveHit(id,semanticObjects_);
 }
+bool CanvasEditingRuntime::publishSelectionAcquisition(std::span<const foundation::ObjectId> acquired,
+    SelectionCombineMode mode,std::uint64_t expectedRevision) {
+    if (selection_.revision()!=expectedRevision) return false;
+    std::vector<foundation::ObjectId> resolved;
+    const auto append=[&](auto ids) {
+        for (auto id:ids) {
+            const auto root=resolveSelectionRoot(id);
+            if (root.isZero()) return false;
+            if (std::find(resolved.begin(),resolved.end(),root)==resolved.end()) resolved.push_back(root);
+        }
+        return true;
+    };
+    // Re-resolve retained roots as well as new hits on this same current view.
+    // External topology edits do not necessarily advance the selection revision.
+    if (mode==SelectionCombineMode::kAdd&&!append(selection_.selected())) return false;
+    if (!append(acquired)) return false;
+    auto roots=resolved;
+    roots.erase(std::remove_if(roots.begin(),roots.end(),[&](auto id) {
+        const auto* record=semanticObjects_.find(id);
+        for (std::size_t depth=0;record&&record->placement.parent_id&&depth<semanticObjects_.size();++depth) {
+            const auto parent=*record->placement.parent_id;
+            if (std::find(resolved.begin(),resolved.end(),parent)!=resolved.end()) return true;
+            record=semanticObjects_.find(parent);
+        }
+        return false;
+    }),roots.end());
+    return selection_.applyAcquisition(roots,SelectionCombineMode::kReplace,expectedRevision);
+}
 bool CanvasEditingRuntime::setSelectionAcquisitionMode(runtime::CanvasSelectionMode mode) noexcept {
     if (mode>runtime::CanvasSelectionMode::kFreeform||closed_||imageCropPointer_||
         (interaction_->textSession()&&interaction_->textSession()->read().phase!=runtime::TextPhase::kClosed)) return false;
@@ -59,6 +87,10 @@ bool CanvasEditingRuntime::setSelectionAcquisitionMode(runtime::CanvasSelectionM
     canonicalPresentationDirty_=true;return true;
 }
 void CanvasEditingRuntime::cancelRegionSelection() noexcept {
+    // The transient surface contains a full scene. Retire it only after a
+    // replacement canonical submission, including invalidation during rendering.
+    // Do not clear here: renderSelectionOverlay may run under preview locks.
+    if (regionSelection_.active()) transientOverlayHandoffPending_=true;
     regionSelection_.cancel();regionCandidates_.clear();regionUnsupportedKinds_.clear();
     regionQueryStatus_=runtime::SelectionQueryStatus::kCancelled;
     ++regionBinding_;canonicalPresentationDirty_=true;
@@ -136,15 +168,18 @@ bool CanvasEditingRuntime::regionSelectionPointer(const input::PointerSample& sa
         regionCandidates_.clear();regionUnsupportedKinds_.clear();
         if (result.status==RegionFinishStatus::kReady) {
             const auto query=querySelectionRegion(result.points);regionQueryStatus_=query.status;regionUnsupportedKinds_=query.unsupportedKinds;
-            if (query.status==Status::kComplete&&selection_.applyAcquisition(query.roots,result.combine,result.context.selectionRevision)) {
+            if (query.status==Status::kComplete&&publishSelectionAcquisition(query.roots,result.combine,result.context.selectionRevision)) {
                 snapGuides_.clear();
             } else if (query.status==Status::kComplete) regionQueryStatus_=Status::kStale;
         } else if (result.status==RegionFinishStatus::kClick) {
-            regionQueryStatus_=selection_.applyAcquisition({},result.combine,result.context.selectionRevision)?Status::kComplete:Status::kStale;
+            regionQueryStatus_=publishSelectionAcquisition({},result.combine,result.context.selectionRevision)?Status::kComplete:Status::kStale;
         } else regionQueryStatus_=Status::kInvalid;
         canonicalPresentationDirty_=true;(void)clearTransientOverlay();(void)renderSelectionOverlay();return true;
     }
-    if (!regionSelection_.update(sample)) {cancelRegionSelection();regionQueryStatus_=Status::kInvalid;return true;}
+    if (!regionSelection_.update(sample)) {
+        // Overflow/invalid coordinates may already have cancelled the leaf session.
+        transientOverlayHandoffPending_=true;cancelRegionSelection();regionQueryStatus_=Status::kInvalid;return true;
+    }
     if (regionSelection_.dragged()) {
         const auto query=querySelectionRegion(regionSelection_.outline());regionCandidates_=query.roots;
         regionUnsupportedKinds_=query.unsupportedKinds;regionQueryStatus_=query.status;
@@ -177,7 +212,7 @@ bool CanvasEditingRuntime::acquisitionPointer(const input::PointerSample& sample
         const auto root=resolveSelectionRoot(hit.value().frontToBack.front());
         if (!root.isZero()) {
             const std::array roots{root};
-            (void)selection_.applyAcquisition(roots,input::hasShift(sample.modifiers)?SelectionCombineMode::kAdd:SelectionCombineMode::kReplace,selection_.revision());
+            (void)publishSelectionAcquisition(roots,input::hasShift(sample.modifiers)?SelectionCombineMode::kAdd:SelectionCombineMode::kReplace,selection_.revision());
         }
         acquisitionClickPointers_.insert(sample.key);canonicalPresentationDirty_=true;(void)renderSelectionOverlay();return true;
     }

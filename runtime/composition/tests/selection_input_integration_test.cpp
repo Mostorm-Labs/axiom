@@ -115,6 +115,8 @@ TEST_F(SelectionInput, NewSelectionAndDeletionCannotBeOverwrittenByOldRegion) {
     ASSERT_EQ(receipt->section->failure,runtime::SectionFailure::kNone);
     ASSERT_TRUE(pointer(input::PointerPhase::kUp,500,200));EXPECT_EQ(selected(),std::vector{section});
     ASSERT_EQ(snapshot().selectionQueryStatus,runtime::SelectionQueryStatus::kStale);
+    runtime::RuntimeFrameOpportunity frame;ASSERT_TRUE(c.serviceFrameOpportunity(true,frame));
+    EXPECT_FALSE(c.qualificationRuntime().previewSurfaceProvider()->overlayVisible());
 }
 TEST_F(SelectionInput, MetricsAndSourceLossCancelOnlyOwnedRegion) {
     click(140,130);ASSERT_TRUE(pointer(input::PointerPhase::kDown,20,20));
@@ -154,6 +156,8 @@ TEST_F(SelectionInput, DeletingOriginalSelectionDoesNotRestoreDeletedIdentity) {
     ASSERT_EQ(c.applyExternalOperation(op,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
     ASSERT_TRUE(pointer(input::PointerPhase::kUp,500,200));EXPECT_TRUE(selected().empty());
     EXPECT_EQ(c.semanticObjectCount(),2U);
+    runtime::RuntimeFrameOpportunity frame;ASSERT_TRUE(c.serviceFrameOpportunity(true,frame));
+    EXPECT_FALSE(c.qualificationRuntime().previewSurfaceProvider()->overlayVisible());
 }
 TEST_F(SelectionInput, SceneMutationRequeriesAtUpButCameraMutationCancels) {
     mode(runtime::CanvasSelectionMode::kRectangle);
@@ -244,5 +248,65 @@ TEST_F(SelectionInput, RegionExcludesHiddenAndLockedWhilePointCanInspectLockedOb
     rectangle(90,90,510,170);EXPECT_EQ(selected(),std::vector{foundation::ObjectId::fromUint64(9103)});
     mode(runtime::CanvasSelectionMode::kPoint);click(300,130);EXPECT_EQ(selected(),std::vector{b});
     EXPECT_TRUE(snapshot().selectedLocked);EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
+}
+
+TEST_F(SelectionInput, AddResolvesRetainedRootsAfterExternalReparent) {
+    const auto groupId=foundation::ObjectId::fromUint64(9700);
+    semantic::ObjectRecord group;group.id=groupId;group.kind=semantic::ObjectKind::kGroup;group.kind_version=1;
+    group.content=semantic::GroupContent{};group.placement.order_key=semantic::OrderKey({4});
+    semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(9701)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,semantic::InsertObjectsOp{{group}}};
+    ASSERT_EQ(c.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    click(140,130);ASSERT_EQ(selected(),std::vector{a});
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,250,90,true));ASSERT_TRUE(pointer(input::PointerPhase::kMove,345,165));
+    const auto before=*c.qualificationRuntime().qualificationObjectRecord(a);
+    semantic::EditContainerTopologyOp move;move.effect=semantic::RelocateObjectsEffect{};
+    move.guard.nodes={{a,before.kind,before.kind_version,before.placement,before.transform},
+        {groupId,group.kind,group.kind_version,group.placement,group.transform}};
+    move.guard.child_sets={{{},{{a,semantic::OrderKey({1})},{b,semantic::OrderKey({2})},
+        {foundation::ObjectId::fromUint64(9103),semantic::OrderKey({3})},{groupId,semantic::OrderKey({4})}}},{groupId,{}}};
+    move.relocations={{a,{groupId,semantic::OrderKey({1})},before.transform}};
+    semantic::Operation op{semantic::OperationId{foundation::ObjectId::fromUint64(9702)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,move};
+    ASSERT_EQ(c.applyExternalOperation(op,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,345,165));
+    EXPECT_EQ(selected(),(std::vector{groupId,b}));
+    EXPECT_EQ(snapshot().selectionQueryStatus,runtime::SelectionQueryStatus::kComplete);
+    // Clicking an already acquired Group never leaves its old child selected too.
+    click(140,130,true);EXPECT_EQ(selected(),(std::vector{groupId,b}));
+}
+TEST_F(SelectionInput, StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement) {
+    auto& editor=c.qualificationRuntime();
+    click(140,130);mode(runtime::CanvasSelectionMode::kRectangle);
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,20,20));ASSERT_TRUE(pointer(input::PointerPhase::kMove,500,200));
+    ASSERT_TRUE(editor.previewSurfaceProvider()->overlayVisible());ASSERT_FALSE(editor.transientOverlayDirty());
+    runtime::CanvasControlRequest q;q.target=f.mountedCanvasTargets().front();q.clientId=9100;q.requestId=++request;
+    q.payload.kind=runtime::CanvasControlPayloadKind::kZoomAt;q.payload.scale=2;
+    ASSERT_EQ(f.submitCanvasControl(q).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
+    runtime::RuntimeFrameOpportunity frame;ASSERT_TRUE(c.serviceFrameOpportunity(true,frame));
+    EXPECT_FALSE(snapshot().regionSelectionActive);EXPECT_FALSE(editor.previewSurfaceProvider()->overlayVisible());
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,500,200));
+    EXPECT_EQ(selected(),std::vector{a});EXPECT_FALSE(editor.previewSurfaceProvider()->overlayVisible());
+}
+TEST_F(SelectionInput, MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation) {
+    semantic::Operation op{semantic::OperationId{foundation::ObjectId::fromUint64(9703)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,
+        semantic::PatchPropertiesOp{{{b,2,semantic::PropertyPatchAction::kSet,semantic::PropertyValue{true}}}}};
+    ASSERT_EQ(c.applyExternalOperation(op,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    for (bool lockedFirst:{false,true}) {
+        mode(runtime::CanvasSelectionMode::kPoint);
+        click(lockedFirst?300.F:140.F,130);click(lockedFirst?140.F:300.F,130,true);
+        ASSERT_EQ(selected().size(),2U);EXPECT_TRUE(snapshot().selectedLocked);
+        const auto before=snapshot();const auto historySize=ink_playground::InkPlaygroundHistoryTestAccess::historySize(c.qualificationRuntime());
+        EXPECT_FALSE(c.qualificationRuntime().deleteSelectedObjects());
+        runtime::CanvasControlRequest q;q.target=f.mountedCanvasTargets().front();q.clientId=9100;q.requestId=++request;
+        q.payload.kind=runtime::CanvasControlPayloadKind::kDeleteSelected;
+        ASSERT_EQ(f.submitCanvasControl(q).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
+        const auto receipt=f.canvasControlReceipt({9100,request});ASSERT_TRUE(receipt);EXPECT_NE(receipt->error,runtime::CanvasControlError::kNone);
+        EXPECT_EQ(c.semanticObjectCount(),3U);EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
+        EXPECT_EQ(snapshot().canUndo,before.canUndo);EXPECT_EQ(snapshot().canRedo,before.canRedo);
+        EXPECT_EQ(ink_playground::InkPlaygroundHistoryTestAccess::historySize(c.qualificationRuntime()),historySize);
+        ASSERT_TRUE(c.qualificationRuntime().qualificationObjectRecord(a));ASSERT_TRUE(c.qualificationRuntime().qualificationObjectRecord(b));
+    }
 }
 }

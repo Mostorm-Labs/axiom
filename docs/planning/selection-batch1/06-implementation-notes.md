@@ -48,3 +48,9 @@ Native: build the targets in `native-regression-commands.json`, discover CTests,
 Web: build `axiom_canvas_demo_web`, then run `node apps/axiom_canvas_demo/tests/web_selection_batch1.mjs --repo . --chrome <verified Chrome executable> --python <Python with Pillow> --git <Git executable> --output <new output directory>`.
 
 Manual: F12 -> Control -> create basic Shapes; Select blank drag; Shift-at-Down append; Rectangle select / Freeform lasso may start over objects; cancel or switch Hand and return Select. Selection must not add Operations or consume Undo/Redo. Unsupported candidate kinds preserve selection and display a message.
+
+## Whole-branch review disposition
+
+One independent read-only review covered base through c1300ce6 and found three Important issues, with no Critical or Minor findings. The fix pass adds actual-ingress regressions for retained-root re-resolution after external Group reparenting, retirement of the visible region surface after invalidation, and mixed locked/unlocked deletion in both orders. All three failed before fixes. The strengthened input fixture has 21 tests. The first fix attempt left lock readback unavailable for multi-selection; that failure is retained, and the subsequent fix projects aggregate lock state independently of the single-object record.
+
+The reviewer did not reproduce test totals independently. Missing exact providers and physical/other-platform/performance acceptance remain the coverage limits above; the separate second handoff-clear condition was not demonstrated as a failing live-frame sequence and received no speculative change.

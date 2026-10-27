@@ -1888,10 +1888,13 @@ bool CanvasEditingRuntime::setSelectedStrokeWidth(double width) noexcept {
       {inverseId, documentId_, 1U, 1U, std::move(inversePayload)});
 }
 bool CanvasEditingRuntime::selectedObjectLocked() const noexcept {
-  if(sceneCoordinator_)if(const auto* derived=sceneCoordinator_->runtimeScene().find(selection_.primary()))
-    if(propertyBool(derived->properties,2U,false))return true;
-  const auto* object=semanticObjects_.find(selection_.primary());
-  return object && propertyBool(object->properties,2U,false);
+  for(const auto id:selection_.selected()) {
+    if(sceneCoordinator_)if(const auto* derived=sceneCoordinator_->runtimeScene().find(id))
+      if(propertyBool(derived->properties,2U,false))return true;
+    const auto* object=semanticObjects_.find(id);
+    if(object && propertyBool(object->properties,2U,false))return true;
+  }
+  return false;
 }
 std::optional<semantic::ObjectRecord> CanvasEditingRuntime::selectedObjectRecord() const {
   if (selectedObjectCount()!=1U) return std::nullopt;
@@ -1939,8 +1942,8 @@ bool CanvasEditingRuntime::setSelectedOrder(bool front) noexcept {
       {inverse,documentId_,1,1,semantic::SetPlacementsOp{{{before->id,before->placement}}}});
 }
 bool CanvasEditingRuntime::deleteSelectedObjects() noexcept {
-  if(const auto section=removeSelectedSections())return section->failure==runtime::SectionFailure::kNone;
   if(selection_.primary().isZero() || selectedObjectLocked()) return false;
+  if(const auto section=removeSelectedSections())return section->failure==runtime::SectionFailure::kNone;
   const auto forwardId=allocateOperationId(),inverseId=allocateOperationId();
   semantic::Operation operation{forwardId,documentId_,1,1,
       semantic::DeleteObjectsOp{{selection_.selected().begin(),selection_.selected().end()}}};
