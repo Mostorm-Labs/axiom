@@ -1,0 +1,200 @@
+[
+  {
+    "path": "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+    "line": 33,
+    "pattern": "class HistorySubmitPort",
+    "source": "class HistorySubmitPort {"
+  },
+  {
+    "path": "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+    "line": 72,
+    "pattern": "executeUndoable",
+    "source": "[[nodiscard]] bool executeUndoable(const semantic::Operation&);"
+  },
+  {
+    "path": "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+    "line": 60,
+    "pattern": "struct PreparedEntry",
+    "source": "struct PreparedEntry final {"
+  },
+  {
+    "path": "runtime/interaction/include/canvas/interaction/editor_history.hpp",
+    "line": 96,
+    "pattern": "submitFresh",
+    "source": "[[nodiscard]] bool submitFresh(std::span<const semantic::Operation> operations,"
+  },
+  {
+    "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "line": 3347,
+    "pattern": "CanvasEditingRuntime::submitAdmitted",
+    "source": "interaction::SubmitResult CanvasEditingRuntime::submitAdmitted("
+  },
+  {
+    "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "line": 1577,
+    "pattern": "bool CanvasEditingRuntime::applyLocalHistoryOperation",
+    "source": "bool CanvasEditingRuntime::applyLocalHistoryOperation("
+  },
+  {
+    "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "line": 1492,
+    "pattern": "lastAppliedCommit_ =",
+    "source": "lastAppliedCommit_ = *result.commit_record;"
+  },
+  {
+    "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "line": 3445,
+    "pattern": "operations.size() != 1U",
+    "source": "if (operations.size() != 1U || source != semantic::ApplySource::kUndoRedo ||"
+  },
+  {
+    "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "line": 1487,
+    "pattern": "void CanvasEditingRuntime::observeApplied",
+    "source": "void CanvasEditingRuntime::observeApplied(const semantic::Operation& operation,"
+  },
+  {
+    "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+    "line": 3388,
+    "pattern": "void CanvasEditingRuntime::publishAdmitted",
+    "source": "void CanvasEditingRuntime::publishAdmitted() noexcept {"
+  },
+  {
+    "path": "runtime/interaction/src/canvas_section_commands.cpp",
+    "line": 453,
+    "pattern": "history_.executeUndoable",
+    "source": "const bool accepted=history_.executeUndoable(std::move(operation));"
+  },
+  {
+    "path": "runtime/interaction/src/canvas_section_commands.cpp",
+    "line": 452,
+    "pattern": "sectionDefersPublication_=true",
+    "source": "sectionDefersPublication_=true;"
+  },
+  {
+    "path": "runtime/interaction/src/editor_history.cpp",
+    "line": 194,
+    "pattern": "bool EditorHistory::executeUndoable",
+    "source": "bool EditorHistory::executeUndoable(const semantic::Operation& forward) try {"
+  },
+  {
+    "path": "runtime/interaction/src/editor_history.cpp",
+    "line": 255,
+    "pattern": "bool EditorHistory::redo",
+    "source": "bool EditorHistory::redo() try {"
+  },
+  {
+    "path": "runtime/interaction/src/editor_history.cpp",
+    "line": 216,
+    "pattern": "bool EditorHistory::submitFresh",
+    "source": "bool EditorHistory::submitFresh(std::span<const semantic::Operation> operations,"
+  },
+  {
+    "path": "runtime/interaction/src/editor_history.cpp",
+    "line": 240,
+    "pattern": "bool EditorHistory::undo",
+    "source": "bool EditorHistory::undo() {"
+  },
+  {
+    "path": "runtime/interaction/src/editor_history.cpp",
+    "line": 169,
+    "pattern": "class HistoryCommandAdmission",
+    "source": "class HistoryCommandAdmission final : public semantic::OperationAdmission {"
+  },
+  {
+    "path": "runtime/interaction/src/editor_history.cpp",
+    "line": 144,
+    "pattern": "entries_.reserve",
+    "source": "entries_.reserve(cursor_+1);"
+  },
+  {
+    "path": "runtime/interaction/src/undoable_command.cpp",
+    "line": 195,
+    "pattern": "engine.prepare(u",
+    "source": "const auto reverse = engine.prepare(u, {after, context.applied_operations, context.manifest});"
+  },
+  {
+    "path": "runtime/interaction/src/undoable_command.cpp",
+    "line": 191,
+    "pattern": "measureProtobufOperation",
+    "source": "const auto forwardSize = SemanticCodec::measureProtobufOperation(f);"
+  },
+  {
+    "path": "runtime/interaction/src/undoable_command.cpp",
+    "line": 192,
+    "pattern": "measureProtobufOperation",
+    "source": "const auto inverseSize = SemanticCodec::measureProtobufOperation(u);"
+  },
+  {
+    "path": "runtime/interaction/src/undoable_command.cpp",
+    "line": 120,
+    "pattern": "prepareUndoableCommand",
+    "source": "std::optional<PreparedUndoableCommand> prepareUndoableCommand("
+  },
+  {
+    "path": "runtime/interaction/tests/editor_history_test.cpp",
+    "line": 53,
+    "pattern": "last.assign",
+    "source": "last.assign(operations.begin(), operations.end());"
+  },
+  {
+    "path": "runtime/interaction/tests/editor_history_test.cpp",
+    "line": 41,
+    "pattern": "struct Submit final",
+    "source": "struct Submit final : HistorySubmitPort {"
+  },
+  {
+    "path": "runtime/semantic/src/operation_engine.cpp",
+    "line": 49,
+    "pattern": "bool admitPlan",
+    "source": "bool admitPlan(OperationAdmission* admission, const PreparedApplyPlan& plan,"
+  },
+  {
+    "path": "runtime/semantic/src/operation_engine.cpp",
+    "line": 113,
+    "pattern": "prepareSuccessor(after)",
+    "source": "if (!generation.prepareSuccessor(after)) {"
+  },
+  {
+    "path": "runtime/semantic/src/operation_engine.cpp",
+    "line": 182,
+    "pattern": "prepareSuccessor(after)",
+    "source": "if (!generation.prepareSuccessor(after)) {"
+  },
+  {
+    "path": "runtime/semantic/src/operation_engine.cpp",
+    "line": 228,
+    "pattern": "prepareSuccessor(after)",
+    "source": "const SemanticGeneration before=generation.current(); SemanticGeneration after; if(!generation.prepareSuccessor(after))return {ApplyDisposition::kRejected,{},CommitBlockReason::kNone,std::nullopt}; CommitOrdinal ordinal; if(!canonical_commit_clock.prepareSuccessor(ordinal))return {ApplyDisposition::kCommitBlocked,{},CommitBlockReason::kCommitLaneExhausted,std::nullopt}; auto changes=internal::prepareChangeSet(*prepared.plan); if(!changes)return {ApplyDisposition::kRejected,{},CommitBlockReason::kNone,std::nullopt};"
+  },
+  {
+    "path": "runtime/semantic/src/operation_engine.cpp",
+    "line": 247,
+    "pattern": "prepareSuccessor(after)",
+    "source": "const SemanticGeneration before=generation.current(); SemanticGeneration after; if(!generation.prepareSuccessor(after))return {ApplyDisposition::kRejected,{},CommitBlockReason::kNone,std::nullopt}; CommitOrdinal ordinal; if(!canonical_commit_clock.prepareSuccessor(ordinal))return {ApplyDisposition::kCommitBlocked,{},CommitBlockReason::kCommitLaneExhausted,std::nullopt}; auto changes=internal::prepareChangeSet(*prepared.plan); if(!changes)return {ApplyDisposition::kRejected,{},CommitBlockReason::kNone,std::nullopt};"
+  },
+  {
+    "path": "runtime/semantic/src/operation_engine.cpp",
+    "line": 125,
+    "pattern": "reserveContainerEntry",
+    "source": "auto reserved_ledger = applied_operations.reserveContainerEntry(prepared.plan->operation, admission != nullptr);"
+  },
+  {
+    "path": "runtime/semantic/src/operation_engine.cpp",
+    "line": 193,
+    "pattern": "reserveContainerEntry",
+    "source": "auto reserved_ledger = applied_operations.reserveContainerEntry(prepared.plan->operation, admission != nullptr);"
+  },
+  {
+    "path": "runtime/semantic/src/operation_engine.cpp",
+    "line": 229,
+    "pattern": "reserveContainerEntry",
+    "source": "auto reserved_ledger = applied_operations.reserveContainerEntry(prepared.plan->operation, admission != nullptr);"
+  },
+  {
+    "path": "runtime/semantic/src/operation_engine.cpp",
+    "line": 248,
+    "pattern": "reserveContainerEntry",
+    "source": "auto reserved_ledger = applied_operations.reserveContainerEntry(prepared.plan->operation, admission != nullptr);"
+  }
+]

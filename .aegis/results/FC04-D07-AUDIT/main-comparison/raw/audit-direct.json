@@ -1,0 +1,154 @@
+{
+  "tests": 12,
+  "failures": 2,
+  "disabled": 0,
+  "errors": 0,
+  "timestamp": "2026-10-27T19:23:12Z",
+  "time": "0.012s",
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "D07",
+      "tests": 12,
+      "failures": 2,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-27T19:23:12Z",
+      "time": "0.012s",
+      "testsuite": [
+        {
+          "name": "ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation",
+          "file": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp",
+          "line": 227,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-27T19:23:12Z",
+          "time": "0.002s",
+          "classname": "D07"
+        },
+        {
+          "name": "HomogeneousMultiTargetValidationRejectsWholeOperationAndPreservesRedo",
+          "file": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp",
+          "line": 238,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-27T19:23:12Z",
+          "time": "0s",
+          "classname": "D07"
+        },
+        {
+          "name": "RealPrecommitAdmissionRejectionHasZeroMutationAndPreservesRedo",
+          "file": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp",
+          "line": 246,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-27T19:23:12Z",
+          "time": "0s",
+          "classname": "D07"
+        },
+        {
+          "name": "TransformBatchHasOneUndoWithChangedSelectionAndFreshRedoIdentity",
+          "file": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp",
+          "line": 267,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-27T19:23:12Z",
+          "time": "0s",
+          "classname": "D07"
+        },
+        {
+          "name": "PropertiesBatchHasOneUndoWithChangedSelection",
+          "file": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp",
+          "line": 301,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-27T19:23:12Z",
+          "time": "0.001s",
+          "classname": "D07"
+        },
+        {
+          "name": "IndependentCommandsExposeAppliedPrefixAtEveryTwoOperationRejectionBoundary",
+          "file": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp",
+          "line": 319,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-27T19:23:12Z",
+          "time": "0s",
+          "classname": "D07"
+        },
+        {
+          "name": "ManualCanonicalCompensationRestoresProjectionButDoesNotRewindMetadataOrEvents",
+          "file": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp",
+          "line": 348,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-27T19:23:12Z",
+          "time": "0s",
+          "classname": "D07"
+        },
+        {
+          "name": "RealScenePublicationFaultsRetainCommittedHistoryAndRecoverCoherently",
+          "file": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp",
+          "line": 373,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-27T19:23:12Z",
+          "time": "0.001s",
+          "classname": "D07"
+        },
+        {
+          "name": "TwoIndependentCommandsNeedTwoUndoUnits",
+          "file": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp",
+          "line": 402,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-27T19:23:12Z",
+          "time": "0.001s",
+          "classname": "D07"
+        },
+        {
+          "name": "CapturedExpectationsRejectUndoConflictWithoutCursorOrRedoMutation",
+          "file": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp",
+          "line": 416,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-27T19:23:12Z",
+          "time": "0s",
+          "classname": "D07"
+        },
+        {
+          "name": "RequiredMultiIntentEntryIsUnavailable_RED",
+          "file": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp",
+          "line": 429,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-27T19:23:12Z",
+          "time": "0s",
+          "classname": "D07",
+          "failures": [
+            {
+              "failure": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp:436\nValue of: accepted\n  Actual: false\nExpected: true\nD07 not closed: the available real Runtime batch port rejects this coherent forward sequence; no production IntentPlan entry found. This is not a defect in its fail-closed guard.\n",
+              "type": ""
+            }
+          ]
+        },
+        {
+          "name": "NaiveSequentialFallbackCannotSatisfyOneUndo_RED",
+          "file": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp",
+          "line": 440,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-27T19:23:12Z",
+          "time": "0.001s",
+          "classname": "D07",
+          "failures": [
+            {
+              "failure": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\verification\\fc04_d07\\audit_test.cpp:445\nExpected equality of these values:\n  read().objects\n    Which is: { 464-byte object <01-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 F0-0C 71-A2 4E-02 00-00 F1-0C 71-A2 4E-02 00-00 ... 00-00 00-00 00-40 6F-40 00-00 00-00 00-00 3E-40 00-00 00-00 00-00 00-00 00-00 00-00 00-00 F0-3F 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 464-byte object <02-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 25-00 00-00 00-00 00-00 12-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 10-0D 71-A2 4E-02 00-00 11-0D 71-A2 4E-02 00-00 ... 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-01 00-00 05-00 00-00 00-00 48-43 00-00 F0-41 00-00 5C-43 00-00 48-42 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 464-byte object <03-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 00-00 00-00 00-00 00-00 10-59 6F-A2 4E-02 00-00 00-00 00-00 00-00 3E-40 90-0C 71-A2 4E-02 00-00 91-0C 71-A2 4E-02 00-00 ... 12-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }\n  before.objects\n    Which is: { 464-byte object <01-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 A0-0B 71-A2 4E-02 00-00 A1-0B 71-A2 4E-02 00-00 ... 00-00 00-00 00-00 54-40 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 F0-3F 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 464-byte object <02-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 25-00 00-00 00-00 00-00 12-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 E0-0D 71-A2 4E-02 00-00 E1-0D 71-A2 4E-02 00-00 ... 00-00 00-00 00-00 34-40 00-00 00-00 00-00 34-40 00-00 00-00 00-00 34-40 00-00 00-00 00-00 34-40 00-00 00-00 00-00 34-40 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 464-byte object <03-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 00-00 00-00 00-00 00-00 10-59 6F-A2 4E-02 00-00 00-00 00-00 00-00 00-00 70-0B 71-A2 4E-02 00-00 71-0B 71-A2 4E-02 00-00 ... 00-00 00-00 00-00 00-00 0F-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }\nD07 not closed: sequencing ordinary commands is not a HistoryGroup and cannot be used as the missing coordinator.\n",
+              "type": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

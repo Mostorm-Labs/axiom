@@ -1,0 +1,26 @@
+[
+  {
+    "name": "audit-direct",
+    "argv": [
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\out\\fc04-d07\\build\\axiom_fc04_d07_audit_tests.exe",
+      "--gtest_color=no",
+      "--gtest_output=json:C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\out\\fc04-d07\\audit-direct.json"
+    ],
+    "exit_code": 1
+  },
+  {
+    "name": "postcommit-scene",
+    "argv": [
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\out\\fc04-d07\\build\\axiom_fc04_d07_postcommit_fault.exe"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "postcommit-receipt",
+    "argv": [
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\out\\fc04-d07\\build\\axiom_fc04_d07_postcommit_fault.exe",
+      "receipt-growth"
+    ],
+    "exit_code": 86
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "argv": [
+      "rg",
+      "-n",
+      "IntentPlan|UndoIntent|HistoryGroup|IntentCommitSegment|LocalIntentPlan",
+      "runtime",
+      "apps",
+      "-g",
+      "*.hpp",
+      "-g",
+      "*.cpp"
+    ],
+    "exit_code": 1,
+    "meaning": "No production coordinator-name match is absence evidence, not a test pass"
+  },
+  {
+    "argv": [
+      "rg",
+      "-n",
+      "HistorySubmitPort",
+      "runtime",
+      "apps",
+      "-g",
+      "*.hpp",
+      "-g",
+      "*.cpp"
+    ],
+    "exit_code": 0,
+    "meaning": "Enumerate actual owners and test fixtures"
+  }
+]

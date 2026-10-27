@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "ctest",
+    "--test-dir",
+    "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\out\\fc04-d07\\build",
+    "-R",
+    "^fc04.d07\\.|^FC04D07Postcommit",
+    "--no-tests=error",
+    "--output-on-failure",
+    "--timeout",
+    "90",
+    "--output-junit",
+    "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-audit\\canvas\\out\\fc04-d07\\audit-materialized.xml"
+  ],
+  "exit_code": 8,
+  "harness_revision": "1ef2ce0f71ba08d2dbff8156e4bb7501f09018a2",
+  "binary_rebuild_after_commit": false,
+  "reason": "No source bytes changed on commit; explicit executable hashes bind the unchanged tested binaries"
+}
