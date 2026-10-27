@@ -1,0 +1,62 @@
+Test project C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/out/selection-batch1/native
+    Start 160: SelectionBatch3Summary
+1/2 Test #160: SelectionBatch3Summary ...........***Failed    0.36 sec
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 12 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 12 tests from Summary
+[ RUN      ] Summary.EmptyIsNotAUniformPropertyOrAnExecutableSelection
+[       OK ] Summary.EmptyIsNotAUniformPropertyOrAnExecutableSelection (0 ms)
+[ RUN      ] Summary.PublicSnapshotsShareOneNormalizedSummaryAndExactWorldBounds
+[       OK ] Summary.PublicSnapshotsShareOneNormalizedSummaryAndExactWorldBounds (0 ms)
+[ RUN      ] Summary.SectionAndNestedGroupCountRootsWithoutDescendants
+[       OK ] Summary.SectionAndNestedGroupCountRootsWithoutDescendants (0 ms)
+[ RUN      ] Summary.TransformAndDeletionRefreshWithoutChangingSelectionOnRead
+[       OK ] Summary.TransformAndDeletionRefreshWithoutChangingSelectionOnRead (0 ms)
+[ RUN      ] Summary.StaleSceneCannotPublishAuthoritativeBoundsPropertiesOrActions
+[       OK ] Summary.StaleSceneCannotPublishAuthoritativeBoundsPropertiesOrActions (0 ms)
+[ RUN      ] Summary.MissingTextMetricsAreNotAZeroSizedCompleteBound
+[       OK ] Summary.MissingTextMetricsAreNotAZeroSizedCompleteBound (0 ms)
+[ RUN      ] Summary.WrongThreadAndClosedRuntimeHaveNoUsableProjection
+[       OK ] Summary.WrongThreadAndClosedRuntimeHaveNoUsableProjection (4 ms)
+[ RUN      ] Summary.PropertiesReportUniformMixedPartialAndMissingWithoutInventingValues
+[       OK ] Summary.PropertiesReportUniformMixedPartialAndMissingWithoutInventingValues (0 ms)
+[ RUN      ] Summary.CapabilitiesUseRealOwnersAndNeverFallBackToPrimaryForMultiEdit
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(138): error: Value of: s.capability(action).available()
+  Actual: false
+Expected: true
+8
+
+[  FAILED  ] Summary.CapabilitiesUseRealOwnersAndNeverFallBackToPrimaryForMultiEdit (0 ms)
+[ RUN      ] Summary.MixedLocksAndInheritedLocksRemainVisibleInAggregatesAndCapabilities
+[       OK ] Summary.MixedLocksAndInheritedLocksRemainVisibleInAggregatesAndCapabilities (0 ms)
+[ RUN      ] Summary.BusyRegionAndNonNormalizedRootsDoNotAdvertiseUnsafeCommands
+[       OK ] Summary.BusyRegionAndNonNormalizedRootsDoNotAdvertiseUnsafeCommands (0 ms)
+[ RUN      ] Summary.SummaryRefreshPreservesRealRedoAndCanonicalOutcome
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] Summary.SummaryRefreshPreservesRealRedoAndCanonicalOutcome (49 ms)
+[----------] 12 tests from Summary (58 ms total)
+
+[----------] Global test environment tear-down
+[==========] 12 tests from 1 test suite ran. (58 ms total)
+[  PASSED  ] 11 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] Summary.CapabilitiesUseRealOwnersAndNeverFallBackToPrimaryForMultiEdit
+
+ 1 FAILED TEST
+
+    Start 199: SelectionBatch3Ui
+2/2 Test #199: SelectionBatch3Ui ................Exit code 0xc0000409***Exception:   2.90 sec
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\out\selection-batch1\native\debug_ui\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\out\selection-batch1\native\debug_ui\icudtl.dat.
+Assertion failed: c.semanticObjectCount()==3&&c.readback().semanticGeneration==before.semanticGeneration, file C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\debug_ui\tests\selection_summary_ui_test.cpp, line 46
+
+
+0% tests passed, 2 tests failed out of 2
+
+Total Test time (real) =   3.89 sec
+
+The following tests FAILED:
+	160 - SelectionBatch3Summary (Failed)
+	199 - SelectionBatch3Ui (Exit code 0xc0000409)
+Errors while running CTest

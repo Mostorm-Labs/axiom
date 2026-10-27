@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="10"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="13"
+	timestamp="2026-10-27T17:25:52"
+	>
+	<testcase name="G4SelectionSession" classname="G4SelectionSession" time="0.0240328" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="G46TransformHandleDrag" classname="G46TransformHandleDrag" time="0.0245914" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC01ARegionSelection" classname="FC01ARegionSelection" time="0.0226544" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="SelectionBatch2Coverage" classname="SelectionBatch2Coverage" time="0.0247821" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 12 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 12 tests from SelectionCoverage
+[ RUN      ] SelectionCoverage.VectorPathCurveAndEvenOddHoleUseGeometryNotControlBounds
+[       OK ] SelectionCoverage.VectorPathCurveAndEvenOddHoleUseGeometryNotControlBounds (0 ms)
+[ RUN      ] SelectionCoverage.LegacyVectorStrokeUsesFiniteWidthSegmentsNotLargeAabb
+[       OK ] SelectionCoverage.LegacyVectorStrokeUsesFiniteWidthSegmentsNotLargeAabb (0 ms)
+[ RUN      ] SelectionCoverage.CanonicalBrushOutlineAndFilledEraseHoleFollowVisibleGeometry
+[       OK ] SelectionCoverage.CanonicalBrushOutlineAndFilledEraseHoleFollowVisibleGeometry (0 ms)
+[ RUN      ] SelectionCoverage.SweptEraseUsesTheRendererMaxRadiusCubicStroke
+[       OK ] SelectionCoverage.SweptEraseUsesTheRendererMaxRadiusCubicStroke (0 ms)
+[ RUN      ] SelectionCoverage.LegacyDabsAr...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC01ASelectionInputIntegration" classname="FC01ASelectionInputIntegration" time="11.485" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 27 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 26 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (296 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (450 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (326 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (161 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitRe...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC08SectionConsumer" classname="FC08SectionConsumer" time="2.04102" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 14 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 8 tests from FC08SectionConsumer
+[ RUN      ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory
+[       OK ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory (2 ms)
+[ RUN      ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically
+[       OK ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically (1 ms)
+[ RUN      ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts (8 ms)
+[ RUN      ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing
+[       OK ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCanc...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC05ConnectorFacade" classname="FC05ConnectorFacade" time="0.0317972" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=4 scene_records=4
+[axiom] present begin frame=2 objects=4 scene_records=4
+[axiom] present begin frame=3 objects=5 scene_records=5
+PASS FC05 public routing, invalidation, derived History, failure and lifecycle
+</system-out>
+	</testcase>
+	<testcase name="FC03ImageFacade" classname="FC03ImageFacade" time="0.0504999" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+</system-out>
+	</testcase>
+	<testcase name="DebugUiSimplifiedControls" classname="DebugUiSimplifiedControls" time="0.0377773" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="PX0ControlRouter" classname="PX0ControlRouter" time="0.0357125" status="run">
+		<properties/>
+		<system-out>SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\out\selection-batch1\native\debug_ui\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\out\selection-batch1\native\debug_ui\icudtl.dat.
+</system-out>
+	</testcase>
+</testsuite>

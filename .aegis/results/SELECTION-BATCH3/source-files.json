@@ -1,0 +1,276 @@
+{
+  "base": "0eb11b25d60f2b6f932f12735de4779d2a3f2f21",
+  "tested_source_subject": "b588c93a2c4b19a5f536453cf3f8c4c9c4d69626",
+  "files": [
+    {
+      "path": "apps/axiom_canvas_demo/platform/web/bridge.cpp",
+      "owner": "Web serialization and actual Chrome/WASM test",
+      "blob_sha256": "172d2a3dfbb335da638131fb11f9a5c576c73e45964240b5e16922ecfe6dfcec",
+      "materialized_sha256": "172d2a3dfbb335da638131fb11f9a5c576c73e45964240b5e16922ecfe6dfcec"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/tests/web_selection_batch3.mjs",
+      "owner": "Web serialization and actual Chrome/WASM test",
+      "blob_sha256": "55b08346f30cf9fde104d699e8dfce783cf35a4c6d9904edee837bc26e15c9d7",
+      "materialized_sha256": "55b08346f30cf9fde104d699e8dfce783cf35a4c6d9904edee837bc26e15c9d7"
+    },
+    {
+      "path": "apps/minimal_runtime_host/minimal_runtime_facade.cpp",
+      "owner": "Host query forwarding and real wrapper regression",
+      "blob_sha256": "e5437a4fcc0e4ca80f303dab196c94aa6d011c674b02296b09f4196c33652b05",
+      "materialized_sha256": "e5437a4fcc0e4ca80f303dab196c94aa6d011c674b02296b09f4196c33652b05"
+    },
+    {
+      "path": "apps/minimal_runtime_host/minimal_runtime_facade.hpp",
+      "owner": "Host query forwarding and real wrapper regression",
+      "blob_sha256": "fbe34586945bde88bf0f99f018e3ce99b30d83bbdeb6c9e33535b5f54c8a7502",
+      "materialized_sha256": "fbe34586945bde88bf0f99f018e3ce99b30d83bbdeb6c9e33535b5f54c8a7502"
+    },
+    {
+      "path": "apps/minimal_runtime_host/tests/section_debug_ui_test.cpp",
+      "owner": "Host query forwarding and real wrapper regression",
+      "blob_sha256": "9a06b81bab85a553164ff32d9c5b004f70fd5613e1e690ebd5a2ef0a8298c1f9",
+      "materialized_sha256": "9a06b81bab85a553164ff32d9c5b004f70fd5613e1e690ebd5a2ef0a8298c1f9"
+    },
+    {
+      "path": "debug_ui/CMakeLists.txt",
+      "owner": "Read-only consumers, snapshot fencing, action gating and UI/contract regressions",
+      "blob_sha256": "01d2ed0da6b36bcbe2d3e5cef9ac40022c4b414f4326f52d2229618529acb599",
+      "materialized_sha256": "01d2ed0da6b36bcbe2d3e5cef9ac40022c4b414f4326f52d2229618529acb599"
+    },
+    {
+      "path": "debug_ui/include/canvas/debug_ui/control_router.hpp",
+      "owner": "Read-only consumers, snapshot fencing, action gating and UI/contract regressions",
+      "blob_sha256": "08ed44e7c1dfe0fc7ffdd06ca584f025316b002670327dd008de6a31f5c4c6c6",
+      "materialized_sha256": "08ed44e7c1dfe0fc7ffdd06ca584f025316b002670327dd008de6a31f5c4c6c6"
+    },
+    {
+      "path": "debug_ui/include/canvas/debug_ui/snapshot.hpp",
+      "owner": "Read-only consumers, snapshot fencing, action gating and UI/contract regressions",
+      "blob_sha256": "7e04dc211f6242e76919335396cd5d59b884ffdfee20764dcbc7a389024327bd",
+      "materialized_sha256": "7e04dc211f6242e76919335396cd5d59b884ffdfee20764dcbc7a389024327bd"
+    },
+    {
+      "path": "debug_ui/src/control_router.cpp",
+      "owner": "Read-only consumers, snapshot fencing, action gating and UI/contract regressions",
+      "blob_sha256": "947145f9e90e674e25c4102f6df39b4b819c3530a9d1285ea53452e1d5f7148d",
+      "materialized_sha256": "947145f9e90e674e25c4102f6df39b4b819c3530a9d1285ea53452e1d5f7148d"
+    },
+    {
+      "path": "debug_ui/src/panels/control.cpp",
+      "owner": "Read-only consumers, snapshot fencing, action gating and UI/contract regressions",
+      "blob_sha256": "f826a0a3db3aca0851a7f2a5b75da9af77e22c6e7349916ad60303639c2fe2b6",
+      "materialized_sha256": "f826a0a3db3aca0851a7f2a5b75da9af77e22c6e7349916ad60303639c2fe2b6"
+    },
+    {
+      "path": "debug_ui/src/panels/dashboard.cpp",
+      "owner": "Read-only consumers, snapshot fencing, action gating and UI/contract regressions",
+      "blob_sha256": "4ca70b3b60f72df556ac2e6a3a1c7814d61d79fcc5f8227442aea8f1fbc53cc3",
+      "materialized_sha256": "4ca70b3b60f72df556ac2e6a3a1c7814d61d79fcc5f8227442aea8f1fbc53cc3"
+    },
+    {
+      "path": "debug_ui/src/panels/inspect.cpp",
+      "owner": "Read-only consumers, snapshot fencing, action gating and UI/contract regressions",
+      "blob_sha256": "10142396cf01f123c07ddcff80e40dd049665a22ab606e92472ab4f1cc868d6d",
+      "materialized_sha256": "10142396cf01f123c07ddcff80e40dd049665a22ab606e92472ab4f1cc868d6d"
+    },
+    {
+      "path": "debug_ui/src/panels/selection_summary_view.hpp",
+      "owner": "Read-only consumers, snapshot fencing, action gating and UI/contract regressions",
+      "blob_sha256": "c924f4873aaba10f939dc11d68901c5f1377ca3b1b52943c68256ed6afecbe38",
+      "materialized_sha256": "c924f4873aaba10f939dc11d68901c5f1377ca3b1b52943c68256ed6afecbe38"
+    },
+    {
+      "path": "debug_ui/src/snapshot_assembler.cpp",
+      "owner": "Read-only consumers, snapshot fencing, action gating and UI/contract regressions",
+      "blob_sha256": "b46ec65f18f5162d706a0035d92b3410918deea27522b3a2a54f23c1618d1e17",
+      "materialized_sha256": "b46ec65f18f5162d706a0035d92b3410918deea27522b3a2a54f23c1618d1e17"
+    },
+    {
+      "path": "debug_ui/tests/control_router_test.cpp",
+      "owner": "Read-only consumers, snapshot fencing, action gating and UI/contract regressions",
+      "blob_sha256": "2a62b9513b6c906e77159ab9a17c2118057a2f8c7a9f46206fd59f7cb33c1806",
+      "materialized_sha256": "2a62b9513b6c906e77159ab9a17c2118057a2f8c7a9f46206fd59f7cb33c1806"
+    },
+    {
+      "path": "debug_ui/tests/selection_summary_ui_test.cpp",
+      "owner": "Read-only consumers, snapshot fencing, action gating and UI/contract regressions",
+      "blob_sha256": "4f4565b718cf812e6465ee3d8ab18ad8a55fe4164235cd4865b9205a20acbff8",
+      "materialized_sha256": "4f4565b718cf812e6465ee3d8ab18ad8a55fe4164235cd4865b9205a20acbff8"
+    },
+    {
+      "path": "debug_ui/tests/snapshot_assembler_test.cpp",
+      "owner": "Read-only consumers, snapshot fencing, action gating and UI/contract regressions",
+      "blob_sha256": "903e7285d2d343baa64b045f32cf6be4d4632451a99c7c5da8a5520c87e9b81d",
+      "materialized_sha256": "903e7285d2d343baa64b045f32cf6be4d4632451a99c7c5da8a5520c87e9b81d"
+    },
+    {
+      "path": "docs/planning/selection-batch3/01-scope-and-behavior.md",
+      "owner": "Accepted package copy and bounded execution/ownership record",
+      "blob_sha256": "ac2f446e14b4ef4491412302f719853cdbd7c6220bd67731f351d74d4079d38f",
+      "materialized_sha256": "ac2f446e14b4ef4491412302f719853cdbd7c6220bd67731f351d74d4079d38f"
+    },
+    {
+      "path": "docs/planning/selection-batch3/02-source-audit.md",
+      "owner": "Accepted package copy and bounded execution/ownership record",
+      "blob_sha256": "04ceee492bb768d8ab3890584e1b26740394caab546e246e786a3c42a388435d",
+      "materialized_sha256": "04ceee492bb768d8ab3890584e1b26740394caab546e246e786a3c42a388435d"
+    },
+    {
+      "path": "docs/planning/selection-batch3/03-implementation-plan.md",
+      "owner": "Accepted package copy and bounded execution/ownership record",
+      "blob_sha256": "ac602d2e6bc5db9e4a3e802aebd06e5aba97859e0d562211aba0bff3e5be0c47",
+      "materialized_sha256": "ac602d2e6bc5db9e4a3e802aebd06e5aba97859e0d562211aba0bff3e5be0c47"
+    },
+    {
+      "path": "docs/planning/selection-batch3/04-codex-prompt.md",
+      "owner": "Accepted package copy and bounded execution/ownership record",
+      "blob_sha256": "88b7e2b65836449b241beb2cc5807eedb5d154a8c56c25238ee9c6d47be55079",
+      "materialized_sha256": "88b7e2b65836449b241beb2cc5807eedb5d154a8c56c25238ee9c6d47be55079"
+    },
+    {
+      "path": "docs/planning/selection-batch3/05-source-contract-map.md",
+      "owner": "Accepted package copy and bounded execution/ownership record",
+      "blob_sha256": "1dc7c54561c7dd1bf3cfb27862c06bdcb0f2f25dcfd768d64f6c204329dc5434",
+      "materialized_sha256": "1dc7c54561c7dd1bf3cfb27862c06bdcb0f2f25dcfd768d64f6c204329dc5434"
+    },
+    {
+      "path": "docs/planning/selection-batch3/06-implementation-notes.md",
+      "owner": "Accepted package copy and bounded execution/ownership record",
+      "blob_sha256": "03c10c4d53d957b41caa34b756750d362b1098bd75024027759c6d4fb008ec3d",
+      "materialized_sha256": "03c10c4d53d957b41caa34b756750d362b1098bd75024027759c6d4fb008ec3d"
+    },
+    {
+      "path": "docs/planning/selection-batch3/README.md",
+      "owner": "Accepted package copy and bounded execution/ownership record",
+      "blob_sha256": "22fd2539220449608954ed1edaecbe7fb59d9b4bf78e2cbf1ab2b12c406de18b",
+      "materialized_sha256": "22fd2539220449608954ed1edaecbe7fb59d9b4bf78e2cbf1ab2b12c406de18b"
+    },
+    {
+      "path": "docs/planning/selection-batch3/execution.json",
+      "owner": "Accepted package copy and bounded execution/ownership record",
+      "blob_sha256": "cd7795c10ce20aa0df21c87d65950a2998d4a34e206aaecf522f41bb184e4ac0",
+      "materialized_sha256": "cd7795c10ce20aa0df21c87d65950a2998d4a34e206aaecf522f41bb184e4ac0"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "owner": "Existing facade publication and real composition regressions",
+      "blob_sha256": "569b092b4f9fd531b90c384d1efb88be0266865415306cdd397ccd99ad9efb8a",
+      "materialized_sha256": "569b092b4f9fd531b90c384d1efb88be0266865415306cdd397ccd99ad9efb8a"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp",
+      "owner": "Existing facade publication and real composition regressions",
+      "blob_sha256": "2e1ca519abb17605045f6a2ff3edb71921a49f5ec9b99eeaffb306a3957a6849",
+      "materialized_sha256": "2e1ca519abb17605045f6a2ff3edb71921a49f5ec9b99eeaffb306a3957a6849"
+    },
+    {
+      "path": "runtime/composition/src/canvas_runtime_facade.cpp",
+      "owner": "Existing facade publication and real composition regressions",
+      "blob_sha256": "969944d3788892a0458909755fb98f7d9de46158bcbcc11762c23082c42da9fd",
+      "materialized_sha256": "969944d3788892a0458909755fb98f7d9de46158bcbcc11762c23082c42da9fd"
+    },
+    {
+      "path": "runtime/composition/src/canvas_runtime_section.cpp",
+      "owner": "Existing facade publication and real composition regressions",
+      "blob_sha256": "d078f5ede550f10979b301f5c93ed230db6aebf539790a9138eaf98ad86e095a",
+      "materialized_sha256": "d078f5ede550f10979b301f5c93ed230db6aebf539790a9138eaf98ad86e095a"
+    },
+    {
+      "path": "runtime/composition/tests/selection_summary_test.cpp",
+      "owner": "Existing facade publication and real composition regressions",
+      "blob_sha256": "0deac863f50fa338367c117137ee86c65c53dacc17d6032a6eceb03045f47422",
+      "materialized_sha256": "0deac863f50fa338367c117137ee86c65c53dacc17d6032a6eceb03045f47422"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/canvas_control_types.hpp",
+      "owner": "Runtime public DTO/query; retain legacy trivially-copyable state",
+      "blob_sha256": "dd698b9d1f4c43052da586b0f1941aadf6a03815e4eae3c821e8d61ae472c096",
+      "materialized_sha256": "dd698b9d1f4c43052da586b0f1941aadf6a03815e4eae3c821e8d61ae472c096"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "owner": "Runtime public DTO/query; retain legacy trivially-copyable state",
+      "blob_sha256": "eaec9cba5c0d22ad99a449b535cc3a1c6bffde46ec081279f6d8ff25021ee135",
+      "materialized_sha256": "eaec9cba5c0d22ad99a449b535cc3a1c6bffde46ec081279f6d8ff25021ee135"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_state.hpp",
+      "owner": "Runtime public DTO/query; retain legacy trivially-copyable state",
+      "blob_sha256": "d23bee0fbca909fefdf068ae08eda105c190b7a14877c8610f539603d0b63694",
+      "materialized_sha256": "d23bee0fbca909fefdf068ae08eda105c190b7a14877c8610f539603d0b63694"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/selection_summary.hpp",
+      "owner": "Runtime public DTO/query; retain legacy trivially-copyable state",
+      "blob_sha256": "e0481b432f197f9e370dd2aaaac4dad1b0184877646c83a3ed5380b3bde399fc",
+      "materialized_sha256": "e0481b432f197f9e370dd2aaaac4dad1b0184877646c83a3ed5380b3bde399fc"
+    },
+    {
+      "path": "runtime/interaction/CMakeLists.txt",
+      "owner": "SelectionSession root projection and CanvasEditingRuntime Scene/capability/property enrichment",
+      "blob_sha256": "58d8c278d061d42b45401e0a5cfce6dd8d92719955e883f672d534096cd4ae01",
+      "materialized_sha256": "58d8c278d061d42b45401e0a5cfce6dd8d92719955e883f672d534096cd4ae01"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp",
+      "owner": "SelectionSession root projection and CanvasEditingRuntime Scene/capability/property enrichment",
+      "blob_sha256": "5b6ae235647e40de7c8d8e919fb7b808883722d07a900243f894e60163a2807b",
+      "materialized_sha256": "5b6ae235647e40de7c8d8e919fb7b808883722d07a900243f894e60163a2807b"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/selection_session.hpp",
+      "owner": "SelectionSession root projection and CanvasEditingRuntime Scene/capability/property enrichment",
+      "blob_sha256": "ddbfd09f5d8e793831cf58b2024e77af1f4c527bfae5c4795155f98379fbe788",
+      "materialized_sha256": "ddbfd09f5d8e793831cf58b2024e77af1f4c527bfae5c4795155f98379fbe788"
+    },
+    {
+      "path": "runtime/interaction/include/canvas/interaction/selection_state.hpp",
+      "owner": "SelectionSession root projection and CanvasEditingRuntime Scene/capability/property enrichment",
+      "blob_sha256": "9e1686e5c34a4cd4fdcee13c87558ba583004f7d41cec96dd52ccded2fcb6a8c",
+      "materialized_sha256": "9e1686e5c34a4cd4fdcee13c87558ba583004f7d41cec96dd52ccded2fcb6a8c"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_selection_summary.cpp",
+      "owner": "SelectionSession root projection and CanvasEditingRuntime Scene/capability/property enrichment",
+      "blob_sha256": "bde09d01d47ba592df4e4983ce11e479a13a99f37cc975dd72c1154cd2e3a9f0",
+      "materialized_sha256": "bde09d01d47ba592df4e4983ce11e479a13a99f37cc975dd72c1154cd2e3a9f0"
+    },
+    {
+      "path": "runtime/interaction/src/selection_session.cpp",
+      "owner": "SelectionSession root projection and CanvasEditingRuntime Scene/capability/property enrichment",
+      "blob_sha256": "ba1e7a57226a29801d9a6c60ef0ed617f0c98621bed39e871f75a151e6f749fd",
+      "materialized_sha256": "ba1e7a57226a29801d9a6c60ef0ed617f0c98621bed39e871f75a151e6f749fd"
+    },
+    {
+      "path": "runtime/interaction/tests/selection_session_test.cpp",
+      "owner": "SelectionSession root projection and CanvasEditingRuntime Scene/capability/property enrichment",
+      "blob_sha256": "c729ac044ceee02ba040439e1e2595f1cdeb9ec9412600710b7d483683832935",
+      "materialized_sha256": "c729ac044ceee02ba040439e1e2595f1cdeb9ec9412600710b7d483683832935"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/normalizer.hpp",
+      "owner": "Semantic: expose existing applicability/default reads; preserve validation/default elision",
+      "blob_sha256": "eabd942e5172f7c279a680cf4799a87d533b305dba0309264e1ddf954213418d",
+      "materialized_sha256": "eabd942e5172f7c279a680cf4799a87d533b305dba0309264e1ddf954213418d"
+    },
+    {
+      "path": "runtime/semantic/include/canvas/semantic/validator.hpp",
+      "owner": "Semantic: expose existing applicability/default reads; preserve validation/default elision",
+      "blob_sha256": "8b56d19537df30ee5ffc333a5babd8d090bda54a7f60d318b54e1729a032ce1c",
+      "materialized_sha256": "8b56d19537df30ee5ffc333a5babd8d090bda54a7f60d318b54e1729a032ce1c"
+    },
+    {
+      "path": "runtime/semantic/src/normalizer.cpp",
+      "owner": "Semantic: expose existing applicability/default reads; preserve validation/default elision",
+      "blob_sha256": "e3b36148ed49b8642ff53afa3eaee8eda35001a12f4a0b5f630dfb116cddf24d",
+      "materialized_sha256": "e3b36148ed49b8642ff53afa3eaee8eda35001a12f4a0b5f630dfb116cddf24d"
+    },
+    {
+      "path": "runtime/semantic/src/validator.cpp",
+      "owner": "Semantic: expose existing applicability/default reads; preserve validation/default elision",
+      "blob_sha256": "cf2b87dc8c2344c9596c257d35e038a2dc5914400c3099ae50e9e9702f442b5b",
+      "materialized_sha256": "cf2b87dc8c2344c9596c257d35e038a2dc5914400c3099ae50e9e9702f442b5b"
+    }
+  ]
+}
