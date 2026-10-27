@@ -61,6 +61,8 @@ def tests(name):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('phase', choices=['lock', 'PackageBindingPreflight', 'EvidenceContractPreflight', 'DesignPreflight'])
+    ap.add_argument('--output-dir', type=Path, default=ROOT / 'out/fc04-d07-ab-p31/preflight-rerun',
+                    help='New output directory; never overwrite committed P31 evidence')
     args = ap.parse_args()
     if args.phase == 'lock':
         assert not (PKG / 'source-lock.json').exists(), 'Do not overwrite a lock'
@@ -136,7 +138,10 @@ def main():
         'source_lock_sha256': sha(PKG / 'source-lock.json'), 'checks': checks,
         'P32_producer': 'NOT_IMPLEMENTED', 'P32_product_tests': 'NOT_RUN',
         'p32_technical_gate': 'Prove true no-fail commit, per-operation publication and actual injected boundaries; return blocker if impossible.'}
-    write(OUT / (args.phase + '.json'), result)
+    destination = args.output_dir / (args.phase + '.json')
+    if destination.exists():
+        raise FileExistsError('Use a new --output-dir; existing evidence is immutable: ' + str(destination))
+    write(destination, result)
     print(json.dumps({'phase': args.phase, 'status': result['status'], 'failed': failures, 'product_tests': 'NOT_RUN'}))
     return result['exit_code']
 if __name__ == '__main__': sys.exit(main())

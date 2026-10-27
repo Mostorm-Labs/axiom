@@ -31,6 +31,8 @@ The supplied instruction had no bundled executable for these three checks. The p
 
 The actual executable is `D:/Softwares/Anaconda/python.exe`. `commands.json` and `raw/` retain exact invocations and output. All 40 bound source/evidence paths were compared to the exact starting Git revision and locked by SHA-256. No product source, test source, SDK lock, global Authority or registry was edited.
 
+After the first P31 materialization at `1768c35ba9f8cc1d542ef3a3c78bd7827072b7fe`, the preflight output handling was corrected and checks were rerun against the unchanged product subject. Fresh reruns use a new `--output-dir` and refuse to overwrite existing output; committed historical P31 evidence is never overwritten by a later P32 preflight. The exact rerun source HEAD and commands are recorded in the JSON results.
+
 The preceding exact-source audit remains **historical evidence**: original D07 11 PASS / 3 FAIL, Selection 160 PASS / 0 FAIL. Those tests were not rerun in this P31-only turn; no new P32 positive exists yet. `FC04D07PostcommitReceiptGrowthFault` remains unresolved with previous controlled exit 86. Physical input, Chrome/WASM and product build were not run here. The planned P32 test matrix includes real producer, two independent commands/two Undo, corrected negative controls, actual forward and reservation fault boundaries, group Undo/Redo and the original OOM test, without skipping the 11/160.
 
 ## P32 handoff
