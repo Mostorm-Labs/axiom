@@ -391,4 +391,16 @@ TEST_F(SelectionInput, ImportedCropFrameExcludesTrimmedSourceAndCropKeepsInputOw
     EXPECT_FALSE(f.readImageCrop().active);EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
 }
 
+TEST_F(SelectionInput, MiterStrokeOutsideNominalBoundsStillReachesPreciseRegionQuery) {
+    semantic::ObjectRecord triangle;triangle.id=foundation::ObjectId::fromUint64(9960);triangle.kind=semantic::ObjectKind::kShape;
+    triangle.kind_version=2;triangle.content=semantic::ShapeContent{3,100,100};triangle.placement.order_key=semantic::OrderKey({4});
+    triangle.transform.tx=600;triangle.transform.ty=300;
+    triangle.properties.entries={{0x100U,semantic::FillStyleValue{semantic::NoFill{}}},
+        {0x101U,semantic::StrokeStyleValue{semantic::SolidStroke{{0,0,0,1},20,semantic::StrokeCap::kButt,semantic::MiterJoin{4},semantic::SolidDash{}}}}};
+    semantic::Operation insert{semantic::OperationId{foundation::ObjectId::fromUint64(9961)},semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,semantic::InsertObjectsOp{{triangle}}};
+    ASSERT_EQ(c.applyExternalOperation(insert,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    mode(runtime::CanvasSelectionMode::kRectangle);rectangle(647,278,653,284);
+    EXPECT_EQ(snapshot().selectionQueryStatus,runtime::SelectionQueryStatus::kComplete);EXPECT_EQ(selected(),std::vector{triangle.id});
+}
+
 }

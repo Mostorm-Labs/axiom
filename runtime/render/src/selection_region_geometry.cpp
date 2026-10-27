@@ -95,7 +95,7 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path) {
         break;
     }
     case semantic::ObjectKind::kRichText: {
-        if(!r.textLayout)return Hit::kUnsupported;
+        if(!r.textLayout||!r.textLayout->diagnostics.empty())return Hit::kUnsupported;
         if(r.textLayout->lines.empty())if(const auto* text=std::get_if<semantic::RichTextContent>(&r.content))
             for(const auto& paragraph:text->document.paragraphs)for(const auto& run:paragraph.runs)
                 if(!run.text.empty())return Hit::kUnsupported;
@@ -115,6 +115,26 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path) {
         for(const auto& p:r.properties.entries)if(p.field_id==0x101U)if(const auto* v=std::get_if<semantic::StrokeStyleValue>(&p.value))
             if(const auto* solid=std::get_if<semantic::SolidStroke>(v);solid&&solid->width>0&&solid->color.a>0)
                 if(!unite(path,skpathutils::FillPathWithPaint(shape,internal::geometryStrokePaint(*solid))))return Hit::kInvalid;
+        if(c->label) {
+            const bool hasText=std::any_of(c->label->document.paragraphs.begin(),c->label->document.paragraphs.end(),[](const auto& paragraph){
+                return std::any_of(paragraph.runs.begin(),paragraph.runs.end(),[](const auto& run){return !run.text.empty();});
+            });
+            if(hasText&&(!r.textLayout||!r.textLayout->diagnostics.empty()||r.textLayout->lines.empty()))return Hit::kUnsupported;
+        }
+        if(r.textLayout&&!r.textLayout->placeholder) {
+            if(!r.textLayout->diagnostics.empty())return Hit::kUnsupported;
+            SkPath label;
+            const auto sx=r.textLayout->shapeLabel?r.textLayout->labelScaleX:1.0F;
+            const auto sy=r.textLayout->shapeLabel?r.textLayout->labelScaleY:1.0F;
+            for(const auto& line:r.textLayout->lines)if(line.utf8End>line.utf8Start) {
+                const auto& area=line.bounds;
+                if(!unite(label,rectangle(area.left*sx,area.top*sy,(area.right-area.left)*sx,(area.bottom-area.top)*sy)))return Hit::kInvalid;
+            }
+            // Published fragments already contain the label offset. Match the
+            // painter's scale and shape clip without measuring text again.
+            const auto clipped=Op(label,shape,kIntersect_SkPathOp);
+            if(!clipped||!unite(path,*clipped))return Hit::kInvalid;
+        }
         break;
     }
     default:return Hit::kUnsupported;
@@ -148,10 +168,14 @@ SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord&
         if(visible.isEmpty())return Hit::kMiss;
         // Include boundary contact within the Skia path kernel's local precision.
         // This is a narrow 1e-4 local-unit tolerance, never an AABB fallback.
-        if(!unite(selection,stroke(selection,2e-4)))return Hit::kInvalid;
         const auto overlap=Op(visible,selection,kIntersect_SkPathOp);
         if(!overlap)return Hit::kInvalid;
-        return overlap->isEmpty()?Hit::kMiss:Hit::kHit;
+        if(!overlap->isEmpty())return Hit::kHit;
+        // Do not union a subpixel stroke into an even-odd selection: Skia may
+        // collapse its interior. Test the narrow contact ring separately.
+        const auto contact=Op(visible,stroke(selection,2e-4),kIntersect_SkPathOp);
+        if(!contact)return Hit::kInvalid;
+        return contact->isEmpty()?Hit::kMiss:Hit::kHit;
     } catch(const std::bad_alloc&){return Hit::kInvalid;}
 }
 }

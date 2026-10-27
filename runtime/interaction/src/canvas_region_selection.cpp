@@ -112,7 +112,7 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
     // Missing text metrics imply unknown extent, so the spatial index cannot
     // prove NoHit. Keep this explicitly incomplete until the font/layout arrives.
     for(const auto& r:projected.records()) {
-        if(r.kind!=semantic::ObjectKind::kRichText||(r.textLayout&&!r.textLayout->lines.empty())||
+        if(r.kind!=semantic::ObjectKind::kRichText||(r.textLayout&&!r.textLayout->lines.empty()&&r.textLayout->diagnostics.empty())||
             !textWritable(r.objectId)||resolveSelectionRoot(r.objectId).isZero())continue;
         if(r.placement.parent_id)if(const auto* parent=semanticObjects_.find(*r.placement.parent_id);
             parent&&parent->kind==semantic::ObjectKind::kSticky)continue;

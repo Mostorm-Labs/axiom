@@ -108,4 +108,26 @@ TEST(SelectionCoverage, StrokeOnlyShapeHasNoSelectableInteriorButHasVisibleBorde
     EXPECT_EQ(intersectSelectionRegion(r,box(-1,45,1,4)),RegionIntersection::kHit);
 }
 
+TEST(SelectionCoverage, FilledStyledShapesContainInteriorRegionAfterInverseTransform) {
+    for(unsigned kind:{1U,2U}) {
+        SCOPED_TRACE(kind);auto r=object(semantic::ObjectKind::kShape,semantic::ShapeContent{kind,80,60});
+        r.transform.tx=kind==1?100:260;r.transform.ty=100;
+        r.properties.entries={{0x100U,semantic::FillStyleValue{semantic::SolidFill{{.25F,.55F,.85F,1}}}},
+            {0x101U,semantic::StrokeStyleValue{semantic::SolidStroke{{.1F,.2F,.3F,1},2,semantic::StrokeCap::kButt,semantic::MiterJoin{4},semantic::SolidDash{}}}}};
+        EXPECT_EQ(intersectSelectionRegion(r,box(120,120,210,35)),RegionIntersection::kHit);
+    }
+}
+
+TEST(SelectionCoverage, UnfilledShapeLabelUsesPublishedClippedAndScaledFragments) {
+    auto r=object(semantic::ObjectKind::kShape,semantic::ShapeContent{2,100,100});
+    r.properties.entries={{0x100U,semantic::FillStyleValue{semantic::NoFill{}}},
+        {0x101U,semantic::StrokeStyleValue{semantic::SolidStroke{{0,0,0,1},2,semantic::StrokeCap::kButt,semantic::MiterJoin{4},semantic::SolidDash{}}}}};
+    RuntimeSceneRecord p;auto layout=std::make_shared<text::TextLayoutSnapshot>();
+    layout->shapeLabel=true;layout->labelScaleX=.5F;layout->labelScaleY=.5F;
+    layout->lines={{{},0,2,{60,80,140,120},110},{{},2,4,{0,0,10,10},8}};p.textLayout=layout;
+    EXPECT_EQ(intersectSelectionRegion(r,box(45,45,4,4)),RegionIntersection::kMiss);
+    EXPECT_EQ(intersectSelectionRegion(r,box(45,45,4,4),&p),RegionIntersection::kHit);
+    EXPECT_EQ(intersectSelectionRegion(r,box(2,2,1,1),&p),RegionIntersection::kMiss);
+}
+
 }

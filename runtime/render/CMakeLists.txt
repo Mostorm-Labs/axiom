@@ -155,10 +155,10 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
 
     add_executable(axiom_render_brush_outline_skia_path_tests
         tests/brush_outline_skia_path_test.cpp)
+    # This test consumes SkPath directly: use the locked SDK imported target,
+    # as production does, instead of treating SDK headers as project headers.
     target_link_libraries(axiom_render_brush_outline_skia_path_tests
-        PRIVATE canvas_runtime_render)
-    target_include_directories(axiom_render_brush_outline_skia_path_tests
-        PRIVATE "${CANVAS_SKIA_SDK_ROOT}")
+        PRIVATE canvas_runtime_render CanvasSkia::Skia)
     target_compile_definitions(axiom_render_brush_outline_skia_path_tests
         PRIVATE G45_SOURCE_ROOT="${PROJECT_SOURCE_DIR}")
     target_compile_features(axiom_render_brush_outline_skia_path_tests PRIVATE cxx_std_20)

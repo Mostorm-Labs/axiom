@@ -3,6 +3,7 @@
 #include "canvas/render/skia_surface_provider.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "canvas/runtime/resource_provider.hpp"
+#include "canvas/scene/derived_geometry.hpp"
 
 #include "canvas/foundation/object_id.hpp"
 #include "canvas/render/frame_plan.hpp"
@@ -747,6 +748,9 @@ void fc01TriangleAndConnectorStyleProbes() {
     arrow.record.visualBounds={40,94,140,106};
     arrow.record.properties.entries={{0x101U,canvas::semantic::StrokeStyleValue{canvas::semantic::SolidStroke{{0,1,0,1},4}}},
         {0x201U,canvas::semantic::ConnectorDecorationValue::kArrow}};
+    // Arrowheads consume the published route, just as in the real Scene path.
+    const auto route=canvas::scene::connectorGeometry(content,arrow.record.properties);
+    assert(route.has_value());arrow.record.derivedGeometry=*route;
     list.entries={arrow};assert(backend.submit({frame,list}).code==BackendSubmissionCode::kAccepted);
     assert(pixel(*backend.observation(),129,103)==(Rgba{0,255,0,255}));
     std::cout<<"PASS FC01 raster Triangle fill/stroke/opacity/None and Connector width/opacity\n";

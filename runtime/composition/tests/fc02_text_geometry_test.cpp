@@ -1810,4 +1810,55 @@ TEST(SelectionBatch2Text, UnavailableFontGeometryDoesNotBecomeAnEmptySuccessfulQ
     EXPECT_EQ(state.regionUnsupportedKinds,std::vector<std::uint32_t>{static_cast<unsigned>(semantic::ObjectKind::kRichText)});
     EXPECT_TRUE(cold.close());
 }
+TEST(SelectionBatch2Text, PartiallyAvailableMixedFontGeometryAlsoPreservesSelection) {
+    Host h;ASSERT_TRUE(h.runtime.registerSource(6001));
+    // Retain the admitted font manifest without publishing its bytes in
+    // a fresh composition, rather than manufacture a layout snapshot.
+    runtime::RuntimeComposition cold;ASSERT_TRUE(cold.open());ASSERT_TRUE(cold.bindSurface(256,256));
+    auto manifest=h.runtime.resources().manifest;auto missing=manifest.entries.front();
+    missing.resource_id=semantic::ResourceId{foundation::ObjectId::fromUint64(501)};manifest.entries.push_back(missing);
+    ASSERT_TRUE(cold.bindManifest(manifest,1));
+    std::ifstream file(FC02_LATIN_FONT,std::ios::binary);std::vector<std::uint8_t> bytes{std::istreambuf_iterator<char>(file),{}};
+    ASSERT_FALSE(bytes.empty());ASSERT_TRUE(cold.publishResource(foundation::ObjectId::fromUint64(500),std::move(bytes)));ASSERT_TRUE(cold.ownerPump());
+    ASSERT_TRUE(cold.registerSource(6002));auto& facade=cold.controlFacade();
+    runtime::StickyCreateRequest sticky;sticky.objectId=foundation::ObjectId::fromUint64(9970);sticky.transform.tx=200;sticky.transform.ty=200;sticky.content={30,30};
+    ASSERT_EQ(facade.createSticky(sticky).state,runtime::ConnectorCommandState::kApplied);
+    ASSERT_TRUE(cold.qualificationRuntime().setSelectionMode(true));ASSERT_TRUE(cold.qualificationRuntime().selectAtViewPoint(215,215));
+    semantic::TextStyle style;style.font_resource_id=semantic::ResourceId{foundation::ObjectId::fromUint64(500)};style.font_size=16;style.weight=400;style.color={0,0,0,1};
+    semantic::Paragraph paragraph;paragraph.id=foundation::ObjectId::fromUint64(9972);paragraph.style.alignment=semantic::ParagraphAlignment::kLeft;paragraph.style.line_height=1.2;paragraph.runs={{"missing font geometry",style}};
+    auto unavailable=paragraph;unavailable.id=foundation::ObjectId::fromUint64(9974);
+    unavailable.runs.front().style.font_resource_id=semantic::ResourceId{foundation::ObjectId::fromUint64(501)};
+    semantic::RichTextContent text;text.document.paragraphs={paragraph,unavailable};
+    semantic::ObjectRecord record;record.id=foundation::ObjectId::fromUint64(9971);record.kind=semantic::ObjectKind::kRichText;record.kind_version=1;
+    record.content=text;record.transform.tx=100;record.transform.ty=100;record.placement.order_key=semantic::OrderKey({2});
+    semantic::Operation insert{semantic::OperationId{foundation::ObjectId::fromUint64(9973)},semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,semantic::InsertObjectsOp{{record}}};
+    ASSERT_EQ(cold.applyExternalOperation(insert,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    ASSERT_EQ(facade.setSelectionAcquisitionMode(runtime::CanvasSelectionMode::kRectangle,1,6002).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(cold.ownerPump());
+    std::uint64_t seq=0;const auto send=[&](input::PointerPhase phase,float x,float y) {
+        input::PlatformPointerSample p;p.source=6002;p.pointer=1;p.sequence=++seq;p.timestampNs=seq*1000000;p.phase=phase;p.x=x;p.y=y;
+        input::PlatformPointerBatch batch;batch.samples={p};return cold.submit(batch);
+    };
+    ASSERT_TRUE(send(input::PointerPhase::kDown,110,105));ASSERT_TRUE(send(input::PointerPhase::kMove,145,125));ASSERT_TRUE(send(input::PointerPhase::kUp,145,125));
+    const auto state=facade.readCanvasControlSnapshot(facade.mountedCanvasTargets().front());
+    EXPECT_EQ(state.selectionQueryStatus,runtime::SelectionQueryStatus::kPartial);
+    EXPECT_EQ(facade.readSection().selectedRoots,std::vector{sticky.objectId});
+    EXPECT_EQ(state.regionUnsupportedKinds,std::vector<std::uint32_t>{static_cast<unsigned>(semantic::ObjectKind::kRichText)});
+    EXPECT_TRUE(cold.close());
+}
+
+TEST(SelectionBatch2Text, UnfilledShapeVisibleLabelParticipatesInRegionSelection) {
+    Host h;ASSERT_TRUE(h.runtime.registerSource(6001));auto record=labelShape();record.kind_version=3;record.transform={};
+    std::get<semantic::ShapeContent>(record.content).width=100;std::get<semantic::ShapeContent>(record.content).height=100;
+    semantic::Paragraph paragraph;paragraph.id=foundation::ObjectId::fromUint64(9980);
+    paragraph.style.alignment=semantic::ParagraphAlignment::kCenter;paragraph.style.line_height=1.2;
+    semantic::TextStyle style;style.font_resource_id=semantic::ResourceId{foundation::ObjectId::fromUint64(500)};
+    style.font_size=16;style.weight=400;style.color={0,0,0,1};paragraph.runs={{"AB",style}};
+    semantic::RichTextContent label;label.layout=semantic::RichTextLayout{100};label.document.paragraphs={paragraph};std::get<semantic::ShapeContent>(record.content).label=label;
+    record.properties.entries={{0x100U,semantic::FillStyleValue{semantic::NoFill{}}},
+        {0x101U,semantic::StrokeStyleValue{semantic::SolidStroke{{0,0,0,1},2,semantic::StrokeCap::kButt,semantic::MiterJoin{4},semantic::SolidDash{}}}}};
+    seedShape(h,record);ASSERT_EQ(h.runtime.semanticObjectCount(),1U);const auto before=h.runtime.readback();selectTestRegion(h,45,45,49,49);
+    EXPECT_EQ(h.facade.readCanvasControlSnapshot(h.facade.mountedCanvasTargets().front()).selectionQueryStatus,runtime::SelectionQueryStatus::kComplete);
+    EXPECT_EQ(h.facade.readSection().selectedRoots,std::vector{record.id});
+    EXPECT_EQ(h.runtime.readback().semanticGeneration,before.semanticGeneration);
+}
 } // namespace
