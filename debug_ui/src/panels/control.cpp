@@ -17,7 +17,8 @@ void textFormat(DebugPanelContext& c) {
     const auto text = c.controls.textEditor();
     if (text.phase == canvas::runtime::TextPhase::kClosed && text.formatObject.isZero()) return;
     ImGui::SeparatorText("Text format");
-    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c) || c.snapshot.product.value.control.selectedLocked);
+    ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c) || c.snapshot.product.value.control.selectedLocked ||
+                        c.snapshot.product.value.selection.selectedObjectCount>1);
     const std::array<std::pair<const char*, double>, 4> sizes{{{"Title",32},{"Heading",24},{"Subheading",20},{"Body",16}}};
     const double currentSize = text.format.fontSize.value_or(16);
     char customSize[48]{};
@@ -101,7 +102,18 @@ void tools(DebugPanelContext& c) {
             (void)c.controls.setTool(value); c.ui.markControlSubmitted();
         }
     };
-    chooseTool("Select", Tool::kSelect, state.selection.enabled && !creating);
+    using SelectionMode=canvas::runtime::CanvasSelectionMode;
+    const auto chooseSelection=[&](const char* label,SelectionMode mode) {
+        if(panel_detail::flowButton(label,first,state.selection.enabled&&!creating&&state.control.selectionAcquisitionMode==mode)) {
+            if(mode==SelectionMode::kPoint) (void)c.controls.setTool(Tool::kSelect);
+            else (void)c.controls.setSelectionAcquisitionMode(mode);
+            c.ui.markControlSubmitted();
+        }
+    };
+    chooseSelection("Select",SelectionMode::kPoint);
+    chooseSelection("Rectangle select",SelectionMode::kRectangle);
+    chooseSelection("Freeform lasso",SelectionMode::kFreeform);
+    chooseTool("Hand",Tool::kPan,tool==Tool::kPan&&!creating);
     chooseTool("Ink", Tool::kInk, tool == Tool::kInk && !creating && !state.selection.enabled);
     chooseTool("Eraser", Tool::kEraser, tool == Tool::kEraser && !creating);
     chooseTool("Text tool", Tool::kText, tool == Tool::kText && !creating);
@@ -146,6 +158,14 @@ void tools(DebugPanelContext& c) {
         }
     }
     ImGui::EndDisabled();
+    if(state.control.selectionQueryStatus==canvas::runtime::SelectionQueryStatus::kPartial) {
+        ImGui::TextWrapped("Selection unchanged: region query has unsupported object providers.");
+        for(std::size_t i=0;i<state.control.regionUnsupportedKindCount;++i)
+            ImGui::Text("Unsupported object kind: %u",state.control.regionUnsupportedKinds[i]);
+    } else if(state.control.selectionQueryStatus==canvas::runtime::SelectionQueryStatus::kFailed||
+              state.control.selectionQueryStatus==canvas::runtime::SelectionQueryStatus::kStale) {
+        ImGui::TextWrapped("Selection query failed or became stale; selection was preserved.");
+    }
     if (!c.controls.hasRuntimeOwner()) ImGui::TextWrapped("Runtime unavailable");
     if (c.controls.hasRuntimeOwner() && !c.controls.connectorDefaultsReady()) {
         ImGui::TextWrapped("Connector defaults unavailable");
@@ -162,7 +182,7 @@ void tools(DebugPanelContext& c) {
         ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c));
         bool objectFirst=true;
         const bool sectionSelected=state.control.selectedKind==static_cast<std::uint32_t>(canvas::semantic::ObjectKind::kSection);
-        ImGui::BeginDisabled(sectionSelected);
+        ImGui::BeginDisabled(sectionSelected||state.selection.selectedObjectCount>1);
         if (panel_detail::flowButton(state.control.selectedLocked ? "Unlock" : "Lock", objectFirst)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedLock,
                                             !state.control.selectedLocked); c.ui.markControlSubmitted();
@@ -172,7 +192,7 @@ void tools(DebugPanelContext& c) {
         if (panel_detail::flowButton(sectionSelected?"Release selected Section":"Delete selected", objectFirst)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kDeleteSelected); c.ui.markControlSubmitted();
         }
-        ImGui::BeginDisabled(sectionSelected);
+        ImGui::BeginDisabled(sectionSelected||state.selection.selectedObjectCount>1);
         if (panel_detail::flowButton("Bring front", objectFirst)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedOrder, true); c.ui.markControlSubmitted();
         }

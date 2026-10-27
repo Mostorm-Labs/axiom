@@ -28,6 +28,49 @@ int fixtureMouseHistory(UINT, LPMOUSEMOVEPOINT, LPMOUSEMOVEPOINT out, int count,
 
 namespace {
 HWND previewWindow = nullptr;
+void selectionUsesWindowMessagesAndLatchedShift() {
+  using namespace canvas;
+  mouseHistory.clear();fixtureTimeMs=100;
+  State state{};state.host=std::make_unique<MinimalRuntimeHost>();
+  state.facade=std::make_unique<MinimalRuntimeFacade>(*state.host);
+  WNDCLASSW klass{};klass.hInstance=GetModuleHandleW(nullptr);klass.lpfnWndProc=windowProc;
+  klass.lpszClassName=L"AxiomRegionSelectionInputTest";assert(RegisterClassW(&klass));
+  const auto window=CreateWindowExW(0,klass.lpszClassName,L"region fixture",WS_OVERLAPPEDWINDOW,
+      80,100,800,600,nullptr,nullptr,klass.hInstance,&state);assert(window);
+  auto& composition=state.host->composition();assert(composition.bindSurface(800,600));
+  assert(composition.setPlatformPresentationDeferred(true));assert(state.host->registerSource(1));
+  semantic::InsertObjectsOp insert;
+  for (unsigned i=0;i<2;++i) {
+    semantic::ObjectRecord r;r.id=foundation::ObjectId::fromUint64(9500+i);r.kind=semantic::ObjectKind::kShape;r.kind_version=1;
+    r.placement.order_key=semantic::OrderKey({static_cast<std::uint8_t>(i+1)});r.content=semantic::ShapeContent{1,80,60};
+    r.transform.tx=100+i*160;r.transform.ty=100;insert.objects.push_back(r);
+  }
+  semantic::Operation op{semantic::OperationId{foundation::ObjectId::fromUint64(9502)},
+      semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,insert};
+  assert(composition.applyExternalOperation(op,semantic::ApplySource::kRemoteSync).disposition==semantic::ApplyDisposition::kApplied);
+  auto& facade=composition.controlFacade();std::uint64_t request=0;
+  const auto setMode=[&](runtime::CanvasSelectionMode mode) {
+    assert(facade.setSelectionAcquisitionMode(mode,++request).state==runtime::ProductControlState::kQueued);
+    assert(composition.ownerPump());
+  };
+  const auto snapshot=[&] {return facade.readCanvasControlSnapshot(facade.mountedCanvasTargets().front());};
+  const auto message=[&](UINT kind,int x,int y,WPARAM flags) {++fixtureTimeMs;SendMessageW(window,kind,flags,MAKELPARAM(x,y));};
+  const auto generation=composition.readback().semanticGeneration;
+  setMode(runtime::CanvasSelectionMode::kRectangle);
+  message(WM_LBUTTONDOWN,90,90,MK_LBUTTON);message(WM_MOUSEMOVE,185,165,MK_LBUTTON);message(WM_LBUTTONUP,185,165,0);
+  assert(snapshot().selectedObjectCount==1);
+  message(WM_LBUTTONDOWN,250,90,MK_LBUTTON|MK_SHIFT);
+  message(WM_MOUSEMOVE,345,165,MK_LBUTTON);message(WM_LBUTTONUP,345,165,0);
+  assert(snapshot().selectedObjectCount==2); // Shift-at-Down, released before Move/Up.
+  setMode(runtime::CanvasSelectionMode::kFreeform);
+  message(WM_LBUTTONDOWN,20,20,MK_LBUTTON);message(WM_MOUSEMOVE,500,200,MK_LBUTTON);
+  SendMessageW(window,WM_CAPTURECHANGED,0,0);assert(!snapshot().regionSelectionActive);
+  assert(snapshot().selectedObjectCount==2);
+  assert(facade.setTool(4103,++request,facade.readRuntimeState().identity.runtimeGeneration).state==runtime::ProductControlState::kQueued);
+  assert(composition.ownerPump());assert(snapshot().selectedObjectCount==2);
+  setMode(runtime::CanvasSelectionMode::kPoint);assert(snapshot().selectedObjectCount==2);
+  assert(composition.readback().semanticGeneration==generation);assert(DestroyWindow(window));
+}
 BOOL CALLBACK findPreview(HWND w, LPARAM) {
   wchar_t name[128]{};
   GetClassNameW(w, name, 128);
@@ -221,7 +264,8 @@ void previewOriginMatchesOwner() {
 
 int main(int argc, char** argv) {
   (void)SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-  if (argc > 1 && std::string_view(argv[1]) == "origin") previewOriginMatchesOwner();
+  if (argc > 1 && std::string_view(argv[1]) == "selection") selectionUsesWindowMessagesAndLatchedShift();
+  else if (argc > 1 && std::string_view(argv[1]) == "origin") previewOriginMatchesOwner();
   else if (argc > 1 && std::string_view(argv[1]) == "coordinates")
     previewAndCanonicalUseSameDeviceCoordinates();
   else mouseHistoryReachesRuntimeAfterShape();

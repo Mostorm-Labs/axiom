@@ -53,6 +53,17 @@ void pending_click_microgesture_nonfinite_and_collinear_are_distinct() {
     auto nan=sample(input::PointerPhase::kDown,std::numeric_limits<float>::quiet_NaN(),0,8);
     assert(!session.begin(nan,RegionSelectionKind::kRectangle,{}));
 }
+void logical_pixel_threshold_and_confirmed_path_bound_are_enforced() {
+    RegionSelectionSession session;
+    assert(session.begin(sample(input::PointerPhase::kDown,0,0,1),RegionSelectionKind::kPendingRectangle,{}));
+    assert(session.update(sample(input::PointerPhase::kMove,3.99F,0,2)));assert(!session.dragged());
+    assert(session.update(sample(input::PointerPhase::kMove,4,0,3)));assert(session.dragged());session.cancel();
+    assert(session.begin(sample(input::PointerPhase::kDown,0,0,1),RegionSelectionKind::kFreeform,{}));
+    for(std::uint64_t i=1;i<4096;++i)assert(session.update(sample(input::PointerPhase::kMove,static_cast<float>(i),1,i+1)));
+    assert(session.outline().size()==4096);
+    assert(!session.update(sample(input::PointerPhase::kMove,4096,1,4097)));
+    assert(!session.active()&&session.outline().empty());
+}
 semantic::ObjectRecord shape(unsigned kind,semantic::Transform2D t={}) {
     semantic::ObjectRecord r;r.kind=semantic::ObjectKind::kShape;r.kind_version=2;
     r.transform=t;r.content=semantic::ShapeContent{kind,100,100};return r;
@@ -91,11 +102,27 @@ void concave_and_even_odd_self_intersection_are_not_bounding_boxes() {
     small.kind=semantic::ObjectKind::kVectorStroke;
     assert(intersectSelectionRegion(small,repeated)==RegionIntersection::kUnsupported);
 }
+void existing_image_and_sticky_frames_use_affine_rectangular_geometry() {
+    const std::vector<RegionPoint> corner{{0,0},{5,0},{5,5},{0,5}};
+    semantic::ObjectRecord image;image.kind=semantic::ObjectKind::kImage;
+    semantic::ImageContent content;content.width=100;content.height=100;image.content=content;
+    assert(intersectSelectionRegion(image,corner)==RegionIntersection::kHit);
+    image.transform.tx=200;assert(intersectSelectionRegion(image,corner)==RegionIntersection::kMiss);
+    semantic::ObjectRecord sticky;sticky.kind=semantic::ObjectKind::kSticky;
+    sticky.content=semantic::StickyContent{100,100};
+    assert(intersectSelectionRegion(sticky,corner)==RegionIntersection::kHit);
+    sticky.transform={0,1,-1,0,200,0};
+    const std::vector<RegionPoint> rotatedInside{{150,50},{155,50},{155,55},{150,55}};
+    assert(intersectSelectionRegion(sticky,rotatedInside)==RegionIntersection::kHit);
+    assert(intersectSelectionRegion(sticky,corner)==RegionIntersection::kMiss);
+}
 }
 int main() {
     session_latches_down_and_only_finishes_confirmed_geometry();
     freeform_closure_cancel_and_generation_fences();
     pending_click_microgesture_nonfinite_and_collinear_are_distinct();
+    logical_pixel_threshold_and_confirmed_path_bound_are_enforced();
     exact_shape_intersections_reject_aabb_false_positives();
     concave_and_even_odd_self_intersection_are_not_bounding_boxes();
+    existing_image_and_sticky_frames_use_affine_rectangular_geometry();
 }

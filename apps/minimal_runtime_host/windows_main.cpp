@@ -179,7 +179,7 @@ void paintCanvas(State& state, HDC dc) {
   (void)composition.finishFrameOpportunity({opportunity.previewWork, true});
 }
 
-void sendPointer(State& state, LPARAM lParam, canvas::input::PointerPhase phase) {
+void sendPointer(State& state, LPARAM lParam, canvas::input::PointerPhase phase, WPARAM keyStates=0) {
   (void)state.host->composition().ownerPump();
   const auto surface = state.host->composition().surfaceSnapshot();
   if (!surface.available || surface.width == 0U || surface.height == 0U ||
@@ -204,6 +204,8 @@ void sendPointer(State& state, LPARAM lParam, canvas::input::PointerPhase phase)
     state.timestamp = (std::max)(state.timestamp + 1U, sampledAt);
     batch.samples.push_back({1U, 1U, ++state.sequence, state.timestamp,
         sampleX, sampleY, 0.0F, 0.0F, 0.0F, {}, {}, provenance, samplePhase});
+    if (provenance!=canvas::input::SampleProvenance::kCoalescedHistory)
+      batch.samples.back().modifiers=(keyStates&MK_SHIFT)?canvas::input::PointerModifiers::kShift:canvas::input::PointerModifiers::kNone;
   };
   POINT screen{GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
   const bool screenAvailable = ClientToScreen(state.window, &screen) != FALSE;
@@ -409,7 +411,7 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       // Canvas pointer entry must also restore the native text/IME destination.
       if (GetFocus() != window) SetFocus(window);
       SetCapture(window);
-      sendPointer(*state, lParam, canvas::input::PointerPhase::kDown);
+      sendPointer(*state, lParam, canvas::input::PointerPhase::kDown, wParam);
       if (!state->mouseKey) releaseHostMouseCapture(*state);
       return 0;
     case WM_MOUSEMOVE:
@@ -421,14 +423,14 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
               static_cast<float>(GET_Y_LPARAM(lParam)) * surface.logicalHeight / surface.height);
       }
       if (!isPromotedPointerMouse() && state->mouseKey && (wParam & MK_LBUTTON))
-        sendPointer(*state, lParam, canvas::input::PointerPhase::kMove);
+        sendPointer(*state, lParam, canvas::input::PointerPhase::kMove, wParam);
       return 0;
     case WM_LBUTTONUP:
       if (isPromotedPointerMouse() || !state->mouseKey) return 0;
       state->releasingPointerUp = true;
       ReleaseCapture();
       state->releasingPointerUp = false;
-      sendPointer(*state, lParam, canvas::input::PointerPhase::kUp);
+      sendPointer(*state, lParam, canvas::input::PointerPhase::kUp, wParam);
       return 0;
     case WM_CAPTURECHANGED:
       if (!state->releasingPointerUp) {

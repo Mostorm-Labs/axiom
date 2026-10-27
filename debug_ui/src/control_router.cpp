@@ -193,6 +193,16 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setSelectionMode(bool
   return receipt;
 }
 
+canvas::runtime::ProductControlReceipt DebugControlRouter::setSelectionAcquisitionMode(canvas::runtime::CanvasSelectionMode mode) noexcept {
+  const auto id=nextRequestId();
+  auto receipt=runtime_==nullptr?unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id):
+      runtime_->setSelectionAcquisitionMode(mode,id,0xD001U);
+  recordProduct("selection-acquisition",receipt);
+  if(receipt.state==canvas::runtime::ProductControlState::kQueued&&receipt.control)
+      pendingProduct_.emplace(receipt.control->key,"selection-acquisition");
+  return receipt;
+}
+
 canvas::runtime::ProductControlReceipt DebugControlRouter::undo() noexcept {
   const auto id = nextRequestId();
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)

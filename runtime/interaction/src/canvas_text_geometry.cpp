@@ -436,6 +436,7 @@ void CanvasEditingRuntime::resetTouchTextTap() noexcept {
 
 bool CanvasEditingRuntime::beginShapeTextEditAt(float x, float y,
                                                 semantic::ObjectId expected) {
+    if (!textTool_ && selectionAcquisitionMode_!=runtime::CanvasSelectionMode::kPoint) return false;
     auto* editor = interaction_->textSession();
     if (!editor || expected.isZero() || selection_.primary() != expected ||
         !textWritable(expected) || hitTextAtView(x, y) != expected)

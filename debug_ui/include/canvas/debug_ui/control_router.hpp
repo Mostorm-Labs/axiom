@@ -56,6 +56,7 @@ class DebugControlRouter final {
   void finishImageCrop(bool commit);
   [[nodiscard]] const std::string& imageStatus() const noexcept { return imageStatus_; }
   canvas::runtime::ProductControlReceipt setSelectionMode(bool enabled) noexcept;
+  canvas::runtime::ProductControlReceipt setSelectionAcquisitionMode(canvas::runtime::CanvasSelectionMode) noexcept;
   canvas::runtime::ProductControlReceipt undo() noexcept;
   canvas::runtime::ProductControlReceipt redo() noexcept;
   canvas::runtime::ProductControlReceipt setCreationPreset(

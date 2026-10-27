@@ -1,6 +1,13 @@
 #include "canvas/runtime/runtime_composition.hpp"
 #include <gtest/gtest.h>
 
+namespace canvas::ink_playground {
+class InkPlaygroundHistoryTestAccess {
+public:
+    static std::size_t historySize(const interaction::CanvasEditingRuntime& runtime) {return runtime.history_.size();}
+};
+}
+
 namespace {
 using namespace canvas;
 class SelectionInput : public testing::Test {
@@ -45,6 +52,7 @@ protected:
     void mode(runtime::CanvasSelectionMode value) {
         ASSERT_EQ(f.setSelectionAcquisitionMode(value,++request,9100).state,runtime::ProductControlState::kQueued);
         ASSERT_TRUE(c.ownerPump());ASSERT_EQ(snapshot().selectionAcquisitionMode,value);
+        ASSERT_EQ(f.readRuntimeState().control.selectionAcquisitionMode,value);
     }
     void TearDown() override {EXPECT_TRUE(c.close());}
 };
@@ -122,14 +130,21 @@ TEST_F(SelectionInput, MetricsAndSourceLossCancelOnlyOwnedRegion) {
 TEST_F(SelectionInput, RegionDoesNotConsumeRedoOrChangeCanonicalOutcome) {
     runtime::StickyCreateRequest create;create.objectId=foundation::ObjectId::fromUint64(9300);
     ASSERT_EQ(f.createSticky(create).state,runtime::ConnectorCommandState::kApplied);
+    const auto expectedSticky=*c.qualificationRuntime().qualificationObjectRecord(create.objectId);
     ASSERT_EQ(f.undo(++request,f.readRuntimeState().identity.runtimeGeneration,9100).state,runtime::ProductControlState::kQueued);
     ASSERT_TRUE(c.ownerPump());ASSERT_TRUE(snapshot().canRedo);const auto before=snapshot();
+    const auto historySize=ink_playground::InkPlaygroundHistoryTestAccess::historySize(c.qualificationRuntime());
+    std::vector<semantic::ObjectRecord> records;
+    for(std::uint64_t i=9101;i<=9103;++i)records.push_back(*c.qualificationRuntime().qualificationObjectRecord(foundation::ObjectId::fromUint64(i)));
     rectangle(90,90,185,165);rectangle(250,90,345,165,true);
     const auto after=snapshot();EXPECT_EQ(after.semanticGeneration,before.semanticGeneration);
     EXPECT_EQ(after.lastAppliedOperation,before.lastAppliedOperation);EXPECT_EQ(after.appliedCommitEpoch,before.appliedCommitEpoch);
     EXPECT_EQ(after.appliedCommitOrdinal,before.appliedCommitOrdinal);EXPECT_EQ(after.canUndo,before.canUndo);EXPECT_EQ(after.canRedo,before.canRedo);
+    EXPECT_EQ(ink_playground::InkPlaygroundHistoryTestAccess::historySize(c.qualificationRuntime()),historySize);
+    for(const auto& record:records)EXPECT_EQ(*c.qualificationRuntime().qualificationObjectRecord(record.id),record);
     ASSERT_EQ(f.redo(++request,f.readRuntimeState().identity.runtimeGeneration,9100).state,runtime::ProductControlState::kQueued);
     ASSERT_TRUE(c.ownerPump());EXPECT_EQ(c.semanticObjectCount(),4U);
+    EXPECT_EQ(*c.qualificationRuntime().qualificationObjectRecord(create.objectId),expectedSticky);
 }
 TEST_F(SelectionInput, DeletingOriginalSelectionDoesNotRestoreDeletedIdentity) {
     click(140,130);ASSERT_TRUE(pointer(input::PointerPhase::kDown,20,20));
@@ -174,5 +189,60 @@ TEST_F(SelectionInput, MissingRegionProviderIsPartialAndNeverPublishesEmptySucce
     EXPECT_EQ(snapshot().selectionQueryStatus,runtime::SelectionQueryStatus::kPartial);
     EXPECT_EQ(snapshot().regionUnsupportedKinds,std::vector<std::uint32_t>{10});
     EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
+}
+TEST_F(SelectionInput, MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade) {
+    rectangle(90,90,345,165);ASSERT_EQ(selected().size(),2U);const auto before=snapshot();
+    runtime::CanvasControlRequest q;q.target=f.mountedCanvasTargets().front();q.clientId=9100;
+    for (const auto kind:{runtime::CanvasControlPayloadKind::kSelectedSize,runtime::CanvasControlPayloadKind::kSelectedTransform,
+         runtime::CanvasControlPayloadKind::kSelectedAppearance,runtime::CanvasControlPayloadKind::kSelectedOrder,
+         runtime::CanvasControlPayloadKind::kSelectedLock,runtime::CanvasControlPayloadKind::kUnlockSelected}) {
+        q.requestId=++request;q.payload.kind=kind;q.payload.width=500;q.payload.height=400;
+        ASSERT_EQ(f.submitCanvasControl(q).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
+        const auto receipt=f.canvasControlReceipt({9100,request});ASSERT_TRUE(receipt);
+        EXPECT_EQ(receipt->error,runtime::CanvasControlError::kUnsupported);
+    }
+    auto& editor=c.qualificationRuntime();
+    EXPECT_FALSE(editor.setSelectedObjectSize(400,300));EXPECT_FALSE(editor.setSelectedTransform({1,0,0,1,10,10}));
+    EXPECT_FALSE(editor.patchSelectedProperty(2,semantic::PropertyValue{true}));
+    EXPECT_FALSE(editor.setSelectedAppearance({}));EXPECT_FALSE(editor.setSelectedOrder(true));
+    EXPECT_FALSE(editor.selectionPointer(input::PointerKey{9100,77,1},input::PointerPhase::kDown,300,130));
+    EXPECT_FALSE(editor.selectionTransformActive());
+    EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
+}
+TEST_F(SelectionInput, MultipleRootsHaveNoSingleObjectHandlesOrPorts) {
+    rectangle(90,90,345,165);ASSERT_EQ(selected().size(),2U);
+    auto& editor=c.qualificationRuntime();ASSERT_TRUE(editor.renderSelectionOverlay());
+    const auto* overlay=editor.selectionOverlay();ASSERT_TRUE(overlay);
+    EXPECT_EQ(overlay->handle(render::HandleKind::kTopLeft).kind,render::HandleKind::kNone);
+    EXPECT_TRUE(overlay->attachmentPoints().empty());
+    EXPECT_EQ(overlay->readOnlyOutlines.size(),2U);
+}
+TEST_F(SelectionInput, FitSelectionIncludesAllRootsWithoutChangingDocument) {
+    rectangle(90,90,345,165);ASSERT_EQ(selected().size(),2U);const auto before=snapshot();
+    runtime::CanvasControlRequest q;q.target=f.mountedCanvasTargets().front();q.clientId=9100;q.requestId=++request;
+    q.payload.kind=runtime::CanvasControlPayloadKind::kFit;q.payload.fitTarget=runtime::CanvasFitTarget::kSelection;
+    ASSERT_EQ(f.submitCanvasControl(q).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
+    const auto after=snapshot();EXPECT_LT(after.cameraScale,3.34F);
+    EXPECT_GE(100*after.cameraScale+after.cameraTranslationX,0);
+    EXPECT_LE(340*after.cameraScale+after.cameraTranslationX,800);
+    EXPECT_EQ(after.semanticGeneration,before.semanticGeneration);
+}
+TEST_F(SelectionInput, MixedSelectionDoesNotExposePrimaryConnectorAsSingleEditableTarget) {
+    runtime::ConnectorCreateRequest q;q.objectId=foundation::ObjectId::fromUint64(9600);
+    q.content.start.value=semantic::FreePointEndpoint{{20,300}};q.content.end.value=semantic::FreePointEndpoint{{120,300}};
+    ASSERT_EQ(f.createConnector(q).state,runtime::ConnectorCommandState::kApplied);
+    click(60,300);ASSERT_TRUE(f.readSelectedConnector().available);
+    click(140,130,true);ASSERT_EQ(selected().size(),2U);EXPECT_FALSE(f.readSelectedConnector().available);
+}
+TEST_F(SelectionInput, RegionExcludesHiddenAndLockedWhilePointCanInspectLockedObject) {
+    semantic::PatchPropertiesOp patch{{{a,1,semantic::PropertyPatchAction::kSet,semantic::PropertyValue{false}},
+        {b,2,semantic::PropertyPatchAction::kSet,semantic::PropertyValue{true}}}};
+    semantic::Operation op{semantic::OperationId{foundation::ObjectId::fromUint64(9601)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,patch};
+    ASSERT_EQ(c.applyExternalOperation(op,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    const auto before=snapshot();mode(runtime::CanvasSelectionMode::kRectangle);
+    rectangle(90,90,510,170);EXPECT_EQ(selected(),std::vector{foundation::ObjectId::fromUint64(9103)});
+    mode(runtime::CanvasSelectionMode::kPoint);click(300,130);EXPECT_EQ(selected(),std::vector{b});
+    EXPECT_TRUE(snapshot().selectedLocked);EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
 }
 }

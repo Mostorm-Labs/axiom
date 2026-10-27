@@ -2,6 +2,7 @@
 #include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/interaction/text_edit_session.hpp"
 #include "canvas/semantic/property_value.hpp"
+#include <algorithm>
 
 namespace canvas::runtime {
 
@@ -20,6 +21,11 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     if (!isTargetCurrent(request.target)) return {CanvasControlError::kStaleTarget, "stale target"};
     auto& runtime = runtime_;
     const auto& p = request.payload;
+    const bool singleObjectEdit=p.kind==CanvasControlPayloadKind::kSelectedAppearance||p.kind==CanvasControlPayloadKind::kSelectedSize||
+        p.kind==CanvasControlPayloadKind::kSelectedTransform||p.kind==CanvasControlPayloadKind::kSelectedOrder||
+        p.kind==CanvasControlPayloadKind::kSelectedLock||p.kind==CanvasControlPayloadKind::kSelectedVisible||p.kind==CanvasControlPayloadKind::kUnlockSelected;
+    if (singleObjectEdit&&runtime.selectedObjectCount()>1)
+      return {CanvasControlError::kUnsupported,"multi-object editing is not supported by this command"};
     bool applied = false;
 
     switch (p.kind) {
@@ -36,7 +42,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
       case CanvasControlPayloadKind::kSelectionAcquisitionMode:
         applied=runtime.setSelectionAcquisitionMode(p.selectionAcquisitionMode);break;
       case CanvasControlPayloadKind::kSelectTool:
-        if (p.tool == CanvasToolKind::kSelect) applied = runtime.setSelectionMode(true);
+        if (p.tool == CanvasToolKind::kSelect) applied = runtime.setSelectionAcquisitionMode(p.selectionAcquisitionMode);
         else if (p.tool == CanvasToolKind::kPan) applied = runtime.setPanTool(true);
         else if (p.tool == CanvasToolKind::kEraser)
           applied = runtime.setSelectionMode(false) && runtime.setPanTool(false) &&
@@ -433,6 +439,10 @@ RuntimeStateSnapshot CanvasRuntimeFacade::readRuntimeState() const noexcept {
   out.control.presentedSemanticGeneration = snapshot.presentedSemanticGeneration;
   out.control.axisLocalDurable = snapshot.axisLocalDurable;
   out.control.axisCloudSynced = snapshot.axisCloudSynced;
+  out.control.selectionAcquisitionMode=snapshot.selectionAcquisitionMode;
+  out.control.selectionQueryStatus=snapshot.selectionQueryStatus;
+  out.control.regionUnsupportedKindCount=static_cast<std::uint8_t>(std::min(snapshot.regionUnsupportedKinds.size(),out.control.regionUnsupportedKinds.size()));
+  std::copy_n(snapshot.regionUnsupportedKinds.begin(),out.control.regionUnsupportedKindCount,out.control.regionUnsupportedKinds.begin());
   return out;
 }
 CanvasControlSnapshot CanvasRuntimeFacade::readCanvasControlSnapshot(const CanvasTargetKey& target) const noexcept {

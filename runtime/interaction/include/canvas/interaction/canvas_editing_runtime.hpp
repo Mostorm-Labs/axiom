@@ -620,7 +620,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   bool expandShapeLabel(semantic::ObjectId);
   bool textClosed() const noexcept override { return closed_; }
   bool textWritable(semantic::ObjectId) const noexcept override;
-  semantic::ObjectId textSelectedObject() const noexcept override { return selection_.primary(); }
+  semantic::ObjectId textSelectedObject() const noexcept override { return selectedObjectCount()==1?selection_.primary():semantic::ObjectId{}; }
   semantic::DocumentId textDocument() const noexcept override { return documentId_; }
   std::uint64_t textGeneration() const noexcept override { return semanticGeneration_.current().value(); }
   const semantic::ObjectRecord* textRecord(semantic::ObjectId id) const noexcept override { return semanticObjects_.find(id); }
@@ -839,6 +839,11 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool regionSelectionPointer(const input::PointerSample&) noexcept;
   [[nodiscard]] foundation::ObjectId resolveSelectionRoot(foundation::ObjectId) const;
   [[nodiscard]] bool acquisitionPointer(const input::PointerSample&) noexcept;
+  [[nodiscard]] bool renderAcquisitionOverlay() noexcept;
+  [[nodiscard]] bool singleSelectionAffordances() const noexcept {
+    return selectedObjectCount()==1U && !regionSelectionActive() && !panTool_ &&
+        (!selectionMode_||selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint);
+  }
   bool selectionMode_ = false;
   interaction::TransientSceneOverride transformOverrides_;
   interaction::TransformHandleDrag transformDrag_{*this, transformOverrides_};

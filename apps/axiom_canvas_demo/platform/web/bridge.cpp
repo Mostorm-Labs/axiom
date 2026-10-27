@@ -84,6 +84,14 @@ struct WebInstance final {
         pending.reset();
     }
     void cancel() {
+        // Retire the exact ingress generations before forgetting host capture.
+        // Clearing only this map strands an active Runtime generation after
+        // blur/tool cancellation, so a later Down cannot reuse the pointer.
+        const auto now=static_cast<std::uint64_t>(std::max(1.0,emscripten_get_now()*1000000.0));
+        for (const auto& [id,key]:pointers) {
+            (void)id;
+            (void)lifecycle.composition().cancelPlatformPointer(key,++sequence,now);
+        }
         (void)lifecycle.composition().cancelAllPointers();
         pointers.clear();
     }
@@ -237,7 +245,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_pointer(std::uintptr_t h,
                                            float width,
                                            float height,
                                            int geometryAvailable,
-                                           int history) {
+                                           int history, int modifiers=0) {
     auto* v = instance(h);
     if (!v)
         return 0;
@@ -277,6 +285,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_pointer(std::uintptr_t h,
                              history ? input::SampleProvenance::kCoalescedHistory
                                      : input::SampleProvenance::kConfirmedCurrent,
                              static_cast<input::PointerPhase>(phase)});
+    batch.samples.back().modifiers=(modifiers&1)?input::PointerModifiers::kShift:input::PointerModifiers::kNone;
     if (!comp.submit(batch)) {
         if (const auto key = comp.platformKey(s, p))
             (void)comp.cancelPlatformPointer(*key, ++v->sequence, time);
@@ -370,7 +379,8 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_control(
     std::uintptr_t h, int kind, float a, float b, float c, float d, float e, float f) {
     auto* v = instance(h);
     if (!v || kind < 0 ||
-        kind > static_cast<int>(runtime::CanvasControlPayloadKind::kUnlockSelected))
+        (kind > static_cast<int>(runtime::CanvasControlPayloadKind::kUnlockSelected)&&
+         kind != static_cast<int>(runtime::CanvasControlPayloadKind::kSelectionAcquisitionMode)))
         return 0;
     auto& facade = v->lifecycle.facade();
     const auto targets = facade.mountedCanvasTargets();
@@ -385,6 +395,9 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_control(
     payload.kind = static_cast<runtime::CanvasControlPayloadKind>(kind);
     using K = runtime::CanvasControlPayloadKind;
     switch (payload.kind) {
+    case K::kSelectionAcquisitionMode:
+        if (!std::isfinite(a)||a<0||a>2||a!=std::floor(a)) return 0;
+        payload.selectionAcquisitionMode=static_cast<runtime::CanvasSelectionMode>(static_cast<int>(a));break;
     case K::kSelectTool:
         if (a < 0 || a > 3)
             return 0;
@@ -467,6 +480,11 @@ EMSCRIPTEN_KEEPALIVE const char* axiom_web_snapshot(std::uintptr_t h) {
         << ",\"logicalHeight\":" << s.logicalHeight << ",\"dpr\":" << s.devicePixelRatio
         << ",\"controlState\":" << static_cast<int>(v->lastControl)
         << ",\"tool\":" << static_cast<int>(control.tool)
+        << ",\"selectedCount\":" << control.selectedObjectCount
+        << ",\"selectionMode\":" << static_cast<int>(control.selectionAcquisitionMode)
+        << ",\"regionActive\":" << control.regionSelectionActive
+        << ",\"regionCandidates\":" << control.regionCandidateCount
+        << ",\"regionQuery\":" << static_cast<int>(control.selectionQueryStatus)
         << ",\"creationMode\":" << control.creationMode
         << ",\"creationPreset\":" << static_cast<int>(control.creationPreset)
         << ",\"size\":" << control.size << ",\"opacity\":" << control.opacity

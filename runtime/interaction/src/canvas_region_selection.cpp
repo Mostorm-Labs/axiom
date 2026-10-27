@@ -6,6 +6,39 @@
 #include <limits>
 
 namespace canvas::interaction {
+bool CanvasEditingRuntime::renderAcquisitionOverlay() noexcept {
+    if (!surface_.available||!sceneCoordinator_||!runtimeSceneHost_||surface_.logicalWidth<=0||surface_.logicalHeight<=0) {
+        selectionView_.reset();return false;
+    }
+    const auto viewport=viewportController_->state();
+    const float zoom=viewport.scale;
+    const render::FrameState frame{viewId_,
+        render::CameraState{{(surface_.logicalWidth*.5F-viewport.translationX)/zoom,
+                             (surface_.logicalHeight*.5F-viewport.translationY)/zoom},zoom,0,
+                             render::CameraGeneration{cameraGeneration()}},
+        {-1e9F,-1e9F,1e9F,1e9F},
+        {surface_.logicalWidth,surface_.logicalHeight,surface_.width,surface_.height,surface_.devicePixelRatio,surface_.displayScale},
+        semanticGeneration_.current(),runtimeSceneHost_->revision(),render::SurfaceGeneration{surface_.generation},
+        render::MetricsGeneration{surface_.metricsGeneration},render::FrameId{nextCanonicalFrameId()},
+        {0,0,surface_.logicalWidth,surface_.logicalHeight}};
+    selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
+    auto& overlay=selectionView_->editingOverlay();
+    const auto append=[&](auto ids,auto& outlines) {
+        for (auto id:ids) {
+            const auto* r=sceneCoordinator_->runtimeScene().find(id);if(!r)continue;
+            const auto& b=r->visualBounds;const auto& t=r->transform;
+            const auto map=[&](float x,float y) {return render::ScreenPoint{
+                static_cast<float>((t.a*x+t.c*y+t.tx)*zoom+viewport.translationX),
+                static_cast<float>((t.b*x+t.d*y+t.ty)*zoom+viewport.translationY)};};
+            outlines.push_back(render::SelectionOutline{{map(b.left,b.top),map(b.right,b.top),map(b.right,b.bottom),map(b.left,b.bottom)},{},true});
+        }
+    };
+    append(selection_.selected(),overlay.readOnlyOutlines);
+    append(regionCandidates_,overlay.candidateOutlines);
+    if (regionSelection_.active()&&regionSelection_.dragged())
+        for (auto p:regionSelection_.outline()) overlay.acquisitionOutline.push_back({static_cast<float>(p.x),static_cast<float>(p.y)});
+    ++selectionOverlayUpdates_;return true;
+}
 RegionSelectionContext CanvasEditingRuntime::regionContext() const noexcept {
     return {selection_.revision(),cameraGeneration(),surface_.generation,surface_.metricsGeneration,
             regionBinding_,selection_.groupScope()};

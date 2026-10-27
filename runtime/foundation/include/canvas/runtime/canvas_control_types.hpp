@@ -3,6 +3,7 @@
 #include "canvas/foundation/object_id.hpp"
 #include "canvas/runtime/section_input.hpp"
 #include "canvas/runtime/canvas_target.hpp"
+#include "canvas/runtime/selection_acquisition.hpp"
 
 #include <array>
 #include <cstdint>
@@ -13,8 +14,6 @@
 namespace canvas::runtime {
 
 enum class CanvasToolKind : std::uint8_t { kInk, kSelect, kEraser, kPan, kText };
-enum class CanvasSelectionMode : std::uint8_t { kPoint, kRectangle, kFreeform };
-enum class SelectionQueryStatus : std::uint8_t { kIdle, kComplete, kPartial, kStale, kFailed, kInvalid, kCancelled };
 enum class CanvasCreationPreset : std::uint8_t {
   kRectangle,
   kEllipse,

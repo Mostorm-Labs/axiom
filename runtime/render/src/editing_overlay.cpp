@@ -100,6 +100,7 @@ bool EditingOverlay::update(const EditingOverlayInput& input) noexcept {
 }
 
 void EditingOverlay::clear() noexcept {
+    readOnlyOutlines.clear();candidateOutlines.clear();acquisitionOutline.clear();
     creationPreview_.reset();
     creationRoute_.reset();
     input_ = {};

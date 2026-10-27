@@ -192,6 +192,7 @@ if(BUILD_TESTING)
     endif()
     add_test(NAME FC00XWindowsMouseHistory
       COMMAND axiom_minimal_windows_input_pipeline_tests history)
+    add_test(NAME FC01AWindowsSelectionInput COMMAND axiom_minimal_windows_input_pipeline_tests selection)
     add_test(NAME FC00XWindowsPreviewOrigin
       COMMAND axiom_minimal_windows_input_pipeline_tests origin)
     add_test(NAME FC00XPreviewCanonicalCoordinates

@@ -198,6 +198,7 @@ bool sendNativePointer(State& state, UINT message, UINT32 id) {
     sample.provenance = i == 0U ? SampleProvenance::kConfirmedCurrent : SampleProvenance::kCoalescedHistory;
     sample.capabilities.tool = current.pointerType == PT_TOUCH ? PointerTool::kFinger : PointerTool::kPen;
     sample.capabilities.coalescedHistory = historyAvailable;
+    sample.modifiers=(info.dwKeyStates&POINTER_MOD_SHIFT)?PointerModifiers::kShift:PointerModifiers::kNone;
     if (!touches.empty()) {
       const auto& touch = touches[i];
       sample.capabilities.pressure = (touch.touchMask & TOUCH_MASK_PRESSURE) != 0U;

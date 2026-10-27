@@ -119,7 +119,7 @@ export const ready = globalThis.axiomMinimalReady = (async () => {
       const accepted = module._axiom_web_pointer(handle, source, event.pointerId, contact.generation, ns,
         phase, x, y, pressure, tool === 2 && Number.isFinite(sample.pressure) ? 1 : 0,
         tool, geometry ? sample.width : 0, geometry ? sample.height : 0, geometry ? 1 : 0,
-        i < history.length ? 1 : 0);
+        i < history.length ? 1 : 0, sample.shiftKey ? 1 : 0);
       if (!accepted) {
         active.delete(identity);
         if (canvas.hasPointerCapture?.(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
@@ -197,9 +197,9 @@ export const ready = globalThis.axiomMinimalReady = (async () => {
   };
   // Transport names map to the existing CanvasControlPayloadKind. Intent
   // validation and all state changes remain in the composition-owned facade.
-  const controls = {tool:0,preset:1,ink:2,eraser:3,pan:4,zoom:5,setZoom:6,fit:7,undo:8,redo:9,shape:10};
+  const controls = {tool:0,preset:1,ink:2,eraser:3,pan:4,zoom:5,setZoom:6,fit:7,undo:8,redo:9,shape:10,selection:21};
   const control = async (kind,...values) => {
-    if(["tool","preset","eraser","shape"].includes(kind))await textInput.finish();
+    if(["tool","preset","eraser","shape","selection"].includes(kind))await textInput.finish();
     cancelInputs('facade-control');
     const args = Array.from({length:6},(_,i) => values[i] ?? 0);
     const code = typeof kind === 'string' ? controls[kind] : kind;

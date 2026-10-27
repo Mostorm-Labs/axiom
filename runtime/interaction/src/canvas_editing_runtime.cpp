@@ -734,7 +734,8 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   std::vector<input::PointerSample> routedSamples;
   routedSamples.reserve(routed.normalized.samples.size());
   for (const auto& sample : routed.normalized.samples)
-    if (!shapeExpandPointer(sample)) routedSamples.push_back(sample);
+    if (panTool_||(selectionMode_&&selectionAcquisitionMode_!=runtime::CanvasSelectionMode::kPoint)||
+        selectedObjectCount()>1U||!shapeExpandPointer(sample)) routedSamples.push_back(sample);
   if (routed.terminalCancel) shapeExpandPointerKeys_.clear();
   // Normalize/retire full pointer identities even while the text editor owns input.
   if(textTool_ || (interaction_->textSession() && interaction_->textSession()->read().phase!=runtime::TextPhase::kClosed) || !textPointerKeys_.empty()){
@@ -1661,6 +1662,7 @@ bool CanvasEditingRuntime::applyTextOperation(semantic::Operation forward,
 }
 
 bool CanvasEditingRuntime::setSelectedObjectSize(double width, double height) noexcept {
+  if (selectedObjectCount()!=1U) return false;
   if (selection_.primary().isZero() || !std::isfinite(width) || !std::isfinite(height) ||
       width <= 0.0 || height <= 0.0) return false;
   const auto* before = semanticObjects_.find(selection_.primary());
@@ -1794,6 +1796,7 @@ bool CanvasEditingRuntime::expandShapeLabel(semantic::ObjectId id) {
 
 bool CanvasEditingRuntime::patchSelectedProperty(std::uint32_t fieldId,
                                                semantic::PropertyValue value) noexcept {
+  if (selectedObjectCount()!=1U) return false;
   if (selection_.primary().isZero() ||
       (selectedObjectLocked() && !(fieldId == 2U && std::get_if<bool>(&value) && !std::get<bool>(value)))) return false;
   const auto* before = semanticObjects_.find(selection_.primary());
@@ -1822,6 +1825,7 @@ bool CanvasEditingRuntime::setFutureAppearance(const runtime::CanvasAppearance& 
   futureAppearance_=appearance; return true;
 }
 bool CanvasEditingRuntime::setSelectedAppearance(const runtime::CanvasAppearance& appearance) noexcept {
+  if (selectedObjectCount()!=1U) return false;
   const auto* before=semanticObjects_.find(selection_.primary());
   if(!before || selectedObjectLocked() || !validAppearance(appearance) ||
       (before->kind!=semantic::ObjectKind::kShape && before->kind!=semantic::ObjectKind::kConnector))return false;
@@ -1856,6 +1860,7 @@ bool CanvasEditingRuntime::setSelectedAppearance(const runtime::CanvasAppearance
       {i,documentId_,1,1,std::move(inverse)});
 }
 bool CanvasEditingRuntime::setSelectedStrokeWidth(double width) noexcept {
+  if (selectedObjectCount()!=1U) return false;
   if (!std::isfinite(width) || width <= 0.0 || selection_.primary().isZero() || selectedObjectLocked()) return false;
   const auto* before = semanticObjects_.find(selection_.primary());
   if (before == nullptr) return false;
@@ -1889,10 +1894,12 @@ bool CanvasEditingRuntime::selectedObjectLocked() const noexcept {
   return object && propertyBool(object->properties,2U,false);
 }
 std::optional<semantic::ObjectRecord> CanvasEditingRuntime::selectedObjectRecord() const {
+  if (selectedObjectCount()!=1U) return std::nullopt;
   const auto* object=semanticObjects_.find(selection_.primary());
   return object ? std::optional<semantic::ObjectRecord>(*object) : std::nullopt;
 }
 bool CanvasEditingRuntime::setSelectedTransform(const semantic::Transform2D& transform) noexcept {
+  if (selectedObjectCount()!=1U) return false;
   const auto* before=semanticObjects_.find(selection_.primary());
   if(!before || selectedObjectLocked()) return false;
   const auto forward=allocateOperationId(),inverse=allocateOperationId();
@@ -1900,6 +1907,7 @@ bool CanvasEditingRuntime::setSelectedTransform(const semantic::Transform2D& tra
       {inverse,documentId_,1,1,semantic::SetTransformsOp{{{before->id,before->transform}}}});
 }
 bool CanvasEditingRuntime::setSelectedOrder(bool front) noexcept {
+  if (selectedObjectCount()!=1U) return false;
   const auto* before=semanticObjects_.find(selection_.primary());
   if(!before || selectedObjectLocked()) return false;
   auto siblings=semanticObjects_.children(before->placement.parent_id);
@@ -1968,6 +1976,11 @@ bool CanvasEditingRuntime::toggleSelectionAtViewPoint(float x, float y) noexcept
 }
 
 bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
+  if (regionSelection_.active()&&regionSelection_.context()!=regionContext()) {
+    cancelRegionSelection();regionQueryStatus_=runtime::SelectionQueryStatus::kStale;
+  }
+  if (regionSelectionActive()||selectedObjectCount()>1U||panTool_||
+      (selectionMode_&&selectionAcquisitionMode_!=runtime::CanvasSelectionMode::kPoint)) return renderAcquisitionOverlay();
   const bool connectorCreation = creationMode_ &&
       (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow);
   if ((!selectionMode_ && !connectorCreation) || selection_.primary().isZero() ||
@@ -2119,6 +2132,7 @@ bool CanvasEditingRuntime::hoverSelectionAtViewPoint(float x, float y) noexcept 
 bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input::PointerPhase phase,
                                          float x, float y) noexcept {
   if (!selectionMode_ || !key.valid()) return false;
+  if (phase==input::PointerPhase::kDown && selectedObjectCount()>1U) return false;
   if (connectorPointerKeys_.contains(key)) {
     const bool accepted = creationPointer(key, phase, x, y);
     if (phase == input::PointerPhase::kUp || phase == input::PointerPhase::kCancel || !accepted)
@@ -3213,9 +3227,13 @@ bool CanvasEditingRuntime::fitViewportToContent(
 
 bool CanvasEditingRuntime::fitViewportToSelection() noexcept {
   if (selection_.primary().isZero() || sceneCoordinator_ == nullptr) return false;
-  const auto* record = sceneCoordinator_->runtimeScene().find(selection_.primary());
-  if (record == nullptr) return false;
-  return fitViewportToContent(record->worldBounds);
+  std::optional<foundation::WorldRect> bounds;
+  for (auto id:selection_.selected()) {
+    const auto* record=sceneCoordinator_->runtimeScene().find(id);
+    if (!record||!record->worldBounds.isFiniteAndOrdered()) return false;
+    bounds=bounds?foundation::unionRects(*bounds,record->worldBounds):record->worldBounds;
+  }
+  return bounds&&fitViewportToContent(*bounds);
 }
 
 bool CanvasEditingRuntime::fitViewportToObject(foundation::ObjectId objectId) noexcept {
@@ -3863,7 +3881,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       const auto layout = textLayoutService_->resolveStickyLabel(
           parentEntry.record.objectId, *richContent, *sticky, true, parentEntry.record.transform);
       parentEntry.command = render::StickyReferenceCommand{
-          *sticky, layout, selection_.primary() == parentEntry.record.objectId};
+          *sticky, layout, singleSelectionAffordances() && selection_.primary() == parentEntry.record.objectId};
       if (childEntryPtr != nullptr) childEntryPtr->command = render::GroupReferenceCommand{};
       references.value().canonicalBytes.clear();
       references.value().digest.clear();
@@ -3915,7 +3933,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       const auto layout = textLayoutService_->resolveStickyLabel(
           parentEntry.record.objectId, *richContent, *sticky, true, parentEntry.record.transform);
         parentEntry.command = render::StickyReferenceCommand{
-            *sticky, layout, selection_.primary() == parentEntry.record.objectId};
+            *sticky, layout, singleSelectionAffordances() && selection_.primary() == parentEntry.record.objectId};
       if (childEntryPtr != nullptr) childEntryPtr->command = render::GroupReferenceCommand{};
       references.value().canonicalBytes.clear();
       references.value().digest.clear();
@@ -3923,7 +3941,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   }
 
   const auto textState=interaction_->textSession()?interaction_->textSession()->read():runtime::TextEditorSnapshot{};
-  foundation::ObjectId placeholderTarget = selection_.primary();
+  foundation::ObjectId placeholderTarget = singleSelectionAffordances()?selection_.primary():foundation::ObjectId{};
   if (textState.phase != runtime::TextPhase::kClosed && !textState.token.object.isZero())
     placeholderTarget = textState.token.object;
   if (!placeholderTarget.isZero() && textLayoutService_) {
@@ -4009,7 +4027,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
           if (existingParent != references.value().entries.end()) {
             const auto& sticky = std::get<semantic::StickyContent>(parent->content);
             existingParent->command = render::StickyReferenceCommand{
-                sticky, layout, selection_.primary() == existingParent->record.objectId};
+                sticky, layout, singleSelectionAffordances() && selection_.primary() == existingParent->record.objectId};
             references.value().canonicalBytes.clear();
             references.value().digest.clear();
             entry.command = render::GroupReferenceCommand{};
@@ -4061,7 +4079,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
         const auto layout = textLayoutService_->resolveStickyLabel(
             childEntry.record.objectId, *rich, *sticky, true, parentEntry.record.transform);
       parentEntry.command = render::StickyReferenceCommand{
-          *sticky, layout, selection_.primary() == parentEntry.record.objectId};
+          *sticky, layout, singleSelectionAffordances() && selection_.primary() == parentEntry.record.objectId};
         childEntry.command = render::GroupReferenceCommand{};
         references.value().canonicalBytes.clear();
         references.value().digest.clear();
@@ -4074,7 +4092,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
   const bool connectorCreation = creationMode_ &&
       (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow);
-  if (selectionMode_ || connectorCreation) (void)renderSelectionOverlay();
+  if (selectionMode_ || connectorCreation || panTool_) (void)renderSelectionOverlay();
   if (creationActive() && creationPreview().valid) {
     if (!selectionView_) selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
     std::vector<render::SnapGuideGeometry> guides;
@@ -4100,7 +4118,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     const auto route = previewRecord.kind == semantic::ObjectKind::kConnector
         ? std::optional(previewConnectorGeometry(creationPreview().record)) : std::nullopt;
     selectionView_->editingOverlay().setCreationPreview(previewRecord, guides, route);
-  } else if (!selectionMode_ && !(creationMode_ &&
+  } else if (!selectionMode_ && !panTool_ && !(creationMode_ &&
       (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow))) {
     selectionView_.reset();
   }
@@ -4434,7 +4452,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
         const auto layout = textLayoutService_->resolveStickyLabel(
             childEntry.record.objectId, *rich, *sticky, true, parentEntry.record.transform);
         parentEntry.command = render::StickyReferenceCommand{
-            *sticky, layout, selection_.primary() == parentEntry.record.objectId};
+            *sticky, layout, singleSelectionAffordances() && selection_.primary() == parentEntry.record.objectId};
         childEntry.command = render::GroupReferenceCommand{};
         references.value().canonicalBytes.clear();
         references.value().digest.clear();
@@ -4447,7 +4465,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
   if (!plan) return false;
   const bool connectorCreation = creationMode_ &&
       (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow);
-  if (selectionMode_ || connectorCreation) (void)renderSelectionOverlay();
+  if (selectionMode_ || connectorCreation || panTool_) (void)renderSelectionOverlay();
   if (creationActive() && creationPreview().valid) {
     if (!selectionView_) selectionView_ = std::make_unique<render::RenderViewRuntime>(frame);
     std::vector<render::SnapGuideGeometry> guides;

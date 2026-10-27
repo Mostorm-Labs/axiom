@@ -201,7 +201,8 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
             const auto state = text ? text->read() : TextEditorSnapshot{};
             if (state.phase != TextPhase::kClosed &&
                 (request->payload.kind == CanvasControlPayloadKind::kSelectTool ||
-                 request->payload.kind == CanvasControlPayloadKind::kSelectCreationPreset)) {
+                 request->payload.kind == CanvasControlPayloadKind::kSelectCreationPreset||
+                 request->payload.kind == CanvasControlPayloadKind::kSelectionAcquisitionMode)) {
                 const auto finish = text->finish();
                 if (finish == TextStatus::kQueued) {
                     deferredControls_.push_back(*request);
@@ -220,7 +221,7 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
                 count += service_->processPending(sequence, key);
         } else if (auto* intent = std::get_if<TextIntent>(&item)) {
             const bool editAtPoint = intent->kind == TextIntentKind::kEditAtPoint;
-            const bool editAllowed=intent->kind!=TextIntentKind::kEditAtPoint || runtime_.textTool() || runtime_.selectionMode();
+            const bool editAllowed=intent->kind!=TextIntentKind::kEditAtPoint || runtime_.textTool() || (runtime_.selectionMode() && runtime_.selectionAcquisitionMode()==CanvasSelectionMode::kPoint);
             if(intent->kind==TextIntentKind::kEditAtPoint && editAllowed){intent->object=runtime_.hitTextAtView(intent->viewX,intent->viewY);intent->kind=TextIntentKind::kEdit;}
             const auto result = !editAllowed ? receipt(TextStatus::kRejected,intent->requestId) : !isTargetCurrent(intent->target)
                                     ? receipt(TextStatus::kStale, intent->requestId)
