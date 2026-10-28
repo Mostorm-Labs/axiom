@@ -4,7 +4,7 @@ from pathlib import Path
 import argparse, json, subprocess, sys
 
 P = Path(__file__).resolve().parent
-ROOT = P.parents[3]
+ROOT = P.parents[2]
 ANCHOR = "3d15645d54d44c47474b4b0dd6ca20ade1e3c633"
 FEATURE = "c7f874395d55952e9d5288e2a336a21747f37f11"
 PACKAGE_REL = ".aegis/packages/FC04-D07-SDK-P31-v0.1"
