@@ -63,7 +63,7 @@ def design():
     require("runtime/semantic/src/codec.cpp" in ctx["forbidden"] and "semantic-sdk.lock.json" in ctx["forbidden"], "forbidden scope missing")
     require(ctx["release_promotion_authorized"] is False and ctx["consumer_lock_update_authorized"] is False, "release boundary mismatch")
     text = (P / "design.md").read_text(encoding="utf-8").lower()
-    for phrase in ("descriptortable::is_initialized", "prewarm descriptors", "byte-identical", "waiters"):
+    for phrase in ("descriptortable::is_initialized", "no descriptor prewarming", "byte-identical", "waiters"):
         require(phrase in text, "design invariant missing: " + phrase)
     print("PASS: patch scope, invariants and release boundary bound")
 
