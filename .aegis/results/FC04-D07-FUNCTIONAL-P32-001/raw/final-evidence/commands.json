@@ -1,0 +1,110 @@
+[
+  {
+    "name": "d07_14",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\build",
+      "--tests-from-file",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\.aegis\\results\\FC04-D07-P31-CORRECTION-v0.2\\raw\\d07-names.txt",
+      "--no-tests=error",
+      "--output-on-failure",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\.aegis\\results\\FC04-D07-FUNCTIONAL-P32-001\\raw\\final-evidence\\d07_14.xml"
+    ],
+    "exit_code": 0,
+    "expected": 14,
+    "actual": 14,
+    "missing": [],
+    "extra": [],
+    "skipped": "0",
+    "failures": "0",
+    "exact": true
+  },
+  {
+    "name": "selection_160",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\build",
+      "--tests-from-file",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\.aegis\\results\\FC04-D07-P31-CORRECTION-v0.2\\raw\\selection-names.txt",
+      "--no-tests=error",
+      "--output-on-failure",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\final-evidence\\selection_160.xml"
+    ],
+    "exit_code": 0,
+    "expected": 160,
+    "actual": 160,
+    "missing": [],
+    "extra": [],
+    "skipped": "0",
+    "failures": "0",
+    "exact": true
+  },
+  {
+    "name": "d07_all",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\build",
+      "-R",
+      "^fc04\\.d07\\.",
+      "--no-tests=error",
+      "--output-on-failure",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\.aegis\\results\\FC04-D07-FUNCTIONAL-P32-001\\raw\\final-evidence\\d07_all.xml"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "scene_regression",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\build",
+      "-R",
+      "^canvas_g2_a6_(atomic_publication|recovery)$",
+      "--no-tests=error",
+      "-V",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\final-evidence\\scene_regression.xml"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "faults",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\build",
+      "-R",
+      "^FC04D07(PostcommitFault|PostcommitReceiptGrowthFault|ExplicitIntentPostcommitNoAllocation|ExplicitIntentInsertPostcommitNoAllocation|HistoryReservationFault|HistoryIntentFault_.*|SemanticParticipantFault_.*|SceneParticipantFault_.*)$",
+      "--no-tests=error",
+      "-V",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\final-evidence\\faults.xml"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "abi",
+    "command": [
+      "C:\\Users\\Chado\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "tools/check_runtime_abi_manifest.py",
+      "--root",
+      "."
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "scope",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit_code": 0
+  }
+]

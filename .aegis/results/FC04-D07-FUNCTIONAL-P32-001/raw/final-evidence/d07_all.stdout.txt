@@ -1,0 +1,65 @@
+Test project C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+      Start  1: fc04.d07.D07.ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation
+ 1/30 Test  #1: fc04.d07.D07.ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation .................   Passed    0.02 sec
+      Start  2: fc04.d07.D07.HomogeneousMultiTargetValidationRejectsWholeOperationAndPreservesRedo
+ 2/30 Test  #2: fc04.d07.D07.HomogeneousMultiTargetValidationRejectsWholeOperationAndPreservesRedo ...........   Passed    0.02 sec
+      Start  3: fc04.d07.D07.RealPrecommitAdmissionRejectionHasZeroMutationAndPreservesRedo
+ 3/30 Test  #3: fc04.d07.D07.RealPrecommitAdmissionRejectionHasZeroMutationAndPreservesRedo ..................   Passed    0.02 sec
+      Start  4: fc04.d07.D07.TransformBatchHasOneUndoWithChangedSelectionAndFreshRedoIdentity
+ 4/30 Test  #4: fc04.d07.D07.TransformBatchHasOneUndoWithChangedSelectionAndFreshRedoIdentity ................   Passed    0.02 sec
+      Start  5: fc04.d07.D07.PropertiesBatchHasOneUndoWithChangedSelection
+ 5/30 Test  #5: fc04.d07.D07.PropertiesBatchHasOneUndoWithChangedSelection ...................................   Passed    0.02 sec
+      Start  6: fc04.d07.D07.IndependentCommandsExposeAppliedPrefixAtEveryTwoOperationRejectionBoundary
+ 6/30 Test  #6: fc04.d07.D07.IndependentCommandsExposeAppliedPrefixAtEveryTwoOperationRejectionBoundary ......   Passed    0.02 sec
+      Start  7: fc04.d07.D07.ManualCanonicalCompensationRestoresProjectionButDoesNotRewindMetadataOrEvents
+ 7/30 Test  #7: fc04.d07.D07.ManualCanonicalCompensationRestoresProjectionButDoesNotRewindMetadataOrEvents ...   Passed    0.02 sec
+      Start  8: fc04.d07.D07.RealScenePublicationFaultsRetainCommittedHistoryAndRecoverCoherently
+ 8/30 Test  #8: fc04.d07.D07.RealScenePublicationFaultsRetainCommittedHistoryAndRecoverCoherently ............   Passed    0.02 sec
+      Start  9: fc04.d07.D07.TwoIndependentCommandsNeedTwoUndoUnits
+ 9/30 Test  #9: fc04.d07.D07.TwoIndependentCommandsNeedTwoUndoUnits ..........................................   Passed    0.02 sec
+      Start 10: fc04.d07.D07.ExplicitIntentGroupProducesOneUndoUnit
+10/30 Test #10: fc04.d07.D07.ExplicitIntentGroupProducesOneUndoUnit ..........................................   Passed    0.02 sec
+      Start 11: fc04.d07.D07.ExplicitIntentStagesInsertedObjectBeforeTransform
+11/30 Test #11: fc04.d07.D07.ExplicitIntentStagesInsertedObjectBeforeTransform ...............................   Passed    0.02 sec
+      Start 12: fc04.d07.D07.ExplicitIntentStagesSectionInsertAndRename
+12/30 Test #12: fc04.d07.D07.ExplicitIntentStagesSectionInsertAndRename ......................................   Passed    0.02 sec
+      Start 13: fc04.d07.D07.ExplicitIntentStagesDeleteThenRestore
+13/30 Test #13: fc04.d07.D07.ExplicitIntentStagesDeleteThenRestore ...........................................   Passed    0.02 sec
+      Start 14: fc04.d07.D07.ExplicitIntentStagesTopologyAndSectionContent
+14/30 Test #14: fc04.d07.D07.ExplicitIntentStagesTopologyAndSectionContent ...................................   Passed    0.02 sec
+      Start 15: fc04.d07.D07.ScenePrep01PrepareIsInvisible
+15/30 Test #15: fc04.d07.D07.ScenePrep01PrepareIsInvisible ...................................................   Passed    0.02 sec
+      Start 16: fc04.d07.D07.ScenePrep02AbortPreservesRedo
+16/30 Test #16: fc04.d07.D07.ScenePrep02AbortPreservesRedo ...................................................   Passed    0.02 sec
+      Start 17: fc04.d07.D07.ExplicitIntentFailureContainment
+17/30 Test #17: fc04.d07.D07.ExplicitIntentFailureContainment ................................................   Passed    0.03 sec
+      Start 18: fc04.d07.D07.ScenePrep05StaleSceneBasisRejectsBeforeWrite
+18/30 Test #18: fc04.d07.D07.ScenePrep05StaleSceneBasisRejectsBeforeWrite ....................................   Passed    0.02 sec
+      Start 19: fc04.d07.D07.ExplicitIntentUndoRedoFailureContainment
+19/30 Test #19: fc04.d07.D07.ExplicitIntentUndoRedoFailureContainment ........................................   Passed    0.02 sec
+      Start 20: fc04.d07.D07.ExplicitIntentRedoRejectsConflictWithoutChangingRedo
+20/30 Test #20: fc04.d07.D07.ExplicitIntentRedoRejectsConflictWithoutChangingRedo ............................   Passed    0.02 sec
+      Start 21: fc04.d07.D07.ExplicitIntentUndoRedoRejectsSceneReservationFailures
+21/30 Test #21: fc04.d07.D07.ExplicitIntentUndoRedoRejectsSceneReservationFailures ...........................   Passed    0.02 sec
+      Start 22: fc04.d07.D07.ExplicitIntentLifecycleAndStaging
+22/30 Test #22: fc04.d07.D07.ExplicitIntentLifecycleAndStaging ...............................................   Passed    0.02 sec
+      Start 23: fc04.d07.D07.ExplicitIntentRejectsInvalidLaterOperationWithoutMutation
+23/30 Test #23: fc04.d07.D07.ExplicitIntentRejectsInvalidLaterOperationWithoutMutation .......................   Passed    0.02 sec
+      Start 24: fc04.d07.D07.ExplicitIntentRejectsStaleBasisWithoutAdditionalMutation
+24/30 Test #24: fc04.d07.D07.ExplicitIntentRejectsStaleBasisWithoutAdditionalMutation ........................   Passed    0.02 sec
+      Start 25: fc04.d07.D07.ScenePublicationRejectsReentrantCanonicalWrite
+25/30 Test #25: fc04.d07.D07.ScenePublicationRejectsReentrantCanonicalWrite ..................................   Passed    0.02 sec
+      Start 26: fc04.d07.D07.LiveSceneApplyIsNotUnpublishedPreparation
+26/30 Test #26: fc04.d07.D07.LiveSceneApplyIsNotUnpublishedPreparation .......................................   Passed    0.02 sec
+      Start 27: fc04.d07.D07.SceneIntentPrepareAndAbortAreInvisible
+27/30 Test #27: fc04.d07.D07.SceneIntentPrepareAndAbortAreInvisible ..........................................   Passed    0.02 sec
+      Start 28: fc04.d07.D07.CapturedExpectationsRejectUndoConflictWithoutCursorOrRedoMutation
+28/30 Test #28: fc04.d07.D07.CapturedExpectationsRejectUndoConflictWithoutCursorOrRedoMutation ...............   Passed    0.02 sec
+      Start 29: fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED
+29/30 Test #29: fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED .......................................   Passed    0.02 sec
+      Start 30: fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED
+30/30 Test #30: fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED .................................   Passed    0.02 sec
+
+100% tests passed, 0 tests failed out of 30
+
+Total Test time (real) =   0.72 sec

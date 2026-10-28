@@ -1,0 +1,20 @@
+[
+  {
+    "name": "native-final-build",
+    "command": [
+      "cmd.exe",
+      "/c",
+      "out\\d07-functional\\build-all.cmd"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "wasm-final-build",
+    "command": [
+      "cmd.exe",
+      "/c",
+      "out\\d07-functional\\build-web.cmd"
+    ],
+    "exit_code": 0
+  }
+]

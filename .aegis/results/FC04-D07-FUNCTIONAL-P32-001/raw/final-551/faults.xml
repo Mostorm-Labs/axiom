@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="46"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="1"
+	timestamp="2026-10-28T17:19:13"
+	>
+	<testcase name="FC04D07PostcommitFault" classname="FC04D07PostcommitFault" time="0.0217397" status="run">
+		<properties/>
+		<system-out>POSTCOMMIT_ALLOCATION_INJECTED before_generation=1 generation=2 ordinal=2 history=1 scene=1 tx=200 objects=1
+COMMAND_RETURNED before_generation=1 generation=2 ordinal=2 history=1 scene=1 tx=200 objects=1
+accepted=1 injected=1
+RECOVERY_RETURNED before_generation=1 generation=2 ordinal=2 history=1 scene=2 tx=200 objects=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07PostcommitReceiptGrowthFault" classname="FC04D07PostcommitReceiptGrowthFault" time="0.0218467" status="run">
+		<properties/>
+		<system-out>POSTCOMMIT_ALLOCATION_INJECTED before_generation=1 generation=2 ordinal=2 history=1 scene=1 tx=0 objects=3
+COMMAND_RETURNED before_generation=1 generation=2 ordinal=2 history=1 scene=1 tx=0 objects=3
+accepted=1 injected=1
+RECOVERY_RETURNED before_generation=1 generation=2 ordinal=2 history=1 scene=2 tx=0 objects=3
+</system-out>
+	</testcase>
+	<testcase name="FC04D07ExplicitIntentPostcommitNoAllocation" classname="FC04D07ExplicitIntentPostcommitNoAllocation" time="0.0213664" status="run">
+		<properties/>
+		<system-out>INTENT_RETURNED before_generation=1 generation=3 ordinal=3 history=1 scene=3 tx=200 objects=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07ExplicitIntentInsertPostcommitNoAllocation" classname="FC04D07ExplicitIntentInsertPostcommitNoAllocation" time="0.0212859" status="run">
+		<properties/>
+		<system-out>INSERT_INTENT_RETURNED before_generation=1 generation=3 ordinal=3 history=1 scene=3 tx=0 objects=2
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryReservationFault" classname="FC04D07HistoryReservationFault" time="0.0198822" status="run">
+		<properties/>
+		<system-out>HISTORY_RESERVATION_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+HISTORY_RESERVATION injected=1 result=0
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_store_index_0" classname="FC04D07SemanticParticipantFault_store_index_0" time="0.0210392" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=100 end=101 operation=0 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_store_index_1" classname="FC04D07SemanticParticipantFault_store_index_1" time="0.0209718" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=100 end=101 operation=1 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_record_store_0" classname="FC04D07SemanticParticipantFault_record_store_0" time="0.0209857" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=120 end=121 operation=0 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_record_store_1" classname="FC04D07SemanticParticipantFault_record_store_1" time="0.0209052" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=120 end=121 operation=1 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_index_0" classname="FC04D07SemanticParticipantFault_index_0" time="0.0213845" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=122 end=123 operation=0 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_index_1" classname="FC04D07SemanticParticipantFault_index_1" time="0.0211908" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=122 end=123 operation=1 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_changeset_0" classname="FC04D07SemanticParticipantFault_changeset_0" time="0.0215195" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=102 end=103 operation=0 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_changeset_1" classname="FC04D07SemanticParticipantFault_changeset_1" time="0.021124" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=102 end=103 operation=1 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_ledger_0" classname="FC04D07SemanticParticipantFault_ledger_0" time="0.0209107" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=104 end=105 operation=0 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_ledger_1" classname="FC04D07SemanticParticipantFault_ledger_1" time="0.0213867" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=104 end=105 operation=1 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_staged_state_0" classname="FC04D07SemanticParticipantFault_staged_state_0" time="0.0214302" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=106 end=107 operation=0 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_staged_state_1" classname="FC04D07SemanticParticipantFault_staged_state_1" time="0.0214993" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=106 end=107 operation=1 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_plan_vector_0" classname="FC04D07SemanticParticipantFault_plan_vector_0" time="0.0215545" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=108 end=109 operation=0 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_storage_vector_0" classname="FC04D07SemanticParticipantFault_storage_vector_0" time="0.0209091" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=110 end=111 operation=0 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_ledger_vector_0" classname="FC04D07SemanticParticipantFault_ledger_vector_0" time="0.020992" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=112 end=113 operation=0 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SemanticParticipantFault_result_vector_0" classname="FC04D07SemanticParticipantFault_result_vector_0" time="0.0220122" status="run">
+		<properties/>
+		<system-out>SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SEMANTIC_PARTICIPANT begin=114 end=115 operation=0 injected=1 reached_end=0 prepared=0
+SEMANTIC_SAME_IDS_RETRY=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SceneParticipantFault_runtime" classname="FC04D07SceneParticipantFault_runtime" time="0.020983" status="run">
+		<properties/>
+		<system-out>SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SCENE_PARTICIPANT begin=0 end=1 injected=1 reached_end=0 prepared=0
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SceneParticipantFault_bounds" classname="FC04D07SceneParticipantFault_bounds" time="0.0209274" status="run">
+		<properties/>
+		<system-out>SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SCENE_PARTICIPANT begin=2 end=3 injected=1 reached_end=0 prepared=0
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SceneParticipantFault_record" classname="FC04D07SceneParticipantFault_record" time="0.021272" status="run">
+		<properties/>
+		<system-out>SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SCENE_PARTICIPANT begin=10 end=11 injected=1 reached_end=0 prepared=0
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SceneParticipantFault_render" classname="FC04D07SceneParticipantFault_render" time="0.0205044" status="run">
+		<properties/>
+		<system-out>SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SCENE_PARTICIPANT begin=12 end=13 injected=1 reached_end=0 prepared=0
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SceneParticipantFault_spatial" classname="FC04D07SceneParticipantFault_spatial" time="0.0212605" status="run">
+		<properties/>
+		<system-out>SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SCENE_PARTICIPANT begin=4 end=5 injected=1 reached_end=0 prepared=0
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SceneParticipantFault_damage" classname="FC04D07SceneParticipantFault_damage" time="0.0211072" status="run">
+		<properties/>
+		<system-out>SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SCENE_PARTICIPANT begin=14 end=15 injected=1 reached_end=0 prepared=0
+</system-out>
+	</testcase>
+	<testcase name="FC04D07SceneParticipantFault_snapshot" classname="FC04D07SceneParticipantFault_snapshot" time="0.0209615" status="run">
+		<properties/>
+		<system-out>SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+SCENE_PARTICIPANT begin=16 end=17 injected=1 reached_end=0 prepared=0
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_undo_semantic_0" classname="FC04D07HistoryIntentFault_undo_semantic_0" time="0.0215956" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=undo owner=semantic begin=100 end=101 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_undo_semantic_1" classname="FC04D07HistoryIntentFault_undo_semantic_1" time="0.0215201" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=undo owner=semantic begin=100 end=101 operation=1 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_undo_runtime" classname="FC04D07HistoryIntentFault_undo_runtime" time="0.0217778" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=undo owner=scene begin=0 end=1 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_undo_bounds" classname="FC04D07HistoryIntentFault_undo_bounds" time="0.0220874" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=undo owner=scene begin=2 end=3 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_undo_record" classname="FC04D07HistoryIntentFault_undo_record" time="0.0214019" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=undo owner=scene begin=10 end=11 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_undo_render" classname="FC04D07HistoryIntentFault_undo_render" time="0.0213279" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=undo owner=scene begin=12 end=13 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_undo_spatial" classname="FC04D07HistoryIntentFault_undo_spatial" time="0.0215628" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=undo owner=scene begin=4 end=5 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_undo_damage" classname="FC04D07HistoryIntentFault_undo_damage" time="0.022459" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=undo owner=scene begin=14 end=15 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_undo_snapshot" classname="FC04D07HistoryIntentFault_undo_snapshot" time="0.0216389" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=undo owner=scene begin=16 end=17 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_redo_semantic_0" classname="FC04D07HistoryIntentFault_redo_semantic_0" time="0.0221467" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=redo owner=semantic begin=100 end=101 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_redo_semantic_1" classname="FC04D07HistoryIntentFault_redo_semantic_1" time="0.0211855" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=redo owner=semantic begin=100 end=101 operation=1 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_redo_runtime" classname="FC04D07HistoryIntentFault_redo_runtime" time="0.021326" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=redo owner=scene begin=0 end=1 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_redo_bounds" classname="FC04D07HistoryIntentFault_redo_bounds" time="0.0218836" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=redo owner=scene begin=2 end=3 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_redo_record" classname="FC04D07HistoryIntentFault_redo_record" time="0.0218201" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=redo owner=scene begin=10 end=11 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_redo_render" classname="FC04D07HistoryIntentFault_redo_render" time="0.0245056" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=redo owner=scene begin=12 end=13 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_redo_spatial" classname="FC04D07HistoryIntentFault_redo_spatial" time="0.0217418" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=redo owner=scene begin=4 end=5 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_redo_damage" classname="FC04D07HistoryIntentFault_redo_damage" time="0.021307" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=redo owner=scene begin=14 end=15 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+	<testcase name="FC04D07HistoryIntentFault_redo_snapshot" classname="FC04D07HistoryIntentFault_redo_snapshot" time="0.0214831" status="run">
+		<properties/>
+		<system-out>HISTORY_INTENT direction=redo owner=scene begin=16 end=17 operation=0 injected=1 accepted=0 preserved_and_retry=1
+</system-out>
+	</testcase>
+</testsuite>
