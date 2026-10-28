@@ -1,0 +1,53 @@
+{
+  "schema_version": "aegis-targeted-p31-v3",
+  "task_id": "FC04-D07-FUNCTIONAL-P32",
+  "stage": "P32",
+  "stage_owner": "aegis-implementation",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "package_path": ".aegis/packages/FC04-D07-FUNCTIONAL-P31-v0.3/package.json",
+  "package_materialization_ref": "refs/heads/codex/fc04-d07-functional-p31-v0-3",
+  "execution_ref": "refs/heads/codex/fc04-d07-functional-p31-v0-3",
+  "worktree": "C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas",
+  "task_anchor": {
+    "revision": "15e76458f3872be4d1b51d4aac05eb8402719014",
+    "relation": "ancestor"
+  },
+  "feature_anchor": {
+    "revision": "c7f874395d55952e9d5288e2a336a21747f37f11",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/fc04-d07-selection-audit",
+    "revision": "b5072f2c7dd796b2ad7aed3a6bfa5d86b6058cad",
+    "completed_through": [
+      "real Scene prepare/abort partial path",
+      "preliminary explicit Intent for SetTransforms + PatchProperties",
+      "original OOM evidence materialized; known descriptor-init hang classified as separate overall D07 blocker"
+    ],
+    "next_action": "Reconcile new worktree against exact cursor; run all four P31 preflights; then finish functional D07 operation coverage, Scene prepare/commit/abort matrix and failure containment"
+  },
+  "inherited_package": {
+    "revision": "b5072f2c7dd796b2ad7aed3a6bfa5d86b6058cad",
+    "path": ".aegis/packages/FC04-D07-AB-P31-v0.2/package.json",
+    "blob_sha": "888e34037ac132f7563ca40d25c86990976ff3af"
+  },
+  "design": "design.md",
+  "closure": "closure.md",
+  "implementation_context": "implementation-context.json",
+  "verification": "test-matrix.json",
+  "evidence_contract": "evidence-contract.md",
+  "source_lock": "source-lock.json",
+  "input_lock": "input-lock.json",
+  "integrity": "integrity.json",
+  "preflight": "preflight.py",
+  "terminal_blockers": "terminal-blockers.md",
+  "p32_handoff": "p32-handoff.md",
+  "p32_authorized_if_four_preflights_pass": true,
+  "overall_d07_pass_authorized": false,
+  "sdk_or_upstream_changes_authorized": false,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW"
+}
