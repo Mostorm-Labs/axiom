@@ -159,14 +159,19 @@ bool IncrementalRuntimeCoordinator::prepareIntent(const ISemanticSceneCompiler& 
         input.changes->afterGeneration() != input.after_generation ||
         input.after_generation <= input.before_generation) return false;
     try {
+        if (checkpointFails(RuntimeCheckpoint::kBeforeRuntimePrepare)) return false;
         auto runtime = runtimeScene_.prepare(input.post_state);
         if (!runtime) return false;
+        if (checkpointFails(RuntimeCheckpoint::kAfterRuntimePrepare)) return false;
         const TextBoundsCompiler textCompiler(compiler, runtime.value().projection, binding_._scene);
         const auto& effective = (textLayoutService_ || deferConnectorRoutes_)
             ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler;
+        if (checkpointFails(RuntimeCheckpoint::kBeforeBoundsPrepare)) return false;
         auto snapshot = effective.compileFull(input.post_state);
         if (!snapshot) return false;
-        auto scene = binding_._scene.prepareIntent(std::move(snapshot.value()), input.after_generation);
+        if (checkpointFails(RuntimeCheckpoint::kAfterBoundsPrepare)) return false;
+        auto scene = binding_._scene.prepareIntent(std::move(snapshot.value()), input.after_generation,
+                                                    &IncrementalRuntimeCoordinator::transactionCheckpoint, this);
         if (!scene) return false;
         intentRuntime_ = std::move(runtime.value());
         intentScene_ = std::move(scene.value());

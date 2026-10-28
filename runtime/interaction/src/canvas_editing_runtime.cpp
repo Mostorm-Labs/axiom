@@ -1556,14 +1556,18 @@ bool CanvasEditingRuntime::prepareExplicitIntentInternal(
       recordHistory ? semantic::ApplySource::kLocalInteraction : semantic::ApplySource::kUndoRedo,
       semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   if (!prepared) return false;
-  semantic::StagedObjectView before(semanticObjects_);
+  std::vector<std::unique_ptr<semantic::StagedObjectView>> stages;
+  stages.push_back(std::make_unique<semantic::StagedObjectView>(semanticObjects_));
   std::vector<semantic::Operation> forwards, inverses;
   std::vector<HistoryExpectation> beforeExpectations, afterExpectations;
   std::vector<semantic::ObjectSemanticChange> changes;
   for (const auto& plan : prepared->plans()) {
-    semantic::StagedObjectView after(static_cast<const semantic::ObjectStore&>(before));
-    for (const auto& record : plan.replacements) if (!after.stageReplace(record)) return false;
-    auto command = prepareUndoableCommand(plan, {before, appliedOperations_, resourceManifestPort_}, after);
+    const auto& before = *stages.back();
+    auto after = std::make_unique<semantic::StagedObjectView>(static_cast<const semantic::ObjectStore&>(before));
+    for (const auto& record : plan.creates) if (!after->stageCreate(record)) return false;
+    for (const auto& record : plan.replacements) if (!after->stageReplace(record)) return false;
+    for (const auto& id : plan.deletes) if (!after->stageDelete(id)) return false;
+    auto command = prepareUndoableCommand(plan, {before, appliedOperations_, resourceManifestPort_}, *after);
     if (!command) return false;
     forwards.push_back(command->forward);
     inverses.push_back(std::move(command->inverse));
@@ -1577,7 +1581,7 @@ bool CanvasEditingRuntime::prepareExplicitIntentInternal(
       item.record = final ? std::optional<semantic::ObjectRecord>(*final) : std::nullopt;
       afterExpectations.push_back(std::move(item));
     }
-    for (const auto& record : plan.replacements) if (!before.stageReplace(record)) return false;
+    stages.push_back(std::move(after));
   }
   std::reverse(inverses.begin(), inverses.end());
   for (const auto& record : prepared->records())

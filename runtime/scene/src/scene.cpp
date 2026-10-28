@@ -362,7 +362,8 @@ void Scene::publishStagedSnapshot() noexcept {
 }
 
 foundation::Result<std::unique_ptr<Scene::PreparedIntent>> Scene::prepareIntent(
-    CompiledSceneSnapshot snapshot, semantic::SemanticGeneration generation) {
+    CompiledSceneSnapshot snapshot, semantic::SemanticGeneration generation,
+    TransactionCheckpointFn checkpoint, void* checkpointContext) {
     using Result = foundation::Result<std::unique_ptr<PreparedIntent>>;
     if (snapshot.sourceRevision.isZero() || snapshot.sourceRevision <= _revision ||
         generation <= _semanticGeneration || snapshot.sourceRevision.value() != generation.value()) {
@@ -370,27 +371,53 @@ foundation::Result<std::unique_ptr<Scene::PreparedIntent>> Scene::prepareIntent(
                                          "Invalid prepared Scene generation"));
     }
     try {
+        if (checkpoint && checkpoint(checkpointContext, 10U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Record prepare checkpoint failure"));
         auto records = _records.prepareReplace(snapshot.records);
         if (!records) return Result::failure(records.error());
+        if (checkpoint && checkpoint(checkpointContext, 11U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Record prepare checkpoint failure"));
+        if (checkpoint && checkpoint(checkpointContext, 12U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Render prepare checkpoint failure"));
         auto render = _renderScene->prepareReplace(records.value().records(), snapshot.sourceRevision);
         if (!render) return Result::failure(render.error());
         if (!render.value()) return Result::failure(makeError(
             foundation::ErrorCode::kParticipantRejected, "Empty prepared render update"));
+        if (checkpoint && checkpoint(checkpointContext, 13U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Render prepare checkpoint failure"));
         auto spatialRecords = makeSpatialRecords(records.value().records());
+        if (checkpoint && checkpoint(checkpointContext, 4U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Spatial checkpoint failure"));
         auto spatial = _spatialIndex->prepareReplace(spatialRecords, snapshot.sourceRevision);
         if (!spatial) return Result::failure(spatial.error());
         if (!spatial.value()) return Result::failure(makeError(
             foundation::ErrorCode::kParticipantRejected, "Empty prepared spatial update"));
+        if (checkpoint && checkpoint(checkpointContext, 5U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Spatial checkpoint failure"));
         const auto bounds = records.value().contentBounds();
         const auto previousBounds = _records.contentBounds();
+        if (checkpoint && checkpoint(checkpointContext, 6U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"));
+        if (checkpoint && checkpoint(checkpointContext, 14U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Damage prepare checkpoint failure"));
         auto damage = _damageTracker.prepareReplace(_revision, snapshot.sourceRevision,
                                                      previousBounds, bounds);
         if (!damage) return Result::failure(damage.error());
+        if (checkpoint && checkpoint(checkpointContext, 15U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Damage prepare checkpoint failure"));
+        if (checkpoint && checkpoint(checkpointContext, 16U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Snapshot prepare checkpoint failure"));
         std::vector<SceneRecord> published(records.value().records().begin(),
                                            records.value().records().end());
         SceneInvalidationOutput invalidation{snapshot.sourceRevision,
             {DamageRect{foundation::unionRects(previousBounds, bounds), DamageReason::kFullRebuild}},
             true};
+        if (checkpoint && checkpoint(checkpointContext, 17U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Snapshot prepare checkpoint failure"));
+        if (checkpoint && checkpoint(checkpointContext, 7U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"));
+        if (checkpoint && checkpoint(checkpointContext, 8U)) return Result::failure(makeError(
+            foundation::ErrorCode::kParticipantRejected, "Publication checkpoint failure"));
         return Result::success(std::make_unique<PreparedIntent>(PreparedIntent{
             _revision, _semanticGeneration, std::move(records.value()), std::move(render.value()),
             std::move(spatial.value()), std::move(damage.value()), std::move(published), bounds,

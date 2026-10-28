@@ -48,11 +48,26 @@
 
 
 namespace canvas::semantic {
+namespace internal {
+namespace {
+thread_local IntentPrepareTestObserver intentPrepareObserver = nullptr;
+thread_local void* intentPrepareObserverContext = nullptr;
+}
+void setIntentPrepareTestObserver(IntentPrepareTestObserver observer, void* context) noexcept {
+    intentPrepareObserver = observer;
+    intentPrepareObserverContext = context;
+}
+void observeIntentPrepare(unsigned phase, std::size_t operation) noexcept {
+    if (intentPrepareObserver) intentPrepareObserver(intentPrepareObserverContext, phase, operation);
+}
+}
 class PreparedOperationIntent::State final {
   public:
     State(IndexedObjectStore& store, AppliedOperationLedger& ledger)
-        : staged(store), objects(store), applied(ledger) {}
-    StagedObjectView staged;
+        : objects(store), applied(ledger) {
+        stages.push_back(std::make_unique<StagedObjectView>(store));
+    }
+    std::vector<std::unique_ptr<StagedObjectView>> stages;
     IndexedObjectStore& objects;
     AppliedOperationLedger& applied;
     SemanticGeneration basis;
@@ -68,7 +83,7 @@ class PreparedOperationIntent::State final {
 PreparedOperationIntent::PreparedOperationIntent(std::unique_ptr<State> state)
     : state_(std::move(state)) {}
 PreparedOperationIntent::~PreparedOperationIntent() = default;
-const StagedObjectView& PreparedOperationIntent::postState() const noexcept { return state_->staged; }
+const StagedObjectView& PreparedOperationIntent::postState() const noexcept { return *state_->stages.back(); }
 const std::vector<PreparedApplyPlan>& PreparedOperationIntent::plans() const noexcept { return state_->plans; }
 const std::vector<CanonicalCommitRecord>& PreparedOperationIntent::records() const noexcept { return state_->records; }
 CanonicalCommitRecord PreparedOperationIntent::takeLastRecord() noexcept {
@@ -93,27 +108,43 @@ std::unique_ptr<PreparedOperationIntent> OperationEngine::prepareIntent(
     state->basis = generation.current();
     state->ordinal = clock.lastCommittedOrdinal();
     state->epoch = clock.runtimeEpoch();
+    internal::observeIntentPrepare(108U, 0U);
     state->plans.reserve(operations.size());
     state->storage.reserve(operations.size());
     state->ledger.reserve(operations.size());
     state->records.reserve(operations.size());
+    internal::observeIntentPrepare(109U, 0U);
     std::set<OperationId> ids;
     for (const auto& operation : operations) {
-        // The currently proved reservation path covers these existing typed
-        // mutations; other kinds fail closed instead of committing a prefix.
-        if ((operation.kind() != OperationKind::kSetTransforms &&
-             operation.kind() != OperationKind::kPatchProperties) ||
-            !ids.insert(operation.id).second) return {};
-        auto prepared = prepare(operation, {state->staged, applied, &manifest});
+        const auto kind = operation.kind();
+        if ((kind != OperationKind::kSetTransforms && kind != OperationKind::kPatchProperties &&
+             kind != OperationKind::kInsertObjects && kind != OperationKind::kRestoreObjects &&
+             kind != OperationKind::kDeleteObjects && kind != OperationKind::kSetSectionContent &&
+             kind != OperationKind::kEditContainerTopology) || !ids.insert(operation.id).second) return {};
+        const auto& beforeState = *state->stages.back();
+        auto prepared = prepare(operation, {beforeState, applied, &manifest});
         if (prepared.disposition != PrepareDisposition::kPrepared || !prepared.plan ||
-            prepared.plan->manifest || !prepared.plan->creates.empty() || !prepared.plan->deletes.empty()) return {};
-        auto storage = internal::ObjectStoreMutator::prepareContainerPlan(objects, *prepared.plan, true);
-        auto changes = internal::prepareChangeSet(*prepared.plan);
-        auto reservation = applied.reserveContainerEntry(prepared.plan->operation, true);
-        if (!storage || !changes || !reservation) return {};
-        for (const auto& item : prepared.plan->replacements)
-            if (!state->staged.stageReplace(item)) return {};
+            prepared.plan->manifest) return {};
         const auto i = state->plans.size();
+        internal::observeIntentPrepare(100U, i);
+        auto storage = internal::ObjectStoreMutator::prepareContainerPlan(objects, *prepared.plan, true, &beforeState);
+        internal::observeIntentPrepare(101U, i);
+        internal::observeIntentPrepare(102U, i);
+        auto changes = internal::prepareChangeSet(*prepared.plan);
+        internal::observeIntentPrepare(103U, i);
+        internal::observeIntentPrepare(104U, i);
+        auto reservation = applied.reserveContainerEntry(prepared.plan->operation, true);
+        internal::observeIntentPrepare(105U, i);
+        if (!storage || !changes || !reservation) return {};
+        internal::observeIntentPrepare(106U, i);
+        auto afterState = std::make_unique<StagedObjectView>(static_cast<const ObjectStore&>(beforeState));
+        for (const auto& item : prepared.plan->creates)
+            if (!afterState->stageCreate(item)) return {};
+        for (const auto& item : prepared.plan->replacements)
+            if (!afterState->stageReplace(item)) return {};
+        for (const auto& id : prepared.plan->deletes)
+            if (!afterState->stageDelete(id)) return {};
+        internal::observeIntentPrepare(107U, i);
         const auto before = SemanticGeneration(state->basis.value() + i);
         const auto after = SemanticGeneration(before.value() + 1U);
         const auto ordinal = CommitOrdinal(state->ordinal.value() + i + 1U);
@@ -122,6 +153,7 @@ std::unique_ptr<PreparedOperationIntent> OperationEngine::prepareIntent(
             CanonicalCommitStamp{state->epoch, ordinal},
             internal::finalizeChangeSet(std::move(*changes), before, after)});
         state->plans.push_back(std::move(*prepared.plan));
+        state->stages.push_back(std::move(afterState));
         state->storage.push_back(std::move(storage));
         state->ledger.push_back(std::move(*reservation));
     }

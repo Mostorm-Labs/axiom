@@ -124,7 +124,11 @@ struct State {
     std::vector<semantic::ObjectRecord> objects;
     std::vector<std::pair<Id, foundation::WorldRect>> bounds;
     std::vector<Id> index;
+    std::vector<Id> hits, drawn;
     std::uint64_t generation = 0, ordinal = 0, scene = 0, projection = 0, revision = 0;
+    std::uint64_t invalidationGeneration = 0;
+    std::size_t invalidationRects = 0, damageEntries = 0;
+    bool fullInvalidation = false;
     std::size_t history = 0, submitted = 0, events = 0, publications = 0;
     bool undo = false, redo = false;
     bool operator==(const State&) const = default;
@@ -149,8 +153,20 @@ class D07 : public testing::Test {
         });
         const auto q = Access::scene(rt()).query({{-1000, -1000, 1000, 1000}});
         EXPECT_TRUE(q.hasValue());
-        if (q.hasValue())
+        if (q.hasValue()) {
             s.index = q.value().backToFront;
+            const auto draw = Access::scene(rt()).buildDrawList(q.value());
+            EXPECT_TRUE(draw.hasValue());
+            if (draw) for (const auto& item : draw.value().items) s.drawn.push_back(item.objectId);
+        }
+        const auto hit = Access::scene(rt()).hitTest({{45, 10}, 0.0F, {}, 10U});
+        EXPECT_TRUE(hit.hasValue());
+        if (hit) s.hits = hit.value().frontToBack;
+        const auto& invalidation = Access::scene(rt()).invalidationOutput();
+        s.invalidationGeneration = invalidation.generation.value();
+        s.invalidationRects = invalidation.rects.size();
+        s.fullInvalidation = invalidation.fullScene;
+        s.damageEntries = Access::scene(rt()).damageDiagnostics().journalEntries;
         s.generation = rt().semanticGeneration().value();
         s.ordinal = rt().canonicalCommitOrdinal();
         s.scene = rt().qualificationSceneGeneration();
@@ -454,6 +470,239 @@ TEST_F(D07, ExplicitIntentGroupProducesOneUndoUnit) {
     ASSERT_EQ(sink.count, 6U);
     EXPECT_NE(sink.events[4].operation, operations[0].id);
     EXPECT_NE(sink.events[5].operation, operations[1].id);
+}
+TEST_F(D07, ExplicitIntentStagesInsertedObjectBeforeTransform) {
+    const auto initial = read();
+    const auto inserted = shape(4);
+    const std::array operations{
+        op(700, semantic::InsertObjectsOp{{inserted}}),
+        op(701, semantic::SetTransformsOp{{{id(4), {1, 0, 0, 1, 350, 40}}}})};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    ASSERT_TRUE(rt().prepareExplicitIntent(operations));
+    ASSERT_TRUE(rt().commitExplicitIntent());
+    ASSERT_NE(Access::objects(rt()).find(id(4)), nullptr);
+    EXPECT_EQ(Access::objects(rt()).find(id(4))->transform.tx, 350);
+    ASSERT_TRUE(rt().undo());
+    EXPECT_EQ(read().objects, initial.objects);
+    ASSERT_TRUE(rt().redo());
+    ASSERT_NE(Access::objects(rt()).find(id(4)), nullptr);
+    EXPECT_EQ(Access::objects(rt()).find(id(4))->transform.tx, 350);
+}
+TEST_F(D07, ExplicitIntentStagesSectionInsertAndRename) {
+    const auto initial = read();
+    semantic::ObjectRecord section;
+    section.id = id(5); section.kind = semantic::ObjectKind::kSection;
+    section.kind_version = 1; section.placement.order_key = semantic::OrderKey({5});
+    section.content = semantic::SectionContent{{0, 0, 100, 80}, "Section", 4, 16};
+    auto original = std::get<semantic::SectionContent>(section.content);
+    auto renamed = original; renamed.title = "Renamed";
+    const std::array operations{
+        op(710, semantic::InsertObjectsOp{{section}}),
+        op(711, semantic::SetSectionContentOp{{{section.id, 1, original, renamed}}, {}})};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    ASSERT_TRUE(rt().prepareExplicitIntent(operations));
+    ASSERT_TRUE(rt().commitExplicitIntent());
+    ASSERT_NE(Access::objects(rt()).find(id(5)), nullptr);
+    EXPECT_EQ(std::get<semantic::SectionContent>(Access::objects(rt()).find(id(5))->content).title, "Renamed");
+    ASSERT_TRUE(rt().undo());
+    EXPECT_EQ(read().objects, initial.objects);
+    ASSERT_TRUE(rt().redo());
+    ASSERT_NE(Access::objects(rt()).find(id(5)), nullptr);
+    EXPECT_EQ(std::get<semantic::SectionContent>(Access::objects(rt()).find(id(5))->content).title, "Renamed");
+}
+TEST_F(D07, ExplicitIntentStagesDeleteThenRestore) {
+    const auto original = *Access::objects(rt()).find(id(1));
+    auto restored = original; restored.transform.tx += 15;
+    const std::array operations{
+        op(720, semantic::DeleteObjectsOp{{id(1)}}),
+        op(721, semantic::RestoreObjectsOp{{restored}})};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    ASSERT_TRUE(rt().prepareExplicitIntent(operations));
+    ASSERT_TRUE(rt().commitExplicitIntent());
+    ASSERT_NE(Access::objects(rt()).find(id(1)), nullptr);
+    EXPECT_EQ(Access::objects(rt()).find(id(1))->transform.tx, restored.transform.tx);
+    ASSERT_TRUE(rt().undo());
+    ASSERT_NE(Access::objects(rt()).find(id(1)), nullptr);
+    EXPECT_EQ(*Access::objects(rt()).find(id(1)), original);
+    ASSERT_TRUE(rt().redo());
+    EXPECT_EQ(Access::objects(rt()).find(id(1))->transform.tx, restored.transform.tx);
+}
+TEST_F(D07, ExplicitIntentStagesTopologyAndSectionContent) {
+    const auto initial = read();
+    semantic::ObjectRecord section;
+    section.id = id(6); section.kind = semantic::ObjectKind::kSection;
+    section.kind_version = 1; section.placement.order_key = semantic::OrderKey({6});
+    section.content = semantic::SectionContent{{0, 0, 100, 80}, "Section", 4, 16};
+    semantic::EditContainerTopologyOp topology;
+    topology.effect = semantic::IntroduceWrappersEffect{{section}};
+    semantic::ContainerChildrenExpectation roots;
+    for (const auto& object : initial.objects)
+        roots.complete_members.push_back({object.id, object.placement.order_key});
+    topology.guard.child_sets.push_back(std::move(roots));
+    auto original = std::get<semantic::SectionContent>(section.content);
+    auto renamed = original; renamed.title = "Renamed";
+    const std::array operations{
+        op(730, std::move(topology)),
+        op(731, semantic::SetSectionContentOp{{{section.id, 1, original, renamed}}, {}})};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    ASSERT_TRUE(rt().prepareExplicitIntent(operations));
+    ASSERT_TRUE(rt().commitExplicitIntent());
+    ASSERT_NE(Access::objects(rt()).find(id(6)), nullptr);
+    EXPECT_EQ(std::get<semantic::SectionContent>(Access::objects(rt()).find(id(6))->content).title, "Renamed");
+    ASSERT_TRUE(rt().undo());
+    EXPECT_EQ(read().objects, initial.objects);
+    ASSERT_TRUE(rt().redo());
+    ASSERT_NE(Access::objects(rt()).find(id(6)), nullptr);
+    EXPECT_EQ(std::get<semantic::SectionContent>(Access::objects(rt()).find(id(6))->content).title, "Renamed");
+}
+TEST_F(D07, ScenePrep01PrepareIsInvisible) {
+    const auto before = read();
+    const std::array operations{move(780), color(781)};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    ASSERT_TRUE(rt().prepareExplicitIntent(operations));
+    EXPECT_EQ(read(), before);
+    rt().abortExplicitIntent();
+}
+TEST_F(D07, ScenePrep02AbortPreservesRedo) {
+    redoBranch();
+    const auto before = read();
+    ASSERT_TRUE(before.redo);
+    const std::array operations{move(782), color(783)};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    ASSERT_TRUE(rt().prepareExplicitIntent(operations));
+    rt().abortExplicitIntent();
+    EXPECT_EQ(read(), before);
+}
+TEST_F(D07, ExplicitIntentFailureContainment) {
+    redoBranch();
+    ASSERT_TRUE(history().canRedo());
+    const std::array operations{move(740), color(741)};
+    const std::array checkpoints{RuntimeCheckpoint::kBeforeRuntimePrepare,
+        RuntimeCheckpoint::kAfterRuntimePrepare, RuntimeCheckpoint::kBeforeBoundsPrepare,
+        RuntimeCheckpoint::kAfterBoundsPrepare, RuntimeCheckpoint::kBeforeSpatialPrepare,
+        RuntimeCheckpoint::kAfterSpatialPrepare, RuntimeCheckpoint::kBeforeInvalidationFinalization,
+        RuntimeCheckpoint::kAfterInvalidationFinalization, RuntimeCheckpoint::kBeforePublication,
+        RuntimeCheckpoint::kBeforeRecordPrepare, RuntimeCheckpoint::kAfterRecordPrepare,
+        RuntimeCheckpoint::kBeforeRenderPrepare, RuntimeCheckpoint::kAfterRenderPrepare,
+        RuntimeCheckpoint::kBeforeDamagePrepare, RuntimeCheckpoint::kAfterDamagePrepare,
+        RuntimeCheckpoint::kBeforeSnapshotPrepare, RuntimeCheckpoint::kAfterSnapshotPrepare};
+    for (const auto checkpoint : checkpoints) {
+        SCOPED_TRACE(static_cast<int>(checkpoint));
+        const auto before = read();
+        IncrementalRuntimeTestAccess::fail(Access::coordinator(rt()), checkpoint);
+        ASSERT_TRUE(rt().beginExplicitIntent());
+        EXPECT_FALSE(rt().prepareExplicitIntent(operations));
+        IncrementalRuntimeTestAccess::clear(Access::coordinator(rt()));
+        EXPECT_EQ(read(), before);
+    }
+}
+TEST_F(D07, ScenePrep05StaleSceneBasisRejectsBeforeWrite) {
+    const std::array operations{move(784), color(785)};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    ASSERT_TRUE(rt().prepareExplicitIntent(operations));
+    const auto canonical = rt().semanticGeneration();
+    semantic::StagedObjectView staged(Access::objects(rt()));
+    auto changed = *staged.find(id(1));
+    changed.transform.tx += 10;
+    ASSERT_TRUE(staged.stageReplace(changed));
+    const semantic::SemanticGeneration next(canonical.value() + 1U);
+    const auto changes = semantic::ChangeSet::fromChanges(
+        canonical, next, {{id(1), semantic::SemanticChangeFlags::kTransform, {}}});
+    const semantic::SemanticReadView post(staged, next);
+    const SceneCommitInput input(canonical, next, post, &changes);
+    ASSERT_TRUE(Access::coordinator(rt()).apply(Access::compiler(rt()), input).hasValue());
+    const auto before = read();
+    EXPECT_FALSE(rt().commitExplicitIntent());
+    EXPECT_EQ(read(), before);
+    EXPECT_EQ(rt().semanticGeneration(), canonical);
+}
+TEST_F(D07, ExplicitIntentUndoRedoFailureContainment) {
+    const std::array operations{move(750), color(751)};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    ASSERT_TRUE(rt().prepareExplicitIntent(operations));
+    ASSERT_TRUE(rt().commitExplicitIntent());
+    auto conflict = move(752);
+    std::get<semantic::SetTransformsOp>(conflict.payload).items[0].transform.tx = 777;
+    ASSERT_EQ(c.applyExternalOperation(conflict, semantic::ApplySource::kRemoteSync).disposition,
+              semantic::ApplyDisposition::kApplied);
+    const auto before = read();
+    EXPECT_FALSE(rt().undo());
+    EXPECT_EQ(read(), before);
+}
+TEST_F(D07, ExplicitIntentRedoRejectsConflictWithoutChangingRedo) {
+    const std::array operations{move(770), color(771)};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    ASSERT_TRUE(rt().prepareExplicitIntent(operations));
+    ASSERT_TRUE(rt().commitExplicitIntent());
+    ASSERT_TRUE(rt().undo());
+    auto conflict = move(772);
+    std::get<semantic::SetTransformsOp>(conflict.payload).items[0].transform.tx = 888;
+    ASSERT_EQ(c.applyExternalOperation(conflict, semantic::ApplySource::kRemoteSync).disposition,
+              semantic::ApplyDisposition::kApplied);
+    const auto before = read();
+    ASSERT_TRUE(before.redo);
+    EXPECT_FALSE(rt().redo());
+    EXPECT_EQ(read(), before);
+}
+TEST_F(D07, ExplicitIntentUndoRedoRejectsSceneReservationFailures) {
+    const std::array operations{move(790), color(791)};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    ASSERT_TRUE(rt().prepareExplicitIntent(operations));
+    ASSERT_TRUE(rt().commitExplicitIntent());
+    const std::array checkpoints{RuntimeCheckpoint::kBeforeRuntimePrepare,
+        RuntimeCheckpoint::kBeforeRecordPrepare, RuntimeCheckpoint::kBeforeRenderPrepare,
+        RuntimeCheckpoint::kBeforeSpatialPrepare, RuntimeCheckpoint::kBeforeDamagePrepare,
+        RuntimeCheckpoint::kBeforeSnapshotPrepare, RuntimeCheckpoint::kBeforePublication};
+    for (const auto checkpoint : checkpoints) {
+        SCOPED_TRACE(static_cast<int>(checkpoint));
+        const auto before = read();
+        IncrementalRuntimeTestAccess::fail(Access::coordinator(rt()), checkpoint);
+        EXPECT_FALSE(rt().undo());
+        IncrementalRuntimeTestAccess::clear(Access::coordinator(rt()));
+        EXPECT_EQ(read(), before);
+    }
+    ASSERT_TRUE(rt().undo());
+    for (const auto checkpoint : checkpoints) {
+        SCOPED_TRACE(static_cast<int>(checkpoint));
+        const auto before = read();
+        ASSERT_TRUE(before.redo);
+        IncrementalRuntimeTestAccess::fail(Access::coordinator(rt()), checkpoint);
+        EXPECT_FALSE(rt().redo());
+        IncrementalRuntimeTestAccess::clear(Access::coordinator(rt()));
+        EXPECT_EQ(read(), before);
+    }
+    ASSERT_TRUE(rt().redo());
+}
+TEST_F(D07, ExplicitIntentLifecycleAndStaging) {
+    const auto before = read();
+    const std::array operations{move(760), color(761)};
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    EXPECT_FALSE(rt().beginExplicitIntent());
+    ASSERT_TRUE(rt().prepareExplicitIntent(operations));
+    EXPECT_EQ(read(), before);
+    rt().abortExplicitIntent();
+    EXPECT_EQ(read(), before);
+    EXPECT_FALSE(rt().commitExplicitIntent());
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    const std::array duplicates{move(762), move(762)};
+    EXPECT_FALSE(rt().prepareExplicitIntent(duplicates));
+    EXPECT_EQ(read(), before);
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    auto foreign = color(764); foreign.document_id = semantic::DocumentId{id(9)};
+    const std::array wrongDocument{move(763), foreign};
+    EXPECT_FALSE(rt().prepareExplicitIntent(wrongDocument));
+    EXPECT_EQ(read(), before);
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    EXPECT_FALSE(rt().prepareExplicitIntent(std::span<const semantic::Operation>{}));
+    EXPECT_EQ(read(), before);
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    const std::array unsupported{move(765), op(766, semantic::SetObjectSizeOp{})};
+    EXPECT_FALSE(rt().prepareExplicitIntent(unsupported));
+    EXPECT_EQ(read(), before);
+    ASSERT_TRUE(rt().beginExplicitIntent());
+    const std::array malformed{move(767), op(768, semantic::SetTransformsOp{})};
+    EXPECT_FALSE(rt().prepareExplicitIntent(malformed));
+    EXPECT_EQ(read(), before);
 }
 TEST_F(D07, ExplicitIntentRejectsInvalidLaterOperationWithoutMutation) {
     const auto before = read();

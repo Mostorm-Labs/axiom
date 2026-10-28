@@ -5,10 +5,14 @@
 
 namespace canvas::semantic {
 class IndexedObjectStore;
+class ObjectStore;
 struct PreparedApplyPlan;
 }
 
 namespace canvas::semantic::internal {
+using IntentPrepareTestObserver = void (*)(void*, unsigned, std::size_t) noexcept;
+void setIntentPrepareTestObserver(IntentPrepareTestObserver, void*) noexcept;
+void observeIntentPrepare(unsigned, std::size_t) noexcept;
 
 // Private, closed-domain reservation within the existing canonical store owner.
 // It is valid only during one synchronous OperationEngine commit.
@@ -36,7 +40,8 @@ class ObjectStoreMutator final {
     [[nodiscard]] static bool replaceExisting(IndexedObjectStore& store, ObjectRecord record);
     [[nodiscard]] static bool eraseExisting(IndexedObjectStore& store, const ObjectId& id);
     [[nodiscard]] static std::unique_ptr<PreparedIndexedContainerApply> prepareContainerPlan(
-        IndexedObjectStore&, const PreparedApplyPlan&, bool admitted = false);
+        IndexedObjectStore&, const PreparedApplyPlan&, bool admitted = false,
+        const ObjectStore* stagedBefore = nullptr);
     [[nodiscard]] static bool indexMatchesRebuild(const IndexedObjectStore& store);
     [[nodiscard]] static std::vector<ObjectId> connectorsReferencing(
         const IndexedObjectStore& store, const ObjectId& target);

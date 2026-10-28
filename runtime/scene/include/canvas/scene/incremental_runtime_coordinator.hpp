@@ -26,6 +26,14 @@ enum class RuntimeCheckpoint : std::uint8_t {
     kAfterInvalidationFinalization,
     kBeforePublication,
     kAfterPublication,
+    kBeforeRecordPrepare,
+    kAfterRecordPrepare,
+    kBeforeRenderPrepare,
+    kAfterRenderPrepare,
+    kBeforeDamagePrepare,
+    kAfterDamagePrepare,
+    kBeforeSnapshotPrepare,
+    kAfterSnapshotPrepare,
 };
 
 struct RuntimeUpdatePlan final {
@@ -98,6 +106,7 @@ class IncrementalRuntimeCoordinator final {
         runtimeScene_.corruptForTest();
     }
     [[nodiscard]] bool checkpointFails(RuntimeCheckpoint checkpoint) const noexcept {
+        if (testCheckpointObserver_) testCheckpointObserver_(testCheckpointObserverContext_, checkpoint);
         return checkpointFailure_.has_value() && *checkpointFailure_ == checkpoint;
     }
     static bool transactionCheckpoint(void* context, std::uint8_t checkpoint) noexcept;
@@ -120,6 +129,8 @@ class IncrementalRuntimeCoordinator final {
     bool deferConnectorRoutes_ = false;
     TestPublicationObserver testPublicationObserver_ = nullptr;
     void* testPublicationObserverContext_ = nullptr;
+    void (*testCheckpointObserver_)(void*, RuntimeCheckpoint) noexcept = nullptr;
+    void* testCheckpointObserverContext_ = nullptr;
 };
 
 } // namespace canvas

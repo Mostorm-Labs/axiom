@@ -143,7 +143,8 @@ class Scene final {
         semantic::SemanticGeneration generation;
     };
     foundation::Result<std::unique_ptr<PreparedIntent>> prepareIntent(
-        CompiledSceneSnapshot snapshot, semantic::SemanticGeneration generation);
+        CompiledSceneSnapshot snapshot, semantic::SemanticGeneration generation,
+        TransactionCheckpointFn checkpoint, void* checkpointContext);
     [[nodiscard]] bool intentBasisMatches(const PreparedIntent&) const noexcept;
     void commitIntent(std::unique_ptr<PreparedIntent>) noexcept;
 
