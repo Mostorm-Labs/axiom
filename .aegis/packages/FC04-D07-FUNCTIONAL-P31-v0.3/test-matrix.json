@@ -166,5 +166,15 @@
     "functional": "FUNCTIONAL_SCOPE_COMPLETE_READY_FOR_CONTROL_REVIEW",
     "overall": "BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG"
   },
-  "skipped_tests_are_pass": false
+  "skipped_tests_are_pass": false,
+  "eligible_operation_kinds": [
+    "SetSectionContent",
+    "EditContainerTopology",
+    "InsertObjects",
+    "DeleteObjects",
+    "RestoreObjects",
+    "SetTransforms",
+    "PatchProperties"
+  ],
+  "operation_kind_source": "runtime/interaction/src/undoable_command.cpp::supportsUndoableCommand at resume cursor b5072f2c7dd796b2ad7aed3a6bfa5d86b6058cad"
 }
