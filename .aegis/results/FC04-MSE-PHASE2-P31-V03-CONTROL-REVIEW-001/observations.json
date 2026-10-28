@@ -1,0 +1,26 @@
+{
+  "package_revision": "7425e79e559b6d33b519995fe373afaa1d578883",
+  "package_sha256": "3a886463173245391f4e4d71e93a8f5472aec4515c9418f06e251d22d34fc3e5",
+  "review_head": "78f57ff5725b253884feb5b10d00e4fc31745406",
+  "preflight": {
+    "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.3/preflight.py --repo . --check all",
+    "exit_code": 0,
+    "stdout": "PASS PackageBindingPreflight: repository, anchors, source and package identities; HEAD=78f57ff5725b253884feb5b10d00e4fc31745406\nPASS EvidenceContractPreflight: MSE-01..27, eight rows, inherited cases and OOM status; implementation NOT_RUN\nPASS DesignPreflight: selected internal C++ boundary, lifetime, typed queue and outcomes documented; control review pending\nPASS FunctionalScopePreflight: proposed owner and protected-boundary allowlists\n",
+    "stderr": ""
+  },
+  "product_diff": {
+    "command": "git diff --name-only 6bcf2d4bbf3314e5252951190c3c475403f52665 7425e79e559b6d33b519995fe373afaa1d578883 -- runtime debug_ui apps schema",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "matrix_case_count": 27,
+  "case_key_sets": {
+    "blocking,case,id": 27
+  },
+  "root_cmake_contains_test_subdir": false,
+  "test_cmake_exists": false,
+  "status": "BLOCKED_VERIFICATION_BINDING",
+  "independent_review": "NOT_RUN",
+  "p32_authorized": false
+}
