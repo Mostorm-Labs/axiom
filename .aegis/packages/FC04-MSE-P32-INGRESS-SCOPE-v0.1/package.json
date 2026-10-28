@@ -1,0 +1,24 @@
+{
+  "schema_version": "aegis-p31-scope-amendment-v1",
+  "package_id": "FC04-MSE-P32-INGRESS-SCOPE-v0.1",
+  "task_id": "FC04-MSE-PHASE2-P32",
+  "baseline": "a6b68e36dacd95b64d9e23586c271db87edc901a",
+  "execution_ref": "refs/heads/codex/fc04-mse-p31-v02-binding-fix",
+  "parent_package": {
+    "revision": "a3fdcb5fa792a9f74bdc3eccd3fa09013f8df2b8",
+    "path": ".aegis/packages/FC04-MSE-PHASE2-P31-v0.4/package.json",
+    "sha256": "b51eea6a24d292aeba63cbe5f1cd453d576c4eac5f682a25da27a2fec8885a90"
+  },
+  "parent_authorization": {
+    "revision": "d5d4f537fb646d02ceeae720b3e3f44ce2664300",
+    "path": ".aegis/results/FC04-MSE-PHASE2-P31-V04-001/authorization-v0.2.json",
+    "sha256": "aaa03c84eceb51bdde592397b167644da18a46b0a71a24fd8673ef1048ed26e2"
+  },
+  "newly_allowed_existing_files": [
+    "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp",
+    "runtime/composition/src/canvas_runtime_text.cpp"
+  ],
+  "review": "preparer self-review explicitly accepted by user for P31; no final Gate waiver",
+  "continue_until_terminal_state": true,
+  "overall_d07_release": "BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG"
+}
