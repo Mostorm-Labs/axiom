@@ -5,6 +5,7 @@ This versioned correction preserves v0.1 and the D07 cursor. It is a draft, not 
 ## Resolved source and test deltas
 
 - The real shared Facade and Selection input integration test are added to the proposed modification surface and locked to the D07 cursor in source-delta.json.
+- The existing CanvasControlService and its test are proposed for the same surface: its queued selection snapshot currently rechecks selected ID and selection revision, but not semantic generation before apply. MSE-27 must verify a same-selection, changed-document generation is rejected or explicitly re-resolved before mutation.
 - Preserve all 160 CTest IDs, including FC01ASelectionInputIntegration. Supersede only assertions that require an intentionally supported multi-root command to be rejected; retain and explicitly test rejection of unsupported commands, invalid inputs and zero-mutation failure.
 - Restore MSE-25 Escape/IME-first semantics from the accepted decision addendum. Preserve the owning-root-after-commit/cancel scenario as an additional distinct assertion under the same case, rather than renaming the existing accepted case.
 - Preserve the eight property rows and MSE-01..MSE-27; do not relabel untested cases as passed.

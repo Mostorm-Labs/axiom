@@ -4,6 +4,10 @@
 
 The current RuntimeFacade read path exposes SelectionSummary with three aggregate slots; the existing CanvasControlReceipt has no frozen structured per-root outcome. The Windows Minimal host wraps the composition facade in MinimalRuntimeFacade; Web passes RuntimeComposition::controlFacade() to DebugController. The v0.1 allowlist omits the shared Facade and its actual Windows/Web integration path.
 
+ADR-0022 identifies the stable public boundary as the Runtime C ABI and permits internal C++ classes to be refactored. Debug UI is currently built as a static library, but its context is declared in a public include directory. Therefore static linkage and the C ABI guard alone do not prove a proposed debug C++ change is outside all applicable interface obligations; bind its exact exposure and consumer rebuilds before execution.
+
+The existing `CanvasControlService` captures a selection-scoped `CanvasControlSnapshot` at enqueue and checks selected ID plus selection revision at dequeue. That check does not compare the captured and current `semanticGeneration`; an unchanged selection with changed document state can therefore pass this queue fence. This is an existing owner path to consider for MSE-27, not proof that the UI's displayed projection and the eventual command are already bound.
+
 ## Required behavior
 
 An immutable feature-owned projection must bind the document/runtime identity, selection revision, semantic generation and Scene publication to normalized root IDs. For each property it must carry applicable/total counts, known/unknown state, Uniform/Mixed separately from Partial, and each excluded root's typed semantic reason. A missing provider/query failure is Indeterminate/Unavailable, not Unsupported. The UI may show and request an explicit eligible cohort; it must not derive applicability from object-kind switches or receive mutable Runtime internals.

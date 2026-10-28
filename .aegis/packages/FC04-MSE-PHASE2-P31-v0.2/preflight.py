@@ -60,8 +60,8 @@ def design():
 def scope():
     data=load('source-delta.json')
     changes={x['path'] for x in data['files'] if x['role']=='proposed_modify'}
-    need(changes=={'runtime/composition/src/canvas_runtime_facade.cpp','runtime/composition/tests/selection_input_integration_test.cpp'}, 'proposed owner delta mismatch')
-    print('PASS FunctionalScopePreflight: exact missing Facade and regression-test owners identified; other candidates research-only')
+    need(changes=={'runtime/composition/src/canvas_runtime_facade.cpp','runtime/composition/tests/selection_input_integration_test.cpp','runtime/control/src/canvas_control_service.cpp','runtime/control/tests/canvas_control_service_test.cpp'}, 'proposed owner delta mismatch')
+    print('PASS FunctionalScopePreflight: exact Facade, queue and regression-test owners identified; other candidates research-only')
 
 def main():
     parser=argparse.ArgumentParser()

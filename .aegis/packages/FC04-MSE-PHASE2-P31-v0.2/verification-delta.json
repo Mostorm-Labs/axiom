@@ -14,6 +14,13 @@
     "rule": "Retain the CTest ID and unaffected negative assertions; replace only assertions explicitly superseded by supported multi-selection commands, with real positive and zero-mutation negative tests.",
     "status": "NOT_RUN"
   },
-  "mse_07_19_20_21_23_26_27": "Inherited accepted D06-B outcomes; exact provider, per-target observations and test paths remain to be bound with the projection contract.",
+  "MSE-27": {
+    "required": "A projection becomes stale after semantic generation changes even if selected root IDs and selection revision are unchanged; the queued command is rejected or re-resolved before canonical mutation.",
+    "existing_queue_owner": "runtime/control/src/canvas_control_service.cpp",
+    "queue_test_owner": "runtime/control/tests/canvas_control_service_test.cpp",
+    "expected": "No canonical/Scene/History mutation on rejection; the original selection-revision and stale-target checks continue to pass.",
+    "status": "NOT_RUN"
+  },
+  "mse_07_19_20_21_23_26": "Inherited accepted D06-B outcomes; exact provider, per-target observations and test paths remain to be bound with the projection contract.",
   "historical_results": "immutable"
 }
