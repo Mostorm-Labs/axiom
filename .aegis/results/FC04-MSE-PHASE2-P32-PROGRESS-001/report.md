@@ -1,0 +1,3 @@
+# FC04 phase 2: initial stale-queue guard
+
+Status: IN_PROGRESS. This is not Phase 2 completion. The real Runtime integration test observed the stale property request applying after an unrelated external semantic change (RED, exit 1); the control queue now rejects a captured semantic generation mismatch. The same test passed after the fix. FC01ASelectionInputIntegration and DUIM1Control passed 2/2 with no skips; exact source hashes and JUnit are in `facts.json` and `queue-guard.xml`. Full MSE-01..27, full inherited regressions, Chrome and physical tests remain NOT_RUN. D07 OOM remains blocked.

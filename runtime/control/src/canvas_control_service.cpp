@@ -155,7 +155,9 @@ std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence,std
       }
       if (capturedSnapshot.has_value()) {
         const auto current = port_.snapshot(request.target);
-        if (capturedSnapshot->selectedObject != current.selectedObject || capturedSnapshot->selectionRevision!=current.selectionRevision) {
+        if (capturedSnapshot->selectedObject != current.selectedObject ||
+            capturedSnapshot->selectionRevision != current.selectionRevision ||
+            capturedSnapshot->semanticGeneration != current.semanticGeneration) {
           capturedSnapshots_.erase(key);
           remember(makeReceipt(key, CanvasControlReceiptState::kStaleTarget,
                                CanvasControlError::kStaleTarget));

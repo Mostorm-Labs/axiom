@@ -214,6 +214,29 @@ TEST_F(SelectionInput, MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade)
     EXPECT_FALSE(editor.selectionTransformActive());
     EXPECT_EQ(snapshot().semanticGeneration,before.semanticGeneration);
 }
+TEST_F(SelectionInput, QueuedPropertyEditRejectsChangedSemanticGeneration) {
+    click(140,130);
+    ASSERT_EQ(selected(),std::vector{a});
+    const auto selectedBefore=snapshot();
+    const auto original=*c.qualificationRuntime().qualificationObjectRecord(a);
+    runtime::CanvasControlRequest q;
+    q.target=f.mountedCanvasTargets().front();q.clientId=9100;q.requestId=++request;
+    q.payload.kind=runtime::CanvasControlPayloadKind::kSelectedVisible;q.payload.flag=false;
+    ASSERT_EQ(f.submitCanvasControl(q).state,runtime::ProductControlState::kQueued);
+    semantic::Operation external{semantic::OperationId{foundation::ObjectId::fromUint64(9501)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,
+        semantic::SetTransformsOp{{{b,{1,0,0,1,300,100}}}}};
+    ASSERT_EQ(c.applyExternalOperation(external,semantic::ApplySource::kRemoteSync).disposition,
+              semantic::ApplyDisposition::kApplied);
+    const auto afterExternal=snapshot();
+    ASSERT_EQ(afterExternal.selectionRevision,selectedBefore.selectionRevision);
+    ASSERT_GT(afterExternal.semanticGeneration,selectedBefore.semanticGeneration);
+    ASSERT_TRUE(c.ownerPump());
+    const auto receipt=f.canvasControlReceipt({9100,request});ASSERT_TRUE(receipt);
+    EXPECT_EQ(receipt->state,runtime::CanvasControlReceiptState::kStaleTarget);
+    EXPECT_EQ(snapshot().semanticGeneration,afterExternal.semanticGeneration);
+    EXPECT_EQ(*c.qualificationRuntime().qualificationObjectRecord(a),original);
+}
 TEST_F(SelectionInput, MultipleRootsHaveNoSingleObjectHandlesOrPorts) {
     rectangle(90,90,345,165);ASSERT_EQ(selected().size(),2U);
     auto& editor=c.qualificationRuntime();ASSERT_TRUE(editor.renderSelectionOverlay());
