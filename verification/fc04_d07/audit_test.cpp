@@ -7,6 +7,7 @@
 #include <array>
 #include <cstdio>
 #include <gtest/gtest.h>
+#include <tuple>
 
 namespace canvas {
 class IncrementalRuntimeTestAccess {
@@ -122,12 +123,18 @@ struct Sink final : interaction::LocalOperationSink {
 };
 struct State {
     std::vector<semantic::ObjectRecord> objects;
+    std::vector<RuntimeSceneRecord> runtimeRecords;
+    std::vector<SceneRecord> sceneRecords;
     std::vector<std::pair<Id, foundation::WorldRect>> bounds;
     std::vector<Id> index;
     std::vector<Id> hits, drawn;
+    std::vector<std::tuple<Id, SceneOrderKey, RenderPayloadRef>> drawItems;
+    std::vector<std::pair<foundation::WorldRect, DamageReason>> invalidationDamage;
     std::uint64_t generation = 0, ordinal = 0, scene = 0, projection = 0, revision = 0;
     std::uint64_t invalidationGeneration = 0;
     std::size_t invalidationRects = 0, damageEntries = 0;
+    std::size_t damageRectCount = 0, damageBytes = 0;
+    std::uint64_t damageCompacted = 0, damageCollapseCount = 0, damageRejectedHints = 0;
     bool fullInvalidation = false;
     std::size_t history = 0, submitted = 0, events = 0, publications = 0;
     bool undo = false, redo = false;
@@ -146,8 +153,11 @@ class D07 : public testing::Test {
     State read() {
         State s;
         s.objects = Access::objects(rt()).allObjects();
-        for (const auto& r : Access::coordinator(rt()).runtimeScene().records())
+        for (const auto& r : Access::coordinator(rt()).runtimeScene().records()) {
+            s.runtimeRecords.push_back(r);
             s.bounds.push_back({r.objectId, r.worldBounds});
+        }
+        for (const auto& r : Access::scene(rt()).read().records()) s.sceneRecords.push_back(r);
         std::sort(s.bounds.begin(), s.bounds.end(), [](const auto& a, const auto& b) {
             return a.first < b.first;
         });
@@ -157,7 +167,10 @@ class D07 : public testing::Test {
             s.index = q.value().backToFront;
             const auto draw = Access::scene(rt()).buildDrawList(q.value());
             EXPECT_TRUE(draw.hasValue());
-            if (draw) for (const auto& item : draw.value().items) s.drawn.push_back(item.objectId);
+            if (draw) for (const auto& item : draw.value().items) {
+                s.drawn.push_back(item.objectId);
+                s.drawItems.emplace_back(item.objectId, item.orderKey, item.renderPayload);
+            }
         }
         const auto hit = Access::scene(rt()).hitTest({{45, 10}, 0.0F, {}, 10U});
         EXPECT_TRUE(hit.hasValue());
@@ -166,7 +179,15 @@ class D07 : public testing::Test {
         s.invalidationGeneration = invalidation.generation.value();
         s.invalidationRects = invalidation.rects.size();
         s.fullInvalidation = invalidation.fullScene;
-        s.damageEntries = Access::scene(rt()).damageDiagnostics().journalEntries;
+        for (const auto& damage : invalidation.rects)
+            s.invalidationDamage.emplace_back(damage.worldRect, damage.reasons);
+        const auto damage = Access::scene(rt()).damageDiagnostics();
+        s.damageEntries = damage.journalEntries;
+        s.damageRectCount = damage.rectCount;
+        s.damageBytes = damage.estimatedBytes;
+        s.damageCompacted = damage.compactedThrough.value();
+        s.damageCollapseCount = damage.collapseCount;
+        s.damageRejectedHints = damage.rejectedHints;
         s.generation = rt().semanticGeneration().value();
         s.ordinal = rt().canonicalCommitOrdinal();
         s.scene = rt().qualificationSceneGeneration();
