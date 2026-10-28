@@ -1,0 +1,45 @@
+[
+  {
+    "name": "projection-green",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "out/fc04-mse-p32/build",
+      "-R",
+      "^(FC01ASelectionInputIntegration|SelectionBatch3Summary|DUIM1Control|FC04[.]MSE-(01|07|21))$",
+      "--output-on-failure",
+      "--no-tests=error",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-mse-p31-correction\\canvas\\out\\fc04-mse-p32\\projection-evidence\\green.xml"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "write-red",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "out/fc04-mse-p32/build",
+      "-R",
+      "^FC04[.]MSE-19$",
+      "--output-on-failure",
+      "--no-tests=error",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-mse-p31-correction\\canvas\\out\\fc04-mse-p32\\projection-evidence\\red.xml"
+    ],
+    "exit_code": 8
+  },
+  {
+    "name": "zero-match",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "out/fc04-mse-p32/build",
+      "-R",
+      "^FC04[.]MSE-02$",
+      "--output-on-failure",
+      "--no-tests=error"
+    ],
+    "exit_code": 8
+  }
+]

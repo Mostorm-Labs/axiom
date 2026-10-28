@@ -1,5 +1,5 @@
 #pragma once
-namespace canvas::runtime { class CanvasRuntimeFacade; }
+namespace canvas::runtime { class CanvasRuntimeFacade; class MultiSelectionPort; }
 #include "canvas/interaction/text_edit_session.hpp"
 
 #include "canvas/input/input_router.hpp"
@@ -146,6 +146,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
                                 public interaction::InteractionDispatchPort {
   friend class canvas::ink_playground::InkPlaygroundHistoryTestAccess;
   friend class canvas::runtime::CanvasRuntimeFacade;
+  friend class canvas::runtime::MultiSelectionPort;
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
   friend class canvas::qualification::Access;
   std::shared_ptr<canvas::qualification::State> fc08Qualification_;

@@ -7,6 +7,7 @@ add_library(canvas_runtime_composition STATIC
     src/canvas_runtime_image.cpp)
 target_sources(canvas_runtime_composition PRIVATE src/canvas_runtime_connector_sticky.cpp)
 target_sources(canvas_runtime_composition PRIVATE src/canvas_runtime_section.cpp)
+target_sources(canvas_runtime_composition PRIVATE src/multi_selection_port.cpp)
 target_include_directories(canvas_runtime_composition PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(canvas_runtime_composition PRIVATE
@@ -27,6 +28,8 @@ else()
 endif()
 
 if(BUILD_TESTING)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/verification/fc04_mse
+                   ${PROJECT_BINARY_DIR}/verification/fc04_mse)
   add_executable(axiom_selection_summary_tests tests/selection_summary_test.cpp)
   target_link_libraries(axiom_selection_summary_tests PRIVATE canvas_runtime_composition GTest::gtest_main)
   target_compile_definitions(axiom_selection_summary_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
