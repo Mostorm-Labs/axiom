@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse,json,pathlib,subprocess,sys,traceback
+import argparse,json,pathlib,subprocess,sys,traceback,xml.etree.ElementTree as ET
 P=pathlib.Path(__file__).resolve().parent
 ROOT=P.parents[2]
 BRANCH="codex/fc04-mse-phase2-p31-v0-1-d07cursor"
@@ -33,8 +33,19 @@ def evidence_contract():
  m=read(P/"test-matrix.json")
  require(len(m["test_cases"])==27 and len({x["id"] for x in m["test_cases"]})==27,"MSE case set is not exactly 27")
  for row in m["inherited_regressions"]:
-  content=(ROOT/row["source"]).read_text(encoding="utf-8")
+  path=ROOT/row["source"]
+  content=path.read_text(encoding="utf-8")
   require(len(content)>0,"empty inherited evidence "+row["id"])
+  if path.suffix==".xml":
+   root=ET.fromstring(content)
+   names=[node.attrib.get("name","") for node in root.iter("testcase")]
+   require(len(names)==row["expected_count"],"inherited test count mismatch "+row["id"])
+   require(not any(node.tag in ("failure","error","skipped") for node in root.iter()),"inherited JUnit has failure/error/skip "+row["id"])
+  else:
+   names=[line.strip() for line in content.splitlines() if line.strip()]
+   require(len(names)==row["expected_count"],"frozen ID list count mismatch "+row["id"])
+ require(len((ROOT/".aegis/results/FC04-D07-FUNCTIONAL-P32-001/raw/final-551/d07_14.xml").read_text(encoding="utf-8"))>0,"missing D07 JUnit")
+ require(len((ROOT/".aegis/results/FC04-D07-FUNCTIONAL-P32-001/raw/final-551/selection_160.xml").read_text(encoding="utf-8"))>0,"missing Selection JUnit")
  require(m["oom_blocker"]["status"]=="BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG","OOM blocker lost")
  print("PASS EvidenceContractPreflight: 27 MSE IDs, inherited D07/Selection evidence and OOM blocker bound")
 def design():
