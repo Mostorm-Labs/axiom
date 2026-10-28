@@ -1,0 +1,17 @@
+{
+  "id": "FC04-MSE-LOCAL-PERMISSION-DECISION-v0.1",
+  "decision": "ACCEPTED_BY_USER",
+  "parent_package_revision": "a3fdcb5fa792a9f74bdc3eccd3fa09013f8df2b8",
+  "worktree_head": "d508ee5183cc43a3737e76c25e6cfc11dcebaec1",
+  "scope": "FC04 Phase 2 internal multi-selection permission admission",
+  "accepted": "In an explicitly identified local single-user mode, local edits are allowed. If a permission context exists and cannot be read, reject the entire eligible cohort. Unconfigured or unknown mode remains unavailable.",
+  "guards": [
+    "No ambient default Allow",
+    "No inference that a missing external provider permits a contextual edit",
+    "Recheck at admission and dequeue, including permission policy revision",
+    "No claim of collaborative authorization or permission-denial coverage without real provider",
+    "D06-B blocked applicable root rejects full eligible cohort",
+    "Existing OOM and independent gate remain unresolved"
+  ],
+  "source": "User response to request call_47d4fb58807f48d8a9a96d7d0efab011, 2026-10-29"
+}
