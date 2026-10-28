@@ -1,0 +1,50 @@
+{
+  "package_revision": "0d8d62f52e68ec4c94520be8bc837598ee98c318",
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/fc04-mse-p31-v02-binding-fix",
+  "package_path": ".aegis/packages/FC04-MSE-PHASE2-P31-v0.2",
+  "package_sha256": "b9fee34c194e5cf29e340f9bea85b1901838bc7df6f58799720a6404f04ff0d2",
+  "source_locks_sha256": "712954161270f2ace47c745bb99c04b948f695aa403f761d0caddb1af87228d8",
+  "integrity_sha256": "18626f43fdb563a7500d4c204e8c20d94aab26538124704bab3079d9c0c9cf7c",
+  "p32_authorized": false,
+  "status": "BLOCKED_PROJECTION_BINDING",
+  "checks": [
+    {
+      "check": "PackageBindingPreflight",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.2/preflight.py --repo . --check PackageBindingPreflight",
+      "exit_code": 0,
+      "stdout": "PASS PackageBindingPreflight: exact repository, cursor, review, historical package and source locks; HEAD=0d8d62f52e68ec4c94520be8bc837598ee98c318\n",
+      "stderr": ""
+    },
+    {
+      "check": "EvidenceContractPreflight",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.2/preflight.py --repo . --check EvidenceContractPreflight",
+      "exit_code": 0,
+      "stdout": "PASS EvidenceContractPreflight: historical 27 IDs and scoped Escape/regression correction preserved; implementation tests NOT_RUN\n",
+      "stderr": ""
+    },
+    {
+      "check": "DesignPreflight",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.2/preflight.py --repo . --check DesignPreflight",
+      "exit_code": 2,
+      "stdout": "",
+      "stderr": "BLOCKED_PROJECTION_BINDING: exact ABI-preserving Windows/Web projection and per-target receipt owner/path are not yet frozen or reviewed\n"
+    },
+    {
+      "check": "FunctionalScopePreflight",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.2/preflight.py --repo . --check FunctionalScopePreflight",
+      "exit_code": 0,
+      "stdout": "PASS FunctionalScopePreflight: exact Facade, queue and regression-test owners identified; other candidates research-only\n",
+      "stderr": ""
+    },
+    {
+      "check": "all",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.2/preflight.py --repo . --check all",
+      "exit_code": 2,
+      "stdout": "PASS PackageBindingPreflight: exact repository, cursor, review, historical package and source locks; HEAD=0d8d62f52e68ec4c94520be8bc837598ee98c318\nPASS EvidenceContractPreflight: historical 27 IDs and scoped Escape/regression correction preserved; implementation tests NOT_RUN\n",
+      "stderr": "BLOCKED_PROJECTION_BINDING: exact ABI-preserving Windows/Web projection and per-target receipt owner/path are not yet frozen or reviewed\n"
+    }
+  ],
+  "product_tests": "NOT_RUN",
+  "physical_verification": "NOT_RUN"
+}
