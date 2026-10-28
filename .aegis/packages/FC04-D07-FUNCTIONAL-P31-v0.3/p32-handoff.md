@@ -1,7 +1,7 @@
 # P32 Handoff — Functional D07
 
-Package materialization commit: `4a2bcd54b0a51761f4d6a4de2f0bbc2932eb88b4`.
-Package: `.aegis/packages/FC04-D07-FUNCTIONAL-P31-v0.3/package.json` on branch `codex/fc04-d07-functional-p31-v0-3`.
+Package materialization: resolve the exact commit supplied in the control-plane handoff; do not rely on a floating branch name alone.
+Package path: `.aegis/packages/FC04-D07-FUNCTIONAL-P31-v0.3/package.json` on branch `codex/fc04-d07-functional-p31-v0-3`.
 
 The functional baseline cursor is `b5072f2c7dd796b2ad7aed3a6bfa5d86b6058cad`; task anchor is `15e76458f3872be4d1b51d4aac05eb8402719014`; feature anchor is `c7f874395d55952e9d5288e2a336a21747f37f11`.
 
