@@ -1,0 +1,51 @@
+{
+  "package_revision": "a3fdcb5fa792a9f74bdc3eccd3fa09013f8df2b8",
+  "package_sha256": "b51eea6a24d292aeba63cbe5f1cd453d576c4eac5f682a25da27a2fec8885a90",
+  "branch": "codex/fc04-mse-p31-v02-binding-fix",
+  "preflights": [
+    {
+      "check": "PackageBindingPreflight",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.4/preflight.py --repo . --check PackageBindingPreflight",
+      "exit_code": 0,
+      "stdout": "PASS PackageBindingPreflight: exact source/input at cursor, HEAD and worktree; clean baseline; HEAD=a3fdcb5fa792a9f74bdc3eccd3fa09013f8df2b8\n",
+      "stderr": ""
+    },
+    {
+      "check": "EvidenceContractPreflight",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.4/preflight.py --repo . --check EvidenceContractPreflight",
+      "exit_code": 0,
+      "stdout": "PASS EvidenceContractPreflight: 27 explicit fixtures, expected outcomes, selectors and evidence; inherited cases; implementation NOT_RUN\n",
+      "stderr": ""
+    },
+    {
+      "check": "DesignPreflight",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.4/preflight.py --repo . --check DesignPreflight",
+      "exit_code": 0,
+      "stdout": "PASS DesignPreflight: selected port, concrete oracle and explicit review boundary\n",
+      "stderr": ""
+    },
+    {
+      "check": "FunctionalScopePreflight",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.4/preflight.py --repo . --check FunctionalScopePreflight",
+      "exit_code": 0,
+      "stdout": "PASS FunctionalScopePreflight: source/ABI boundaries and nonzero 27-case runner entry specified\n",
+      "stderr": ""
+    },
+    {
+      "check": "all",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.4/preflight.py --repo . --check all",
+      "exit_code": 0,
+      "stdout": "PASS PackageBindingPreflight: exact source/input at cursor, HEAD and worktree; clean baseline; HEAD=a3fdcb5fa792a9f74bdc3eccd3fa09013f8df2b8\nPASS EvidenceContractPreflight: 27 explicit fixtures, expected outcomes, selectors and evidence; inherited cases; implementation NOT_RUN\nPASS DesignPreflight: selected port, concrete oracle and explicit review boundary\nPASS FunctionalScopePreflight: source/ABI boundaries and nonzero 27-case runner entry specified\n",
+      "stderr": ""
+    }
+  ],
+  "checker_tests": {
+    "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.4/test_preflight_contract.py",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "test_missing_composition_build_entry_is_rejected (__main__.PreflightContractTests.test_missing_composition_build_entry_is_rejected) ... ok\ntest_missing_expected_result_is_rejected (__main__.PreflightContractTests.test_missing_expected_result_is_rejected) ... ok\ntest_worktree_bytes_cannot_differ_from_locked_cursor (__main__.PreflightContractTests.test_worktree_bytes_cannot_differ_from_locked_cursor) ... ok\ntest_wrong_case_selector_is_rejected (__main__.PreflightContractTests.test_wrong_case_selector_is_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.374s\n\nOK\n"
+  },
+  "product_tests": "NOT_RUN",
+  "review": "PREPARER_SELF_REVIEW_USER_ACCEPTED",
+  "d07_oom": "BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG"
+}
