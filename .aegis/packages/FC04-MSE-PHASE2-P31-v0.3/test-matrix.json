@@ -1,0 +1,200 @@
+{
+  "subject_revision": "6bcf2d4bbf3314e5252951190c3c475403f52665",
+  "d06_b_authority": "https://app.notion.com/p/4074c57a590c81d9b124cd243e44f205?pvs=204",
+  "test_cases": [
+    {
+      "id": "MSE-01",
+      "blocking": true,
+      "case": "Empty selection: no property value or edit capability"
+    },
+    {
+      "id": "MSE-02",
+      "blocking": true,
+      "case": "Single root preserves existing single-object behavior"
+    },
+    {
+      "id": "MSE-03",
+      "blocking": true,
+      "case": "Multiple compatible roots move/transform in one intent preserving relative geometry"
+    },
+    {
+      "id": "MSE-04",
+      "blocking": true,
+      "case": "Selected Group plus selected child normalizes roots and avoids double transform"
+    },
+    {
+      "id": "MSE-05",
+      "blocking": true,
+      "case": "All roots support property and same value projects Uniform"
+    },
+    {
+      "id": "MSE-06",
+      "blocking": true,
+      "case": "All roots support property and differing values projects Mixed; edit normalizes eligible cohort"
+    },
+    {
+      "id": "MSE-07",
+      "blocking": true,
+      "case": "Partial applicability reports eligible/total and explicit excluded reasons before commit"
+    },
+    {
+      "id": "MSE-08",
+      "blocking": true,
+      "case": "Same UI label with distinct semantic fields never coerces FillStyle/TextColor/BrushColor/StrokeStyle"
+    },
+    {
+      "id": "MSE-09",
+      "blocking": true,
+      "case": "Applicable target locked/stale/out-of-scope rejects before mutation"
+    },
+    {
+      "id": "MSE-10",
+      "blocking": true,
+      "case": "Invalid value or invalid target rejects whole eligible batch before mutation"
+    },
+    {
+      "id": "MSE-11",
+      "blocking": true,
+      "case": "Cancel during edit produces no canonical write or History entry"
+    },
+    {
+      "id": "MSE-12",
+      "blocking": true,
+      "case": "Undo after selection changes restores original committed targets"
+    },
+    {
+      "id": "MSE-13",
+      "blocking": true,
+      "case": "Redo restores forward meaning with fresh operation identity"
+    },
+    {
+      "id": "MSE-14",
+      "blocking": true,
+      "case": "Stale selection/scene/document generation rejects or refreshes before commit"
+    },
+    {
+      "id": "MSE-15",
+      "blocking": true,
+      "case": "Multi-property intent needing multiple Operations uses D07 explicit Intent or stays unavailable"
+    },
+    {
+      "id": "MSE-16",
+      "blocking": true,
+      "case": "Selection/Inspector refresh is read-only and creates no operation/history"
+    },
+    {
+      "id": "MSE-17",
+      "blocking": true,
+      "case": "Connector line/arrow properties use Connector-specific semantics"
+    },
+    {
+      "id": "MSE-18",
+      "blocking": true,
+      "case": "Existing single-object transform, Section, Image Crop and Connector behavior regresses cleanly"
+    },
+    {
+      "id": "MSE-19",
+      "blocking": true,
+      "case": "Partial eligible subset commits atomically and reports exact changed/skipped roots"
+    },
+    {
+      "id": "MSE-20",
+      "blocking": true,
+      "case": "Applicable but locked/stale/permission-denied root rejects entire eligible cohort with zero mutation"
+    },
+    {
+      "id": "MSE-21",
+      "blocking": true,
+      "case": "Mixed and Partial are orthogonal dimensions"
+    },
+    {
+      "id": "MSE-22",
+      "blocking": true,
+      "case": "Undo/Redo failure leaves cursor and Redo branch unchanged"
+    },
+    {
+      "id": "MSE-23",
+      "blocking": true,
+      "case": "Injected failure leaves Document, Scene publication, History cursor and Redo branch unchanged"
+    },
+    {
+      "id": "MSE-24",
+      "blocking": true,
+      "case": "Double-click/Edit Text resolves actual hit text object, not prior primary"
+    },
+    {
+      "id": "MSE-25",
+      "blocking": true,
+      "case": "Escape cancels active IME composition/session first without also clearing selection or leaving scope; TextEdit commit/cancel leaves owning root selected."
+    },
+    {
+      "id": "MSE-26",
+      "blocking": true,
+      "case": "Missing property provider is Indeterminate/Unavailable and never enables UI"
+    },
+    {
+      "id": "MSE-27",
+      "blocking": true,
+      "case": "Stale displayed projection, including same-selection changed semantic generation, rejects or explicitly refreshes before admission and at dequeue."
+    }
+  ],
+  "required_property_rows": [
+    "Visible",
+    "Locked",
+    "Opacity",
+    "BlendMode",
+    "FillStyle",
+    "StrokeStyle",
+    "ConnectorStartDecoration",
+    "ConnectorEndDecoration"
+  ],
+  "inherited_regressions": [
+    {
+      "id": "D07-ORIGINAL-14",
+      "source": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/d07-names.txt",
+      "expected_count": 14,
+      "blocking": true
+    },
+    {
+      "id": "SELECTION-160",
+      "source": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/selection-names.txt",
+      "expected_count": 160,
+      "blocking": true
+    },
+    {
+      "id": "D07-EXPANDED-30",
+      "source": ".aegis/results/FC04-D07-FUNCTIONAL-P32-001/raw/final-551/d07_all.xml",
+      "expected_count": 30,
+      "blocking": true
+    },
+    {
+      "id": "D07-FAULT-46",
+      "source": ".aegis/results/FC04-D07-FUNCTIONAL-P32-001/raw/final-551/faults.xml",
+      "expected_count": 46,
+      "blocking": true
+    },
+    {
+      "id": "D07-SCENE-2",
+      "source": ".aegis/results/FC04-D07-FUNCTIONAL-P32-001/raw/final-551/scene_regression.xml",
+      "expected_count": 2,
+      "blocking": true
+    }
+  ],
+  "required_platforms": [
+    "Windows native",
+    "actual Chrome/WASM automated interaction where supported"
+  ],
+  "required_guards": [
+    "python tools/check_runtime_abi_manifest.py --root .",
+    "git diff --check",
+    "exact source-scope diff",
+    "MSE-01..MSE-27 exact IDs, zero skips"
+  ],
+  "oom_blocker": {
+    "status": "BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG",
+    "source": "https://app.notion.com/p/4074c57a590c81269adeeed3598f5889?pvs=204",
+    "rule": "Do not rerun the known hanging allocation sweep in the same poisoned process; do not mark it pass or waive overall D07/release blocker."
+  },
+  "terminal_success": "PHASE2_FUNCTIONAL_SCOPE_COMPLETE_READY_FOR_CONTROL_REVIEW",
+  "overall_d07_status": "BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG"
+}
