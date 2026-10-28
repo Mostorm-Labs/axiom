@@ -110,10 +110,16 @@ std::unique_ptr<PreparedOperationIntent> OperationEngine::prepareIntent(
     state->epoch = clock.runtimeEpoch();
     internal::observeIntentPrepare(108U, 0U);
     state->plans.reserve(operations.size());
-    state->storage.reserve(operations.size());
-    state->ledger.reserve(operations.size());
-    state->records.reserve(operations.size());
     internal::observeIntentPrepare(109U, 0U);
+    internal::observeIntentPrepare(110U, 0U);
+    state->storage.reserve(operations.size());
+    internal::observeIntentPrepare(111U, 0U);
+    internal::observeIntentPrepare(112U, 0U);
+    state->ledger.reserve(operations.size());
+    internal::observeIntentPrepare(113U, 0U);
+    internal::observeIntentPrepare(114U, 0U);
+    state->records.reserve(operations.size());
+    internal::observeIntentPrepare(115U, 0U);
     std::set<OperationId> ids;
     for (const auto& operation : operations) {
         const auto kind = operation.kind();
@@ -127,7 +133,7 @@ std::unique_ptr<PreparedOperationIntent> OperationEngine::prepareIntent(
             prepared.plan->manifest) return {};
         const auto i = state->plans.size();
         internal::observeIntentPrepare(100U, i);
-        auto storage = internal::ObjectStoreMutator::prepareContainerPlan(objects, *prepared.plan, true, &beforeState);
+        auto storage = internal::ObjectStoreMutator::prepareContainerPlan(objects, *prepared.plan, true, &beforeState, i);
         internal::observeIntentPrepare(101U, i);
         internal::observeIntentPrepare(102U, i);
         auto changes = internal::prepareChangeSet(*prepared.plan);
