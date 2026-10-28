@@ -44,8 +44,16 @@ def evidence_contract():
   else:
    names=[line.strip() for line in content.splitlines() if line.strip()]
    require(len(names)==row["expected_count"],"frozen ID list count mismatch "+row["id"])
- require(len((ROOT/".aegis/results/FC04-D07-FUNCTIONAL-P32-001/raw/final-551/d07_14.xml").read_text(encoding="utf-8"))>0,"missing D07 JUnit")
- require(len((ROOT/".aegis/results/FC04-D07-FUNCTIONAL-P32-001/raw/final-551/selection_160.xml").read_text(encoding="utf-8"))>0,"missing Selection JUnit")
+ d07_names=[line.strip() for line in (ROOT/".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/d07-names.txt").read_text(encoding="utf-8").splitlines() if line.strip()]
+ selection_names=[line.strip() for line in (ROOT/".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/selection-names.txt").read_text(encoding="utf-8").splitlines() if line.strip()]
+ d07_xml=ET.fromstring((ROOT/".aegis/results/FC04-D07-FUNCTIONAL-P32-001/raw/final-551/d07_14.xml").read_text(encoding="utf-8"))
+ selection_xml=ET.fromstring((ROOT/".aegis/results/FC04-D07-FUNCTIONAL-P32-001/raw/final-551/selection_160.xml").read_text(encoding="utf-8"))
+ d07_actual=[node.attrib.get("name","") for node in d07_xml.iter("testcase")]
+ selection_actual=[node.attrib.get("name","") for node in selection_xml.iter("testcase")]
+ require(len(d07_actual)==14 and set(d07_actual)==set(d07_names),"D07 frozen IDs do not exactly match JUnit")
+ require(len(selection_actual)==160 and set(selection_actual)==set(selection_names),"Selection frozen IDs do not exactly match JUnit")
+ require(not any(node.tag in ("failure","error","skipped") for node in d07_xml.iter()),"D07 inherited JUnit has failure/error/skip")
+ require(not any(node.tag in ("failure","error","skipped") for node in selection_xml.iter()),"Selection inherited JUnit has failure/error/skip")
  require(m["oom_blocker"]["status"]=="BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG","OOM blocker lost")
  print("PASS EvidenceContractPreflight: 27 MSE IDs, inherited D07/Selection evidence and OOM blocker bound")
 def design():
