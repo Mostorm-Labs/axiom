@@ -1,0 +1,25 @@
+{
+  "schema_version": "aegis-targeted-p31-correction-v1",
+  "package_id": "FC04-MSE-PHASE2-P31-v0.2",
+  "task_id": "FC04-MSE-PHASE2-P32",
+  "repository": {"provider": "github", "full_name": "Mostorm-Labs/axiom"},
+  "package_materialization_ref": "refs/heads/codex/fc04-mse-p31-v02-binding-fix",
+  "task_anchor": {"revision": "6bcf2d4bbf3314e5252951190c3c475403f52665", "relation": "ancestor"},
+  "review_anchor": {"revision": "0fc9462af3b6ee73aa7c378cd3917ce2886acca0", "relation": "ancestor"},
+  "superseded_candidate": {
+    "revision": "eecee8f24a952a93f96ee9a4f946f46bbdcf51a4",
+    "path": ".aegis/packages/FC04-MSE-PHASE2-P31-v0.1/package.json",
+    "sha256": "029663cf325ca36e3131e6ba7b499bb784925f4d478a5882f35f9461281d8c87"
+  },
+  "status": "DRAFT_PROJECTION_BINDING_REQUIRED",
+  "p32_authorized": false,
+  "requires_control_review": true,
+  "projection_binding": "UNRESOLVED_ABI_BOUNDARY",
+  "source_delta": "source-delta.json",
+  "verification_delta": "verification-delta.json",
+  "projection_binding_candidate": "projection-binding.md",
+  "closure": "closure.md",
+  "preflight": "preflight.py",
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW"
+}
