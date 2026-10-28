@@ -1,0 +1,18 @@
+{
+  "status": "AUTHORIZED_SCOPE_LIMITED",
+  "review": "preparer self-review per user instruction; not independent, not a Gate",
+  "package_revision": "2b7dcaaa20f19888490ca23c8c629b4e66191bd2",
+  "package_sha256": "d319a74cc4b2723877d0625680503400e8fe4af26e2a3f1a2cf4bcd9b619acc4",
+  "source_baseline": "a6b68e36dacd95b64d9e23586c271db87edc901a",
+  "preflight": {
+    "command": "python .aegis/packages/FC04-MSE-P32-INGRESS-SCOPE-v0.1/preflight.py --repo .",
+    "exit_code": 0,
+    "stdout": "PASS ingress amendment: exact package, parent authority, baseline sources, ordering and no-mutation scope; implementation tests NOT_RUN; HEAD=2b7dcaaa20f19888490ca23c8c629b4e66191bd2\n"
+  },
+  "added_existing_paths": [
+    "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp",
+    "runtime/composition/src/canvas_runtime_text.cpp"
+  ],
+  "product_tests": "NOT_RUN_FOR_AMENDMENT",
+  "overall_d07_release": "BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG"
+}
