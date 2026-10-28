@@ -1,0 +1,56 @@
+{
+  "task_id": "FC04-D07-ROUTE-A-SDK-P32",
+  "task_anchor": "3d15645d54d44c47474b4b0dd6ca20ade1e3c633",
+  "feature_anchor": "c7f874395d55952e9d5288e2a336a21747f37f11",
+  "incident_anchor": "3615a38422a103024bc23924c570e3c585656670",
+  "execution_branch": "codex/fc04-d07-selection-audit",
+  "worktree": "C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas",
+  "locked_dependencies": {
+    "protobuf": {"version": "36.0", "source_sha256": "399931c793f4ac6db81045b00b06dd07c877b48aeecf36c797f65c541fb533e7"},
+    "abseil": {"version": "20250512.1", "source_sha256": "9b7a064305e9fd94d124ffa6cc358592eb42b5da588fb4e07d09254aa40086db"}
+  },
+  "current_sdk_release_set": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea",
+  "allowed_new_artifacts": [
+    "tools/semantic/patches/patch-set.json",
+    "tools/semantic/patches/abseil-20250512.1/**",
+    "tools/semantic/patches/protobuf-v36.0/**"
+  ],
+  "allowed_existing_sources": [
+    "tools/semantic/build_runtime.py",
+    "tools/semantic/sources.py",
+    "tools/semantic/contract.py",
+    "tools/semantic/profile-v2.json",
+    "tools/semantic/producer_cell.py",
+    "tools/semantic/producer_plan.py",
+    "tools/semantic/package_runtime.py",
+    "tools/semantic/classify_producer_changes.py",
+    "tools/semantic/aggregate.py",
+    "tools/semantic/publish_release.py",
+    "tools/semantic/reuse_release.py",
+    ".github/workflows/semantic-sdk-producer.yml",
+    ".github/workflows/semantic-sdk-producer-contract.yml",
+    ".github/workflows/semantic-sdk-release.yml",
+    "tools/semantic/tests/**",
+    "verification/tests/test_semantic_sdk_workflows.py"
+  ],
+  "conditional_upstream_patch_owners": {
+    "abseil": ["absl/base/call_once.h", "absl/base/internal/spinlock_wait.h", "absl/base/internal/spinlock_wait.cc", "corresponding tests"],
+    "protobuf": ["src/google/protobuf/generated_message_reflection.cc", "src/google/protobuf/message.cc", "descriptor-pool/message-factory/default-instance/reflection owners only if fault tests prove necessary", "corresponding tests"]
+  },
+  "forbidden": [
+    "runtime/semantic/src/codec.cpp",
+    "deps.lock.json",
+    "semantic-sdk.lock.json",
+    "installed SDK contents",
+    "generated Axiom protobuf code",
+    "public ABI / wire schema / canonical Operation changes",
+    "descriptor prewarming",
+    "catch-only workaround",
+    "undocumented once-control reset",
+    "fault relocation",
+    "weakening allocation sweep",
+    "SDK release promotion in P32"
+  ],
+  "release_promotion_authorized": false,
+  "consumer_lock_update_authorized": false
+}
