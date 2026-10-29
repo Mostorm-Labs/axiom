@@ -159,7 +159,9 @@ if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
       canvas_runtime_render canvas_runtime_scene canvas_runtime_text canvas_runtime_ink
       canvas_runtime_input canvas_runtime_control canvas_runtime_semantic
       ARCHIVE DESTINATION lib)
-    install(DIRECTORY runtime/foundation/include/ runtime/semantic/include/ DESTINATION include)
+    install(DIRECTORY runtime/foundation/include/ runtime/semantic/include/ runtime/input/include/ DESTINATION include)
+    install(FILES runtime/composition/include/canvas/runtime/runtime.hpp DESTINATION include/canvas/runtime)
+    install(FILES "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat" DESTINATION share/AxiomRuntime)
     get_filename_component(_axiom_semantic_root "${Protobuf_DIR}/../../.." ABSOLUTE)
     file(SHA256 "${_axiom_semantic_root}/manifest.json" AXIOM_RUNTIME_SEMANTIC_MANIFEST_SHA256)
     file(SHA256 "${CANVAS_SKIA_SDK_ROOT}/manifest.json" AXIOM_RUNTIME_SKIA_MANIFEST_SHA256)

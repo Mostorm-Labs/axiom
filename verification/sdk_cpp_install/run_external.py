@@ -34,7 +34,7 @@ def main():
              '-DCMAKE_PREFIX_PATH=' + str(args.semantic_root.resolve()),
              '-DCanvasSkia_DIR=' + str(args.skia_root.resolve() / 'lib/cmake/CanvasSkia')],
             ['cmake', '--build', str(build)],
-            ['ctest', '--test-dir', str(build), '-R', '^(ExternalRuntimeLifecycle|ExternalMultiStrokeStyle)$',
+            ['ctest', '--test-dir', str(build), '-R', '^(ExternalRuntimeLifecycle|ExternalMultiStrokeStyle|ExternalMultiShapeStyle)$',
              '--no-tests=error', '--output-on-failure', '--output-junit', str(root / 'external-results.xml')],
         ]
         for command in commands:
@@ -47,7 +47,7 @@ def main():
         else:
             suite = ET.parse(root / 'external-results.xml').getroot()
             cases = suite.findall('.//testcase')
-            if {x.get('name') for x in cases} != {'ExternalRuntimeLifecycle', 'ExternalMultiStrokeStyle'} or len(cases) != 2 or any(
+            if {x.get('name') for x in cases} != {'ExternalRuntimeLifecycle', 'ExternalMultiStrokeStyle', 'ExternalMultiShapeStyle'} or len(cases) != 3 or any(
                     x.find('failure') is not None or x.find('error') is not None or x.find('skipped') is not None for x in cases):
                 result['status'] = 'FAIL'
                 args.output.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')

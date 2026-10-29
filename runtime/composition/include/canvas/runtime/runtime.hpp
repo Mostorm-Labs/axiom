@@ -1,6 +1,7 @@
 #pragma once
 
 #include "canvas/runtime/runtime_facade.hpp"
+#include "canvas/input/platform_input_contract.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -21,6 +22,10 @@ class Runtime final {
 
   [[nodiscard]] bool open() noexcept;
   [[nodiscard]] bool bindSurface(std::uint32_t width, std::uint32_t height) noexcept;
+  [[nodiscard]] bool registerSource(input::InputSourceId source) noexcept;
+  [[nodiscard]] bool unregisterSource(input::InputSourceId source, std::uint64_t sequence,
+                                      std::uint64_t timestampNs) noexcept;
+  [[nodiscard]] bool submit(const input::PlatformPointerBatch& batch) noexcept;
   [[nodiscard]] bool pump() noexcept;
   [[nodiscard]] bool close() noexcept;
   [[nodiscard]] RuntimeFacade& facade() noexcept;

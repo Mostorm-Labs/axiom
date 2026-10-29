@@ -31,4 +31,14 @@ set_target_properties(Axiom::Runtime PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${_axiom_prefix}/include"
   INTERFACE_COMPILE_FEATURES cxx_std_20
   INTERFACE_LINK_LIBRARIES "AxiomInternal::composition;AxiomInternal::editor;AxiomInternal::interaction;AxiomInternal::render;AxiomInternal::scene;AxiomInternal::text;AxiomInternal::ink;AxiomInternal::input;AxiomInternal::control;AxiomInternal::semantic;CanvasSkia::Paragraph;CanvasSkia::Skia;protobuf::libprotobuf")
+function(axiom_runtime_copy_assets target)
+  if(NOT TARGET "${target}")
+    message(FATAL_ERROR "axiom_runtime_copy_assets requires an existing target")
+  endif()
+  get_filename_component(_axiom_assets_prefix "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../../.." ABSOLUTE)
+  add_custom_command(TARGET "${target}" POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+      "${_axiom_assets_prefix}/share/AxiomRuntime/icudtl.dat" "$<TARGET_FILE_DIR:${target}>/icudtl.dat"
+    VERBATIM)
+endfunction()
 unset(_axiom_prefix)

@@ -1,11 +1,13 @@
 #include <canvas/runtime/runtime.hpp>
 
 #include <cstdio>
+#include <filesystem>
 
 #define CHECK(x) do { if (!(x)) { std::fprintf(stderr, "FAIL %d: %s\n", __LINE__, #x); return 1; } } while (false)
 
 int main() {
   using namespace canvas;
+  CHECK(std::filesystem::exists("icudtl.dat"));
   runtime::Runtime app;
   CHECK(app.open());
   CHECK(!app.open());

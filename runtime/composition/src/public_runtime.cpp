@@ -15,6 +15,11 @@ bool Runtime::open() noexcept { return impl_->composition.open(); }
 bool Runtime::bindSurface(std::uint32_t width, std::uint32_t height) noexcept {
   return impl_->composition.bindSurface(width, height);
 }
+bool Runtime::registerSource(input::InputSourceId source) noexcept { return impl_->composition.registerSource(source); }
+bool Runtime::unregisterSource(input::InputSourceId source, std::uint64_t sequence, std::uint64_t timestampNs) noexcept {
+  return impl_->composition.unregisterSource(source, sequence, timestampNs);
+}
+bool Runtime::submit(const input::PlatformPointerBatch& batch) noexcept { return impl_->composition.submit(batch); }
 bool Runtime::pump() noexcept { return impl_->composition.ownerPump(); }
 bool Runtime::close() noexcept { return impl_->composition.close(); }
 RuntimeFacade& Runtime::facade() noexcept { return impl_->composition.controlFacade(); }
