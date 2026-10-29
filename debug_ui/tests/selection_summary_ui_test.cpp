@@ -158,6 +158,32 @@ int main() {
     assert(c.ownerPump());
     assert(c.semanticObjectCount() == 3);
     assert(snapshot().selectionSummary.count == 2);
+    (void)render(snapshot());
+    (void)render(snapshot(), "Group selected");
+    assert(c.ownerPump());
+    const auto selectedGroup = snapshot().selectionSummary.primary;
+    assert(!selectedGroup.isZero());
+    (void)render(snapshot());
+    (void)render(snapshot(), "Enter group");
+    assert(c.ownerPump());
+    assert(snapshot().selectionSummary.groupScope == selectedGroup);
+    assert(facade.setSelectionMode(true, 5, facade.readRuntimeState().identity.runtimeGeneration, 7004).state ==
+           runtime::ProductControlState::kQueued);
+    assert(c.ownerPump() && c.registerSource(7004));
+    const auto view = facade.readCanvasControlSnapshot(facade.mountedCanvasTargets().front());
+    input::PlatformPointerBatch down;
+    down.samples.push_back({7004, 1, 1, 1000000, 70 * view.cameraScale + view.cameraTranslationX,
+                            75 * view.cameraScale + view.cameraTranslationY, 0, 0, 0, {}, {},
+                            input::SampleProvenance::kConfirmedCurrent, input::PointerPhase::kDown});
+    assert(c.submit(down));
+    auto up=down;up.samples.front().sequence=2;up.samples.front().timestampNs=2000000;
+    up.samples.front().phase=input::PointerPhase::kUp;
+    assert(c.submit(up));
+    assert(snapshot().selectionSummary.primary == id(1));
+    (void)render(snapshot());
+    (void)render(snapshot(), "Leave group");
+    assert(c.ownerPump());
+    assert(!snapshot().selectionSummary.groupScope);
     ImGui::DestroyContext();
     assert(c.close());
     std::cout << "PASS read-only summary UI, typed disabled actions and stale selection fence\n";

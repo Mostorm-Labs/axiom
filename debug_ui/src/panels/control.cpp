@@ -307,6 +307,21 @@ void tools(DebugPanelContext& c) {
             intent.expectedSemanticGeneration=c.snapshot.selectionSummary.semanticGeneration;
             (void)c.controls.sectionIntent(intent);c.ui.markControlSubmitted();
         }
+        const auto& summary=c.snapshot.selectionSummary;
+        const bool selectedGroup=summary.count==1 && summary.kindCounts.size()==1 &&
+            summary.kindCounts.front().kind==static_cast<std::uint32_t>(canvas::semantic::ObjectKind::kGroup);
+        if (selectedGroup) {
+            ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c));
+            if (panel_detail::flowButton("Enter group",objectFirst)) {
+                canvas::runtime::SectionIntent intent;
+                intent.action=canvas::runtime::SectionAction::kEnterGroupScope;
+                intent.objectId=summary.primary;
+                intent.selectionRevision=summary.selectionRevision;
+                intent.expectedSemanticGeneration=summary.semanticGeneration;
+                (void)c.controls.sectionIntent(intent);c.ui.markControlSubmitted();
+            }
+            ImGui::EndDisabled();
+        }
         const auto lockAction=state.control.selectedLocked?Action::kUnlock:Action::kLock;
         if (panel_detail::selectionActionButton(c,state.control.selectedLocked ? "Unlock" : "Lock", objectFirst,lockAction)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedLock,
@@ -330,6 +345,17 @@ void tools(DebugPanelContext& c) {
                 selectedConnector.work.expanded, selectedConnector.work.predicates);
             ImGui::EndDisabled();
         }
+    }
+    if (c.snapshot.selectionSummary.groupScope) {
+        ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c));
+        if (ImGui::Button("Leave group")) {
+            canvas::runtime::SectionIntent intent;
+            intent.action=canvas::runtime::SectionAction::kLeaveGroupScope;
+            intent.selectionRevision=c.snapshot.selectionSummary.selectionRevision;
+            intent.expectedSemanticGeneration=c.snapshot.selectionSummary.semanticGeneration;
+            (void)c.controls.sectionIntent(intent);c.ui.markControlSubmitted();
+        }
+        ImGui::EndDisabled();
     }
     textFormat(c);
     if (c.ui.advancedControls()) {
