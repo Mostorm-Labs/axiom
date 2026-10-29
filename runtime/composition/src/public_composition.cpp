@@ -7,13 +7,14 @@ namespace canvas::runtime {
 
 class RuntimeComposition::Impl final {
  public:
+  explicit Impl(std::uint64_t viewId) : core(render::ViewId{viewId}) {}
   RuntimeCompositionCore core;
 };
 RuntimeCompositionCore& RuntimePlatformAccess::core(RuntimeComposition& owner) noexcept {
   return owner.impl_->core;
 }
 
-RuntimeComposition::RuntimeComposition() : impl_(std::make_unique<Impl>()) {}
+RuntimeComposition::RuntimeComposition(std::uint64_t viewId) : impl_(std::make_unique<Impl>(viewId)) {}
 RuntimeComposition::~RuntimeComposition() = default;
 bool RuntimeComposition::open() noexcept { return impl_->core.open(); }
 bool RuntimeComposition::bindSurface(std::uint32_t w, std::uint32_t h) noexcept {

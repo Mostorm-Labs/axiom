@@ -31,6 +31,14 @@ set_target_properties(Axiom::Runtime PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${_axiom_prefix}/include"
   INTERFACE_COMPILE_FEATURES cxx_std_20
   INTERFACE_LINK_LIBRARIES "AxiomInternal::composition;AxiomInternal::editor;AxiomInternal::interaction;AxiomInternal::render;AxiomInternal::scene;AxiomInternal::text;AxiomInternal::ink;AxiomInternal::input;AxiomInternal::control;AxiomInternal::semantic;CanvasSkia::Paragraph;CanvasSkia::Skia;protobuf::libprotobuf")
+if(EXISTS "${_axiom_prefix}/lib/axiom_minimal_windows_surface.lib")
+  add_library(AxiomInternal::windows_surface STATIC IMPORTED)
+  set_target_properties(AxiomInternal::windows_surface PROPERTIES
+    IMPORTED_LOCATION "${_axiom_prefix}/lib/axiom_minimal_windows_surface.lib")
+  add_library(Axiom::PlatformWindows INTERFACE IMPORTED)
+  set_target_properties(Axiom::PlatformWindows PROPERTIES
+    INTERFACE_LINK_LIBRARIES "AxiomInternal::windows_surface;Axiom::Runtime;d3d12;dxgi;dcomp;imm32;user32;gdi32")
+endif()
 function(axiom_runtime_copy_assets target)
   if(NOT TARGET "${target}")
     message(FATAL_ERROR "axiom_runtime_copy_assets requires an existing target")

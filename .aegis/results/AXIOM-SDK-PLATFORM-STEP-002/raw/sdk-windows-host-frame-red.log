@@ -1,0 +1,41 @@
+[0/2] Re-checking globbed directories...
+[1/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\rich_text_state.cpp.obj
+[2/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\container_operation_mapping.cpp.obj
+[3/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot_bootstrap.cpp.obj
+[4/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot.cpp.obj
+[5/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\protobuf_object_mapping.cpp.obj
+[6/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\codec.cpp.obj
+[7/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_engine.pb.cc.obj
+[8/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\common.pb.cc.obj
+[9/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\erase_mask.pb.cc.obj
+[10/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\container_operations.pb.cc.obj
+[11/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\connector.pb.cc.obj
+[12/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_stroke.pb.cc.obj
+[13/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\geometry.pb.cc.obj
+[14/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\paint.pb.cc.obj
+[15/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\object.pb.cc.obj
+[16/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\rich_text.pb.cc.obj
+[17/25] C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\out\sdk01-review\build\apps\minimal_runtime_host && D:\Softwares\CMake\bin\cmake.exe -E copy_directory C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/assets/fonts/imported C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build/apps/minimal_runtime_host/fonts && D:\Softwares\CMake\bin\cmake.exe -E copy_if_different C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build/apps/minimal_runtime_host/axiom-font.otf && D:\Softwares\CMake\bin\cmake.exe -E copy_if_different C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/assets/fonts/noto-sans-cjk-sc/LICENSE.txt C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build/apps/minimal_runtime_host/axiom-font.LICENSE.txt && D:\Softwares\CMake\bin\cmake.exe -E copy_if_different C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/assets/fonts/noto-sans-cjk-sc/NOTICE.txt C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build/apps/minimal_runtime_host/axiom-font.NOTICE.txt"
+[18/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\operation.pb.cc.obj
+[19/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\property.pb.cc.obj
+[20/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\section.pb.cc.obj
+[21/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\snapshot.pb.cc.obj
+[22/25] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\vector_path.pb.cc.obj
+[23/25] Linking CXX static library runtime\semantic\canvas_runtime_semantic.lib
+[24/25] Building CXX object apps\minimal_runtime_host\CMakeFiles\axiom_minimal_windows_text_tool_entry_tests.dir\tests\windows_text_tool_entry_test.cpp.obj
+cl : Command line warning D9025 : overriding '/DNDEBUG' with '/UNDEBUG'
+[25/25] Linking CXX executable apps\minimal_runtime_host\axiom_minimal_windows_text_tool_entry_tests.exe
+Test project C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build
+    Start 229: SDKWindowsHostPublicAdapter
+1/1 Test #229: SDKWindowsHostPublicAdapter ......***Failed    0.33 sec
+[d3d12] resize owner=1 old=0x0 new=800x600 gen=0\n[d3d12] resize ready owner=1 gen=1\n[d3d12] resize owner=0 old=0x0 new=800x600 gen=0\n[d3d12] resize ready owner=0 gen=1\n[axiom] present begin frame=1 objects=0 scene_records=0
+Assertion failed: state.platformAdapter->frameStatus().canonicalWorkId != 0, file C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_text_tool_entry_test.cpp, line 76
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.70 sec
+
+The following tests FAILED:
+	229 - SDKWindowsHostPublicAdapter (Failed)
+Errors while running CTest

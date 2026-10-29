@@ -57,6 +57,7 @@ PresentFeedbackDisposition mappedFeedback(WebSurfaceHost& host, const PresentedF
 
 void rejectsStaleSurfaceAndAcceptsFreshDprMetrics() {
     WebSurfaceHost host{surface(10, 20)};
+    assert(&host.publicComposition().controlFacade() == &host.composition().controlFacade());
     assert(host.bind(host.lifecycle().current()) == WebSurfaceDisposition::kRebound);
     assert(host.bind(surface(9, 20)) == WebSurfaceDisposition::kRejectedStale);
     const auto before = host.lifecycle().current();

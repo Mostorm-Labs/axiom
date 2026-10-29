@@ -3,6 +3,8 @@
 #include "canvas/render/presentation_tracker.hpp"
 #include "canvas/render/surface_lifecycle.hpp"
 #include "canvas/runtime/internal/runtime_composition_core.hpp"
+#include "canvas/runtime/internal/runtime_platform_access.hpp"
+#include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
 
 #include <optional>
@@ -25,13 +27,14 @@ class WebSurfaceHost final {
         render::FrameId platformFrame) const noexcept;
     [[nodiscard]] bool syncRuntimeSurfaceIdentity() noexcept;
     [[nodiscard]] const render::SurfaceLifecycle& lifecycle() const noexcept { return lifecycle_; }
-    [[nodiscard]] runtime::RuntimeCompositionCore& composition() noexcept { return composition_; }
+    [[nodiscard]] runtime::RuntimeCompositionCore& composition() noexcept { return runtime::RuntimePlatformAccess::core(composition_); }
+    [[nodiscard]] runtime::RuntimeComposition& publicComposition() noexcept { return composition_; }
     [[nodiscard]] runtime::RuntimeFacade& facade() noexcept { return composition_.controlFacade(); }
 
   private:
     render::SurfaceLifecycle lifecycle_;
     render::PresentationTracker presentation_;
-    runtime::RuntimeCompositionCore composition_;
+    runtime::RuntimeComposition composition_;
     struct FrameMapping final {
         render::FrameId platformFrame{};
         render::RuntimeFrameIdentity runtimeFrame{};

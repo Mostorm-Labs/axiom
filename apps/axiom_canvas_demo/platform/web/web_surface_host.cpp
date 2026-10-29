@@ -8,11 +8,11 @@ namespace canvas::web_demo {
 WebSurfaceHost::WebSurfaceHost(render::SurfaceSnapshot initial, bool deferPlatformBinding) noexcept
     : lifecycle_({initial.viewId, render::SurfaceGeneration{1},
                   render::MetricsGeneration{1}, initial.metrics}),
-      presentation_(lifecycle_), composition_(initial.viewId) {
+      presentation_(lifecycle_), composition_(initial.viewId.value()) {
     submittedRuntimeFrames_.reserve(8U);
-    (void)composition_.open();
+    (void)composition().open();
     if (!deferPlatformBinding) {
-        (void)composition_.bindSurface(initial.metrics);
+        (void)composition().bindSurface(initial.metrics);
         (void)syncRuntimeSurfaceIdentity();
     }
 }
@@ -37,19 +37,19 @@ WebSurfaceDisposition WebSurfaceHost::bindMetrics(const render::SurfaceMetrics& 
         metrics.physicalWidth == 0U || metrics.physicalHeight == 0U) {
         return WebSurfaceDisposition::kRejectedInvalid;
     }
-    const auto before = composition_.surfaceSnapshot();
-    const bool committed = composition_.state() == runtime::RuntimeCompositionState::kBound
-        ? composition_.bindSurface(metrics)
-        : composition_.state() == runtime::RuntimeCompositionState::kLost
-            ? composition_.rebindSurface(metrics) : composition_.resizeSurface(metrics);
+    const auto before = composition().surfaceSnapshot();
+    const bool committed = composition().state() == runtime::RuntimeCompositionState::kBound
+        ? composition().bindSurface(metrics)
+        : composition().state() == runtime::RuntimeCompositionState::kLost
+            ? composition().rebindSurface(metrics) : composition().resizeSurface(metrics);
     if (!committed) {
-        if (composition_.state() == runtime::RuntimeCompositionState::kLost) {
+        if (composition().state() == runtime::RuntimeCompositionState::kLost) {
             submittedRuntimeFrames_.clear();
             (void)lifecycle_.markLost(lifecycle_.current().viewId);
         }
         return WebSurfaceDisposition::kRejectedInvalid;
     }
-    const auto accepted = composition_.surfaceSnapshot();
+    const auto accepted = composition().surfaceSnapshot();
     if (accepted.surfaceGeneration != before.surfaceGeneration ||
         accepted.metricsGeneration != before.metricsGeneration) submittedRuntimeFrames_.clear();
     return syncRuntimeSurfaceIdentity() ? WebSurfaceDisposition::kRebound
@@ -57,8 +57,8 @@ WebSurfaceDisposition WebSurfaceHost::bindMetrics(const render::SurfaceMetrics& 
 }
 
 bool WebSurfaceHost::syncRuntimeSurfaceIdentity() noexcept {
-    const auto accepted = composition_.surfaceSnapshot();
-    if (!accepted.available || composition_.state() != runtime::RuntimeCompositionState::kReady) return false;
+    const auto accepted = composition().surfaceSnapshot();
+    if (!accepted.available || composition().state() != runtime::RuntimeCompositionState::kReady) return false;
     const render::SurfaceSnapshot snapshot{
         accepted.viewId, render::SurfaceGeneration{accepted.surfaceGeneration},
         render::MetricsGeneration{accepted.metricsGeneration},
@@ -78,8 +78,8 @@ bool WebSurfaceHost::syncRuntimeSurfaceIdentity() noexcept {
 
 render::SurfaceLifecycleDisposition WebSurfaceHost::markLost() noexcept {
     submittedRuntimeFrames_.clear();
-    if (composition_.state() == runtime::RuntimeCompositionState::kReady &&
-        !composition_.loseSurface()) {
+    if (composition().state() == runtime::RuntimeCompositionState::kReady &&
+        !composition().loseSurface()) {
         return render::SurfaceLifecycleDisposition::kUnavailable;
     }
     return lifecycle_.markLost(lifecycle_.current().viewId);
@@ -98,7 +98,7 @@ render::PresentFeedbackDisposition WebSurfaceHost::submit(const render::FrameSta
     const auto disposition = presentation_.submit(frame);
     if (disposition != render::PresentFeedbackDisposition::kSubmitted) return disposition;
     runtime::RuntimeFrameOpportunity opportunity{};
-    if (!composition_.serviceFrameOpportunity(true, opportunity) ||
+    if (!composition().serviceFrameOpportunity(true, opportunity) ||
         !opportunity.canonicalFrame.has_value() || !opportunity.canonicalWork ||
         opportunity.canonicalFrame->viewId != frame.viewId ||
         opportunity.canonicalFrame->surfaceGeneration != frame.surfaceGeneration ||
@@ -127,7 +127,7 @@ render::PresentFeedbackDisposition WebSurfaceHost::feedback(
     // Never relabel a bare or another instance's callback with this host's
     // current Runtime work. The platform must retain the original token.
     if (mapping->runtimeWork != work) return render::PresentFeedbackDisposition::kStaleGeneration;
-    const auto current = composition_.lastSubmittedCanonicalWork();
+    const auto current = composition().lastSubmittedCanonicalWork();
     if (!current.has_value() || current.value() != mapping->runtimeWork) {
         // A replaced/late platform frame cannot acknowledge the newer Runtime
         // frame. Leave the newer mapping and Runtime handoff untouched.
@@ -136,7 +136,7 @@ render::PresentFeedbackDisposition WebSurfaceHost::feedback(
     }
     const auto disposition = presentation_.receive(value);
     if (disposition != render::PresentFeedbackDisposition::kPresented) return disposition;
-    if (!composition_.receivePlatformPresented({mapping->runtimeWork,
+    if (!composition().receivePlatformPresented({mapping->runtimeWork,
             value.outcome, value.evidence, value.presentedTimeNs})) {
         return render::PresentFeedbackDisposition::kUnavailable;
     }

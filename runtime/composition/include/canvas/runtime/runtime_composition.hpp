@@ -14,7 +14,7 @@ class RuntimePlatformAccess;
 // remains valid until its owner is destroyed. Close before destruction.
 class RuntimeComposition final {
  public:
-  RuntimeComposition();
+  explicit RuntimeComposition(std::uint64_t viewId = 1);
   ~RuntimeComposition();
   RuntimeComposition(const RuntimeComposition&) = delete;
   RuntimeComposition& operator=(const RuntimeComposition&) = delete;

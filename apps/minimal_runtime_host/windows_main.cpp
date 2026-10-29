@@ -7,7 +7,7 @@
 #include "canvas/debug_ui/windows_host.hpp"
 #include "windows_image_file.hpp"
 #endif
-#include "windows_d3d12_surface_provider.hpp"
+#include "canvas/platform/windows_runtime_adapter.hpp"
 
 #include <windows.h>
 #include <windowsx.h>
@@ -75,7 +75,7 @@ struct State final {
   std::map<UINT32, NativeContact> nativeContacts;
   std::map<std::pair<canvas::input::InputSourceId, UINT32>, POINTER_INFO> nativeWatermarks;
   std::unique_ptr<std::FILE, decltype(&std::fclose)> inputLog{nullptr, &std::fclose};
-  canvas::minimal_runtime_host::WindowsD3D12SurfaceProvider* previewProvider = nullptr;
+  std::unique_ptr<canvas::platform::WindowsRuntimeAdapter> platformAdapter;
   canvas::minimal_runtime_host::WindowsPresentationCache presentationCache;
   canvas::runtime::RuntimeFrameOpportunity frameOpportunity{};
 };
@@ -91,6 +91,10 @@ canvas::render::SurfaceMetrics clientMetrics(HWND window, std::uint32_t width,
 }
 
 void paintCanvas(State& state, HDC dc) {
+  if (state.platformAdapter) {
+    (void)state.platformAdapter->present();
+    return;
+  }
   auto& composition = state.host->composition();
   const auto surface = composition.surfaceSnapshot();
   const auto& opportunity = state.frameOpportunity;
@@ -326,17 +330,28 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       return result;
     }
     case kOverlaySyncMessage:
-      if (state->previewProvider) state->previewProvider->reposition();
+      if (state->platformAdapter) state->platformAdapter->reposition();
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
       if (state->debugUi) state->debugUi->reposition();
 #endif
       return 0;
     case WM_TIMER: {
       pumpWindowsText(*state);
-      const bool frameReady = state->host->composition().serviceFrameOpportunity(
-          false, state->frameOpportunity);
-      const bool needsCanvasPaint = frameReady && state->frameOpportunity.needsPaint;
-      if (state->frameOpportunity.canonicalRequested || state->frameOpportunity.previewRendered)
+      bool frameReady = false;
+      bool needsCanvasPaint = false;
+      bool frameChanged = false;
+      if (state->platformAdapter) {
+        frameReady = state->platformAdapter->prepareFrame(false);
+        const auto frame = state->platformAdapter->frameStatus();
+        needsCanvasPaint = frameReady && frame.needsPaint;
+        frameChanged = frame.canonicalRequested || frame.previewRendered;
+        if (frameReady && !needsCanvasPaint) (void)state->platformAdapter->present();
+      } else {
+        frameReady = state->host->composition().serviceFrameOpportunity(false, state->frameOpportunity);
+        needsCanvasPaint = frameReady && state->frameOpportunity.needsPaint;
+        frameChanged = state->frameOpportunity.canonicalRequested || state->frameOpportunity.previewRendered;
+      }
+      if (frameChanged)
         logInput(*state, "frame-opportunity", frameReady, {});
       if (state->host->composition().readback().lastOwnerControlCount != 0U)
         logInput(*state, "facade-control", true, {});
@@ -365,7 +380,9 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     case WM_SIZE:
       cancelHostPointers(*state, "resize");
       if (LOWORD(lParam) != 0U && HIWORD(lParam) != 0U)
-        if (state->host->composition().resizeSurface(clientMetrics(window, LOWORD(lParam), HIWORD(lParam)))) {
+        if (state->platformAdapter ? state->platformAdapter->resize(LOWORD(lParam), HIWORD(lParam),
+              clientMetrics(window, LOWORD(lParam), HIWORD(lParam)).devicePixelRatio) :
+              state->host->composition().resizeSurface(clientMetrics(window, LOWORD(lParam), HIWORD(lParam)))) {
           state->presentationCache.reset();
           InvalidateRect(window, nullptr, FALSE);
         }
@@ -382,7 +399,11 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       RECT client{};
       GetClientRect(window, &client);
       if (client.right > 0 && client.bottom > 0) {
-        (void)state->host->composition().resizeSurface(clientMetrics(window,
+        if (state->platformAdapter) (void)state->platformAdapter->resize(
+            static_cast<std::uint32_t>(client.right), static_cast<std::uint32_t>(client.bottom),
+            clientMetrics(window, static_cast<std::uint32_t>(client.right),
+                          static_cast<std::uint32_t>(client.bottom)).devicePixelRatio);
+        else (void)state->host->composition().resizeSurface(clientMetrics(window,
             static_cast<std::uint32_t>(client.right), static_cast<std::uint32_t>(client.bottom)));
         state->presentationCache.reset();
         InvalidateRect(window, nullptr, FALSE);
@@ -447,6 +468,10 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       return DefWindowProcW(window, message, wParam, lParam);
     case WM_DESTROY:
       cancelHostPointers(*state, "window-destroy");
+#if AXIOM_MINIMAL_HAS_DEBUG_UI
+      if (state->debugUi) state->debugUi->shutdown();
+#endif
+      if (state->platformAdapter) (void)state->platformAdapter->shutdown();
       PostQuitMessage(0); return 0;
     default: return DefWindowProcW(window, message, wParam, lParam);
   }
@@ -485,20 +510,11 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   GetClientRect(state.window, &client);
   const auto width = static_cast<std::uint32_t>((std::max)(client.right, 1L));
   const auto height = static_cast<std::uint32_t>((std::max)(client.bottom, 1L));
-  auto canonicalProvider = std::make_unique<canvas::minimal_runtime_host::WindowsD3D12SurfaceProvider>(
-      state.window, true);
-  if (canonicalProvider->resize(width, height).code != canvas::render::BackendSubmissionCode::kAccepted ||
-      !state.host->composition().registerSurfaceProvider("windows-d3d12-canonical",
-          std::move(canonicalProvider))) return 1;
-  auto previewProvider = std::make_unique<canvas::minimal_runtime_host::WindowsD3D12SurfaceProvider>(
-      state.window, false);
-  state.previewProvider = previewProvider.get();
-  previewProvider->setOverlayOffset(0, 0);
-  if (previewProvider->resize(width, height).code != canvas::render::BackendSubmissionCode::kAccepted ||
-      !state.host->composition().registerPreviewSurfaceProvider("windows-d3d12-preview",
-          std::move(previewProvider))) return 1;
-  if (!state.host->composition().bindSurface(clientMetrics(state.window, width, height)) ||
-      !state.host->registerSource(1U)) return 1;
+  state.platformAdapter = std::make_unique<canvas::platform::WindowsRuntimeAdapter>(
+      state.host->publicComposition(), state.window);
+  const auto dpi = GetDpiForWindow(state.window);
+  const auto scale = dpi == 0U ? 1.0F : static_cast<float>(dpi) / 96.0F;
+  if (!state.platformAdapter->bind(width, height, scale) || !state.host->registerSource(1U)) return 1;
   std::array<wchar_t,32768> modulePath{};const auto moduleLength=GetModuleFileNameW(nullptr,modulePath.data(),static_cast<DWORD>(modulePath.size()));
   if(moduleLength==0 || moduleLength>=modulePath.size() || !canvas::minimal_runtime_host::bindHostTextFonts(state.host->composition(),std::filesystem::path(modulePath.data()).parent_path()/L"axiom-font.otf",std::filesystem::path(modulePath.data()).parent_path()/L"fonts"))return 1;
   if (state.inputLog) {
@@ -513,7 +529,6 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
         metrics.devicePixelRatio, GetDpiForWindow(state.window));
     logInput(state, "startup", true, {});
   }
-  (void)state.host->composition().setPlatformPresentationDeferred(true);
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
   if (!state.facade->setMultiSelectionPermission(canvas::runtime::MultiSelectionPermissionMode::kLocalSingleUser)) return 1;
   state.controller = std::make_unique<canvas::debug_ui::DebugController>(

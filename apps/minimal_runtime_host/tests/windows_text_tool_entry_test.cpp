@@ -68,6 +68,24 @@ int main(int argc, char** argv) {
                                        &state);
     assert(owner);
     auto& composition = state.host->composition();
+    if (mode == "public-adapter") {
+        state.platformAdapter = std::make_unique<platform::WindowsRuntimeAdapter>(state.host->publicComposition(), owner);
+        if (!state.platformAdapter->bind(800, 600, 1.0F)) return 77;
+        assert(&state.host->publicComposition().controlFacade() == &composition.controlFacade());
+        SendMessageW(owner, WM_TIMER, 1, 0);
+        assert(state.platformAdapter->frameStatus().canonicalWorkId != 0);
+        ShowWindow(owner, SW_SHOWNOACTIVATE);
+        InvalidateRect(owner, nullptr, FALSE);
+        UpdateWindow(owner);
+        assert(state.platformAdapter->frameStatus().canonicalWorkId == 0);
+        SendMessageW(owner, WM_SIZE, 0, MAKELPARAM(640, 480));
+        assert(composition.surfaceSnapshot().width == 640);
+        assert(state.platformAdapter->shutdown());
+        assert(composition.close());
+        DestroyWindow(owner);
+        std::puts("PASS Windows Host public adapter same-owner surface and resize");
+        return 0;
+    }
     assert(composition.bindSurface(800, 600));
     assert(state.host->registerSource(1));
     assert(minimal_runtime_host::bindHostTextFont(composition, "axiom-font.otf"));
