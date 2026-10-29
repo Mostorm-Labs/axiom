@@ -619,6 +619,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   runtime::TextGeometrySnapshot textGeometry(const runtime::CanvasTargetKey&);
   std::optional<std::uint32_t> textHit(const semantic::ObjectRecord&,float,float);
   semantic::ObjectId hitTextAtView(float,float);
+  bool enterGroupAtViewPoint(float,float);
   bool textPointer(const input::PointerSample&);
   bool observeTouchTextTap(const input::PointerSample&);
   bool beginShapeTextEditAt(float, float, semantic::ObjectId);

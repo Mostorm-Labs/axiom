@@ -1,0 +1,78 @@
+{
+  "source_base": "112fa93f30def9f335cb5effcfdee075543af996",
+  "tested_source_sha256": {
+    "apps/axiom_canvas_demo/platform/web/text_input.js": "d68218e8a176fc626e10dda2ec4343d6c0dba7aaacdd49c20bfc2ec3fe367f75",
+    "apps/minimal_runtime_host/CMakeLists.txt": "75010eb8534a6ac3764f5cd15408b854ebd9b2da68e24819a98be06c87f8f930",
+    "apps/minimal_runtime_host/tests/windows_text_tool_entry_test.cpp": "042a0c4615d96e7725fac8018403562ee54a7639df78953d052f76f877065d2e",
+    "runtime/composition/src/canvas_runtime_text.cpp": "62f90f7fffe349266ce3e1dccefbdb9853c2b70a8a837fc466cc1abff37c36f1",
+    "runtime/composition/tests/fc02_text_geometry_test.cpp": "859bd7d857ca673e827bc7ea0ec758e208d5136b38c8d52bdfdbd12eb8453506",
+    "runtime/composition/tests/fc08_section_consumer_test.cpp": "3c0330126e3f41eab8312603466dd479645849b7fcc8a9e4a1e28c799ef193ac",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "b22003ff98fab5390fac2e585249be330a3abc50489aff259a73a78b40590c7a",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "0b291c6d76395ec9bc2e3306669d0cabf257afa3baf732cdbc00b3a2e6b3ae85",
+    "runtime/interaction/src/canvas_region_selection.cpp": "e9031da0ac0a28d45bf9e5267706f9e8bbd613689adb2a3dee3c000199cb9efe",
+    "runtime/interaction/src/canvas_text_geometry.cpp": "d2d23bc9fdfe7cdfafc1858a17592e01394c456593621ef63fe9b22316a9b12e"
+  },
+  "browser_asset_sha256": {
+    "axiom_canvas_demo_web.js": "ca3083f1e3453c76a18b65d33fe2a36e168247b743ad31afcf3efd0e118b067c",
+    "axiom_canvas_demo_web.wasm": "af47eaecbbc9fbe72c4c0a44b585b898150c070641622190ab8104f59319bc56",
+    "text_input.js": "d68218e8a176fc626e10dda2ec4343d6c0dba7aaacdd49c20bfc2ec3fe367f75"
+  },
+  "raw_sha256": {
+    "selection160-names.txt": "87348d78b29571bb98ff479e51158a4c6e9383b96ef107d71def5c1c56aeb298",
+    "selection160-touch-final.log": "59dd2c7a40e887630b96522d5c7a4f561e53bea254ba55d5bae3255c9fd91df7",
+    "selection160-touch-final.xml": "f0225302e8a5d333e8fb79bddad937f2c0e1be55f9f690912da1908fd4c64b1f",
+    "group-touch-focused.log": "c865c07224d7ee258ef930e6513aec19a5850a1e8bae89f9c08c9a7075c32884",
+    "group-touch-focused.xml": "6bb93fda02e5faa5e78cff9446095c5c55ebaab2f12fd76ba5a7b5d2925db1e5",
+    "group-final-matrix.log": "a033d46d224cb55f1d4bac400aead597619c42a8320c32343cce70626defe43c",
+    "group-final-matrix.xml": "6c36d603fa9a958f85abaac16401b3d10f1adf667689a75f54cf57ccc63b25ed",
+    "chrome-group-doubleclick.mjs": "73e9a511232c1b35c7c4ffe5aa07eeb9e4261a8df3becef852e93c51c450172f",
+    "browser-group-mouse-fixed/results.json": "e1686d34096216829d931685f4453c11b289c729b892f0a7aad5019a257c1a6f",
+    "chrome-group-touch.mjs": "aafc65bf8292b5cb0120e85aa5777e525bbc50701cb0f6918356cbc48d1c29c0",
+    "browser-group-touch-events/results.json": "6f973999369fe3b5ec94e850bb88c60126691efdcf607e893005816e9532528d",
+    "browser-group-touch-fixed/results.json": "9fca9c5aa25802a7ee257c005f8b3f54bc1cebdd05f2b4316c829c7e7bd56096",
+    "chrome-touch-shape.mjs": "f0e21980f960193de92486b7fe558aca15cab940f1cd3ddd6b847b68c36d7995",
+    "browser-touch-shape-debug/results.json": "2c71a99c7f008e4350d61d9a8410f69deaa23884c6401a4cebc4201a52b043f9",
+    "browser-touch-shape-final/results.json": "93d31bf1c445ba38081066514fda665285c76a749fc955ecb9ccc91f1c21f99a"
+  },
+  "raw_zip_sha256": "e7d2453ab18cb9bd8926551a2740dceda30b3c2239df119f9ed7599559e46def",
+  "observations": {
+    "selection_ctest": {
+      "exit": 0,
+      "pass": 160
+    },
+    "focused_ctest": {
+      "exit": 0,
+      "pass": 14
+    },
+    "earlier_focused_ctest": {
+      "exit": 8,
+      "pass": 13,
+      "fail": "FC02WindowsTouchShapeLabelEntry"
+    },
+    "chrome_mouse": {
+      "exit": 0,
+      "assertions": 14
+    },
+    "chrome_touch_group": {
+      "exit": 0,
+      "assertions": 15
+    },
+    "chrome_ungrouped_touch_text": {
+      "exit": 0,
+      "assertions": 4
+    },
+    "earlier_chrome_touch": {
+      "exit": 1,
+      "failure": "compatibility mouse dblclick opened text after group entry"
+    },
+    "abi_manifest": {
+      "exit": 0
+    }
+  },
+  "physical": "NOT_RUN per user",
+  "remaining": [
+    "FC04 MSE-20, MSE-23, MSE-26 incomplete",
+    "D07 protobuf/abseil OOM blocker unchanged",
+    "full Group integration and physical validation incomplete"
+  ]
+}

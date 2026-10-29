@@ -1687,6 +1687,29 @@ TEST(FC02Formatting, ImportedFamiliesAreNamedSelectableAndActuallyRender) {
         ASSERT_EQ(h.intent(TextIntentKind::kSelectAll).status, TextStatus::kObserved);
     }
 }
+TEST(FC08SectionTextGeometry, DoubleClickGroupedShapeEntersScopeBeforeTextEditing) {
+    Host h(true);auto a=labelShape();a.content=semantic::ShapeContent{1,80,60};
+    auto b=a;b.id=foundation::ObjectId::fromUint64(8812);b.placement.order_key=semantic::OrderKey({2});b.transform.tx=150;
+    seedShape(h,a);
+    const semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(8813)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,semantic::InsertObjectsOp{{b}}};
+    ASSERT_EQ(h.runtime.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,semantic::ApplyDisposition::kApplied);
+    const auto group=foundation::ObjectId::fromUint64(8814);
+    ASSERT_EQ(h.facade.groupObjects({a.id,b.id},group,1,8815).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    ASSERT_EQ(h.facade.setSelectionMode(true,2,h.facade.readRuntimeState().identity.runtimeGeneration,8815).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(h.runtime.ownerPump());
+    runtime::TextIntent edit;edit.clientId=8815;edit.target=h.facade.mountedCanvasTargets().front();
+    edit.kind=runtime::TextIntentKind::kEditAtPoint;edit.viewX=40;edit.viewY=50;edit.requestId=3;
+    ASSERT_EQ(h.facade.submitTextIntent(edit).status,runtime::TextStatus::kQueued);ASSERT_TRUE(h.runtime.ownerPump());
+    EXPECT_EQ(h.facade.readSelectionSummary().groupScope,group);EXPECT_EQ(h.facade.readSelectionSummary().primary,a.id);
+    EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kClosed);
+    edit.requestId=4;ASSERT_EQ(h.facade.submitTextIntent(edit).status,runtime::TextStatus::kQueued);ASSERT_TRUE(h.runtime.ownerPump());
+    EXPECT_EQ(h.facade.readTextEditor().phase,runtime::TextPhase::kEditing);
+    EXPECT_EQ(h.facade.readTextEditor().token.object,a.id);
+    EXPECT_TRUE(h.runtime.close());
+}
+
 TEST(FC08SectionTextGeometry, WrappedShapeEditingFollowsAncestorWorldPose) {
     Host h(true);auto record=labelShape();seedShape(h,record);
     const auto edit=[&](float x,float y) {

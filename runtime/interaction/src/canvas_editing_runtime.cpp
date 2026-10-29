@@ -2395,10 +2395,17 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       }
     }
     if (editingHandle_ == render::HandleKind::kNone && !moveSelected) {
-      (void)selectAtViewPoint(x,y);
-      editingPointer_ = key;
-      (void)presentTransientOverlayFrame(nextCanonicalFrameId());
-      return true;
+      const bool selected = selectAtViewPoint(x,y);
+      const auto* acquired = semanticObjects_.find(selection_.primary());
+      // A Group is the target of the original Down on any of its members.
+      // Start the same whole-Group drag immediately instead of requiring a
+      // second gesture after selection. Preserve the existing behavior for
+      // all other object kinds and for failed/empty acquisition.
+      if (!selected || !acquired || acquired->kind != semantic::ObjectKind::kGroup) {
+        editingPointer_ = key;
+        (void)presentTransientOverlayFrame(nextCanonicalFrameId());
+        return true;
+      }
     }
     const auto* object = semanticObjects_.find(selection_.primary());
     if (object == nullptr) return false;

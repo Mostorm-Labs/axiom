@@ -106,7 +106,11 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
     // locate the clicked glyph (or request native completion for an outside hit).
     if(snapshot().phase===0 || document.activeElement!==carrier)canvas.focus({preventScroll:true});
   });
-  canvas.addEventListener('dblclick',event=>{event.preventDefault();const rect=canvas.getBoundingClientRect();finish().then(()=>{
+  canvas.addEventListener('dblclick',event=>{event.preventDefault();
+    // Touch double-taps are already routed through Runtime's pointer path.
+    // The browser's compatibility mouse event must not submit them again.
+    if(event.sourceCapabilities?.firesTouchEvents)return;
+    const rect=canvas.getBoundingClientRect();finish().then(()=>{
     // Finishing the single-click draft blurs the carrier. Restore canvas focus
     // so sync can hand it to the newly entered editor rather than leaving it on body.
     canvas.focus({preventScroll:true});

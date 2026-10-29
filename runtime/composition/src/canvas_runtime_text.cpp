@@ -225,7 +225,16 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
             const bool editAtPoint = intent->kind == TextIntentKind::kEditAtPoint;
             bool editAllowed=intent->kind!=TextIntentKind::kEditAtPoint || runtime_.textTool() || (runtime_.selectionMode() && runtime_.selectionAcquisitionMode()==CanvasSelectionMode::kPoint);
             foundation::ObjectId editSelectionRoot{};
-            if (editAtPoint && editAllowed) {
+            bool enteredGroup=false;
+            // The native double-click fact is shared with text editing. In
+            // Select mode the first double-click on a grouped descendant enters
+            // that Group; a subsequent double-click can edit the actual child.
+            if (editAtPoint && editAllowed && runtime_.selectionMode() && isTargetCurrent(intent->target) &&
+                text && text->read().phase==TextPhase::kClosed && !runtime_.selectionTransformActive() &&
+                !runtime_.creationActive() && !runtime_.imageCropPresentation_) {
+                enteredGroup=runtime_.enterGroupAtViewPoint(intent->viewX,intent->viewY);
+            }
+            if (editAtPoint && editAllowed && !enteredGroup) {
                 intent->object = runtime_.hitTextAtView(intent->viewX, intent->viewY);
                 if (runtime_.selectionMode()) {
                     editSelectionRoot = runtime_.resolveSelectionRoot(intent->object);
@@ -233,11 +242,11 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
                 }
                 intent->kind = TextIntentKind::kEdit;
             }
-            const auto result = !editAllowed ? receipt(TextStatus::kRejected,intent->requestId) : !isTargetCurrent(intent->target)
+            const auto result = enteredGroup ? receipt(TextStatus::kObserved,intent->requestId) : !editAllowed ? receipt(TextStatus::kRejected,intent->requestId) : !isTargetCurrent(intent->target)
                                     ? receipt(TextStatus::kStale, intent->requestId)
                                 : text ? text->intent(*intent)
                                        : receipt(TextStatus::kUnsupported, intent->requestId);
-            if (editAtPoint && result.status == TextStatus::kApplied && text) {
+            if (editAtPoint && !enteredGroup && result.status == TextStatus::kApplied && text) {
                 if (!editSelectionRoot.isZero()) {
                     const std::array roots{editSelectionRoot};
                     (void)runtime_.selection_.applyAcquisition(

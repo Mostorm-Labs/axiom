@@ -62,6 +62,23 @@ foundation::Result<HitTestResult> CanvasEditingRuntime::selectionPointHits(found
     ids.erase(std::remove_if(ids.begin(),ids.end(),[&](auto id){return resolveSelectionRoot(id).isZero();}),ids.end());
     return result;
 }
+bool CanvasEditingRuntime::enterGroupAtViewPoint(float x,float y) {
+    if (!selectionMode_ || selectionAcquisitionMode_!=runtime::CanvasSelectionMode::kPoint ||
+        !std::isfinite(x) || !std::isfinite(y)) return false;
+    const auto world=viewportController_->viewToContent(x,y);
+    const auto hit=selectionPointHits({world.first,world.second});
+    if (!hit || hit.value().frontToBack.empty()) return false;
+    const auto id=hit.value().frontToBack.front();
+    const auto root=resolveSelectionRoot(id);
+    const auto* object=semanticObjects_.find(root);
+    if (!object || object->kind!=semantic::ObjectKind::kGroup) return false;
+    auto after=selection_;
+    if (!after.enterGroupScope(root,semanticObjects_)) return false;
+    const auto child=after.resolveHit(id,semanticObjects_);
+    if (!child.isZero())(void)after.click(child);
+    selection_=std::move(after);selectionView_.reset();canonicalPresentationDirty_=true;
+    return true;
+}
 bool CanvasEditingRuntime::publishSelectionAcquisition(std::span<const foundation::ObjectId> acquired,
     SelectionCombineMode mode,std::uint64_t expectedRevision) {
     if (selection_.revision()!=expectedRevision) return false;
