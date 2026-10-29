@@ -1,0 +1,72 @@
+[
+  {
+    "check": "PackageBindingPreflight",
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      ".aegis\\packages\\AXIOM-SDK-CPP-MULTI-BRIDGE-v0.1\\preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "PackageBindingPreflight"
+    ],
+    "exit_code": 0,
+    "stdout": "PRECONDITIONS_OK: identity, immutable refs, user C++ direction, actual RED, exact tests and scope\nPackageBindingPreflight: PASS for this bounded slice; not SDK Gate or physical PASS\n",
+    "stderr": ""
+  },
+  {
+    "check": "EvidenceContractPreflight",
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      ".aegis\\packages\\AXIOM-SDK-CPP-MULTI-BRIDGE-v0.1\\preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "EvidenceContractPreflight"
+    ],
+    "exit_code": 0,
+    "stdout": "PRECONDITIONS_OK: identity, immutable refs, user C++ direction, actual RED, exact tests and scope\nEvidenceContractPreflight: PASS for this bounded slice; not SDK Gate or physical PASS\n",
+    "stderr": ""
+  },
+  {
+    "check": "DesignPreflight",
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      ".aegis\\packages\\AXIOM-SDK-CPP-MULTI-BRIDGE-v0.1\\preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "DesignPreflight"
+    ],
+    "exit_code": 0,
+    "stdout": "PRECONDITIONS_OK: identity, immutable refs, user C++ direction, actual RED, exact tests and scope\nDesignPreflight: PASS for this bounded slice; not SDK Gate or physical PASS\n",
+    "stderr": ""
+  },
+  {
+    "check": "ScopePreflight",
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      ".aegis\\packages\\AXIOM-SDK-CPP-MULTI-BRIDGE-v0.1\\preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "ScopePreflight"
+    ],
+    "exit_code": 0,
+    "stdout": "PRECONDITIONS_OK: identity, immutable refs, user C++ direction, actual RED, exact tests and scope\nScopePreflight: PASS for this bounded slice; not SDK Gate or physical PASS\n",
+    "stderr": ""
+  },
+  {
+    "check": "all",
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      ".aegis\\packages\\AXIOM-SDK-CPP-MULTI-BRIDGE-v0.1\\preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "all"
+    ],
+    "exit_code": 0,
+    "stdout": "PRECONDITIONS_OK: identity, immutable refs, user C++ direction, actual RED, exact tests and scope\nall: PASS for this bounded slice; not SDK Gate or physical PASS\n",
+    "stderr": ""
+  }
+]

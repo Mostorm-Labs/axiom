@@ -1,0 +1,17 @@
+{
+  "status": "USER_REQUESTED_CPP_SLICE",
+  "required": [
+    "exact input/result revisions, dirty state, hashes, commands and exit codes",
+    "per-test JUnit output with exact names and no skips",
+    "compiler and SDK Store identities",
+    "Windows build and actual Chrome/WASM driver artifacts or explicit environment blocker",
+    "no physical claim without actual observation"
+  ],
+  "materialization": "commit and push exact result and text evidence to task branch; retain large binaries as hashed local artifacts with documented path",
+  "not_authorized": [
+    "Gate PASS",
+    "SDK release",
+    "full SDK completion",
+    "D07 OOM pass"
+  ]
+}

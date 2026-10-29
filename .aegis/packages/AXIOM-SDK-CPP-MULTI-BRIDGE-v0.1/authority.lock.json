@@ -1,0 +1,84 @@
+{
+  "status": "USER_DIRECTION_AUTHORIZES_CPP_MULTI_SLICE_ONLY",
+  "source_revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+  "direct_user_instruction": "C++ public Runtime first; migrate Product Shell/Debug UI and Windows/Web to the same Runtime; keep existing C ABI V1 contract; do not require complete stable C ABI for this phase.",
+  "user_instruction_evidence_thread": "01a13d78-2852-7342-b02a-c5fcf62ce0c1",
+  "user_instruction_evidence_turn": "01a187fb-3cad-7460-854a-496d2ab70072",
+  "preserved_authority": [
+    "Existing V1 C ABI declarations and compatibility unchanged; not declared superseded",
+    "Prior P31 v0.4 and all historical results remain immutable",
+    "Previously accepted permission unknown refusal, target revision/stale rejection, complete IDs and original undo semantics"
+  ],
+  "bound_sources": [
+    {
+      "path": ".aegis/results/AXIOM-SDK-CPP-FIRST-RED-013/user-direction.md",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "88dea1b6c5c1615b10e424c605ef096528a6ae48f276e352e0ff7c6b0df28835"
+    },
+    {
+      "path": ".aegis/results/AXIOM-SDK-CPP-FIRST-RED-013/report.md",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "d18c31e679cf76932e1767f116ca95523bcc61e1ecaada001f48e674db88b1af"
+    },
+    {
+      "path": ".aegis/results/AXIOM-SDK-CPP-FIRST-RED-013/raw/build.log",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "67686bbd5c940e02198dbfe0a081ef353814d4581fd98c0ce0d786ba2fcc4f5b"
+    },
+    {
+      "path": "verification/sdk_cpp_first/public_multi_owner_test.cpp",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "204a416d4928779f734c35c0f42001aed619525635e3f11f848b62cfd98fcc50"
+    },
+    {
+      "path": "verification/sdk_cpp_first/inject-tests.cmake",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "e4c5487e4eaac9011a4391cc2d5e61cbae3add9deb70a2248c97bdb85aae73fc"
+    },
+    {
+      "path": "verification/sdk_cpp_first/tests.cmake",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "c3aecc7ff49db37eb780a2d0fe37a8d508f300c0394cf62f9d6e13aca72b8216"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "988e532abcf7ed59a175c12e8d0be48984c862c54ec69166db31b98a213f29c5"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/multi_selection_port.hpp",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "90a6b521e061290150740b031566ca0d3c8949c6a53316de7ceeb42b11c088df"
+    },
+    {
+      "path": "runtime/composition/src/multi_selection_port.cpp",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "beb99b8702316a60daf1da7d84774a4f010e17a980e8d1bbd93acfb9542018a9"
+    },
+    {
+      "path": "debug_ui/src/control_router.cpp",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "0a50a09315ba6fd56ae26c1613464e9a2ba1e27f92c6903f27a40a2c81acc798"
+    },
+    {
+      "path": "apps/minimal_runtime_host/windows_main.cpp",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "c20de3974594dd343e7c7fd45e10cf51db1800ee6fc3e6b9711a3b4d348f62b3"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/platform/web/web_debug_ui.inl",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "4e64a30dfb6eb3a17ac0303293c0b0dd958f2f12d4f3ddd1afb108182de9c5e8"
+    },
+    {
+      "path": "docs/api/canvas_runtime_api_v1.h",
+      "revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+      "sha256": "cbc55b2ccd396a8f843fb202531bcf09e708a75f41da1ef0c960ec0cd303011e"
+    }
+  ],
+  "not_authorized": [
+    "Claim C ABI retired or released",
+    "Claim entire SDK-01, Gate, D07 OOM or physical pass",
+    "Exceed this slice without further evidence and scope reconciliation"
+  ]
+}

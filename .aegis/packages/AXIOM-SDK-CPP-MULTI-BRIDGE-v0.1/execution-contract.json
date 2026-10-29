@@ -1,0 +1,69 @@
+{
+  "status": "USER_REQUESTED_CPP_FIRST_INCREMENTAL_SLICE",
+  "implementation": {
+    "required_changes": [
+      "Expose existing multi-selection projection, permission, whole-field submission and terminal receipts through public C++ RuntimeFacade with fail-closed default methods and real composition owner delegation",
+      "Migrate Windows and Web Debug UI plus MinimalRuntimeFacade to use that facade for multi-selection on the same actual Runtime",
+      "Do not introduce second selection, canonical Document or History owner",
+      "Preserve exact permission and staleness behavior; do not implement unrequested mixed-field overwrite",
+      "Keep old packages, C ABI V1 and SDK locks unchanged"
+    ],
+    "mutation_scope": [
+      "runtime/foundation/include/canvas/runtime/**",
+      "runtime/composition/include/canvas/runtime/**",
+      "runtime/composition/src/**",
+      "debug_ui/**",
+      "apps/minimal_runtime_host/**",
+      "apps/axiom_canvas_demo/platform/web/**",
+      "apps/axiom_canvas_demo/tests/**",
+      "verification/fc04_mse/**",
+      "verification/sdk_cpp_first/**"
+    ],
+    "forbidden": [
+      "Rewrite or alter docs/api C ABI or manifests",
+      "New parallel selection or semantic owner",
+      "Weaken/remove fault injection or label timeout as pass",
+      "Assume C++ binary ABI stability across arbitrary toolchains",
+      "Merge main, publish SDK or claim full SDK-01 completion"
+    ]
+  },
+  "tests": {
+    "required": [
+      "CPP-MULTI-OWNER",
+      "CPP-MULTI-UI",
+      "CPP-MULTI-REGRESSION",
+      "CPP-MULTI-WIN",
+      "CPP-MULTI-WEB",
+      "CPP-BOUNDARY"
+    ],
+    "missing_web_env": "ENVIRONMENT_BLOCKER; preserve result, do not claim Web PASS"
+  },
+  "evidence": {
+    "blocking": [
+      "exact revision, source/test hashes and real test output",
+      "all named owner tests and real platform build results",
+      "same owner and actual final receipt with no skipped tests"
+    ],
+    "corroborative": [
+      "C ABI legacy smoke and C declaration prototypes"
+    ]
+  },
+  "terminal_success": {
+    "all_of": [
+      "all required slice tests pass",
+      "reviewer-accessible exact result",
+      "remaining full SDK work and physical states explicitly reported"
+    ]
+  },
+  "terminal_blockers": [
+    "AUTHORITY_CONFLICT",
+    "MISSING_REQUIRED_INPUT",
+    "ENVIRONMENT_BLOCKER",
+    "FROZEN_VERIFICATION_FAILURE",
+    "NEW_HIGH_IMPACT_FAILURE_MODE"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}
