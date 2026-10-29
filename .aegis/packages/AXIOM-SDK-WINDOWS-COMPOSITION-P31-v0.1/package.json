@@ -1,0 +1,111 @@
+{
+  "task_id": "AXIOM-SDK-WINDOWS-COMPOSITION",
+  "package_version": "0.1",
+  "status": "USER_DIRECTED_NOT_INDEPENDENTLY_REVIEWED",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/sdk-cpp-first-multi-bridge",
+  "task_anchor": {
+    "revision": "8e195cda25f3fb4d44e75412bc378c696d365883",
+    "relation": "ancestor"
+  },
+  "user_plan_sha256": "cc7247fe87300d6fa9a9ad39bffe5bf03e5a18a74f55b7641626b6760b455312",
+  "inputs": [
+    {
+      "path": "runtime/composition/include/canvas/runtime/runtime_composition.hpp",
+      "revision": "8e195cda25f3fb4d44e75412bc378c696d365883",
+      "sha256": "87d86348a8360d383be46a5b5c9e98d303a9e93e9eb8b31935f0118fa74d373e"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/runtime.hpp",
+      "revision": "8e195cda25f3fb4d44e75412bc378c696d365883",
+      "sha256": "cc775a4e3d0b2fa13f2c8aec7913917e78fa5e57369b7d17870ac96b50901dae"
+    },
+    {
+      "path": "runtime/composition/src/public_runtime.cpp",
+      "revision": "8e195cda25f3fb4d44e75412bc378c696d365883",
+      "sha256": "954ecec7521dca80fbd4ba3ec2a0d79e19825e5b6eb4079f711be8538dc06b43"
+    },
+    {
+      "path": "apps/minimal_runtime_host/windows_main.cpp",
+      "revision": "8e195cda25f3fb4d44e75412bc378c696d365883",
+      "sha256": "4c67309e935190b368ed6ef442472bc6162c5d978cab61bef3defc659e5a1662"
+    },
+    {
+      "path": "apps/minimal_runtime_host/minimal_runtime_host.hpp",
+      "revision": "8e195cda25f3fb4d44e75412bc378c696d365883",
+      "sha256": "a31910de6b4b442810d6f59b1f1c44a0c6bbf8c1a0170fecec8b1dcb4e916af9"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/platform/web/bridge.cpp",
+      "revision": "8e195cda25f3fb4d44e75412bc378c696d365883",
+      "sha256": "172d2a3dfbb335da638131fb11f9a5c576c73e45964240b5e16922ecfe6dfcec"
+    },
+    {
+      "path": "verification/sdk_cpp_composition/consumer/single_owner.cpp",
+      "revision": "8e195cda25f3fb4d44e75412bc378c696d365883",
+      "sha256": "1e8dec73f65ef7d3d229f0998866bd4a4d30e2395a99d31d4885375e212aa53a"
+    },
+    {
+      "path": "verification/sdk_cpp_composition/run_external.py",
+      "revision": "8e195cda25f3fb4d44e75412bc378c696d365883",
+      "sha256": "f0345af571f88fdac260b796e0f6924d43f2f3db44ab5036590450b373d21743"
+    },
+    {
+      "path": "verification/sdk_cpp_install/run_external.py",
+      "revision": "8e195cda25f3fb4d44e75412bc378c696d365883",
+      "sha256": "e7b8c1e4d3b48884605e093ab5e18c8f86d7ba33af3de839d9af19b1e28668ae"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "revision": "8e195cda25f3fb4d44e75412bc378c696d365883",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "revision": "8e195cda25f3fb4d44e75412bc378c696d365883",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    }
+  ],
+  "closure": {
+    "required_changes": [
+      "One public RuntimeComposition Pimpl; migrate three existing external consumers; preserve one canonical/editor/history owner",
+      "Windows platform adapter with existing D3D12 canonical and preview, input, lifecycle and real feedback; migrate Minimal Host and shared Facade/Debug UI",
+      "Installable external SDK window consumer using locked dependencies, real window/input/frame feedback/resize/close",
+      "Remove duplicate Runtime wrapper only after migration",
+      "Specify contact reuse/late-event identity and regression without claiming physical reproduction"
+    ],
+    "forbidden": [
+      "Alter historic packages, C ABI V1, SDK locks or rebuild published dependencies",
+      "Second Runtime owner or reimplemented gestures, scene or presentation algorithms",
+      "Convert synthetic input or controlled reorder into PHYSICAL PASS",
+      "Suppress D07 OOM or fake independent review"
+    ],
+    "required_tests": [
+      "Pre-existing three installed consumers with original assertions",
+      "Single owner outside-repository RED to GREEN without internal header leakage",
+      "Existing Windows Runtime/selection/frame/Debug UI regressions with no skips",
+      "Actual external installed SDK Windows window and dual surface input/edit/receipt/present/resize/close",
+      "Contact reuse, old generation and lifecycle rejection tests",
+      "Actual Web regression or explicit unresolved result; no Web SDK claim"
+    ],
+    "evidence": [
+      "Exact source/test/artifact hashes, commands, exit codes and original failures",
+      "Public/platform/private header list, owner identity, lifetime/thread and frame feedback contracts",
+      "Reviewer-accessible commit and raw logs; physical status separate"
+    ],
+    "terminal_success": "All required Windows vertical-slice changes and tests pass; remaining out-of-scope work explicitly identified",
+    "terminal_blockers": [
+      "AUTHORITY_CONFLICT",
+      "MISSING_REQUIRED_INPUT",
+      "ENVIRONMENT_BLOCKER",
+      "FROZEN_VERIFICATION_FAILURE",
+      "NEW_HIGH_IMPACT_FAILURE_MODE"
+    ],
+    "continue_until_terminal_state": true
+  },
+  "authority_note": "User explicitly requests this direction and permits one versioned amendment; older immutable packages remain historical. This is not independent Control/Gate acceptance.",
+  "preflight_sha256": "f41e251e3956383d02fb706f7e300f56b3692be24f93128c9238cf6834472a36"
+}
