@@ -27,7 +27,9 @@ bool CanvasEditingRuntime::renderAcquisitionOverlay() noexcept {
     const auto append=[&](auto ids,auto& outlines) {
         for (auto id:ids) {
             const auto* r=sceneCoordinator_->runtimeScene().find(id);if(!r)continue;
-            const auto& b=r->visualBounds;const auto& t=r->transform;
+            const auto& b=r->visualBounds;
+            const auto* transient=transformOverrides_.find(id);
+            const auto& t=transient?*transient:r->transform;
             const auto map=[&](float x,float y) {return render::ScreenPoint{
                 static_cast<float>((t.a*x+t.c*y+t.tx)*zoom+viewport.translationX),
                 static_cast<float>((t.b*x+t.d*y+t.ty)*zoom+viewport.translationY)};};
@@ -208,7 +210,23 @@ bool CanvasEditingRuntime::acquisitionPointer(const input::PointerSample& sample
         return true;
     }
     if (regionSelection_.active()) return regionSelectionPointer(sample);
-    if (sample.phase!=input::PointerPhase::kDown) return selectionPointer(sample.key,sample.phase,sample.x,sample.y);
+    if (sample.phase!=input::PointerPhase::kDown) {
+        const bool clickOnly = sample.phase == input::PointerPhase::kUp && pendingMultiClick_ &&
+            editingPointer_ == sample.key && !editingMultiInitial_.empty() &&
+            std::abs(viewportController_->viewToContent(sample.x,sample.y).first-editingDownWorld_.x)<1e-6 &&
+            std::abs(viewportController_->viewToContent(sample.x,sample.y).second-editingDownWorld_.y)<1e-6;
+        const auto root = pendingMultiClick_;
+        const bool accepted = selectionPointer(sample.key,sample.phase,sample.x,sample.y);
+        if (sample.phase==input::PointerPhase::kUp||sample.phase==input::PointerPhase::kCancel) {
+            pendingMultiClick_.reset();
+            if (clickOnly && root) {
+                const std::array roots{*root};
+                (void)publishSelectionAcquisition(roots,SelectionCombineMode::kReplace,selection_.revision());
+                canonicalPresentationDirty_=true;(void)renderSelectionOverlay();
+            }
+        }
+        return accepted;
+    }
     if (selectionAcquisitionMode_!=runtime::CanvasSelectionMode::kPoint) return regionSelectionPointer(sample);
     // Point mode keeps the existing handle/port owner priority.
     (void)renderSelectionOverlay();
@@ -223,6 +241,16 @@ bool CanvasEditingRuntime::acquisitionPointer(const input::PointerSample& sample
     const auto hit=selectionPointHits({w.first,w.second});
     if (!hit) {regionQueryStatus_=runtime::SelectionQueryStatus::kFailed;return true;}
     if (hit.value().frontToBack.empty()) return regionSelectionPointer(sample);
+    if (!input::hasShift(sample.modifiers) && selection_.selected().size()>1) {
+        const auto root=resolveSelectionRoot(hit.value().frontToBack.front());
+        if (!root.isZero() && std::find(selection_.selected().begin(),selection_.selected().end(),root)!=selection_.selected().end()) {
+            pendingMultiClick_=root;
+            if (!selectionPointer(sample.key,sample.phase,sample.x,sample.y)) {
+                pendingMultiClick_.reset();acquisitionClickPointers_.insert(sample.key);
+            }
+            return true;
+        }
+    }
     if (input::hasShift(sample.modifiers)||selection_.selected().size()>1) {
         const auto root=resolveSelectionRoot(hit.value().frontToBack.front());
         if (!root.isZero()) {

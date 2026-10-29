@@ -5,17 +5,21 @@
 #include <cstddef>
 #include <deque>
 #include <mutex>
+#include <memory>
 #include <optional>
 #include <unordered_map>
 #include <unordered_set>
 
 namespace canvas::runtime {
+struct MultiSelectionControlWork;
 
 class CanvasControlService final {
  public:
   explicit CanvasControlService(CanvasControlPort& port, std::size_t queueCapacity = 256,
                                 std::size_t receiptCapacity = 1024);
   [[nodiscard]] CanvasControlReceipt enqueue(const CanvasControlRequest& request);
+  [[nodiscard]] CanvasControlReceipt enqueueMultiSelection(
+      std::shared_ptr<MultiSelectionControlWork> request);
   [[nodiscard]] std::size_t processPending(std::uint64_t ownerSequence,std::optional<CanvasControlReceiptKey> only = std::nullopt);
   void rejectPending(CanvasControlReceiptKey,CanvasControlError);
   [[nodiscard]] std::optional<CanvasControlReceipt> receipt(CanvasControlReceiptKey key) const;
@@ -32,7 +36,14 @@ class CanvasControlService final {
   const std::size_t queueCapacity_;
   const std::size_t receiptCapacity_;
   mutable std::mutex mutex_;
-  std::deque<CanvasControlRequest> queue_;
+  struct PendingControl final {
+    CanvasControlReceiptKey key{};
+    CanvasTargetKey target{};
+    std::uint64_t deadlineSequence = 0;
+    std::optional<CanvasControlRequest> request;
+    std::shared_ptr<MultiSelectionControlWork> multiSelection;
+  };
+  std::deque<PendingControl> queue_;
   std::unordered_map<CanvasControlReceiptKey, CanvasControlSnapshot,
                      CanvasControlReceiptKeyHash> capturedSnapshots_;
   std::deque<CanvasControlReceiptKey> receiptOrder_;

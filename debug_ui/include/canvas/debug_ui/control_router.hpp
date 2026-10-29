@@ -4,6 +4,11 @@
 #include "canvas/debug_ui/snapshot.hpp"
 #include "canvas/runtime/debug_control.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+#include "canvas/runtime/internal/multi_selection_port.hpp"
+#else
+namespace canvas::runtime { class MultiSelectionPort; }
+#endif
 #include "canvas/runtime/surface_debug_control.hpp"
 
 #include <cstdint>
@@ -27,10 +32,21 @@ class DebugControlRouter final {
   DebugControlRouter(canvas::runtime::RuntimeFacade* runtime,
                      canvas::runtime::AxiomDebugControl* axiomDebug,
                      canvas::runtime::PlatformDebugControl* platformDebug,
-                     DebugActivityLog* activity) noexcept;
+                     DebugActivityLog* activity,
+                     canvas::runtime::MultiSelectionPort* multiSelection = nullptr) noexcept;
 
   void beginFrame(const DebugSnapshot& snapshot) noexcept;
   void refreshReceipts() noexcept;
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+  [[nodiscard]] const canvas::runtime::MultiSelectionProjection& multiSelectionProjection() const noexcept {
+    return multiProjection_;
+  }
+  [[nodiscard]] canvas::runtime::MultiSelectionSubmitReceipt applyMultiSelectionProperty(
+      std::uint32_t field, const canvas::semantic::PropertyValue& value) noexcept;
+  [[nodiscard]] std::optional<canvas::runtime::MultiSelectionOutcome> multiSelectionOutcome() const noexcept;
+  [[nodiscard]] bool hasMultiSelectionAdmission() const noexcept { return hasMultiSelectionAdmission_; }
+  [[nodiscard]] canvas::runtime::MultiSelectionSubmitReceipt multiSelectionAdmission() const noexcept { return multiSelectionAdmission_; }
+#endif
   // UI consumer policy only: one attempt per bound Runtime, before the UI opens.
   void prepareConnectorDefaults(std::uint64_t runtimeEpoch, bool retry = false);
   [[nodiscard]] bool connectorDefaultsReady() const noexcept { return connectorDefaultsReady_; }
@@ -122,6 +138,13 @@ class DebugControlRouter final {
   struct PendingText final { std::uint64_t client; std::string action; };
   std::unordered_map<std::uint64_t, PendingText> pendingText_;
 
+  canvas::runtime::MultiSelectionPort* multiSelection_ = nullptr;
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+  canvas::runtime::MultiSelectionProjection multiProjection_{};
+  std::uint64_t lastMultiRequest_ = 0;
+  bool hasMultiSelectionAdmission_ = false;
+  canvas::runtime::MultiSelectionSubmitReceipt multiSelectionAdmission_{};
+#endif
   canvas::runtime::RuntimeFacade* runtime_ = nullptr;
   canvas::runtime::AxiomDebugControl* axiomDebug_ = nullptr;
   canvas::runtime::PlatformDebugControl* platformDebug_ = nullptr;

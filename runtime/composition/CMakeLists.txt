@@ -11,7 +11,7 @@ target_sources(canvas_runtime_composition PRIVATE src/multi_selection_port.cpp)
 target_include_directories(canvas_runtime_composition PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(canvas_runtime_composition PRIVATE
-    ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
+    ${PROJECT_SOURCE_DIR}/runtime/semantic/src ${PROJECT_SOURCE_DIR}/runtime/control/src)
 target_link_libraries(canvas_runtime_composition PUBLIC
     canvas_runtime_editor canvas_runtime_scene canvas_runtime_render
     canvas_runtime_control

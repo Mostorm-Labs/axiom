@@ -2,6 +2,7 @@
 #include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/interaction/text_edit_session.hpp"
 #include "canvas/semantic/property_value.hpp"
+#include "multi_selection_queue.hpp"
 #include <algorithm>
 
 namespace canvas::runtime {
@@ -299,6 +300,37 @@ void CanvasRuntimeFacade::setTarget(CanvasTargetKey target) noexcept {
 const CanvasTargetKey& CanvasRuntimeFacade::target() const noexcept { return binding_->target(); }
 bool CanvasRuntimeFacade::isTargetCurrent(const CanvasTargetKey& target) const noexcept {
   return binding_->isTargetCurrent(target);
+}
+CanvasControlReceipt CanvasRuntimeFacade::submitMultiSelection(
+    std::shared_ptr<MultiSelectionControlWork> work) noexcept {
+  CanvasControlReceipt rejected{};
+  if (!work) return rejected;
+  rejected.key = work->key;
+  rejected.state = CanvasControlReceiptState::kRejected;
+  rejected.error = CanvasControlError::kBusy;
+  if (!ownerThread() || runtime_.closed()) return rejected;
+  try {
+    std::scoped_lock lock(ingressMutex_);
+    if (work->target != target()) {
+      rejected.state = CanvasControlReceiptState::kStaleTarget;
+      rejected.error = CanvasControlError::kStaleTarget;
+      return rejected;
+    }
+    if (pendingWork_.load() >= 256U) {
+      rejected.state = CanvasControlReceiptState::kQueueFull;
+      rejected.error = CanvasControlError::kQueueFull;
+      return rejected;
+    }
+    ingress_.push_back(work);
+    const auto receipt = service_->enqueueMultiSelection(work);
+    if (receipt.state != CanvasControlReceiptState::kQueued) ingress_.pop_back();
+    else ++pendingWork_;
+    return receipt;
+  } catch (const std::bad_alloc&) {
+    rejected.state = CanvasControlReceiptState::kQueueFull;
+    rejected.error = CanvasControlError::kQueueFull;
+    return rejected;
+  }
 }
 ProductControlReceipt CanvasRuntimeFacade::submitCanvasControl(const CanvasControlRequest& request) noexcept {
   try {

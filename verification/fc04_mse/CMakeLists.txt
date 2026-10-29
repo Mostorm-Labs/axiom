@@ -1,6 +1,6 @@
 add_executable(axiom_fc04_mse_tests mse_01_27_test.cpp)
 target_link_libraries(axiom_fc04_mse_tests PRIVATE canvas_runtime_composition GTest::gtest_main)
-target_compile_definitions(axiom_fc04_mse_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+target_compile_definitions(axiom_fc04_mse_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1 MSE_REPO_ROOT="${PROJECT_SOURCE_DIR}")
 target_compile_features(axiom_fc04_mse_tests PRIVATE cxx_std_20)
 if(MSVC)
   target_compile_options(axiom_fc04_mse_tests PRIVATE /W4 /permissive- /WX /EHsc)

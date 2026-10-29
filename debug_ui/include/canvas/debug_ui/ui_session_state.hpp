@@ -2,6 +2,9 @@
 
 #include "canvas/debug_ui/workspace.hpp"
 #include "canvas/runtime/canvas_control_types.hpp"
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+#include "canvas/runtime/internal/multi_selection_port.hpp"
+#endif
 
 namespace canvas::debug_ui {
 
@@ -23,6 +26,19 @@ class DebugUiSessionState final {
   void setActivityAutoScroll(bool enabled) noexcept { activityAutoScroll_ = enabled; }
   [[nodiscard]] bool controlSubmittedThisFrame() const noexcept { return controlSubmittedThisFrame_; }
   void markControlSubmitted() noexcept { controlSubmittedThisFrame_ = true; }
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+  struct MultiSelectionDraft final {
+    canvas::runtime::MultiSelectionStamp stamp{};
+    bool initialized = false;
+    bool visible = true, locked = false;
+    float opacity = 1.0F;
+    float fill[4] = {0, 0, 0, 1};
+    bool noFill = false;
+    double strokeWidth = 1.0;
+    int startDecoration = 0, endDecoration = 0;
+  };
+  [[nodiscard]] MultiSelectionDraft& multiSelectionDraft() noexcept { return multiSelectionDraft_; }
+#endif
   struct CameraDraft final {
     float panDeltaX = 0.0F;
     float panDeltaY = 0.0F;
@@ -52,6 +68,9 @@ class DebugUiSessionState final {
   bool advancedControls_ = false;
   bool activityAutoScroll_ = true;
   bool controlSubmittedThisFrame_ = false;
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+  MultiSelectionDraft multiSelectionDraft_{};
+#endif
   CameraDraft cameraDraft_{};
   ImageDraft imageDraft_{};
   canvas::runtime::CanvasCreationPreset creationPresetDraft_ =

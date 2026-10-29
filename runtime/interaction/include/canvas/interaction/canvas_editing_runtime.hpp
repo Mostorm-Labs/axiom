@@ -860,6 +860,12 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
         (!selectionMode_||selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint);
   }
   bool selectionMode_ = false;
+  // Explicit local permission is bound by the owning composition; unknown is denied.
+  bool multiSelectionPermissionAllowed_ = false;
+  std::uint64_t multiSelectionPermissionRevision_ = 1;
+  std::uint64_t editingPermissionRevision_ = 0;
+  std::optional<foundation::ObjectId> pendingMultiClick_;
+  std::vector<std::pair<foundation::ObjectId, semantic::Transform2D>> editingMultiInitial_;
   interaction::TransientSceneOverride transformOverrides_;
   interaction::TransformHandleDrag transformDrag_{*this, transformOverrides_};
   input::PointerKey editingPointer_{};

@@ -1,4 +1,5 @@
 #include "canvas/control/canvas_control_service.hpp"
+#include "multi_selection_queue.hpp"
 
 #include <algorithm>
 
@@ -113,43 +114,103 @@ CanvasControlReceipt CanvasControlService::enqueue(const CanvasControlRequest& r
   if(request.payload.kind==CanvasControlPayloadKind::kSection)
     sectionRequests_.emplace(key,request);
   clientHighWater_[request.clientId] = request.requestId;
-  queue_.push_back(request);
+  queue_.push_back({key, request.target, request.deadlineSequence, request, {}});
   if (isSelectionScoped(request.payload.kind)) capturedSnapshots_[key] = capture;
   CanvasControlReceipt receipt = makeReceipt(key, CanvasControlReceiptState::kQueued);
   remember(receipt);
   return receipt;
 }
 
+CanvasControlReceipt CanvasControlService::enqueueMultiSelection(
+    std::shared_ptr<MultiSelectionControlWork> request) {
+  if (!request || !request->apply || !request->finish || request->key.clientId == 0 ||
+      request->key.requestId == 0)
+    return makeReceipt(request ? request->key : CanvasControlReceiptKey{},
+                       CanvasControlReceiptState::kRejected, CanvasControlError::kInvalidValue);
+  std::scoped_lock lock(mutex_);
+  const auto key = request->key;
+  const auto client = clientHighWater_.find(key.clientId);
+  if (client != clientHighWater_.end() && key.requestId <= client->second)
+    return makeReceipt(key, receipts_.contains(key) ? CanvasControlReceiptState::kDuplicate
+                                                    : CanvasControlReceiptState::kExpired);
+  const bool newClient = client == clientHighWater_.end();
+  const auto previous = newClient ? 0U : client->second;
+  if (newClient && clientHighWater_.size() >= queueCapacity_ + receiptCapacity_)
+    return makeReceipt(key, CanvasControlReceiptState::kQueueFull, CanvasControlError::kQueueFull);
+  const bool terminalReceiptRoom = static_cast<std::size_t>(std::count_if(receipts_.begin(), receipts_.end(), [](const auto& row) {
+        return row.second.state == CanvasControlReceiptState::kQueued;
+      })) < receiptCapacity_;
+  const auto reject = [&](CanvasControlReceiptState state, CanvasControlError error) {
+    auto receipt = makeReceipt(key, state, error);
+    try {
+      clientHighWater_[key.clientId] = key.requestId;
+      if (terminalReceiptRoom) remember(receipt);
+      return receipt;
+    } catch (const std::bad_alloc&) {
+      receipts_.erase(key);
+      std::erase(receiptOrder_, key);
+      if (newClient) clientHighWater_.erase(key.clientId);
+      else clientHighWater_[key.clientId] = previous;
+      return makeReceipt(key, CanvasControlReceiptState::kQueueFull, CanvasControlError::kQueueFull);
+    }
+  };
+  if (wasDestroyed(request->target) || !port_.isTargetCurrent(request->target))
+    return reject(CanvasControlReceiptState::kStaleTarget, CanvasControlError::kStaleTarget);
+  if (queue_.size() >= queueCapacity_ || !terminalReceiptRoom)
+    return reject(CanvasControlReceiptState::kQueueFull, CanvasControlError::kQueueFull);
+  try {
+    clientHighWater_[key.clientId] = key.requestId;
+    queue_.push_back({key, request->target, request->deadlineSequence, {}, std::move(request)});
+    auto receipt = makeReceipt(key, CanvasControlReceiptState::kQueued);
+    remember(receipt);
+    return receipt;
+  } catch (const std::bad_alloc&) {
+    std::erase_if(queue_, [&](const auto& pending) { return pending.key == key; });
+    receipts_.erase(key);
+    std::erase(receiptOrder_, key);
+    if (newClient) clientHighWater_.erase(key.clientId);
+    else clientHighWater_[key.clientId] = previous;
+    return makeReceipt(key, CanvasControlReceiptState::kQueueFull, CanvasControlError::kQueueFull);
+  }
+}
+
 std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence,std::optional<CanvasControlReceiptKey> only) {
   std::size_t processed = 0;
   for (;;) {
     CanvasControlRequest request{};
+    std::shared_ptr<MultiSelectionControlWork> multiSelection;
     std::optional<CanvasControlSnapshot> capturedSnapshot;
     {
       std::scoped_lock lock(mutex_);
       if (queue_.empty()) break;
       auto next=queue_.begin();
-      if(only)next=std::find_if(queue_.begin(),queue_.end(),[&](const auto& item){return item.clientId==only->clientId && item.requestId==only->requestId;});
+      if(only)next=std::find_if(queue_.begin(),queue_.end(),[&](const auto& item){return item.key==*only;});
       if(next==queue_.end())break;
-      request = *next;
+      const auto key = next->key;
+      const auto target = next->target;
+      const auto deadline = next->deadlineSequence;
+      if (next->request) request = *next->request;
+      multiSelection = std::move(next->multiSelection);
       queue_.erase(next);
-      const CanvasControlReceiptKey key{request.clientId, request.requestId};
       const auto captured = capturedSnapshots_.find(key);
       if (captured != capturedSnapshots_.end()) capturedSnapshot = captured->second;
-      if (wasDestroyed(request.target)) {
+      if (wasDestroyed(target)) {
         remember(makeReceipt(key, CanvasControlReceiptState::kTargetDestroyed,
                              CanvasControlError::kStaleTarget));
+        if (multiSelection) multiSelection->finish(CanvasControlReceiptState::kTargetDestroyed, CanvasControlError::kStaleTarget);
         capturedSnapshots_.erase(key);
         continue;
       }
-      if (request.deadlineSequence != 0 && ownerSequence > request.deadlineSequence) {
+      if (deadline != 0 && ownerSequence > deadline) {
         remember(makeReceipt(key, CanvasControlReceiptState::kExpired));
+        if (multiSelection) multiSelection->finish(CanvasControlReceiptState::kExpired, CanvasControlError::kNone);
         capturedSnapshots_.erase(key);
         continue;
       }
-      if (!port_.isTargetCurrent(request.target)) {
+      if (!port_.isTargetCurrent(target)) {
         remember(makeReceipt(key, CanvasControlReceiptState::kStaleTarget,
                              CanvasControlError::kStaleTarget));
+        if (multiSelection) multiSelection->finish(CanvasControlReceiptState::kStaleTarget, CanvasControlError::kStaleTarget);
         capturedSnapshots_.erase(key);
         continue;
       }
@@ -182,6 +243,20 @@ std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence,std
         }
       }
     }
+    if (multiSelection) {
+      const auto error = multiSelection->apply();
+      const auto state = error == CanvasControlError::kNone ? CanvasControlReceiptState::kApplied
+          : error == CanvasControlError::kStaleTarget ? CanvasControlReceiptState::kStaleTarget
+                                                      : CanvasControlReceiptState::kFailed;
+      multiSelection->finish(state, error);
+      {
+        std::scoped_lock lock(mutex_);
+        remember(makeReceipt(multiSelection->key, state, error));
+      }
+      ++processed;
+      if (only) break;
+      continue;
+    }
     const auto result = port_.apply(request);
     const CanvasControlReceiptKey key{request.clientId, request.requestId};
     const auto state = result.error == CanvasControlError::kNone
@@ -208,7 +283,10 @@ std::size_t CanvasControlService::processPending(std::uint64_t ownerSequence,std
 
 void CanvasControlService::rejectPending(CanvasControlReceiptKey key,CanvasControlError error) {
   std::scoped_lock lock(mutex_);
-  std::erase_if(queue_,[&](const auto& item){return item.clientId==key.clientId && item.requestId==key.requestId;});
+  for (const auto& item : queue_)
+    if (item.key == key && item.multiSelection)
+      item.multiSelection->finish(CanvasControlReceiptState::kFailed, error);
+  std::erase_if(queue_,[&](const auto& item){return item.key==key;});
   capturedSnapshots_.erase(key);
   remember(makeReceipt(key,CanvasControlReceiptState::kFailed,error));
 }
@@ -228,7 +306,9 @@ void CanvasControlService::destroyTarget(const CanvasTargetKey& target) {
   destroyed_.insert(target);
   for (auto it = queue_.begin(); it != queue_.end();) {
     if (it->target == target) {
-      const CanvasControlReceiptKey key{it->clientId, it->requestId};
+      const auto key=it->key;
+      if (it->multiSelection)
+        it->multiSelection->finish(CanvasControlReceiptState::kTargetDestroyed, CanvasControlError::kStaleTarget);
       remember(makeReceipt(key,
                            CanvasControlReceiptState::kTargetDestroyed,
                            CanvasControlError::kStaleTarget));

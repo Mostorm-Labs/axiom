@@ -1,0 +1,159 @@
+{
+  "status": "IN_PROGRESS_NOT_GATE_PASS",
+  "base_head": "89f3d4f33f2f4e03a942f6994a44a59fcb4cd97c",
+  "execution_branch": "codex/fc04-mse-p31-v02-binding-fix",
+  "source_sha256": {
+    "apps/axiom_canvas_demo/platform/web/web_debug_ui.inl": "4e64a30dfb6eb3a17ac0303293c0b0dd958f2f12d4f3ddd1afb108182de9c5e8",
+    "apps/minimal_runtime_host/windows_main.cpp": "c20de3974594dd343e7c7fd45e10cf51db1800ee6fc3e6b9711a3b4d348f62b3",
+    "debug_ui/CMakeLists.txt": "ab05fbd6ea38dd562bf7b3153c5f32fe2add11f6f923c4fb95bb7982d3d9d2e5",
+    "debug_ui/include/canvas/debug_ui/control_router.hpp": "6a88c9a20b0ccbd16ac8b11f1a496ca2c1e15f1cdaf654bd70d9b95ca4914f0f",
+    "debug_ui/include/canvas/debug_ui/controller.hpp": "710bd4cb5ac5617bcab048758739f232fae9f2d7de9bf2ce341a1b451308e531",
+    "debug_ui/include/canvas/debug_ui/ui_session_state.hpp": "55d793c872fd7b595429fd1c97e6a77cee398bfe97d9c5e7496e46ec8813b3de",
+    "debug_ui/src/control_router.cpp": "0a50a09315ba6fd56ae26c1613464e9a2ba1e27f92c6903f27a40a2c81acc798",
+    "debug_ui/src/controller.cpp": "246cb170a858b00d7336164a9b0c88a84d1626545363125dede72208398a1b7d",
+    "debug_ui/src/panels/control.cpp": "dfa47c0b77918a4300f30b4d1ba6fb429cb63be016c71a239908d1ef381d5f1d",
+    "debug_ui/tests/selection_summary_ui_test.cpp": "a830bde9163a29ba593ea47544f513bad25ab5daba115f44ec49d40ec6697470",
+    "runtime/composition/CMakeLists.txt": "e3b5bd6dc46f683660cdbfc48dbf71e2737ff731a2d9363c5073e3901be8b018",
+    "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp": "07351fbc122f3432e0b8a2b375ee50e2b82b24e8cf64436c87ff60e3f1dd5cc9",
+    "runtime/composition/include/canvas/runtime/internal/multi_selection_port.hpp": "90a6b521e061290150740b031566ca0d3c8949c6a53316de7ceeb42b11c088df",
+    "runtime/composition/src/canvas_runtime_facade.cpp": "31c6a131b572ad3d077850d7c8f3c1deb5bf52302d5b3e975268e874d6e8e66f",
+    "runtime/composition/src/canvas_runtime_text.cpp": "79639a05068d140ea0a90351c3a3763cb2ddc060f6345e86c4ddda7280361c51",
+    "runtime/composition/src/multi_selection_port.cpp": "beb99b8702316a60daf1da7d84774a4f010e17a980e8d1bbd93acfb9542018a9",
+    "runtime/control/include/canvas/control/canvas_control_service.hpp": "1656141ac259283925d905529aa0e499ac9476548f9d2d26d414a6ceb375ffa6",
+    "runtime/control/src/canvas_control_service.cpp": "eca12ad2ef1090fcea578e66a7c3d73f759b47cf65b78bb573520c057f8ffcae",
+    "runtime/control/tests/canvas_control_service_test.cpp": "c2789343b17aec7a5f135fcb352c523c23428aea70d8f01e1fd1ddf93497b726",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "5bd423da62d84d5a48d8f692750f33e1f56b4c7ce426a7bc53b2843aa9d8ba8b",
+    "runtime/interaction/src/canvas_connector_routing.cpp": "0b0ff7d3cdfea5ca79a96420e4a0e8fcc6192a557cf6fbb62e96499a71762025",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "0ea8f0c2012e24a8e65c1005d25f06e99bd16def6706865a470ebc87ca0a0e67",
+    "runtime/interaction/src/canvas_region_selection.cpp": "cfae91f603b08da2fbee8dffed1f109792f54224b5a8acebcba098e8a304ea1c",
+    "verification/fc04_mse/CMakeLists.txt": "56fb192cd146354c8032308e893013515f21108d5c33dddbc413a23ae1e04fb1",
+    "verification/fc04_mse/mse_01_27_test.cpp": "ddc274fdec045e00111f5492e50874cd78ba0e1ce5314f146b3523a02f061ab9",
+    "runtime/control/src/multi_selection_queue.hpp": "679cf6c932ceca92410234457cf36a5c4033846867df1dfd469cb2066869e9be"
+  },
+  "native_mse": {
+    "command": "ctest --test-dir out/fc04-mse-p32/build -R '^FC04[.]MSE-' --output-on-failure --no-tests=error",
+    "exit_code": 8,
+    "pass_count": 18,
+    "missing_ids": [
+      "MSE-11",
+      "MSE-15",
+      "MSE-18",
+      "MSE-20",
+      "MSE-22",
+      "MSE-23",
+      "MSE-24",
+      "MSE-25",
+      "MSE-26"
+    ],
+    "note": "Some passing IDs cover only subsets of compound frozen scenarios; no full-suite acceptance."
+  },
+  "selection_160": {
+    "exit_code": 0,
+    "count": 160,
+    "source": "selection160-final.xml",
+    "fixture_restore": "13 exact SHA256 and size matched .aegis/results/FC04-D07-FUNCTIONAL-P32-001/raw/restored-inputs.json"
+  },
+  "d07": {
+    "original": 14,
+    "expanded": 30,
+    "faults": 46,
+    "scene": 2,
+    "exit_code": 0,
+    "excluded": "known hanging Protobuf/Abseil allocation sweep; independent blocker remains"
+  },
+  "chrome": {
+    "real_browser": true,
+    "physical_input": false,
+    "drag_assertions": 42,
+    "debug_assertions": 41,
+    "note": "exploratory CDP cases and existing selection regression, not frozen WEB-MSE matrix"
+  },
+  "builds": {
+    "windows_exe": "out/fc04-mse-p32/build/apps/minimal_runtime_host/axiom_minimal_runtime_host_windows.exe",
+    "windows_sha256": "408b92ca72faa51cbf06685e5bf1c0eabcbce559b344b4bdcc38101fcb8c3f25",
+    "web_wasm": "out/fc04-mse-p32/web-build/apps/axiom_canvas_demo/axiom_canvas_demo_web.wasm",
+    "web_wasm_sha256": "4a87959890e9c450fc57f328352dae9cdee3308625ebe7fb0a6f69715d730788",
+    "pre_line_endings_windows_sha256": "d33d4eb2583a7c33c684a6c0544d57a4ec5b24eb82db72c9fdf6d5b0b7997f05",
+    "pre_line_endings_web_wasm_sha256": "4a87959890e9c450fc57f328352dae9cdee3308625ebe7fb0a6f69715d730788"
+  },
+  "not_run": [
+    "full MSE-01..27 acceptance",
+    "frozen 8-case WEB-MSE suite",
+    "physical input",
+    "gated release"
+  ],
+  "remaining_blockers": [
+    "Contextual per-root permission-denied provider is absent; local-only policy does not prove MSE-20 denied variant",
+    "MSE-11,15,18,20,22,23,24,25,26 remain unimplemented",
+    "Some UI rows have incomplete mixed-stroke editing and typed blocked-root detail",
+    "Known independent D07 Protobuf/Abseil OOM hang blocks overall release"
+  ],
+  "raw_evidence_bundle": {
+    "path": ".aegis/results/FC04-MSE-PHASE2-P32-PROGRESS-003/raw-evidence.zip",
+    "sha256": "f986cb8222b263d131dbe642774855e18202a37aaffa23d162a9ec44f30991c6",
+    "entries": "FC04-MSE-PHASE2-P32-PROGRESS-002/ and FC04-MSE-PHASE2-P32-PROGRESS-003/; original bytes verified"
+  },
+  "pre_line_ending_normalization_source_sha256": {
+    "apps/axiom_canvas_demo/platform/web/web_debug_ui.inl": "6efd0ebac9b1b3beaf9f34a9fea4b44a168480f2746050304c6edd6df41ba7ed",
+    "apps/minimal_runtime_host/windows_main.cpp": "55169113389a4f00d374abbe75939767fbf0a23b7f6ef7dc1c809184b7e17139",
+    "debug_ui/CMakeLists.txt": "ab05fbd6ea38dd562bf7b3153c5f32fe2add11f6f923c4fb95bb7982d3d9d2e5",
+    "debug_ui/include/canvas/debug_ui/control_router.hpp": "8d0c026627510b4396391d97ad22a4215a954ab1b29ffec0d27ddbdd22c657b1",
+    "debug_ui/include/canvas/debug_ui/controller.hpp": "5bbdf9805fa9d15b66b4627f4e460ab712c4a2ce818fdf26c1313cefda55a4f5",
+    "debug_ui/include/canvas/debug_ui/ui_session_state.hpp": "55d793c872fd7b595429fd1c97e6a77cee398bfe97d9c5e7496e46ec8813b3de",
+    "debug_ui/src/control_router.cpp": "5190166d3299aeb58b2ad37e22664301b11d72fde6f96d65578f4e5afd184d14",
+    "debug_ui/src/controller.cpp": "c29bcaf11be90c77592b8e350ab26214fe51807463873467f98567b8da583622",
+    "debug_ui/src/panels/control.cpp": "ca265ae44c37b9822220b36a997c854631640d4729cf7c828b34ac3cab34b01a",
+    "debug_ui/tests/selection_summary_ui_test.cpp": "a830bde9163a29ba593ea47544f513bad25ab5daba115f44ec49d40ec6697470",
+    "runtime/composition/CMakeLists.txt": "e3b5bd6dc46f683660cdbfc48dbf71e2737ff731a2d9363c5073e3901be8b018",
+    "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp": "07351fbc122f3432e0b8a2b375ee50e2b82b24e8cf64436c87ff60e3f1dd5cc9",
+    "runtime/composition/include/canvas/runtime/internal/multi_selection_port.hpp": "99b1c414e2715d88f91a781a521200332d5a229bea36db2ed9f397304d4ba5c4",
+    "runtime/composition/src/canvas_runtime_facade.cpp": "31c6a131b572ad3d077850d7c8f3c1deb5bf52302d5b3e975268e874d6e8e66f",
+    "runtime/composition/src/canvas_runtime_text.cpp": "79639a05068d140ea0a90351c3a3763cb2ddc060f6345e86c4ddda7280361c51",
+    "runtime/composition/src/multi_selection_port.cpp": "6d06710340595e35c02794ac3b218ece3cafffbfc825dee0d7b36bc4ed313b06",
+    "runtime/control/include/canvas/control/canvas_control_service.hpp": "1656141ac259283925d905529aa0e499ac9476548f9d2d26d414a6ceb375ffa6",
+    "runtime/control/src/canvas_control_service.cpp": "eca12ad2ef1090fcea578e66a7c3d73f759b47cf65b78bb573520c057f8ffcae",
+    "runtime/control/tests/canvas_control_service_test.cpp": "c2789343b17aec7a5f135fcb352c523c23428aea70d8f01e1fd1ddf93497b726",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "5bd423da62d84d5a48d8f692750f33e1f56b4c7ce426a7bc53b2843aa9d8ba8b",
+    "runtime/interaction/src/canvas_connector_routing.cpp": "e06ea33265291611a22bea52312a82ded9f7e82ae714f5ef151450a4354f3881",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "0ea8f0c2012e24a8e65c1005d25f06e99bd16def6706865a470ebc87ca0a0e67",
+    "runtime/interaction/src/canvas_region_selection.cpp": "b32dc32d7769c9d98445c71c88fa56566cd3c8562544b4b10016775f5b364b55",
+    "verification/fc04_mse/CMakeLists.txt": "677a9946e2c1bb69a51843d61984a9ec85f41fe4746bf43a7af9cacba04c46fc",
+    "verification/fc04_mse/mse_01_27_test.cpp": "4444dc7e26d1e47bff22297e7f4d31a4cb5dcf77a0c3ec94e7cc3981f97c2fa1",
+    "runtime/control/src/multi_selection_queue.hpp": "679cf6c932ceca92410234457cf36a5c4033846867df1dfd469cb2066869e9be"
+  },
+  "line_endings": "Restored baseline LF/CRLF conventions after earlier run; pre-normalization exact hashes retained. Final verification must use current source.",
+  "normalized_verification": {
+    "archive": ".aegis/results/FC04-MSE-PHASE2-P32-PROGRESS-003/normalized-source-verification.zip",
+    "sha256": "652a65dbad4a5b417ffd0d85813e45603a0a277dff64664a28994bf6abb7cc52",
+    "native_selection": {
+      "count": 160,
+      "exit_code": 0
+    },
+    "d07": {
+      "original": 14,
+      "expanded": 30,
+      "faults": 46,
+      "exit_code": 0
+    },
+    "ui_scene": {
+      "count": 4,
+      "exit_code": 0
+    },
+    "extra": {
+      "count": 5,
+      "exit_code": 0
+    },
+    "mse": {
+      "count": 27,
+      "passed": 18,
+      "failed": 9,
+      "exit_code": 8
+    },
+    "browser": {
+      "drag_assertions": 42,
+      "debug_assertions": 41,
+      "exit_code": 0
+    },
+    "note": "All runs after restoration of baseline source line endings. Browser facts are synthetic; no physical acceptance."
+  }
+}

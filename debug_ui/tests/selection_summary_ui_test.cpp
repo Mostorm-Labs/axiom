@@ -2,6 +2,7 @@
 #include "canvas/debug_ui/ui_session_state.hpp"
 #include "canvas/debug_ui/snapshot_assembler.hpp"
 #include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/multi_selection_port.hpp"
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -14,6 +15,7 @@ int main() {
     const auto id = [](std::uint64_t n) { return foundation::ObjectId::fromUint64(n); };
     runtime::RuntimeComposition c;
     assert(c.open() && c.bindSurface(800, 600));
+    assert(c.multiSelectionPort().setPermissionMode(runtime::MultiSelectionPermissionMode::kLocalSingleUser));
     auto& facade = c.controlFacade();
     semantic::ObjectRecord section;
     section.id = id(3);
@@ -59,7 +61,7 @@ int main() {
     registerBuiltinPanels(panels);
     DebugUiSessionState ui;
     ui.setAdvancedControls(true);
-    DebugControlRouter router(&facade, nullptr, nullptr, nullptr);
+    DebugControlRouter router(&facade, nullptr, nullptr, nullptr, &c.multiSelectionPort());
     DebugSnapshotAssembler assembler;
     const auto snapshot = [&] { return assembler.capture({&facade}); };
     const auto render = [&](const DebugSnapshot& s, const char* activate = nullptr) {
@@ -71,7 +73,13 @@ int main() {
         ImGui::LogToBuffer();
         auto& g = *ImGui::GetCurrentContext();
         if (activate) {
-            g.NavActivateId = g.NavActivateDownId = ImGui::GetID(activate);
+            if (std::string(activate) == "ApplyOpacity") {
+                ImGui::PushID(3);
+                g.NavActivateId = g.NavActivateDownId = ImGui::GetID("Apply");
+                ImGui::PopID();
+            } else {
+                g.NavActivateId = g.NavActivateDownId = ImGui::GetID(activate);
+            }
             g.NavInputSource = ImGuiInputSource_Keyboard;
         }
         DebugPanelContext context{s, router, ui};
@@ -100,6 +108,20 @@ int main() {
     assert(c.ownerPump());
     assert(c.semanticObjectCount() == 3 &&
            c.readback().semanticGeneration == before.semanticGeneration);
+    router.beginFrame(snapshot());
+    const auto projection = router.multiSelectionProjection();
+    assert(projection.available && projection.properties.at(3U).mixed);
+    const auto multiText = render(snapshot());
+    assert(multiText.find("Multi-selection properties") != std::string::npos);
+    assert(multiText.find("Opacity: 2/2 mixed") != std::string::npos);
+    ui.multiSelectionDraft().opacity = 0.6F;
+    (void)render(snapshot(), "ApplyOpacity");
+    assert(c.ownerPump());
+    const auto outcome = router.multiSelectionOutcome();
+    assert(outcome && outcome->applied && outcome->changed.size() == 2U);
+    assert(facade.undo(3, facade.readRuntimeState().identity.runtimeGeneration, 7778).state ==
+           runtime::ProductControlState::kQueued);
+    assert(c.ownerPump());
     const auto text = render(snapshot());
     assert(text.find("Selected roots: 2") != std::string::npos);
     assert(text.find("Shape: 2") != std::string::npos);

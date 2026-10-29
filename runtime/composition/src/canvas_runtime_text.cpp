@@ -1,5 +1,6 @@
 #include "canvas/interaction/text_edit_session.hpp"
 #include "canvas/runtime/canvas_runtime_facade.hpp"
+#include "multi_selection_queue.hpp"
 
 #include <algorithm>
 
@@ -250,6 +251,18 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
                     }
             }
             ++count;
+        } else if (auto* multi = std::get_if<std::shared_ptr<MultiSelectionControlWork>>(&item)) {
+            const auto key = (*multi)->key;
+            const auto current = service_->receipt(key);
+            if (current && current->state == CanvasControlReceiptState::kQueued) {
+                const auto state = text ? text->read() : TextEditorSnapshot{};
+                // A pending TextEdit/IME or earlier deferred control cannot be
+                // overtaken by this edit. Reject without mutating either owner.
+                if (!deferredControls_.empty() || state.phase != TextPhase::kClosed)
+                    service_->rejectPending(key, CanvasControlError::kBusy);
+                else
+                    count += service_->processPending(sequence, key);
+            }
         } else {
             const auto& event = std::get<TextInputEvent>(item);
             const auto result =
