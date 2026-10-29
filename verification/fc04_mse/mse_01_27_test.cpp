@@ -10,6 +10,13 @@
 
 #include "canvas/runtime/internal/multi_selection_port.hpp"
 #include "canvas/semantic/normalizer.hpp"
+#if AXIOM_MSE_HAS_DEBUG_UI
+#include "canvas/debug_ui/builtin_panels.hpp"
+#include "canvas/debug_ui/snapshot_assembler.hpp"
+#include "canvas/debug_ui/ui_session_state.hpp"
+#include "imgui.h"
+#include "imgui_internal.h"
+#endif
 
 namespace canvas::ink_playground {
 class InkPlaygroundHistoryTestAccess {
@@ -417,6 +424,235 @@ TEST_F(MultiSelectionMSE, MSE_10) {
   EXPECT_EQ(composition.readback().semanticGeneration, before.semanticGeneration);
   EXPECT_EQ(Access::historySize(composition.qualificationRuntime()), beforeHistory);
 }
+
+#if AXIOM_MSE_HAS_DEBUG_UI
+TEST_F(MultiSelectionMSE, MSE_11) {
+  preparePartialFillFixture();
+  Access::select(composition.qualificationRuntime(), {id(1), id(2)});
+  auto& facade = composition.controlFacade();
+  const auto before = composition.readback();
+  const auto history = Access::historySize(composition.qualificationRuntime());
+  const auto historyState = facade.readRuntimeState().history;
+  struct ImGuiOwner { ImGuiOwner() { ImGui::CreateContext(); } ~ImGuiOwner() { ImGui::DestroyContext(); } } imgui;
+  auto& io = ImGui::GetIO(); io.IniFilename = nullptr; io.DisplaySize = {1000,1800}; io.DeltaTime = 1.0F/60;
+  unsigned char* pixels = nullptr; int w = 0, h = 0; io.Fonts->GetTexDataAsRGBA32(&pixels, &w, &h);
+  ASSERT_NE(pixels, nullptr);
+  debug_ui::PanelRegistry panels; debug_ui::registerBuiltinPanels(panels);
+  debug_ui::DebugUiSessionState ui;
+  debug_ui::DebugControlRouter router(&facade, nullptr, nullptr, nullptr, &composition.multiSelectionPort());
+  debug_ui::DebugSnapshotAssembler assembler;
+  const auto render = [&](bool cancel) {
+    const auto snapshot = assembler.capture({&facade}); router.beginFrame(snapshot); ui.beginFrame();
+    ImGui::NewFrame(); ImGui::SetNextWindowSize({1000,1800}, ImGuiCond_Always); ImGui::Begin("MSE cancel");
+    auto& g = *ImGui::GetCurrentContext();
+    if (cancel) { ImGui::PushID(3); g.NavActivateId = g.NavActivateDownId = ImGui::GetID("Cancel");
+      ImGui::PopID(); g.NavInputSource = ImGuiInputSource_Keyboard; }
+    debug_ui::DebugPanelContext context{snapshot, router, ui};
+    for (const auto& panel : panels.contributions(debug_ui::WorkspaceId::kControl))
+      if (panel.slot == debug_ui::PanelSlot::kTools) panel.render(context);
+    ImGui::End(); ImGui::Render(); g.NavActivateId = g.NavActivateDownId = 0; ImGui::ClearActiveID();
+  };
+  render(false); ASSERT_TRUE(ui.multiSelectionDraft().initialized);
+  ui.multiSelectionDraft().opacity = 0.25F;
+  render(true);
+  EXPECT_FALSE(ui.multiSelectionDraft().initialized);
+  render(false);
+  EXPECT_FLOAT_EQ(ui.multiSelectionDraft().opacity, 1.0F);
+  EXPECT_FALSE(router.hasMultiSelectionAdmission());
+  EXPECT_EQ(composition.readback().semanticGeneration, before.semanticGeneration);
+  EXPECT_EQ(composition.readback().sceneRevision, before.sceneRevision);
+  EXPECT_EQ(Access::historySize(composition.qualificationRuntime()), history);
+  EXPECT_EQ(facade.readRuntimeState().history.canUndo, historyState.canUndo);
+  EXPECT_EQ(facade.readRuntimeState().history.canRedo, historyState.canRedo);
+}
+#endif
+
+#if AXIOM_MSE_HAS_DEBUG_UI
+TEST_F(MultiSelectionMSE, MSE_24) {
+  std::ifstream file(AXIOM_MSE_HOST_FONT, std::ios::binary);
+  ASSERT_TRUE(file);
+  std::vector<std::uint8_t> font{std::istreambuf_iterator<char>(file), {}};
+  ASSERT_EQ(font.size(), 16437364U);
+  const semantic::ResourceId fontId{id(0xFC0202U)};
+  semantic::ResourceManifest manifest;
+  manifest.entries.push_back({fontId, semantic::ResourceKind::kFont, 1,
+      "sha256:2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+      font.size(), 1, 1, {8, 1, 16, 0, 24, 1}});
+  ASSERT_TRUE(composition.bindManifest(manifest, 1));
+  ASSERT_TRUE(composition.publishResource(fontId.value, std::move(font)));
+  ASSERT_TRUE(composition.ownerPump());
+  semantic::InsertObjectsOp insert;
+  for (std::uint64_t i = 1; i <= 2; ++i) {
+    semantic::ObjectRecord record;
+    record.id = id(i); record.kind = semantic::ObjectKind::kShape; record.kind_version = 3;
+    semantic::TextStyle style{fontId, 16, 400, false, false, {0, 0, 0, 1}};
+    semantic::RichTextContent label;
+    label.document.paragraphs = {{id(100 + i), {semantic::ParagraphAlignment::kLeft, 1, 0, 0}, {{"Text", style}}}};
+    label.layout = semantic::RichTextLayout{100};
+    semantic::ShapeContent shape{1, 100, 60}; shape.label = std::move(label);
+    record.content = std::move(shape);
+    record.transform.tx = static_cast<double>(i * 150);
+    record.placement.order_key = semantic::OrderKey({static_cast<std::uint8_t>(i)});
+    insert.objects.push_back(std::move(record));
+  }
+  const semantic::Operation seed{semantic::OperationId{id(1000)}, semantic::DocumentId{id(1)},
+                                  1, 1, std::move(insert)};
+  const auto seeded = composition.applyExternalOperation(seed, semantic::ApplySource::kRemoteSync);
+  ASSERT_EQ(seeded.disposition, semantic::ApplyDisposition::kApplied)
+      << "semantic issue " << static_cast<int>(seeded.error.issue);
+  ASSERT_TRUE(composition.qualificationRuntime().setSelectionMode(true));
+  Access::select(composition.qualificationRuntime(), {id(1), id(2)});
+  auto& facade = composition.controlFacade();
+  ASSERT_EQ(facade.readSelectionSummary().count, 2U);
+  ASSERT_EQ(facade.readSelectionSummary().primary, id(1));
+  runtime::TextIntent edit;
+  edit.target = facade.mountedCanvasTargets().front();
+  edit.clientId = 7024U; edit.requestId = 1U;
+  edit.kind = runtime::TextIntentKind::kEditAtPoint;
+  edit.viewX = 350.0F; edit.viewY = 30.0F;
+  ASSERT_EQ(facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+  ASSERT_TRUE(composition.ownerPump());
+  const auto receipt = facade.textIntentReceipt(edit.clientId, edit.requestId);
+  ASSERT_TRUE(receipt);
+  ASSERT_EQ(receipt->status, runtime::TextStatus::kApplied);
+  EXPECT_EQ(facade.readTextEditor().token.object, id(2));
+  EXPECT_EQ(facade.readSelectionSummary().roots, std::vector<foundation::ObjectId>{id(2)});
+  edit.kind = runtime::TextIntentKind::kFinish; edit.requestId++;
+  edit.token = facade.readTextEditor().token;
+  ASSERT_EQ(facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+  ASSERT_TRUE(composition.ownerPump());
+  ASSERT_EQ(facade.textIntentReceipt(edit.clientId, edit.requestId)->status, runtime::TextStatus::kApplied);
+  Access::select(composition.qualificationRuntime(), {id(1), id(2)});
+  ASSERT_EQ(facade.readSelectionSummary().primary, id(1));
+  ASSERT_TRUE(composition.registerSource(7024U));
+  std::uint64_t sequence = 0;
+  for (const auto phase : {input::PointerPhase::kDown, input::PointerPhase::kUp,
+                           input::PointerPhase::kDown, input::PointerPhase::kUp}) {
+    input::PlatformPointerBatch batch;
+    batch.samples.push_back({7024U, 1U, ++sequence, sequence * 1000U, 350.0F, 30.0F,
+        0, 0, 0, {}, {}, input::SampleProvenance::kConfirmedCurrent, phase});
+    ASSERT_TRUE(composition.submit(batch));
+    EXPECT_EQ(facade.readTextEditor().phase, runtime::TextPhase::kClosed)
+        << "pointer sequence " << sequence << " textTool " << composition.qualificationRuntime().textTool();
+  }
+  // Web emits dblclick after two pointer ups; the host translates that event
+  // into the point intent. Win32 uses its distinct WM_LBUTTONDBLCLK path.
+  edit.kind = runtime::TextIntentKind::kEditAtPoint; edit.requestId++;
+  ASSERT_EQ(facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+  ASSERT_TRUE(composition.ownerPump());
+  ASSERT_EQ(facade.textIntentReceipt(edit.clientId, edit.requestId)->status, runtime::TextStatus::kApplied);
+  EXPECT_EQ(facade.readTextEditor().token.object, id(2));
+  EXPECT_EQ(facade.readSelectionSummary().roots, std::vector<foundation::ObjectId>{id(2)});
+}
+TEST_F(MultiSelectionMSE, MSE_25) {
+  std::ifstream file(AXIOM_MSE_HOST_FONT, std::ios::binary);
+  ASSERT_TRUE(file);
+  std::vector<std::uint8_t> font{std::istreambuf_iterator<char>(file), {}};
+  ASSERT_EQ(font.size(), 16437364U);
+  const semantic::ResourceId fontId{id(0xFC0202U)};
+  semantic::ResourceManifest manifest;
+  manifest.entries.push_back({fontId, semantic::ResourceKind::kFont, 1,
+      "sha256:2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+      font.size(), 1, 1, {8, 1, 16, 0, 24, 1}});
+  ASSERT_TRUE(composition.bindManifest(manifest, 1));
+  ASSERT_TRUE(composition.publishResource(fontId.value, std::move(font)));
+  ASSERT_TRUE(composition.ownerPump());
+  semantic::InsertObjectsOp insert;
+  semantic::ObjectRecord group;
+  group.id = id(3); group.kind = semantic::ObjectKind::kGroup; group.kind_version = 1;
+  group.content = semantic::GroupContent{};
+  group.placement.order_key = semantic::OrderKey({1});
+  insert.objects.push_back(group);
+  for (std::uint64_t i = 1; i <= 2; ++i) {
+    semantic::ObjectRecord record;
+    record.id = id(i); record.kind = semantic::ObjectKind::kShape; record.kind_version = 3;
+    semantic::TextStyle style{fontId, 16, 400, false, false, {0, 0, 0, 1}};
+    semantic::RichTextContent label;
+    label.document.paragraphs = {{id(100 + i), {semantic::ParagraphAlignment::kLeft, 1, 0, 0}, {{"Text", style}}}};
+    label.layout = semantic::RichTextLayout{100};
+    semantic::ShapeContent shape{1, 100, 60}; shape.label = std::move(label);
+    record.content = std::move(shape);
+    record.transform.tx = static_cast<double>(i * 150);
+    record.placement.parent_id = id(3);
+    record.placement.order_key = semantic::OrderKey({static_cast<std::uint8_t>(i)});
+    insert.objects.push_back(std::move(record));
+  }
+  const semantic::Operation seed{semantic::OperationId{id(1000)}, semantic::DocumentId{id(1)},
+                                  1, 1, std::move(insert)};
+  const auto seeded = composition.applyExternalOperation(seed, semantic::ApplySource::kRemoteSync);
+  ASSERT_EQ(seeded.disposition, semantic::ApplyDisposition::kApplied)
+      << "semantic issue " << static_cast<int>(seeded.error.issue);
+  ASSERT_TRUE(composition.qualificationRuntime().setSelectionMode(true));
+  ASSERT_TRUE(Access::enterGroupScope(composition.qualificationRuntime(), id(3)));
+  Access::select(composition.qualificationRuntime(), {id(1), id(2)});
+  auto& facade = composition.controlFacade();
+  ASSERT_EQ(facade.readSelectionSummary().count, 2U);
+  ASSERT_EQ(facade.readSelectionSummary().primary, id(1));
+  runtime::TextIntent edit;
+  edit.target = facade.mountedCanvasTargets().front();
+  edit.clientId = 7025U; edit.requestId = 1U;
+  edit.kind = runtime::TextIntentKind::kEditAtPoint;
+  edit.viewX = 350.0F; edit.viewY = 30.0F;
+  ASSERT_EQ(facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+  ASSERT_TRUE(composition.ownerPump());
+  const auto receipt = facade.textIntentReceipt(edit.clientId, edit.requestId);
+  ASSERT_TRUE(receipt);
+  ASSERT_EQ(receipt->status, runtime::TextStatus::kApplied);
+  ASSERT_EQ(facade.readTextEditor().token.object, id(2));
+  const auto send = [&](runtime::TextInputKind kind, std::u16string value, std::uint64_t comp) {
+    const auto state = facade.readTextEditor();
+    runtime::TextInputEvent event;
+    event.token = state.token; event.sequence = state.nextInputSequence;
+    event.kind = kind; event.composition = comp; event.text = std::move(value);
+    event.range = state.selection;
+    EXPECT_EQ(facade.submitTextInput(event).status, runtime::TextStatus::kQueued);
+    EXPECT_TRUE(composition.ownerPump());
+    const auto result = facade.textInputReceipt(event.token, event.sequence);
+    EXPECT_TRUE(result);
+    return result ? result->status : runtime::TextStatus::kUnsupported;
+  };
+  ASSERT_EQ(send(runtime::TextInputKind::kBegin, {}, 1), runtime::TextStatus::kObserved);
+  ASSERT_EQ(send(runtime::TextInputKind::kUpdate, u"\u5019\u9009", 1), runtime::TextStatus::kObserved);
+  ASSERT_EQ(facade.readTextEditor().phase, runtime::TextPhase::kComposing);
+  edit.kind = runtime::TextIntentKind::kEscape; edit.requestId++;
+  edit.token = facade.readTextEditor().token;
+  ASSERT_EQ(facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+  ASSERT_TRUE(composition.ownerPump());
+  ASSERT_EQ(facade.textIntentReceipt(edit.clientId, edit.requestId)->status, runtime::TextStatus::kObserved);
+  EXPECT_EQ(facade.readTextEditor().phase, runtime::TextPhase::kEditing);
+  EXPECT_TRUE(facade.readTextEditor().preedit.empty());
+  EXPECT_EQ(facade.readTextEditor().projection, u"Text");
+  EXPECT_EQ(facade.readSelectionSummary().groupScope, id(3));
+  EXPECT_EQ(facade.readSelectionSummary().roots, std::vector<foundation::ObjectId>{id(2)});
+  edit.requestId++; edit.token = facade.readTextEditor().token;
+  ASSERT_EQ(facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+  ASSERT_TRUE(composition.ownerPump());
+  EXPECT_EQ(facade.readTextEditor().phase, runtime::TextPhase::kClosed);
+  EXPECT_EQ(facade.readSelectionSummary().roots, std::vector<foundation::ObjectId>{id(2)});
+  Access::select(composition.qualificationRuntime(), {id(1), id(2)});
+  edit.kind = runtime::TextIntentKind::kEditAtPoint; edit.requestId++;
+  ASSERT_EQ(facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+  ASSERT_TRUE(composition.ownerPump());
+  ASSERT_EQ(facade.textIntentReceipt(edit.clientId, edit.requestId)->status, runtime::TextStatus::kApplied);
+  ASSERT_EQ(send(runtime::TextInputKind::kReplace, u"!", 0), runtime::TextStatus::kApplied);
+  const auto committedProjection = facade.readTextEditor().projection;
+  ASSERT_NE(committedProjection.find(u"!"), std::u16string::npos);
+  edit.kind = runtime::TextIntentKind::kFinish; edit.requestId++;
+  edit.token = facade.readTextEditor().token;
+  ASSERT_EQ(facade.submitTextIntent(edit).status, runtime::TextStatus::kQueued);
+  ASSERT_TRUE(composition.ownerPump());
+  ASSERT_EQ(facade.textIntentReceipt(edit.clientId, edit.requestId)->status, runtime::TextStatus::kApplied);
+  EXPECT_EQ(facade.readTextEditor().phase, runtime::TextPhase::kClosed);
+  EXPECT_EQ(facade.readSelectionSummary().roots, std::vector<foundation::ObjectId>{id(2)});
+  const auto* committed = composition.qualificationRuntime().qualificationObjectRecord(id(2));
+  ASSERT_NE(committed, nullptr);
+  const auto& label = *std::get<semantic::ShapeContent>(committed->content).label;
+  ASSERT_FALSE(label.document.paragraphs.empty());
+  std::string text;
+  for (const auto& run : label.document.paragraphs.front().runs) text += run.text;
+  EXPECT_NE(text.find('!'), std::string::npos);
+}
+#endif
 
 TEST_F(MultiSelectionMSE, MSE_12) {
   preparePartialFillFixture();

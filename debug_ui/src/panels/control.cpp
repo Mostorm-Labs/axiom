@@ -177,6 +177,8 @@ void multiSelectionProperties(DebugPanelContext& c) {
             (void)c.controls.applyMultiSelectionProperty(row.field, value);
             c.ui.markControlSubmitted();
         }
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel")) draft.initialized = false;
         ImGui::EndDisabled();
         ImGui::EndDisabled();
         ImGui::PopID();
