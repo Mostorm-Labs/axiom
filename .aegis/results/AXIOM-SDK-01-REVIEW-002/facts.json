@@ -1,0 +1,64 @@
+{
+  "source_revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+  "parent_revision": "c672503b312cb4e89bc644288e4f0662f8fbe666",
+  "checks": [
+    {
+      "file": "raw/ctest-existing.xml",
+      "count": 12,
+      "failed": [
+        "FC00XRuntimeFacade"
+      ],
+      "skipped": []
+    },
+    {
+      "file": "raw/ctest-mse.xml",
+      "count": 6,
+      "failed": [],
+      "skipped": []
+    },
+    {
+      "name": "external_c_and_cpp_source_compile",
+      "compiler": "MSVC 19.51.36246.0",
+      "header": "docs/api/canvas_runtime_api_v1.h",
+      "exit_code": 0,
+      "scope": "compile-only; no SDK link or execution"
+    },
+    {
+      "name": "external_missing_library",
+      "exit_code": 1,
+      "status": "BLOCKED_INPUT",
+      "scope": "configure; no SDK link or execution"
+    }
+  ],
+  "external_sdk": "NOT_RUN_MISSING_INSTALLED_LIBRARY",
+  "facade_probe": {
+    "submitted_generation": 3,
+    "current_generation": 4,
+    "processed": 0,
+    "receipt_state": "kStaleTarget",
+    "receipt_error": "kStaleTarget"
+  },
+  "p32_authorized": false,
+  "files": {
+    "raw\\build-environment.json": "9c02dc63963058a8f1dd1bcb1d00d862e8b8468a44a4d4afa671a1857cdb4509",
+    "raw\\configure.py": "2734e2c7302d1f1a79895880fa1664f2543b81c9b17cac0b7be790aa1077d97b",
+    "raw\\ctest-existing.log": "c78d8f805aa9028fca96c65440ae2026542299cc56bde30b4abf6dfc1e8dcef9",
+    "raw\\ctest-existing.xml": "e95b5b9162c872429ff70347ecc5799dc0d92a5387a1e4a65d5e695d8b4bab9b",
+    "raw\\ctest-mse.log": "871c5faaa0bd61be66a681695805c44fcbf089ad272c74ee69b1a77b973372ec",
+    "raw\\ctest-mse.xml": "64faca7f71c06312c4bf2b630927094dc41feed585e211efda9f7c392dae9726",
+    "raw\\external-source-block.json": "0d82490d47056b1cbfc7cecb88003e4a51323057fe2faeb0ae3abeb40377a156",
+    "raw\\facade-probe-confirmed.log": "b310e0a121781e35dcd90440b6fc73781acfb759ce517fea7d0be2e4f527a612",
+    "raw\\facade-probe-initial-ndebug.log": "54c649fbdaea58d5f0fcbbf9d20f647d5a8918afbb8eefc18d17f8b6b6d6bb7b",
+    "raw\\facade-probe.cpp": "11dc5784f963f6a56a131734719b99d1c0beabf0f415563d194eaee809aef544",
+    "raw\\inject-review.cmake": "6a147f81ea415eaca5a932292d0e0362fc17154d98a79a4912c17f288bfea910",
+    "raw\\skia-summary.json": "597b8377d2543664e54dad428aa11b31b111d0eb1a836af16751b562742b27c9"
+  },
+  "verification_sources": {
+    "verification/sdk01/external-consumer/CMakeLists.txt": "6331e387f0217bfb9b2c85dede9004a4f8f513a9ed87c8c5b7bdaa09855839a8",
+    "verification/sdk01/external-consumer/external_link.cpp": "df50da1d6a952ae61fce006ac246cd8531bf2691cf64e1907b8f8495db7b705d",
+    "verification/sdk01/external-consumer/external_smoke.c": "19c093d630d342994e76b05d0c069b1997b7f1eac87bf651c5e319da749b1c94",
+    "verification/sdk01/external-consumer/README.md": "7cd7a7f23fd0c0056576cb17f2be7e7f38da3ebefdbb9c394eb949d80bb0bfbc",
+    "verification/sdk01/multi-selection-binding.md": "d2e69cb7cee6572be900cbbfcb7d9b2d58eec3fc664328e3683b5b3d35405e60",
+    "verification/sdk01/run_external.py": "aae301a94a6d3e0208174c58389df4a1fff350b589ff10b2ef65281cb73d8b00"
+  }
+}

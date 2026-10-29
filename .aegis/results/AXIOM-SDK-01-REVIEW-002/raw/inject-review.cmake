@@ -1,0 +1,11 @@
+function(axiom_sdk01_review_probe)
+  add_executable(sdk01_facade_probe "${CMAKE_SOURCE_DIR}/out/sdk01-review/facade_probe.cpp")
+  target_link_libraries(sdk01_facade_probe PRIVATE canvas_runtime_composition)
+  target_compile_definitions(sdk01_facade_probe PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+  target_compile_features(sdk01_facade_probe PRIVATE cxx_std_20)
+  target_compile_options(sdk01_facade_probe PRIVATE /UNDEBUG)
+endfunction()
+if(PROJECT_NAME STREQUAL "canvas_v2_pocs" AND CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  cmake_language(DEFER CALL axiom_sdk01_review_probe)
+endif()
+

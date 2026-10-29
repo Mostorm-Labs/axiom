@@ -1,0 +1,35 @@
+Test project C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build
+      Start 143: FC00XRuntimeIsolation
+ 1/12 Test #143: FC00XRuntimeIsolation ............   Passed    0.13 sec
+      Start 149: FC00XFrameCoordinator
+ 2/12 Test #149: FC00XFrameCoordinator ............   Passed    0.12 sec
+      Start 160: SelectionBatch3Summary
+ 3/12 Test #160: SelectionBatch3Summary ...........   Passed    0.44 sec
+      Start 161: FC01ASelectionInputIntegration
+ 4/12 Test #161: FC01ASelectionInputIntegration ...   Passed   10.58 sec
+      Start 162: FC08SectionConsumer
+ 5/12 Test #162: FC08SectionConsumer ..............   Passed    2.96 sec
+      Start 163: FC05ConnectorFacade
+ 6/12 Test #163: FC05ConnectorFacade ..............   Passed    0.30 sec
+      Start 164: FC02Text
+ 7/12 Test #164: FC02Text .........................   Passed   25.72 sec
+      Start 172: FC00XRuntimeComposition
+ 8/12 Test #172: FC00XRuntimeComposition ..........   Passed    0.37 sec
+      Start 175: FC00XRuntimeFacade
+ 9/12 Test #175: FC00XRuntimeFacade ...............Exit code 0xc0000409***Exception:   4.10 sec
+Assertion failed: styleFacade.process(1U) == 1U, file C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\composition\tests\canvas_runtime_facade_test.cpp, line 95
+
+      Start 176: FC03ImageFacade
+10/12 Test #176: FC03ImageFacade ..................   Passed    0.62 sec
+      Start 234: SelectionBatch3Ui
+11/12 Test #234: SelectionBatch3Ui ................   Passed    0.43 sec
+      Start 242: PX0ControlRouter
+12/12 Test #242: PX0ControlRouter .................   Passed    0.38 sec
+
+92% tests passed, 1 tests failed out of 12
+
+Total Test time (real) =  49.20 sec
+
+The following tests FAILED:
+	175 - FC00XRuntimeFacade (Exit code 0xc0000409)
+Errors while running CTest
