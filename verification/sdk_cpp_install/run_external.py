@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import xml.etree.ElementTree as ET
 
 
 def main():
@@ -33,8 +34,8 @@ def main():
              '-DCMAKE_PREFIX_PATH=' + str(args.semantic_root.resolve()),
              '-DCanvasSkia_DIR=' + str(args.skia_root.resolve() / 'lib/cmake/CanvasSkia')],
             ['cmake', '--build', str(build)],
-            ['ctest', '--test-dir', str(build), '-R', '^ExternalRuntimeLifecycle$',
-             '--no-tests=error', '--output-on-failure'],
+            ['ctest', '--test-dir', str(build), '-R', '^(ExternalRuntimeLifecycle|ExternalMultiStrokeStyle)$',
+             '--no-tests=error', '--output-on-failure', '--output-junit', str(root / 'external-results.xml')],
         ]
         for command in commands:
             run = subprocess.run(command, text=True, capture_output=True, env=os.environ.copy(), check=False)
@@ -44,6 +45,14 @@ def main():
                 result['status'] = 'FAIL'
                 break
         else:
+            suite = ET.parse(root / 'external-results.xml').getroot()
+            cases = suite.findall('.//testcase')
+            if {x.get('name') for x in cases} != {'ExternalRuntimeLifecycle', 'ExternalMultiStrokeStyle'} or len(cases) != 2 or any(
+                    x.find('failure') is not None or x.find('error') is not None or x.find('skipped') is not None for x in cases):
+                result['status'] = 'FAIL'
+                args.output.write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
+                return 1
+            result['junit'] = (root / 'external-results.xml').read_text(encoding='utf-8')
             bad_crt = commands[1].copy()
             bad_crt[bad_crt.index('-B') + 1] = str(root / 'incompatible-build')
             bad_crt.append('-DAXIOM_TEST_BAD_CRT=ON')

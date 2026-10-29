@@ -20,6 +20,9 @@ limited; native surface/input, resources, frame presentation, installable Web
 bindings and complete consumer-facing contracts remain separate work.
 
 `run_external.py` installs to a fresh directory outside the repository,
-compiles and runs the real Section edit/Undo consumer, then checks that an
-incompatible CRT is rejected. It uses locally resolved SDKs and does not build
-Protobuf, Abseil or Skia. The negative check is not a product acceptance test.
+compiles and runs the real Section edit/Undo consumer and a two-Sticky mixed
+stroke-width/Undo/Redo consumer, then checks that an incompatible CRT is
+rejected. Both consumers use the installed facade and existing Runtime owner.
+The Sticky case does not replace the frozen two-Shape acceptance case. It uses
+locally resolved SDKs and does not build Protobuf, Abseil or Skia. The negative
+check is not a product acceptance test.

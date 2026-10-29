@@ -1,0 +1,5 @@
+# Installed external C++ mixed-style observation
+
+The user-requested installed SDK was installed to a fresh temporary directory outside the repository. The executable creates two Sections and two Sticky objects through the public Runtime facade, assigns each a different full stroke, selects them together, reads their exact object IDs and values through the public stamped read, changes only the stroke width, and verifies each original color/cap/join/dash and one Undo/Redo. Both the lifecycle and mixed-style consumers passed; the separate intentionally mismatched `/MD` configure was rejected. Exact commands, exit codes and JUnit are in `external-results.json`, with source hashes in `manifest.json`.
+
+This is a real external consumer run against the existing Runtime and History owners. It uses Sticky objects, not the two-Shape frozen P04 fixture, and does not establish the full P01–P10 or API01–API12 obligations. It is synthetic native input and makes no physical, Gate, SDK release or D07 OOM claim. The result uses the source files committed alongside this evidence and the immediately preceding Runtime commit.
