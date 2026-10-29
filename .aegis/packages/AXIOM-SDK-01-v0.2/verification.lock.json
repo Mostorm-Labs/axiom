@@ -1,0 +1,148 @@
+{
+  "status": "DRAFT_PARTIAL_CASES_NOT_ACCEPTED",
+  "source_revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+  "obligations": [
+    {
+      "id": "API01",
+      "requirement": "installed C/C++ headers, real linker symbols and no internal closure",
+      "oracle": "outside-source-tree compiler, linker, invocation, export scan",
+      "acceptance": "all specified subcases must be independently observed; precise per-case binding pending P20",
+      "evidence_required": "exact source, environment, inputs, output, exit codes and per-case result",
+      "runner_status": "NOT_MATERIALIZED"
+    },
+    {
+      "id": "API02",
+      "requirement": "version/layout/null/overflow/buffer/exception and memory ownership",
+      "oracle": "independent canaries and target layout probes",
+      "acceptance": "all specified subcases must be independently observed; precise per-case binding pending P20",
+      "evidence_required": "exact source, environment, inputs, output, exit codes and per-case result",
+      "runner_status": "NOT_MATERIALIZED"
+    },
+    {
+      "id": "API03",
+      "requirement": "two instances, full Id128 and stale/foreign/wrong-type handles",
+      "oracle": "two-instance black-box before/after state",
+      "acceptance": "all specified subcases must be independently observed; precise per-case binding pending P20",
+      "evidence_required": "exact source, environment, inputs, output, exit codes and per-case result",
+      "runner_status": "NOT_MATERIALIZED"
+    },
+    {
+      "id": "API04",
+      "requirement": "ordered controls, ingress and truthful admission/final receipt",
+      "oracle": "real owner trace and independently specified object state",
+      "acceptance": "all specified subcases must be independently observed; precise per-case binding pending P20",
+      "evidence_required": "exact source, environment, inputs, output, exit codes and per-case result",
+      "runner_status": "NOT_MATERIALIZED"
+    },
+    {
+      "id": "API05",
+      "requirement": "typed edits, history and exact eligible/excluded property targets",
+      "oracle": "real public consumer and existing owner comparison",
+      "acceptance": "all specified subcases must be independently observed; precise per-case binding pending P20",
+      "evidence_required": "exact source, environment, inputs, output, exit codes and per-case result",
+      "runner_status": "NOT_MATERIALIZED"
+    },
+    {
+      "id": "API06",
+      "requirement": "role and token fidelity; actual presentation not submission",
+      "oracle": "platform trace with exact work identity and feedback",
+      "acceptance": "all specified subcases must be independently observed; precise per-case binding pending P20",
+      "evidence_required": "exact source, environment, inputs, output, exit codes and per-case result",
+      "runner_status": "NOT_MATERIALIZED"
+    },
+    {
+      "id": "API07",
+      "requirement": "document save/restore, no echo, local output and close barrier",
+      "oracle": "real codec and independent canonical-content comparison",
+      "acceptance": "all specified subcases must be independently observed; precise per-case binding pending P20",
+      "evidence_required": "exact source, environment, inputs, output, exit codes and per-case result",
+      "runner_status": "NOT_MATERIALIZED"
+    },
+    {
+      "id": "API08",
+      "requirement": "resource lifecycle, hash and late completion",
+      "oracle": "real resource/decoder and token observation",
+      "acceptance": "all specified subcases must be independently observed; precise per-case binding pending P20",
+      "evidence_required": "exact source, environment, inputs, output, exit codes and per-case result",
+      "runner_status": "NOT_MATERIALIZED"
+    },
+    {
+      "id": "API09",
+      "requirement": "source/pointer identity and native IME semantics",
+      "oracle": "platform ingress and real session observations",
+      "acceptance": "all specified subcases must be independently observed; precise per-case binding pending P20",
+      "evidence_required": "exact source, environment, inputs, output, exit codes and per-case result",
+      "runner_status": "NOT_MATERIALIZED"
+    },
+    {
+      "id": "API10",
+      "requirement": "wrapper and uint64/Id128 conversion",
+      "oracle": "cross-binding independently checked values",
+      "acceptance": "all specified subcases must be independently observed; precise per-case binding pending P20",
+      "evidence_required": "exact source, environment, inputs, output, exit codes and per-case result",
+      "runner_status": "NOT_MATERIALIZED"
+    },
+    {
+      "id": "API11",
+      "requirement": "relocatable package, resources, optional Debug UI",
+      "oracle": "fresh external consumer and installed artifact scan",
+      "acceptance": "all specified subcases must be independently observed; precise per-case binding pending P20",
+      "evidence_required": "exact source, environment, inputs, output, exit codes and per-case result",
+      "runner_status": "NOT_MATERIALIZED"
+    },
+    {
+      "id": "API12",
+      "requirement": "baseline cost and no full-document per pointer processing",
+      "oracle": "same-build measured counters and approved thresholds",
+      "acceptance": "all specified subcases must be independently observed; precise per-case binding pending P20",
+      "evidence_required": "exact source, environment, inputs, output, exit codes and per-case result",
+      "runner_status": "NOT_MATERIALIZED"
+    }
+  ],
+  "existing_ctest_names": [
+    "FC00XRuntimeComposition",
+    "FC00XRuntimeFacade",
+    "FC00XFrameCoordinator",
+    "FC00XRuntimeIsolation",
+    "FC02Text",
+    "FC03ImageFacade",
+    "FC05ConnectorFacade",
+    "FC08SectionConsumer",
+    "PX0ControlRouter",
+    "SelectionBatch3Summary",
+    "FC01ASelectionInputIntegration",
+    "SelectionBatch3Ui"
+  ],
+  "not_run": [
+    "external SDK consumer",
+    "current SDK product build",
+    "native physical input",
+    "actual browser SDK consumer",
+    "D07 allocation sweep"
+  ],
+  "p20_blockers": [
+    "public multi-selection ABI and exact public Windows/Web consumer oracles are not implemented or accepted",
+    "external smoke covers only two-runtime basics; edit, full Id128, handle lifetime boundaries and command/receipt cases remain incomplete",
+    "hosted evidence boundary and acceptance criteria not frozen",
+    "MSE-20/23/26 and D07 OOM are retained separate open findings, not converted to passes"
+  ],
+  "case_binding": {
+    "path": "verification/sdk01/case-bindings-v0.2.json",
+    "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+    "sha256": "d035cbd90aa4a1cbe2038a05fe01b44f6815c7526fff1cfe7a90300e77afc2af"
+  },
+  "actual_evidence": [
+    {
+      "path": ".aegis/results/AXIOM-SDK-01-REVIEW-002/report.md",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "08120d48175efae98b2ff725aaefdb7fe1a8af5d1831c01b971cc8dd0b591fb3",
+      "status": "historical_11_of_12_and_6_mse"
+    },
+    {
+      "path": ".aegis/results/AXIOM-SDK-01-STALE-DECISION-003/report.md",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "e6ed17a53a83cc437f385be1082649a6ed5b50206602bfbb0939f3d451c55011",
+      "status": "13_of_13_real_owner_regressions"
+    }
+  ]
+}

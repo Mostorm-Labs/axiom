@@ -1,0 +1,78 @@
+{
+  "task_id": "AXIOM-SDK-01",
+  "package_version": "0.2",
+  "stage": "P31",
+  "status": "DRAFT_AWAITING_CONTROL_AND_VERIFICATION_ACCEPTANCE",
+  "p32_authorized": false,
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "planning_source_revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+  "execution_ref": "refs/heads/codex/sdk-01-public-core",
+  "task_anchor": {
+    "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "supersedes_candidate": {
+    "path": ".aegis/packages/AXIOM-SDK-01/package.json",
+    "revision": "c672503b312cb4e89bc644288e4f0662f8fbe666",
+    "sha256": "f34edfbf9fa1f314d9a90bd50c595d3339710200f60eaa01d97895675ecbf685"
+  },
+  "review_documents": [
+    {
+      "path": "docs/planning/sdk/contract-decisions.md",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "b5e8e864590af2a8ad265736f0347742cc104a176cecb43348c9fe1dae4db814"
+    },
+    {
+      "path": "docs/planning/sdk/decision-stale-target-v0.1.md",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "824312f619cd6fcf28fdf62dca408f4da5877d43774f8b7ec3a3a2d9caf40b15"
+    },
+    {
+      "path": "verification/sdk01/case-bindings-v0.2.json",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "d035cbd90aa4a1cbe2038a05fe01b44f6815c7526fff1cfe7a90300e77afc2af"
+    },
+    {
+      "path": "verification/sdk01/multi-selection-binding.md",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "d2e69cb7cee6572be900cbbfcb7d9b2d58eec3fc664328e3683b5b3d35405e60"
+    }
+  ],
+  "requires_acceptance": [
+    "ABI extensions and public typed structures / callback semantics",
+    "P20 public multi-selection and Windows/Web driver oracle closure",
+    "hosted evidence boundary",
+    "exact source scope"
+  ],
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "e63baef1cfbd6a6abe1b0e31dfccf91794168c0aa6779c55f02639a6928bfd6b"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "c21a2136791005850863eb8342b67df8170930397aab338df31e4f6910926bce"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "00ad9cecb37f8a6dd303f8d762d8197d2c25b017fda2ffe56a7000047bf76fee"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "7f7269508fc1d002e66dedea25d7769ca8d6429708d21dc2a7bf788cd971f548"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "f13282d7496b57ad3438d19bd251cd19df158b740a488c99a23a86c37a711255"
+  },
+  "preflight_ref": {
+    "path": "preflight.py",
+    "sha256": "b1e353b83e5089511a36d2c7c751a8883e18751ee4babcba4cde52ffcf1319c5"
+  }
+}

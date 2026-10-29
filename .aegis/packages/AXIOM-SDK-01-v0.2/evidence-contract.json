@@ -1,0 +1,20 @@
+{
+  "status": "DRAFT_NOT_ACCEPTED",
+  "subject_revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+  "required": [
+    "test executable and installed SDK hashes",
+    "exact source revision and clean/dirty state",
+    "command lines, environment and toolchain identity",
+    "per-case input and independent expected hashes, observations and exit status",
+    "external consumer and Debug UI on/off artifact identities",
+    "native/browser/physical applicability and unresolved failures"
+  ],
+  "separate_claims": [
+    "declaration checks are not linkage",
+    "synthetic browser is not physical",
+    "D07 hang and MSE missing provider evidence are not passes"
+  ],
+  "physical_status": "PHYSICAL_PENDING",
+  "hosted_artifact_boundary": "UNRESOLVED_TO_BE_ACCEPTED",
+  "partial_existing_evidence": ".aegis/results/AXIOM-SDK-01-STALE-DECISION-003/report.md"
+}

@@ -1,0 +1,178 @@
+{
+  "status": "PARTIAL_USER_DECISION_NOT_FULL_AUTHORITY",
+  "subject_revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+  "sources": [
+    {
+      "path": "docs/api/canvas_runtime_api_v1.h",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "cbc55b2ccd396a8f843fb202531bcf09e708a75f41da1ef0c960ec0cd303011e",
+      "classification": "V1_DECLARATION_MANIFEST_INPUT"
+    },
+    {
+      "path": "docs/api/RUNTIME_C_API_CONTRACT.md",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "fbcf538a4f7f9cf8490211b0d4289d58ada215ebb528893dc286e22e8799a82f",
+      "classification": "ACCEPTED_CONTRACT_BASELINE_WITH_AR0_CLARIFICATION"
+    },
+    {
+      "path": "docs/notion/authority/05-runtime-architecture/axiom-architecture-baseline-v0.4.md",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "eb45f2f0fdacd114e466e41c87ce417d6396aa11781a7172809272a6e04ed5ce",
+      "classification": "ARCHITECTURE_MIRROR"
+    },
+    {
+      "path": "docs/notion/authority/08-platform-contract/README.md",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "f02e55d5e0dd9e3450f72422e159f2dfe41de797bbcf1f3937d6e934aabb7a7a",
+      "classification": "DATED_PLATFORM_DIRECTION_MIRROR"
+    },
+    {
+      "path": "docs/notion/authority/06-module-design/implementation-contract-freeze/icf-00-binding-idl-profile-v0.3.md",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "86226cd955f56672f0af37198307f45b89b8cb58dfa8adf1f84b8807eb7b5ec8",
+      "classification": "PROPOSED_FREEZE_CANDIDATE"
+    },
+    {
+      "path": "docs/notion/authority/06-module-design/implementation-contract-freeze/icf-01-data-bridge-v0.1.md",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "614a95a21e86e4c065e806f1ae747042c586e05d4cdab949fe05a53df058eeb8",
+      "classification": "PROPOSED_FREEZE_CANDIDATE"
+    },
+    {
+      "path": "docs/notion/authority/06-module-design/implementation-contract-freeze/icf-02-platform-runtime-v0.2.md",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "daec6d70c146ff12901354524494caa73f8e153da5e5ddcde00180b2e795c6fc",
+      "classification": "PROPOSED_FREEZE_CANDIDATE"
+    },
+    {
+      "path": "docs/notion/authority/06-module-design/implementation-contract-freeze/icf-05-document-close-v0.1.md",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "cb6bd880a57060b37f62e986cc662277a87921cd179b9333ae64e4f70f87b06f",
+      "classification": "PROPOSED_FREEZE_CANDIDATE"
+    }
+  ],
+  "unresolved": [
+    "exact public ABI extension types and compatibility acceptance",
+    "one Document/View, handle overflow, target and per-API thread/callback contract acceptance",
+    "public multi-selection typed values, eligibility, permission and receipt representation acceptance",
+    "DataBridge and close ICFs remain proposed freeze candidates"
+  ],
+  "source_facts": [
+    {
+      "path": "runtime/composition/include/canvas/runtime/runtime_composition.hpp",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "87d86348a8360d383be46a5b5c9e98d303a9e93e9eb8b31935f0118fa74d373e"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/multi_selection_port.hpp",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "90a6b521e061290150740b031566ca0d3c8949c6a53316de7ceeb42b11c088df"
+    },
+    {
+      "path": "runtime/composition/src/multi_selection_port.cpp",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "beb99b8702316a60daf1da7d84774a4f010e17a980e8d1bbd93acfb9542018a9"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "988e532abcf7ed59a175c12e8d0be48984c862c54ec69166db31b98a213f29c5"
+    },
+    {
+      "path": "runtime/foundation/include/canvas/runtime/selection_summary.hpp",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "e0481b432f197f9e370dd2aaaac4dad1b0184877646c83a3ed5380b3bde399fc"
+    },
+    {
+      "path": "runtime/input/include/canvas/input/platform_input_contract.hpp",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "5fe1e926fc513bea36c16055d7846ac5b5f5c21c985123b7a0c71cf1be14baff"
+    },
+    {
+      "path": "apps/minimal_runtime_host/windows_main.cpp",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "c20de3974594dd343e7c7fd45e10cf51db1800ee6fc3e6b9711a3b4d348f62b3"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/platform/web/web_debug_ui.inl",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "4e64a30dfb6eb3a17ac0303293c0b0dd958f2f12d4f3ddd1afb108182de9c5e8"
+    },
+    {
+      "path": "runtime/composition/CMakeLists.txt",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "e3b5bd6dc46f683660cdbfc48dbf71e2737ff731a2d9363c5073e3901be8b018"
+    },
+    {
+      "path": "runtime/render/CMakeLists.txt",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "b3672de85187586c02660943cfb67b92964c1751e2a641f2f5f97f6799cd2b5b"
+    },
+    {
+      "path": "debug_ui/CMakeLists.txt",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "95b805b1bc272cabb7ca9ded37db6946c5ecc1355c6422416c2ee71e4cc9f6ca"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514"
+    },
+    {
+      "path": "r1-full-skia-sdk.lock.json",
+      "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+      "sha256": "de966037aff53fb173f3c72f929413f98fe20f3bb05ddaff4cd893ac110c9d75"
+    },
+    {
+      "path": "runtime/composition/tests/canvas_runtime_facade_test.cpp",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "d90f95bb59007405e9a900fa5e422fa341ce1aa91a64f384acce08bba7e2608b"
+    },
+    {
+      "path": "verification/sdk01/facade_stale_retry_test.cpp",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "bdbbaddec93c9a10e75c43ed9800b13326f38d9e2bd334bd76c1b3b873b3051a"
+    },
+    {
+      "path": "verification/sdk01/owner-tests.cmake",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "686cd31480691f853a5340afef1b903cbfc39f5cdf677717c8941711d8c830ce"
+    },
+    {
+      "path": "verification/sdk01/inject-owner-tests.cmake",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "70c94c19e0034789cc178f0eb082bfc212e71814c8daaaf72cfa9c19362acc14"
+    },
+    {
+      "path": "verification/sdk01/case-bindings-v0.2.json",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "d035cbd90aa4a1cbe2038a05fe01b44f6815c7526fff1cfe7a90300e77afc2af"
+    },
+    {
+      "path": "verification/sdk01/run_external.py",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "aae301a94a6d3e0208174c58389df4a1fff350b589ff10b2ef65281cb73d8b00"
+    },
+    {
+      "path": "verification/sdk01/external-consumer/CMakeLists.txt",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "6331e387f0217bfb9b2c85dede9004a4f8f513a9ed87c8c5b7bdaa09855839a8"
+    },
+    {
+      "path": "verification/sdk01/external-consumer/external_smoke.c",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "19c093d630d342994e76b05d0c069b1997b7f1eac87bf651c5e319da749b1c94"
+    },
+    {
+      "path": "verification/sdk01/external-consumer/external_link.cpp",
+      "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+      "sha256": "df50da1d6a952ae61fce006ac246cd8531bf2691cf64e1907b8f8495db7b705d"
+    }
+  ],
+  "accepted_user_decision": {
+    "path": "docs/planning/sdk/decision-stale-target-v0.1.md",
+    "revision": "f10a5adce2c54ab87378feba0c7d4709e4273747",
+    "sha256": "824312f619cd6fcf28fdf62dca408f4da5877d43774f8b7ec3a3a2d9caf40b15",
+    "scope": "stale queued property edit rejects, refresh and explicit new request"
+  }
+}

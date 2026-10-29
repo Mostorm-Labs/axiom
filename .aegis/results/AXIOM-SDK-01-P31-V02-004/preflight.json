@@ -1,0 +1,67 @@
+[
+  {
+    "argv": [
+      "python",
+      ".aegis\\packages\\AXIOM-SDK-01-v0.2\\preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "integrity"
+    ],
+    "exit_code": 0,
+    "stdout": "INTEGRITY_OK: identity, anchor, package refs, review docs and locked source bytes\nDRAFT_ONLY: integrity does not establish Authority, Verification or P32 approval\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python",
+      ".aegis\\packages\\AXIOM-SDK-01-v0.2\\preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "PackageBindingPreflight"
+    ],
+    "exit_code": 2,
+    "stdout": "INTEGRITY_OK: identity, anchor, package refs, review docs and locked source bytes\nBLOCKED: PackageBindingPreflight: P32 authorization and exact accepted package absent\nBLOCKED: PackageBindingPreflight: public ABI/target/threading and multi-selection Authority unresolved\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python",
+      ".aegis\\packages\\AXIOM-SDK-01-v0.2\\preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "EvidenceContractPreflight"
+    ],
+    "exit_code": 2,
+    "stdout": "INTEGRITY_OK: identity, anchor, package refs, review docs and locked source bytes\nBLOCKED: EvidenceContractPreflight: public multi-selection and Windows/Web drivers/oracles not materialized or accepted\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python",
+      ".aegis\\packages\\AXIOM-SDK-01-v0.2\\preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "DesignPreflight"
+    ],
+    "exit_code": 2,
+    "stdout": "INTEGRITY_OK: identity, anchor, package refs, review docs and locked source bytes\nBLOCKED: DesignPreflight: public types, handles and lifecycle require accepted decisions\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python",
+      ".aegis\\packages\\AXIOM-SDK-01-v0.2\\preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "all"
+    ],
+    "exit_code": 2,
+    "stdout": "INTEGRITY_OK: identity, anchor, package refs, review docs and locked source bytes\nBLOCKED: PackageBindingPreflight: P32 authorization and exact accepted package absent\nBLOCKED: PackageBindingPreflight: public ABI/target/threading and multi-selection Authority unresolved\nBLOCKED: EvidenceContractPreflight: public multi-selection and Windows/Web drivers/oracles not materialized or accepted\nBLOCKED: DesignPreflight: public types, handles and lifecycle require accepted decisions\n",
+    "stderr": ""
+  }
+]
