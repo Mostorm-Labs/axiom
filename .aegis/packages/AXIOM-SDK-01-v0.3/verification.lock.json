@@ -1,0 +1,97 @@
+{
+  "status": "DRAFT_NOT_ACCEPTED",
+  "reference_revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+  "obligations": [
+    {
+      "id": "P01",
+      "requirement": "Projection: select shapes 1,2,3 and images 4,5; supported fill roots 1-3, exclusions 4-5 with typed reason; no mutation",
+      "oracle_and_acceptance": "actual document independently inspected; projection roots, eligible/excluded IDs and reasons exact",
+      "candidate_fixture": "verification/sdk01/multi_candidate_consumer.c",
+      "fixture_status": "EXISTING_PARTIAL_NOT_A_COMPLETE_ORACLE",
+      "evidence_required": "exact test/fixture IDs and hashes, subject/build, command/exit, independent expected and raw observations, toolchain/environment, executed/not-run"
+    },
+    {
+      "id": "P02",
+      "requirement": "Unknown permission rejects and leaves document, Scene, history and redo unchanged; explicit local permission invalidates old token",
+      "oracle_and_acceptance": "capture state before and after, check stale token and exact refusal",
+      "candidate_fixture": "verification/sdk01/multi_candidate_consumer.c",
+      "fixture_status": "EXISTING_PARTIAL_NOT_A_COMPLETE_ORACLE",
+      "evidence_required": "exact test/fixture IDs and hashes, subject/build, command/exit, independent expected and raw observations, toolchain/environment, executed/not-run"
+    },
+    {
+      "id": "P03",
+      "requirement": "Partial request requires visible 3/5 scope and explicit confirmation; pending is not success; final changes exactly roots 1-3 with images unchanged",
+      "oracle_and_acceptance": "actual UI scope and receipt plus independent document snapshots; Undo/Redo exactly one unit",
+      "candidate_fixture": "verification/sdk01/multi_candidate_consumer.c",
+      "fixture_status": "EXISTING_PARTIAL_NOT_A_COMPLETE_ORACLE",
+      "evidence_required": "exact test/fixture IDs and hashes, subject/build, command/exit, independent expected and raw observations, toolchain/environment, executed/not-run"
+    },
+    {
+      "id": "P04",
+      "requirement": "Two shapes with distinct colors/cap/join/dash: apply width 19 without changing other leaves of either root",
+      "oracle_and_acceptance": "read independent before/after canonical fields; one Undo and Redo preserve all other leaves",
+      "candidate_fixture": "verification/sdk01/multi_candidate_leaf_consumer.c",
+      "fixture_status": "EXISTING_PARTIAL_NOT_A_COMPLETE_ORACLE",
+      "evidence_required": "exact test/fixture IDs and hashes, subject/build, command/exit, independent expected and raw observations, toolchain/environment, executed/not-run"
+    },
+    {
+      "id": "P05",
+      "requirement": "Stale, locked, permission denied/unavailable, missing/invalid target, duplicate IDs, invalid masks and queue/capacity failure reject without canonical/Scene/History change",
+      "oracle_and_acceptance": "independent snapshots and receipt exact reason; real provider or injection if absent remains blocked",
+      "candidate_fixture": "verification/sdk01/facade_stale_retry_test.cpp",
+      "fixture_status": "EXISTING_PARTIAL_NOT_A_COMPLETE_ORACLE",
+      "evidence_required": "exact test/fixture IDs and hashes, subject/build, command/exit, independent expected and raw observations, toolchain/environment, executed/not-run"
+    },
+    {
+      "id": "P06",
+      "requirement": "Real installed C/C++ consumer outside repository invokes public SDK without internal includes",
+      "oracle_and_acceptance": "compile, link, exports, run against actual installed library and record per-case raw output",
+      "candidate_fixture": "verification/sdk01/run_external.py",
+      "fixture_status": "EXISTING_PARTIAL_NOT_A_COMPLETE_ORACLE",
+      "evidence_required": "exact test/fixture IDs and hashes, subject/build, command/exit, independent expected and raw observations, toolchain/environment, executed/not-run"
+    },
+    {
+      "id": "P07",
+      "requirement": "Windows real minimal host Debug UI uses public entry; projection, partial consent, submit, result, Undo/Redo match P01-P05",
+      "oracle_and_acceptance": "real Windows host driver with independently verified document and receipt, not a port mock",
+      "candidate_fixture": "apps/minimal_runtime_host/windows_main.cpp",
+      "fixture_status": "PLATFORM_DRIVER_NOT_MATERIALIZED",
+      "evidence_required": "exact test/fixture IDs and hashes, subject/build, command/exit, independent expected and raw observations, toolchain/environment, executed/not-run"
+    },
+    {
+      "id": "P08",
+      "requirement": "Actual Chrome executes WASM demo Debug UI through public entry and checks same P01-P05 cases",
+      "oracle_and_acceptance": "browser executable/version, source and build hashes, raw browser inputs/results and independently checked state; Node is not Chrome",
+      "candidate_fixture": "apps/axiom_canvas_demo/platform/web/web_debug_ui.inl",
+      "fixture_status": "PLATFORM_DRIVER_NOT_MATERIALIZED",
+      "evidence_required": "exact test/fixture IDs and hashes, subject/build, command/exit, independent expected and raw observations, toolchain/environment, executed/not-run"
+    },
+    {
+      "id": "P09",
+      "requirement": "Candidate types/layout/invalid buffers and ownership safe on native x64 and wasm32",
+      "oracle_and_acceptance": "explicit independent per-target values and canaries, real SDK run for safety and errors",
+      "candidate_fixture": "verification/sdk01/multi_candidate_layout.c",
+      "fixture_status": "EXISTING_PARTIAL_NOT_A_COMPLETE_ORACLE",
+      "evidence_required": "exact test/fixture IDs and hashes, subject/build, command/exit, independent expected and raw observations, toolchain/environment, executed/not-run"
+    },
+    {
+      "id": "P10",
+      "requirement": "Existing 12 CTests plus stale owner and applicable MSE regressions execute with all named cases and zero skips",
+      "oracle_and_acceptance": "JUnit names, executed count and exit codes; zero matches fail",
+      "candidate_fixture": "verification/sdk01/case-bindings-v0.3.json",
+      "fixture_status": "EXISTING_PARTIAL_NOT_A_COMPLETE_ORACLE",
+      "evidence_required": "exact test/fixture IDs and hashes, subject/build, command/exit, independent expected and raw observations, toolchain/environment, executed/not-run"
+    }
+  ],
+  "unresolved": [
+    "Complete real installed SDK fixture and independent state/history oracle for P01-P06",
+    "Materialize real Windows P07 and Chrome/WASM P08 drivers",
+    "Specify provider-specific evidence boundary and acceptance",
+    "Bind remaining existing API01-API12 obligations; P01-P10 are targeted and do not replace them"
+  ],
+  "prior_verification_lock": {
+    "path": ".aegis/packages/AXIOM-SDK-01-v0.2/verification.lock.json",
+    "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+    "sha256": "c21a2136791005850863eb8342b67df8170930397aab338df31e4f6910926bce"
+  }
+}
