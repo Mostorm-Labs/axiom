@@ -185,6 +185,40 @@ TEST_F(MultiSelectionMSE, MSE_07) {
   EXPECT_EQ(Access::historySize(composition.qualificationRuntime()), beforeHistory);
 }
 
+#if defined(AXIOM_MSE_FAULT_CTEST_PATH) && defined(AXIOM_MSE_FAULT_BUILD_DIR)
+TEST_F(MultiSelectionMSE, MSE_22) {
+  for (const auto* name : {"FC04MSEHistoryFaultUndo", "FC04MSEHistoryFaultRedo"}) {
+    SCOPED_TRACE(name);
+    const std::string command = std::string("\"") + AXIOM_MSE_FAULT_CTEST_PATH +
+        "\" --test-dir \"" + AXIOM_MSE_FAULT_BUILD_DIR +
+        "\" -R \"^" + name + "$\" --output-on-failure --no-tests=error --timeout 20";
+#if defined(_WIN32)
+    const auto invocation = std::string("\"") + command + "\"";
+#else
+    const auto& invocation = command;
+#endif
+    EXPECT_EQ(std::system(invocation.c_str()), 0) << command;
+  }
+}
+#endif
+
+#if defined(AXIOM_MSE_FAULT_CTEST_PATH) && defined(AXIOM_MSE_FAULT_BUILD_DIR)
+TEST_F(MultiSelectionMSE, MSE_15) {
+  for (const auto* name : {"FC04MSEMultiIntent", "FC04MSEMultiIntentFault"}) {
+    SCOPED_TRACE(name);
+    const std::string command = std::string("\"") + AXIOM_MSE_FAULT_CTEST_PATH +
+        "\" --test-dir \"" + AXIOM_MSE_FAULT_BUILD_DIR +
+        "\" -R \"^" + name + "$\" --output-on-failure --no-tests=error --timeout 20";
+#if defined(_WIN32)
+    const auto invocation = std::string("\"") + command + "\"";
+#else
+    const auto& invocation = command;
+#endif
+    EXPECT_EQ(std::system(invocation.c_str()), 0) << command;
+  }
+}
+#endif
+
 TEST_F(MultiSelectionMSE, MSE_21) {
   preparePartialFillFixture();
   semantic::PatchPropertiesOp patch;

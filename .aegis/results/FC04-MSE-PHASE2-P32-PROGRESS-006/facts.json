@@ -1,0 +1,34 @@
+{
+  "base_head": "899871fce46877b4d3211091de65f29419ceaed2",
+  "source_sha256": {
+    "verification/fc04_mse/mse_01_27_test.cpp": "9586952fad81fc7476e36b71980f885a269b3ae0940719c90819061618b744b3",
+    "verification/fc04_mse/mse_fault_probe.cpp": "39cca31df5c6f01f0b97893bdd65e39059fb20ecea9f00e71ec6ec9c58b853a0",
+    "verification/fc04_mse/CMakeLists.txt": "11a501d48038de50cd92e8da0610467f9de03f9c5d159b1cb85adbaaa80966aa",
+    ".aegis/packages/FC04-MSE-FAULT-PROBE-v0.1/package.json": "7b42d625751861e460651412ab85726f0a48b25a361086042aab1d519989a7f9"
+  },
+  "archive_sha256": "12085e940be64ce1fd4105e00c1b734d06fa19588af0683296b9ebbdd1a3d0e4",
+  "native_mse": {
+    "passing_test_names": 24,
+    "zero_match": [
+      "MSE-20",
+      "MSE-23",
+      "MSE-26"
+    ],
+    "exit_code": 8
+  },
+  "bounded_fault_probes": {
+    "tests": 6,
+    "pass": 6,
+    "timeout_seconds": 20,
+    "exit_code": 0,
+    "scope": "actual multi-selection A/B forward, explicit intent, Undo/Redo; existing observers, isolated processes"
+  },
+  "pending": [
+    "real per-object permission-denied provider or accepted frozen verification amendment",
+    "property provider failure/unavailability owner or accepted frozen verification amendment",
+    "remaining MSE-23 capability query and History reservation fault sites",
+    "full frozen Web variants",
+    "native IME and physical touch"
+  ],
+  "oom": "known Protobuf/Abseil fault sweep remains blocked, unchanged and not rerun"
+}

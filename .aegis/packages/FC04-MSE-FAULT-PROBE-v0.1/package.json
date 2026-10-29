@@ -1,0 +1,41 @@
+{
+  "schema_version": "aegis-p31-scope-amendment-v1",
+  "id": "FC04-MSE-FAULT-PROBE-v0.1",
+  "parent_package_revision": "a3fdcb5fa792a9f74bdc3eccd3fa09013f8df2b8",
+  "baseline": "899871fce46877b4d3211091de65f29419ceaed2",
+  "rationale": "The frozen multi-selection precommit and history fault variants require an isolated real-process probe using existing default-off test observers. Preserve existing D07 implementation and probes byte for byte.",
+  "allowed_existing": [
+    {
+      "path": "verification/fc04_mse/CMakeLists.txt",
+      "baseline_sha256": "56fb192cd146354c8032308e893013515f21108d5c33dddbc413a23ae1e04fb1",
+      "git_blob": "21a295644ff3911bfaebbd6f672006929ec62687"
+    },
+    {
+      "path": "runtime/semantic/src/operation_engine.cpp",
+      "baseline_sha256": "606f1390ba525decd28182e8c85a7639624b64db36b9539af5475131bf317eb6",
+      "git_blob": "c2f815ad9e0de0492564850e238f610cd09c7be9"
+    },
+    {
+      "path": "verification/fc04_d07/postcommit_fault.cpp",
+      "baseline_sha256": "5dd94d6e3aa94499e0920116bcbd9a4f2e21689c8d31faea467c9c823feb05b9",
+      "git_blob": "2fc1603b9354168e583307e555b5ee6c401e78eb"
+    }
+  ],
+  "allowed_new": [
+    "verification/fc04_mse/mse_fault_probe.cpp"
+  ],
+  "required": [
+    "invoke real multi-selection typed port and real History/Scene owners",
+    "assert injection site reached and exact Document, Scene, undo/redo preservation and retry",
+    "preserve timeout as failure",
+    "never change existing fault observer semantics or default policy",
+    "do not rerun or waive the known D07 allocation sweep hang"
+  ],
+  "forbidden": [
+    "product runtime changes through this amendment",
+    "fabricated permission or property providers",
+    "weakened expected results",
+    "D07 OOM sweep classified as pass"
+  ],
+  "authorization": "User requested continuation of Phase 2 and accepted same-preparer control review; no Gate or release decision is implied."
+}

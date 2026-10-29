@@ -1,0 +1,11 @@
+# FC04 MSE phase 2 — progress 006 (not a Gate result)
+
+MSE-15 now executes a real two-object, two-Operation explicit Intent and separately injects a real semantic participant allocation failure during prepare. It checks zero Document/Scene/History mutation on failure, retries, and verifies a single Undo and Redo restore both objects and the exact transform/opacity. MSE-22 executes real typed multi-selection edits followed by separately injected Undo/Redo preparation failures; both processes check terminal failure receipt, exact two-object and RuntimeScene records, generation, Scene revision, History cursor/redo and successful retry. Each fault is an allocation thrown by an isolated process at an existing D07 participant observer; the original observer and old tests are unchanged.
+
+Two additional real typed-port forward probes cover semantic and Scene preparation fault sites for MSE-23. All six isolated probes passed with the injection observed where applicable, exit 0; their 20-second timeout is failure, never pass. This does not cover all MSE-23 sites or the known D07 global OOM sweep.
+
+Full native frozen MSE command exits 8: 24 test names pass, while MSE-20, MSE-23 and MSE-26 have no matching test case and fail. Some passing compound cases still lack other variants or physical-platform evidence. `raw.zip` preserves exact CTest logs and JUnit observations.
+
+The locally accepted permission mode explicitly allows the local single-user context and fails closed for unknown/unreadable contexts. The current runtime has no per-object permission-denial provider, so this cannot prove MSE-20's distinct denied-object variant. Property eligibility/defaults use the static semantic table; there is no actual independently failing property provider for MSE-26. MSE-23 still requires capability-provider failure and History-reservation fault exercised through the real multi-selection path. These are owning-layer verification/implementation bindings to resolve, not permission to invent or claim fake providers.
+
+Native real IME/touch and full frozen Chrome/WASM cases remain NOT_RUN. The D07 Protobuf/Abseil allocation sweep remains a separate blocker, unchanged and not rerun. No Gate, main merge or release readiness is claimed.
