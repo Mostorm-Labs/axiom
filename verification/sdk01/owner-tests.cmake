@@ -1,0 +1,15 @@
+# Optional verification-only injection, not a public SDK target.
+if(NOT TARGET canvas_runtime_composition)
+  message(FATAL_ERROR "SDK-01 owner tests require the existing runtime composition target")
+endif()
+add_executable(axiom_sdk01_facade_stale_retry_test
+  "${CMAKE_SOURCE_DIR}/verification/sdk01/facade_stale_retry_test.cpp")
+target_link_libraries(axiom_sdk01_facade_stale_retry_test PRIVATE canvas_runtime_composition)
+target_compile_definitions(axiom_sdk01_facade_stale_retry_test PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+target_compile_features(axiom_sdk01_facade_stale_retry_test PRIVATE cxx_std_20)
+if(MSVC)
+  target_compile_options(axiom_sdk01_facade_stale_retry_test PRIVATE /W4 /permissive- /WX /EHsc)
+else()
+  target_compile_options(axiom_sdk01_facade_stale_retry_test PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+add_test(NAME SDK01FacadeStaleRetry COMMAND axiom_sdk01_facade_stale_retry_test)

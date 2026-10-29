@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="13"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="39"
+	timestamp="2026-10-29T19:33:52"
+	>
+	<testcase name="SDK01FacadeStaleRetry" classname="SDK01FacadeStaleRetry" time="0.0210633" status="run">
+		<properties/>
+		<system-out>PASS stale receipt and explicit retry preserve concurrent stroke width
+</system-out>
+	</testcase>
+	<testcase name="FC00XRuntimeIsolation" classname="FC00XRuntimeIsolation" time="0.0163103" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC00XFrameCoordinator" classname="FC00XFrameCoordinator" time="0.0165772" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="SelectionBatch3Summary" classname="SelectionBatch3Summary" time="0.0725055" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 14 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 13 tests from Summary
+[ RUN      ] Summary.EmptyIsNotAUniformPropertyOrAnExecutableSelection
+[       OK ] Summary.EmptyIsNotAUniformPropertyOrAnExecutableSelection (0 ms)
+[ RUN      ] Summary.PublicSnapshotsShareOneNormalizedSummaryAndExactWorldBounds
+[       OK ] Summary.PublicSnapshotsShareOneNormalizedSummaryAndExactWorldBounds (0 ms)
+[ RUN      ] Summary.SectionAndNestedGroupCountRootsWithoutDescendants
+[       OK ] Summary.SectionAndNestedGroupCountRootsWithoutDescendants (0 ms)
+[ RUN      ] Summary.TransformAndDeletionRefreshWithoutChangingSelectionOnRead
+[       OK ] Summary.TransformAndDeletionRefreshWithoutChangingSelectionOnRead (0 ms)
+[ RUN      ] Summary.StaleSceneCannotPublishAuthoritativeBoundsPropertiesOrActions
+[       OK ] Summary.StaleSceneCannotPublishAuthoritativ...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC01ASelectionInputIntegration" classname="FC01ASelectionInputIntegration" time="10.146" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 29 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 27 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (270 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (432 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (278 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (135 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitRegionSta...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC08SectionConsumer" classname="FC08SectionConsumer" time="2.6078" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 21 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 13 tests from FC08SectionConsumer
+[ RUN      ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory
+[       OK ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory (2 ms)
+[ RUN      ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically
+[       OK ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically (1 ms)
+[ RUN      ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts (1 ms)
+[ RUN      ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing
+[       OK ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWrit...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC05ConnectorFacade" classname="FC05ConnectorFacade" time="0.0246595" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=4 scene_records=4
+[axiom] present begin frame=2 objects=4 scene_records=4
+[axiom] present begin frame=3 objects=5 scene_records=5
+PASS FC05 public routing, invalidation, derived History, failure and lifecycle
+</system-out>
+	</testcase>
+	<testcase name="FC02Text" classname="FC02Text" time="25.2875" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 79 tests from 10 test suites.
+[----------] Global test environment set-up.
+[----------] 5 tests from FC02Snapshot
+[ RUN      ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication
+[       OK ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication (0 ms)
+[ RUN      ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue
+[       OK ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue (0 ms)
+[ RUN      ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest
+[       OK ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest (0 ms)
+[ RUN      ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore
+[       OK ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore (1 ms)
+[ RUN      ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapability
+[       OK ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapabilit...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC00XRuntimeComposition" classname="FC00XRuntimeComposition" time="0.0997148" status="run">
+		<properties/>
+		<system-out>[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=3 objects=0 scene_records=0
+[axiom] present begin frame=4 objects=0 scene_records=0
+[axiom] present begin frame=5 objects=0 scene_records=0
+[axiom] present begin frame=6 objects=0 scene_records=0
+[axiom] present begin frame=7 objects=0 scene_records=0
+[axiom] present begin frame=8 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply poi...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC00XRuntimeFacade" classname="FC00XRuntimeFacade" time="0.310814" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+	<testcase name="FC03ImageFacade" classname="FC03ImageFacade" time="0.0506065" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+</system-out>
+	</testcase>
+	<testcase name="SelectionBatch3Ui" classname="SelectionBatch3Ui" time="0.135978" status="run">
+		<properties/>
+		<system-out>PASS read-only summary UI, typed disabled actions and stale selection fence
+</system-out>
+	</testcase>
+	<testcase name="PX0ControlRouter" classname="PX0ControlRouter" time="0.03525" status="run">
+		<properties/>
+		<system-out></system-out>
+	</testcase>
+</testsuite>

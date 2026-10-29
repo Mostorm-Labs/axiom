@@ -1,0 +1,73 @@
+{
+  "status": "DRAFT_NOT_ACCEPTED",
+  "subject_revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+  "scope": "SDK-01 targeted public consumer and multi-selection migration",
+  "cases": [
+    {
+      "id": "SDK01-EXTERNAL-C-001",
+      "requirement": "A standalone C consumer can link the installed V1 SDK and exercise real ABI/version and two-instance lifetime.",
+      "fixture": "verification/sdk01/external-consumer/external_smoke.c",
+      "oracle": "ABI version equals CANVAS_RUNTIME_ABI_VERSION; invalid handle and version reject; two valid runtimes remain isolated after the first is destroyed; destroyed handles reject.",
+      "runner": "verification/sdk01/run_external.py",
+      "test_name": "SDK01ExternalCSmoke",
+      "status": "NOT_RUN_NO_INSTALLED_SDK"
+    },
+    {
+      "id": "SDK01-EXTERNAL-CPP-001",
+      "requirement": "A standalone C++ consumer links the same installed C ABI with correct language linkage.",
+      "fixture": "verification/sdk01/external-consumer/external_link.cpp",
+      "oracle": "The linked function reports the exact V1 ABI version.",
+      "runner": "verification/sdk01/run_external.py",
+      "test_name": "SDK01ExternalCppLink",
+      "status": "NOT_RUN_NO_INSTALLED_SDK"
+    },
+    {
+      "id": "SDK01-STALE-RETRY-001",
+      "requirement": "A stale selected-appearance request is rejected; a fresh explicit request can update opacity without overwriting a concurrent stroke-width change.",
+      "fixture": "verification/sdk01/facade_stale_retry_test.cpp",
+      "oracle": "A 3-to-4 semantic-generation change produces kStaleTarget and no queued opacity change; refreshed request ID applies opacity 0.6 while preserving stroke width 19 and original fill.",
+      "runner": "ctest --test-dir <build> -R ^SDK01FacadeStaleRetry$ --output-on-failure --no-tests=error",
+      "status": "OWNER_TEST_ONLY_PUBLIC_CLIENT_NOT_RUN"
+    },
+    {
+      "id": "SDK01-MULTI-PROJECTION-001",
+      "requirement": "Partial applicability is explicit; unsupported roots are not silently changed.",
+      "fixture": "verification/fc04_mse/mse_01_27_test.cpp:MultiSelectionMSE.MSE_07",
+      "oracle": "For selected shapes 1,2,3 and images 4,5, fill eligible IDs are 1,2,3, excluded IDs are 4,5 with kNotApplicable; read changes no canonical state, Scene or History.",
+      "runner": "ctest --test-dir <build> -R ^FC04\\.MSE-07$ --output-on-failure --no-tests=error",
+      "status": "INTERNAL_OWNER_ONLY_PUBLIC_CLIENT_NOT_MATERIALIZED"
+    },
+    {
+      "id": "SDK01-MULTI-COMMIT-001",
+      "requirement": "Partial property submission reports admission and final exact targets while preserving excluded roots and one-step Undo.",
+      "fixture": "verification/fc04_mse/mse_01_27_test.cpp:MultiSelectionMSE.MSE_19",
+      "oracle": "Explicit local permission; three eligible shapes change to red, two excluded images do not change, pending has no changed IDs, final reports 3 changed/2 skipped; one Undo reverts all three.",
+      "runner": "ctest --test-dir <build> -R ^FC04\\.MSE-19$ --output-on-failure --no-tests=error",
+      "status": "INTERNAL_OWNER_ONLY_PUBLIC_CLIENT_NOT_MATERIALIZED"
+    },
+    {
+      "id": "SDK01-MULTI-STALE-001",
+      "requirement": "Semantic, selection and attachment changes do not allow stale target mutation.",
+      "fixture": "verification/fc04_mse/mse_01_27_test.cpp:MultiSelectionMSE.MSE_27",
+      "oracle": "Stale submission or terminal receipt rejects with no unintended canonical, Scene or History change.",
+      "runner": "ctest --test-dir <build> -R ^FC04\\.MSE-27$ --output-on-failure --no-tests=error",
+      "status": "INTERNAL_OWNER_ONLY_PUBLIC_CLIENT_NOT_MATERIALIZED"
+    },
+    {
+      "id": "SDK01-MULTI-PERMISSION-001",
+      "requirement": "Unknown/unreadable permission cannot authorize a write; explicit local single-user mode can enable supported edits.",
+      "fixture": "verification/fc04_mse/mse_01_27_test.cpp:MultiSelectionMSE.MSE_03",
+      "oracle": "A change to unavailable context during drag causes no new semantic or Scene mutation and preserves redo; a real per-object deny source is still missing.",
+      "runner": "ctest --test-dir <build> -R ^FC04\\.MSE-03$ --output-on-failure --no-tests=error",
+      "status": "PARTIAL_INTERNAL_OWNER_ONLY_PUBLIC_CLIENT_AND_MSE20_NOT_MATERIALIZED"
+    },
+    {
+      "id": "SDK01-MIGRATE-WINWEB-001",
+      "requirement": "Both real Debug UI consumers migrate to the public owner before the internal port is hidden.",
+      "fixture": "apps/minimal_runtime_host/windows_main.cpp and apps/axiom_canvas_demo/platform/web/web_debug_ui.inl",
+      "oracle": "On Windows and actual Chrome/WASM, equivalent explicit permission, eligible/excluded projection, exact target and final receipt are observed; no internal accessor remains in either host.",
+      "runner": null,
+      "status": "NOT_MATERIALIZED_PUBLIC_API_AND_DRIVERS_PENDING"
+    }
+  ]
+}
