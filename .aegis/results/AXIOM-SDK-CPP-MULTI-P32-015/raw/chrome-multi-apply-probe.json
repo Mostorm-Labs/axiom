@@ -1,0 +1,3841 @@
+{
+  "execution": "actual Chrome/WASM with CDP mouse delivery; synthetic facts, no PHYS claim",
+  "commands": [
+    "C:\\Users\\Chado\\AppData\\Local\\Axiom\\toolchains\\emsdk-6.0.6\\node\\24.19.0_64bit\\node.exe",
+    "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-cpp-first-chrome\\multi-apply-probe.mjs",
+    "--repo",
+    ".",
+    "--build",
+    "out/sdk-cpp-first-web/apps/axiom_canvas_demo",
+    "--output",
+    "out/sdk-cpp-first-chrome/multi-apply-probe",
+    "--chrome",
+    "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "--python",
+    "D:/Softwares/Anaconda/python.exe"
+  ],
+  "rows": [
+    {
+      "name": "empty public selection summary is available",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "4e882aeadc42a89064027eb7b27f72e6a257fc83",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 0,
+        "operations": 0,
+        "pointerSamples": 0,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 2,
+        "retries": 0,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 2,
+        "metricsGeneration": 2,
+        "width": 900,
+        "height": 600,
+        "logicalWidth": 900,
+        "logicalHeight": 600,
+        "dpr": 1,
+        "controlState": 9,
+        "tool": 0,
+        "selectedCount": 0,
+        "selectionMode": 0,
+        "regionActive": false,
+        "regionCandidates": 0,
+        "regionQuery": 6,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 0,
+          "pointer": 0,
+          "generation": 0
+        },
+        "error": "",
+        "selectionSummary": {
+          "actions": [
+            {
+              "action": 0,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 1,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 2,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 3,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 4,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 5,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 6,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 7,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 8,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 9,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 10,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 11,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "action": 12,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 13,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 14,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "bounds": {
+            "reason": 1,
+            "status": 0,
+            "world": null
+          },
+          "count": 0,
+          "groupScope": null,
+          "kindCounts": [],
+          "primary": "00000000000000000000000000000000",
+          "properties": [
+            {
+              "applicableRoots": 0,
+              "applicableValuesMixed": false,
+              "fieldId": 1,
+              "knownRoots": 0,
+              "reason": 1,
+              "state": 0,
+              "value": null
+            },
+            {
+              "applicableRoots": 0,
+              "applicableValuesMixed": false,
+              "fieldId": 2,
+              "knownRoots": 0,
+              "reason": 1,
+              "state": 0,
+              "value": null
+            },
+            {
+              "applicableRoots": 0,
+              "applicableValuesMixed": false,
+              "fieldId": 3,
+              "knownRoots": 0,
+              "reason": 1,
+              "state": 0,
+              "value": null
+            }
+          ],
+          "reason": 0,
+          "roots": [],
+          "sceneGeneration": "0",
+          "sceneRevision": "0",
+          "selectionRevision": "1",
+          "semanticGeneration": "0",
+          "status": 1
+        },
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "resize"
+          }
+        ],
+        "domEvents": []
+      }
+    },
+    {
+      "name": "empty properties never become uniform",
+      "ok": true,
+      "actual": [
+        {
+          "applicableRoots": 0,
+          "applicableValuesMixed": false,
+          "fieldId": 1,
+          "knownRoots": 0,
+          "reason": 1,
+          "state": 0,
+          "value": null
+        },
+        {
+          "applicableRoots": 0,
+          "applicableValuesMixed": false,
+          "fieldId": 2,
+          "knownRoots": 0,
+          "reason": 1,
+          "state": 0,
+          "value": null
+        },
+        {
+          "applicableRoots": 0,
+          "applicableValuesMixed": false,
+          "fieldId": 3,
+          "knownRoots": 0,
+          "reason": 1,
+          "state": 0,
+          "value": null
+        }
+      ]
+    },
+    {
+      "name": "three real Shape creations",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "4e882aeadc42a89064027eb7b27f72e6a257fc83",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 3,
+        "operations": 3,
+        "pointerSamples": 9,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 14,
+        "retries": 11,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 2,
+        "metricsGeneration": 2,
+        "width": 900,
+        "height": 600,
+        "logicalWidth": 900,
+        "logicalHeight": 600,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 0,
+        "selectedCount": 0,
+        "selectionMode": 0,
+        "regionActive": false,
+        "regionCandidates": 0,
+        "regionQuery": 6,
+        "creationMode": true,
+        "creationPreset": 2,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 1,
+          "generation": 3
+        },
+        "error": "",
+        "selectionSummary": {
+          "actions": [
+            {
+              "action": 0,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 1,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 2,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 3,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 4,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 5,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 6,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 7,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 8,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 9,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 10,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 11,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "action": 12,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 13,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 14,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "bounds": {
+            "reason": 1,
+            "status": 0,
+            "world": null
+          },
+          "count": 0,
+          "groupScope": null,
+          "kindCounts": [],
+          "primary": "00000000000000000000000000000000",
+          "properties": [
+            {
+              "applicableRoots": 0,
+              "applicableValuesMixed": false,
+              "fieldId": 1,
+              "knownRoots": 0,
+              "reason": 1,
+              "state": 0,
+              "value": null
+            },
+            {
+              "applicableRoots": 0,
+              "applicableValuesMixed": false,
+              "fieldId": 2,
+              "knownRoots": 0,
+              "reason": 1,
+              "state": 0,
+              "value": null
+            },
+            {
+              "applicableRoots": 0,
+              "applicableValuesMixed": false,
+              "fieldId": 3,
+              "knownRoots": 0,
+              "reason": 1,
+              "state": 0,
+              "value": null
+            }
+          ],
+          "reason": 0,
+          "roots": [],
+          "sceneGeneration": "3",
+          "sceneRevision": "3",
+          "selectionRevision": "1",
+          "semanticGeneration": "3",
+          "status": 1
+        },
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "resize"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "2631100000",
+            "x": 100,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "2664300000",
+            "x": 180,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 2,
+            "timestampNs": "2782200000",
+            "x": 180,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 0,
+            "timestampNs": "2868000000",
+            "x": 260,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 1,
+            "timestampNs": "2896400000",
+            "x": 340,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 2,
+            "timestampNs": "3079700000",
+            "x": 340,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 0,
+            "timestampNs": "3147000000",
+            "x": 420,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 1,
+            "timestampNs": "3181200000",
+            "x": 500,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 2,
+            "timestampNs": "3259100000",
+            "x": 500,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          }
+        ],
+        "domEvents": [
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 100,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 260,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 420,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          }
+        ]
+      }
+    },
+    {
+      "name": "point selection",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "4e882aeadc42a89064027eb7b27f72e6a257fc83",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 3,
+        "operations": 3,
+        "pointerSamples": 11,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 16,
+        "retries": 13,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 2,
+        "metricsGeneration": 2,
+        "width": 900,
+        "height": 600,
+        "logicalWidth": 900,
+        "logicalHeight": 600,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 1,
+        "selectedCount": 1,
+        "selectionMode": 0,
+        "regionActive": false,
+        "regionCandidates": 0,
+        "regionQuery": 6,
+        "creationMode": false,
+        "creationPreset": 2,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 1,
+          "generation": 4
+        },
+        "error": "",
+        "selectionSummary": {
+          "actions": [
+            {
+              "action": 0,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 1,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 2,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 3,
+              "reason": 18,
+              "state": 0
+            },
+            {
+              "action": 4,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 5,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 6,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 7,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 8,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 9,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 10,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "action": 11,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "action": 12,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 13,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 14,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "bounds": {
+            "reason": 0,
+            "status": 1,
+            "world": [
+              99,
+              99,
+              181,
+              161
+            ]
+          },
+          "count": 1,
+          "groupScope": null,
+          "kindCounts": [
+            {
+              "count": 1,
+              "kind": 1
+            }
+          ],
+          "primary": "01000000000001000000000000000000",
+          "properties": [
+            {
+              "applicableRoots": 1,
+              "applicableValuesMixed": false,
+              "fieldId": 1,
+              "knownRoots": 1,
+              "reason": 0,
+              "state": 1,
+              "value": true
+            },
+            {
+              "applicableRoots": 1,
+              "applicableValuesMixed": false,
+              "fieldId": 2,
+              "knownRoots": 1,
+              "reason": 0,
+              "state": 1,
+              "value": false
+            },
+            {
+              "applicableRoots": 1,
+              "applicableValuesMixed": false,
+              "fieldId": 3,
+              "knownRoots": 1,
+              "reason": 0,
+              "state": 1,
+              "value": 1
+            }
+          ],
+          "reason": 0,
+          "roots": [
+            "01000000000001000000000000000000"
+          ],
+          "sceneGeneration": "3",
+          "sceneRevision": "3",
+          "selectionRevision": "2",
+          "semanticGeneration": "3",
+          "status": 1
+        },
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "resize"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "2631100000",
+            "x": 100,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "2664300000",
+            "x": 180,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 2,
+            "timestampNs": "2782200000",
+            "x": 180,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 0,
+            "timestampNs": "2868000000",
+            "x": 260,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 1,
+            "timestampNs": "2896400000",
+            "x": 340,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 2,
+            "timestampNs": "3079700000",
+            "x": 340,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 0,
+            "timestampNs": "3147000000",
+            "x": 420,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 1,
+            "timestampNs": "3181200000",
+            "x": 500,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 2,
+            "timestampNs": "3259100000",
+            "x": 500,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 0,
+            "timestampNs": "3398000000",
+            "x": 140,
+            "y": 130,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 2,
+            "timestampNs": "3832600000",
+            "x": 140,
+            "y": 130,
+            "pressure": 0,
+            "history": false
+          }
+        ],
+        "domEvents": [
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 100,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 260,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 420,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          }
+        ]
+      }
+    },
+    {
+      "name": "blank Down retains formal selection",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "4e882aeadc42a89064027eb7b27f72e6a257fc83",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 3,
+        "operations": 3,
+        "pointerSamples": 12,
+        "rejectedInputs": 0,
+        "activePointers": 1,
+        "presentedFrames": 16,
+        "retries": 13,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 2,
+        "metricsGeneration": 2,
+        "width": 900,
+        "height": 600,
+        "logicalWidth": 900,
+        "logicalHeight": 600,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 1,
+        "selectedCount": 1,
+        "selectionMode": 0,
+        "regionActive": true,
+        "regionCandidates": 0,
+        "regionQuery": 0,
+        "creationMode": false,
+        "creationPreset": 2,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 1,
+          "generation": 5
+        },
+        "error": "",
+        "selectionSummary": {
+          "actions": [
+            {
+              "action": 0,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 1,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 2,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 3,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 4,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 5,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 6,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 7,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 8,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 9,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 10,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 11,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "action": 12,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 13,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 14,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "bounds": {
+            "reason": 0,
+            "status": 1,
+            "world": [
+              99,
+              99,
+              181,
+              161
+            ]
+          },
+          "count": 1,
+          "groupScope": null,
+          "kindCounts": [
+            {
+              "count": 1,
+              "kind": 1
+            }
+          ],
+          "primary": "01000000000001000000000000000000",
+          "properties": [
+            {
+              "applicableRoots": 1,
+              "applicableValuesMixed": false,
+              "fieldId": 1,
+              "knownRoots": 1,
+              "reason": 0,
+              "state": 1,
+              "value": true
+            },
+            {
+              "applicableRoots": 1,
+              "applicableValuesMixed": false,
+              "fieldId": 2,
+              "knownRoots": 1,
+              "reason": 0,
+              "state": 1,
+              "value": false
+            },
+            {
+              "applicableRoots": 1,
+              "applicableValuesMixed": false,
+              "fieldId": 3,
+              "knownRoots": 1,
+              "reason": 0,
+              "state": 1,
+              "value": 1
+            }
+          ],
+          "reason": 0,
+          "roots": [
+            "01000000000001000000000000000000"
+          ],
+          "sceneGeneration": "3",
+          "sceneRevision": "3",
+          "selectionRevision": "2",
+          "semanticGeneration": "3",
+          "status": 1
+        },
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "resize"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "2631100000",
+            "x": 100,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "2664300000",
+            "x": 180,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 2,
+            "timestampNs": "2782200000",
+            "x": 180,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 0,
+            "timestampNs": "2868000000",
+            "x": 260,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 1,
+            "timestampNs": "2896400000",
+            "x": 340,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 2,
+            "timestampNs": "3079700000",
+            "x": 340,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 0,
+            "timestampNs": "3147000000",
+            "x": 420,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 1,
+            "timestampNs": "3181200000",
+            "x": 500,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 2,
+            "timestampNs": "3259100000",
+            "x": 500,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 0,
+            "timestampNs": "3398000000",
+            "x": 140,
+            "y": 130,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 2,
+            "timestampNs": "3832600000",
+            "x": 140,
+            "y": 130,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 0,
+            "timestampNs": "3851800000",
+            "x": 20,
+            "y": 20,
+            "pressure": 0,
+            "history": false
+          }
+        ],
+        "domEvents": [
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 100,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 260,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 420,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 20,
+            "y": 77
+          }
+        ]
+      }
+    },
+    {
+      "name": "Move only publishes candidates",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "4e882aeadc42a89064027eb7b27f72e6a257fc83",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 3,
+        "operations": 3,
+        "pointerSamples": 13,
+        "rejectedInputs": 0,
+        "activePointers": 1,
+        "presentedFrames": 17,
+        "retries": 14,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 2,
+        "metricsGeneration": 2,
+        "width": 900,
+        "height": 600,
+        "logicalWidth": 900,
+        "logicalHeight": 600,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 1,
+        "selectedCount": 1,
+        "selectionMode": 0,
+        "regionActive": true,
+        "regionCandidates": 2,
+        "regionQuery": 1,
+        "creationMode": false,
+        "creationPreset": 2,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 1,
+          "generation": 5
+        },
+        "error": "",
+        "selectionSummary": {
+          "actions": [
+            {
+              "action": 0,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 1,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 2,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 3,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 4,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 5,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 6,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 7,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 8,
+              "reason": 9,
+              "state": 0
+            },
+            {
+              "action": 9,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 10,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 11,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "action": 12,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 13,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 14,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "bounds": {
+            "reason": 0,
+            "status": 1,
+            "world": [
+              99,
+              99,
+              181,
+              161
+            ]
+          },
+          "count": 1,
+          "groupScope": null,
+          "kindCounts": [
+            {
+              "count": 1,
+              "kind": 1
+            }
+          ],
+          "primary": "01000000000001000000000000000000",
+          "properties": [
+            {
+              "applicableRoots": 1,
+              "applicableValuesMixed": false,
+              "fieldId": 1,
+              "knownRoots": 1,
+              "reason": 0,
+              "state": 1,
+              "value": true
+            },
+            {
+              "applicableRoots": 1,
+              "applicableValuesMixed": false,
+              "fieldId": 2,
+              "knownRoots": 1,
+              "reason": 0,
+              "state": 1,
+              "value": false
+            },
+            {
+              "applicableRoots": 1,
+              "applicableValuesMixed": false,
+              "fieldId": 3,
+              "knownRoots": 1,
+              "reason": 0,
+              "state": 1,
+              "value": 1
+            }
+          ],
+          "reason": 0,
+          "roots": [
+            "01000000000001000000000000000000"
+          ],
+          "sceneGeneration": "3",
+          "sceneRevision": "3",
+          "selectionRevision": "2",
+          "semanticGeneration": "3",
+          "status": 1
+        },
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "resize"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "2631100000",
+            "x": 100,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "2664300000",
+            "x": 180,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 2,
+            "timestampNs": "2782200000",
+            "x": 180,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 0,
+            "timestampNs": "2868000000",
+            "x": 260,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 1,
+            "timestampNs": "2896400000",
+            "x": 340,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 2,
+            "timestampNs": "3079700000",
+            "x": 340,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 0,
+            "timestampNs": "3147000000",
+            "x": 420,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 1,
+            "timestampNs": "3181200000",
+            "x": 500,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 2,
+            "timestampNs": "3259100000",
+            "x": 500,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 0,
+            "timestampNs": "3398000000",
+            "x": 140,
+            "y": 130,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 2,
+            "timestampNs": "3832600000",
+            "x": 140,
+            "y": 130,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 0,
+            "timestampNs": "3851800000",
+            "x": 20,
+            "y": 20,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 1,
+            "timestampNs": "3864000000",
+            "x": 345,
+            "y": 170,
+            "pressure": 0,
+            "history": true
+          }
+        ],
+        "domEvents": [
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 100,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 260,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 420,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 20,
+            "y": 77
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 345,
+            "y": 227
+          }
+        ]
+      }
+    },
+    {
+      "name": "Up commits rectangle once",
+      "ok": true,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "4e882aeadc42a89064027eb7b27f72e6a257fc83",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 3,
+        "operations": 3,
+        "pointerSamples": 14,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 18,
+        "retries": 14,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 2,
+        "metricsGeneration": 2,
+        "width": 900,
+        "height": 600,
+        "logicalWidth": 900,
+        "logicalHeight": 600,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 1,
+        "selectedCount": 2,
+        "selectionMode": 0,
+        "regionActive": false,
+        "regionCandidates": 0,
+        "regionQuery": 1,
+        "creationMode": false,
+        "creationPreset": 2,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 1,
+          "generation": 5
+        },
+        "error": "",
+        "selectionSummary": {
+          "actions": [
+            {
+              "action": 0,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 1,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 2,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 3,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 4,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 5,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 6,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 7,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 8,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 9,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 10,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "action": 11,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "action": 12,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 13,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 14,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "bounds": {
+            "reason": 0,
+            "status": 1,
+            "world": [
+              99,
+              99,
+              341,
+              161
+            ]
+          },
+          "count": 2,
+          "groupScope": null,
+          "kindCounts": [
+            {
+              "count": 2,
+              "kind": 1
+            }
+          ],
+          "primary": "02000000000001000000000000000000",
+          "properties": [
+            {
+              "applicableRoots": 2,
+              "applicableValuesMixed": false,
+              "fieldId": 1,
+              "knownRoots": 2,
+              "reason": 0,
+              "state": 1,
+              "value": true
+            },
+            {
+              "applicableRoots": 2,
+              "applicableValuesMixed": false,
+              "fieldId": 2,
+              "knownRoots": 2,
+              "reason": 0,
+              "state": 1,
+              "value": false
+            },
+            {
+              "applicableRoots": 2,
+              "applicableValuesMixed": false,
+              "fieldId": 3,
+              "knownRoots": 2,
+              "reason": 0,
+              "state": 1,
+              "value": 1
+            }
+          ],
+          "reason": 0,
+          "roots": [
+            "02000000000001000000000000000000",
+            "01000000000001000000000000000000"
+          ],
+          "sceneGeneration": "3",
+          "sceneRevision": "3",
+          "selectionRevision": "3",
+          "semanticGeneration": "3",
+          "status": 1
+        },
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "resize"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "2631100000",
+            "x": 100,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "2664300000",
+            "x": 180,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 2,
+            "timestampNs": "2782200000",
+            "x": 180,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 0,
+            "timestampNs": "2868000000",
+            "x": 260,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 1,
+            "timestampNs": "2896400000",
+            "x": 340,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 2,
+            "timestampNs": "3079700000",
+            "x": 340,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 0,
+            "timestampNs": "3147000000",
+            "x": 420,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 1,
+            "timestampNs": "3181200000",
+            "x": 500,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 2,
+            "timestampNs": "3259100000",
+            "x": 500,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 0,
+            "timestampNs": "3398000000",
+            "x": 140,
+            "y": 130,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 2,
+            "timestampNs": "3832600000",
+            "x": 140,
+            "y": 130,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 0,
+            "timestampNs": "3851800000",
+            "x": 20,
+            "y": 20,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 1,
+            "timestampNs": "3864000000",
+            "x": 345,
+            "y": 170,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 2,
+            "timestampNs": "4005600000",
+            "x": 345,
+            "y": 170,
+            "pressure": 0,
+            "history": false
+          }
+        ],
+        "domEvents": [
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 100,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 260,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 420,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 20,
+            "y": 77
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 345,
+            "y": 227
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 345,
+            "y": 227
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 345,
+            "y": 227
+          }
+        ]
+      }
+    },
+    {
+      "name": "normalized public roots kinds and primary agree",
+      "ok": true,
+      "actual": {
+        "actions": [
+          {
+            "action": 0,
+            "reason": 0,
+            "state": 1
+          },
+          {
+            "action": 1,
+            "reason": 0,
+            "state": 1
+          },
+          {
+            "action": 2,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 3,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 4,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 5,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 6,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 7,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 8,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 9,
+            "reason": 0,
+            "state": 1
+          },
+          {
+            "action": 10,
+            "reason": 12,
+            "state": 0
+          },
+          {
+            "action": 11,
+            "reason": 14,
+            "state": 0
+          },
+          {
+            "action": 12,
+            "reason": 13,
+            "state": 2
+          },
+          {
+            "action": 13,
+            "reason": 13,
+            "state": 2
+          },
+          {
+            "action": 14,
+            "reason": 13,
+            "state": 2
+          }
+        ],
+        "bounds": {
+          "reason": 0,
+          "status": 1,
+          "world": [
+            99,
+            99,
+            341,
+            161
+          ]
+        },
+        "count": 2,
+        "groupScope": null,
+        "kindCounts": [
+          {
+            "count": 2,
+            "kind": 1
+          }
+        ],
+        "primary": "02000000000001000000000000000000",
+        "properties": [
+          {
+            "applicableRoots": 2,
+            "applicableValuesMixed": false,
+            "fieldId": 1,
+            "knownRoots": 2,
+            "reason": 0,
+            "state": 1,
+            "value": true
+          },
+          {
+            "applicableRoots": 2,
+            "applicableValuesMixed": false,
+            "fieldId": 2,
+            "knownRoots": 2,
+            "reason": 0,
+            "state": 1,
+            "value": false
+          },
+          {
+            "applicableRoots": 2,
+            "applicableValuesMixed": false,
+            "fieldId": 3,
+            "knownRoots": 2,
+            "reason": 0,
+            "state": 1,
+            "value": 1
+          }
+        ],
+        "reason": 0,
+        "roots": [
+          "02000000000001000000000000000000",
+          "01000000000001000000000000000000"
+        ],
+        "sceneGeneration": "3",
+        "sceneRevision": "3",
+        "selectionRevision": "3",
+        "semanticGeneration": "3",
+        "status": 1
+      }
+    },
+    {
+      "name": "published bounds and summary generations agree",
+      "ok": true,
+      "actual": {
+        "actions": [
+          {
+            "action": 0,
+            "reason": 0,
+            "state": 1
+          },
+          {
+            "action": 1,
+            "reason": 0,
+            "state": 1
+          },
+          {
+            "action": 2,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 3,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 4,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 5,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 6,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 7,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 8,
+            "reason": 11,
+            "state": 0
+          },
+          {
+            "action": 9,
+            "reason": 0,
+            "state": 1
+          },
+          {
+            "action": 10,
+            "reason": 12,
+            "state": 0
+          },
+          {
+            "action": 11,
+            "reason": 14,
+            "state": 0
+          },
+          {
+            "action": 12,
+            "reason": 13,
+            "state": 2
+          },
+          {
+            "action": 13,
+            "reason": 13,
+            "state": 2
+          },
+          {
+            "action": 14,
+            "reason": 13,
+            "state": 2
+          }
+        ],
+        "bounds": {
+          "reason": 0,
+          "status": 1,
+          "world": [
+            99,
+            99,
+            341,
+            161
+          ]
+        },
+        "count": 2,
+        "groupScope": null,
+        "kindCounts": [
+          {
+            "count": 2,
+            "kind": 1
+          }
+        ],
+        "primary": "02000000000001000000000000000000",
+        "properties": [
+          {
+            "applicableRoots": 2,
+            "applicableValuesMixed": false,
+            "fieldId": 1,
+            "knownRoots": 2,
+            "reason": 0,
+            "state": 1,
+            "value": true
+          },
+          {
+            "applicableRoots": 2,
+            "applicableValuesMixed": false,
+            "fieldId": 2,
+            "knownRoots": 2,
+            "reason": 0,
+            "state": 1,
+            "value": false
+          },
+          {
+            "applicableRoots": 2,
+            "applicableValuesMixed": false,
+            "fieldId": 3,
+            "knownRoots": 2,
+            "reason": 0,
+            "state": 1,
+            "value": 1
+          }
+        ],
+        "reason": 0,
+        "roots": [
+          "02000000000001000000000000000000",
+          "01000000000001000000000000000000"
+        ],
+        "sceneGeneration": "3",
+        "sceneRevision": "3",
+        "selectionRevision": "3",
+        "semanticGeneration": "3",
+        "status": 1
+      }
+    },
+    {
+      "name": "accepted Shape opacity default aggregates uniformly",
+      "ok": true,
+      "actual": [
+        {
+          "applicableRoots": 2,
+          "applicableValuesMixed": false,
+          "fieldId": 1,
+          "knownRoots": 2,
+          "reason": 0,
+          "state": 1,
+          "value": true
+        },
+        {
+          "applicableRoots": 2,
+          "applicableValuesMixed": false,
+          "fieldId": 2,
+          "knownRoots": 2,
+          "reason": 0,
+          "state": 1,
+          "value": false
+        },
+        {
+          "applicableRoots": 2,
+          "applicableValuesMixed": false,
+          "fieldId": 3,
+          "knownRoots": 2,
+          "reason": 0,
+          "state": 1,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "name": "Web Debug UI multi-select applies one operation through same Runtime",
+      "ok": false,
+      "actual": {
+        "owner": "RuntimeComposition",
+        "revision": "4e882aeadc42a89064027eb7b27f72e6a257fc83",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 3,
+        "operations": 3,
+        "pointerSamples": 14,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 21,
+        "retries": 17,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 2,
+        "metricsGeneration": 2,
+        "width": 900,
+        "height": 600,
+        "logicalWidth": 900,
+        "logicalHeight": 600,
+        "dpr": 1,
+        "controlState": 1,
+        "tool": 1,
+        "selectedCount": 2,
+        "selectionMode": 0,
+        "regionActive": false,
+        "regionCandidates": 0,
+        "regionQuery": 6,
+        "creationMode": false,
+        "creationPreset": 2,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 1,
+          "x": 0,
+          "y": 0
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 1,
+          "generation": 5
+        },
+        "error": "",
+        "selectionSummary": {
+          "actions": [
+            {
+              "action": 0,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 1,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 2,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 3,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 4,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 5,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 6,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 7,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 8,
+              "reason": 11,
+              "state": 0
+            },
+            {
+              "action": 9,
+              "reason": 0,
+              "state": 1
+            },
+            {
+              "action": 10,
+              "reason": 12,
+              "state": 0
+            },
+            {
+              "action": 11,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "action": 12,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 13,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 14,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "bounds": {
+            "reason": 0,
+            "status": 1,
+            "world": [
+              99,
+              99,
+              341,
+              161
+            ]
+          },
+          "count": 2,
+          "groupScope": null,
+          "kindCounts": [
+            {
+              "count": 2,
+              "kind": 1
+            }
+          ],
+          "primary": "02000000000001000000000000000000",
+          "properties": [
+            {
+              "applicableRoots": 2,
+              "applicableValuesMixed": false,
+              "fieldId": 1,
+              "knownRoots": 2,
+              "reason": 0,
+              "state": 1,
+              "value": true
+            },
+            {
+              "applicableRoots": 2,
+              "applicableValuesMixed": false,
+              "fieldId": 2,
+              "knownRoots": 2,
+              "reason": 0,
+              "state": 1,
+              "value": false
+            },
+            {
+              "applicableRoots": 2,
+              "applicableValuesMixed": false,
+              "fieldId": 3,
+              "knownRoots": 2,
+              "reason": 0,
+              "state": 1,
+              "value": 1
+            }
+          ],
+          "reason": 0,
+          "roots": [
+            "02000000000001000000000000000000",
+            "01000000000001000000000000000000"
+          ],
+          "sceneGeneration": "3",
+          "sceneRevision": "3",
+          "selectionRevision": "3",
+          "semanticGeneration": "3",
+          "status": 1
+        },
+        "failure": "",
+        "trace": [
+          {
+            "kind": "cancel-all",
+            "reason": "resize"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "2631100000",
+            "x": 100,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "2664300000",
+            "x": 180,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 2,
+            "timestampNs": "2782200000",
+            "x": 180,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 0,
+            "timestampNs": "2868000000",
+            "x": 260,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 1,
+            "timestampNs": "2896400000",
+            "x": 340,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "2",
+            "phase": 2,
+            "timestampNs": "3079700000",
+            "x": 340,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 0,
+            "timestampNs": "3147000000",
+            "x": 420,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 1,
+            "timestampNs": "3181200000",
+            "x": 500,
+            "y": 160,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "3",
+            "phase": 2,
+            "timestampNs": "3259100000",
+            "x": 500,
+            "y": 160,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "facade-control"
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 0,
+            "timestampNs": "3398000000",
+            "x": 140,
+            "y": 130,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "4",
+            "phase": 2,
+            "timestampNs": "3832600000",
+            "x": 140,
+            "y": 130,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 0,
+            "timestampNs": "3851800000",
+            "x": 20,
+            "y": 20,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 1,
+            "timestampNs": "3864000000",
+            "x": 345,
+            "y": 170,
+            "pressure": 0,
+            "history": true
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "5",
+            "phase": 2,
+            "timestampNs": "4005600000",
+            "x": 345,
+            "y": 170,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "debug-toggle"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "debug-input"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "debug-input"
+          }
+        ],
+        "domEvents": [
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 100,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 180,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 260,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 340,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 420,
+            "y": 157
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 500,
+            "y": 217
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 140,
+            "y": 187
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 20,
+            "y": 77
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 1,
+            "button": -1,
+            "target": "axiom-canvas",
+            "x": 345,
+            "y": 227
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 345,
+            "y": 227
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "axiom-canvas",
+            "x": 345,
+            "y": 227
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 0,
+            "button": -1,
+            "target": "debugUi",
+            "x": 33,
+            "y": 528.6061401367188
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "debugUi",
+            "x": 33,
+            "y": 528.6061401367188
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "debugUi",
+            "x": 33,
+            "y": 528.6061401367188
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "debugUi",
+            "x": 33,
+            "y": 528.6061401367188
+          },
+          {
+            "type": "pointermove",
+            "id": 1,
+            "buttons": 0,
+            "button": -1,
+            "target": "debugUi",
+            "x": 45,
+            "y": 548.372314453125
+          },
+          {
+            "type": "pointerdown",
+            "id": 1,
+            "buttons": 1,
+            "button": 0,
+            "target": "debugUi",
+            "x": 45,
+            "y": 548.372314453125
+          },
+          {
+            "type": "pointerup",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "debugUi",
+            "x": 45,
+            "y": 548.372314453125
+          },
+          {
+            "type": "lostpointercapture",
+            "id": 1,
+            "buttons": 0,
+            "button": 0,
+            "target": "debugUi",
+            "x": 45,
+            "y": 548.372314453125
+          }
+        ]
+      }
+    }
+  ],
+  "browser": {
+    "executable": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "args": [
+      "--headless=new",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--enable-unsafe-swiftshader",
+      "--use-angle=swiftshader",
+      "--remote-debugging-port=0",
+      "--user-data-dir=C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\selection-batch1\\chrome-batch3-1793285877046",
+      "about:blank"
+    ],
+    "url": "http://127.0.0.1:8646/index.html?rev=selection-batch3",
+    "version": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/155.0.8059.86",
+      "revision": "@804d6b05f089b27af8342622a36558c49401a1d4",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+      "jsVersion": "15.5.35.25"
+    }
+  },
+  "initial": {
+    "owner": "RuntimeComposition",
+    "revision": "4e882aeadc42a89064027eb7b27f72e6a257fc83",
+    "dirty": 1,
+    "debugUiEnabled": true,
+    "state": 2,
+    "objects": 0,
+    "operations": 0,
+    "pointerSamples": 0,
+    "rejectedInputs": 0,
+    "activePointers": 0,
+    "presentedFrames": 2,
+    "retries": 0,
+    "pendingFrame": false,
+    "previewActive": false,
+    "surfaceGeneration": 2,
+    "metricsGeneration": 2,
+    "width": 900,
+    "height": 600,
+    "logicalWidth": 900,
+    "logicalHeight": 600,
+    "dpr": 1,
+    "controlState": 9,
+    "tool": 0,
+    "selectedCount": 0,
+    "selectionMode": 0,
+    "regionActive": false,
+    "regionCandidates": 0,
+    "regionQuery": 6,
+    "creationMode": false,
+    "creationPreset": 0,
+    "size": 16,
+    "opacity": 1,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "lastPointer": {
+      "source": 0,
+      "pointer": 0,
+      "generation": 0
+    },
+    "error": "",
+    "selectionSummary": {
+      "actions": [
+        {
+          "action": 0,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "action": 1,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "action": 2,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "action": 3,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "action": 4,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "action": 5,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "action": 6,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "action": 7,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "action": 8,
+          "reason": 1,
+          "state": 0
+        },
+        {
+          "action": 9,
+          "reason": 13,
+          "state": 2
+        },
+        {
+          "action": 10,
+          "reason": 13,
+          "state": 2
+        },
+        {
+          "action": 11,
+          "reason": 14,
+          "state": 0
+        },
+        {
+          "action": 12,
+          "reason": 13,
+          "state": 2
+        },
+        {
+          "action": 13,
+          "reason": 13,
+          "state": 2
+        },
+        {
+          "action": 14,
+          "reason": 13,
+          "state": 2
+        }
+      ],
+      "bounds": {
+        "reason": 1,
+        "status": 0,
+        "world": null
+      },
+      "count": 0,
+      "groupScope": null,
+      "kindCounts": [],
+      "primary": "00000000000000000000000000000000",
+      "properties": [
+        {
+          "applicableRoots": 0,
+          "applicableValuesMixed": false,
+          "fieldId": 1,
+          "knownRoots": 0,
+          "reason": 1,
+          "state": 0,
+          "value": null
+        },
+        {
+          "applicableRoots": 0,
+          "applicableValuesMixed": false,
+          "fieldId": 2,
+          "knownRoots": 0,
+          "reason": 1,
+          "state": 0,
+          "value": null
+        },
+        {
+          "applicableRoots": 0,
+          "applicableValuesMixed": false,
+          "fieldId": 3,
+          "knownRoots": 0,
+          "reason": 1,
+          "state": 0,
+          "value": null
+        }
+      ],
+      "reason": 0,
+      "roots": [],
+      "sceneGeneration": "0",
+      "sceneRevision": "0",
+      "selectionRevision": "1",
+      "semanticGeneration": "0",
+      "status": 1
+    },
+    "failure": "",
+    "trace": [
+      {
+        "kind": "cancel-all",
+        "reason": "resize"
+      }
+    ],
+    "domEvents": []
+  },
+  "error": "Error: Web Debug UI multi-select applies one operation through same Runtime: {\"owner\":\"RuntimeComposition\",\"revision\":\"4e882aeadc42a89064027eb7b27f72e6a257fc83\",\"dirty\":1,\"debugUiEnabled\":true,\"state\":2,\"objects\":3,\"operations\":3,\"pointerSamples\":14,\"rejectedInputs\":0,\"activePointers\":0,\"presentedFrames\":21,\"retries\":17,\"pendingFrame\":false,\"previewActive\":false,\"surfaceGeneration\":2,\"metricsGeneration\":2,\"width\":900,\"height\":600,\"logicalWidth\":900,\"logicalHeight\":600,\"dpr\":1,\"controlState\":1,\"tool\":1,\"selectedCount\":2,\"selectionMode\":0,\"regionActive\":false,\"regionCandidates\":0,\"regionQuery\":6,\"creationMode\":false,\"creationPreset\":2,\"size\":16,\"opacity\":1,\"camera\":{\"scale\":1,\"x\":0,\"y\":0},\"lastPointer\":{\"source\":1,\"pointer\":1,\"generation\":5},\"error\":\"\",\"selectionSummary\":{\"actions\":[{\"action\":0,\"reason\":0,\"state\":1},{\"action\":1,\"reason\":0,\"state\":1},{\"action\":2,\"reason\":11,\"state\":0},{\"action\":3,\"reason\":11,\"state\":0},{\"action\":4,\"reason\":11,\"state\":0},{\"action\":5,\"reason\":11,\"state\":0},{\"action\":6,\"reason\":11,\"state\":0},{\"action\":7,\"reason\":11,\"state\":0},{\"action\":8,\"reason\":11,\"state\":0},{\"action\":9,\"reason\":0,\"state\":1},{\"action\":10,\"reason\":12,\"state\":0},{\"action\":11,\"reason\":14,\"state\":0},{\"action\":12,\"reason\":13,\"state\":2},{\"action\":13,\"reason\":13,\"state\":2},{\"action\":14,\"reason\":13,\"state\":2}],\"bounds\":{\"reason\":0,\"status\":1,\"world\":[99,99,341,161]},\"count\":2,\"groupScope\":null,\"kindCounts\":[{\"count\":2,\"kind\":1}],\"primary\":\"02000000000001000000000000000000\",\"properties\":[{\"applicableRoots\":2,\"applicableValuesMixed\":false,\"fieldId\":1,\"knownRoots\":2,\"reason\":0,\"state\":1,\"value\":true},{\"applicableRoots\":2,\"applicableValuesMixed\":false,\"fieldId\":2,\"knownRoots\":2,\"reason\":0,\"state\":1,\"value\":false},{\"applicableRoots\":2,\"applicableValuesMixed\":false,\"fieldId\":3,\"knownRoots\":2,\"reason\":0,\"state\":1,\"value\":1}],\"reason\":0,\"roots\":[\"02000000000001000000000000000000\",\"01000000000001000000000000000000\"],\"sceneGeneration\":\"3\",\"sceneRevision\":\"3\",\"selectionRevision\":\"3\",\"semanticGeneration\":\"3\",\"status\":1},\"failure\":\"\",\"trace\":[{\"kind\":\"cancel-all\",\"reason\":\"resize\"},{\"kind\":\"cancel-all\",\"reason\":\"facade-control\"},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"1\",\"phase\":0,\"timestampNs\":\"2631100000\",\"x\":100,\"y\":100,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"1\",\"phase\":1,\"timestampNs\":\"2664300000\",\"x\":180,\"y\":160,\"pressure\":0,\"history\":true},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"1\",\"phase\":2,\"timestampNs\":\"2782200000\",\"x\":180,\"y\":160,\"pressure\":0,\"history\":false},{\"kind\":\"cancel-all\",\"reason\":\"facade-control\"},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"2\",\"phase\":0,\"timestampNs\":\"2868000000\",\"x\":260,\"y\":100,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"2\",\"phase\":1,\"timestampNs\":\"2896400000\",\"x\":340,\"y\":160,\"pressure\":0,\"history\":true},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"2\",\"phase\":2,\"timestampNs\":\"3079700000\",\"x\":340,\"y\":160,\"pressure\":0,\"history\":false},{\"kind\":\"cancel-all\",\"reason\":\"facade-control\"},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"3\",\"phase\":0,\"timestampNs\":\"3147000000\",\"x\":420,\"y\":100,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"3\",\"phase\":1,\"timestampNs\":\"3181200000\",\"x\":500,\"y\":160,\"pressure\":0,\"history\":true},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"3\",\"phase\":2,\"timestampNs\":\"3259100000\",\"x\":500,\"y\":160,\"pressure\":0,\"history\":false},{\"kind\":\"cancel-all\",\"reason\":\"facade-control\"},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"4\",\"phase\":0,\"timestampNs\":\"3398000000\",\"x\":140,\"y\":130,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"4\",\"phase\":2,\"timestampNs\":\"3832600000\",\"x\":140,\"y\":130,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"5\",\"phase\":0,\"timestampNs\":\"3851800000\",\"x\":20,\"y\":20,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"5\",\"phase\":1,\"timestampNs\":\"3864000000\",\"x\":345,\"y\":170,\"pressure\":0,\"history\":true},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"5\",\"phase\":2,\"timestampNs\":\"4005600000\",\"x\":345,\"y\":170,\"pressure\":0,\"history\":false},{\"kind\":\"cancel-all\",\"reason\":\"debug-toggle\"},{\"kind\":\"cancel-all\",\"reason\":\"debug-input\"},{\"kind\":\"cancel-all\",\"reason\":\"debug-input\"}],\"domEvents\":[{\"type\":\"pointerdown\",\"id\":1,\"buttons\":1,\"button\":0,\"target\":\"axiom-canvas\",\"x\":100,\"y\":157},{\"type\":\"pointermove\",\"id\":1,\"buttons\":1,\"button\":-1,\"target\":\"axiom-canvas\",\"x\":180,\"y\":217},{\"type\":\"pointerup\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"axiom-canvas\",\"x\":180,\"y\":217},{\"type\":\"lostpointercapture\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"axiom-canvas\",\"x\":180,\"y\":217},{\"type\":\"pointerdown\",\"id\":1,\"buttons\":1,\"button\":0,\"target\":\"axiom-canvas\",\"x\":260,\"y\":157},{\"type\":\"pointermove\",\"id\":1,\"buttons\":1,\"button\":-1,\"target\":\"axiom-canvas\",\"x\":340,\"y\":217},{\"type\":\"pointerup\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"axiom-canvas\",\"x\":340,\"y\":217},{\"type\":\"lostpointercapture\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"axiom-canvas\",\"x\":340,\"y\":217},{\"type\":\"pointerdown\",\"id\":1,\"buttons\":1,\"button\":0,\"target\":\"axiom-canvas\",\"x\":420,\"y\":157},{\"type\":\"pointermove\",\"id\":1,\"buttons\":1,\"button\":-1,\"target\":\"axiom-canvas\",\"x\":500,\"y\":217},{\"type\":\"pointerup\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"axiom-canvas\",\"x\":500,\"y\":217},{\"type\":\"lostpointercapture\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"axiom-canvas\",\"x\":500,\"y\":217},{\"type\":\"pointerdown\",\"id\":1,\"buttons\":1,\"button\":0,\"target\":\"axiom-canvas\",\"x\":140,\"y\":187},{\"type\":\"pointerup\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"axiom-canvas\",\"x\":140,\"y\":187},{\"type\":\"lostpointercapture\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"axiom-canvas\",\"x\":140,\"y\":187},{\"type\":\"pointerdown\",\"id\":1,\"buttons\":1,\"button\":0,\"target\":\"axiom-canvas\",\"x\":20,\"y\":77},{\"type\":\"pointermove\",\"id\":1,\"buttons\":1,\"button\":-1,\"target\":\"axiom-canvas\",\"x\":345,\"y\":227},{\"type\":\"pointerup\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"axiom-canvas\",\"x\":345,\"y\":227},{\"type\":\"lostpointercapture\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"axiom-canvas\",\"x\":345,\"y\":227},{\"type\":\"pointermove\",\"id\":1,\"buttons\":0,\"button\":-1,\"target\":\"debugUi\",\"x\":33,\"y\":528.6061401367188},{\"type\":\"pointerdown\",\"id\":1,\"buttons\":1,\"button\":0,\"target\":\"debugUi\",\"x\":33,\"y\":528.6061401367188},{\"type\":\"pointerup\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"debugUi\",\"x\":33,\"y\":528.6061401367188},{\"type\":\"lostpointercapture\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"debugUi\",\"x\":33,\"y\":528.6061401367188},{\"type\":\"pointermove\",\"id\":1,\"buttons\":0,\"button\":-1,\"target\":\"debugUi\",\"x\":45,\"y\":548.372314453125},{\"type\":\"pointerdown\",\"id\":1,\"buttons\":1,\"button\":0,\"target\":\"debugUi\",\"x\":45,\"y\":548.372314453125},{\"type\":\"pointerup\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"debugUi\",\"x\":45,\"y\":548.372314453125},{\"type\":\"lostpointercapture\",\"id\":1,\"buttons\":0,\"button\":0,\"target\":\"debugUi\",\"x\":45,\"y\":548.372314453125}]}\n    at check (file:///C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk-cpp-first-chrome/multi-apply-probe.mjs:55:80)\n    at file:///C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk-cpp-first-chrome/multi-apply-probe.mjs:88:9",
+  "exitCode": 1,
+  "assertions": 11,
+  "failed": 1,
+  "source": {
+    "head": "4e882aeadc42a89064027eb7b27f72e6a257fc83"
+  }
+}

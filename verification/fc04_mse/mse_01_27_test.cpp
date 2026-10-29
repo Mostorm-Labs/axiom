@@ -497,7 +497,7 @@ TEST_F(MultiSelectionMSE, MSE_11) {
   ASSERT_NE(pixels, nullptr);
   debug_ui::PanelRegistry panels; debug_ui::registerBuiltinPanels(panels);
   debug_ui::DebugUiSessionState ui;
-  debug_ui::DebugControlRouter router(&facade, nullptr, nullptr, nullptr, &composition.multiSelectionPort());
+  debug_ui::DebugControlRouter router(&facade, nullptr, nullptr, nullptr);
   debug_ui::DebugSnapshotAssembler assembler;
   const auto render = [&](bool cancel) {
     const auto snapshot = assembler.capture({&facade}); router.beginFrame(snapshot); ui.beginFrame();
@@ -1259,5 +1259,29 @@ TEST_F(MultiSelectionMSE, ProjectionRejectsWrongThreadAndClosedOwner) {
   const auto closed = composition.multiSelectionPort().read();
   EXPECT_FALSE(closed.available);
   EXPECT_TRUE(closed.roots.empty());
+}
+TEST_F(MultiSelectionMSE, PublicFacadePermissionChangeInvalidatesQueuedWrite) {
+  preparePartialFillFixture();
+  auto& facade = composition.controlFacade();
+  const auto projection = facade.readMultiSelection();
+  ASSERT_TRUE(projection.available);
+  const auto& fill = projection.properties.at(0x100U);
+  ASSERT_TRUE(fill.editAvailable);
+  const auto before = composition.readback();
+  const auto history = Access::historySize(composition.qualificationRuntime());
+  const auto state = facade.readRuntimeState().history;
+  const semantic::PropertyValue red = semantic::FillStyleValue{semantic::SolidFill{{1, 0, 0, 1}}};
+  ASSERT_TRUE(facade.submitMultiSelectionProperty(0x100U, red, projection.stamp, fill.eligible, 7996U, 1U).queued);
+  ASSERT_TRUE(facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kContextUnavailable));
+  ASSERT_TRUE(composition.ownerPump());
+  const auto outcome = facade.multiSelectionReceipt(7996U, 1U);
+  ASSERT_TRUE(outcome);
+  EXPECT_TRUE(outcome->terminal);
+  EXPECT_FALSE(outcome->applied);
+  EXPECT_TRUE(outcome->changed.empty());
+  EXPECT_EQ(composition.readback().semanticGeneration, before.semanticGeneration);
+  EXPECT_EQ(composition.readback().sceneRevision, before.sceneRevision);
+  EXPECT_EQ(Access::historySize(composition.qualificationRuntime()), history);
+  EXPECT_EQ(facade.readRuntimeState().history.canRedo, state.canRedo);
 }
 }  // namespace

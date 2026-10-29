@@ -17,6 +17,9 @@ foreach(number RANGE 1 27)
     COMMAND axiom_fc04_mse_tests --gtest_filter=MultiSelectionMSE.MSE_${id}
             --gtest_fail_if_no_test_selected)
 endforeach()
+add_test(NAME SDKCppPublicMultiPermissionStale
+  COMMAND axiom_fc04_mse_tests --gtest_filter=MultiSelectionMSE.PublicFacadePermissionChangeInvalidatesQueuedWrite
+          --gtest_fail_if_no_test_selected)
 if(WIN32 AND EXISTS "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat")
   add_custom_command(TARGET axiom_fc04_mse_tests POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat" "$<TARGET_FILE_DIR:axiom_fc04_mse_tests>/icudtl.dat")

@@ -11,6 +11,22 @@ runtime::SelectionSummary MinimalRuntimeFacade::readSelectionSummary() const {
   return host_.composition().controlFacade().readSelectionSummary();
 }
 
+bool MinimalRuntimeFacade::setMultiSelectionPermission(runtime::MultiSelectionPermissionMode mode) noexcept {
+  return host_.composition().controlFacade().setMultiSelectionPermission(mode);
+}
+runtime::MultiSelectionProjection MinimalRuntimeFacade::readMultiSelection() const noexcept {
+  return host_.composition().controlFacade().readMultiSelection();
+}
+runtime::MultiSelectionSubmitReceipt MinimalRuntimeFacade::submitMultiSelectionProperty(
+    std::uint32_t field, const semantic::PropertyValue& value, const runtime::MultiSelectionStamp& stamp,
+    const std::vector<foundation::ObjectId>& eligible, std::uint64_t client, std::uint64_t request) noexcept {
+  return host_.composition().controlFacade().submitMultiSelectionProperty(field, value, stamp, eligible, client, request);
+}
+std::optional<runtime::MultiSelectionOutcome> MinimalRuntimeFacade::multiSelectionReceipt(
+    std::uint64_t client, std::uint64_t request) const noexcept {
+  return host_.composition().controlFacade().multiSelectionReceipt(client, request);
+}
+
 runtime::SectionSnapshot MinimalRuntimeFacade::readSection(foundation::ObjectId id) const {
   return host_.composition().controlFacade().readSection(id);
 }

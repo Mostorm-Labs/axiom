@@ -65,7 +65,7 @@ try {
   let s=await state();await check(s.objects===3,'three real Shape creations',s);
   const baselinePng=await page.send('Page.captureScreenshot',{format:'png'});
   await fs.writeFile(path.join(output,'unselected-baseline.png'),Buffer.from(baselinePng.data,'base64'));
-  const operationCount=s.operations;
+  let operationCount=s.operations;
   await control('selection',0);await mouse('mousePressed',140,130);await mouse('mouseReleased',140,130);
   s=await state();await check(s.selectedCount===1,'point selection',s);
   await mouse('mousePressed',20,20);s=await state();await check(s.regionActive&&s.selectedCount===1,'blank Down retains formal selection',s);
@@ -75,6 +75,28 @@ try {
   await check(s.selectionSummary.count===2&&s.selectionSummary.kindCounts.reduce((n,k)=>n+k.count,0)===2&&s.selectionSummary.roots.includes(s.selectionSummary.primary),'normalized public roots kinds and primary agree',s.selectionSummary);
   await check(s.selectionSummary.bounds.status===1&&s.selectionSummary.sceneGeneration===s.selectionSummary.semanticGeneration,'published bounds and summary generations agree',s.selectionSummary);
   await check(s.selectionSummary.properties.find(p=>p.fieldId===3)?.state===1&&s.selectionSummary.properties.find(p=>p.fieldId===3)?.value===1,'accepted Shape opacity default aggregates uniformly',s.selectionSummary.properties);
+  const sampleCanvas=()=>evaluate(`(()=>{const c=document.getElementById('axiom-canvas'),gl=c.getContext('webgl2'),o=axiomMinimalHost.observation();const old=gl.getParameter(gl.FRAMEBUFFER_BINDING);gl.bindFramebuffer(gl.FRAMEBUFFER,null);const read=(x,y)=>{const a=new Uint8Array(4);gl.readPixels(Math.floor(x*c.width/o.logicalWidth),c.height-1-Math.floor(y*c.height/o.logicalHeight),1,1,gl.RGBA,gl.UNSIGNED_BYTE,a);return [...a];};const result=[read(140,130),read(300,130),read(460,130)];gl.bindFramebuffer(gl.FRAMEBUFFER,old);return result;})()`);
+  const beforePixels=await sampleCanvas();
+  await check(beforePixels.every(pixel=>pixel[0]<180 && pixel[1]<200 && pixel[2]<240),
+    'Web multi-select pixel fixtures begin inside visible shapes',beforePixels);
+  const beforeMulti = await state();
+  await evaluate('axiomMinimalHost.toggleDebugUi()'); await flush();
+  // Coordinates are in the 410x650 Debug UI backing canvas; assertions below
+  // verify the resulting canvas pixels, so a changed layout cannot silently pass.
+  const clickDebug = async (x,y) => {
+    const p=await evaluate(`(()=>{const r=document.getElementById('debugUi').getBoundingClientRect();return {x:r.left+${x}*r.width/410,y:r.top+${y}*r.height/650};})()`);
+    await page.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:p.x,y:p.y,buttons:0});
+    await page.send('Input.dispatchMouseEvent',{type:'mousePressed',x:p.x,y:p.y,button:'left',buttons:1,clickCount:1}); await flush();
+    await page.send('Input.dispatchMouseEvent',{type:'mouseReleased',x:p.x,y:p.y,button:'left',buttons:0,clickCount:1}); await flush();
+  };
+  await clickDebug(25,574); await clickDebug(37,598);
+  let afterMulti=await state();
+  const afterPixels=await sampleCanvas();
+  await check(afterPixels.slice(0,2).every(pixel=>pixel[0]>240 && pixel[1]>240 && pixel[2]>240) && JSON.stringify(beforePixels[2])===JSON.stringify(afterPixels[2]),'Web multi-select hides both selected objects and preserves the third',{beforePixels,afterPixels});
+  await check(afterMulti.operations===beforeMulti.operations+1,'Web Debug UI multi-select applies one operation through same Runtime',afterMulti);
+  await evaluate('axiomMinimalHost.toggleDebugUi()'); await flush();
+  await control('undo');
+  s=await state(); const undoPixels=await sampleCanvas(); await check(JSON.stringify(undoPixels)===JSON.stringify(beforePixels),'Web multi-select Undo restores both selected objects', {beforePixels,undoPixels}); await check(s.operations===beforeMulti.operations+2,'Web multi-select Undo creates the inverse operation',s); operationCount=s.operations;
   await drag(410,90,510,170,true);s=await state();await check(s.selectedCount===3,'Shift-at-Down appends triangle',s);
   await drag(410,90,510,170,true);s=await state();await check(s.selectedCount===3,'Add does not toggle an existing root',s);
   const multiPng=await page.send('Page.captureScreenshot',{format:'png'});await fs.writeFile(path.join(output,'multiple-roots.png'),Buffer.from(multiPng.data,'base64'));
@@ -139,7 +161,8 @@ print(json.dumps({'baseDark':sum(map(dark,base)),'actualDark':sum(map(dark,actua
   await drag(30,30,570,250);roots=(await sectionSnapshot()).selectedRoots;
   await check(roots.length===3&&roots.includes(sectionId)&&!roots.includes(shapeA),'whole Section region yields nonredundant operation roots',roots);
   s=await state();await check(s.selectionSummary.count===3&&s.selectionSummary.roots.includes(sectionId)&&!s.selectionSummary.roots.includes(shapeA),'public summary reuses hierarchy reduction',s.selectionSummary);
-  await check(s.selectionSummary.actions.filter(a=>[8,9,10,11,12,13,14].includes(a.action)).every(a=>a.state!==1),'future and primary-only multi-selection actions remain disabled',s.selectionSummary.actions);
+  await check(s.selectionSummary.actions.find(a=>a.action===9)?.state===1,'Group is available for eligible multi-selection',s.selectionSummary.actions);
+  await check(s.selectionSummary.actions.filter(a=>[8,10,11,12,13,14].includes(a.action)).every(a=>a.state!==1),'future and primary-only multi-selection actions remain disabled',s.selectionSummary.actions);
   await check((await state()).operations===topologyOperations,'hierarchy selection creates no operations',await state());
   s=await state();result.final=s;
   result.artifacts=[];for(const name of ['axiom_canvas_demo_web.js','axiom_canvas_demo_web.wasm','host.js']){const bytes=await fs.readFile(path.join(build,name));result.artifacts.push({name,sha256:hash(bytes),bytes:bytes.length});}

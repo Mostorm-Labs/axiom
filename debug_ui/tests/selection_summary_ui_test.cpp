@@ -2,7 +2,6 @@
 #include "canvas/debug_ui/ui_session_state.hpp"
 #include "canvas/debug_ui/snapshot_assembler.hpp"
 #include "canvas/runtime/runtime_composition.hpp"
-#include "canvas/runtime/internal/multi_selection_port.hpp"
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -15,8 +14,8 @@ int main() {
     const auto id = [](std::uint64_t n) { return foundation::ObjectId::fromUint64(n); };
     runtime::RuntimeComposition c;
     assert(c.open() && c.bindSurface(800, 600));
-    assert(c.multiSelectionPort().setPermissionMode(runtime::MultiSelectionPermissionMode::kLocalSingleUser));
     auto& facade = c.controlFacade();
+    assert(facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));
     semantic::ObjectRecord section;
     section.id = id(3);
     section.kind = semantic::ObjectKind::kSection;
@@ -61,7 +60,7 @@ int main() {
     registerBuiltinPanels(panels);
     DebugUiSessionState ui;
     ui.setAdvancedControls(true);
-    DebugControlRouter router(&facade, nullptr, nullptr, nullptr, &c.multiSelectionPort());
+    DebugControlRouter router(&facade, nullptr, nullptr, nullptr);
     DebugSnapshotAssembler assembler;
     const auto snapshot = [&] { return assembler.capture({&facade}); };
     const auto render = [&](const DebugSnapshot& s, const char* activate = nullptr) {

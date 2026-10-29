@@ -28,9 +28,8 @@ canvas::runtime::SurfaceModeReceipt unsupportedReceipt(std::uint64_t requestId) 
 DebugControlRouter::DebugControlRouter(canvas::runtime::RuntimeFacade* runtime,
                                        canvas::runtime::AxiomDebugControl* axiomDebug,
                                        canvas::runtime::PlatformDebugControl* platformDebug,
-                                       DebugActivityLog* activity,
-                                       canvas::runtime::MultiSelectionPort* multiSelection) noexcept
-    : multiSelection_(multiSelection), runtime_(runtime), axiomDebug_(axiomDebug), platformDebug_(platformDebug), activity_(activity) {}
+                                       DebugActivityLog* activity) noexcept
+    : runtime_(runtime), axiomDebug_(axiomDebug), platformDebug_(platformDebug), activity_(activity) {}
 
 #if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
 canvas::runtime::MultiSelectionSubmitReceipt DebugControlRouter::applyMultiSelectionProperty(
@@ -38,19 +37,19 @@ canvas::runtime::MultiSelectionSubmitReceipt DebugControlRouter::applyMultiSelec
   hasMultiSelectionAdmission_ = true;
   lastMultiRequest_ = 0;
   multiSelectionAdmission_ = {};
-  if (!multiSelection_ || !multiProjection_.available) return multiSelectionAdmission_;
+  if (!runtime_ || !multiProjection_.available) return multiSelectionAdmission_;
   const auto property = multiProjection_.properties.find(field);
   if (property == multiProjection_.properties.end() || !property->second.editAvailable)
     return multiSelectionAdmission_;
   const auto request = nextRequestId();
-  multiSelectionAdmission_ = multiSelection_->submitProperty(field, value, multiProjection_.stamp,
+  multiSelectionAdmission_ = runtime_->submitMultiSelectionProperty(field, value, multiProjection_.stamp,
                                                               property->second.eligible, 0xD002U, request);
   if (multiSelectionAdmission_.queued) lastMultiRequest_ = request;
   return multiSelectionAdmission_;
 }
 std::optional<canvas::runtime::MultiSelectionOutcome> DebugControlRouter::multiSelectionOutcome() const noexcept {
-  if (!multiSelection_ || lastMultiRequest_ == 0U) return {};
-  return multiSelection_->receipt(0xD002U, lastMultiRequest_);
+  if (!runtime_ || lastMultiRequest_ == 0U) return {};
+  return runtime_->multiSelectionReceipt(0xD002U, lastMultiRequest_);
 }
 #endif
 
@@ -88,9 +87,9 @@ void DebugControlRouter::beginFrame(const DebugSnapshot& snapshot) noexcept {
   frame_.actions=summary.actions;
 #if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
   multiProjection_ = {};
-  if (multiSelection_ && snapshot.coherence == SnapshotCoherence::kCoherent &&
+  if (runtime_ && snapshot.coherence == SnapshotCoherence::kCoherent &&
       summary.status == canvas::runtime::SelectionSummaryStatus::kAvailable) {
-    auto projection = multiSelection_->read();
+    auto projection = runtime_->readMultiSelection();
     if (projection.available && projection.roots == summary.roots &&
         projection.stamp.selectionRevision == summary.selectionRevision &&
         projection.stamp.semanticGeneration == summary.semanticGeneration &&

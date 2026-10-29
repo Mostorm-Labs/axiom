@@ -11,6 +11,13 @@ class MinimalRuntimeFacade final : public runtime::RuntimeFacade,
  public:
   explicit MinimalRuntimeFacade(MinimalRuntimeHost& host) noexcept;
   [[nodiscard]] runtime::SelectionSummary readSelectionSummary() const override;
+  [[nodiscard]] bool setMultiSelectionPermission(runtime::MultiSelectionPermissionMode) noexcept override;
+  [[nodiscard]] runtime::MultiSelectionProjection readMultiSelection() const noexcept override;
+  [[nodiscard]] runtime::MultiSelectionSubmitReceipt submitMultiSelectionProperty(
+      std::uint32_t, const semantic::PropertyValue&, const runtime::MultiSelectionStamp&,
+      const std::vector<foundation::ObjectId>&, std::uint64_t, std::uint64_t) noexcept override;
+  [[nodiscard]] std::optional<runtime::MultiSelectionOutcome> multiSelectionReceipt(
+      std::uint64_t, std::uint64_t) const noexcept override;
   [[nodiscard]] runtime::SectionSnapshot readSection(foundation::ObjectId = {}) const override;
   runtime::TextReceipt submitTextIntent(const runtime::TextIntent&) override;
   runtime::TextReceipt submitTextInput(const runtime::TextInputEvent&) override;

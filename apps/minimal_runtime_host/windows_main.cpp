@@ -515,12 +515,11 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   }
   (void)state.host->composition().setPlatformPresentationDeferred(true);
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
-  auto& multiSelection = state.host->composition().multiSelectionPort();
-  if (!multiSelection.setPermissionMode(canvas::runtime::MultiSelectionPermissionMode::kLocalSingleUser)) return 1;
+  if (!state.facade->setMultiSelectionPermission(canvas::runtime::MultiSelectionPermissionMode::kLocalSingleUser)) return 1;
   state.controller = std::make_unique<canvas::debug_ui::DebugController>(
       canvas::debug_ui::DebugControllerContext{state.facade.get(), nullptr, nullptr,
           state.facade.get(), nullptr, nullptr, nullptr,
-          [&state] { return canvas::minimal_runtime_host::chooseWindowsImageFile(state.window); }, &multiSelection});
+          [&state] { return canvas::minimal_runtime_host::chooseWindowsImageFile(state.window); }});
   state.debugUi->setController(state.controller.get());
   state.debugUi->setFocusAdmission([&state]{return admitWindowsDebugFocus(state);});
 #endif

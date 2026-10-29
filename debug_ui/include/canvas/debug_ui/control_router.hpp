@@ -4,11 +4,6 @@
 #include "canvas/debug_ui/snapshot.hpp"
 #include "canvas/runtime/debug_control.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
-#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
-#include "canvas/runtime/internal/multi_selection_port.hpp"
-#else
-namespace canvas::runtime { class MultiSelectionPort; }
-#endif
 #include "canvas/runtime/surface_debug_control.hpp"
 
 #include <cstdint>
@@ -32,8 +27,7 @@ class DebugControlRouter final {
   DebugControlRouter(canvas::runtime::RuntimeFacade* runtime,
                      canvas::runtime::AxiomDebugControl* axiomDebug,
                      canvas::runtime::PlatformDebugControl* platformDebug,
-                     DebugActivityLog* activity,
-                     canvas::runtime::MultiSelectionPort* multiSelection = nullptr) noexcept;
+                     DebugActivityLog* activity) noexcept;
 
   void beginFrame(const DebugSnapshot& snapshot) noexcept;
   void refreshReceipts() noexcept;
@@ -138,7 +132,6 @@ class DebugControlRouter final {
   struct PendingText final { std::uint64_t client; std::string action; };
   std::unordered_map<std::uint64_t, PendingText> pendingText_;
 
-  canvas::runtime::MultiSelectionPort* multiSelection_ = nullptr;
 #if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
   canvas::runtime::MultiSelectionProjection multiProjection_{};
   std::uint64_t lastMultiRequest_ = 0;

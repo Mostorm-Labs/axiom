@@ -1,11 +1,29 @@
 #include "canvas/runtime/canvas_runtime_facade.hpp"
 #include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/multi_selection_port.hpp"
 #include "canvas/interaction/text_edit_session.hpp"
 #include "canvas/semantic/property_value.hpp"
 #include "multi_selection_queue.hpp"
 #include <algorithm>
 
 namespace canvas::runtime {
+
+bool CanvasRuntimeFacade::setMultiSelectionPermission(MultiSelectionPermissionMode mode) noexcept {
+  return composition_ && composition_->multiSelectionPort().setPermissionMode(mode);
+}
+MultiSelectionProjection CanvasRuntimeFacade::readMultiSelection() const noexcept {
+  return composition_ ? composition_->multiSelectionPort().read() : MultiSelectionProjection{};
+}
+MultiSelectionSubmitReceipt CanvasRuntimeFacade::submitMultiSelectionProperty(
+    std::uint32_t field, const semantic::PropertyValue& value, const MultiSelectionStamp& stamp,
+    const std::vector<foundation::ObjectId>& eligible, std::uint64_t client, std::uint64_t request) noexcept {
+  return composition_ ? composition_->multiSelectionPort().submitProperty(field, value, stamp, eligible, client, request)
+                      : MultiSelectionSubmitReceipt{};
+}
+std::optional<MultiSelectionOutcome> CanvasRuntimeFacade::multiSelectionReceipt(
+    std::uint64_t client, std::uint64_t request) const noexcept {
+  return composition_ ? composition_->multiSelectionPort().receipt(client, request) : std::nullopt;
+}
 
 struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
  public:
