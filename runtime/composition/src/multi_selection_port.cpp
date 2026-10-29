@@ -52,6 +52,7 @@ MultiSelectionProjection MultiSelectionPort::read() const noexcept {
       MultiSelectionPropertyProjection property;
       property.total = before.roots.size();
       bool writable = writeReady;
+      bool allSolidStrokes = field == 0x101U;
       std::optional<semantic::PropertyValue> first;
       for (const auto id : before.roots) {
         const auto* record = runtime.semanticObjects_.find(id);
@@ -67,6 +68,10 @@ MultiSelectionProjection MultiSelectionPort::read() const noexcept {
           if (entry.field_id == field) { value = entry.value; break; }
         if (!value) value = semantic::propertyDefaultValue(field);
         if (!value) return {};
+        if (field == 0x101U) {
+          const auto* stroke = std::get_if<semantic::StrokeStyleValue>(&*value);
+          allSolidStrokes = allSolidStrokes && stroke && std::holds_alternative<semantic::SolidStroke>(*stroke);
+        }
         if (!first) first = *value;
         else if (*first != *value) property.mixed = true;
       }
@@ -79,6 +84,7 @@ MultiSelectionProjection MultiSelectionPort::read() const noexcept {
           : writable && !property.eligible.empty() ? MultiSelectionAvailability::kReady
                                                    : MultiSelectionAvailability::kUnavailable;
       property.editAvailable = permissionKnownAllow && writable && !property.eligible.empty();
+      property.strokeWidthAvailable = allSolidStrokes && !property.eligible.empty();
       result.properties.emplace(field, std::move(property));
     }
     const auto after = runtime.selectionSummary();
@@ -96,10 +102,49 @@ MultiSelectionProjection MultiSelectionPort::read() const noexcept {
   }
 }
 
+std::optional<std::vector<MultiSelectionRootPropertyValue>> MultiSelectionPort::readPropertyValues(
+    std::uint32_t field, const MultiSelectionStamp& stamp,
+    const std::vector<foundation::ObjectId>& eligible) const noexcept {
+  try {
+    const auto projection = read();
+    const auto property = projection.properties.find(field);
+    if (!projection.available || projection.stamp != stamp || property == projection.properties.end() ||
+        !property->second.editAvailable || property->second.eligible != eligible || eligible.empty()) return {};
+    std::vector<MultiSelectionRootPropertyValue> values;
+    values.reserve(eligible.size());
+    for (const auto id : eligible) {
+      const auto* record = owner_.runtime_->semanticObjects_.find(id);
+      if (!record) return {};
+      std::optional<semantic::PropertyValue> value;
+      for (const auto& entry : record->properties.entries)
+        if (entry.field_id == field) { value = entry.value; break; }
+      if (!value) value = semantic::propertyDefaultValue(field);
+      if (!value) return {};
+      values.push_back({id, std::move(*value)});
+    }
+    const auto after = read();
+    if (!after.available || after.stamp != stamp) return {};
+    return values;
+  } catch (const std::bad_alloc&) {
+    return {};
+  }
+}
+
 MultiSelectionSubmitReceipt MultiSelectionPort::submitProperty(
     std::uint32_t field, const semantic::PropertyValue& value, const MultiSelectionStamp& stamp,
     const std::vector<foundation::ObjectId>& eligible, std::uint64_t client,
     std::uint64_t request) noexcept {
+  return submitPropertyImpl(field, value, std::nullopt, stamp, eligible, client, request);
+}
+MultiSelectionSubmitReceipt MultiSelectionPort::submitStrokeWidth(
+    double width, const MultiSelectionStamp& stamp, const std::vector<foundation::ObjectId>& eligible,
+    std::uint64_t client, std::uint64_t request) noexcept {
+  return submitPropertyImpl(0x101U, semantic::PropertyValue{false}, width, stamp, eligible, client, request);
+}
+MultiSelectionSubmitReceipt MultiSelectionPort::submitPropertyImpl(
+    std::uint32_t field, const semantic::PropertyValue& value, std::optional<double> strokeWidth,
+    const MultiSelectionStamp& stamp, const std::vector<foundation::ObjectId>& eligible,
+    std::uint64_t client, std::uint64_t request) noexcept {
   if (std::this_thread::get_id() != owner_.ownerThread_ || client == 0U || request == 0U ||
       !owner_.controlFacade_) return {};
   bool highWaterChanged = false;
@@ -119,7 +164,8 @@ MultiSelectionSubmitReceipt MultiSelectionPort::submitProperty(
       return {false, CanvasControlReceiptState::kRejected, CanvasControlError::kResourceUnavailable};
     if (!projection.available || projection.stamp != stamp || property == projection.properties.end() ||
         !property->second.editAvailable || property->second.eligible != eligible || eligible.empty() ||
-        (property->second.uniformValue && *property->second.uniformValue == value)) return {};
+        (strokeWidth && !property->second.strokeWidthAvailable) ||
+        (!strokeWidth && property->second.uniformValue && *property->second.uniformValue == value)) return {};
     const auto key = std::make_pair(client, request);
     if (outcomes_.contains(key)) return {false, CanvasControlReceiptState::kDuplicate, CanvasControlError::kNone};
     const auto priorHighWater = outcomeHighWater_.find(client);
@@ -134,6 +180,8 @@ MultiSelectionSubmitReceipt MultiSelectionPort::submitProperty(
       outcomes_.erase(old);
     }
     auto outcome = std::make_shared<MultiSelectionOutcome>();
+    std::vector<std::pair<foundation::ObjectId, semantic::PropertyValue>> changedValues;
+    changedValues.reserve(eligible.size());
     for (const auto id : eligible) {
       const auto* record = owner_.runtime_->semanticObjects_.find(id);
       if (!record) return {};
@@ -142,7 +190,19 @@ MultiSelectionSubmitReceipt MultiSelectionPort::submitProperty(
         if (entry.field_id == field) { prior = entry.value; break; }
       if (!prior) prior = semantic::propertyDefaultValue(field);
       if (!prior) return {};
-      if (*prior != value) outcome->changed.push_back(id);
+      auto next = value;
+      if (strokeWidth) {
+        const auto* style = std::get_if<semantic::StrokeStyleValue>(&*prior);
+        const auto* solid = style ? std::get_if<semantic::SolidStroke>(style) : nullptr;
+        if (!solid) return {};
+        auto updated = *solid;
+        updated.width = *strokeWidth;
+        next = semantic::StrokeStyleValue{std::move(updated)};
+      }
+      if (*prior != next) {
+        outcome->changed.push_back(id);
+        changedValues.emplace_back(id, std::move(next));
+      }
       else outcome->unchanged.push_back(id);
     }
     if (outcome->changed.empty()) return {};
@@ -153,7 +213,7 @@ MultiSelectionSubmitReceipt MultiSelectionPort::submitProperty(
     const auto sequence = owner_.controlFacade_->controlSequence();
     work->deadlineSequence = sequence <= std::numeric_limits<std::uint64_t>::max() - 120U
         ? sequence + 120U : std::numeric_limits<std::uint64_t>::max();
-    work->apply = [this, field, value, stamp, eligible, outcome]() -> CanvasControlError {
+    work->apply = [this, field, changedValues = std::move(changedValues), stamp, eligible, outcome]() -> CanvasControlError {
       const auto current = read();
       const auto item = current.properties.find(field);
       if (!current.available || current.stamp != stamp || item == current.properties.end() ||
@@ -163,8 +223,8 @@ MultiSelectionSubmitReceipt MultiSelectionPort::submitProperty(
       try {
         semantic::PatchPropertiesOp patch;
         patch.patches.reserve(outcome->changed.size());
-        for (const auto id : outcome->changed)
-          patch.patches.push_back({id, field, semantic::PropertyPatchAction::kSet, value});
+        for (const auto& [id, next] : changedValues)
+          patch.patches.push_back({id, field, semantic::PropertyPatchAction::kSet, next});
         auto& runtime = *owner_.runtime_;
         const auto operationId = runtime.allocateOperationId();
         if (operationId.isZero() || !runtime.beginExplicitIntent()) return CanvasControlError::kBusy;

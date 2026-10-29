@@ -47,6 +47,20 @@ canvas::runtime::MultiSelectionSubmitReceipt DebugControlRouter::applyMultiSelec
   if (multiSelectionAdmission_.queued) lastMultiRequest_ = request;
   return multiSelectionAdmission_;
 }
+canvas::runtime::MultiSelectionSubmitReceipt DebugControlRouter::applyMultiSelectionStrokeWidth(double width) noexcept {
+  hasMultiSelectionAdmission_ = true;
+  lastMultiRequest_ = 0;
+  multiSelectionAdmission_ = {};
+  if (!runtime_ || !multiProjection_.available) return multiSelectionAdmission_;
+  const auto property = multiProjection_.properties.find(0x101U);
+  if (property == multiProjection_.properties.end() || !property->second.editAvailable ||
+      !property->second.strokeWidthAvailable) return multiSelectionAdmission_;
+  const auto request = nextRequestId();
+  multiSelectionAdmission_ = runtime_->submitMultiSelectionStrokeWidth(width, multiProjection_.stamp,
+                                                                       property->second.eligible, 0xD002U, request);
+  if (multiSelectionAdmission_.queued) lastMultiRequest_ = request;
+  return multiSelectionAdmission_;
+}
 std::optional<canvas::runtime::MultiSelectionOutcome> DebugControlRouter::multiSelectionOutcome() const noexcept {
   if (!runtime_ || lastMultiRequest_ == 0U) return {};
   return runtime_->multiSelectionReceipt(0xD002U, lastMultiRequest_);

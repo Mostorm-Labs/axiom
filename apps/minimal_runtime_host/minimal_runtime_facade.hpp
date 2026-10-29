@@ -13,9 +13,14 @@ class MinimalRuntimeFacade final : public runtime::RuntimeFacade,
   [[nodiscard]] runtime::SelectionSummary readSelectionSummary() const override;
   [[nodiscard]] bool setMultiSelectionPermission(runtime::MultiSelectionPermissionMode) noexcept override;
   [[nodiscard]] runtime::MultiSelectionProjection readMultiSelection() const noexcept override;
+  [[nodiscard]] std::optional<std::vector<runtime::MultiSelectionRootPropertyValue>> readMultiSelectionPropertyValues(
+      std::uint32_t, const runtime::MultiSelectionStamp&, const std::vector<foundation::ObjectId>&) const noexcept override;
   [[nodiscard]] runtime::MultiSelectionSubmitReceipt submitMultiSelectionProperty(
       std::uint32_t, const semantic::PropertyValue&, const runtime::MultiSelectionStamp&,
       const std::vector<foundation::ObjectId>&, std::uint64_t, std::uint64_t) noexcept override;
+  [[nodiscard]] runtime::MultiSelectionSubmitReceipt submitMultiSelectionStrokeWidth(
+      double, const runtime::MultiSelectionStamp&, const std::vector<foundation::ObjectId>&,
+      std::uint64_t, std::uint64_t) noexcept override;
   [[nodiscard]] std::optional<runtime::MultiSelectionOutcome> multiSelectionReceipt(
       std::uint64_t, std::uint64_t) const noexcept override;
   [[nodiscard]] runtime::SectionSnapshot readSection(foundation::ObjectId = {}) const override;

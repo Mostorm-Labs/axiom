@@ -1284,4 +1284,110 @@ TEST_F(MultiSelectionMSE, PublicFacadePermissionChangeInvalidatesQueuedWrite) {
   EXPECT_EQ(Access::historySize(composition.qualificationRuntime()), history);
   EXPECT_EQ(facade.readRuntimeState().history.canRedo, state.canRedo);
 }
+
+TEST_F(MultiSelectionMSE, PublicStrokeWidthPreservesEachObjectAndUndoRedo) {
+  semantic::SolidStroke first{{1, 0, 0, 1}, 5, semantic::StrokeCap::kRound,
+                              semantic::MiterJoin{4}, semantic::DashPattern{{2, 1}, 0}};
+  semantic::SolidStroke second{{0, 0, 1, 1}, 7, semantic::StrokeCap::kSquare,
+                               semantic::MiterJoin{7}, semantic::DashPattern{{4, 2}, 0}};
+  semantic::InsertObjectsOp insert;
+  for (std::uint64_t n = 1; n <= 2; ++n) {
+    semantic::ObjectRecord object{};
+    object.id = id(n); object.kind = semantic::ObjectKind::kShape; object.kind_version = 1;
+    object.content = semantic::ShapeContent{1, 40, 30};
+    object.placement.order_key = semantic::OrderKey({static_cast<std::uint8_t>(n)});
+    object.transform.tx = static_cast<double>(n * 70);
+    object.properties.entries.push_back({0x100U, semantic::FillStyleValue{semantic::SolidFill{{0, 0, 1, 1}}}});
+    object.properties.entries.push_back({0x101U, semantic::StrokeStyleValue{n == 1 ? first : second}});
+    insert.objects.push_back(std::move(object));
+  }
+  const semantic::Operation seed{semantic::OperationId{id(101)}, semantic::DocumentId{id(1)}, 1, 1, std::move(insert)};
+  ASSERT_EQ(composition.applyExternalOperation(seed, semantic::ApplySource::kRemoteSync).disposition,
+            semantic::ApplyDisposition::kApplied);
+  Access::select(composition.qualificationRuntime(), {id(1), id(2)});
+  auto& facade = composition.controlFacade();
+  const auto projection = facade.readMultiSelection();
+  ASSERT_TRUE(projection.available);
+  const auto& stroke = projection.properties.at(0x101U);
+  ASSERT_TRUE(stroke.mixed);
+  ASSERT_EQ(stroke.eligible, (std::vector<foundation::ObjectId>{id(1), id(2)}));
+  const auto roots = facade.readMultiSelectionPropertyValues(0x101U, projection.stamp, stroke.eligible);
+  ASSERT_TRUE(roots);
+  ASSERT_EQ(roots->size(), 2U);
+  EXPECT_EQ((*roots)[0].object, id(1));
+  EXPECT_EQ((*roots)[0].value, semantic::PropertyValue{semantic::StrokeStyleValue{first}});
+  EXPECT_EQ((*roots)[1].object, id(2));
+  EXPECT_EQ((*roots)[1].value, semantic::PropertyValue{semantic::StrokeStyleValue{second}});
+  EXPECT_FALSE(facade.readMultiSelectionPropertyValues(0x101U, projection.stamp, {id(1)}));
+  auto staleStamp = projection.stamp;
+  ++staleStamp.selectionRevision;
+  EXPECT_FALSE(facade.readMultiSelectionPropertyValues(0x101U, staleStamp, stroke.eligible));
+  const auto history = Access::historySize(composition.qualificationRuntime());
+  ASSERT_TRUE(facade.submitMultiSelectionStrokeWidth(19, projection.stamp, stroke.eligible, 8800, 1).queued);
+  ASSERT_TRUE(composition.ownerPump());
+  const auto receipt = facade.multiSelectionReceipt(8800, 1);
+  ASSERT_TRUE(receipt && receipt->terminal && receipt->applied);
+  EXPECT_EQ(receipt->changed, stroke.eligible);
+  EXPECT_EQ(Access::historySize(composition.qualificationRuntime()), history + 1U);
+  const auto check = [&](const semantic::SolidStroke& expectedFirst, const semantic::SolidStroke& expectedSecond) {
+    for (const auto& pair : {std::pair{id(1), expectedFirst}, std::pair{id(2), expectedSecond}}) {
+      const auto* object = composition.qualificationRuntime().qualificationObjectRecord(pair.first);
+      ASSERT_NE(object, nullptr);
+      const auto it = std::find_if(object->properties.entries.begin(), object->properties.entries.end(),
+                                   [](const auto& value) { return value.field_id == 0x101U; });
+      ASSERT_NE(it, object->properties.entries.end());
+      EXPECT_EQ(it->value, semantic::PropertyValue{semantic::StrokeStyleValue{pair.second}});
+      const auto fill = std::find_if(object->properties.entries.begin(), object->properties.entries.end(),
+                                     [](const auto& value) { return value.field_id == 0x100U; });
+      ASSERT_NE(fill, object->properties.entries.end());
+      EXPECT_EQ(fill->value, (semantic::PropertyValue{semantic::FillStyleValue{semantic::SolidFill{{0, 0, 1, 1}}}}));
+    }
+  };
+  auto changedFirst = first; changedFirst.width = 19;
+  auto changedSecond = second; changedSecond.width = 19;
+  check(changedFirst, changedSecond);
+  const auto generation = facade.readRuntimeState().identity.runtimeGeneration;
+  ASSERT_EQ(facade.undo(2, generation, 8800).state, runtime::ProductControlState::kQueued);
+  ASSERT_TRUE(composition.ownerPump());
+  check(first, second);
+  ASSERT_EQ(facade.redo(3, generation, 8800).state, runtime::ProductControlState::kQueued);
+  ASSERT_TRUE(composition.ownerPump());
+  check(changedFirst, changedSecond);
+  EXPECT_FALSE(facade.submitMultiSelectionStrokeWidth(21, projection.stamp, stroke.eligible, 8800, 4).queued);
+  const auto fresh = facade.readMultiSelection();
+  const auto& currentStroke = fresh.properties.at(0x101U);
+  const auto beforeRejectedHistory = Access::historySize(composition.qualificationRuntime());
+  ASSERT_TRUE(facade.submitMultiSelectionStrokeWidth(-1, fresh.stamp, currentStroke.eligible, 8800, 4).queued);
+  ASSERT_TRUE(composition.ownerPump());
+  const auto invalid = facade.multiSelectionReceipt(8800, 4);
+  ASSERT_TRUE(invalid && invalid->terminal);
+  EXPECT_FALSE(invalid->applied);
+  EXPECT_TRUE(invalid->changed.empty());
+  EXPECT_EQ(Access::historySize(composition.qualificationRuntime()), beforeRejectedHistory);
+  check(changedFirst, changedSecond);
+  ASSERT_TRUE(facade.submitMultiSelectionStrokeWidth(21, fresh.stamp, currentStroke.eligible, 8800, 5).queued);
+  ASSERT_TRUE(facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kContextUnavailable));
+  EXPECT_FALSE(facade.readMultiSelectionPropertyValues(0x101U, fresh.stamp, currentStroke.eligible));
+  ASSERT_TRUE(composition.ownerPump());
+  const auto rejected = facade.multiSelectionReceipt(8800, 5);
+  ASSERT_TRUE(rejected && rejected->terminal);
+  EXPECT_FALSE(rejected->applied);
+  EXPECT_TRUE(rejected->changed.empty());
+  EXPECT_EQ(Access::historySize(composition.qualificationRuntime()), beforeRejectedHistory);
+  check(changedFirst, changedSecond);
+}
+
+TEST_F(MultiSelectionMSE, PublicStrokeWidthRejectsNoStrokeWithoutMutation) {
+  preparePartialFillFixture();
+  auto& facade = composition.controlFacade();
+  const auto projection = facade.readMultiSelection();
+  ASSERT_TRUE(projection.available);
+  const auto& stroke = projection.properties.at(0x101U);
+  EXPECT_FALSE(stroke.strokeWidthAvailable);
+  const auto before = composition.readback();
+  const auto history = Access::historySize(composition.qualificationRuntime());
+  EXPECT_FALSE(facade.submitMultiSelectionStrokeWidth(19, projection.stamp, stroke.eligible, 8801, 1).queued);
+  EXPECT_EQ(composition.readback().semanticGeneration, before.semanticGeneration);
+  EXPECT_EQ(Access::historySize(composition.qualificationRuntime()), history);
+}
 }  // namespace

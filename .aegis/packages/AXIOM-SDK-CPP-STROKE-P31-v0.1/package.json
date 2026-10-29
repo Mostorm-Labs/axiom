@@ -1,0 +1,10 @@
+{
+  "task_id": "AXIOM-SDK-CPP-STROKE-WIDTH",
+  "status": "USER_DIRECTED_BOUNDED_SLICE",
+  "repository": "Mostorm-Labs/axiom",
+  "task_anchor": "c8ed35456b352172482cf6f4bb1b7db11049eb90",
+  "scope": ["public stamped per-object property read and typed multi-selection stroke-width intent", "per-object preservation of other stroke fields", "Windows and Web Debug UI forwarding through existing Runtime owner"],
+  "forbidden": ["change wire schema", "second selection or History owner", "weaken permission or staleness checks", "change historical evidence or SDK locks"],
+  "verification": ["real two-root mixed-stroke apply with per-object independent expectations", "exact receipt and one Undo/Redo", "stale and permission rejection", "existing Runtime and Windows/Web regressions"],
+  "continue_until_terminal_state": true
+}

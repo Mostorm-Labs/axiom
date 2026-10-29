@@ -37,6 +37,7 @@ class DebugControlRouter final {
   }
   [[nodiscard]] canvas::runtime::MultiSelectionSubmitReceipt applyMultiSelectionProperty(
       std::uint32_t field, const canvas::semantic::PropertyValue& value) noexcept;
+  [[nodiscard]] canvas::runtime::MultiSelectionSubmitReceipt applyMultiSelectionStrokeWidth(double width) noexcept;
   [[nodiscard]] std::optional<canvas::runtime::MultiSelectionOutcome> multiSelectionOutcome() const noexcept;
   [[nodiscard]] bool hasMultiSelectionAdmission() const noexcept { return hasMultiSelectionAdmission_; }
   [[nodiscard]] canvas::runtime::MultiSelectionSubmitReceipt multiSelectionAdmission() const noexcept { return multiSelectionAdmission_; }

@@ -159,11 +159,8 @@ void multiSelectionProperties(DebugPanelContext& c) {
                 semantic::SolidFill{{draft.fill[0],draft.fill[1],draft.fill[2],draft.fill[3]}}};
             break;
         case 0x101U: {
-            const auto* stroke = property.uniformValue ? std::get_if<semantic::StrokeStyleValue>(&*property.uniformValue) : nullptr;
-            const auto* solid = stroke ? std::get_if<semantic::SolidStroke>(stroke) : nullptr;
-            if (!solid) { enabled = false; ImGui::TextWrapped("Stroke editing requires a uniform solid stroke."); }
-            else { auto updated = *solid; ImGui::InputDouble("Stroke width", &draft.strokeWidth);
-                updated.width = draft.strokeWidth; value = semantic::StrokeStyleValue{std::move(updated)}; }
+            if (!property.strokeWidthAvailable) { enabled = false; ImGui::TextWrapped("Stroke width requires solid strokes."); }
+            else ImGui::InputDouble("Stroke width", &draft.strokeWidth);
             break;
         }
         case 0x200U: ImGui::Combo("Start decoration", &draft.startDecoration, "None\0Arrow\0");
@@ -174,7 +171,8 @@ void multiSelectionProperties(DebugPanelContext& c) {
         }
         ImGui::BeginDisabled(!enabled);
         if (ImGui::Button("Apply")) {
-            (void)c.controls.applyMultiSelectionProperty(row.field, value);
+            if (row.field == 0x101U) (void)c.controls.applyMultiSelectionStrokeWidth(draft.strokeWidth);
+            else (void)c.controls.applyMultiSelectionProperty(row.field, value);
             c.ui.markControlSubmitted();
         }
         ImGui::SameLine();

@@ -22,13 +22,23 @@ class MultiSelectionPort final {
   explicit MultiSelectionPort(RuntimeComposition& owner) noexcept : owner_(owner) {}
   [[nodiscard]] bool setPermissionMode(MultiSelectionPermissionMode mode) noexcept;
   [[nodiscard]] MultiSelectionProjection read() const noexcept;
+  [[nodiscard]] std::optional<std::vector<MultiSelectionRootPropertyValue>> readPropertyValues(
+      std::uint32_t, const MultiSelectionStamp&, const std::vector<foundation::ObjectId>&) const noexcept;
   [[nodiscard]] MultiSelectionSubmitReceipt submitProperty(
       std::uint32_t field, const semantic::PropertyValue& value,
       const MultiSelectionStamp& stamp, const std::vector<foundation::ObjectId>& eligible,
       std::uint64_t client, std::uint64_t request) noexcept;
+  [[nodiscard]] MultiSelectionSubmitReceipt submitStrokeWidth(
+      double width, const MultiSelectionStamp& stamp,
+      const std::vector<foundation::ObjectId>& eligible,
+      std::uint64_t client, std::uint64_t request) noexcept;
   [[nodiscard]] std::optional<MultiSelectionOutcome> receipt(
       std::uint64_t client, std::uint64_t request) const noexcept;
  private:
+  [[nodiscard]] MultiSelectionSubmitReceipt submitPropertyImpl(
+      std::uint32_t field, const semantic::PropertyValue& value, std::optional<double> strokeWidth,
+      const MultiSelectionStamp& stamp, const std::vector<foundation::ObjectId>& eligible,
+      std::uint64_t client, std::uint64_t request) noexcept;
   RuntimeComposition& owner_;
   MultiSelectionPermissionMode permissionMode_ = MultiSelectionPermissionMode::kUnconfigured;
   std::uint64_t permissionRevision_ = 1;

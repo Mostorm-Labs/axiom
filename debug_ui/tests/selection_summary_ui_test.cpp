@@ -33,6 +33,11 @@ int main() {
         shape.transform.tx = 50 * n;
         shape.transform.ty = 60;
         shape.properties.entries = {{3U, n == 1 ? 0.5F : 0.75F}};
+        semantic::SolidStroke stroke{};
+        stroke.color = n == 1 ? semantic::ColorValue{1, 0, 0, 1} : semantic::ColorValue{0, 0, 1, 1};
+        stroke.width = n == 1 ? 5 : 7;
+        stroke.join = semantic::MiterJoin{4};
+        shape.properties.entries.push_back({0x101U, semantic::StrokeStyleValue{stroke}});
         records.push_back(shape);
     }
     semantic::Operation seed{semantic::OperationId{id(7000)},
@@ -72,8 +77,8 @@ int main() {
         ImGui::LogToBuffer();
         auto& g = *ImGui::GetCurrentContext();
         if (activate) {
-            if (std::string(activate) == "ApplyOpacity") {
-                ImGui::PushID(3);
+            if (std::string(activate) == "ApplyOpacity" || std::string(activate) == "ApplyStroke") {
+                ImGui::PushID(std::string(activate) == "ApplyOpacity" ? 3 : 0x101);
                 g.NavActivateId = g.NavActivateDownId = ImGui::GetID("Apply");
                 ImGui::PopID();
             } else {
@@ -119,6 +124,17 @@ int main() {
     const auto outcome = router.multiSelectionOutcome();
     assert(outcome && outcome->applied && outcome->changed.size() == 2U);
     assert(facade.undo(3, facade.readRuntimeState().identity.runtimeGeneration, 7778).state ==
+           runtime::ProductControlState::kQueued);
+    assert(c.ownerPump());
+    (void)render(snapshot());
+    assert(router.multiSelectionProjection().properties.at(0x101U).mixed);
+    assert(router.multiSelectionProjection().properties.at(0x101U).strokeWidthAvailable);
+    ui.multiSelectionDraft().strokeWidth = 19;
+    (void)render(snapshot(), "ApplyStroke");
+    assert(c.ownerPump());
+    const auto strokeOutcome = router.multiSelectionOutcome();
+    assert(strokeOutcome && strokeOutcome->applied && strokeOutcome->changed.size() == 2U);
+    assert(facade.undo(5, facade.readRuntimeState().identity.runtimeGeneration, 7778).state ==
            runtime::ProductControlState::kQueued);
     assert(c.ownerPump());
     const auto text = render(snapshot());

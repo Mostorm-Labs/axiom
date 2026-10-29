@@ -22,9 +22,14 @@ class RuntimeFacade {
   // The concrete composition remains the only selection and History owner.
   [[nodiscard]] virtual bool setMultiSelectionPermission(MultiSelectionPermissionMode) noexcept { return false; }
   [[nodiscard]] virtual MultiSelectionProjection readMultiSelection() const noexcept { return {}; }
+  [[nodiscard]] virtual std::optional<std::vector<MultiSelectionRootPropertyValue>> readMultiSelectionPropertyValues(
+      std::uint32_t, const MultiSelectionStamp&, const std::vector<foundation::ObjectId>&) const noexcept { return {}; }
   [[nodiscard]] virtual MultiSelectionSubmitReceipt submitMultiSelectionProperty(
       std::uint32_t, const semantic::PropertyValue&, const MultiSelectionStamp&,
       const std::vector<foundation::ObjectId>&, std::uint64_t, std::uint64_t) noexcept { return {}; }
+  [[nodiscard]] virtual MultiSelectionSubmitReceipt submitMultiSelectionStrokeWidth(
+      double, const MultiSelectionStamp&, const std::vector<foundation::ObjectId>&,
+      std::uint64_t, std::uint64_t) noexcept { return {}; }
   [[nodiscard]] virtual std::optional<MultiSelectionOutcome> multiSelectionReceipt(
       std::uint64_t, std::uint64_t) const noexcept { return {}; }
   [[nodiscard]] virtual SectionSnapshot readSection(foundation::ObjectId = {}) const { return {}; }

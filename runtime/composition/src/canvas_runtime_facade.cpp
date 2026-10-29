@@ -14,10 +14,21 @@ bool CanvasRuntimeFacade::setMultiSelectionPermission(MultiSelectionPermissionMo
 MultiSelectionProjection CanvasRuntimeFacade::readMultiSelection() const noexcept {
   return composition_ ? composition_->multiSelectionPort().read() : MultiSelectionProjection{};
 }
+std::optional<std::vector<MultiSelectionRootPropertyValue>> CanvasRuntimeFacade::readMultiSelectionPropertyValues(
+    std::uint32_t field, const MultiSelectionStamp& stamp,
+    const std::vector<foundation::ObjectId>& eligible) const noexcept {
+  return composition_ ? composition_->multiSelectionPort().readPropertyValues(field, stamp, eligible) : std::nullopt;
+}
 MultiSelectionSubmitReceipt CanvasRuntimeFacade::submitMultiSelectionProperty(
     std::uint32_t field, const semantic::PropertyValue& value, const MultiSelectionStamp& stamp,
     const std::vector<foundation::ObjectId>& eligible, std::uint64_t client, std::uint64_t request) noexcept {
   return composition_ ? composition_->multiSelectionPort().submitProperty(field, value, stamp, eligible, client, request)
+                      : MultiSelectionSubmitReceipt{};
+}
+MultiSelectionSubmitReceipt CanvasRuntimeFacade::submitMultiSelectionStrokeWidth(
+    double width, const MultiSelectionStamp& stamp, const std::vector<foundation::ObjectId>& eligible,
+    std::uint64_t client, std::uint64_t request) noexcept {
+  return composition_ ? composition_->multiSelectionPort().submitStrokeWidth(width, stamp, eligible, client, request)
                       : MultiSelectionSubmitReceipt{};
 }
 std::optional<MultiSelectionOutcome> CanvasRuntimeFacade::multiSelectionReceipt(

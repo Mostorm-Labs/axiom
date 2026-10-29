@@ -68,9 +68,14 @@ class CanvasRuntimeFacade : public RuntimeFacade {
     [[nodiscard]] SelectionSummary readSelectionSummary() const override;
   [[nodiscard]] bool setMultiSelectionPermission(MultiSelectionPermissionMode) noexcept override;
   [[nodiscard]] MultiSelectionProjection readMultiSelection() const noexcept override;
+  [[nodiscard]] std::optional<std::vector<MultiSelectionRootPropertyValue>> readMultiSelectionPropertyValues(
+      std::uint32_t, const MultiSelectionStamp&, const std::vector<foundation::ObjectId>&) const noexcept override;
   [[nodiscard]] MultiSelectionSubmitReceipt submitMultiSelectionProperty(
       std::uint32_t, const semantic::PropertyValue&, const MultiSelectionStamp&,
       const std::vector<foundation::ObjectId>&, std::uint64_t, std::uint64_t) noexcept override;
+  [[nodiscard]] MultiSelectionSubmitReceipt submitMultiSelectionStrokeWidth(
+      double, const MultiSelectionStamp&, const std::vector<foundation::ObjectId>&,
+      std::uint64_t, std::uint64_t) noexcept override;
   [[nodiscard]] std::optional<MultiSelectionOutcome> multiSelectionReceipt(
       std::uint64_t, std::uint64_t) const noexcept override;
   CanvasRuntimeFacade(const CanvasRuntimeFacade&) = delete;

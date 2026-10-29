@@ -17,10 +17,20 @@ bool MinimalRuntimeFacade::setMultiSelectionPermission(runtime::MultiSelectionPe
 runtime::MultiSelectionProjection MinimalRuntimeFacade::readMultiSelection() const noexcept {
   return host_.composition().controlFacade().readMultiSelection();
 }
+std::optional<std::vector<runtime::MultiSelectionRootPropertyValue>> MinimalRuntimeFacade::readMultiSelectionPropertyValues(
+    std::uint32_t field, const runtime::MultiSelectionStamp& stamp,
+    const std::vector<foundation::ObjectId>& eligible) const noexcept {
+  return host_.composition().controlFacade().readMultiSelectionPropertyValues(field, stamp, eligible);
+}
 runtime::MultiSelectionSubmitReceipt MinimalRuntimeFacade::submitMultiSelectionProperty(
     std::uint32_t field, const semantic::PropertyValue& value, const runtime::MultiSelectionStamp& stamp,
     const std::vector<foundation::ObjectId>& eligible, std::uint64_t client, std::uint64_t request) noexcept {
   return host_.composition().controlFacade().submitMultiSelectionProperty(field, value, stamp, eligible, client, request);
+}
+runtime::MultiSelectionSubmitReceipt MinimalRuntimeFacade::submitMultiSelectionStrokeWidth(
+    double width, const runtime::MultiSelectionStamp& stamp, const std::vector<foundation::ObjectId>& eligible,
+    std::uint64_t client, std::uint64_t request) noexcept {
+  return host_.composition().controlFacade().submitMultiSelectionStrokeWidth(width, stamp, eligible, client, request);
 }
 std::optional<runtime::MultiSelectionOutcome> MinimalRuntimeFacade::multiSelectionReceipt(
     std::uint64_t client, std::uint64_t request) const noexcept {

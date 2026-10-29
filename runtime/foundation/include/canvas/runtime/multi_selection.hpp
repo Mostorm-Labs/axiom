@@ -31,6 +31,9 @@ struct MultiSelectionPropertyProjection final {
   // A missing permission fact is not authorization to mutate.
   MultiSelectionAvailability availability = MultiSelectionAvailability::kPermissionUnknown;
   bool editAvailable = false;
+  // True only when every applicable root has a solid stroke. It does not
+  // override permission or lifecycle admission in editAvailable.
+  bool strokeWidthAvailable = false;
   std::optional<semantic::PropertyValue> uniformValue;
 };
 struct MultiSelectionStamp final {
@@ -54,6 +57,10 @@ struct MultiSelectionSubmitReceipt final {
   bool queued = false;
   CanvasControlReceiptState state = CanvasControlReceiptState::kRejected;
   CanvasControlError error = CanvasControlError::kNone;
+};
+struct MultiSelectionRootPropertyValue final {
+  foundation::ObjectId object{};
+  semantic::PropertyValue value{};
 };
 struct MultiSelectionOutcome final {
   bool applied = false;
