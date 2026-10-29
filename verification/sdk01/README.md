@@ -1,0 +1,7 @@
+# SDK-01 verification candidates
+
+`facade_stale_retry_test.cpp` tests the existing real Facade/Runtime owner, with qualification visibility enabled only for that test target. To register it in an already configured Runtime build, reconfigure with `-DCMAKE_PROJECT_INCLUDE=<repo>/verification/sdk01/inject-owner-tests.cmake`, then build `axiom_sdk01_facade_stale_retry_test` and run `ctest --test-dir <build> -R '^SDK01FacadeStaleRetry$' --output-on-failure --no-tests=error`. The harness does not expose the qualification interface in an installed SDK.
+
+`external-consumer/` and `run_external.py` require an actually installed header and library **outside the source tree**. Run `python verification/sdk01/run_external.py --include-dir <installed-header-directory> --library <installed-library> --output <result.json>`, optionally with `--shared` and `--runtime-dir` for a shared library. It copies the consumer into a fresh OS temporary directory and records real configure/build/CTest output; absent inputs fail closed. Its two tests currently cover only V1 ABI version and basic two-runtime lifetime, not the broader SDK exit criteria.
+
+`case-bindings-v0.2.json` and `multi-selection-binding.md` describe candidate oracles and identify which ones only cover internal owners. A candidate entry is not an accepted P20 contract or an observed public SDK pass. Windows/Web SDK consumers, multi-selection public API, full Id128, extended errors, and the real P31 acceptance are still pending.
