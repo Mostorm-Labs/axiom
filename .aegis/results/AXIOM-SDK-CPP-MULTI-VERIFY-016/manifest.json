@@ -1,0 +1,55 @@
+{
+  "source_revision": "f43bd4604f3b54890a2e7564e16d3c7b5893ac27",
+  "source_clean_at_build": true,
+  "toolchain": "MSVC 19.51 x64, Emscripten 6.0.6; locked Semantic SDK v2 and locked Skia",
+  "commands": [
+    {
+      "command": "cmd.exe /c 'call \"C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat\" >nul && cmake -S . -B out/sdk01-review/build && cmake --build out/sdk01-review/build --target axiom_minimal_runtime_host_windows axiom_fc04_mse_tests axiom_selection_summary_ui_tests --parallel 4'",
+      "exit_code": 0
+    },
+    {
+      "command": "D:/Softwares/Anaconda/python.exe out/sdk-cpp-first-web-config.py",
+      "exit_code": 0
+    },
+    {
+      "command": "D:/Softwares/Anaconda/python.exe out/sdk-cpp-first-web-config.py --build",
+      "exit_code": 0
+    },
+    {
+      "command": "ctest --test-dir out/sdk01-review/build -R '^(SDKCppPublicMultiOwner|SDKCppPublicMultiPermissionStale|SelectionBatch3Ui|FC02MinimalTextConsumer)$' --output-on-failure --output-junit out/sdk-cpp-first-clean/native.xml",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\toolchains\\emsdk-6.0.6\\node\\24.19.0_64bit\\node.exe",
+        "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\apps\\axiom_canvas_demo\\tests\\web_selection_batch3.mjs",
+        "--repo",
+        ".",
+        "--build",
+        "out/sdk-cpp-first-web/apps/axiom_canvas_demo",
+        "--output",
+        "out/sdk-cpp-first-clean/chrome",
+        "--chrome",
+        "C:/Program Files/Google/Chrome/Application/chrome.exe",
+        "--python",
+        "D:/Softwares/Anaconda/python.exe"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "binaries": {
+    "out/sdk01-review/build/apps/minimal_runtime_host/axiom_minimal_runtime_host_windows.exe": "df6c4c256786f53f56a31e09644944cbe666499b83a6415a8c6c6258a8bea117",
+    "out/sdk-cpp-first-web/apps/axiom_canvas_demo/axiom_canvas_demo_web.wasm": "ceb6144ffc3a3e013c8c527cb9f7722cb531ce2d1f7da845d25e4d3b092efdef"
+  },
+  "raw_sha256": {
+    "chrome.json": "e5fa3889662722ee9b87ca1d148328f493a34fdc2cbbce6d46ac60bfdcd3ff83",
+    "chrome.log": "cfc1b8755f384e3600cbc6b264b84d3a4d7dced5c438f2e742617c539fee3837",
+    "native.log": "57b819eca147a05f2a721b24aa1fc157ad1c393928bf5867303be824756328a0",
+    "native.xml": "bb5a46d586295e3092acd72d0468e56f079375eddeeb51d6907312f4b7c9cf73",
+    "web-build.log": "8feec58f76a3dfbb0aaa26c7e3459ef95e96cf4b3742185a2052a60d3a6a8cd0",
+    "web-config.log": "8b8ccb3dc2daf86835b1805a4edb7b3549151829798f09d81509e895fd892e36",
+    "windows-build.log": "b1eae6170112c1b21f69f14664f2eb082d3754bd4dabb4093d81b7f21f2433ab",
+    "web-config-helper.py": "99aee4169a7c369402a26f1835f58d70af053613952e66b14384c360e1c89e96",
+    "install-probe.json": "6acd68466ae81df0a395d89c890cff00be9bd848e3e0cbfa143fa30180fc3a3e"
+  }
+}
