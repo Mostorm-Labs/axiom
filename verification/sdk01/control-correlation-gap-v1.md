@@ -1,0 +1,16 @@
+# SDK-01 generic control correlation gap — source audit
+
+Status: `DESIGN_GAP`, not a product failure or an approved ABI. Subject: source files at the enclosing result revision.
+
+`CanvasCommandV1` contains only type, schema version and payload; `canvas_view_set_active_tool` and other V1 setters return a `CanvasStatus`, and V1 does not supply a client/request identity, target-binding token, revision expectation or general terminal-receipt query. The `candidate-multi-selection-v1.h` adds these concepts for multi-property submission only. It does not supply a public typed lane for tool, camera, selection acquisition, general commands or Group/Section control.
+
+The current owner `runtime::CanvasRuntimeFacade` already accepts `CanvasControlRequest` with client ID, request ID, deadline, full `CanvasTargetKey` and typed payload; it exposes `canvasControlReceipt`. `ProductControlReceipt::kQueued` is admission, not final success. Some existing convenience functions choose `mountedCanvasTargets().front()` internally. A public SDK that treats V1 return `kOk` as final application, truncates 128-bit client identity, or calls the first target without binding it to the view would not satisfy the previously documented SDK-01 goals.
+
+Two technically possible resolution directions need an exact implementation contract and tests:
+
+1. **V1 owner-synchronous adaptation**: assign collision-free private client/request IDs, bind the actual view target, submit and advance the existing owner until a definite result, and return the final status. It must define callback/reentrancy and bounded processing; it cannot reorder accepted pointer facts or block indefinitely, and it cannot retroactively provide caller-visible request correlation where consumers need asynchronous operation.
+2. **Additive typed control interface**: alongside unchanged V1, expose a versioned view-bound target/observation identity, full 128-bit client/request identity, typed control payloads, admission and terminal receipt. Validate and copy caller data before enqueue; translate explicit enum tables and use the existing Facade queue, not a new editor/History or arbitrary semantic-operation transaction. V1 wrappers retain documented behavior and may use the same owner under their separately specified synchronous/asynchronous semantics.
+
+The existing direction in `docs/planning/sdk/contract-decisions.md` recommends option 2; it is not yet represented by a complete compilable C ABI, per-action type mapping, owner-to-public error mapping or independent Windows/Chrome cases. The SDK-01 acceptance table cannot honestly be marked executable until this is bound. In particular, the multi-selection extension alone is not an implementation of general `control_submit`/`control_receipt`, and a checksum of draft declarations is not ABI acceptance.
+
+Keep the V1 54 names and numeric values unchanged. Test (a) set-tool then pointer-down ordering, (b) target rebinding/stale request and no mutation, (c) distinct full client IDs with identical low 64 bits, (d) duplicate and queued versus applied receipts, and (e) callback/owner-thread and queue-full handling. Real SDK and platform host tests must exercise the same runtime; no mock receipt or frontend-side canonical mutation. The known D07 protobuf/Abseil OOM result remains a separate finding.
