@@ -1,0 +1,31 @@
+{
+  "id": "FC04-GROUP-FIRST-SLICE-P31-v0.1",
+  "repository": "Mostorm-Labs/axiom",
+  "source_revision": "aba4d0f21c553e367fe726bba4b64f78bceb0067",
+  "execution_ref": "refs/heads/codex/fc04-mse-p31-v02-binding-fix",
+  "p32_authorized": true,
+  "basis": "user explicitly requested Group implementation; previously accepted same-preparer review",
+  "scope": "bounded Group/Ungroup via existing Runtime, Selection, topology and History; preserve C ABI and wire",
+  "source_lock_sha256": "5cc9ccb98a803928ad07a90b55d54140ceb49f035bc118bef46e0371a8312468",
+  "allowed_files": [
+    "runtime/foundation/include/canvas/runtime/section_input.hpp",
+    "runtime/foundation/include/canvas/runtime/runtime_facade.hpp",
+    "runtime/interaction/src/canvas_section_commands.cpp",
+    "runtime/interaction/src/canvas_selection_summary.cpp",
+    "runtime/composition/src/canvas_runtime_facade.cpp",
+    "runtime/control/src/canvas_control_service.cpp",
+    "runtime/composition/tests/fc08_section_consumer_test.cpp"
+  ],
+  "tests": [
+    "FC08SectionConsumer real Group and Ungroup behavior, world geometry and Undo/Redo",
+    "existing FC08SectionConsumer and relevant Selection regressions"
+  ],
+  "constraints": [
+    "original FC08 package and 302 expected values preserved",
+    "no complete 302 runner prerequisite for incremental implementation",
+    "no Gate/PHYS/release pass",
+    "known D07 OOM blocker unchanged",
+    "physical tests deferred by user"
+  ],
+  "continue_until_terminal_state": true
+}
