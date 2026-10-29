@@ -1,5 +1,6 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "canvas/interaction/region_selection_geometry.hpp"
+#include "canvas/scene/hierarchy_geometry.hpp"
 #include "canvas/text/text_layout.hpp"
 
 #include <algorithm>
@@ -7,6 +8,75 @@
 #include <limits>
 
 namespace canvas::interaction {
+void CanvasEditingRuntime::appendGroupScopeOutline(render::EditingOverlay& overlay) noexcept {
+    const auto scope=selection_.groupScope();
+    if(!scope || !sceneCoordinator_ || !viewportController_)return;
+    try {
+        const auto& projectedScene=sceneCoordinator_->runtimeScene();
+        const auto* group=projectedScene.find(*scope);
+        if(!group || group->kind!=semantic::ObjectKind::kGroup)return;
+        auto bounds=group->worldBounds;
+        if(transformDrag_.active()) {
+            // Union the scope's actual descendant bounds against transient
+            // world transforms, without copying or mutating the Scene.
+            bool haveBounds=false;foundation::WorldRect combined{};
+            for(const auto& item:projectedScene.records()) {
+                if(item.kind==semantic::ObjectKind::kGroup)continue;
+                bool belongs=false;auto parent=item.placement.parent_id;
+                for(std::size_t depth=0;parent&&depth<=semanticObjects_.size();++depth) {
+                    if(*parent==*scope){belongs=true;break;}
+                    const auto* node=semanticObjects_.find(*parent);if(!node)break;
+                    parent=node->placement.parent_id;
+                }
+                if(!belongs)continue;
+                auto itemBounds=item.worldBounds;
+                auto cursor=std::optional<foundation::ObjectId>(item.objectId);
+                for(std::size_t depth=0;cursor&&depth<=semanticObjects_.size();++depth) {
+                    if(const auto* preview=transformOverrides_.find(*cursor)) {
+                        const auto* original=projectedScene.find(*cursor);semantic::Transform2D inverse{};
+                        if(!original || !scene::inverseTransform(original->transform,inverse))return;
+                        const auto world=scene::composeTransform(scene::composeTransform(*preview,inverse),item.transform);
+                        bool have=false;foundation::WorldRect projected{};
+                        for(double x:{static_cast<double>(item.visualBounds.left),static_cast<double>(item.visualBounds.right)})
+                          for(double y:{static_cast<double>(item.visualBounds.top),static_cast<double>(item.visualBounds.bottom)}) {
+                            const float px=static_cast<float>((world.a*x+world.c*y)+world.tx);
+                            const float py=static_cast<float>((world.b*x+world.d*y)+world.ty);
+                            const foundation::WorldRect point{px,py,px,py};
+                            projected=have?foundation::unionRects(projected,point):point;have=true;
+                          }
+                        if(!projected.isFiniteAndOrdered())return;
+                        itemBounds=projected;break;
+                    }
+                    const auto* node=semanticObjects_.find(*cursor);if(!node)break;
+                    cursor=node->placement.parent_id;
+                }
+                if(!itemBounds.isFiniteAndOrdered())return;
+                combined=haveBounds?foundation::unionRects(combined,itemBounds):itemBounds;haveBounds=true;
+            }
+            if(!haveBounds)return;
+            bounds=combined;
+        } else {
+            // Empty Group has no invented visual area.
+            bool haveBounds=false;
+            for(const auto& item:projectedScene.records()) {
+                if(item.kind==semantic::ObjectKind::kGroup)continue;
+                auto parent=item.placement.parent_id;
+                for(std::size_t depth=0;parent&&depth<=semanticObjects_.size();++depth) {
+                    if(*parent==*scope){haveBounds=true;break;}
+                    const auto* node=semanticObjects_.find(*parent);if(!node)break;
+                    parent=node->placement.parent_id;
+                }
+                if(haveBounds)break;
+            }
+            if(!haveBounds)return;
+        }
+        if(!bounds.isFiniteAndOrdered())return;
+        const auto v=viewportController_->state();
+        const auto map=[&](float x,float y){return render::ScreenPoint{x*v.scale+v.translationX,y*v.scale+v.translationY};};
+        overlay.readOnlyOutlines.push_back({{map(bounds.left,bounds.top),map(bounds.right,bounds.top),
+            map(bounds.right,bounds.bottom),map(bounds.left,bounds.bottom)},{},true});
+    } catch(const std::bad_alloc&) { /* Preserve the existing scene and selection. */ }
+}
 bool CanvasEditingRuntime::renderAcquisitionOverlay() noexcept {
     if (!surface_.available||!sceneCoordinator_||!runtimeSceneHost_||surface_.logicalWidth<=0||surface_.logicalHeight<=0) {
         selectionView_.reset();return false;
@@ -24,6 +94,7 @@ bool CanvasEditingRuntime::renderAcquisitionOverlay() noexcept {
         {0,0,surface_.logicalWidth,surface_.logicalHeight}};
     selectionView_=std::make_unique<render::RenderViewRuntime>(frame);
     auto& overlay=selectionView_->editingOverlay();
+    appendGroupScopeOutline(overlay);
     const auto append=[&](auto ids,auto& outlines) {
         for (auto id:ids) {
             const auto* r=sceneCoordinator_->runtimeScene().find(id);if(!r)continue;

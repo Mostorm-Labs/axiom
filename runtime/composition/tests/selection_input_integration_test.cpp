@@ -454,3 +454,80 @@ TEST(SelectionBatch2Runtime, RealShapeCreationLeavesSectionTopologyAdmissible) {
 }
 
 }
+
+TEST(SelectionGroupScope, KeepsAndUpdatesGroupOutlineDuringChildDrag) {
+    using namespace canvas;
+    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
+    auto& f=c.controlFacade();constexpr std::uint64_t client=4300;
+    const auto a=foundation::ObjectId::fromUint64(4301),b=foundation::ObjectId::fromUint64(4302);
+    const auto group=foundation::ObjectId::fromUint64(4303);
+    std::uint64_t request=0;
+    for(const auto id:{a,b}) {
+        runtime::SectionIntent create;create.objectId=id;create.content.boundary={0,0,80,60};
+        create.transform.tx=id==a?100:260;create.transform.ty=100;
+        ASSERT_EQ(f.submitSectionIntent(create,++request,client).state,runtime::ProductControlState::kQueued);
+        ASSERT_TRUE(c.ownerPump());ASSERT_EQ(f.canvasControlReceipt({client,request})->state,runtime::CanvasControlReceiptState::kApplied);
+    }
+    ASSERT_EQ(f.groupObjects({a,b},group,++request,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());ASSERT_EQ(f.canvasControlReceipt({client,request})->state,runtime::CanvasControlReceiptState::kApplied);
+    ASSERT_EQ(f.setSelectionMode(true,++request,f.readRuntimeState().identity.runtimeGeneration,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());ASSERT_TRUE(c.registerSource(client));
+    runtime::SectionIntent enter;enter.action=runtime::SectionAction::kEnterGroupScope;enter.objectId=group;
+    ASSERT_EQ(f.submitSectionIntent(enter,++request,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());ASSERT_EQ(f.readSelectionSummary().count,0U);
+    auto& editor=c.qualificationRuntime();ASSERT_TRUE(editor.renderSelectionOverlay());
+    ASSERT_NE(editor.selectionOverlay(),nullptr);ASSERT_EQ(editor.selectionOverlay()->readOnlyOutlines.size(),1U);
+    runtime::SectionIntent leave;leave.action=runtime::SectionAction::kLeaveGroupScope;
+    ASSERT_EQ(f.submitSectionIntent(leave,++request,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());EXPECT_FALSE(f.readSelectionSummary().groupScope);
+    runtime::TextIntent doubleClick;doubleClick.clientId=client;doubleClick.requestId=++request;
+    doubleClick.target=f.mountedCanvasTargets().front();doubleClick.kind=runtime::TextIntentKind::kEditAtPoint;
+    doubleClick.viewX=110;doubleClick.viewY=110;
+    ASSERT_EQ(f.submitTextIntent(doubleClick).status,runtime::TextStatus::kQueued);ASSERT_TRUE(c.ownerPump());
+    ASSERT_EQ(f.readSelectionSummary().groupScope,group);
+    ASSERT_EQ(f.readSelectionSummary().primary,a);
+    EXPECT_EQ(f.readTextEditor().phase,runtime::TextPhase::kClosed);
+    ASSERT_TRUE(editor.renderSelectionOverlay());
+    ASSERT_NE(editor.selectionOverlay(),nullptr);
+    ASSERT_EQ(editor.selectionOverlay()->readOnlyOutlines.size(),1U);
+    const auto beforeOutline=editor.selectionOverlay()->readOnlyOutlines.front();
+    const auto beforeGeneration=c.readback().semanticGeneration;
+    std::uint64_t seq=0;
+    const auto pointer=[&](input::PointerPhase phase,float x,float y) {
+        const auto view=f.readCanvasControlSnapshot(f.mountedCanvasTargets().front());
+        input::PlatformPointerBatch batch;++seq;
+        batch.samples.push_back({client,1,seq,seq*1000000,x*view.cameraScale+view.cameraTranslationX,
+            y*view.cameraScale+view.cameraTranslationY,0,0,0,{},{},input::SampleProvenance::kConfirmedCurrent,phase});
+        return c.submit(batch);
+    };
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,110,110));
+    ASSERT_TRUE(pointer(input::PointerPhase::kMove,610,410));
+    ASSERT_NE(editor.selectionOverlay(),nullptr);
+    ASSERT_EQ(editor.selectionOverlay()->readOnlyOutlines.size(),1U);
+    const auto previewOutline=editor.selectionOverlay()->readOnlyOutlines.front();
+    EXPECT_EQ(c.readback().semanticGeneration,beforeGeneration);
+    EXPECT_GT(previewOutline.corners[1].x,beforeOutline.corners[1].x);
+    EXPECT_GT(previewOutline.corners[2].y,beforeOutline.corners[2].y);
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,610,410));
+    auto moved=f.readSection(a);EXPECT_EQ(moved.parentId,group);
+    EXPECT_DOUBLE_EQ(moved.worldTransform.tx,600);EXPECT_DOUBLE_EQ(moved.worldTransform.ty,400);
+    EXPECT_DOUBLE_EQ(f.readSection(b).worldTransform.tx,260);
+    ASSERT_TRUE(editor.renderSelectionOverlay());
+    ASSERT_NE(editor.selectionOverlay(),nullptr);
+    ASSERT_EQ(editor.selectionOverlay()->readOnlyOutlines.size(),1U);
+    EXPECT_NEAR(editor.selectionOverlay()->readOnlyOutlines.front().corners[1].x,previewOutline.corners[1].x,0.1F);
+    EXPECT_NEAR(editor.selectionOverlay()->readOnlyOutlines.front().corners[2].y,previewOutline.corners[2].y,0.1F);
+    ASSERT_EQ(f.undo(++request,f.readRuntimeState().identity.runtimeGeneration,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());moved=f.readSection(a);EXPECT_EQ(moved.parentId,group);
+    EXPECT_DOUBLE_EQ(moved.worldTransform.tx,100);EXPECT_DOUBLE_EQ(moved.worldTransform.ty,100);
+    ASSERT_TRUE(editor.renderSelectionOverlay());ASSERT_NE(editor.selectionOverlay(),nullptr);
+    ASSERT_EQ(editor.selectionOverlay()->readOnlyOutlines.size(),1U);
+    EXPECT_NEAR(editor.selectionOverlay()->readOnlyOutlines.front().corners[1].x,beforeOutline.corners[1].x,0.1F);
+    EXPECT_NEAR(editor.selectionOverlay()->readOnlyOutlines.front().corners[2].y,beforeOutline.corners[2].y,0.1F);
+    ASSERT_EQ(f.redo(++request,f.readRuntimeState().identity.runtimeGeneration,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());ASSERT_TRUE(editor.renderSelectionOverlay());
+    ASSERT_NE(editor.selectionOverlay(),nullptr);ASSERT_EQ(editor.selectionOverlay()->readOnlyOutlines.size(),1U);
+    EXPECT_NEAR(editor.selectionOverlay()->readOnlyOutlines.front().corners[1].x,previewOutline.corners[1].x,0.1F);
+    EXPECT_NEAR(editor.selectionOverlay()->readOnlyOutlines.front().corners[2].y,previewOutline.corners[2].y,0.1F);
+    EXPECT_TRUE(c.close());
+}

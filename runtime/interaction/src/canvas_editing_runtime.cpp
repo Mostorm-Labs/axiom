@@ -2125,6 +2125,7 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
     cancelRegionSelection();regionQueryStatus_=runtime::SelectionQueryStatus::kStale;
   }
   if (regionSelectionActive()||selectedObjectCount()>1U||panTool_||
+      (selectionMode_&&selection_.groupScope()&&selection_.primary().isZero())||
       (selectionMode_&&selectionAcquisitionMode_!=runtime::CanvasSelectionMode::kPoint)) return renderAcquisitionOverlay();
   const bool connectorCreation = creationMode_ &&
       (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow);
@@ -2233,6 +2234,7 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
       render::HandleCapabilities{
           !selectedObjectLocked(), !selectedObjectLocked(), !selectedObjectLocked() && !imageCropPresentation_},
       snapGuides_, attachmentPoints});
+  if(updated)appendGroupScopeOutline(selectionView_->editingOverlay());
   if (updated) ++selectionOverlayUpdates_;
   return updated;
 }

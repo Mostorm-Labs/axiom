@@ -856,6 +856,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
       SelectionCombineMode, std::uint64_t expectedRevision);
   [[nodiscard]] bool acquisitionPointer(const input::PointerSample&) noexcept;
   [[nodiscard]] bool renderAcquisitionOverlay() noexcept;
+  void appendGroupScopeOutline(render::EditingOverlay&) noexcept;
   [[nodiscard]] bool singleSelectionAffordances() const noexcept {
     return selectedObjectCount()==1U && !regionSelectionActive() && !panTool_ &&
         (!selectionMode_||selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint);
