@@ -1,0 +1,82 @@
+[0/2] Re-checking globbed directories...
+[1/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\rich_text_state.cpp.obj
+[2/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot_bootstrap.cpp.obj
+[3/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\container_operation_mapping.cpp.obj
+[4/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot.cpp.obj
+[5/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\protobuf_object_mapping.cpp.obj
+[6/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\codec.cpp.obj
+[7/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\common.pb.cc.obj
+[8/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\connector.pb.cc.obj
+[9/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_engine.pb.cc.obj
+[10/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\container_operations.pb.cc.obj
+[11/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_stroke.pb.cc.obj
+[12/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\object.pb.cc.obj
+[13/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\geometry.pb.cc.obj
+[14/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\erase_mask.pb.cc.obj
+[15/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\property.pb.cc.obj
+[16/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\paint.pb.cc.obj
+[17/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\operation.pb.cc.obj
+[18/24] Building CXX object runtime\interaction\CMakeFiles\axiom_selection_session_tests.dir\tests\selection_session_test.cpp.obj
+FAILED: runtime/interaction/CMakeFiles/axiom_selection_session_tests.dir/tests/selection_session_test.cpp.obj 
+C:\PROGRA~1\MICROS~3\18\COMMUN~1\VC\Tools\MSVC\1451~1.362\bin\Hostx64\x64\cl.exe  /nologo /TP -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_RELEASE -D_HAS_ITERATOR_DEBUGGING=0 -D_ITERATOR_DEBUG_LEVEL=0 -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\foundation\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\semantic\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\input\include /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MT /W4 /permissive- /WX /EHsc /UNDEBUG /showIncludes /Foruntime\interaction\CMakeFiles\axiom_selection_session_tests.dir\tests\selection_session_test.cpp.obj /Fdruntime\interaction\CMakeFiles\axiom_selection_session_tests.dir\ /FS -c C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp
+cl : Command line warning D9025 : overriding '/DNDEBUG' with '/UNDEBUG'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(144): error C3083: 'runtime': the symbol to the left of a '::' must be a type
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(144): error C2039: 'SelectionSummaryStatus': is not a member of 'canvas'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_session.hpp(10): note: see declaration of 'canvas'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(144): error C2061: syntax error: identifier 'SelectionSummaryStatus'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(146): error C2660: 'canvas::interaction::SelectionSession::summary': function does not take 1 arguments
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_session.hpp(38): note: see declaration of 'canvas::interaction::SelectionSession::summary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(146): note: while trying to match the argument list '(`anonymous-namespace'::HierarchyFixture)'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(147): error C2039: 'status': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(147): error C2653: 'Status': is not a class or namespace name
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(147): error C2065: 'kAvailable': undeclared identifier
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(147): error C2039: 'roots': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(147): error C2039: 'kindCounts': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(148): error C2039: 'selectionRevision': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(151): error C2660: 'canvas::interaction::SelectionSession::summary': function does not take 1 arguments
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_session.hpp(38): note: see declaration of 'canvas::interaction::SelectionSession::summary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(151): note: while trying to match the argument list '(`anonymous-namespace'::HierarchyFixture)'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(152): error C2039: 'status': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(152): error C2653: 'Status': is not a class or namespace name
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(152): error C2065: 'kAvailable': undeclared identifier
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(153): error C2039: 'roots': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(153): error C2039: 'kindCounts': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(154): error C2039: 'kindCounts': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(155): error C2039: 'kindCounts': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(157): error C2660: 'canvas::interaction::SelectionSession::summary': function does not take 1 arguments
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_session.hpp(38): note: see declaration of 'canvas::interaction::SelectionSession::summary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(157): note: while trying to match the argument list '(`anonymous-namespace'::HierarchyFixture)'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(158): error C2039: 'status': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(158): error C2653: 'Status': is not a class or namespace name
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(158): error C2065: 'kInvalid': undeclared identifier
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(158): error C2039: 'roots': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(165): error C2660: 'canvas::interaction::SelectionSession::summary': function does not take 1 arguments
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_session.hpp(38): note: see declaration of 'canvas::interaction::SelectionSession::summary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(165): note: while trying to match the argument list '(`anonymous-namespace'::HierarchyFixture)'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(165): error C2039: 'roots': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(168): error C2660: 'canvas::interaction::SelectionSession::summary': function does not take 1 arguments
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_session.hpp(38): note: see declaration of 'canvas::interaction::SelectionSession::summary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(168): note: while trying to match the argument list '(`anonymous-namespace'::HierarchyFixture)'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(168): error C2039: 'roots': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(168): error C2039: 'groupScope': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_session_test.cpp(169): error C2039: 'selectionRevision': is not a member of 'canvas::interaction::SelectionSummary'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/selection_state.hpp(10): note: see declaration of 'canvas::interaction::SelectionSummary'
+[19/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\section.pb.cc.obj
+[20/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\vector_path.pb.cc.obj
+[21/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\snapshot.pb.cc.obj
+[22/24] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\rich_text.pb.cc.obj
+ninja: build stopped: subcommand failed.

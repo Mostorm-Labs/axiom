@@ -1,0 +1,74 @@
+[
+  {
+    "name": "d07_14_subject",
+    "count": 14,
+    "expected": 14,
+    "no_skips_or_failures": true,
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\build",
+      "--tests-from-file",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\.aegis\\results\\FC04-D07-P31-CORRECTION-v0.2\\raw\\d07-names.txt",
+      "--no-tests=error",
+      "--output-on-failure",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\.aegis\\results\\FC04-D07-FUNCTIONAL-P32-001\\raw\\final-evidence\\d07_14_subject.xml"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "selection_subject",
+    "count": 160,
+    "expected": 160,
+    "no_skips_or_failures": true,
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\build",
+      "--tests-from-file",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\.aegis\\results\\FC04-D07-P31-CORRECTION-v0.2\\raw\\selection-names.txt",
+      "--no-tests=error",
+      "--output-on-failure",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\.aegis\\results\\FC04-D07-FUNCTIONAL-P32-001\\raw\\final-evidence\\selection_subject.xml"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "d07_subject",
+    "count": 30,
+    "expected": 30,
+    "no_skips_or_failures": true,
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\build",
+      "-R",
+      "^fc04\\.d07\\.",
+      "--no-tests=error",
+      "--output-on-failure",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\.aegis\\results\\FC04-D07-FUNCTIONAL-P32-001\\raw\\final-evidence\\d07_subject.xml"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "faults_subject",
+    "count": 39,
+    "expected": 39,
+    "no_skips_or_failures": true,
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\build",
+      "-R",
+      "^FC04D07(PostcommitFault|PostcommitReceiptGrowthFault|ExplicitIntentPostcommitNoAllocation|ExplicitIntentInsertPostcommitNoAllocation|HistoryReservationFault|HistoryIntentFault_.*|SemanticParticipantFault_.*|SceneParticipantFault_.*)$",
+      "--no-tests=error",
+      "-V",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\.aegis\\results\\FC04-D07-FUNCTIONAL-P32-001\\raw\\final-evidence\\faults_subject.xml"
+    ],
+    "exit_code": 0
+  }
+]

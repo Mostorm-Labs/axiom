@@ -1,0 +1,42 @@
+{
+  "source_base": "7bae582ec205616ff5c9af03b1c27d5c13d7e613",
+  "tested_source_sha256": {
+    "runtime/composition/tests/selection_input_integration_test.cpp": "140668207039ab2248986a4b55b4a8f0641c030d3dfe3caff43e4cdcdf97a706",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "9d101fb74137a410b12462b6eaae4ce13d6933a6c0fff3e370dfbacbc704ad9f",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "26cd861fb473f976aef2197dc2f24b2abae64fb4c80470c0fd70f1d7d33e64e7",
+    "runtime/interaction/src/canvas_region_selection.cpp": "724a42626314974594b45b9eb94cb825ed8c76cdd108c6f38786e1941e35a81b"
+  },
+  "raw_zip_sha256": "c66157063875cb6ee9ab031f10d33fdd590d3c8be67dd9cdb9141d173f8465cc",
+  "raw_sha256": {
+    "group-outline-regression.log": "1d5b62183219acb924bdf686e36f73851bb4a2e64cd710f7af8b0d977bea5220",
+    "group-outline-regression.xml": "10ea3e7225c66797fe8089211bdd15e073fd03721689a32c556d15e95db6c49b",
+    "chrome-group-outline.mjs": "51b0f31d104abc9456161cbae5575c096690624ead9f4c31647ce8f6f5992866",
+    "browser-group-outline/results.json": "5174d35ad7356299e8610a10234bdffdb3898f4ef485aa7fd08baee496b36b80",
+    "browser-group-outline/group-scope-entry.png": "352b2dec2d818eadf636e5aeee2f2ded35cffa2fc514408ff01c584e2194ddd0",
+    "browser-group-outline/group-scope-drag.png": "45dcb27cff10df0e17570686decb2c8da536632fa4df9d34e66ad414a7759358",
+    "browser-group-outline/group-scope-commit.png": "a694a7ec79618ccfc1016a393bbf4258c03042d6a1b755606d6d13c862be4a39"
+  },
+  "observations": {
+    "focused_scope_test": {
+      "before_change": "failed: group outline count 0, expected 1",
+      "after_change": "pass"
+    },
+    "selection_text_ctest": {
+      "exit": 0,
+      "pass": 5
+    },
+    "chrome_wasm": {
+      "exit": 0,
+      "assertions": 14,
+      "input": "synthetic CDP; entry, drag, and commit screenshots reviewed"
+    },
+    "windows_and_web_build": {
+      "exit": 0
+    }
+  },
+  "physical": "NOT_RUN, user retest pending",
+  "constraints": [
+    "no canonical Group mutation for scope outline",
+    "D07 OOM blocker and FC04 MSE-20/23/26 gaps unchanged"
+  ]
+}

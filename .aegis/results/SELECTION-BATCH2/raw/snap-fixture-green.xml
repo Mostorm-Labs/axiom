@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="2"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="3"
+	timestamp="2026-10-27T17:01:58"
+	>
+	<testcase name="FC01SnapCreationDifferential" classname="FC01SnapCreationDifferential" time="1.25364" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=3 objects=1 scene_records=1
+PASS E04 indexed viewport/linear target ids, five presets, preview/guide/final matrix cases=360
+PASS E04 invalid/selected/transient targets excluded; two sessions isolated; moved target refresh and camera/target Up fences
+</system-out>
+	</testcase>
+	<testcase name="FC01SelectedActions" classname="FC01SelectedActions" time="1.3109" status="run">
+		<properties/>
+		<system-out>[axiom] present begin frame=11 objects=3 scene_records=3
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[axiom] present begin frame=5 objects=1 scene_records=1
+[axiom] present begin frame=6 objects=0 scene_records=0
+</system-out>
+	</testcase>
+</testsuite>

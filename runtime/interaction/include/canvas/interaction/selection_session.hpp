@@ -9,11 +9,20 @@
 
 namespace canvas::interaction {
 
+enum class SelectionCombineMode : std::uint8_t { kReplace, kAdd };
+
 class SelectionSession final {
   public:
     [[nodiscard]] bool click(foundation::ObjectId objectId);
     [[nodiscard]] bool toggle(foundation::ObjectId objectId);
     [[nodiscard]] bool marquee(std::span<const HitCandidate> candidates);
+    // The caller resolves live, in-scope roots on one coherent scene read.
+    // Revision fencing prevents an old acquisition from replacing newer state.
+    [[nodiscard]] bool applyAcquisition(std::span<const foundation::ObjectId> resolvedFrontToBack,
+                                       SelectionCombineMode mode, std::uint64_t expectedRevision);
+    // Pure projection: nullopt means a missing/cyclic hierarchy, not an empty hit.
+    [[nodiscard]] std::optional<std::vector<foundation::ObjectId>> resolveRoots(
+        std::span<const foundation::ObjectId>, const semantic::ObjectStore&) const;
     void onChangeSet(const semantic::ChangeSet& changes);
     void cancel() noexcept;
     [[nodiscard]] foundation::ObjectId resolveHit(foundation::ObjectId,const semantic::ObjectStore&) const;
@@ -27,6 +36,7 @@ class SelectionSession final {
     }
     [[nodiscard]] foundation::ObjectId primary() const noexcept { return state_.primary(); }
     [[nodiscard]] SelectionSummary summary() const noexcept { return state_.summary(); }
+    [[nodiscard]] SelectionSummary summary(const semantic::ObjectStore&) const;
 
   private:
     HitTestService hitTest_;

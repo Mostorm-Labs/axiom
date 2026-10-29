@@ -1,6 +1,7 @@
 #include "canvas/debug_ui/builtin_panels.hpp"
 #include "canvas/debug_ui/ui_session_state.hpp"
 #include "imgui.h"
+#include "selection_summary_view.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -17,17 +18,14 @@ void selection(DebugPanelContext& c) {
     const auto& s = c.snapshot;
     ImGui::SeparatorText("Selection");
     ImGui::Text("Product: %s", panel_detail::availabilityLabel(s.product.availability));
-    ImGui::Text("mode %s / count %u / primary %llu / snap candidates %llu",
-                s.product.value.selection.enabled ? "enabled" : "disabled",
-                s.product.value.selection.selectedObjectCount,
-                static_cast<unsigned long long>(s.product.value.selection.primaryObject),
-                static_cast<unsigned long long>(s.product.value.selection.snapCandidateCount));
+    panel_detail::renderSelectionSummary(s.selectionSummary,c.ui.advancedControls());
 }
 void object(DebugPanelContext& c) {
     ImGui::SeparatorText("Object");
     const auto& s = c.snapshot;
     if (!panel_detail::hasReadback(s.product.availability) ||
-        s.product.value.selection.selectedObjectCount == 0) {
+        s.selectionSummary.count != 1||s.selectionSummary.status!=canvas::runtime::SelectionSummaryStatus::kAvailable||
+        s.product.value.control.selectedKind==0) {
         ImGui::TextUnformatted("No selected object readback");
         return;
     }

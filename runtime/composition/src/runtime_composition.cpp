@@ -1,5 +1,6 @@
 #include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/runtime/canvas_runtime_facade.hpp"
+#include "canvas/runtime/internal/multi_selection_port.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "canvas/text/text_layout.hpp"
 
@@ -38,6 +39,7 @@ RuntimeComposition::RuntimeComposition(render::ViewId viewId)
 #endif
   controlFacade_ = std::make_unique<CanvasRuntimeFacade>(
       *runtime_, CanvasTargetKey{1U, viewId.value(), 1U, 1U},runtimeInstanceId_, this);
+  multiSelectionPort_ = std::make_unique<MultiSelectionPort>(*this);
 #if defined(CANVAS_RENDER_HAS_SKIA)
   runtime_->bindResourceServices(imageResolver_.get(), textLayoutService_.get());
 #else
@@ -75,6 +77,7 @@ void RuntimeComposition::surfaceBindingChanged() noexcept {
 RuntimeComposition::~RuntimeComposition() { (void)close(); }
 RuntimeFacade& RuntimeComposition::controlFacade() noexcept { return *controlFacade_; }
 const RuntimeFacade& RuntimeComposition::controlFacade() const noexcept { return *controlFacade_; }
+MultiSelectionPort& RuntimeComposition::multiSelectionPort() noexcept { return *multiSelectionPort_; }
 bool RuntimeComposition::transition(RuntimeCompositionState next) noexcept {
   if (state_ == RuntimeCompositionState::kClosed) return false;
   state_ = next; return true;

@@ -1,0 +1,163 @@
+{
+  "status": "CANDIDATE_NOT_ACCEPTED",
+  "oracle": "explicit arithmetic and accepted P12/P13; no production geometry or codec is used to generate expectations",
+  "cases": [
+    {
+      "id": "GROUP-ARITH-01",
+      "fixture": {
+        "selected_roots": [
+          "A",
+          "B"
+        ],
+        "group_parent": "root",
+        "world_A": [
+          1,
+          0,
+          0,
+          1,
+          10,
+          20
+        ],
+        "world_B": [
+          1,
+          0,
+          0,
+          1,
+          40,
+          60
+        ],
+        "new_group_local": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "order": [
+          "A",
+          "B"
+        ]
+      },
+      "expected": {
+        "group_world": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "A_local": [
+          1,
+          0,
+          0,
+          1,
+          10,
+          20
+        ],
+        "B_local": [
+          1,
+          0,
+          0,
+          1,
+          40,
+          60
+        ],
+        "A_world": [
+          1,
+          0,
+          0,
+          1,
+          10,
+          20
+        ],
+        "B_world": [
+          1,
+          0,
+          0,
+          1,
+          40,
+          60
+        ],
+        "one_history_unit": true
+      }
+    },
+    {
+      "id": "GROUP-ARITH-02",
+      "fixture": {
+        "group_world": [
+          0,
+          2,
+          -2,
+          0,
+          100,
+          200
+        ],
+        "A_local": [
+          1,
+          0,
+          0,
+          1,
+          10,
+          20
+        ],
+        "B_local": [
+          1,
+          0,
+          0,
+          1,
+          30,
+          40
+        ],
+        "release_parent_world": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "expected": {
+        "A_world": [
+          0,
+          2,
+          -2,
+          0,
+          60,
+          220
+        ],
+        "B_world": [
+          0,
+          2,
+          -2,
+          0,
+          20,
+          260
+        ],
+        "A_local_after_release": [
+          0,
+          2,
+          -2,
+          0,
+          60,
+          220
+        ],
+        "B_local_after_release": [
+          0,
+          2,
+          -2,
+          0,
+          20,
+          260
+        ],
+        "one_history_unit": true
+      }
+    }
+  ],
+  "limitations": [
+    "candidate fixture identities and operation seeds still need exact source/runner binding",
+    "no actual product or browser observation is implied"
+  ]
+}

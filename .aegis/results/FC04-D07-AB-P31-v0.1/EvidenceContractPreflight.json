@@ -1,0 +1,47 @@
+{
+  "preflight": "EvidenceContractPreflight",
+  "status": "PASS",
+  "exit_code": 0,
+  "scope": "P31 structural binding/design preflight only; no product behavior verified",
+  "subject": "832866a2d001a247c4eb374c1fb1899258a6f6cf",
+  "actual_head": "1768c35ba9f8cc1d542ef3a3c78bd7827072b7fe",
+  "package_sha256": "56962b59726eca31f3cb015779234df84926bbbac427b382e285aea8dd70aa77",
+  "source_lock_sha256": "e679e71c11d4f0ff8f211da519d19c5331fc4af9ae3c52e8966da09899845f60",
+  "checks": [
+    {
+      "name": "exact_D07_baseline",
+      "status": "PASS",
+      "detail": {
+        "count": 14,
+        "failed": [
+          "fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED",
+          "fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED",
+          "FC04D07PostcommitReceiptGrowthFault"
+        ]
+      }
+    },
+    {
+      "name": "exact_selection_baseline",
+      "status": "PASS",
+      "detail": 160
+    },
+    {
+      "name": "explicit_real_producer_oracle_planned",
+      "status": "PASS",
+      "detail": "Planned test is NOT_RUN; P32 must bind the real production API."
+    },
+    {
+      "name": "negative_control_and_oom_separate",
+      "status": "PASS",
+      "detail": "Historical failures remain historical; no positive product verdict is synthesized."
+    },
+    {
+      "name": "required_invocations_and_no_zero",
+      "status": "PASS",
+      "detail": "Real discovery, native, ABI, allocation, source and test evidence required in P32."
+    }
+  ],
+  "P32_producer": "NOT_IMPLEMENTED",
+  "P32_product_tests": "NOT_RUN",
+  "p32_technical_gate": "Prove true no-fail commit, per-operation publication and actual injected boundaries; return blocker if impossible."
+}

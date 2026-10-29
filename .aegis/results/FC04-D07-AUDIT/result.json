@@ -1,0 +1,89 @@
+{
+  "task": "FC04-D07-SOURCE-AUDIT",
+  "status": "BLOCKED_IMPLEMENTATION",
+  "formal_gate_verdict": null,
+  "phase2_product_implementation_authorized": false,
+  "execution_branch": "codex/fc04-d07-selection-audit",
+  "materialized_ref": "refs/heads/codex/fc04-d07-selection-audit",
+  "product_subject": "c7f874395d55952e9d5288e2a336a21747f37f11",
+  "source_branch": "codex/selection-summary-batch3",
+  "worktree": "C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas",
+  "harness_and_scope_revision": "d1cb1be7af32b41500f398863633237e359b47c9",
+  "harness_introduction_revision": "b901de5ffbd591ac20e2fbdda938562dc0dd683c",
+  "original_main_comparison": {
+    "subject": "2fee75f66a7f96f6aac834228ede372a9abda59a",
+    "harness_revision": "1ef2ce0f71ba08d2dbff8156e4bb7501f09018a2",
+    "role": "historical comparison only, superseded active baseline per latest direct user instruction",
+    "initial_cases": 154,
+    "initial_pass": 148,
+    "initial_missing_wire_failures": 6,
+    "verified_cached_artifacts_restored": 13,
+    "failed_case_rerun_pass": 6
+  },
+  "current_tests": {
+    "focused_regressions": {
+      "registered": 160,
+      "passed": 160,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "audit": {
+      "registered": 14,
+      "passed": 11,
+      "failed": 3,
+      "skipped": 0,
+      "exit_code": 8,
+      "negative_controls_not_future_coordinator_gate_tests": true
+    },
+    "direct_audit_exit": 1,
+    "scene_oom_probe_exit": 0,
+    "receipt_growth_probe_exit": 86
+  },
+  "blockers": [
+    {
+      "id": "D07-COORDINATOR",
+      "classification": "BLOCKED_IMPLEMENTATION",
+      "owner": "Interaction/Runtime/EditorHistory",
+      "actual": "No production staged sequence/IntentCommitSegment/HistoryGroup; raw spans refuse and naive independent commands need two Undo units",
+      "impact": "Cannot promise coherent multi-Operation user command or one Undo",
+      "existing_independent_coverage": "Single-op atomic/History tests pass; component tests do not provide a multi-intent producer",
+      "required_next": "Control-owner bounded D07/History acceptance, then separately authorized implementation and entry-bound tests"
+    },
+    {
+      "id": "D07-POSTCOMMIT-RECEIPT",
+      "classification": "IMPLEMENTATION_FINDING_REPRODUCED",
+      "owner": "CanvasEditingRuntime::observeApplied and History publication order",
+      "actual": "Inject ChangeSet/result-copy allocation growth after commit: generation2,ordinal2,objects3,History0,Scene1 then terminate observer exits86",
+      "impact": "Postcommit failure cannot finalize truthful History/outcome in this path",
+      "existing_independent_coverage": "Engine+History component allocation fixtures bypass production observeApplied; safe derived Scene OOM probe passes",
+      "unique_detection": "Real production submitAdmitted/observeApplied path after canonical commit, omitted by prior fixtures",
+      "required_next": "Separate owning-layer classification/fix authorization; no crash rollback requirement added"
+    },
+    {
+      "id": "D07-CONTROL-DECISION",
+      "classification": "CONTROL_OWNER_DECISION_REQUIRED",
+      "owner": "FC00X-C/FC04 and existing History architecture",
+      "actual": "D07 remains OPEN;07-14 exact API/budgets remain proposed/open. v0.2 narrow candidate prepared, not accepted Authority.",
+      "required_next": "Review candidate without expanding into canonical/global Transaction or cross-client/crash guarantees"
+    }
+  ],
+  "production_changed_files": [],
+  "test_and_doc_changed_files": 17,
+  "cursor_scope": "Known small-history size/flags/target behavior, no new numeric cursor API",
+  "evidence_kinds": [
+    "Existing mock submit: UNIT",
+    "Real Engine/History with custom submit: COMPONENT INTEGRATION",
+    "New actual RuntimeComposition/History/Scene/index/sink probes: REAL-OWNER INTEGRATION",
+    "End-to-end multi-intent coordinator: UNAVAILABLE"
+  ],
+  "not_run": [
+    "Web",
+    "Physical UI/touch/IME/GPU",
+    "persistence/crash/client guarantees",
+    "full302"
+  ],
+  "source_scope": "Audit/test harness only; no product fix, expected/oracle, locks or registries changed; no merge",
+  "utc": "2026-10-27T11:40:34.486883+00:00",
+  "receipt_policy": "Evidence-only descendant; tested production subject remains the exact Selection revision, harness bytes and binaries are separately hash bound."
+}

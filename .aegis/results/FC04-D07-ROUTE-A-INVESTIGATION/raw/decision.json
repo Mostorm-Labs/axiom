@@ -1,0 +1,167 @@
+{
+  "decision": "SDK_EXCEPTION_SAFETY_FIX_REQUIRES_UPSTREAM_RELEASE",
+  "confidence": "high",
+  "basis": [
+    {
+      "finding": "Abseil 20250512.1 CallOnceImpl changes control to running, invokes the callable, and only after normal return exchanges done and wakes waiters; exact source has no exception reset or waiter wake path.",
+      "evidence": [
+        "raw/call-once-snippet.txt",
+        "raw/fault-index-100-stack.log",
+        "raw/prepare-sweep-hang-stack.log"
+      ],
+      "upstream_ref": "turn272008view0"
+    },
+    {
+      "finding": "Protobuf v36.0 GetMetadataImpl calls absl::call_once around AssignDescriptorsOnceInnerCall. AddDescriptors sets DescriptorTable::is_initialized=true before AddDescriptorsImpl performs descriptor-pool, message-factory, extension and reflection registration; AssignMessageDescriptor mutates class data and allocates Reflection objects.",
+      "evidence": [
+        "raw/message-snippet.txt",
+        "raw/reflection-snippet.txt"
+      ],
+      "upstream_refs": [
+        "turn272008view2",
+        "turn876424view1",
+        "turn876424view2",
+        "turn876424view3"
+      ]
+    },
+    {
+      "finding": "The real Windows allocation sweep fails at ArenaStringPtr::Mutable during AssignDescriptorsOnceInnerCall and the subsequent same-descriptor attempt hangs in SpinLockWait/CallOnceImpl. The hang dump includes two worker waiter threads.",
+      "evidence": [
+        "raw/fresh-sweep.log",
+        "raw/fault-index-100-stack.log",
+        "raw/prepare-sweep-hang-stack.log"
+      ],
+      "current_result": "P32-002 reproduced"
+    }
+  ],
+  "why_not_runtime_fix": [
+    "Caller-side catch cannot reset private absl::once_flag safely or know which generated descriptor tables and registrations were partially mutated.",
+    "Resetting only once state can expose partially registered DescriptorPool, MessageFactory, default-instance and reflection state.",
+    "Routing around measureProtobufOperation changes the frozen payload-budget oracle and does not prove normal encoding equivalence."
+  ],
+  "required_sdk_patch_scope": {
+    "abseil": [
+      "absl/base/call_once.h",
+      "associated internal spinlock/wait implementation and exception/waiter tests"
+    ],
+    "protobuf": [
+      "src/google/protobuf/generated_message_reflection.cc",
+      "src/google/protobuf/message.cc if metadata path changes",
+      "descriptor pool/message factory/registration owner files identified by upstream tests",
+      "generated reflection/descriptor exception-safety tests"
+    ],
+    "producer": [
+      "tools/semantic/build_runtime.py",
+      "tools/semantic/contract.py",
+      "tools/semantic/classify_producer_changes.py",
+      "tools/semantic/aggregate.py",
+      "tools/semantic/publish_release.py",
+      "tools/semantic/reuse_release.py",
+      ".github/workflows/semantic-sdk-release.yml"
+    ],
+    "axiom_after_release": [
+      "runtime/semantic/src/codec.cpp only if an upstream release contract requires a stable failure mapping; separate P31 decision required"
+    ]
+  },
+  "invariants": [
+    {
+      "id": "ONCE-OOM-RETURN",
+      "purpose": "inject allocation in initializer and assert first call returns controlled exception/result; no hung waiter",
+      "expected": "initializer may retry only if once state and initializer-owned state are both restored"
+    },
+    {
+      "id": "ONCE-WAITER-2",
+      "purpose": "one initializer + >=2 waiters under injected failure",
+      "expected": "all calls terminate; no waiter remains in running state"
+    },
+    {
+      "id": "PROTO-PARTIAL-STATE",
+      "purpose": "instrument descriptor pool/default instance/reflection registration around failure",
+      "expected": "no is_initialized=true or registration side effect survives a retry unless fully committed"
+    },
+    {
+      "id": "PROTO-RETRY-BYTES",
+      "purpose": "retry same descriptor and normal encode output",
+      "expected": "termination plus byte-identical output to no-fault control"
+    },
+    {
+      "id": "FULL-SWEEP",
+      "purpose": "real allocation fault at every precommit allocation",
+      "expected": "every case returns or explicit stable terminal failure; no deadlock or canonical mutation"
+    },
+    {
+      "id": "RUNTIME-CONTAINMENT",
+      "purpose": "Runtime/Scene/History state around each SDK failure",
+      "expected": "zero mutation and truthful blocker/receipt"
+    }
+  ],
+  "release_path": [
+    "Create versioned source patches and producer contract changes with exact source hashes.",
+    "Build Abseil then Protobuf from verified archives using tools/semantic/build_runtime.py; never modify installed SDK in place.",
+    "Run SDK unit/reproducibility/smoke plus ONCE-OOM-RETURN, ONCE-WAITER-2, PROTO-PARTIAL-STATE, PROTO-RETRY-BYTES and FULL-SWEEP.",
+    "Publish an immutable Semantic SDK release set and candidate lock-only PR through the existing workflow; releaseTag, releaseSetId and indexSha256 must change.",
+    "Resolve the candidate through setup_build_environment.py and offline resolution; rebuild Axiom consumers and rerun P32 obligations."
+  ],
+  "test_plan": {
+    "status": "INVESTIGATION_ONLY",
+    "required_cases": [
+      {
+        "id": "ONCE-OOM-RETURN",
+        "purpose": "inject allocation in initializer and assert first call returns controlled exception/result; no hung waiter",
+        "expected": "initializer may retry only if once state and initializer-owned state are both restored"
+      },
+      {
+        "id": "ONCE-WAITER-2",
+        "purpose": "one initializer + >=2 waiters under injected failure",
+        "expected": "all calls terminate; no waiter remains in running state"
+      },
+      {
+        "id": "PROTO-PARTIAL-STATE",
+        "purpose": "instrument descriptor pool/default instance/reflection registration around failure",
+        "expected": "no is_initialized=true or registration side effect survives a retry unless fully committed"
+      },
+      {
+        "id": "PROTO-RETRY-BYTES",
+        "purpose": "retry same descriptor and normal encode output",
+        "expected": "termination plus byte-identical output to no-fault control"
+      },
+      {
+        "id": "FULL-SWEEP",
+        "purpose": "real allocation fault at every precommit allocation",
+        "expected": "every case returns or explicit stable terminal failure; no deadlock or canonical mutation"
+      },
+      {
+        "id": "RUNTIME-CONTAINMENT",
+        "purpose": "Runtime/Scene/History state around each SDK failure",
+        "expected": "zero mutation and truthful blocker/receipt"
+      }
+    ],
+    "forbidden": [
+      "prewarm descriptor",
+      "catch-only runtime workaround",
+      "fault relocation",
+      "SDK rebuild outside producer",
+      "expected/oracle weakening"
+    ],
+    "source_owners": [
+      "Abseil call_once.h/source and tests",
+      "Protobuf generated_message_reflection.cc/message.cc and tests",
+      "tools/semantic/build_runtime.py",
+      "tools/semantic/contract.py",
+      "tools/semantic/classify_producer_changes.py",
+      ".github/workflows/semantic-sdk-release.yml",
+      "tools/semantic/publish_release.py",
+      "tools/semantic/aggregate.py",
+      "tools/semantic/reuse_release.py"
+    ],
+    "release_flow": [
+      "version source inputs/producer contract",
+      "run locked producer with verified source hashes",
+      "publish immutable release set",
+      "run smoke/reproducibility and exception-safety matrix",
+      "open lock-only candidate PR",
+      "update semantic-sdk.lock.json only through accepted candidate",
+      "rerun Axiom consumer and full verification"
+    ]
+  }
+}

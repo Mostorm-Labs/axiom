@@ -1,0 +1,22 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SelectionCoverage.UnfilledShapeLabelUsesPublishedClippedAndScaledFragments
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SelectionCoverage
+[ RUN      ] SelectionCoverage.UnfilledShapeLabelUsesPublishedClippedAndScaledFragments
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_coverage_test.cpp(129): error: Expected equality of these values:
+  intersectSelectionRegion(r,box(45,45,4,4),&p)
+    Which is: 1-byte object <01>
+  RegionIntersection::kHit
+    Which is: 1-byte object <00>
+
+[  FAILED  ] SelectionCoverage.UnfilledShapeLabelUsesPublishedClippedAndScaledFragments (0 ms)
+[----------] 1 test from SelectionCoverage (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (1 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionCoverage.UnfilledShapeLabelUsesPublishedClippedAndScaledFragments
+
+ 1 FAILED TEST

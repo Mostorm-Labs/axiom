@@ -375,3 +375,13 @@ endif()
     target_compile_options(axiom_dui_m1_runtime_facade_tests PRIVATE /W4 /permissive- /WX /EHsc /UNDEBUG)
   endif()
   add_test(NAME DUIM1RuntimeFacade COMMAND axiom_dui_m1_runtime_facade_tests)
+
+if(BUILD_TESTING AND NOT EMSCRIPTEN AND TARGET axiom_fc04_mse_tests AND
+   TARGET axiom_fc08_section_consumer_tests AND TARGET axiom_fc03_image_facade_tests AND
+   TARGET axiom_fc05_connector_facade_tests AND TARGET axiom_fc01_selected_actions_tests)
+  add_dependencies(axiom_fc04_mse_tests axiom_fc08_section_consumer_tests
+      axiom_fc03_image_facade_tests axiom_fc05_connector_facade_tests axiom_fc01_selected_actions_tests)
+  target_compile_definitions(axiom_fc04_mse_tests PRIVATE
+      AXIOM_MSE_REGRESSION_BUILD_DIR="${CMAKE_BINARY_DIR}"
+      AXIOM_MSE_CTEST_PATH="${CMAKE_CTEST_COMMAND}")
+endif()

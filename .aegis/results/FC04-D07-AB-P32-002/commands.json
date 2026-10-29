@@ -1,0 +1,162 @@
+{
+  "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas",
+  "collected_utc": "2026-10-27T18:11:20.282471+00:00",
+  "commands": [
+    {
+      "name": "d07-current",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "out/fc04-d07-ab-p32/build",
+        "-R",
+        "^fc04\\.d07\\.",
+        "--timeout",
+        "20",
+        "--no-tests=error",
+        "--output-on-failure",
+        "--output-junit",
+        ".aegis\\results\\FC04-D07-AB-P32-002\\raw\\d07-current.xml"
+      ],
+      "exit_code": 0,
+      "raw": "raw\\d07-current.log",
+      "sha256": "c012e29f9677a9f7c467fb9f51199a41934ce977061a708a8907deeab7ad765e"
+    },
+    {
+      "name": "oom-current",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "out/fc04-d07-ab-p32/build",
+        "-R",
+        "^FC04D07(ExplicitIntentPostcommitNoAllocation|PostcommitFault|PostcommitReceiptGrowthFault)$",
+        "--timeout",
+        "20",
+        "--no-tests=error",
+        "--output-on-failure",
+        "--output-junit",
+        ".aegis\\results\\FC04-D07-AB-P32-002\\raw\\oom-current.xml"
+      ],
+      "exit_code": 0,
+      "raw": "raw\\oom-current.log",
+      "sha256": "e2bce6429b1cc58ae2ab9fcfd19aba19ae69cd406204d571707f3a2bf8694a28"
+    },
+    {
+      "name": "scene-regression",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "out/fc04-d07-ab-p32/build",
+        "-R",
+        "^canvas_g2_a6_(atomic_publication|recovery)$",
+        "--timeout",
+        "30",
+        "--no-tests=error",
+        "--output-on-failure",
+        "--output-junit",
+        ".aegis\\results\\FC04-D07-AB-P32-002\\raw\\scene-regression.xml"
+      ],
+      "exit_code": 0,
+      "raw": "raw\\scene-regression.log",
+      "sha256": "394d3b06957f3cb34e58f29ccf60025e3a4d64296789313ffdcf1dc0da06e8ac"
+    },
+    {
+      "name": "abi-check",
+      "argv": [
+        "C:\\Users\\Chado\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+        "tools/check_runtime_abi_manifest.py",
+        "--root",
+        "."
+      ],
+      "exit_code": 0,
+      "raw": "raw\\abi-check.log",
+      "sha256": "d0e32b46a6ed8044d768f459c7569a495710709accf6dda7bfad11eebfd90fcc"
+    },
+    {
+      "name": "diff-check",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "raw": "raw\\diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "d07-junit",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "out/fc04-d07-ab-p32/build",
+        "-R",
+        "^fc04\\.d07\\.",
+        "--timeout",
+        "20",
+        "--no-tests=error",
+        "--output-on-failure",
+        "--output-junit",
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\.aegis\\results\\FC04-D07-AB-P32-002\\raw\\d07-current.xml"
+      ],
+      "exit_code": 0,
+      "raw": "raw\\d07-junit.log",
+      "sha256": "f6ca1020bfd253ab2b0b5ce0a34ef85152b9efdf0503d8dd4697c2919e2a2bdc"
+    },
+    {
+      "name": "oom-junit",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "out/fc04-d07-ab-p32/build",
+        "-R",
+        "^FC04D07(ExplicitIntentPostcommitNoAllocation|PostcommitFault|PostcommitReceiptGrowthFault)$",
+        "--timeout",
+        "20",
+        "--no-tests=error",
+        "--output-on-failure",
+        "--output-junit",
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\.aegis\\results\\FC04-D07-AB-P32-002\\raw\\oom-current.xml"
+      ],
+      "exit_code": 0,
+      "raw": "raw\\oom-junit.log",
+      "sha256": "e2bce6429b1cc58ae2ab9fcfd19aba19ae69cd406204d571707f3a2bf8694a28"
+    },
+    {
+      "name": "scene-junit",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "out/fc04-d07-ab-p32/build",
+        "-R",
+        "^canvas_g2_a6_(atomic_publication|recovery)$",
+        "--timeout",
+        "30",
+        "--no-tests=error",
+        "--output-on-failure",
+        "--output-junit",
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\.aegis\\results\\FC04-D07-AB-P32-002\\raw\\scene-regression.xml"
+      ],
+      "exit_code": 0,
+      "raw": "raw\\scene-junit.log",
+      "sha256": "ae19dacfbc8f63935f9b7d5f5a034f503e04b06433ee65e1de95b1422ecdf8e5"
+    }
+  ],
+  "prior_fault_reproduction": {
+    "argv": [
+      "ctest",
+      "--test-dir",
+      "out/fc04-d07-ab-p32/build",
+      "-R",
+      "^FC04D07ExplicitIntentPrepareAllocationSweep$",
+      "--timeout",
+      "15",
+      "--no-tests=error",
+      "--output-on-failure"
+    ],
+    "exit_code": 8,
+    "raw": "raw/prepare-sweep-timeout.log"
+  },
+  "debugger": [
+    "cdb -logo raw/prepare-sweep-hang-stack.log -p <reproduced PID> -c \"~* kv;qd\"",
+    "cdb -logo raw/fault-index-100-stack.log -c \"g;kv;q\" <fault executable> trace-prepare-sweep"
+  ]
+}

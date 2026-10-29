@@ -1,0 +1,180 @@
+{
+  "subject_revision": "b5072f2c7dd796b2ad7aed3a6bfa5d86b6058cad",
+  "test_creation_status": "NOT_RUN_PENDING_P32",
+  "frozen_regressions": {
+    "d07_original_14": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/d07-names.txt",
+    "selection_160": ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/raw/selection-names.txt",
+    "no_skips": true,
+    "no_zero_match_as_pass": true
+  },
+  "functional_required_tests": [
+    {
+      "id": "fc04.d07.D07.ExplicitIntentGroupProducesOneUndoUnit",
+      "kind": "real-owner-positive",
+      "blocking": true,
+      "assertions": [
+        "all eligible operation kinds in accepted D07 contract are exercised, not only SetTransforms + PatchProperties",
+        "one coherent local result and exactly one Undo unit",
+        "Undo after selection change restores original targets",
+        "Redo restores forward meaning with fresh IDs",
+        "per-operation identity/generation/stamp/ChangeSet and ordered bridge records preserved",
+        "no partial observer snapshot"
+      ]
+    },
+    {
+      "id": "fc04.d07.D07.ExplicitIntentLifecycleAndStaging",
+      "kind": "real-owner-positive-and-rejections",
+      "blocking": true,
+      "assertions": [
+        "begin/prepare/commit/abort ownership and single consumption",
+        "dependent operations validate against sequential staged state",
+        "abort/invalid later candidate leaves Document, Scene, ledger, History cursor/redo and observers unchanged",
+        "stale basis, duplicate IDs, cross-document, unsupported operation, empty/malformed/reentrant groups reject before write"
+      ]
+    },
+    {
+      "id": "fc04.d07.D07.ExplicitIntentFailureContainment",
+      "kind": "real-owner-fault-injection",
+      "blocking": true,
+      "assertions": [
+        "inject each forward operation and each History/store/index/ledger/ChangeSet/result/Scene reservation boundary",
+        "record actual phase and before/after canonical generation, records, ledger, History, Redo, Scene/index and observer state",
+        "no post-prefix failure relabeled as precommit rejection",
+        "no fake coordinator or moved failpoint"
+      ]
+    },
+    {
+      "id": "fc04.d07.D07.ExplicitIntentUndoRedoFailureContainment",
+      "kind": "real-owner-fault-injection",
+      "blocking": true,
+      "assertions": [
+        "Undo/Redo preflight, reservation and operation-boundary failures",
+        "conflict rejection leaves History cursor and Redo unchanged",
+        "successful Redo uses fresh operation IDs"
+      ]
+    },
+    {
+      "id": "fc04.d07.D07.TwoIndependentCommandsNeedTwoUndoUnits",
+      "kind": "protected-existing",
+      "blocking": true,
+      "assertions": [
+        "two independent commands remain two Undo units; one Undo removes only latest result; two Redos succeed"
+      ]
+    },
+    {
+      "id": "fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED",
+      "kind": "negative-control",
+      "blocking": true,
+      "assertions": [
+        "sequential standalone commands remain unable to satisfy one-Undo intent; preserve historical RED characterization and corrected test mapping"
+      ]
+    },
+    {
+      "id": "fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED",
+      "kind": "legacy-negative-control",
+      "blocking": true,
+      "assertions": [
+        "legacy span submission remains rejected without mutation; explicit Intent positive is tested separately"
+      ]
+    },
+    {
+      "id": "FC04D07PostcommitReceiptGrowthFault",
+      "kind": "protected-existing-oom",
+      "blocking": true,
+      "assertions": [
+        "preserve single-command receipt-growth fix; no canonical commit stranded without History"
+      ]
+    },
+    {
+      "id": "FC04D07PostcommitFault",
+      "kind": "protected-existing-scene-recovery",
+      "blocking": true,
+      "assertions": [
+        "derived Scene publication failure retains coherent History and recovery behavior"
+      ]
+    },
+    {
+      "id": "SCENE-PREP-01",
+      "kind": "real-owner-scene-case",
+      "blocking": true,
+      "assertions": [
+        "prepare changes no visible Scene/RuntimeScene records, revision/generation, query/hit/draw, damage or observer count"
+      ]
+    },
+    {
+      "id": "SCENE-PREP-02",
+      "kind": "real-owner-scene-case",
+      "blocking": true,
+      "assertions": [
+        "abort after prepare leaves Document/Scene/History/Redo unchanged and releases staged resources"
+      ]
+    },
+    {
+      "id": "SCENE-PREP-03",
+      "kind": "real-owner-scene-case",
+      "blocking": true,
+      "assertions": [
+        "each real participant prepare/reservation fault leaves visible state unchanged; actual phase recorded"
+      ]
+    },
+    {
+      "id": "SCENE-PREP-04",
+      "kind": "real-owner-scene-case",
+      "blocking": true,
+      "assertions": [
+        "successful commit publishes coherent final state; no fallible allocation remains after canonical mutation begins"
+      ]
+    },
+    {
+      "id": "SCENE-PREP-05",
+      "kind": "real-owner-scene-case",
+      "blocking": true,
+      "assertions": [
+        "stale Scene revision/semantic generation rejects before write"
+      ]
+    },
+    {
+      "id": "SCENE-PREP-06",
+      "kind": "real-owner-scene-case",
+      "blocking": true,
+      "assertions": [
+        "existing single-operation apply/synchronize/recover behavior and callback order remain compatible"
+      ]
+    }
+  ],
+  "overall_blocker": {
+    "id": "D07-OOM-DESCRIPTOR-INIT",
+    "status": "KNOWN_BLOCKING_OUTSIDE_THIS_FUNCTIONAL_PACKAGE",
+    "evidence": [
+      ".aegis/results/FC04-D07-AB-P32-002/report.md",
+      ".aegis/results/FC04-D07-AB-P32-002/raw/fault-index-100-stack.log",
+      ".aegis/results/FC04-D07-AB-P32-002/raw/prepare-sweep-hang-stack.log"
+    ],
+    "rule": "Do not rerun repeatedly in same poisoned process; do not count as pass or waive overall D07/release block. Deep Protobuf/Abseil fix is out of scope."
+  },
+  "required_platforms": [
+    "Windows native",
+    "actual Chrome/WASM where supported; record environment/commands; no synthetic substitute"
+  ],
+  "required_guards": [
+    "python tools/check_runtime_abi_manifest.py --root .",
+    "exact source-scope diff",
+    "exact D07 14 IDs",
+    "exact Selection 160 IDs"
+  ],
+  "terminal_statuses": {
+    "functional": "FUNCTIONAL_SCOPE_COMPLETE_READY_FOR_CONTROL_REVIEW",
+    "overall": "BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG"
+  },
+  "skipped_tests_are_pass": false,
+  "eligible_operation_kinds": [
+    "SetSectionContent",
+    "EditContainerTopology",
+    "InsertObjects",
+    "DeleteObjects",
+    "RestoreObjects",
+    "SetTransforms",
+    "PatchProperties"
+  ],
+  "operation_kind_source": "runtime/interaction/src/undoable_command.cpp::supportsUndoableCommand at resume cursor b5072f2c7dd796b2ad7aed3a6bfa5d86b6058cad"
+}

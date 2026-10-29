@@ -1,0 +1,31 @@
+{
+  "record_type": "P32_EXECUTION_AUTHORIZATION_CORRECTION",
+  "task_id": "FC04-MSE-PHASE2-P32",
+  "status": "AUTHORIZED_SCOPE_LIMITED",
+  "basis": "User accepted preparer self-review for this P31 and requested continuation on 2026-10-29; exact package was self-reviewed and all required package preflights passed.",
+  "reviewer": "package preparer; not independent; no claim of independent review or Gate PASS",
+  "repository": "Mostorm-Labs/axiom",
+  "package_ref": {
+    "revision": "a3fdcb5fa792a9f74bdc3eccd3fa09013f8df2b8",
+    "path": ".aegis/packages/FC04-MSE-PHASE2-P31-v0.4/package.json",
+    "sha256": "b51eea6a24d292aeba63cbe5f1cd453d576c4eac5f682a25da27a2fec8885a90"
+  },
+  "preflights": {
+    "result": "PASS",
+    "evidence": ".aegis/results/FC04-MSE-PHASE2-P31-V04-001/commands.json"
+  },
+  "execution_ref": "refs/heads/codex/fc04-mse-p31-v02-binding-fix",
+  "task_anchor": {
+    "revision": "a3fdcb5fa792a9f74bdc3eccd3fa09013f8df2b8",
+    "relation": "ancestor"
+  },
+  "authorized_work": "Phase 2 multi-selection editing only as frozen in v0.4 and prior closure, no Group/Ungroup implementation",
+  "overall_d07_release": "BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG",
+  "product_status": "NOT_IMPLEMENTED",
+  "final_gate": "NOT_REVIEWED",
+  "preserved_v04_package_flag": "package.json remains false as historical draft; this separate user-directed authorization record is the later acceptance",
+  "continue_until_terminal_state": true,
+  "supersedes": "authorization.json",
+  "superseded_sha256": "2b831c6b66a1fd895d3e4f8ce8ae9c357d3b8451ecaa6de64e8e291062ac1e58",
+  "correction_reason": "v0.4 PackageBindingPreflight requires this exact branch; do not override the frozen check."
+}

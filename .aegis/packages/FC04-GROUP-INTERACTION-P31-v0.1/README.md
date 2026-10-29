@@ -1,0 +1,3 @@
+# Group interaction P31 candidate
+
+This source-bound draft preserves previous packages and evidence. It is not execution authorization or a Gate result. Test scenarios are candidates, not verified or frozen oracles; an exact test runner, narrow owner allowlist and control decision are required. In particular, the old full FC08 product package remains intact; no claim is made that all 302 cases passed. The user requested incremental real implementation rather than using a complete 302-case runner as a blanket prerequisite: record an explicit, separately bounded sequencing decision before relying on that for Group. Physical testing is deferred until Group implementation is complete.

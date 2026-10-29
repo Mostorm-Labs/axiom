@@ -1,0 +1,28 @@
+{
+  "schema_version": "aegis-p31-scope-amendment-v1",
+  "id": "FC04-MSE-TEXT-ENTRY-INGRESS-v0.1",
+  "parent_package_revision": "a3fdcb5fa792a9f74bdc3eccd3fa09013f8df2b8",
+  "baseline": "6ba9de4544121dc67f86cb51650363f5d7ba7fd9",
+  "rationale": "MSE-24/25 real TextEdit entry must resolve the actual text owner and normalize selection; its existing composition ingress was omitted from the original allowlist. Existing SelectionSession and TextEdit retain ownership.",
+  "allowed_existing": [
+    {
+      "path": "runtime/composition/src/canvas_runtime_text.cpp",
+      "baseline_sha256": "79639a05068d140ea0a90351c3a3763cb2ddc060f6345e86c4ddda7280361c51",
+      "git_blob": "d270ae00bbec0240d4ca30176c9a9ade88458aab"
+    }
+  ],
+  "required": [
+    "real hit text target; resolve current selection scope and reject unavailable hierarchy",
+    "one owning selected root after successful text entry; never promote out-of-scope child",
+    "preserve native IME finish/cancel and committed text",
+    "MSE-24/25 plus FC02 text and selection regressions",
+    "D07 OOM blocker unchanged"
+  ],
+  "forbidden": [
+    "new public ABI or wire schema",
+    "change unrelated TextEdit/IME behavior",
+    "alter frozen test expectations",
+    "Group/Ungroup implementation"
+  ],
+  "authorization": "User requested Phase 2 continuation and explicitly accepted same-preparer control review; no Gate or release decision is implied."
+}

@@ -16,6 +16,28 @@
 #include <type_traits>
 
 namespace canvas::render {
+namespace {
+void drawAcquisition(SkCanvas& canvas,const EditingOverlay& overlay) {
+    SkPaint paint;paint.setAntiAlias(true);paint.setStrokeWidth(1.5F);
+    const auto drawOutline=[&](const SelectionOutline& outline,bool candidate) {
+        if (!outline.visible) return;
+        SkPathBuilder path;path.moveTo(outline.corners[0].x,outline.corners[0].y);
+        for (std::size_t i=1;i<4;++i) path.lineTo(outline.corners[i].x,outline.corners[i].y);
+        path.close();const auto polygon=path.detach();
+        if (candidate) {paint.setStyle(SkPaint::kFill_Style);paint.setColor4f({.12F,.5F,.9F,.10F},nullptr);canvas.drawPath(polygon,paint);}
+        paint.setStyle(SkPaint::kStroke_Style);paint.setColor4f({.12F,.65F,.85F,candidate?.55F:.95F},nullptr);canvas.drawPath(polygon,paint);
+    };
+    for (const auto& outline:overlay.readOnlyOutlines) drawOutline(outline,false);
+    for (const auto& outline:overlay.candidateOutlines) drawOutline(outline,true);
+    if (overlay.acquisitionOutline.size()<2) return;
+    SkPathBuilder path;path.setFillType(SkPathFillType::kEvenOdd);
+    path.moveTo(overlay.acquisitionOutline[0].x,overlay.acquisitionOutline[0].y);
+    for (std::size_t i=1;i<overlay.acquisitionOutline.size();++i) path.lineTo(overlay.acquisitionOutline[i].x,overlay.acquisitionOutline[i].y);
+    path.close();const auto polygon=path.detach();
+    paint.setStyle(SkPaint::kFill_Style);paint.setColor4f({.12F,.5F,.9F,.08F},nullptr);canvas.drawPath(polygon,paint);
+    paint.setStyle(SkPaint::kStroke_Style);paint.setColor4f({.12F,.5F,.9F,.85F},nullptr);canvas.drawPath(polygon,paint);
+}
+}
 
 BackendSubmissionResult SkiaRenderer::renderFrame(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
@@ -47,6 +69,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         canvas->save();
         canvas->scale(plan.frame.metrics.physicalWidth / plan.frame.metrics.logicalWidth,
                       plan.frame.metrics.physicalHeight / plan.frame.metrics.logicalHeight);
+        drawAcquisition(*canvas,*selectionOverlay);
         if(selectionOverlay->textCaret){
             SkPaint paint;paint.setAntiAlias(true);paint.setColor4f({0.12F,0.45F,0.9F,0.25F},nullptr);
             const auto draw=[&](const auto& quad){SkPathBuilder path;path.moveTo(quad[0],quad[1]);for(std::size_t i=1;i<4;++i)path.lineTo(quad[i*2],quad[i*2+1]);path.close();canvas->drawPath(path.detach(),paint);};
@@ -143,6 +166,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     canvas->save();
     canvas->scale(plan.frame.metrics.physicalWidth / plan.frame.metrics.logicalWidth,
                   plan.frame.metrics.physicalHeight / plan.frame.metrics.logicalHeight);
+    drawAcquisition(*canvas,*selectionOverlay);
     SkPaint guidePaint;
     guidePaint.setAntiAlias(true);
     guidePaint.setStyle(SkPaint::kStroke_Style);

@@ -1,0 +1,23 @@
+169:       {kOnceInit, kOnceRunning, true},
+170:       {kOnceRunning, kOnceWaiter, false},
+171:       {kOnceDone, kOnceDone, true}};
+172: 
+173:   // Must do this before potentially modifying control word's state.
+174:   base_internal::SchedulingHelper maybe_disable_scheduling(scheduling_mode);
+175:   // Short circuit the simplest case to avoid procedure call overhead.
+176:   // The base_internal::SpinLockWait() call returns either kOnceInit or
+177:   // kOnceDone. If it returns kOnceDone, it must have loaded the control word
+178:   // with std::memory_order_acquire and seen a value of kOnceDone.
+179:   uint32_t old_control = kOnceInit;
+180:   if (control->compare_exchange_strong(old_control, kOnceRunning,
+181:                                        std::memory_order_relaxed) ||
+182:       base_internal::SpinLockWait(control, ABSL_ARRAYSIZE(trans), trans,
+183:                                   scheduling_mode) == kOnceInit) {
+184:     std::invoke(std::forward<Callable>(fn), std::forward<Args>(args)...);
+185:     old_control =
+186:         control->exchange(base_internal::kOnceDone, std::memory_order_release);
+187:     if (old_control == base_internal::kOnceWaiter) {
+188:       base_internal::SpinLockWake(control, true);
+189:     }
+190:   }  // else *control is already kOnceDone
+191: }

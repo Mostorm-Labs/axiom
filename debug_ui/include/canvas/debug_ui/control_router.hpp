@@ -4,9 +4,15 @@
 #include "canvas/debug_ui/snapshot.hpp"
 #include "canvas/runtime/debug_control.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+#include "canvas/runtime/internal/multi_selection_port.hpp"
+#else
+namespace canvas::runtime { class MultiSelectionPort; }
+#endif
 #include "canvas/runtime/surface_debug_control.hpp"
 
 #include <cstdint>
+#include <array>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -26,10 +32,21 @@ class DebugControlRouter final {
   DebugControlRouter(canvas::runtime::RuntimeFacade* runtime,
                      canvas::runtime::AxiomDebugControl* axiomDebug,
                      canvas::runtime::PlatformDebugControl* platformDebug,
-                     DebugActivityLog* activity) noexcept;
+                     DebugActivityLog* activity,
+                     canvas::runtime::MultiSelectionPort* multiSelection = nullptr) noexcept;
 
   void beginFrame(const DebugSnapshot& snapshot) noexcept;
   void refreshReceipts() noexcept;
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+  [[nodiscard]] const canvas::runtime::MultiSelectionProjection& multiSelectionProjection() const noexcept {
+    return multiProjection_;
+  }
+  [[nodiscard]] canvas::runtime::MultiSelectionSubmitReceipt applyMultiSelectionProperty(
+      std::uint32_t field, const canvas::semantic::PropertyValue& value) noexcept;
+  [[nodiscard]] std::optional<canvas::runtime::MultiSelectionOutcome> multiSelectionOutcome() const noexcept;
+  [[nodiscard]] bool hasMultiSelectionAdmission() const noexcept { return hasMultiSelectionAdmission_; }
+  [[nodiscard]] canvas::runtime::MultiSelectionSubmitReceipt multiSelectionAdmission() const noexcept { return multiSelectionAdmission_; }
+#endif
   // UI consumer policy only: one attempt per bound Runtime, before the UI opens.
   void prepareConnectorDefaults(std::uint64_t runtimeEpoch, bool retry = false);
   [[nodiscard]] bool connectorDefaultsReady() const noexcept { return connectorDefaultsReady_; }
@@ -56,6 +73,7 @@ class DebugControlRouter final {
   void finishImageCrop(bool commit);
   [[nodiscard]] const std::string& imageStatus() const noexcept { return imageStatus_; }
   canvas::runtime::ProductControlReceipt setSelectionMode(bool enabled) noexcept;
+  canvas::runtime::ProductControlReceipt setSelectionAcquisitionMode(canvas::runtime::CanvasSelectionMode) noexcept;
   canvas::runtime::ProductControlReceipt undo() noexcept;
   canvas::runtime::ProductControlReceipt redo() noexcept;
   canvas::runtime::ProductControlReceipt setCreationPreset(
@@ -91,13 +109,14 @@ class DebugControlRouter final {
  private:
   struct FrameContext final {
     DebugSnapshotStamp stamp{};
-    std::uint32_t selectedObjectCount = 0;
-    std::uint64_t primaryObject = 0;
+    std::uint64_t selectionRevision = 0, semanticGeneration = 0, sceneRevision = 0;
+    std::array<canvas::runtime::SelectionCapability,static_cast<std::size_t>(canvas::runtime::SelectionAction::kCount)> actions{};
   };
   struct PendingAxiom final { std::string action; };
   struct PendingSurface final { std::string action; };
 
   [[nodiscard]] std::uint64_t nextRequestId() noexcept;
+  [[nodiscard]] bool canSubmitSelection(canvas::runtime::SelectionAction) const noexcept;
   [[nodiscard]] std::uint64_t productDeadline() const noexcept;
   [[nodiscard]] std::uint64_t uiDeadline() const noexcept {
     return frame_.stamp.sequence + 120U;
@@ -119,6 +138,13 @@ class DebugControlRouter final {
   struct PendingText final { std::uint64_t client; std::string action; };
   std::unordered_map<std::uint64_t, PendingText> pendingText_;
 
+  canvas::runtime::MultiSelectionPort* multiSelection_ = nullptr;
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+  canvas::runtime::MultiSelectionProjection multiProjection_{};
+  std::uint64_t lastMultiRequest_ = 0;
+  bool hasMultiSelectionAdmission_ = false;
+  canvas::runtime::MultiSelectionSubmitReceipt multiSelectionAdmission_{};
+#endif
   canvas::runtime::RuntimeFacade* runtime_ = nullptr;
   canvas::runtime::AxiomDebugControl* axiomDebug_ = nullptr;
   canvas::runtime::PlatformDebugControl* platformDebug_ = nullptr;

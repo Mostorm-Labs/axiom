@@ -1,0 +1,29 @@
+{
+  "status": "IN_PROGRESS",
+  "authorization": ".aegis/results/FC04-MSE-PHASE2-P31-V04-001/authorization-v0.2.json",
+  "base_revision": "d5d4f537fb646d02ceeae720b3e3f44ce2664300",
+  "source_sha256": {
+    "runtime/control/src/canvas_control_service.cpp": "7b932b9f441b8eade55ae0a8ae543960fb09e8d7b6922e92ff10cb588aaaac67",
+    "runtime/composition/tests/selection_input_integration_test.cpp": "d10bee9e752cfa9e698db601cdd775c330ac60727d12b70c1e71a7cf6c36b143"
+  },
+  "red_observation": {
+    "test": "SelectionInput.QueuedPropertyEditRejectsChangedSemanticGeneration",
+    "exit_code": 1,
+    "observed": "old command applied after external generation change: receipt Applied, generation 2 to 3, selected object mutated",
+    "raw_output": "tool execution transcript"
+  },
+  "green": {
+    "test": "SelectionInput.QueuedPropertyEditRejectsChangedSemanticGeneration",
+    "exit_code": 0
+  },
+  "regression": {
+    "command": "ctest --test-dir out/fc04-mse-p32/build -R '^(FC01ASelectionInputIntegration|DUIM1Control)$' --output-on-failure --no-tests=error --output-junit out/fc04-mse-p32/queue-guard.xml",
+    "exit_code": 0,
+    "ctest_count": 2,
+    "junit": "queue-guard.xml",
+    "sha256": "06bf4540a284422bca6d4563ffaab9eff57e40b917ccd41a5a70ec838670160f"
+  },
+  "full_mse_01_27": "NOT_RUN",
+  "web": "NOT_RUN",
+  "physical": "NOT_RUN"
+}

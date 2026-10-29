@@ -1,0 +1,28 @@
+[
+  {
+    "argv": [
+      "D:/Softwares/Anaconda/python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "unittest",
+      "verification.tests.test_current_semantic_descriptor",
+      "verification.tests.test_semantic_contract",
+      "verification.tests.test_fc02_host_contract",
+      "verification.tests.test_host_text_font_resource",
+      "-v"
+    ],
+    "exit_code": 0
+  },
+  {
+    "argv": [
+      "D:/Softwares/Anaconda/python.exe",
+      "-X",
+      "utf8",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "."
+    ],
+    "exit_code": 0
+  }
+]

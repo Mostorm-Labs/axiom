@@ -1,0 +1,196 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 12 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 12 tests from Summary
+[ RUN      ] Summary.EmptyIsNotAUniformPropertyOrAnExecutableSelection
+[       OK ] Summary.EmptyIsNotAUniformPropertyOrAnExecutableSelection (0 ms)
+[ RUN      ] Summary.PublicSnapshotsShareOneNormalizedSummaryAndExactWorldBounds
+[       OK ] Summary.PublicSnapshotsShareOneNormalizedSummaryAndExactWorldBounds (0 ms)
+[ RUN      ] Summary.SectionAndNestedGroupCountRootsWithoutDescendants
+[       OK ] Summary.SectionAndNestedGroupCountRootsWithoutDescendants (0 ms)
+[ RUN      ] Summary.TransformAndDeletionRefreshWithoutChangingSelectionOnRead
+[       OK ] Summary.TransformAndDeletionRefreshWithoutChangingSelectionOnRead (0 ms)
+[ RUN      ] Summary.StaleSceneCannotPublishAuthoritativeBoundsPropertiesOrActions
+[       OK ] Summary.StaleSceneCannotPublishAuthoritativeBoundsPropertiesOrActions (0 ms)
+[ RUN      ] Summary.MissingTextMetricsAreNotAZeroSizedCompleteBound
+[       OK ] Summary.MissingTextMetricsAreNotAZeroSizedCompleteBound (0 ms)
+[ RUN      ] Summary.WrongThreadAndClosedRuntimeHaveNoUsableProjection
+[       OK ] Summary.WrongThreadAndClosedRuntimeHaveNoUsableProjection (4 ms)
+[ RUN      ] Summary.PropertiesReportUniformMixedPartialAndMissingWithoutInventingValues
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(122): error: Expected equality of these values:
+  s.properties[0].state
+    Which is: 1-byte object <00>
+  Property::kUniform
+    Which is: 1-byte object <01>
+
+unknown file: error: C++ exception with description "bad variant access" thrown in the test body.
+
+[  FAILED  ] Summary.PropertiesReportUniformMixedPartialAndMissingWithoutInventingValues (0 ms)
+[ RUN      ] Summary.CapabilitiesUseRealOwnersAndNeverFallBackToPrimaryForMultiEdit
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(138): error: Value of: s.capability(action).available()
+  Actual: false
+Expected: true
+0
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(138): error: Value of: s.capability(action).available()
+  Actual: false
+Expected: true
+1
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(138): error: Value of: s.capability(action).available()
+  Actual: false
+Expected: true
+5
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(138): error: Value of: s.capability(action).available()
+  Actual: false
+Expected: true
+6
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(138): error: Value of: s.capability(action).available()
+  Actual: false
+Expected: true
+7
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(138): error: Value of: s.capability(action).available()
+  Actual: false
+Expected: true
+2
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(138): error: Value of: s.capability(action).available()
+  Actual: false
+Expected: true
+4
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(139): error: Value of: s.capability(Action::kFit).available()
+  Actual: false
+Expected: true
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(139): error: Value of: s.capability(Action::kDelete).available()
+  Actual: false
+Expected: true
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(141): error: Expected equality of these values:
+  s.capability(action).reason
+    Which is: 1-byte object <02>
+  Reason::kMultipleRoots
+    Which is: 1-byte object <0B>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(141): error: Expected equality of these values:
+  s.capability(action).reason
+    Which is: 1-byte object <02>
+  Reason::kMultipleRoots
+    Which is: 1-byte object <0B>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(141): error: Expected equality of these values:
+  s.capability(action).reason
+    Which is: 1-byte object <02>
+  Reason::kMultipleRoots
+    Which is: 1-byte object <0B>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(141): error: Expected equality of these values:
+  s.capability(action).reason
+    Which is: 1-byte object <02>
+  Reason::kMultipleRoots
+    Which is: 1-byte object <0B>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(141): error: Expected equality of these values:
+  s.capability(action).reason
+    Which is: 1-byte object <02>
+  Reason::kMultipleRoots
+    Which is: 1-byte object <0B>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(144): error: Expected equality of these values:
+  s.capability(action).state
+    Which is: 1-byte object <00>
+  Cap::kNotImplemented
+    Which is: 1-byte object <02>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(144): error: Expected equality of these values:
+  s.capability(action).state
+    Which is: 1-byte object <00>
+  Cap::kNotImplemented
+    Which is: 1-byte object <02>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(144): error: Expected equality of these values:
+  s.capability(action).state
+    Which is: 1-byte object <00>
+  Cap::kNotImplemented
+    Which is: 1-byte object <02>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(144): error: Expected equality of these values:
+  s.capability(action).state
+    Which is: 1-byte object <00>
+  Cap::kNotImplemented
+    Which is: 1-byte object <02>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(144): error: Expected equality of these values:
+  s.capability(action).state
+    Which is: 1-byte object <00>
+  Cap::kNotImplemented
+    Which is: 1-byte object <02>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(145): error: Expected equality of these values:
+  s.capability(Action::kWrapInSection).reason
+    Which is: 1-byte object <02>
+  Reason::kOutsideBatch
+    Which is: 1-byte object <0E>
+
+[  FAILED  ] Summary.CapabilitiesUseRealOwnersAndNeverFallBackToPrimaryForMultiEdit (0 ms)
+[ RUN      ] Summary.MixedLocksAndInheritedLocksRemainVisibleInAggregatesAndCapabilities
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(155): error: Expected equality of these values:
+  s.properties[1].state
+    Which is: 1-byte object <00>
+  Property::kMixed
+    Which is: 1-byte object <02>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(156): error: Expected equality of these values:
+  s.capability(Action::kDelete).reason
+    Which is: 1-byte object <02>
+  Reason::kLocked
+    Which is: 1-byte object <0A>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(157): error: Value of: s.capability(Action::kUnlock).available()
+  Actual: false
+Expected: true
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(161): error: Expected equality of these values:
+  s.properties[1].state
+    Which is: 1-byte object <00>
+  Property::kUniform
+    Which is: 1-byte object <01>
+
+[  FAILED  ] Summary.MixedLocksAndInheritedLocksRemainVisibleInAggregatesAndCapabilities (0 ms)
+[ RUN      ] Summary.BusyRegionAndNonNormalizedRootsDoNotAdvertiseUnsafeCommands
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(169): error: Expected equality of these values:
+  s.capability(Action::kDelete).reason
+    Which is: 1-byte object <02>
+  Reason::kBusy
+    Which is: 1-byte object <09>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(170): error: Value of: read().capability(Action::kDelete).available()
+  Actual: false
+Expected: true
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(173): error: Expected equality of these values:
+  s.capability(Action::kDelete).reason
+    Which is: 1-byte object <02>
+  Reason::kNonNormalizedSelection
+    Which is: 1-byte object <11>
+
+[  FAILED  ] Summary.BusyRegionAndNonNormalizedRootsDoNotAdvertiseUnsafeCommands (1 ms)
+[ RUN      ] Summary.SummaryRefreshPreservesRealRedoAndCanonicalOutcome
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] Summary.SummaryRefreshPreservesRealRedoAndCanonicalOutcome (49 ms)
+[----------] 12 tests from Summary (59 ms total)
+
+[----------] Global test environment tear-down
+[==========] 12 tests from 1 test suite ran. (59 ms total)
+[  PASSED  ] 8 tests.
+[  FAILED  ] 4 tests, listed below:
+[  FAILED  ] Summary.PropertiesReportUniformMixedPartialAndMissingWithoutInventingValues
+[  FAILED  ] Summary.CapabilitiesUseRealOwnersAndNeverFallBackToPrimaryForMultiEdit
+[  FAILED  ] Summary.MixedLocksAndInheritedLocksRemainVisibleInAggregatesAndCapabilities
+[  FAILED  ] Summary.BusyRegionAndNonNormalizedRootsDoNotAdvertiseUnsafeCommands
+
+ 4 FAILED TESTS

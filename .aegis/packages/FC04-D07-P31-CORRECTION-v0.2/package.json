@@ -1,0 +1,29 @@
+{
+  "task_id": "FC04-D07-P31-CORRECTION",
+  "version": "0.2",
+  "status": "BLOCKED_VERIFICATION",
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/fc04-d07-selection-audit",
+  "source_revision": "a85a8077a58fce97c617badc7116794f6bc1a15b",
+  "feature_anchor": "c7f874395d55952e9d5288e2a336a21747f37f11",
+  "supersedes_only": "Contradictory P31 independent-call/grouped-intent test mapping; v0.1 files and results remain immutable.",
+  "authorization": "P31 test-binding/evidence correction only; no product or test source edits; no product repair activation.",
+  "allowed_paths": [
+    ".aegis/packages/FC04-D07-P31-CORRECTION-v0.2/",
+    ".aegis/results/FC04-D07-P31-CORRECTION-v0.2/"
+  ],
+  "bindings": "test-bindings.json",
+  "authority_inputs": [
+    "current.json",
+    "acceptance.json",
+    "correction.json"
+  ],
+  "required_preflights": [
+    "PackageBindingPreflight",
+    "EvidenceContractPreflight",
+    "D07Preflight"
+  ],
+  "terminal_blocker": "BLOCKED_VERIFICATION: real explicit-intent production entry is absent; do not implement it in this task.",
+  "product_repair_authorized": false,
+  "D06_B": "OPEN"
+}

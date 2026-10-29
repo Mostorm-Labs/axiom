@@ -49,6 +49,8 @@ struct DebugSnapshot final {
   DebugSnapshotStamp stamp{};
   SnapshotCoherence coherence = SnapshotCoherence::kStale;
   DiagnosticSection<canvas::runtime::RuntimeStateSnapshot> product{};
+  // Owning value copy from Runtime; never an authoritative UI selection store.
+  canvas::runtime::SelectionSummary selectionSummary{};
   DiagnosticSection<canvas::runtime::AxiomDiagnosticsSnapshot> axiom{};
   DiagnosticSection<canvas::runtime::ArcDiagnosticsSnapshot> arc{};
   DiagnosticSection<canvas::runtime::PlatformDiagnosticsSnapshot> platform{};

@@ -1,0 +1,63 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Summary.WrongThreadAndClosedRuntimeHaveNoUsableProjection:Summary.MissingRootsAndEmptyGroupsNeverFabricateUsableGeometry
+[==========] Running 2 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 2 tests from Summary
+[ RUN      ] Summary.WrongThreadAndClosedRuntimeHaveNoUsableProjection
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(117): error: Expected equality of these values:
+  other.capability(Action::kDelete).reason
+    Which is: 1-byte object <02>
+  Reason::kWrongThread
+    Which is: 1-byte object <08>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(117): error: Expected equality of these values:
+  other.bounds.reason
+    Which is: 1-byte object <04>
+  Reason::kWrongThread
+    Which is: 1-byte object <08>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(119): error: Expected equality of these values:
+  closed.capability(Action::kDelete).reason
+    Which is: 1-byte object <02>
+  Reason::kClosed
+    Which is: 1-byte object <07>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(119): error: Expected equality of these values:
+  closed.properties[0].reason
+    Which is: 1-byte object <01>
+  Reason::kClosed
+    Which is: 1-byte object <07>
+
+[  FAILED  ] Summary.WrongThreadAndClosedRuntimeHaveNoUsableProjection (5 ms)
+[ RUN      ] Summary.MissingRootsAndEmptyGroupsNeverFabricateUsableGeometry
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(124): error: Expected equality of these values:
+  invalid.bounds.reason
+    Which is: 1-byte object <04>
+  Reason::kInvalidHierarchy
+    Which is: 1-byte object <03>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(126): error: Expected equality of these values:
+  emptyGroup.bounds.status
+    Which is: 1-byte object <01>
+  Status::kUnavailable
+    Which is: 1-byte object <00>
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(126): error: Value of: emptyGroup.bounds.world
+  Actual: true
+Expected: false
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(126): error: Value of: emptyGroup.capability(Action::kFit).available()
+  Actual: true
+Expected: false
+
+[  FAILED  ] Summary.MissingRootsAndEmptyGroupsNeverFabricateUsableGeometry (0 ms)
+[----------] 2 tests from Summary (6 ms total)
+
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test suite ran. (6 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 2 tests, listed below:
+[  FAILED  ] Summary.WrongThreadAndClosedRuntimeHaveNoUsableProjection
+[  FAILED  ] Summary.MissingRootsAndEmptyGroupsNeverFabricateUsableGeometry
+
+ 2 FAILED TESTS

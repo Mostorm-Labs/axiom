@@ -1,0 +1,11 @@
+{
+  "from": "aegis-implementation/P32",
+  "to": "aegis/CONTROL_REVIEW",
+  "status": "SDK_EXCEPTION_SAFETY_FIX_REQUIRES_UPSTREAM_RELEASE",
+  "continue_execution": false,
+  "incident_baseline": "3615a38422a103024bc23924c570e3c585656670",
+  "result_path": ".aegis/results/FC04-D07-ROUTE-A-INVESTIGATION/report.md",
+  "decision_path": ".aegis/results/FC04-D07-ROUTE-A-INVESTIGATION/raw/decision.json",
+  "required_next_step": "Materialize a versioned SDK-correction P31 package only after control review accepts the upstream owner scope and verification matrix.",
+  "preserve": ["P32-002 incident evidence", "single-command OOM fix", "partial Scene/Intent work", "locked dependency identities"]
+}

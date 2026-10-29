@@ -1,0 +1,64 @@
+{
+  "package_revision": "7425e79e559b6d33b519995fe373afaa1d578883",
+  "branch": "codex/fc04-mse-p31-v02-binding-fix",
+  "package_sha256": "3a886463173245391f4e4d71e93a8f5472aec4515c9418f06e251d22d34fc3e5",
+  "integrity_sha256": "c80d1b33c16b6ee2777223f9bb966df044e525de1c58402aa6ea598a3a3807be",
+  "source_lock_sha256": "8f252756807f8b69d176f11d2124bcef5dd00a9ad58e6fd974eb1ab3fd145a7d",
+  "checks": [
+    {
+      "check": "PackageBindingPreflight",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.3/preflight.py --repo . --check PackageBindingPreflight",
+      "exit_code": 0,
+      "stdout": "PASS PackageBindingPreflight: repository, anchors, source and package identities; HEAD=7425e79e559b6d33b519995fe373afaa1d578883\n",
+      "stderr": ""
+    },
+    {
+      "check": "EvidenceContractPreflight",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.3/preflight.py --repo . --check EvidenceContractPreflight",
+      "exit_code": 0,
+      "stdout": "PASS EvidenceContractPreflight: MSE-01..27, eight rows, inherited cases and OOM status; implementation NOT_RUN\n",
+      "stderr": ""
+    },
+    {
+      "check": "DesignPreflight",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.3/preflight.py --repo . --check DesignPreflight",
+      "exit_code": 0,
+      "stdout": "PASS DesignPreflight: selected internal C++ boundary, lifetime, typed queue and outcomes documented; control review pending\n",
+      "stderr": ""
+    },
+    {
+      "check": "FunctionalScopePreflight",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.3/preflight.py --repo . --check FunctionalScopePreflight",
+      "exit_code": 0,
+      "stdout": "PASS FunctionalScopePreflight: proposed owner and protected-boundary allowlists\n",
+      "stderr": ""
+    },
+    {
+      "check": "all",
+      "command": "python .aegis/packages/FC04-MSE-PHASE2-P31-v0.3/preflight.py --repo . --check all",
+      "exit_code": 0,
+      "stdout": "PASS PackageBindingPreflight: repository, anchors, source and package identities; HEAD=7425e79e559b6d33b519995fe373afaa1d578883\nPASS EvidenceContractPreflight: MSE-01..27, eight rows, inherited cases and OOM status; implementation NOT_RUN\nPASS DesignPreflight: selected internal C++ boundary, lifetime, typed queue and outcomes documented; control review pending\nPASS FunctionalScopePreflight: proposed owner and protected-boundary allowlists\n",
+      "stderr": ""
+    }
+  ],
+  "additional_checks": [
+    {
+      "command": "python tools/check_runtime_abi_manifest.py --root .",
+      "exit_code": 0,
+      "stdout": "Runtime C ABI manifest passed (54 functions, 49 structs, 163 enum constants)\n"
+    },
+    {
+      "command": "python tools/setup_build_environment.py --core --semantic --facts-output out/build-environment.json --status",
+      "exit_code": 0,
+      "result": "Semantic SDK resolved from locked Store; core dependencies resolved"
+    },
+    {
+      "command": "python tools/setup_build_environment.py --semantic --offline --status",
+      "exit_code": 0,
+      "result": "Locked Semantic SDK resolved offline from Store"
+    }
+  ],
+  "product_tests": "NOT_RUN",
+  "control_review": "PENDING",
+  "p32_authorized": false
+}

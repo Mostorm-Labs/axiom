@@ -1,0 +1,79 @@
+{
+  "task": "SELECTION-BATCH3",
+  "repository": "Mostorm-Labs/axiom",
+  "branch": "codex/selection-summary-batch3",
+  "materialized_ref": "refs/heads/codex/selection-summary-batch3",
+  "base": "0eb11b25d60f2b6f932f12735de4779d2a3f2f21",
+  "tested_source_subject": "b588c93a2c4b19a5f536453cf3f8c4c9c4d69626",
+  "tested_source_dirty": false,
+  "receipt_policy": "Evidence-only descendant; exact receipt commit is the branch tip reported to user. No source is changed by this receipt.",
+  "status": "IMPLEMENTED_AND_SCOPED_AUTOMATION_PASS",
+  "utc": "2026-10-27T10:40:23.469632+00:00",
+  "tests": {
+    "native_ctest": {
+      "passed": 92,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "actual_chrome_wasm": {
+      "assertions_passed": 38,
+      "failed": 0,
+      "exit_code": 0,
+      "mode": "headless Chrome, SwiftShader, synthetic CDP mouse facts"
+    },
+    "python_unittest": {
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "runtime_boundaries": {
+      "contract_files": 103,
+      "exit_code": 0
+    }
+  },
+  "changed_files": 45,
+  "blocking_requirements": [],
+  "profile_properties": [
+    1,
+    2,
+    3
+  ],
+  "remaining_limits": [
+    "No fill/stroke/font/text-format aggregates or bulk mutations",
+    "No new Group/Ungroup/Wrap/Snap/Alignment operations",
+    "Summary-specific exhaustive combinations for Image/VectorPath/RichText/DabStroke/Connector and resource failures not all exercised; existing workflows are regressions, not full summary coverage",
+    "Large selections and Group traversal/deletion-planning costs are not G5-qualified",
+    "Physical touch/pen/IME/GPU, hosted CI, other platforms and full302 runner NOT_RUN"
+  ],
+  "artifact_identity": {
+    "source_subject": "b588c93a2c4b19a5f536453cf3f8c4c9c4d69626",
+    "artifacts": [
+      {
+        "path": "C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/out/selection-batch1/native/apps/minimal_runtime_host/axiom_minimal_runtime_host_windows.exe",
+        "sha256": "d150270e7cb56d6d3bf4ca9f48d185c9222702e2658bd986d176ea5951cc34ee",
+        "bytes": 13727744
+      },
+      {
+        "path": "C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/out/selection-batch1/web/apps/axiom_canvas_demo/axiom_canvas_demo_web.js",
+        "sha256": "716c74a7aed4d2cc41cff983591ec55380bff23c8ee69c0a937832dc32162808",
+        "bytes": 130783
+      },
+      {
+        "path": "C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/out/selection-batch1/web/apps/axiom_canvas_demo/axiom_canvas_demo_web.wasm",
+        "sha256": "451d42ecf42df13c229fe99bd22d255d3ae4eb160dbf74c3390665db4b5ae43a",
+        "bytes": 11862276
+      },
+      {
+        "path": "C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/out/selection-batch1/web/apps/axiom_canvas_demo/host.js",
+        "sha256": "6b010b2e6867ee089d3eff1ce8c64b7c3db84adefd2ecaaf66daa242a412ccfb",
+        "bytes": 17314
+      }
+    ]
+  },
+  "historical_failures_preserved": true,
+  "main_merged": false,
+  "global_registry_changed": false,
+  "gate_or_release_claim": false
+}

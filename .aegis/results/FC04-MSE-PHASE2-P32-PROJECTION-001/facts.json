@@ -1,0 +1,31 @@
+{
+  "status": "IN_PROGRESS",
+  "base_revision": "e17b151984bbf2d429a03cb427c96273abecc5e2",
+  "source_sha256": {
+    "runtime/composition/include/canvas/runtime/internal/multi_selection_port.hpp": "91aac21a7336d4502960e1c5cbddb287e81268885478199800185963d68f6d75",
+    "runtime/composition/include/canvas/runtime/runtime_composition.hpp": "87d86348a8360d383be46a5b5c9e98d303a9e93e9eb8b31935f0118fa74d373e",
+    "runtime/composition/src/multi_selection_port.cpp": "c2c3a5f9848def6d02738225d64c10f960385461aabbc514f6d4de7563a3fa2c",
+    "runtime/composition/src/runtime_composition.cpp": "3fc689496b11d1aab9e5b0312b408f946e5bc33e2ad58299cece717f945b6349",
+    "runtime/composition/CMakeLists.txt": "dc550cf2a30d7122a82adcd266bc87206c745464bc4f85fd8aec24d62d546d89",
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "48ef4b3783d23b2651996fa7dc184a71e2b24acd40bc8cecca5456df9c82196d",
+    "verification/fc04_mse/CMakeLists.txt": "9279df7162e5f103cc5d78af123444369b7d2f56e4b1143f4a418f731a36c1f4",
+    "verification/fc04_mse/mse_01_27_test.cpp": "3e7b5806239c0c50e3f9d65c80ac667e6c28a2b8e12047b1bc8b746546fd5181"
+  },
+  "passed": [
+    "FC04.MSE-01",
+    "FC04.MSE-07",
+    "FC04.MSE-21",
+    "FC01ASelectionInputIntegration",
+    "SelectionBatch3Summary",
+    "DUIM1Control",
+    "ProjectionRejectsWrongThreadAndClosedOwner"
+  ],
+  "red": [
+    "FC04.MSE-19 typed batch submission missing",
+    "FC04.MSE-02 selector not yet implemented (zero-match guard)"
+  ],
+  "other_mse": "NOT_RUN",
+  "actual_chrome": "NOT_RUN",
+  "physical": "NOT_RUN",
+  "d07_oom": "BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG"
+}

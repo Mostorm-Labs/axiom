@@ -71,6 +71,60 @@ int main(int argc, char** argv) {
     assert(composition.bindSurface(800, 600));
     assert(state.host->registerSource(1));
     assert(minimal_runtime_host::bindHostTextFont(composition, "axiom-font.otf"));
+    if (mode == "group-dblclick" || mode == "group-touch") {
+        const auto a=foundation::ObjectId::fromUint64(9101),b=foundation::ObjectId::fromUint64(9102);
+        const auto group=foundation::ObjectId::fromUint64(9103);
+        semantic::InsertObjectsOp insert;
+        for(const auto id:{a,b}) {
+            semantic::ObjectRecord shape;shape.id=id;shape.kind=semantic::ObjectKind::kShape;shape.kind_version=1;
+            shape.content=semantic::ShapeContent{1,80,60};shape.transform.tx=id==a?100:260;shape.transform.ty=100;
+            shape.placement.order_key=semantic::OrderKey({static_cast<std::uint8_t>(id==a?1:2)});insert.objects.push_back(shape);
+        }
+        semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(9104)},
+            semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,std::move(insert)};
+        assert(composition.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition==semantic::ApplyDisposition::kApplied);
+        auto& facade=composition.controlFacade();
+        assert(facade.groupObjects({a,b},group,1,9100).state==runtime::ProductControlState::kQueued);
+        assert(composition.ownerPump());
+        assert(facade.setSelectionMode(true,2,facade.readRuntimeState().identity.runtimeGeneration,9100).state==runtime::ProductControlState::kQueued);
+        assert(composition.ownerPump());
+        if (mode == "group-touch") {
+            const auto touch=[&](UINT message) {
+                Sleep(40);nativePointer={};nativePointer.pointerType=PT_TOUCH;nativePointer.pointerId=7;
+                nativePointer.sourceDevice=reinterpret_cast<HANDLE>(1);nativePointer.hwndTarget=owner;
+                nativePointer.ptPixelLocation={120,120};assert(ClientToScreen(owner,&nativePointer.ptPixelLocation));
+                nativePointer.dwTime=GetTickCount();nativePointer.pointerFlags=message==WM_POINTERUP?POINTER_FLAG_UP:
+                    POINTER_FLAG_DOWN|POINTER_FLAG_INCONTACT;
+                SendMessageW(owner,message,7,0);pumpWindowsText(state);
+            };
+            touch(WM_POINTERDOWN);touch(WM_POINTERUP);touch(WM_POINTERDOWN);touch(WM_POINTERUP);
+            assert(facade.readSelectionSummary().groupScope==group);
+            assert(facade.readSelectionSummary().primary==a);
+            assert(facade.readTextEditor().phase==runtime::TextPhase::kClosed);
+            touch(WM_POINTERDOWN);touch(WM_POINTERUP);touch(WM_POINTERDOWN);touch(WM_POINTERUP);
+            assert(facade.readTextEditor().phase==runtime::TextPhase::kEditing);
+            assert(facade.readTextEditor().token.object==a);
+            assert(composition.close());DestroyWindow(owner);
+            std::puts("PASS Win32 touch double-tap enters Group before child text editing");return 0;
+        }
+        const auto doubleClick=[&] {
+            SendMessageW(owner,WM_LBUTTONDOWN,MK_LBUTTON,MAKELPARAM(120,120));
+            SendMessageW(owner,WM_LBUTTONUP,0,MAKELPARAM(120,120));
+            SendMessageW(owner,WM_LBUTTONDBLCLK,MK_LBUTTON,MAKELPARAM(120,120));
+            SendMessageW(owner,WM_LBUTTONUP,0,MAKELPARAM(120,120));
+            pumpWindowsText(state);
+        };
+        doubleClick();
+        assert(facade.readSelectionSummary().groupScope==group);
+        assert(facade.readSelectionSummary().primary==a);
+        assert(facade.readTextEditor().phase==runtime::TextPhase::kClosed);
+        doubleClick();
+        assert(facade.readTextEditor().phase==runtime::TextPhase::kEditing);
+        assert(facade.readTextEditor().token.object==a);
+        assert(composition.close());DestroyWindow(owner);
+        std::puts("PASS Win32 double-click enters Group before child text editing");
+        return 0;
+    }
     if (mode == "touch-shape-label") {
         runtime::CanvasControlRequest control;
         control.clientId = 0xFC027;

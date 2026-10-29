@@ -1,0 +1,46 @@
+{
+  "status": "BLOCKED_VERIFICATION",
+  "activate_for_product_repair": false,
+  "independent_commands": {
+    "id": "fc04.d07.D07.TwoIndependentCommandsNeedTwoUndoUnits",
+    "role": "blocking-characterization",
+    "source": "verification/fc04_d07/audit_test.cpp",
+    "source_sha256": "38514fcabee961469a089f49d6a1509e89c7f0030a0725fa4aca1299e2a21c3d",
+    "test_body_sha256": "30519104d7f6f2d874b1c551c6a28635a5e631dc2a4d03b72f69602bcd61a6e4",
+    "expected": "Two independent calls create two Undo units; first Undo leaves first mutation; second restores initial objects; two Redo calls restore both."
+  },
+  "naive_fallback": {
+    "historical_id": "fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED",
+    "role": "negative-control",
+    "historical_assertion_preserved": true,
+    "test_body_sha256": "5a635f1c230c8935ac65652135fe2d6247573b4f6f4d104fb7a5c09211671169",
+    "historical_expected_observation": "FAIL at records-equal-after-one-Undo assertion; this demonstrates the fallback limitation, not grouped-intent conformance.",
+    "current_characterization_oracle": "fc04.d07.D07.TwoIndependentCommandsNeedTwoUndoUnits",
+    "positive_grouped_acceptance": false
+  },
+  "explicit_intent": {
+    "required": true,
+    "planned_id": "fc04.d07.D07.ExplicitIntentGroupProducesOneUndoUnit",
+    "real_entry": null,
+    "owner_source_binding": null,
+    "status": "NOT_RUN_MISSING_PRODUCTION_ENTRY",
+    "expected": "Real multi-Operation explicit intent; coherent local commit; exactly one Undo unit; whole-intent Undo and fresh-identity Redo."
+  },
+  "legacy_entry_probe": {
+    "id": "fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED",
+    "role": "historical-gap-probe",
+    "not_grouped_commit_oracle": true
+  },
+  "oom": {
+    "id": "FC04D07PostcommitReceiptGrowthFault",
+    "role": "blocking-product-regression",
+    "expected": "No termination or canonical commit stranded without History; all existing fault assertions preserved."
+  },
+  "preserve": {
+    "d07_existing_passes": 11,
+    "selection_regressions": 160,
+    "test_sources_unchanged": true,
+    "historical_failures_immutable": true,
+    "D06_B": "OPEN"
+  }
+}

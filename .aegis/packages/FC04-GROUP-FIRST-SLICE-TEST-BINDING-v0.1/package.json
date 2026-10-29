@@ -1,0 +1,9 @@
+{
+  "purpose": "update only old Group/Ungroup NotImplemented assertions superseded by the newly implemented capabilities; preserve other multi-selection negative assertions",
+  "source_file": "runtime/composition/tests/selection_summary_test.cpp",
+  "source_sha256": "0deac863f50fa338367c117137ee86c65c53dacc17d6032a6eceb03045f47422",
+  "parent_package": "FC04-GROUP-FIRST-SLICE-P31-v0.1",
+  "user_authorization": "continue Group/Ungroup and preserve existing regressions",
+  "required_test": "SelectionBatch3Summary",
+  "not_authorized": "change unrelated tests, expectations or product semantics"
+}

@@ -128,6 +128,7 @@ class PreparedIndexedContainerApply::State final {
     std::vector<ObjectId> deletes;
     ObjectIndex::ParentPatch parents;
     ObjectIndex::ConnectorPatch connectors;
+    std::unique_ptr<ObjectIndex> stagedIndex;
 };
 
 PreparedIndexedContainerApply::PreparedIndexedContainerApply(std::unique_ptr<State> state) : state_(std::move(state)) {}
@@ -143,12 +144,17 @@ void PreparedIndexedContainerApply::publish() noexcept {
     }
     while (!state_->reserved_records.empty()) records.insert(state_->reserved_records.extract(state_->reserved_records.begin()));
     for (const auto& id : state_->deletes) records.erase(id);
-    state_->store.object_index_->publishParentChanges(std::move(state_->parents));
-    state_->store.object_index_->publishConnectorChanges(std::move(state_->connectors));
+    if (state_->stagedIndex) {
+        state_->store.object_index_.swap(state_->stagedIndex);
+    } else {
+        state_->store.object_index_->publishParentChanges(std::move(state_->parents));
+        state_->store.object_index_->publishConnectorChanges(std::move(state_->connectors));
+    }
 }
 
 std::unique_ptr<PreparedIndexedContainerApply> ObjectStoreMutator::prepareContainerPlan(
-    IndexedObjectStore& store, const PreparedApplyPlan& plan, bool admitted) {
+    IndexedObjectStore& store, const PreparedApplyPlan& plan, bool admitted,
+    const ObjectStore* stagedBefore, std::size_t intentOperation) {
     const auto kind = plan.operation.kind();
     if (kind != OperationKind::kSetSectionContent && kind != OperationKind::kEditContainerTopology &&
         (!admitted || (kind != OperationKind::kInsertObjects && kind != OperationKind::kRestoreObjects &&
@@ -160,15 +166,19 @@ std::unique_ptr<PreparedIndexedContainerApply> ObjectStoreMutator::prepareContai
     std::vector<ObjectRecord> connectorBefore, connectorAfter;
     for (const auto& record : plan.creates) {
         if (!admitted && record.kind != ObjectKind::kGroup && record.kind != ObjectKind::kSection) return {};
+        if (stagedBefore) observeIntentPrepare(120U, intentOperation);
         if (!state->reserved_records.emplace(record.id, record).second) return {};
+        if (stagedBefore) observeIntentPrepare(121U, intentOperation);
         after.push_back({record.id, record.placement});
         if (record.kind == ObjectKind::kConnector) connectorAfter.push_back(record);
     }
     for (const auto& record : plan.replacements) {
-        const auto* current = store.find(record.id);
+        const auto* current = stagedBefore ? stagedBefore->find(record.id) : store.find(record.id);
         if (!current || current->kind != record.kind ||
             (record.kind == ObjectKind::kConnector && current->content != record.content)) return {};
+        if (stagedBefore) observeIntentPrepare(120U, intentOperation);
         if (!state->reserved_records.emplace(record.id, record).second) return {};
+        if (stagedBefore) observeIntentPrepare(121U, intentOperation);
         state->replacements.push_back(record.id);
         if (current->placement != record.placement) {
             before.push_back({current->id, current->placement});
@@ -176,14 +186,25 @@ std::unique_ptr<PreparedIndexedContainerApply> ObjectStoreMutator::prepareContai
         }
     }
     for (const auto& id : plan.deletes) {
-        const auto* current = store.find(id);
+        const auto* current = stagedBefore ? stagedBefore->find(id) : store.find(id);
         if (!current || (!admitted && current->kind != ObjectKind::kGroup && current->kind != ObjectKind::kSection)) return {};
         if (current->kind == ObjectKind::kConnector) connectorBefore.push_back(*current);
         before.push_back({id, current->placement});
         state->deletes.push_back(id);
     }
-    state->parents = store.object_index_->prepareParentChanges(before, after);
-    state->connectors = store.object_index_->prepareConnectorChanges(connectorBefore, connectorAfter);
+    if (stagedBefore) {
+        StagedObjectView stagedAfter(*stagedBefore);
+        for (const auto& record : plan.creates) if (!stagedAfter.stageCreate(record)) return {};
+        for (const auto& record : plan.replacements) if (!stagedAfter.stageReplace(record)) return {};
+        for (const auto& id : plan.deletes) if (!stagedAfter.stageDelete(id)) return {};
+        observeIntentPrepare(122U, intentOperation);
+        state->stagedIndex = std::make_unique<ObjectIndex>();
+        for (const auto& record : stagedAfter.allObjects()) state->stagedIndex->insert(record);
+        observeIntentPrepare(123U, intentOperation);
+    } else {
+        state->parents = store.object_index_->prepareParentChanges(before, after);
+        state->connectors = store.object_index_->prepareConnectorChanges(connectorBefore, connectorAfter);
+    }
     return std::unique_ptr<PreparedIndexedContainerApply>(new PreparedIndexedContainerApply(std::move(state)));
 }
 

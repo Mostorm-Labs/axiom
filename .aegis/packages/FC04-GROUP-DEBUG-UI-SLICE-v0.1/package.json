@@ -1,0 +1,22 @@
+{
+  "id": "FC04-GROUP-DEBUG-UI-SLICE-v0.1",
+  "parent": "FC04-GROUP-FIRST-SLICE-P31-v0.1",
+  "basis": "user requested Group/Ungroup through existing UI; same-preparer review accepted earlier",
+  "scope": "bind existing Debug UI Control buttons to existing Runtime-owned typed group/ungroup intent and receipts; no UI-owned semantic mutation",
+  "p32_authorized": true,
+  "source_sha256": {
+    "debug_ui/src/panels/control.cpp": "3e91ad7de9a21bc092a8409da5b7e571ebc350c5ecf8950d7ea7a45f484ccedf",
+    "debug_ui/tests/selection_summary_ui_test.cpp": "a830bde9163a29ba593ea47544f513bad25ab5daba115f44ec49d40ec6697470"
+  },
+  "allowed_files": [
+    "debug_ui/src/panels/control.cpp",
+    "debug_ui/tests/selection_summary_ui_test.cpp"
+  ],
+  "required_test": "SelectionBatch3Ui",
+  "physical_test": "deferred",
+  "limits": [
+    "no new canonical state",
+    "no Gate or release claim",
+    "known D07 OOM remains blocked"
+  ]
+}

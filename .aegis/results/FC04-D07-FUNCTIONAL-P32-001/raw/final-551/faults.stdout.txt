@@ -1,0 +1,475 @@
+UpdateCTestConfiguration  from :C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build/DartConfiguration.tcl
+Parse Config file:C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build/DartConfiguration.tcl
+Test project C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 31
+      Start 31: FC04D07PostcommitFault
+
+31: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe
+31: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+31: Test timeout computed to be: 90
+31: POSTCOMMIT_ALLOCATION_INJECTED before_generation=1 generation=2 ordinal=2 history=1 scene=1 tx=200 objects=1
+31: COMMAND_RETURNED before_generation=1 generation=2 ordinal=2 history=1 scene=1 tx=200 objects=1
+31: accepted=1 injected=1
+31: RECOVERY_RETURNED before_generation=1 generation=2 ordinal=2 history=1 scene=2 tx=200 objects=1
+ 1/46 Test #31: FC04D07PostcommitFault ..............................   Passed    0.02 sec
+test 32
+      Start 32: FC04D07PostcommitReceiptGrowthFault
+
+32: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "receipt-growth"
+32: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+32: Test timeout computed to be: 90
+32: POSTCOMMIT_ALLOCATION_INJECTED before_generation=1 generation=2 ordinal=2 history=1 scene=1 tx=0 objects=3
+32: COMMAND_RETURNED before_generation=1 generation=2 ordinal=2 history=1 scene=1 tx=0 objects=3
+32: accepted=1 injected=1
+32: RECOVERY_RETURNED before_generation=1 generation=2 ordinal=2 history=1 scene=2 tx=0 objects=3
+ 2/46 Test #32: FC04D07PostcommitReceiptGrowthFault .................   Passed    0.02 sec
+test 33
+      Start 33: FC04D07ExplicitIntentPostcommitNoAllocation
+
+33: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "explicit-intent-noalloc"
+33: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+33: Test timeout computed to be: 1500
+33: INTENT_RETURNED before_generation=1 generation=3 ordinal=3 history=1 scene=3 tx=200 objects=1
+ 3/46 Test #33: FC04D07ExplicitIntentPostcommitNoAllocation .........   Passed    0.02 sec
+test 34
+      Start 34: FC04D07ExplicitIntentInsertPostcommitNoAllocation
+
+34: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "explicit-intent-insert-noalloc"
+34: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+34: Test timeout computed to be: 1500
+34: INSERT_INTENT_RETURNED before_generation=1 generation=3 ordinal=3 history=1 scene=3 tx=0 objects=2
+ 4/46 Test #34: FC04D07ExplicitIntentInsertPostcommitNoAllocation ...   Passed    0.02 sec
+test 35
+      Start 35: FC04D07HistoryReservationFault
+
+35: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-reservation-fault"
+35: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+35: Test timeout computed to be: 1500
+35: HISTORY_RESERVATION_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+35: HISTORY_RESERVATION injected=1 result=0
+ 5/46 Test #35: FC04D07HistoryReservationFault ......................   Passed    0.02 sec
+test 36
+      Start 36: FC04D07SemanticParticipantFault_store_index_0
+
+36: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "100" "101" "0"
+36: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+36: Test timeout computed to be: 20
+36: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+36: SEMANTIC_PARTICIPANT begin=100 end=101 operation=0 injected=1 reached_end=0 prepared=0
+36: SEMANTIC_SAME_IDS_RETRY=1
+ 6/46 Test #36: FC04D07SemanticParticipantFault_store_index_0 .......   Passed    0.02 sec
+test 37
+      Start 37: FC04D07SemanticParticipantFault_store_index_1
+
+37: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "100" "101" "1"
+37: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+37: Test timeout computed to be: 20
+37: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+37: SEMANTIC_PARTICIPANT begin=100 end=101 operation=1 injected=1 reached_end=0 prepared=0
+37: SEMANTIC_SAME_IDS_RETRY=1
+ 7/46 Test #37: FC04D07SemanticParticipantFault_store_index_1 .......   Passed    0.02 sec
+test 38
+      Start 38: FC04D07SemanticParticipantFault_record_store_0
+
+38: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "120" "121" "0"
+38: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+38: Test timeout computed to be: 20
+38: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+38: SEMANTIC_PARTICIPANT begin=120 end=121 operation=0 injected=1 reached_end=0 prepared=0
+38: SEMANTIC_SAME_IDS_RETRY=1
+ 8/46 Test #38: FC04D07SemanticParticipantFault_record_store_0 ......   Passed    0.02 sec
+test 39
+      Start 39: FC04D07SemanticParticipantFault_record_store_1
+
+39: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "120" "121" "1"
+39: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+39: Test timeout computed to be: 20
+39: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+39: SEMANTIC_PARTICIPANT begin=120 end=121 operation=1 injected=1 reached_end=0 prepared=0
+39: SEMANTIC_SAME_IDS_RETRY=1
+ 9/46 Test #39: FC04D07SemanticParticipantFault_record_store_1 ......   Passed    0.02 sec
+test 40
+      Start 40: FC04D07SemanticParticipantFault_index_0
+
+40: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "122" "123" "0"
+40: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+40: Test timeout computed to be: 20
+40: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+40: SEMANTIC_PARTICIPANT begin=122 end=123 operation=0 injected=1 reached_end=0 prepared=0
+40: SEMANTIC_SAME_IDS_RETRY=1
+10/46 Test #40: FC04D07SemanticParticipantFault_index_0 .............   Passed    0.02 sec
+test 41
+      Start 41: FC04D07SemanticParticipantFault_index_1
+
+41: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "122" "123" "1"
+41: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+41: Test timeout computed to be: 20
+41: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+41: SEMANTIC_PARTICIPANT begin=122 end=123 operation=1 injected=1 reached_end=0 prepared=0
+41: SEMANTIC_SAME_IDS_RETRY=1
+11/46 Test #41: FC04D07SemanticParticipantFault_index_1 .............   Passed    0.02 sec
+test 42
+      Start 42: FC04D07SemanticParticipantFault_changeset_0
+
+42: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "102" "103" "0"
+42: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+42: Test timeout computed to be: 20
+42: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+42: SEMANTIC_PARTICIPANT begin=102 end=103 operation=0 injected=1 reached_end=0 prepared=0
+42: SEMANTIC_SAME_IDS_RETRY=1
+12/46 Test #42: FC04D07SemanticParticipantFault_changeset_0 .........   Passed    0.02 sec
+test 43
+      Start 43: FC04D07SemanticParticipantFault_changeset_1
+
+43: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "102" "103" "1"
+43: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+43: Test timeout computed to be: 20
+43: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+43: SEMANTIC_PARTICIPANT begin=102 end=103 operation=1 injected=1 reached_end=0 prepared=0
+43: SEMANTIC_SAME_IDS_RETRY=1
+13/46 Test #43: FC04D07SemanticParticipantFault_changeset_1 .........   Passed    0.02 sec
+test 44
+      Start 44: FC04D07SemanticParticipantFault_ledger_0
+
+44: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "104" "105" "0"
+44: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+44: Test timeout computed to be: 20
+44: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+44: SEMANTIC_PARTICIPANT begin=104 end=105 operation=0 injected=1 reached_end=0 prepared=0
+44: SEMANTIC_SAME_IDS_RETRY=1
+14/46 Test #44: FC04D07SemanticParticipantFault_ledger_0 ............   Passed    0.02 sec
+test 45
+      Start 45: FC04D07SemanticParticipantFault_ledger_1
+
+45: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "104" "105" "1"
+45: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+45: Test timeout computed to be: 20
+45: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+45: SEMANTIC_PARTICIPANT begin=104 end=105 operation=1 injected=1 reached_end=0 prepared=0
+45: SEMANTIC_SAME_IDS_RETRY=1
+15/46 Test #45: FC04D07SemanticParticipantFault_ledger_1 ............   Passed    0.02 sec
+test 46
+      Start 46: FC04D07SemanticParticipantFault_staged_state_0
+
+46: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "106" "107" "0"
+46: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+46: Test timeout computed to be: 20
+46: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+46: SEMANTIC_PARTICIPANT begin=106 end=107 operation=0 injected=1 reached_end=0 prepared=0
+46: SEMANTIC_SAME_IDS_RETRY=1
+16/46 Test #46: FC04D07SemanticParticipantFault_staged_state_0 ......   Passed    0.02 sec
+test 47
+      Start 47: FC04D07SemanticParticipantFault_staged_state_1
+
+47: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "106" "107" "1"
+47: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+47: Test timeout computed to be: 20
+47: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+47: SEMANTIC_PARTICIPANT begin=106 end=107 operation=1 injected=1 reached_end=0 prepared=0
+47: SEMANTIC_SAME_IDS_RETRY=1
+17/46 Test #47: FC04D07SemanticParticipantFault_staged_state_1 ......   Passed    0.02 sec
+test 48
+      Start 48: FC04D07SemanticParticipantFault_plan_vector_0
+
+48: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "108" "109" "0"
+48: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+48: Test timeout computed to be: 20
+48: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+48: SEMANTIC_PARTICIPANT begin=108 end=109 operation=0 injected=1 reached_end=0 prepared=0
+48: SEMANTIC_SAME_IDS_RETRY=1
+18/46 Test #48: FC04D07SemanticParticipantFault_plan_vector_0 .......   Passed    0.02 sec
+test 49
+      Start 49: FC04D07SemanticParticipantFault_storage_vector_0
+
+49: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "110" "111" "0"
+49: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+49: Test timeout computed to be: 20
+49: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+49: SEMANTIC_PARTICIPANT begin=110 end=111 operation=0 injected=1 reached_end=0 prepared=0
+49: SEMANTIC_SAME_IDS_RETRY=1
+19/46 Test #49: FC04D07SemanticParticipantFault_storage_vector_0 ....   Passed    0.02 sec
+test 50
+      Start 50: FC04D07SemanticParticipantFault_ledger_vector_0
+
+50: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "112" "113" "0"
+50: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+50: Test timeout computed to be: 20
+50: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+50: SEMANTIC_PARTICIPANT begin=112 end=113 operation=0 injected=1 reached_end=0 prepared=0
+50: SEMANTIC_SAME_IDS_RETRY=1
+20/46 Test #50: FC04D07SemanticParticipantFault_ledger_vector_0 .....   Passed    0.02 sec
+test 51
+      Start 51: FC04D07SemanticParticipantFault_result_vector_0
+
+51: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "semantic-participant-fault" "114" "115" "0"
+51: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+51: Test timeout computed to be: 20
+51: SEMANTIC_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+51: SEMANTIC_PARTICIPANT begin=114 end=115 operation=0 injected=1 reached_end=0 prepared=0
+51: SEMANTIC_SAME_IDS_RETRY=1
+21/46 Test #51: FC04D07SemanticParticipantFault_result_vector_0 .....   Passed    0.02 sec
+test 52
+      Start 52: FC04D07SceneParticipantFault_runtime
+
+52: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "scene-participant-fault" "0" "1"
+52: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+52: Test timeout computed to be: 20
+52: SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+52: SCENE_PARTICIPANT begin=0 end=1 injected=1 reached_end=0 prepared=0
+22/46 Test #52: FC04D07SceneParticipantFault_runtime ................   Passed    0.02 sec
+test 53
+      Start 53: FC04D07SceneParticipantFault_bounds
+
+53: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "scene-participant-fault" "2" "3"
+53: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+53: Test timeout computed to be: 20
+53: SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+53: SCENE_PARTICIPANT begin=2 end=3 injected=1 reached_end=0 prepared=0
+23/46 Test #53: FC04D07SceneParticipantFault_bounds .................   Passed    0.02 sec
+test 54
+      Start 54: FC04D07SceneParticipantFault_record
+
+54: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "scene-participant-fault" "10" "11"
+54: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+54: Test timeout computed to be: 20
+54: SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+54: SCENE_PARTICIPANT begin=10 end=11 injected=1 reached_end=0 prepared=0
+24/46 Test #54: FC04D07SceneParticipantFault_record .................   Passed    0.02 sec
+test 55
+      Start 55: FC04D07SceneParticipantFault_render
+
+55: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "scene-participant-fault" "12" "13"
+55: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+55: Test timeout computed to be: 20
+55: SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+55: SCENE_PARTICIPANT begin=12 end=13 injected=1 reached_end=0 prepared=0
+25/46 Test #55: FC04D07SceneParticipantFault_render .................   Passed    0.02 sec
+test 56
+      Start 56: FC04D07SceneParticipantFault_spatial
+
+56: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "scene-participant-fault" "4" "5"
+56: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+56: Test timeout computed to be: 20
+56: SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+56: SCENE_PARTICIPANT begin=4 end=5 injected=1 reached_end=0 prepared=0
+26/46 Test #56: FC04D07SceneParticipantFault_spatial ................   Passed    0.02 sec
+test 57
+      Start 57: FC04D07SceneParticipantFault_damage
+
+57: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "scene-participant-fault" "14" "15"
+57: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+57: Test timeout computed to be: 20
+57: SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+57: SCENE_PARTICIPANT begin=14 end=15 injected=1 reached_end=0 prepared=0
+27/46 Test #57: FC04D07SceneParticipantFault_damage .................   Passed    0.02 sec
+test 58
+      Start 58: FC04D07SceneParticipantFault_snapshot
+
+58: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "scene-participant-fault" "16" "17"
+58: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+58: Test timeout computed to be: 20
+58: SCENE_PARTICIPANT_AFTER before_generation=1 generation=1 ordinal=1 history=0 scene=1 tx=0 objects=1
+58: SCENE_PARTICIPANT begin=16 end=17 injected=1 reached_end=0 prepared=0
+28/46 Test #58: FC04D07SceneParticipantFault_snapshot ...............   Passed    0.02 sec
+test 59
+      Start 59: FC04D07HistoryIntentFault_undo_semantic_0
+
+59: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "undo" "semantic" "100" "101" "0"
+59: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+59: Test timeout computed to be: 20
+59: HISTORY_INTENT direction=undo owner=semantic begin=100 end=101 operation=0 injected=1 accepted=0 preserved_and_retry=1
+29/46 Test #59: FC04D07HistoryIntentFault_undo_semantic_0 ...........   Passed    0.02 sec
+test 60
+      Start 60: FC04D07HistoryIntentFault_undo_semantic_1
+
+60: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "undo" "semantic" "100" "101" "1"
+60: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+60: Test timeout computed to be: 20
+60: HISTORY_INTENT direction=undo owner=semantic begin=100 end=101 operation=1 injected=1 accepted=0 preserved_and_retry=1
+30/46 Test #60: FC04D07HistoryIntentFault_undo_semantic_1 ...........   Passed    0.02 sec
+test 61
+      Start 61: FC04D07HistoryIntentFault_undo_runtime
+
+61: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "undo" "scene" "0" "1" "0"
+61: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+61: Test timeout computed to be: 20
+61: HISTORY_INTENT direction=undo owner=scene begin=0 end=1 operation=0 injected=1 accepted=0 preserved_and_retry=1
+31/46 Test #61: FC04D07HistoryIntentFault_undo_runtime ..............   Passed    0.02 sec
+test 62
+      Start 62: FC04D07HistoryIntentFault_undo_bounds
+
+62: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "undo" "scene" "2" "3" "0"
+62: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+62: Test timeout computed to be: 20
+62: HISTORY_INTENT direction=undo owner=scene begin=2 end=3 operation=0 injected=1 accepted=0 preserved_and_retry=1
+32/46 Test #62: FC04D07HistoryIntentFault_undo_bounds ...............   Passed    0.02 sec
+test 63
+      Start 63: FC04D07HistoryIntentFault_undo_record
+
+63: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "undo" "scene" "10" "11" "0"
+63: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+63: Test timeout computed to be: 20
+63: HISTORY_INTENT direction=undo owner=scene begin=10 end=11 operation=0 injected=1 accepted=0 preserved_and_retry=1
+33/46 Test #63: FC04D07HistoryIntentFault_undo_record ...............   Passed    0.02 sec
+test 64
+      Start 64: FC04D07HistoryIntentFault_undo_render
+
+64: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "undo" "scene" "12" "13" "0"
+64: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+64: Test timeout computed to be: 20
+64: HISTORY_INTENT direction=undo owner=scene begin=12 end=13 operation=0 injected=1 accepted=0 preserved_and_retry=1
+34/46 Test #64: FC04D07HistoryIntentFault_undo_render ...............   Passed    0.02 sec
+test 65
+      Start 65: FC04D07HistoryIntentFault_undo_spatial
+
+65: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "undo" "scene" "4" "5" "0"
+65: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+65: Test timeout computed to be: 20
+65: HISTORY_INTENT direction=undo owner=scene begin=4 end=5 operation=0 injected=1 accepted=0 preserved_and_retry=1
+35/46 Test #65: FC04D07HistoryIntentFault_undo_spatial ..............   Passed    0.02 sec
+test 66
+      Start 66: FC04D07HistoryIntentFault_undo_damage
+
+66: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "undo" "scene" "14" "15" "0"
+66: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+66: Test timeout computed to be: 20
+66: HISTORY_INTENT direction=undo owner=scene begin=14 end=15 operation=0 injected=1 accepted=0 preserved_and_retry=1
+36/46 Test #66: FC04D07HistoryIntentFault_undo_damage ...............   Passed    0.02 sec
+test 67
+      Start 67: FC04D07HistoryIntentFault_undo_snapshot
+
+67: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "undo" "scene" "16" "17" "0"
+67: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+67: Test timeout computed to be: 20
+67: HISTORY_INTENT direction=undo owner=scene begin=16 end=17 operation=0 injected=1 accepted=0 preserved_and_retry=1
+37/46 Test #67: FC04D07HistoryIntentFault_undo_snapshot .............   Passed    0.02 sec
+test 68
+      Start 68: FC04D07HistoryIntentFault_redo_semantic_0
+
+68: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "redo" "semantic" "100" "101" "0"
+68: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+68: Test timeout computed to be: 20
+68: HISTORY_INTENT direction=redo owner=semantic begin=100 end=101 operation=0 injected=1 accepted=0 preserved_and_retry=1
+38/46 Test #68: FC04D07HistoryIntentFault_redo_semantic_0 ...........   Passed    0.02 sec
+test 69
+      Start 69: FC04D07HistoryIntentFault_redo_semantic_1
+
+69: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "redo" "semantic" "100" "101" "1"
+69: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+69: Test timeout computed to be: 20
+69: HISTORY_INTENT direction=redo owner=semantic begin=100 end=101 operation=1 injected=1 accepted=0 preserved_and_retry=1
+39/46 Test #69: FC04D07HistoryIntentFault_redo_semantic_1 ...........   Passed    0.02 sec
+test 70
+      Start 70: FC04D07HistoryIntentFault_redo_runtime
+
+70: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "redo" "scene" "0" "1" "0"
+70: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+70: Test timeout computed to be: 20
+70: HISTORY_INTENT direction=redo owner=scene begin=0 end=1 operation=0 injected=1 accepted=0 preserved_and_retry=1
+40/46 Test #70: FC04D07HistoryIntentFault_redo_runtime ..............   Passed    0.02 sec
+test 71
+      Start 71: FC04D07HistoryIntentFault_redo_bounds
+
+71: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "redo" "scene" "2" "3" "0"
+71: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+71: Test timeout computed to be: 20
+71: HISTORY_INTENT direction=redo owner=scene begin=2 end=3 operation=0 injected=1 accepted=0 preserved_and_retry=1
+41/46 Test #71: FC04D07HistoryIntentFault_redo_bounds ...............   Passed    0.02 sec
+test 72
+      Start 72: FC04D07HistoryIntentFault_redo_record
+
+72: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "redo" "scene" "10" "11" "0"
+72: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+72: Test timeout computed to be: 20
+72: HISTORY_INTENT direction=redo owner=scene begin=10 end=11 operation=0 injected=1 accepted=0 preserved_and_retry=1
+42/46 Test #72: FC04D07HistoryIntentFault_redo_record ...............   Passed    0.02 sec
+test 73
+      Start 73: FC04D07HistoryIntentFault_redo_render
+
+73: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "redo" "scene" "12" "13" "0"
+73: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+73: Test timeout computed to be: 20
+73: HISTORY_INTENT direction=redo owner=scene begin=12 end=13 operation=0 injected=1 accepted=0 preserved_and_retry=1
+43/46 Test #73: FC04D07HistoryIntentFault_redo_render ...............   Passed    0.02 sec
+test 74
+      Start 74: FC04D07HistoryIntentFault_redo_spatial
+
+74: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "redo" "scene" "4" "5" "0"
+74: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+74: Test timeout computed to be: 20
+74: HISTORY_INTENT direction=redo owner=scene begin=4 end=5 operation=0 injected=1 accepted=0 preserved_and_retry=1
+44/46 Test #74: FC04D07HistoryIntentFault_redo_spatial ..............   Passed    0.02 sec
+test 75
+      Start 75: FC04D07HistoryIntentFault_redo_damage
+
+75: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "redo" "scene" "14" "15" "0"
+75: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+75: Test timeout computed to be: 20
+75: HISTORY_INTENT direction=redo owner=scene begin=14 end=15 operation=0 injected=1 accepted=0 preserved_and_retry=1
+45/46 Test #75: FC04D07HistoryIntentFault_redo_damage ...............   Passed    0.02 sec
+test 76
+      Start 76: FC04D07HistoryIntentFault_redo_snapshot
+
+76: Test command: C:\Users\Chado\.codex\worktrees\fc04-d07-functional-p31-v0-3\canvas\out\d07-functional\build\axiom_fc04_d07_postcommit_fault.exe "history-intent-participant-fault" "redo" "scene" "16" "17" "0"
+76: Working Directory: C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+76: Test timeout computed to be: 20
+76: HISTORY_INTENT direction=redo owner=scene begin=16 end=17 operation=0 injected=1 accepted=0 preserved_and_retry=1
+46/46 Test #76: FC04D07HistoryIntentFault_redo_snapshot .............   Passed    0.02 sec
+
+The following tests passed:
+	FC04D07PostcommitFault
+	FC04D07PostcommitReceiptGrowthFault
+	FC04D07ExplicitIntentPostcommitNoAllocation
+	FC04D07ExplicitIntentInsertPostcommitNoAllocation
+	FC04D07HistoryReservationFault
+	FC04D07SemanticParticipantFault_store_index_0
+	FC04D07SemanticParticipantFault_store_index_1
+	FC04D07SemanticParticipantFault_record_store_0
+	FC04D07SemanticParticipantFault_record_store_1
+	FC04D07SemanticParticipantFault_index_0
+	FC04D07SemanticParticipantFault_index_1
+	FC04D07SemanticParticipantFault_changeset_0
+	FC04D07SemanticParticipantFault_changeset_1
+	FC04D07SemanticParticipantFault_ledger_0
+	FC04D07SemanticParticipantFault_ledger_1
+	FC04D07SemanticParticipantFault_staged_state_0
+	FC04D07SemanticParticipantFault_staged_state_1
+	FC04D07SemanticParticipantFault_plan_vector_0
+	FC04D07SemanticParticipantFault_storage_vector_0
+	FC04D07SemanticParticipantFault_ledger_vector_0
+	FC04D07SemanticParticipantFault_result_vector_0
+	FC04D07SceneParticipantFault_runtime
+	FC04D07SceneParticipantFault_bounds
+	FC04D07SceneParticipantFault_record
+	FC04D07SceneParticipantFault_render
+	FC04D07SceneParticipantFault_spatial
+	FC04D07SceneParticipantFault_damage
+	FC04D07SceneParticipantFault_snapshot
+	FC04D07HistoryIntentFault_undo_semantic_0
+	FC04D07HistoryIntentFault_undo_semantic_1
+	FC04D07HistoryIntentFault_undo_runtime
+	FC04D07HistoryIntentFault_undo_bounds
+	FC04D07HistoryIntentFault_undo_record
+	FC04D07HistoryIntentFault_undo_render
+	FC04D07HistoryIntentFault_undo_spatial
+	FC04D07HistoryIntentFault_undo_damage
+	FC04D07HistoryIntentFault_undo_snapshot
+	FC04D07HistoryIntentFault_redo_semantic_0
+	FC04D07HistoryIntentFault_redo_semantic_1
+	FC04D07HistoryIntentFault_redo_runtime
+	FC04D07HistoryIntentFault_redo_bounds
+	FC04D07HistoryIntentFault_redo_record
+	FC04D07HistoryIntentFault_redo_render
+	FC04D07HistoryIntentFault_redo_spatial
+	FC04D07HistoryIntentFault_redo_damage
+	FC04D07HistoryIntentFault_redo_snapshot
+
+100% tests passed, 0 tests failed out of 46
+
+Total Test time (real) =   1.05 sec

@@ -1,0 +1,44 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SelectionInput.SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSelectable
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SelectionInput
+[ RUN      ] SelectionInput.SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSelectable
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(316): error: Expected equality of these values:
+  selected()
+    Which is: { 16-byte object <48-26 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+  std::vector{a}
+    Which is: { 16-byte object <8D-23 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(318): error: Expected equality of these values:
+  selected()
+    Which is: { 16-byte object <48-26 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+  std::vector{b}
+    Which is: { 16-byte object <8E-23 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(320): error: Expected equality of these values:
+  selected()
+    Which is: { 16-byte object <48-26 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+  std::vector{a}
+    Which is: { 16-byte object <8D-23 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(332): error: Expected equality of these values:
+  selected()
+    Which is: { 16-byte object <48-26 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+  std::vector{b}
+    Which is: { 16-byte object <8E-23 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(332): error: Value of: snapshot().selectedLocked
+  Actual: false
+Expected: true
+
+[  FAILED  ] SelectionInput.SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSelectable (2209 ms)
+[----------] 1 test from SelectionInput (2209 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2210 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionInput.SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSelectable
+
+ 1 FAILED TEST

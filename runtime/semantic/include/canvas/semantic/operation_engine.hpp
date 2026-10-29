@@ -8,7 +8,10 @@
 #include "canvas/semantic/semantic_generation.hpp"
 
 #include <cstdint>
+#include <memory>
 #include <optional>
+#include <span>
+#include <vector>
 
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
 #include <memory>
@@ -21,6 +24,21 @@ class AppliedOperationLedger;
 class IndexedObjectStore;
 class ReferenceObjectStore;
 class StagedObjectView;
+class PreparedOperationIntent final {
+  public:
+    ~PreparedOperationIntent();
+    PreparedOperationIntent(const PreparedOperationIntent&) = delete;
+    PreparedOperationIntent& operator=(const PreparedOperationIntent&) = delete;
+    [[nodiscard]] const StagedObjectView& postState() const noexcept;
+    [[nodiscard]] const std::vector<PreparedApplyPlan>& plans() const noexcept;
+    [[nodiscard]] const std::vector<CanonicalCommitRecord>& records() const noexcept;
+    [[nodiscard]] CanonicalCommitRecord takeLastRecord() noexcept;
+  private:
+    friend class OperationEngine;
+    class State;
+    explicit PreparedOperationIntent(std::unique_ptr<State> state);
+    std::unique_ptr<State> state_;
+};
 
 // Serialized precommit admission. A local command reserves its real inverse
 // and History entry here; canonical/replay callers keep the ordinary path.
@@ -57,6 +75,11 @@ class OperationEngine final {
     std::shared_ptr<canvas::qualification::State> fc08Qualification_;
 #endif
   public:
+    [[nodiscard]] std::unique_ptr<PreparedOperationIntent> prepareIntent(
+        std::span<const Operation>, ApplySource, IndexedObjectStore&, ResourceManifest&,
+        AppliedOperationLedger&, const SemanticGenerationState&, const CanonicalCommitClock&) const;
+    [[nodiscard]] bool commitIntent(PreparedOperationIntent&, SemanticGenerationState&,
+                                    CanonicalCommitClock&) const noexcept;
     [[nodiscard]] PrepareResult prepare(
         const Operation& operation,
         const StatefulValidationContext& context) const;

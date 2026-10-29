@@ -1,0 +1,24 @@
+{
+  "command": [
+    "python",
+    ".aegis/packages/FC04-GROUP-INTERACTION-P31-v0.1/preflight.py",
+    "--repo",
+    "."
+  ],
+  "working_directory": "C:\\Users\\Chado\\.codex\\worktrees\\fc04-mse-p31-correction\\canvas",
+  "exit_code": 2,
+  "source_revision": "84f0b19addedb1f0614072abb33d97c7950783d7",
+  "status": "BLOCKED_P32_READINESS",
+  "stdout_sha256": "febb1f3c2b835103c74a89e0bf8fa183a10f50a0c6f7744ae9977a7cccd327ba",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "arithmetic": {
+    "command": [
+      "python",
+      ".aegis/packages/FC04-GROUP-INTERACTION-P31-v0.1/check-oracle.py"
+    ],
+    "exit_code": 0,
+    "stdout_sha256": "4c426f89d0b8c9d8af7f4335b3fc64046a24c26dc0c74698ae2fbc40bc1a4d46",
+    "purpose": "candidate arithmetic only, not product test",
+    "earlier_manual_check": "initial manual check omitted translation term; corrected before this recorded check"
+  }
+}

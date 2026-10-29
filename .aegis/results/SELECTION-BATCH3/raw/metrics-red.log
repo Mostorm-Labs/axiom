@@ -1,0 +1,22 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Summary.MissingTextMetricsAreNotAZeroSizedCompleteBound
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Summary
+[ RUN      ] Summary.MissingTextMetricsAreNotAZeroSizedCompleteBound
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_summary_test.cpp(112): error: Expected equality of these values:
+  s.bounds.reason
+    Which is: 1-byte object <04>
+  Reason::kBoundsUnavailable
+    Which is: 1-byte object <06>
+
+[  FAILED  ] Summary.MissingTextMetricsAreNotAZeroSizedCompleteBound (1 ms)
+[----------] 1 test from Summary (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (1 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] Summary.MissingTextMetricsAreNotAZeroSizedCompleteBound
+
+ 1 FAILED TEST

@@ -1,5 +1,5 @@
 #pragma once
-namespace canvas::runtime { class CanvasRuntimeFacade; }
+namespace canvas::runtime { class CanvasRuntimeFacade; class MultiSelectionPort; }
 #include "canvas/interaction/text_edit_session.hpp"
 
 #include "canvas/input/input_router.hpp"
@@ -16,6 +16,7 @@ namespace canvas::runtime { class CanvasRuntimeFacade; }
 #include "canvas/interaction/viewport_interaction_controller.hpp"
 #include "canvas/interaction/viewport_constraints.hpp"
 #include "canvas/interaction/selection_session.hpp"
+#include "canvas/interaction/region_selection_session.hpp"
 #include "canvas/interaction/transform_handle_drag.hpp"
 #include "canvas/render/presentation_tracker.hpp"
 #include "canvas/render/surface_lifecycle.hpp"
@@ -145,6 +146,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
                                 public interaction::InteractionDispatchPort {
   friend class canvas::ink_playground::InkPlaygroundHistoryTestAccess;
   friend class canvas::runtime::CanvasRuntimeFacade;
+  friend class canvas::runtime::MultiSelectionPort;
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
   friend class canvas::qualification::Access;
   std::shared_ptr<canvas::qualification::State> fc08Qualification_;
@@ -155,6 +157,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   virtual ~CanvasEditingRuntime() = default;
   void close() noexcept;
   [[nodiscard]] bool closed() const noexcept { return closed_; }
+  [[nodiscard]] bool beginExplicitIntent() noexcept;
+  [[nodiscard]] bool prepareExplicitIntent(std::span<const semantic::Operation> operations);
+  [[nodiscard]] bool commitExplicitIntent() noexcept;
+  void abortExplicitIntent() noexcept;
   [[nodiscard]] bool registerInputSource(input::InputSourceId source,
                                          std::string_view platform) noexcept;
   [[nodiscard]] bool unregisterInputSource(input::InputSourceId source,
@@ -198,6 +204,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool panTool() const noexcept { return panTool_; }
   [[nodiscard]] bool setSelectionMode(bool enabled) noexcept;
   [[nodiscard]] bool selectionMode() const noexcept { return selectionMode_; }
+  [[nodiscard]] bool setSelectionAcquisitionMode(runtime::CanvasSelectionMode) noexcept;
+  [[nodiscard]] runtime::CanvasSelectionMode selectionAcquisitionMode() const noexcept { return selectionAcquisitionMode_; }
+  [[nodiscard]] bool regionSelectionActive() const noexcept { return regionSelection_.active(); }
+  void cancelRegionSelection() noexcept;
   [[nodiscard]] bool selectAtViewPoint(float x, float y) noexcept;
   [[nodiscard]] runtime::SectionOutcome executeSectionIntent(const runtime::SectionIntent&) noexcept;
   [[nodiscard]] runtime::SectionSnapshot sectionSnapshot(foundation::ObjectId = {}) const;
@@ -229,6 +239,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool selectionTransformActive() const noexcept { return transformDrag_.active() || sectionBoundaryDrag_.has_value(); }
   [[nodiscard]] std::size_t transientTransformCount() const noexcept { return transformOverrides_.size(); }
   void clearSelection() noexcept {
+    cancelRegionSelection();
     cancelSelectionTransform();
     selection_.cancel();
     selectionView_.reset();
@@ -236,8 +247,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     canonicalPresentationDirty_ = true;
   }
   [[nodiscard]] std::size_t selectedObjectCount() const noexcept {
-    return selection_.summary().count;
+    return selection_.selected().size();
   }
+  [[nodiscard]] runtime::SelectionSummary selectionSummary() const noexcept;
   [[nodiscard]] foundation::ObjectId selectedPrimaryObject() const noexcept {
     return selection_.primary();
   }
@@ -599,11 +611,15 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] std::uint64_t localOperationOrdinal() const noexcept;
   [[nodiscard]] bool historySceneReady() const noexcept;
   [[nodiscard]] bool canonicalWriteAdmission() const noexcept;
+  [[nodiscard]] bool prepareExplicitIntentInternal(std::span<const semantic::Operation>, bool);
+  [[nodiscard]] bool submitHistoryIntent(std::span<const semantic::Operation>,
+      std::span<const HistoryExpectation>, EditorHistory::IntentCommit, void*);
   bool textReady() const noexcept override;
   std::vector<std::uint32_t> textGraphemes(const std::u16string&) const override;
   runtime::TextGeometrySnapshot textGeometry(const runtime::CanvasTargetKey&);
   std::optional<std::uint32_t> textHit(const semantic::ObjectRecord&,float,float);
   semantic::ObjectId hitTextAtView(float,float);
+  bool enterGroupAtViewPoint(float,float);
   bool textPointer(const input::PointerSample&);
   bool observeTouchTextTap(const input::PointerSample&);
   bool beginShapeTextEditAt(float, float, semantic::ObjectId);
@@ -614,7 +630,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   bool expandShapeLabel(semantic::ObjectId);
   bool textClosed() const noexcept override { return closed_; }
   bool textWritable(semantic::ObjectId) const noexcept override;
-  semantic::ObjectId textSelectedObject() const noexcept override { return selection_.primary(); }
+  semantic::ObjectId textSelectedObject() const noexcept override { return selectedObjectCount()==1?selection_.primary():semantic::ObjectId{}; }
   semantic::DocumentId textDocument() const noexcept override { return documentId_; }
   std::uint64_t textGeneration() const noexcept override { return semanticGeneration_.current().value(); }
   const semantic::ObjectRecord* textRecord(semantic::ObjectId id) const noexcept override { return semanticObjects_.find(id); }
@@ -642,7 +658,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   void publishAdmitted() noexcept override;
   void cancel(std::uint64_t) noexcept override;
 
-  std::optional<semantic::CanonicalCommitRecord> historyCommitForPublication_;
+  bool historyPublicationPending_ = false;
   std::unique_ptr<input::InputRouter> input_;
   std::unique_ptr<ink::InkEngine> ink_;
   std::unique_ptr<ink::PreviewModel> preview_;
@@ -780,6 +796,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<semantic::ObjectRecord> imageCropPresentation_;
   std::function<void(const input::PointerSample&)> imageCropPointer_;
   interaction::EditorHistory history_;
+  std::unique_ptr<semantic::PreparedOperationIntent> explicitIntent_;
+  std::optional<interaction::EditorHistory::PreparedEntry> explicitIntentHistory_;
+  bool explicitIntentActive_ = false;
   render::SkiaRenderer skiaRenderer_;
   render::SkiaRenderer previewRenderer_;
   mutable std::mutex previewRenderMutex_;
@@ -816,7 +835,39 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unordered_map<std::uint64_t, ink::CanonicalHandoffIdentity>
       pendingCanonicalIdentities_;
   interaction::SelectionSession selection_;
+  interaction::RegionSelectionSession regionSelection_;
+  runtime::CanvasSelectionMode selectionAcquisitionMode_=runtime::CanvasSelectionMode::kPoint;
+  runtime::SelectionQueryStatus regionQueryStatus_=runtime::SelectionQueryStatus::kIdle;
+  std::vector<foundation::ObjectId> regionCandidates_;
+  std::vector<std::uint32_t> regionUnsupportedKinds_;
+  std::unordered_set<input::PointerKey,input::PointerKeyHash> acquisitionClickPointers_;
+  std::uint64_t regionBinding_=1;
+  struct RegionQueryResult final {
+    runtime::SelectionQueryStatus status=runtime::SelectionQueryStatus::kFailed;
+    std::vector<foundation::ObjectId> roots;
+    std::vector<std::uint32_t> unsupportedKinds;
+  };
+  [[nodiscard]] RegionSelectionContext regionContext() const noexcept;
+  [[nodiscard]] foundation::Result<HitTestResult> selectionPointHits(foundation::WorldPoint) const;
+  [[nodiscard]] RegionQueryResult querySelectionRegion(std::span<const RegionPoint>) const;
+  [[nodiscard]] bool regionSelectionPointer(const input::PointerSample&) noexcept;
+  [[nodiscard]] foundation::ObjectId resolveSelectionRoot(foundation::ObjectId) const;
+  [[nodiscard]] bool publishSelectionAcquisition(std::span<const foundation::ObjectId>,
+      SelectionCombineMode, std::uint64_t expectedRevision);
+  [[nodiscard]] bool acquisitionPointer(const input::PointerSample&) noexcept;
+  [[nodiscard]] bool renderAcquisitionOverlay() noexcept;
+  void appendGroupScopeOutline(render::EditingOverlay&) noexcept;
+  [[nodiscard]] bool singleSelectionAffordances() const noexcept {
+    return selectedObjectCount()==1U && !regionSelectionActive() && !panTool_ &&
+        (!selectionMode_||selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint);
+  }
   bool selectionMode_ = false;
+  // Explicit local permission is bound by the owning composition; unknown is denied.
+  bool multiSelectionPermissionAllowed_ = false;
+  std::uint64_t multiSelectionPermissionRevision_ = 1;
+  std::uint64_t editingPermissionRevision_ = 0;
+  std::optional<foundation::ObjectId> pendingMultiClick_;
+  std::vector<std::pair<foundation::ObjectId, semantic::Transform2D>> editingMultiInitial_;
   interaction::TransientSceneOverride transformOverrides_;
   interaction::TransformHandleDrag transformDrag_{*this, transformOverrides_};
   input::PointerKey editingPointer_{};

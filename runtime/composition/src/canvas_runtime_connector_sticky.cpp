@@ -108,6 +108,7 @@ semantic::ConnectorRouting CanvasRuntimeFacade::readConnectorRoutingPreset() con
   return runtime_.connectorRoutingPreset_;
 }
 ConnectorSnapshot CanvasRuntimeFacade::readSelectedConnector() const {
+  if(runtime_.selectedObjectCount()!=1U)return {};
   return readConnectorState(runtime_.selection_.primary());
 }
 ConnectorSnapshot CanvasRuntimeFacade::readConnectorState(semantic::ObjectId id) const {
@@ -125,5 +126,5 @@ ConnectorSnapshot CanvasRuntimeFacade::readConnectorState(semantic::ObjectId id)
   }
   return snapshot;
 }
-StickySnapshot CanvasRuntimeFacade::readSelectedSticky() const { StickySnapshot r{}; const auto* o=runtime_.textRecord(runtime_.selection_.primary()); if(o&&o->kind==semantic::ObjectKind::kSticky){r.available=true;r.objectId=o->id;r.content=std::get<semantic::StickyContent>(o->content);} return r; }
+StickySnapshot CanvasRuntimeFacade::readSelectedSticky() const { if(runtime_.selectedObjectCount()!=1U)return {}; StickySnapshot r{}; const auto* o=runtime_.textRecord(runtime_.selection_.primary()); if(o&&o->kind==semantic::ObjectKind::kSticky){r.available=true;r.objectId=o->id;r.content=std::get<semantic::StickyContent>(o->content);} return r; }
 }

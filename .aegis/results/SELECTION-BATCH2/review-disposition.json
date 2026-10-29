@@ -1,0 +1,47 @@
+{
+  "review_range": {
+    "base": "5daf623eba9a943706d813f8e197e00a9f6a8b2e",
+    "head": "6b62a443b4e6364f4f9e290d68559e0c4daa5f84"
+  },
+  "reviewer": "fresh read-only gpt-6-astra, high; whole branch review required by executing-plans",
+  "assessment": "with fixes: 3 Important, 0 Critical, 1 Minor",
+  "independently_reran_tests": false,
+  "re_review": false,
+  "findings": [
+    {
+      "id": "R1",
+      "grade": "Important",
+      "test": "SelectionBatch2Text.PartiallyAvailableMixedFontGeometryAlsoPreservesSelection",
+      "red": "raw/review-text-red.log",
+      "fix": "diagnostic-bearing partial layouts are Unsupported; global unknown-extent query remains Partial and preserves S0"
+    },
+    {
+      "id": "R2",
+      "grade": "Important",
+      "test": "SelectionCoverage.UnfilledShapeLabelUsesPublishedClippedAndScaledFragments",
+      "red": "raw/review-label-unit-red.log",
+      "fix": "reuse published label fragments/scales and shape clip; earlier real-font positive was not discriminating"
+    },
+    {
+      "id": "R3",
+      "grade": "Important",
+      "test": "SelectionInput.MiterStrokeOutsideNominalBoundsStillReachesPreciseRegionQuery",
+      "red": "raw/review-miter-red.log",
+      "fix": "accurate acute miter bounds before indexing; preserve geometry-centered attachment transverse axes"
+    },
+    {
+      "id": "M1",
+      "grade": "Minor",
+      "disposition": "deferred to G5",
+      "description": "repeated segment/dab/mask path unions per region Move may scale poorly; no demonstrated hang or benchmark claim"
+    }
+  ],
+  "additional_regressions": [
+    "styled Ellipse exact-intersection before contact ring (real Chrome+literal RED)",
+    "created sibling OrderKey low-bit loss (real Native+Chrome RED)",
+    "legacy arrow raster fixture missing derived route (expected pixel unchanged)",
+    "legacy Snap test assumes free endpoint despite FC05 attachment (all prior coordinate/guide/commit/camera checks retained)"
+  ],
+  "rulings": "implementation-ledger.md; all Ruling lines carried verbatim",
+  "green": "raw/release-native-regression.xml + raw/browser-004/results.json"
+}

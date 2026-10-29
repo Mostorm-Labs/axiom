@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="3"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="11"
+	timestamp="2026-10-27T14:21:08"
+	>
+	<testcase name="FC08SectionGeometry" classname="FC08SectionGeometry" time="0.115755" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 3 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 3 tests from FC08SectionGeometry
+[ RUN      ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren
+[       OK ] FC08SectionGeometry.AncestorsComposeOnceAndBoundaryDoesNotClipChildren (0 ms)
+[ RUN      ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose
+[       OK ] FC08SectionGeometry.NegativeBoundaryResizePreservesChildrenWorldPose (0 ms)
+[ RUN      ] FC08SectionGeometry.PublicationFailureRetainsOldSceneAndRecoveryDoesNotClipChildren
+[       OK ] FC08SectionGeometry.PublicationFailureRetainsOldSceneAndRecoveryDoesNotClipChildren (0 ms)
+[----------] 3 tests from FC08SectionGeometry (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 3 tests.
+</system-out>
+	</testcase>
+	<testcase name="FC01ASelectionInputIntegration" classname="FC01ASelectionInputIntegration" time="8.78851" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 22 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 22 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (274 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (432 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (290 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (137 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitReg...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC08SectionConsumer" classname="FC08SectionConsumer" time="2.23557" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 14 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 8 tests from FC08SectionConsumer
+[ RUN      ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory
+[       OK ] FC08SectionConsumer.EmptyCreateRenameResizeReleaseUseRealHistory (3 ms)
+[ RUN      ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically
+[       OK ] FC08SectionConsumer.WrapReparentReleasePreserveWorldAndRejectCycleAtomically (1 ms)
+[ RUN      ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC08SectionConsumer.DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts (1 ms)
+[ RUN      ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing
+[       OK ] FC08SectionConsumer.BoundaryPointerChangesOnlyBoundaryAndCanc...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

@@ -1,6 +1,7 @@
 #include "canvas/debug_ui/builtin_panels.hpp"
 #include "canvas/debug_ui/ui_session_state.hpp"
 #include "widgets.hpp"
+#include "selection_summary_view.hpp"
 
 #include <algorithm>
 #include <array>
@@ -88,6 +89,111 @@ void textFormat(DebugPanelContext& c) {
         static_cast<unsigned long long>(text.composition));
     ImGui::EndDisabled();
 }
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+void multiSelectionProperties(DebugPanelContext& c) {
+    using namespace canvas;
+    const auto& projection = c.controls.multiSelectionProjection();
+    if (c.snapshot.selectionSummary.count < 2) return;
+    ImGui::SeparatorText("Multi-selection properties");
+    if (!projection.available) {
+        ImGui::TextWrapped("Property projection unavailable; refresh selection.");
+        return;
+    }
+    auto& draft = c.ui.multiSelectionDraft();
+    if (!draft.initialized || draft.stamp != projection.stamp) {
+        draft = {};
+        draft.initialized = true;
+        draft.stamp = projection.stamp;
+        const auto value = [&](std::uint32_t field) -> const semantic::PropertyValue* {
+            const auto it = projection.properties.find(field);
+            return it == projection.properties.end() || !it->second.uniformValue
+                ? nullptr : &*it->second.uniformValue;
+        };
+        if (const auto* v = value(1U)) if (const auto* b = std::get_if<bool>(v)) draft.visible = *b;
+        if (const auto* v = value(2U)) if (const auto* b = std::get_if<bool>(v)) draft.locked = *b;
+        if (const auto* v = value(3U)) if (const auto* f = std::get_if<float>(v)) draft.opacity = *f;
+        if (const auto* v = value(0x100U)) if (const auto* fill = std::get_if<semantic::FillStyleValue>(v)) {
+            draft.noFill = std::holds_alternative<semantic::NoFill>(*fill);
+            if (const auto* solid = std::get_if<semantic::SolidFill>(fill)) {
+                draft.fill[0] = solid->color.r; draft.fill[1] = solid->color.g;
+                draft.fill[2] = solid->color.b; draft.fill[3] = solid->color.a;
+            }
+        }
+        if (const auto* v = value(0x101U)) if (const auto* stroke = std::get_if<semantic::StrokeStyleValue>(v))
+            if (const auto* solid = std::get_if<semantic::SolidStroke>(stroke)) draft.strokeWidth = solid->width;
+        if (const auto* v = value(0x200U)) if (const auto* d = std::get_if<semantic::ConnectorDecorationValue>(v))
+            draft.startDecoration = *d == semantic::ConnectorDecorationValue::kArrow ? 1 : 0;
+        if (const auto* v = value(0x201U)) if (const auto* d = std::get_if<semantic::ConnectorDecorationValue>(v))
+            draft.endDecoration = *d == semantic::ConnectorDecorationValue::kArrow ? 1 : 0;
+    }
+    struct Row { std::uint32_t field; const char* label; };
+    constexpr std::array<Row, 8> rows{{{1U,"Visible"},{2U,"Locked"},{3U,"Opacity"},{4U,"Blend"},
+        {0x100U,"Fill"},{0x101U,"Stroke"},{0x200U,"Connector start"},{0x201U,"Connector end"}}};
+    for (const auto& row : rows) {
+        const auto item = projection.properties.find(row.field);
+        if (item == projection.properties.end()) continue;
+        const auto& property = item->second;
+        ImGui::PushID(static_cast<int>(row.field));
+        ImGui::Text("%s: %zu/%zu%s%s", row.label, property.eligible.size(), property.total,
+                    property.mixed ? " mixed" : "", property.partial ? " partial" : "");
+        for (const auto& excluded : property.excluded) {
+            char id[33]{};
+            for (std::size_t i = 0; i < excluded.object.bytes.size(); ++i)
+                (void)std::snprintf(id + i * 2, 3, "%02x", static_cast<unsigned>(excluded.object.bytes[i]));
+            ImGui::TextWrapped("Excluded %s: property not applicable", id);
+        }
+        if (property.availability == runtime::MultiSelectionAvailability::kPermissionUnknown)
+            ImGui::TextWrapped("Permission unavailable; editing disabled.");
+        bool enabled = property.editAvailable && panel_detail::canSubmitProduct(c);
+        semantic::PropertyValue value{false};
+        ImGui::BeginDisabled(!enabled);
+        switch (row.field) {
+        case 1U: ImGui::Checkbox("Visible##value", &draft.visible); value = draft.visible; break;
+        case 2U: ImGui::Checkbox("Locked##value", &draft.locked); value = draft.locked; break;
+        case 3U: ImGui::InputFloat("Opacity##value", &draft.opacity, 0.05F, 0.1F); value = draft.opacity; break;
+        case 4U: ImGui::TextUnformatted("Normal"); value = semantic::BlendModeValue::kNormal; break;
+        case 0x100U:
+            ImGui::Checkbox("No fill", &draft.noFill);
+            if (!draft.noFill) ImGui::ColorEdit4("Fill color", draft.fill);
+            value = draft.noFill ? semantic::FillStyleValue{semantic::NoFill{}} : semantic::FillStyleValue{
+                semantic::SolidFill{{draft.fill[0],draft.fill[1],draft.fill[2],draft.fill[3]}}};
+            break;
+        case 0x101U: {
+            const auto* stroke = property.uniformValue ? std::get_if<semantic::StrokeStyleValue>(&*property.uniformValue) : nullptr;
+            const auto* solid = stroke ? std::get_if<semantic::SolidStroke>(stroke) : nullptr;
+            if (!solid) { enabled = false; ImGui::TextWrapped("Stroke editing requires a uniform solid stroke."); }
+            else { auto updated = *solid; ImGui::InputDouble("Stroke width", &draft.strokeWidth);
+                updated.width = draft.strokeWidth; value = semantic::StrokeStyleValue{std::move(updated)}; }
+            break;
+        }
+        case 0x200U: ImGui::Combo("Start decoration", &draft.startDecoration, "None\0Arrow\0");
+            value = draft.startDecoration == 0 ? semantic::ConnectorDecorationValue::kNone : semantic::ConnectorDecorationValue::kArrow; break;
+        case 0x201U: ImGui::Combo("End decoration", &draft.endDecoration, "None\0Arrow\0");
+            value = draft.endDecoration == 0 ? semantic::ConnectorDecorationValue::kNone : semantic::ConnectorDecorationValue::kArrow; break;
+        default: enabled = false; break;
+        }
+        ImGui::BeginDisabled(!enabled);
+        if (ImGui::Button("Apply")) {
+            (void)c.controls.applyMultiSelectionProperty(row.field, value);
+            c.ui.markControlSubmitted();
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel")) draft.initialized = false;
+        ImGui::EndDisabled();
+        ImGui::EndDisabled();
+        ImGui::PopID();
+    }
+    if (c.controls.hasMultiSelectionAdmission() && !c.controls.multiSelectionAdmission().queued)
+        ImGui::Text("Multi-selection request rejected (state %u, reason %u).",
+                    static_cast<unsigned>(c.controls.multiSelectionAdmission().state),
+                    static_cast<unsigned>(c.controls.multiSelectionAdmission().error));
+    if (const auto outcome = c.controls.multiSelectionOutcome()) {
+        if (!outcome->terminal) ImGui::TextUnformatted("Multi-selection: pending");
+        else if (outcome->applied) ImGui::Text("Applied to %zu; excluded %zu.", outcome->changed.size(), outcome->skipped.size());
+        else ImGui::Text("Multi-selection failed (reason %u).", static_cast<unsigned>(outcome->error));
+    }
+}
+#endif
 void tools(DebugPanelContext& c) {
     const auto& state = c.snapshot.product.value;
     const bool creating = state.control.creationMode;
@@ -101,7 +207,18 @@ void tools(DebugPanelContext& c) {
             (void)c.controls.setTool(value); c.ui.markControlSubmitted();
         }
     };
-    chooseTool("Select", Tool::kSelect, state.selection.enabled && !creating);
+    using SelectionMode=canvas::runtime::CanvasSelectionMode;
+    const auto chooseSelection=[&](const char* label,SelectionMode mode) {
+        if(panel_detail::flowButton(label,first,state.selection.enabled&&!creating&&state.control.selectionAcquisitionMode==mode)) {
+            if(mode==SelectionMode::kPoint) (void)c.controls.setTool(Tool::kSelect);
+            else (void)c.controls.setSelectionAcquisitionMode(mode);
+            c.ui.markControlSubmitted();
+        }
+    };
+    chooseSelection("Select",SelectionMode::kPoint);
+    chooseSelection("Rectangle select",SelectionMode::kRectangle);
+    chooseSelection("Freeform lasso",SelectionMode::kFreeform);
+    chooseTool("Hand",Tool::kPan,tool==Tool::kPan&&!creating);
     chooseTool("Ink", Tool::kInk, tool == Tool::kInk && !creating && !state.selection.enabled);
     chooseTool("Eraser", Tool::kEraser, tool == Tool::kEraser && !creating);
     chooseTool("Text tool", Tool::kText, tool == Tool::kText && !creating);
@@ -146,6 +263,14 @@ void tools(DebugPanelContext& c) {
         }
     }
     ImGui::EndDisabled();
+    if(state.control.selectionQueryStatus==canvas::runtime::SelectionQueryStatus::kPartial) {
+        ImGui::TextWrapped("Selection unchanged: region query has unsupported object providers.");
+        for(std::size_t i=0;i<state.control.regionUnsupportedKindCount;++i)
+            ImGui::Text("Unsupported object kind: %u",state.control.regionUnsupportedKinds[i]);
+    } else if(state.control.selectionQueryStatus==canvas::runtime::SelectionQueryStatus::kFailed||
+              state.control.selectionQueryStatus==canvas::runtime::SelectionQueryStatus::kStale) {
+        ImGui::TextWrapped("Selection query failed or became stale; selection was preserved.");
+    }
     if (!c.controls.hasRuntimeOwner()) ImGui::TextWrapped("Runtime unavailable");
     if (c.controls.hasRuntimeOwner() && !c.controls.connectorDefaultsReady()) {
         ImGui::TextWrapped("Connector defaults unavailable");
@@ -157,28 +282,60 @@ void tools(DebugPanelContext& c) {
         }
         ImGui::EndDisabled();
     }
-    if (state.selection.selectedObjectCount != 0) {
-        ImGui::SeparatorText("Selected object");
-        ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c));
+    panel_detail::renderSelectionSummary(c.snapshot.selectionSummary,c.ui.advancedControls());
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+    multiSelectionProperties(c);
+#endif
+    if (c.snapshot.selectionSummary.count != 0) {
+        ImGui::SeparatorText("Selection actions");
         bool objectFirst=true;
         const bool sectionSelected=state.control.selectedKind==static_cast<std::uint32_t>(canvas::semantic::ObjectKind::kSection);
-        ImGui::BeginDisabled(sectionSelected);
-        if (panel_detail::flowButton(state.control.selectedLocked ? "Unlock" : "Lock", objectFirst)) {
+        using Action=canvas::runtime::SelectionAction;
+        if (panel_detail::selectionActionButton(c,"Group selected", objectFirst,Action::kGroup)) {
+            canvas::runtime::SectionIntent intent;
+            intent.action=canvas::runtime::SectionAction::kGroup;
+            intent.objects=c.snapshot.selectionSummary.roots;
+            intent.selectionRevision=c.snapshot.selectionSummary.selectionRevision;
+            intent.expectedSemanticGeneration=c.snapshot.selectionSummary.semanticGeneration;
+            (void)c.controls.sectionIntent(intent);c.ui.markControlSubmitted();
+        }
+        if (panel_detail::selectionActionButton(c,"Ungroup selected", objectFirst,Action::kUngroup)) {
+            canvas::runtime::SectionIntent intent;
+            intent.action=canvas::runtime::SectionAction::kUngroup;
+            intent.objectId=c.snapshot.selectionSummary.primary;
+            intent.selectionRevision=c.snapshot.selectionSummary.selectionRevision;
+            intent.expectedSemanticGeneration=c.snapshot.selectionSummary.semanticGeneration;
+            (void)c.controls.sectionIntent(intent);c.ui.markControlSubmitted();
+        }
+        const auto& summary=c.snapshot.selectionSummary;
+        const bool selectedGroup=summary.count==1 && summary.kindCounts.size()==1 &&
+            summary.kindCounts.front().kind==static_cast<std::uint32_t>(canvas::semantic::ObjectKind::kGroup);
+        if (selectedGroup) {
+            ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c));
+            if (panel_detail::flowButton("Enter group",objectFirst)) {
+                canvas::runtime::SectionIntent intent;
+                intent.action=canvas::runtime::SectionAction::kEnterGroupScope;
+                intent.objectId=summary.primary;
+                intent.selectionRevision=summary.selectionRevision;
+                intent.expectedSemanticGeneration=summary.semanticGeneration;
+                (void)c.controls.sectionIntent(intent);c.ui.markControlSubmitted();
+            }
+            ImGui::EndDisabled();
+        }
+        const auto lockAction=state.control.selectedLocked?Action::kUnlock:Action::kLock;
+        if (panel_detail::selectionActionButton(c,state.control.selectedLocked ? "Unlock" : "Lock", objectFirst,lockAction)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedLock,
                                             !state.control.selectedLocked); c.ui.markControlSubmitted();
         }
-        ImGui::EndDisabled();
-        ImGui::BeginDisabled(state.control.selectedLocked);
-        if (panel_detail::flowButton(sectionSelected?"Release selected Section":"Delete selected", objectFirst)) {
+        if (panel_detail::selectionActionButton(c,sectionSelected?"Release selected Section":"Delete selected", objectFirst,Action::kDelete)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kDeleteSelected); c.ui.markControlSubmitted();
         }
-        ImGui::BeginDisabled(sectionSelected);
-        if (panel_detail::flowButton("Bring front", objectFirst)) {
+        if (panel_detail::selectionActionButton(c,"Bring front", objectFirst,Action::kOrder)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedOrder, true); c.ui.markControlSubmitted();
         }
-        ImGui::EndDisabled();
         const auto selectedConnector = c.controls.selectedConnector();
         if (selectedConnector.available) {
+            ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c)||!c.snapshot.selectionSummary.capability(Action::kAppearance).available());
             if (selectedConnector.content.routing == canvas::semantic::ConnectorRouting::kStraight &&
                 panel_detail::flowButton("Convert to orthogonal", objectFirst)) {
                 (void)c.controls.setConnectorRouting(canvas::semantic::ConnectorRouting::kOrthogonal, true); c.ui.markControlSubmitted();
@@ -186,8 +343,18 @@ void tools(DebugPanelContext& c) {
             ImGui::Text("Route: %s", canvas::runtime::connectorRouteStatusName(selectedConnector.routeStatus));
             if (c.ui.advancedControls()) ImGui::Text("Search: %u states / %u predicates",
                 selectedConnector.work.expanded, selectedConnector.work.predicates);
+            ImGui::EndDisabled();
         }
-        ImGui::EndDisabled();
+    }
+    if (c.snapshot.selectionSummary.groupScope) {
+        ImGui::BeginDisabled(!panel_detail::canSubmitProduct(c));
+        if (ImGui::Button("Leave group")) {
+            canvas::runtime::SectionIntent intent;
+            intent.action=canvas::runtime::SectionAction::kLeaveGroupScope;
+            intent.selectionRevision=c.snapshot.selectionSummary.selectionRevision;
+            intent.expectedSemanticGeneration=c.snapshot.selectionSummary.semanticGeneration;
+            (void)c.controls.sectionIntent(intent);c.ui.markControlSubmitted();
+        }
         ImGui::EndDisabled();
     }
     textFormat(c);
@@ -317,14 +484,14 @@ void view(DebugPanelContext& context) {
         context.ui.markControlSubmitted();
     }
     ImGui::EndDisabled();
-    ImGui::BeginDisabled(!available || snapshot.product.value.selection.selectedObjectCount == 0);
+    ImGui::BeginDisabled(!available || !snapshot.selectionSummary.capability(canvas::runtime::SelectionAction::kFit).available());
     if (panel_detail::flowButton("Fit Selection", first)) {
         (void)context.controls.fitToSelection();
         context.ui.markControlSubmitted();
     }
     ImGui::EndDisabled();
     if (context.ui.advancedControls()) {
-    ImGui::BeginDisabled(!available || snapshot.product.value.selection.primaryObject == 0);
+    ImGui::BeginDisabled(!available || !snapshot.selectionSummary.capability(canvas::runtime::SelectionAction::kFitPrimary).available());
     if (ImGui::Button("Fit Primary Object")) {
         (void)context.controls.fitPrimaryObject();
         context.ui.markControlSubmitted();

@@ -1,0 +1,62 @@
+{
+  "status": "INVESTIGATION_ONLY",
+  "required_cases": [
+    {
+      "id": "ONCE-OOM-RETURN",
+      "purpose": "inject allocation in initializer and assert first call returns controlled exception/result; no hung waiter",
+      "expected": "initializer may retry only if once state and initializer-owned state are both restored"
+    },
+    {
+      "id": "ONCE-WAITER-2",
+      "purpose": "one initializer + >=2 waiters under injected failure",
+      "expected": "all calls terminate; no waiter remains in running state"
+    },
+    {
+      "id": "PROTO-PARTIAL-STATE",
+      "purpose": "instrument descriptor pool/default instance/reflection registration around failure",
+      "expected": "no is_initialized=true or registration side effect survives a retry unless fully committed"
+    },
+    {
+      "id": "PROTO-RETRY-BYTES",
+      "purpose": "retry same descriptor and normal encode output",
+      "expected": "termination plus byte-identical output to no-fault control"
+    },
+    {
+      "id": "FULL-SWEEP",
+      "purpose": "real allocation fault at every precommit allocation",
+      "expected": "every case returns or explicit stable terminal failure; no deadlock or canonical mutation"
+    },
+    {
+      "id": "RUNTIME-CONTAINMENT",
+      "purpose": "Runtime/Scene/History state around each SDK failure",
+      "expected": "zero mutation and truthful blocker/receipt"
+    }
+  ],
+  "forbidden": [
+    "prewarm descriptor",
+    "catch-only runtime workaround",
+    "fault relocation",
+    "SDK rebuild outside producer",
+    "expected/oracle weakening"
+  ],
+  "source_owners": [
+    "Abseil call_once.h/source and tests",
+    "Protobuf generated_message_reflection.cc/message.cc and tests",
+    "tools/semantic/build_runtime.py",
+    "tools/semantic/contract.py",
+    "tools/semantic/classify_producer_changes.py",
+    ".github/workflows/semantic-sdk-release.yml",
+    "tools/semantic/publish_release.py",
+    "tools/semantic/aggregate.py",
+    "tools/semantic/reuse_release.py"
+  ],
+  "release_flow": [
+    "version source inputs/producer contract",
+    "run locked producer with verified source hashes",
+    "publish immutable release set",
+    "run smoke/reproducibility and exception-safety matrix",
+    "open lock-only candidate PR",
+    "update semantic-sdk.lock.json only through accepted candidate",
+    "rerun Axiom consumer and full verification"
+  ]
+}

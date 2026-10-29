@@ -276,6 +276,47 @@ protected:
 };
 TEST_F(SectionDropTest, ShapeDropUpdatesMembershipAndFollowsSectionWithOneStepHistory) {exercise(false);}
 TEST_F(SectionDropTest, StrokeDropUpdatesMembershipAndFollowsSectionWithOneStepHistory) {exercise(true);}
+TEST_F(SectionDropTest, GroupDropIntoSectionKeepsSubtreeAndOneStepHistory) {
+    seed();
+    const auto sticky=foundation::ObjectId::fromUint64(6610),group=foundation::ObjectId::fromUint64(6611);
+    runtime::StickyCreateRequest second;second.objectId=sticky;second.content={80,80};second.transform.tx=130;second.transform.ty=40;
+    ASSERT_EQ(f.createSticky(second).state,runtime::ConnectorCommandState::kApplied);
+    ASSERT_EQ(f.groupObjects({actor,sticky},group,++request,6600).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());ASSERT_EQ(f.canvasControlReceipt({6600,request})->state,runtime::CanvasControlReceiptState::kApplied);
+    create();ASSERT_TRUE(click(60,70));const auto before=c.readback().semanticGeneration;
+    ASSERT_TRUE(drag(60,70,390,290));
+    auto after=f.readSection(section);ASSERT_EQ(after.directChildren,std::vector{group});
+    EXPECT_EQ(c.readback().semanticGeneration,before+1);
+    undo();EXPECT_TRUE(f.readSection(section).directChildren.empty());
+    redo();EXPECT_EQ(f.readSection(section).directChildren,std::vector{group});
+    ASSERT_TRUE(click(390,290));const auto beforeExit=c.readback().semanticGeneration;
+    ASSERT_TRUE(drag(390,290,100,120));
+    EXPECT_TRUE(f.readSection(section).directChildren.empty());
+    EXPECT_EQ(c.readback().semanticGeneration,beforeExit+1);
+    undo();EXPECT_EQ(f.readSection(section).directChildren,std::vector{group});
+}
+TEST_F(SectionDropTest, DroppingSectionOverGroupMemberDoesNotImplicitlyJoinGroup) {
+    const auto first=foundation::ObjectId::fromUint64(6620),second=foundation::ObjectId::fromUint64(6621);
+    const auto group=foundation::ObjectId::fromUint64(6622);
+    runtime::StickyCreateRequest sticky;sticky.content={80,80};sticky.objectId=first;
+    sticky.transform.tx=300;sticky.transform.ty=200;
+    ASSERT_EQ(f.createSticky(sticky).state,runtime::ConnectorCommandState::kApplied);
+    sticky.objectId=second;sticky.transform.tx=450;
+    ASSERT_EQ(f.createSticky(sticky).state,runtime::ConnectorCommandState::kApplied);
+    ASSERT_EQ(f.groupObjects({first,second},group,++request,6600).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());ASSERT_EQ(f.canvasControlReceipt({6600,request})->state,runtime::CanvasControlReceiptState::kApplied);
+    create({1,0,0,1,20,40},{0,0,80,60});
+    ASSERT_TRUE(click(30,50));const auto generation=c.readback().semanticGeneration;
+    ASSERT_TRUE(drag(30,50,340,240));
+    auto moved=f.readSection(section);ASSERT_FALSE(moved.parentId);
+    EXPECT_DOUBLE_EQ(moved.worldTransform.tx,330);EXPECT_DOUBLE_EQ(moved.worldTransform.ty,230);
+    EXPECT_EQ(f.readSelectionSummary().primary,section);
+    EXPECT_EQ(c.readback().semanticGeneration,generation+1);
+    undo();moved=f.readSection(section);EXPECT_FALSE(moved.parentId);
+    EXPECT_DOUBLE_EQ(moved.worldTransform.tx,20);EXPECT_DOUBLE_EQ(moved.worldTransform.ty,40);
+    redo();moved=f.readSection(section);EXPECT_FALSE(moved.parentId);
+    EXPECT_DOUBLE_EQ(moved.worldTransform.tx,330);EXPECT_DOUBLE_EQ(moved.worldTransform.ty,230);
+}
 TEST_F(SectionDropTest, ActualAffineBoundaryAndFinalPreviewPoseDetermineDrop) {
     seed();create({1,1,-1,1,400,200},{0,0,100,100});ASSERT_TRUE(click(60,70));
     ASSERT_TRUE(drag(60,70,310,210)); // inside AABB, outside the actual parallelogram
@@ -314,4 +355,231 @@ TEST_F(SectionDropTest, SurfaceMetricsChangeInvalidatesDropAndLateUp) {
     EXPECT_EQ(c.readback().semanticGeneration,before);EXPECT_TRUE(f.readSection(section).directChildren.empty());
 }
 
+}
+
+TEST(FC08SectionConsumer, GroupSelectedRootsAdvertisesCapability) {
+    runtime::RuntimeComposition c; ASSERT_TRUE(c.open()); ASSERT_TRUE(c.bindSurface(800,600));
+    semantic::InsertObjectsOp insert;
+    for (std::uint64_t i=1;i<=2;++i) {
+        semantic::ObjectRecord object;
+        object.id=foundation::ObjectId::fromUint64(i); object.kind=semantic::ObjectKind::kShape;
+        object.kind_version=1; object.content=semantic::ShapeContent{1,40,30};
+        object.transform.tx=static_cast<double>(i*100);
+        object.placement.order_key=semantic::OrderKey({static_cast<std::uint8_t>(i)});
+        insert.objects.push_back(object);
+    }
+    semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(3900)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,std::move(insert)};
+    ASSERT_EQ(c.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,
+              semantic::ApplyDisposition::kApplied);
+    ASSERT_TRUE(c.registerSource(3900)); auto& f=c.controlFacade();
+    ASSERT_EQ(f.setSelectionMode(true,1,f.readRuntimeState().identity.runtimeGeneration,3900).state,
+              runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
+    std::uint64_t sequence=0;
+    const auto pointer=[&](input::PointerPhase phase,float x,bool shift) {
+        input::PlatformPointerSample s; s.source=3900;s.pointer=1;s.sequence=++sequence;
+        s.timestampNs=sequence*1000000;s.x=x;s.y=15;s.phase=phase;
+        s.modifiers=shift?input::PointerModifiers::kShift:input::PointerModifiers::kNone;
+        input::PlatformPointerBatch batch;batch.samples.push_back(s);return c.submit(batch);
+    };
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,120,false));
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,120,false));
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,220,true));
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,220,true));
+    const auto summary=f.readSelectionSummary();ASSERT_EQ(summary.count,2U);
+    EXPECT_TRUE(summary.capability(runtime::SelectionAction::kGroup).available());
+    const auto groupId=foundation::ObjectId::fromUint64(3901);
+    ASSERT_EQ(f.groupObjects(summary.roots,groupId,2,3900,summary.selectionRevision).state,
+              runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());const auto receipt=f.canvasControlReceipt({3900,2});
+    ASSERT_TRUE(receipt);ASSERT_EQ(receipt->state,runtime::CanvasControlReceiptState::kApplied);
+    EXPECT_EQ(c.semanticObjectCount(),3U);
+    const auto selected=f.readSelectionSummary();ASSERT_EQ(selected.count,1U);
+    EXPECT_EQ(selected.primary,groupId);ASSERT_EQ(selected.kindCounts.size(),1U);
+    EXPECT_EQ(selected.kindCounts.front().kind,static_cast<std::uint32_t>(semantic::ObjectKind::kGroup));
+    ASSERT_EQ(f.undo(3,f.readRuntimeState().identity.runtimeGeneration,3900).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump()); EXPECT_EQ(c.semanticObjectCount(),2U);
+    ASSERT_EQ(f.redo(4,f.readRuntimeState().identity.runtimeGeneration,3900).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump()); EXPECT_EQ(c.semanticObjectCount(),3U);
+    ASSERT_EQ(f.ungroupObject(groupId,5,3900).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());const auto released=f.canvasControlReceipt({3900,5});
+    ASSERT_TRUE(released);ASSERT_EQ(released->state,runtime::CanvasControlReceiptState::kApplied);
+    EXPECT_EQ(c.semanticObjectCount(),2U);EXPECT_EQ(f.readSelectionSummary().count,2U);
+    ASSERT_EQ(f.undo(6,f.readRuntimeState().identity.runtimeGeneration,3900).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump()); EXPECT_EQ(c.semanticObjectCount(),3U);
+    ASSERT_EQ(f.redo(7,f.readRuntimeState().identity.runtimeGeneration,3900).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump()); EXPECT_EQ(c.semanticObjectCount(),2U);
+    const auto beforeStale=c.readback();const auto historyBefore=f.readRuntimeState().history;
+    ASSERT_EQ(f.groupObjects(summary.roots,foundation::ObjectId::fromUint64(3902),8,3900,
+                             summary.selectionRevision).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());const auto stale=f.canvasControlReceipt({3900,8});
+    ASSERT_TRUE(stale);EXPECT_NE(stale->state,runtime::CanvasControlReceiptState::kApplied);
+    EXPECT_EQ(c.readback().semanticGeneration,beforeStale.semanticGeneration);
+    EXPECT_EQ(c.readback().sceneRevision,beforeStale.sceneRevision);
+    EXPECT_EQ(f.readRuntimeState().history.canUndo,historyBefore.canUndo);
+    EXPECT_EQ(f.readRuntimeState().history.canRedo,historyBefore.canRedo);
+    EXPECT_TRUE(c.close());
+}
+
+TEST(FC08SectionConsumer, UngroupTransformedGroupPreservesSectionWorldPose) {
+    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
+    auto& f=c.controlFacade();
+    semantic::ObjectRecord group;group.id=foundation::ObjectId::fromUint64(4001);
+    group.kind=semantic::ObjectKind::kGroup;group.kind_version=1;
+    group.placement.order_key=semantic::OrderKey({1});group.transform={0,2,-2,0,100,200};
+    group.content=semantic::GroupContent{};
+    semantic::ObjectRecord section;section.id=foundation::ObjectId::fromUint64(4002);
+    section.kind=semantic::ObjectKind::kSection;section.kind_version=1;
+    section.placement.parent_id=group.id;section.placement.order_key=semantic::OrderKey({1});
+    section.transform={1,0,0,1,10,20};section.content=semantic::SectionContent{{0,0,100,80},"Nested",0,0};
+    semantic::EditContainerTopologyOp topology;topology.effect=semantic::IntroduceWrappersEffect{{group,section}};
+    topology.guard.child_sets.push_back({std::nullopt,{}});
+    semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(4003)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,topology};
+    ASSERT_EQ(c.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,
+              semantic::ApplyDisposition::kApplied);
+    auto before=f.readSection(section.id);ASSERT_TRUE(before.projectionReady);
+    EXPECT_DOUBLE_EQ(before.worldTransform.tx,60);EXPECT_DOUBLE_EQ(before.worldTransform.ty,220);
+    ASSERT_EQ(f.ungroupObject(group.id,1,4004).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());const auto released=f.canvasControlReceipt({4004,1});
+    ASSERT_TRUE(released);ASSERT_EQ(released->state,runtime::CanvasControlReceiptState::kApplied);
+    auto after=f.readSection(section.id);ASSERT_TRUE(after.projectionReady);
+    EXPECT_FALSE(after.parentId);EXPECT_EQ(after.worldTransform,before.worldTransform);
+    ASSERT_EQ(f.undo(2,f.readRuntimeState().identity.runtimeGeneration,4004).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());auto restored=f.readSection(section.id);
+    EXPECT_EQ(restored.parentId,group.id);EXPECT_EQ(restored.worldTransform,before.worldTransform);
+    ASSERT_EQ(f.redo(3,f.readRuntimeState().identity.runtimeGeneration,4004).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());after=f.readSection(section.id);
+    EXPECT_FALSE(after.parentId);EXPECT_EQ(after.worldTransform,before.worldTransform);
+    EXPECT_TRUE(c.close());
+}
+
+TEST(FC08SectionConsumer, NestedGroupAndSectionKeepWorldPoseAcrossUndoRedo) {
+    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
+    auto& f=c.controlFacade();
+    const auto sectionA=foundation::ObjectId::fromUint64(4101);
+    const auto sectionB=foundation::ObjectId::fromUint64(4102);
+    const auto sectionC=foundation::ObjectId::fromUint64(4103);
+    const auto inner=foundation::ObjectId::fromUint64(4104);
+    const auto outer=foundation::ObjectId::fromUint64(4105);
+    std::uint64_t n=0;constexpr std::uint64_t client=4100;
+    for (const auto id:{sectionA,sectionB,sectionC}) {
+        runtime::SectionIntent create;create.objectId=id;
+        create.transform.tx=static_cast<double>((++n)*100);create.transform.ty=50;
+        ASSERT_EQ(f.submitSectionIntent(create,n,client).state,runtime::ProductControlState::kQueued);
+        ASSERT_TRUE(c.ownerPump());
+        ASSERT_EQ(f.canvasControlReceipt({client,n})->state,runtime::CanvasControlReceiptState::kApplied);
+    }
+    const auto worldA=f.readSection(sectionA).worldTransform;
+    const auto worldB=f.readSection(sectionB).worldTransform;
+    const auto worldC=f.readSection(sectionC).worldTransform;
+    const auto group=[&](std::vector<foundation::ObjectId> ids,foundation::ObjectId target) {
+        const auto request=++n;
+        EXPECT_EQ(f.groupObjects(std::move(ids),target,request,client).state,runtime::ProductControlState::kQueued);
+        EXPECT_TRUE(c.ownerPump());const auto receipt=f.canvasControlReceipt({client,request});
+        EXPECT_TRUE(receipt);if(receipt)EXPECT_EQ(receipt->state,runtime::CanvasControlReceiptState::kApplied)<<receipt->detail;
+    };
+    group({sectionA,sectionB},inner);
+    group({inner,sectionC},outer);
+    EXPECT_EQ(f.readSection(sectionA).parentId,inner);
+    EXPECT_EQ(f.readSection(sectionB).parentId,inner);
+    EXPECT_EQ(f.readSection(sectionC).parentId,outer);
+    EXPECT_EQ(f.readSection(sectionA).worldTransform,worldA);
+    EXPECT_EQ(f.readSection(sectionB).worldTransform,worldB);
+    EXPECT_EQ(f.readSection(sectionC).worldTransform,worldC);
+    ASSERT_EQ(f.ungroupObject(outer,++n,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());ASSERT_EQ(f.canvasControlReceipt({client,n})->state,runtime::CanvasControlReceiptState::kApplied);
+    EXPECT_FALSE(f.readSection(sectionC).parentId);
+    EXPECT_EQ(f.readSection(sectionA).parentId,inner);
+    EXPECT_EQ(f.readSection(sectionA).worldTransform,worldA);
+    EXPECT_EQ(f.readSection(sectionC).worldTransform,worldC);
+    ASSERT_EQ(f.undo(++n,f.readRuntimeState().identity.runtimeGeneration,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());EXPECT_EQ(f.readSection(sectionC).parentId,outer);
+    EXPECT_EQ(f.readSection(sectionA).worldTransform,worldA);EXPECT_EQ(f.readSection(sectionC).worldTransform,worldC);
+    ASSERT_EQ(f.redo(++n,f.readRuntimeState().identity.runtimeGeneration,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());EXPECT_FALSE(f.readSection(sectionC).parentId);
+    EXPECT_EQ(f.readSection(sectionA).worldTransform,worldA);EXPECT_EQ(f.readSection(sectionC).worldTransform,worldC);
+    EXPECT_TRUE(c.close());
+}
+
+TEST(FC08SectionConsumer, DragGroupedSectionsMovesEachOnceAndUndoRestores) {
+    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
+    auto& f=c.controlFacade();constexpr std::uint64_t client=4200;
+    const auto a=foundation::ObjectId::fromUint64(4201),b=foundation::ObjectId::fromUint64(4202);
+    const auto group=foundation::ObjectId::fromUint64(4203);
+    std::uint64_t request=0;
+    for (const auto id:{a,b}) {
+        runtime::SectionIntent create;create.objectId=id;create.content.boundary={0,0,80,60};
+        create.transform.tx=id==a?100:260;create.transform.ty=100;
+        ASSERT_EQ(f.submitSectionIntent(create,++request,client).state,runtime::ProductControlState::kQueued);
+        ASSERT_TRUE(c.ownerPump());ASSERT_EQ(f.canvasControlReceipt({client,request})->state,runtime::CanvasControlReceiptState::kApplied);
+    }
+    ASSERT_EQ(f.groupObjects({a,b},group,++request,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());ASSERT_EQ(f.canvasControlReceipt({client,request})->state,runtime::CanvasControlReceiptState::kApplied);
+    ASSERT_EQ(f.setSelectionMode(true,++request,f.readRuntimeState().identity.runtimeGeneration,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());ASSERT_TRUE(c.registerSource(client));
+    std::uint64_t sequence=0;
+    const auto pointer=[&](input::PointerPhase phase,float x,float y) {
+        const auto view=f.readCanvasControlSnapshot(f.mountedCanvasTargets().front());
+        input::PlatformPointerBatch batch;++sequence;
+        batch.samples.push_back({client,1,sequence,sequence*1000000,x*view.cameraScale+view.cameraTranslationX,
+            y*view.cameraScale+view.cameraTranslationY,0,0,0,{},{},input::SampleProvenance::kConfirmedCurrent,phase});
+        return c.submit(batch);
+    };
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,700,500));
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,700,500));
+    ASSERT_EQ(f.readSelectionSummary().count,0U);
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,110,110));
+    ASSERT_TRUE(pointer(input::PointerPhase::kMove,150,140));
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,150,140));
+    EXPECT_DOUBLE_EQ(f.readSection(a).worldTransform.tx,140);EXPECT_DOUBLE_EQ(f.readSection(a).worldTransform.ty,130);
+    EXPECT_DOUBLE_EQ(f.readSection(b).worldTransform.tx,300);EXPECT_DOUBLE_EQ(f.readSection(b).worldTransform.ty,130);
+    ASSERT_EQ(f.undo(++request,f.readRuntimeState().identity.runtimeGeneration,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());
+    EXPECT_DOUBLE_EQ(f.readSection(a).worldTransform.tx,100);EXPECT_DOUBLE_EQ(f.readSection(a).worldTransform.ty,100);
+    EXPECT_DOUBLE_EQ(f.readSection(b).worldTransform.tx,260);EXPECT_DOUBLE_EQ(f.readSection(b).worldTransform.ty,100);
+    EXPECT_TRUE(c.close());
+}
+
+TEST(FC08SectionConsumer, DoubleClickEntersGroupAndDraggingChildNeverRemovesMembership) {
+    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
+    auto& f=c.controlFacade();constexpr std::uint64_t client=4300;
+    const auto a=foundation::ObjectId::fromUint64(4301),b=foundation::ObjectId::fromUint64(4302);
+    const auto group=foundation::ObjectId::fromUint64(4303);
+    std::uint64_t request=0;
+    for(const auto id:{a,b}) {
+        runtime::SectionIntent create;create.objectId=id;create.content.boundary={0,0,80,60};
+        create.transform.tx=id==a?100:260;create.transform.ty=100;
+        ASSERT_EQ(f.submitSectionIntent(create,++request,client).state,runtime::ProductControlState::kQueued);
+        ASSERT_TRUE(c.ownerPump());ASSERT_EQ(f.canvasControlReceipt({client,request})->state,runtime::CanvasControlReceiptState::kApplied);
+    }
+    ASSERT_EQ(f.groupObjects({a,b},group,++request,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());ASSERT_EQ(f.canvasControlReceipt({client,request})->state,runtime::CanvasControlReceiptState::kApplied);
+    ASSERT_EQ(f.setSelectionMode(true,++request,f.readRuntimeState().identity.runtimeGeneration,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());ASSERT_TRUE(c.registerSource(client));
+    runtime::TextIntent doubleClick;doubleClick.clientId=client;doubleClick.requestId=++request;
+    doubleClick.target=f.mountedCanvasTargets().front();doubleClick.kind=runtime::TextIntentKind::kEditAtPoint;
+    doubleClick.viewX=110;doubleClick.viewY=110;
+    ASSERT_EQ(f.submitTextIntent(doubleClick).status,runtime::TextStatus::kQueued);ASSERT_TRUE(c.ownerPump());
+    ASSERT_EQ(f.readSelectionSummary().groupScope,group);
+    ASSERT_EQ(f.readSelectionSummary().primary,a);
+    EXPECT_EQ(f.readTextEditor().phase,runtime::TextPhase::kClosed);
+    std::uint64_t seq=0;
+    const auto pointer=[&](input::PointerPhase phase,float x,float y) {
+        const auto view=f.readCanvasControlSnapshot(f.mountedCanvasTargets().front());
+        input::PlatformPointerBatch batch;++seq;
+        batch.samples.push_back({client,1,seq,seq*1000000,x*view.cameraScale+view.cameraTranslationX,
+            y*view.cameraScale+view.cameraTranslationY,0,0,0,{},{},input::SampleProvenance::kConfirmedCurrent,phase});
+        return c.submit(batch);
+    };
+    ASSERT_TRUE(pointer(input::PointerPhase::kDown,110,110));
+    ASSERT_TRUE(pointer(input::PointerPhase::kMove,610,410));
+    ASSERT_TRUE(pointer(input::PointerPhase::kUp,610,410));
+    auto moved=f.readSection(a);EXPECT_EQ(moved.parentId,group);
+    EXPECT_DOUBLE_EQ(moved.worldTransform.tx,600);EXPECT_DOUBLE_EQ(moved.worldTransform.ty,400);
+    EXPECT_DOUBLE_EQ(f.readSection(b).worldTransform.tx,260);
+    ASSERT_EQ(f.undo(++request,f.readRuntimeState().identity.runtimeGeneration,client).state,runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());moved=f.readSection(a);EXPECT_EQ(moved.parentId,group);
+    EXPECT_DOUBLE_EQ(moved.worldTransform.tx,100);EXPECT_DOUBLE_EQ(moved.worldTransform.ty,100);
+    EXPECT_TRUE(c.close());
 }

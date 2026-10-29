@@ -15,6 +15,8 @@ struct RuntimeProbe final : canvas::runtime::RuntimeFacade {
   mutable int reads = 0;
   canvas::runtime::RuntimeStateSnapshot first{};
   canvas::runtime::RuntimeStateSnapshot second{};
+  canvas::runtime::SelectionSummary summary{};
+  canvas::runtime::SelectionSummary readSelectionSummary() const override { return summary; }
   canvas::runtime::RuntimeStateSnapshot readRuntimeState() const noexcept override {
     ++reads;
     return reads == 1 ? first : second;
@@ -66,6 +68,11 @@ int main() {
   runtime.first.identity = {7, 8, 9, 10, 11};
   runtime.second.identity = runtime.first.identity;
   runtime.second.tool.toolId = 4101;
+  runtime.summary.status = canvas::runtime::SelectionSummaryStatus::kAvailable;
+  runtime.summary.reason = canvas::runtime::SelectionReason::kNone;
+  runtime.summary.count = 1;
+  runtime.summary.primary = canvas::foundation::ObjectId::fromUint64(99);
+  runtime.summary.roots = {runtime.summary.primary};
   AxiomProbe axiom;
   ArcProbe arc;
   PlatformProbe platform;
@@ -87,10 +94,14 @@ int main() {
   assert(snapshot.stamp.snapshotSequence == 1);
   assert(snapshot.stamp.monotonicTimeNs != 0);
   assert(runtime.reads == 2);
+  assert(snapshot.selectionSummary == runtime.summary);
   static_assert(!HasCapabilities<canvas::debug_ui::DebugSnapshot>);
   canvas::debug_ui::MutexCopySnapshotChannel channel;
   channel.publish(snapshot);
   assert(channel.read().product.value.tool.toolId == 4101);
+  runtime.summary.roots.clear();
+  assert(channel.read().selectionSummary.roots.size() == 1); // Owning copy, no borrowed IDs.
+  runtime.summary = {}; // Remaining legacy fixtures intentionally have no summary owner.
 
   RuntimeProbe retrying;
   retrying.first.identity = {20, 21, 22, 23, 24};
@@ -137,6 +148,14 @@ int main() {
   const auto stale = assembler.capture(changingSources);
   assert(stale.coherence == canvas::debug_ui::SnapshotCoherence::kMixedGeneration);
   assert(changing.reads == 4);
+
+  RuntimeProbe inconsistentSummary;
+  inconsistentSummary.summary.status = canvas::runtime::SelectionSummaryStatus::kAvailable;
+  inconsistentSummary.summary.selectionRevision = 99;
+  const auto inconsistent = assembler.capture({&inconsistentSummary});
+  assert(inconsistent.coherence == canvas::debug_ui::SnapshotCoherence::kMixedGeneration);
+  assert(inconsistent.selectionSummary.status == canvas::runtime::SelectionSummaryStatus::kStale);
+  assert(inconsistent.selectionSummary.roots.empty());
 
   canvas::debug_ui::DebugSnapshotSources absent{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
   const auto absentSnapshot = assembler.capture(absent);

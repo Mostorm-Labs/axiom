@@ -1,0 +1,107 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 12 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 12 tests from D07
+[ RUN      ] D07.ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation
+[       OK ] D07.ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation (2 ms)
+[ RUN      ] D07.HomogeneousMultiTargetValidationRejectsWholeOperationAndPreservesRedo
+[       OK ] D07.HomogeneousMultiTargetValidationRejectsWholeOperationAndPreservesRedo (0 ms)
+[ RUN      ] D07.RealPrecommitAdmissionRejectionHasZeroMutationAndPreservesRedo
+[       OK ] D07.RealPrecommitAdmissionRejectionHasZeroMutationAndPreservesRedo (0 ms)
+[ RUN      ] D07.TransformBatchHasOneUndoWithChangedSelectionAndFreshRedoIdentity
+OBS phase=transform-before generation=1 ordinal=1 scene=1 projection=1 revision=1 history=0 undo=0 redo=0 events=0 publications=0 index=3
+record id=01000000000000000000000000000000 tx=40 ty=0 properties=0
+record id=02000000000000000000000000000000 tx=80 ty=0 properties=0
+record id=03000000000000000000000000000000 tx=120 ty=0 properties=0
+OBS phase=transform-forward generation=2 ordinal=2 scene=2 projection=2 revision=2 history=1 undo=1 redo=0 events=1 publications=6 index=3
+record id=01000000000000000000000000000000 tx=200 ty=30 properties=0
+record id=02000000000000000000000000000000 tx=250 ty=30 properties=0
+record id=03000000000000000000000000000000 tx=120 ty=0 properties=0
+event id=fe010000000000000000000000000000 generation=2 ordinal=2 callback_scene=1 callback_history=0 changes=2
+OBS phase=transform-undo-selection-is-third-object generation=3 ordinal=3 scene=3 projection=3 revision=3 history=1 undo=0 redo=1 events=2 publications=12 index=3
+record id=01000000000000000000000000000000 tx=40 ty=0 properties=0
+record id=02000000000000000000000000000000 tx=80 ty=0 properties=0
+record id=03000000000000000000000000000000 tx=120 ty=0 properties=0
+event id=fe010000000000000000000000000000 generation=2 ordinal=2 callback_scene=1 callback_history=0 changes=2
+event id=00000000000000800000000000000000 generation=3 ordinal=3 callback_scene=2 callback_history=1 changes=2
+OBS phase=transform-redo generation=4 ordinal=4 scene=4 projection=4 revision=4 history=1 undo=1 redo=0 events=3 publications=18 index=3
+record id=01000000000000000000000000000000 tx=200 ty=30 properties=0
+record id=02000000000000000000000000000000 tx=250 ty=30 properties=0
+record id=03000000000000000000000000000000 tx=120 ty=0 properties=0
+event id=fe010000000000000000000000000000 generation=2 ordinal=2 callback_scene=1 callback_history=0 changes=2
+event id=00000000000000800000000000000000 generation=3 ordinal=3 callback_scene=2 callback_history=1 changes=2
+event id=01000000000000800000000000000000 generation=4 ordinal=4 callback_scene=3 callback_history=1 changes=2
+[       OK ] D07.TransformBatchHasOneUndoWithChangedSelectionAndFreshRedoIdentity (0 ms)
+[ RUN      ] D07.PropertiesBatchHasOneUndoWithChangedSelection
+OBS phase=properties-before generation=1 ordinal=1 scene=1 projection=1 revision=1 history=0 undo=0 redo=0 events=0 publications=0 index=3
+record id=01000000000000000000000000000000 tx=40 ty=0 properties=0
+record id=02000000000000000000000000000000 tx=80 ty=0 properties=0
+record id=03000000000000000000000000000000 tx=120 ty=0 properties=0
+OBS phase=properties-forward generation=2 ordinal=2 scene=2 projection=2 revision=2 history=1 undo=1 redo=0 events=1 publications=6 index=3
+record id=01000000000000000000000000000000 tx=40 ty=0 properties=1
+record id=02000000000000000000000000000000 tx=80 ty=0 properties=1
+record id=03000000000000000000000000000000 tx=120 ty=0 properties=0
+event id=fe010000000000000000000000000000 generation=2 ordinal=2 callback_scene=1 callback_history=0 changes=2
+OBS phase=properties-undo generation=3 ordinal=3 scene=3 projection=3 revision=3 history=1 undo=0 redo=1 events=2 publications=12 index=3
+record id=01000000000000000000000000000000 tx=40 ty=0 properties=0
+record id=02000000000000000000000000000000 tx=80 ty=0 properties=0
+record id=03000000000000000000000000000000 tx=120 ty=0 properties=0
+event id=fe010000000000000000000000000000 generation=2 ordinal=2 callback_scene=1 callback_history=0 changes=2
+event id=00000000000000800000000000000000 generation=3 ordinal=3 callback_scene=2 callback_history=1 changes=2
+OBS phase=properties-redo generation=4 ordinal=4 scene=4 projection=4 revision=4 history=1 undo=1 redo=0 events=3 publications=18 index=3
+record id=01000000000000000000000000000000 tx=40 ty=0 properties=1
+record id=02000000000000000000000000000000 tx=80 ty=0 properties=1
+record id=03000000000000000000000000000000 tx=120 ty=0 properties=0
+event id=fe010000000000000000000000000000 generation=2 ordinal=2 callback_scene=1 callback_history=0 changes=2
+event id=00000000000000800000000000000000 generation=3 ordinal=3 callback_scene=2 callback_history=1 changes=2
+event id=01000000000000800000000000000000 generation=4 ordinal=4 callback_scene=3 callback_history=1 changes=2
+[       OK ] D07.PropertiesBatchHasOneUndoWithChangedSelection (0 ms)
+[ RUN      ] D07.IndependentCommandsExposeAppliedPrefixAtEveryTwoOperationRejectionBoundary
+negative-control boundary=0 prefix=0 generation=1 history=0 observer_events=0
+negative-control boundary=1 prefix=1 generation=2 history=1 observer_events=1
+[       OK ] D07.IndependentCommandsExposeAppliedPrefixAtEveryTwoOperationRejectionBoundary (0 ms)
+[ RUN      ] D07.ManualCanonicalCompensationRestoresProjectionButDoesNotRewindMetadataOrEvents
+mechanism-only prefix_generation=2 compensated_generation=3 events=2 retained_history=1
+[       OK ] D07.ManualCanonicalCompensationRestoresProjectionButDoesNotRewindMetadataOrEvents (0 ms)
+[ RUN      ] D07.RealScenePublicationFaultsRetainCommittedHistoryAndRecoverCoherently
+single-operation publication_checkpoint=0 accepted=1 generation=2 scene=2 events=1
+single-operation publication_checkpoint=1 accepted=1 generation=3 scene=3 events=2
+single-operation publication_checkpoint=2 accepted=1 generation=4 scene=4 events=3
+single-operation publication_checkpoint=3 accepted=1 generation=5 scene=5 events=4
+single-operation publication_checkpoint=4 accepted=1 generation=6 scene=6 events=5
+single-operation publication_checkpoint=5 accepted=1 generation=7 scene=7 events=6
+single-operation publication_checkpoint=6 accepted=1 generation=8 scene=8 events=7
+single-operation publication_checkpoint=7 accepted=1 generation=9 scene=9 events=8
+single-operation publication_checkpoint=8 accepted=1 generation=10 scene=10 events=9
+single-operation publication_checkpoint=9 accepted=1 generation=11 scene=11 events=10
+[       OK ] D07.RealScenePublicationFaultsRetainCommittedHistoryAndRecoverCoherently (1 ms)
+[ RUN      ] D07.TwoIndependentCommandsNeedTwoUndoUnits
+[       OK ] D07.TwoIndependentCommandsNeedTwoUndoUnits (1 ms)
+[ RUN      ] D07.CapturedExpectationsRejectUndoConflictWithoutCursorOrRedoMutation
+[       OK ] D07.CapturedExpectationsRejectUndoConflictWithoutCursorOrRedoMutation (0 ms)
+[ RUN      ] D07.RequiredMultiIntentEntryIsUnavailable_RED
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\verification\fc04_d07\audit_test.cpp(436): error: Value of: accepted
+  Actual: false
+Expected: true
+D07 not closed: the available real Runtime batch port rejects this coherent forward sequence; no production IntentPlan entry found. This is not a defect in its fail-closed guard.
+
+[  FAILED  ] D07.RequiredMultiIntentEntryIsUnavailable_RED (0 ms)
+[ RUN      ] D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\verification\fc04_d07\audit_test.cpp(445): error: Expected equality of these values:
+  read().objects
+    Which is: { 464-byte object <01-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 10-12 A5-B9 1F-02 00-00 11-12 A5-B9 1F-02 00-00 ... 00-00 00-00 00-40 6F-40 00-00 00-00 00-00 3E-40 20-91 A2-B9 1F-02 00-00 D0-10 A4-B9 1F-02 00-00 00-91 A2-B9 1F-02 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 464-byte object <02-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-01 00-00 01-00 00-00 25-00 00-00 00-00 00-00 03-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 F0-14 A5-B9 1F-02 00-00 F1-14 A5-B9 1F-02 00-00 ... 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-01 00-00 05-00 00-00 00-00 48-43 00-00 F0-41 00-00 5C-43 00-00 48-42 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 464-byte object <03-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 00-00 00-00 00-00 00-00 D0-CC A5-B9 1F-02 00-00 00-00 00-00 00-00 3E-40 A0-15 A5-B9 1F-02 00-00 A1-15 A5-B9 1F-02 00-00 ... 03-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+  before.objects
+    Which is: { 464-byte object <01-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 50-14 A5-B9 1F-02 00-00 51-14 A5-B9 1F-02 00-00 ... 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 464-byte object <02-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 25-00 00-00 00-00 00-00 03-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 B0-13 A5-B9 1F-02 00-00 B1-13 A5-B9 1F-02 00-00 ... 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 464-byte object <03-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 01-00 00-00 01-00 00-00 00-00 00-00 00-00 00-00 D0-CC A5-B9 1F-02 00-00 00-00 00-00 00-00 00-00 C0-12 A5-B9 1F-02 00-00 C1-12 A5-B9 1F-02 00-00 ... 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+D07 not closed: sequencing ordinary commands is not a HistoryGroup and cannot be used as the missing coordinator.
+
+[  FAILED  ] D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED (1 ms)
+[----------] 12 tests from D07 (12 ms total)
+
+[----------] Global test environment tear-down
+[==========] 12 tests from 1 test suite ran. (12 ms total)
+[  PASSED  ] 10 tests.
+[  FAILED  ] 2 tests, listed below:
+[  FAILED  ] D07.RequiredMultiIntentEntryIsUnavailable_RED
+[  FAILED  ] D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED
+
+ 2 FAILED TESTS

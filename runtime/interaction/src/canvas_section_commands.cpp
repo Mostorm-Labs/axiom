@@ -238,10 +238,12 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionIntent(const runtime
 runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtime::SectionIntent& intent,
     const semantic::SetTransformsOp* confirmedDrop) noexcept {
     using A=runtime::SectionAction;using Failure=runtime::SectionFailure;
+    const bool groupWrap=intent.action==A::kGroup;
+    const bool groupRelease=intent.action==A::kUngroup;
     runtime::SectionOutcome result;result.objectId=intent.objectId;
     result.semanticGeneration=semanticGeneration().value();result.sceneRevision=sceneRevision();
     const auto fail=[&](Failure reason){
-        if(intent.objectId.isZero()&&(intent.action==A::kCreate||intent.action==A::kWrap))result.objectId={};
+        if(intent.objectId.isZero()&&(intent.action==A::kCreate||intent.action==A::kWrap||groupWrap))result.objectId={};
         result.failure=reason;return result;
     };
     try {
@@ -258,6 +260,8 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtim
         const bool selectionOnly=intent.action==A::kSelect||intent.action==A::kSelectChildren||intent.action==A::kEnterGroupScope||intent.action==A::kLeaveGroupScope;
         if(!selectionOnly) {
             auto checked=chosen;if(object)checked.push_back(object->id);if(intent.parentId)checked.push_back(*intent.parentId);
+            if((groupWrap||groupRelease)&&std::any_of(checked.begin(),checked.end(),[&](auto id){return !textWritable(id);}))
+                return fail(Failure::kInvalidTarget);
             if(const auto scope=selection_.groupScope())
                 for(auto id:checked)if(!under(id,*scope,semanticObjects_))return fail(Failure::kInvalidHierarchy);
             for(auto id:checked)if(const auto* record=sceneCoordinator_->runtimeScene().find(id))
@@ -313,15 +317,15 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtim
             if(intent.action==A::kCreate&&!parent)parent=selection_.groupScope();
             const auto& projection=sceneCoordinator_->runtimeScene();
             if(parent&&!container(semanticObjects_.find(*parent)))return fail(Failure::kInvalidHierarchy);
-            if(intent.action==A::kWrap) {
-                if(chosen.empty())return fail(Failure::kInvalidTarget);
+            if(intent.action==A::kWrap||groupWrap) {
+                if(chosen.empty()||(groupWrap&&chosen.size()<2U))return fail(Failure::kInvalidTarget);
                 // Nearest common parent, including root, from the existing forest.
                 parent=semanticObjects_.find(chosen.front())->placement.parent_id;
                 while(parent&&std::any_of(chosen.begin(),chosen.end(),[&](auto id){return !under(id,*parent,semanticObjects_);}))
                     parent=semanticObjects_.find(*parent)->placement.parent_id;
             }
-            if(intent.action==A::kRelease) {
-                if(!object||object->kind!=ObjectKind::kSection)return fail(Failure::kInvalidTarget);
+            if(intent.action==A::kRelease||groupRelease) {
+                if(!object || object->kind!=(groupRelease?ObjectKind::kGroup:ObjectKind::kSection))return fail(Failure::kInvalidTarget);
                 parent=object->placement.parent_id;chosen.clear();
                 for(const auto& child:semanticObjects_.children(object->id))chosen.push_back(child.id);
                 edit.effect=ReleaseWrappersEffect{{*object}};
@@ -329,25 +333,26 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtim
                 if(chosen.empty())return fail(Failure::kInvalidTarget);
                 if(parent&&std::any_of(chosen.begin(),chosen.end(),[&](auto id){return under(*parent,id,semanticObjects_);}))return fail(Failure::kInvalidHierarchy);
                 edit.effect=RelocateObjectsEffect{};
-            } else if(intent.action!=A::kCreate&&intent.action!=A::kWrap)return fail(Failure::kUnsupported);
+            } else if(intent.action!=A::kCreate&&intent.action!=A::kWrap&&!groupWrap)return fail(Failure::kUnsupported);
             Transform2D parentWorld{};
             if(const auto scope=selection_.groupScope();scope&&(!parent||!under(*parent,*scope,semanticObjects_)))return fail(Failure::kInvalidHierarchy);
             if(parent) {const auto* p=projection.find(*parent);if(!p)return fail(Failure::kProjectionUnavailable);parentWorld=p->transform;}
             Transform2D parentInverse{};
-            if(intent.action==A::kWrap&&!scene::inverseTransform(parentWorld,parentInverse))return fail(Failure::kNumericRange);
+            if((intent.action==A::kWrap||groupWrap)&&!scene::inverseTransform(parentWorld,parentInverse))return fail(Failure::kNumericRange);
             const auto selected=[&](ObjectId id){return std::find(chosen.begin(),chosen.end(),id)!=chosen.end();};
             // Canonical path traversal, not caller ordering, defines member order.
             std::stable_sort(chosen.begin(),chosen.end(),[&](auto a,auto b){
                 return std::find_if(projection.records().begin(),projection.records().end(),[&](const auto& r){return r.objectId==a;})<
                        std::find_if(projection.records().begin(),projection.records().end(),[&](const auto& r){return r.objectId==b;});
             });
-            const bool introduce=intent.action==A::kCreate||intent.action==A::kWrap;
+            const bool introduce=intent.action==A::kCreate||intent.action==A::kWrap||groupWrap;
             ObjectRecord wrapper{};
             if(introduce) {
                 wrapper.id=intent.objectId.isZero()?allocateTextIdentity():intent.objectId;
                 if(wrapper.id.isZero()||semanticObjects_.contains(wrapper.id))return fail(Failure::kInvalidTarget);
-                wrapper.kind=ObjectKind::kSection;wrapper.kind_version=1;wrapper.placement.parent_id=parent;
-                wrapper.transform=intent.action==A::kWrap?Transform2D{}:intent.transform;wrapper.content=intent.content;
+                wrapper.kind=groupWrap?ObjectKind::kGroup:ObjectKind::kSection;wrapper.kind_version=1;wrapper.placement.parent_id=parent;
+                wrapper.transform=(intent.action==A::kWrap||groupWrap)?Transform2D{}:intent.transform;
+                if(groupWrap)wrapper.content=GroupContent{};else wrapper.content=intent.content;
                 result.objectId=wrapper.id;
                 if(intent.action==A::kWrap) {
                     bool have=false;double l=0,t=0,r=0,b=0;
@@ -372,7 +377,7 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtim
             }
             auto destination=semanticObjects_.children(parent);
             std::vector<ObjectId> finalOrder;std::size_t insertion=destination.size();
-            if(intent.action==A::kWrap) {
+            if(intent.action==A::kWrap||groupWrap) {
                 insertion=0;
                 for(std::size_t i=0;i<destination.size();++i)
                     if(std::any_of(chosen.begin(),chosen.end(),[&](auto id){return under(id,destination[i].id,semanticObjects_);}))insertion=i+1;
@@ -380,7 +385,7 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtim
             for(std::size_t i=0;i<=destination.size();++i) {
                 if(introduce&&i==insertion)finalOrder.push_back(wrapper.id);
                 if(i==destination.size())break;
-                if(intent.action==A::kRelease&&destination[i].id==object->id)finalOrder.insert(finalOrder.end(),chosen.begin(),chosen.end());
+                if((intent.action==A::kRelease||groupRelease)&&destination[i].id==object->id)finalOrder.insert(finalOrder.end(),chosen.begin(),chosen.end());
                 else if(!selected(destination[i].id))finalOrder.push_back(destination[i].id);
             }
             if(intent.action==A::kReparent)finalOrder.insert(finalOrder.end(),chosen.begin(),chosen.end());
@@ -391,7 +396,7 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtim
                 else if(!selected(id)&&semanticObjects_.find(id)->placement.order_key!=key)edit.order_only_edits.push_back({id,key});
             }
             const auto destinationWorld=introduce?scene::composeTransform(parentWorld,wrapper.transform):parentWorld;
-            if(introduce&&!renderableBoundary(std::get<SectionContent>(wrapper.content),destinationWorld))return fail(Failure::kNumericRange);
+            if(introduce&&!groupWrap&&!renderableBoundary(std::get<SectionContent>(wrapper.content),destinationWorld))return fail(Failure::kNumericRange);
             Transform2D inverse{};
             if(!chosen.empty()&&!scene::inverseTransform(destinationWorld,inverse))return fail(Failure::kNumericRange);
             for(std::size_t i=0;i<chosen.size();++i) {
@@ -431,10 +436,10 @@ runtime::SectionOutcome CanvasEditingRuntime::executeSectionCommand(const runtim
                 ancestor=record->placement.parent_id;
             }
             if(introduce)(void)afterSelection.click(outerGroup.value_or(wrapper.id));
-            else if(intent.action==A::kRelease) {
+            else if(intent.action==A::kRelease||groupRelease) {
                 std::vector<HitCandidate> candidates;
                 for(auto id:chosen) {
-                    const auto resolved=selection_.resolveHit(id,semanticObjects_);
+                    const auto resolved=groupRelease?outerGroup.value_or(id):selection_.resolveHit(id,semanticObjects_);
                     if(!resolved.isZero())candidates.push_back({resolved,true,false});
                 }
                 (void)afterSelection.marquee(candidates);

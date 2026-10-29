@@ -150,6 +150,59 @@ void IncrementalRuntimeCoordinator::abortPublication() noexcept {
     publicationGate_.observationContext = nullptr;
 }
 
+bool IncrementalRuntimeCoordinator::prepareIntent(const ISemanticSceneCompiler& compiler,
+                                                   const SceneCommitInput& input) {
+    if (intentScene_ || intentRuntime_ || publicationGate_.transactionActive ||
+        input.changes == nullptr || input.before_generation != runtimeScene_.generation() ||
+        input.after_generation != input.post_state.generation() ||
+        input.changes->beforeGeneration() != input.before_generation ||
+        input.changes->afterGeneration() != input.after_generation ||
+        input.after_generation <= input.before_generation) return false;
+    try {
+        if (checkpointFails(RuntimeCheckpoint::kBeforeRuntimePrepare)) return false;
+        auto runtime = runtimeScene_.prepare(input.post_state);
+        if (!runtime) return false;
+        if (checkpointFails(RuntimeCheckpoint::kAfterRuntimePrepare)) return false;
+        const TextBoundsCompiler textCompiler(compiler, runtime.value().projection, binding_._scene);
+        const auto& effective = (textLayoutService_ || deferConnectorRoutes_)
+            ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler;
+        if (checkpointFails(RuntimeCheckpoint::kBeforeBoundsPrepare)) return false;
+        auto snapshot = effective.compileFull(input.post_state);
+        if (!snapshot) return false;
+        if (checkpointFails(RuntimeCheckpoint::kAfterBoundsPrepare)) return false;
+        auto scene = binding_._scene.prepareIntent(std::move(snapshot.value()), input.after_generation,
+                                                    &IncrementalRuntimeCoordinator::transactionCheckpoint, this);
+        if (!scene) return false;
+        intentRuntime_ = std::move(runtime.value());
+        intentScene_ = std::move(scene.value());
+        return true;
+    } catch (const std::bad_alloc&) {
+        abortIntent();
+        return false;
+    }
+}
+
+bool IncrementalRuntimeCoordinator::intentBasisMatches() const noexcept {
+    return intentScene_ && intentRuntime_ &&
+           runtimeScene_.generation() == intentScene_->basisGeneration &&
+           binding_._scene.intentBasisMatches(*intentScene_);
+}
+
+void IncrementalRuntimeCoordinator::commitIntent() noexcept {
+    // The owner must check intentBasisMatches() before starting canonical writes.
+    if (!intentScene_ || !intentRuntime_) return;
+    binding_._scene.commitIntent(std::move(intentScene_));
+    runtimeScene_.publish(std::move(*intentRuntime_));
+    intentRuntime_.reset();
+    if (testPublicationObserver_ != nullptr)
+        testPublicationObserver_(testPublicationObserverContext_);
+}
+
+void IncrementalRuntimeCoordinator::abortIntent() noexcept {
+    intentScene_.reset();
+    intentRuntime_.reset();
+}
+
 
 foundation::Result<RuntimeUpdatePlan> IncrementalRuntimeCoordinator::plan(
     const semantic::SemanticReadView& postState,

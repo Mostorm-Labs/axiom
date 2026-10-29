@@ -436,6 +436,7 @@ void CanvasEditingRuntime::resetTouchTextTap() noexcept {
 
 bool CanvasEditingRuntime::beginShapeTextEditAt(float x, float y,
                                                 semantic::ObjectId expected) {
+    if (!textTool_ && selectionAcquisitionMode_!=runtime::CanvasSelectionMode::kPoint) return false;
     auto* editor = interaction_->textSession();
     if (!editor || expected.isZero() || selection_.primary() != expected ||
         !textWritable(expected) || hitTextAtView(x, y) != expected)
@@ -490,10 +491,20 @@ bool CanvasEditingRuntime::observeTouchTextTap(const input::PointerSample& sampl
                 contact.moved = true;
             }
         }
-        const auto object = hitTextAtView(sample.x, sample.y);
+        auto object = hitTextAtView(sample.x, sample.y);
+        bool grouped=false;
+        const auto* selected=semanticObjects_.find(selection_.primary());
+        if (selected && selected->kind==semantic::ObjectKind::kGroup) {
+            const auto world=viewportController_->viewToContent(sample.x,sample.y);
+            const auto hit=selectionPointHits({world.first,world.second});
+            if (hit && !hit.value().frontToBack.empty()) {
+                const auto candidate=hit.value().frontToBack.front();
+                if (resolveSelectionRoot(candidate)==selected->id) {object=candidate;grouped=true;}
+            }
+        }
         const auto* record = object.isZero() ? nullptr : semanticObjects_.find(object);
         touchTapContacts_.insert_or_assign(
-            sample.key, TouchTapContact{record && (record->kind == semantic::ObjectKind::kShape ||
+            sample.key, TouchTapContact{record && (grouped || record->kind == semantic::ObjectKind::kShape ||
                                                    record->kind == semantic::ObjectKind::kSticky)
                                             ? object : semantic::ObjectId{},
                                         sample.x, sample.y, sample.timestampNs, false});
@@ -536,10 +547,13 @@ bool CanvasEditingRuntime::observeTouchTextTap(const input::PointerSample& sampl
         (sample.x - previousTouchTap_->x) * (sample.x - previousTouchTap_->x) +
                 (sample.y - previousTouchTap_->y) * (sample.y - previousTouchTap_->y) <=
             kDoubleTapSlop * kDoubleTapSlop &&
-        selection_.primary() == current.object;
+        selection_.primary() == resolveSelectionRoot(current.object);
     if (isDoubleTap) {
         previousTouchTap_.reset();
         if (touchTapContacts_.empty()) touchTapMultiContact_ = false;
+        const auto* selected=semanticObjects_.find(selection_.primary());
+        if (selected && selected->kind==semantic::ObjectKind::kGroup)
+            return enterGroupAtViewPoint(sample.x,sample.y);
         return beginShapeTextEditAt(sample.x, sample.y, current.object);
     }
 

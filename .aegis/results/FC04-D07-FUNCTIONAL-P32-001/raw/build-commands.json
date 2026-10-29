@@ -1,0 +1,30 @@
+[
+  {
+    "name": "native-build",
+    "command": [
+      "cmd.exe",
+      "/c",
+      "out\\d07-functional\\build-all.cmd"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "wasm-build",
+    "command": [
+      "cmd.exe",
+      "/c",
+      "call \"C:\\Users\\Chado\\AppData\\Local\\Axiom\\toolchains\\emsdk-6.0.6\\emsdk_env.bat\" >nul 2>&1 && cmake --build out/d07-functional/web-build --target axiom_fc04_d07_web_intent axiom_canvas_demo_web --parallel 8"
+    ],
+    "exit_code": 1
+  },
+  {
+    "name": "wasm-build-retry",
+    "command": [
+      "cmd.exe",
+      "/c",
+      "out\\d07-functional\\build-web.cmd"
+    ],
+    "exit_code": 0,
+    "reason": "correct Windows cmd quoting; preserve failed first invocation"
+  }
+]

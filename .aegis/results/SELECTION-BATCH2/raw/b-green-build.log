@@ -1,0 +1,115 @@
+[0/2] Re-checking globbed directories...
+[1/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_engine.pb.cc.obj
+[2/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\rich_text_state.cpp.obj
+[3/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\container_operation_mapping.cpp.obj
+[4/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot.cpp.obj
+[5/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\protobuf_object_mapping.cpp.obj
+[6/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\container_operations.pb.cc.obj
+[7/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\codec.cpp.obj
+[8/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot_bootstrap.cpp.obj
+[9/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_stroke.pb.cc.obj
+[10/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\connector.pb.cc.obj
+[11/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\common.pb.cc.obj
+[12/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\geometry.pb.cc.obj
+[13/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\erase_mask.pb.cc.obj
+[14/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\paint.pb.cc.obj
+[15/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\object.pb.cc.obj
+[16/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\property.pb.cc.obj
+[17/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\operation.pb.cc.obj
+[18/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\section.pb.cc.obj
+[19/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\rich_text.pb.cc.obj
+[20/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\snapshot.pb.cc.obj
+[21/42] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\vector_path.pb.cc.obj
+[22/42] Linking CXX static library runtime\semantic\canvas_runtime_semantic.lib
+[23/42] Building CXX object runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\scene.cpp.obj
+[24/42] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_editing_runtime.cpp.obj
+FAILED: runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_editing_runtime.cpp.obj 
+C:\PROGRA~1\MICROS~3\18\COMMUN~1\VC\Tools\MSVC\1451~1.362\bin\Hostx64\x64\cl.exe  /nologo /TP -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_RELEASE -D_HAS_ITERATOR_DEBUGGING=0 -D_ITERATOR_DEBUG_LEVEL=0 -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\scene\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\text\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\foundation\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\semantic\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\input\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\render\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\ink\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\nlohmann-json\single_include /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MT /W4 /permissive- /WX /EHsc /showIncludes /Foruntime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_editing_runtime.cpp.obj /Fdruntime\interaction\CMakeFiles\canvas_runtime_editor.dir\canvas_runtime_editor.pdb /FS -c C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_editing_runtime.cpp
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_editing_runtime.cpp(1467): error C3861: 'selectionPointHits': identifier not found
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_editing_runtime.cpp(1477): error C3536: 'selectedId': cannot be used before it is initialized
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_editing_runtime.cpp(1964): error C3861: 'selectionPointHits': identifier not found
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_editing_runtime.cpp(1967): error C3536: 'selectedId': cannot be used before it is initialized
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_editing_runtime.cpp(2174): error C3861: 'selectionPointHits': identifier not found
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_editing_runtime.cpp(2177): error C3536: 'hitId': cannot be used before it is initialized
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_editing_runtime.cpp(2177): error C3535: cannot deduce type for 'const auto *' from '<error>'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_editing_runtime.cpp(2181): error C3536: 'parent': cannot be used before it is initialized
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_editing_runtime.cpp(2185): error C2088: built-in operator '==' cannot be applied to an operand of type 'canvas::foundation::ObjectId'
+[25/42] Linking CXX static library runtime\scene\canvas_runtime_scene.lib
+[26/42] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_region_selection.cpp.obj
+FAILED: runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_region_selection.cpp.obj 
+C:\PROGRA~1\MICROS~3\18\COMMUN~1\VC\Tools\MSVC\1451~1.362\bin\Hostx64\x64\cl.exe  /nologo /TP -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_RELEASE -D_HAS_ITERATOR_DEBUGGING=0 -D_ITERATOR_DEBUG_LEVEL=0 -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\scene\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\text\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\foundation\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\semantic\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\input\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\render\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\ink\include -IC:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\nlohmann-json\single_include /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MT /W4 /permissive- /WX /EHsc /showIncludes /Foruntime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_region_selection.cpp.obj /Fdruntime\interaction\CMakeFiles\canvas_runtime_editor.dir\canvas_runtime_editor.pdb /FS -c C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(53): error C2039: 'selectionPointHits': is not a member of 'canvas::interaction::CanvasEditingRuntime'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\include\canvas/interaction/canvas_editing_runtime.hpp(137): note: see declaration of 'canvas::interaction::CanvasEditingRuntime'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(53): error C2270: 'selectionPointHits': modifiers not allowed on nonmember functions
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(54): error C2065: 'runtimeSceneHost_': undeclared identifier
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(54): error C3861: 'historySceneReady': identifier not found
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): error C2065: 'runtimeSceneHost_': undeclared identifier
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): error C2065: 'semanticObjects_': undeclared identifier
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): error C2664: '_Ty std::max<size_t>(std::initializer_list<_Ty>)': cannot convert argument 1 from 'int' to 'std::initializer_list<_Ty>'
+        with
+        [
+            _Ty=size_t
+        ]
+        and
+        [
+            _Ty=unsigned __int64
+        ]
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): note: 'std::initializer_list<_Ty>::initializer_list': no overloaded function could convert all the argument types
+        with
+        [
+            _Ty=unsigned __int64
+        ]
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\initializer_list(65): note: could be 'std::initializer_list<_Ty>::initializer_list(std::initializer_list<_Ty> &&)'
+        with
+        [
+            _Ty=unsigned __int64
+        ]
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): note: 'std::initializer_list<_Ty>::initializer_list(std::initializer_list<_Ty> &&)': cannot convert argument 1 from 'int' to 'std::initializer_list<_Ty> &&'
+        with
+        [
+            _Ty=unsigned __int64
+        ]
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): note: Reason: cannot convert from 'int' to 'std::initializer_list<_Ty>'
+        with
+        [
+            _Ty=unsigned __int64
+        ]
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): note: Conversion requires a second user-defined-conversion operator or constructor
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\initializer_list(65): note: or       'std::initializer_list<_Ty>::initializer_list(const std::initializer_list<_Ty> &)'
+        with
+        [
+            _Ty=unsigned __int64
+        ]
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): note: 'std::initializer_list<_Ty>::initializer_list(const std::initializer_list<_Ty> &)': cannot convert argument 1 from 'int' to 'const std::initializer_list<_Ty> &'
+        with
+        [
+            _Ty=unsigned __int64
+        ]
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): note: Reason: cannot convert from 'int' to 'const std::initializer_list<_Ty>'
+        with
+        [
+            _Ty=unsigned __int64
+        ]
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): note: Conversion requires a second user-defined-conversion operator or constructor
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): note: while trying to match the argument list '(int)'
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xutility(7505): note: see declaration of 'std::max'
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\utility(85): note: could be '_Ty std::max(std::initializer_list<_Elem>,_Pr)'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): note: '_Ty std::max(std::initializer_list<_Elem>,_Pr)': expects 2 arguments - 1 provided
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\utility(77): note: or       'const _Ty &std::max(const _Ty &,const _Ty &) noexcept(<expr>)'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): note: 'const _Ty &std::max(const _Ty &,const _Ty &) noexcept(<expr>)': expects 2 arguments - 1 provided
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\utility(67): note: or       'const _Ty &std::max(const _Ty &,const _Ty &,_Pr) noexcept(<expr>)'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): note: 'const _Ty &std::max(const _Ty &,const _Ty &,_Pr) noexcept(<expr>)': expects 3 arguments - 1 provided
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(56): note: while trying to match the argument list '(int)'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(57): error C3536: 'result': cannot be used before it is initialized
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(58): error C2530: 'ids': references must be initialized
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(59): error C3536: 'ids': cannot be used before it is initialized
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(59): error C2672: 'std::remove_if': no matching overloaded function found
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\algorithm(5111): note: could be '_FwdIt std::remove_if(_ExPo &&,_FwdIt,_FwdIt,_Pr) noexcept'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(59): note: '_FwdIt std::remove_if(_ExPo &&,_FwdIt,_FwdIt,_Pr) noexcept': expects 4 arguments - 2 provided
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include\xmemory(2383): note: or       '_FwdIt std::remove_if(_FwdIt,const _FwdIt,_Pr)'
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(59): note: '_FwdIt std::remove_if(_FwdIt,const _FwdIt,_Pr)': expects 3 arguments - 2 provided
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\src\canvas_region_selection.cpp(57): warning C4390: ';': empty controlled statement found; is this the intent?
+[27/42] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_text_geometry.cpp.obj
+[28/42] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_connector_routing.cpp.obj
+[29/42] Building CXX object runtime\interaction\CMakeFiles\canvas_runtime_editor.dir\src\canvas_section_commands.cpp.obj
+ninja: build stopped: subcommand failed.

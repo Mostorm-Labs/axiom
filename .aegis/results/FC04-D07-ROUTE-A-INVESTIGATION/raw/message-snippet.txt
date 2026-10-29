@@ -1,0 +1,25 @@
+1179:   // Last non weak field index. This is an optimization when most weak fields
+1180:   // are at the end of the containing message. If a message proto doesn't
+1181:   // contain weak fields, then this field equals descriptor_->field_count().
+1182:   int last_non_weak_field_index_;
+1183:   // The table-driven parser table.
+1184:   // This table is generated on demand for Message types that did not override
+1185:   // _InternalParse. It uses the reflection information to do so.
+1186:   mutable absl::once_flag tcparse_table_once_;
+1187: 
+1188:   const Descriptor* const descriptor_;
+1189:   MessageFactory* const message_factory_;
+1190:   const DescriptorPool* const descriptor_pool_;
+1191: 
+1192:   const internal::ReflectionSchema schema_;
+1193: 
+1194:   using TcParseTableBase = internal::TcParseTableBase;
+1195:   mutable const TcParseTableBase* tcparse_table_ = nullptr;
+1196: 
+1197:   const TcParseTableBase* GetTcParseTable() const {
+1198:     absl::call_once(tcparse_table_once_,
+1199:                     [&] { tcparse_table_ = CreateTcParseTable(); });
+1200:     return tcparse_table_;
+1201:   }
+1202: 
+1203:   const TcParseTableBase* CreateTcParseTable() const;

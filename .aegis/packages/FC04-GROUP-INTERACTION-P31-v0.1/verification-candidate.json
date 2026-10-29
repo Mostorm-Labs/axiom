@@ -1,0 +1,51 @@
+{
+  "status": "DRAFT_NOT_FROZEN",
+  "cases": [
+    {
+      "id": "GROUP-01",
+      "input": "two selected roots with different kinds and world translations (10,20) and (40,60)",
+      "expected": "one Group; both world transforms and canonical member order retained; Group selected; one Undo and Redo exactly restore states"
+    },
+    {
+      "id": "GROUP-02",
+      "input": "selected Group containing two roots under a transformed parent",
+      "expected": "release only wrapper; both world transforms retained; resulting roots selected; one Undo/Redo restores"
+    },
+    {
+      "id": "GROUP-03",
+      "input": "nested Group/Section including parent rotation and scale",
+      "expected": "existing scope and hierarchy semantics preserved; Group unwrapping retains Section world coordinates within accepted P12 error budget"
+    },
+    {
+      "id": "GROUP-04",
+      "input": "Group drop-in, drop-out, cancel and invalid cycle",
+      "expected": "successful relocations keep pose and coherent History; cancel/rejected operations leave document, scene and History unchanged"
+    },
+    {
+      "id": "GROUP-05",
+      "input": "stale selection, locked object and injected prepare failure",
+      "expected": "whole accepted cohort rejects before commit with no partial document, scene or History change"
+    },
+    {
+      "id": "GROUP-06",
+      "input": "Windows native and actual Chrome/WASM ordinary consumer entry with synthetic mouse/touch facts",
+      "expected": "same canonical identities, selection and Undo/Redo results; actual physical inputs deferred"
+    }
+  ],
+  "test_source_proposal": "verification/fc08_group/group_interaction_test.cpp",
+  "runner_status": "NOT_MATERIALIZED",
+  "independent_oracles": "expected states computed from literal seeded transforms and accepted P12/P13, not production planner",
+  "required_regressions": [
+    "FC08SectionConsumer",
+    "FC01SelectedActions",
+    "FC03ImageFacade",
+    "FC05ConnectorFacade",
+    "FC05ConnectorDragPreview",
+    "MSE-03",
+    "MSE-15",
+    "MSE-22",
+    "MSE-24",
+    "MSE-25"
+  ],
+  "physical_status": "DEFERRED_BY_USER"
+}

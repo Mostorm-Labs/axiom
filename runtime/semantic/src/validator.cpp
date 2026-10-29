@@ -720,6 +720,10 @@ ValidationResult invalidPropertyPatch() noexcept {
 
 } // namespace
 
+bool propertyAppliesToObjectKind(ObjectKind kind,std::uint32_t fieldId) noexcept {
+    return fieldAppliesToObjectKind(kind,fieldId);
+}
+
 bool internal::validateSectionContent(const SectionContent& content) noexcept {
     return validSection(content);
 }

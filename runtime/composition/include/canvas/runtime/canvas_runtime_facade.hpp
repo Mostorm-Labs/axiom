@@ -19,6 +19,7 @@
 namespace canvas::runtime {
 
 class RuntimeComposition;
+struct MultiSelectionControlWork;
 
 // Shared product-control owner used by Minimal, Playground, Windows and Web.
 // It owns one CanvasControlService queue and binds it to an existing
@@ -64,6 +65,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   [[nodiscard]] ConnectorSnapshot readConnectorState(semantic::ObjectId) const override;
   [[nodiscard]] StickySnapshot readSelectedSticky() const override;
   [[nodiscard]] SectionSnapshot readSection(foundation::ObjectId = {}) const override;
+    [[nodiscard]] SelectionSummary readSelectionSummary() const override;
   CanvasRuntimeFacade(const CanvasRuntimeFacade&) = delete;
   CanvasRuntimeFacade& operator=(const CanvasRuntimeFacade&) = delete;
 
@@ -93,6 +95,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   // reach the concrete binding or editor.
 #endif
   friend class RuntimeComposition;
+  friend class MultiSelectionPort;
   void discardImageCrop() noexcept;
   [[nodiscard]] CanvasControlApplyResult applyControl(
       const CanvasControlRequest& request);
@@ -116,8 +119,11 @@ class CanvasRuntimeFacade : public RuntimeFacade {
       const std::vector<std::uint8_t>& bytes, const std::string& mimeType, bool commit = true);
   void imageCropPointer(const input::PointerSample&);
   [[nodiscard]] std::size_t processIngress(std::uint64_t);
+  [[nodiscard]] CanvasControlReceipt submitMultiSelection(
+      std::shared_ptr<MultiSelectionControlWork>) noexcept;
   void finishTextReceipts();
-  using Work = std::variant<CanvasControlRequest,TextIntent,TextInputEvent>;
+  using Work = std::variant<CanvasControlRequest,TextIntent,TextInputEvent,
+                            std::shared_ptr<MultiSelectionControlWork>>;
   mutable std::mutex ingressMutex_;
   std::deque<Work> ingress_;
   std::deque<CanvasControlRequest> deferredControls_;

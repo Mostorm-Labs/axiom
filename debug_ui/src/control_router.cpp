@@ -28,8 +28,31 @@ canvas::runtime::SurfaceModeReceipt unsupportedReceipt(std::uint64_t requestId) 
 DebugControlRouter::DebugControlRouter(canvas::runtime::RuntimeFacade* runtime,
                                        canvas::runtime::AxiomDebugControl* axiomDebug,
                                        canvas::runtime::PlatformDebugControl* platformDebug,
-                                       DebugActivityLog* activity) noexcept
-    : runtime_(runtime), axiomDebug_(axiomDebug), platformDebug_(platformDebug), activity_(activity) {}
+                                       DebugActivityLog* activity,
+                                       canvas::runtime::MultiSelectionPort* multiSelection) noexcept
+    : multiSelection_(multiSelection), runtime_(runtime), axiomDebug_(axiomDebug), platformDebug_(platformDebug), activity_(activity) {}
+
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+canvas::runtime::MultiSelectionSubmitReceipt DebugControlRouter::applyMultiSelectionProperty(
+    std::uint32_t field, const canvas::semantic::PropertyValue& value) noexcept {
+  hasMultiSelectionAdmission_ = true;
+  lastMultiRequest_ = 0;
+  multiSelectionAdmission_ = {};
+  if (!multiSelection_ || !multiProjection_.available) return multiSelectionAdmission_;
+  const auto property = multiProjection_.properties.find(field);
+  if (property == multiProjection_.properties.end() || !property->second.editAvailable)
+    return multiSelectionAdmission_;
+  const auto request = nextRequestId();
+  multiSelectionAdmission_ = multiSelection_->submitProperty(field, value, multiProjection_.stamp,
+                                                              property->second.eligible, 0xD002U, request);
+  if (multiSelectionAdmission_.queued) lastMultiRequest_ = request;
+  return multiSelectionAdmission_;
+}
+std::optional<canvas::runtime::MultiSelectionOutcome> DebugControlRouter::multiSelectionOutcome() const noexcept {
+  if (!multiSelection_ || lastMultiRequest_ == 0U) return {};
+  return multiSelection_->receipt(0xD002U, lastMultiRequest_);
+}
+#endif
 
 canvas::runtime::SectionSnapshot DebugControlRouter::sectionSnapshot() const {
   return runtime_?runtime_->readSection():canvas::runtime::SectionSnapshot{};
@@ -60,8 +83,32 @@ void DebugControlRouter::beginFrame(const DebugSnapshot& snapshot) noexcept {
       snapshot.platform.value.canonicalSurfaceGeneration != 0) {
     frame_.stamp.surfaceGeneration = snapshot.platform.value.canonicalSurfaceGeneration;
   }
-  frame_.selectedObjectCount = snapshot.product.value.selection.selectedObjectCount;
-  frame_.primaryObject = snapshot.product.value.selection.primaryObject;
+  const auto& summary=snapshot.selectionSummary;
+  frame_.selectionRevision=summary.selectionRevision;frame_.semanticGeneration=summary.semanticGeneration;frame_.sceneRevision=summary.sceneRevision;
+  frame_.actions=summary.actions;
+#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
+  multiProjection_ = {};
+  if (multiSelection_ && snapshot.coherence == SnapshotCoherence::kCoherent &&
+      summary.status == canvas::runtime::SelectionSummaryStatus::kAvailable) {
+    auto projection = multiSelection_->read();
+    if (projection.available && projection.roots == summary.roots &&
+        projection.stamp.selectionRevision == summary.selectionRevision &&
+        projection.stamp.semanticGeneration == summary.semanticGeneration &&
+        projection.stamp.sceneGeneration == summary.sceneGeneration &&
+        projection.stamp.sceneRevision == summary.sceneRevision)
+      multiProjection_ = std::move(projection);
+  }
+#endif
+}
+
+bool DebugControlRouter::canSubmitSelection(canvas::runtime::SelectionAction action) const noexcept {
+  const auto i=static_cast<std::size_t>(action);
+  if(!runtime_||i>=frame_.actions.size()||!frame_.actions[i].available())return false;
+  try {
+    const auto current=runtime_->readSelectionSummary();
+    return current.status==canvas::runtime::SelectionSummaryStatus::kAvailable&&current.capability(action).available()&&
+      current.selectionRevision==frame_.selectionRevision&&current.semanticGeneration==frame_.semanticGeneration&&current.sceneRevision==frame_.sceneRevision;
+  } catch(const std::bad_alloc&) { return false; }
 }
 
 std::uint64_t DebugControlRouter::nextRequestId() noexcept {
@@ -190,6 +237,16 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::setSelectionMode(bool
   recordProduct("set-selection-mode", receipt);
   if (receipt.state == canvas::runtime::ProductControlState::kQueued && receipt.control)
     pendingProduct_.emplace(receipt.control->key, "set-selection-mode");
+  return receipt;
+}
+
+canvas::runtime::ProductControlReceipt DebugControlRouter::setSelectionAcquisitionMode(canvas::runtime::CanvasSelectionMode mode) noexcept {
+  const auto id=nextRequestId();
+  auto receipt=runtime_==nullptr?unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id):
+      runtime_->setSelectionAcquisitionMode(mode,id,0xD001U);
+  recordProduct("selection-acquisition",receipt);
+  if(receipt.state==canvas::runtime::ProductControlState::kQueued&&receipt.control)
+      pendingProduct_.emplace(receipt.control->key,"selection-acquisition");
   return receipt;
 }
 
@@ -385,7 +442,7 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::localRejected(
 
 canvas::runtime::ProductControlReceipt DebugControlRouter::fitToSelection() noexcept {
   const auto id = nextRequestId();
-  if (frame_.selectedObjectCount == 0) {
+  if (!canSubmitSelection(canvas::runtime::SelectionAction::kFit)) {
     const auto receipt = localRejected(id);
     recordProduct("fit-selection", receipt);
     return receipt;
@@ -398,13 +455,13 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::fitToSelection() noex
 
 canvas::runtime::ProductControlReceipt DebugControlRouter::fitPrimaryObject() noexcept {
   const auto id = nextRequestId();
-  if (frame_.primaryObject == 0) {
+  if (!canSubmitSelection(canvas::runtime::SelectionAction::kFitPrimary)) {
     const auto receipt = localRejected(id);
     recordProduct("fit-primary", receipt);
     return receipt;
   }
   auto receipt = runtime_ == nullptr ? unsupportedReceipt<canvas::runtime::ProductControlReceipt>(id)
-                                     : runtime_->fitToObject(frame_.primaryObject, id, frame_.stamp.runtimeGeneration, 0xD001U);
+                                     : runtime_->fitToSelection(id, frame_.stamp.runtimeGeneration, 0xD001U);
   recordProduct("fit-primary", receipt);
   return receipt;
 }
@@ -412,12 +469,18 @@ canvas::runtime::ProductControlReceipt DebugControlRouter::fitPrimaryObject() no
 canvas::runtime::ProductControlReceipt DebugControlRouter::selectedAction(
     canvas::runtime::CanvasControlPayloadKind kind, bool flag) noexcept {
   const auto requestId = nextRequestId();
-  if (runtime_ == nullptr || frame_.selectedObjectCount == 0) {
+  using A=canvas::runtime::SelectionAction;using K=canvas::runtime::CanvasControlPayloadKind;
+  const auto action=kind==K::kDeleteSelected?A::kDelete:kind==K::kSelectedOrder?A::kOrder:
+      kind==K::kUnlockSelected?A::kUnlock:kind==K::kSelectedLock?(flag?A::kLock:A::kUnlock):A::kCount;
+  if (!canSubmitSelection(action)) {
     const auto receipt = localRejected(requestId);
     recordProduct("selected-action", receipt);
     return receipt;
   }
   const auto targets = runtime_->mountedCanvasTargets();
+  if(targets.empty()||targets.front().runtimeEpoch!=frame_.stamp.runtimeGeneration) {
+    const auto receipt=localRejected(requestId);recordProduct("selected-action",receipt);return receipt;
+  }
   canvas::runtime::CanvasControlRequest request{};
   request.clientId = 0xD001U;
   request.requestId = requestId;

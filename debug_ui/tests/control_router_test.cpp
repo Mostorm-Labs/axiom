@@ -24,6 +24,8 @@ struct RuntimeProbe final : runtime::RuntimeFacade {
   runtime::ProductControlState productState = runtime::ProductControlState::kApplied;
   runtime::CanvasControlReceiptState canvasState = runtime::CanvasControlReceiptState::kApplied;
   runtime::RuntimeStateSnapshot state{};
+  runtime::SelectionSummary summary{};
+  runtime::SelectionSummary readSelectionSummary() const override { return summary; }
   runtime::ProductControlRequest lastProduct{};
   runtime::CanvasControlRequest lastCanvas{};
 
@@ -471,6 +473,14 @@ int main() {
   assert(runtime.productCalls == beforeFit);
   snapshot.product.value.selection.selectedObjectCount = 1;
   snapshot.product.value.selection.primaryObject = 42;
+  // Counts are display facts, never command authority. Supply the explicit
+  // read-only capability contract for this RuntimeProbe consumer fixture.
+  auto& summary=snapshot.selectionSummary;
+  summary.status=runtime::SelectionSummaryStatus::kAvailable;summary.count=1;
+  summary.primary=foundation::ObjectId::fromUint64(42);summary.roots={summary.primary};
+  for(const auto action:{runtime::SelectionAction::kFit,runtime::SelectionAction::kFitPrimary})
+    summary.actions[static_cast<std::size_t>(action)]={runtime::SelectionCapabilityState::kAvailable,runtime::SelectionReason::kNone};
+  runtime.summary=summary;
   runtime.productState = runtime::ProductControlState::kApplied;
   router.beginFrame(snapshot);
   assert(router.fitToSelection().state == runtime::ProductControlState::kApplied);

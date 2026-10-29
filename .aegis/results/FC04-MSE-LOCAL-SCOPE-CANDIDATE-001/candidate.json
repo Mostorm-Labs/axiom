@@ -1,0 +1,34 @@
+{
+  "status": "DRAFT_NOT_ACCEPTED",
+  "source_revision": "4eee69946dad61e0fc7678f9453423066c51750c",
+  "user_decision_ref": ".aegis/results/FC04-MSE-LOCAL-PERMISSION-DECISION-v0.1/decision.json",
+  "frozen_test_ref": ".aegis/packages/FC04-MSE-PHASE2-P31-v0.4/test-matrix.json",
+  "proposals": [
+    {
+      "test": "MSE-20",
+      "observed": "local single-user mode allows; unavailable context rejects; no per-object contextual provider",
+      "candidate": "For the explicitly bounded local single-user profile, verify locked, stale, and unavailable-context rejection; preserve the per-object PermissionDenied variant as NOT_RUN for a genuine contextual permission owner, not as PASS.",
+      "decision_owner": "verification/control; do not change expected values silently"
+    },
+    {
+      "test": "MSE-26",
+      "observed": "property lookup uses a compiled static semantic applicability/default table; there is no fallible provider seam",
+      "candidate": "Determine whether an explicit required provider is part of current product architecture. If yes, bind its real owner and failure behavior; if no, version an applicability clarification backed by tests of real lookup failures and preserve the original provider-failure variant as NOT_RUN for any future dynamic provider.",
+      "decision_owner": "architecture/verification/control"
+    },
+    {
+      "test": "MSE-23",
+      "observed": "semantic and Scene precommit allocation failures are demonstrated; capability-provider and History reservation failure cases through the real typed multi-selection path are incomplete",
+      "candidate": "Bind the real History reservation site and capability failure semantics for the current runtime. Retain each remaining missing variant as NOT_RUN; do not use the already passing D07 tests as substitutes.",
+      "decision_owner": "verification/control plus actual implementation owners"
+    }
+  ],
+  "preserve": [
+    "24/27 named MSE results and all failing/missing records",
+    "accepted user local single-user policy",
+    "historical frozen cases, expected values and oracle sources",
+    "independent D07 Protobuf/Abseil OOM blocker",
+    "no PHYS before third stage completes"
+  ],
+  "no_approval_implied": true
+}

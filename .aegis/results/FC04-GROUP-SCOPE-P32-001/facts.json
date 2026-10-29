@@ -1,0 +1,41 @@
+{
+  "source_base": "4e2b629f92cd73f69dc83b4e36d7aeb4bf7ed2dc",
+  "tested_worktree_source_sha256": {
+    "debug_ui/src/panels/control.cpp": "4d5b60c61b796dd2ff06f9061d4d3fb53f2fb713026af03aa67b7292dfd44ad7",
+    "debug_ui/tests/selection_summary_ui_test.cpp": "5baa4401577e7920be545fdc4089dc66067429ae932a796ef9de569c97bf571c",
+    "runtime/composition/tests/fc08_section_consumer_test.cpp": "eb5519fda7afa0379c649a7396deb01c4f8528a5cbb851e8e106057ca4a21f54"
+  },
+  "raw_zip_sha256": "21bc4381260447f079cdf29708ddcfbb71fb5b529b1a8024b79154a3121699e6",
+  "raw_sha256": {
+    "group-scope-final.log": "7595c93fd9164a3bbdebfa86be671a315809625f7336b38a43a459bfaafba247",
+    "group-scope-final.xml": "754d296a9925eacdcb1f31057206b17018e68f16222feb4b574cc8cd940f805c",
+    "selection160-scope.log": "2c6361cc57deddfce0d50258235c273986cd6be896f853e613175f4ebd8339a9",
+    "selection160-scope.xml": "393aaa72b64362b76c80d4876ec3878ff45a8b51715d8c6c71f691e15770cd4a",
+    "selection160-names.txt": "87348d78b29571bb98ff479e51158a4c6e9383b96ef107d71def5c1c56aeb298",
+    "chrome-group-scope-final.mjs": "433debe789e12aa1dcb1e9c13b2e5aa79178f599b412be5f1c05d512f4f91058",
+    "browser-group-scope-final/results.json": "e244e750323ce3d546566eb46d06707645b1614c7d7eddffe3187418c0207d8e",
+    "browser-group-scope-observe/results.json": "60d4fc45c43d54e4e5aae8123ee51f2c3895d60d634a5a369294d823e95d864b"
+  },
+  "checks": {
+    "focused_ctest_exit": 0,
+    "focused_ctest_cases": 3,
+    "selection160_exit": 0,
+    "selection160_passed": 160,
+    "selection160_note": "run before the final extra Group-out-of-Section assertions; production sources were unchanged after that run",
+    "chrome_exit": 0,
+    "chrome_synthetic_assertions": 18,
+    "chrome_failures": 0,
+    "previous_probe_exit": 1,
+    "previous_probe_note": "intentional diagnostic attempted Ungroup after entering scope without reselecting; retained as raw observation",
+    "windows_and_web_build_exit": 0,
+    "abi_manifest_exit": 0
+  },
+  "unimplemented": [
+    "MSE-20 denied per-object provider",
+    "MSE-23 capability and history reservation fault variants",
+    "MSE-26 missing/failing property provider",
+    "explicit Group membership drag-in/out interaction and its cross-platform coverage"
+  ],
+  "physical": "NOT_RUN, deferred by user",
+  "d07_oom": "unchanged"
+}

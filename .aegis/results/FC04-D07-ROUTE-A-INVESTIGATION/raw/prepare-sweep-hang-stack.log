@@ -1,0 +1,107 @@
+Opened log file '.aegis/results/FC04-D07-AB-P32-002/raw/prepare-sweep-hang-stack.log'
+
+************* Preparing the environment for Debugger Extensions Gallery repositories **************
+   ExtensionRepository : Implicit
+   UseExperimentalFeatureForNugetShare : true
+   AllowNugetExeUpdate : true
+   NonInteractiveNuget : true
+   AllowNugetMSCredentialProviderInstall : true
+   AllowParallelInitializationOfLocalRepositories : true
+
+   EnableRedirectToV8JsProvider : false
+
+   -- Configuring repositories
+      ----> Repository : LocalInstalled, Enabled: true
+      ----> Repository : UserExtensions, Enabled: true
+
+>>>>>>>>>>>>> Preparing the environment for Debugger Extensions Gallery repositories completed, duration 0.000 seconds
+
+************* Waiting for Debugger Extensions Gallery to Initialize **************
+
+>>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.015 seconds
+   ----> Repository : UserExtensions, Enabled: true, Packages count: 0
+   ----> Repository : LocalInstalled, Enabled: true, Packages count: 29
+
+Microsoft (R) Windows Debugger Version 10.0.26100.3323 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+*** wait with pending attach
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\atlmfc.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\ObjectiveC.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\concurrency.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\cpp_rest.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\stl.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Data.Json.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Geolocation.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Sensors.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Media.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\windows.natvis'
+NatVis script successfully loaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\winrt.natvis'
+
+************* Path validation summary **************
+Response                         Time (ms)     Location
+Deferred                                       srv*
+Symbol search path is: srv*
+Executable search path is: 
+ModLoad: 00007ff7`14730000 00007ff7`1510b000   C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\out\fc04-d07-ab-p32\build\axiom_fc04_d07_postcommit_fault.exe
+ModLoad: 00007ffb`1e970000 00007ffb`1eb68000   C:\WINDOWS\SYSTEM32\ntdll.dll
+ModLoad: 00007ffb`1cc30000 00007ffb`1ccf2000   C:\WINDOWS\System32\KERNEL32.DLL
+ModLoad: 00007ffb`1c1a0000 00007ffb`1c49f000   C:\WINDOWS\System32\KERNELBASE.dll
+ModLoad: 00007ffb`19b90000 00007ffb`19d74000   C:\WINDOWS\SYSTEM32\dbghelp.dll
+ModLoad: 00007ffb`1c010000 00007ffb`1c110000   C:\WINDOWS\System32\ucrtbase.dll
+(76a8.7fe0): Break instruction exception - code 80000003 (first chance)
+ntdll!DbgBreakPoint:
+00007ffb`1ea11020 cc              int     3
+0:003> ~* kv;qd
+
+   0  Id: 76a8.5968 Suspend: 1 Teb: 0000005c`11543000 Unfrozen
+Child-SP          RetAddr               : Args to Child                                                           : Call Site
+0000005c`113ac7f8 00007ffb`1c1f5a1e     : 0000005c`113ac8b8 00000000`00000000 00000000`00000000 00000000`00000050 : ntdll!NtDelayExecution+0x14
+*** WARNING: Unable to verify checksum for C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\out\fc04-d07-ab-p32\build\axiom_fc04_d07_postcommit_fault.exe
+0000005c`113ac800 00007ff7`14856db0     : 00000161`904e0000 00000000`00000000 00007ff7`c00000bb 00000000`00000000 : KERNELBASE!SleepEx+0x9e
+0000005c`113ac8a0 00007ff7`1478f143     : 0000005c`113ae1a0 00000161`905b0000 00007ff7`14f67a48 00007ff7`1485f4ec : axiom_fc04_d07_postcommit_fault!absl::lts_20250512::base_internal::SpinLockWait+0xc0
+0000005c`113ac900 00007ff7`1478df48     : 00000161`90593200 00000161`9059ea88 00000161`90593240 00007ff7`14d23094 : axiom_fc04_d07_postcommit_fault!absl::lts_20250512::base_internal::CallOnceImpl<`google::protobuf::Reflection::GetTcParseTable'::`1'::<lambda_1> >+0x223
+0000005c`113ac940 00007ff7`14ca46c8     : 00000161`90593200 00000161`9059e680 00000161`9059ea88 00007ff7`14cc1095 : axiom_fc04_d07_postcommit_fault!google::protobuf::Message::GetMetadata+0x88
+0000005c`113ac990 00007ff7`14ca54ff     : 0000005c`113acb00 00000161`905927f0 0000005c`113acba0 0000005c`113adea0 : axiom_fc04_d07_postcommit_fault!google::protobuf::Message::GetDescriptor+0x6a8
+0000005c`113acaa0 00007ff7`149089ab     : 00000161`905927f0 00000161`905927f0 0000005c`113adea0 00000161`905b1028 : axiom_fc04_d07_postcommit_fault!canvas::semantic::SemanticCodec::measureProtobufOperation+0x14f
+0000005c`113acdb0 00007ff7`148bcaca     : 0000005c`113adee0 0000005c`113adf70 00000000`00000000 00000161`905ac1f0 : axiom_fc04_d07_postcommit_fault!canvas::interaction::prepareUndoableCommand+0xd3b
+0000005c`113adda0 00007ff7`148bc7fe     : 00007ff7`00000000 00007ff7`148acc67 0000005c`113aeb01 00000161`905ac470 : axiom_fc04_d07_postcommit_fault!canvas::interaction::CanvasEditingRuntime::prepareExplicitIntentInternal+0x2aa
+0000005c`113aeb10 00007ff7`14862d4d     : 00000161`9059f040 00007ff7`15098020 00000000`00000065 0000005c`113aebb0 : axiom_fc04_d07_postcommit_fault!canvas::interaction::CanvasEditingRuntime::prepareExplicitIntent+0x1e
+0000005c`113aeb50 00007ff7`14cfe8cf     : 00007ff7`14f7adc0 00007ff7`14cfe949 00000000`00000000 00000000`00000000 : axiom_fc04_d07_postcommit_fault!main+0xbcd
+(Inline Function) --------`--------     : --------`-------- --------`-------- --------`-------- --------`-------- : axiom_fc04_d07_postcommit_fault!invoke_main+0x22 (Inline Function @ 00007ff7`14cfe8cf)
+0000005c`113afef0 00007ffb`1cc47374     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : axiom_fc04_d07_postcommit_fault!__scrt_common_main_seh+0x10f
+0000005c`113aff30 00007ffb`1e9bcc91     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : KERNEL32!BaseThreadInitThunk+0x14
+0000005c`113aff60 00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!RtlUserThreadStart+0x21
+
+   1  Id: 76a8.6cd4 Suspend: 1 Teb: 0000005c`11545000 Unfrozen
+Child-SP          RetAddr               : Args to Child                                                           : Call Site
+0000005c`116ff458 00007ffb`1e9bd407     : 00000000`00000000 00000000`00000000 00000161`905787c0 00000161`90578e50 : ntdll!NtWaitForWorkViaWorkerFactory+0x14
+0000005c`116ff460 00007ffb`1cc47374     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!TppWorkerThread+0x2f7
+0000005c`116ff760 00007ffb`1e9bcc91     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : KERNEL32!BaseThreadInitThunk+0x14
+0000005c`116ff790 00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!RtlUserThreadStart+0x21
+
+   2  Id: 76a8.67b8 Suspend: 1 Teb: 0000005c`11547000 Unfrozen
+Child-SP          RetAddr               : Args to Child                                                           : Call Site
+0000005c`117ff8f8 00007ffb`1e9bd407     : 00000000`0001000b 00000000`00000001 00000161`00000001 00000000`00000000 : ntdll!NtWaitForWorkViaWorkerFactory+0x14
+0000005c`117ff900 00007ffb`1cc47374     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!TppWorkerThread+0x2f7
+0000005c`117ffc00 00007ffb`1e9bcc91     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : KERNEL32!BaseThreadInitThunk+0x14
+0000005c`117ffc30 00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!RtlUserThreadStart+0x21
+
+#  3  Id: 76a8.7fe0 Suspend: 1 Teb: 0000005c`11549000 Unfrozen
+Child-SP          RetAddr               : Args to Child                                                           : Call Site
+0000005c`118ffec8 00007ffb`1ea3ca7e     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!DbgBreakPoint
+0000005c`118ffed0 00007ffb`1cc47374     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!DbgUiRemoteBreakin+0x4e
+0000005c`118fff00 00007ffb`1e9bcc91     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : KERNEL32!BaseThreadInitThunk+0x14
+0000005c`118fff30 00000000`00000000     : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : ntdll!RtlUserThreadStart+0x21
+quit:
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\atlmfc.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\ObjectiveC.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\concurrency.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\cpp_rest.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\stl.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Data.Json.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Geolocation.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Devices.Sensors.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\Windows.Media.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\windows.natvis'
+NatVis script unloaded from 'C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\Visualizers\winrt.natvis'

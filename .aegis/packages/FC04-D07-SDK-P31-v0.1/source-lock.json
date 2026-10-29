@@ -1,0 +1,126 @@
+{
+  "algorithm": "git-blob-sha1",
+  "subject": "3d15645d54d44c47474b4b0dd6ca20ade1e3c633",
+  "files": [
+    {
+      "path": "deps.lock.json",
+      "git_blob_sha": "6196b7cd367db056f44f75aa182bb1350f386455",
+      "role": "locked upstream source archive identities"
+    },
+    {
+      "path": "semantic-sdk.lock.json",
+      "git_blob_sha": "1aa9a0eddc8c7a917287276b466da23c4f9ef589",
+      "role": "accepted SDK lock; read-only until formal release"
+    },
+    {
+      "path": "tools/semantic/build_runtime.py",
+      "git_blob_sha": "e60bff283c660e919e7a8e65cc815da4ccfb5509",
+      "role": "producer build owner"
+    },
+    {
+      "path": "tools/semantic/sources.py",
+      "git_blob_sha": "f2b4b1929f4b818faed0ae8f2698fe280b1189b7",
+      "role": "verified source extraction"
+    },
+    {
+      "path": "tools/semantic/contract.py",
+      "git_blob_sha": "58acd92a2fc40cbe13d794694f8c2b1364b40edd",
+      "role": "runtime identity and producer contract"
+    },
+    {
+      "path": "tools/semantic/profile-v2.json",
+      "git_blob_sha": "12ef81cf2a2270f64eb31faed167ae648d4a9509",
+      "role": "runtime profile"
+    },
+    {
+      "path": "tools/semantic/producer_cell.py",
+      "git_blob_sha": "3ce9c2891ae4d229d5072e4275b78a6f77610b5d",
+      "role": "producer identity/reuse"
+    },
+    {
+      "path": "tools/semantic/producer_plan.py",
+      "git_blob_sha": "31546fb15f25903a6b034d6d3fb3d2bd51680a86",
+      "role": "producer plan"
+    },
+    {
+      "path": "tools/semantic/package_runtime.py",
+      "git_blob_sha": "cb09150aa26a97e8ea9a1ad5ba6b579430580dd4",
+      "role": "runtime package manifest"
+    },
+    {
+      "path": "tools/semantic/classify_producer_changes.py",
+      "git_blob_sha": "ff9ec07f6ba3c684cd6e84505ff1cd1baabc81fe",
+      "role": "CI change classification"
+    },
+    {
+      "path": "tools/semantic/aggregate.py",
+      "git_blob_sha": "fdb44160afa1f2e1f70dbb99dae2d96a27acbc06",
+      "role": "release-set aggregation"
+    },
+    {
+      "path": "tools/semantic/publish_release.py",
+      "git_blob_sha": "bf3836fd28057329ed7747fda06efe066638672d",
+      "role": "formal immutable release owner"
+    },
+    {
+      "path": "tools/semantic/reuse_release.py",
+      "git_blob_sha": "3b857229cce57bfff0d5a512d027cf5cb8ce665d",
+      "role": "cached asset reuse"
+    },
+    {
+      "path": ".github/workflows/semantic-sdk-producer.yml",
+      "git_blob_sha": "0c1842632f15ff5977145d1e07124e896969ca8d",
+      "role": "producer workflow"
+    },
+    {
+      "path": ".github/workflows/semantic-sdk-producer-contract.yml",
+      "git_blob_sha": "741990d825766cbea60ec8dc9d6e59385ac12224",
+      "role": "producer contract workflow"
+    },
+    {
+      "path": ".github/workflows/semantic-sdk-release.yml",
+      "git_blob_sha": "1ab26c08933df2852fee97aa022472ae736b4bd0",
+      "role": "formal release gate"
+    },
+    {
+      "path": "tools/semantic/tests/test_contract_v2.py",
+      "git_blob_sha": "88b534191bbe7aeb92a4ca3c85ede9a9334aef2b",
+      "role": "contract tests"
+    },
+    {
+      "path": "tools/semantic/tests/test_producer_orchestration.py",
+      "git_blob_sha": "0179d2f33c96e6ad2e7d656eb3398bc195814b29",
+      "role": "producer orchestration tests"
+    },
+    {
+      "path": "tools/semantic/tests/test_runtime_reproducibility.py",
+      "git_blob_sha": "8e94d3ba6697316b6b896cee4e2a1b4ae4906f61",
+      "role": "reproducibility tests"
+    },
+    {
+      "path": "tools/semantic/tests/test_runtime_smoke_contract.py",
+      "git_blob_sha": "5887a1544d81e736f5966ae82bed74a06c42dc5c",
+      "role": "consumer smoke contract"
+    },
+    {
+      "path": "tools/semantic/tests/test_package_runtime_v2.py",
+      "git_blob_sha": "e5622e100116d5d4be0423b715cc50a9013225a1",
+      "role": "runtime package tests"
+    },
+    {
+      "path": "tools/semantic/tests/test_producer_change_classifier.py",
+      "git_blob_sha": "caea3171106516e242e91c1f41dd0d2019d438a3",
+      "role": "change classifier tests"
+    },
+    {
+      "path": "tools/semantic/tests/test_runtime_cmake_discovery.py",
+      "git_blob_sha": "ec0c01d3da35ae9c72a70aef6ea93bf5c4845986",
+      "role": "CMake/toolchain tests"
+    },
+    {
+      "path": "verification/tests/test_semantic_sdk_workflows.py",
+      "git_blob_sha": "2d43ea2a03e13183eee50624632104903ab89802",
+      "role": "CI workflow contract tests"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "status": "DRAFT_NOT_AUTHORIZATION",
+  "base_revision": "4eee69946dad61e0fc7678f9453423066c51750c",
+  "requirements_source": "user accepted Group/Section product semantics; semantic topology effect set already accepted; this file creates no new Authority",
+  "scope": "Group/Ungroup and interactions required to exercise them; no new Section design, Frame or Snap",
+  "proposed_cases": [
+    {
+      "id": "GROUP-CAND-01",
+      "trigger": "Group two selected roots including different object kinds",
+      "expected": "one existing Group identity, exact member order, world geometry unchanged, Group selected; one Undo/Redo restores both states"
+    },
+    {
+      "id": "GROUP-CAND-02",
+      "trigger": "Ungroup existing selected Group with children",
+      "expected": "remove wrapper only, preserve world geometry and sibling ordering, select released roots, one Undo/Redo"
+    },
+    {
+      "id": "GROUP-CAND-03",
+      "trigger": "Nested Group and Group/Section combinations",
+      "expected": "respect existing root reduction and scope; preserve world coordinates and selected root after reparent or release"
+    },
+    {
+      "id": "GROUP-CAND-04",
+      "trigger": "Drag/drop into a Group, drag out and cancel",
+      "expected": "apply only accepted scope policy, preserve world coordinates, atomic history; canceled gesture has zero canonical write"
+    },
+    {
+      "id": "GROUP-CAND-05",
+      "trigger": "Locked, stale, hidden, invalid ancestry, failed owner preparation",
+      "expected": "reject before publication with unchanged document, scene, selection policy and Undo/Redo; no mixed success"
+    },
+    {
+      "id": "GROUP-CAND-06",
+      "trigger": "Windows and actual Chrome/WASM ordinary consumer entry and control",
+      "expected": "same semantic results with full pointer identity, no host-owned hierarchy/history; physical inputs deferred to integrated verification"
+    }
+  ],
+  "must_resolve_before_authorization": [
+    "exact package base and ancestry, without automatic main merge",
+    "exact test source, independent oracle and runnable case bindings",
+    "scope and owner file allowlist, ordinary consumer and Windows/Web ingress",
+    "reuse accepted P12/P13/P14-P17, Section and D07 evidence with applicability limits",
+    "actual per-platform verification and coherent Scene/History failure coverage",
+    "whether remaining old 302-variant runner requirements apply to this bounded Group slice; do not declare them satisfied or waive silently",
+    "source-bound package/evidence/design preflights and control acceptance"
+  ],
+  "physical_test": "deferred by user until stage 3 complete",
+  "group_product_implementation_authorized": false,
+  "gate_or_release_claim": false
+}

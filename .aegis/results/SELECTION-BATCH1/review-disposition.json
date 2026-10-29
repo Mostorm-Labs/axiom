@@ -1,0 +1,33 @@
+{
+  "range": {
+    "base": "2fee75f66a7f96f6aac834228ede372a9abda59a",
+    "head": "c1300ce658016ad2026257c67a0cc0d024b47e05"
+  },
+  "reviewer": "fresh read-only gpt-6-astra; executing-plans whole-branch reviewer",
+  "assessment": "request changes; 3 Important, no Critical/Minor",
+  "fix_subject": "cde786d6c06a0e37538075c83e5bd4548ea6b162",
+  "independently_reran_tests": false,
+  "re_review": false,
+  "findings": [
+    {
+      "id": "R1",
+      "test": "SelectionInput.AddResolvesRetainedRootsAfterExternalReparent",
+      "disposition": "Resolve retained/acquired roots together at publication, remove ancestor/descendant duplicates."
+    },
+    {
+      "id": "R2",
+      "test": "SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement",
+      "disposition": "Existing canonical handoff retires stale region; added provider-visibility checks after camera/new-selection/deletion invalidation."
+    },
+    {
+      "id": "R3",
+      "test": "SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation",
+      "disposition": "All-root lock eligibility and matching UI snapshot; both orders, Runtime/Facade rejection with unchanged canonical/History."
+    }
+  ],
+  "red": "raw/review-red.log",
+  "intermediate_failed": "raw/review-green.log",
+  "green": "raw/review-green2.xml",
+  "rulings": "implementation-ledger.md",
+  "deferred_minors": []
+}

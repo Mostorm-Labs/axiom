@@ -1,0 +1,63 @@
+[0/2] Re-checking globbed directories...
+[1/206] Building CXX object runtime/input/CMakeFiles/canvas_runtime_input.dir/src/web_input_adapter.cpp.o
+[2/206] Building CXX object runtime/input/CMakeFiles/canvas_runtime_input.dir/src/arc_input_adapter.cpp.o
+[3/206] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/build_info.cpp.o
+[4/206] Building CXX object runtime/input/CMakeFiles/canvas_runtime_input.dir/src/input_router.cpp.o
+[5/206] Generating generated/auditoryworks/axiom/v1/brush_engine.pb.cc, generated/auditoryworks/axiom/v1/brush_stroke.pb.cc, generated/auditoryworks/axiom/v1/common.pb.cc, generated/auditoryworks/axiom/v1/connector.pb.cc, generated/auditoryworks/axiom/v1/container_operations.pb.cc, generated/auditoryworks/axiom/v1/erase_mask.pb.cc, generated/auditoryworks/axiom/v1/geometry.pb.cc, generated/auditoryworks/axiom/v1/object.pb.cc, generated/auditoryworks/axiom/v1/operation.pb.cc, generated/auditoryworks/axiom/v1/paint.pb.cc, generated/auditoryworks/axiom/v1/property.pb.cc, generated/auditoryworks/axiom/v1/rich_text.pb.cc, generated/auditoryworks/axiom/v1/section.pb.cc, generated/auditoryworks/axiom/v1/snapshot.pb.cc, generated/auditoryworks/axiom/v1/vector_path.pb.cc, generated/auditoryworks/axiom/v1/brush_engine.pb.h, generated/auditoryworks/axiom/v1/brush_stroke.pb.h, generated/auditoryworks/axiom/v1/common.pb.h, generated/auditoryworks/axiom/v1/connector.pb.h, generated/auditoryworks/axiom/v1/container_operations.pb.h, generated/auditoryworks/axiom/v1/erase_mask.pb.h, generated/auditoryworks/axiom/v1/geometry.pb.h, generated/auditoryworks/axiom/v1/object.pb.h, generated/auditoryworks/axiom/v1/operation.pb.h, generated/auditoryworks/axiom/v1/paint.pb.h, generated/auditoryworks/axiom/v1/property.pb.h, generated/auditoryworks/axiom/v1/rich_text.pb.h, generated/auditoryworks/axiom/v1/section.pb.h, generated/auditoryworks/axiom/v1/snapshot.pb.h, generated/auditoryworks/axiom/v1/vector_path.pb.h
+[6/206] Building CXX object runtime/input/CMakeFiles/canvas_runtime_input.dir/src/platform_interaction_ingress.cpp.o
+[7/206] Building CXX object runtime/input/CMakeFiles/canvas_runtime_input.dir/src/active_pointer_registry.cpp.o
+[8/206] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/stroke_session.cpp.o
+[9/206] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/ink_engine.cpp.o
+[10/206] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/canvas_control_service.cpp.o
+[11/206] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/damage_tracker.cpp.o
+[12/206] Linking CXX static library runtime\control\libcanvas_runtime_control.a
+[13/206] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene_binding.cpp.o
+[14/206] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/reference_geometry.cpp.o
+[15/206] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/direct_render_scene.cpp.o
+[16/206] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/incremental_runtime_full_materialization_bridge.cpp.o
+[17/206] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/hierarchy_geometry.cpp.o
+FAILED: runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/hierarchy_geometry.cpp.o 
+C:\Developer\emsdk\upstream\emscripten\em++.bat -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_RELEASE -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/include -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/foundation/include -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/text/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -ffp-contract=off -MD -MT runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/hierarchy_geometry.cpp.o -MF runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\hierarchy_geometry.cpp.o.d -o runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/hierarchy_geometry.cpp.o -c C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/hierarchy_geometry.cpp
+C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/hierarchy_geometry.cpp:55:141: error: reference to local binding 'field' declared in enclosing function 'canvas::scene::projectWorldObjects'
+            auto found=std::find_if(record.properties.entries.begin(),record.properties.entries.end(),[&](const auto& p){return p.field_id==field;});
+                                                                                                                                            ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/find_if.h:25:9: note: in instantiation of function template specialization 'canvas::scene::projectWorldObjects(std::span<const semantic::ObjectRecord>)::(anonymous class)::operator()<canvas::semantic::PropertyEntry>' requested here
+    if (__pred(*__first))
+        ^
+C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/hierarchy_geometry.cpp:55:29: note: in instantiation of function template specialization 'std::find_if<std::__wrap_iter<canvas::semantic::PropertyEntry *>, (lambda at C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/hierarchy_geometry.cpp:55:103)>' requested here
+            auto found=std::find_if(record.properties.entries.begin(),record.properties.entries.end(),[&](const auto& p){return p.field_id==field;});
+                            ^
+C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/hierarchy_geometry.cpp:53:25: note: 'field' declared here
+        for(const auto [field,value]:{std::pair{1U,visible},std::pair{2U,locked}}) {
+                        ^
+C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/hierarchy_geometry.cpp:53:24: error: loop variable '[field, value]' creates a copy from type 'std::pair<unsigned int, bool> const' [-Werror,-Wrange-loop-construct]
+        for(const auto [field,value]:{std::pair{1U,visible},std::pair{2U,locked}}) {
+                       ^
+C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/hierarchy_geometry.cpp:53:13: note: use reference type 'std::pair<unsigned int, bool> const &' to prevent copying
+        for(const auto [field,value]:{std::pair{1U,visible},std::pair{2U,locked}}) {
+            ^~~~~~~~~~~~~~~~~~~~~~~~~
+                       &
+2 errors generated.
+em++: error: 'C:/Developer/emsdk/upstream/bin\clang++.exe -target wasm32-unknown-emscripten -fignore-exceptions -fvisibility=default -mllvm -combiner-global-alias-analysis=false -mllvm -enable-emscripten-sjlj -mllvm -disable-lsr -DEMSCRIPTEN -IC:\Developer\emsdk\upstream\emscripten\cache\sysroot\include\SDL --sysroot=C:\Developer\emsdk\upstream\emscripten\cache\sysroot -Xclang -iwithsysroot/include\compat -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_RELEASE -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/include -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/foundation/include -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/text/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -ffp-contract=off -MD -MT runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/hierarchy_geometry.cpp.o -MF runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\hierarchy_geometry.cpp.o.d -c C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/hierarchy_geometry.cpp -o runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/hierarchy_geometry.cpp.o' failed (returned 1)
+[18/206] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/derived_geometry.cpp.o
+[19/206] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/bounds_system.cpp.o
+[20/206] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/incremental_runtime_coordinator.cpp.o
+FAILED: runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/incremental_runtime_coordinator.cpp.o 
+C:\Developer\emsdk\upstream\emscripten\em++.bat -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_RELEASE -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/include -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/foundation/include -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/text/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/incremental_runtime_coordinator.cpp.o -MF runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\incremental_runtime_coordinator.cpp.o.d -o runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/incremental_runtime_coordinator.cpp.o -c C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/incremental_runtime_coordinator.cpp
+C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/incremental_runtime_coordinator.cpp:410:108: error: reference to local binding 'id' declared in enclosing function 'canvas::IncrementalRuntimeCoordinator::publishConnectorRoutes'
+        auto it=std::find_if(next.records.begin(),next.records.end(),[&](const auto& r){return r.objectId==id;});
+                                                                                                           ^
+C:\Developer\emsdk\upstream\emscripten\cache\sysroot/include/c++/v1\__algorithm/find_if.h:25:9: note: in instantiation of function template specialization 'canvas::IncrementalRuntimeCoordinator::publishConnectorRoutes(std::span<const std::pair<semantic::ObjectId, scene::ConnectorGeometry>>, semantic::SemanticGeneration)::(anonymous class)::operator()<canvas::RuntimeSceneRecord>' requested here
+    if (__pred(*__first))
+        ^
+C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/incremental_runtime_coordinator.cpp:410:22: note: in instantiation of function template specialization 'std::find_if<std::__wrap_iter<canvas::RuntimeSceneRecord *>, (lambda at C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/incremental_runtime_coordinator.cpp:410:70)>' requested here
+        auto it=std::find_if(next.records.begin(),next.records.end(),[&](const auto& r){return r.objectId==id;});
+                     ^
+C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/incremental_runtime_coordinator.cpp:409:23: note: 'id' declared here
+    for (const auto& [id,geometry]:routes) {
+                      ^
+1 error generated.
+em++: error: 'C:/Developer/emsdk/upstream/bin\clang++.exe -target wasm32-unknown-emscripten -fignore-exceptions -fvisibility=default -mllvm -combiner-global-alias-analysis=false -mllvm -enable-emscripten-sjlj -mllvm -disable-lsr -DEMSCRIPTEN -IC:\Developer\emsdk\upstream\emscripten\cache\sysroot\include\SDL --sysroot=C:\Developer\emsdk\upstream\emscripten\cache\sysroot -Xclang -iwithsysroot/include\compat -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_RELEASE -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/include -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/semantic/include -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/foundation/include -IC:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/text/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror -MD -MT runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/incremental_runtime_coordinator.cpp.o -MF runtime\scene\CMakeFiles\canvas_runtime_scene.dir\src\incremental_runtime_coordinator.cpp.o.d -c C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/runtime/scene/src/incremental_runtime_coordinator.cpp -o runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/incremental_runtime_coordinator.cpp.o' failed (returned 1)
+[21/206] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene.cpp.o
+[22/206] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/connector_router.cpp.o
+ninja: build stopped: subcommand failed.

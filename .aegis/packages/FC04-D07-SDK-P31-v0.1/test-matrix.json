@@ -1,0 +1,31 @@
+{
+  "status": "FROZEN_REQUIREMENTS_NOT_RUN",
+  "required_cases": [
+    {"id":"ONCE-OOM-RETURN","purpose":"Inject at the real lazy descriptor initialization allocation; first call returns a controlled failure or safely retries without hanging."},
+    {"id":"ONCE-WAITER-2","purpose":"One initializer and at least two concurrent waiters; after injected failure every caller terminates."},
+    {"id":"PROTO-PARTIAL-STATE","purpose":"Inspect descriptor table, generated pool, message factory, extensions, default instances, class data and reflection state across failure."},
+    {"id":"PROTO-RETRY-BYTES","purpose":"Retry the same descriptor and compare canonical measure/encode bytes byte-for-byte with no-fault control."},
+    {"id":"FULL-SWEEP","purpose":"Run the real precommit allocation sweep without prewarming or fault relocation; no timeout, deadlock or canonical mutation."},
+    {"id":"RUNTIME-CONTAINMENT","purpose":"Document, Scene, History cursor and redo branch unchanged for rejected intent; truthful receipt."},
+    {"id":"PATCH-APPLICATION","purpose":"Pinned archive extraction and patch application are deterministic and fail closed on mismatch or duplicate application."},
+    {"id":"PATCH-IDENTITY","purpose":"Patch-set digest changes runtime identity and prevents reuse of unpatched cached assets."},
+    {"id":"PRODUCER-REPRODUCIBILITY","purpose":"Identical locked sources, patches and toolchain reproduce the same runtime package identity/bytes under current contract."},
+    {"id":"SDK-CONSUMER-QUALIFICATION","purpose":"Relevant upstream tests, SDK smoke/consumer tests and supported producer CI cells pass."},
+    {"id":"D07-AB-REGRESSION","purpose":"Real D07 coordinator/Scene/Intent suite passes, including grouped Undo and OOM tests."},
+    {"id":"SELECTION-REGRESSION","purpose":"All 160 frozen Selection IDs pass at resulting Axiom revision; historical passes are not substituted."}
+  ],
+  "required_profiles": {
+    "windows_native": "required",
+    "semantic_sdk_producer_ci": "all selected host/runtime cells required by existing release contract",
+    "chrome_wasm": "required after patched SDK consumer is available and locked toolchain supports it",
+    "physical_touch": "not required for SDK exception-safety task"
+  },
+  "historical_preservation": {
+    "incident": "3615a38422a103024bc23924c570e3c585656670",
+    "feature_anchor": "c7f874395d55952e9d5288e2a336a21747f37f11",
+    "rewrite_historical_evidence": false,
+    "prewarm_descriptors": false,
+    "catch_only": false,
+    "fault_relocation": false
+  }
+}

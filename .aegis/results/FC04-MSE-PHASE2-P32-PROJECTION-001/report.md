@@ -1,0 +1,3 @@
+# FC04 MSE read-only projection progress
+
+Status: IN_PROGRESS. A Runtime-owned read-only port reports all eight field projections, normalized roots, applicable/excluded IDs, mixed/partial states and stamp; batch edit availability is false. Three real native MSE cases (01/07/21), wrong-thread/closed test, and three existing CTest regressions passed. MSE-19 is a real RED for the missing typed submit and receipt; MSE-02 confirms zero matched Google Tests fails, not a pass. Raw CTest observations and JUnit are alongside this file. Other MSE cases, batch commands, Debug UI, Windows/Web builds and physical acceptance remain incomplete. No final Gate or overall D07 claim is made.

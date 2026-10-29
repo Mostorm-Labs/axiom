@@ -1,0 +1,65 @@
+{
+  "base_head": "6ba9de4544121dc67f86cb51650363f5d7ba7fd9",
+  "branch": "codex/fc04-mse-p31-v02-binding-fix",
+  "local_permission": "explicit local single-user allowed; unconfigured or unavailable context fails closed; no per-object permission provider",
+  "source_sha256": {
+    "debug_ui/CMakeLists.txt": "95b805b1bc272cabb7ca9ded37db6946c5ecc1355c6422416c2ee71e4cc9f6ca",
+    "debug_ui/src/panels/control.cpp": "3e91ad7de9a21bc092a8409da5b7e571ebc350c5ecf8950d7ea7a45f484ccedf",
+    "runtime/composition/src/canvas_runtime_text.cpp": "dc3067c4dcd2b2830e8fabd8e921d2b7c580d4d8f7a8e97f7c21530b5d705dde",
+    "verification/fc04_mse/mse_01_27_test.cpp": "d78170ef6983b77c3bb0dabf213f443c33622b2530df6fed64e9e483ec7401b5",
+    ".aegis/packages/FC04-MSE-TEXT-ENTRY-INGRESS-v0.1/package.json": "8564cac593e33be7d8cfd07dd8ab3f39af1ad0297d2a7c092070f3be4ea0c73e",
+    ".aegis/packages/FC04-MSE-TEXT-ENTRY-INGRESS-v0.1/preflight.py": "18549763ca0d3c8d02286ef2030a5b6dde5a5e914d9de5ef059e9d028d84154c"
+  },
+  "raw_sha256": "20568633a574b490219beb2ab8e1e8c7edd04f7a289db9f627e22d71e179bac7",
+  "matrix": {
+    "passed_test_names": 21,
+    "zero_match_test_names": [
+      "MSE-15",
+      "MSE-18",
+      "MSE-20",
+      "MSE-22",
+      "MSE-23",
+      "MSE-26"
+    ],
+    "exit_code": 8,
+    "caveat": "a passing test name is not automatically full coverage of compound fixture, platform, real IME, or grouped scope"
+  },
+  "selection160_after_relink": {
+    "passed": 160,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "fc02_and_mse_focused": {
+    "ctest_count": 10,
+    "exit_code": 0,
+    "synthetic_input": true
+  },
+  "existing_object_regressions": {
+    "names": [
+      "FC03ImageFacade",
+      "FC05ConnectorFacade",
+      "FC05ConnectorDragPreview",
+      "FC01SelectedActions",
+      "FC08SectionConsumer"
+    ],
+    "exit_code": 0,
+    "caveat": "not the missing exact MSE-18 selector"
+  },
+  "chrome": {
+    "debug_assertions": 41,
+    "mouse_text_assertions": 14,
+    "exit_code": 0,
+    "actual_browser": true,
+    "input": "synthetic CDP; not physical IME/touch"
+  },
+  "not_run": [
+    "frozen WEB-MSE full matrix",
+    "physical Windows and Web IME/touch",
+    "MSE-15 precommit fault",
+    "MSE-20 per-root permission denied",
+    "MSE-22 undo/redo fault",
+    "MSE-23 fault matrix",
+    "MSE-26 provider fault"
+  ],
+  "independent_blocker": "D07 protobuf/abseil allocation fault hang remains open; not rerun"
+}

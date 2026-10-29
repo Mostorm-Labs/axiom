@@ -5,6 +5,7 @@
 #include "canvas/text/text_layout.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <limits>
 #include <variant>
@@ -167,6 +168,28 @@ BoundsResult computeBounds(const semantic::ObjectRecord& record,
     }();
     result.visual = {result.geometry.left - stroke, result.geometry.top - stroke,
                      result.geometry.right + stroke, result.geometry.bottom + stroke};
+    // A triangle's acute miter can extend past the half-width expansion.
+    // Include each admitted outer join before transforming/indexing the bounds.
+    if(const auto* shape=std::get_if<semantic::ShapeContent>(&record.content);shape&&shape->shape_kind==3&&stroke>0) {
+        for(const auto& entry:record.properties.entries)if(entry.field_id==0x101U)
+            if(const auto* style=std::get_if<semantic::StrokeStyleValue>(&entry.value))
+                if(const auto* solid=std::get_if<semantic::SolidStroke>(style))
+                    if(const auto* join=std::get_if<semantic::MiterJoin>(&solid->join)) {
+                        const std::array<std::array<double,2>,3> vertices{{{shape->width/2,0},{shape->width,shape->height},{0,shape->height}}};
+                        for(std::size_t i=0;i<vertices.size();++i) {
+                            const auto& p=vertices[(i+2)%3];const auto& v=vertices[i];const auto& n=vertices[(i+1)%3];
+                            const double ax=v[0]-p[0],ay=v[1]-p[1],bx=n[0]-v[0],by=n[1]-v[1];
+                            const double al=std::hypot(ax,ay),bl=std::hypot(bx,by);
+                            if(al<=0||bl<=0)continue;
+                            const double nx=ay/al+by/bl,ny=-ax/al-bx/bl,denominator=1+(ax*bx+ay*by)/(al*bl);
+                            if(denominator<=0)continue;
+                            const double dx=nx*stroke/denominator,dy=ny*stroke/denominator;
+                            if(std::hypot(dx,dy)>stroke*join->limit)continue;
+                            const float x=static_cast<float>(v[0]+dx),y=static_cast<float>(v[1]+dy);
+                            result.visual=foundation::unionRects(result.visual,{x,y,x,y});
+                        }
+                    }
+    }
     const double xs[] = {result.visual.left, result.visual.right};
     const double ys[] = {result.visual.top, result.visual.bottom};
     foundation::WorldRect transformed{};

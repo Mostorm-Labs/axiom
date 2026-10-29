@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="3"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="12"
+	timestamp="2026-10-27T14:35:42"
+	>
+	<testcase name="FC01ARegionSelection" classname="FC01ARegionSelection" time="2.32009" status="fail">
+		<failure message="Exit code 0xc0000409"/>
+		<properties/>
+		<system-out>Assertion failed: intersectSelectionRegion(small,repeated)==RegionIntersection::kUnsupported, file C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\region_selection_session_test.cpp, line 103
+</system-out>
+	</testcase>
+	<testcase name="SelectionBatch2Coverage" classname="SelectionBatch2Coverage" time="0.185031" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 9 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 9 tests from SelectionCoverage
+[ RUN      ] SelectionCoverage.VectorPathCurveAndEvenOddHoleUseGeometryNotControlBounds
+[       OK ] SelectionCoverage.VectorPathCurveAndEvenOddHoleUseGeometryNotControlBounds (0 ms)
+[ RUN      ] SelectionCoverage.LegacyVectorStrokeUsesFiniteWidthSegmentsNotLargeAabb
+[       OK ] SelectionCoverage.LegacyVectorStrokeUsesFiniteWidthSegmentsNotLargeAabb (0 ms)
+[ RUN      ] SelectionCoverage.CanonicalBrushOutlineAndFilledEraseHoleFollowVisibleGeometry
+[       OK ] SelectionCoverage.CanonicalBrushOutlineAndFilledEraseHoleFollowVisibleGeometry (0 ms)
+[ RUN      ] SelectionCoverage.SweptEraseUsesTheRendererMaxRadiusCubicStroke
+[       OK ] SelectionCoverage.SweptEraseUsesTheRendererMaxRadiusCubicStroke (0 ms)
+[ RUN      ] SelectionCoverage.LegacyDabsAreS...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="FC01ASelectionInputIntegration" classname="FC01ASelectionInputIntegration" time="9.35586" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+[==========] Running 23 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 23 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (278 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (420 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (290 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (140 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitReg...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

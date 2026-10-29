@@ -1,0 +1,20 @@
+{
+  "version": "v0.2",
+  "status": "ACTIVE_VERIFICATION_SCOPE",
+  "requested_by": "Latest direct user clarification: use codex/selection-summary-batch3 and its worktree, rather than main",
+  "product_subject": "c7f874395d55952e9d5288e2a336a21747f37f11",
+  "source_branch": "codex/selection-summary-batch3",
+  "execution_branch": "codex/fc04-d07-selection-audit",
+  "worktree": "C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas",
+  "inherited_harness_revision": "b901de5ffbd591ac20e2fbdda938562dc0dd683c",
+  "historical_main_scope": "verification-scope.json v0.1 applies only to main2fee75f6; retained as comparison, not current-feature evidence",
+  "historical_main_harness": "1ef2ce0f71ba08d2dbff8156e4bb7501f09018a2",
+  "allowed_paths": [
+    "verification/fc04_d07/**",
+    "docs/planning/fc04-d07/**",
+    ".aegis/results/FC04-D07-AUDIT/**"
+  ],
+  "production_changes_authorized": false,
+  "main_or_selection_branch_merge_authorized": false,
+  "required": "Reconcile production delta, run actual current-branch tests; do not silently reuse main PASS/RED as current evidence"
+}

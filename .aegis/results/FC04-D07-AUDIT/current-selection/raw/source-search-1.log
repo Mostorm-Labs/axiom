@@ -1,0 +1,11 @@
+runtime\composition\tests\runtime_composition_test.cpp:997:  auto& historyPort = static_cast<canvas::interaction::HistorySubmitPort&>(lostRuntime);
+runtime\composition\tests\fc02_text_test.cpp:118:struct HistoryPort final : canvas::interaction::HistorySubmitPort {
+runtime\interaction\tests\editor_history_test.cpp:12:using canvas::interaction::HistorySubmitPort;
+runtime\interaction\tests\editor_history_test.cpp:41:struct Submit final : HistorySubmitPort {
+runtime\interaction\include\canvas\interaction\editor_history.hpp:33:class HistorySubmitPort {
+runtime\interaction\include\canvas\interaction\editor_history.hpp:40:    virtual ~HistorySubmitPort() = default;
+runtime\interaction\include\canvas\interaction\editor_history.hpp:73:    explicit EditorHistory(HistorySubmitPort& submit) noexcept : submit_(submit) {}
+runtime\interaction\include\canvas\interaction\editor_history.hpp:100:    HistorySubmitPort& submit_;
+runtime\interaction\include\canvas\interaction\canvas_editing_runtime.hpp:142:                                public interaction::HistorySubmitPort,
+runtime\semantic\tests\fc08_section_history_allocation_test.cpp:24:struct Runtime : HistorySubmitPort {
+runtime\semantic\tests\fc08_section_history_test.cpp:10:template<class Store> struct HistoryRuntime : Runtime<Store>, HistorySubmitPort {

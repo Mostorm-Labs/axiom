@@ -1,0 +1,26 @@
+[
+  {
+    "test": "ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation",
+    "path": "verification/fc04_d07/audit_test.cpp",
+    "start_line": 227,
+    "body": "TEST_F(D07, ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation) {\n    redoBranch();\n    const auto before = read();\n    auto& port = static_cast<interaction::HistorySubmitPort&>(rt());\n    for (const auto source :\n         {semantic::ApplySource::kLocalInteraction, semantic::ApplySource::kUndoRedo}) {\n        const std::array operations{move(510), color(511)};\n        EXPECT_FALSE(port.submit(operations, source).accepted);\n        EXPECT_EQ(read(), before);\n    }\n}"
+  },
+  {
+    "test": "TwoIndependentCommandsNeedTwoUndoUnits",
+    "path": "verification/fc04_d07/audit_test.cpp",
+    "start_line": 402,
+    "body": "TEST_F(D07, TwoIndependentCommandsNeedTwoUndoUnits) {\n    const auto before = read();\n    ASSERT_TRUE(history().executeUndoable(move(580)));\n    ASSERT_TRUE(history().executeUndoable(color(581)));\n    EXPECT_EQ(history().size(), 2U);\n    ASSERT_TRUE(rt().undo());\n    EXPECT_NE(read().objects, before.objects);\n    ASSERT_TRUE(rt().undo());\n    EXPECT_EQ(read().objects, before.objects);\n    EXPECT_FALSE(history().canUndo());\n    ASSERT_TRUE(rt().redo());\n    ASSERT_TRUE(rt().redo());\n    EXPECT_EQ(sink.count, 6U);\n}"
+  },
+  {
+    "test": "RequiredMultiIntentEntryIsUnavailable_RED",
+    "path": "verification/fc04_d07/audit_test.cpp",
+    "start_line": 429,
+    "body": "TEST_F(D07, RequiredMultiIntentEntryIsUnavailable_RED) {\n    const auto before = read();\n    const std::array operations{move(600), color(601)};\n    const bool accepted = static_cast<interaction::HistorySubmitPort&>(rt())\n                              .submit(operations, semantic::ApplySource::kLocalInteraction)\n                              .accepted;\n    EXPECT_EQ(read(), before);\n    EXPECT_TRUE(accepted) << \"D07 not closed: the available real Runtime batch port rejects this \"\n                             \"coherent forward sequence; no production IntentPlan entry found. \"\n                             \"This is not a defect in its fail-closed guard.\";\n}"
+  },
+  {
+    "test": "NaiveSequentialFallbackCannotSatisfyOneUndo_RED",
+    "path": "verification/fc04_d07/audit_test.cpp",
+    "start_line": 440,
+    "body": "TEST_F(D07, NaiveSequentialFallbackCannotSatisfyOneUndo_RED) {\n    const auto before = read();\n    ASSERT_TRUE(history().executeUndoable(move(610)));\n    ASSERT_TRUE(history().executeUndoable(color(611)));\n    ASSERT_TRUE(rt().undo());\n    EXPECT_EQ(read().objects, before.objects)\n        << \"D07 not closed: sequencing ordinary commands is not a HistoryGroup and cannot be used \"\n           \"as the missing coordinator.\";\n}\n} // namespace"
+  }
+]

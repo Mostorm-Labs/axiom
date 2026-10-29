@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="6"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="13"
+	timestamp="2026-10-27T19:20:20"
+	>
+	<testcase name="fc08.section_c.SectionHistory.H03HistoricalOriginalRecipesRemainInvalid" classname="fc08.section_c.SectionHistory.H03HistoricalOriginalRecipesRemainInvalid" time="0.555284" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc04-d07-audit\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SectionHistory.H03HistoricalOriginalRecipesRemainInvalid
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SectionHistory
+[ RUN      ] SectionHistory.H03HistoricalOriginalRecipesRemainInvalid
+C historical H03 original remains rejected before setup variant=FC08-H03/root-children-65534 error=10; not a product budget PASS
+C historical H03 original remains rejected before setup variant=FC08-H03/root-children-65535 error=10; not a product budget PASS
+[       OK ] SectionHistory.H03HistoricalOriginalRecipesRemainInvalid (507 ms)
+[----------] 1 test from SectionHistory (507 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (507 ms total)
+[  PASSED  ] 1 test.
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0" classname="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0" time="7.42061" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc04-d07-audit\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Accepted/SectionHistoryBudget
+[ RUN      ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/0
+C H03 active input=H03-v0.1 expected=79d2b28490940471480f11e07fb7bf2885f73bc1b740ed02374454e58cd3fa1f original-input-preserved=f77b15b0b27e3a5136cbb0b1cc31e26efb729499eef639cdd15ecdfb65ee09c6
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":1,"history_size":0,"input_version":"H03-v0.1","last_history_submit_disposition":2,"objects":65534,"ordinal":1,"phase":"before-forward","variant_id":"FC08-H03/root-children-65534"}
+C budget SUT observation={"applied_submissions":1,"can_redo":false,"can_undo":true,"generation":2,"history_size":1,"input_vers...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1" classname="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1" time="3.29523" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc04-d07-audit\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Accepted/SectionHistoryBudget
+[ RUN      ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/1
+C H03 active input=H03-v0.1 expected=e1cc24f9249d0d1d6f7c0cd0e61e5c66f9dadab13392425f90e0c44b577db110 original-input-preserved=7d55163ba474acd767dc6a4d9ed3628c62403f01f9e5b7d45228012d6ee2c92a
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":1,"history_size":0,"input_version":"H03-v0.1","last_history_submit_disposition":2,"objects":65535,"ordinal":1,"phase":"before-forward","variant_id":"FC08-H03/root-children-65535"}
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":1,"history_size":0,"input_ver...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/2" classname="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/2" time="1.06504" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc04-d07-audit\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/2
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Accepted/SectionHistoryBudget
+[ RUN      ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/2
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":0,"history_size":0,"input_version":"original","last_history_submit_disposition":2,"objects":0,"ordinal":0,"phase":"before-forward","variant_id":"FC08-H04/operation-33554431"}
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":0,"history_size":0,"input_version":"original","last_history_submit_disposition":2,"objects":0,"ordinal":0,"phase":"after-forward-attempt","variant_id":"FC08-H04/operation-33554431"}
+C budget variant=FC08-H04/operation-33554431...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/3" classname="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/3" time="1.02312" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc04-d07-audit\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/3
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Accepted/SectionHistoryBudget
+[ RUN      ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/3
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":0,"history_size":0,"input_version":"original","last_history_submit_disposition":2,"objects":0,"ordinal":0,"phase":"before-forward","variant_id":"FC08-H04/operation-33554432"}
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":0,"history_size":0,"input_version":"original","last_history_submit_disposition":2,"objects":0,"ordinal":0,"phase":"after-forward-attempt","variant_id":"FC08-H04/operation-33554432"}
+C budget variant=FC08-H04/operation-33554432...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/4" classname="fc08.section_c.Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/4" time="0.298087" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\fc04-d07-audit\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/4
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Accepted/SectionHistoryBudget
+[ RUN      ] Accepted/SectionHistoryBudget.ActualBidirectionalAdmission/4
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":0,"history_size":0,"input_version":"original","last_history_submit_disposition":2,"objects":0,"ordinal":0,"phase":"before-forward","variant_id":"FC08-H04/operation-33554433"}
+C budget SUT observation={"applied_submissions":0,"can_redo":false,"can_undo":false,"generation":0,"history_size":0,"input_version":"original","last_history_submit_disposition":2,"objects":0,"ordinal":0,"phase":"after-forward-attempt","variant_id":"FC08-H04/operation-33554433"}
+C budget variant=FC08-H04/operation-33554433...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+</testsuite>

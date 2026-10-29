@@ -1,0 +1,3 @@
+# Targeted multi-drag source binding
+
+MSE-03/04 require actual pointer acquisition and coherent preview of moved roots and attached Connector routes. The existing input owner canvas_region_selection.cpp and Connector preview owner canvas_connector_routing.cpp are not included in P31 v0.4's file list. This amendment binds only those existing owners; current worktree bytes match HEAD and hashes are locked in package.json. The prior package, accepted D06-B policy and D07/OOM status are unchanged. The same-preparer review acceptance is limited to P31 and does not imply Gate, P34 or physical acceptance.

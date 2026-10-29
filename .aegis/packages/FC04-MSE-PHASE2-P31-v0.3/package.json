@@ -1,0 +1,29 @@
+{
+  "schema_version": "aegis-targeted-p31-correction-v1",
+  "package_id": "FC04-MSE-PHASE2-P31-v0.3",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "package_materialization_ref": "refs/heads/codex/fc04-mse-p31-v02-binding-fix",
+  "task_anchor": {
+    "revision": "6bcf2d4bbf3314e5252951190c3c475403f52665",
+    "relation": "ancestor"
+  },
+  "source_review_revision": "53bbf2a96abca24230403797a12394af96d1f2ac",
+  "user_selected_design": "internal Runtime-owned typed port; 2026-10-29",
+  "historical_p31_package_sha256": "029663cf325ca36e3131e6ba7b499bb784925f4d478a5882f35f9461281d8c87",
+  "p32_authorized": false,
+  "requires_control_review": true,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "design": "design.md",
+  "context": "implementation-context.json",
+  "test_matrix": "test-matrix.json",
+  "source_lock": "source-lock.json",
+  "integrity": "integrity.json",
+  "preflight": "preflight.py",
+  "prior_closure": ".aegis/packages/FC04-MSE-PHASE2-P31-v0.1/closure.md",
+  "prior_inputs": ".aegis/packages/FC04-MSE-PHASE2-P31-v0.1/input-lock.json",
+  "overall_d07_status": "BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG"
+}

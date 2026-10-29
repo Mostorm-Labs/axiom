@@ -1,0 +1,120 @@
+{
+  "configure": {
+    "argv": [
+      "cmake",
+      "-S",
+      ".",
+      "-B",
+      "out/fc04-d07-selection/build",
+      "-G",
+      "Ninja",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+      "-DBUILD_TESTING=ON",
+      "-DCANVAS_BUILD_POC01=OFF",
+      "-DCANVAS_BUILD_SEMANTIC=ON",
+      "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON",
+      "-DCANVAS_BUILD_RENDER=ON",
+      "-DCANVAS_BUILD_RF01=ON",
+      "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON",
+      "-DCANVAS_BUILD_INK_PLAYGROUND=OFF",
+      "-DAXIOM_BUILD_DEBUG_UI=OFF",
+      "-DAXIOM_FC08_QUALIFICATION_HOOKS=OFF",
+      "-DCANVAS_SKIA_SDK_VARIANT=release",
+      "-DCANVAS_SKIA_SDK_ROOT=C:/Users/Chado/.codex/worktrees/fc08-verification-materialization/canvas/.deps/skia-sdk/windows-x64-d3d12/release",
+      "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=C:/Users/Chado/.codex/worktrees/selection-unified-batch1/canvas/verification/fc04_d07/inject.cmake",
+      "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+      "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe",
+      "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+      "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY",
+      "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF",
+      "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"
+    ],
+    "exit_code": 0
+  },
+  "build": {
+    "argv": [
+      "cmake",
+      "--build",
+      "out/fc04-d07-selection/build",
+      "--target",
+      "axiom_fc04_d07_audit_tests",
+      "axiom_fc04_d07_postcommit_fault",
+      "axiom_editor_history_tests",
+      "axiom_fc08_section_history_tests",
+      "axiom_fc08_section_history_allocation_tests",
+      "canvas_semantic_operation_engine_boundary_test",
+      "canvas_semantic_operation_engine_generation_change_set_test",
+      "canvas_g2_a6_atomic_publication",
+      "canvas_g2_a6_recovery",
+      "axiom_fc00x_runtime_composition_tests",
+      "axiom_selection_summary_tests",
+      "axiom_selection_session_tests",
+      "axiom_region_selection_tests",
+      "axiom_selection_coverage_tests",
+      "axiom_selection_input_integration_tests",
+      "axiom_fc08_section_consumer_tests",
+      "--parallel",
+      "6"
+    ],
+    "exit_code": 0
+  },
+  "regressions": {
+    "argv": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\fc04-d07-selection\\build",
+      "--tests-from-file",
+      "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\fc04-d07-selection\\existing-names.txt",
+      "--no-tests=error",
+      "--output-on-failure",
+      "--timeout",
+      "180",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\fc04-d07-selection\\existing.xml"
+    ],
+    "exit_code": 0
+  },
+  "audit": {
+    "argv": [
+      "ctest",
+      "--test-dir",
+      "out/fc04-d07-selection/build",
+      "-R",
+      "^fc04.d07\\.|^FC04D07Postcommit",
+      "--no-tests=error",
+      "--output-on-failure",
+      "--timeout",
+      "90",
+      "--output-junit",
+      "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\fc04-d07-selection\\audit.xml"
+    ],
+    "exit_code": 8
+  },
+  "direct": [
+    {
+      "name": "audit-direct",
+      "argv": [
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\fc04-d07-selection\\build\\axiom_fc04_d07_audit_tests.exe",
+        "--gtest_color=no",
+        "--gtest_output=json:C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\fc04-d07-selection\\audit-direct.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "name": "postcommit-scene",
+      "argv": [
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\fc04-d07-selection\\build\\axiom_fc04_d07_postcommit_fault.exe"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "postcommit-receipt",
+      "argv": [
+        "C:\\Users\\Chado\\.codex\\worktrees\\selection-unified-batch1\\canvas\\out\\fc04-d07-selection\\build\\axiom_fc04_d07_postcommit_fault.exe",
+        "receipt-growth"
+      ],
+      "exit_code": 86
+    }
+  ]
+}

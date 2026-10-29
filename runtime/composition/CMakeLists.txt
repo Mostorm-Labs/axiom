@@ -7,10 +7,11 @@ add_library(canvas_runtime_composition STATIC
     src/canvas_runtime_image.cpp)
 target_sources(canvas_runtime_composition PRIVATE src/canvas_runtime_connector_sticky.cpp)
 target_sources(canvas_runtime_composition PRIVATE src/canvas_runtime_section.cpp)
+target_sources(canvas_runtime_composition PRIVATE src/multi_selection_port.cpp)
 target_include_directories(canvas_runtime_composition PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(canvas_runtime_composition PRIVATE
-    ${PROJECT_SOURCE_DIR}/runtime/semantic/src)
+    ${PROJECT_SOURCE_DIR}/runtime/semantic/src ${PROJECT_SOURCE_DIR}/runtime/control/src)
 target_link_libraries(canvas_runtime_composition PUBLIC
     canvas_runtime_editor canvas_runtime_scene canvas_runtime_render
     canvas_runtime_control
@@ -27,6 +28,31 @@ else()
 endif()
 
 if(BUILD_TESTING)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/verification/fc04_mse
+                   ${PROJECT_BINARY_DIR}/verification/fc04_mse)
+  add_executable(axiom_selection_summary_tests tests/selection_summary_test.cpp)
+  target_link_libraries(axiom_selection_summary_tests PRIVATE canvas_runtime_composition GTest::gtest_main)
+  target_compile_definitions(axiom_selection_summary_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+  target_compile_definitions(axiom_selection_summary_tests PRIVATE SELECTION_TEST_FONT="${CANVAS_SKIA_SDK_ROOT}/resources/fonts/Roboto-Regular.ttf")
+  if(MSVC)
+    target_compile_options(axiom_selection_summary_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_selection_summary_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME SelectionBatch3Summary COMMAND axiom_selection_summary_tests)
+  add_executable(axiom_selection_input_integration_tests tests/selection_input_integration_test.cpp)
+  target_link_libraries(axiom_selection_input_integration_tests PRIVATE canvas_runtime_composition GTest::gtest_main)
+  target_compile_definitions(axiom_selection_input_integration_tests PRIVATE AXIOM_RUNTIME_QUALIFICATION=1)
+  if(MSVC)
+    target_compile_options(axiom_selection_input_integration_tests PRIVATE /W4 /permissive- /WX /EHsc)
+  else()
+    target_compile_options(axiom_selection_input_integration_tests PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+  add_test(NAME FC01ASelectionInputIntegration COMMAND axiom_selection_input_integration_tests)
+  if(WIN32 AND EXISTS "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat")
+    add_custom_command(TARGET axiom_selection_input_integration_tests POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CANVAS_SKIA_SDK_ROOT}/runtime/windows/icudtl.dat" "$<TARGET_FILE_DIR:axiom_selection_input_integration_tests>/icudtl.dat")
+  endif()
   add_executable(axiom_fc08_section_consumer_tests tests/fc08_section_consumer_test.cpp)
   target_link_libraries(axiom_fc08_section_consumer_tests PRIVATE canvas_runtime_composition GTest::gtest_main)
   if(MSVC)

@@ -1,0 +1,54 @@
+{
+  "schema_version": "aegis-p31-package-v1",
+  "package_id": "FC04-MSE-PHASE2-P31-v0.1",
+  "task_id": "FC04-MSE-PHASE2-P32",
+  "stage": "P32",
+  "stage_owner": "aegis-implementation",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "package_materialization_ref": "refs/heads/codex/fc04-mse-phase2-p31-v0-1-d07cursor",
+  "execution_ref": "refs/heads/codex/fc04-mse-phase2-p31-v0-1-d07cursor",
+  "package_path": ".aegis/packages/FC04-MSE-PHASE2-P31-v0.1/package.json",
+  "task_anchor": {
+    "revision": "2fee75f66a7f96f6aac834228ede372a9abda59a",
+    "relation": "ancestor"
+  },
+  "resume_cursor": {
+    "execution_ref": "refs/heads/codex/fc04-d07-functional-p31-v0-3",
+    "revision": "6bcf2d4bbf3314e5252951190c3c475403f52665",
+    "completed_through": [
+      "D07 functional source scope and evidence reviewed at P34 PASS_WITH_FINDINGS",
+      "D06-B eligible-subset product policy accepted by targeted P23",
+      "Selection/Lasso/marquee runtime foundation and Section/Group semantic integration present in source cursor"
+    ],
+    "next_action": "Run package preflights, reconcile exact source paths, implement frozen Phase 2 multi-selection editing closure; do not redo D07"
+  },
+  "authority": {
+    "d06_b": "https://app.notion.com/p/4074c57a590c81d9b124cd243e44f205?pvs=204",
+    "d07_scope": "https://app.notion.com/p/4064c57a590c819aabc5e9efbf9a2b53?pvs=204",
+    "d07_functional_review": "https://app.notion.com/p/4074c57a590c81269adeeed3598f5889?pvs=204",
+    "mse_behavior": "https://app.notion.com/p/4064c57a590c8129bf61f11188e21b2e?pvs=204",
+    "mse_source_matrix": "https://app.notion.com/p/4064c57a590c81d9b562f037705e2345?pvs=204",
+    "fc02_decisions": "https://app.notion.com/p/4064c57a590c81a997ddfff3da30ccea?pvs=204"
+  },
+  "design": "design.md",
+  "closure": "closure.md",
+  "implementation_context": "implementation-context.json",
+  "source_matrix": "source-matrix.md",
+  "test_matrix": "test-matrix.json",
+  "evidence_contract": "evidence-contract.md",
+  "source_lock": "source-lock.json",
+  "input_lock": "input-lock.json",
+  "integrity": "integrity.json",
+  "preflight": "preflight.py",
+  "terminal_blockers": "terminal-blockers.md",
+  "p32_handoff": "p32-handoff.md",
+  "p32_authorized": false,
+  "requires_control_review": true,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "terminal_success": "PHASE2_FUNCTIONAL_SCOPE_COMPLETE_READY_FOR_CONTROL_REVIEW",
+  "overall_d07_release_status": "BLOCKED_KNOWN_HIGH_IMPACT_OOM_HANG"
+}

@@ -18,6 +18,7 @@ namespace canvas::text { class RichTextLayoutService; }
 
 namespace canvas::runtime {
 class CanvasRuntimeFacade;
+class MultiSelectionPort;
 
 enum class RuntimeCompositionState : std::uint8_t {
   kCreated,
@@ -109,6 +110,7 @@ struct RuntimeSurfaceSnapshot final {
 
 class RuntimeComposition final {
   friend class CanvasRuntimeFacade;
+  friend class MultiSelectionPort;
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
   friend class canvas::qualification::Access;
 #endif
@@ -171,6 +173,7 @@ class RuntimeComposition final {
   // attach an alternate owner.
   [[nodiscard]] RuntimeFacade& controlFacade() noexcept;
   [[nodiscard]] const RuntimeFacade& controlFacade() const noexcept;
+  [[nodiscard]] MultiSelectionPort& multiSelectionPort() noexcept;
 #if defined(AXIOM_RUNTIME_QUALIFICATION)
   [[nodiscard]] bool requestCanonicalFrame(std::uint64_t frameId) noexcept;
 #endif
@@ -269,6 +272,7 @@ class RuntimeComposition final {
   std::thread::id ownerThread_;
   render::ViewId viewId_{render::ViewId{1}};
   std::unique_ptr<CanvasRuntimeFacade> controlFacade_;
+  std::unique_ptr<MultiSelectionPort> multiSelectionPort_;
   std::optional<interaction::PreviewPresentationCapture> pendingPreviewCapture_;
   std::uint64_t pendingPreviewPresentCount_ = 0;
   std::uint64_t pendingPreviewWorkId_ = 0;

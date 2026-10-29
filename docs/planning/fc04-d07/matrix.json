@@ -1,0 +1,94 @@
+[
+  {
+    "id": "D07-01",
+    "status": "BLOCKED_IMPLEMENTATION",
+    "actual_and_limit": "No real multi-intent entry or HistoryGroup; span admission RED and two ordinary commands produce two entries.",
+    "evidence_test_suffixes": [
+      "RequiredMultiIntentEntryIsUnavailable_RED",
+      "TwoIndependentCommandsNeedTwoUndoUnits",
+      "NaiveSequentialFallbackCannotSatisfyOneUndo_RED"
+    ]
+  },
+  {
+    "id": "D07-02",
+    "status": "PARTIAL_SINGLE_OP_ONLY",
+    "actual_and_limit": "Real span refuses before apply; homogeneous invalid batch and real precommit admission rejection preserve Document/Scene/index/generation/history/redo. No staged sequence coordinator.",
+    "evidence_test_suffixes": [
+      "ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation",
+      "HomogeneousMultiTargetValidationRejectsWholeOperationAndPreservesRedo",
+      "RealPrecommitAdmissionRejectionHasZeroMutationAndPreservesRedo"
+    ]
+  },
+  {
+    "id": "D07-03",
+    "status": "BLOCKED_MULTI_INTENT_INJECTION",
+    "actual_and_limit": "No permitted multi-operation forward boundaries exist. Independent-command negative control tested rejection at0/1, demonstrates retained prefix, not containment.",
+    "evidence_test_suffixes": [
+      "IndependentCommandsExposeAppliedPrefixAtEveryTwoOperationRejectionBoundary"
+    ]
+  },
+  {
+    "id": "D07-04",
+    "status": "PARTIAL_COMPONENT_ONLY",
+    "actual_and_limit": "Existing real C++ allocation sweeps exercise Engine+History with custom submit fixtures. Group-wide preimage/history reservation and production coordinator absent.",
+    "evidence_test_suffixes": [
+      "fc08.section_c_allocation.SectionHistoryAllocation.*"
+    ]
+  },
+  {
+    "id": "D07-05",
+    "status": "REPRODUCED_POSTCOMMIT_FAILURE",
+    "actual_and_limit": "Ten real Scene checkpoints and safe Scene OOM recover. ChangeSet/result-copy growth OOM reaches terminate86 after canonical mutation with History0; no grouped receipt path.",
+    "evidence_test_suffixes": [
+      "RealScenePublicationFaultsRetainCommittedHistoryAndRecoverCoherently",
+      "FC04D07PostcommitFault",
+      "FC04D07PostcommitReceiptGrowthFault"
+    ]
+  },
+  {
+    "id": "D07-06",
+    "status": "PASS_SINGLE_OP_NOT_RUN_MULTI",
+    "actual_and_limit": "Actual two-target Transform/Properties Undo after selecting third object restores committed original targets; no multi-op group to test.",
+    "evidence_test_suffixes": [
+      "TransformBatchHasOneUndoWithChangedSelectionAndFreshRedoIdentity",
+      "PropertiesBatchHasOneUndoWithChangedSelection"
+    ]
+  },
+  {
+    "id": "D07-07",
+    "status": "PASS_SINGLE_OP_NOT_RUN_MULTI",
+    "actual_and_limit": "Fresh Undo/Redo IDs, monotonic generation/ordinal and one-entry cursor behavior verified for single-op batches only.",
+    "evidence_test_suffixes": [
+      "TransformBatchHasOneUndoWithChangedSelectionAndFreshRedoIdentity"
+    ]
+  },
+  {
+    "id": "D07-08",
+    "status": "PASS_PREWRITE_BLOCKED_MID_INTENT",
+    "actual_and_limit": "Prewrite rejection preserves known small-history cursor/redo; no coherent middle-failure group path.",
+    "evidence_test_suffixes": [
+      "ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation",
+      "HomogeneousMultiTargetValidationRejectsWholeOperationAndPreservesRedo",
+      "CapturedExpectationsRejectUndoConflictWithoutCursorOrRedoMutation"
+    ]
+  },
+  {
+    "id": "D07-09",
+    "status": "OBSERVED_INDIVIDUAL_OPS_BLOCKED_GROUP",
+    "actual_and_limit": "Real events/ChangeSets advance per commit; callbacks can see old Scene/history before later coherent publication. Ordinary Undo restores projection, not metadata/events and retains redo. Not automatic failed-intent compensation.",
+    "evidence_test_suffixes": [
+      "ManualCanonicalCompensationRestoresProjectionButDoesNotRewindMetadataOrEvents",
+      "RealScenePublicationFaultsRetainCommittedHistoryAndRecoverCoherently"
+    ]
+  },
+  {
+    "id": "D07-10",
+    "status": "PASS_CORE_INTEGRATION",
+    "actual_and_limit": "Single SetTransforms/PatchProperties with two targets tested independently; malformed member rejects whole op. No public bulk UI claim.",
+    "evidence_test_suffixes": [
+      "TransformBatchHasOneUndoWithChangedSelectionAndFreshRedoIdentity",
+      "PropertiesBatchHasOneUndoWithChangedSelection",
+      "HomogeneousMultiTargetValidationRejectsWholeOperationAndPreservesRedo"
+    ]
+  }
+]

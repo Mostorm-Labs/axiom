@@ -1,0 +1,41 @@
+# FC04 D07 — Selection subject audit v0.2
+
+**Active subject: codex/selection-summary-batch3@c7f874395d55952e9d5288e2a336a21747f37f11. Verdict: D07 BLOCKED_IMPLEMENTATION; no Gate or Phase2 implementation approval.**
+
+## Baseline correction and preservation
+
+The original supplied handoff named main2fee75f6. Its initial audit/harness was preserved on codex/fc04-d07-source-audit@1ef2ce0f and in the separate fc04-d07-audit worktree. Following the user's latest clarification, execution returned to the existing selection-unified-batch1/canvas worktree, branched codex/fc04-d07-selection-audit directly from c7f87439, and cherry-picked only the bounded test/doc change as b901de5f. Original main and Selection branch pointers remain unchanged. The earlier findings/amendment v0.1 remain main-comparison history; verification-scope-v0.2.json and this document define the active audit.
+
+Six specified History/OperationEngine files are byte-identical across the two subjects. Selection/root resolution, caller and Scene code, plus the read-only normalizer/validator publication, differ. The current branch was separately built and executed; main results were not substituted. SDK locks are identical. No product runtime/schema/app/debugUI/build source, expected corpus or registry was changed by this audit. The existing public Windows exe hash remains d150270e7cb56d6d3bf4ca9f48d185c9222702e2658bd986d176ea5951cc34ee.
+
+## Source audit answers on the actual Selection subject
+
+1. No production IntentPlan/LocalIntentPlan/UndoIntent/HistoryGroup/IntentCommitSegment implementation or caller was found. Actual owner tracing corroborates the searches: CanvasEditingRuntime is the sole production HistorySubmitPort; its span path refuses size!=1 before apply and is UndoRedo-only. Input/session coordinators and RuntimeComposition are not multi-operation commit coordinators. Section topology commits one opcode18 rather than orchestrating multiple independent operations.
+2. OperationEngine::prepare/admitPlan and prepareUndoableCommand validate one forward/staged-after/inverse pair. No complete ordered multi-operation staged sequence on a coherent basis is admitted before first apply. The span guard proves safe unavailability, not sequence preflight.
+3. The admitted single-op History path captures/measures actual F/U, validates inverse restoration, reserves History storage and retains expectations before canonical apply. Legacy applyLocalHistoryOperation also prepares its single entry first; Brush/eraser post-apply record calls are not evidence for this guarantee. No group-wide reservation owner exists. Existing allocation fixtures exercise actual Engine+History through a custom submit owner and therefore do not prove real production receipt/Scene publication.
+4. A real two-operation span is rejected without mutation, including an existing redo branch. Deliberately sequencing independent real commands demonstrates that item0 rejection is a no-op and item1 rejection leaves an Applied first-command prefix. This is a negative control, not a test-side replacement coordinator.
+5. Ordinary Undo restores real canonical records, world bounds and spatial-query IDs while new generations/stamps/events remain. Ten real Scene publication checkpoints keep committed History and allow coherent recovery. The separate receipt-growth failure below is not contained by this path. There is no automatic failed-intent compensation/group finalizer to verify.
+6. Two independent heterogeneous commands produce two History units; one Undo does not revert both. A single SetTransforms or PatchProperties operation over two objects produces one Undo unit and remains bound to the original targets after current selection changes to a third object. This is real-owner integration, not a claim that public multi-edit UI already exists.
+7. Existing editor_history_test.cpp uses a fake submit port and is UNIT evidence. FC08 history/allocation tests use real Engine/History with a custom host fixture and are COMPONENT INTEGRATION. New probes use actual RuntimeComposition/CanvasEditingRuntime/EditorHistory/Scene/index and existing read-only observers/test seams: REAL-OWNER INTEGRATION. No end-to-end multi-intent producer exists and none was fabricated. Small-history cursor preservation is demonstrated by size/canUndo/canRedo and actual Undo/Redo target behavior; no new private cursor API is invented.
+8. Per-operation intermediate events and generations are allowed by07-14. Compensation must not rewind/delete metadata. Cross-crash/cross-client whole-intent atomicity remains OPEN and was not added as a requirement.
+
+Exact source anchors and caller inventory are retained in the result receipt; the full D07-01..10 obligation matrix is matrix-v0.2.json. It explicitly distinguishes single-op PASS from multi-intent BLOCKED/NOT_RUN.
+
+## Actual current-subject execution
+
+- Release /MT /WX Native build: PASS. Locked published Semantic and Skia SDKs consumed; offline resolution succeeds, qualification hooks remain OFF. Test targets are injected by an opt-in test-only CMake include; production CMake is unchanged.
+- Existing/focused regressions:160 registered CTests PASS,0 failed/0 skipped, exit0. This includes the earlier154 owner/component checks plus Selection Summary, SelectionSession, region, coverage, input and Section consumer regressions. Frozen H03/H04 ignored wire inputs were restored BEFORE this run from local verified cache using13 committed hash bindings; input/expected bytes are unchanged.
+- Audit suite:14 registered CTests,11 PASS and3 RED, exit8. No WILL_FAIL conversion or skipped/missing-match success.
+- Direct full-output audit binary:10 PASS/2 RED, exit1. Its two REDs show missing admission and why naive sequencing is not one Undo; they are current-subject counterexamples, not an eventual new-coordinator Gate runner and not instructions to remove the lower port's guard.
+- Controlled postcommit Scene allocation failure: exit0. Actual trace generation1→2, History1, Scene initially1, then recovery reaches2. This passing branch prevents overgeneralizing an allocation-failure hypothesis.
+- Controlled postcommit retained-result growth failure: exit86. An ordinary InsertObjects of two Shapes after one existing Shape grows the ChangeSet/result copy. After injecting the first C++ allocation failure after generation advancement, raw observations show generation2, ordinal2, canonical objects3, History0, Scene1, followed by TERMINATE_REACHED. Production chain is Engine commit → submitAdmitted → noexcept observeApplied / lastAppliedCommit_ copy → termination before History commitPrepared. The isolated terminate observer records state and exits86 without an OS dialog; it does not repair or recover the SUT. No persistent recovery or crash-atomic rollback conclusion follows from this test.
+
+This fatal boundary is missed by custom submit fixtures that call Engine directly and omit production observeApplied. It is a concrete outcome/finalization gap relevant to D07-05, requiring owning-layer classification/fix authorization. The other two REDs demonstrate absent coherent-intent functionality, not a defect in the safe span refusal.
+
+Main comparison: initial154 run had148 PASS/6 missing-cache-input failures; verified restoration made all six pass. Those original failures and main observations are preserved separately and are not relabeled current-Selection evidence.
+
+## Terminal return
+
+D07 is not closed for Phase2: required multi-operation staged preflight, bounded non-interleaving segment, automatic compensation, group-wide admission and one successful HistoryGroup are absent, and receipt-growth OOM exposes a postcommit fatal boundary. Keep affected multi-operation commands unavailable; the current Runtime guard already does this. Single-operation multi-target mechanisms have scoped proof and may be used only through separately authorized product command work.
+
+D07-scope-amendment-candidate-v0.2.md requests the narrow control-owner decision within existing Runtime/History ownership. It is a candidate, not accepted Authority. No production fix, global Transaction, second History, main merge, DEV/P34/PHYS/Gate or release claim. Native local tests only: Web, physical UI/touch/IME/GPU, persistence/crash/client tests and full302 NOT_RUN.

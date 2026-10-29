@@ -1,0 +1,22 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SelectionCoverage.RichTextUsesExistingLineFragmentsAndMissingLayoutIsUnsupported
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SelectionCoverage
+[ RUN      ] SelectionCoverage.RichTextUsesExistingLineFragmentsAndMissingLayoutIsUnsupported
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\interaction\tests\selection_coverage_test.cpp(94): error: Expected equality of these values:
+  intersectSelectionRegion(r,box(5,3),&p)
+    Which is: 1-byte object <01>
+  RegionIntersection::kUnsupported
+    Which is: 1-byte object <02>
+
+[  FAILED  ] SelectionCoverage.RichTextUsesExistingLineFragmentsAndMissingLayoutIsUnsupported (0 ms)
+[----------] 1 test from SelectionCoverage (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionCoverage.RichTextUsesExistingLineFragmentsAndMissingLayoutIsUnsupported
+
+ 1 FAILED TEST

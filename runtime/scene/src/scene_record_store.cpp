@@ -94,11 +94,11 @@ SceneRecordStore::buildPreparedUpdate(std::vector<SceneRecord> records) {
 }
 
 const SceneRecord* SceneRecordStore::PreparedUpdate::find(ObjectId objectId) const {
-    return findRecord(_records, _index, objectId);
+    return findRecord(_payload->records, _payload->index, objectId);
 }
 
 WorldRect SceneRecordStore::PreparedUpdate::contentBounds() const {
-    return calculateContentBounds(_records);
+    return calculateContentBounds(_payload->records);
 }
 
 const SceneRecord* SceneRecordStore::find(ObjectId objectId) const {
@@ -166,7 +166,20 @@ SceneRecordStore::prepareReplace(std::span<const SceneRecord> records) const {
             }
             normalized.push_back(std::move(result.value()));
         }
-        return buildPreparedUpdate(std::move(normalized));
+        auto result = buildPreparedUpdate(std::move(normalized));
+        if (!result) return result;
+        auto& update = result.value();
+        update._payload->handles.reserve(update._payload->records.size());
+        update._payload->arena.reserve(update._payload->records.size());
+        auto nextHandle = _nextHandle;
+        for (const auto& record : update._payload->records) {
+            const auto handle = nextHandle++;
+            update._payload->handles.emplace(record.objectId, handle);
+            update._payload->arena.emplace(handle, record);
+            update._payload->orderIndex.emplace(std::make_pair(record.orderKey, record.objectId), handle);
+        }
+        update._payload->nextHandle = nextHandle;
+        return result;
     } catch (const std::bad_alloc&) {
         return foundation::Result<PreparedUpdate>::failure(
             makeError(ErrorCode::kOutOfMemory, "Unable to prepare Scene replacement"));
@@ -283,9 +296,9 @@ SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
     }
 }
 
-void SceneRecordStore::commit(PreparedUpdate update) noexcept {
-    if (!update._delta.sceneDelta.mutations.empty()) {
-        for (const SceneMutation& mutation : update._delta.sceneDelta.mutations) {
+void SceneRecordStore::commit(PreparedUpdate&& update) noexcept {
+    if (!update._payload->delta.sceneDelta.mutations.empty()) {
+        for (const SceneMutation& mutation : update._payload->delta.sceneDelta.mutations) {
             switch (mutation.kind) {
             case SceneMutationKind::kInsert: {
                 if (_handles.find(mutation.objectId) == _handles.end()) {
@@ -320,21 +333,16 @@ void SceneRecordStore::commit(PreparedUpdate update) noexcept {
             }
             }
         }
-        _localityDiagnostics.localizedMutationCount += update._delta.sceneDelta.mutations.size();
+        _localityDiagnostics.localizedMutationCount += update._payload->delta.sceneDelta.mutations.size();
         _orderedCacheValid = false;
         return;
     }
-    _records.swap(update._records);
-    _index.swap(update._index);
-    _handles.clear();
-    _arena.clear();
-    _orderIndex.clear();
-    for (const SceneRecord& record : _records) {
-        const RecordHandle handle = _nextHandle++;
-        _handles.emplace(record.objectId, handle);
-        _arena.emplace(handle, record);
-        _orderIndex.emplace(std::make_pair(record.orderKey, record.objectId), handle);
-    }
+    _records.swap(update._payload->records);
+    _index.swap(update._payload->index);
+    _handles.swap(update._payload->handles);
+    _arena.swap(update._payload->arena);
+    _orderIndex.swap(update._payload->orderIndex);
+    _nextHandle = update._payload->nextHandle;
     _orderedCacheValid = true;
 }
 

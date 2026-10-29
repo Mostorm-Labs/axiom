@@ -1,0 +1,26 @@
+{
+  "authority": "https://app.notion.com/p/4064c57a590c81a997ddfff3da30ccea",
+  "retained_case_ids": "MSE-01..MSE-27",
+  "MSE-25": {
+    "required": "Escape during TextEdit or active IME composition cancels only the active edit/composition and does not also clear selection or exit group scope in the same event.",
+    "additional_assertion": "After commit or cancel the owning root remains selected; the previous multi-selection is not restored.",
+    "expected": "No unconfirmed composition becomes canonical; previously committed text is retained; selection/scope remains unchanged for the same Escape event.",
+    "status": "NOT_RUN"
+  },
+  "protected_regression": {
+    "ctest_id": "FC01ASelectionInputIntegration",
+    "source": "runtime/composition/tests/selection_input_integration_test.cpp",
+    "affected_case": "SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade",
+    "rule": "Retain the CTest ID and unaffected negative assertions; replace only assertions explicitly superseded by supported multi-selection commands, with real positive and zero-mutation negative tests.",
+    "status": "NOT_RUN"
+  },
+  "MSE-27": {
+    "required": "A projection becomes stale after semantic generation changes even if selected root IDs and selection revision are unchanged; the queued command is rejected or re-resolved before canonical mutation.",
+    "existing_queue_owner": "runtime/control/src/canvas_control_service.cpp",
+    "queue_test_owner": "runtime/control/tests/canvas_control_service_test.cpp",
+    "expected": "No canonical/Scene/History mutation on rejection; the original selection-revision and stale-target checks continue to pass.",
+    "status": "NOT_RUN"
+  },
+  "mse_07_19_20_21_23_26": "Inherited accepted D06-B outcomes; exact provider, per-target observations and test paths remain to be bound with the projection contract.",
+  "historical_results": "immutable"
+}

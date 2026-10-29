@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <map>
+#include <memory>
 #include <span>
 #include <unordered_map>
 #include <utility>
@@ -33,7 +34,7 @@ class SceneRecordStore final {
         PreparedUpdate& operator=(const PreparedUpdate&) = delete;
 
         [[nodiscard]] std::span<const SceneRecord> records() const {
-            return _records;
+            return _payload->records;
         }
         [[nodiscard]] const SceneRecord* find(ObjectId objectId) const;
         [[nodiscard]] WorldRect contentBounds() const;
@@ -41,15 +42,25 @@ class SceneRecordStore final {
       private:
         friend class SceneRecordStore;
 
+        struct Payload final {
+            std::vector<SceneRecord> records;
+            std::unordered_map<ObjectId, std::size_t, foundation::ObjectIdHash> index;
+            std::unordered_map<ObjectId, RecordHandle, foundation::ObjectIdHash> handles;
+            std::unordered_map<RecordHandle, SceneRecord> arena;
+            std::map<std::pair<SceneOrderKey, ObjectId>, RecordHandle> orderIndex;
+            RecordHandle nextHandle = 0;
+            PreparedDelta delta;
+        };
         PreparedUpdate(std::vector<SceneRecord> records,
                        std::unordered_map<ObjectId, std::size_t, foundation::ObjectIdHash> index)
-            : _records(std::move(records)), _index(std::move(index)) {}
-
-        explicit PreparedUpdate(PreparedDelta delta) : _delta(std::move(delta)) {}
-
-        std::vector<SceneRecord> _records;
-        std::unordered_map<ObjectId, std::size_t, foundation::ObjectIdHash> _index;
-        PreparedDelta _delta;
+            : _payload(std::make_unique<Payload>()) {
+            _payload->records.swap(records);
+            _payload->index.swap(index);
+        }
+        explicit PreparedUpdate(PreparedDelta delta) : _payload(std::make_unique<Payload>()) {
+            _payload->delta = std::move(delta);
+        }
+        std::unique_ptr<Payload> _payload;
     };
 
     [[nodiscard]] std::span<const SceneRecord> records() const {
@@ -64,7 +75,7 @@ class SceneRecordStore final {
 
     foundation::Result<PreparedUpdate> prepareReplace(std::span<const SceneRecord> records) const;
     foundation::Result<PreparedUpdate> prepareApply(std::span<const SceneMutation> mutations) const;
-    void commit(PreparedUpdate update) noexcept;
+    void commit(PreparedUpdate&& update) noexcept;
     [[nodiscard]] LocalityDiagnostics localityDiagnostics() const noexcept {
         return _localityDiagnostics;
     }

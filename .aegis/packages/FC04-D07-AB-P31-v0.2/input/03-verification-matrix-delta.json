@@ -1,0 +1,18 @@
+{
+  "correction_id": "FC04-D07-P31-SCENE-SCOPE-v0.2",
+  "subject_revision": "15e76458f3872be4d1b51d4aac05eb8402719014",
+  "status": "PLANNED_NOT_RUN",
+  "new_scene_oracles": [
+    {"id":"SCENE-PREP-01","kind":"real-owner-positive","assertions":["real coordinator prepare changes no visible Scene/RuntimeScene records, revision/generation, queries, hit-test, draw-list, damage/invalidation or observer counts"]},
+    {"id":"SCENE-PREP-02","kind":"abort-no-mutation","assertions":["abort after prepare leaves Document, Scene, RuntimeScene, History cursor and redo unchanged; staged resources released"]},
+    {"id":"SCENE-PREP-03","kind":"participant-failure-injection","assertions":["each real participant prepare/reservation failure leaves visible state unchanged; actual fault phase recorded"]},
+    {"id":"SCENE-PREP-04","kind":"no-fail-commit","assertions":["successful commit publishes coherent post-intent state; no fallible allocation/recoverable rejection remains after canonical mutation begins; per-Operation metadata and ordered DataBridge notifications remain intact"]},
+    {"id":"SCENE-PREP-05","kind":"stale-basis-rejection","assertions":["stale Scene revision/semantic generation rejects before canonical mutation; Document, Scene, History cursor and redo unchanged"]},
+    {"id":"SCENE-PREP-06","kind":"single-operation-regression","assertions":["existing apply/synchronize/recover behavior and callback order remain compatible"]},
+    {"id":"D07-GROUP-POSITIVE","kind":"explicit-intent-real-owner","assertions":["multiple typed Operations through real explicit Intent owner; one user-visible Undo; Undo after selection change restores original targets; Redo restores forward meaning with fresh IDs; no partial Scene/observer state"]},
+    {"id":"D07-OOM-BLOCKING","kind":"fault-injection","assertions":["preserve single-command receipt-growth OOM fix; no canonical mutation stranded without History; History, Scene and redo invariants hold"]}
+  ],
+  "preserve": {"selection_regression_ids":160,"historical_d07_passes":11,"historical_evidence_immutable":true,"independent_commands_need_two_undo_units":true,"naive_sequential_fallback_is_negative_control":true},
+  "profiles": {"windows_native":"required","web_wasm":"run where locked toolchain supports and record synthetic coverage","physical_touch":"not part of this D07 closure"},
+  "forbidden": ["global canonical Transaction","public C ABI or wire/schema change","D06-B implementation","rewriting historical results","test-only fake Scene preparer"]
+}

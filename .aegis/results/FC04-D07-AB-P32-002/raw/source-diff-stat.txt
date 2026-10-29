@@ -1,0 +1,16 @@
+ .../canvas/interaction/canvas_editing_runtime.hpp  |  10 ++
+ .../include/canvas/interaction/editor_history.hpp  |  15 +++
+ runtime/interaction/src/canvas_editing_runtime.cpp | 141 +++++++++++++++++++++
+ runtime/interaction/src/editor_history.cpp         |  59 ++++++++-
+ .../scene/incremental_runtime_coordinator.hpp      |  10 ++
+ runtime/scene/include/canvas/scene/scene.hpp       |  17 +++
+ .../include/canvas/scene/scene_record_store.hpp    |  29 +++--
+ .../scene/src/incremental_runtime_coordinator.cpp  |  48 +++++++
+ runtime/scene/src/scene.cpp                        |  71 ++++++++++-
+ runtime/scene/src/scene_record_store.cpp           |  44 ++++---
+ .../include/canvas/semantic/operation_engine.hpp   |  23 ++++
+ runtime/semantic/src/operation_engine.cpp          |  99 +++++++++++++++
+ verification/fc04_d07/CMakeLists.txt               |   3 +
+ verification/fc04_d07/audit_test.cpp               |  57 +++++++++
+ verification/fc04_d07/postcommit_fault.cpp         |  74 ++++++++++-
+ 15 files changed, 668 insertions(+), 32 deletions(-)

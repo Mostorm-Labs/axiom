@@ -1,0 +1,38 @@
+{
+  "repository": "Mostorm-Labs/axiom",
+  "remote": "https://github.com/Mostorm-Labs/axiom.git",
+  "source_revision": "4eee69946dad61e0fc7678f9453423066c51750c",
+  "source_ref": "refs/heads/codex/fc04-mse-p31-v02-binding-fix",
+  "origin_main_observed": "863578cd2acc004a60b1e3be63c4ac1cd93237b5",
+  "common_ancestor": "2fee75f66a7f96f6aac834228ede372a9abda59a",
+  "main_history_delta_net_files": [],
+  "existing_product_p31_ref": "refs/heads/control/fc08-product-p31-package",
+  "existing_product_p31_revision": "f67b9db29090449799bd3e05ef7f1d269dab6d31",
+  "source_sha256": {
+    "runtime/interaction/src/canvas_section_commands.cpp": "c2ff4cb0a778bfea7454109b3c7ac7e85596f44d500f8dfa271986d750cf09f6",
+    "runtime/interaction/src/selection_session.cpp": "ba1e7a57226a29801d9a6c60ef0ed617f0c98621bed39e871f75a151e6f749fd",
+    "runtime/interaction/src/canvas_selection_summary.cpp": "bde09d01d47ba592df4e4983ce11e479a13a99f37cc975dd72c1154cd2e3a9f0",
+    "runtime/interaction/src/undoable_command.cpp": "52634b9d12deba83ca9acb762105d6bc497c9b474edb5a96c007b41e9e838a4d",
+    "runtime/semantic/src/container_topology_plan.cpp": "031204417995b738ff5d0dd19d4fec51a2c89db8f65f738971a694470a3c0eab",
+    "runtime/semantic/src/container_operation_validation.cpp": "6692180d94d79c64a85303eba76a7c3304301c0d96e2d59106fbfc0a06523e64",
+    "runtime/semantic/include/canvas/semantic/container_operation.hpp": "0aecd9d69a785608791c7ddb8973e38a602fc58e8bc392060dd9854c462d563b",
+    "runtime/composition/tests/fc08_section_consumer_test.cpp": "d59f7bf93a43918545086e12fc25e3872dca0c98ffc53b69e0662d38dbc11b2b",
+    "runtime/composition/src/multi_selection_port.cpp": "beb99b8702316a60daf1da7d84774a4f010e17a980e8d1bbd93acfb9542018a9",
+    "runtime/composition/include/canvas/runtime/internal/multi_selection_port.hpp": "90a6b521e061290150740b031566ca0d3c8949c6a53316de7ceeb42b11c088df",
+    "verification/fc04_mse/mse_01_27_test.cpp": "9586952fad81fc7476e36b71980f885a269b3ae0940719c90819061618b744b3",
+    ".aegis/packages/FC-08-PRODUCT-P31-v0.1/package.json": "16bf27433764def988bbff5eb925f08816c42f32842e23a4b33e46976c2df165",
+    ".aegis/results/FC-08-P31-BOOTSTRAP/attempts/bootstrap-003/terminal-result.json": "0ac93d550b8877e5fe33461efe8615d2cfa049380dc07e96379a6b5cfd901bab"
+  },
+  "raw_sha256": "2ff81d51a73c5efc8be21cd4c5bdade0e0bf756ff55698b2b68dcca21817fa84",
+  "verification": {
+    "command": "ctest --test-dir <absolute build> -R ^(FC04[.]MSE-(09|15|18|21|22|24|25|27)|FC04MSE(HistoryFaultUndo|HistoryFaultRedo|MultiIntent|MultiIntentFault|ForwardFaultSemantic|ForwardFaultScene)|FC08SectionConsumer)$ --output-on-failure --no-tests=error --timeout 30 --output-junit <absolute XML>",
+    "tests": 15,
+    "exit_code": 0,
+    "claims": "regression and preparation only; physical testing not run"
+  },
+  "group_authorization": "NOT_MATERIALIZED",
+  "group_product_code_changed": false,
+  "original_fc08_product_package_authorized": false,
+  "phase2_status": "INCOMPLETE: MSE-20, MSE-23, MSE-26 and full web matrix",
+  "d07_oom": "BLOCKED independent of the bounded functional tests; not rerun"
+}

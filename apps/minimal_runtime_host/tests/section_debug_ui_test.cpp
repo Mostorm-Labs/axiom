@@ -64,6 +64,10 @@ int main() {
   assert(section.target==facade.mountedCanvasTargets().front());
   assert(section.content.boundary.width==320&&section.content.boundary.height==240);
   assert(section.selectedRoots==std::vector{section.objectId});
+  const auto summary=facade.readSelectionSummary();
+  assert(summary.status==runtime::SelectionSummaryStatus::kAvailable);
+  assert(summary.roots==section.selectedRoots&&summary.primary==section.objectId);
+  assert(controller.snapshot().selectionSummary==summary);
   assert(canonicalPixels()!=emptyCanvas); // a real visible Section, not only a receipt
   const auto activity=controller.snapshot().activity;
   assert(!activity.entries.empty()&&activity.entries.back().state==debug_ui::DebugActivityState::kApplied);
@@ -92,6 +96,16 @@ int main() {
   assert(wrapped.members.front().worldTransform.tx==100&&wrapped.members.front().worldTransform.ty==120);
   activate("Release Section");assert(host.composition().semanticObjectCount()==1);
   assert(!facade.readSection(wrapped.objectId).available);
+  const auto roots=facade.readSection().selectedRoots;
+  activate("Rectangle select");
+  assert(facade.readRuntimeState().control.selectionAcquisitionMode==runtime::CanvasSelectionMode::kRectangle);
+  assert(facade.readSection().selectedRoots==roots);
+  activate("Freeform lasso");
+  assert(facade.readRuntimeState().control.selectionAcquisitionMode==runtime::CanvasSelectionMode::kFreeform);
+  activate("Hand");assert(facade.readRuntimeState().tool.toolId==3);
+  assert(facade.readSection().selectedRoots==roots);
+  activate("Select");assert(facade.readRuntimeState().control.selectionAcquisitionMode==runtime::CanvasSelectionMode::kPoint);
+  assert(facade.readSection().selectedRoots==roots);
   ImGui::DestroyContext();
   std::cout<<"PASS: real Section widgets through MinimalRuntimeFacade create/wrap/release and Undo/Redo\n";
 }

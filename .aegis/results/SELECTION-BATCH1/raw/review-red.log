@@ -1,0 +1,80 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SelectionInput.AddResolvesRetainedRootsAfterExternalReparent:SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement:SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation
+[==========] Running 3 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 3 tests from SelectionInput
+[ RUN      ] SelectionInput.AddResolvesRetainedRootsAfterExternalReparent
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(269): error: Expected equality of these values:
+  selected()
+    Which is: { 16-byte object <8D-23 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 16-byte object <8E-23 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+  (std::vector{groupId,b})
+    Which is: { 16-byte object <E4-25 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 16-byte object <8E-23 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(272): error: Expected equality of these values:
+  selected()
+    Which is: { 16-byte object <8E-23 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 16-byte object <E4-25 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+  (std::vector{groupId,b})
+    Which is: { 16-byte object <E4-25 00-00 00-00 00-00 00-00 00-00 00-00 00-00>, 16-byte object <8E-23 00-00 00-00 00-00 00-00 00-00 00-00 00-00> }
+
+[  FAILED  ] SelectionInput.AddResolvesRetainedRootsAfterExternalReparent (281 ms)
+[ RUN      ] SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement
+[axiom] present begin frame=3 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=3 scene_records=3
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(283): error: Value of: editor.previewSurfaceProvider()->overlayVisible()
+  Actual: true
+Expected: false
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(285): error: Value of: editor.previewSurfaceProvider()->overlayVisible()
+  Actual: true
+Expected: false
+
+[  FAILED  ] SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement (473 ms)
+[ RUN      ] SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(295): error: Value of: snapshot().selectedLocked
+  Actual: false
+Expected: true
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(297): error: Value of: c.qualificationRuntime().deleteSelectedObjects()
+  Actual: true
+Expected: false
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(302): error: Expected equality of these values:
+  c.semanticObjectCount()
+    Which is: 1
+  3U
+    Which is: 3
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(302): error: Expected equality of these values:
+  snapshot().semanticGeneration
+    Which is: 3
+  before.semanticGeneration
+    Which is: 2
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(303): error: Expected equality of these values:
+  snapshot().canUndo
+    Which is: true
+  before.canUndo
+    Which is: false
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(304): error: Expected equality of these values:
+  ink_playground::InkPlaygroundHistoryTestAccess::historySize(c.qualificationRuntime())
+    Which is: 1
+  historySize
+    Which is: 0
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(305): error: Value of: c.qualificationRuntime().qualificationObjectRecord(a)
+  Actual: false
+Expected: true
+
+[  FAILED  ] SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation (137 ms)
+[----------] 3 tests from SelectionInput (892 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test suite ran. (892 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 3 tests, listed below:
+[  FAILED  ] SelectionInput.AddResolvesRetainedRootsAfterExternalReparent
+[  FAILED  ] SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement
+[  FAILED  ] SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation
+
+ 3 FAILED TESTS

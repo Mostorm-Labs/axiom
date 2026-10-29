@@ -1,0 +1,17 @@
+{
+  "task": "FC04-D07-SOURCE-AUDIT",
+  "authorized_by": "Direct user supplied audit-only handoff v0.1; separately bounded verification harness and evidence only",
+  "source_subject": "2fee75f66a7f96f6aac834228ede372a9abda59a",
+  "branch": "codex/fc04-d07-source-audit",
+  "allowed_paths": [
+    "verification/fc04_d07/**",
+    "docs/planning/fc04-d07/**",
+    ".aegis/results/FC04-D07-AUDIT/**"
+  ],
+  "production_changes_authorized": false,
+  "no_gate_or_phase2_authorization": true,
+  "handoff_sha256": "072e6c700b7a317da206aec675f8141473599e73e6923f37af5d7ece7e16d0f5",
+  "original_checkout": "codex/selection-summary-batch3@c7f874395d55952e9d5288e2a336a21747f37f11",
+  "reconciliation": "Fresh isolated worktree at exact main subject. Six named core files identical at Selection Batch3 HEAD; preserve that worktree/exe. Fetched origin/main still exact subject.",
+  "boundary": "New test CMake is injected with CMAKE_PROJECT_TOP_LEVEL_INCLUDES/deferred test-only include, no product CMake edits, locked SDKs, qualification hooks remain OFF."
+}

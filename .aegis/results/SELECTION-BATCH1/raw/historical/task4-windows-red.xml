@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="1"
+	failures="1"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="2"
+	timestamp="2026-10-27T11:44:59"
+	>
+	<testcase name="FC01AWindowsSelectionInput" classname="FC01AWindowsSelectionInput" time="2.72548" status="fail">
+		<failure message="Exit code 0xc0000409"/>
+		<properties/>
+		<system-out>SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\out\selection-batch1\native\apps\minimal_runtime_host\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\out\selection-batch1\native\apps\minimal_runtime_host\icudtl.dat.
+Assertion failed: snapshot().selectedObjectCount==2, file C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp, line 64
+</system-out>
+	</testcase>
+</testsuite>

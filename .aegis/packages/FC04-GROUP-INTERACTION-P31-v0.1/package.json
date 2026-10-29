@@ -1,0 +1,50 @@
+{
+  "schema_version": "aegis-repo-local-execution-package-v1",
+  "id": "FC04-GROUP-INTERACTION-P31-v0.1",
+  "status": "DRAFT_NOT_ACCEPTED",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "source_revision": "84f0b19addedb1f0614072abb33d97c7950783d7",
+  "task_anchor": {
+    "revision": "84f0b19addedb1f0614072abb33d97c7950783d7",
+    "relation": "ancestor"
+  },
+  "execution_ref": "refs/heads/codex/fc04-mse-p31-v02-binding-fix",
+  "source_lock_sha256": "8141026320f5148d9b4b6ada35bc4360e681bdf5d5f9f1df5545aba0b8abcdb1",
+  "verification_candidate_sha256": "ddc9b3ad749339e289264569c5a06666f152beb857ed64bd887a78c72d179224",
+  "implementation_scope": "Group/Ungroup using existing topology, selection, scene and History; no parallel hierarchy or History; no new Group/Section semantics",
+  "allowed_source_scope_candidate": [
+    "runtime/interaction/include/canvas/interaction/**",
+    "runtime/interaction/src/canvas_section_commands.cpp",
+    "runtime/interaction/src/canvas_selection_summary.cpp",
+    "runtime/interaction/src/selection_session.cpp",
+    "runtime/composition/include/canvas/runtime/**",
+    "runtime/composition/src/**",
+    "runtime/foundation/include/canvas/runtime/**",
+    "debug_ui/**",
+    "apps/minimal_runtime_host/**",
+    "apps/axiom_canvas_demo/**",
+    "verification/fc08_group/**"
+  ],
+  "allowlist_status": "CANDIDATE: must narrow to exact files before P32",
+  "preserve": [
+    "original FC08 package and 302 expected values",
+    "accepted P12/P13 and Section semantics",
+    "D07 independent OOM blocker",
+    "user local single-user policy"
+  ],
+  "P32_authorized": false,
+  "blockers": [
+    "existing source owners are mapped; precise Group intent/receipt ingress and exact allowlist still need a binding decision",
+    "real test runner and frozen test commands not yet materialized",
+    "old FC08 full-runner requirement applicability or separately versioned sequencing not decided",
+    "package acceptance not recorded"
+  ],
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "owner_bindings_sha256": "5975279ccfc5a23a747ea821b06889581c8b2cda283512b024ae8056edb46358",
+  "oracle_candidate_sha256": "62266886135fb42f8f07122351ae0fe41abba91124e4769f24123116c4948b88"
+}

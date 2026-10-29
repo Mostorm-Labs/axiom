@@ -1,0 +1,53 @@
+{
+  "source_revision": "551f385c0bd7d9d311bded5ebc32896d7d5e6001",
+  "package_revision": "18ae15cdfc9410db7e7abce780b8721f3e3b601c",
+  "resume_cursor": "b5072f2c7dd796b2ad7aed3a6bfa5d86b6058cad",
+  "branch": "codex/fc04-d07-functional-p31-v0-3",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "python": "3.11.3 (tags/v3.11.3:f3909b8, Apr  4 2023, 23:49:59) [MSC v.1934 64 bit (AMD64)]",
+  "source_and_artifact_sha256": {
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "42e7c08f51fd42f7081493ef547580362aeb46232f04243318fd747de3e9ca9a",
+    "runtime/scene/include/canvas/scene/incremental_runtime_coordinator.hpp": "dddfb2403d6d8503f48ff5688eeee6eaa1c5890eb5d4aaed1b9c2d3436c2873a",
+    "runtime/scene/include/canvas/scene/scene.hpp": "7cec264d72c9a986fa5dcbd7db66f16a139b79957de161bc0215e526b33c3105",
+    "runtime/scene/src/incremental_runtime_coordinator.cpp": "43776efba1f6b196dba66bcc00b5bea1f78b2bbbb48c43bf2fa863ae118fdc73",
+    "runtime/scene/src/scene.cpp": "301dac2f711ad32dda2e525c6d86e1ca8c8837779d77aeb7cd7a09652d00d131",
+    "runtime/semantic/src/indexed_object_store.cpp": "7ba56546fcb9d03db08a685f1401b7003b5c1806b7ea085af681e0bbb04ff3d1",
+    "runtime/semantic/src/object_store_mutator.hpp": "510b76ba2ea962842e0c8caba8ce429309e46c472e5fc90d0cb996d97adce03e",
+    "runtime/semantic/src/operation_engine.cpp": "606f1390ba525decd28182e8c85a7639624b64db36b9539af5475131bf317eb6",
+    "verification/fc04_d07/CMakeLists.txt": "46fd3cf5cb5f75c8ecf6494b2c7e1bae4dc34b6a1cc527764edef13c5b1b1d1e",
+    "verification/fc04_d07/audit_test.cpp": "1937687e659cd22bfd839bf09db1be3a54df7d6e54a74088860563327c64c6a9",
+    "verification/fc04_d07/postcommit_fault.cpp": "5dd94d6e3aa94499e0920116bcbd9a4f2e21689c8d31faea467c9c823feb05b9",
+    "verification/fc04_d07/web_intent_test.cpp": "6b792bf74e60d68324be234aa2feb6bb4d899a780d0fbc284848615fd182a901",
+    "out/d07-functional/build/axiom_fc04_d07_audit_tests.exe": "b54d97d453f0dddc3bb3144a1b6bc07749e7b57da337b0579926ff7dd4799f81",
+    "out/d07-functional/build/axiom_fc04_d07_postcommit_fault.exe": "34dcf6ef8fecea895a8275af091597be42e7c6c1de03f380504fe04dd72d3ac7",
+    "out/d07-functional/web-build/axiom_fc04_d07_web_intent.wasm": "d375833207e263f6ac94fc3a0f41b9741548183029cd7d2b0cc6f3aa9cf77751",
+    "out/d07-functional/web-build/apps/axiom_canvas_demo/axiom_canvas_demo_web.wasm": "8f9b871ac35e34108afc5b9e02f4558dfb4fb22ca9e024011827411c5b3022a8"
+  },
+  "final_counts": {
+    "d07_14": {
+      "tests": 14,
+      "expected": 14,
+      "pass": true
+    },
+    "selection_160": {
+      "tests": 160,
+      "expected": 160,
+      "pass": true
+    },
+    "d07_all": {
+      "tests": 30,
+      "expected": 30,
+      "pass": true
+    },
+    "scene_regression": {
+      "tests": 2,
+      "expected": 2,
+      "pass": true
+    },
+    "faults": {
+      "tests": 46,
+      "expected": 46,
+      "pass": true
+    }
+  }
+}

@@ -1,0 +1,38 @@
+285:   int split_offset_;
+286:   int sizeof_split_;
+287: };
+288: 
+289: // This struct tries to reduce unnecessary padding.
+290: // The num_xxx might not be close to their respective pointer, but this saves
+291: // padding.
+292: struct PROTOBUF_EXPORT DescriptorTable {
+293:   mutable bool is_initialized;
+294:   bool is_eager;
+295:   int size;  // of serialized descriptor
+296:   const char* descriptor;
+297:   const char* filename;
+298:   absl::once_flag* once;
+299:   const DescriptorTable* const* deps;
+300:   int num_deps;
+301:   int num_messages;
+302:   const MigrationSchema* schemas;
+303:   const MessageGlobalsBase* const* message_globals;
+304:   const uint32_t* offsets;
+305:   // update the following descriptor arrays.
+306:   const EnumDescriptor** file_level_enum_descriptors;
+307:   const ServiceDescriptor** file_level_service_descriptors;
+308: };
+309: 
+310: // AssignDescriptors() pulls the compiled FileDescriptor from the DescriptorPool
+311: // and uses it to populate all of the global variables which store pointers to
+312: // the descriptor objects.  It also constructs the reflection objects.  It is
+313: // called the first time anyone calls descriptor() or GetReflection() on one of
+314: // the types defined in the file.  AssignDescriptors() is thread-safe.
+315: void PROTOBUF_EXPORT AssignDescriptors(const DescriptorTable* table);
+316: // As above, but the caller did the call_once call already.
+317: void PROTOBUF_EXPORT
+318: AssignDescriptorsOnceInnerCall(const DescriptorTable* table);
+319: 
+320: // These cannot be in lite so we put them in the reflection.
+321: PROTOBUF_EXPORT void UnknownFieldSetSerializer(const uint8_t* base,
+322:                                                uint32_t offset, uint32_t tag,

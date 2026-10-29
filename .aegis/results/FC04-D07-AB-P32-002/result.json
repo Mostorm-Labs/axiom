@@ -1,0 +1,28 @@
+{
+  "task": "FC04-D07-AB-P32",
+  "terminal_status": "NEW_HIGH_IMPACT_FAILURE_MODE",
+  "continue_execution": false,
+  "starting_revision": "c86fe624755794cf2fedd39fc46b2dc955ded1bd",
+  "task_anchor": "15e76458f3872be4d1b51d4aac05eb8402719014",
+  "feature_anchor": "c7f874395d55952e9d5288e2a336a21747f37f11",
+  "package_sha256": "b653d8847493f724c60c6921d2e807321174c89b8e310f272ccda5d789143da8",
+  "blocker": {
+    "component": "locked Semantic SDK Protobuf / Abseil one-time descriptor initialization, called by SemanticCodec::measureProtobufOperation",
+    "symptom": "precommit allocation fault at sweep index 100 unwinds out of descriptor call_once; next prepare at 101 hangs in SpinLockWait",
+    "required_decision": "control owner must decide how to ensure recoverable measurement and retry without changing frozen oracles or silently altering the locked SDK; codec.cpp is outside the P31 source surface",
+    "canonical_at_failure": "no canonical write in the observed preparation sweep through index 100",
+    "evidence": [
+      "raw/prepare-sweep-timeout.log",
+      "raw/fault-index-100-stack.log",
+      "raw/prepare-sweep-hang-stack.log",
+      "raw/sdk-absl-call-once-excerpt.txt"
+    ]
+  },
+  "implementation_status": "PARTIAL_NOT_SAFE_FOR_MERGE",
+  "frozen_selection_160": "NOT_RUN_THIS_REVISION",
+  "web_wasm": "NOT_RUN_THIS_REVISION",
+  "scene_prep_01_06": "INCOMPLETE",
+  "d07_ab": "NOT_PASSED",
+  "d06_b": "OPEN",
+  "gate": "NOT_EVALUATED"
+}

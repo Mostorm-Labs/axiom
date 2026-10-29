@@ -1,0 +1,24 @@
+Running main() from C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from SelectionInput
+[ RUN      ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(208): error: Value of: editor.selectionPointer(input::PointerKey{9100,77,1},input::PointerPhase::kDown,300,130)
+  Actual: true
+Expected: false
+
+C:\Users\Chado\.codex\worktrees\selection-unified-batch1\canvas\runtime\composition\tests\selection_input_integration_test.cpp(209): error: Value of: editor.selectionTransformActive()
+  Actual: true
+Expected: false
+
+[  FAILED  ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade (281 ms)
+[----------] 1 test from SelectionInput (281 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (281 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade
+
+ 1 FAILED TEST

@@ -1,0 +1,1034 @@
+#include "canvas/render/skia_headless_backend.hpp"
+#include "canvas/render/image_resource.hpp"
+#include "canvas/render/image_crop_geometry.hpp"
+#include "canvas/render/skia_text_resources.hpp"
+#include "include/core/SkImage.h"
+#include "include/core/SkData.h"
+#include "canvas/render/brush_outline_skia_path.hpp"
+#include "canvas/render/skia_scene_renderer.hpp"
+#include "canvas/scene/bounds_system.hpp"
+#include "canvas/scene/derived_geometry.hpp"
+
+#include "include/core/SkBlendMode.h"
+#include "include/core/SkCanvas.h"
+#include "include/core/SkColorSpace.h"
+#include "include/core/SkImageInfo.h"
+#include "include/core/SkPaint.h"
+#include "include/core/SkPath.h"
+#include "include/core/SkPathBuilder.h"
+#include "include/core/SkSurface.h"
+#include "include/effects/SkDashPathEffect.h"
+
+#include <algorithm>
+#include <bit>
+#include <cmath>
+#include <cstddef>
+#include <cstdint>
+#include <limits>
+#include <memory>
+#include <string>
+#include <type_traits>
+
+namespace canvas::render {
+namespace {
+
+bool finite(double value) noexcept { return std::isfinite(value); }
+void scaleToDevice(SkCanvas& canvas, const SurfaceMetrics& metrics) {
+    const auto sx = metrics.logicalWidth > 0 && metrics.physicalWidth > 0
+        ? metrics.physicalWidth / metrics.logicalWidth : 1.0F;
+    const auto sy = metrics.logicalHeight > 0 && metrics.physicalHeight > 0
+        ? metrics.physicalHeight / metrics.logicalHeight : 1.0F;
+    canvas.scale(sx, sy);
+}
+bool integral(double value) noexcept {
+    return finite(value) && std::floor(value) == value;
+}
+
+bool scalarRange(double value) noexcept {
+    return finite(value) && value >= -std::numeric_limits<float>::max() &&
+           value <= std::numeric_limits<float>::max();
+}
+
+bool pointInScalarRange(const semantic::Vec2& point) noexcept {
+    return scalarRange(point.x) && scalarRange(point.y);
+}
+
+float skScalar(double value) noexcept { return static_cast<float>(value); }
+
+bool validAffine(const WorldToViewAffine& affine) noexcept {
+    return scalarRange(affine.a) && scalarRange(affine.b) &&
+           scalarRange(affine.c) && scalarRange(affine.d) &&
+           scalarRange(affine.tx) && scalarRange(affine.ty);
+}
+
+bool validRect(const foundation::WorldRect& rect) noexcept {
+    return rect.isFiniteAndOrdered() && integral(rect.left) && integral(rect.top) &&
+           integral(rect.right) && integral(rect.bottom);
+}
+
+bool validBrushRect(const foundation::WorldRect& value) noexcept {
+    return value.isFiniteAndOrdered() && scalarRange(value.left) && scalarRange(value.top) &&
+           scalarRange(value.right) && scalarRange(value.bottom);
+}
+
+// Production Skia targets render in logical coordinates and must accept the
+// fractional bounds produced while a creation endpoint is held on a snap
+// guide.  The headless backend keeps its stricter integral fixture contract
+// in submit(); this predicate is only for the shared production draw path.
+bool validProductionRect(const foundation::WorldRect& value) noexcept {
+    return value.isFiniteAndOrdered() && scalarRange(value.left) &&
+           scalarRange(value.top) && scalarRange(value.right) &&
+           scalarRange(value.bottom);
+}
+
+bool validUtf8(const std::string& text) noexcept {
+    for (std::size_t index = 0; index < text.size();) {
+        const auto lead = static_cast<std::uint8_t>(text[index]);
+        std::size_t width = 0U;
+        if (lead <= 0x7fU) width = 1U;
+        else if (lead >= 0xc2U && lead <= 0xdfU) width = 2U;
+        else if (lead >= 0xe0U && lead <= 0xefU) width = 3U;
+        else if (lead >= 0xf0U && lead <= 0xf4U) width = 4U;
+        else return false;
+        if (index + width > text.size()) return false;
+        for (std::size_t offset = 1U; offset < width; ++offset) {
+            if ((static_cast<std::uint8_t>(text[index + offset]) & 0xc0U) != 0x80U) return false;
+        }
+        if (width >= 3U) {
+            const auto second = static_cast<std::uint8_t>(text[index + 1U]);
+            if ((lead == 0xe0U && second < 0xa0U) ||
+                (lead == 0xedU && second >= 0xa0U) ||
+                (lead == 0xf0U && second < 0x90U) ||
+                (lead == 0xf4U && second > 0x8fU)) return false;
+        }
+        index += width;
+    }
+    return true;
+}
+
+SkMatrix matrix(const WorldToViewAffine& affine) {
+    return SkMatrix::MakeAll(static_cast<float>(affine.a), static_cast<float>(affine.c),
+                             static_cast<float>(affine.tx), static_cast<float>(affine.b),
+                             static_cast<float>(affine.d), static_cast<float>(affine.ty),
+                             0.0F, 0.0F, 1.0F);
+}
+
+SkMatrix matrix(const semantic::Transform2D& transform) {
+    return SkMatrix::MakeAll(static_cast<float>(transform.a), static_cast<float>(transform.c),
+                             static_cast<float>(transform.tx), static_cast<float>(transform.b),
+                             static_cast<float>(transform.d), static_cast<float>(transform.ty),
+                             0.0F, 0.0F, 1.0F);
+}
+
+SkRect rect(const foundation::WorldRect& value) {
+    return SkRect::MakeLTRB(value.left, value.top, value.right, value.bottom);
+}
+
+SkColor4f color(const semantic::ColorValue& value) {
+    return SkColor4f{value.r, value.g, value.b, value.a};
+}
+
+semantic::ColorValue propertyColor(const RuntimeSceneRecord& record,
+                                   std::uint32_t fieldId,
+                                   semantic::ColorValue fallback) {
+    for (const auto& property : record.properties.entries) {
+        if (property.field_id != fieldId) continue;
+        if (fieldId == 0x00000100U) {
+            if (const auto* fill = std::get_if<semantic::FillStyleValue>(&property.value)) {
+                if (const auto* solid = std::get_if<semantic::SolidFill>(fill)) return solid->color;
+                if (std::holds_alternative<semantic::NoFill>(*fill)) return {0.0F, 0.0F, 0.0F, 0.0F};
+            }
+        }
+        if (fieldId == 0x00000101U) {
+            if (const auto* stroke = std::get_if<semantic::StrokeStyleValue>(&property.value)) {
+                if (const auto* solid = std::get_if<semantic::SolidStroke>(stroke)) return solid->color;
+            }
+        }
+    }
+    return fallback;
+}
+
+void drawPath(SkCanvas& canvas, const semantic::VectorPathGeometry& geometry,
+              const SkPaint& paint) {
+    SkPathBuilder path(geometry.fill_rule == semantic::FillRule::kEvenOdd
+                           ? SkPathFillType::kEvenOdd
+                           : SkPathFillType::kWinding);
+    for (const auto& command : geometry.commands) {
+        std::visit([&](const auto& value) {
+            using T = std::decay_t<decltype(value)>;
+            if constexpr (std::is_same_v<T, semantic::MoveTo>) path.moveTo(skScalar(value.point.x), skScalar(value.point.y));
+            else if constexpr (std::is_same_v<T, semantic::LineTo>) path.lineTo(skScalar(value.end.x), skScalar(value.end.y));
+            else if constexpr (std::is_same_v<T, semantic::QuadTo>) path.quadTo(skScalar(value.control.x), skScalar(value.control.y), skScalar(value.end.x), skScalar(value.end.y));
+            else if constexpr (std::is_same_v<T, semantic::CubicTo>) path.cubicTo(skScalar(value.control1.x), skScalar(value.control1.y), skScalar(value.control2.x), skScalar(value.control2.y), skScalar(value.end.x), skScalar(value.end.y));
+            else if constexpr (std::is_same_v<T, semantic::ClosePath>) path.close();
+        }, command);
+    }
+    canvas.drawPath(path.detach(), paint);
+}
+
+void drawSolidRect(SkCanvas& canvas, const foundation::WorldRect& bounds,
+                   const semantic::ColorValue& value) {
+    SkPaint paint;
+    paint.setAntiAlias(false);
+    paint.setColor4f(color(value));
+    paint.setStyle(SkPaint::kFill_Style);
+    canvas.drawRect(rect(bounds), paint);
+}
+
+bool validatePath(const semantic::VectorPathGeometry& geometry,
+                  bool requireIntegral = true) noexcept {
+    for (const auto& command : geometry.commands) {
+        bool ok = true;
+        std::visit([&](const auto& value) {
+            using T = std::decay_t<decltype(value)>;
+            auto pointOk = [requireIntegral](const semantic::Vec2& point) {
+                return pointInScalarRange(point) &&
+                    (!requireIntegral || (integral(point.x) && integral(point.y)));
+            };
+            if constexpr (std::is_same_v<T, semantic::MoveTo>) ok = pointOk(value.point);
+            else if constexpr (std::is_same_v<T, semantic::LineTo>) ok = pointOk(value.end);
+            else if constexpr (std::is_same_v<T, semantic::QuadTo>) ok = pointOk(value.control) && pointOk(value.end);
+            else if constexpr (std::is_same_v<T, semantic::CubicTo>) ok = pointOk(value.control1) && pointOk(value.control2) && pointOk(value.end);
+        }, command);
+        if (!ok) return false;
+    }
+    return true;
+}
+
+bool validateSweptMask(const semantic::SweptCircleMask& mask) noexcept {
+    for (const auto& segment : mask.segments) {
+        const auto finitePoint = [](const semantic::Vec2& p) {
+            return pointInScalarRange(p);
+        };
+        if (!finitePoint(segment.p0.position) || !finitePoint(segment.p1.position) ||
+            !finitePoint(segment.control1) || !finitePoint(segment.control2) ||
+            !std::isfinite(segment.p0.radius) || !std::isfinite(segment.p1.radius) ||
+            segment.p0.radius <= 0.0 || segment.p1.radius <= 0.0) return false;
+    }
+    return !mask.segments.empty();
+}
+
+bool pathInScalarRange(const semantic::VectorPathGeometry& geometry) noexcept {
+    for (const auto& command : geometry.commands) {
+        bool ok = true;
+        std::visit([&](const auto& value) {
+            using T = std::decay_t<decltype(value)>;
+            if constexpr (std::is_same_v<T, semantic::MoveTo>) ok = pointInScalarRange(value.point);
+            else if constexpr (std::is_same_v<T, semantic::LineTo>) ok = pointInScalarRange(value.end);
+            else if constexpr (std::is_same_v<T, semantic::QuadTo>) ok = pointInScalarRange(value.control) && pointInScalarRange(value.end);
+            else if constexpr (std::is_same_v<T, semantic::CubicTo>) ok = pointInScalarRange(value.control1) && pointInScalarRange(value.control2) && pointInScalarRange(value.end);
+        }, command);
+        if (!ok) return false;
+    }
+    return true;
+}
+
+HeadlessSubmissionIssue validateCommand(const ReferenceTraversalEntry& entry) noexcept {
+    return std::visit([&](const auto& command) -> HeadlessSubmissionIssue {
+        using T = std::decay_t<decltype(command)>;
+        if constexpr (std::is_same_v<T, VectorPathReferenceCommand>) {
+            if (!pathInScalarRange(command.content.geometry)) return HeadlessSubmissionIssue::kOverflow;
+            if (!validatePath(command.content.geometry)) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+        } else if constexpr (std::is_same_v<T, RichTextReferenceCommand>) {
+            for (const auto& paragraph : command.content.document.paragraphs) {
+                for (const auto& run : paragraph.runs) {
+                    if (!validUtf8(run.text) || !finite(run.style.font_size) ||
+                        (!command.layout && !integral(run.style.font_size))) {
+                        return HeadlessSubmissionIssue::kUnsupportedGeometry;
+                    }
+                }
+            }
+        } else if constexpr (std::is_same_v<T, VectorStrokeReferenceCommand>) {
+            const auto* data = std::get_if<semantic::VectorStrokeData>(&command.content.stroke.data);
+            if (data == nullptr || !integral(command.content.stroke.brush.nominal_size) ||
+                !finite(command.content.stroke.brush.opacity)) {
+                return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            }
+            for (const auto& sample : data->samples) {
+                if (!pointInScalarRange(sample.position)) return HeadlessSubmissionIssue::kOverflow;
+                if (!integral(sample.position.x) || !integral(sample.position.y)) {
+                    return HeadlessSubmissionIssue::kUnsupportedGeometry;
+                }
+            }
+        } else if constexpr (std::is_same_v<T, DabStrokeReferenceCommand>) {
+            const auto* data = std::get_if<semantic::DabStrokeData>(&command.content.stroke.data);
+            if (data == nullptr || !finite(command.content.stroke.brush.opacity)) {
+                return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            }
+            for (const auto& dab : data->dabs) {
+                const double half = dab.size / 2.0;
+                if (!pointInScalarRange(dab.center) || !scalarRange(dab.size)) {
+                    return HeadlessSubmissionIssue::kOverflow;
+                }
+                if (!integral(dab.center.x - half) || !integral(dab.center.y - half) ||
+                    !integral(dab.center.x + half) || !integral(dab.center.y + half) ||
+                    !finite(dab.opacity)) {
+                    return HeadlessSubmissionIssue::kUnsupportedGeometry;
+                }
+            }
+        } else if constexpr (std::is_same_v<T, BrushStrokeReferenceCommand>) {
+            if (command.content.stroke.vector_output.outline.empty()) {
+                return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            }
+            for (const auto& point : command.content.stroke.vector_output.outline) {
+                if (!pointInScalarRange(point)) return HeadlessSubmissionIssue::kOverflow;
+            }
+        } else if constexpr (std::is_same_v<T, DabBrushStrokeReferenceCommand>) {
+            if (command.content.stroke.dab_output.dabs.empty()) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            for (const auto& dab : command.content.stroke.dab_output.dabs) {
+                if (!pointInScalarRange(dab.center) || !scalarRange(dab.size)) return HeadlessSubmissionIssue::kOverflow;
+                if (!finite(dab.rotation) || !finite(dab.opacity) || dab.size <= 0.0) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            }
+        } else if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
+            const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
+            const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
+            const auto* derived = std::get_if<scene::ConnectorGeometry>(&entry.record.derivedGeometry);
+            if (derived != nullptr) {
+                if (derived->route.size() < 2U) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+                for (const auto point : derived->route)
+                    if (!std::isfinite(point.x) || !std::isfinite(point.y) ||
+                        std::abs(point.x) > 100000000.0F || std::abs(point.y) > 100000000.0F)
+                        return HeadlessSubmissionIssue::kOverflow;
+                return HeadlessSubmissionIssue::kNone;
+            }
+            if (start == nullptr || end == nullptr) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            if (!pointInScalarRange(start->point) || !pointInScalarRange(end->point)) {
+                return HeadlessSubmissionIssue::kOverflow;
+            }
+            if (!integral(start->point.x) || !integral(start->point.y) ||
+                !integral(end->point.x) || !integral(end->point.y)) {
+                return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            }
+        } else if constexpr (std::is_same_v<T, StickyReferenceCommand>) {
+            if (!scalarRange(command.content.width) || !scalarRange(command.content.height)) {
+                return HeadlessSubmissionIssue::kOverflow;
+            }
+            if (!integral(command.content.width) || !integral(command.content.height)) {
+                return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            }
+        }
+        return HeadlessSubmissionIssue::kNone;
+    }, entry.command);
+}
+
+HeadlessSubmissionIssue validateProductionCommand(const ReferenceTraversalEntry& entry) noexcept {
+    return std::visit([&](const auto& command) -> HeadlessSubmissionIssue {
+        using T = std::decay_t<decltype(command)>;
+        if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
+            const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
+            const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
+            const auto* derived = std::get_if<scene::ConnectorGeometry>(&entry.record.derivedGeometry);
+            if (derived != nullptr) {
+                if (derived->route.size() < 2U) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+                for (const auto point : derived->route)
+                    if (!std::isfinite(point.x) || !std::isfinite(point.y) ||
+                        std::abs(point.x) > 100000000.0F || std::abs(point.y) > 100000000.0F)
+                        return HeadlessSubmissionIssue::kOverflow;
+                return HeadlessSubmissionIssue::kNone;
+            }
+            if (start == nullptr || end == nullptr) return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            if (!pointInScalarRange(start->point) || !pointInScalarRange(end->point))
+                return HeadlessSubmissionIssue::kOverflow;
+            return HeadlessSubmissionIssue::kNone;
+        } else if constexpr (std::is_same_v<T, StickyReferenceCommand>) {
+            // View-to-world mapping and snapping produce fractional sizes.
+            // Only the legacy headless fixture contract requires integers.
+            if (!scalarRange(command.content.width) || !scalarRange(command.content.height))
+                return HeadlessSubmissionIssue::kOverflow;
+            if (command.content.width <= 0.0 || command.content.height <= 0.0)
+                return HeadlessSubmissionIssue::kUnsupportedGeometry;
+            return HeadlessSubmissionIssue::kNone;
+        }
+        return validateCommand(entry);
+    }, entry.command);
+}
+
+const semantic::SolidStroke* objectStroke(const RuntimeSceneRecord& record) {
+    for (const auto& entry : record.properties.entries) {
+        if (entry.field_id == 0x101U)
+            if (const auto* style=std::get_if<semantic::StrokeStyleValue>(&entry.value))
+                return std::get_if<semantic::SolidStroke>(style);
+    }
+    return nullptr;
+}
+float objectOpacity(const RuntimeSceneRecord& record) {
+    for (const auto& entry : record.properties.entries)
+        if (entry.field_id==3U) if (const auto* value=std::get_if<float>(&entry.value)) return *value;
+    return 1.0F;
+}
+SkPaint strokePaint(const semantic::SolidStroke& stroke, bool antiAlias = false) {
+    SkPaint paint; paint.setAntiAlias(antiAlias); paint.setColor4f(color(stroke.color));
+    paint.setStyle(SkPaint::kStroke_Style); paint.setStrokeWidth(skScalar(stroke.width));
+    switch(stroke.cap) {
+        case semantic::StrokeCap::kButt: paint.setStrokeCap(SkPaint::kButt_Cap); break;
+        case semantic::StrokeCap::kRound: paint.setStrokeCap(SkPaint::kRound_Cap); break;
+        case semantic::StrokeCap::kSquare: paint.setStrokeCap(SkPaint::kSquare_Cap); break;
+    }
+    std::visit([&](const auto& join) {
+        using Join=std::decay_t<decltype(join)>;
+        if constexpr(std::is_same_v<Join,semantic::RoundJoin>) paint.setStrokeJoin(SkPaint::kRound_Join);
+        else if constexpr(std::is_same_v<Join,semantic::BevelJoin>) paint.setStrokeJoin(SkPaint::kBevel_Join);
+        else {paint.setStrokeJoin(SkPaint::kMiter_Join);paint.setStrokeMiter(skScalar(join.limit));}
+    },stroke.join);
+    if(const auto* dash=std::get_if<semantic::DashPattern>(&stroke.dash)) {
+        std::vector<SkScalar> intervals;intervals.reserve(dash->segments.size());
+        for(const auto value:dash->segments) intervals.push_back(skScalar(value));
+        paint.setPathEffect(SkDashPathEffect::Make(SkSpan<const SkScalar>(intervals.data(),intervals.size()),skScalar(dash->offset)));
+    }
+    return paint;
+}
+
+void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageResourceResolver* images,
+                 SkiaTextResources* textResources, bool antiAliasConnectors = false,
+                 bool legacyHeadlessGolden = false) {
+    const auto& record = entry.record;
+    std::visit([&](const auto& command) {
+        using T = std::decay_t<decltype(command)>;
+        if constexpr (std::is_same_v<T, ShapeReferenceCommand>) {
+            const auto drawLabel = [&] {
+                if (textResources == nullptr || !command.labelLayout) return;
+                canvas.save();
+                if (command.content.shape_kind == 2U) {
+                    SkPathBuilder ovalPath;
+                    ovalPath.addOval(SkRect::MakeXYWH(
+                        0.0F, 0.0F, skScalar(command.content.width),
+                        skScalar(command.content.height)));
+                    canvas.clipPath(ovalPath.detach());
+                } else if (command.content.shape_kind == 3U) {
+                    SkPathBuilder labelPath;
+                    labelPath.moveTo(skScalar(command.content.width * 0.5), 0.0F);
+                    labelPath.lineTo(skScalar(command.content.width),
+                                     skScalar(command.content.height));
+                    labelPath.lineTo(0.0F, skScalar(command.content.height));
+                    labelPath.close();
+                    canvas.clipPath(labelPath.detach());
+                } else {
+                    canvas.clipRect(SkRect::MakeXYWH(
+                        0.0F, 0.0F, skScalar(command.content.width),
+                        skScalar(command.content.height)));
+                }
+                if (command.labelLayout->shapeLabel) {
+                    canvas.scale(command.labelLayout->labelScaleX,
+                                 command.labelLayout->labelScaleY);
+                }
+                textResources->draw(canvas, *command.labelLayout);
+                canvas.restore();
+                if (command.showExpandButton && command.labelLayout->overflow) {
+                    canvas.save();
+                    if (command.labelLayout->shapeLabel)
+                        canvas.scale(command.labelLayout->labelScaleX,
+                                     command.labelLayout->labelScaleY);
+                    const auto& r = command.labelLayout->expandButton;
+                    SkPaint button; button.setAntiAlias(true); button.setColor(SK_ColorWHITE);
+                    button.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left,r.top,r.right,r.bottom),button);
+                    button.setColor(SK_ColorBLACK); button.setStyle(SkPaint::kStroke_Style); button.setStrokeWidth(1.5F);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left,r.top,r.right,r.bottom),button);
+                    button.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left+3,r.top+7,r.right-3,r.top+9),button);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left+7,r.top+3,r.left+9,r.bottom-3),button);
+                    canvas.restore();
+                }
+            };
+            const auto fill = propertyColor(record, 0x00000100U, {1.0F, 0.0F, 0.0F, 1.0F});
+            if (command.content.shape_kind == 3U) {
+                SkPathBuilder path;
+                path.moveTo(skScalar(command.content.width * 0.5), 0.0F);
+                path.lineTo(skScalar(command.content.width), skScalar(command.content.height));
+                path.lineTo(0.0F, skScalar(command.content.height));
+                path.close();
+                const auto geometry=path.detach();
+                SkPaint layer;layer.setAlphaf(objectOpacity(record));canvas.saveLayer(nullptr,&layer);
+                const auto triangleFill=propertyColor(record,0x100U,{0,0,0,0});
+                if(triangleFill.a>0) {
+                    SkPaint paint;paint.setAntiAlias(false);paint.setColor4f(color(triangleFill));
+                    paint.setStyle(SkPaint::kFill_Style);canvas.drawPath(geometry,paint);
+                }
+                if(const auto* stroke=objectStroke(record);stroke && stroke->width>0 && stroke->color.a>0)
+                    canvas.drawPath(geometry,strokePaint(*stroke));
+                canvas.restore();
+            } else if (command.content.shape_kind == 2U) {
+                // Shape geometry is local to the record transform.  Using
+                // visualBounds here turns an ellipse into a transformed
+                // rectangle (and also bakes stroke expansion into its fill),
+                // which is why the Windows host previously displayed a box.
+                const auto oval = SkRect::MakeXYWH(
+                    0.0F, 0.0F, skScalar(command.content.width),
+                    skScalar(command.content.height));
+                SkPaint layer;
+                layer.setAlphaf(objectOpacity(record));
+                canvas.saveLayer(nullptr, &layer);
+                const auto ellipseFill = propertyColor(record, 0x100U, fill);
+                if (ellipseFill.a > 0.0F) {
+                    SkPaint paint;
+                    paint.setAntiAlias(true);
+                    paint.setColor4f(color(ellipseFill));
+                    paint.setStyle(SkPaint::kFill_Style);
+                    canvas.drawOval(oval, paint);
+                }
+                if (const auto* stroke = objectStroke(record);
+                    stroke != nullptr && stroke->width > 0.0 && stroke->color.a > 0.0F) {
+                    canvas.drawOval(oval, strokePaint(*stroke));
+                }
+                canvas.restore();
+            } else if (command.content.shape_kind == 1U && !legacyHeadlessGolden) {
+                const auto rectangle = SkRect::MakeXYWH(
+                    0.0F, 0.0F, skScalar(command.content.width),
+                    skScalar(command.content.height));
+                SkPaint layer;
+                layer.setAlphaf(objectOpacity(record));
+                canvas.saveLayer(nullptr, &layer);
+                if (fill.a > 0.0F) {
+                    SkPaint paint;
+                    paint.setAntiAlias(true);
+                    paint.setColor4f(color(propertyColor(record, 0x100U, fill)));
+                    paint.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(rectangle, paint);
+                }
+                if (const auto* stroke = objectStroke(record);
+                    stroke != nullptr && stroke->width > 0.0 && stroke->color.a > 0.0F) {
+                    canvas.drawRect(rectangle, strokePaint(*stroke));
+                }
+                canvas.restore();
+            } else if (fill.a > 0.0F) {
+                drawSolidRect(canvas, record.visualBounds, fill);
+            }
+            drawLabel();
+        } else if constexpr (std::is_same_v<T, ImageReferenceCommand>) {
+            if (images == nullptr) return;
+            const auto decoded = images->resolve(command.content.resource_id);
+            if (decoded->state != ImageResourceState::kReady) return;
+            const auto info = SkImageInfo::Make(decoded->width, decoded->height,
+                kRGBA_8888_SkColorType, kPremul_SkAlphaType, SkColorSpace::MakeSRGB());
+            const auto image = SkImages::RasterFromData(info,
+                SkData::MakeWithCopy(decoded->rgba.data(), decoded->rgba.size()), info.minRowBytes());
+            if (!image) return;
+            if (command.showCropSource) {
+                const auto fullSource = SkRect::MakeWH(static_cast<float>(decoded->width),
+                                                       static_cast<float>(decoded->height));
+                const auto fullDestination = rect(imageCropSourceBounds(command.content));
+                const auto trim = SkRect::MakeWH(skScalar(command.content.width), skScalar(command.content.height));
+                // A single full-source draw keeps inside/outside pixels aligned.
+                // Darken only the part excluded by the current trim frame.
+                canvas.drawImageRect(image, fullSource, fullDestination,
+                    SkSamplingOptions(SkFilterMode::kNearest), nullptr, SkCanvas::kStrict_SrcRectConstraint);
+                canvas.save();
+                canvas.clipRect(trim, SkClipOp::kDifference);
+                SkPaint dim; dim.setColor4f({0, 0, 0, .5F});
+                canvas.drawRect(fullDestination, dim);
+                canvas.restore();
+                return;
+            }
+            SkRect source = SkRect::MakeWH(static_cast<float>(decoded->width), static_cast<float>(decoded->height));
+            if (command.content.source_rect) {
+                const auto& r = *command.content.source_rect;
+                source = SkRect::MakeXYWH(static_cast<float>(r.x * decoded->width),
+                    static_cast<float>(r.y * decoded->height), static_cast<float>(r.width * decoded->width),
+                    static_cast<float>(r.height * decoded->height));
+            }
+            SkRect destination = rect(record.visualBounds);
+            if (source.isEmpty() || destination.isEmpty()) return;
+            const auto mode = command.content.content_mode;
+            if (mode == semantic::ImageContentMode::kFit || mode == semantic::ImageContentMode::kFill) {
+                const float sx = destination.width() / source.width(), sy = destination.height() / source.height();
+                const float scale = mode == semantic::ImageContentMode::kFit ? std::min(sx, sy) : std::max(sx, sy);
+                const float w = source.width() * scale, h = source.height() * scale;
+                destination = SkRect::MakeXYWH(destination.centerX() - w/2, destination.centerY() - h/2, w, h);
+            }
+            canvas.save(); canvas.clipRect(rect(record.visualBounds));
+            canvas.drawImageRect(image, source, destination, SkSamplingOptions(SkFilterMode::kNearest),
+                nullptr, SkCanvas::kStrict_SrcRectConstraint);
+            canvas.restore();
+        } else if constexpr (std::is_same_v<T, VectorPathReferenceCommand>) {
+            SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(propertyColor(record, 0x00000100U, {0.0F, 0.0F, 1.0F, 1.0F}))); drawPath(canvas, command.content.geometry, paint);
+        } else if constexpr (std::is_same_v<T, RichTextReferenceCommand>) {
+            if (command.layout && textResources) {
+                canvas.save();
+                if (command.suppressBorder) {
+                    canvas.scale(command.layout->labelScaleX,
+                                 command.layout->labelScaleY);
+                }
+                textResources->draw(canvas,*command.layout);
+                canvas.restore();
+            }
+            if (command.showExpandButton && command.layout && command.layout->overflow) {
+                canvas.save();
+                if (command.suppressBorder) {
+                    canvas.scale(command.layout->labelScaleX,
+                                 command.layout->labelScaleY);
+                }
+                const auto& r = command.layout->expandButton;
+                SkPaint button; button.setAntiAlias(true); button.setColor(SK_ColorWHITE);
+                button.setStyle(SkPaint::kFill_Style); canvas.drawRect(SkRect::MakeLTRB(r.left, r.top, r.right, r.bottom), button);
+                button.setColor(SK_ColorBLACK); button.setStyle(SkPaint::kStroke_Style); button.setStrokeWidth(1.5F);
+                canvas.drawRect(SkRect::MakeLTRB(r.left, r.top, r.right, r.bottom), button);
+                button.setStyle(SkPaint::kFill_Style);
+                canvas.drawRect(SkRect::MakeLTRB(r.left + 3, r.top + 7, r.right - 3, r.top + 9), button);
+                canvas.drawRect(SkRect::MakeLTRB(r.left + 7, r.top + 3, r.left + 9, r.bottom - 3), button);
+                canvas.restore();
+            }
+            if(!legacyHeadlessGolden && !command.suppressBorder && command.content.layout && command.layout) {
+                SkPaint border;border.setAntiAlias(true);border.setStyle(SkPaint::kStroke_Style);border.setStrokeWidth(0);border.setColor(SK_ColorBLACK);
+                canvas.drawRect(SkRect::MakeLTRB(1,1,static_cast<float>(command.content.layout->wrap_width)-1,command.layout->localBounds.bottom-1),border);
+            }
+        } else if constexpr (std::is_same_v<T, VectorStrokeReferenceCommand>) {
+            const auto& stroke = command.content.stroke;
+            const auto* data = std::get_if<semantic::VectorStrokeData>(&stroke.data);
+            if (data == nullptr) return;
+            auto strokeColor = stroke.brush.color;
+            strokeColor.a *= stroke.brush.opacity;
+            SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(strokeColor)); paint.setStyle(SkPaint::kStroke_Style); paint.setStrokeWidth(static_cast<float>(stroke.brush.nominal_size)); paint.setStrokeCap(SkPaint::kButt_Cap);
+            for (std::size_t i = 1; i < data->samples.size(); ++i) canvas.drawLine(skScalar(data->samples[i - 1].position.x), skScalar(data->samples[i - 1].position.y), skScalar(data->samples[i].position.x), skScalar(data->samples[i].position.y), paint);
+        } else if constexpr (std::is_same_v<T, DabStrokeReferenceCommand>) {
+            const auto& stroke = command.content.stroke;
+            const auto* data = std::get_if<semantic::DabStrokeData>(&stroke.data);
+            if (data == nullptr) return;
+            for (const auto& dab : data->dabs) {
+                auto dabColor = stroke.brush.color;
+                dabColor.a *= stroke.brush.opacity * dab.opacity;
+                drawSolidRect(canvas, foundation::WorldRect{static_cast<float>(dab.center.x - dab.size / 2.0), static_cast<float>(dab.center.y - dab.size / 2.0), static_cast<float>(dab.center.x + dab.size / 2.0), static_cast<float>(dab.center.y + dab.size / 2.0)}, dabColor);
+            }
+        } else if constexpr (std::is_same_v<T, BrushStrokeReferenceCommand>) {
+            const auto& stroke = command.content.stroke;
+            if (stroke.vector_output.outline.empty()) return;
+            const auto& paintState = stroke.snapshot.paint;
+            SkPaint paint;
+            paint.setAntiAlias(true);
+            paint.setColor4f(SkColor4f{static_cast<float>(paintState.red),
+                                      static_cast<float>(paintState.green),
+                                      static_cast<float>(paintState.blue),
+                                      static_cast<float>(paintState.alpha * paintState.opacity)});
+            paint.setStyle(SkPaint::kFill_Style);
+            canvas.drawPath(buildVectorBrushOutlineSkPath(
+                std::span<const semantic::Vec2>(stroke.vector_output.outline.data(),
+                                                 stroke.vector_output.outline.size()),
+                stroke.vector_output.fill_rule, stroke.vector_output.closed), paint);
+            // Chalk is still driven by the same canonical outline, but its
+            // package material adds deterministic translucent grain marks at
+            // render time. This keeps BrushEngine geometry identical while
+            // making the chalk profile visibly different from solid vector.
+            if (stroke.snapshot.material_mode == 3U) {
+                SkPaint grain = paint;
+                grain.setAlpha(static_cast<U8CPU>(
+                    std::clamp(paintState.alpha * paintState.opacity * 0.28, 0.0, 1.0) * 255.0));
+                const auto& outline = stroke.vector_output.outline;
+                for (std::size_t index = 0; index < outline.size(); index += 3U) {
+                    const auto& point = outline[index];
+                    const float radius = 1.0F + static_cast<float>((index % 5U)) * 0.45F;
+                    canvas.drawCircle(static_cast<float>(point.x), static_cast<float>(point.y), radius, grain);
+                }
+            }
+        } else if constexpr (std::is_same_v<T, DabBrushStrokeReferenceCommand>) {
+            const auto& stroke = command.content.stroke;
+            const semantic::ColorValue color{
+                static_cast<float>(stroke.snapshot.paint.red),
+                static_cast<float>(stroke.snapshot.paint.green),
+                static_cast<float>(stroke.snapshot.paint.blue),
+                static_cast<float>(stroke.snapshot.paint.alpha * stroke.snapshot.paint.opacity)};
+            if (stroke.snapshot.material_mode == 4U) {
+                internal::drawMembraneDabsToSkCanvas(canvas, stroke.dab_output.dabs, color);
+            } else if (stroke.snapshot.package_revision >= 3U) {
+                internal::drawChalkDabsToSkCanvas(canvas, stroke.dab_output.dabs,
+                                                   color, stroke.snapshot.package_revision);
+            } else {
+                internal::drawDabInstancesToSkCanvas(canvas, stroke.dab_output.dabs, color);
+            }
+        } else if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
+            const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
+            const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
+            const auto* derived = std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry);
+            if ((start == nullptr || end == nullptr) &&
+                (derived == nullptr || derived->route.size() < 2U)) return;
+            const bool hasStroke=std::any_of(record.properties.entries.begin(),record.properties.entries.end(),
+                [](const auto& entry){return entry.field_id==0x101U;});
+            const auto* stroke=objectStroke(record);
+            if(hasStroke && (!stroke || stroke->width<=0 || stroke->color.a<=0)) return;
+            // Keep the historical unstyled Connector fixture's draw bytes.
+            // Explicit styles always use the same Field Registry values as Preview.
+            const semantic::SolidStroke legacy{{1.0F,128.0F/255.0F,0.0F,1.0F},4.0};
+            auto paint=strokePaint(stroke ? *stroke : legacy, antiAliasConnectors);
+            // Pending is an interactive connection, not a routing failure.
+            // Keep its authored solid/dash style while the readback remains
+            // Pending; only terminal failures use the diagnostic treatment.
+            if(derived && derived->status!=runtime::ConnectorRouteStatus::kReady &&
+               derived->status!=runtime::ConnectorRouteStatus::kPending) {
+                const SkScalar intervals[]{6.0F,4.0F};
+                paint.setColor4f({0.9F,0.35F,0.12F,1.0F},nullptr);
+                paint.setPathEffect(SkDashPathEffect::Make(SkSpan<const SkScalar>(intervals,2),0));
+            }
+            const auto opacity=objectOpacity(record);
+            if(opacity==1.0F) canvas.save();
+            else {SkPaint layer;layer.setAlphaf(opacity);canvas.saveLayer(nullptr,&layer);}
+            if (derived != nullptr && derived->route.size() >= 2U) {
+                for (std::size_t index = 1U; index < derived->route.size(); ++index) {
+                    const auto& from = derived->route[index - 1U];
+                    const auto& to = derived->route[index];
+                    canvas.drawLine(from.x, from.y, to.x, to.y, paint);
+                }
+            } else if (command.content.routing == semantic::ConnectorRouting::kOrthogonal) {
+                canvas.drawLine(skScalar(start->point.x), skScalar(start->point.y), skScalar(end->point.x),
+                                skScalar(start->point.y), paint);
+                canvas.drawLine(skScalar(end->point.x), skScalar(start->point.y), skScalar(end->point.x),
+                                skScalar(end->point.y), paint);
+            } else {
+                canvas.drawLine(skScalar(start->point.x), skScalar(start->point.y), skScalar(end->point.x),
+                                skScalar(end->point.y), paint);
+            }
+            bool arrow = false;
+            for (const auto& property : record.properties.entries) {
+                if (property.field_id != 0x201U) continue;
+                if (const auto* decoration = std::get_if<semantic::ConnectorDecorationValue>(&property.value))
+                    arrow = *decoration == semantic::ConnectorDecorationValue::kArrow;
+            }
+            if (arrow && derived && derived->status==runtime::ConnectorRouteStatus::kReady) {
+                auto geometry=*derived;geometry.arrow_end=true;
+                const auto headGeometry=scene::arrowHead(geometry);
+                SkPathBuilder head;head.moveTo(headGeometry.tip.x,headGeometry.tip.y);
+                head.lineTo(headGeometry.left.x,headGeometry.left.y);
+                head.lineTo(headGeometry.right.x,headGeometry.right.y);head.close();
+                paint.setStyle(SkPaint::kFill_Style);paint.setPathEffect(nullptr);
+                canvas.drawPath(head.detach(),paint);
+            }
+            canvas.restore();
+        } else if constexpr (std::is_same_v<T, StickyReferenceCommand>) {
+            const auto width = static_cast<float>(command.content.width);
+            const auto height = static_cast<float>(command.content.height);
+            const bool identity = record.transform.a == 1.0 && record.transform.b == 0.0 &&
+                record.transform.c == 0.0 && record.transform.d == 1.0 &&
+                record.transform.tx == 0.0 && record.transform.ty == 0.0;
+            const auto bounds = identity
+                ? foundation::WorldRect{record.visualBounds.left, record.visualBounds.top,
+                                        record.visualBounds.left + width, record.visualBounds.top + height}
+                : foundation::WorldRect{0.0F, 0.0F, width, height};
+            drawSolidRect(canvas, bounds, {1.0F, 1.0F, 0.5F, 1.0F});
+            if (command.labelLayout && textResources) {
+                canvas.save();
+                canvas.clipRect(SkRect::MakeXYWH(0.0F, 0.0F, width, height));
+                canvas.scale(command.labelLayout->labelScaleX,
+                             command.labelLayout->labelScaleY);
+                textResources->draw(canvas, *command.labelLayout);
+                canvas.restore();
+                if (command.showExpandButton && command.labelLayout->overflow) {
+                    canvas.save();
+                    canvas.scale(command.labelLayout->labelScaleX,
+                                 command.labelLayout->labelScaleY);
+                    const auto& r = command.labelLayout->expandButton;
+                    SkPaint button; button.setAntiAlias(true); button.setColor(SK_ColorWHITE);
+                    button.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left, r.top, r.right, r.bottom), button);
+                    button.setColor(SK_ColorBLACK); button.setStyle(SkPaint::kStroke_Style);
+                    button.setStrokeWidth(1.5F);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left, r.top, r.right, r.bottom), button);
+                    button.setStyle(SkPaint::kFill_Style);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left + 3, r.top + 7, r.right - 3, r.top + 9), button);
+                    canvas.drawRect(SkRect::MakeLTRB(r.left + 7, r.top + 3, r.left + 9, r.bottom - 3), button);
+                    canvas.restore();
+                }
+            }
+        } else if constexpr (std::is_same_v<T, SectionReferenceCommand>) {
+            const auto& b=command.content.boundary;
+            const auto area=SkRect::MakeXYWH(skScalar(b.x),skScalar(b.y),skScalar(b.width),skScalar(b.height));
+            const auto fill=propertyColor(record,0x100U,{0,0,0,0});
+            if(fill.a>0)drawSolidRect(canvas,{skScalar(b.x),skScalar(b.y),skScalar(b.x+b.width),skScalar(b.y+b.height)},fill);
+            // Boundary chrome is presentation only, never a persisted stroke.
+            SkPaint border;border.setAntiAlias(true);border.setColor4f({.4F,.45F,.5F,.65F});
+            border.setStyle(SkPaint::kStroke_Style);border.setStrokeWidth(1);
+            canvas.drawRect(area,border);
+            if(command.titleLayout&&textResources) {
+                canvas.save();
+                canvas.clipRect(SkRect::MakeXYWH(skScalar(b.x),skScalar(b.y),skScalar(b.width),
+                    skScalar(std::min(b.height,command.content.header_height))));
+                canvas.translate(skScalar(b.x+command.content.padding),skScalar(b.y));
+                textResources->draw(canvas,*command.titleLayout);
+                canvas.restore();
+            }
+        } else if constexpr (std::is_same_v<T, GroupReferenceCommand>) {
+            // Group is an ordered traversal entry with no pixel contribution.
+        }
+    }, entry.command);
+}
+
+void eraseMasks(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
+    for (const auto& mask : entry.record.eraseMasks) {
+        if (const auto* filled = std::get_if<semantic::FilledPathMask>(&mask.geometry)) {
+            SkPaint paint; paint.setAntiAlias(false); paint.setBlendMode(SkBlendMode::kClear); drawPath(canvas, filled->path, paint);
+        } else if (const auto* swept = std::get_if<semantic::SweptCircleMask>(&mask.geometry)) {
+            SkPaint paint;
+            paint.setAntiAlias(true);
+            paint.setBlendMode(SkBlendMode::kClear);
+            paint.setStyle(SkPaint::kStroke_Style);
+            paint.setStrokeCap(SkPaint::kRound_Cap);
+            paint.setStrokeJoin(SkPaint::kRound_Join);
+            for (const auto& segment : swept->segments) {
+                paint.setStrokeWidth(static_cast<float>(2.0 * std::max(segment.p0.radius, segment.p1.radius)));
+                SkPathBuilder path;
+                path.moveTo(static_cast<float>(segment.p0.position.x), static_cast<float>(segment.p0.position.y));
+                path.cubicTo(static_cast<float>(segment.control1.x), static_cast<float>(segment.control1.y),
+                             static_cast<float>(segment.control2.x), static_cast<float>(segment.control2.y),
+                             static_cast<float>(segment.p1.position.x), static_cast<float>(segment.p1.position.y));
+                canvas.drawPath(path.detach(), paint);
+            }
+        }
+    }
+}
+
+bool isInkReferenceEntry(const ReferenceTraversalEntry& entry) noexcept {
+    return std::holds_alternative<VectorStrokeReferenceCommand>(entry.command) ||
+           std::holds_alternative<DabStrokeReferenceCommand>(entry.command) ||
+           std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
+           std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
+}
+
+bool isDrawableNonInkReferenceEntry(const ReferenceTraversalEntry& entry) noexcept {
+    // Group entries describe traversal only and have no pixels of their own.
+    // They must not force an ink layer, otherwise kClear erases composite
+    // against the layer's opaque backdrop in an ink-only frame.
+    return entry.contributesPixels && !isInkReferenceEntry(entry) &&
+           !std::holds_alternative<GroupReferenceCommand>(entry.command);
+}
+
+bool isBrushReferenceEntry(const ReferenceTraversalEntry& entry) noexcept {
+    return std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
+           std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
+}
+
+bool hasNonIdentityTransform(const ReferenceTraversalEntry& entry) noexcept {
+    const auto& transform = entry.record.transform;
+    return transform.a != 1.0 || transform.b != 0.0 || transform.c != 0.0 ||
+           transform.d != 1.0 || transform.tx != 0.0 || transform.ty != 0.0;
+}
+
+bool shouldIsolateInkEntry(const ReferenceTraversalEntry& entry,
+                           bool hasDrawableNonInk) noexcept {
+    // BrushSession canonical content has always used the opaque white target
+    // semantics. Preserve that behavior even for an ink-only frame. Legacy
+    // VectorStroke/DabStroke content uses direct kClear when it is standalone,
+    // but needs isolation when a real shape/image/etc. is underneath it.
+    return (hasDrawableNonInk && isInkReferenceEntry(entry)) ||
+           (isBrushReferenceEntry(entry) && !hasNonIdentityTransform(entry));
+}
+
+std::string digest(const std::vector<std::uint8_t>& bytes) {
+    std::uint64_t value = 0xcbf29ce484222325ULL;
+    for (std::uint8_t byte : bytes) { value ^= byte; value *= 0x100000001b3ULL; }
+    constexpr char digits[] = "0123456789abcdef";
+    std::string result = "fnv1a64:";
+    for (int shift = 60; shift >= 0; shift -= 4) result.push_back(digits[(value >> shift) & 0x0fU]);
+    return result;
+}
+
+} // namespace
+
+namespace internal {
+
+void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
+                                  const semantic::ObjectRecord& object,
+                                  const scene::ConnectorGeometry* route) {
+    RuntimeSceneRecord record{};
+    record.objectId = object.id; record.kind = object.kind; record.kindVersion = object.kind_version;
+    record.transform = object.transform; record.properties = object.properties; record.content = object.content;
+    // Transient creation records are not compiled through RuntimeScene yet.
+    // Populate the same derived bounds that canonical records carry; without
+    // this, rectangle/ellipse previews reach the renderer with a zero visual
+    // rect and appear only after pointer-up commits them.
+    const auto bounds = canvas::scene::computeBounds(object, nullptr, route);
+    if(route)record.derivedGeometry=*route;
+    record.geometryBounds = bounds.geometry;
+    record.visualBounds = bounds.visual;
+    record.worldBounds = bounds.world;
+    ReferenceTraversalEntry entry{}; entry.record = record;
+    if (const auto* shape = std::get_if<semantic::ShapeContent>(&object.content))
+        entry.command = ShapeReferenceCommand{*shape};
+    else if (const auto* connector = std::get_if<semantic::ConnectorContent>(&object.content))
+        entry.command = ConnectorReferenceCommand{*connector};
+    else if (const auto* sticky = std::get_if<semantic::StickyContent>(&object.content))
+        entry.command = StickyReferenceCommand{*sticky, nullptr, false};
+    else return;
+    drawTransientEntryToSkCanvas(canvas, plan, entry);
+}
+
+void drawTransientEntryToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
+                                  const ReferenceTraversalEntry& entry) {
+    canvas.save(); scaleToDevice(canvas, plan.frame.metrics);
+    canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
+    const WorldToViewAffine transform{entry.record.transform.a, entry.record.transform.b,
+                                      entry.record.transform.c, entry.record.transform.d,
+                                      entry.record.transform.tx, entry.record.transform.ty};
+    canvas.concat(SkMatrix::Concat(matrix(plan.referenceDrawList.worldToView), matrix(transform)));
+    drawCommand(canvas, entry, nullptr, nullptr, true);
+    canvas.restore();
+}
+
+BackendSubmissionResult drawReferencePlanToSkCanvas(
+    SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images,
+    SkiaTextResources* textResources, bool includeInk) {
+    if (!(plan.referenceDrawList.frame == plan.frame)) {
+        return BackendSubmissionResult::rejected("frame identity mismatch");
+    }
+    // An empty visibility result is a valid canonical frame: the scene may be
+    // non-empty while every object is outside the current world viewport.
+    // The renderer still clears the target and presents that frame.  The
+    // headless backend keeps its stricter fixture contract in submit(), while
+    // the shared provider path must not turn an off-screen stroke into a
+    // failed canonical handoff.
+    if (!validAffine(plan.referenceDrawList.worldToView) ||
+        !validProductionRect(plan.referenceDrawList.viewportClip)) {
+        return BackendSubmissionResult::rejected("invalid transform or clip");
+    }
+    for (const auto& entry : plan.referenceDrawList.entries) {
+        const bool brushEntry = std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
+                                std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command) ||
+                                std::holds_alternative<RichTextReferenceCommand>(entry.command);
+        if (!(brushEntry ? validBrushRect(entry.record.visualBounds)
+                         : validProductionRect(entry.record.visualBounds))) {
+            return BackendSubmissionResult::rejected("non-integral visual bounds");
+        }
+        const WorldToViewAffine transform{entry.record.transform.a, entry.record.transform.b,
+                                          entry.record.transform.c, entry.record.transform.d,
+                                          entry.record.transform.tx, entry.record.transform.ty};
+        if (!validAffine(transform) || validateProductionCommand(entry) != HeadlessSubmissionIssue::kNone) {
+            return BackendSubmissionResult::rejected("unsupported command geometry");
+        }
+        for (const auto& mask : entry.record.eraseMasks) {
+            const bool valid = std::visit([](const auto& geometry) {
+                using T = std::decay_t<decltype(geometry)>;
+                // Object-local erase geometry can be fractional after inverse
+                // affine mapping, independently of headless object fixtures.
+                if constexpr (std::is_same_v<T, semantic::FilledPathMask>) return validatePath(geometry.path, false);
+                else return validateSweptMask(geometry);
+            }, mask.geometry);
+            if (!valid) {
+                return BackendSubmissionResult::rejected("unsupported erase mask");
+            }
+        }
+    }
+    // Canonical surfaces are opaque document targets. Preview has its own
+    // transparent clear in SkiaRenderer::renderPreview.
+    canvas.clear(SK_ColorWHITE);
+    canvas.save();
+    scaleToDevice(canvas, plan.frame.metrics);
+    canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
+    const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
+    const bool hasDrawableNonInk = std::any_of(
+        plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
+        isDrawableNonInkReferenceEntry);
+    for (const auto& entry : plan.referenceDrawList.entries) {
+        if (!includeInk && isInkReferenceEntry(entry)) continue;
+        const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk);
+        canvas.save();
+        if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
+        canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
+        drawCommand(canvas, entry, images, textResources, true);
+        eraseMasks(canvas, entry);
+        if (isolatedInk) canvas.restore();
+        canvas.restore();
+    }
+    canvas.restore();
+    return BackendSubmissionResult::accepted();
+}
+
+void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
+                              ImageResourceResolver* images,
+                              SkiaTextResources* textResources) {
+    canvas.save();
+    scaleToDevice(canvas, plan.frame.metrics);
+    canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
+    const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
+    const bool hasDrawableNonInk = std::any_of(
+        plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
+        isDrawableNonInkReferenceEntry);
+    for (const auto& entry : plan.referenceDrawList.entries) {
+        if (!isInkReferenceEntry(entry)) continue;
+        const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk);
+        canvas.save();
+        if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
+        canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
+        drawCommand(canvas, entry, images, textResources, true);
+        eraseMasks(canvas, entry);
+        if (isolatedInk) canvas.restore();
+        canvas.restore();
+    }
+    canvas.restore();
+}
+
+} // namespace internal
+
+SkiaHeadlessBackend::SkiaHeadlessBackend(HeadlessRasterConfig config, ImageResourceResolver* images) : _config(config), _images(images) {}
+
+BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
+    _lastIssue = HeadlessSubmissionIssue::kNone;
+    auto reject = [&](HeadlessSubmissionIssue issue, std::string message) {
+        _lastIssue = issue;
+        return BackendSubmissionResult::rejected(std::move(message));
+    };
+    if (_config.width == 0U || _config.height == 0U) return reject(HeadlessSubmissionIssue::kInvalidConfiguration, "invalid raster dimensions");
+    const std::uint64_t byteCount = static_cast<std::uint64_t>(_config.width) * _config.height * 4U;
+    if (byteCount > std::numeric_limits<std::size_t>::max() || byteCount > 512ULL * 1024ULL * 1024ULL) return reject(HeadlessSubmissionIssue::kOverflow, "raster allocation overflow");
+    if (_config.width != 256U || _config.height != 256U) return reject(HeadlessSubmissionIssue::kInvalidConfiguration, "headless raster must be 256x256");
+    if (!(plan.referenceDrawList.frame == plan.frame)) return reject(HeadlessSubmissionIssue::kPlanIdentityMismatch, "frame identity mismatch");
+    if (plan.referenceDrawList.entries.empty()) return reject(HeadlessSubmissionIssue::kEmptyPlan, "empty reference draw list");
+    if (!validAffine(plan.referenceDrawList.worldToView) || !validRect(plan.referenceDrawList.viewportClip)) return reject(HeadlessSubmissionIssue::kUnsupportedGeometry, "invalid transform or clip");
+    for (const auto& entry : plan.referenceDrawList.entries) {
+        const bool brushEntry = std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
+                                std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command) ||
+                                std::holds_alternative<RichTextReferenceCommand>(entry.command);
+        if (!(brushEntry ? validBrushRect(entry.record.visualBounds)
+                         : validRect(entry.record.visualBounds))) return reject(HeadlessSubmissionIssue::kUnsupportedGeometry, "invalid visual bounds");
+        const WorldToViewAffine recordTransform{entry.record.transform.a, entry.record.transform.b, entry.record.transform.c, entry.record.transform.d, entry.record.transform.tx, entry.record.transform.ty};
+        if (!scalarRange(recordTransform.a) || !scalarRange(recordTransform.b) ||
+            !scalarRange(recordTransform.c) || !scalarRange(recordTransform.d) ||
+            !scalarRange(recordTransform.tx) || !scalarRange(recordTransform.ty)) {
+            return reject(HeadlessSubmissionIssue::kOverflow, "record transform exceeds raster scalar range");
+        }
+        if (!validAffine(recordTransform)) return reject(HeadlessSubmissionIssue::kUnsupportedGeometry, "non-integral record transform");
+        const auto commandIssue = validateCommand(entry);
+        if (commandIssue != HeadlessSubmissionIssue::kNone) {
+            return reject(commandIssue, commandIssue == HeadlessSubmissionIssue::kOverflow
+                ? "command geometry exceeds raster scalar range"
+                : "unsupported command geometry");
+        }
+        for (const auto& mask : entry.record.eraseMasks) {
+            const bool valid = std::visit([](const auto& geometry) {
+                using T = std::decay_t<decltype(geometry)>;
+                if constexpr (std::is_same_v<T, semantic::FilledPathMask>) return validatePath(geometry.path, false);
+                else return validateSweptMask(geometry);
+            }, mask.geometry);
+            if (!valid) return reject(HeadlessSubmissionIssue::kUnsupportedEraseMask, "unsupported erase mask");
+        }
+    }
+    const SkImageInfo info = SkImageInfo::Make(_config.width, _config.height, kRGBA_8888_SkColorType, kPremul_SkAlphaType, SkColorSpace::MakeSRGB());
+    auto surface = SkSurfaces::Raster(info);
+    if (!surface) return reject(HeadlessSubmissionIssue::kRasterFailure, "unable to create raster surface");
+    SkCanvas* canvas = surface->getCanvas();
+    const auto background=_config.backgroundRgba;
+    canvas->clear(SkColorSetARGB(background&255U,background>>24U,(background>>16U)&255U,(background>>8U)&255U));
+    canvas->save();
+    scaleToDevice(*canvas, plan.frame.metrics);
+    canvas->clipRect(rect(plan.referenceDrawList.viewportClip));
+    const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
+    const bool hasDrawableNonInk = std::any_of(
+        plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
+        isDrawableNonInkReferenceEntry);
+    std::vector<semantic::ObjectKind> kinds;
+    kinds.reserve(plan.referenceDrawList.entries.size());
+    for (const auto& entry : plan.referenceDrawList.entries) {
+        const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk);
+        canvas->save();
+        if (isolatedInk) canvas->saveLayer(nullptr, nullptr);
+        canvas->concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
+        drawCommand(*canvas, entry, _images, &_textResources, false, true);
+        eraseMasks(*canvas, entry);
+        if (isolatedInk) canvas->restore();
+        canvas->restore();
+        kinds.push_back(entry.record.kind);
+    }
+    canvas->restore();
+    std::vector<std::uint8_t> rgba(static_cast<std::size_t>(byteCount));
+    if (!surface->readPixels(info, rgba.data(), _config.width * 4U, 0, 0)) return reject(HeadlessSubmissionIssue::kRasterFailure, "unable to read raster surface");
+    const std::string rgbaDigest = digest(rgba);
+    HeadlessRasterObservation next{_config.width, _config.height, std::move(rgba), rgbaDigest, plan.referenceDrawList.digest, std::move(kinds)};
+    _observation = std::move(next);
+    return BackendSubmissionResult::accepted();
+}
+
+} // namespace canvas::render

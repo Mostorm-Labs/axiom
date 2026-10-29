@@ -2,6 +2,8 @@
 #include "canvas/runtime/runtime_composition.hpp"
 #include "canvas/interaction/text_edit_session.hpp"
 #include "canvas/semantic/property_value.hpp"
+#include "multi_selection_queue.hpp"
+#include <algorithm>
 
 namespace canvas::runtime {
 
@@ -20,6 +22,11 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     if (!isTargetCurrent(request.target)) return {CanvasControlError::kStaleTarget, "stale target"};
     auto& runtime = runtime_;
     const auto& p = request.payload;
+    const bool singleObjectEdit=p.kind==CanvasControlPayloadKind::kSelectedAppearance||p.kind==CanvasControlPayloadKind::kSelectedSize||
+        p.kind==CanvasControlPayloadKind::kSelectedTransform||p.kind==CanvasControlPayloadKind::kSelectedOrder||
+        p.kind==CanvasControlPayloadKind::kSelectedLock||p.kind==CanvasControlPayloadKind::kSelectedVisible||p.kind==CanvasControlPayloadKind::kUnlockSelected;
+    if (singleObjectEdit&&runtime.selectedObjectCount()>1)
+      return {CanvasControlError::kUnsupported,"multi-object editing is not supported by this command"};
     bool applied = false;
 
     switch (p.kind) {
@@ -33,8 +40,10 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
             CanvasControlError::kInvalidValue;
         return {error,"",result};
       }
+      case CanvasControlPayloadKind::kSelectionAcquisitionMode:
+        applied=runtime.setSelectionAcquisitionMode(p.selectionAcquisitionMode);break;
       case CanvasControlPayloadKind::kSelectTool:
-        if (p.tool == CanvasToolKind::kSelect) applied = runtime.setSelectionMode(true);
+        if (p.tool == CanvasToolKind::kSelect) applied = runtime.setSelectionAcquisitionMode(p.selectionAcquisitionMode);
         else if (p.tool == CanvasToolKind::kPan) applied = runtime.setPanTool(true);
         else if (p.tool == CanvasToolKind::kEraser)
           applied = runtime.setSelectionMode(false) && runtime.setPanTool(false) &&
@@ -140,6 +149,12 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     out.canUndo = runtime.canUndo(); out.canRedo = runtime.canRedo();
     out.semanticGeneration = runtime.semanticGeneration().value();
     out.selectedObjectCount = static_cast<std::uint32_t>(runtime.selectedObjectCount());
+    out.selectionSummary=runtime.selectionSummary();
+    out.selectionAcquisitionMode=runtime.selectionAcquisitionMode();
+    out.selectionRevision=runtime.selection_.revision();
+    out.regionSelectionActive=runtime.regionSelectionActive();
+    out.regionCandidateCount=static_cast<std::uint32_t>(runtime.regionCandidates_.size());
+    out.selectionQueryStatus=runtime.regionQueryStatus_;out.regionUnsupportedKinds=runtime.regionUnsupportedKinds_;
     if (out.selectedObjectCount != 0U) out.selectedObject = runtime.selectedPrimaryObject();
     out.creationPreset = static_cast<CanvasCreationPreset>(runtime.creationPreset());
     out.creationActive = runtime.creationActive();
@@ -165,10 +180,10 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
         : runtime.toolMode() == canvas::interaction::CanvasEditingRuntime::ToolMode::kObjectEraser ||
           runtime.toolMode() == canvas::interaction::CanvasEditingRuntime::ToolMode::kPartialEraser
             ? CanvasToolKind::kEraser : CanvasToolKind::kInk;
+    out.selectedLocked = runtime.selectedObjectLocked();
     if (const auto record = runtime.selectedObjectRecord()) {
       out.selectedKind = static_cast<std::uint32_t>(record->kind);
       out.selectedVersion = record->kind_version;
-      out.selectedLocked = runtime.selectedObjectLocked();
       const auto& transform = record->transform;
       out.selectedTransform = {transform.a, transform.b, transform.c, transform.d,
                                transform.tx, transform.ty};
@@ -279,12 +294,43 @@ void CanvasRuntimeFacade::setTarget(CanvasTargetKey target) noexcept {
   std::scoped_lock lock(ingressMutex_);
   if (binding_ == nullptr) return;
   const auto previous = binding_->target();
-  if (previous != target && service_ != nullptr) service_->destroyTarget(previous);
+  if (previous != target) {runtime_.cancelRegionSelection();if (service_ != nullptr) service_->destroyTarget(previous);}
   binding_->setTarget(target);
 }
 const CanvasTargetKey& CanvasRuntimeFacade::target() const noexcept { return binding_->target(); }
 bool CanvasRuntimeFacade::isTargetCurrent(const CanvasTargetKey& target) const noexcept {
   return binding_->isTargetCurrent(target);
+}
+CanvasControlReceipt CanvasRuntimeFacade::submitMultiSelection(
+    std::shared_ptr<MultiSelectionControlWork> work) noexcept {
+  CanvasControlReceipt rejected{};
+  if (!work) return rejected;
+  rejected.key = work->key;
+  rejected.state = CanvasControlReceiptState::kRejected;
+  rejected.error = CanvasControlError::kBusy;
+  if (!ownerThread() || runtime_.closed()) return rejected;
+  try {
+    std::scoped_lock lock(ingressMutex_);
+    if (work->target != target()) {
+      rejected.state = CanvasControlReceiptState::kStaleTarget;
+      rejected.error = CanvasControlError::kStaleTarget;
+      return rejected;
+    }
+    if (pendingWork_.load() >= 256U) {
+      rejected.state = CanvasControlReceiptState::kQueueFull;
+      rejected.error = CanvasControlError::kQueueFull;
+      return rejected;
+    }
+    ingress_.push_back(work);
+    const auto receipt = service_->enqueueMultiSelection(work);
+    if (receipt.state != CanvasControlReceiptState::kQueued) ingress_.pop_back();
+    else ++pendingWork_;
+    return receipt;
+  } catch (const std::bad_alloc&) {
+    rejected.state = CanvasControlReceiptState::kQueueFull;
+    rejected.error = CanvasControlError::kQueueFull;
+    return rejected;
+  }
 }
 ProductControlReceipt CanvasRuntimeFacade::submitCanvasControl(const CanvasControlRequest& request) noexcept {
   try {
@@ -412,7 +458,7 @@ RuntimeStateSnapshot CanvasRuntimeFacade::readRuntimeState() const noexcept {
   out.history = {runtime_.canUndo(), runtime_.canRedo()};
   out.selection = {runtime_.selectionMode(), static_cast<std::uint32_t>(runtime_.selectedObjectCount()),
                    runtime_.selectedPrimaryObjectValue(), runtime_.snapCandidateCount()};
-  const auto snapshot = readCanvasControlSnapshot(target());
+  auto snapshot = readCanvasControlSnapshot(target());
   out.control.creationPreset = static_cast<std::uint8_t>(snapshot.creationPreset);
   out.control.creationMode = snapshot.creationMode;
   out.control.semanticGeneration = snapshot.semanticGeneration;
@@ -426,6 +472,11 @@ RuntimeStateSnapshot CanvasRuntimeFacade::readRuntimeState() const noexcept {
   out.control.presentedSemanticGeneration = snapshot.presentedSemanticGeneration;
   out.control.axisLocalDurable = snapshot.axisLocalDurable;
   out.control.axisCloudSynced = snapshot.axisCloudSynced;
+  out.control.selectionAcquisitionMode=snapshot.selectionAcquisitionMode;
+  out.control.selectionQueryStatus=snapshot.selectionQueryStatus;
+  out.control.regionUnsupportedKindCount=static_cast<std::uint8_t>(std::min(snapshot.regionUnsupportedKinds.size(),out.control.regionUnsupportedKinds.size()));
+  std::copy_n(snapshot.regionUnsupportedKinds.begin(),out.control.regionUnsupportedKindCount,out.control.regionUnsupportedKinds.begin());
+  out.control.selectionRevision=snapshot.selectionRevision;
   return out;
 }
 CanvasControlSnapshot CanvasRuntimeFacade::readCanvasControlSnapshot(const CanvasTargetKey& target) const noexcept {

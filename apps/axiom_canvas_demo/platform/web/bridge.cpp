@@ -84,6 +84,14 @@ struct WebInstance final {
         pending.reset();
     }
     void cancel() {
+        // Retire the exact ingress generations before forgetting host capture.
+        // Clearing only this map strands an active Runtime generation after
+        // blur/tool cancellation, so a later Down cannot reuse the pointer.
+        const auto now=static_cast<std::uint64_t>(std::max(1.0,emscripten_get_now()*1000000.0));
+        for (const auto& [id,key]:pointers) {
+            (void)id;
+            (void)lifecycle.composition().cancelPlatformPointer(key,++sequence,now);
+        }
         (void)lifecycle.composition().cancelAllPointers();
         pointers.clear();
     }
@@ -237,7 +245,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_pointer(std::uintptr_t h,
                                            float width,
                                            float height,
                                            int geometryAvailable,
-                                           int history) {
+                                           int history, int modifiers=0) {
     auto* v = instance(h);
     if (!v)
         return 0;
@@ -277,6 +285,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_pointer(std::uintptr_t h,
                              history ? input::SampleProvenance::kCoalescedHistory
                                      : input::SampleProvenance::kConfirmedCurrent,
                              static_cast<input::PointerPhase>(phase)});
+    batch.samples.back().modifiers=(modifiers&1)?input::PointerModifiers::kShift:input::PointerModifiers::kNone;
     if (!comp.submit(batch)) {
         if (const auto key = comp.platformKey(s, p))
             (void)comp.cancelPlatformPointer(*key, ++v->sequence, time);
@@ -370,7 +379,8 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_control(
     std::uintptr_t h, int kind, float a, float b, float c, float d, float e, float f) {
     auto* v = instance(h);
     if (!v || kind < 0 ||
-        kind > static_cast<int>(runtime::CanvasControlPayloadKind::kUnlockSelected))
+        (kind > static_cast<int>(runtime::CanvasControlPayloadKind::kUnlockSelected)&&
+         kind != static_cast<int>(runtime::CanvasControlPayloadKind::kSelectionAcquisitionMode)))
         return 0;
     auto& facade = v->lifecycle.facade();
     const auto targets = facade.mountedCanvasTargets();
@@ -385,6 +395,9 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_control(
     payload.kind = static_cast<runtime::CanvasControlPayloadKind>(kind);
     using K = runtime::CanvasControlPayloadKind;
     switch (payload.kind) {
+    case K::kSelectionAcquisitionMode:
+        if (!std::isfinite(a)||a<0||a>2||a!=std::floor(a)) return 0;
+        payload.selectionAcquisitionMode=static_cast<runtime::CanvasSelectionMode>(static_cast<int>(a));break;
     case K::kSelectTool:
         if (a < 0 || a > 3)
             return 0;
@@ -448,6 +461,37 @@ EMSCRIPTEN_KEEPALIVE const char* axiom_web_snapshot(std::uintptr_t h) {
             v->lastControl = receipt->state;
     }
     const auto s = comp.surfaceSnapshot();
+    const auto& summary=control.selectionSummary;
+    const auto identifier=[](const canvas::foundation::ObjectId& id) {
+        std::ostringstream value;value<<std::hex<<std::setfill('0');
+        for(const auto b:id.bytes)value<<std::setw(2)<<static_cast<unsigned>(b);
+        return value.str();
+    };
+    nlohmann::json projection{{"status",static_cast<unsigned>(summary.status)},{"reason",static_cast<unsigned>(summary.reason)},
+        {"count",summary.count},{"primary",identifier(summary.primary)},{"groupScope",nullptr},{"roots",nlohmann::json::array()},
+        {"kindCounts",nlohmann::json::array()},{"selectionRevision",std::to_string(summary.selectionRevision)},
+        {"semanticGeneration",std::to_string(summary.semanticGeneration)},{"sceneGeneration",std::to_string(summary.sceneGeneration)},
+        {"sceneRevision",std::to_string(summary.sceneRevision)},{"bounds",{{"status",static_cast<unsigned>(summary.bounds.status)},
+            {"reason",static_cast<unsigned>(summary.bounds.reason)},{"world",nullptr}}},
+        {"properties",nlohmann::json::array()},{"actions",nlohmann::json::array()}};
+    for(const auto id:summary.roots)projection["roots"].push_back(identifier(id));
+    if(summary.groupScope)projection["groupScope"]=identifier(*summary.groupScope);
+    for(const auto& count:summary.kindCounts)projection["kindCounts"].push_back({{"kind",count.kind},{"count",count.count}});
+    if(summary.bounds.world) {
+        const auto& b=*summary.bounds.world;projection["bounds"]["world"]={b.left,b.top,b.right,b.bottom};
+    }
+    for(const auto& property:summary.properties) {
+        nlohmann::json row{{"fieldId",property.fieldId},{"state",static_cast<unsigned>(property.state)},
+            {"reason",static_cast<unsigned>(property.reason)},{"applicableRoots",property.applicableRoots},
+            {"knownRoots",property.knownRoots},{"applicableValuesMixed",property.applicableValuesMixed},{"value",nullptr}};
+        if(property.value) {
+            if(const auto* boolean=std::get_if<bool>(&*property.value))row["value"]=*boolean;
+            else if(const auto* scalar=std::get_if<float>(&*property.value))row["value"]=*scalar;
+        }
+        projection["properties"].push_back(std::move(row));
+    }
+    for(std::size_t i=0;i<summary.actions.size();++i)projection["actions"].push_back({{"action",i},
+        {"state",static_cast<unsigned>(summary.actions[i].state)},{"reason",static_cast<unsigned>(summary.actions[i].reason)}});
     std::ostringstream out;
     out << std::boolalpha << "{\"owner\":\"RuntimeComposition\",\"revision\":\""
         << AXIOM_BUILD_SOURCE_REVISION << "\",\"dirty\":" << AXIOM_BUILD_DIRTY
@@ -467,6 +511,11 @@ EMSCRIPTEN_KEEPALIVE const char* axiom_web_snapshot(std::uintptr_t h) {
         << ",\"logicalHeight\":" << s.logicalHeight << ",\"dpr\":" << s.devicePixelRatio
         << ",\"controlState\":" << static_cast<int>(v->lastControl)
         << ",\"tool\":" << static_cast<int>(control.tool)
+        << ",\"selectedCount\":" << control.selectedObjectCount
+        << ",\"selectionMode\":" << static_cast<int>(control.selectionAcquisitionMode)
+        << ",\"regionActive\":" << control.regionSelectionActive
+        << ",\"regionCandidates\":" << control.regionCandidateCount
+        << ",\"regionQuery\":" << static_cast<int>(control.selectionQueryStatus)
         << ",\"creationMode\":" << control.creationMode
         << ",\"creationPreset\":" << static_cast<int>(control.creationPreset)
         << ",\"size\":" << control.size << ",\"opacity\":" << control.opacity
@@ -475,7 +524,7 @@ EMSCRIPTEN_KEEPALIVE const char* axiom_web_snapshot(std::uintptr_t h) {
         << "},\"lastPointer\":{\"source\":" << v->lastPointer.source
         << ",\"pointer\":" << v->lastPointer.pointer
         << ",\"generation\":" << v->lastPointer.generation
-        << "},\"error\":" << std::quoted(v->error) << "}";
+        << "},\"error\":" << std::quoted(v->error) << ",\"selectionSummary\":" << projection.dump() << "}";
     json = out.str();
     return json.c_str();
 }

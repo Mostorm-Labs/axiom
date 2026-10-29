@@ -26,6 +26,14 @@ enum class RuntimeCheckpoint : std::uint8_t {
     kAfterInvalidationFinalization,
     kBeforePublication,
     kAfterPublication,
+    kBeforeRecordPrepare,
+    kAfterRecordPrepare,
+    kBeforeRenderPrepare,
+    kAfterRenderPrepare,
+    kBeforeDamagePrepare,
+    kAfterDamagePrepare,
+    kBeforeSnapshotPrepare,
+    kAfterSnapshotPrepare,
 };
 
 struct RuntimeUpdatePlan final {
@@ -54,6 +62,14 @@ class IncrementalRuntimeCoordinator final {
     foundation::Result<SceneSyncReceipt> recover(
         const ISemanticSceneCompiler& compiler,
         const SceneCommitInput& input);
+
+    // Private product-owned preparation for one explicit local intent. No
+    // canonical or visible Scene state changes until commitIntent().
+    [[nodiscard]] bool prepareIntent(const ISemanticSceneCompiler& compiler,
+                                     const SceneCommitInput& input);
+    [[nodiscard]] bool intentBasisMatches() const noexcept;
+    void commitIntent() noexcept;
+    void abortIntent() noexcept;
 
     [[nodiscard]] const RuntimeScene& runtimeScene() const noexcept {
         return runtimeScene_;
@@ -90,6 +106,7 @@ class IncrementalRuntimeCoordinator final {
         runtimeScene_.corruptForTest();
     }
     [[nodiscard]] bool checkpointFails(RuntimeCheckpoint checkpoint) const noexcept {
+        if (testCheckpointObserver_) testCheckpointObserver_(testCheckpointObserverContext_, checkpoint);
         return checkpointFailure_.has_value() && *checkpointFailure_ == checkpoint;
     }
     static bool transactionCheckpoint(void* context, std::uint8_t checkpoint) noexcept;
@@ -102,6 +119,8 @@ class IncrementalRuntimeCoordinator final {
     text::RichTextLayoutService* textLayoutService_ = nullptr;
     std::optional<RuntimeCheckpoint> checkpointFailure_;
     std::optional<RuntimeScene::PreparedPublication> pendingPublication_;
+    std::optional<RuntimeScene::PreparedPublication> intentRuntime_;
+    std::unique_ptr<Scene::PreparedIntent> intentScene_;
     ScenePublicationGate publicationGate_;
     semantic::SemanticGeneration pendingGeneration_{};
     SceneRevision pendingRevision_{};
@@ -110,6 +129,8 @@ class IncrementalRuntimeCoordinator final {
     bool deferConnectorRoutes_ = false;
     TestPublicationObserver testPublicationObserver_ = nullptr;
     void* testPublicationObserverContext_ = nullptr;
+    void (*testCheckpointObserver_)(void*, RuntimeCheckpoint) noexcept = nullptr;
+    void* testCheckpointObserverContext_ = nullptr;
 };
 
 } // namespace canvas

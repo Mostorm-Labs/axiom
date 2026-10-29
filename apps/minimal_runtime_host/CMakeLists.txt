@@ -155,6 +155,8 @@ if(BUILD_TESTING)
       add_test(NAME FC02WindowsInkDoubleClick COMMAND axiom_minimal_windows_text_tool_entry_tests ink-double-click)
       add_test(NAME FC02WindowsShapeLabelEntry COMMAND axiom_minimal_windows_text_tool_entry_tests shape-label)
       add_test(NAME FC02WindowsTouchShapeLabelEntry COMMAND axiom_minimal_windows_text_tool_entry_tests touch-shape-label)
+      add_test(NAME FC04WindowsGroupDoubleClick COMMAND axiom_minimal_windows_text_tool_entry_tests group-dblclick)
+      add_test(NAME FC04WindowsGroupTouchDoubleTap COMMAND axiom_minimal_windows_text_tool_entry_tests group-touch)
     endif()
     add_executable(axiom_minimal_windows_text_pipeline_tests tests/windows_text_pipeline_test.cpp)
     target_link_libraries(axiom_minimal_windows_text_pipeline_tests PRIVATE axiom_minimal_runtime_host axiom_minimal_windows_surface user32 gdi32 libcpmt)
@@ -192,6 +194,7 @@ if(BUILD_TESTING)
     endif()
     add_test(NAME FC00XWindowsMouseHistory
       COMMAND axiom_minimal_windows_input_pipeline_tests history)
+    add_test(NAME FC01AWindowsSelectionInput COMMAND axiom_minimal_windows_input_pipeline_tests selection)
     add_test(NAME FC00XWindowsPreviewOrigin
       COMMAND axiom_minimal_windows_input_pipeline_tests origin)
     add_test(NAME FC00XPreviewCanonicalCoordinates

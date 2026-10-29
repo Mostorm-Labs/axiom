@@ -1,0 +1,81 @@
+[
+  {
+    "command": [
+      "C:/Users/Chado/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "apps/axiom_canvas_demo/tests/web_selection_batch1.mjs",
+      "--repo",
+      ".",
+      "--build",
+      "out/d07-functional/web-build/apps/axiom_canvas_demo",
+      "--chrome",
+      "C:/Program Files/Google/Chrome/Application/chrome.exe",
+      "--python",
+      "D:/Softwares/Anaconda/python.exe",
+      "--git",
+      "D:/Softwares/Git/cmd/git.exe",
+      "--output",
+      "out/d07-functional/web-final-v4-batch1"
+    ],
+    "exit_code": 0,
+    "assertions": 19,
+    "failed": 0
+  },
+  {
+    "command": [
+      "C:/Users/Chado/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "apps/axiom_canvas_demo/tests/web_selection_batch2.mjs",
+      "--repo",
+      ".",
+      "--build",
+      "out/d07-functional/web-build/apps/axiom_canvas_demo",
+      "--chrome",
+      "C:/Program Files/Google/Chrome/Application/chrome.exe",
+      "--python",
+      "D:/Softwares/Anaconda/python.exe",
+      "--git",
+      "D:/Softwares/Git/cmd/git.exe",
+      "--output",
+      "out/d07-functional/web-final-v4-batch2"
+    ],
+    "exit_code": 0,
+    "assertions": 28,
+    "failed": 0
+  },
+  {
+    "command": [
+      "C:/Users/Chado/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "apps/axiom_canvas_demo/tests/web_selection_batch3.mjs",
+      "--repo",
+      ".",
+      "--build",
+      "out/d07-functional/web-build/apps/axiom_canvas_demo",
+      "--chrome",
+      "C:/Program Files/Google/Chrome/Application/chrome.exe",
+      "--python",
+      "D:/Softwares/Anaconda/python.exe",
+      "--git",
+      "D:/Softwares/Git/cmd/git.exe",
+      "--output",
+      "out/d07-functional/web-final-v4-batch3"
+    ],
+    "exit_code": 0,
+    "assertions": 38,
+    "failed": 0
+  },
+  {
+    "command": [
+      "C:/Program Files/Google/Chrome/Application/chrome.exe",
+      "--headless",
+      "--disable-gpu",
+      "--no-sandbox",
+      "--allow-file-access-from-files",
+      "--user-data-dir=C:\\Users\\Chado\\.codex\\worktrees\\fc04-d07-functional-p31-v0-3\\canvas\\out\\d07-functional\\chrome-intent-profile",
+      "--virtual-time-budget=15000",
+      "--dump-dom",
+      "file:///C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/web-build/intent.html"
+    ],
+    "exit_code": 0,
+    "oracle": "FC04_D07_REAL_WASM_INTENT=PASS",
+    "oracle_present": true
+  }
+]

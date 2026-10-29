@@ -1,4 +1,5 @@
 #include "canvas/control/canvas_control_service.hpp"
+#include "../src/multi_selection_queue.hpp"
 
 #include <cassert>
 #include <cstdint>
@@ -92,5 +93,44 @@ int main() {
   // Evicting detailed receipts must not make an old Undo executable again.
   assert(bounded.enqueue(request(20, 1, live, CanvasControlPayloadKind::kUndo)).state ==
          CanvasControlReceiptState::kExpired);
+
+  Port orderedPort;
+  CanvasControlService ordered(orderedPort, 2, 8);
+  assert(ordered.enqueue(request(60, 1, live, CanvasControlPayloadKind::kPanBy)).state ==
+         CanvasControlReceiptState::kQueued);
+  auto work = std::make_shared<MultiSelectionControlWork>();
+  work->key = {60, 2}; work->target = live;
+  CanvasControlReceiptState finalState = CanvasControlReceiptState::kQueued;
+  int typedCalls = 0;
+  work->apply = [&] {
+    assert(orderedPort.applied == 1U);
+    ++typedCalls;
+    return CanvasControlError::kNone;
+  };
+  work->finish = [&](CanvasControlReceiptState state, CanvasControlError) { finalState = state; };
+  assert(ordered.enqueueMultiSelection(work).state == CanvasControlReceiptState::kQueued);
+  assert(ordered.enqueueMultiSelection(work).state == CanvasControlReceiptState::kDuplicate);
+  assert(ordered.processPending(3) == 2U);
+  assert(typedCalls == 1 && finalState == CanvasControlReceiptState::kApplied);
+
+  auto destroyedWork = std::make_shared<MultiSelectionControlWork>();
+  destroyedWork->key = {61, 1}; destroyedWork->target = live;
+  destroyedWork->apply = [&] { ++typedCalls; return CanvasControlError::kNone; };
+  destroyedWork->finish = [&](CanvasControlReceiptState state, CanvasControlError) { finalState = state; };
+  assert(ordered.enqueueMultiSelection(destroyedWork).state == CanvasControlReceiptState::kQueued);
+  ordered.destroyTarget(live);
+  assert(finalState == CanvasControlReceiptState::kTargetDestroyed);
+  assert(ordered.processPending(4) == 0U && typedCalls == 1);
+
+  Port stalePort;
+  CanvasControlService staleService(stalePort, 1, 8);
+  auto staleWork = std::make_shared<MultiSelectionControlWork>();
+  staleWork->key = {62, 1}; staleWork->target = CanvasTargetKey{7, 11, 2, 9};
+  staleWork->apply = [&] { ++typedCalls; return CanvasControlError::kNone; };
+  staleWork->finish = [&](CanvasControlReceiptState state, CanvasControlError) { finalState = state; };
+  assert(staleService.enqueueMultiSelection(staleWork).state == CanvasControlReceiptState::kStaleTarget);
+  staleWork->target = live;
+  assert(staleService.enqueueMultiSelection(staleWork).state != CanvasControlReceiptState::kQueued);
+  assert(staleService.processPending(5) == 0U && typedCalls == 1);
   return 0;
 }

@@ -1,0 +1,33 @@
+Test project C:/Users/Chado/.codex/worktrees/fc04-d07-functional-p31-v0-3/canvas/out/d07-functional/build
+      Start  1: fc04.d07.D07.ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation
+ 1/14 Test  #1: fc04.d07.D07.ActualHistoryPortRejectsAllMultiOperationBatchesWithoutMutation .................   Passed    0.10 sec
+      Start  2: fc04.d07.D07.HomogeneousMultiTargetValidationRejectsWholeOperationAndPreservesRedo
+ 2/14 Test  #2: fc04.d07.D07.HomogeneousMultiTargetValidationRejectsWholeOperationAndPreservesRedo ...........   Passed    0.07 sec
+      Start  3: fc04.d07.D07.RealPrecommitAdmissionRejectionHasZeroMutationAndPreservesRedo
+ 3/14 Test  #3: fc04.d07.D07.RealPrecommitAdmissionRejectionHasZeroMutationAndPreservesRedo ..................   Passed    0.06 sec
+      Start  4: fc04.d07.D07.TransformBatchHasOneUndoWithChangedSelectionAndFreshRedoIdentity
+ 4/14 Test  #4: fc04.d07.D07.TransformBatchHasOneUndoWithChangedSelectionAndFreshRedoIdentity ................   Passed    0.07 sec
+      Start  5: fc04.d07.D07.PropertiesBatchHasOneUndoWithChangedSelection
+ 5/14 Test  #5: fc04.d07.D07.PropertiesBatchHasOneUndoWithChangedSelection ...................................   Passed    0.08 sec
+      Start  6: fc04.d07.D07.IndependentCommandsExposeAppliedPrefixAtEveryTwoOperationRejectionBoundary
+ 6/14 Test  #6: fc04.d07.D07.IndependentCommandsExposeAppliedPrefixAtEveryTwoOperationRejectionBoundary ......   Passed    0.07 sec
+      Start  7: fc04.d07.D07.ManualCanonicalCompensationRestoresProjectionButDoesNotRewindMetadataOrEvents
+ 7/14 Test  #7: fc04.d07.D07.ManualCanonicalCompensationRestoresProjectionButDoesNotRewindMetadataOrEvents ...   Passed    0.05 sec
+      Start  8: fc04.d07.D07.RealScenePublicationFaultsRetainCommittedHistoryAndRecoverCoherently
+ 8/14 Test  #8: fc04.d07.D07.RealScenePublicationFaultsRetainCommittedHistoryAndRecoverCoherently ............   Passed    0.09 sec
+      Start  9: fc04.d07.D07.TwoIndependentCommandsNeedTwoUndoUnits
+ 9/14 Test  #9: fc04.d07.D07.TwoIndependentCommandsNeedTwoUndoUnits ..........................................   Passed    0.08 sec
+      Start 28: fc04.d07.D07.CapturedExpectationsRejectUndoConflictWithoutCursorOrRedoMutation
+10/14 Test #28: fc04.d07.D07.CapturedExpectationsRejectUndoConflictWithoutCursorOrRedoMutation ...............   Passed    0.11 sec
+      Start 29: fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED
+11/14 Test #29: fc04.d07.D07.RequiredMultiIntentEntryIsUnavailable_RED .......................................   Passed    0.10 sec
+      Start 30: fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED
+12/14 Test #30: fc04.d07.D07.NaiveSequentialFallbackCannotSatisfyOneUndo_RED .................................   Passed    0.12 sec
+      Start 31: FC04D07PostcommitFault
+13/14 Test #31: FC04D07PostcommitFault .......................................................................   Passed    0.36 sec
+      Start 32: FC04D07PostcommitReceiptGrowthFault
+14/14 Test #32: FC04D07PostcommitReceiptGrowthFault ..........................................................   Passed    0.18 sec
+
+100% tests passed, 0 tests failed out of 14
+
+Total Test time (real) =   1.86 sec

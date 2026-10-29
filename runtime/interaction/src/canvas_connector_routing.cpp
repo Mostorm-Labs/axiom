@@ -1,10 +1,12 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "canvas/scene/hierarchy_geometry.hpp"
+#include <algorithm>
 namespace canvas::interaction {
 struct CanvasEditingRuntime::ConnectorPreviewRouting {
     std::uint64_t generation=0;
     semantic::ObjectId selected{};
     std::optional<semantic::Transform2D> transform;
+    std::vector<std::pair<semantic::ObjectId, semantic::Transform2D>> transforms;
     std::optional<semantic::ObjectRecord> creation;
     std::vector<semantic::ObjectRecord> source;
     std::vector<semantic::ObjectRecord> queue;
@@ -17,23 +19,32 @@ bool CanvasEditingRuntime::connectorPreviewRoutingPending() const noexcept {
 }
 scene::ConnectorGeometry CanvasEditingRuntime::previewConnectorGeometry(const semantic::ObjectRecord& record) {
     const auto* transform=transformOverrides_.find(selection_.primary());
+    std::vector<std::pair<semantic::ObjectId, semantic::Transform2D>> transforms;
+    if (!editingMultiInitial_.empty()) {
+        for (const auto& [id, initial] : editingMultiInitial_) {
+            (void)initial;
+            if (const auto* current = transformOverrides_.find(id)) transforms.emplace_back(id, *current);
+        }
+    } else if (transform) transforms.emplace_back(selection_.primary(), *transform);
     std::optional<semantic::ObjectRecord> creation;
     if(creationActive()&&creationPreview().valid&&creationPreview().record.kind==semantic::ObjectKind::kConnector)
         creation=creationPreview().record;
     const std::optional<semantic::Transform2D> current=transform?std::optional(*transform):std::nullopt;
     if(!connectorPreviewRouting_||connectorPreviewRouting_->generation!=semanticGeneration_.current().value()||
        connectorPreviewRouting_->selected!=selection_.primary()||connectorPreviewRouting_->transform!=current||
-       connectorPreviewRouting_->creation!=creation) {
+       connectorPreviewRouting_->transforms!=transforms||connectorPreviewRouting_->creation!=creation) {
         auto next=std::make_shared<ConnectorPreviewRouting>();next->generation=semanticGeneration_.current().value();
-        next->selected=selection_.primary();next->transform=current;next->creation=creation;
+        next->selected=selection_.primary();next->transform=current;next->transforms=transforms;next->creation=creation;
         next->source=semanticObjects_.allObjects();
-        if(transform)for(auto& object:next->source)if(object.id==next->selected) {
+        for(auto& object:next->source) {
+            const auto found=std::find_if(transforms.begin(),transforms.end(),[&](const auto& item){return item.first==object.id;});
+            if(found==transforms.end())continue;
             semantic::Transform2D inverseParent{};
             if(object.placement.parent_id) {
                 const auto* parent=sceneCoordinator_->runtimeScene().find(*object.placement.parent_id);
-                if(!parent||!scene::inverseTransform(parent->transform,inverseParent))break;
+                if(!parent||!scene::inverseTransform(parent->transform,inverseParent))continue;
             }
-            object.transform=scene::composeTransform(inverseParent,*transform);
+            object.transform=scene::composeTransform(inverseParent,found->second);
         }
         next->source=scene::projectWorldObjects(next->source);
         if(creation)next->queue.push_back(*creation);

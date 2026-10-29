@@ -7,7 +7,7 @@
 
 namespace canvas::debug_ui {
 DebugController::DebugController(DebugControllerContext context)
-    : context_(context), router_(context.runtime, context.axiomDebug, context.platformDebug, &activity_) {
+    : context_(context), router_(context.runtime, context.axiomDebug, context.platformDebug, &activity_, context.multiSelection) {
   registerBuiltinPanels(registry_);
   if (context_.runtime != nullptr)
     router_.prepareConnectorDefaults(context_.runtime->readRuntimeState().identity.runtimeGeneration);

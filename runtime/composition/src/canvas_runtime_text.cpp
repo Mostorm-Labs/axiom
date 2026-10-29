@@ -1,7 +1,9 @@
 #include "canvas/interaction/text_edit_session.hpp"
 #include "canvas/runtime/canvas_runtime_facade.hpp"
+#include "multi_selection_queue.hpp"
 
 #include <algorithm>
+#include <array>
 
 namespace canvas::runtime {
 namespace {
@@ -201,7 +203,8 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
             const auto state = text ? text->read() : TextEditorSnapshot{};
             if (state.phase != TextPhase::kClosed &&
                 (request->payload.kind == CanvasControlPayloadKind::kSelectTool ||
-                 request->payload.kind == CanvasControlPayloadKind::kSelectCreationPreset)) {
+                 request->payload.kind == CanvasControlPayloadKind::kSelectCreationPreset||
+                 request->payload.kind == CanvasControlPayloadKind::kSelectionAcquisitionMode)) {
                 const auto finish = text->finish();
                 if (finish == TextStatus::kQueued) {
                     deferredControls_.push_back(*request);
@@ -220,13 +223,36 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
                 count += service_->processPending(sequence, key);
         } else if (auto* intent = std::get_if<TextIntent>(&item)) {
             const bool editAtPoint = intent->kind == TextIntentKind::kEditAtPoint;
-            const bool editAllowed=intent->kind!=TextIntentKind::kEditAtPoint || runtime_.textTool() || runtime_.selectionMode();
-            if(intent->kind==TextIntentKind::kEditAtPoint && editAllowed){intent->object=runtime_.hitTextAtView(intent->viewX,intent->viewY);intent->kind=TextIntentKind::kEdit;}
-            const auto result = !editAllowed ? receipt(TextStatus::kRejected,intent->requestId) : !isTargetCurrent(intent->target)
+            bool editAllowed=intent->kind!=TextIntentKind::kEditAtPoint || runtime_.textTool() || (runtime_.selectionMode() && runtime_.selectionAcquisitionMode()==CanvasSelectionMode::kPoint);
+            foundation::ObjectId editSelectionRoot{};
+            bool enteredGroup=false;
+            // The native double-click fact is shared with text editing. In
+            // Select mode the first double-click on a grouped descendant enters
+            // that Group; a subsequent double-click can edit the actual child.
+            if (editAtPoint && editAllowed && runtime_.selectionMode() && isTargetCurrent(intent->target) &&
+                text && text->read().phase==TextPhase::kClosed && !runtime_.selectionTransformActive() &&
+                !runtime_.creationActive() && !runtime_.imageCropPresentation_) {
+                enteredGroup=runtime_.enterGroupAtViewPoint(intent->viewX,intent->viewY);
+            }
+            if (editAtPoint && editAllowed && !enteredGroup) {
+                intent->object = runtime_.hitTextAtView(intent->viewX, intent->viewY);
+                if (runtime_.selectionMode()) {
+                    editSelectionRoot = runtime_.resolveSelectionRoot(intent->object);
+                    if (editSelectionRoot.isZero()) editAllowed = false;
+                }
+                intent->kind = TextIntentKind::kEdit;
+            }
+            const auto result = enteredGroup ? receipt(TextStatus::kObserved,intent->requestId) : !editAllowed ? receipt(TextStatus::kRejected,intent->requestId) : !isTargetCurrent(intent->target)
                                     ? receipt(TextStatus::kStale, intent->requestId)
                                 : text ? text->intent(*intent)
                                        : receipt(TextStatus::kUnsupported, intent->requestId);
-            if (editAtPoint && result.status == TextStatus::kApplied && text) {
+            if (editAtPoint && !enteredGroup && result.status == TextStatus::kApplied && text) {
+                if (!editSelectionRoot.isZero()) {
+                    const std::array roots{editSelectionRoot};
+                    (void)runtime_.selection_.applyAcquisition(
+                        roots, interaction::SelectionCombineMode::kReplace,
+                        runtime_.selection_.revision());
+                }
                 if (const auto record = runtime_.textPresentation()) {
                     if (const auto hit = runtime_.textHit(*record, intent->viewX, intent->viewY)) {
                         const auto state = text->read();
@@ -249,6 +275,18 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
                     }
             }
             ++count;
+        } else if (auto* multi = std::get_if<std::shared_ptr<MultiSelectionControlWork>>(&item)) {
+            const auto key = (*multi)->key;
+            const auto current = service_->receipt(key);
+            if (current && current->state == CanvasControlReceiptState::kQueued) {
+                const auto state = text ? text->read() : TextEditorSnapshot{};
+                // A pending TextEdit/IME or earlier deferred control cannot be
+                // overtaken by this edit. Reject without mutating either owner.
+                if (!deferredControls_.empty() || state.phase != TextPhase::kClosed)
+                    service_->rejectPending(key, CanvasControlError::kBusy);
+                else
+                    count += service_->processPending(sequence, key);
+            }
         } else {
             const auto& event = std::get<TextInputEvent>(item);
             const auto result =
