@@ -43,6 +43,9 @@ def main():
             if run.returncode:
                 result['status'] = 'FAIL'
                 break
+            if command[1] == '--install' and (install / 'include/canvas/runtime/runtime.hpp').exists():
+                result['status'] = 'FAIL_LEGACY_PUBLIC_RUNTIME_ENTRY'
+                break
             if command[1] == '--build':
                 output = (run.stdout + run.stderr).replace('\\', '/').lower()
                 forbidden = ['/canvas/interaction/', '/canvas/scene/', '/canvas/render/',

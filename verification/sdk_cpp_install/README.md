@@ -15,8 +15,8 @@ Call `axiom_runtime_copy_assets(your_target)` after creating the executable to
 copy the installed ICU data alongside it. Other application fonts and resources
 are not included by this initial profile.
 
-`canvas::runtime::Runtime` is an owner-thread object. Its borrowed facade is
-valid while the Runtime object exists and delegates to its single composition.
+`canvas::runtime::RuntimeComposition` is an owner-thread object. Its borrowed
+facade is valid while the Composition exists and delegates to its single core.
 The owner thread opens, binds, pumps and closes it; stop using the borrowed
 facade before destroying the owner. Register or unregister a source and submit
 the existing `PlatformPointerBatch` as supplied by the platform. The Runtime

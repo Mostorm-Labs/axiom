@@ -1,0 +1,112 @@
+Configure: cmake -S . -B out/sdk01-review-off/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_BUILD_RF01=ON -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON -DAXIOM_BUILD_DEBUG_UI=OFF -DAXIOM_DEBUG_UI_PROFILE=off -DCANVAS_BUILD_INK_PLAYGROUND=OFF -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCANVAS_SKIA_SDK_VARIANT=release -DCANVAS_SKIA_SDK_ROOT=C:/Users/Chado/AppData/Local/Temp/axiom-locked-skia-independent-cciddm46/release -DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c -DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe -DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF -DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF
+-- Configuring done (7.6s)
+CMake Warning in runtime/semantic/tests/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review-off/build/runtime/semantic/tests/CMakeFiles/canvas_semantic_operation_engine_generation_change_set_differential_test.dir/./
+
+  has 197 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    operation_engine_generation_change_set_differential_test.cpp.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+CMake Warning in runtime/semantic/tests/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review-off/build/runtime/semantic/tests/CMakeFiles/canvas_semantic_operation_engine_canonical_commit_differential_test.dir/./
+
+  has 192 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    operation_engine_canonical_commit_differential_test.cpp.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+CMake Warning in runtime/semantic/tests/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review-off/build/runtime/semantic/tests/CMakeFiles/canvas_semantic_canvas_semantic_applied_operation_ledger_hpp.dir/./
+
+  has 185 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    self_contained_canvas_semantic_applied_operation_ledger_hpp.cpp.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+CMake Warning in runtime/semantic/tests/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review-off/build/runtime/semantic/tests/CMakeFiles/canvas_semantic_canvas_semantic_operation_specific_validation_hpp.dir/./
+
+  has 190 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    self_contained_canvas_semantic_operation_specific_validation_hpp.cpp.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+CMake Warning in runtime/semantic/tests/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review-off/build/runtime/semantic/tests/CMakeFiles/canvas_semantic_canvas_semantic_operation_state_validator_hpp.dir/./
+
+  has 186 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    self_contained_canvas_semantic_operation_state_validator_hpp.cpp.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+-- Generating done (2.7s)
+-- Build files have been written to: C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review-off/build
+[0/2] Re-checking globbed directories...
+[1/30] Building CXX object runtime\control\CMakeFiles\canvas_runtime_control.dir\src\build_info.cpp.obj
+[2/30] Building CXX object runtime\control\CMakeFiles\canvas_runtime_control.dir\src\canvas_control_service.cpp.obj
+[3/30] Linking CXX static library runtime\control\canvas_runtime_control.lib
+[4/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\container_operation_mapping.cpp.obj
+[5/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\rich_text_state.cpp.obj
+[6/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot.cpp.obj
+[7/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\codec.cpp.obj
+[8/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\protobuf_object_mapping.cpp.obj
+[9/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_engine.pb.cc.obj
+[10/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_stroke.pb.cc.obj
+[11/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot_bootstrap.cpp.obj
+[12/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\erase_mask.pb.cc.obj
+[13/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\common.pb.cc.obj
+[14/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\connector.pb.cc.obj
+[15/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\container_operations.pb.cc.obj
+[16/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\object.pb.cc.obj
+[17/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\operation.pb.cc.obj
+[18/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\paint.pb.cc.obj
+[19/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\geometry.pb.cc.obj
+[20/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\snapshot.pb.cc.obj
+[21/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\property.pb.cc.obj
+[22/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\vector_path.pb.cc.obj
+[23/30] C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\out\sdk01-review-off\build\apps\minimal_runtime_host && D:\Softwares\CMake\bin\cmake.exe -E copy_directory C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/assets/fonts/imported C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review-off/build/apps/minimal_runtime_host/fonts && D:\Softwares\CMake\bin\cmake.exe -E copy_if_different C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review-off/build/apps/minimal_runtime_host/axiom-font.otf && D:\Softwares\CMake\bin\cmake.exe -E copy_if_different C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/assets/fonts/noto-sans-cjk-sc/LICENSE.txt C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review-off/build/apps/minimal_runtime_host/axiom-font.LICENSE.txt && D:\Softwares\CMake\bin\cmake.exe -E copy_if_different C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/assets/fonts/noto-sans-cjk-sc/NOTICE.txt C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review-off/build/apps/minimal_runtime_host/axiom-font.NOTICE.txt"
+[24/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\section.pb.cc.obj
+[25/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\rich_text.pb.cc.obj
+[26/30] Linking CXX static library runtime\semantic\canvas_runtime_semantic.lib
+[27/30] Linking CXX static library runtime\composition\canvas_runtime_composition.lib
+[28/30] Linking CXX executable apps\minimal_runtime_host\axiom_windows_public_adapter_tests.exe
+[29/30] Building CXX object apps\minimal_runtime_host\CMakeFiles\axiom_minimal_runtime_host_windows.dir\windows_main.cpp.obj
+[30/30] Linking CXX executable apps\minimal_runtime_host\axiom_minimal_runtime_host_windows.exe
+Test project C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review-off/build
+    Start 220: SDKWindowsPublicAdapter
+1/1 Test #220: SDKWindowsPublicAdapter ..........   Passed    0.54 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.91 sec
