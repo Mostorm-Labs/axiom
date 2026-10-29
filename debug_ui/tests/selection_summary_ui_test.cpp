@@ -1,7 +1,7 @@
 #include "canvas/debug_ui/builtin_panels.hpp"
 #include "canvas/debug_ui/ui_session_state.hpp"
 #include "canvas/debug_ui/snapshot_assembler.hpp"
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -12,7 +12,7 @@ int main() {
     using namespace canvas;
     using namespace debug_ui;
     const auto id = [](std::uint64_t n) { return foundation::ObjectId::fromUint64(n); };
-    runtime::RuntimeComposition c;
+    runtime::RuntimeCompositionCore c;
     assert(c.open() && c.bindSurface(800, 600));
     auto& facade = c.controlFacade();
     assert(facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));

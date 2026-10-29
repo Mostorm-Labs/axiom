@@ -1,5 +1,5 @@
 // Audit only: real Runtime/History/Scene, existing test access seams, no product adapter.
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/semantic/codec.hpp"
 #include "canvas/semantic/staged_object_view.hpp"
 
@@ -142,7 +142,7 @@ struct State {
 };
 class D07 : public testing::Test {
   protected:
-    runtime::RuntimeComposition c;
+    runtime::RuntimeCompositionCore c;
     Sink sink;
     interaction::CanvasEditingRuntime& rt() {
         return c.qualificationRuntime();
@@ -749,7 +749,7 @@ TEST_F(D07, ExplicitIntentRejectsStaleBasisWithoutAdditionalMutation) {
 }
 TEST_F(D07, ScenePublicationRejectsReentrantCanonicalWrite) {
     struct Attempt {
-        runtime::RuntimeComposition* composition;
+        runtime::RuntimeCompositionCore* composition;
         semantic::Operation operation;
         bool called = false;
         semantic::ApplyDisposition disposition = semantic::ApplyDisposition::kRejected;

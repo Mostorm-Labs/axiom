@@ -23,6 +23,7 @@ int main() {
     using namespace canvas::runtime;
     minimal_runtime_host::MinimalRuntimeHost host;
     auto& composition = host.composition();
+    REQUIRE(&host.publicComposition().controlFacade() == &composition.controlFacade());
     REQUIRE(composition.bindSurface(640, 480));
     REQUIRE(minimal_runtime_host::bindHostTextFont(composition, FC02_HOST_FONT));
     minimal_runtime_host::MinimalRuntimeFacade adapter(host);

@@ -1,5 +1,5 @@
 #pragma once
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/text/text_layout.hpp"
 #include "axiom/host_text_font.hpp"
 
@@ -7,7 +7,7 @@
 #include <fstream>
 #include <iterator>
 namespace canvas::minimal_runtime_host {
-inline bool bindHostTextFont(runtime::RuntimeComposition& composition,
+inline bool bindHostTextFont(runtime::RuntimeCompositionCore& composition,
                              const std::filesystem::path& path) {
     std::ifstream file(path, std::ios::binary);
     if (!file)
@@ -33,7 +33,7 @@ inline bool bindHostTextFont(runtime::RuntimeComposition& composition,
 }
 // Application assembly only: immutable identities come from the checked-in
 // catalog; admission, font registration and refresh remain owned by Runtime.
-inline bool bindHostTextFonts(runtime::RuntimeComposition& composition,
+inline bool bindHostTextFonts(runtime::RuntimeCompositionCore& composition,
                               const std::filesystem::path& cjkPath,
                               const std::filesystem::path& catalogRoot) {
     struct Pending { foundation::ObjectId id; std::vector<std::uint8_t> bytes; };

@@ -1,4 +1,4 @@
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/internal/multi_selection_port.hpp"
 
 #include <algorithm>
@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
   const bool observeReplacement = argc == 2 && std::strcmp(argv[1], "--observe-replacement") == 0;
   CHECK(expectPreserved || observeReplacement);
   const auto id = [](std::uint64_t value) { return foundation::ObjectId::fromUint64(value); };
-  runtime::RuntimeComposition composition;
+  runtime::RuntimeCompositionCore composition;
   CHECK(composition.open());
   CHECK(composition.bindSurface(256U, 256U));
   CHECK(composition.multiSelectionPort().setPermissionMode(runtime::MultiSelectionPermissionMode::kLocalSingleUser));

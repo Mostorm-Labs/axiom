@@ -1,5 +1,5 @@
 #include "canvas/runtime/canvas_runtime_facade.hpp"
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/internal/multi_selection_port.hpp"
 #include "canvas/interaction/text_edit_session.hpp"
 #include "canvas/semantic/property_value.hpp"
@@ -265,7 +265,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
 
 CanvasRuntimeFacade::CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
                                          CanvasTargetKey target,std::uint64_t runtimeInstance,
-                                         RuntimeComposition* composition) noexcept
+                                         RuntimeCompositionCore* composition) noexcept
     : runtime_(runtime), composition_(composition), binding_(std::make_unique<Binding>(runtime)),
       service_(std::make_unique<CanvasControlService>(*binding_)) {
   binding_->setTarget(target);

@@ -1,12 +1,12 @@
 #include "canvas/runtime/runtime.hpp"
 
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 
 namespace canvas::runtime {
 
 class Runtime::Impl final {
  public:
-  RuntimeComposition composition;
+  RuntimeCompositionCore composition;
 };
 
 Runtime::Runtime() : impl_(std::make_unique<Impl>()) {}

@@ -1,4 +1,4 @@
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include <gtest/gtest.h>
 #include <algorithm>
 
@@ -13,7 +13,7 @@ namespace {
 using namespace canvas;
 class SelectionInput : public testing::Test {
 protected:
-    runtime::RuntimeComposition c;
+    runtime::RuntimeCompositionCore c;
     runtime::RuntimeFacade& f=c.controlFacade();
     std::uint64_t seq=0,request=0;
     const foundation::ObjectId a=foundation::ObjectId::fromUint64(9101);
@@ -427,7 +427,7 @@ TEST_F(SelectionInput, MiterStrokeOutsideNominalBoundsStillReachesPreciseRegionQ
 }
 
 TEST(SelectionBatch2Runtime, RealShapeCreationLeavesSectionTopologyAdmissible) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));ASSERT_TRUE(c.registerSource(6008));
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));ASSERT_TRUE(c.registerSource(6008));
     auto& f=c.controlFacade();std::uint64_t sequence=0,request=0;
     const auto pointer=[&](input::PointerPhase phase,float x,float y) {
         input::PlatformPointerSample p;p.source=6008;p.pointer=1;p.sequence=++sequence;p.timestampNs=sequence*1000000;p.phase=phase;p.x=x;p.y=y;
@@ -457,7 +457,7 @@ TEST(SelectionBatch2Runtime, RealShapeCreationLeavesSectionTopologyAdmissible) {
 
 TEST(SelectionGroupScope, KeepsAndUpdatesGroupOutlineDuringChildDrag) {
     using namespace canvas;
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
     auto& f=c.controlFacade();constexpr std::uint64_t client=4300;
     const auto a=foundation::ObjectId::fromUint64(4301),b=foundation::ObjectId::fromUint64(4302);
     const auto group=foundation::ObjectId::fromUint64(4303);

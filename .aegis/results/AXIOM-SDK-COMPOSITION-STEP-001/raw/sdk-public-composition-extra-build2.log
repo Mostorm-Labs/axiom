@@ -1,0 +1,33 @@
+[0/2] Re-checking globbed directories...
+[1/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\section.pb.cc.obj
+[2/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\rich_text_state.cpp.obj
+[3/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\container_operation_mapping.cpp.obj
+[4/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\codec.cpp.obj
+[5/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot.cpp.obj
+[6/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot_bootstrap.cpp.obj
+[7/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_engine.pb.cc.obj
+[8/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\protobuf_object_mapping.cpp.obj
+[9/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_stroke.pb.cc.obj
+[10/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\container_operations.pb.cc.obj
+[11/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\common.pb.cc.obj
+[12/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\connector.pb.cc.obj
+[13/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\erase_mask.pb.cc.obj
+[14/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\paint.pb.cc.obj
+[15/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\geometry.pb.cc.obj
+[16/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\object.pb.cc.obj
+[17/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\operation.pb.cc.obj
+[18/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\property.pb.cc.obj
+[19/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\vector_path.pb.cc.obj
+[20/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\rich_text.pb.cc.obj
+[21/30] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\snapshot.pb.cc.obj
+[22/30] Linking CXX static library runtime\semantic\canvas_runtime_semantic.lib
+[23/30] Building CXX object apps\minimal_runtime_host\CMakeFiles\axiom_fc02_text_consumer_tests.dir\tests\text_consumer_test.cpp.obj
+FAILED: apps/minimal_runtime_host/CMakeFiles/axiom_fc02_text_consumer_tests.dir/tests/text_consumer_test.cpp.obj 
+C:\PROGRA~1\MICROS~3\18\COMMUN~1\VC\Tools\MSVC\1451~1.362\bin\Hostx64\x64\cl.exe  /nologo /TP -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -DFC02_HOST_FONT=\"C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf\" -DSK_RELEASE -D_HAS_ITERATOR_DEBUGGING=0 -D_ITERATOR_DEBUG_LEVEL=0 -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\out\sdk01-review\build\generated -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\control\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\foundation\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\composition\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\interaction\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\scene\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\text\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\semantic\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\input\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\render\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\ink\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\.deps\nlohmann-json\single_include /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MT /W4 /WX /EHsc /showIncludes /Foapps\minimal_runtime_host\CMakeFiles\axiom_fc02_text_consumer_tests.dir\tests\text_consumer_test.cpp.obj /Fdapps\minimal_runtime_host\CMakeFiles\axiom_fc02_text_consumer_tests.dir\ /FS -c C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\text_consumer_test.cpp
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\text_consumer_test.cpp(26): error C2039: 'publicComposition': is not a member of 'canvas::minimal_runtime_host::MinimalRuntimeHost'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\minimal_runtime_host.hpp(8): note: see declaration of 'canvas::minimal_runtime_host::MinimalRuntimeHost'
+[24/30] Building CXX object runtime\composition\CMakeFiles\axiom_selection_input_integration_tests.dir\tests\selection_input_integration_test.cpp.obj
+[25/30] Building CXX object runtime\composition\CMakeFiles\axiom_fc00x_runtime_composition_tests.dir\tests\runtime_composition_test.cpp.obj
+cl : Command line warning D9025 : overriding '/DNDEBUG' with '/UNDEBUG'
+[26/30] Building CXX object runtime\composition\CMakeFiles\axiom_fc08_section_consumer_tests.dir\tests\fc08_section_consumer_test.cpp.obj
+ninja: build stopped: subcommand failed.

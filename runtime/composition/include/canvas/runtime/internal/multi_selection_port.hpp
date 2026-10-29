@@ -13,13 +13,13 @@
 #include <vector>
 
 namespace canvas::runtime {
-class RuntimeComposition;
+class RuntimeCompositionCore;
 
 // Internal, borrowed capability. Composition outlives this port and its host
 // consumers must detach before closing or destroying the composition.
 class MultiSelectionPort final {
  public:
-  explicit MultiSelectionPort(RuntimeComposition& owner) noexcept : owner_(owner) {}
+  explicit MultiSelectionPort(RuntimeCompositionCore& owner) noexcept : owner_(owner) {}
   [[nodiscard]] bool setPermissionMode(MultiSelectionPermissionMode mode) noexcept;
   [[nodiscard]] MultiSelectionProjection read() const noexcept;
   [[nodiscard]] std::optional<std::vector<MultiSelectionRootPropertyValue>> readPropertyValues(
@@ -39,7 +39,7 @@ class MultiSelectionPort final {
       std::uint32_t field, const semantic::PropertyValue& value, std::optional<double> strokeWidth,
       const MultiSelectionStamp& stamp, const std::vector<foundation::ObjectId>& eligible,
       std::uint64_t client, std::uint64_t request) noexcept;
-  RuntimeComposition& owner_;
+  RuntimeCompositionCore& owner_;
   MultiSelectionPermissionMode permissionMode_ = MultiSelectionPermissionMode::kUnconfigured;
   std::uint64_t permissionRevision_ = 1;
   std::map<std::pair<std::uint64_t, std::uint64_t>, std::shared_ptr<MultiSelectionOutcome>> outcomes_;

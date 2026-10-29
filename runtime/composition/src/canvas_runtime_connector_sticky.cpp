@@ -1,5 +1,5 @@
 #include "canvas/runtime/canvas_runtime_facade.hpp"
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/scene/derived_geometry.hpp"
 #include "canvas/scene/hierarchy_geometry.hpp"
 

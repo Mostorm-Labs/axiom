@@ -1,5 +1,5 @@
 #include "windows_d3d12_surface_provider.hpp"
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 
 #include <cassert>
 #include <cstdio>
@@ -50,7 +50,7 @@ int main() {
       WS_OVERLAPPEDWINDOW, 0, 0, 400, 400, nullptr, nullptr, klass.hInstance, nullptr);
   assert(window != nullptr);
   {
-    runtime::RuntimeComposition composition;
+    runtime::RuntimeCompositionCore composition;
     assert(composition.open());
     auto canonical = std::make_unique<minimal_runtime_host::WindowsD3D12SurfaceProvider>(window, true);
     auto* canonicalRaw = canonical.get();

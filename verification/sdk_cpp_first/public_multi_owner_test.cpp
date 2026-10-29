@@ -1,4 +1,4 @@
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
 #include <cstdio>
 
@@ -7,7 +7,7 @@
 int main() {
   using namespace canvas;
   const auto id=[](std::uint64_t n){return foundation::ObjectId::fromUint64(n);};
-  runtime::RuntimeComposition composition;
+  runtime::RuntimeCompositionCore composition;
   CHECK(composition.open());
   CHECK(composition.bindSurface(256,256));
   semantic::InsertObjectsOp insert;

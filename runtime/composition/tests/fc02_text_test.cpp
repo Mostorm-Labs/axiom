@@ -1,7 +1,7 @@
 #include "auditoryworks/axiom/v1/operation.pb.h"
 #include "auditoryworks/axiom/v1/snapshot.pb.h"
 #include "canvas/interaction/editor_history.hpp"
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/semantic/applied_operation_ledger.hpp"
 #include "canvas/semantic/operation_engine.hpp"
 #include "canvas/semantic/rich_text_state.hpp"
@@ -404,7 +404,7 @@ TEST(FC02Snapshot, MixedTriangleTextAndManifestRoundTripAndBoundRestore) {
 }
 
 struct RealHost {
-    canvas::runtime::RuntimeComposition composition;
+    canvas::runtime::RuntimeCompositionCore composition;
     canvas::runtime::RuntimeFacade& facade = composition.controlFacade();
     std::uint64_t request = 0, sequence = 0;
     RealHost() {

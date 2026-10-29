@@ -1,5 +1,5 @@
 // Browser-executed WASM check of the real Runtime, Semantic, Scene and History owners.
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include <array>
 #include <cstdio>
 
@@ -16,7 +16,7 @@ semantic::Operation op(std::uint64_t value, semantic::OperationPayload payload) 
     return {semantic::OperationId{id(value)}, semantic::DocumentId{id(1)}, 1, 1, std::move(payload)};
 }
 bool run() {
-    runtime::RuntimeComposition composition;
+    runtime::RuntimeCompositionCore composition;
     if (!composition.open() || !composition.bindSurface(64, 64)) return false;
     auto& runtime = composition.qualificationRuntime();
     const auto seed = op(100, semantic::InsertObjectsOp{{shape(1)}});

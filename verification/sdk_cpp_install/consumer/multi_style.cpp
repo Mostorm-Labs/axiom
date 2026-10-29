@@ -1,4 +1,4 @@
-#include <canvas/runtime/runtime.hpp>
+#include <canvas/runtime/runtime_composition.hpp>
 
 #include <algorithm>
 #include <cstdio>
@@ -8,14 +8,14 @@
 int main() {
   using namespace canvas;
   const auto id = [](std::uint64_t n) { return foundation::ObjectId::fromUint64(n); };
-  runtime::Runtime app;
+  runtime::RuntimeComposition app;
   CHECK(app.open() && app.bindSurface(800, 600));
-  auto& facade = app.facade();
+  auto& facade = app.controlFacade();
   CHECK(facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));
   std::uint64_t request = 0;
   const auto sectionCommand = [&](runtime::SectionIntent intent) {
     const auto serial = ++request;
-    if (facade.submitSectionIntent(intent, serial, 9000).state != runtime::ProductControlState::kQueued || !app.pump()) return false;
+    if (facade.submitSectionIntent(intent, serial, 9000).state != runtime::ProductControlState::kQueued || !app.ownerPump()) return false;
     const auto receipt = facade.canvasControlReceipt({9000, serial});
     return receipt && receipt->state == runtime::CanvasControlReceiptState::kApplied;
   };
@@ -39,7 +39,7 @@ int main() {
     const semantic::PropertyValue value = semantic::StrokeStyleValue{n == 1 ? first : second};
     const auto serial = ++request;
     CHECK(facade.submitMultiSelectionProperty(0x101U, value, projection.stamp, property.eligible, 9000, serial).queued);
-    CHECK(app.pump());
+    CHECK(app.ownerPump());
     const auto outcome = facade.multiSelectionReceipt(9000, serial);
     CHECK(outcome && outcome->terminal && outcome->applied);
   }
@@ -66,7 +66,7 @@ int main() {
   auto projection = facade.readMultiSelection();
   const auto serial = ++request;
   CHECK(facade.submitMultiSelectionStrokeWidth(19, projection.stamp, projection.properties.at(0x101U).eligible, 9000, serial).queued);
-  CHECK(app.pump());
+  CHECK(app.ownerPump());
   const auto receipt = facade.multiSelectionReceipt(9000, serial);
   CHECK(receipt && receipt->terminal && receipt->applied && receipt->changed.size() == 2);
   CHECK(std::find(receipt->changed.begin(), receipt->changed.end(), id(1)) != receipt->changed.end());
@@ -76,9 +76,9 @@ int main() {
   CHECK(verify(updatedFirst, updatedSecond));
   auto generation = facade.readRuntimeState().identity.runtimeGeneration;
   CHECK(facade.undo(++request, generation, 9000).state == runtime::ProductControlState::kQueued);
-  CHECK(app.pump() && verify(first, second));
+  CHECK(app.ownerPump() && verify(first, second));
   CHECK(facade.redo(++request, generation, 9000).state == runtime::ProductControlState::kQueued);
-  CHECK(app.pump() && verify(updatedFirst, updatedSecond));
+  CHECK(app.ownerPump() && verify(updatedFirst, updatedSecond));
   CHECK(app.close());
   std::puts("PASS: external per-object stroke preservation and Undo/Redo");
 }

@@ -18,7 +18,7 @@
 
 namespace canvas::runtime {
 
-class RuntimeComposition;
+class RuntimeCompositionCore;
 struct MultiSelectionControlWork;
 
 // Shared product-control owner used by Minimal, Playground, Windows and Web.
@@ -29,13 +29,13 @@ class CanvasRuntimeFacade : public RuntimeFacade {
 #if defined(AXIOM_RUNTIME_QUALIFICATION)
   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
                       CanvasTargetKey target,std::uint64_t runtimeInstance = 1,
-                      RuntimeComposition* composition = nullptr) noexcept;
+                      RuntimeCompositionCore* composition = nullptr) noexcept;
 #else
  private:
-  friend class RuntimeComposition;
+  friend class RuntimeCompositionCore;
   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
                       CanvasTargetKey target,std::uint64_t runtimeInstance = 1,
-                      RuntimeComposition* composition = nullptr) noexcept;
+                      RuntimeCompositionCore* composition = nullptr) noexcept;
  public:
 #endif
   ~CanvasRuntimeFacade() override;
@@ -98,15 +98,15 @@ class CanvasRuntimeFacade : public RuntimeFacade {
 
 #if defined(AXIOM_RUNTIME_QUALIFICATION)
  public:
-  // White-box qualification only. RuntimeComposition is the only production
+  // White-box qualification only. RuntimeCompositionCore is the only production
   // owner that invokes these execution seams; ordinary consumers receive the
-  // RuntimeFacade base interface from RuntimeComposition::controlFacade().
+  // RuntimeFacade base interface from RuntimeCompositionCore::controlFacade().
 #else
  private:
-  // Internal RuntimeComposition execution seam; ordinary consumers cannot
+  // Internal RuntimeCompositionCore execution seam; ordinary consumers cannot
   // reach the concrete binding or editor.
 #endif
-  friend class RuntimeComposition;
+  friend class RuntimeCompositionCore;
   friend class MultiSelectionPort;
   void discardImageCrop() noexcept;
   [[nodiscard]] CanvasControlApplyResult applyControl(
@@ -159,7 +159,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   void refreshTarget() const noexcept;
 
   interaction::CanvasEditingRuntime& runtime_;
-  RuntimeComposition* composition_ = nullptr;
+  RuntimeCompositionCore* composition_ = nullptr;
   mutable std::unique_ptr<Binding> binding_;
   mutable std::unique_ptr<CanvasControlService> service_;
   const std::thread::id ownerThread_ = std::this_thread::get_id();

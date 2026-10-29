@@ -176,7 +176,7 @@ void mouseHistoryReachesRuntimeAfterShape() {
 
 void previewAndCanonicalUseSameDeviceCoordinates() {
   using namespace canvas;
-  runtime::RuntimeComposition composition;
+  runtime::RuntimeCompositionCore composition;
   assert(composition.open());
   assert(composition.bindSurface({320.0F, 240.0F, 640U, 480U, 2.0F, 2.0F}));
   assert(composition.setPlatformPresentationDeferred(true));

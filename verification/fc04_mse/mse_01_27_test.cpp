@@ -1,4 +1,4 @@
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 
 #include <gtest/gtest.h>
 #include <algorithm>
@@ -66,7 +66,7 @@ foundation::ObjectId id(std::uint64_t value) { return foundation::ObjectId::from
 
 class MultiSelectionMSE : public testing::Test {
  protected:
-  runtime::RuntimeComposition composition;
+  runtime::RuntimeCompositionCore composition;
   void SetUp() override {
     ASSERT_TRUE(composition.open());
     ASSERT_TRUE(composition.bindSurface(800, 600));

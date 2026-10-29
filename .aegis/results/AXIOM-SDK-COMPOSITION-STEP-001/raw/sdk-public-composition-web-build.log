@@ -1,0 +1,19 @@
+COMMAND ["cmake", "--build", "out/sdk-cpp-first-web", "--target", "axiom_canvas_demo_web", "--parallel", "6"]
+[0/2] Re-checking globbed directories...
+[1/17] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/build_info.cpp.o
+[2/17] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/canvas_control_service.cpp.o
+[3/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_section.cpp.o
+[4/17] Linking CXX static library runtime\control\libcanvas_runtime_control.a
+[5/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/public_composition.cpp.o
+[6/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/multi_selection_port.cpp.o
+[7/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_connector_sticky.cpp.o
+[8/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_image.cpp.o
+[9/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/public_runtime.cpp.o
+[10/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_text.cpp.o
+[11/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/runtime_composition.cpp.o
+[12/17] Building CXX object apps/axiom_canvas_demo/CMakeFiles/axiom_canvas_demo_common.dir/platform/web/web_surface_host.cpp.o
+[13/17] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_facade.cpp.o
+[14/17] Linking CXX static library runtime\composition\libcanvas_runtime_composition.a
+[15/17] Linking CXX static library apps\axiom_canvas_demo\libaxiom_canvas_demo_common.a
+[16/17] Building CXX object apps/axiom_canvas_demo/CMakeFiles/axiom_canvas_demo_web.dir/platform/web/bridge.cpp.o
+[17/17] Linking CXX executable apps\axiom_canvas_demo\axiom_canvas_demo_web.js

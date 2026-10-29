@@ -1,4 +1,4 @@
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/semantic/normalizer.hpp"
 #include "canvas/text/text_layout.hpp"
 
@@ -62,7 +62,7 @@ semantic::ObjectRecord group(std::uint64_t n) {
 }
 class Summary : public testing::Test {
   protected:
-    runtime::RuntimeComposition c;
+    runtime::RuntimeCompositionCore c;
     runtime::RuntimeFacade& f = c.controlFacade();
     std::uint64_t operation = 9000;
     void SetUp() override {

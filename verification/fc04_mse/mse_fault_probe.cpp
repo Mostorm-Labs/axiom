@@ -1,7 +1,7 @@
 // Isolated real-owner MSE probe. The existing D07 test observer merely arms
 // a single allocation failure at a named participant; no production hook or
 // fault policy is changed. Each invocation runs in its own process.
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/internal/multi_selection_port.hpp"
 #include <algorithm>
 #include <array>
@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
       mode!="forward-semantic" && mode!="forward-scene") return 2;
   const bool redo = mode == "redo";
   const auto id=[](std::uint64_t n) { return foundation::ObjectId::fromUint64(n); };
-  runtime::RuntimeComposition composition;
+  runtime::RuntimeCompositionCore composition;
   if (!composition.open() || !composition.bindSurface(800, 600) ||
       !composition.multiSelectionPort().setPermissionMode(
           runtime::MultiSelectionPermissionMode::kLocalSingleUser)) return 3;

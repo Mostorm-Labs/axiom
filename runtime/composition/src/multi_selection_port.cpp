@@ -1,6 +1,6 @@
 #include "canvas/runtime/internal/multi_selection_port.hpp"
 
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/canvas_runtime_facade.hpp"
 #include "canvas/semantic/normalizer.hpp"
 #include "canvas/semantic/validator.hpp"

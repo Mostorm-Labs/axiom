@@ -1,4 +1,4 @@
-#include <canvas/runtime/runtime.hpp>
+#include <canvas/runtime/runtime_composition.hpp>
 
 #include <algorithm>
 #include <cstdio>
@@ -7,10 +7,10 @@
 
 int main() {
   using namespace canvas;
-  runtime::Runtime app;
+  runtime::RuntimeComposition app;
   CHECK(app.open() && app.bindSurface(800, 600));
   CHECK(app.registerSource(9100));
-  auto& facade = app.facade();
+  auto& facade = app.controlFacade();
   const auto beforeInvalid = facade.readRuntimeState().control.semanticGeneration;
   input::PlatformPointerBatch invalid;
   input::PlatformPointerSample bad{};
@@ -28,7 +28,7 @@ int main() {
   control.payload.kind = runtime::CanvasControlPayloadKind::kSelectCreationPreset;
   control.payload.creationPreset = runtime::CanvasCreationPreset::kRectangle;
   CHECK(facade.submitCanvasControl(control).state == runtime::ProductControlState::kQueued);
-  CHECK(app.pump());
+  CHECK(app.ownerPump());
   std::uint64_t sequence = 0;
   const auto pointer = [&](input::PointerPhase phase, float x, float y, bool shift = false) {
     input::PlatformPointerSample sample{};
@@ -45,7 +45,7 @@ int main() {
     CHECK(pointer(input::PointerPhase::kUp, x + 80, 160));
   }
   CHECK(facade.setSelectionMode(true, 2, facade.readRuntimeState().identity.runtimeGeneration, 9101).state == runtime::ProductControlState::kQueued);
-  CHECK(app.pump());
+  CHECK(app.ownerPump());
   CHECK(facade.setMultiSelectionPermission(runtime::MultiSelectionPermissionMode::kLocalSingleUser));
   semantic::SolidStroke first{{1, 0, 0, 1}, 5, semantic::StrokeCap::kRound,
                               semantic::MiterJoin{4}, semantic::DashPattern{{2, 1}, 0}};
@@ -68,7 +68,7 @@ int main() {
           : semantic::PropertyValue{semantic::StrokeStyleValue{n == 0 ? first : second}};
       const auto serial = ++request;
       CHECK(facade.submitMultiSelectionProperty(field, value, projection.stamp, projection.properties.at(field).eligible, 9102, serial).queued);
-      CHECK(app.pump());
+      CHECK(app.ownerPump());
       const auto receipt = facade.multiSelectionReceipt(9102, serial);
       CHECK(receipt && receipt->terminal && receipt->applied);
     }
@@ -99,7 +99,7 @@ int main() {
   const auto projection = facade.readMultiSelection();
   const auto serial = ++request;
   CHECK(facade.submitMultiSelectionStrokeWidth(19, projection.stamp, projection.properties.at(0x101U).eligible, 9102, serial).queued);
-  CHECK(app.pump());
+  CHECK(app.ownerPump());
   const auto receipt = facade.multiSelectionReceipt(9102, serial);
   CHECK(receipt && receipt->terminal && receipt->applied && receipt->changed.size() == 2);
   CHECK(std::find(receipt->changed.begin(), receipt->changed.end(), ids[0]) != receipt->changed.end());
@@ -109,9 +109,9 @@ int main() {
   CHECK(verify(afterFirst, afterSecond));
   const auto generation = facade.readRuntimeState().identity.runtimeGeneration;
   CHECK(facade.undo(1, generation, 9103).state == runtime::ProductControlState::kQueued);
-  CHECK(app.pump() && verify(first, second));
+  CHECK(app.ownerPump() && verify(first, second));
   CHECK(facade.redo(2, generation, 9103).state == runtime::ProductControlState::kQueued);
-  CHECK(app.pump() && verify(afterFirst, afterSecond));
+  CHECK(app.ownerPump() && verify(afterFirst, afterSecond));
   ++sequence;
   CHECK(app.unregisterSource(9100, sequence, sequence * 1000000));
   CHECK(!pointer(input::PointerPhase::kDown, 20, 20));
