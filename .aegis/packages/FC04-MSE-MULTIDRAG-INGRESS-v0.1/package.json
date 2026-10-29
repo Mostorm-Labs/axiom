@@ -1,0 +1,32 @@
+{
+  "schema_version": "aegis-p31-scope-amendment-v1",
+  "id": "FC04-MSE-MULTIDRAG-INGRESS-v0.1",
+  "parent_package_revision": "a3fdcb5fa792a9f74bdc3eccd3fa09013f8df2b8",
+  "baseline": "f556cb6d9f40bb3c650db7acaae582164f50486d",
+  "rationale": "MSE-03/04 requires real input and preview; the existing acquisition and connector preview owners were omitted from the original allowlist. No replacement gesture framework or new product semantics.",
+  "allowed_existing": [
+    {
+      "path": "runtime/interaction/src/canvas_region_selection.cpp",
+      "baseline_sha256": "c1ec915326d3a911d704d69c7570a1d39ab0da25bba68cdc8c9a61c85887d491",
+      "git_blob": "f6fb170499c1bb00e667004f6a9a1c311b5c9c76"
+    },
+    {
+      "path": "runtime/interaction/src/canvas_connector_routing.cpp",
+      "baseline_sha256": "11bfcc1c03ba3317de1b1d6d3f2bb60abdf5689af3b2f291bf7dba8b127a4339",
+      "git_blob": "fa0f251b4ae820a30062aab0287259a4ad5d3fdc"
+    }
+  ],
+  "required": [
+    "MSE-03 and MSE-04 real pointer input and one Undo",
+    "respect explicit local permission mode and reject unavailable context",
+    "preview all operation roots and dependent attached connectors",
+    "retain selection acquisition, click, transform and Section regressions",
+    "D07 OOM blocker unchanged"
+  ],
+  "forbidden": [
+    "Group/Ungroup product implementation",
+    "new wire types or C ABI changes",
+    "alter frozen tests or expected results"
+  ],
+  "authorization": "User explicitly requested continuation of Phase 2 and accepted same-preparer control review; no P34 or release decision is implied."
+}
