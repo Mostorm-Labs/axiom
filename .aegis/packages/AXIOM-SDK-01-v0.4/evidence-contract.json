@@ -1,0 +1,16 @@
+{
+  "status": "DRAFT_NOT_ACCEPTED",
+  "parent_revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+  "required": [
+    "source/dirty status, package and test inputs hashes",
+    "binary, installed header/library, toolchain and platform identities",
+    "each case ID, actual fixture inputs, independent expected/observed, command and exit",
+    "real Windows host and Chrome/WASM driver raw evidence",
+    "exact named regression results and skips",
+    "reviewer-accessible revision and artifact references"
+  ],
+  "hosted_artifact_boundary": "NOT_ACCEPTED",
+  "physical_status": "PHYSICAL_PENDING",
+  "preserve_historical_results": true,
+  "phase_order": "Structural preflight before P32; real SDK and both platform observations during P32; actual results blocking at exit."
+}

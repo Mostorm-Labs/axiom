@@ -1,0 +1,72 @@
+[
+  {
+    "check": "integrity",
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      ".aegis/packages/AXIOM-SDK-01-v0.4/preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "integrity"
+    ],
+    "exit_code": 0,
+    "stdout": "INTEGRITY_OK: repository, anchor, package bytes, locked revisions, owners and P01-P10\nDRAFT_ONLY: integrity does not imply P20 acceptance, P32 authorization or product pass\n",
+    "stderr": ""
+  },
+  {
+    "check": "PackageBindingPreflight",
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      ".aegis/packages/AXIOM-SDK-01-v0.4/preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "PackageBindingPreflight"
+    ],
+    "exit_code": 2,
+    "stdout": "INTEGRITY_OK: repository, anchor, package bytes, locked revisions, owners and P01-P10\nBLOCKED: PackageBindingPreflight: accepted exact ABI and P32 authorization are absent\n",
+    "stderr": ""
+  },
+  {
+    "check": "EvidenceContractPreflight",
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      ".aegis/packages/AXIOM-SDK-01-v0.4/preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "EvidenceContractPreflight"
+    ],
+    "exit_code": 2,
+    "stdout": "INTEGRITY_OK: repository, anchor, package bytes, locked revisions, owners and P01-P10\nBLOCKED: EvidenceContractPreflight: P20 expected values, remaining cases and real driver contract remain incomplete or unaccepted; product execution is an exit requirement\n",
+    "stderr": ""
+  },
+  {
+    "check": "DesignPreflight",
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      ".aegis/packages/AXIOM-SDK-01-v0.4/preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "DesignPreflight"
+    ],
+    "exit_code": 2,
+    "stdout": "INTEGRITY_OK: repository, anchor, package bytes, locked revisions, owners and P01-P10\nBLOCKED: DesignPreflight: public ABI/lifecycle and per-root owner path require acceptance\n",
+    "stderr": ""
+  },
+  {
+    "check": "all",
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      ".aegis/packages/AXIOM-SDK-01-v0.4/preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "all"
+    ],
+    "exit_code": 2,
+    "stdout": "INTEGRITY_OK: repository, anchor, package bytes, locked revisions, owners and P01-P10\nBLOCKED: PackageBindingPreflight: accepted exact ABI and P32 authorization are absent\nBLOCKED: EvidenceContractPreflight: P20 expected values, remaining cases and real driver contract remain incomplete or unaccepted; product execution is an exit requirement\nBLOCKED: DesignPreflight: public ABI/lifecycle and per-root owner path require acceptance\n",
+    "stderr": ""
+  }
+]
