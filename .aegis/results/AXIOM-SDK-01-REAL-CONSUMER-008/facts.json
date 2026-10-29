@@ -1,0 +1,31 @@
+{
+  "parent_revision": "b1e86773b35fcd5550466c51e897851e69261648",
+  "status": "PARTIAL_TEST_INFRASTRUCTURE_NOT_P32",
+  "production_implementation": "NOT_CHANGED",
+  "oracle_selftests": {
+    "count": 13,
+    "failed": 0
+  },
+  "actual_runtime_owner_ctests": [
+    "FC04.MSE-07",
+    "FC04.MSE-19",
+    "FC04.MSE-27"
+  ],
+  "sdk_external_consumer": "NOT_RUN: SDK not provided",
+  "windows_sdk_consumer": "NOT_RUN",
+  "chrome_sdk_consumer": "NOT_RUN",
+  "physical": "NOT_RUN",
+  "sha256": {
+    "verification/sdk01/real_consumer/check_observations.py": "67d464a7d1db35a0d2d2a04e6c8c23d2f0da31fd5bd9f28b34aa594841f9fd8a",
+    "verification/sdk01/real_consumer/expected-v1.json": "7e32a4945a65aacea09a195f0675446bc7d5ce1a352ffbbfe074a60215c16f34",
+    "verification/sdk01/real_consumer/README.md": "222f09cab30a37bcb52b0572608e815c127bc32d57b855d2d99ae9d8651d6781",
+    "verification/sdk01/real_consumer/run_observation_driver.py": "9e8559fe7260303b085af684f47ba63d629292e9f295279376dba2350985f4a8",
+    "verification/sdk01/real_consumer/test_driver_boundary.py": "3aacfc20e620fa1983b1a314dc71fa7fb8d846cfa2e3eadd82a2d2f64312e0be",
+    "verification/sdk01/real_consumer/test_observation_contract.py": "4afd72750a8caee33499eb9d3ee721cd1677fb60fa3dfc5fb0fbbe93edd0d6d6",
+    ".aegis/results/AXIOM-SDK-01-REAL-CONSUMER-008/raw/external-missing-sdk.json": "22c0a852beaf0ffc0eed591f329b30f548ed5df51f032c618410a0ffe89a8015",
+    ".aegis/results/AXIOM-SDK-01-REAL-CONSUMER-008/raw/mse.log": "ef40a454cce2ef073b0ed4a5bfa288972b36d94bb7dc4b521fda193d3d662cb0",
+    ".aegis/results/AXIOM-SDK-01-REAL-CONSUMER-008/raw/mse.xml": "05296bcefc19a80836c0dccc1e81a27fe3277d46d802bc5744df36a59a603cb6",
+    ".aegis/results/AXIOM-SDK-01-REAL-CONSUMER-008/raw/oracle-checks.json": "25fe6e8d1354de9db385b2d285fe784329065c0295e8d4e0742b9a3442871dae",
+    ".aegis/results/AXIOM-SDK-01-REAL-CONSUMER-008/raw/selftests-final.json": "5c2f5873f3780eff6d2ee9f0ff8252b2945c9b4ae80e6113661592a1024092c9"
+  }
+}

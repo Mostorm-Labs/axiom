@@ -1,0 +1,64 @@
+[
+  {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "verification/sdk01/real_consumer",
+      "-p",
+      "test_observation_contract.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "test_complete_exact_observations (test_observation_contract.ObservationContractTests.test_complete_exact_observations) ... ok\ntest_duplicate_json_key_is_rejected (test_observation_contract.ObservationContractTests.test_duplicate_json_key_is_rejected) ... ok\ntest_empty_results_fail (test_observation_contract.ObservationContractTests.test_empty_results_fail) ... ok\ntest_extra_scenarios_are_not_ignored (test_observation_contract.ObservationContractTests.test_extra_scenarios_are_not_ignored) ... ok\ntest_missing_step_fails (test_observation_contract.ObservationContractTests.test_missing_step_fails) ... ok\ntest_nonfinite_json_is_rejected (test_observation_contract.ObservationContractTests.test_nonfinite_json_is_rejected) ... ok\ntest_type_confusion_and_nonfinite_fail (test_observation_contract.ObservationContractTests.test_type_confusion_and_nonfinite_fail) ... ok\ntest_wrong_color_or_unselected_object_fails (test_observation_contract.ObservationContractTests.test_wrong_color_or_unselected_object_fails) ... ok\ntest_wrong_history_or_receipt_fails (test_observation_contract.ObservationContractTests.test_wrong_history_or_receipt_fails) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.006s\n\nOK\n"
+  },
+  {
+    "name": "wrong_second_color",
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\verification\\sdk01\\real_consumer\\check_observations.py",
+      "--expected",
+      "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\verification\\sdk01\\real_consumer\\expected-v1.json",
+      "--observed",
+      "C:\\Users\\Chado\\AppData\\Local\\Temp\\sdk01-oracle-test-dkm7imrx\\bad.json",
+      "--output",
+      "C:\\Users\\Chado\\AppData\\Local\\Temp\\sdk01-oracle-test-dkm7imrx\\result.json"
+    ],
+    "exit_code": 1,
+    "stdout": "MISMATCH\n",
+    "stderr": "",
+    "result": {
+      "status": "MISMATCH",
+      "errors": [
+        "$.scenarios.stroke_width.steps.after.objects.shape_b.stroke.color[0]: expected 0, got 1",
+        "$.scenarios.stroke_width.steps.after.objects.shape_b.stroke.color[2]: expected 1, got 0"
+      ],
+      "note": "Comparison only; provenance, real SUT, and platform execution require separate evidence."
+    },
+    "synthetic_oracle_selftest": true
+  },
+  {
+    "name": "missing_observations",
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\verification\\sdk01\\real_consumer\\check_observations.py",
+      "--expected",
+      "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\verification\\sdk01\\real_consumer\\expected-v1.json",
+      "--observed",
+      "C:\\Users\\Chado\\AppData\\Local\\Temp\\sdk01-oracle-test-dkm7imrx\\absent.json",
+      "--output",
+      "C:\\Users\\Chado\\AppData\\Local\\Temp\\sdk01-oracle-test-dkm7imrx\\result.json"
+    ],
+    "exit_code": 2,
+    "stdout": "BLOCKED_INPUT\n",
+    "stderr": "",
+    "result": {
+      "status": "BLOCKED_INPUT",
+      "error": "[Errno 2] No such file or directory: 'C:\\\\Users\\\\Chado\\\\AppData\\\\Local\\\\Temp\\\\sdk01-oracle-test-dkm7imrx\\\\absent.json'"
+    },
+    "synthetic_oracle_selftest": true
+  }
+]

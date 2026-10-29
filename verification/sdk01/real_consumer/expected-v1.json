@@ -1,0 +1,405 @@
+{
+  "schema_version": 1,
+  "scenarios": {
+    "partial_fill": {
+      "steps": {
+        "before": {
+          "objects": {
+            "shape_a": {
+              "kind": "shape",
+              "fill": "blue"
+            },
+            "shape_b": {
+              "kind": "shape",
+              "fill": "blue"
+            },
+            "shape_c": {
+              "kind": "shape",
+              "fill": "blue"
+            },
+            "image_x": {
+              "kind": "image",
+              "fill": "not_applicable"
+            },
+            "image_y": {
+              "kind": "image",
+              "fill": "not_applicable"
+            }
+          },
+          "history_cursor": 0,
+          "projection": {
+            "total": 5,
+            "eligible": [
+              "shape_a",
+              "shape_b",
+              "shape_c"
+            ],
+            "excluded": [
+              {
+                "id": "image_x",
+                "reason": "not_applicable"
+              },
+              {
+                "id": "image_y",
+                "reason": "not_applicable"
+              }
+            ]
+          }
+        },
+        "unknown_permission": {
+          "objects": {
+            "shape_a": {
+              "kind": "shape",
+              "fill": "blue"
+            },
+            "shape_b": {
+              "kind": "shape",
+              "fill": "blue"
+            },
+            "shape_c": {
+              "kind": "shape",
+              "fill": "blue"
+            },
+            "image_x": {
+              "kind": "image",
+              "fill": "not_applicable"
+            },
+            "image_y": {
+              "kind": "image",
+              "fill": "not_applicable"
+            }
+          },
+          "history_cursor": 0,
+          "receipt": {
+            "state": "rejected",
+            "reason": "permission_unavailable"
+          }
+        },
+        "no_partial_ack": {
+          "objects": {
+            "shape_a": {
+              "kind": "shape",
+              "fill": "blue"
+            },
+            "shape_b": {
+              "kind": "shape",
+              "fill": "blue"
+            },
+            "shape_c": {
+              "kind": "shape",
+              "fill": "blue"
+            },
+            "image_x": {
+              "kind": "image",
+              "fill": "not_applicable"
+            },
+            "image_y": {
+              "kind": "image",
+              "fill": "not_applicable"
+            }
+          },
+          "history_cursor": 0,
+          "receipt": {
+            "state": "rejected",
+            "reason": "partial_not_acknowledged"
+          }
+        },
+        "after": {
+          "objects": {
+            "shape_a": {
+              "kind": "shape",
+              "fill": "red"
+            },
+            "shape_b": {
+              "kind": "shape",
+              "fill": "red"
+            },
+            "shape_c": {
+              "kind": "shape",
+              "fill": "red"
+            },
+            "image_x": {
+              "kind": "image",
+              "fill": "not_applicable"
+            },
+            "image_y": {
+              "kind": "image",
+              "fill": "not_applicable"
+            }
+          },
+          "history_cursor": 1,
+          "receipt": {
+            "state": "applied",
+            "changed": [
+              "shape_a",
+              "shape_b",
+              "shape_c"
+            ],
+            "unchanged": [],
+            "skipped": [
+              {
+                "id": "image_x",
+                "reason": "not_applicable"
+              },
+              {
+                "id": "image_y",
+                "reason": "not_applicable"
+              }
+            ]
+          }
+        },
+        "undo": {
+          "objects": {
+            "shape_a": {
+              "kind": "shape",
+              "fill": "blue"
+            },
+            "shape_b": {
+              "kind": "shape",
+              "fill": "blue"
+            },
+            "shape_c": {
+              "kind": "shape",
+              "fill": "blue"
+            },
+            "image_x": {
+              "kind": "image",
+              "fill": "not_applicable"
+            },
+            "image_y": {
+              "kind": "image",
+              "fill": "not_applicable"
+            }
+          },
+          "history_cursor": 0
+        },
+        "redo": {
+          "objects": {
+            "shape_a": {
+              "kind": "shape",
+              "fill": "red"
+            },
+            "shape_b": {
+              "kind": "shape",
+              "fill": "red"
+            },
+            "shape_c": {
+              "kind": "shape",
+              "fill": "red"
+            },
+            "image_x": {
+              "kind": "image",
+              "fill": "not_applicable"
+            },
+            "image_y": {
+              "kind": "image",
+              "fill": "not_applicable"
+            }
+          },
+          "history_cursor": 1
+        }
+      }
+    },
+    "stroke_width": {
+      "steps": {
+        "before": {
+          "objects": {
+            "shape_a": {
+              "kind": "shape",
+              "fill": "blue",
+              "stroke": {
+                "color": [
+                  1,
+                  0,
+                  0,
+                  1
+                ],
+                "width": 5,
+                "cap": "round",
+                "join": "miter",
+                "miter": 4,
+                "dash": [
+                  2,
+                  1
+                ],
+                "dash_offset": 0
+              }
+            },
+            "shape_b": {
+              "kind": "shape",
+              "fill": "blue",
+              "stroke": {
+                "color": [
+                  0,
+                  0,
+                  1,
+                  1
+                ],
+                "width": 7,
+                "cap": "square",
+                "join": "miter",
+                "miter": 7,
+                "dash": [
+                  4,
+                  2
+                ],
+                "dash_offset": 0
+              }
+            }
+          },
+          "history_cursor": 0
+        },
+        "after": {
+          "objects": {
+            "shape_a": {
+              "kind": "shape",
+              "fill": "blue",
+              "stroke": {
+                "color": [
+                  1,
+                  0,
+                  0,
+                  1
+                ],
+                "width": 19,
+                "cap": "round",
+                "join": "miter",
+                "miter": 4,
+                "dash": [
+                  2,
+                  1
+                ],
+                "dash_offset": 0
+              }
+            },
+            "shape_b": {
+              "kind": "shape",
+              "fill": "blue",
+              "stroke": {
+                "color": [
+                  0,
+                  0,
+                  1,
+                  1
+                ],
+                "width": 19,
+                "cap": "square",
+                "join": "miter",
+                "miter": 7,
+                "dash": [
+                  4,
+                  2
+                ],
+                "dash_offset": 0
+              }
+            }
+          },
+          "history_cursor": 1,
+          "receipt": {
+            "state": "applied",
+            "changed": [
+              "shape_a",
+              "shape_b"
+            ],
+            "unchanged": [],
+            "skipped": []
+          }
+        },
+        "undo": {
+          "objects": {
+            "shape_a": {
+              "kind": "shape",
+              "fill": "blue",
+              "stroke": {
+                "color": [
+                  1,
+                  0,
+                  0,
+                  1
+                ],
+                "width": 5,
+                "cap": "round",
+                "join": "miter",
+                "miter": 4,
+                "dash": [
+                  2,
+                  1
+                ],
+                "dash_offset": 0
+              }
+            },
+            "shape_b": {
+              "kind": "shape",
+              "fill": "blue",
+              "stroke": {
+                "color": [
+                  0,
+                  0,
+                  1,
+                  1
+                ],
+                "width": 7,
+                "cap": "square",
+                "join": "miter",
+                "miter": 7,
+                "dash": [
+                  4,
+                  2
+                ],
+                "dash_offset": 0
+              }
+            }
+          },
+          "history_cursor": 0
+        },
+        "redo": {
+          "objects": {
+            "shape_a": {
+              "kind": "shape",
+              "fill": "blue",
+              "stroke": {
+                "color": [
+                  1,
+                  0,
+                  0,
+                  1
+                ],
+                "width": 19,
+                "cap": "round",
+                "join": "miter",
+                "miter": 4,
+                "dash": [
+                  2,
+                  1
+                ],
+                "dash_offset": 0
+              }
+            },
+            "shape_b": {
+              "kind": "shape",
+              "fill": "blue",
+              "stroke": {
+                "color": [
+                  0,
+                  0,
+                  1,
+                  1
+                ],
+                "width": 19,
+                "cap": "square",
+                "join": "miter",
+                "miter": 7,
+                "dash": [
+                  4,
+                  2
+                ],
+                "dash_offset": 0
+              }
+            }
+          },
+          "history_cursor": 1
+        }
+      }
+    }
+  }
+}
