@@ -1,0 +1,13 @@
+[
+  {
+    "name": "native_compile",
+    "argv": [
+      "cmd.exe",
+      "/c",
+      "call \"C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat\" >nul && cl /nologo /W4 /WX /std:c11 /I docs/api /I docs/planning/sdk /c verification/sdk01/multi_candidate_compile.c /Foout/sdk01-review/multi-candidate-c.obj && cl /nologo /W4 /WX /EHsc /std:c++17 /I docs/api /I docs/planning/sdk /c verification/sdk01/multi_candidate_compile.cpp /Foout/sdk01-review/multi-candidate-cpp.obj"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "'\\\"C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat\\\"' is not recognized as an internal or external command,\noperable program or batch file.\n"
+  }
+]

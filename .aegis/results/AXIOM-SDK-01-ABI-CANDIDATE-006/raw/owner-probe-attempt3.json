@@ -1,0 +1,20 @@
+[
+  {
+    "argv": [
+      "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk01-review\\build\\axiom_sdk01_owner_mixed_stroke_probe.exe",
+      "--observe-replacement"
+    ],
+    "exit_code": 0,
+    "stdout": "selection_after_first=1\nselection_after_second=2\nsecond_stroke rgba=(1.0,0.0,0.0,1.0) width=19.0\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk01-review\\build\\axiom_sdk01_owner_mixed_stroke_probe.exe",
+      "--expect-preserved"
+    ],
+    "exit_code": 1,
+    "stdout": "selection_after_first=1\nselection_after_second=2\nsecond_stroke rgba=(1.0,0.0,0.0,1.0) width=19.0\n",
+    "stderr": "FAIL line 107: stroke->color.b == 1.0F && stroke->color.r == 0.0F\n"
+  }
+]
