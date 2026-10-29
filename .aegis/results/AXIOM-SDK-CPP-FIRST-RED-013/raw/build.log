@@ -1,0 +1,106 @@
+-- Configuring done (3.6s)
+CMake Warning in runtime/semantic/tests/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build/runtime/semantic/tests/CMakeFiles/canvas_semantic_operation_engine_generation_change_set_differential_test.dir/./
+
+  has 193 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    operation_engine_generation_change_set_differential_test.cpp.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+CMake Warning in runtime/semantic/tests/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build/runtime/semantic/tests/CMakeFiles/canvas_semantic_canvas_semantic_operation_specific_validation_hpp.dir/./
+
+  has 186 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    self_contained_canvas_semantic_operation_specific_validation_hpp.cpp.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+-- Generating done (1.8s)
+-- Build files have been written to: C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build
+[0/2] Re-checking globbed directories...
+[1/2] Re-running CMake...
+-- Configuring done (3.6s)
+CMake Warning in runtime/semantic/tests/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build/runtime/semantic/tests/CMakeFiles/canvas_semantic_operation_engine_generation_change_set_differential_test.dir/./
+
+  has 193 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    operation_engine_generation_change_set_differential_test.cpp.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+CMake Warning in runtime/semantic/tests/CMakeLists.txt:
+  The object file directory
+
+    C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build/runtime/semantic/tests/CMakeFiles/canvas_semantic_canvas_semantic_operation_specific_validation_hpp.dir/./
+
+  has 186 characters.  The maximum full path to an object file is 250
+  characters (see CMAKE_OBJECT_PATH_MAX).  Object file
+
+    self_contained_canvas_semantic_operation_specific_validation_hpp.cpp.obj
+
+  cannot be safely placed under this directory.  The build may not work
+  correctly.
+
+
+-- Generating done (1.8s)
+-- Build files have been written to: C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build
+[0/2] Re-checking globbed directories...
+[1/27] Building CXX object runtime\control\CMakeFiles\canvas_runtime_control.dir\src\build_info.cpp.obj
+[2/27] Building CXX object CMakeFiles\axiom_sdk_cpp_public_multi_owner_test.dir\verification\sdk_cpp_first\public_multi_owner_test.cpp.obj
+FAILED: CMakeFiles/axiom_sdk_cpp_public_multi_owner_test.dir/verification/sdk_cpp_first/public_multi_owner_test.cpp.obj 
+C:\PROGRA~1\MICROS~3\18\COMMUN~1\VC\Tools\MSVC\1451~1.362\bin\Hostx64\x64\cl.exe  /nologo /TP -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -DSK_RELEASE -D_HAS_ITERATOR_DEBUGGING=0 -D_ITERATOR_DEBUG_LEVEL=0 -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\composition\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\interaction\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\scene\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\text\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\foundation\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\semantic\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\input\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\render\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\ink\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\.deps\nlohmann-json\single_include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\control\include /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MT /W4 /permissive- /WX /EHsc /showIncludes /FoCMakeFiles\axiom_sdk_cpp_public_multi_owner_test.dir\verification\sdk_cpp_first\public_multi_owner_test.cpp.obj /FdCMakeFiles\axiom_sdk_cpp_public_multi_owner_test.dir\ /FS -c C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(41): error C2039: 'readMultiSelection': is not a member of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\foundation\include\canvas/runtime/runtime_facade.hpp(16): note: see declaration of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(42): error C3536: 'projection': cannot be used before it is initialized
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(43): error C2737: 'unknown': const object must be initialized
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(44): error C3536: 'unknown': cannot be used before it is initialized
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(46): error C2039: 'submitMultiSelectionProperty': is not a member of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\foundation\include\canvas/runtime/runtime_facade.hpp(16): note: see declaration of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(47): error C2039: 'setMultiSelectionPermission': is not a member of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\foundation\include\canvas/runtime/runtime_facade.hpp(16): note: see declaration of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(47): error C3083: 'MultiSelectionPermissionMode': the symbol to the left of a '::' must be a type
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(47): error C2039: 'kLocalSingleUser': is not a member of 'canvas::runtime'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\composition\include\canvas/runtime/runtime_composition.hpp(19): note: see declaration of 'canvas::runtime'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(47): error C2065: 'kLocalSingleUser': undeclared identifier
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(48): error C2039: 'readMultiSelection': is not a member of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\foundation\include\canvas/runtime/runtime_facade.hpp(16): note: see declaration of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(50): error C2737: 'selected': const object must be initialized
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(51): error C3536: 'selected': cannot be used before it is initialized
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(52): error C2039: 'submitMultiSelectionProperty': is not a member of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\foundation\include\canvas/runtime/runtime_facade.hpp(16): note: see declaration of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(54): error C2039: 'multiSelectionReceipt': is not a member of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\foundation\include\canvas/runtime/runtime_facade.hpp(16): note: see declaration of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(54): error C2737: 'receipt': const object must be initialized
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(55): error C3536: 'receipt': cannot be used before it is initialized
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(56): error C2039: 'readMultiSelection': is not a member of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\foundation\include\canvas/runtime/runtime_facade.hpp(16): note: see declaration of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(56): error C2737: 'after': const object must be initialized
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(57): error C3536: 'after': cannot be used before it is initialized
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(60): error C2039: 'readMultiSelection': is not a member of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\foundation\include\canvas/runtime/runtime_facade.hpp(16): note: see declaration of 'canvas::runtime::RuntimeFacade'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(60): error C2737: 'undone': const object must be initialized
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\verification\sdk_cpp_first\public_multi_owner_test.cpp(61): error C3536: 'undone': cannot be used before it is initialized
+[3/27] Building CXX object runtime\control\CMakeFiles\canvas_runtime_control.dir\src\canvas_control_service.cpp.obj
+[4/27] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot_bootstrap.cpp.obj
+[5/27] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot.cpp.obj
+[6/27] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\container_operation_mapping.cpp.obj
+[7/27] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\protobuf_object_mapping.cpp.obj
+ninja: build stopped: subcommand failed.
