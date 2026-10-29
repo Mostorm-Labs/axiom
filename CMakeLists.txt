@@ -151,6 +151,22 @@ endif()
 if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
   add_subdirectory(runtime/render)
   add_subdirectory(runtime/composition)
+  # Initial C++ consumer profile: Windows x64 Release with the locked static
+  # Semantic and Skia SDKs. Other platforms require their own package profile.
+  if(WIN32 AND MSVC AND NOT EMSCRIPTEN AND CANVAS_SEMANTIC_ENABLE_PROTOBUF AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS
+     AND CMAKE_BUILD_TYPE STREQUAL "Release" AND CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreaded")
+    install(TARGETS canvas_runtime_composition canvas_runtime_editor canvas_runtime_interaction
+      canvas_runtime_render canvas_runtime_scene canvas_runtime_text canvas_runtime_ink
+      canvas_runtime_input canvas_runtime_control canvas_runtime_semantic
+      ARCHIVE DESTINATION lib)
+    install(DIRECTORY runtime/foundation/include/ runtime/semantic/include/ DESTINATION include)
+    get_filename_component(_axiom_semantic_root "${Protobuf_DIR}/../../.." ABSOLUTE)
+    file(SHA256 "${_axiom_semantic_root}/manifest.json" AXIOM_RUNTIME_SEMANTIC_MANIFEST_SHA256)
+    file(SHA256 "${CANVAS_SKIA_SDK_ROOT}/manifest.json" AXIOM_RUNTIME_SKIA_MANIFEST_SHA256)
+    configure_file(cmake/AxiomRuntimeConfig.cmake.in AxiomRuntimeConfig.cmake @ONLY)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/AxiomRuntimeConfig.cmake"
+      DESTINATION lib/cmake/AxiomRuntime)
+  endif()
   add_subdirectory(apps/minimal_runtime_host)
 endif()
 if(AXIOM_BUILD_DEBUG_UI OR

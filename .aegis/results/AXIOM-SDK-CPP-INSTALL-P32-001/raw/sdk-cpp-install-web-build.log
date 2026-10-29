@@ -1,0 +1,9 @@
+COMMAND ["cmake", "--build", "out/sdk-cpp-first-web", "--target", "axiom_canvas_demo_web", "--parallel", "6"]
+[0/2] Re-checking globbed directories...
+[1/7] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/build_info.cpp.o
+[2/7] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/canvas_control_service.cpp.o
+[3/7] Linking CXX static library runtime\control\libcanvas_runtime_control.a
+[4/7] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/public_runtime.cpp.o
+[5/7] Linking CXX static library runtime\composition\libcanvas_runtime_composition.a
+[6/7] Building CXX object apps/axiom_canvas_demo/CMakeFiles/axiom_canvas_demo_web.dir/platform/web/bridge.cpp.o
+[7/7] Linking CXX executable apps\axiom_canvas_demo\axiom_canvas_demo_web.js

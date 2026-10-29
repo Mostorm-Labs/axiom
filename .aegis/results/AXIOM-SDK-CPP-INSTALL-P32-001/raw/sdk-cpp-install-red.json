@@ -1,0 +1,35 @@
+{
+  "status": "FAIL",
+  "steps": [
+    {
+      "command": [
+        "cmake",
+        "--install",
+        "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk01-review\\build",
+        "--prefix",
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-installed-consumer-bkgww1hj\\install"
+      ],
+      "exit_code": 0,
+      "stdout": "-- Install configuration: \"Release\"\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cmake",
+        "-S",
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-installed-consumer-bkgww1hj\\consumer",
+        "-B",
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-installed-consumer-bkgww1hj\\build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DAxiomRuntime_DIR=C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-installed-consumer-bkgww1hj\\install\\lib\\cmake\\AxiomRuntime",
+        "-DCMAKE_PREFIX_PATH=C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c",
+        "-DCanvasSkia_DIR=C:\\Users\\Chado\\.codex\\worktrees\\fc00x-runtime-minimum-closure\\canvas\\.deps\\skia-sdk\\windows-x64-d3d12\\release\\lib\\cmake\\CanvasSkia"
+      ],
+      "exit_code": 1,
+      "stdout": "-- The CXX compiler identification is MSVC 19.51.36246.0\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- Configuring incomplete, errors occurred!\n",
+      "stderr": "CMake Error at CMakeLists.txt:3 (find_package):\n  Could not find a package configuration file provided by \"AxiomRuntime\" with\n  any of the following names:\n\n    AxiomRuntime.cps\n    axiomruntime.cps\n    AxiomRuntimeConfig.cmake\n    axiomruntime-config.cmake\n\n  Add the installation prefix of \"AxiomRuntime\" to CMAKE_PREFIX_PATH or set\n  \"AxiomRuntime_DIR\" to a directory containing one of the above files.  If\n  \"AxiomRuntime\" provides a separate development package or SDK, be sure it\n  has been installed.\n\n\n"
+    }
+  ]
+}

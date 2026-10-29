@@ -1,4 +1,5 @@
 add_library(canvas_runtime_composition STATIC
+    src/public_runtime.cpp
     src/resource_binding.cpp
     src/scene_adapter.cpp
     src/runtime_composition.cpp
