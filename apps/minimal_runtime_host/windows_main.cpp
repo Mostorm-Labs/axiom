@@ -1,7 +1,6 @@
 #include "minimal_runtime_host.hpp"
 #include "minimal_runtime_facade.hpp"
 #include "windows_presentation_cache.hpp"
-#include "host_font_resources.hpp"
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
 #include "canvas/debug_ui/controller.hpp"
 #include "canvas/debug_ui/windows_host.hpp"
@@ -518,7 +517,9 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
   const auto scale = dpi == 0U ? 1.0F : static_cast<float>(dpi) / 96.0F;
   if (!state.platformAdapter->bind(width, height, scale) || !state.host->registerSource(1U)) return 1;
   std::array<wchar_t,32768> modulePath{};const auto moduleLength=GetModuleFileNameW(nullptr,modulePath.data(),static_cast<DWORD>(modulePath.size()));
-  if(moduleLength==0 || moduleLength>=modulePath.size() || !canvas::minimal_runtime_host::bindHostTextFonts(state.host->composition(),std::filesystem::path(modulePath.data()).parent_path()/L"axiom-font.otf",std::filesystem::path(modulePath.data()).parent_path()/L"fonts"))return 1;
+  if(moduleLength==0 || moduleLength>=modulePath.size() || !state.platformAdapter->loadHostFonts(
+      (std::filesystem::path(modulePath.data()).parent_path()/L"axiom-font.otf").c_str(),
+      (std::filesystem::path(modulePath.data()).parent_path()/L"fonts").c_str()))return 1;
   if (state.inputLog) {
 #if defined(AXIOM_BUILD_SOURCE_REVISION)
     std::fprintf(state.inputLog.get(), "build_revision=%s dirty=%d msvc=%d pid=%lu debug_ui_enabled=%d\n",

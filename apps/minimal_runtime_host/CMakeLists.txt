@@ -38,6 +38,7 @@ if(WIN32 AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PR
     ${PROJECT_SOURCE_DIR}/runtime/semantic/include
     ${PROJECT_SOURCE_DIR}/runtime/scene/include
     ${CANVAS_SKIA_SDK_ROOT})
+  target_include_directories(axiom_minimal_windows_surface PRIVATE ${AXIOM_HOST_FONT_INCLUDE})
   target_link_libraries(axiom_minimal_windows_surface PUBLIC d3d12 dxgi dcomp imm32)
   target_link_libraries(axiom_minimal_windows_surface PUBLIC canvas_runtime_composition)
   if(TARGET CanvasSkia::Skia)
@@ -220,6 +221,7 @@ if(BUILD_TESTING)
     add_test(NAME FC00XS2WindowsSurfaceBinding COMMAND axiom_minimal_windows_surface_binding_tests)
     set_tests_properties(FC00XS2WindowsSurfaceBinding PROPERTIES SKIP_RETURN_CODE 77)
     add_executable(axiom_windows_public_adapter_tests tests/windows_public_adapter_test.cpp)
+    axiom_package_host_text_font(axiom_windows_public_adapter_tests)
     target_link_libraries(axiom_windows_public_adapter_tests PRIVATE axiom_minimal_windows_surface canvas_runtime_composition)
     target_compile_features(axiom_windows_public_adapter_tests PRIVATE cxx_std_20)
     if(MSVC)

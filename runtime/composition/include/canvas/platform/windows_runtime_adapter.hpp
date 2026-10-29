@@ -26,6 +26,10 @@ class WindowsRuntimeAdapter final {
   [[nodiscard]] bool resize(std::uint32_t width, std::uint32_t height, float scale) noexcept;
   [[nodiscard]] bool loseSurface() noexcept;
   [[nodiscard]] bool recoverSurface(std::uint32_t width, std::uint32_t height, float scale) noexcept;
+  // Startup only, before binding other document resources: the existing font
+  // catalog loader replaces the Runtime resource manifest. Fonts are not
+  // installed into the operating system. A successful load is one-shot.
+  [[nodiscard]] bool loadHostFonts(const wchar_t* cjkPath, const wchar_t* catalogRoot) noexcept;
   [[nodiscard]] bool prepareFrame(bool forceCanonical = false) noexcept;
   [[nodiscard]] WindowsFrameStatus frameStatus() const noexcept;
   // Call after the window's real platform paint/presentation opportunity.

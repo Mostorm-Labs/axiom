@@ -22,9 +22,12 @@ int main() {
   CHECK(owner.open());
   canvas::platform::WindowsRuntimeAdapter platform(owner, window);
   if (!platform.bind(400, 300, 1.0F)) return 77;
+  CHECK(!platform.loadHostFonts(L"missing-font.otf", L"fonts"));
+  CHECK(platform.loadHostFonts(L"axiom-font.otf", L"fonts"));
   auto& product = owner.controlFacade();
   auto& debug = owner.controlFacade();
   CHECK(&product == &debug);
+  CHECK(!product.readFontCatalog().entries.empty());
   CHECK(owner.registerSource(9000));
   canvas::input::PlatformPointerSample sample{};
   sample.source = 9000; sample.pointer = 1; sample.sequence = 1; sample.timestampNs = 1000000;

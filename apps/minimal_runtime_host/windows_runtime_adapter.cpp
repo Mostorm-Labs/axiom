@@ -4,6 +4,7 @@
 #include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/internal/runtime_platform_access.hpp"
 #include "windows_d3d12_surface_provider.hpp"
+#include "host_font_resources.hpp"
 
 #include <cmath>
 #include <thread>
@@ -24,6 +25,7 @@ class WindowsRuntimeAdapter::Impl final {
   std::uint64_t previewConfirmed = 0;
   bool bound = false;
   bool prepared = false;
+  bool hostFontsLoaded = false;
 };
 
 WindowsRuntimeAdapter::WindowsRuntimeAdapter(runtime::RuntimeComposition& owner, void* hwnd)
@@ -65,6 +67,15 @@ bool WindowsRuntimeAdapter::recoverSurface(std::uint32_t width, std::uint32_t he
       !std::isfinite(scale) || scale <= 0) return false;
   impl_->prepared = false;
   return impl_->core.rebindSurface({width / scale, height / scale, width, height, scale, scale});
+}
+bool WindowsRuntimeAdapter::loadHostFonts(const wchar_t* cjkPath, const wchar_t* catalogRoot) noexcept {
+  if (std::this_thread::get_id() != impl_->thread || !impl_->bound || impl_->hostFontsLoaded ||
+      !cjkPath || !catalogRoot || impl_->core.semanticObjectCount() != 0) return false;
+  try {
+    impl_->hostFontsLoaded = minimal_runtime_host::bindHostTextFonts(impl_->core,
+        std::filesystem::path(cjkPath), std::filesystem::path(catalogRoot));
+    return impl_->hostFontsLoaded;
+  } catch (...) { return false; }
 }
 bool WindowsRuntimeAdapter::prepareFrame(bool force) noexcept {
   if (std::this_thread::get_id() != impl_->thread || !impl_->bound || impl_->prepared) return false;

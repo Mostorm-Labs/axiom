@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Install and run the real Windows SDK window sample outside the checkout."""
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -26,6 +27,13 @@ def main():
             raise RuntimeError('consumer directory is not external')
         install, source, build = root / 'install', root / 'source', root / 'build'
         shutil.copytree(Path(__file__).parent / 'consumer', source)
+        build.mkdir()
+        cjk = repo / 'assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf'
+        catalog = repo / 'assets/fonts/imported'
+        shutil.copyfile(cjk, build / 'axiom-font.otf')
+        shutil.copytree(catalog, build / 'fonts')
+        result['font_fixture'] = {'cjk_sha256': hashlib.sha256(cjk.read_bytes()).hexdigest(),
+                                  'catalog_files': len(list(catalog.rglob('*')))}
         commands = [
             ['cmake', '--install', str(args.build.resolve()), '--prefix', str(install)],
             ['cmake', '-S', str(source), '-B', str(build), '-G', 'Ninja', '-DCMAKE_BUILD_TYPE=Release',

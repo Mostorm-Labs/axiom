@@ -49,6 +49,8 @@ int main() {
   sample.phase = canvas::input::PointerPhase::kUp; sample.sequence = 3;
   sample.timestampNs = 3000000; batch.samples = {sample};
   assert(composition.submitContact(*first, batch));
+  // The startup loader must not replace a manifest after content exists.
+  assert(!adapter.loadHostFonts(L"axiom-font.otf", L"fonts"));
   sample.phase = canvas::input::PointerPhase::kDown;
   sample.sequence = 4; sample.timestampNs = 4000000; batch.samples = {sample};
   const auto second = composition.beginContact(batch);

@@ -1,3 +1,4 @@
+#include "host_font_resources.hpp"
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -72,6 +73,10 @@ int main(int argc, char** argv) {
         state.platformAdapter = std::make_unique<platform::WindowsRuntimeAdapter>(state.host->publicComposition(), owner);
         if (!state.platformAdapter->bind(800, 600, 1.0F)) return 77;
         assert(&state.host->publicComposition().controlFacade() == &composition.controlFacade());
+        assert(!state.platformAdapter->loadHostFonts(L"missing-axiom-font.otf", L"fonts"));
+        assert(state.platformAdapter->loadHostFonts(L"axiom-font.otf", L"fonts"));
+        assert(!state.host->publicComposition().controlFacade().readFontCatalog().entries.empty());
+        assert(!state.platformAdapter->loadHostFonts(L"axiom-font.otf", L"fonts"));
         SendMessageW(owner, WM_TIMER, 1, 0);
         assert(state.platformAdapter->frameStatus().canonicalWorkId != 0);
         ShowWindow(owner, SW_SHOWNOACTIVATE);

@@ -1,3 +1,4 @@
+#include "host_font_resources.hpp"
 #include <cassert>
 #include <cstdio>
 #include <cstring>
