@@ -1,0 +1,48 @@
+{
+  "repository": "Mostorm-Labs/axiom",
+  "starting_revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+  "origin_main_at_fetch": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+  "fc05_ancestor": "e5e630c5662167763fc7ba66b94c35881b1e1470",
+  "plan_sha256": "a394e4210e4b38a091c99b884b62ee6ac2ea76e055ef546d2f4e3c4a6c7e9c5e",
+  "independent_review_sha256": "e9966f34d5b3999980097f7edb985c2880b7aea277b3758f1886d44753492ca9",
+  "static_checks": [
+    {
+      "command": "python tools/check_runtime_abi_manifest.py --root .",
+      "exit_code": 0,
+      "observation": "54 functions, 49 structs, 163 enum constants; declaration only"
+    },
+    {
+      "command": "python tools/check_runtime_boundaries.py --root .",
+      "exit_code": 0,
+      "observation": "103 contract files; not SDK closure"
+    }
+  ],
+  "ctest_discovery": {
+    "exit_code": 0,
+    "matched": 12,
+    "missing_executables": [
+      "FC00XRuntimeIsolation",
+      "FC00XFrameCoordinator",
+      "FC00XRuntimeFacade",
+      "PX0ControlRouter"
+    ],
+    "execution": "NOT_RUN",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:/Users/Chado/.codex/worktrees/fc04-mse-p31-correction/canvas/out/fc04-mse-p32/build",
+      "-N",
+      "-R",
+      "^(FC00XRuntimeComposition|FC00XRuntimeFacade|FC00XFrameCoordinator|FC00XRuntimeIsolation|FC02Text|FC03ImageFacade|FC05ConnectorFacade|FC08SectionConsumer|PX0ControlRouter|SelectionBatch3Summary|FC01ASelectionInputIntegration|SelectionBatch3Ui)$"
+    ],
+    "raw_log_sha256": "c858655b602b56428b51370b3bbdc85df4b9eda34d4165938fb6bc3c6b9119a0"
+  },
+  "physical": "PHYSICAL_PENDING",
+  "p32_authorized": false,
+  "evidence_hashes": {
+    "check-1.log": "e03bbb60a9aa37df2f00d152b016b908b184d670ee0a075e17f6c0fa7371b777",
+    "check-2.log": "fb35bbed7cdd193f686c7a54b5af67cba6aa8934befcbdef4793c85e01127c8a",
+    "ctest-discovery.log": "c858655b602b56428b51370b3bbdc85df4b9eda34d4165938fb6bc3c6b9119a0",
+    "draft-integrity.log": "dac783a4e6e2caba2dd634921b3410a6e0e2c7bf7cf6ca58a487ad6d8d9d53f7"
+  }
+}

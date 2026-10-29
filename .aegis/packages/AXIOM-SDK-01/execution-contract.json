@@ -1,0 +1,81 @@
+{
+  "status": "DRAFT_P32_NOT_AUTHORIZED",
+  "implementation": {
+    "required_changes": [
+      "real versioned public C ABI and opaque runtime/document/view handle management on existing RuntimeComposition",
+      "typed target-aware controls, readback, truthful admission/final receipts and existing RuntimeFacade/History routing",
+      "equivalent public multi-selection permission/projection/stamp/eligible/excluded/receipt path before migrating both real consumers and sealing internal port",
+      "build/install/export allowlist and real external C/C++ consumer with no internal headers"
+    ],
+    "authorized_mutation_scope_candidate": [
+      "sdk/**",
+      "samples/sdk/**",
+      "tests/sdk/**",
+      "runtime/composition/**",
+      "runtime/foundation/**",
+      "runtime/control/**",
+      "apps/minimal_runtime_host/**",
+      "apps/axiom_canvas_demo/platform/web/**",
+      "debug_ui/**",
+      "CMakeLists.txt",
+      "docs/sdk/**"
+    ],
+    "scope_is_proposed_not_authorized": true,
+    "forbidden_changes": [
+      "canonical Operation/schema/registry, frozen V1 manifest and SDK lock changes",
+      "create parallel selection, document, History or semantic owner",
+      "hide internal port before both real consumers use equivalent validated public path",
+      "rebuild published Semantic/Skia dependencies",
+      "weaken/remove fault injection or relabel D07/PHYS/Gate pass",
+      "merge main or publish SDK"
+    ]
+  },
+  "tests": {
+    "required_existing_commands": [
+      "python tools/check_runtime_abi_manifest.py --root .",
+      "python tools/check_runtime_boundaries.py --root .",
+      "ctest --test-dir <build> -R '^(FC00XRuntimeComposition|FC00XRuntimeFacade|FC00XFrameCoordinator|FC00XRuntimeIsolation|FC02Text|FC03ImageFacade|FC05ConnectorFacade|FC08SectionConsumer|PX0ControlRouter|SelectionBatch3Summary|FC01ASelectionInputIntegration|SelectionBatch3Ui)$' --output-on-failure --no-tests=error"
+    ],
+    "new_external_test_commands": "NOT_YET_BOUND: test runner and per-case expected artifacts require P20",
+    "must_check_all_12_names_and_no_skips": true
+  },
+  "hosted_verification": {
+    "required": "UNRESOLVED: select actual provider and artifacts before acceptance",
+    "optional": [
+      "actual Chrome/WASM preview evidence where environment permits; no physical claim"
+    ]
+  },
+  "evidence": {
+    "blocking": [
+      "accepted exact Authority and Verification refs",
+      "independent external consumer compile/link/run and per-case observations",
+      "exact source/input/environment/command/exit/raw artifact hashes",
+      "exact 12 existing CTest observations and zero skips"
+    ],
+    "corroborative": [
+      "SDK-00 static checks",
+      "historical Group screenshots"
+    ]
+  },
+  "terminal_success": {
+    "status": "DRAFT",
+    "all_of": [
+      "accepted package and preflights",
+      "all frozen SDK-01 obligations have actual real-SUT evidence",
+      "reviewer-accessible exact result",
+      "no unsupported substitution for required API"
+    ]
+  },
+  "terminal_blockers": [
+    "AUTHORITY_CONFLICT",
+    "MISSING_REQUIRED_INPUT",
+    "VERIFICATION_DESIGN_DEFECT",
+    "ENVIRONMENT_BLOCKER",
+    "FROZEN_VERIFICATION_FAILURE",
+    "NEW_HIGH_IMPACT_FAILURE_MODE"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

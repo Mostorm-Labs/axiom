@@ -1,0 +1,60 @@
+{
+  "task_id": "AXIOM-SDK-01",
+  "stage": "P31",
+  "status": "DRAFT_AWAITING_CONTROL_AND_VERIFICATION_ACCEPTANCE",
+  "p32_authorized": false,
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "planning_source_revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+  "execution_ref": "refs/heads/codex/sdk-01-public-core",
+  "task_anchor": {
+    "revision": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "requires_acceptance": [
+    "exact Authority and verification source bindings must be accepted; local proposed freeze candidate is not accepted",
+    "ABI/version and public typed interface decisions",
+    "independent executable P20 oracles and hosted evidence boundary",
+    "exact source scope review"
+  ],
+  "review_documents": [
+    {
+      "path": "docs/planning/sdk/api-inventory.md",
+      "sha256": "a40122fdbbf417dfa03f06f2ee9e4308624188d2df65d1cf5673199fabc23821"
+    },
+    {
+      "path": "docs/planning/sdk/contract-decisions.md",
+      "sha256": "b5e8e864590af2a8ad265736f0347742cc104a176cecb43348c9fe1dae4db814"
+    },
+    {
+      "path": "docs/planning/sdk/verification.md",
+      "sha256": "aba208a275ba72baca9bd7f8c69e0afa6c435770e3d3ed9a7ffb7d590dbd7e22"
+    }
+  ],
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "49e87034d103b910c917e9b767d66129f5b56e0a070028ccd9857f66ce46a8b6"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "9f8861d47ed8099c6b8b7e47ee98f2fbbfaac88a6d5d46c5fb9bec61554c4df5"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "0ac44c2d57e5168797a3554c3a07cc61f8f5230b1e379def627f336f24980cf1"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "6da5e5cb3677a46cdef930744ebfa01fe863c6e74921871a4ecfed52930326aa"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "b319c6e20d303636adf1fdb7c07e83b5634c89c6bc57719482dd40295a91d337"
+  }
+}
