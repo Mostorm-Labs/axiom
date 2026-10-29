@@ -1,0 +1,93 @@
+[
+  {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "verification/sdk01/validate_scope_matrix.py",
+      "--header",
+      "docs/api/canvas_runtime_api_v1.h",
+      "--matrix",
+      "verification/sdk01/scope-matrix-v1.json"
+    ],
+    "exit_code": 0,
+    "stdout": "DRAFT_SCOPE_STRUCTURALLY_VALID: 54 symbols and API01-API12; not authority or product evidence\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "verification/sdk01/validate_p20_cases.py",
+      "--repo",
+      ".",
+      "--cases",
+      "verification/sdk01/p20-cases-v1.json"
+    ],
+    "exit_code": 0,
+    "stdout": "DRAFT_CASE_STRUCTURE_OK: no product test or authority pass implied\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "verification/sdk01/validate_candidate_abi.py",
+      "--base",
+      "docs/api/canvas_runtime_api_v1.h",
+      "--extension",
+      "docs/planning/sdk/candidate-multi-selection-v1.h"
+    ],
+    "exit_code": 0,
+    "stdout": "DRAFT_ADDITIVE_SYMBOLS_OK: 54 V1 and 14 extension declarations; not a compatibility or export test\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "-m",
+      "unittest",
+      "verification.sdk01.test_scope_matrix",
+      "verification.sdk01.test_p20_cases",
+      "verification.sdk01.test_candidate_abi",
+      "-v"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "test_actual_header_has_complete_unique_classification (verification.sdk01.test_scope_matrix.ScopeMatrixTests.test_actual_header_has_complete_unique_classification) ... ok\ntest_all_twelve_families_explicit (verification.sdk01.test_scope_matrix.ScopeMatrixTests.test_all_twelve_families_explicit) ... ok\ntest_duplicate_and_extra_symbol_fail (verification.sdk01.test_scope_matrix.ScopeMatrixTests.test_duplicate_and_extra_symbol_fail) ... ok\ntest_future_features_cannot_claim_success (verification.sdk01.test_scope_matrix.ScopeMatrixTests.test_future_features_cannot_claim_success) ... ok\ntest_future_scope_needs_owner (verification.sdk01.test_scope_matrix.ScopeMatrixTests.test_future_scope_needs_owner) ... ok\ntest_missing_symbol_is_not_coverage (verification.sdk01.test_scope_matrix.ScopeMatrixTests.test_missing_symbol_is_not_coverage) ... ok\ntest_required_function_cannot_be_deferred_without_audit (verification.sdk01.test_scope_matrix.ScopeMatrixTests.test_required_function_cannot_be_deferred_without_audit) ... ok\ntest_case_structure_and_all_twelve_families (verification.sdk01.test_p20_cases.P20CasesTests.test_case_structure_and_all_twelve_families) ... ok\ntest_draft_case_cannot_be_labeled_pass (verification.sdk01.test_p20_cases.P20CasesTests.test_draft_case_cannot_be_labeled_pass) ... ok\ntest_missing_family_and_duplicate_id_are_rejected (verification.sdk01.test_p20_cases.P20CasesTests.test_missing_family_and_duplicate_id_are_rejected) ... ok\ntest_missing_oracle_is_not_coverage (verification.sdk01.test_p20_cases.P20CasesTests.test_missing_oracle_is_not_coverage) ... ok\ntest_nonexistent_fixture_fails_closed (verification.sdk01.test_p20_cases.P20CasesTests.test_nonexistent_fixture_fails_closed) ... ok\ntest_base_and_extension_are_disjoint (verification.sdk01.test_candidate_abi.CandidateAbiTests.test_base_and_extension_are_disjoint) ... ok\ntest_duplicate_and_v1_collision_fail (verification.sdk01.test_candidate_abi.CandidateAbiTests.test_duplicate_and_v1_collision_fail) ... ok\ntest_missing_required_extension_symbol_fails (verification.sdk01.test_candidate_abi.CandidateAbiTests.test_missing_required_extension_symbol_fails) ... ok\ntest_no_v1_header_is_rejected (verification.sdk01.test_candidate_abi.CandidateAbiTests.test_no_v1_header_is_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 0.066s\n\nOK\n"
+  },
+  {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "verification/sdk01/real_consumer",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "test_driver_wrong_observations_are_rejected (test_driver_boundary.DriverBoundaryTests.test_driver_wrong_observations_are_rejected) ... ok\ntest_invalid_expected_hash_blocks_before_run (test_driver_boundary.DriverBoundaryTests.test_invalid_expected_hash_blocks_before_run) ... ok\ntest_missing_driver_records_blocker (test_driver_boundary.DriverBoundaryTests.test_missing_driver_records_blocker) ... ok\ntest_success_exit_without_observations_is_not_pass (test_driver_boundary.DriverBoundaryTests.test_success_exit_without_observations_is_not_pass) ... ok\ntest_complete_exact_observations (test_observation_contract.ObservationContractTests.test_complete_exact_observations) ... ok\ntest_duplicate_json_key_is_rejected (test_observation_contract.ObservationContractTests.test_duplicate_json_key_is_rejected) ... ok\ntest_empty_results_fail (test_observation_contract.ObservationContractTests.test_empty_results_fail) ... ok\ntest_extra_scenarios_are_not_ignored (test_observation_contract.ObservationContractTests.test_extra_scenarios_are_not_ignored) ... ok\ntest_missing_step_fails (test_observation_contract.ObservationContractTests.test_missing_step_fails) ... ok\ntest_nonfinite_json_is_rejected (test_observation_contract.ObservationContractTests.test_nonfinite_json_is_rejected) ... ok\ntest_type_confusion_and_nonfinite_fail (test_observation_contract.ObservationContractTests.test_type_confusion_and_nonfinite_fail) ... ok\ntest_wrong_color_or_unselected_object_fails (test_observation_contract.ObservationContractTests.test_wrong_color_or_unselected_object_fails) ... ok\ntest_wrong_history_or_receipt_fails (test_observation_contract.ObservationContractTests.test_wrong_history_or_receipt_fails) ... ok\ntest_distinct_scenarios_preserve_real_state (test_rejection_expectations.RejectionExpectationTests.test_distinct_scenarios_preserve_real_state) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 1.489s\n\nOK\n"
+  },
+  {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "tools/check_runtime_abi_manifest.py",
+      "--root",
+      "."
+    ],
+    "exit_code": 0,
+    "stdout": "Runtime C ABI manifest passed (54 functions, 49 structs, 163 enum constants)\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      "tools/check_runtime_boundaries.py",
+      "--root",
+      "."
+    ],
+    "exit_code": 0,
+    "stdout": "Runtime module boundary check passed (103 contract files)\n",
+    "stderr": ""
+  }
+]
