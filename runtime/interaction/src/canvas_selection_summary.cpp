@@ -134,6 +134,8 @@ runtime::SelectionSummary CanvasEditingRuntime::selectionSummary() const noexcep
                 p.value.reset();
             }
             denyLive(R::kStaleScene, C::kStaleSelection);
+            out.actions[static_cast<std::size_t>(A::kGroup)] = {C::kStaleSelection, R::kStaleScene};
+            out.actions[static_cast<std::size_t>(A::kUngroup)] = {C::kStaleSelection, R::kStaleScene};
         };
         if (out.status != S::kAvailable) {
             out.bounds = {S::kInvalid, out.reason, {}};
@@ -203,6 +205,15 @@ runtime::SelectionSummary CanvasEditingRuntime::selectionSummary() const noexcep
             const bool locked = std::any_of(out.roots.begin(), out.roots.end(), [&](auto id) {
                 return flag(projection.find(id)->properties, 2U, false);
             });
+            const bool groupWritable = std::all_of(out.roots.begin(), out.roots.end(),
+                [&](auto id) { return textWritable(id); });
+            set(A::kGroup, locked || !groupWritable ? R::kLocked
+                : out.count < 2 ? R::kMultipleRoots
+                : !ready ? R::kBoundsUnavailable : R::kNone);
+            const auto* primaryGroup = semanticObjects_.find(out.primary);
+            set(A::kUngroup, locked || !groupWritable ? R::kLocked
+                : out.count != 1 || !primaryGroup || primaryGroup->kind != semantic::ObjectKind::kGroup
+                    ? R::kUnsupportedKind : R::kNone);
             if (locked)
                 set(A::kDelete, R::kLocked);
             else {

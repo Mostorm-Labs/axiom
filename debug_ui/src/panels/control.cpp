@@ -291,6 +291,22 @@ void tools(DebugPanelContext& c) {
         bool objectFirst=true;
         const bool sectionSelected=state.control.selectedKind==static_cast<std::uint32_t>(canvas::semantic::ObjectKind::kSection);
         using Action=canvas::runtime::SelectionAction;
+        if (panel_detail::selectionActionButton(c,"Group selected", objectFirst,Action::kGroup)) {
+            canvas::runtime::SectionIntent intent;
+            intent.action=canvas::runtime::SectionAction::kGroup;
+            intent.objects=c.snapshot.selectionSummary.roots;
+            intent.selectionRevision=c.snapshot.selectionSummary.selectionRevision;
+            intent.expectedSemanticGeneration=c.snapshot.selectionSummary.semanticGeneration;
+            (void)c.controls.sectionIntent(intent);c.ui.markControlSubmitted();
+        }
+        if (panel_detail::selectionActionButton(c,"Ungroup selected", objectFirst,Action::kUngroup)) {
+            canvas::runtime::SectionIntent intent;
+            intent.action=canvas::runtime::SectionAction::kUngroup;
+            intent.objectId=c.snapshot.selectionSummary.primary;
+            intent.selectionRevision=c.snapshot.selectionSummary.selectionRevision;
+            intent.expectedSemanticGeneration=c.snapshot.selectionSummary.semanticGeneration;
+            (void)c.controls.sectionIntent(intent);c.ui.markControlSubmitted();
+        }
         const auto lockAction=state.control.selectedLocked?Action::kUnlock:Action::kLock;
         if (panel_detail::selectionActionButton(c,state.control.selectedLocked ? "Unlock" : "Lock", objectFirst,lockAction)) {
             (void)c.controls.selectedAction(canvas::runtime::CanvasControlPayloadKind::kSelectedLock,

@@ -356,9 +356,9 @@ TEST_F(Summary, CapabilitiesUseRealOwnersAndNeverFallBackToPrimaryForMultiEdit) 
         EXPECT_FALSE(s.capability(action).available());
         EXPECT_EQ(s.capability(action).reason, Reason::kMultipleRoots);
     }
-    for (const auto action : {Action::kGroup,
-                              Action::kUngroup,
-                              Action::kBulkProperties,
+    EXPECT_TRUE(s.capability(Action::kGroup).available());
+    EXPECT_FALSE(s.capability(Action::kUngroup).available());
+    for (const auto action : {Action::kBulkProperties,
                               Action::kSnap,
                               Action::kAlignment})
         EXPECT_EQ(s.capability(action).state, Cap::kNotImplemented);

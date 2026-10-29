@@ -1,0 +1,95 @@
+Test project C:/Users/Chado/.codex/worktrees/fc04-mse-p31-correction/canvas/out/fc04-mse-p32/build
+      Start 320: FC04.MSE-01
+ 1/27 Test #320: FC04.MSE-01 ......................   Passed    0.36 sec
+      Start 321: FC04.MSE-02
+ 2/27 Test #321: FC04.MSE-02 ......................   Passed    0.35 sec
+      Start 322: FC04.MSE-03
+ 3/27 Test #322: FC04.MSE-03 ......................   Passed    0.62 sec
+      Start 323: FC04.MSE-04
+ 4/27 Test #323: FC04.MSE-04 ......................   Passed    0.18 sec
+      Start 324: FC04.MSE-05
+ 5/27 Test #324: FC04.MSE-05 ......................   Passed    0.03 sec
+      Start 325: FC04.MSE-06
+ 6/27 Test #325: FC04.MSE-06 ......................   Passed    0.03 sec
+      Start 326: FC04.MSE-07
+ 7/27 Test #326: FC04.MSE-07 ......................   Passed    0.03 sec
+      Start 327: FC04.MSE-08
+ 8/27 Test #327: FC04.MSE-08 ......................   Passed    0.36 sec
+      Start 328: FC04.MSE-09
+ 9/27 Test #328: FC04.MSE-09 ......................   Passed    0.03 sec
+      Start 329: FC04.MSE-10
+10/27 Test #329: FC04.MSE-10 ......................   Passed    0.03 sec
+      Start 330: FC04.MSE-11
+11/27 Test #330: FC04.MSE-11 ......................   Passed    0.04 sec
+      Start 331: FC04.MSE-12
+12/27 Test #331: FC04.MSE-12 ......................   Passed    0.03 sec
+      Start 332: FC04.MSE-13
+13/27 Test #332: FC04.MSE-13 ......................   Passed    0.03 sec
+      Start 333: FC04.MSE-14
+14/27 Test #333: FC04.MSE-14 ......................   Passed    0.03 sec
+      Start 334: FC04.MSE-15
+15/27 Test #334: FC04.MSE-15 ......................   Passed    0.84 sec
+      Start 335: FC04.MSE-16
+16/27 Test #335: FC04.MSE-16 ......................   Passed    0.03 sec
+      Start 336: FC04.MSE-17
+17/27 Test #336: FC04.MSE-17 ......................   Passed    0.03 sec
+      Start 337: FC04.MSE-18
+18/27 Test #337: FC04.MSE-18 ......................   Passed    6.66 sec
+      Start 338: FC04.MSE-19
+19/27 Test #338: FC04.MSE-19 ......................   Passed    0.05 sec
+      Start 339: FC04.MSE-20
+20/27 Test #339: FC04.MSE-20 ......................***Failed    0.04 sec
+Running main() from C:\Users\Chado\.codex\worktrees\fc04-mse-p31-correction\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = MultiSelectionMSE.MSE_20
+[==========] Running 0 tests from 0 test suites.
+No tests ran. Check that tests exist and are not disabled or filtered out.
+
+For sharded runs, this error indicates an empty shard. This can happen if you have more shards than tests, or if --gtest_filter leaves a shard with no tests.
+
+To permit empty shards (e.g., when debugging with a filter), specify 
+--gtest_fail_if_no_test_selected=false.
+
+      Start 340: FC04.MSE-21
+21/27 Test #340: FC04.MSE-21 ......................   Passed    0.06 sec
+      Start 341: FC04.MSE-22
+22/27 Test #341: FC04.MSE-22 ......................   Passed    0.42 sec
+      Start 342: FC04.MSE-23
+23/27 Test #342: FC04.MSE-23 ......................***Failed    0.03 sec
+Running main() from C:\Users\Chado\.codex\worktrees\fc04-mse-p31-correction\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = MultiSelectionMSE.MSE_23
+[==========] Running 0 tests from 0 test suites.
+No tests ran. Check that tests exist and are not disabled or filtered out.
+
+For sharded runs, this error indicates an empty shard. This can happen if you have more shards than tests, or if --gtest_filter leaves a shard with no tests.
+
+To permit empty shards (e.g., when debugging with a filter), specify 
+--gtest_fail_if_no_test_selected=false.
+
+      Start 343: FC04.MSE-24
+24/27 Test #343: FC04.MSE-24 ......................   Passed    1.23 sec
+      Start 344: FC04.MSE-25
+25/27 Test #344: FC04.MSE-25 ......................   Passed    1.77 sec
+      Start 345: FC04.MSE-26
+26/27 Test #345: FC04.MSE-26 ......................***Failed    0.83 sec
+Running main() from C:\Users\Chado\.codex\worktrees\fc04-mse-p31-correction\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = MultiSelectionMSE.MSE_26
+[==========] Running 0 tests from 0 test suites.
+No tests ran. Check that tests exist and are not disabled or filtered out.
+
+For sharded runs, this error indicates an empty shard. This can happen if you have more shards than tests, or if --gtest_filter leaves a shard with no tests.
+
+To permit empty shards (e.g., when debugging with a filter), specify 
+--gtest_fail_if_no_test_selected=false.
+
+      Start 346: FC04.MSE-27
+27/27 Test #346: FC04.MSE-27 ......................   Passed    0.96 sec
+
+89% tests passed, 3 tests failed out of 27
+
+Total Test time (real) =  15.45 sec
+
+The following tests FAILED:
+	339 - FC04.MSE-20 (Failed)
+	342 - FC04.MSE-23 (Failed)
+	345 - FC04.MSE-26 (Failed)
+Errors while running CTest

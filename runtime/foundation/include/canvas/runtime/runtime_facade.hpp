@@ -31,6 +31,23 @@ class RuntimeFacade {
     return submitCanvasControl(request);
     } catch(const std::bad_alloc&) {return {requestId,ProductControlState::kRejected,0,std::nullopt};}
   }
+  // Group uses the existing ordered container intent and receipt lane.
+  [[nodiscard]] ProductControlReceipt groupObjects(
+      std::vector<foundation::ObjectId> objects, foundation::ObjectId groupId,
+      std::uint64_t requestId, std::uint64_t clientId = 1,
+      std::optional<std::uint64_t> selectionRevision = std::nullopt) noexcept {
+    SectionIntent intent; intent.action = SectionAction::kGroup; intent.objectId = groupId;
+    intent.objects = std::move(objects); intent.selectionRevision = selectionRevision;
+    return submitSectionIntent(intent, requestId, clientId);
+  }
+  [[nodiscard]] ProductControlReceipt ungroupObject(
+      foundation::ObjectId groupId, std::uint64_t requestId,
+      std::uint64_t clientId = 1,
+      std::optional<std::uint64_t> selectionRevision = std::nullopt) noexcept {
+    SectionIntent intent; intent.action = SectionAction::kUngroup; intent.objectId = groupId;
+    intent.selectionRevision = selectionRevision;
+    return submitSectionIntent(intent, requestId, clientId);
+  }
   [[nodiscard]] virtual TextReceipt submitTextIntent(const TextIntent&) { return {}; }
   [[nodiscard]] virtual TextReceipt submitTextInput(const TextInputEvent&) { return {}; }
   [[nodiscard]] virtual TextEditorSnapshot readTextEditor() const { return {}; }

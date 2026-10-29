@@ -12,7 +12,7 @@
 namespace canvas::runtime {
 enum class SectionAction : std::uint8_t {
     kCreate, kWrap, kRelease, kReparent, kResize, kRename, kSelect, kSelectChildren,
-    kEnterGroupScope,kLeaveGroupScope
+    kEnterGroupScope,kLeaveGroupScope, kGroup, kUngroup
 };
 // Programmatic geometry is Section-local (boundary) and parent-local
 // (transform). Screen coordinates never enter these semantic intents.

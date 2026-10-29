@@ -1,0 +1,68 @@
+{
+  "source_base": "6eec357611ca1e8367307d2266d52e8117deb3d8",
+  "source_state": "working tree changes over source_base; file hashes below identify tested source",
+  "tested_source_sha256": {
+    "debug_ui/src/panels/control.cpp": "2a0b25f3e902b508485e8b6bca854a8fefecc65202de057b2685d16cbdc87760",
+    "debug_ui/tests/selection_summary_ui_test.cpp": "90e4d3845ca6ed5b35a8e3ecc4052b20c4c8ccad7d9dab0c28f6c5e8d62f4316",
+    "runtime/composition/tests/fc08_section_consumer_test.cpp": "bef45ac40e588dfd39c44c54a360872c60eb1e06c10f85eb1ea4a653a88e0aaa",
+    "runtime/composition/tests/selection_summary_test.cpp": "7a8984b7e26bcdbc50f6922439b92396c53f9793db9ea818ae240462cbb87ba8",
+    "runtime/foundation/include/canvas/runtime/runtime_facade.hpp": "988e532abcf7ed59a175c12e8d0be48984c862c54ec69166db31b98a213f29c5",
+    "runtime/foundation/include/canvas/runtime/section_input.hpp": "73a13bfd0b397c44543050dffe0f6de473eba529c200510aadba298a67fa7eee",
+    "runtime/interaction/src/canvas_section_commands.cpp": "e5cf59a8d0cec42517e78d1bbf32a358fd4143e78629e35c8a3e1100bb6d29b8",
+    "runtime/interaction/src/canvas_selection_summary.cpp": "e54b873c226ef2dc7fbc5403d008b63939b7155e4e7a6fe532289d0cd60a65e4"
+  },
+  "raw_sha256": {
+    "selection160.log": "c42c091c195a0551e1bb8c65489cdaeab420d1d2e5df543220be907e3f8a38b8",
+    "selection160.xml": "17a5bb75ceafd6f6553b024ae6df95a83d5620b7028e44b1f7c6986a6490f876",
+    "selection160-names.txt": "87348d78b29571bb98ff479e51158a4c6e9383b96ef107d71def5c1c56aeb298",
+    "mse.log": "89c188cc3189970beadfdd1946e6528ee737a5827dc8f74c9b5196141e9a218d",
+    "mse.xml": "df1be3cdbc83815ec58ee62256148eb671b26cc6d9aeee282f1a39b6da9fff88",
+    "group-focused.xml": "590bd0196390159c52b4eab1e38514801a6c4737f8468a3d02727c8526e33036",
+    "chrome-group-undo2.mjs": "1585cadc00841c08a2592dd2bda2e83176e222c15cc25eca88525752d6b9a101",
+    "chrome-final.json": "0273de7ce0b4e9dd2a2e72c59c6a640d858eac2d115d0a73ca50527b7a226e34",
+    "chrome-earlier-ungroup-failed.json": "21a9c55fafcf245c02a35c67503c896dbfd562ce719de4483c59250912f58f3a",
+    "chrome-earlier-undo-failed.json": "d0475e1cc4f32b6a966ac593001c4a4889c6985875b0c8ba0fcae64816fe815f"
+  },
+  "checks": {
+    "group_focused": {
+      "exit_code": 0,
+      "ctest_cases": 3
+    },
+    "selection160": {
+      "exit_code": 0,
+      "ctest_cases": 160
+    },
+    "mse": {
+      "ctest_exit_code": 8,
+      "passed": 24,
+      "failed_no_test_selected": [
+        "MSE-20",
+        "MSE-23",
+        "MSE-26"
+      ]
+    },
+    "chrome_wasm_synthetic": {
+      "exit_code": 0,
+      "assertions": 15,
+      "failed": 0
+    },
+    "runtime_c_abi": {
+      "exit_code": 0,
+      "functions": 54,
+      "structs": 49,
+      "enum_constants": 163
+    },
+    "windows_build": {
+      "exit_code": 0
+    },
+    "web_build": {
+      "exit_code": 0
+    }
+  },
+  "physical_testing": "NOT_RUN (user deferred)",
+  "known_blockers": [
+    "D07 protobuf/abseil OOM hang: not rerun or closed",
+    "MSE-20, MSE-23, MSE-26 missing true test implementations",
+    "Group drag into/out of group and broader hierarchy interaction not implemented in this slice"
+  ]
+}
