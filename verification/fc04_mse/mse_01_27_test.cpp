@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include <algorithm>
 #include <array>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iterator>
@@ -257,6 +258,29 @@ TEST_F(MultiSelectionMSE, MSE_17) {
   EXPECT_EQ(effective(0x200U), std::optional<semantic::PropertyValue>{semantic::ConnectorDecorationValue::kNone});
   EXPECT_EQ(effective(0x201U), std::optional<semantic::PropertyValue>{semantic::ConnectorDecorationValue::kNone});
 }
+
+#if defined(AXIOM_MSE_REGRESSION_BUILD_DIR) && defined(AXIOM_MSE_CTEST_PATH)
+TEST_F(MultiSelectionMSE, MSE_18) {
+  // Invoke each frozen producer's existing real fixture separately so an
+  // absent test or executable cannot be hidden by another matching test.
+  for (const auto* name : {"FC01SelectedActions", "FC08SectionConsumer",
+                           "FC03ImageFacade", "FC05ConnectorFacade",
+                           "FC05ConnectorDragPreview"}) {
+    SCOPED_TRACE(name);
+    const std::string command = std::string("\"") + AXIOM_MSE_CTEST_PATH +
+        "\" --test-dir \"" + AXIOM_MSE_REGRESSION_BUILD_DIR +
+        "\" -R \"^" + name + "$\" --output-on-failure --no-tests=error";
+#if defined(_WIN32)
+    // cmd.exe needs an outer quote pair when the executable and arguments
+    // themselves contain quoted paths.
+    const auto invocation = std::string("\"") + command + "\"";
+#else
+    const auto& invocation = command;
+#endif
+    EXPECT_EQ(std::system(invocation.c_str()), 0) << command;
+  }
+}
+#endif
 
 TEST_F(MultiSelectionMSE, MSE_19) {
   preparePartialFillFixture();

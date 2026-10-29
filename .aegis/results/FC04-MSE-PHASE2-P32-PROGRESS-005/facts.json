@@ -1,0 +1,31 @@
+{
+  "base_head": "54d6d3580d1a1fe82a8e5f1c8e46c8f0c1e820b8",
+  "source_sha256": {
+    "apps/ink_playground/CMakeLists.txt": "3e000a4a6341aeb6204cca7a1864b74794549364f0062f8d88b501959d1499ac",
+    "verification/fc04_mse/mse_01_27_test.cpp": "1d09c02396fc610116593216563fb29038c6e565a47d64ad988f30d191585962"
+  },
+  "raw_sha256": "e61b4f5558d228409a987f210b36c9c20c82104c44ca1af1898ccc5de28d4ba4",
+  "native_mse": {
+    "passing_test_names": 22,
+    "zero_match": [
+      "MSE-15",
+      "MSE-20",
+      "MSE-22",
+      "MSE-23",
+      "MSE-26"
+    ],
+    "exit_code": 8
+  },
+  "MSE-18": {
+    "actual_nested_ctest": [
+      "FC01SelectedActions",
+      "FC08SectionConsumer",
+      "FC03ImageFacade",
+      "FC05ConnectorFacade",
+      "FC05ConnectorDragPreview"
+    ],
+    "each_no_tests_error": true,
+    "exit_code": 0
+  },
+  "caveat": "Other named passing tests may not cover all frozen compound and physical-platform variants."
+}
