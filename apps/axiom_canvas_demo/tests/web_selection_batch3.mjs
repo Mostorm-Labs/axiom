@@ -164,6 +164,22 @@ print(json.dumps({'baseDark':sum(map(dark,base)),'actualDark':sum(map(dark,actua
   await check(s.selectionSummary.actions.find(a=>a.action===9)?.state===1,'Group is available for eligible multi-selection',s.selectionSummary.actions);
   await check(s.selectionSummary.actions.filter(a=>[8,10,11,12,13,14].includes(a.action)).every(a=>a.state!==1),'future and primary-only multi-selection actions remain disabled',s.selectionSummary.actions);
   await check((await state()).operations===topologyOperations,'hierarchy selection creates no operations',await state());
+  // Drive the real WASM boundary with an old generation after pointer reuse;
+  // a large newer timestamp must not cause the second contact to be retired.
+  const contactReuse = await evaluate(`(()=>{
+    const h=axiomMinimalHost,m=h.module,id=987;
+    const send=(g,t,p)=>m._axiom_web_pointer(h.handle,3,id,g,t,p,20,20,0,0,1,0,0,0,0,0);
+    const a=send(0n,1000000001n,0), first=m._axiom_web_pointer_generation(h.handle,3,id);
+    const b=send(first,1000000002n,3);
+    const c=send(0n,1000000003n,0), second=m._axiom_web_pointer_generation(h.handle,3,id);
+    const late=send(first,1000000004n,2);
+    const active=m._axiom_web_pointer_generation(h.handle,3,id);
+    const d=send(second,1000000005n,3);
+    return {a,b,c,late,d,first:String(first),second:String(second),active:String(active)};
+  })()`);
+  await check(contactReuse.a===1&&contactReuse.b===1&&contactReuse.c===1&&contactReuse.late===0&&
+    contactReuse.d===1&&contactReuse.first!==contactReuse.second&&contactReuse.active===contactReuse.second,
+    'Web rejects a delayed Up from a previous pointer generation',contactReuse);
   s=await state();result.final=s;
   result.artifacts=[];for(const name of ['axiom_canvas_demo_web.js','axiom_canvas_demo_web.wasm','host.js']){const bytes=await fs.readFile(path.join(build,name));result.artifacts.push({name,sha256:hash(bytes),bytes:bytes.length});}
 }catch(e){error=String(e.stack??e);result.error=error;}

@@ -19,7 +19,7 @@ int main() {
   invalid.samples.push_back(bad);
   bad.source = 9999;
   invalid.samples.push_back(bad);
-  CHECK(!app.submit(invalid));
+  CHECK(!app.beginContact(invalid));
   CHECK(facade.readRuntimeState().control.semanticGeneration == beforeInvalid);
   auto targets = facade.mountedCanvasTargets();
   CHECK(targets.size() == 1);
@@ -30,6 +30,7 @@ int main() {
   CHECK(facade.submitCanvasControl(control).state == runtime::ProductControlState::kQueued);
   CHECK(app.ownerPump());
   std::uint64_t sequence = 0;
+  std::optional<input::PointerKey> contact;
   const auto pointer = [&](input::PointerPhase phase, float x, float y, bool shift = false) {
     input::PlatformPointerSample sample{};
     sample.source = 9100; sample.pointer = 1; sample.sequence = ++sequence;
@@ -37,7 +38,11 @@ int main() {
     sample.x = x; sample.y = y;
     sample.modifiers = shift ? input::PointerModifiers::kShift : input::PointerModifiers::kNone;
     input::PlatformPointerBatch batch; batch.samples.push_back(sample);
-    return app.submit(batch);
+    if (phase == input::PointerPhase::kDown) {
+      contact = app.beginContact(batch);
+      return contact.has_value();
+    }
+    return contact && app.submitContact(*contact, batch);
   };
   for (const float x : {100.0F, 260.0F}) {
     CHECK(pointer(input::PointerPhase::kDown, x, 100));

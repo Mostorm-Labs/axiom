@@ -27,8 +27,37 @@ bool RuntimeComposition::unregisterSource(input::InputSourceId source, std::uint
                                            std::uint64_t timestampNs) noexcept {
   return impl_->core.unregisterSource(source, sequence, timestampNs);
 }
-bool RuntimeComposition::submit(const input::PlatformPointerBatch& batch) noexcept {
+std::optional<input::PointerKey> RuntimeComposition::beginContact(
+    const input::PlatformPointerBatch& batch) noexcept {
+  if (batch.samples.size() != 1 || batch.sourceLost || batch.terminalCancel ||
+      batch.samples.front().phase != input::PointerPhase::kDown) return std::nullopt;
+  const auto& sample = batch.samples.front();
+  if (impl_->core.platformKey(sample.source, sample.pointer)) return std::nullopt;
+  if (!impl_->core.submit(batch)) {
+    // Ingress may have admitted Down before the tool rejected it. Retire the
+    // exact generation so a failed begin cannot strand a live contact.
+    if (const auto key = impl_->core.platformKey(sample.source, sample.pointer))
+      (void)impl_->core.cancelPlatformPointer(*key, sample.sequence, sample.timestampNs);
+    return std::nullopt;
+  }
+  return impl_->core.platformKey(sample.source, sample.pointer);
+}
+bool RuntimeComposition::submitContact(const input::PointerKey& key,
+    const input::PlatformPointerBatch& batch) noexcept {
+  if (!key.valid() || batch.samples.empty() || batch.sourceLost || batch.terminalCancel ||
+      impl_->core.platformKey(key.source, key.pointer) != key) return false;
+  for (std::size_t i = 0; i < batch.samples.size(); ++i) {
+    const auto& sample = batch.samples[i];
+    if (sample.source != key.source || sample.pointer != key.pointer ||
+        sample.phase == input::PointerPhase::kDown ||
+        ((sample.phase == input::PointerPhase::kUp || sample.phase == input::PointerPhase::kCancel) &&
+         i + 1 != batch.samples.size())) return false;
+  }
   return impl_->core.submit(batch);
+}
+bool RuntimeComposition::cancelContact(const input::PointerKey& key, std::uint64_t sequence,
+                                       std::uint64_t timestampNs) noexcept {
+  return impl_->core.cancelPlatformPointer(key, sequence, timestampNs);
 }
 bool RuntimeComposition::ownerPump() noexcept { return impl_->core.ownerPump(); }
 bool RuntimeComposition::close() noexcept { return impl_->core.close(); }

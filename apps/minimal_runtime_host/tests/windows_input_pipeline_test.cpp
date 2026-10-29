@@ -229,10 +229,9 @@ void previewOriginMatchesOwner() {
       WS_OVERLAPPEDWINDOW, 220, 180, 640, 480, nullptr, nullptr, klass.hInstance, &state);
   assert(owner);
   {
-    canvas::minimal_runtime_host::WindowsD3D12SurfaceProvider preview(owner, false);
-    state.previewProvider = &preview;
-    assert(preview.resize(640U, 480U).code == canvas::render::BackendSubmissionCode::kAccepted);
-    assert(preview.activateBinding().code == canvas::render::BackendSubmissionCode::kAccepted);
+    state.platformAdapter = std::make_unique<canvas::platform::WindowsRuntimeAdapter>(
+        state.host->publicComposition(), owner);
+    assert(state.platformAdapter->bind(640U, 480U, 1.0F));
     EnumThreadWindows(GetCurrentThreadId(), findPreview, 0);
     assert(previewWindow);
     POINT expected{}; assert(ClientToScreen(owner, &expected));
@@ -241,7 +240,7 @@ void previewOriginMatchesOwner() {
         expected.x, expected.y, actual.left, actual.top);
     std::fflush(stdout);
     assert(actual.left == expected.x && actual.top == expected.y);
-    preview.setOverlayVisible(true);
+    ShowWindow(previewWindow, SW_SHOWNOACTIVATE);
     // A visible preview must also follow owner moves without another input
     // sample or a new surface binding.
     assert(SetWindowPos(owner, nullptr, 470, 320, 0, 0, SWP_NOSIZE | SWP_NOZORDER));
@@ -251,12 +250,13 @@ void previewOriginMatchesOwner() {
     expected = {}; assert(ClientToScreen(owner, &expected));
     assert(GetWindowRect(previewWindow, &actual));
     assert(actual.left == expected.x && actual.top == expected.y);
-    state.previewProvider = nullptr;
     assert(SetWindowPos(owner, nullptr, 390, 240, 0, 0, SWP_NOSIZE | SWP_NOZORDER));
-    preview.setOverlayVisible(true);
+    state.platformAdapter->reposition();
     expected = {}; assert(ClientToScreen(owner, &expected));
     assert(GetWindowRect(previewWindow, &actual));
     assert(actual.left == expected.x && actual.top == expected.y);
+    assert(state.platformAdapter->shutdown());
+    state.platformAdapter.reset();
   }
   assert(DestroyWindow(owner));
 }

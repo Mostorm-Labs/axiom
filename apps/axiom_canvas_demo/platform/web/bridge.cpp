@@ -90,7 +90,7 @@ struct WebInstance final {
         const auto now=static_cast<std::uint64_t>(std::max(1.0,emscripten_get_now()*1000000.0));
         for (const auto& [id,key]:pointers) {
             (void)id;
-            (void)lifecycle.composition().cancelPlatformPointer(key,++sequence,now);
+            (void)lifecycle.publicComposition().cancelContact(key,++sequence,now);
         }
         (void)lifecycle.composition().cancelAllPointers();
         pointers.clear();
@@ -217,7 +217,7 @@ axiom_web_cancel_pointer(std::uintptr_t h, std::uint32_t s, std::uint32_t p, std
     if (it == v->pointers.end() || it->second.generation != g)
         return 0;
     const auto now = static_cast<std::uint64_t>(emscripten_get_now() * 1000000.0);
-    const bool ok = v->lifecycle.composition().cancelPlatformPointer(
+    const bool ok = v->lifecycle.publicComposition().cancelContact(
         it->second, ++v->sequence, std::max(now, v->timestamps[id] + 1));
     if (ok)
         v->pointers.erase(it);
@@ -257,7 +257,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_pointer(std::uintptr_t h,
         !std::isfinite(y) || !std::isfinite(pressure) || pressure < 0 || pressure > 1)
         return reject();
     const auto id = identity(s, p);
-    auto& comp = v->lifecycle.composition();
+    auto& comp = v->lifecycle.publicComposition();
     const auto active = v->pointers.find(id);
     if (time <= v->timestamps[id] ||
         (phase == 0 ? g != 0 || active != v->pointers.end()
@@ -286,18 +286,17 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_pointer(std::uintptr_t h,
                                      : input::SampleProvenance::kConfirmedCurrent,
                              static_cast<input::PointerPhase>(phase)});
     batch.samples.back().modifiers=(modifiers&1)?input::PointerModifiers::kShift:input::PointerModifiers::kNone;
-    if (!comp.submit(batch)) {
-        if (const auto key = comp.platformKey(s, p))
-            (void)comp.cancelPlatformPointer(*key, ++v->sequence, time);
+    const auto started = phase == 0 ? comp.beginContact(batch) : std::optional<input::PointerKey>{};
+    const bool accepted = phase == 0 ? started.has_value() : comp.submitContact(active->second, batch);
+    if (!accepted) {
+        if (active != v->pointers.end())
+            (void)comp.cancelContact(active->second, ++v->sequence, time);
         v->pointers.erase(id);
         return reject();
     }
     if (phase == 0) {
-        const auto key = comp.platformKey(s, p);
-        if (!key)
-            return reject();
-        v->pointers[id] = *key;
-        v->lastPointer = *key;
+        v->pointers[id] = *started;
+        v->lastPointer = *started;
     } else
         v->lastPointer = active->second;
     if (phase == 2 || phase == 3)

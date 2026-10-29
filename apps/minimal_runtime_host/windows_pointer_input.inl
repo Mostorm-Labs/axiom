@@ -45,7 +45,7 @@ void logInput(State& state, const char* event, bool accepted,
 
 void cancelKey(State& state, const canvas::input::PointerKey& key, const char* reason) {
   state.timestamp = (std::max)(state.timestamp + 1U, nativeTimestamp(GetTickCount()));
-  const bool cancelled = state.host->composition().cancelPlatformPointer(
+  const bool cancelled = state.host->publicComposition().cancelContact(
       key, ++state.sequence, state.timestamp);
   logInput(state, reason, cancelled, key);
   InvalidateRect(state.window, nullptr, FALSE);
@@ -225,9 +225,11 @@ bool sendNativePointer(State& state, UINT message, UINT32 id) {
   if (batch.samples.empty()) return true;
   if (down && GetFocus() != state.window) SetFocus(state.window);
   const auto oldKey = down ? PointerKey{} : existing->second.key;
-  const bool accepted = state.host->submit(batch);
+  auto key = down ? state.host->publicComposition().beginContact(batch)
+                  : std::optional<PointerKey>(oldKey);
+  const bool accepted = down ? key.has_value()
+                             : state.host->publicComposition().submitContact(oldKey, batch);
   state.nativeWatermarks[identity] = current;
-  const auto key = down ? state.host->composition().platformKey(source, id) : std::optional<PointerKey>(oldKey);
   logInput(state, "pointer", accepted, key.value_or(PointerKey{}), &batch);
   if (!accepted) {
     if (key) cancelKey(state, *key, "pointer-rejected");

@@ -12,6 +12,6 @@ bool MinimalRuntimeHost::unregisterSource(input::InputSourceId source,
 }
 bool MinimalRuntimeHost::submit(const input::PlatformPointerBatch& batch) noexcept {
   if (batch.samples.empty()) return false;
-  return composition_.submit(batch);
+  return composition().submit(batch);
 }
 }  // namespace canvas::minimal_runtime_host

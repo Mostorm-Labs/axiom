@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 
 namespace canvas::runtime {
 
@@ -26,7 +27,14 @@ class RuntimeComposition final {
   [[nodiscard]] bool registerSource(input::InputSourceId source) noexcept;
   [[nodiscard]] bool unregisterSource(input::InputSourceId source, std::uint64_t sequence,
                                       std::uint64_t timestampNs) noexcept;
-  [[nodiscard]] bool submit(const input::PlatformPointerBatch& batch) noexcept;
+  // A Down starts one contact and returns the Runtime-assigned identity. Every
+  // later observation must carry that identity, including delayed events.
+  [[nodiscard]] std::optional<input::PointerKey> beginContact(
+      const input::PlatformPointerBatch& batch) noexcept;
+  [[nodiscard]] bool submitContact(const input::PointerKey& key,
+                                   const input::PlatformPointerBatch& batch) noexcept;
+  [[nodiscard]] bool cancelContact(const input::PointerKey& key, std::uint64_t sequence,
+                                   std::uint64_t timestampNs) noexcept;
   [[nodiscard]] bool ownerPump() noexcept;
   [[nodiscard]] bool close() noexcept;
   [[nodiscard]] RuntimeFacade& controlFacade() noexcept;

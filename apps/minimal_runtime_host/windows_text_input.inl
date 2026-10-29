@@ -92,7 +92,7 @@ void pumpWindowsText(State& state) {
     if (!state.facade)
         return;
     auto& facade = *state.facade;
-    auto& composition = state.host->composition();
+    auto& composition = state.host->publicComposition();
     std::vector<std::pair<TextSessionToken, TextSessionToken>> accepted;
     for (std::size_t count = 0; count < 258 && !state.textFacts.empty(); ++count) {
         auto fact = state.textFacts.front();

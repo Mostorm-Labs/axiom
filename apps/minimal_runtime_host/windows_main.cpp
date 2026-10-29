@@ -270,9 +270,11 @@ void sendPointer(State& state, LPARAM lParam, canvas::input::PointerPhase phase,
     state.lastMousePoint.reset();
   if (batch.samples.empty()) return;
   const auto before = state.mouseKey;
-  const bool accepted = state.host->submit(batch);
   if (phase == canvas::input::PointerPhase::kDown)
-    state.mouseKey = state.host->composition().platformKey(1U, 1U);
+    state.mouseKey = state.host->publicComposition().beginContact(batch);
+  const bool accepted = phase == canvas::input::PointerPhase::kDown
+      ? state.mouseKey.has_value()
+      : state.mouseKey && state.host->publicComposition().submitContact(*state.mouseKey, batch);
   logInput(state, "mouse", accepted, state.mouseKey ? *state.mouseKey : before.value_or(canvas::input::PointerKey{}), &batch);
   if (!accepted && state.mouseKey) {
     cancelKey(state, *state.mouseKey, "mouse-rejected");
