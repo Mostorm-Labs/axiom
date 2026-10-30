@@ -15,7 +15,7 @@ class StandaloneServerTest(unittest.TestCase):
             root = Path(temp)
             (root / entry).write_text('<title>SDK</title>', encoding='utf-8')
             (root / 'axiom.mjs').write_text('export const version=1;', encoding='utf-8')
-            (root / 'axiom-runtime.wasm').write_bytes(b'\0asm')
+            (root / 'axiom.wasm').write_bytes(b'\0asm')
             process = subprocess.Popen(
                 [sys.executable, str(script), '--directory', str(root), '--port', '0'],
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -30,7 +30,7 @@ class StandaloneServerTest(unittest.TestCase):
                 base = url.removesuffix('example.html')
                 with urlopen(base + 'axiom.mjs', timeout=5) as response:
                     self.assertIn('javascript', response.headers['Content-Type'])
-                with urlopen(base + 'axiom-runtime.wasm', timeout=5) as response:
+                with urlopen(base + 'axiom.wasm', timeout=5) as response:
                     self.assertEqual(response.headers['Content-Type'], 'application/wasm')
             finally:
                 process.terminate()

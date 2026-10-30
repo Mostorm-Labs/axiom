@@ -5,14 +5,12 @@ on:
     paths:
       - "r1-full-skia-sdk.lock.json"
       - "pocs/ink_engine/**"
-      - "arc/**"
       - "pocs/fastink/**"
   push:
     branches: [main]
     paths:
       - "r1-full-skia-sdk.lock.json"
       - "pocs/ink_engine/**"
-      - "arc/**"
       - "pocs/fastink/**"
   workflow_dispatch:
 

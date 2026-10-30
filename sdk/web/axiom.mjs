@@ -73,9 +73,9 @@ export async function createRuntime({mount, documentId, restore, initialResource
   };
   const events = [];
   try {
-    const factory = (await import(new URL('axiom-runtime.mjs', import.meta.url))).default;
     const assets=new URL(assetBaseURL,import.meta.url);
-    module=await factory({canvas:canonical,locateFile:name=>new URL(name,assets).href,
+    // Emscripten appends this public API to the same module as its factory.
+    module=await createAxiomEngine({canvas:canonical,locateFile:name=>new URL(name,assets).href,
       onPreview:visible=>{preview.style.visibility=visible?'visible':'hidden';},
       onLocalOperation:bytes=>{if(onOperation)queueMicrotask(()=>{if(!closed)onOperation(bytes);});},
       onDeliveryError:()=>emitError(new AxiomError('OPERATION_DELIVERY_FAILED'))});

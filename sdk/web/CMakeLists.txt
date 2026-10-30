@@ -8,13 +8,16 @@ target_include_directories(axiom_js_runtime PRIVATE
 target_link_options(axiom_js_runtime PRIVATE
   -fexceptions
   --no-entry -sMODULARIZE=1 -sEXPORT_ES6=1 -sENVIRONMENT=web
+  -sEXPORT_NAME=createAxiomEngine
+  "SHELL:--extern-post-js \"${CMAKE_CURRENT_SOURCE_DIR}/axiom.mjs\""
   -sALLOW_MEMORY_GROWTH=1 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2
   "-sEXPORTED_FUNCTIONS=['_axiom_js_call','_axiom_js_bytes','_axiom_js_size','_malloc','_free']"
   "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString','stringToNewUTF8','stringToUTF16','HEAPU8']"
   "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/noto-sans-cjk-sc/NotoSansCJKsc-Regular.otf@/axiom-font.otf\""
   "SHELL:--preload-file \"${PROJECT_SOURCE_DIR}/assets/fonts/imported@/fonts\"")
-set_target_properties(axiom_js_runtime PROPERTIES OUTPUT_NAME axiom-runtime SUFFIX .mjs)
-foreach(file axiom.mjs axiom.d.mts package.json README.md example.html)
+set_target_properties(axiom_js_runtime PROPERTIES OUTPUT_NAME axiom SUFFIX .mjs)
+set_property(TARGET axiom_js_runtime APPEND PROPERTY LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/axiom.mjs")
+foreach(file axiom.d.mts package.json README.md example.html)
   configure_file("${file}" "${CMAKE_CURRENT_BINARY_DIR}/${file}" COPYONLY)
   install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${file}" DESTINATION js)
 endforeach()
@@ -40,5 +43,5 @@ foreach(file IN LISTS _js_font_files)
 endforeach()
 install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/licenses" DESTINATION js)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pointer_input.mjs" "${CMAKE_CURRENT_BINARY_DIR}/text_input.mjs" DESTINATION js)
-install(FILES "$<TARGET_FILE:axiom_js_runtime>" "${CMAKE_CURRENT_BINARY_DIR}/axiom-runtime.wasm"
-  "${CMAKE_CURRENT_BINARY_DIR}/axiom-runtime.data" DESTINATION js)
+install(FILES "$<TARGET_FILE:axiom_js_runtime>" "${CMAKE_CURRENT_BINARY_DIR}/axiom.wasm"
+  "${CMAKE_CURRENT_BINARY_DIR}/axiom.data" DESTINATION js)

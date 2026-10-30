@@ -23,8 +23,9 @@ Give the empty mount a nonzero CSS width and height. The SDK handles drawing
 buffers, DPR, pointer capture, resize and WebGL context restoration. Run
 `python serve.py`, then open `/example.html` for a consumer using only this public
 module. No Emscripten or C++ compiler is required to consume the built JS package.
-Keep `axiom-runtime.mjs`, `.wasm`, `.data`, both input modules, declarations and
-the `licenses/` directory alongside `axiom.mjs`. For bundlers that relocate the
+The three main artifacts are `axiom.mjs`, `axiom.wasm` and `axiom.data`; the
+public API and Emscripten loader share `axiom.mjs`. Keep both input modules,
+declarations and the `licenses/` directory alongside them. For bundlers that relocate the
 data/WASM, pass `assetBaseURL` pointing to the deployed engine assets.
 
 API version 1 uses 32-character lowercase hexadecimal object IDs and decimal

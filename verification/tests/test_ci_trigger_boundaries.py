@@ -136,7 +136,7 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         for path in (
             '"runtime/ink/**"',
             '"apps/brush_lab/**"',
-            '"arc/**"',
+            '"verification/runtime_qualification/**"',
             '"verification/corpus/brush/g4_5/**"',
             '".aegis/packages/GT-G4-5/**"',
             '".github/workflows/g4-5-programmable-brush.yml"',

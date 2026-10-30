@@ -20,8 +20,8 @@ def main() -> int:
     command = ["cmake", "-S", str(ROOT), "-B", args.build, "-G", "Ninja",
                "-DCANVAS_BUILD_POC01=OFF", "-DCANVAS_BUILD_POC02=OFF",
                "-DCANVAS_BUILD_POC03=OFF", "-DCANVAS_BUILD_RF01=ON",
-               "-DCANVAS_BUILD_RENDER=ON", "-DCANVAS_BUILD_ARC=ON",
-               "-DCANVAS_BUILD_INK_PLAYGROUND=ON", "-DCANVAS_BUILD_CONTROL=ON",
+               "-DCANVAS_BUILD_RENDER=ON",
+               "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=ON", "-DCANVAS_BUILD_CONTROL=ON",
                "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON", "-DAXIOM_BUILD_DEBUG_UI=ON",
                "-DAXIOM_DEBUG_UI_PROFILE=full", "-DBUILD_TESTING=ON"]
     if args.skia:
