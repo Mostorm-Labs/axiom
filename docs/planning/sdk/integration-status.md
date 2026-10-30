@@ -7,6 +7,11 @@ of that release until separately built and published. Historical SDK-00 and
 P31 drafts remain historical records; their proposed scope and status must
 not be read as a current inventory of all subsequently implemented features.
 
+The [2026-10-31 consumer readiness review](consumer-readiness-review-20261031.md)
+records a successful single-DLL feasibility experiment, the repaired npm loader
+whitelist, and an open rapid-input/frame handoff failure reproduced by the
+external JS example. A passing 51-case core run is not full SDK acceptance.
+
 - Windows: the installed C++ SDK and external window integration test exist.
   The external consumer is an automated integration test, not a full interactive
   SDK application. Physical touch, native IME and long-running use still need

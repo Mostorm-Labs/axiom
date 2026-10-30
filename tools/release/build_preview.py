@@ -6,13 +6,14 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tarfile
 import tempfile
 import zipfile
 import xml.etree.ElementTree as ET
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tools.semantic.cmake_consumer import consumer_cmake_arguments
-from tools.release.preview_package import build_assets
+from tools.release.preview_package import build_assets, sha256
 
 
 def run(args, env=None):
@@ -59,8 +60,60 @@ def verify_js_bundle(archive, env, emsdk, chrome):
         root = Path(temp).resolve()
         with zipfile.ZipFile(archive) as package:
             package.extractall(root)
-        run([emsdk / 'node/24.19.0_64bit/node.exe',
-             Path(__file__).resolve().parents[2] / 'verification/sdk_js/verify_browser.mjs', root, chrome], env)
+        node_root = emsdk / 'node/24.19.0_64bit'
+        node = node_root / 'node.exe'
+        verifier = Path(__file__).resolve().parents[2] / 'verification/sdk_js/verify_browser.mjs'
+        run([node, verifier, root, chrome], env)
+        # Exercise npm's actual publish whitelist, rather than only the ZIP.
+        # This remains a local pack operation; it does not publish the package.
+        packed = root / 'npm-packed'
+        packed.mkdir()
+        command = [node, node_root / 'node_modules/npm/bin/npm-cli.js', 'pack',
+                   '--ignore-scripts', '--json', '--pack-destination', packed]
+        print('COMMAND', json.dumps([str(arg) for arg in command]), flush=True)
+        result = subprocess.run([str(arg) for arg in command], cwd=root, env=env,
+                                text=True, capture_output=True, check=False)
+        print(result.stdout, flush=True)
+        if result.stderr:
+            print(result.stderr, file=sys.stderr, flush=True)
+        result.check_returncode()
+        entries = json.loads(result.stdout)
+        if len(entries) != 1:
+            raise RuntimeError('npm must produce exactly one SDK package')
+        filename = entries[0]['filename']
+        if Path(filename).name != filename:
+            raise RuntimeError('invalid npm package filename')
+        extracted = packed / 'extracted'
+        with tarfile.open(packed / filename) as package:
+            package.extractall(extracted, filter='data')
+        consumer = extracted / 'package'
+        required = ['axiom.mjs', 'internal/axiom.mjs', 'axiom.d.mts', 'axiom.wasm',
+                    'axiom.data', 'pointer_input.mjs', 'text_input.mjs',
+                    'example.html', 'serve.py']
+        required += [path.relative_to(root).as_posix()
+                     for path in (root / 'licenses').rglob('*') if path.is_file()]
+        for name in required:
+            if not (consumer / name).is_file() or sha256(root / name) != sha256(consumer / name):
+                raise RuntimeError(f'npm SDK package omitted or changed {name}')
+        application = packed / 'application'
+        application.mkdir()
+        (application / 'package.json').write_text(
+            '{"name":"axiom-external-type-consumer","private":true,"type":"module"}\n',
+            encoding='utf-8')
+        install = [node, node_root / 'node_modules/npm/bin/npm-cli.js', 'install',
+                   '--offline', '--ignore-scripts', '--no-audit', '--no-fund', packed / filename]
+        print('COMMAND', json.dumps([str(arg) for arg in install]), flush=True)
+        subprocess.run([str(arg) for arg in install], cwd=application, env=env, check=True)
+        types = (verifier.parent / 'api_types_test.mts').read_text(encoding='utf-8')
+        (application / 'consumer.mts').write_text(
+            types.replace("'../../sdk/web/axiom.mjs'", "'@mostorm/axiom'"), encoding='utf-8')
+        typecheck = [node, node_root / 'node_modules/npm/bin/npm-cli.js', 'exec',
+                     '--yes', '--ignore-scripts', '--package', 'typescript@5.9.3', '--',
+                     'tsc', '--noEmit', '--strict', '--target', 'es2022', '--module',
+                     'nodenext', '--moduleResolution', 'nodenext', 'consumer.mts']
+        print('COMMAND', json.dumps([str(arg) for arg in typecheck]), flush=True)
+        subprocess.run([str(arg) for arg in typecheck], cwd=application, env=env, check=True)
+        run([node, verifier, consumer, chrome], env)
 
 
 def main():

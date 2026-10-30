@@ -4,6 +4,6 @@
   "type": "module",
   "private": true,
   "exports": {".": {"types": "./axiom.d.mts", "import": "./axiom.mjs"}},
-  "files": ["*.mjs", "*.d.mts", "*.wasm", "*.data", "*.html", "serve.py", "licenses/**", "README.md"],
+  "files": ["*.mjs", "internal/**", "*.d.mts", "*.wasm", "*.data", "*.html", "serve.py", "licenses/**", "README.md"],
   "engines": {"node": ">=22"}
 }

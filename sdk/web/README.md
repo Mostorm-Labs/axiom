@@ -23,6 +23,10 @@ Give the empty mount a nonzero CSS width and height. The SDK handles drawing
 buffers, DPR, pointer capture, resize and WebGL context restoration. Run
 `python serve.py`, then open `/example.html` for a consumer using only this public
 module. No Emscripten or C++ compiler is required to consume the built JS package.
+The distribution can also be packed locally with `npm pack --ignore-scripts`.
+Its whitelist includes the internal loader; release verification exercises the
+extracted npm package in Chrome as well as the ZIP. `private: true` prevents
+accidental registry publication and does not prevent local packing/installing.
 The three main artifacts are `axiom.mjs`, `axiom.wasm` and `axiom.data`.
 The Emscripten loader lives in `internal/axiom.mjs`; applications import only
 the public root `axiom.mjs`. Keep the `internal/` directory, both input modules,
