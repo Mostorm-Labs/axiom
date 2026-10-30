@@ -25,7 +25,8 @@ try {
     const target=path.resolve(build,'.'+(name==='/'?'/index.html':name));
     if(!target.startsWith(build+path.sep))throw new Error('outside consumer');
     const bytes=await fs.readFile(target);
-    res.setHeader('Content-Type',target.endsWith('.wasm')?'application/wasm':target.endsWith('.js')?'text/javascript':target.endsWith('.data')?'application/octet-stream':'text/html');
+    res.setHeader('Content-Type',target.endsWith('.wasm')?'application/wasm':
+      /\.m?js$/.test(target)?'text/javascript':target.endsWith('.data')?'application/octet-stream':'text/html');
     res.end(bytes);
   }catch{res.statusCode=404;res.end();}});
   await new Promise(r=>server.listen(0,'127.0.0.1',r));

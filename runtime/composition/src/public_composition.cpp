@@ -11,6 +11,8 @@ class RuntimeComposition::Impl final {
   explicit Impl(std::uint64_t viewId) : core(render::ViewId{viewId}) {}
   RuntimeCompositionCore core;
   const std::thread::id ownerThread = std::this_thread::get_id();
+  bool initialResourcesBound = false;
+  bool interactionStarted = false;
 };
 RuntimeCompositionCore& RuntimePlatformAccess::core(RuntimeComposition& owner) noexcept {
   return owner.impl_->core;
@@ -42,7 +44,9 @@ std::optional<input::PointerKey> RuntimeComposition::beginContact(
       (void)impl_->core.cancelPlatformPointer(*key, sample.sequence, sample.timestampNs);
     return std::nullopt;
   }
-  return impl_->core.platformKey(sample.source, sample.pointer);
+  const auto key = impl_->core.platformKey(sample.source, sample.pointer);
+  if (key) impl_->interactionStarted = true;
+  return key;
 }
 bool RuntimeComposition::submitContact(const input::PointerKey& key,
     const input::PlatformPointerBatch& batch) noexcept {
@@ -62,6 +66,31 @@ bool RuntimeComposition::cancelContact(const input::PointerKey& key, std::uint64
   return impl_->core.cancelPlatformPointer(key, sequence, timestampNs);
 }
 bool RuntimeComposition::ownerPump() noexcept { return impl_->core.ownerPump(); }
+bool RuntimeComposition::bindInitialResourceManifest(const semantic::ResourceManifest& manifest,
+                                                      std::uint64_t binding) noexcept {
+  if (std::this_thread::get_id() != impl_->ownerThread || impl_->initialResourcesBound || impl_->interactionStarted ||
+      impl_->core.readback().state != RuntimeCompositionState::kReady ||
+      impl_->core.controlFacade().readTextEditor().phase != TextPhase::kClosed ||
+      impl_->core.semanticObjectCount() != 0 || impl_->core.resources().manifest.manifest_revision != 0 ||
+      !impl_->core.resources().manifest.entries.empty() || !impl_->core.resources().manifest.retired_entries.empty()) return false;
+  if (!impl_->core.bindManifest(manifest, binding)) return false;
+  impl_->initialResourcesBound = true;
+  return true;
+}
+std::optional<ResourceBindingToken> RuntimeComposition::resourceToken(foundation::ObjectId id) const noexcept {
+  if (std::this_thread::get_id() != impl_->ownerThread ||
+      impl_->core.readback().state != RuntimeCompositionState::kReady) return std::nullopt;
+  return impl_->core.currentResourceToken(id);
+}
+bool RuntimeComposition::publishResourceBytes(const ResourceBindingToken& token,
+                                               std::vector<std::uint8_t> bytes) noexcept {
+  return impl_->core.publishResource(token, std::move(bytes));
+}
+std::optional<ResourcePortReceipt> RuntimeComposition::resourceReceipt(foundation::ObjectId id) const noexcept {
+  if (std::this_thread::get_id() != impl_->ownerThread ||
+      impl_->core.readback().state != RuntimeCompositionState::kReady) return std::nullopt;
+  return impl_->core.resourceReceipt(id);
+}
 std::optional<RuntimeSurfaceMetrics> RuntimeComposition::surfaceMetrics() const noexcept {
   if (std::this_thread::get_id() != impl_->ownerThread) return std::nullopt;
   const auto s = impl_->core.surfaceSnapshot();

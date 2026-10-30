@@ -33,6 +33,7 @@ int main() {
   auto& debug = owner.controlFacade();
   CHECK(&product == &debug);
   CHECK(!product.readFontCatalog().entries.empty());
+  CHECK(owner.resourceToken(product.readFontCatalog().entries.front().id).has_value());
   CHECK(owner.registerSource(9000));
   CHECK(owner.hostObservation() && owner.hostObservation()->objectCount == 0U);
   CHECK(!owner.hoverSelectionAtViewPoint(20.0F, 20.0F));

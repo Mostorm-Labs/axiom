@@ -1,6 +1,7 @@
 #pragma once
 
 #include "canvas/input/platform_input_contract.hpp"
+#include "canvas/runtime/resource_binding.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
 
 #include <cstdint>
@@ -59,6 +60,15 @@ class RuntimeComposition final {
   [[nodiscard]] bool cancelContact(const input::PointerKey& key, std::uint64_t sequence,
                                    std::uint64_t timestampNs) noexcept;
   [[nodiscard]] bool ownerPump() noexcept;
+  // Bind the initial resource metadata for a new, empty document only. This is
+  // not a document loader and cannot replace an existing manifest or objects.
+  [[nodiscard]] bool bindInitialResourceManifest(const semantic::ResourceManifest& manifest,
+                                                  std::uint64_t documentBinding) noexcept;
+  // Retain the full token while obtaining bytes; stale completions are rejected.
+  [[nodiscard]] std::optional<ResourceBindingToken> resourceToken(foundation::ObjectId id) const noexcept;
+  [[nodiscard]] bool publishResourceBytes(const ResourceBindingToken& token,
+                                          std::vector<std::uint8_t> bytes) noexcept;
+  [[nodiscard]] std::optional<ResourcePortReceipt> resourceReceipt(foundation::ObjectId id) const noexcept;
   // Empty when queried from a thread other than the owner thread.
   [[nodiscard]] std::optional<RuntimeSurfaceMetrics> surfaceMetrics() const noexcept;
   [[nodiscard]] std::optional<RuntimeHostObservation> hostObservation() const noexcept;

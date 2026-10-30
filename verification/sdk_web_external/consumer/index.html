@@ -1,13 +1,55 @@
 <!doctype html><meta charset="utf-8"><title>External Axiom Web SDK consumer</title>
-<style>#stage{position:relative;width:400px;height:300px}canvas{position:absolute;left:0;top:0;width:400px;height:300px}#preview{pointer-events:none}</style>
+<style>#stage{position:relative;width:400px;height:300px}canvas{position:absolute;left:0;top:0;width:400px;height:300px}#surface{touch-action:none}#preview{pointer-events:none}</style>
 <div id="stage"><canvas id="surface" width="400" height="300"></canvas><canvas id="preview" width="400" height="300"></canvas></div>
+<button id="external-text-tool" hidden>Text</button>
+<button id="external-ink-tool" hidden>Ink</button>
 <pre id="result">STARTING</pre>
 <script>
-var Module={canvas:document.getElementById('surface'),onAbort:x=>{document.getElementById('result').textContent='FAIL: '+x}};
-const canvas=document.getElementById('surface');
-for(const [name,phase] of [['pointerdown',0],['pointermove',1],['pointerup',2]]) canvas.addEventListener(name,e=>{
-  if(phase===1 && !(e.buttons&1)) return;
-  const r=canvas.getBoundingClientRect();
-  if(!Module._sdk_input(phase,(e.clientX-r.left)*0.5,(e.clientY-r.top)*0.5)) document.getElementById('result').textContent='FAIL: pointer';
-});
+let runtimeReadyResolve;
+const runtimeReady = new Promise(resolve => { runtimeReadyResolve = resolve; });
+var Module={canvas:document.getElementById('surface'),onRuntimeInitialized:()=>runtimeReadyResolve(),
+  onAbort:x=>{document.getElementById('result').textContent='FAIL: '+x}};
+if (new URLSearchParams(location.search).has('manual')) {
+  document.getElementById('stage').style.width='200px'; document.getElementById('stage').style.height='150px';
+  for (const c of document.querySelectorAll('canvas')) { c.style.width='200px'; c.style.height='150px'; }
+}
 </script><script src="external_web.js"></script>
+<script type="module">
+import {installPointerInput} from './pointer_input.mjs';
+import {installTextInput} from './text_input.mjs';
+await runtimeReady;
+const manual = new URLSearchParams(location.search).has('manual');
+const canvas = document.getElementById('surface');
+let textInput;
+if (manual) {
+  textInput = installTextInput({module:Module, handle:1, canvas, stage:document.getElementById('stage'),
+    schedule:()=>Module._sdk_schedule()});
+  window.externalTextInput = textInput;
+  const button = document.getElementById('external-text-tool'); button.hidden = false;
+  button.addEventListener('click', async()=>{
+    try {
+      await textInput.finish();
+      if (!Module._axiom_web_text_tool(1) || !Module._axiom_web_text_pump(1))
+        throw new Error('Text tool rejected');
+      Module._sdk_schedule();
+    } catch (error) { document.getElementById('result').textContent = `FAIL: ${error}`; }
+  });
+  const ink = document.getElementById('external-ink-tool'); ink.hidden = false;
+  ink.addEventListener('click', async()=>{
+    try {
+      await textInput.finish();
+      if (!Module._sdk_ink_tool()) throw new Error('Ink tool rejected');
+      Module._sdk_schedule();
+    } catch (error) { document.getElementById('result').textContent = `FAIL: ${error}`; }
+  });
+}
+const dispose = installPointerInput({canvas:document.getElementById('surface'),
+  logicalSize:()=>[Module._sdk_logical_width(),Module._sdk_logical_height()], submit:f=>{
+  const accepted=Module._sdk_input(f.source,f.pointer,f.phase,f.x,f.y,f.timestampNs,f.pressure,
+    f.pressureAvailable,f.width,f.height,f.geometryAvailable,f.historical,f.shift);
+  if(!accepted) document.getElementById('result').textContent='FAIL: pointer';
+  if (textInput) queueMicrotask(()=>textInput.sync());
+  return !!accepted;
+}});
+window.addEventListener('pagehide', ()=>{ dispose(); textInput?.dispose(); Module._sdk_shutdown(); }, {once:true});
+</script>
