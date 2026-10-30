@@ -146,7 +146,7 @@ def build_assets(platform, prefix, semantic, skia, demo, repo, output, revision)
             js = root / 'js-package'
             shutil.copytree(prefix / 'js', js, symlinks=True)
             package_tree(js, output / js_name,
-                         ['axiom.mjs', 'axiom.d.mts', 'axiom.wasm',
+                         ['axiom.mjs', 'axiom.d.mts', 'internal/axiom.mjs', 'axiom.wasm',
                           'axiom.data', 'pointer_input.mjs', 'text_input.mjs', 'example.html',
                           'serve.py', 'package.json', 'README.md', 'licenses/nlohmann-json-LICENSE.MIT'], revision, 'js-sdk')
     assets = [output / sdk_name, output / demo_name]

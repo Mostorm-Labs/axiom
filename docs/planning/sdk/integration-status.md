@@ -13,7 +13,7 @@ not be read as a current inventory of all subsequently implemented features.
   external-consumer validation.
 - Web: the C++/WASM SDK and legacy external browser consumer remain available.
   Current JS artifacts are `axiom.mjs`, `axiom.wasm` and `axiom.data`; the
-  public API and generated loader are combined in `axiom.mjs`.
+  generated loader is an implementation detail under `internal/axiom.mjs`.
   `sdk/web/` now implements the standalone JS API v1, modular engine, public
   types, input/IME adapters and a JS-only consumer. It covers the existing
   Facade controls, text/fonts, Image/Crop, containers, connectors/Sticky,

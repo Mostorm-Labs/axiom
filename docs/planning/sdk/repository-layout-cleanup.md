@@ -1,9 +1,9 @@
 # SDK artifact and obsolete-host cleanup
 
-The public JavaScript distribution has one entry/loader module, `axiom.mjs`,
-with `axiom.wasm` and `axiom.data`. Emscripten appends the public API to its
-generated module using `--extern-post-js`; no separately named Runtime loader
-needs to be deployed. Types, input helpers, examples, server and licenses remain
+The public JavaScript distribution has one public entry, `axiom.mjs`,
+with `axiom.wasm` and `axiom.data`. Its generated Emscripten loader is kept under
+`internal/axiom.mjs`, preserving the existing asynchronous loading boundary.
+Types, input helpers, examples, server and licenses remain
 in the distribution. Packaging and external-browser verification use these new
 names. Previous release archives are immutable and keep their original names.
 
@@ -15,6 +15,13 @@ Foundation and Composition also publish headers into shared `canvas/runtime`.
 Flattening only the source tree would require generated aliases or widespread
 include changes; flattening the installed tree would break current consumers.
 This cleanup preserves those public paths and C++ namespaces.
+
+A single-file entry/loader experiment exposed a frame scheduling problem with
+fast native mouse input in the shipped example. Its attempted scheduler changes
+also exposed frame receipt rejection and were withdrawn. No Runtime/frame
+semantics were changed as part of the cleanup. Original failed diagnostics are
+retained under `out/cleanup-final-package.log` and `out/cleanup-diagnostic/`;
+the final layout retains the separate loader instead.
 
 Arc and its FastInk experiment (`pocs/fastink`) have been retired, together with
 the Arc workflow and the Arc-dependent Playground Windows/Android applications.

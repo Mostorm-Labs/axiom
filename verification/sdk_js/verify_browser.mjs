@@ -10,7 +10,7 @@ let browser,server,socket;let failure;let observation;
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 try {
   await fs.mkdir(files);
-  for(const name of ['axiom.mjs','axiom.d.mts','axiom.wasm','axiom.data','pointer_input.mjs','text_input.mjs','package.json','README.md','example.html','serve.py','licenses'])
+  for(const name of ['axiom.mjs','axiom.d.mts','internal','axiom.wasm','axiom.data','pointer_input.mjs','text_input.mjs','package.json','README.md','example.html','serve.py','licenses'])
     await fs.cp(path.resolve(process.argv[2],name),path.join(files,name),{recursive:true});
   await fs.copyFile(new URL('./browser.html',import.meta.url),path.join(files,'index.html'));
   server=http.createServer(async(req,res)=>{try{const p=path.resolve(files,'.'+new URL(req.url,'http://localhost').pathname.replace(/\/$/,'/index.html'));
@@ -29,7 +29,7 @@ try {
   let result;
   for(let i=0;i<900;i++) {const r=await send('Runtime.evaluate',{expression:`document.getElementById('result')?.textContent`,returnByValue:true});
     if(r.result.value && r.result.value!=='PENDING'){result=JSON.parse(r.result.value);break;}await delay(100);}
-  const hashes={};for(const name of ['axiom.mjs','axiom.d.mts','axiom.wasm','axiom.data','pointer_input.mjs','text_input.mjs'])hashes[name]=createHash('sha256').update(await fs.readFile(path.join(files,name))).digest('hex');
+  const hashes={};for(const name of ['axiom.mjs','axiom.d.mts','internal/axiom.mjs','axiom.wasm','axiom.data','pointer_input.mjs','text_input.mjs'])hashes[name]=createHash('sha256').update(await fs.readFile(path.join(files,name))).digest('hex');
   observation={consumer:files,result,exceptions:errors,browserVersion,mode:'headless Chrome/WebGL2; synthetic DOM input',files:hashes};
   console.log(JSON.stringify(observation));
   if(result?.status!=='PASS'||!Array.isArray(result.results)||result.results.length<40||errors.length)throw Error('JS SDK browser acceptance failed');
