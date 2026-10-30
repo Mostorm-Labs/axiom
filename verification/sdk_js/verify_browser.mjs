@@ -12,7 +12,9 @@ try {
   await fs.mkdir(files);
   for(const name of ['axiom.mjs','axiom.d.mts','internal','axiom.wasm','axiom.data','pointer_input.mjs','text_input.mjs','package.json','README.md','example.html','serve.py','licenses'])
     await fs.cp(path.resolve(process.argv[2],name),path.join(files,name),{recursive:true});
-  await fs.copyFile(new URL('./browser.html',import.meta.url),path.join(files,'index.html'));
+  const framesOnly=process.argv[5]==='frames';
+  await fs.copyFile(new URL(framesOnly?'./frame_handoff.html':'./browser.html',import.meta.url),path.join(files,'index.html'));
+  await fs.copyFile(new URL('./frame_handoff.html',import.meta.url),path.join(files,'frame_handoff.html'));
   server=http.createServer(async(req,res)=>{try{const p=path.resolve(files,'.'+new URL(req.url,'http://localhost').pathname.replace(/\/$/,'/index.html'));
     if(!p.startsWith(files+path.sep))throw Error('path');
     res.setHeader('Content-Type',p.endsWith('.wasm')?'application/wasm':p.endsWith('.mjs')?'text/javascript':p.endsWith('.html')?'text/html':'application/octet-stream');res.end(await fs.readFile(p));
@@ -21,8 +23,8 @@ try {
   let port;for(let i=0;i<200&&!port;i++){try{port=(await fs.readFile(path.join(profile,'DevToolsActivePort'),'utf8')).split('\n')[0];}catch{await delay(50);}}
   if(!port)throw Error('Chrome unavailable');const page=await fetch(`http://127.0.0.1:${port}/json/new?about:blank`,{method:'PUT'}).then(r=>r.json());
   socket=new WebSocket(page.webSocketDebuggerUrl);await new Promise((r,j)=>{socket.addEventListener('open',r,{once:true});socket.addEventListener('error',j,{once:true});});
-  let serial=0;const pending=new Map(),errors=[];
-  socket.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.id){const p=pending.get(m.id);pending.delete(m.id);clearTimeout(p.timer);m.error?p.reject(Error(JSON.stringify(m.error))):p.resolve(m.result);}else if(m.method==='Runtime.exceptionThrown')errors.push(m.params);});
+  let serial=0;const pending=new Map(),errors=[],consoleErrors=[];
+  socket.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.id){const p=pending.get(m.id);pending.delete(m.id);clearTimeout(p.timer);m.error?p.reject(Error(JSON.stringify(m.error))):p.resolve(m.result);}else if(m.method==='Runtime.exceptionThrown')errors.push(m.params);else if(m.method==='Runtime.consoleAPICalled'&&m.params.type==='error')consoleErrors.push(m.params.args.map(a=>a.value??a.description).join(' '));});
   const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++serial;const timer=setTimeout(()=>reject(Error('CDP timeout')),30000);pending.set(id,{resolve,reject,timer});socket.send(JSON.stringify({id,method,params}));});
   const browserVersion=await send('Browser.getVersion');
   await send('Runtime.enable');await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/`});
@@ -30,9 +32,18 @@ try {
   for(let i=0;i<900;i++) {const r=await send('Runtime.evaluate',{expression:`document.getElementById('result')?.textContent`,returnByValue:true});
     if(r.result.value && r.result.value!=='PENDING'){result=JSON.parse(r.result.value);break;}await delay(100);}
   const hashes={};for(const name of ['axiom.mjs','axiom.d.mts','internal/axiom.mjs','axiom.wasm','axiom.data','pointer_input.mjs','text_input.mjs'])hashes[name]=createHash('sha256').update(await fs.readFile(path.join(files,name))).digest('hex');
-  observation={consumer:files,result,exceptions:errors,browserVersion,mode:'headless Chrome/WebGL2; synthetic DOM input',files:hashes};
+  observation={consumer:files,result,exceptions:errors,consoleErrors,browserVersion,mode:'headless Chrome/WebGL2; synthetic DOM input',files:hashes};
   console.log(JSON.stringify(observation));
-  if(result?.status!=='PASS'||!Array.isArray(result.results)||result.results.length<40||errors.length)throw Error('JS SDK browser acceptance failed');
+  const validFrames=value=>value?.status==='PASS'&&['pending-input','no-duplicate-completion','pending-resize','native-loss-before-dom','context-recovery'].every(id=>value.scenarios?.includes(id))&&value.delayed>0;
+  if(result?.status!=='PASS'||!Array.isArray(result.results)||(framesOnly?!validFrames(result):result.results.length<40)||errors.length)throw Error('JS SDK browser acceptance failed');
+  if(framesOnly){await send('Browser.close');}
+  else {
+  await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/frame_handoff.html`});
+  let handoff;
+  for(let i=0;i<900;i++){const r=await send('Runtime.evaluate',{expression:`document.getElementById('result')?.textContent`,returnByValue:true});if(r.result.value&&r.result.value!=='PENDING'){handoff=JSON.parse(r.result.value);break;}await delay(100);}
+  observation.frameRegression=handoff;
+  console.log(JSON.stringify({frameRegression:handoff}));
+  if(!validFrames(handoff))throw Error('JS SDK frame handoff regression failed');
   await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/example.html`});
   const evaluate=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
   const until=async(expression,label)=>{for(let i=0;i<300;i++){if(await evaluate(expression))return;await delay(50);}throw Error('Example timeout: '+label);};
@@ -49,6 +60,7 @@ try {
   if(errors.length)throw Error('Example exception');
   console.log(JSON.stringify({example:observation.example}));
   await send('Browser.close');
+  }
 }catch(error){failure=error;console.error(error.stack||error);}
 finally{socket?.close();browser?.kill();if(server)await new Promise(r=>server.close(r));
   if(process.argv[4]){const output=path.resolve(process.argv[4]);await fs.mkdir(path.dirname(output),{recursive:true});await fs.writeFile(output,JSON.stringify({command:process.argv,...observation,exitCode:failure?1:0,error:failure?String(failure):undefined},null,2)+'\n');}

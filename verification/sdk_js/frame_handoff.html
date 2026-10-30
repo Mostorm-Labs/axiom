@@ -1,0 +1,84 @@
+<!doctype html><meta charset="utf-8"><title>SDK frame handoff regression</title>
+<style>#mount{width:480px;height:360px}</style><div id="mount"></div><pre id="result">PENDING</pre>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+const results=[],errors=[],scenarios=[];
+const check=(ok,label)=>{if(!ok)throw Error(label);results.push(label);};
+const wait=()=>new Promise(r=>setTimeout(r,20));
+const until=async(fn,label)=>{for(let i=0;i<250;i++){if(fn())return;await wait();}throw Error('timeout '+label);};
+let held=false,delayed=0,frames=0;
+let delayLoss=false;const lossFacts=[],wrapped=new WeakMap();
+const add=EventTarget.prototype.addEventListener,remove=EventTarget.prototype.removeEventListener;
+EventTarget.prototype.addEventListener=function(type,listener,options){
+  if(type==='webglcontextlost'&&typeof listener==='function'){
+    if(!wrapped.has(listener))wrapped.set(listener,function(event){if(delayLoss){event.preventDefault();lossFacts.push(()=>listener.call(this,event));}else listener.call(this,event);});
+    return add.call(this,type,wrapped.get(listener),options);
+  }
+  return add.call(this,type,listener,options);
+};
+EventTarget.prototype.removeEventListener=function(type,listener,options){return remove.call(this,type,type==='webglcontextlost'?(wrapped.get(listener)||listener):listener,options);};
+const original=WebGL2RenderingContext.prototype.clientWaitSync;
+// Delay a real ready fence; never fabricate completion or hide a GL failure.
+WebGL2RenderingContext.prototype.clientWaitSync=function(...args){
+  const status=original.apply(this,args);
+  if(held&&(status===this.ALREADY_SIGNALED||status===this.CONDITION_SATISFIED)){++delayed;return this.TIMEOUT_EXPIRED;}
+  return status;
+};
+let sdk;
+const pointer=(type,x,y)=>{const c=sdk.canvas,r=c.getBoundingClientRect();
+  c.dispatchEvent(new PointerEvent(type,{pointerId:31,pointerType:'mouse',clientX:r.left+x,clientY:r.top+y,
+    buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true}));};
+const blue=()=>{const c=sdk.canvas,g=c.getContext('webgl2'),f=g.getParameter(g.FRAMEBUFFER_BINDING),p=new Uint8Array(4),d=devicePixelRatio||1;
+  g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(Math.round(90*d),c.height-Math.round(90*d),1,1,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);
+  return p[2]>p[0]+20&&p[3]>0;};
+try{
+  sdk=await createRuntime({mount:document.getElementById('mount'),onError:e=>errors.push({code:e.code,details:e.details}),onFrame:()=>++frames});
+  sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
+  await until(()=>frames>0,'initial real presentation');
+  await sdk.selectShape('rectangle');
+  held=true;
+  pointer('pointerdown',40,40);
+  await until(()=>delayed>0,'real pending GPU fence');
+  pointer('pointermove',160,140);pointer('pointerup',160,140);
+  check(sdk.readState().objects===1,'canonical input committed while prior fence pending');
+  held=false;
+  await until(blue,'new canonical pixels after pending frame');
+  check(!errors.length,'no rejected completion after superseded preview');
+  scenarios.push('pending-input');
+  const before=frames;
+  for(let i=0;i<8;i++)await sdk.selectTool('select');
+  await wait();await wait();
+  check(!errors.length,'idle opportunities do not acknowledge an already presented frame');
+  scenarios.push('no-duplicate-completion');
+  held=true;await sdk.setAppearance({selected:false,fill:[0,0,1,1]});
+  const previousDelays=delayed;
+  await sdk.zoomAt(0,0,1.1);
+  await until(()=>delayed>previousDelays,'pending resize fence');
+  document.getElementById('mount').style.width='520px';
+  await until(()=>sdk.readState().surface.width===520,'new surface metrics');
+  held=false;
+  await until(()=>frames>before,'resized real presentation');
+  check(sdk.readState().objects===1&&!errors.length,'resize invalidates old work without losing document');
+  scenarios.push('pending-resize');
+  const canvases=[...document.querySelectorAll('#mount canvas')];
+  const extensions=canvases.map(c=>c.getContext('webgl2').getExtension('WEBGL_lose_context'));
+  check(extensions.every(Boolean),'real context loss extension');
+  held=true;const previousLossDelays=delayed;
+  await sdk.zoomAt(0,0,1.2);
+  await until(()=>delayed>previousLossDelays,'pending native-loss fence');
+  const framesAtLoss=frames;delayLoss=true;
+  for(const e of extensions)e.loseContext();
+  await until(()=>lossFacts.length===2&&!sdk.readState().surface.available,'native loss before delayed DOM delivery');
+  check(frames===framesAtLoss,'lost GPU fences do not become successful presentations');
+  scenarios.push('native-loss-before-dom');
+  delayLoss=false;for(const fact of lossFacts.splice(0))fact();held=false;
+  for(const e of extensions)e.restoreContext();
+  await until(()=>sdk.readState().surface.available,'surface recovery');
+  await until(blue,'recovered canonical pixels');
+  check(!errors.length,'no stale completion after context recovery');
+  scenarios.push('context-recovery');
+  await sdk.close();
+  document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,scenarios,delayed,frames});
+}catch(e){held=false;document.getElementById('result').textContent=JSON.stringify({status:'FAIL',results,scenarios,delayed,frames,error:String(e),errors});}
+finally{held=false;delayLoss=false;WebGL2RenderingContext.prototype.clientWaitSync=original;EventTarget.prototype.addEventListener=add;EventTarget.prototype.removeEventListener=remove;}
+</script>

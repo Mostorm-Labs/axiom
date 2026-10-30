@@ -1,0 +1,35 @@
+{
+  "task_id": "AXIOM-SDK-CONSUMER-20261031",
+  "stage": "P32",
+  "p32_authorized": true,
+  "authorization": {
+    "kind": "explicit_user_request",
+    "text": "按照这个顺序继续实现吧，关闭js的帧问题后，要把Windows的dll精简包和同版本预览方案做的彻底一些",
+    "scope": "JS frame closure, complete Windows consumer DLL and matching preview delivery"
+  },
+  "repository": {"provider": "github", "full_name": "Mostorm-Labs/axiom"},
+  "task_anchor": {"revision": "0074763f2a5d167b24887c37558904e942a502a6", "relation": "ancestor"},
+  "execution_ref": "refs/heads/codex/sdk-cpp-first-multi-bridge",
+  "continue_until_terminal_state": true,
+  "required_changes": [
+    "Reproduce and close pending-frame/new-input handoff with real WebGL completion and exact existing Runtime work identity",
+    "Reuse one RuntimeComposition, Facade, Scene, Text and History per SDK instance",
+    "Deliver Windows axiom.dll with memory-safe versioned handle/buffer boundary and a C++ consumer facade, complete supported control/input/document/resource surface and Windows adapter",
+    "Provide a working external Windows application without Semantic/Skia/component library dependencies",
+    "Provide DLL/import-stub/public-header/assets/licenses consumer package; internal static components remain build inputs only",
+    "Produce JS and Windows consumer SDK/demo artifacts from one exact revision with manifests, hashes, external-consumer verification and prerelease CI"
+  ],
+  "allowed_paths": ["sdk/", "runtime/composition/", "runtime/interaction/", "apps/minimal_runtime_host/", "apps/axiom_canvas_demo/", "cmake/", "CMakeLists.txt", "verification/sdk_js/", "verification/sdk_windows_dll/", "verification/sdk_cpp_windows/", "tools/release/", ".github/workflows/sdk-preview-release.yml", "docs/planning/sdk/", ".aegis/packages/AXIOM-SDK-CONSUMER-20261031-v0.1/"],
+  "forbidden_changes": ["SDK locks or dependency rebuilds", "historical descriptor lock", "global Authority/Gate registries", "new canonical model, History or generic transaction owner", "weakened existing expected values", "D07 OOM remediation", "automatic main merge"],
+  "required_proof": [
+    "RED then GREEN real-browser delayed-fence/input regression, superseded work, resize/loss/recovery, no repeated completion or endless idle loop",
+    "Existing JS core/browser/example and npm pack/offline install/TypeScript consumers",
+    "Strict Windows DLL build with published locked dependencies and external caller using only consumer package",
+    "DLL capability/command parity, allocation ownership, stale/foreign/wrong-thread/lifecycle rejection, real native input/IME bridge and shutdown",
+    "Existing affected Windows Runtime/History/Text/Image/Connector/Section/selection regressions; preserve separately documented baseline failures",
+    "Fresh consumer ZIP verification and same-revision/version/hash checks before GitHub prerelease publication"
+  ],
+  "terminal_success": "Required implementation and automated proof complete, exact matching preview artifacts independently consumable and published; physical-only items explicitly pending, no stable/Gate/PHYS claim",
+  "terminal_blockers": ["unresolvable exact input or authority conflict", "unavailable required toolchain or service", "new high-impact failure requiring an owning semantic decision"],
+  "physical_validation": "User observation remains separate; synthetic/native automated input is not PHYS acceptance"
+}

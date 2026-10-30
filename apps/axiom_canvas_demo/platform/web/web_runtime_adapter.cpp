@@ -8,6 +8,7 @@
 #include <GLES3/gl3.h>
 #include <emscripten/html5.h>
 #include <cmath>
+#include <cstdio>
 #include <limits>
 #include <optional>
 #include <thread>
@@ -15,6 +16,10 @@
 
 namespace canvas::platform {
 namespace {
+WebFrameResult rejected(const char* stage) noexcept {
+  std::fprintf(stderr, "Axiom Web frame rejected: %s\n", stage);
+  return WebFrameResult::kRejected;
+}
 struct Fence final {
   EMSCRIPTEN_WEBGL_CONTEXT_HANDLE context = 0;
   GLsync sync = nullptr;
@@ -49,6 +54,7 @@ class WebRuntimeAdapter::Impl final {
   EMSCRIPTEN_WEBGL_CONTEXT_HANDLE canonical = 0, preview = 0;
   Fence canonicalFence, previewFence;
   std::optional<runtime::RuntimeFrameOpportunity> pending;
+  std::optional<runtime::CanonicalWork> confirmed;
   std::uint64_t presented = 0;
   bool bound = false;
   bool hostFontsLoaded = false;
@@ -105,7 +111,8 @@ bool WebRuntimeAdapter::bind(std::int32_t canonical, std::int32_t preview,
 bool WebRuntimeAdapter::loseSurface() noexcept {
   if (std::this_thread::get_id() != impl_->thread || !impl_->bound) return false;
   impl_->discard();
-  return impl_->core.loseSurface();
+  return impl_->core.state() == runtime::RuntimeCompositionState::kLost ||
+      impl_->core.loseSurface();
 }
 bool WebRuntimeAdapter::loadHostFonts(const char* cjkPath, const char* catalogRoot) noexcept {
   if (std::this_thread::get_id() != impl_->thread || !impl_->bound || impl_->hostFontsLoaded ||
@@ -117,39 +124,65 @@ bool WebRuntimeAdapter::loadHostFonts(const char* cjkPath, const char* catalogRo
   } catch (...) { return false; }
 }
 WebFrameResult WebRuntimeAdapter::prepareFrame(bool force) noexcept {
-  if (std::this_thread::get_id() != impl_->thread || !impl_->bound) return WebFrameResult::kRejected;
+  if (std::this_thread::get_id() != impl_->thread || !impl_->bound) return rejected("prepare owner/binding");
+  if (emscripten_is_webgl_context_lost(impl_->canonical) ||
+      emscripten_is_webgl_context_lost(impl_->preview))
+    return loseSurface() ? WebFrameResult::kIdle : rejected("prepare observed context loss");
   if (impl_->pending) return WebFrameResult::kPending;
   runtime::RuntimeFrameOpportunity work{};
-  if (!impl_->core.serviceFrameOpportunity(force, work)) return WebFrameResult::kRejected;
-  if (!work.canonicalRequested) work.canonicalWork.reset();
+  if (!impl_->core.serviceFrameOpportunity(force, work)) return rejected("prepare owner opportunity");
+  // The owner may already have submitted a canonical frame during input.
+  // Conversely, an idle opportunity can recapture an already confirmed frame
+  // with a new work ID. Fence only a genuinely unconfirmed submission.
+  if (work.canonicalWork && impl_->confirmed &&
+      work.canonicalWork->runtimeInstanceId == impl_->confirmed->runtimeInstanceId &&
+      work.canonicalWork->lifetimeGeneration == impl_->confirmed->lifetimeGeneration &&
+      work.canonicalWork->attachmentEpoch == impl_->confirmed->attachmentEpoch &&
+      work.canonicalWork->frame == impl_->confirmed->frame)
+    work.canonicalWork.reset();
   if (!work.canonicalWork && !work.previewWork)
     return impl_->core.canonicalPresentationDirty() ||
            (impl_->core.previewActive() && impl_->core.previewRenderState().dirty)
         ? WebFrameResult::kRetry : WebFrameResult::kIdle;
   if ((work.canonicalWork && !impl_->canonicalFence.insert(impl_->canonical)) ||
       (work.previewWork && !impl_->previewFence.insert(impl_->preview))) {
-    impl_->discard(); return WebFrameResult::kRejected;
+    impl_->discard(); return rejected("insert GPU fence");
   }
   impl_->pending = work;
   return WebFrameResult::kPending;
 }
 WebFrameResult WebRuntimeAdapter::pollFrame() noexcept {
-  if (std::this_thread::get_id() != impl_->thread || !impl_->bound) return WebFrameResult::kRejected;
+  if (std::this_thread::get_id() != impl_->thread || !impl_->bound) return rejected("poll owner/binding");
+  // WebGL can invalidate sync objects before the DOM lost event is delivered.
+  // A real context-loss fact is suspension, never a successful presentation.
+  if (emscripten_is_webgl_context_lost(impl_->canonical) ||
+      emscripten_is_webgl_context_lost(impl_->preview))
+    return loseSurface() ? WebFrameResult::kIdle : rejected("poll observed context loss");
   if (!impl_->pending) return WebFrameResult::kIdle;
   const auto canonical = impl_->canonicalFence.poll(), preview = impl_->previewFence.poll();
-  if (!canonical || !preview) return WebFrameResult::kRejected;
+  if (!canonical || !preview) return rejected("poll GPU fence");
   if (canonical == 2 || preview == 2) return WebFrameResult::kPending;
   const auto& work = *impl_->pending;
   if (work.previewWork && impl_->core.previewActive() &&
       impl_->core.previewRenderState().contentRevision == work.previewWork->contentRevision &&
-      !impl_->core.finishFrameOpportunity({work.previewWork, true})) return WebFrameResult::kRejected;
+      !impl_->core.finishFrameOpportunity({work.previewWork, true})) return rejected("preview completion");
   if (work.canonicalWork) {
+    const auto current = impl_->core.lastSubmittedCanonicalWork();
+    if (!current || *current != *work.canonicalWork) {
+      // Input or a binding change superseded this real GPU submission. Its
+      // completion cannot qualify newer work; let the owner prepare that work.
+      impl_->discard();
+      return WebFrameResult::kRetry;
+    }
     if (!impl_->core.receivePlatformPresented({*work.canonicalWork, render::PresentOutcome::kPresented,
-            render::PresentEvidenceKind::kPlatformQualified, std::nullopt})) return WebFrameResult::kRejected;
+            render::PresentEvidenceKind::kPlatformQualified, std::nullopt})) return rejected("canonical completion");
+    impl_->confirmed = *work.canonicalWork;
     ++impl_->presented;
   }
   impl_->discard();
-  return WebFrameResult::kIdle;
+  // A poll only completes the captured work. Input/resources may have arrived
+  // meanwhile. One prepare opportunity drains them; an idle prepare then stops.
+  return WebFrameResult::kRetry;
 }
 WebFrameStatus WebRuntimeAdapter::frameStatus() const noexcept {
   if (std::this_thread::get_id() != impl_->thread || !impl_->pending) return {};
