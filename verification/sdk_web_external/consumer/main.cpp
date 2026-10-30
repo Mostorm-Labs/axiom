@@ -252,11 +252,36 @@ extern "C" EMSCRIPTEN_KEEPALIVE const char* sdk_selection_diagnostics() {
   if (targets.empty()) return "{}";
   const auto s = facade.readCanvasControlSnapshot(targets.front());
   const auto metrics = owner->surfaceMetrics();
-  output = nlohmann::json{{"kind",s.selectedKind},{"width",s.selectedWidth},
+  output = nlohmann::json{{"kind",s.selectedKind},{"eraserMode",s.eraserMode},{"width",s.selectedWidth},
       {"height",s.selectedHeight},{"transform",s.selectedTransform},
       {"scale",s.cameraScale},{"cameraX",s.cameraTranslationX},{"cameraY",s.cameraTranslationY},
       {"logicalWidth",metrics ? metrics->logicalWidth : 0},{"logicalHeight",metrics ? metrics->logicalHeight : 0}}.dump();
   return output.c_str();
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int sdk_connector_preset() {
+  return owner ? static_cast<int>(owner->controlFacade().readConnectorRoutingPreset()) : 0;
+}
+// Sample diagnostic: inspect actual canonical connector contents through the
+// public checkpoint API, rather than inferring routing from toolbar state.
+extern "C" EMSCRIPTEN_KEEPALIVE int sdk_connector_count_by_routing(int routing) {
+  if (!owner) return -1;
+  auto& facade = owner->controlFacade();
+  const auto targets = facade.mountedCanvasTargets();
+  if (targets.empty()) return -1;
+  canvas::runtime::DocumentSnapshotRequest request{};
+  request.expectedSemanticGeneration = facade.readCanvasControlSnapshot(targets.front()).semanticGeneration;
+  request.documentRevision = 1;
+  request.recoveryFrontier = {8,1,16,1,24,1};
+  const auto captured = owner->captureDocumentSnapshot(request);
+  if (captured.status != canvas::runtime::DocumentSnapshotStatus::kCaptured) return -1;
+  const auto snapshot = canvas::semantic::SnapshotCodec::decode(captured.bytes,
+      canvas::semantic::SnapshotCapability::kShape2TriangleRichTextFormattingConnectorAndSectionV1);
+  if (!snapshot.ok()) return -1;
+  return static_cast<int>(std::count_if(snapshot.snapshot->objects.begin(), snapshot.snapshot->objects.end(),
+      [routing](const auto& object) {
+        const auto* connector = std::get_if<canvas::semantic::ConnectorContent>(&object.content);
+        return connector && static_cast<int>(connector->routing) == routing;
+      }));
 }
 extern "C" EMSCRIPTEN_KEEPALIVE int sdk_hover(float x, float y) {
   if (!owner) return 0;
@@ -305,7 +330,11 @@ extern "C" EMSCRIPTEN_KEEPALIVE int sdk_control(int action, int value) {
   canvas::runtime::CanvasControlRequest request{};
   request.target = targets.front(); request.clientId = 704; request.requestId = ++sequence;
   using K = canvas::runtime::CanvasControlPayloadKind;
-  if (action == 0 && value >= 0 && value <= 4) {
+  if (action == 6 && (value == 1 || value == 2)) {
+    request.payload.kind = K::kSelectTool;
+    request.payload.tool = canvas::runtime::CanvasToolKind::kEraser;
+    request.payload.eraser.mode = canvas::runtime::OptionPatch<std::uint32_t>::set(value);
+  } else if (action == 0 && value >= 0 && value <= 4) {
     request.payload.kind = K::kSelectTool; request.payload.tool = static_cast<canvas::runtime::CanvasToolKind>(value);
   } else if (action == 1 && value >= 0 && value <= 5) {
     if (value == 3 || value == 4) {
@@ -325,7 +354,16 @@ extern "C" EMSCRIPTEN_KEEPALIVE int sdk_control(int action, int value) {
   if (facade.submitCanvasControl(request).state != canvas::runtime::ProductControlState::kQueued ||
       !owner->ownerPump()) return 0;
   const auto receipt = facade.canvasControlReceipt({request.clientId, request.requestId});
-  return receipt && receipt->state == canvas::runtime::CanvasControlReceiptState::kApplied ? 1 : 0;
+  if (!receipt || receipt->state != canvas::runtime::CanvasControlReceiptState::kApplied) return 0;
+  if (action == 6) {
+    request.requestId = ++sequence;
+    request.payload.kind = K::kEraserOptions;
+    if (facade.submitCanvasControl(request).state != canvas::runtime::ProductControlState::kQueued ||
+        !owner->ownerPump()) return 0;
+    const auto modeReceipt = facade.canvasControlReceipt({request.clientId, request.requestId});
+    if (!modeReceipt || modeReceipt->state != canvas::runtime::CanvasControlReceiptState::kApplied) return 0;
+  }
+  return 1;
 }
 extern "C" EMSCRIPTEN_KEEPALIVE float sdk_logical_height() {
   const auto metrics = owner ? owner->surfaceMetrics() : std::nullopt;
@@ -419,6 +457,12 @@ int main() {
   if (!adapter->bind(canonical, preview, static_cast<float>(logicalWidth), static_cast<float>(logicalHeight), pixelWidth, pixelHeight, dpr) || !owner->registerSource(1) ||
       !owner->registerSource(2) || !owner->registerSource(3)) {
     status("FAIL: initial binding"); return 1;
+  }
+  canvas::runtime::ConnectorRoutingRequest routing{};
+  routing.routing = canvas::semantic::ConnectorRouting::kOrthogonal;
+  if (owner->controlFacade().setConnectorRouting(routing).state != canvas::runtime::ConnectorCommandState::kApplied ||
+      owner->controlFacade().readConnectorRoutingPreset() != routing.routing) {
+    status("FAIL: connector routing preset"); return 1;
   }
   if (adapter->loadHostFonts("/missing-font.otf", "/fonts") ||
       !adapter->loadHostFonts("/axiom-font.otf", "/fonts") ||

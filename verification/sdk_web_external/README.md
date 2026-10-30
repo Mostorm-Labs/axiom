@@ -97,3 +97,7 @@ JavaScript and `.wasm` as WebAssembly; on some Windows systems the standard
 The status becomes READY only after both Runtime and DOM input handlers initialize.
 Tool buttons turn blue only after the Runtime accepts the selected tool; Undo,
 Redo and other one-shot actions leave the active tool unchanged.
+Object eraser removes a hit stroke; Partial eraser masks only the crossed area.
+New connectors use orthogonal routing by default, including connectors created
+from a selected object's attachment points. A clear aligned route can still be
+rendered as one straight horizontal or vertical segment.

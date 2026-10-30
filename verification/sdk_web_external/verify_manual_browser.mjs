@@ -56,7 +56,7 @@ try {
   const clickAndDrag=async(start,end)=>{
     const a=await point(...start), b=await point(...end);
     await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',...a,button:'left',buttons:1,clickCount:1});
-    await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...b,button:'left',buttons:1});
+    for(let i=1;i<=8;i++) await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',x:a.x+(b.x-a.x)*i/8,y:a.y+(b.y-a.y)*i/8,button:'left',buttons:1});
     await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',...b,button:'left',buttons:0,clickCount:1});
   };
   const clickButton=async(id)=>{
@@ -68,17 +68,72 @@ try {
     throw new Error('initial Ink tool is not indicated');
   await clickButton('external-shape');
   await delay(100);
-  await clickAndDrag([600,300],[700,380]);
+  await clickAndDrag([350,300],[450,380]);
   await until(`Module._sdk_object_count()===1`,'physical button rectangle creation');
   if (!await evaluate(`document.getElementById('external-shape').getAttribute('aria-pressed')==='true'`))
     throw new Error('selected Rectangle tool is not indicated');
   if (await evaluate(`document.getElementById('external-ink-tool').getAttribute('aria-pressed')`) !== 'false')
     throw new Error('previous tool remains indicated');
-  await until(`(()=>{const c=document.getElementById('surface'),g=c.getContext('webgl2'),p=new Uint8Array(4),f=g.getParameter(g.FRAMEBUFFER_BINDING);g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(1300,c.height-680,1,1,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);return p[2]>p[0]+20 && p[3]>0;})()`,'rectangle visible on canvas');
+  await until(`(()=>{const c=document.getElementById('surface'),g=c.getContext('webgl2'),p=new Uint8Array(4),f=g.getParameter(g.FRAMEBUFFER_BINDING);g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(800,c.height-680,1,1,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);return p[2]>p[0]+20 && p[3]>0;})()`,'rectangle visible on canvas');
+  if (!await evaluate(`!!Module._sdk_connector_preset && Module._sdk_connector_preset()===2 && !!Module._sdk_connector_count_by_routing`))
+    throw new Error('new connector routing does not default to orthogonal');
+  await clickButton('external-select');
+  await until(`document.getElementById('external-select').getAttribute('aria-pressed')==='true'`,'Select selected');
+  const sourceCenter=await point(400,340);
+  await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',...sourceCenter,button:'left',buttons:1,clickCount:1});
+  await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',...sourceCenter,button:'left',buttons:0,clickCount:1});
+  await until(`Module._sdk_selection_count()===1`,'connector source selected');
+  const rightPort=await point(479,340);
+  await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',...rightPort,button:'left',buttons:1,clickCount:1});
+  await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',...rightPort,button:'left',buttons:0,clickCount:1});
+  await until(`Module._sdk_object_count()===3`,'attachment creates connector and target');
+  if (await evaluate(`Module._sdk_connector_count_by_routing(2)`) !== 1 ||
+      await evaluate(`Module._sdk_connector_count_by_routing(1)`) !== 0)
+    throw new Error('attachment did not create an orthogonal connector');
+  const source=JSON.parse(await evaluate('Module.UTF8ToString(Module._sdk_selection_diagnostics())'));
+  if(source.kind!==1)throw new Error('connector source was not selected');
+  const sourceX=source.transform[4]+source.width/2, sourceY=source.transform[5]+source.height/2;
+  await clickAndDrag([sourceX,sourceY],[sourceX,sourceY-100]);
+  await until(`JSON.parse(Module.UTF8ToString(Module._sdk_selection_diagnostics())).transform[5]<${source.transform[5]-50}`,'move connector source off axis');
+  if (await evaluate(`Module._sdk_connector_count_by_routing(2)`) !== 1)
+    throw new Error('moving target changed connector routing');
+  // Inspect the actual canvas between the two objects: an off-axis orthogonal
+  // route must contain a substantial vertical segment, not a diagonal line.
+  await until(`(()=>{const c=document.getElementById('surface'),g=c.getContext('webgl2'),ratio=2;
+    const left=455,right=595,top=Math.floor(Math.min(340,${sourceY-100}))+5,bottom=Math.floor(Math.max(340,${sourceY-100}))-5;
+    if(right<=left||bottom<=top)return false;const w=(right-left)*ratio,h=(bottom-top)*ratio,p=new Uint8Array(w*h*4),f=g.getParameter(g.FRAMEBUFFER_BINDING);
+    g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(left*ratio,c.height-bottom*ratio,w,h,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);
+    for(let x=0;x<w;x++){let run=0;for(let y=0;y<h;y++){const i=(y*w+x)*4;if(p[i]<100&&p[i+1]<100&&p[i+2]<120&&p[i+3]>0){if(++run>=14)return true;}else run=0;}}return false;})()`,'off-axis connector renders a vertical segment');
+  await clickButton('external-undo');
+  await until(`JSON.parse(Module.UTF8ToString(Module._sdk_selection_diagnostics())).transform[5]===${source.transform[5]}`,'undo source move');
+  await clickButton('external-undo');
+  await until(`Module._sdk_object_count()===1`,'undo auto-created connector and target');
   await clickButton('external-undo');
   await until(`Module._sdk_object_count()===0`,'physical undo button');
-  if (!await evaluate(`document.getElementById('external-shape').getAttribute('aria-pressed')==='true'`))
+  if (!await evaluate(`document.getElementById('external-select').getAttribute('aria-pressed')==='true'`))
     throw new Error('one-shot action incorrectly changed selected tool');
+  if (!await evaluate(`!!document.getElementById('external-object-eraser') && !!document.getElementById('external-partial-eraser')`))
+    throw new Error('both object and partial eraser controls are required');
+  await clickButton('external-ink-tool');
+  await until(`document.getElementById('external-ink-tool').getAttribute('aria-pressed')==='true'`,'ink selected');
+  await clickAndDrag([570,390],[730,390]);
+  await until(`Module._sdk_object_count()===1`,'eraser fixture stroke');
+  const centerPixel=`(()=>{const c=document.getElementById('surface'),g=c.getContext('webgl2'),p=new Uint8Array(4),f=g.getParameter(g.FRAMEBUFFER_BINDING);g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(1300,c.height-780,1,1,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);return [...p];})()`;
+  await until(`${centerPixel}[3]>0 && ${centerPixel}[0]<180`,'stroke visible before erasing');
+  await clickButton('external-partial-eraser');
+  await until(`document.getElementById('external-partial-eraser').getAttribute('aria-pressed')==='true'`,'partial eraser selected');
+  if ((await evaluate(`JSON.parse(Module.UTF8ToString(Module._sdk_selection_diagnostics())).eraserMode`))!==2)
+    throw new Error('partial eraser mode not reflected by Runtime');
+  await clickAndDrag([650,370],[650,410]);
+  await until(`${centerPixel}[3]===0 || ${centerPixel}[0]>200`,'partial eraser changes visible pixels');
+  if (await evaluate('Module._sdk_object_count()')!==1)throw new Error('partial eraser removed the stroke object');
+  await clickButton('external-object-eraser');
+  await until(`document.getElementById('external-object-eraser').getAttribute('aria-pressed')==='true'`,'object eraser selected');
+  if (await evaluate(`document.getElementById('external-partial-eraser').getAttribute('aria-pressed')`)!=='false' ||
+      (await evaluate(`JSON.parse(Module.UTF8ToString(Module._sdk_selection_diagnostics())).eraserMode`))!==1)
+    throw new Error('object eraser mode or selected state is incorrect');
+  await clickAndDrag([600,370],[600,410]);
+  await until(`Module._sdk_object_count()===0`,'object eraser removes whole stroke');
   await clickButton('external-text-tool');
   await until(`document.getElementById('external-text-tool').getAttribute('aria-pressed')==='true'`,'text selected state');
   const textPoint=await point(90,90);
@@ -187,7 +242,7 @@ try {
   console.log(JSON.stringify({status:'PASS_SCOPED',consumer:build,chrome,args,coverage:[
     'correct MIME server and visible failure on incorrect MIME','real pointer button selection, blue active state and rendered pixels',
     'responsive canvas and DPR resize','synthetic Chrome IME composition/result and text size',
-    'ink, rectangle and sticky','rectangle selection and group/ungroup','undo/redo',
+    'ink, rectangle and sticky','attachment creates canonical orthogonal connector','object and partial eraser, mode and rendered pixels','rectangle selection and group/ungroup','undo/redo',
     'synthetic image file import, crop zoom and cancel','Section creation','wheel zoom']}));
   try{await cdp.send('Browser.close');}catch{}
 } catch(e){failed=String(e.stack??e);console.error(failed);}
