@@ -24,7 +24,7 @@ try {
   socket=new WebSocket(page.webSocketDebuggerUrl);await new Promise((r,j)=>{socket.addEventListener('open',r,{once:true});socket.addEventListener('error',j,{once:true});});
   let serial=0;const pending=new Map(),errors=[],consoleErrors=[];
   socket.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.id){const p=pending.get(m.id);if(!p)return;pending.delete(m.id);clearTimeout(p.timer);m.error?p.reject(Error(JSON.stringify(m.error))):p.resolve(m.result);}else if(m.method==='Runtime.exceptionThrown')errors.push(m.params);else if(m.method==='Runtime.consoleAPICalled'&&m.params.type==='error')consoleErrors.push(m.params.args.map(a=>a.value??a.description).join(' '));});
-  const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++serial;const timer=setTimeout(()=>{pending.delete(id);reject(Error(`CDP timeout: ${method}`));},30000);pending.set(id,{resolve,reject,timer});socket.send(JSON.stringify({id,method,params}));});
+  const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++serial;const timer=setTimeout(()=>{pending.delete(id);reject(Error(`CDP timeout: ${method}`));},method==='Page.navigate'?120000:30000);pending.set(id,{resolve,reject,timer});socket.send(JSON.stringify({id,method,params}));});
   // Browser.close may tear down this target socket before its response arrives.
   // Prove real process termination instead of waiting for a vanished transport.
   const closeBrowser=()=>new Promise((resolve,reject)=>{
@@ -34,7 +34,8 @@ try {
     browser.once('exit',done);socket.send(JSON.stringify({id:++serial,method:'Browser.close',params:{}}));
   });
   const browserVersion=await send('Browser.getVersion');
-  await send('Runtime.enable');await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/`});
+  observation={consumer:files,exceptions:errors,consoleErrors,browserVersion,startup:started.diagnostics()};
+  await send('Runtime.enable');await send('Page.enable');await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/`});
   let result;
   for(let i=0;i<900;i++) {const r=await send('Runtime.evaluate',{expression:`document.getElementById('result')?.textContent`,returnByValue:true});
     if(r.result.value && r.result.value!=='PENDING'){result=JSON.parse(r.result.value);break;}await delay(100);}

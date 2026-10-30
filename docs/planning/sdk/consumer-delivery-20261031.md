@@ -125,3 +125,11 @@ cause. The 45-second bounded launcher qualified that same hosted environment;
 it does not relax Runtime frame or consumer assertions. Standard Web release
 jobs now run this environment preflight before the SDK build. CI evidence
 artifact names include the attempt number to retain prior failed observations.
+
+Hosted run 41113164419 (e462f772) passed Windows and Chrome environment
+startup (Chrome 156, 17,552 ms), but the first Page.navigate exceeded the old
+30-second CDP deadline. This remains a failed attempt. The driver now records
+browser/console/exception observations before navigation and gives page
+navigation its separate bounded 120-second loading deadline. Other CDP, SUT
+assertions, frame waits and golden/expected values are unchanged. A loading
+timeout remains failure; it is not a successful presentation or product pass.
