@@ -34,6 +34,8 @@ int main() {
   CHECK(&product == &debug);
   CHECK(!product.readFontCatalog().entries.empty());
   CHECK(owner.registerSource(9000));
+  CHECK(owner.hostObservation() && owner.hostObservation()->objectCount == 0U);
+  CHECK(!owner.hoverSelectionAtViewPoint(20.0F, 20.0F));
   canvas::input::PlatformPointerSample sample{};
   sample.source = 9000; sample.pointer = 1; sample.sequence = 1; sample.timestampNs = 1000000;
   sample.phase = canvas::input::PointerPhase::kDown; sample.x = 10; sample.y = 10;
@@ -75,6 +77,10 @@ int main() {
   sample.phase = canvas::input::PointerPhase::kUp; sample.sequence = 8; sample.timestampNs = 8000000;
   batch.samples = {sample}; CHECK(owner.submitContact(*contact, batch));
   CHECK(debug.readSelectionSummary().count == 1);
+  CHECK(owner.hostObservation() && owner.hostObservation()->objectCount == 2U);
+  CHECK(platform.prepareFrame(true)); CHECK(platform.present());
+  CHECK(owner.hoverSelectionAtViewPoint(148.0F, 80.0F));
+  CHECK(owner.hoverSelectionAtViewPoint(0.0F, 0.0F));
   const auto previousContact = *contact;
   sample.phase = canvas::input::PointerPhase::kDown; sample.sequence = 9;
   sample.timestampNs = 9000000; batch.samples = {sample};

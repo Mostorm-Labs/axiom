@@ -43,11 +43,16 @@ int main() {
   assert(!adapter.present());
   bool otherThreadAccepted = true;
   bool otherThreadRead = true;
+  bool otherThreadObservation = true;
   std::thread other([&] { otherThreadAccepted = adapter.resize(300, 300, 1.0F);
-                          otherThreadRead = composition.surfaceMetrics().has_value(); });
+                          otherThreadRead = composition.surfaceMetrics().has_value();
+                          otherThreadObservation = composition.hostObservation().has_value(); });
   other.join();
-  assert(!otherThreadAccepted && !otherThreadRead);
+  assert(!otherThreadAccepted && !otherThreadRead && !otherThreadObservation);
   assert(composition.registerSource(9100));
+  const auto initialObservation = composition.hostObservation();
+  assert(initialObservation && initialObservation->objectCount == 0U && !initialObservation->previewActive);
+  assert(!composition.hoverSelectionAtViewPoint(20.0F, 20.0F));
   canvas::input::PlatformPointerBatch batch;
   canvas::input::PlatformPointerSample sample{};
   sample.source = 9100; sample.pointer = 1; sample.sequence = 1; sample.timestampNs = 1000000;
@@ -58,12 +63,14 @@ int main() {
   sample.phase = canvas::input::PointerPhase::kMove; sample.x = 60; sample.y = 60;
   sample.sequence = 2; sample.timestampNs = 2000000; batch.samples = {sample};
   assert(composition.submitContact(*first, batch));
+  assert(composition.hostObservation() && composition.hostObservation()->previewActive);
   assert(adapter.prepareFrame(false));
   assert(adapter.frameStatus().previewWorkId != 0);
   assert(adapter.present());
   sample.phase = canvas::input::PointerPhase::kUp; sample.sequence = 3;
   sample.timestampNs = 3000000; batch.samples = {sample};
   assert(composition.submitContact(*first, batch));
+  assert(composition.hostObservation() && composition.hostObservation()->objectCount == 1U);
   // The startup loader must not replace a manifest after content exists.
   assert(!adapter.loadHostFonts(L"axiom-font.otf", L"fonts"));
   sample.phase = canvas::input::PointerPhase::kDown;

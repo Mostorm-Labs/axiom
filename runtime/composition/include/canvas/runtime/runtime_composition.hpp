@@ -25,6 +25,15 @@ struct RuntimeSurfaceMetrics final {
   bool available = false;
 };
 
+// Read-only owner-thread observations for platform diagnostics.
+struct RuntimeHostObservation final {
+  std::uint32_t lifecycleState = 0;
+  std::uint64_t objectCount = 0;
+  std::uint64_t lastCanonicalFrame = 0;
+  std::uint64_t lastOwnerControlCount = 0;
+  bool previewActive = false;
+};
+
 // Owner-thread entry. The borrowed facade belongs to this Composition and
 // remains valid until its owner is destroyed. Close before destruction.
 class RuntimeComposition final {
@@ -52,6 +61,8 @@ class RuntimeComposition final {
   [[nodiscard]] bool ownerPump() noexcept;
   // Empty when queried from a thread other than the owner thread.
   [[nodiscard]] std::optional<RuntimeSurfaceMetrics> surfaceMetrics() const noexcept;
+  [[nodiscard]] std::optional<RuntimeHostObservation> hostObservation() const noexcept;
+  [[nodiscard]] bool hoverSelectionAtViewPoint(float x, float y) noexcept;
   [[nodiscard]] bool close() noexcept;
   [[nodiscard]] RuntimeFacade& controlFacade() noexcept;
   [[nodiscard]] const RuntimeFacade& controlFacade() const noexcept;

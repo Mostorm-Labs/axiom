@@ -205,7 +205,7 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_cancel_all(std::uintptr_t h) {
 EMSCRIPTEN_KEEPALIVE int axiom_web_hover(std::uintptr_t h, float x, float y) {
     auto* v = instance(h);
     if (!v || !std::isfinite(x) || !std::isfinite(y)) return 0;
-    return v->lifecycle.composition().hoverSelectionAtViewPoint(x, y) ? 1 : 0;
+    return v->lifecycle.publicComposition().hoverSelectionAtViewPoint(x, y) ? 1 : 0;
 }
 EMSCRIPTEN_KEEPALIVE int
 axiom_web_cancel_pointer(std::uintptr_t h, std::uint32_t s, std::uint32_t p, std::uint64_t g) {

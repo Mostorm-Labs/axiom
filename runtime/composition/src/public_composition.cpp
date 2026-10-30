@@ -69,6 +69,18 @@ std::optional<RuntimeSurfaceMetrics> RuntimeComposition::surfaceMetrics() const 
       s.logicalWidth, s.logicalHeight, s.width, s.height, s.devicePixelRatio,
       s.displayScale, s.available};
 }
+std::optional<RuntimeHostObservation> RuntimeComposition::hostObservation() const noexcept {
+  if (std::this_thread::get_id() != impl_->ownerThread) return std::nullopt;
+  const auto receipt = impl_->core.readback();
+  const auto frame = impl_->core.lastSubmittedCanonicalFrame();
+  return RuntimeHostObservation{static_cast<std::uint32_t>(receipt.state),
+      static_cast<std::uint64_t>(impl_->core.semanticObjectCount()),
+      frame ? frame->frameId.value() : 0U,
+      static_cast<std::uint64_t>(receipt.lastOwnerControlCount), impl_->core.previewActive()};
+}
+bool RuntimeComposition::hoverSelectionAtViewPoint(float x, float y) noexcept {
+  return impl_->core.hoverSelectionAtViewPoint(x, y);
+}
 bool RuntimeComposition::close() noexcept { return impl_->core.close(); }
 RuntimeFacade& RuntimeComposition::controlFacade() noexcept { return impl_->core.controlFacade(); }
 const RuntimeFacade& RuntimeComposition::controlFacade() const noexcept { return impl_->core.controlFacade(); }

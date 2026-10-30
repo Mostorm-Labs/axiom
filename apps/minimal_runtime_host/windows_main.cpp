@@ -366,7 +366,8 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
 #endif
       if (frameChanged)
         logInput(*state, "frame-opportunity", frameReady, {});
-      if (state->host->composition().readback().lastOwnerControlCount != 0U)
+      if (const auto observation = state->host->publicComposition().hostObservation();
+          observation && observation->lastOwnerControlCount != 0U)
         logInput(*state, "facade-control", true, {});
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
       if (state->controller) state->controller->processHostRequests();
@@ -460,7 +461,7 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       if (!isPromotedPointerMouse() && !state->mouseKey) {
         const auto surface = state->host->publicComposition().surfaceMetrics().value_or(canvas::runtime::RuntimeSurfaceMetrics{});
         if (surface.width != 0U && surface.height != 0U)
-          (void)state->host->composition().hoverSelectionAtViewPoint(
+          (void)state->host->publicComposition().hoverSelectionAtViewPoint(
               static_cast<float>(GET_X_LPARAM(lParam)) * surface.logicalWidth / surface.width,
               static_cast<float>(GET_Y_LPARAM(lParam)) * surface.logicalHeight / surface.height);
       }
