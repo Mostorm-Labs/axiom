@@ -38,6 +38,17 @@ strings for 64-bit revisions/tokens. Command promises resolve only after the
 Runtime's result is available; this does not acknowledge durable storage.
 Application callbacks are deferred and must not replace native IME results.
 
+The Product Shell / Axis bridge adds `subscribeOperations`, `subscribeState` and
+their returned disposers. Operation subscription attaches volatile custody;
+`data.readNext`, `data.release`, `data.status` and `data.reportStatus` separate byte
+handoff from actual external durability/sync. Callbacks copy/transfer promptly;
+after the data owner accepts the complete prefix, release through that packet.
+A full queue rejects local commits. Controlled close reports `PUBLICATION_PENDING`
+until custody is released. `applyRemoteOperations` reports independent mixed
+outcomes, never a generic transaction or local echo. `resources.list/readBytes`
+allow an external data owner to discover and retain actual resource bytes.
+See `docs/planning/sdk/shell-axis-integration.md` in the source repository.
+
 | Area | Public methods |
 |---|---|
 | Tools and style | `selectTool`, `selectShape`, `setSelectionMode`, `brushPresets`, `selectBrush`, `setInk`, `setEraser`, `setAppearance` |
@@ -82,6 +93,7 @@ input/composition tests; actual OS IME, physical touch and other browsers still
 need device qualification. The known D07 Protobuf/Abseil allocation-failure hang
 remains unresolved. These limitations prevent claiming production readiness.
 
-This package is being validated for the first release; the historical preview
-release does not contain this JS SDK. See the checked declarations for the
+The published `20261031-4fc3ebfe` preview contains the preceding JS SDK. The new
+Shell/Axis extensions require a matching rebuilt wrapper/WASM and are not added
+to previously published immutable assets. See the checked declarations for the
 exact supported API. Unsupported operations reject with `AxiomError`.

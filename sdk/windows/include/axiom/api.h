@@ -13,6 +13,17 @@ extern "C" {
 #define AXIOM_ABI_VERSION 1u
 typedef uint64_t axiom_runtime;
 typedef uint64_t axiom_buffer;
+typedef uint64_t axiom_subscription;
+enum axiom_event_mask { AXIOM_EVENT_OPERATION = 1, AXIOM_EVENT_STATE = 2 };
+enum axiom_data_progress {
+    AXIOM_DATA_UNAVAILABLE = 0,
+    AXIOM_DATA_PENDING = 1,
+    AXIOM_DATA_FAILED = 2,
+    AXIOM_DATA_CONFIRMED = 3
+};
+/* Deferred by dispatch_events, borrowed JSON/bytes. Return nonzero to retain
+   this subscriber's cursor for explicit retry. Never reenter Runtime here. */
+typedef int (*axiom_event_callback)(void*, uint32_t, const char*, size_t, const uint8_t*, size_t);
 enum axiom_status {
     AXIOM_OK = 0,
     AXIOM_INVALID_ARGUMENT = 1,
@@ -48,8 +59,12 @@ AXIOM_API int axiom_call(
     axiom_runtime, const char*, size_t, const uint8_t*, size_t, axiom_buffer*, axiom_buffer* bytes);
 AXIOM_API int axiom_window(axiom_runtime, void**);
 AXIOM_API int
-    axiom_close(axiom_runtime); /* BUSY: pump messages/frames and retry, no false IME commit */
+    axiom_close(axiom_runtime); /* BUSY: pump native work or drain data custody, then retry. */
 AXIOM_API int axiom_abandon(axiom_runtime); /* forced teardown, no IME/persistence promise */
+AXIOM_API int
+axiom_subscribe(axiom_runtime, uint32_t mask, axiom_event_callback, void*, axiom_subscription*);
+AXIOM_API int axiom_unsubscribe(axiom_runtime, axiom_subscription);
+AXIOM_API int axiom_dispatch_events(axiom_runtime);
 AXIOM_API int axiom_buffer_size(axiom_buffer, size_t*);
 AXIOM_API int axiom_buffer_copy(axiom_buffer, void*, size_t, size_t* written);
 AXIOM_API int axiom_buffer_release(axiom_buffer);

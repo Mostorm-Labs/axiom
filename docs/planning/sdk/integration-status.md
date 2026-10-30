@@ -1,6 +1,14 @@
 # SDK integration status
 
-Current implementation is the consumer SDK profile authorized by
+The current Shell / Axis extension is authorized by
+`.aegis/packages/AXIOM-SDK-SHELL-AXIS-20261031-v0.1/package.json`, based on the
+published `4fc3ebfe1325c9197024f1cd7137e54473a1c76d` preview. It adds dynamic
+subscriptions, precommit volatile packet custody/admission, real commit identity,
+external status reports, mixed remote batches, resource discovery/byte retrieval
+and a close publication barrier. See `shell-axis-integration.md`. The published
+preview assets remain unchanged until a new matching release is built/published.
+
+The preceding consumer SDK profile was authorized by
 `.aegis/packages/AXIOM-SDK-CONSUMER-20261031-v0.1/package.json`. Historical SDK-00
 and P31 candidates retain their original status; they are not the inventory of
 this later explicit user-authorized consumer implementation.
@@ -10,7 +18,7 @@ this later explicit user-authorized consumer implementation.
   orthogonal connectors, text/fonts, Image/Crop, multiselection, containers,
   snapshots, operation delivery/remote application and resources. See
   `frame-handoff-closure.md` and `consumer-delivery-20261031.md`.
-- Windows now has a consumer `axiom.dll`, 13 explicit C/POD exports and a
+- Windows now has a consumer `axiom.dll`, 16 explicit C/POD exports and a
   caller-side C++ facade. The /MD interactive external app uses no internal
   headers or component libraries. Native mouse/pointer/IMM32 collection reuses
   the current owners. Independent handles, contact generations, response-buffer

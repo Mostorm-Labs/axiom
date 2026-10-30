@@ -398,6 +398,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     canonicalVisibilitySink_ = sink;
   }
   void setLocalOperationSink(LocalOperationSink* sink) noexcept { localOperationSink_ = sink; }
+  [[nodiscard]] semantic::CanonicalCommitStamp canonicalCommitFence() const noexcept {
+    return {canonicalCommitClock_.runtimeEpoch(), canonicalCommitClock_.lastCommittedOrdinal()};
+  }
   [[nodiscard]] semantic::ApplyResult applyExternalOperation(
       const semantic::Operation&, semantic::ApplySource);
   [[nodiscard]] OperationOutcomeSnapshot operationOutcome() const noexcept {

@@ -36,6 +36,21 @@
 
 namespace canvas::interaction {
 namespace {
+class PublicationReservation final {
+    LocalOperationSink* sink_;
+    bool ready_;
+
+  public:
+    PublicationReservation(LocalOperationSink* sink, const semantic::Operation& op)
+        : sink_(sink), ready_(!sink || sink->preparePublication({&op, 1})) {}
+    ~PublicationReservation() {
+        if (sink_)
+            sink_->abortPreparedPublication();
+    }
+    explicit operator bool() const noexcept {
+        return ready_;
+    }
+};
 bool propertyBool(const semantic::PropertyBag& bag, std::uint32_t id, bool fallback) {
   for (const auto& entry : bag.entries) if (entry.field_id == id)
     if (const auto* value = std::get_if<bool>(&entry.value)) return *value;
@@ -1597,11 +1612,21 @@ bool CanvasEditingRuntime::prepareExplicitIntentInternal(
                                          std::move(beforeExpectations), std::move(afterExpectations));
     if (!entry) return false;
   }
-  if (!sceneCoordinator_->prepareIntent(*sceneCompiler_, input)) return false;
+  if (localOperationSink_ && !localOperationSink_->preparePublication(operations))
+      return false;
+  if (!sceneCoordinator_->prepareIntent(*sceneCompiler_, input)) {
+      if (localOperationSink_)
+          localOperationSink_->abortPreparedPublication();
+      return false;
+  }
   explicitIntentHistory_ = std::move(entry);
   explicitIntent_ = std::move(prepared);
   return true;
-} catch (const std::bad_alloc&) { return false; }
+} catch (const std::bad_alloc&) {
+    if (localOperationSink_)
+        localOperationSink_->abortPreparedPublication();
+    return false;
+}
 
 bool CanvasEditingRuntime::commitExplicitIntent() noexcept {
   if (!explicitIntentActive_ || !explicitIntent_ || !explicitIntentHistory_ ||
@@ -1636,10 +1661,13 @@ bool CanvasEditingRuntime::commitExplicitIntent() noexcept {
 }
 
 void CanvasEditingRuntime::abortExplicitIntent() noexcept {
-  if (sceneCoordinator_) sceneCoordinator_->abortIntent();
-  explicitIntent_.reset();
-  explicitIntentHistory_.reset();
-  explicitIntentActive_ = false;
+    if (localOperationSink_)
+        localOperationSink_->abortPreparedPublication();
+    if (sceneCoordinator_)
+        sceneCoordinator_->abortIntent();
+    explicitIntent_.reset();
+    explicitIntentHistory_.reset();
+    explicitIntentActive_ = false;
 }
 
 bool CanvasEditingRuntime::submitHistoryIntent(std::span<const semantic::Operation> operations,
@@ -1703,6 +1731,9 @@ semantic::PrepareResult CanvasEditingRuntime::prepareTextOperation(const semanti
 bool CanvasEditingRuntime::applyResourceManifestOperation(const semantic::Operation& operation) noexcept {
   if (!canonicalWriteAdmission() || !resourceManifestPort_ ||
       operation.kind() != semantic::OperationKind::kUpdateResourceManifest) return false;
+  PublicationReservation publication(localOperationSink_, operation);
+  if (!publication)
+      return false;
   const auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalCommand,
       semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   if (applied.disposition != semantic::ApplyDisposition::kApplied) return false;
@@ -1757,6 +1788,9 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
       canvas::qualification::kApplyPlan | canvas::qualification::kHistoryEntry};
   if (canvas::qualification::notify(&fc08Context, canvas::qualification::Point::kCmdAdmitted, forward)) return false;
 #endif
+  PublicationReservation publication(localOperationSink_, forward);
+  if (!publication)
+      return false;
   const auto applied = resourceManifestPort_
       ? operationEngine_.apply(forward, semantic::ApplySource::kLocalInteraction, semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_)
       : operationEngine_.apply(forward, semantic::ApplySource::kLocalInteraction, semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
@@ -3069,6 +3103,11 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
     }
     inverse.payload = std::move(remove);
   }
+  PublicationReservation publication(localOperationSink_, operation);
+  if (!publication) {
+      (void)eraserCancel(pointerId);
+      return false;
+  }
   const auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalInteraction,
       semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   eraserTraces_.erase(it);
@@ -3287,6 +3326,11 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
   inverse.schema_version = 1U;
   inverse.payload_version = 1U;
   inverse.payload = semantic::DeleteObjectsOp{{foundation::ObjectId::fromUint64(operationId)}};
+  PublicationReservation publication(localOperationSink_, operation);
+  if (!publication) {
+      (void)cancelBrushSession(pointerId);
+      return false;
+  }
   const auto applied = operationEngine_.apply(
       operation, semantic::ApplySource::kLocalInteraction, semanticObjects_,
       appliedOperations_, semanticGeneration_, canonicalCommitClock_);
@@ -3545,6 +3589,9 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
   if (operation.document_id != documentId_ ||
       operation.id != semantic::OperationId(canvas::foundation::ObjectId::fromUint64(request.operationId)))
     return interaction::SubmitResult::rejected();
+  PublicationReservation publication(localOperationSink_, operation);
+  if (!publication)
+      return interaction::SubmitResult::rejected();
   const auto applied = operationEngine_.apply(
       operation, semantic::ApplySource::kLocalInteraction, semanticObjects_,
       appliedOperations_, semanticGeneration_, canonicalCommitClock_);
@@ -3596,6 +3643,9 @@ interaction::SubmitResult CanvasEditingRuntime::submitAdmitted(
   if (historyPublicationPending_ || !canonicalWriteAdmission() || !historySceneReady() ||
       (source != semantic::ApplySource::kLocalInteraction && source != semantic::ApplySource::kUndoRedo) ||
       !interaction::supportsUndoableCommand(operation.kind())) return interaction::SubmitResult::rejected();
+  PublicationReservation publication(localOperationSink_, operation);
+  if (!publication)
+      return interaction::SubmitResult::rejected();
   auto* commandAdmission = &admission;
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
   class QualifiedAdmission final : public semantic::OperationAdmission {
@@ -3729,12 +3779,25 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
   if (operations.size() != 1U || source != semantic::ApplySource::kUndoRedo ||
       !historySceneReady()) return interaction::SubmitResult::rejected();
   for (const auto& operation : operations) {
-    const auto applied = resourceManifestPort_
-        ? operationEngine_.apply(operation, source, semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_)
-        : operationEngine_.apply(operation, source, semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
-    if (applied.disposition != semantic::ApplyDisposition::kApplied) {
-      return interaction::SubmitResult::rejected();
-    }
+      PublicationReservation publication(localOperationSink_, operation);
+      if (!publication)
+          return interaction::SubmitResult::rejected();
+      const auto applied = resourceManifestPort_ ? operationEngine_.apply(operation,
+                                                                          source,
+                                                                          semanticObjects_,
+                                                                          *resourceManifestPort_,
+                                                                          appliedOperations_,
+                                                                          semanticGeneration_,
+                                                                          canonicalCommitClock_)
+                                                 : operationEngine_.apply(operation,
+                                                                          source,
+                                                                          semanticObjects_,
+                                                                          appliedOperations_,
+                                                                          semanticGeneration_,
+                                                                          canonicalCommitClock_);
+      if (applied.disposition != semantic::ApplyDisposition::kApplied) {
+          return interaction::SubmitResult::rejected();
+      }
     observeApplied(operation, applied);
     if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr &&
         sceneCompiler_ != nullptr) {

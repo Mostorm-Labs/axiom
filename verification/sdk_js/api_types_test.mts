@@ -8,6 +8,14 @@ const color:Color=[0,0,1,1];await sdk.text.format({color,bold:true});
 await sdk.createConnector({start:{point:[1,2]},end:{objectId:sdk.readState().primary,port:4}});
 const checkpoint=await sdk.captureSnapshot({generation:sdk.readState().generation,documentRevision:'9007199254740993',recoveryFrontier:[8,1,16,1,24,1]});
 checkpoint.bytes.slice();checkpoint.checkpointDigest.slice();
+checkpoint.throughCommit.ordinal;
+sdk.data.attach({capacity:1024,byteCapacity:32*1024*1024});
+const stop=sdk.subscribeOperations(packet=>{packet.bytes.slice();packet.commit.ordinal;});
+sdk.subscribeState(state=>state.canUndo);
+await sdk.dispatchEvents();stop();
+const packet=sdk.data.readNext();if(packet){sdk.data.reportStatus(packet,3,1);sdk.data.release(packet);}
+await sdk.applyRemoteOperations(packet?[packet]:[]);
+await sdk.applyReplayOperations(packet?[packet]:[]);
 // @ts-expect-error unsupported tools do not widen to arbitrary strings
 await sdk.selectTool('brushX');
 // @ts-expect-error revisions must retain exact decimal representation

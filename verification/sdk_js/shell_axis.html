@@ -1,0 +1,58 @@
+<!doctype html><meta charset="utf-8"><style>.mount{width:400px;height:300px;display:inline-block}</style>
+<div id="one" class="mount"></div><div id="two" class="mount"></div><pre id="result">PENDING</pre>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+const results=[],errors=[];
+const assert=(v,message)=>{if(!v)throw Error(message);results.push(message);};
+try{
+  const options={documentId:'1234567890abcdef1234567890abcdef',onError:e=>errors.push(e)};
+  const a=await createRuntime({...options,mount:document.getElementById('one')});
+  const b=await createRuntime({...options,mount:document.getElementById('two')});
+  const resources=a.resources.list();
+  assert(resources.entries.length>0&&a.resources.readBytes(resources.entries[0].token).length>0,'external data owner can enumerate and retain real resource bytes');
+  a.data.attach({capacity:2});b.data.attach();
+  const packets=[],states=[];
+  const stop=a.subscribeOperations(p=>packets.push(p));
+  const stopState=a.subscribeState(s=>states.push(s));
+  await a.createSticky({size:80});await a.createSticky({size:80,x:100});
+  await a.dispatchEvents();
+  assert(packets.length===2&&packets[0].bytes.length>0,'deferred subscription returns owned real Operation bytes');
+  assert(packets[0].operationId!==packets[1].operationId&&packets[0].commit.ordinal!==packets[1].commit.ordinal,'full identity and canonical commit order');
+  const before=a.readState();let rejected=false;
+  try{await a.createSticky({size:80});}catch{rejected=true;}
+  assert(rejected&&a.readState().generation===before.generation&&a.readState().objects===before.objects,'queue pressure rejects canonical mutation');
+  a.data.reportStatus(packets[1],3,1);
+  assert(a.readState().lastCommit.localDurable===3,'Axis report reaches existing Runtime status owner');
+  rejected=false;try{b.data.reportStatus(packets[1],3,3);}catch{rejected=true;}
+  assert(rejected,'foreign Runtime data identity rejected');
+  const outcomes=await b.applyRemoteOperations([...packets,packets[0],{operationId:'0'.repeat(31)+'1',bytes:packets[0].bytes}]);
+  assert(outcomes.length===4&&outcomes[0].ok&&outcomes[1].ok&&outcomes[2].ok&&!outcomes[3].ok,'independent remote batch and packet identity validation');
+  assert(!outcomes[2].commit&&b.data.status().pending===0&&b.readState().objects===2,'duplicate has no new commit and remote has no local echo');
+  const replayMount=document.createElement('div');replayMount.className='mount';document.body.append(replayMount);
+  const recovered=await createRuntime({...options,mount:replayMount});recovered.data.attach();
+  const replayed=await recovered.applyReplayOperations(packets);
+  assert(replayed.every(r=>r.ok&&r.source===4)&&recovered.readState().objects===2&&!recovered.readState().canUndo&&recovered.data.status().pending===0,'local replay uses RestoreReplay without new local output or History');
+  await recovered.applyReplayOperation(packets[0].bytes);assert(recovered.readState().objects===2,'local replay retains original OperationId and deduplicates');
+  await recovered.close();replayMount.remove();
+  await a.dispatchEvents();assert(states.length>0,'shell observes controls/history/Axis state');
+  stop();stopState();
+  rejected=false;try{await a.close();}catch(e){rejected=e.code==='PUBLICATION_PENDING';}
+  assert(rejected,'controlled close retains unpublished data');
+  rejected=false;try{await a.createSticky({size:80});}catch(e){rejected=e.code==='DOCUMENT_CLOSING';}
+  assert(rejected,'close barrier rejects new shell commands while data can drain');
+  a.data.release(packets[1]);
+  assert(a.data.status().pending===0,'explicit custody release drains retained prefix');
+  await a.close();await b.close();
+  assert(packets.length===2,'no callback after unsubscribe/close');
+  const mount=document.createElement('div');mount.className='mount';document.body.append(mount);
+  const retry=await createRuntime({...options,mount});let attempts=0;
+  const unsubscribe=retry.subscribeOperations(()=>{if(++attempts===1)throw Error('application queue unavailable');});
+  await retry.createSticky({size:80});await retry.dispatchEvents();
+  await Promise.resolve();
+  assert(retry.data.status().pending===1&&errors.some(e=>e.code==='EVENT_LISTENER_FAILED'),'listener exception reports failure while retaining custody');
+  await retry.dispatchEvents();assert(attempts===2,'explicit retry delivers the failed cursor');
+  unsubscribe();retry.data.release(retry.data.readNext());await retry.close();mount.remove();
+  assert(errors.length===1&&errors[0].code==='EVENT_LISTENER_FAILED','expected listener error classified exactly');errors.length=0;
+  document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,errors:errors.map(e=>e.code)});
+}catch(e){document.getElementById('result').textContent=JSON.stringify({status:'FAIL',results,error:String(e),stack:e.stack});}
+</script>

@@ -1,0 +1,153 @@
+{
+  "baseline_revision": "eaccff7a35f38991a2826216f2cca4a704554bec",
+  "baseline_build_exit": 0,
+  "baseline_ctest_exit": 8,
+  "relocated_ctest_exit": 8,
+  "relocated_tests": 56,
+  "passed": 44,
+  "failed": 12,
+  "failure_comparison": [
+    {
+      "name": "FC01Creation-width-style",
+      "baseline_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "relocated_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "assertions": [
+        "Assertion failed: service.processPending(1) == 1, line 290"
+      ]
+    },
+    {
+      "name": "G45BrushRuntimePipeline",
+      "baseline_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "relocated_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "assertions": [
+        "Assertion failed: host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0), line 12"
+      ]
+    },
+    {
+      "name": "G46BQueryStructure",
+      "baseline_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "relocated_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "assertions": [
+        "Assertion failed: begin != std::string::npos && end != std::string::npos && end > begin, line 17"
+      ]
+    },
+    {
+      "name": "G46CQualificationBundle",
+      "baseline_failure": {
+        "message": "Timeout"
+      },
+      "relocated_failure": {
+        "message": "Timeout"
+      },
+      "assertions": []
+    },
+    {
+      "name": "G46PlaygroundTransform",
+      "baseline_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "relocated_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "assertions": [
+        "Assertion failed: host.presentCanonicalFrame(host.canonicalFrameCount()+1U, 0.0, false), line 20"
+      ]
+    },
+    {
+      "name": "G47TextHost",
+      "baseline_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "relocated_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "assertions": [
+        "Assertion failed: host.textLayoutMetrics().objectLayouts==transformLayouts, line 47"
+      ]
+    },
+    {
+      "name": "G4InkPlaygroundComposition",
+      "baseline_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "relocated_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "assertions": [
+        "Assertion failed: host.commitStroke(17, 71), line 29"
+      ]
+    },
+    {
+      "name": "G4InkPlaygroundRepeatedStrokes",
+      "baseline_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "relocated_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "assertions": [
+        "Assertion failed: host.commitStroke(21, 121), line 81"
+      ]
+    },
+    {
+      "name": "G4InkPlaygroundSelection",
+      "baseline_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "relocated_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "assertions": [
+        "Assertion failed: host.acceptPlatformBatch(batch, 2'000'000U), line 259"
+      ]
+    },
+    {
+      "name": "G4InkPlaygroundSurface",
+      "baseline_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "relocated_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "assertions": [
+        "Assertion failed: host.resizeSurface(800, 450), line 53"
+      ]
+    },
+    {
+      "name": "G4MultiPointerPlayground",
+      "baseline_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "relocated_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "assertions": [
+        "Assertion failed: host.commitStroke(second, 102, 202), line 139"
+      ]
+    },
+    {
+      "name": "G4ViewportGestureState",
+      "baseline_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "relocated_failure": {
+        "message": "Exit code 0xc0000409"
+      },
+      "assertions": [
+        "Assertion failed: host.commitStroke(third, 403, 403), line 206"
+      ]
+    }
+  ]
+}

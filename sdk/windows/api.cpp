@@ -15,9 +15,17 @@ using canvas::sdk::Json;
 struct Context {
     std::thread::id thread = std::this_thread::get_id();
     bool busy = false;
+    bool publicationClosing = false;
     axiom_options options{};
     std::unique_ptr<canvas::sdk::Session> session;
     std::set<uint64_t> sources;
+    struct Subscription {
+        uint32_t mask;
+        axiom_event_callback callback;
+        void* context;
+        Json cursor = nullptr, lastState = nullptr;
+    };
+    std::map<uint64_t, Subscription> subscriptions;
     std::map<std::pair<uint64_t, uint64_t>, canvas::input::PointerKey> contacts;
     canvas::sdk::NativePlatform& platform() {
         return static_cast<canvas::sdk::NativePlatform&>(session->platform());
@@ -285,11 +293,11 @@ int axiom_call(axiom_runtime id,
         const auto action = j.contains("action") && j["action"].is_string()
                                 ? j["action"].get<std::string>()
                                 : std::string{};
-        const bool editing = cmd == "version" || cmd == "text" || cmd == "textEdit" ||
-                             cmd == "state" || cmd == "frame" || cmd == "selection" ||
-                             cmd == "hover" || cmd == "readSection" || cmd == "presets" ||
-                             action == "read" || action == "readCrop" || action == "token" ||
-                             action == "receipt";
+        const bool editing =
+            cmd == "data" || cmd == "version" || cmd == "text" || cmd == "textEdit" ||
+            cmd == "state" || cmd == "frame" || cmd == "selection" || cmd == "hover" ||
+            cmd == "readSection" || cmd == "presets" || action == "list" || action == "bytes" ||
+            action == "read" || action == "readCrop" || action == "token" || action == "receipt";
         if ((!editing || format) && !c.platform().finishText(format))
             return AXIOM_BUSY;
         auto reply = c.session->call(std::string_view(data, size), {bytes, count});
@@ -330,11 +338,102 @@ int axiom_close(axiom_runtime id) {
     return checked(id, [&](Context& c) -> int {
         if (!c.contacts.empty() || c.platform().activeContacts() || !c.platform().finishText(false))
             return AXIOM_BUSY;
-        if (!Json::parse(c.session->call("{\"command\":\"close\"}")).value("ok", false))
+        const auto result = Json::parse(c.session->call("{\"command\":\"close\"}"));
+        if (!result.value("ok", false)) {
+            if (result.value("code",std::string{})=="PUBLICATION_PENDING") {
+                c.publicationClosing=true;c.platform().pauseInputForClose();return AXIOM_BUSY;
+            }
             return AXIOM_REJECTED;
+        }
         c.session->clearCallbacks();
         std::lock_guard lock(mutex);
         runtimes.erase(id);
+        return AXIOM_OK;
+    });
+}
+int axiom_subscribe(axiom_runtime id,
+                    uint32_t mask,
+                    axiom_event_callback callback,
+                    void* context,
+                    axiom_subscription* out) {
+    if (out)
+        *out = 0;
+    if (!out || !callback || mask == 0 || mask > 3)
+        return AXIOM_INVALID_ARGUMENT;
+    return checked(id, [&](Context& c) -> int {
+        if (c.subscriptions.size() >= 64)
+            return AXIOM_BUSY;
+        Context::Subscription s{mask, callback, context};
+        if (mask & AXIOM_EVENT_OPERATION) {
+            const auto result =
+                Json::parse(c.session->call("{\"command\":\"data\",\"action\":\"attach\"}"));
+            if (!result.value("ok", false))
+                return AXIOM_REJECTED;
+            s.cursor = result.at("value").at("latest");
+        }
+        const auto token = next++;
+        c.subscriptions.emplace(token, std::move(s));
+        *out = token;
+        return AXIOM_OK;
+    });
+}
+int axiom_unsubscribe(axiom_runtime id, axiom_subscription token) {
+    return checked(id, [&](Context& c) -> int {
+        return c.subscriptions.erase(token) ? AXIOM_OK : AXIOM_INVALID_HANDLE;
+    });
+}
+int axiom_dispatch_events(axiom_runtime id) {
+    return checked(id, [&](Context& c) -> int {
+        struct CallbackGuard {
+            Context& c;
+            explicit CallbackGuard(Context& value) : c(value) {
+                c.platform().inCallback(true);
+            }
+            ~CallbackGuard() {
+                c.platform().inCallback(false);
+            }
+        };
+        const auto deliver = [&](Context::Subscription& s,
+                                 uint32_t kind,
+                                 const Json& value,
+                                 std::span<const uint8_t> bytes) {
+            const auto json = value.dump();
+            CallbackGuard guard(c);
+            try {
+                return s.callback(
+                    s.context, kind, json.data(), json.size(), bytes.data(), bytes.size());
+            } catch (...) {
+                return static_cast<int>(AXIOM_INTERNAL_ERROR);
+            }
+        };
+        for (auto& [token, s] : c.subscriptions) {
+            (void)token;
+            if (s.mask & AXIOM_EVENT_OPERATION)
+                for (unsigned n = 0; n < 64; ++n) {
+                    const Json request = {
+                        {"command", "data"}, {"action", "next"}, {"after", s.cursor}};
+                    const auto result = Json::parse(c.session->call(request.dump()));
+                    if (!result.value("ok", false))
+                        return AXIOM_REJECTED;
+                    const auto& packet = result.at("value");
+                    if (packet.is_null())
+                        break;
+                    const auto code = deliver(s, AXIOM_EVENT_OPERATION, packet, c.session->bytes());
+                    if (code)
+                        return code;
+                    s.cursor = packet;
+                }
+            if (s.mask & AXIOM_EVENT_STATE) {
+                const auto value =
+                    Json::parse(c.session->call("{\"command\":\"state\"}")).at("value");
+                if (value != s.lastState) {
+                    const auto code = deliver(s, AXIOM_EVENT_STATE, value, {});
+                    if (code)
+                        return code;
+                    s.lastState = value;
+                }
+            }
+        }
         return AXIOM_OK;
     });
 }
@@ -408,6 +507,7 @@ int axiom_input_begin(axiom_runtime id, const axiom_sample* s, size_t n, axiom_c
         return AXIOM_INVALID_ARGUMENT;
     *out = {};
     return checked(id, [&](Context& c) -> int {
+        if (c.publicationClosing) return AXIOM_BUSY;
         auto b = batch(s, n);
         if (!c.sources.contains(s->source) || c.contacts.contains({s->source, s->pointer}))
             return AXIOM_REJECTED;

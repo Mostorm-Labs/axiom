@@ -28,7 +28,7 @@ This prerelease is not a cross-version C++ ABI promise.
 axiom::Runtime runtime({parentHwnd}); // owns a child canvas HWND, same UI thread
 runtime.rectangle();
 runtime.permission(1); // explicit local-single-user permission policy
-runtime.group();       // existing Selection / topology / History owner
+// After the user selects two or more objects: runtime.group().
 runtime.frame();       // service in the normal message loop
 ```
 
@@ -46,6 +46,19 @@ resource tokens/receipts/publication. Named C++ methods use the same v1 command
 vocabulary as JS. Advanced `invoke(command, args, bytes)` is explicitly decoded;
 it is not arbitrary canonical patching. Id128 is 32 lowercase hex characters;
 uint64 JSON values are decimal strings. See `axiom.hpp` and the shipped example.
+
+For Product Shell / Axis integration, use `subscribe`, `unsubscribe` and
+`dispatchEvents` (also serviced by `frame`). Operation subscription attaches a
+bounded volatile custody queue. Read retained packets with `nextOperation`, copy
+their exact IDs/bytes into the data owner's queue, then `releaseOperations` through
+the accepted prefix. `reportOperationStatus` returns actual external durability /
+sync facts through the existing Runtime status projection. Listener success is
+not custody release or a saved file. A full publication queue rejects local writes;
+controlled close stays BUSY until it is drained. `resourceManifest` and
+`readResourceBytes` expose current metadata and validated bytes without Semantic
+headers. `applyRemoteBatch` returns independent per-packet results, without local
+echo or cross-operation atomicity. See the repository's
+`docs/planning/sdk/shell-axis-integration.md` for the complete lifecycle and examples.
 
 `api.h` is the C/POD boundary for LoadLibrary and other language bindings.
 Check `axiom_abi_version`, size/version of config, and every transport status;

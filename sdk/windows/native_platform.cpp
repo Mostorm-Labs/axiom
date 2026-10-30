@@ -72,7 +72,8 @@ LRESULT CALLBACK proc(HWND w, UINT m, WPARAM a, LPARAM b) {
             return 0;
         if (s->inCallback &&
             ((m >= WM_KEYFIRST && m <= WM_KEYLAST) || (m >= WM_MOUSEFIRST && m <= WM_MOUSELAST) ||
-             (m >= WM_POINTERUPDATE && m <= WM_POINTERUP)))
+             (m >= WM_POINTERUPDATE && m <= WM_POINTERUP) ||
+             (m >= WM_IME_STARTCOMPOSITION && m <= WM_IME_COMPOSITION) || m==WM_IME_CHAR))
             return 0;
         const bool hostFocus = m == WM_KILLFOCUS && a &&
                                (reinterpret_cast<HWND>(a) == GetParent(w) ||
@@ -182,6 +183,7 @@ class Platform final : public NativePlatform {
     HMODULE module_ = module();
     std::wstring name_ = className();
     bool registered_ = false;
+    bool publicationClosing_ = false;
 
   public:
     Platform(HWND parent, const std::filesystem::path& assets) : parent_(parent), assets_(assets) {}
@@ -192,8 +194,9 @@ class Platform final : public NativePlatform {
         return state_.window;
     }
     void inCallback(bool value) override {
-        state_.inCallback = value;
+        state_.inCallback = value || publicationClosing_;
     }
+    void pauseInputForClose() override { publicationClosing_=true;state_.inCallback=true; }
     Json open(runtime::RuntimeComposition& owner, const Json&) override {
         std::unique_lock lock(classMutex);
         WNDCLASSW cls{};

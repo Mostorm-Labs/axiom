@@ -1,0 +1,61 @@
+{
+  "task_id": "AXIOM-SDK-SHELL-AXIS-20261031",
+  "stage": "P32",
+  "p32_authorized": true,
+  "authorization": {
+    "kind": "explicit_user_request",
+    "text": "要把runtime对接product shell和shared data（axis）的接口都开放出来，让外部能够衔接"
+  },
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "4fc3ebfe1325c9197024f1cd7137e54473a1c76d",
+    "relation": "ancestor"
+  },
+  "execution_ref": "refs/heads/codex/sdk-shell-axis-bridge",
+  "contract": "docs/planning/sdk/shell-axis-preview-contract.md",
+  "required_changes": [
+    "Expose dynamic Operation and coarse shell subscriptions in DLL/C++ and JS, with explicit unsubscribe and non-reentrant dispatch",
+    "Expose real Operation identity, source, commit stamp and semantic generations without requiring external Semantic headers",
+    "Retain bounded outbound packets until explicit data-owner custody release; prepare encoding and capacity before local canonical mutation; reject overload without mutation",
+    "Expose per-operation local-durability/cloud-sync reports through the existing LocalOperationSink status path, without treating them as document/blob closure proof",
+    "Expose independent mixed-outcome remote batch application with packet identity checks, no local echo and no generic Transaction",
+    "Expose snapshot through-commit and a controlled close publication barrier; preserve force abandon semantics",
+    "Document external Product Shell and Axis responsibilities and provide real external consumer tests"
+  ],
+  "allowed_paths": [
+    "sdk/",
+    "runtime/composition/",
+    "runtime/interaction/",
+    "verification/sdk_windows_dll/",
+    "verification/sdk_js/",
+    "docs/planning/sdk/",
+    ".aegis/packages/AXIOM-SDK-SHELL-AXIS-20261031-v0.1/"
+  ],
+  "forbidden_changes": [
+    "canonical/schema or SDK locks",
+    "new storage/network/outbox owner",
+    "server revision or generic canonical transaction",
+    "D07 OOM changes",
+    "global Aegis registries",
+    "main merge or release replacement"
+  ],
+  "required_proof": [
+    "Real published old DLL RED for missing data attach",
+    "Strict native SDK and external consumer with owned bytes/metadata, replay no-echo, duplicate/mixed batches, wrong/stale status, backlog admission, abort, Undo/Redo, unsubscribe and close barrier",
+    "Actual Chrome/WASM JS consumer and existing frame/input/IME synthetic regression",
+    "Existing affected Runtime/History/composition regression, explicit missing/failed test reporting"
+  ],
+  "terminal_success": "Working Windows and JS external bridge with exact local build/test evidence; no storage, protocol, Gate, PHYS or stable-ABI claim",
+  "terminal_blockers": [
+    "unavailable locked toolchain/dependency",
+    "existing owner cannot satisfy required contract without unresolved semantic changes"
+  ],
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "scope_clarifications": [
+    "Local durable-log replay reuses the existing RestoreReplay source; remote synchronization retains RemoteSync. Neither path emits new local Operations or restores History."
+  ]
+}

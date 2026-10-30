@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <memory>
 #include <optional>
+#include <span>
 
 namespace canvas::runtime {
 
@@ -73,6 +74,13 @@ class RuntimeComposition final {
   // means canonical apply, not storage durability or network acknowledgment.
   using LocalOperationCallback = void (*)(void*, const semantic::Operation&,
                                           const semantic::CanonicalCommitRecord&) noexcept;
+  using LocalOperationPrepare = bool (*)(void*, std::span<const semantic::Operation>) noexcept;
+  using LocalOperationAbort = void (*)(void*) noexcept;
+  struct OperationDataStatus {
+      std::uint8_t localDurable = 0, cloudSynced = 0;
+  };
+  using LocalOperationStatus = OperationDataStatus (*)(
+      void*, const semantic::OperationId&, const semantic::CanonicalCommitStamp&) noexcept;
   explicit RuntimeComposition(std::uint64_t viewId = 1);
   ~RuntimeComposition();
   RuntimeComposition(const RuntimeComposition&) = delete;
@@ -85,10 +93,17 @@ class RuntimeComposition final {
   // snapshot restore or a durable-storage acknowledgment.
   [[nodiscard]] bool openDocument(foundation::ObjectId documentId) noexcept;
   [[nodiscard]] std::optional<foundation::ObjectId> documentId() const noexcept;
+  [[nodiscard]] std::optional<semantic::CanonicalCommitStamp> canonicalCommitFence() const noexcept;
   [[nodiscard]] bool setLocalOperationCallback(LocalOperationCallback callback, void* context) noexcept;
+  [[nodiscard]] bool setLocalOperationCallbacks(LocalOperationCallback callback,
+                                                void* context,
+                                                LocalOperationPrepare prepare,
+                                                LocalOperationAbort abort,
+                                                LocalOperationStatus status) noexcept;
   // Remote apply is canonical-only; an Applied result does not assert that
   // a Scene has presented or that external storage has persisted the input.
   [[nodiscard]] semantic::ApplyResult applyRemoteOperation(const semantic::Operation& operation) noexcept;
+  [[nodiscard]] semantic::ApplyResult applyReplayOperation(const semantic::Operation& operation) noexcept;
   [[nodiscard]] DocumentSnapshotResult captureDocumentSnapshot(const DocumentSnapshotRequest& request) noexcept;
   // Restores only into a fresh owner; checkpoint metadata is supplied by the
   // data layer. History and remote operations before the frontier are not replayed.
@@ -116,6 +131,9 @@ class RuntimeComposition final {
   [[nodiscard]] bool publishResourceBytes(const ResourceBindingToken& token,
                                           std::vector<std::uint8_t> bytes) noexcept;
   [[nodiscard]] std::optional<ResourcePortReceipt> resourceReceipt(foundation::ObjectId id) const noexcept;
+  [[nodiscard]] std::optional<ResourceBindingSnapshot> resourceSnapshot() const noexcept;
+  [[nodiscard]] std::optional<std::vector<std::uint8_t>>
+  readResourceBytes(const ResourceBindingToken&) const noexcept;
   // Empty when queried from a thread other than the owner thread.
   [[nodiscard]] std::optional<RuntimeSurfaceMetrics> surfaceMetrics() const noexcept;
   [[nodiscard]] std::optional<RuntimeHostObservation> hostObservation() const noexcept;

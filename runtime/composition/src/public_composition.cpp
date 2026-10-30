@@ -11,15 +11,44 @@ class RuntimeComposition::Impl final {
   class Sink final : public interaction::LocalOperationSink {
    public:
     RuntimeComposition::LocalOperationCallback callback = nullptr;
+    RuntimeComposition::LocalOperationPrepare prepare = nullptr;
+    RuntimeComposition::LocalOperationAbort abort = nullptr;
+    RuntimeComposition::LocalOperationStatus readStatus = nullptr;
     void* context = nullptr;
-    bool active = false;
+    mutable bool active = false;
+    bool preparePublication(std::span<const semantic::Operation> operations) noexcept override {
+        if (active)
+            return false;
+        active = true;
+        const bool result = !prepare || prepare(context, operations);
+        active = false;
+        return result;
+    }
+    void abortPreparedPublication() noexcept override {
+        if (abort) {
+            active = true;
+            abort(context);
+            active = false;
+        }
+    }
     void applied(const semantic::Operation& operation,
                  const semantic::CanonicalCommitRecord& record) noexcept override {
       if (!callback || active) return;
       active = true; callback(context, operation, record); active = false;
     }
-    interaction::AxisOperationStatus status(const semantic::OperationId&,
-        const semantic::CanonicalCommitStamp&) const noexcept override { return {}; }
+    interaction::AxisOperationStatus
+    status(const semantic::OperationId& id,
+           const semantic::CanonicalCommitStamp& stamp) const noexcept override {
+        if (!readStatus || active)
+            return {};
+        active = true;
+        const auto value = readStatus(context, id, stamp);
+        active = false;
+        if (value.localDurable > 3 || value.cloudSynced > 3)
+            return {};
+        return {static_cast<interaction::AxisProgress>(value.localDurable),
+                static_cast<interaction::AxisProgress>(value.cloudSynced)};
+    }
   };
   explicit Impl(std::uint64_t id) : core(render::ViewId{id}), viewId(id) {}
   ~Impl() { (void)core.setLocalOperationSink(nullptr); }
@@ -48,15 +77,37 @@ std::optional<foundation::ObjectId> RuntimeComposition::documentId() const noexc
   return impl_->core.documentId().value();
 }
 bool RuntimeComposition::setLocalOperationCallback(LocalOperationCallback callback, void* context) noexcept {
-  if (std::this_thread::get_id() != impl_->ownerThread || impl_->sink.active ||
-      impl_->core.readback().state != RuntimeCompositionState::kReady) return false;
-  if (!impl_->core.setLocalOperationSink(callback ? &impl_->sink : nullptr)) return false;
-  impl_->sink.callback = callback; impl_->sink.context = callback ? context : nullptr;
-  return true;
+    return setLocalOperationCallbacks(callback, context, nullptr, nullptr, nullptr);
+}
+std::optional<semantic::CanonicalCommitStamp> RuntimeComposition::canonicalCommitFence() const noexcept {
+  if (std::this_thread::get_id()!=impl_->ownerThread ||
+      impl_->core.readback().state!=RuntimeCompositionState::kReady) return std::nullopt;
+  return impl_->core.canonicalCommitFence();
+}
+bool RuntimeComposition::setLocalOperationCallbacks(LocalOperationCallback callback,
+                                                    void* context,
+                                                    LocalOperationPrepare prepare,
+                                                    LocalOperationAbort abort,
+                                                    LocalOperationStatus status) noexcept {
+    if (std::this_thread::get_id() != impl_->ownerThread || impl_->sink.active ||
+        impl_->core.readback().state != RuntimeCompositionState::kReady)
+        return false;
+    if (!impl_->core.setLocalOperationSink(callback ? &impl_->sink : nullptr))
+        return false;
+    impl_->sink.callback = callback;
+    impl_->sink.context = callback ? context : nullptr;
+    impl_->sink.prepare = callback ? prepare : nullptr;
+    impl_->sink.abort = callback ? abort : nullptr;
+    impl_->sink.readStatus = callback ? status : nullptr;
+    return true;
 }
 semantic::ApplyResult RuntimeComposition::applyRemoteOperation(const semantic::Operation& operation) noexcept {
   if (std::this_thread::get_id() != impl_->ownerThread || impl_->sink.active) return {};
   return impl_->core.applyExternalOperation(operation, semantic::ApplySource::kRemoteSync);
+}
+semantic::ApplyResult RuntimeComposition::applyReplayOperation(const semantic::Operation& operation) noexcept {
+  if (std::this_thread::get_id()!=impl_->ownerThread || impl_->sink.active) return {};
+  return impl_->core.applyExternalOperation(operation,semantic::ApplySource::kRestoreReplay);
 }
 DocumentSnapshotResult RuntimeComposition::captureDocumentSnapshot(const DocumentSnapshotRequest& request) noexcept {
   if (std::this_thread::get_id() != impl_->ownerThread) {
@@ -165,6 +216,23 @@ std::optional<RuntimeSurfaceMetrics> RuntimeComposition::surfaceMetrics() const 
   return RuntimeSurfaceMetrics{s.viewId.value(), s.surfaceGeneration, s.metricsGeneration,
       s.logicalWidth, s.logicalHeight, s.width, s.height, s.devicePixelRatio,
       s.displayScale, s.available};
+}
+std::optional<ResourceBindingSnapshot> RuntimeComposition::resourceSnapshot() const noexcept {
+    if (std::this_thread::get_id() != impl_->ownerThread ||
+        impl_->core.readback().state != RuntimeCompositionState::kReady)
+        return std::nullopt;
+    try {
+        return impl_->core.resources();
+    } catch (...) {
+        return std::nullopt;
+    }
+}
+std::optional<std::vector<std::uint8_t>>
+RuntimeComposition::readResourceBytes(const ResourceBindingToken& token) const noexcept {
+    if (std::this_thread::get_id() != impl_->ownerThread ||
+        impl_->core.readback().state != RuntimeCompositionState::kReady)
+        return std::nullopt;
+    return impl_->core.readResourceBytes(token);
 }
 std::optional<RuntimeHostObservation> RuntimeComposition::hostObservation() const noexcept {
   if (std::this_thread::get_id() != impl_->ownerThread) return std::nullopt;

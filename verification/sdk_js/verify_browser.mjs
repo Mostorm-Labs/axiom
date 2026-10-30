@@ -15,6 +15,7 @@ try {
   const framesOnly=process.argv[5]==='frames';
   await fs.copyFile(new URL(framesOnly?'./frame_handoff.html':'./browser.html',import.meta.url),path.join(files,'index.html'));
   await fs.copyFile(new URL('./frame_handoff.html',import.meta.url),path.join(files,'frame_handoff.html'));
+  await fs.copyFile(new URL('./shell_axis.html',import.meta.url),path.join(files,'shell_axis.html'));
   server=http.createServer(async(req,res)=>{try{const p=path.resolve(files,'.'+new URL(req.url,'http://localhost').pathname.replace(/\/$/,'/index.html'));
     if(!p.startsWith(files+path.sep))throw Error('path');
     res.setHeader('Content-Type',p.endsWith('.wasm')?'application/wasm':p.endsWith('.mjs')?'text/javascript':p.endsWith('.html')?'text/html':'application/octet-stream');res.end(await fs.readFile(p));
@@ -53,6 +54,12 @@ try {
   observation.frameRegression=handoff;
   console.log(JSON.stringify({frameRegression:handoff}));
   if(!validFrames(handoff))throw Error('JS SDK frame handoff regression failed');
+  await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/shell_axis.html`});
+  let bridge;
+  for(let i=0;i<900;i++){const r=await send('Runtime.evaluate',{expression:`document.getElementById('result')?.textContent`,returnByValue:true});if(r.result.value&&r.result.value!=='PENDING'){bridge=JSON.parse(r.result.value);break;}await delay(100);}
+  observation.shellAxis=bridge;
+  console.log(JSON.stringify({shellAxis:bridge}));
+  if(bridge?.status!=='PASS'||bridge.results?.length<10||bridge.errors?.length)throw Error('Shell/Axis SDK acceptance failed');
   await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/example.html`});
   const evaluate=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
   const until=async(expression,label)=>{for(let i=0;i<300;i++){if(await evaluate(expression))return;await delay(50);}throw Error('Example timeout: '+label);};

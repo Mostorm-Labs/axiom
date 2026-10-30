@@ -4,6 +4,8 @@
 
 #include <array>
 #include <functional>
+#include <map>
+#include <memory>
 #include <span>
 #include <stdexcept>
 #include <string>
@@ -66,6 +68,23 @@ class Runtime final {
     Options options_;
     axiom_runtime id_ = 0;
     uint64_t textRequest_ = 0;
+    struct Listener {
+        std::function<void(uint32_t, const Json&, std::span<const uint8_t>)> call;
+    };
+    std::map<uint64_t, std::unique_ptr<Listener>> listeners_;
+    static int event(void* p,
+                     uint32_t kind,
+                     const char* json,
+                     size_t n,
+                     const uint8_t* bytes,
+                     size_t size) noexcept {
+        try {
+            static_cast<Listener*>(p)->call(kind, Json::parse(json, json + n), {bytes, size});
+            return AXIOM_OK;
+        } catch (...) {
+            return AXIOM_INTERNAL_ERROR;
+        }
+    }
     static void operation(void* p, const uint8_t* b, size_t n) noexcept {
         auto& self = *static_cast<Runtime*>(p);
         try {
@@ -151,8 +170,56 @@ class Runtime final {
         return invoke("state").value.at("value");
     }
     Json frame(bool force = false) {
-        return invoke("frame", {{"force", force}}).value;
+        auto result = invoke("frame", {{"force", force}}).value;
+        dispatchEvents();
+        return result;
     }
+    uint64_t subscribe(uint32_t mask,
+                       std::function<void(uint32_t, const Json&, std::span<const uint8_t>)> fn) {
+        auto listener = std::make_unique<Listener>();
+        listener->call = std::move(fn);
+        uint64_t token = 0;
+        check(axiom_subscribe(id_, mask, event, listener.get(), &token));
+        try {
+            listeners_.emplace(token, std::move(listener));
+        } catch (...) {
+            (void)axiom_unsubscribe(id_, token);
+            throw;
+        }
+        return token;
+    }
+    void unsubscribe(uint64_t token) {
+        check(axiom_unsubscribe(id_, token));
+        listeners_.erase(token);
+    }
+    void dispatchEvents() {
+        check(axiom_dispatch_events(id_));
+    }
+    Json attachData(Json options = Json::object()) {
+        options["action"] = "attach";
+        return invoke("data", options).value.at("value");
+    }
+    Json dataStatus() {
+        return invoke("data", {{"action", "status"}}).value.at("value");
+    }
+    Response nextOperation(Json after = nullptr) {
+        return invoke("data", {{"action", "next"}, {"after", after}});
+    }
+    void releaseOperations(Json packet) {
+        (void)invoke("data", {{"action", "release"}, {"packet", packet}});
+    }
+    void reportOperationStatus(Json packet, unsigned localDurable, unsigned cloudSynced) {
+        (void)invoke("data",
+                     {{"action", "report"},
+                      {"packet", packet},
+                      {"localDurable", localDurable},
+                      {"cloudSynced", cloudSynced}});
+    }
+    Json applyRemoteBatch(Json packets) {
+        return invoke("remoteBatch", {{"packets", packets}}).value.at("value");
+    }
+    Json applyReplay(std::span<const uint8_t> bytes) { return invoke("replay",Json::object(),bytes).value; }
+    Json applyReplayBatch(Json packets) { return invoke("replayBatch",{{"packets",packets}}).value.at("value"); }
     void resize(float width, float height, float dpr) {
         (void)invoke("resize", {{"width", width}, {"height", height}, {"dpr", dpr}});
     }
@@ -417,6 +484,12 @@ class Runtime final {
     }
     Json resourceToken(std::string id) {
         return resource({{"action", "token"}, {"objectId", id}}).at("value");
+    }
+    Json resourceManifest() {
+        return resource({{"action", "list"}}).at("value");
+    }
+    std::vector<uint8_t> readResourceBytes(Json token) {
+        return invoke("resource", {{"action", "bytes"}, {"token", token}}).bytes;
     }
     Json resourceReceipt(std::string id) {
         return resource({{"action", "receipt"}, {"objectId", id}}).at("value");

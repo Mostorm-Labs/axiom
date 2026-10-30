@@ -102,6 +102,9 @@ bool RuntimeCompositionCore::setLocalOperationSink(interaction::LocalOperationSi
   if (std::this_thread::get_id() != ownerThread_ || state_ == RuntimeCompositionState::kCreated) return false;
   runtime_->setLocalOperationSink(sink); return true;
 }
+semantic::CanonicalCommitStamp RuntimeCompositionCore::canonicalCommitFence() const noexcept {
+  return runtime_->canonicalCommitFence();
+}
 DocumentSnapshotResult RuntimeCompositionCore::captureDocumentSnapshot(const DocumentSnapshotRequest& request) noexcept {
   DocumentSnapshotResult result{};
   if (std::this_thread::get_id() != ownerThread_) { result.status = DocumentSnapshotStatus::kWrongThread; return result; }
@@ -722,6 +725,23 @@ std::optional<ResourceBindingToken> RuntimeCompositionCore::currentResourceToken
     foundation::ObjectId id) const noexcept {
   if (std::this_thread::get_id() != ownerThread_) return std::nullopt;
   return resources_.token(id, providerEpoch_, nextRequestId_);
+}
+std::optional<std::vector<std::uint8_t>>
+RuntimeCompositionCore::readResourceBytes(const ResourceBindingToken& token) const noexcept {
+    if (std::this_thread::get_id() != ownerThread_ || !provider_)
+        return std::nullopt;
+    try {
+        const auto expected = resources_.token(token.resourceId, providerEpoch_, token.requestId);
+        if (!expected || *expected != token)
+            return std::nullopt;
+        const auto* entry = resources_.find(token.resourceId);
+        const auto bytes = provider_->resolve(token.resourceId);
+        if (!entry || !bytes.bytes || !validateResourceBytes(*entry, bytes))
+            return std::nullopt;
+        return *bytes.bytes;
+    } catch (...) {
+        return std::nullopt;
+    }
 }
 
 bool RuntimeCompositionCore::imageResourceDecodeReady(

@@ -2,13 +2,19 @@ export const SDK_VERSION: '1.0.0-preview.1';
 export class AxiomError extends Error {code: string; details: Record<string,unknown>; constructor(code:string,message?:string,details?:Record<string,unknown>);}
 export type Id128 = string;
 export type Revision = string;
+export interface CommitStamp {runtimeEpoch:Revision;ordinal:Revision;}
+export type DataProgress = 0|1|2|3;
+export interface OperationMetadata {version:1;owner:string;binding:Revision;operationId:Id128;documentId:Id128;kind:number;source:0|1|2|3;beforeGeneration:Revision;afterGeneration:Revision;commit:CommitStamp;localDurable:DataProgress;cloudSynced:DataProgress;}
+export interface OperationPacket extends OperationMetadata {bytes:Uint8Array;}
+export interface DataStatus {attached:boolean;closing:boolean;fault:boolean;pending:number;pendingBytes:number;capacity:number;byteCapacity:number;statusCapacity:4096;statusRecords:number;latest:OperationMetadata|null;releasedOrdinal:Revision;}
 export interface Stamp {readonly owner:string;readonly token:[Revision,Revision,Revision,Revision,Revision,Revision,Revision,Revision];}
 export type Color = [number,number,number,number];
 export type PropertyValue = {type:'boolean';value:boolean}|{type:'float';value:number}|{type:'color';value:Color}|{type:'fill';value:Color|null}|{type:'blend'|'decoration';value:number}|{type:'stroke';value:Stroke|null};
 export interface Stroke {color:Color;width:number;cap:1|2|3;join:{kind:'miter';limit:number}|{kind:'round'|'bevel'};dash:{segments:number[];offset:number}|null;}
 export interface MultiProperty {total:number;eligible:Id128[];excluded:{objectId:Id128;reason:number}[];mixed:boolean;partial:boolean;available:boolean;availability:number;strokeWidthAvailable:boolean;uniformValue:PropertyValue|null;}
 export interface MultiProjection {available:boolean;stamp:Stamp;roots:Id128[];properties:Record<string,MultiProperty>;}
-export interface ResourceToken {readonly owner:string;resourceId:Id128;documentBinding:Revision;providerEpoch:Revision;resourceVersion:Revision;expectedSha256:string;requestId:Revision;lifetimeGeneration:Revision;}
+export interface ResourceToken {readonly owner:string;readonly instance:Revision;resourceId:Id128;documentBinding:Revision;providerEpoch:Revision;resourceVersion:Revision;expectedSha256:string;requestId:Revision;lifetimeGeneration:Revision;}
+export interface ResourceCatalog {revision:Revision;binding:Revision;entries:(InitialResources['entries'][number]&{token:ResourceToken|null})[];}
 export interface InitialResources {revision:Revision;binding:Revision;entries:{resourceId:Id128;kind:1|2|3;revision:Revision;sha256:string;byteLength:Revision;decodeVersion:number;layoutVersion:number;metadata:number[]}[];}
 export interface TextToken {runtime:Revision;attachment:Revision;view:Revision;adapter:Revision;session:Revision;projection:Revision;document:Id128;object:Id128;}
 export interface TextSnapshot {phase:0|1|2|3|4;token:TextToken;sequence:Revision;composition:Revision;effect:Revision;projection:number[];preedit:number[];selection:[number,number];replacement:[number,number];width:number;format:TextFormat;formatObject:Id128;mixedFormat:boolean;geometry:{available:boolean;caret:number[];selection:number[][];diagnostics:string[]};}
@@ -25,13 +31,20 @@ export interface RuntimeOptions {
   restore?: {bytes:Uint8Array;metadata:{documentRevision:Revision;recoveryFrontier:number[];checkpointDigest:number[];resourceBinding:Revision}};
 }
 export interface CommandResult {ok:true;requestId?:Revision;revision?:Revision;section?:{objectId:Id128;operationId:Id128;generation:Revision;canonical:number;projection:number;failure:number};}
-export interface RuntimeState {documentId:Id128;target:{runtimeEpoch:Revision;viewId:Revision;viewEpoch:Revision;attachmentEpoch:Revision};generation:Revision;selectionRevision:Revision;selectionMode:0|1|2;eraserMode:1|2;tool:number;shape:number;creationMode:boolean;objects:number;activeContacts:number;selected:Id128[];primary:Id128;canUndo:boolean;canRedo:boolean;camera:{scale:number;x:number;y:number};surface:{available:boolean;width:number;height:number};}
+export interface RuntimeState {documentId:Id128;target:{runtimeEpoch:Revision;viewId:Revision;viewEpoch:Revision;attachmentEpoch:Revision};generation:Revision;selectionRevision:Revision;selectionMode:0|1|2;eraserMode:1|2;tool:number;shape:number;creationMode:boolean;objects:number;activeContacts:number;selected:Id128[];primary:Id128;canUndo:boolean;canRedo:boolean;text:{phase:number;session:Revision;sequence:Revision;composition:Revision;selection:[number,number]};lastCommit:{operationId:Id128;runtimeEpoch:Revision;ordinal:Revision;presentedGeneration:Revision;localDurable:DataProgress;cloudSynced:DataProgress};data:Omit<DataStatus,'latest'>&{latest:Omit<OperationMetadata,'owner'>|null};camera:{scale:number;x:number;y:number};surface:{available:boolean;width:number;height:number};}
 export interface SectionOptions {objectId?:Id128;objects?:Id128[];parentId?:Id128|null;title?:string;boundary?:[number,number,number,number];generation?:Revision;selectionRevision?:Revision;}
 export interface TextFormat {color?:[number,number,number,number];fontSize?:number;font?:Id128;bold?:boolean;italic?:boolean;underline?:boolean;strikethrough?:boolean;bulleted?:boolean;alignment?:1|2|3;}
 export interface Runtime {
   readonly version:'1.0.0-preview.1'; readonly canvas:HTMLCanvasElement;
-  readBuildInfo():{ok:true;apiVersion:1;sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
+  readBuildInfo():{ok:true;apiVersion:1;features:{shellAxis:1;resourceCustody:1};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
   readState():RuntimeState;
+  subscribeOperations(listener:(packet:OperationPacket)=>void):()=>void;
+  subscribeState(listener:(state:RuntimeState)=>void):()=>void;
+  dispatchEvents():Promise<void>;
+  data:{attach(options?:{capacity?:number;byteCapacity?:number}):DataStatus;status():DataStatus;
+    readNext(after?:OperationMetadata|null):OperationPacket|null;
+    release(through:OperationMetadata):CommandResult;
+    reportStatus(packet:OperationMetadata,localDurable:DataProgress,cloudSynced:DataProgress):CommandResult;};
   readSelection():{count:number;roots:Id128[];primary:Id128;status:number;reason:number;groupScope:Id128|null;bounds:[number,number,number,number]|null;actions:{available:boolean;state:number;reason:number}[];generation:Revision;selectionRevision:Revision;kind:number;width:number;height:number;transform:[number,number,number,number,number,number]|null;appearance:{fill:Color;stroke:Color;strokeWidth:number;opacity:number;fillEnabled:boolean;strokeEnabled:boolean}|null};
   selectTool(name:'ink'|'select'|'objectEraser'|'partialEraser'|'hand'|'text'):Promise<CommandResult>;
   selectShape(name:'rectangle'|'ellipse'|'triangle'|'line'|'arrow'|'sticky'):Promise<CommandResult>;
@@ -56,7 +69,7 @@ export interface Runtime {
     escape():Promise<TextSnapshot>;insertParagraph():Promise<TextSnapshot>;setWidth(width:number):Promise<TextSnapshot>;resync():Promise<TextSnapshot>;retry():Promise<TextSnapshot>;
     format(patch:TextFormat):Promise<void>;finish():Promise<boolean>;completeComposition():Promise<boolean>};
   multi:{read():MultiProjection;readValues(field:number,stamp:Stamp,eligible:Id128[]):{objectId:Id128;value:PropertyValue}[];setPermission(mode:'unconfigured'|'localSingleUser'|'contextUnavailable'):Promise<CommandResult>;setProperty(field:number,value:PropertyValue,stamp:Stamp,eligible:Id128[]):Promise<CommandResult>;setStrokeWidth(width:number,stamp:Stamp,eligible:Id128[]):Promise<CommandResult>};
-  resources:{token(id:Id128):ResourceToken|null;receipt(id:Id128):{token:ResourceToken;state:number;byteLength:number;changed:boolean}|null;publish(token:ResourceToken,bytes:Uint8Array):Promise<CommandResult>};
+  resources:{list():ResourceCatalog;readBytes(token:ResourceToken):Uint8Array;token(id:Id128):ResourceToken|null;receipt(id:Id128):{token:ResourceToken;state:number;byteLength:number;changed:boolean}|null;publish(token:ResourceToken,bytes:Uint8Array):Promise<CommandResult>};
   importImage(bytes:Uint8Array,mime:'image/png'|'image/jpeg'|'image/webp'):Promise<{objectId:Id128}>;
   replaceImage(bytes:Uint8Array,mime:'image/png'|'image/jpeg'|'image/webp'):Promise<{objectId:Id128}>;
   readSelectedImage():{available:boolean;editable:boolean;objectId:Id128;content:ImageContent};readCrop():{active:boolean;token:Revision;objectId:Id128;scale:number;content:ImageContent};
@@ -67,7 +80,10 @@ export interface Runtime {
   setConnectorRouting(options:{objectId?:Id128;routing:1|2;generation?:Revision}):Promise<CommandResult>;
   readConnector(id?:Id128):{available:boolean;objectId:Id128;start:Endpoint;end:Endpoint;routing:1|2;routeStatus:number;route:[number,number][];generation:Revision};
   createSticky(options:{objectId?:Id128;size:number;x?:number;y?:number}):Promise<{objectId:Id128}>;readSelectedSticky():{available:boolean;objectId:Id128;width:number;height:number};
-  captureSnapshot(metadata:{generation:Revision;documentRevision:Revision;recoveryFrontier:number[]}):Promise<{bytes:Uint8Array;generation:Revision;checkpointDigest:number[]}>;
+  captureSnapshot(metadata:{generation:Revision;documentRevision:Revision;recoveryFrontier:number[]}):Promise<{bytes:Uint8Array;generation:Revision;checkpointDigest:number[];throughCommit:CommitStamp}>;
+  applyRemoteOperations(packets:{operationId:Id128;bytes:Uint8Array}[]):Promise<{ok:boolean;code?:string;disposition?:number;operationId?:Id128;commit?:CommitStamp}[]>;
+  applyReplayOperation(bytes:Uint8Array):Promise<CommandResult>;
+  applyReplayOperations(packets:{operationId:Id128;bytes:Uint8Array}[]):Promise<{ok:boolean;code?:string;disposition?:number;source?:4;operationId?:Id128;commit?:CommitStamp}[]>;
   applyRemoteOperation(bytes:Uint8Array):Promise<CommandResult>;close():Promise<void>;
 }
 export function createRuntime(options:RuntimeOptions):Promise<Runtime>;

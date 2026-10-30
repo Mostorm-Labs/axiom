@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <optional>
+#include <span>
 
 namespace canvas::interaction {
 
@@ -20,6 +21,12 @@ struct AxisOperationStatus final {
 class LocalOperationSink {
  public:
   virtual ~LocalOperationSink() = default;
+  // Optional volatile bridge custody. Reserve/encode before canonical mutation;
+  // never wait for storage or network. Existing sinks retain their old behavior.
+  [[nodiscard]] virtual bool preparePublication(std::span<const semantic::Operation>) noexcept {
+      return true;
+  }
+  virtual void abortPreparedPublication() noexcept {}
   virtual void applied(const semantic::Operation&,
                        const semantic::CanonicalCommitRecord&) noexcept = 0;
   [[nodiscard]] virtual AxisOperationStatus status(

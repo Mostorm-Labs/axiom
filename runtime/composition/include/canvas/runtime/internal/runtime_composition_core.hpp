@@ -125,6 +125,7 @@ class RuntimeCompositionCore final {
   [[nodiscard]] bool openDocument(semantic::DocumentId id) noexcept;
   [[nodiscard]] semantic::DocumentId documentId() const noexcept;
   [[nodiscard]] bool setLocalOperationSink(interaction::LocalOperationSink* sink) noexcept;
+  [[nodiscard]] semantic::CanonicalCommitStamp canonicalCommitFence() const noexcept;
   [[nodiscard]] DocumentSnapshotResult captureDocumentSnapshot(const DocumentSnapshotRequest& request) noexcept;
   [[nodiscard]] DocumentRestoreStatus restoreSnapshotBeforeSurface(const semantic::SemanticSnapshot& snapshot,
       const semantic::SnapshotBootstrapper::CheckpointBinding& binding, std::uint64_t resourceBinding) noexcept;
@@ -233,6 +234,8 @@ class RuntimeCompositionCore final {
   [[nodiscard]] const ResourceBindingSnapshot& resources() const noexcept {
     return resources_;
   }
+  [[nodiscard]] std::optional<std::vector<std::uint8_t>>
+  readResourceBytes(const ResourceBindingToken&) const noexcept;
   [[nodiscard]] std::optional<ResourcePortReceipt> resourceReceipt(
       foundation::ObjectId id) const noexcept;
   [[nodiscard]] bool imageResourceDecodeReady(

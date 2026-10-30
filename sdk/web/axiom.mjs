@@ -26,6 +26,8 @@ export async function createRuntime({mount, documentId, restore, initialResource
   mount.append(canonical, preview);
   let module, closed = false, closing = false, scheduled = 0, observer, disposeInput, text, lastPresented = '0', tail = Promise.resolve();
   let boundWidth=0,boundHeight=0,boundDpr=0,pendingResize=false;
+  let closeBarrier=false;
+  const listeners=new Map();let listenerSequence=0;
   const emitError = error => { if (onError) queueMicrotask(() => {if(!closed)onError(error);}); };
   const call = (command, args = {}, bytes) => {
     if (closed) throw new AxiomError('CLOSED');
@@ -42,22 +44,50 @@ export async function createRuntime({mount, documentId, restore, initialResource
       return result;
     } finally { if (input) module._free(input); if (data) module._free(data); }
   };
-  const changed=()=>{if(onChange&&!closed){const value=call('state').value;queueMicrotask(()=>{if(!closed)onChange(value);});}};
+  const changed=()=>schedule();
+  const packetValue=value=>value?{...value,owner:id}:null;
+  const packetMetadata=packet=>{const {bytes,...metadata}=packet;return metadata;};
+  const readPacket=after=>{
+    if(after&&after.owner!==id)throw new AxiomError('WRONG_RUNTIME');
+    const result=call('data',{action:'next',after:after?packetMetadata(after):null});
+    return result.value?{...packetValue(result.value),bytes:module.HEAPU8.slice(module._axiom_js_bytes(),module._axiom_js_bytes()+module._axiom_js_size())}:null;
+  };
+  const listenerError=error=>new AxiomError('EVENT_LISTENER_FAILED',String(error));
+  const dispatch=()=>{
+    if(closed)return;
+    for(const [token,s] of listeners){
+      if(s.paused)continue;
+      try{
+        if(s.kind==='operation')for(let n=0;n<64&&listeners.has(token);++n){
+          const packet=readPacket(s.cursor);if(!packet)break;
+          const result=s.fn(packet);if(result?.then){result.catch?.(()=>{});throw new AxiomError('ASYNC_LISTENER','Transfer to your queue synchronously; report durability later');}
+          if(listeners.has(token))s.cursor=packetMetadata(packet);
+          if(n===63)schedule();
+        }
+        else if(s.kind==='state'){
+          const value=call('state').value,key=JSON.stringify(value);
+          if(key!==s.last){const result=s.fn(value);if(result?.then){result.catch?.(()=>{});throw new AxiomError('ASYNC_LISTENER');}s.last=key;}
+        }
+      }catch(error){s.paused=true;emitError(error instanceof AxiomError?error:listenerError(error));}
+    }
+  };
   const render = () => {
     scheduled = 0; if (closed || closing) return;
     try {
       const frame = call('frame');
-      if (frame.presented && frame.presented !== lastPresented) { lastPresented = frame.presented; if(onFrame)queueMicrotask(()=>{if(!closed)onFrame({presented:frame.presented});}); }
+      dispatch();
+      if (frame.presented && frame.presented !== lastPresented) { lastPresented = frame.presented; if(onFrame)queueMicrotask(()=>{if(!closed)try{const result=onFrame({presented:frame.presented});result?.catch?.(error=>emitError(listenerError(error)));}catch(error){emitError(listenerError(error));}}); }
       if (frame.pending || frame.retry || text?.snapshot().phase) schedule();
     } catch(error) { emitError(error); }
   };
   const schedule = () => { if(!closed && !closing && !scheduled)scheduled=requestAnimationFrame(render); };
   const enqueue = (fn, finish = true) => {
-    if(closing || closed)return Promise.reject(new AxiomError('CLOSED'));
+    if(closing || closed || closeBarrier)return Promise.reject(new AxiomError(closeBarrier?'DOCUMENT_CLOSING':'CLOSED'));
     const task = tail.then(async()=>{if(closed)throw new AxiomError('CLOSED');if(finish)await text?.finish();const result=await fn();changed();schedule();return result;});
     tail=task.catch(()=>{});return task;
   };
   const cleanup = () => {
+    listeners.clear();
     cancelAnimationFrame(scheduled); observer?.disconnect(); disposeInput?.(); text?.dispose();
     for(const [name,fn,options] of events)canonical.removeEventListener(name,fn,options);
     canonical.remove();preview.remove();if(positioned&&mount.style.position==='relative')mount.style.position=oldPosition;
@@ -77,10 +107,10 @@ export async function createRuntime({mount, documentId, restore, initialResource
     const assets=new URL(assetBaseURL,import.meta.url);
     module=await factory({canvas:canonical,locateFile:name=>new URL(name,assets).href,
       onPreview:visible=>{preview.style.visibility=visible?'visible':'hidden';},
-      onLocalOperation:bytes=>{if(onOperation)queueMicrotask(()=>{if(!closed)onOperation(bytes);});},
+      onLocalOperation:bytes=>{if(onOperation)queueMicrotask(()=>{if(!closed)try{const result=onOperation(bytes);if(result?.catch)result.catch(error=>emitError(listenerError(error)));}catch(error){emitError(listenerError(error));}});},
       onDeliveryError:()=>emitError(new AxiomError('OPERATION_DELIVERY_FAILED'))});
     if(['_axiom_js_call','_axiom_js_bytes','_axiom_js_size','_malloc','_free','UTF8ToString','stringToNewUTF8'].some(key=>typeof module[key]!=='function'))throw new AxiomError('INCOMPATIBLE_ENGINE');
-    if(call('version').apiVersion!==1)throw new AxiomError('INCOMPATIBLE_ENGINE');
+    if(call('version').apiVersion!==1||call('version').features?.shellAxis!==1)throw new AxiomError('INCOMPATIBLE_ENGINE');
     const initial=mount.getBoundingClientRect(),dpr=devicePixelRatio||1;
     if(!(initial.width>0&&initial.height>0))throw new AxiomError('INVALID_SIZE');
     canonical.width=preview.width=Math.round(initial.width*dpr);canonical.height=preview.height=Math.round(initial.height*dpr);
@@ -114,11 +144,26 @@ export async function createRuntime({mount, documentId, restore, initialResource
     const section=(action,options={})=>enqueue(()=>call('section',{action,...options}));
     const textIntent=(kind,options={})=>enqueue(async()=>{const result=await text.intent(kind,options);if(text.error())throw new AxiomError('TEXT_REJECTED',text.error());return result;},false);
     const owned=(value)=>{if(!value||value.owner!==id)throw new AxiomError('WRONG_RUNTIME');return value;};
+    const subscribe=(kind,fn)=>{
+      if(closed||closing||closeBarrier)throw new AxiomError(closeBarrier?'DOCUMENT_CLOSING':'CLOSED');
+      if(typeof fn!=='function'||listeners.size>=64)throw new AxiomError('INVALID_ARGUMENT');
+      const cursor=kind==='operation'?packetValue(call('data',{action:'attach'}).value.latest):null;
+      const token=++listenerSequence;listeners.set(token,{kind,fn,cursor,last:null,paused:false});schedule();
+      return ()=>{listeners.delete(token);};
+    };
+    if(onChange)subscribe('state',onChange);
     const api={
       version:SDK_VERSION, canvas:canonical,
       readBuildInfo:()=>call('version'),
       readState:()=>call('state').value,
       readSelection:()=>call('selection').value,
+      subscribeOperations:fn=>subscribe('operation',fn),subscribeState:fn=>subscribe('state',fn),
+      dispatchEvents:()=>Promise.resolve().then(()=>{if(closed)throw new AxiomError('CLOSED');for(const s of listeners.values())s.paused=false;dispatch();}),
+      data:{attach:options=>{const s=call('data',{action:'attach',...options}).value;return {...s,latest:packetValue(s.latest)};},
+        status:()=>{const s=call('data',{action:'status'}).value;return {...s,latest:packetValue(s.latest)};},
+        readNext:after=>readPacket(after),
+        release:packet=>{const result=call('data',{action:'release',packet:packetMetadata(owned(packet))});schedule();return result;},
+        reportStatus:(packet,localDurable,cloudSynced)=>{const result=call('data',{action:'report',packet:packetMetadata(owned(packet)),localDurable,cloudSynced});schedule();return result;}},
       selectTool:async name=>{const value=enumValue({ink:0,select:1,objectEraser:2,partialEraser:2,hand:3,text:4},name);return enqueue(()=>{const result=call('control',{kind:'tool',value});if(name.endsWith('Eraser'))call('control',{kind:'eraser',mode:name==='objectEraser'?1:2});return result;});},
       selectShape:async name=>control({kind:'shape',value:enumValue({rectangle:0,ellipse:1,triangle:2,line:3,arrow:4,sticky:5},name)}),
       setSelectionMode:async name=>control({kind:'selectionMode',value:enumValue({point:0,rectangle:1,lasso:2},name)}),
@@ -151,7 +196,9 @@ export async function createRuntime({mount, documentId, restore, initialResource
         setPermission:mode=>enqueue(()=>call('multi',{action:'permission',mode:enumValue({unconfigured:0,localSingleUser:1,contextUnavailable:2},mode)})),
         setProperty:(field,value,stamp,eligible)=>enqueue(()=>call('multi',{action:'set',field,value,stamp:owned(stamp).token,eligible})),
         setStrokeWidth:(width,stamp,eligible)=>enqueue(()=>call('multi',{action:'width',width,stamp:owned(stamp).token,eligible}))},
-      resources:{token:objectId=>{const value=call('resource',{action:'token',objectId}).value;return value?{...value,owner:id}:null;},
+      resources:{list:()=>{const value=call('resource',{action:'list'}).value;for(const e of value.entries)if(e.token)e.token.owner=id;return value;},
+        readBytes:token=>{call('resource',{action:'bytes',token:owned(token)});return module.HEAPU8.slice(module._axiom_js_bytes(),module._axiom_js_bytes()+module._axiom_js_size());},
+        token:objectId=>{const value=call('resource',{action:'token',objectId}).value;return value?{...value,owner:id}:null;},
         receipt:objectId=>{const value=call('resource',{action:'receipt',objectId}).value;if(value)value.token.owner=id;return value;},
         publish:(token,bytes)=>enqueue(()=>call('resource',{action:'publish',token:owned(token)},bytes),false)},
       importImage:(bytes,mime)=>enqueue(()=>call('image',{action:'import',mime},bytes)),
@@ -167,9 +214,12 @@ export async function createRuntime({mount, documentId, restore, initialResource
       createSticky:options=>enqueue(()=>call('sticky',{action:'create',...options,objectId:options?.objectId??newId()})),readSelectedSticky:()=>call('sticky',{action:'read'}).value,
       captureSnapshot:metadata=>enqueue(()=>{const result=call('snapshot',metadata);return {...result,bytes:module.HEAPU8.slice(module._axiom_js_bytes(),module._axiom_js_bytes()+module._axiom_js_size())};}),
       applyRemoteOperation:bytes=>enqueue(()=>call('remote',{},bytes)),
+      applyReplayOperation:bytes=>enqueue(()=>call('replay',{},bytes)),
+      applyReplayOperations:packets=>enqueue(()=>call('replayBatch',{packets:packets.map(p=>({operationId:p.operationId,bytes:Array.from(p.bytes)}))}).value),
+      applyRemoteOperations:packets=>enqueue(()=>call('remoteBatch',{packets:packets.map(p=>({operationId:p.operationId,bytes:Array.from(p.bytes)}))}).value),
       async close(){if(closed)return;if(closing)throw new AxiomError('BUSY');closing=true;
-        try{await tail;await text.finish();disposeInput?.();disposeInput=undefined;call('close');closed=true;cleanup();text=undefined;module=null;}
-        catch(error){closing=false;schedule();throw error;}}
+        try{await tail;await text.finish();call('close');disposeInput?.();disposeInput=undefined;closed=true;cleanup();text=undefined;module=null;}
+        catch(error){if(['PUBLICATION_PENDING','SHUTDOWN_FAILED','CLOSE_FAILED'].includes(error.code)){closeBarrier=true;disposeInput?.();disposeInput=undefined;text.dispose();}closing=false;schedule();throw error;}}
     };
     schedule();return Object.freeze(api);
   } catch(error) {try{if(module)call('close');}catch{}closed=true;cleanup();throw error;}

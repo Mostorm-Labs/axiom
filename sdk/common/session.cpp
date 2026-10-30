@@ -1,6 +1,9 @@
 #include "session.hpp"
 
+#include "data_port.hpp"
+
 #include <algorithm>
+#include <atomic>
 #include <canvas/control/build_info.hpp>
 #include <canvas/semantic/codec.hpp>
 #include <cmath>
@@ -29,6 +32,7 @@ struct TextInstance {
     std::uint64_t request = 0, lastTextIntent = 0;
 };
 thread_local TextInstance* activeText = nullptr;
+std::atomic<std::uint64_t> nextDataBinding{1};
 TextInstance* instance(std::uintptr_t h) {
     return h == 1 && activeText && activeText->lifecycle.owner ? activeText : nullptr;
 }
@@ -80,6 +84,8 @@ class Session::Impl {
     std::vector<std::uint8_t> outputBytes;
     TextInstance textInstance;
     SessionCallbacks callbacks;
+    DataPort dataPort;
+    const std::uint64_t dataBinding = nextDataBinding++;
     const std::thread::id thread = std::this_thread::get_id();
     void notifyOperation(const std::uint8_t* data, std::size_t size) noexcept {
         if (callbacks.operation)
@@ -91,8 +97,17 @@ class Session::Impl {
     }
     static void localOperation(void* context,
                                const semantic::Operation& op,
-                               const semantic::CanonicalCommitRecord&) noexcept {
+                               const semantic::CanonicalCommitRecord& record) noexcept {
         auto& self = *static_cast<Impl*>(context);
+        if (self.dataPort.attached) {
+            const auto* packet = self.dataPort.commit(op, record);
+            if (!packet) {
+                self.notifyDeliveryFailure();
+                return;
+            }
+            self.notifyOperation(packet->bytes.data(), packet->bytes.size());
+            return;
+        }
         try {
             auto encoded = semantic::SemanticCodec::encodeProtobufOperation(op);
             if (!encoded.ok()) {
@@ -103,6 +118,52 @@ class Session::Impl {
         } catch (...) {
             self.notifyDeliveryFailure();
         }
+    }
+    static bool preparePublication(void* context,
+                                   std::span<const semantic::Operation> ops) noexcept {
+        return static_cast<Impl*>(context)->dataPort.prepare(ops);
+    }
+    static void abortPublication(void* context) noexcept {
+        static_cast<Impl*>(context)->dataPort.prepared.clear();
+    }
+    static runtime::RuntimeComposition::OperationDataStatus
+    operationStatus(void* context,
+                    const semantic::OperationId& id,
+                    const semantic::CanonicalCommitStamp& stamp) noexcept {
+        const auto* p = static_cast<Impl*>(context)->dataPort.find(id, stamp);
+        return p ? runtime::RuntimeComposition::OperationDataStatus{p->durable, p->synced}
+                 : runtime::RuntimeComposition::OperationDataStatus{};
+    }
+    J packet(const DataPort::Packet& p) const {
+        return {{"version", 1},
+                {"binding", std::to_string(dataBinding)},
+                {"operationId", hexId(p.id.value())},
+                {"documentId", hexId(p.document.value())},
+                {"kind", p.kind},
+                {"source", p.source},
+                {"beforeGeneration", std::to_string(p.before)},
+                {"afterGeneration", std::to_string(p.after)},
+                {"commit",
+                 {{"runtimeEpoch", std::to_string(p.stamp.runtime_epoch.value())},
+                  {"ordinal", std::to_string(p.stamp.ordinal.value())}}},
+                {"localDurable", p.durable},
+                {"cloudSynced", p.synced}};
+    }
+    J dataStatus() const {
+        J latest = nullptr;
+        if (const auto* p = dataPort.latest())
+            latest = packet(*p);
+        return {{"attached", dataPort.attached},
+                {"closing", dataPort.closing},
+                {"fault", dataPort.fault},
+                {"pending", dataPort.retained.size()},
+                {"pendingBytes", dataPort.retainedBytes},
+                {"capacity", dataPort.maxPackets},
+                {"byteCapacity", dataPort.maxBytes},
+                {"latest", latest},
+                {"statusCapacity", 4096},
+                {"statusRecords", dataPort.receipts.size()},
+                {"releasedOrdinal", std::to_string(dataPort.released.stamp.ordinal.value())}};
     }
     static J error(const char* code) {
         return {{"ok", false}, {"code", code}};
@@ -246,16 +307,18 @@ class Session::Impl {
         }
         throw std::invalid_argument("property type");
     }
-    static J tokenJson(const runtime::ResourceBindingToken& t) {
+    J tokenJson(const runtime::ResourceBindingToken& t) const {
         return {{"resourceId", hexId(t.resourceId)},
                 {"documentBinding", std::to_string(t.documentBinding)},
                 {"providerEpoch", std::to_string(t.providerEpoch)},
                 {"resourceVersion", std::to_string(t.resourceVersion)},
                 {"expectedSha256", t.expectedSha256},
                 {"requestId", std::to_string(t.requestId)},
-                {"lifetimeGeneration", std::to_string(t.lifetimeGeneration)}};
+                {"lifetimeGeneration", std::to_string(t.lifetimeGeneration)},
+                {"instance",std::to_string(dataBinding)}};
     }
-    static runtime::ResourceBindingToken parseResourceToken(const J& j) {
+    runtime::ResourceBindingToken parseResourceToken(const J& j) const {
+        if (decimal(j.at("instance"))!=dataBinding) throw std::invalid_argument("foreign resource instance");
         return {rawId(j.at("resourceId")),
                 decimal(j.at("documentBinding")),
                 decimal(j.at("providerEpoch")),
@@ -348,6 +411,7 @@ class Session::Impl {
         const auto selected = facade().readSelectionSummary();
         const auto m = owner->surfaceMetrics();
         const auto o = owner->hostObservation();
+        const auto text = facade().readTextEditor();
         return {
             {"documentId", hexId(*owner->documentId())},
             {"target", jsonTarget(s.target)},
@@ -364,6 +428,20 @@ class Session::Impl {
             {"primary", hexId(selected.primary)},
             {"canUndo", s.canUndo},
             {"canRedo", s.canRedo},
+            {"text",
+             {{"phase", text.phase},
+              {"session", std::to_string(text.token.session)},
+              {"sequence", std::to_string(text.nextInputSequence)},
+              {"composition", std::to_string(text.composition)},
+              {"selection", {text.selection.start, text.selection.length}}}},
+            {"lastCommit",
+             {{"operationId", hexId(s.lastAppliedOperation.value_or(foundation::ObjectId{}))},
+              {"runtimeEpoch", std::to_string(s.appliedCommitEpoch)},
+              {"ordinal", std::to_string(s.appliedCommitOrdinal)},
+              {"presentedGeneration", std::to_string(s.presentedSemanticGeneration)},
+              {"localDurable", s.axisLocalDurable},
+              {"cloudSynced", s.axisCloudSynced}}},
+            {"data", dataStatus()},
             {"camera",
              {{"scale", s.cameraScale}, {"x", s.cameraTranslationX}, {"y", s.cameraTranslationY}}},
             {"surface",
@@ -377,6 +455,7 @@ class Session::Impl {
             const auto b = runtime::readRuntimeBuildInfo();
             return {{"ok", true},
                     {"apiVersion", 1},
+                    {"features", {{"shellAxis", 1}, {"resourceCustody", 1}}},
                     {"sdkVersion", AXIOM_SDK_VERSION},
                     {"sourceRevision", b.sourceRevision},
                     {"dirty", b.dirty},
@@ -440,16 +519,82 @@ class Session::Impl {
             if (facade().setConnectorRouting(routing).state !=
                 runtime::ConnectorCommandState::kApplied)
                 return error("ROUTING_FAILED");
-            if (!owner->setLocalOperationCallback(localOperation, this))
+            if (!owner->setLocalOperationCallbacks(
+                    localOperation, this, preparePublication, abortPublication, operationStatus))
                 return error("CALLBACK_FAILED");
             return {{"ok", true}, {"apiVersion", 1}};
         }
         if (!owner)
             return error("CLOSED");
+        if (command == "data") {
+            const auto action = j.at("action").get<std::string>();
+            if (action == "attach") {
+                if (!dataPort.attached) {
+                    const auto cap = j.value("capacity", std::size_t{1024});
+                    const auto byteCap = j.value("byteCapacity", std::size_t{32 * 1024 * 1024});
+                    if (cap == 0 || cap > 4096 || byteCap == 0 || byteCap > 134217728)
+                        return error("INVALID_CAPACITY");
+                    dataPort.maxPackets = cap;
+                    dataPort.maxBytes = byteCap;
+                    dataPort.attached = true;
+                }
+                return {{"ok", true}, {"value", dataStatus()}};
+            }
+            if (action == "status")
+                return {{"ok", true}, {"value", dataStatus()}};
+            if (!dataPort.attached)
+                return error("DATA_NOT_ATTACHED");
+            const auto identity = [&](const J& p) {
+                if (decimal(p.at("binding")) != dataBinding)
+                    throw std::invalid_argument("foreign data binding");
+                if (p.at("version")!=1 || rawId(p.at("documentId"))!=*owner->documentId())
+                    throw std::invalid_argument("invalid publication document/version");
+                const auto& c = p.at("commit");
+                return std::pair{semantic::OperationId{rawId(p.at("operationId"))},
+                                 semantic::CanonicalCommitStamp{
+                                     semantic::RuntimeEpoch{decimal(c.at("runtimeEpoch"))},
+                                     semantic::CommitOrdinal{decimal(c.at("ordinal"))}}};
+            };
+            if (action == "next") {
+                std::uint64_t ordinal = dataPort.released.stamp.ordinal.value();
+                if (j.contains("after") && !j.at("after").is_null()) {
+                    const auto [id, stamp] = identity(j.at("after"));
+                    if (stamp.ordinal.value() < ordinal)
+                        return error("PUBLICATION_GAP");
+                    if (!dataPort.find(id, stamp))
+                        return error("INVALID_PUBLICATION_CURSOR");
+                    ordinal = stamp.ordinal.value();
+                }
+                for (const auto& p : dataPort.retained)
+                    if (p.stamp.ordinal.value() > ordinal) {
+                        outputBytes = p.bytes;
+                        return {{"ok", true}, {"value", packet(p)}};
+                    }
+                return {{"ok", true}, {"value", nullptr}};
+            }
+            if (action == "release" || action == "report") {
+                const auto [id, stamp] = identity(j.at("packet"));
+                const bool accepted =
+                    action == "release"
+                        ? dataPort.release(id, stamp)
+                        : dataPort.report(
+                              id,
+                              stamp,
+                              static_cast<std::uint8_t>(unsignedValue(j.at("localDurable"), 3)),
+                              static_cast<std::uint8_t>(unsignedValue(j.at("cloudSynced"), 3)));
+                return {{"ok", accepted}, {"code", "INVALID_PUBLICATION_IDENTITY"}};
+            }
+            return error("UNSUPPORTED");
+        }
         if (command == "close") {
             if ((!contacts.empty() || adapter->activeContacts() != 0) ||
                 facade().readTextEditor().phase != runtime::TextPhase::kClosed)
                 return error("BUSY");
+            if (dataPort.attached) {
+                dataPort.closing = true;
+                if (dataPort.fault || !dataPort.retained.empty())
+                    return error("PUBLICATION_PENDING");
+            }
             if (adapter && !adapter->shutdown())
                 return error("SHUTDOWN_FAILED");
             if (!owner->close())
@@ -459,6 +604,10 @@ class Session::Impl {
             textInstance.lifecycle.owner = nullptr;
             return {{"ok", true}};
         }
+        if (dataPort.closing && command!="state" && command!="frame" && command!="selection" &&
+            command!="resource" && command!="snapshot" && command!="readSection" && command!="presets" &&
+            !(command=="text" && j.value("action",std::string{})!="intent"))
+            return error("DOCUMENT_CLOSING");
         if (command == "resize") {
             if (!contacts.empty() || adapter->activeContacts() != 0)
                 return error("BUSY");
@@ -774,6 +923,36 @@ class Session::Impl {
         }
         if (command == "resource") {
             const auto action = j.at("action").get<std::string>();
+            if (action == "list") {
+                const auto snapshot = owner->resourceSnapshot();
+                if (!snapshot)
+                    return error("RESOURCE_SNAPSHOT_UNAVAILABLE");
+                J entries = J::array();
+                for (const auto& e : snapshot->manifest.entries) {
+                    const auto token = owner->resourceToken(e.resource_id.value);
+                    entries.push_back({{"resourceId", hexId(e.resource_id.value)},
+                                       {"kind", e.resource_kind},
+                                       {"revision", std::to_string(e.resource_revision)},
+                                       {"sha256", e.content_hash},
+                                       {"byteLength", std::to_string(e.byte_length)},
+                                       {"decodeVersion", e.decode_version},
+                                       {"layoutVersion", e.layout_version},
+                                       {"metadata", e.metadata},
+                                       {"token", token ? tokenJson(*token) : J(nullptr)}});
+                }
+                return {{"ok", true},
+                        {"value",
+                         {{"revision", std::to_string(snapshot->manifest.manifest_revision)},
+                          {"binding", std::to_string(snapshot->documentBinding)},
+                          {"entries", entries}}}};
+            }
+            if (action == "bytes") {
+                const auto resource = owner->readResourceBytes(parseResourceToken(j.at("token")));
+                if (!resource)
+                    return error("RESOURCE_BYTES_UNAVAILABLE");
+                outputBytes = *resource;
+                return {{"ok", true}};
+            }
             if (action == "token") {
                 const auto t = owner->resourceToken(rawId(j.at("objectId")));
                 return {{"ok", true}, {"value", t ? tokenJson(*t) : J(nullptr)}};
@@ -1073,6 +1252,10 @@ class Session::Impl {
                         {"status", saved.status},
                         {"generation", std::to_string(saved.semanticGeneration)}};
             if (saved.status == runtime::DocumentSnapshotStatus::kCaptured) {
+                const auto fence=owner->canonicalCommitFence();
+                if (!fence) return error("SNAPSHOT_FENCE_UNAVAILABLE");
+                result["throughCommit"] = {{"runtimeEpoch", std::to_string(fence->runtime_epoch.value())},
+                                           {"ordinal", std::to_string(fence->ordinal.value())}};
                 auto decoded = semantic::SnapshotCodec::decode(
                     outputBytes,
                     semantic::SnapshotCapability::
@@ -1083,16 +1266,47 @@ class Session::Impl {
             }
             return result;
         }
-        if (command == "remote") {
+        if (command == "remoteBatch" || command == "replayBatch") {
+            const auto& packets = j.at("packets");
+            if (!packets.is_array() || packets.size() > 256)
+                return error("INVALID_BATCH");
+            J results = J::array();
+            for (const auto& p : packets) {
+                try {
+                    auto input = byteArray(p.at("bytes"));
+                    const auto lane=command=="replayBatch"?"replay":"remote";
+                    J request = {{"command", lane}, {"packetId", p.at("operationId")}};
+                    results.push_back(dispatch(lane, request, input));
+                } catch (...) {
+                    results.push_back(error("INVALID_PACKET"));
+                }
+            }
+            return {{"ok", true}, {"value", results}};
+        }
+        if (command == "remote" || command == "replay") {
+            if (dataPort.closing)
+                return error("DOCUMENT_CLOSING");
             const auto op = semantic::SemanticCodec::decodeProtobufOperation(bytes);
             if (!op.ok())
                 return error("INVALID_OPERATION");
-            auto result = owner->applyRemoteOperation(op.operation);
-            return {{"ok",
+            if (j.contains("packetId") && rawId(j.at("packetId")) != op.operation.id.value())
+                return error("OPERATION_ID_MISMATCH");
+            auto result = command=="replay" ? owner->applyReplayOperation(op.operation)
+                                           : owner->applyRemoteOperation(op.operation);
+            J reply = {{"ok",
                      result.disposition == semantic::ApplyDisposition::kApplied ||
                          result.disposition == semantic::ApplyDisposition::kAlreadyApplied},
                     {"code", "REMOTE_REJECTED"},
-                    {"disposition", result.disposition}};
+                    {"disposition", result.disposition},
+                       {"operationId", hexId(op.operation.id.value())}};
+            if (result.commit_record)
+                reply["commit"] = {
+                    {"runtimeEpoch",
+                     std::to_string(result.commit_record->commit_stamp.runtime_epoch.value())},
+                    {"ordinal",
+                     std::to_string(result.commit_record->commit_stamp.ordinal.value())}};
+            if (result.commit_record) reply["source"]=result.commit_record->source;
+            return reply;
         }
         return error("UNSUPPORTED");
     }

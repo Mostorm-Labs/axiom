@@ -43,6 +43,7 @@ def verify(prefix, output, export=None):
             if expected and (identities[0]['sourceRevision']!=expected or identities[0]['dirty']):
                 raise RuntimeError('DLL source does not match the frozen clean release revision')
             run([root/'build/axiom_c_loader.exe'],Path(tempfile.gettempdir()),records)
+            run([root/'build/axiom_bridge_tests.exe'],Path(tempfile.gettempdir()),records)
             run(['dumpbin','/dependents',prefix/'bin/axiom.dll'],root,records)
             imports=records[-1]['stdout'].lower()
             if any(name in imports for name in ('protobuf','abseil','skia.dll','vcruntime','msvcp','ucrtbase')):
@@ -50,6 +51,7 @@ def verify(prefix, output, export=None):
             run(['dumpbin','/exports',prefix/'bin/axiom.dll'],root,records)
             exported=re.findall(r'^\s+\d+\s+[0-9A-F]+\s+[0-9A-F]+\s+(\S+)\s*$',records[-1]['stdout'],re.MULTILINE)
             expected={'axiom_abi_version','axiom_create','axiom_call','axiom_window','axiom_close','axiom_abandon','axiom_buffer_size','axiom_buffer_copy','axiom_buffer_release','axiom_input_source','axiom_input_begin','axiom_input_submit','axiom_input_cancel'}
+            expected.update({'axiom_subscribe','axiom_unsubscribe','axiom_dispatch_events'})
             if set(exported)!=expected:
                 raise RuntimeError(f'wrong v1 export surface: {exported}')
             if export:
