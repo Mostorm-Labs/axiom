@@ -2,6 +2,11 @@ name: Axiom SDK and demo preview release
 
 on:
   workflow_dispatch:
+    inputs:
+      browser_probe_only:
+        description: 'Run browser environment diagnostic only (no product qualification or release)'
+        type: boolean
+        default: false
   pull_request:
     paths:
       - '.github/workflows/sdk-preview-release.yml'
@@ -29,7 +34,28 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  browser-probe:
+    if: github.event_name == 'workflow_dispatch' && inputs.browser_probe_only
+    runs-on: windows-2025
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Probe real Chrome startup
+        shell: pwsh
+        run: |
+          node --version
+          Get-Item "$env:ProgramFiles\Google\Chrome\Application\chrome.exe" | Select-Object FullName, @{Name='Version';Expression={$_.VersionInfo.ProductVersion}}
+          node tools/release/chrome_probe.mjs "$env:ProgramFiles\Google\Chrome\Application\chrome.exe" out/chrome-probe.json
+          exit $LASTEXITCODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: axiom-chrome-probe
+          path: out/chrome-probe.json
   build:
+    if: github.event_name != 'workflow_dispatch' || !inputs.browser_probe_only
     name: Build and verify ${{ matrix.platform }}
     runs-on: windows-2025
     timeout-minutes: 120

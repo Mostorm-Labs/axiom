@@ -107,3 +107,13 @@ checks passed: the target socket closed before the Browser.close CDP response.
 The driver now requires actual Chrome process exit (code 0, no signal) rather
 than an acknowledgement on a destroyed target transport; timeouts/nonzero
 exits still fail. The same complete consumer/frame/example run then passed.
+
+Hosted run 41108525751 (3c564bdf), attempts 1 and 2, passed Windows but could
+not observe Chrome's debugging port before the old 10-second launcher window;
+Web compilation and the Node API contract passed. These are preserved browser
+environment failures, not product passes. Startup now records executable,
+arguments, stderr, elapsed time and actual early exit, creates its isolated
+profile explicitly and has a bounded 45-second environment startup deadline.
+All SUT/frame deadlines/assertions remain unchanged. A manual probe-only workflow
+qualifies only Chrome availability and cannot publish or establish product PASS.
+The same local full browser/frame/example suite passed through this launcher.
