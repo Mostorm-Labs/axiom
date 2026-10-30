@@ -2265,8 +2265,13 @@ bool CanvasEditingRuntime::hoverSelectionAtViewPoint(float x, float y) noexcept 
   const bool connectorCreation = creationMode_ &&
       (creationPreset_ == CreationPreset::kLine ||
        creationPreset_ == CreationPreset::kArrow);
-  if ((!selectionMode_ && !connectorCreation) || selection_.primary().isZero() || !selectionView_ ||
+  if ((!selectionMode_ && !connectorCreation) || selection_.primary().isZero() ||
       !std::isfinite(x) || !std::isfinite(y)) return false;
+  // Clearing a finished preview can release the transient view while the
+  // selected object's canonical overlay remains visible. Recreate it before
+  // hit testing hover, just as selectionPointer does for pointer-down.
+  if (!selectionView_) (void)renderSelectionOverlay();
+  if (!selectionView_) return false;
   auto& points = selectionView_->editingOverlay().mutableAttachmentPoints();
   bool changed = false;
   for (auto& point : points) {
@@ -3695,6 +3700,24 @@ bool CanvasEditingRuntime::recoverHistoryScene() noexcept {
   const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current());
   const canvas::SceneCommitInput recovery(semanticGeneration_.current(), view);
   return static_cast<bool>(sceneCoordinator_->recover(*sceneCompiler_, recovery));
+}
+SnapshotRestoreOutcome CanvasEditingRuntime::restoreSnapshotBeforeSurface(const semantic::SemanticSnapshot& snapshot,
+    const semantic::SnapshotBootstrapper::CheckpointBinding& binding,
+    semantic::ResourceManifest& manifest) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || closed_ || surface_.available || semanticObjects_.size() != 0U ||
+      snapshot.document_id != documentId_ || sceneCoordinator_ == nullptr || sceneCompiler_ == nullptr) return SnapshotRestoreOutcome::kInvalid;
+  try {
+    auto state = semantic::DocumentRuntimeState::kLoading;
+    constexpr auto capability = semantic::SnapshotCapability::kShape2TriangleRichTextFormattingConnectorAndSectionV1;
+    const auto restored = semantic::SnapshotBootstrapper::restore(snapshot, capability, state,
+        semanticObjects_, manifest, semanticGeneration_, binding);
+    if (!restored.restored) return SnapshotRestoreOutcome::kInvalid;
+    const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current(), &manifest);
+    const canvas::SceneCommitInput input(semanticGeneration_.current(), view);
+    if (!sceneCoordinator_->recover(*sceneCompiler_, input)) return SnapshotRestoreOutcome::kSceneFailed;
+    canonicalPresentationDirty_ = true;
+    return SnapshotRestoreOutcome::kRestored;
+  } catch (...) { return SnapshotRestoreOutcome::kSceneFailed; }
 }
 
 interaction::SubmitResult CanvasEditingRuntime::submit(

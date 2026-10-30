@@ -4,6 +4,7 @@
 #include "canvas/runtime/resource_binding.hpp"
 #include "canvas/runtime/scene_adapter.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
+#include "canvas/runtime/runtime_composition.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -121,6 +122,12 @@ class RuntimeCompositionCore final {
   RuntimeCompositionCore& operator=(const RuntimeCompositionCore&) = delete;
 
   [[nodiscard]] bool open() noexcept;
+  [[nodiscard]] bool openDocument(semantic::DocumentId id) noexcept;
+  [[nodiscard]] semantic::DocumentId documentId() const noexcept;
+  [[nodiscard]] bool setLocalOperationSink(interaction::LocalOperationSink* sink) noexcept;
+  [[nodiscard]] DocumentSnapshotResult captureDocumentSnapshot(const DocumentSnapshotRequest& request) noexcept;
+  [[nodiscard]] DocumentRestoreStatus restoreSnapshotBeforeSurface(const semantic::SemanticSnapshot& snapshot,
+      const semantic::SnapshotBootstrapper::CheckpointBinding& binding, std::uint64_t resourceBinding) noexcept;
   // Reference compatibility only: these overloads mean logical=physical,
   // DPR=1. Platform consumers pass the complete accepted measurements.
   [[nodiscard]] bool bindSurface(std::uint32_t width, std::uint32_t height) noexcept;

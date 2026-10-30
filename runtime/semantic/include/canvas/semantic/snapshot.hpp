@@ -20,6 +20,9 @@ enum class SnapshotCapability : std::uint8_t {
     kRichTextFormattingV3 = 6,
     kShape2TriangleAndRichTextFormattingV3 = 7,
     kShape2TriangleRichTextFormattingAndConnectorAttachmentV1 = 15,
+    // Section/1 requires an explicit reader capability and a v3 manifest.
+    kSectionV1 = 16,
+    kShape2TriangleRichTextFormattingConnectorAndSectionV1 = 31,
 };
 
 struct SemanticSnapshot final {
@@ -50,6 +53,8 @@ struct SnapshotDecodeResult final {
 class SnapshotCodec final {
   public:
     // Captured objects/manifest/revision/frontier must already share one read view.
+    // Derives the canonical requirements from the captured object values.
+    [[nodiscard]] static bool populateRequirements(SemanticSnapshot& snapshot);
     // Computes the accepted algorithm1 projections; does not invent a frontier.
     [[nodiscard]] static bool bindDigests(SemanticSnapshot&, SnapshotCapability capability = SnapshotCapability::kLegacyV1);
     [[nodiscard]] static CodecResult encode(const SemanticSnapshot& snapshot, SnapshotCapability capability = SnapshotCapability::kLegacyV1);

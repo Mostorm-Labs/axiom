@@ -46,30 +46,20 @@ std::array<std::uint8_t, 32> snapshotDigest(const auditoryworks::axiom::v1::Docu
     return internal::sha256(framed);
 }
 
-bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reader) {
-    const auto bits=static_cast<unsigned>(reader);
-    if(bits>15U) return false;
-    bool triangle=false,text=false,formatting=false;
+struct SnapshotFeatures final { bool triangle=false,text=false,formatting=false,section=false,label=false,connector=false; };
+SnapshotFeatures snapshotFeatures(const SemanticSnapshot& snapshot) {
+    SnapshotFeatures result;
     for(const auto& object:snapshot.objects) {
         if(object.kind==ObjectKind::kShape && (object.kind_version==2 || object.kind_version==3)) {
             const auto* shape=std::get_if<ShapeContent>(&object.content);
-            triangle=triangle || (shape && shape->shape_kind==3);
-            text = text || (shape && shape->label.has_value());
+            result.triangle=result.triangle || (shape && shape->shape_kind==3);
+            result.text = result.text || (shape && shape->label.has_value());
+            result.label = result.label || (object.kind_version==3 && shape && shape->label.has_value());
         }
-        text=text || (object.kind==ObjectKind::kRichText && object.kind_version>=2);
-        formatting=formatting || (object.kind==ObjectKind::kRichText && object.kind_version==3);
+        result.text=result.text || (object.kind==ObjectKind::kRichText && object.kind_version>=2);
+        result.formatting=result.formatting || (object.kind==ObjectKind::kRichText && object.kind_version==3);
+        result.section=result.section || object.kind==ObjectKind::kSection;
     }
-    if((triangle && (bits&1U)==0) || (text && ((bits&2U)==0 || snapshot.schema_version<3))) return false;
-    if(formatting && (bits&4U)==0)return false;
-    if(snapshot.schema_version<3) return true;
-    if(snapshot.capability_requirements.size()>1024 || snapshot.recovery_frontier.size()>32)return false;
-    auditoryworks::axiom::v1::CapabilityRequirementsV1 caps;
-    if(!caps.ParseFromArray(snapshot.capability_requirements.data(),static_cast<int>(snapshot.capability_requirements.size())))return false;
-    std::vector<std::string> expected{"resource-manifest-v1"};
-    if(text)expected.push_back("richtext-fixed-width-v2");if(formatting)expected.push_back("richtext-formatting-v3");if(triangle)expected.push_back("shape2-triangle-v1");
-    bool label = false; for (const auto& object : snapshot.objects) if (object.kind == ObjectKind::kShape && object.kind_version == 3U) { const auto* shape = std::get_if<ShapeContent>(&object.content); label = label || (shape && shape->label.has_value()); }
-    if (label) expected.push_back("shape-richtext-label-v1");
-    bool connectorShapeAttachment = false;
     for (const auto& object : snapshot.objects) {
         if (object.kind != ObjectKind::kConnector) continue;
         const auto* connector = std::get_if<ConnectorContent>(&object.content);
@@ -79,12 +69,35 @@ bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reade
                 const auto target = std::find_if(snapshot.objects.begin(), snapshot.objects.end(),
                     [&](const auto& candidate) { return candidate.id == attached->target_object_id; });
                 if (target != snapshot.objects.end() && target->kind == ObjectKind::kShape &&
-                    target->kind_version >= 2U) connectorShapeAttachment = true;
+                    target->kind_version >= 2U) result.connector = true;
             }
         }
     }
-    if (connectorShapeAttachment) expected.push_back("connector-shape-attachment-v1");
-    if (connectorShapeAttachment && (bits & 8U) == 0U) return false;
+    return result;
+}
+std::vector<std::string> requiredCapabilities(const SnapshotFeatures& features) {
+    std::vector<std::string> result{"resource-manifest-v1"};
+    if(features.text)result.push_back("richtext-fixed-width-v2");
+    if(features.formatting)result.push_back("richtext-formatting-v3");
+    if(features.triangle)result.push_back("shape2-triangle-v1");
+    if(features.label)result.push_back("shape-richtext-label-v1");
+    if(features.connector)result.push_back("connector-shape-attachment-v1");
+    if(features.section)result.push_back("section-v1");
+    return result;
+}
+bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reader) {
+    const auto bits=static_cast<unsigned>(reader);
+    if(bits>31U) return false;
+    const auto features=snapshotFeatures(snapshot);
+    if((features.triangle && (bits&1U)==0) || (features.text && ((bits&2U)==0 || snapshot.schema_version<3))) return false;
+    if(features.formatting && (bits&4U)==0)return false;
+    if(features.section && ((bits&16U)==0 || snapshot.schema_version<3))return false;
+    if(snapshot.schema_version<3) return true;
+    if(snapshot.capability_requirements.size()>1024 || snapshot.recovery_frontier.size()>32)return false;
+    auditoryworks::axiom::v1::CapabilityRequirementsV1 caps;
+    if(!caps.ParseFromArray(snapshot.capability_requirements.data(),static_cast<int>(snapshot.capability_requirements.size())))return false;
+    const auto expected=requiredCapabilities(features);
+    if (features.connector && (bits & 8U) == 0U) return false;
     if(caps.required_ids_size()!=static_cast<int>(expected.size()))return false;
     for(int i=0;i<caps.required_ids_size();++i)if(caps.required_ids(i)!=expected[static_cast<std::size_t>(i)])return false;
     const auto canonical=internal::canonicalEncodeProto(caps);
@@ -113,8 +126,8 @@ bool supportedSnapshotVersion(std::uint32_t version) noexcept {
 }
 
 bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability capability, const ObjectRecord& object) noexcept {
-    // Section snapshot capabilities are not delivered by the codec-only A slice.
-    if (object.kind == ObjectKind::kSection) return false;
+    if (object.kind == ObjectKind::kSection)
+        return schema_version == 3U && (static_cast<unsigned>(capability) & 16U) != 0U;
     if (object.kind == ObjectKind::kRichText && object.kind_version == 3U)
         return schema_version==3U && (static_cast<unsigned>(capability)&6U)==6U;
     if (object.kind == ObjectKind::kRichText && object.kind_version == 2U)
@@ -201,6 +214,19 @@ static CodecResult encodeSnapshot(const SemanticSnapshot& snapshot, SnapshotCapa
 }
 
 CodecResult SnapshotCodec::encode(const SemanticSnapshot& snapshot,SnapshotCapability capability) { return encodeSnapshot(snapshot,capability,nullptr); }
+bool SnapshotCodec::populateRequirements(SemanticSnapshot& snapshot) {
+#if defined(CANVAS_SEMANTIC_PROTOBUF)
+    if (snapshot.schema_version != 3) return false;
+    auditoryworks::axiom::v1::CapabilityRequirementsV1 requirements;
+    for (const auto& name : requiredCapabilities(snapshotFeatures(snapshot))) requirements.add_required_ids(name);
+    const auto encoded = internal::canonicalEncodeProto(requirements);
+    if (!encoded.ok()) return false;
+    snapshot.capability_requirements = encoded.bytes;
+    return true;
+#else
+    (void)snapshot; return false;
+#endif
+}
 bool SnapshotCodec::bindDigests(SemanticSnapshot& snapshot,SnapshotCapability capability) {
     if(snapshot.schema_version!=3)return false;
     auto staged=snapshot;staged.document_digest.resize(32);staged.checkpoint_digest.resize(32);

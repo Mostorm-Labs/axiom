@@ -40,7 +40,7 @@ try {
   socket=new WebSocket(page.webSocketDebuggerUrl);
   await new Promise((resolve,reject)=>{socket.addEventListener('open',resolve,{once:true});socket.addEventListener('error',reject,{once:true});});
   const cdp=new CDP(socket);await cdp.send('Runtime.enable');await cdp.send('Page.enable');
-  await cdp.send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/index.html`});
+  await cdp.send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/index.html?selftest=1`});
   const evaluate=async expression=>{const r=await cdp.send('Runtime.evaluate',{expression,returnByValue:true});
     if(r.exceptionDetails)throw new Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
   async function until(expression,label){for(let i=0;i<600;i++){
@@ -58,6 +58,7 @@ try {
   if(!previewPixel || previewPixel[3]===0)throw new Error('preview pixel not rendered '+JSON.stringify(previewPixel));
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',x:150,y:100,button:'left',buttons:0,clickCount:1});
   await until(`document.getElementById('result')?.dataset.commit==='complete'`,'canonical fence');
+  await until(`getComputedStyle(document.getElementById('preview')).visibility==='hidden'`,'preview retirement');
   const canonicalPixel=await pixel('surface');
   if(!canonicalPixel || canonicalPixel[3]===0 || canonicalPixel.slice(0,3).every(v=>v>230))
     throw new Error('canonical stroke pixel not rendered '+JSON.stringify(canonicalPixel));

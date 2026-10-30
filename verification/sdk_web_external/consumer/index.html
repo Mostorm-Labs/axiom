@@ -1,31 +1,55 @@
 <!doctype html><meta charset="utf-8"><title>External Axiom Web SDK consumer</title>
-<style>#stage{position:relative;width:400px;height:300px}canvas{position:absolute;left:0;top:0;width:400px;height:300px}#surface{touch-action:none}#preview{pointer-events:none}</style>
+<style>#stage{position:relative;width:400px;height:300px}canvas{position:absolute;left:0;top:0;width:400px;height:300px}#surface{touch-action:none}#preview{pointer-events:none;visibility:hidden}
+body.manual{margin:0;height:100vh;display:flex;flex-direction:column;font:14px system-ui}
+body.manual #toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:6px;background:#f1f3f6}
+body.manual #stage{width:100%;height:auto;flex:1;min-height:120px;background:white;overflow:hidden}
+body.manual canvas{width:100%;height:100%}body.manual #result{margin:0;padding:4px}
+button[aria-pressed="true"]{background:#a9d5ff} [hidden]{display:none!important}</style>
+<header id="toolbar" hidden>
+<button id="external-ink-tool">Ink</button><button id="external-select">Select</button>
+<button id="external-rectangle-select" data-action="2" data-value="1">Rectangle select</button><button data-action="2" data-value="2">Lasso</button>
+<button data-action="0" data-value="2">Eraser</button><button data-action="0" data-value="3">Hand</button>
+<button id="external-text-tool">Text</button><button id="external-shape" data-action="1" data-value="0">Rectangle</button>
+<button data-action="1" data-value="1">Ellipse</button><button data-action="1" data-value="2">Triangle</button>
+<button id="external-sticky" data-action="1" data-value="5">Sticky</button><button data-action="1" data-value="4">Connector</button>
+<button id="external-undo" data-action="3" data-value="0">Undo</button><button id="external-redo" data-action="4" data-value="0">Redo</button>
+<button data-action="5" data-value="0">Fit content</button><button id="external-image">Import image</button>
+<button id="external-replace">Replace image</button><button id="external-crop" data-crop="0">Crop</button>
+<button data-crop="1">Crop done</button><button id="external-crop-cancel" data-crop="2">Crop cancel</button>
+<label>Crop zoom <input id="external-crop-zoom" type="range" min="0.25" max="4" step="0.01" value="1"></label>
+<button id="external-section" data-section="0">Create Section</button><button id="external-group" data-section="1">Group</button>
+<button id="external-ungroup" data-section="2">Ungroup</button><button data-section="3">Enter group</button><button data-section="4">Leave group</button>
+<label>Size <select id="external-font-size" class="text-format"><option value="32">Title</option><option value="24">Heading</option><option value="20">Subheading</option><option value="16" selected>Body</option></select></label>
+<label>Font <select id="external-font" class="text-format"></select></label>
+<label>Color <select id="external-color" class="text-format"><option value="black">Black</option><option value="blue">Blue</option></select></label>
+<label>Align <select id="external-align" class="text-format"><option value="1">Left</option><option value="2">Center</option><option value="3">Right</option></select></label>
+<button class="text-format" data-format="bold">Bold</button><button class="text-format" data-format="italic">Italic</button>
+<button class="text-format" data-format="underline">Underline</button><button class="text-format" data-format="strikethrough">Strike</button><button class="text-format" data-format="bulleted">Bullets</button>
+<input id="external-image-file" type="file" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" hidden></header>
 <div id="stage"><canvas id="surface" width="400" height="300"></canvas><canvas id="preview" width="400" height="300"></canvas></div>
-<button id="external-text-tool" hidden>Text</button>
-<button id="external-ink-tool" hidden>Ink</button>
 <pre id="result">STARTING</pre>
 <script>
 let runtimeReadyResolve;
 const runtimeReady = new Promise(resolve => { runtimeReadyResolve = resolve; });
 var Module={canvas:document.getElementById('surface'),onRuntimeInitialized:()=>runtimeReadyResolve(),
   onAbort:x=>{document.getElementById('result').textContent='FAIL: '+x}};
-if (new URLSearchParams(location.search).has('manual')) {
-  document.getElementById('stage').style.width='200px'; document.getElementById('stage').style.height='150px';
-  for (const c of document.querySelectorAll('canvas')) { c.style.width='200px'; c.style.height='150px'; }
+if (!new URLSearchParams(location.search).has('selftest')) {
+  document.body.classList.add('manual'); document.getElementById('toolbar').hidden = false;
 }
 </script><script src="external_web.js"></script>
 <script type="module">
 import {installPointerInput} from './pointer_input.mjs';
 import {installTextInput} from './text_input.mjs';
 await runtimeReady;
-const manual = new URLSearchParams(location.search).has('manual');
+const manual = !new URLSearchParams(location.search).has('selftest');
 const canvas = document.getElementById('surface');
 let textInput;
+let syncFormat=()=>{};
 if (manual) {
   textInput = installTextInput({module:Module, handle:1, canvas, stage:document.getElementById('stage'),
-    schedule:()=>Module._sdk_schedule()});
+    schedule:()=>{Module._sdk_schedule();queueMicrotask(syncFormat);}});
   window.externalTextInput = textInput;
-  const button = document.getElementById('external-text-tool'); button.hidden = false;
+  const button = document.getElementById('external-text-tool');
   button.addEventListener('click', async()=>{
     try {
       await textInput.finish();
@@ -34,7 +58,7 @@ if (manual) {
       Module._sdk_schedule();
     } catch (error) { document.getElementById('result').textContent = `FAIL: ${error}`; }
   });
-  const ink = document.getElementById('external-ink-tool'); ink.hidden = false;
+  const ink = document.getElementById('external-ink-tool');
   ink.addEventListener('click', async()=>{
     try {
       await textInput.finish();
@@ -42,14 +66,108 @@ if (manual) {
       Module._sdk_schedule();
     } catch (error) { document.getElementById('result').textContent = `FAIL: ${error}`; }
   });
+  const invoke = async(action, value) => {
+    try { await textInput.finish(); if (!Module._sdk_control(action,value)) throw new Error('Control rejected'); Module._sdk_schedule(); }
+    catch(error) { document.getElementById('result').textContent=`FAIL: ${error}`; }
+  };
+  document.getElementById('external-select').addEventListener('click',()=>invoke(0,1));
+  for (const button of document.querySelectorAll('[data-action]'))
+    button.addEventListener('click',()=>invoke(Number(button.dataset.action),Number(button.dataset.value)));
+  for (const button of document.querySelectorAll('[data-section]')) button.addEventListener('click',async()=>{
+    try { await textInput.finish(); if(!Module._sdk_section(Number(button.dataset.section)))throw new Error('Section/group command rejected'); Module._sdk_schedule(); }
+    catch(error) { document.getElementById('result').textContent=`FAIL: ${error}`; }
+  });
+  const font=document.getElementById('external-font');
+  for (const entry of textInput.fontCatalog().entries || []) font.add(new Option(entry.family,entry.id));
+  syncFormat=()=>{
+    const s=textInput.snapshot(); if(s.phase===0)return;
+    for(const button of document.querySelectorAll('[data-format]'))
+      button.setAttribute('aria-pressed',s.format[button.dataset.format]?'true':'false');
+    if(s.format.fontSize) document.getElementById('external-font-size').value=String(s.format.fontSize);
+    if(s.format.font) font.value=s.format.font;
+    if(s.format.alignment) document.getElementById('external-align').value=String(s.format.alignment);
+  };
+  document.getElementById('toolbar').addEventListener('pointerdown',event=>{
+    if (!event.target.closest('.text-format') || textInput.snapshot().phase===0) return;
+    if (textInput.composing()) event.preventDefault();
+    textInput.complete().catch(error=>{document.getElementById('result').textContent=`FAIL: ${error}`;});
+  },true);
+  const format=async patch=>{
+    try { await textInput.intent(15,{format:patch}); if(textInput.error()) throw new Error(textInput.error()); Module._sdk_schedule(); }
+    catch(error) { document.getElementById('result').textContent=`FAIL: ${error}`; }
+  };
+  document.getElementById('external-font-size').addEventListener('change',e=>format({fontSize:Number(e.target.value)}));
+  font.addEventListener('change',e=>format({font:e.target.value}));
+  document.getElementById('external-color').addEventListener('change',e=>format({color:e.target.value==='blue'?[0,0,1,1]:[0,0,0,1]}));
+  document.getElementById('external-align').addEventListener('change',e=>format({alignment:Number(e.target.value)}));
+  for(const button of document.querySelectorAll('[data-format]')) button.addEventListener('click',()=>{
+    const field=button.dataset.format; format({[field]:!textInput.snapshot().format[field]});
+  });
+  const picker=document.getElementById('external-image-file'); let replace=false;
+  document.getElementById('external-image').addEventListener('click',()=>{replace=false;picker.value='';picker.click();});
+  document.getElementById('external-replace').addEventListener('click',()=>{replace=true;picker.value='';picker.click();});
+  for (const button of document.querySelectorAll('[data-crop]')) button.addEventListener('click',()=>{
+    if(!Module._sdk_crop(Number(button.dataset.crop))) document.getElementById('result').textContent='FAIL: crop rejected';
+    if(Module._sdk_crop_active()) document.getElementById('external-crop-zoom').value=String(Module._sdk_crop_scale());
+    Module._sdk_schedule();
+  });
+  document.getElementById('external-crop-zoom').addEventListener('input',event=>{
+    if(!Module._sdk_crop_zoom(Number(event.target.value))) document.getElementById('result').textContent='FAIL: crop zoom rejected';
+    Module._sdk_schedule();
+  });
+  picker.addEventListener('change',async()=>{
+    const file=picker.files?.[0]; if(!file)return;
+    try {
+      await textInput.finish();
+      if(!file.size || file.size>128*1024*1024)throw new Error('Image is empty or exceeds 128 MiB');
+      const bytes=new Uint8Array(await file.arrayBuffer());
+      const prefix=(at,values)=>values.every((v,i)=>bytes[at+i]===v);
+      const mime=prefix(0,[137,80,78,71,13,10,26,10])?'image/png':prefix(0,[255,216,255])?'image/jpeg':
+        prefix(0,[82,73,70,70])&&prefix(8,[87,69,66,80])?'image/webp':'';
+      if(!mime)throw new Error('Unsupported image');
+      const ptr=Module._malloc(bytes.length), type=Module.stringToNewUTF8(mime);
+      if(!ptr || !type) { Module._free(ptr); Module._free(type); throw new Error('Allocation failed'); }
+      try { Module.HEAPU8.set(bytes,ptr); if(!Module._sdk_import_image(ptr,bytes.length,type,replace?1:0))throw new Error('Image import rejected'); }
+      finally { Module._free(ptr); Module._free(type); }
+      Module._sdk_schedule();
+    } catch(error) { document.getElementById('result').textContent=`FAIL: ${error}`; }
+  });
+  canvas.addEventListener('wheel',event=>{
+    const rect=canvas.getBoundingClientRect();
+    const x=(event.clientX-rect.left)*Module._sdk_logical_width()/rect.width;
+    const y=(event.clientY-rect.top)*Module._sdk_logical_height()/rect.height;
+    const ok=event.ctrlKey ? Module._sdk_view(1,x,y,Math.exp(-event.deltaY*.01)) :
+      Module._sdk_view(0,-event.deltaX,-event.deltaY,1);
+    if(!ok) document.getElementById('result').textContent='FAIL: viewport navigation rejected';
+    textInput.sync();Module._sdk_schedule();event.preventDefault();
+  },{passive:false});
+  canvas.addEventListener('pointermove',event=>{
+    if(event.pointerType!=='mouse' || event.buttons!==0)return;
+    const rect=canvas.getBoundingClientRect();
+    Module._sdk_hover((event.clientX-rect.left)*Module._sdk_logical_width()/rect.width,
+      (event.clientY-rect.top)*Module._sdk_logical_height()/rect.height);
+  });
 }
 const dispose = installPointerInput({canvas:document.getElementById('surface'),
   logicalSize:()=>[Module._sdk_logical_width(),Module._sdk_logical_height()], submit:f=>{
   const accepted=Module._sdk_input(f.source,f.pointer,f.phase,f.x,f.y,f.timestampNs,f.pressure,
     f.pressureAvailable,f.width,f.height,f.geometryAvailable,f.historical,f.shift);
   if(!accepted) document.getElementById('result').textContent='FAIL: pointer';
-  if (textInput) queueMicrotask(()=>textInput.sync());
+  if (textInput) queueMicrotask(()=>{textInput.sync();syncFormat();});
   return !!accepted;
 }});
-window.addEventListener('pagehide', ()=>{ dispose(); textInput?.dispose(); Module._sdk_shutdown(); }, {once:true});
+let resizeTimer=0;
+const observer = manual ? new ResizeObserver(()=>{
+  clearTimeout(resizeTimer);
+  const resize=()=>{
+    if(Module._sdk_active_count()) { resizeTimer=setTimeout(resize,50); return; }
+    const r=document.getElementById('stage').getBoundingClientRect(), ratio=devicePixelRatio||1;
+    if(r.width===Module._sdk_logical_width() && r.height===Module._sdk_logical_height() &&
+       canvas.width===Math.round(r.width*ratio) && canvas.height===Math.round(r.height*ratio)) return;
+    if(!Module._sdk_resize(r.width,r.height,ratio)) document.getElementById('result').textContent='FAIL: resize';
+    else textInput?.sync();
+  }; resizeTimer=setTimeout(resize,0);
+}) : null;
+observer?.observe(document.getElementById('stage'));
+window.addEventListener('pagehide', ()=>{ clearTimeout(resizeTimer); observer?.disconnect(); dispose(); textInput?.dispose(); Module._sdk_shutdown(); }, {once:true});
 </script>

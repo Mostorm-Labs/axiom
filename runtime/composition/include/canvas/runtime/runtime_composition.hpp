@@ -3,6 +3,8 @@
 #include "canvas/input/platform_input_contract.hpp"
 #include "canvas/runtime/resource_binding.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
+#include "canvas/semantic/operation_engine.hpp"
+#include "canvas/semantic/snapshot.hpp"
 
 #include <cstdint>
 #include <memory>
@@ -35,10 +37,42 @@ struct RuntimeHostObservation final {
   bool previewActive = false;
 };
 
+enum class DocumentSnapshotStatus : std::uint8_t {
+  kCaptured, kWrongThread, kNotReady, kBusy, kStale, kInvalidCheckpoint, kFailed
+};
+// The data owner supplies metadata for the same semantic generation. The
+// Runtime neither invents a recovery frontier nor asserts durable storage.
+struct DocumentSnapshotRequest final {
+  std::uint64_t expectedSemanticGeneration = 0;
+  std::uint64_t documentRevision = 0;
+  std::vector<std::uint8_t> recoveryFrontier;
+  // Empty derives the requirements from the captured canonical objects.
+  std::vector<std::uint8_t> capabilityRequirements;
+};
+struct DocumentSnapshotResult final {
+  DocumentSnapshotStatus status = DocumentSnapshotStatus::kFailed;
+  std::uint64_t semanticGeneration = 0;
+  std::vector<std::uint8_t> bytes;
+};
+enum class DocumentRestoreStatus : std::uint8_t { kRestored, kWrongThread, kNotReady, kInvalidSnapshot, kSceneFailed, kFailed };
+struct DocumentRestoreRequest final {
+  std::vector<std::uint8_t> bytes;
+  foundation::ObjectId expectedDocumentId{};
+  std::uint64_t documentRevision = 0;
+  std::vector<std::uint8_t> recoveryFrontier;
+  std::vector<std::uint8_t> checkpointDigest;
+  std::uint64_t resourceBinding = 0;
+};
+
 // Owner-thread entry. The borrowed facade belongs to this Composition and
 // remains valid until its owner is destroyed. Close before destruction.
 class RuntimeComposition final {
  public:
+  // Owner-thread callback receives borrowed values only for the call duration.
+  // It must not destroy the Runtime or perform reentrant mutation. Delivery
+  // means canonical apply, not storage durability or network acknowledgment.
+  using LocalOperationCallback = void (*)(void*, const semantic::Operation&,
+                                          const semantic::CanonicalCommitRecord&) noexcept;
   explicit RuntimeComposition(std::uint64_t viewId = 1);
   ~RuntimeComposition();
   RuntimeComposition(const RuntimeComposition&) = delete;
@@ -47,6 +81,19 @@ class RuntimeComposition final {
   RuntimeComposition& operator=(RuntimeComposition&&) = delete;
 
   [[nodiscard]] bool open() noexcept;
+  // Opens one new document with the caller's full identity. This is not a
+  // snapshot restore or a durable-storage acknowledgment.
+  [[nodiscard]] bool openDocument(foundation::ObjectId documentId) noexcept;
+  [[nodiscard]] std::optional<foundation::ObjectId> documentId() const noexcept;
+  [[nodiscard]] bool setLocalOperationCallback(LocalOperationCallback callback, void* context) noexcept;
+  // Remote apply is canonical-only; an Applied result does not assert that
+  // a Scene has presented or that external storage has persisted the input.
+  [[nodiscard]] semantic::ApplyResult applyRemoteOperation(const semantic::Operation& operation) noexcept;
+  [[nodiscard]] DocumentSnapshotResult captureDocumentSnapshot(const DocumentSnapshotRequest& request) noexcept;
+  // Restores only into a fresh owner; checkpoint metadata is supplied by the
+  // data layer. History and remote operations before the frontier are not replayed.
+  // Must precede borrowing controlFacade(), whose lifetime is bound to this owner.
+  [[nodiscard]] DocumentRestoreStatus openDocumentFromSnapshot(const DocumentRestoreRequest& request) noexcept;
   [[nodiscard]] bool bindSurface(std::uint32_t width, std::uint32_t height) noexcept;
   [[nodiscard]] bool registerSource(input::InputSourceId source) noexcept;
   [[nodiscard]] bool unregisterSource(input::InputSourceId source, std::uint64_t sequence,

@@ -1,6 +1,7 @@
 #pragma once
 namespace canvas::runtime { class CanvasRuntimeFacade; class MultiSelectionPort; }
 #include "canvas/interaction/text_edit_session.hpp"
+#include "canvas/semantic/snapshot_bootstrap.hpp"
 
 #include "canvas/input/input_router.hpp"
 #include "canvas/input/platform_input_contract.hpp"
@@ -63,6 +64,8 @@ namespace canvas::ink_playground { class InkPlaygroundHistoryTestAccess; }
 namespace canvas::render { class ImageResourceResolver; }
 
 namespace canvas::interaction {
+
+enum class SnapshotRestoreOutcome : std::uint8_t { kRestored, kInvalid, kSceneFailed };
 
 struct HudSnapshot final {
   double sampleHz = 0.0;
@@ -274,6 +277,17 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] std::uint64_t qualificationSceneGeneration() const noexcept {
     return runtimeSceneHost_ == nullptr ? 0U : runtimeSceneHost_->revision().value();
   }
+  // Called only by Composition before the initial document is opened.
+  [[nodiscard]] bool setInitialDocumentId(semantic::DocumentId id) noexcept {
+    if (id.isZero() || closed_ || surface_.available || semanticObjects_.size() != 0U) return false;
+    documentId_ = id; return true;
+  }
+  [[nodiscard]] semantic::DocumentId documentId() const noexcept { return documentId_; }
+  [[nodiscard]] bool snapshotCaptureReady() const noexcept { return textReady(); }
+  [[nodiscard]] std::vector<semantic::ObjectRecord> snapshotObjects() const { return semanticObjects_.allObjects(); }
+  [[nodiscard]] SnapshotRestoreOutcome restoreSnapshotBeforeSurface(const semantic::SemanticSnapshot& snapshot,
+      const semantic::SnapshotBootstrapper::CheckpointBinding& binding,
+      semantic::ResourceManifest& manifest) noexcept;
   [[nodiscard]] std::uint64_t selectionOverlayUpdates() const noexcept {
     return selectionOverlayUpdates_;
   }

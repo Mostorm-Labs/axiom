@@ -89,6 +89,60 @@ bool RuntimeCompositionCore::open() noexcept {
   return std::this_thread::get_id() == ownerThread_ && runtimeInstanceId_ != 0U &&
       state_ == RuntimeCompositionState::kCreated && transition(RuntimeCompositionState::kBound);
 }
+bool RuntimeCompositionCore::openDocument(semantic::DocumentId id) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || runtimeInstanceId_ == 0U ||
+      state_ != RuntimeCompositionState::kCreated || id.isZero() ||
+      !runtime_->setInitialDocumentId(id)) return false;
+  return open();
+}
+semantic::DocumentId RuntimeCompositionCore::documentId() const noexcept {
+  return runtime_->documentId();
+}
+bool RuntimeCompositionCore::setLocalOperationSink(interaction::LocalOperationSink* sink) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || state_ == RuntimeCompositionState::kCreated) return false;
+  runtime_->setLocalOperationSink(sink); return true;
+}
+DocumentSnapshotResult RuntimeCompositionCore::captureDocumentSnapshot(const DocumentSnapshotRequest& request) noexcept {
+  DocumentSnapshotResult result{};
+  if (std::this_thread::get_id() != ownerThread_) { result.status = DocumentSnapshotStatus::kWrongThread; return result; }
+  if (!canMutate()) { result.status = DocumentSnapshotStatus::kNotReady; return result; }
+  if (!runtime_->snapshotCaptureReady()) {
+    result.status = DocumentSnapshotStatus::kBusy; return result;
+  }
+  result.semanticGeneration = runtime_->semanticGeneration().value();
+  if (request.expectedSemanticGeneration != result.semanticGeneration) { result.status = DocumentSnapshotStatus::kStale; return result; }
+  try {
+    if (controlFacade_->readTextEditor().phase != TextPhase::kClosed) {
+      result.status = DocumentSnapshotStatus::kBusy; return result;
+    }
+    semantic::SemanticSnapshot snapshot{};
+    snapshot.document_id = runtime_->documentId(); snapshot.schema_version = 3;
+    snapshot.objects = runtime_->snapshotObjects(); snapshot.manifest = resources_.manifest;
+    snapshot.manifest_present = true; snapshot.document_revision = request.documentRevision;
+    snapshot.recovery_frontier = request.recoveryFrontier;
+    snapshot.capability_requirements = request.capabilityRequirements; snapshot.digest_algorithm = 1;
+    if (snapshot.capability_requirements.empty() && !semantic::SnapshotCodec::populateRequirements(snapshot)) {
+      result.status = DocumentSnapshotStatus::kInvalidCheckpoint; return result;
+    }
+    constexpr auto capability = semantic::SnapshotCapability::kShape2TriangleRichTextFormattingConnectorAndSectionV1;
+    if (!semantic::SnapshotCodec::bindDigests(snapshot, capability)) {
+      result.status = DocumentSnapshotStatus::kInvalidCheckpoint; return result;
+    }
+    auto encoded = semantic::SnapshotCodec::encode(snapshot, capability);
+    if (!encoded.ok()) { result.status = DocumentSnapshotStatus::kInvalidCheckpoint; return result; }
+    result.bytes = std::move(encoded.bytes); result.status = DocumentSnapshotStatus::kCaptured;
+    return result;
+  } catch (...) { result.status = DocumentSnapshotStatus::kFailed; return result; }
+}
+DocumentRestoreStatus RuntimeCompositionCore::restoreSnapshotBeforeSurface(const semantic::SemanticSnapshot& snapshot,
+    const semantic::SnapshotBootstrapper::CheckpointBinding& binding, std::uint64_t resourceBinding) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || state_ != RuntimeCompositionState::kBound ||
+      !bindManifest(snapshot.manifest, resourceBinding)) return DocumentRestoreStatus::kInvalidSnapshot;
+  const auto outcome = runtime_->restoreSnapshotBeforeSurface(snapshot, binding, resources_.manifest);
+  if (outcome == interaction::SnapshotRestoreOutcome::kInvalid) return DocumentRestoreStatus::kInvalidSnapshot;
+  if (outcome == interaction::SnapshotRestoreOutcome::kSceneFailed) return DocumentRestoreStatus::kSceneFailed;
+  return DocumentRestoreStatus::kRestored;
+}
 bool RuntimeCompositionCore::bindSurface(std::uint32_t width, std::uint32_t height) noexcept {
   return bindSurface(render::SurfaceMetrics{static_cast<float>(width),
                                              static_cast<float>(height), width,

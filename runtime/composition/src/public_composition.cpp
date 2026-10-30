@@ -8,11 +8,28 @@ namespace canvas::runtime {
 
 class RuntimeComposition::Impl final {
  public:
-  explicit Impl(std::uint64_t viewId) : core(render::ViewId{viewId}) {}
+  class Sink final : public interaction::LocalOperationSink {
+   public:
+    RuntimeComposition::LocalOperationCallback callback = nullptr;
+    void* context = nullptr;
+    bool active = false;
+    void applied(const semantic::Operation& operation,
+                 const semantic::CanonicalCommitRecord& record) noexcept override {
+      if (!callback || active) return;
+      active = true; callback(context, operation, record); active = false;
+    }
+    interaction::AxisOperationStatus status(const semantic::OperationId&,
+        const semantic::CanonicalCommitStamp&) const noexcept override { return {}; }
+  };
+  explicit Impl(std::uint64_t id) : core(render::ViewId{id}), viewId(id) {}
+  ~Impl() { (void)core.setLocalOperationSink(nullptr); }
   RuntimeCompositionCore core;
+  const std::uint64_t viewId;
+  Sink sink;
   const std::thread::id ownerThread = std::this_thread::get_id();
   bool initialResourcesBound = false;
   bool interactionStarted = false;
+  bool facadeBorrowed = false;
 };
 RuntimeCompositionCore& RuntimePlatformAccess::core(RuntimeComposition& owner) noexcept {
   return owner.impl_->core;
@@ -21,6 +38,57 @@ RuntimeCompositionCore& RuntimePlatformAccess::core(RuntimeComposition& owner) n
 RuntimeComposition::RuntimeComposition(std::uint64_t viewId) : impl_(std::make_unique<Impl>(viewId)) {}
 RuntimeComposition::~RuntimeComposition() = default;
 bool RuntimeComposition::open() noexcept { return impl_->core.open(); }
+bool RuntimeComposition::openDocument(foundation::ObjectId id) noexcept {
+  return impl_->core.openDocument(semantic::DocumentId{id});
+}
+std::optional<foundation::ObjectId> RuntimeComposition::documentId() const noexcept {
+  if (std::this_thread::get_id() != impl_->ownerThread ||
+      impl_->core.readback().state == RuntimeCompositionState::kCreated ||
+      impl_->core.readback().state == RuntimeCompositionState::kClosed) return std::nullopt;
+  return impl_->core.documentId().value();
+}
+bool RuntimeComposition::setLocalOperationCallback(LocalOperationCallback callback, void* context) noexcept {
+  if (std::this_thread::get_id() != impl_->ownerThread || impl_->sink.active ||
+      impl_->core.readback().state != RuntimeCompositionState::kReady) return false;
+  if (!impl_->core.setLocalOperationSink(callback ? &impl_->sink : nullptr)) return false;
+  impl_->sink.callback = callback; impl_->sink.context = callback ? context : nullptr;
+  return true;
+}
+semantic::ApplyResult RuntimeComposition::applyRemoteOperation(const semantic::Operation& operation) noexcept {
+  if (std::this_thread::get_id() != impl_->ownerThread || impl_->sink.active) return {};
+  return impl_->core.applyExternalOperation(operation, semantic::ApplySource::kRemoteSync);
+}
+DocumentSnapshotResult RuntimeComposition::captureDocumentSnapshot(const DocumentSnapshotRequest& request) noexcept {
+  if (std::this_thread::get_id() != impl_->ownerThread) {
+    DocumentSnapshotResult result{}; result.status = DocumentSnapshotStatus::kWrongThread; return result;
+  }
+  if (impl_->sink.active) { DocumentSnapshotResult result{}; result.status = DocumentSnapshotStatus::kBusy; return result; }
+  return impl_->core.captureDocumentSnapshot(request);
+}
+DocumentRestoreStatus RuntimeComposition::openDocumentFromSnapshot(const DocumentRestoreRequest& request) noexcept {
+  if (std::this_thread::get_id() != impl_->ownerThread) return DocumentRestoreStatus::kWrongThread;
+  if (impl_->sink.active || impl_->facadeBorrowed || impl_->core.readback().state != RuntimeCompositionState::kCreated)
+    return DocumentRestoreStatus::kNotReady;
+  if (request.expectedDocumentId.isZero() || request.resourceBinding == 0) return DocumentRestoreStatus::kInvalidSnapshot;
+  try {
+    constexpr auto capability = semantic::SnapshotCapability::kShape2TriangleRichTextFormattingConnectorAndSectionV1;
+    auto decoded = semantic::SnapshotCodec::decode(request.bytes, capability);
+    if (!decoded.ok() || decoded.snapshot->schema_version != 3 || !decoded.snapshot->manifest_present ||
+        decoded.snapshot->document_id.value() != request.expectedDocumentId ||
+        decoded.snapshot->document_revision != request.documentRevision ||
+        decoded.snapshot->recovery_frontier != request.recoveryFrontier ||
+        decoded.snapshot->checkpoint_digest != request.checkpointDigest) return DocumentRestoreStatus::kInvalidSnapshot;
+    semantic::SnapshotBootstrapper::CheckpointBinding binding{decoded.snapshot->document_id,
+        request.documentRevision, request.recoveryFrontier, request.checkpointDigest};
+    auto candidate = std::make_unique<Impl>(impl_->viewId);
+    if (!candidate->core.openDocument(decoded.snapshot->document_id)) return DocumentRestoreStatus::kFailed;
+    const auto outcome = candidate->core.restoreSnapshotBeforeSurface(*decoded.snapshot, binding, request.resourceBinding);
+    if (outcome != DocumentRestoreStatus::kRestored) return outcome;
+    candidate->initialResourcesBound = true;
+    impl_ = std::move(candidate);
+    return DocumentRestoreStatus::kRestored;
+  } catch (...) { return DocumentRestoreStatus::kFailed; }
+}
 bool RuntimeComposition::bindSurface(std::uint32_t w, std::uint32_t h) noexcept {
   return impl_->core.bindSurface(w, h);
 }
@@ -110,8 +178,13 @@ std::optional<RuntimeHostObservation> RuntimeComposition::hostObservation() cons
 bool RuntimeComposition::hoverSelectionAtViewPoint(float x, float y) noexcept {
   return impl_->core.hoverSelectionAtViewPoint(x, y);
 }
-bool RuntimeComposition::close() noexcept { return impl_->core.close(); }
-RuntimeFacade& RuntimeComposition::controlFacade() noexcept { return impl_->core.controlFacade(); }
-const RuntimeFacade& RuntimeComposition::controlFacade() const noexcept { return impl_->core.controlFacade(); }
+bool RuntimeComposition::close() noexcept {
+  if (std::this_thread::get_id() != impl_->ownerThread || impl_->sink.active) return false;
+  const bool closed = impl_->core.close();
+  if (closed) { (void)impl_->core.setLocalOperationSink(nullptr); impl_->sink.callback = nullptr; }
+  return closed;
+}
+RuntimeFacade& RuntimeComposition::controlFacade() noexcept { impl_->facadeBorrowed = true; return impl_->core.controlFacade(); }
+const RuntimeFacade& RuntimeComposition::controlFacade() const noexcept { impl_->facadeBorrowed = true; return impl_->core.controlFacade(); }
 
 }  // namespace canvas::runtime

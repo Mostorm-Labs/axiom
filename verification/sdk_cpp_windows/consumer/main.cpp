@@ -4,6 +4,7 @@
 #define NOMINMAX
 #include <windows.h>
 #include <cstdio>
+#include <string>
 
 #define CHECK(x) do { if (!(x)) { std::fprintf(stderr, "FAIL %d: %s\n", __LINE__, #x); return 1; } } while (false)
 
@@ -19,7 +20,8 @@ int main() {
   ShowWindow(window, SW_SHOWNOACTIVATE);
   UpdateWindow(window);
   canvas::runtime::RuntimeComposition owner;
-  CHECK(owner.open());
+  const auto document = canvas::foundation::ObjectId::fromUint64(701);
+  CHECK(owner.openDocument(document) && owner.documentId() == document);
   canvas::platform::WindowsRuntimeAdapter platform(owner, window);
   if (!platform.bind(400, 300, 1.0F)) return 77;
   const auto metrics = owner.surfaceMetrics();
@@ -34,6 +36,25 @@ int main() {
   CHECK(&product == &debug);
   CHECK(!product.readFontCatalog().entries.empty());
   CHECK(owner.resourceToken(product.readFontCatalog().entries.front().id).has_value());
+  canvas::runtime::DocumentSnapshotRequest snapshot{};
+  const auto targets = product.mountedCanvasTargets(); CHECK(!targets.empty());
+  snapshot.expectedSemanticGeneration = product.readCanvasControlSnapshot(targets.front()).semanticGeneration;
+  snapshot.documentRevision = 1; snapshot.recoveryFrontier = {8,1,16,1,24,1};
+  const std::string capability = "resource-manifest-v1";
+  snapshot.capabilityRequirements = {10,static_cast<std::uint8_t>(capability.size())};
+  snapshot.capabilityRequirements.insert(snapshot.capabilityRequirements.end(), capability.begin(), capability.end());
+  const auto saved = owner.captureDocumentSnapshot(snapshot);
+  CHECK(saved.status == canvas::runtime::DocumentSnapshotStatus::kCaptured);
+  constexpr auto readerCapability = canvas::semantic::SnapshotCapability::kShape2TriangleRichTextFormattingConnectorAndSectionV1;
+  const auto decoded = canvas::semantic::SnapshotCodec::decode(saved.bytes, readerCapability);
+  CHECK(decoded.ok());
+  canvas::runtime::DocumentRestoreRequest restore{};
+  restore.bytes = saved.bytes; restore.expectedDocumentId = document; restore.documentRevision = snapshot.documentRevision;
+  restore.recoveryFrontier = snapshot.recoveryFrontier; restore.checkpointDigest = decoded.snapshot->checkpoint_digest;
+  restore.resourceBinding = 55;
+  canvas::runtime::RuntimeComposition reopened;
+  CHECK(reopened.openDocumentFromSnapshot(restore) == canvas::runtime::DocumentRestoreStatus::kRestored);
+  CHECK(reopened.documentId() == document && reopened.close());
   CHECK(owner.registerSource(9000));
   CHECK(owner.hostObservation() && owner.hostObservation()->objectCount == 0U);
   CHECK(!owner.hoverSelectionAtViewPoint(20.0F, 20.0F));

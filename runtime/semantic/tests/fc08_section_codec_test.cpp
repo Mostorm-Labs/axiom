@@ -5,8 +5,10 @@
 #include "canvas/semantic/reference_object_store.hpp"
 #include "canvas/semantic/section_content.hpp"
 #include "canvas/semantic/snapshot.hpp"
+#include "canvas/semantic/snapshot_bootstrap.hpp"
 #include "canvas/semantic/validator.hpp"
 #include "auditoryworks/axiom/v1/operation.pb.h"
+#include "auditoryworks/axiom/v1/snapshot.pb.h"
 #include <gtest/gtest.h>
 #include <nlohmann/json.hpp>
 #include <cmath>
@@ -227,6 +229,60 @@ TEST(Fc08SectionA, RejectsSectionSnapshotUntilExplicitCapabilityIsImplemented) {
     snapshot.document_id = DocumentId{ObjectId::fromUint64(3)};
     snapshot.schema_version = 1; snapshot.objects = {section()};
     EXPECT_FALSE(SnapshotCodec::encode(snapshot).ok());
+}
+TEST(Fc08SectionA, SectionSnapshotRequiresExplicitReaderAndRestoresHierarchy) {
+    SemanticSnapshot snapshot;
+    snapshot.document_id = DocumentId{ObjectId::fromUint64(3)};
+    snapshot.schema_version = 3; snapshot.manifest_present = true;
+    snapshot.document_revision = 7; snapshot.digest_algorithm = 1;
+    p::RecoveryFrontierV1 frontier;
+    frontier.set_version(1); frontier.set_kind(1); frontier.set_sequence(7);
+    snapshot.recovery_frontier = wire(frontier.SerializeAsString());
+    p::CapabilityRequirementsV1 requirements;
+    requirements.add_required_ids("resource-manifest-v1");
+    requirements.add_required_ids("section-v1");
+    snapshot.capability_requirements = wire(requirements.SerializeAsString());
+    auto child = section(); child.id = ObjectId::fromUint64(4);
+    child.kind = ObjectKind::kShape; child.kind_version = 1;
+    child.content = ShapeContent{1, 20, 20}; child.placement.parent_id = section().id;
+    child.transform.tx = 43; child.transform.ty = -27;
+    snapshot.objects = {section(), child};
+    const auto sectionCapability = SnapshotCapability::kShape2TriangleRichTextFormattingConnectorAndSectionV1;
+    auto missingRequirement = snapshot;
+    p::CapabilityRequirementsV1 legacyRequirements;
+    legacyRequirements.add_required_ids("resource-manifest-v1");
+    missingRequirement.capability_requirements = wire(legacyRequirements.SerializeAsString());
+    EXPECT_FALSE(SnapshotCodec::bindDigests(missingRequirement, sectionCapability));
+    EXPECT_FALSE(SnapshotCodec::bindDigests(snapshot, SnapshotCapability::kShape2TriangleRichTextFormattingAndConnectorAttachmentV1));
+    auto existing = missingRequirement; existing.objects.clear();
+    const auto oldCapability = SnapshotCapability::kShape2TriangleRichTextFormattingAndConnectorAttachmentV1;
+    ASSERT_TRUE(SnapshotCodec::bindDigests(existing, oldCapability));
+    EXPECT_EQ(SnapshotCodec::encode(existing, oldCapability).bytes,
+              SnapshotCodec::encode(existing, sectionCapability).bytes);
+    ASSERT_TRUE(SnapshotCodec::bindDigests(snapshot, sectionCapability));
+    const auto encoded = SnapshotCodec::encode(snapshot, sectionCapability);
+    ASSERT_TRUE(encoded.ok());
+    EXPECT_FALSE(SnapshotCodec::decode(encoded.bytes, SnapshotCapability::kShape2TriangleRichTextFormattingAndConnectorAttachmentV1).ok());
+    const auto decoded = SnapshotCodec::decode(encoded.bytes, sectionCapability);
+    ASSERT_TRUE(decoded.ok());
+    EXPECT_EQ(decoded.snapshot->objects, snapshot.objects);
+    EXPECT_EQ(decoded.snapshot->capability_requirements, snapshot.capability_requirements);
+    DocumentRuntimeState state = DocumentRuntimeState::kLoading;
+    IndexedObjectStore store; ResourceManifest manifest; SemanticGenerationState generation;
+    SnapshotBootstrapper::CheckpointBinding binding{snapshot.document_id, snapshot.document_revision,
+        snapshot.recovery_frontier, snapshot.checkpoint_digest};
+    DocumentRuntimeState oldState = DocumentRuntimeState::kLoading;
+    IndexedObjectStore oldStore; ResourceManifest oldManifest; SemanticGenerationState oldGeneration;
+    EXPECT_FALSE(SnapshotBootstrapper::restore(*decoded.snapshot, oldCapability, oldState,
+                                               oldStore, oldManifest, oldGeneration, binding).restored);
+    EXPECT_EQ(oldStore.size(), 0U);
+    ASSERT_TRUE(SnapshotBootstrapper::restore(*decoded.snapshot, sectionCapability, state,
+                                              store, manifest, generation, binding).restored);
+    ASSERT_NE(store.find(child.id), nullptr);
+    EXPECT_EQ(*store.find(child.id), child);
+    // Bootstrap restores into the Loading owner; publication/Ready belongs to
+    // the caller and must not be inferred from a successful codec restore.
+    EXPECT_EQ(state, DocumentRuntimeState::kLoading);
 }
 TEST(Fc08SectionA, SectionPropertiesRejectForbiddenDefaultsAndClearWithoutMutation) {
     auto object = section();

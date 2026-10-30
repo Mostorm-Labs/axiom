@@ -29,6 +29,28 @@ For a new, empty document an application may use
 binding is an alternative to `loadHostFonts`, which also binds a manifest; it
 does not load a saved document or replace a live document's resource manifest.
 
+`openDocument` accepts a nonzero full document ID before surface binding;
+legacy `open` retains its existing default ID. `setLocalOperationCallback`
+delivers borrowed canonical local operations on the owner thread; it is not a
+durability acknowledgment. Callbacks must not reenter or destroy the owner.
+`applyRemoteOperation` uses the existing remote apply owner and does not echo
+through the local callback. These APIs do not perform file or network I/O.
+
+`captureDocumentSnapshot` captures committed canonical state only when the
+Runtime has no active editing/input session. The caller provides an expected
+semantic generation and the data owner's document revision and canonical recovery
+frontier for that same state. Capability requirements are derived from the
+captured objects when omitted, or validated if supplied. A mismatch, busy
+session, invalid metadata or wrong thread is rejected. The returned bytes are
+not an acknowledgment of storage durability, and resource bytes remain the
+data owner's responsibility. `openDocumentFromSnapshot` restores a verified v3
+checkpoint into a fresh owner, rebuilds the Scene before publishing the owner,
+and rejects mismatched document/frontier/digest. The data layer must supply the
+correct checkpoint binding and replay only operations after that frontier; the
+snapshot does not restore Undo history or the old applied-operation ledger.
+Live-document replacement and a document-close/durability barrier are not yet
+provided.
+
 Call `prepareFrame` when there is work. A pending result exposes the Runtime's
 work IDs; yield to the browser and call `pollFrame` until it completes. Only
 completed GPU fences cause Runtime feedback; no scanout time is claimed.
@@ -54,8 +76,11 @@ both contexts, preview and canonical GPU completion, an in-flight loss,
 actual `WEBGL_lose_context` loss/restoration events, generation advance, rebind, application font loading, synthetic text input and
 shutdown. The consumer does not depend on the Demo HTML or private Runtime
 headers. Add `--export-dir <new-directory>` to retain the verified assets and
-serve that directory over HTTP; open `index.html?manual=1` for the interactive
-Ink/Text example. Its application-owned text bridge forwards native browser
+serve that directory over HTTP; open `index.html` for the responsive
+interactive example. It exposes common Ink/Text, selection, shape, Sticky,
+Connector, Section, Group, Undo/Redo, text-format and image/crop controls via
+the public Runtime Facade. It is a separate HTML toolbar, not the complete
+internal Debug UI. Its application-owned text bridge forwards native browser
 composition facts through the public Runtime Facade; it uses nlohmann/json as
 an application dependency. The checked-in carrier and bridge mirror the Demo's
 implementation, and the repository runner checks they remain identical.
