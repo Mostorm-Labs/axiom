@@ -87,7 +87,8 @@ WindowsFrameStatus WindowsRuntimeAdapter::frameStatus() const noexcept {
   if (std::this_thread::get_id() != impl_->thread || !impl_->prepared) return {};
   return {impl_->frame.needsPaint, impl_->frame.canonicalRequested, impl_->frame.previewRendered,
           impl_->frame.canonicalWork ? impl_->frame.canonicalWork->workId : 0U,
-          impl_->frame.previewWork ? impl_->frame.previewWork->workId : 0U};
+          impl_->frame.previewWork ? impl_->frame.previewWork->workId : 0U,
+          static_cast<std::uint64_t>(impl_->frame.pendingCanonicalHandoff), true};
 }
 runtime::PlatformDiagnosticsSnapshot WindowsRuntimeAdapter::readPlatformDiagnostics() const noexcept {
   runtime::PlatformDiagnosticsSnapshot out{};

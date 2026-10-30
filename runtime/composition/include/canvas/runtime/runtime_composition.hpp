@@ -11,6 +11,20 @@ namespace canvas::runtime {
 
 class RuntimePlatformAccess;
 
+// Read-only physical and logical surface facts owned by the Composition.
+struct RuntimeSurfaceMetrics final {
+  std::uint64_t viewId = 0;
+  std::uint64_t surfaceGeneration = 0;
+  std::uint64_t metricsGeneration = 0;
+  float logicalWidth = 0.0F;
+  float logicalHeight = 0.0F;
+  std::uint32_t width = 0;
+  std::uint32_t height = 0;
+  float devicePixelRatio = 1.0F;
+  float displayScale = 1.0F;
+  bool available = false;
+};
+
 // Owner-thread entry. The borrowed facade belongs to this Composition and
 // remains valid until its owner is destroyed. Close before destruction.
 class RuntimeComposition final {
@@ -36,6 +50,8 @@ class RuntimeComposition final {
   [[nodiscard]] bool cancelContact(const input::PointerKey& key, std::uint64_t sequence,
                                    std::uint64_t timestampNs) noexcept;
   [[nodiscard]] bool ownerPump() noexcept;
+  // Empty when queried from a thread other than the owner thread.
+  [[nodiscard]] std::optional<RuntimeSurfaceMetrics> surfaceMetrics() const noexcept;
   [[nodiscard]] bool close() noexcept;
   [[nodiscard]] RuntimeFacade& controlFacade() noexcept;
   [[nodiscard]] const RuntimeFacade& controlFacade() const noexcept;

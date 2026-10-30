@@ -13,6 +13,8 @@ struct WindowsFrameStatus final {
   bool previewRendered = false;
   std::uint64_t canonicalWorkId = 0;
   std::uint64_t previewWorkId = 0;
+  std::uint64_t pendingCanonicalHandoff = 0;
+  bool available = false;
 };
 
 // Borrowed owner and HWND must outlive the adapter. All methods run on the

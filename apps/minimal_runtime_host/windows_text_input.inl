@@ -274,7 +274,7 @@ std::optional<LRESULT> windowsTextMessage(State& state, UINT message, WPARAM key
             if (snapshot.composition)
                 return 0;
         }
-        const auto metrics = state.host->composition().surfaceSnapshot();
+        const auto metrics = state.host->publicComposition().surfaceMetrics().value_or(RuntimeSurfaceMetrics{});
         if (!metrics.width || !metrics.height)
             return 0;
         TextFact fact;

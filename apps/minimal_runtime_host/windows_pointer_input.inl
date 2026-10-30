@@ -19,14 +19,22 @@ void logInput(State& state, const char* event, bool accepted,
   const auto snapshot = composition.controlFacade().readRuntimeState();
   const auto frame = composition.lastSubmittedCanonicalFrame();
   const auto text = composition.controlFacade().readTextEditor();
+  std::string handoff = "unavailable";
+  if (state.platformAdapter) {
+    const auto status = state.platformAdapter->frameStatus();
+    if (status.available) handoff = std::to_string(status.pendingCanonicalHandoff);
+  }
+#if defined(AXIOM_RUNTIME_QUALIFICATION) && AXIOM_RUNTIME_QUALIFICATION
+  else handoff = std::to_string(state.frameOpportunity.pendingCanonicalHandoff);
+#endif
   std::fprintf(state.inputLog.get(),
-      "event=%s accepted=%d source=%llu pointer=%llu generation=%llu state=%u objects=%zu operations=%llu frame=%llu handoff=%zu preview=%d camera=(%.6f,%.3f,%.3f) tool=%u text_phase=%u text_session=%llu canvas_focus=%d\n",
+      "event=%s accepted=%d source=%llu pointer=%llu generation=%llu state=%u objects=%zu operations=%llu frame=%llu handoff=%s preview=%d camera=(%.6f,%.3f,%.3f) tool=%u text_phase=%u text_session=%llu canvas_focus=%d\n",
       event, accepted, static_cast<unsigned long long>(key.source),
       static_cast<unsigned long long>(key.pointer), static_cast<unsigned long long>(key.generation),
       static_cast<unsigned>(receipt.state), composition.semanticObjectCount(),
       static_cast<unsigned long long>(snapshot.identity.documentRevision),
       static_cast<unsigned long long>(frame ? frame->frameId.value() : 0U),
-      state.frameOpportunity.pendingCanonicalHandoff, composition.previewActive(),
+      handoff.c_str(), composition.previewActive(),
       snapshot.camera.scale, snapshot.camera.translationX, snapshot.camera.translationY,
       snapshot.tool.toolId, static_cast<unsigned>(text.phase),
       static_cast<unsigned long long>(text.token.session), GetFocus() == state.window);
@@ -124,8 +132,8 @@ bool sendNativePointer(State& state, UINT message, UINT32 id) {
     cancelNativePointer(state, id, "pointer-cancelled");
     return true;
   }
-  (void)state.host->composition().ownerPump();
-  const auto surface = state.host->composition().surfaceSnapshot();
+  (void)state.host->publicComposition().ownerPump();
+  const auto surface = state.host->publicComposition().surfaceMetrics().value_or(canvas::runtime::RuntimeSurfaceMetrics{});
   if (!surface.available || !surface.width || !surface.height ||
       !std::isfinite(surface.logicalWidth) || !std::isfinite(surface.logicalHeight) ||
       surface.logicalWidth <= 0.0F || surface.logicalHeight <= 0.0F) {

@@ -30,17 +30,23 @@ int main() {
     return 77;
   }
   const canvas::runtime::PlatformDiagnostics& diagnostics = adapter;
+  const auto metrics = composition.surfaceMetrics();
+  assert(metrics && metrics->available && metrics->width == 256U && metrics->height == 256U);
+  assert(metrics->logicalWidth == 128.0F && metrics->logicalHeight == 128.0F);
   auto surface = diagnostics.readPlatformDiagnostics();
   assert(surface.surfaceAvailable && surface.width == 256U && surface.height == 256U);
   assert(surface.devicePixelRatio == 2.0F && surface.canonicalSurfaceGeneration != 0);
   assert(adapter.prepareFrame(true));
-  assert(adapter.frameStatus().canonicalWorkId != 0);
+  assert(adapter.frameStatus().available && adapter.frameStatus().canonicalWorkId != 0);
   assert(adapter.present());
+  assert(!adapter.frameStatus().available);
   assert(!adapter.present());
   bool otherThreadAccepted = true;
-  std::thread other([&] { otherThreadAccepted = adapter.resize(300, 300, 1.0F); });
+  bool otherThreadRead = true;
+  std::thread other([&] { otherThreadAccepted = adapter.resize(300, 300, 1.0F);
+                          otherThreadRead = composition.surfaceMetrics().has_value(); });
   other.join();
-  assert(!otherThreadAccepted);
+  assert(!otherThreadAccepted && !otherThreadRead);
   assert(composition.registerSource(9100));
   canvas::input::PlatformPointerBatch batch;
   canvas::input::PlatformPointerSample sample{};
@@ -90,11 +96,15 @@ int main() {
   assert(!composition.submitContact(*third, batch));
   assert(composition.submitContact(*rebound, batch));
   assert(adapter.resize(320, 240, 2.0F));
+  const auto resized = composition.surfaceMetrics();
+  assert(resized && resized->available && resized->logicalWidth == 160.0F &&
+         resized->logicalHeight == 120.0F && resized->width == 320U && resized->height == 240U);
   surface = diagnostics.readPlatformDiagnostics();
   assert(surface.surfaceAvailable && surface.width == 320U && surface.height == 240U);
   assert(adapter.prepareFrame(true));
   assert(adapter.present());
   assert(adapter.loseSurface());
+  assert(composition.surfaceMetrics() && !composition.surfaceMetrics()->available);
   assert(!diagnostics.readPlatformDiagnostics().surfaceAvailable);
   assert(!adapter.prepareFrame(true));
   assert(adapter.recoverSurface(320, 240, 2.0F));

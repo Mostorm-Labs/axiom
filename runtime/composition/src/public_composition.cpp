@@ -2,6 +2,7 @@
 
 #include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/internal/runtime_platform_access.hpp"
+#include <thread>
 
 namespace canvas::runtime {
 
@@ -9,6 +10,7 @@ class RuntimeComposition::Impl final {
  public:
   explicit Impl(std::uint64_t viewId) : core(render::ViewId{viewId}) {}
   RuntimeCompositionCore core;
+  const std::thread::id ownerThread = std::this_thread::get_id();
 };
 RuntimeCompositionCore& RuntimePlatformAccess::core(RuntimeComposition& owner) noexcept {
   return owner.impl_->core;
@@ -60,6 +62,13 @@ bool RuntimeComposition::cancelContact(const input::PointerKey& key, std::uint64
   return impl_->core.cancelPlatformPointer(key, sequence, timestampNs);
 }
 bool RuntimeComposition::ownerPump() noexcept { return impl_->core.ownerPump(); }
+std::optional<RuntimeSurfaceMetrics> RuntimeComposition::surfaceMetrics() const noexcept {
+  if (std::this_thread::get_id() != impl_->ownerThread) return std::nullopt;
+  const auto s = impl_->core.surfaceSnapshot();
+  return RuntimeSurfaceMetrics{s.viewId.value(), s.surfaceGeneration, s.metricsGeneration,
+      s.logicalWidth, s.logicalHeight, s.width, s.height, s.devicePixelRatio,
+      s.displayScale, s.available};
+}
 bool RuntimeComposition::close() noexcept { return impl_->core.close(); }
 RuntimeFacade& RuntimeComposition::controlFacade() noexcept { return impl_->core.controlFacade(); }
 const RuntimeFacade& RuntimeComposition::controlFacade() const noexcept { return impl_->core.controlFacade(); }

@@ -22,6 +22,8 @@ int main() {
   CHECK(owner.open());
   canvas::platform::WindowsRuntimeAdapter platform(owner, window);
   if (!platform.bind(400, 300, 1.0F)) return 77;
+  const auto metrics = owner.surfaceMetrics();
+  CHECK(metrics && metrics->available && metrics->width == 400U && metrics->logicalWidth == 400.0F);
   const canvas::runtime::PlatformDiagnostics& diagnostics = platform;
   CHECK(diagnostics.readPlatformDiagnostics().surfaceAvailable);
   CHECK(diagnostics.readPlatformDiagnostics().width == 400U);
@@ -84,11 +86,13 @@ int main() {
   sample.sequence = 10; sample.timestampNs = 11000000; batch.samples = {sample};
   CHECK(owner.submitContact(*contact, batch));
   CHECK(platform.resize(320, 240, 1.0F));
+  CHECK(owner.surfaceMetrics() && owner.surfaceMetrics()->width == 320U);
   CHECK(diagnostics.readPlatformDiagnostics().width == 320U);
   CHECK(platform.prepareFrame(true));
   CHECK(platform.frameStatus().canonicalWorkId != 0);
   CHECK(platform.present());
   CHECK(platform.loseSurface());
+  CHECK(owner.surfaceMetrics() && !owner.surfaceMetrics()->available);
   CHECK(!diagnostics.readPlatformDiagnostics().surfaceAvailable);
   CHECK(!platform.prepareFrame(true));
   CHECK(platform.recoverSurface(320, 240, 1.0F));

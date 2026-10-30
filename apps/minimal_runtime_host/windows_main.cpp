@@ -73,25 +73,33 @@ struct State final {
   std::map<std::pair<canvas::input::InputSourceId, UINT32>, POINTER_INFO> nativeWatermarks;
   std::unique_ptr<std::FILE, decltype(&std::fclose)> inputLog{nullptr, &std::fclose};
   std::unique_ptr<canvas::platform::WindowsRuntimeAdapter> platformAdapter;
+#if defined(AXIOM_RUNTIME_QUALIFICATION) && AXIOM_RUNTIME_QUALIFICATION
   canvas::minimal_runtime_host::WindowsPresentationCache presentationCache;
   canvas::runtime::RuntimeFrameOpportunity frameOpportunity{};
+#endif
 };
 
 #include "windows_pointer_input.inl"
 #include "windows_text_input.inl"
 
+float windowScale(HWND window) noexcept {
+  const auto dpi = GetDpiForWindow(window);
+  return dpi == 0U ? 1.0F : static_cast<float>(dpi) / 96.0F;
+}
+#if defined(AXIOM_RUNTIME_QUALIFICATION) && AXIOM_RUNTIME_QUALIFICATION
 canvas::render::SurfaceMetrics clientMetrics(HWND window, std::uint32_t width,
                                              std::uint32_t height) noexcept {
-  const auto dpi = GetDpiForWindow(window);
-  const auto scale = dpi == 0U ? 1.0F : static_cast<float>(dpi) / 96.0F;
+  const auto scale = windowScale(window);
   return {width / scale, height / scale, width, height, scale, scale};
 }
+#endif
 
 void paintCanvas(State& state, HDC dc) {
   if (state.platformAdapter) {
     (void)state.platformAdapter->present();
     return;
   }
+#if defined(AXIOM_RUNTIME_QUALIFICATION) && AXIOM_RUNTIME_QUALIFICATION
   auto& composition = state.host->composition();
   const auto surface = composition.surfaceSnapshot();
   const auto& opportunity = state.frameOpportunity;
@@ -178,11 +186,14 @@ void paintCanvas(State& state, HDC dc) {
     }
   }
   (void)composition.finishFrameOpportunity({opportunity.previewWork, true});
+#else
+  (void)dc;
+#endif
 }
 
 void sendPointer(State& state, LPARAM lParam, canvas::input::PointerPhase phase, WPARAM keyStates=0) {
-  (void)state.host->composition().ownerPump();
-  const auto surface = state.host->composition().surfaceSnapshot();
+  (void)state.host->publicComposition().ownerPump();
+  const auto surface = state.host->publicComposition().surfaceMetrics().value_or(canvas::runtime::RuntimeSurfaceMetrics{});
   if (!surface.available || surface.width == 0U || surface.height == 0U ||
       !std::isfinite(surface.logicalWidth) || !std::isfinite(surface.logicalHeight) ||
       surface.logicalWidth <= 0.0F || surface.logicalHeight <= 0.0F) {
@@ -345,11 +356,14 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
         needsCanvasPaint = frameReady && frame.needsPaint;
         frameChanged = frame.canonicalRequested || frame.previewRendered;
         if (frameReady && !needsCanvasPaint) (void)state->platformAdapter->present();
-      } else {
+      }
+#if defined(AXIOM_RUNTIME_QUALIFICATION) && AXIOM_RUNTIME_QUALIFICATION
+      else {
         frameReady = state->host->composition().serviceFrameOpportunity(false, state->frameOpportunity);
         needsCanvasPaint = frameReady && state->frameOpportunity.needsPaint;
         frameChanged = state->frameOpportunity.canonicalRequested || state->frameOpportunity.previewRendered;
       }
+#endif
       if (frameChanged)
         logInput(*state, "frame-opportunity", frameReady, {});
       if (state->host->composition().readback().lastOwnerControlCount != 0U)
@@ -378,13 +392,20 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
     }
     case WM_SIZE:
       cancelHostPointers(*state, "resize");
-      if (LOWORD(lParam) != 0U && HIWORD(lParam) != 0U)
-        if (state->platformAdapter ? state->platformAdapter->resize(LOWORD(lParam), HIWORD(lParam),
-              clientMetrics(window, LOWORD(lParam), HIWORD(lParam)).devicePixelRatio) :
-              state->host->composition().resizeSurface(clientMetrics(window, LOWORD(lParam), HIWORD(lParam)))) {
+      if (LOWORD(lParam) != 0U && HIWORD(lParam) != 0U) {
+        bool resized = state->platformAdapter && state->platformAdapter->resize(
+            LOWORD(lParam), HIWORD(lParam), windowScale(window));
+#if defined(AXIOM_RUNTIME_QUALIFICATION) && AXIOM_RUNTIME_QUALIFICATION
+        if (!state->platformAdapter) resized = state->host->composition().resizeSurface(
+            clientMetrics(window, LOWORD(lParam), HIWORD(lParam)));
+#endif
+        if (resized) {
+#if defined(AXIOM_RUNTIME_QUALIFICATION) && AXIOM_RUNTIME_QUALIFICATION
           state->presentationCache.reset();
+#endif
           InvalidateRect(window, nullptr, FALSE);
         }
+      }
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
       if (state->debugUi) state->debugUi->reposition();
 #endif
@@ -400,11 +421,12 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       if (client.right > 0 && client.bottom > 0) {
         if (state->platformAdapter) (void)state->platformAdapter->resize(
             static_cast<std::uint32_t>(client.right), static_cast<std::uint32_t>(client.bottom),
-            clientMetrics(window, static_cast<std::uint32_t>(client.right),
-                          static_cast<std::uint32_t>(client.bottom)).devicePixelRatio);
+            windowScale(window));
+#if defined(AXIOM_RUNTIME_QUALIFICATION) && AXIOM_RUNTIME_QUALIFICATION
         else (void)state->host->composition().resizeSurface(clientMetrics(window,
             static_cast<std::uint32_t>(client.right), static_cast<std::uint32_t>(client.bottom)));
         state->presentationCache.reset();
+#endif
         InvalidateRect(window, nullptr, FALSE);
       }
       return 0;
@@ -436,7 +458,7 @@ LRESULT CALLBACK windowProc(HWND window, UINT message, WPARAM wParam, LPARAM lPa
       return 0;
     case WM_MOUSEMOVE:
       if (!isPromotedPointerMouse() && !state->mouseKey) {
-        const auto surface = state->host->composition().surfaceSnapshot();
+        const auto surface = state->host->publicComposition().surfaceMetrics().value_or(canvas::runtime::RuntimeSurfaceMetrics{});
         if (surface.width != 0U && surface.height != 0U)
           (void)state->host->composition().hoverSelectionAtViewPoint(
               static_cast<float>(GET_X_LPARAM(lParam)) * surface.logicalWidth / surface.width,
@@ -524,7 +546,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
         AXIOM_BUILD_SOURCE_REVISION, AXIOM_BUILD_DIRTY, _MSC_FULL_VER,
         GetCurrentProcessId(), AXIOM_MINIMAL_HAS_DEBUG_UI);
 #endif
-    const auto metrics = state.host->composition().surfaceSnapshot();
+    const auto metrics = state.host->publicComposition().surfaceMetrics().value_or(canvas::runtime::RuntimeSurfaceMetrics{});
     std::fprintf(state.inputLog.get(), "surface physical=%ux%u logical=%.3fx%.3f dpr=%.3f dpi=%u\n",
         metrics.width, metrics.height, metrics.logicalWidth, metrics.logicalHeight,
         metrics.devicePixelRatio, GetDpiForWindow(state.window));

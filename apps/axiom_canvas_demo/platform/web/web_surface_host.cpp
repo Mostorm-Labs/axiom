@@ -57,13 +57,14 @@ WebSurfaceDisposition WebSurfaceHost::bindMetrics(const render::SurfaceMetrics& 
 }
 
 bool WebSurfaceHost::syncRuntimeSurfaceIdentity() noexcept {
-    const auto accepted = composition().surfaceSnapshot();
-    if (!accepted.available || composition().state() != runtime::RuntimeCompositionState::kReady) return false;
+    const auto accepted = composition_.surfaceMetrics();
+    if (!accepted || !accepted->available ||
+        composition().state() != runtime::RuntimeCompositionState::kReady) return false;
     const render::SurfaceSnapshot snapshot{
-        accepted.viewId, render::SurfaceGeneration{accepted.surfaceGeneration},
-        render::MetricsGeneration{accepted.metricsGeneration},
-        render::SurfaceMetrics{accepted.logicalWidth, accepted.logicalHeight,
-            accepted.width, accepted.height, accepted.devicePixelRatio, accepted.displayScale}};
+        render::ViewId{accepted->viewId}, render::SurfaceGeneration{accepted->surfaceGeneration},
+        render::MetricsGeneration{accepted->metricsGeneration},
+        render::SurfaceMetrics{accepted->logicalWidth, accepted->logicalHeight,
+            accepted->width, accepted->height, accepted->devicePixelRatio, accepted->displayScale}};
     const auto result = lifecycle_.replace(snapshot);
     // Initial prepared resources may use the first surface identity while
     // supplying complete logical metrics for that same initial binding.
