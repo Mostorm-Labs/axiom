@@ -1,0 +1,36 @@
+{
+  "status": "FAIL",
+  "steps": [
+    {
+      "command": [
+        "cmake",
+        "--install",
+        "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-cpp-first-web",
+        "--prefix",
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-web-sdk-0hytb80r\\install"
+      ],
+      "exit_code": 0,
+      "stdout": "-- Install configuration: \"Release\"\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cmake",
+        "-S",
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-web-sdk-0hytb80r\\source",
+        "-B",
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-web-sdk-0hytb80r\\build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_TOOLCHAIN_FILE=C:\\Users\\Chado\\AppData\\Local\\Axiom\\toolchains\\emsdk-6.0.6\\upstream\\emscripten\\cmake\\Modules\\Platform\\Emscripten.cmake",
+        "-DAxiomRuntime_DIR=C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-web-sdk-0hytb80r\\install\\lib\\cmake\\AxiomRuntime",
+        "-DCMAKE_PREFIX_PATH=C:\\Users\\Chado\\AppData\\Local\\Axiom\\sdk\\packages\\semantic\\runtimes\\4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+        "-DCanvasSkia_DIR=C:\\Users\\Chado\\.codex\\worktrees\\fc00x-runtime-minimum-closure\\canvas\\.deps\\skia-sdk\\web-wasm-webgl2\\release\\lib\\cmake\\CanvasSkia"
+      ],
+      "exit_code": 1,
+      "stdout": "-- Configuring incomplete, errors occurred!\n",
+      "stderr": "CMake Error at CMakeLists.txt:3 (find_package):\n  Could not find a package configuration file provided by \"AxiomRuntime\" with\n  any of the following names:\n\n    AxiomRuntime.cps\n    axiomruntime.cps\n    AxiomRuntimeConfig.cmake\n    axiomruntime-config.cmake\n\n  Add the installation prefix of \"AxiomRuntime\" to CMAKE_PREFIX_PATH or set\n  \"AxiomRuntime_DIR\" to a directory containing one of the above files.  If\n  \"AxiomRuntime\" provides a separate development package or SDK, be sure it\n  has been installed.\n\n\n"
+    }
+  ]
+}

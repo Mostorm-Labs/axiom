@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><title>External Axiom Web SDK consumer</title>
+<style>#stage{position:relative;width:400px;height:300px}canvas{position:absolute;left:0;top:0;width:400px;height:300px}#preview{pointer-events:none}</style>
+<div id="stage"><canvas id="surface" width="400" height="300"></canvas><canvas id="preview" width="400" height="300"></canvas></div>
+<pre id="result">STARTING</pre>
+<script>
+var Module={canvas:document.getElementById('surface'),onAbort:x=>{document.getElementById('result').textContent='FAIL: '+x}};
+const canvas=document.getElementById('surface');
+for(const [name,phase] of [['pointerdown',0],['pointermove',1],['pointerup',2]]) canvas.addEventListener(name,e=>{
+  if(phase===1 && !(e.buttons&1)) return;
+  const r=canvas.getBoundingClientRect();
+  if(!Module._sdk_input(phase,(e.clientX-r.left)*0.5,(e.clientY-r.top)*0.5)) document.getElementById('result').textContent='FAIL: pointer';
+});
+</script><script src="external_web.js"></script>

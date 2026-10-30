@@ -164,7 +164,12 @@ export const ready = globalThis.axiomMinimalReady = (async () => {
     module._axiom_web_cancel_pointer(handle, contact.source, contact.pointer, contact.generation);
     active.delete(identity); schedule();
   });
+  const lostContexts = new Set();
+  let restoreScheduled = 0, restoreAttempts = 0;
   const resize = (lw,lh,ratio, setCss = true) => {
+    // ResizeObserver may fire between loss and restoration of the two
+    // contexts; binding until both are restored would permanently fail.
+    if (lostContexts.size) return;
     if (lw === logicalWidth && lh === logicalHeight && ratio === dpr && module._axiom_web_backend_ready(handle)) return;
     cancelInputs('resize');
     const text = module.stringToNewUTF8('#axiom-canvas');
@@ -182,9 +187,26 @@ export const ready = globalThis.axiomMinimalReady = (async () => {
   });
   resizeObserver.observe(stage);
   addEventListener('resize', () => { if (handle) resize(...metrics(), false); });
+  const scheduleContextRebind = () => {
+    if (!handle || lostContexts.size || restoreScheduled) return;
+    restoreScheduled = requestAnimationFrame(() => {
+      restoreScheduled = 0;
+      if (!handle || lostContexts.size) return;
+      try { resize(...metrics(), false); restoreAttempts = 0; }
+      catch (error) {
+        if (++restoreAttempts < 120) scheduleContextRebind();
+        else fail(error);
+      }
+    });
+  };
   for (const target of [canvas,preview]) {
-    target.addEventListener('webglcontextlost', event => { event.preventDefault(); cancelInputs('context-loss'); module._axiom_web_lose_surface(handle); pending = false; });
-    target.addEventListener('webglcontextrestored', () => { if (handle) resize(...metrics(), false); });
+    target.addEventListener('webglcontextlost', event => {
+      event.preventDefault();
+      const first = lostContexts.size === 0;
+      lostContexts.add(target); restoreAttempts = 0;
+      if (first && handle) { cancelInputs('context-loss'); module._axiom_web_lose_surface(handle); pending = false; }
+    });
+    target.addEventListener('webglcontextrestored', () => { lostContexts.delete(target); scheduleContextRebind(); });
   }
   const flush = async () => {
     schedule();
@@ -266,7 +288,7 @@ export const ready = globalThis.axiomMinimalReady = (async () => {
   document.addEventListener('visibilitychange',() => { if (document.hidden) { clearTimeout(textOpportunityTimer); textOpportunityTimer = 0; cancelInputs('hidden'); } else schedule(); });
   document.addEventListener('visibilitychange',()=>{if(document.hidden)textInput.finish().catch(error=>{status.textContent=String(error);});});
   addEventListener('beforeunload',event=>{if(textInput.snapshot().phase!==0){textInput.finish().catch(()=>{});event.preventDefault();event.returnValue='';}});
-  addEventListener('pagehide',() => { if (handle) { clearTimeout(textOpportunityTimer); imageInput.dispose(); textInput.dispose(); resizeObserver.disconnect(); cancelInputs('close'); cancelAnimationFrame(scheduled); module._axiom_web_destroy(handle); handle = 0; } },{once:true});
+  addEventListener('pagehide',() => { if (handle) { clearTimeout(textOpportunityTimer); imageInput.dispose(); textInput.dispose(); resizeObserver.disconnect(); cancelInputs('close'); cancelAnimationFrame(scheduled); cancelAnimationFrame(restoreScheduled); module._axiom_web_destroy(handle); handle = 0; } },{once:true});
   const host = {module,handle,observation,flush,control,resize,toggleDebugUi,textInput,
     loseSurface() { cancelInputs('surface-loss'); pending = false; return module._axiom_web_lose_surface(handle); }};
   globalThis.axiomMinimalHost = host;

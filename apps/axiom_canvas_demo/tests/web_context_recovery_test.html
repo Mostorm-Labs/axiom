@@ -1,0 +1,43 @@
+<!doctype html><meta charset="utf-8"><title>Web context recovery regression</title>
+<iframe id="app" src="../index.html" width="900" height="650"></iframe>
+<pre id="result">PENDING</pre>
+<script type="module">
+const frame=document.getElementById('app');
+frame.addEventListener('load',async()=>{
+  const result=document.getElementById('result'); let host;
+  try {
+    const win=frame.contentWindow; host=await win.axiomMinimalReady; await host.flush();
+    const doc=frame.contentDocument, canvases=[doc.getElementById('axiom-canvas'),doc.getElementById('axiom-preview')];
+    const extensions=canvases.map(c=>c.getContext('webgl2').getExtension('WEBGL_lose_context'));
+    if(extensions.some(e=>!e)) throw new Error('BLOCKED: WEBGL_lose_context unavailable');
+    const before=host.observation(); let lost=0,restored=0; const errors=[];
+    win.addEventListener('error',e=>errors.push(String(e.message)));
+    const complete=new Promise((resolve,reject)=>{
+      const timer=setTimeout(()=>reject(new Error('context restore timeout')),20000);
+      for(const canvas of canvases) {
+        canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();if(++lost===2){
+          const stage=doc.getElementById('stage');stage.style.flex='none';stage.style.width='880px';stage.style.height='560px';
+          setTimeout(()=>extensions.forEach(x=>x.restoreContext()),100);
+        }},{once:true});
+        canvas.addEventListener('webglcontextrestored',()=>{if(++restored===2){clearTimeout(timer);resolve();}},{once:true});
+      }
+      extensions.forEach(x=>x.loseContext());
+    });
+    await complete; await host.flush();
+    const after=host.observation();
+    if(errors.length||after.failure||after.error||after.surfaceGeneration<=before.surfaceGeneration||after.logicalWidth!==880)
+      throw new Error('restore failed '+JSON.stringify({errors,before,after}));
+    const canvas=canvases[0],rect=canvas.getBoundingClientRect(); canvas.setPointerCapture=()=>{};
+    let clock=win.performance.now()+100;
+    for(const [type,x,y] of [['pointerdown',60,60],['pointermove',160,100],['pointerup',160,100]]) {
+      const e=new win.PointerEvent(type,{pointerId:888,pointerType:'mouse',clientX:rect.left+x,clientY:rect.top+y,
+        buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true});
+      Object.defineProperty(e,'timeStamp',{value:clock+=17}); canvas.dispatchEvent(e);
+    }
+    await host.flush(); const final=host.observation();
+    if(final.objects!==before.objects+1||final.failure||final.error) throw new Error('input after restore '+JSON.stringify(final));
+    result.textContent=JSON.stringify({status:'PASS',lost,restored,beforeGeneration:before.surfaceGeneration,
+      afterGeneration:after.surfaceGeneration,objects:final.objects,mode:'Chrome WebGL context loss; synthetic pointer'});
+  }catch(error){result.textContent=JSON.stringify({status:'FAIL',error:String(error),observation:host?.observation()});}
+},{once:true});
+</script>

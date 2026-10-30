@@ -1,9 +1,9 @@
 #include "canvas/input/platform_input_contract.hpp"
+#include "canvas/platform/web_runtime_adapter.hpp"
 #include "canvas/render/webgl_surface_backend.hpp"
 #include "web_surface_host.hpp"
 
 #include <GLES3/gl3.h>
-#include "host_font_resources.hpp"
 #include "nlohmann/json.hpp"
 #include <cstring>
 #include <stdexcept>
@@ -29,42 +29,22 @@ EM_JS(void, axiom_web_preview_visibility, (int visible), {
 
 namespace {
 using namespace canvas;
-struct Fence final {
-    EMSCRIPTEN_WEBGL_CONTEXT_HANDLE context = 0;
-    GLsync sync = nullptr;
-    void clear() {
-        if (sync && emscripten_webgl_make_context_current(context) == EMSCRIPTEN_RESULT_SUCCESS)
-            glDeleteSync(sync);
-        sync = nullptr;
-    }
-    bool insert(EMSCRIPTEN_WEBGL_CONTEXT_HANDLE value) {
-        context = value;
-        if (emscripten_webgl_make_context_current(context) != EMSCRIPTEN_RESULT_SUCCESS)
-            return false;
-        sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-        glFlush();
-        return sync != nullptr;
-    }
-    int poll() const {
-        if (!sync)
-            return 1;
-        if (emscripten_webgl_make_context_current(context) != EMSCRIPTEN_RESULT_SUCCESS)
-            return 0;
-        const auto r = glClientWaitSync(sync, 0, 0);
-        return r == GL_ALREADY_SIGNALED || r == GL_CONDITION_SATISFIED ? 1
-               : r == GL_TIMEOUT_EXPIRED                               ? 2
-                                                                       : 0;
+struct OwnedWebContexts final {
+    EMSCRIPTEN_WEBGL_CONTEXT_HANDLE canonical = 0, preview = 0;
+    ~OwnedWebContexts() {
+        if (preview) emscripten_webgl_destroy_context(preview);
+        if (canonical) emscripten_webgl_destroy_context(canonical);
     }
 };
 struct WebInstance final {
+    // Declared before the Runtime so contexts outlive provider destruction.
+    OwnedWebContexts contexts;
     web_demo::WebSurfaceHost lifecycle;
-    EMSCRIPTEN_WEBGL_CONTEXT_HANDLE canonicalContext = 0, previewContext = 0;
-    Fence canonicalFence, previewFence;
-    std::optional<runtime::RuntimeFrameOpportunity> pending;
+    platform::WebRuntimeAdapter adapter;
     std::unordered_map<std::uint64_t, input::PointerKey> pointers;
     std::unordered_map<std::uint64_t, std::uint64_t> timestamps;
     input::PointerKey lastPointer{};
-    std::uint64_t pointerSamples = 0, sequence = 0, request = 0, presentedFrames = 0, retries = 0,
+    std::uint64_t pointerSamples = 0, sequence = 0, request = 0, retries = 0,
                   rejectedInputs = 0;
     std::uint64_t lastTextIntent=0;
     bool forceCanonical = true;
@@ -77,12 +57,9 @@ struct WebInstance final {
     explicit WebInstance(const render::SurfaceMetrics& m)
         : lifecycle(
               {render::ViewId{301}, render::SurfaceGeneration{1}, render::MetricsGeneration{1}, m},
-              true) {}
-    void discardFrame() {
-        canonicalFence.clear();
-        previewFence.clear();
-        pending.reset();
-    }
+              true), adapter(lifecycle.publicComposition(), [](void*, bool visible) {
+                  axiom_web_preview_visibility(visible ? 1 : 0);
+              }) {}
     void cancel() {
         // Retire the exact ingress generations before forgetting host capture.
         // Clearing only this map strands an active Runtime generation after
@@ -96,8 +73,8 @@ struct WebInstance final {
         pointers.clear();
     }
     ~WebInstance() {
-        discardFrame();
         cancel();
+        (void)adapter.shutdown();
         (void)lifecycle.composition().close();
     }
 };
@@ -114,38 +91,30 @@ bool bind(WebInstance& v, const char* selector, const render::SurfaceMetrics& m)
         return false;
     auto& comp = v.lifecycle.composition();
     v.cancel();
-    v.discardFrame();
     const auto before = comp.surfaceSnapshot();
-    if (before.available && before.width == m.physicalWidth && before.height == m.physicalHeight) {
-        if (v.lifecycle.bindMetrics(m) != web_demo::WebSurfaceDisposition::kRebound)
+    if (!v.contexts.canonical || !v.contexts.preview) {
+        if (emscripten_set_canvas_element_size(selector, static_cast<int>(m.physicalWidth), static_cast<int>(m.physicalHeight)) != EMSCRIPTEN_RESULT_SUCCESS ||
+            emscripten_set_canvas_element_size("#axiom-preview", static_cast<int>(m.physicalWidth), static_cast<int>(m.physicalHeight)) != EMSCRIPTEN_RESULT_SUCCESS)
             return false;
-    } else {
-        if (comp.state() == runtime::RuntimeCompositionState::kReady &&
-            v.lifecycle.markLost() != render::SurfaceLifecycleDisposition::kLost)
-            return false;
-        // One provider, not a legacy backend plus another Ganesh wrapper of the same context.
-        auto canonical = std::make_unique<render::WebGlSurfaceProvider>(
-            render::WebGlSurfaceConfig{selector, m.physicalWidth, m.physicalHeight});
-        if (!canonical->ready()) {
-            v.error = canonical->error();
-            return false;
-        }
-        v.canonicalContext = emscripten_webgl_get_current_context();
-        auto preview = std::make_unique<render::WebGlSurfaceProvider>(render::WebGlSurfaceConfig{
-            "#axiom-preview", m.physicalWidth, m.physicalHeight, 0, [](bool visible) {
-                axiom_web_preview_visibility(visible);
-            }});
-        if (!preview->ready()) {
-            v.error = preview->error();
-            return false;
-        }
-        v.previewContext = emscripten_webgl_get_current_context();
-        if (!comp.registerSurfaceProvider("webgl-window", std::move(canonical)) ||
-            !comp.registerPreviewSurfaceProvider("webgl-preview", std::move(preview)) ||
-            v.lifecycle.bindMetrics(m) != web_demo::WebSurfaceDisposition::kRebound)
+        EmscriptenWebGLContextAttributes attributes;
+        emscripten_webgl_init_context_attributes(&attributes);
+        attributes.alpha = true; attributes.antialias = false; attributes.depth = false;
+        attributes.stencil = true; attributes.premultipliedAlpha = true; attributes.majorVersion = 2;
+        attributes.minorVersion = 0; attributes.enableExtensionsByDefault = false;
+        attributes.preserveDrawingBuffer = true;
+        v.contexts.canonical = emscripten_webgl_create_context(selector, &attributes);
+        v.contexts.preview = emscripten_webgl_create_context("#axiom-preview", &attributes);
+        if (!v.contexts.canonical || !v.contexts.preview) return false;
+    } else if (before.width != m.physicalWidth || before.height != m.physicalHeight) {
+        if (before.available && (!v.adapter.loseSurface() ||
+            v.lifecycle.markLost() != render::SurfaceLifecycleDisposition::kLost)) return false;
+        if (emscripten_set_canvas_element_size(selector, static_cast<int>(m.physicalWidth), static_cast<int>(m.physicalHeight)) != EMSCRIPTEN_RESULT_SUCCESS ||
+            emscripten_set_canvas_element_size("#axiom-preview", static_cast<int>(m.physicalWidth), static_cast<int>(m.physicalHeight)) != EMSCRIPTEN_RESULT_SUCCESS)
             return false;
     }
-    (void)comp.setPlatformPresentationDeferred(true);
+    if (!v.adapter.bind(static_cast<std::int32_t>(v.contexts.canonical), static_cast<std::int32_t>(v.contexts.preview),
+                        m.logicalWidth, m.logicalHeight, m.physicalWidth, m.physicalHeight, m.devicePixelRatio) ||
+        !v.lifecycle.syncRuntimeSurfaceIdentity()) return false;
     v.error.clear();
     v.forceCanonical = true;
     return true;
@@ -158,7 +127,7 @@ EMSCRIPTEN_KEEPALIVE std::uintptr_t axiom_web_create(
     auto v = std::make_unique<WebInstance>(render::SurfaceMetrics{lw, lh, pw, ph, dpr, 1});
     if (!bind(*v, selector, {lw, lh, pw, ph, dpr, 1}))
         return 0;
-    if(!minimal_runtime_host::bindHostTextFonts(v->lifecycle.composition(),"/axiom-font.otf","/fonts"))return 0;
+    if(!v->adapter.loadHostFonts("/axiom-font.otf","/fonts"))return 0;
     for (std::uint32_t s = 1; s <= 3; ++s)
         if (!v->lifecycle.composition().registerSource(s))
             return 0;
@@ -192,8 +161,8 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_lose_surface(std::uintptr_t h) {
     if (!v)
         return 0;
     v->cancel();
-    v->discardFrame();
-    return v->lifecycle.markLost() == render::SurfaceLifecycleDisposition::kLost;
+    return v->adapter.loseSurface() &&
+           v->lifecycle.markLost() == render::SurfaceLifecycleDisposition::kLost;
 }
 EMSCRIPTEN_KEEPALIVE int axiom_web_cancel_all(std::uintptr_t h) {
     auto* v = instance(h);
@@ -309,70 +278,26 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_begin_frame(std::uintptr_t h) {
     auto* v = instance(h);
     if (!v || !axiom_web_backend_ready(h))
         return 0;
-    if (v->pending)
-        return 2;
-    runtime::RuntimeFrameOpportunity work{};
-    if (!v->lifecycle.composition().serviceFrameOpportunity(v->forceCanonical, work)) {
+    const auto result = v->adapter.prepareFrame(v->forceCanonical);
+    if (result == platform::WebFrameResult::kRejected) {
         v->error = "Runtime frame opportunity rejected";
         return 0;
     }
     v->forceCanonical = false;
-    // A historical submitted identity is not newly rendered work.
-    if (!work.canonicalRequested)
-        work.canonicalWork.reset();
-    if (!work.canonicalWork && !work.previewWork) {
-        const auto& comp = v->lifecycle.composition();
-        if (comp.canonicalPresentationDirty() || (comp.previewActive() && comp.previewRenderState().dirty)) {
-            ++v->retries;
-            return 3;
-        }
-        return 1;
-    }
-    if ((work.canonicalWork && !v->canonicalFence.insert(v->canonicalContext)) ||
-        (work.previewWork && !v->previewFence.insert(v->previewContext))) {
-        v->error = "WebGL completion fence creation failed";
-        return 0;
-    }
-    v->pending = work;
-    return 2;
+    if (result == platform::WebFrameResult::kRetry) ++v->retries;
+    return static_cast<int>(result);
 }
 EMSCRIPTEN_KEEPALIVE int axiom_web_complete_frame(std::uintptr_t h) {
     auto* v = instance(h);
     if (!v)
         return 0;
-    if (!v->pending)
-        return 1;
-    const auto a = v->canonicalFence.poll(), b = v->previewFence.poll();
-    if (!a || !b) {
+    const auto result = v->adapter.pollFrame();
+    if (result == platform::WebFrameResult::kRejected) {
         v->error = "WebGL completion fence failed";
         return 0;
     }
-    if (a == 2 || b == 2) {
-        ++v->retries;
-        return 2;
-    }
-    auto& comp = v->lifecycle.composition();
-    const auto& work = *v->pending;
-    if (work.previewWork && comp.previewActive() &&
-        comp.previewRenderState().contentRevision == work.previewWork->contentRevision &&
-        !comp.finishFrameOpportunity({work.previewWork, true})) {
-        v->error = "Preview completion rejected";
-        return 0;
-    }
-    // Called only after browser yield and actual GPU fence completion. No scanout timestamp is
-    // invented.
-    if (work.canonicalWork) {
-        if (!comp.receivePlatformPresented({*work.canonicalWork,
-                                            render::PresentOutcome::kPresented,
-                                            render::PresentEvidenceKind::kPlatformQualified,
-                                            std::nullopt})) {
-            v->error = "Canonical completion rejected";
-            return 0;
-        }
-        ++v->presentedFrames;
-    }
-    v->discardFrame();
-    return 1;
+    if (result == platform::WebFrameResult::kPending) ++v->retries;
+    return static_cast<int>(result);
 }
 EMSCRIPTEN_KEEPALIVE int axiom_web_control(
     std::uintptr_t h, int kind, float a, float b, float c, float d, float e, float f) {
@@ -501,8 +426,8 @@ EMSCRIPTEN_KEEPALIVE const char* axiom_web_snapshot(std::uintptr_t h) {
         << ",\"pointerSamples\":" << v->pointerSamples
         << ",\"rejectedInputs\":" << v->rejectedInputs
         << ",\"activePointers\":" << v->pointers.size()
-        << ",\"presentedFrames\":" << v->presentedFrames << ",\"retries\":" << v->retries
-        << ",\"pendingFrame\":" << v->pending.has_value()
+        << ",\"presentedFrames\":" << v->adapter.presentedCount() << ",\"retries\":" << v->retries
+        << ",\"pendingFrame\":" << v->adapter.frameStatus().pending
         << ",\"previewActive\":" << comp.previewActive()
         << ",\"surfaceGeneration\":" << s.surfaceGeneration
         << ",\"metricsGeneration\":" << s.metricsGeneration << ",\"width\":" << s.width

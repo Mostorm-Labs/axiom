@@ -169,6 +169,25 @@ if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/AxiomRuntimeConfig.cmake"
       DESTINATION lib/cmake/AxiomRuntime)
   endif()
+  if(EMSCRIPTEN AND CANVAS_SEMANTIC_ENABLE_PROTOBUF AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS
+     AND CMAKE_BUILD_TYPE STREQUAL "Release")
+    install(TARGETS canvas_runtime_composition canvas_runtime_editor canvas_runtime_interaction
+      canvas_runtime_render canvas_runtime_scene canvas_runtime_text canvas_runtime_ink
+      canvas_runtime_input canvas_runtime_control canvas_runtime_semantic ARCHIVE DESTINATION lib)
+    install(DIRECTORY runtime/foundation/include/ runtime/semantic/include/ runtime/input/include/ DESTINATION include)
+    install(FILES runtime/composition/include/canvas/runtime/runtime_composition.hpp DESTINATION include/canvas/runtime)
+    get_filename_component(_axiom_semantic_root "${Protobuf_DIR}/../../.." ABSOLUTE)
+    file(SHA256 "${_axiom_semantic_root}/manifest.json" AXIOM_RUNTIME_SEMANTIC_MANIFEST_SHA256)
+    file(SHA256 "${CANVAS_SKIA_SDK_ROOT}/manifest.json" AXIOM_RUNTIME_SKIA_MANIFEST_SHA256)
+    execute_process(COMMAND "${CMAKE_CXX_COMPILER}" --version OUTPUT_VARIABLE _axiom_web_compiler_version
+      RESULT_VARIABLE _axiom_web_compiler_result OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(NOT _axiom_web_compiler_result EQUAL 0)
+      message(FATAL_ERROR "Could not identify the Emscripten compiler")
+    endif()
+    string(REGEX MATCH "^[^\r\n]+" AXIOM_RUNTIME_WEB_COMPILER_ID "${_axiom_web_compiler_version}")
+    configure_file(cmake/AxiomRuntimeWebConfig.cmake.in AxiomRuntimeConfig.cmake @ONLY)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/AxiomRuntimeConfig.cmake" DESTINATION lib/cmake/AxiomRuntime)
+  endif()
   add_subdirectory(apps/minimal_runtime_host)
 endif()
 if(AXIOM_BUILD_DEBUG_UI OR

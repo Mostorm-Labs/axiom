@@ -80,9 +80,21 @@ endif()
 if(EMSCRIPTEN)
     include(${PROJECT_SOURCE_DIR}/cmake/AxiomHostTextFont.cmake)
     axiom_resolve_host_text_font()
+    add_library(axiom_web_runtime_adapter STATIC platform/web/web_runtime_adapter.cpp)
+    target_link_libraries(axiom_web_runtime_adapter PUBLIC canvas_runtime_composition)
+    target_include_directories(axiom_web_runtime_adapter PRIVATE ${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host ${AXIOM_HOST_FONT_INCLUDE})
+    target_compile_features(axiom_web_runtime_adapter PUBLIC cxx_std_20)
+    target_compile_options(axiom_web_runtime_adapter PRIVATE -Wall -Wextra -Wpedantic -Werror)
+    if(CANVAS_SEMANTIC_ENABLE_PROTOBUF AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND CMAKE_BUILD_TYPE STREQUAL "Release")
+        install(TARGETS axiom_web_runtime_adapter ARCHIVE DESTINATION lib)
+        install(FILES "${PROJECT_SOURCE_DIR}/runtime/composition/include/canvas/platform/web_runtime_adapter.hpp"
+          DESTINATION include/canvas/platform)
+        install(FILES "${PROJECT_SOURCE_DIR}/verification/sdk_web_external/README.md"
+          DESTINATION share/AxiomRuntime)
+    endif()
     add_executable(axiom_canvas_demo_web
         platform/web/bridge.cpp)
-    target_link_libraries(axiom_canvas_demo_web PRIVATE axiom_canvas_demo_common)
+    target_link_libraries(axiom_canvas_demo_web PRIVATE axiom_canvas_demo_common axiom_web_runtime_adapter)
     target_include_directories(axiom_canvas_demo_web PRIVATE platform/web ${AXIOM_HOST_FONT_INCLUDE} ${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host ${PROJECT_SOURCE_DIR}/.deps/nlohmann-json/single_include)
     find_package(CanvasSkia CONFIG REQUIRED PATHS "${CANVAS_SKIA_SDK_ROOT}/lib/cmake/CanvasSkia" NO_DEFAULT_PATH)
     target_compile_features(axiom_canvas_demo_web PRIVATE cxx_std_20)
@@ -119,6 +131,8 @@ if(EMSCRIPTEN)
         ${CMAKE_CURRENT_BINARY_DIR}/tests/web_fit_tool_test.html COPYONLY)
     configure_file(tests/web_fit_scene_test.html
         ${CMAKE_CURRENT_BINARY_DIR}/tests/web_fit_scene_test.html COPYONLY)
+    configure_file(tests/web_context_recovery_test.html
+        ${CMAKE_CURRENT_BINARY_DIR}/tests/web_context_recovery_test.html COPYONLY)
     configure_file(${AXIOM_HOST_FONT_ROOT}/LICENSE.txt ${CMAKE_CURRENT_BINARY_DIR}/axiom-font.LICENSE.txt COPYONLY)
     configure_file(${AXIOM_HOST_FONT_ROOT}/NOTICE.txt ${CMAKE_CURRENT_BINARY_DIR}/axiom-font.NOTICE.txt COPYONLY)
     target_link_options(axiom_canvas_demo_web PRIVATE
