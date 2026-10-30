@@ -26,7 +26,7 @@ if(WIN32 AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PR
   endif()
   add_library(axiom_minimal_windows_surface STATIC
     windows_d3d12_surface_provider.cpp windows_runtime_adapter.cpp)
-  if(MSVC AND CMAKE_BUILD_TYPE STREQUAL "Release" AND CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreaded")
+  if(AXIOM_INSTALL_DEVELOPER_COMPONENTS AND MSVC AND CMAKE_BUILD_TYPE STREQUAL "Release" AND CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreaded")
     install(TARGETS axiom_minimal_windows_surface ARCHIVE DESTINATION lib)
     install(FILES "${PROJECT_SOURCE_DIR}/runtime/composition/include/canvas/platform/windows_runtime_adapter.hpp"
       DESTINATION include/canvas/platform)

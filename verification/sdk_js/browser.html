@@ -17,6 +17,8 @@ const draw=async(runtime,x=40,y=40,width=100,height=80)=>{
 try {
   const a=await createRuntime({mount:document.getElementById('one'),documentId:'01ff'.padStart(32,'0'),onOperation:b=>operations.push(b),onError:e=>errors.push(e)});
   const b=await createRuntime({mount:document.getElementById('two'),documentId:'02ff'.padStart(32,'0'),onError:e=>errors.push(e)});
+  assert(a.readBuildInfo().sdkVersion===a.version && /^[0-9a-f]{40}$/.test(a.readBuildInfo().sourceRevision),'matching wrapper and engine build identity');
+  const buildInfo=a.readBuildInfo();
   assert(a.readState().documentId!==b.readState().documentId,'independent document identity');
   await a.selectShape('rectangle');await draw(a);
   assert(a.readState().objects===1 && b.readState().objects===0,'real pointer input and instance isolation');
@@ -116,6 +118,6 @@ try {
   catch(e){assert(e.code==='OPEN_REJECTED','malformed checkpoint rejects');}
   assert(document.getElementById('one').children.length===0 && document.getElementById('two').children.length===0,'DOM disposal');
   assert(errors.length===0,'no runtime errors');
-  document.getElementById('result').textContent=JSON.stringify({status:'PASS',results});
+  document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,buildInfo});
 }catch(error){document.getElementById('result').textContent=JSON.stringify({status:'FAIL',results,error:String(error.stack||error),errors:errors.map(String)});}
 </script>

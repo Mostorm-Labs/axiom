@@ -1,41 +1,51 @@
-# SDK and demo preview releases
+# Consumer SDK preview releases
 
-`sdk-preview-release.yml` builds Windows x64 and Web/WASM using the locked
-published Semantic and Skia SDKs. New builds produce five assets:
+`sdk-preview-release.yml` builds locked Windows x64 and JavaScript/WebAssembly
+consumers from one clean exact revision and SDK version (`sdk/version.json`).
+The current profile produces four assets:
 
-- `axiom-sdk-windows-preview.zip`: the C++ Runtime and Windows adapter, locked
-  Semantic/Skia libraries, their licenses, and an external consumer example.
-- `axiom-demo-windows-preview.zip`: the Minimal Host executable, ICU data,
-  application fonts and license notices. Keep the archive contents together.
-- `axiom-sdk-web-preview.zip`: the C++ Runtime and Web adapter, locked
-  Semantic/Skia libraries, their licenses, and an external consumer example.
-- `axiom-demo-web-preview.zip`: the external SDK consumer, WebAssembly,
-  resources, license notices and a loopback HTTP server. Run `python serve.py`.
-- `axiom-sdk-js-preview.zip`: the ready-to-use JavaScript/TypeScript SDK,
-  modular WASM engine, builtin font data, input adapters, licenses and a JS-only
-  `example.html`. Consumers do not need a C++ compiler or Emscripten.
+- `axiom-sdk-windows-preview.zip`: `bin/axiom.dll`, the small `lib/axiom.lib`
+  import stub, public C/POD and caller-side C++ facade headers, CMake consumer
+  config, ICU/fonts, licenses and a real external interactive example.
+- `axiom-demo-windows-preview.zip`: that actual DLL-linked example executable,
+  DLL and runtime assets. Tools/Create/Edit/Image/Text format/Font menus use
+  the public SDK. It is not an internal Minimal Host executable.
+- `axiom-sdk-js-preview.zip`: ready-to-import `axiom.mjs`, public TypeScript
+  types, private generated loader, `axiom.wasm`, `axiom.data`, DOM/IME adapters,
+  licenses and `example.html`. C++/Emscripten are not consumer prerequisites.
+- `axiom-demo-web-preview.zip`: the same JS SDK and interactive example, with
+  `index.html` and a loopback server. Run `python serve.py`.
 
-Each archive contains `manifest.json` with the source commit and per-file
-hashes. The release also includes `SHA256SUMS` for all five archives. The
-historical `axiom-sdk-preview-20261030-fc536ad0` release retains its original
-four archives and does not contain the new JavaScript SDK. C++ SDK
-packages are coupled to the exact compiler and dependency manifests enforced
-by their CMake configuration: Windows requires x64 MSVC 19.51, Release and
-`/MT`; Web requires the locked Emscripten 6.0.6 toolchain and Release. Follow
-the README in the extracted SDK and configure its included example. The Web
-Demo is the external SDK consumer, not the internal Minimal Host Debug UI.
+Neither consumer SDK contains Semantic, Skia or Runtime component archives.
+Windows callers may use /MD: all C++ containers compile in the application;
+only versioned POD/opaque handles and SDK-owned buffers cross the DLL. Locked
+MSVC 19.51 /MT remains an internal DLL production requirement. The C++ static
+SDK profile is now explicitly opt-in (`AXIOM_INSTALL_DEVELOPER_COMPONENTS`)
+and is not part of this release profile. Build the DLL with
+`AXIOM_BUILD_WINDOWS_SDK=ON`.
 
-Pull requests and manual workflow runs build and test without publishing. A
-push of a new `axiom-sdk-preview-*` tag builds both platforms, runs focused
-tests and independent consumers, then extracts each SDK archive and builds and
-executes its included consumer against the included dependencies. CI rejects
-missing, skipped, mismatched or corrupt assets. It creates a draft only after
-both platform jobs pass, uploads the exact verified assets and checksum
-file, then publishes an immutable GitHub prerelease. Existing releases are
-never overwritten by this workflow. Investigate a failed draft rather than
-deleting or replacing assets silently.
+Every archive's `manifest.json` binds source revision, SDK version and every
+file hash. `release.json` and `SHA256SUMS` bind the four archives. The release
+verifier rejects mismatched versions/revisions, extra archives, corrupt files
+and internal archives in the consumer package. Original releases remain
+unchanged; in particular the 20261030-fc536ad0 release contains the older
+static-package layout and no standalone JS asset.
 
-This preview is not a stable ABI, production release, or acceptance Gate.
-Physical input and IME coverage is incomplete; applications own persistence,
-network and durable-close coordination. The known D07 Protobuf/Abseil
-allocation-failure hang remains unresolved.
+Both jobs build and execute real external consumers before publication.
+Native tests run a fresh /MD app and pure C LoadLibrary/unload/reload consumer
+outside the checkout, from an unrelated CWD. The packaged ZIP is exercised
+again. JS is tested in actual Chrome/WebGL2, then real `npm pack`, offline
+installation into a fresh application, TypeScript positive/negative consumers
+and the packed engine in Chrome. Delayed fences, resize, native loss before
+DOM notification, recovery and idle duplicate completion have explicit checks.
+
+Only a new `axiom-sdk-preview-*` tag publishes. After both jobs pass, CI creates
+a draft, uploads all verified assets/identities, then publishes it as a
+prerelease (`latest=false`). Failed or existing assets are never overwritten.
+PR/manual runs build and verify without publishing.
+
+This is a preview, not a Gate or stable release. Physical IME/touch/DPI coverage,
+MSE-20/23/26 and the deferred D07 injected-OOM hang remain separate obligations.
+Applications own persistence, networking, resource storage and durable close;
+snapshots omit resource blobs and Undo history. See `sdk/windows/README.md`
+and `sdk/web/README.md` for the consumer contracts.

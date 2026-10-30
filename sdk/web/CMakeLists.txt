@@ -1,5 +1,5 @@
 add_executable(axiom_js_runtime bridge.cpp)
-target_link_libraries(axiom_js_runtime PRIVATE axiom_web_runtime_adapter canvas_runtime_composition)
+target_link_libraries(axiom_js_runtime PRIVATE axiom_web_runtime_adapter axiom_sdk_session)
 target_compile_features(axiom_js_runtime PRIVATE cxx_std_20)
 target_compile_options(axiom_js_runtime PRIVATE -Wall -Wextra -Wpedantic -Werror -fexceptions)
 target_include_directories(axiom_js_runtime PRIVATE

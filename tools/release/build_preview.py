@@ -14,6 +14,7 @@ import xml.etree.ElementTree as ET
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tools.semantic.cmake_consumer import consumer_cmake_arguments
 from tools.release.preview_package import build_assets, sha256
+from tools.release.consumer_package import package as build_consumer_assets
 
 
 def run(args, env=None):
@@ -63,7 +64,9 @@ def verify_js_bundle(archive, env, emsdk, chrome):
         node_root = emsdk / 'node/24.19.0_64bit'
         node = node_root / 'node.exe'
         verifier = Path(__file__).resolve().parents[2] / 'verification/sdk_js/verify_browser.mjs'
-        run([node, verifier, root, chrome], env)
+        evidence=Path(env.get('AXIOM_VERIFICATION_OUTPUT_DIR',root/'evidence'))
+        evidence.mkdir(parents=True,exist_ok=True)
+        run([node, verifier, root, chrome,evidence/'zip-browser.json'], env)
         # Exercise npm's actual publish whitelist, rather than only the ZIP.
         # This remains a local pack operation; it does not publish the package.
         packed = root / 'npm-packed'
@@ -113,7 +116,7 @@ def verify_js_bundle(archive, env, emsdk, chrome):
                      'nodenext', '--moduleResolution', 'nodenext', 'consumer.mts']
         print('COMMAND', json.dumps([str(arg) for arg in typecheck]), flush=True)
         subprocess.run([str(arg) for arg in typecheck], cwd=application, env=env, check=True)
-        run([node, verifier, consumer, chrome], env)
+        run([node, verifier, consumer, chrome,evidence/'npm-browser.json'], env)
 
 
 def main():
@@ -135,11 +138,13 @@ def main():
     facts = json.loads(args.facts.read_text(encoding='utf-8'))
     env = os.environ.copy()
     env.update(facts['environment'])
+    env['AXIOM_EXPECTED_REVISION'] = args.revision
     semantic = Path(facts['environment']['AXIOM_SEMANTIC_RUNTIME_ROOT']).resolve(strict=True)
     protoc = Path(facts['environment']['AXIOM_PROTOC']).resolve(strict=True)
     skia = args.skia.resolve(strict=True)
     build = args.build.resolve()
-    prefix = build / 'preview-install'
+    env['AXIOM_VERIFICATION_OUTPUT_DIR'] = str(build/'evidence')
+    prefix = build / ('preview-install-' + args.revision[:12])
     configure = ['cmake', '-S', repo, '-B', build, '-G', 'Ninja',
         '-DCMAKE_BUILD_TYPE=Release', '-DBUILD_TESTING=' + ('ON' if args.platform == 'windows' else 'OFF'), '-DCANVAS_BUILD_POC01=OFF',
         '-DCANVAS_BUILD_SEMANTIC=ON', '-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON',
@@ -150,7 +155,7 @@ def main():
         '-DCanvasSkia_DIR=' + (skia / 'lib/cmake/CanvasSkia').as_posix(),
         *consumer_cmake_arguments(semantic, protoc)]
     if args.platform == 'windows':
-        configure += ['-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded']
+        configure += ['-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded', '-DAXIOM_BUILD_WINDOWS_SDK=ON']
     else:
         if not args.emsdk or not args.chrome:
             p.error('Web requires --emsdk and --chrome')
@@ -162,37 +167,50 @@ def main():
         configure += ['-DCMAKE_TOOLCHAIN_FILE=' + (emsdk / 'upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake').as_posix(), '-DAXIOM_BUILD_JS_SDK=ON']
     run(configure, env)
     if args.platform == 'windows':
-        config = build / 'AxiomRuntimeConfig.cmake'
-        if not config.is_file() or 'requires Windows x64, MSVC 19.51.' not in config.read_text(encoding='utf-8'):
-            raise RuntimeError('locked Windows SDK requires MSVC 19.51; refusing a mismatched toolchain')
-        targets = ['axiom_minimal_runtime_host_windows', 'axiom_sdk_public_resources_tests',
+        targets = ['axiom_sdk', 'axiom_sdk_public_resources_tests',
                    'axiom_sdk_public_document_identity_tests', 'axiom_sdk_public_document_operations_tests',
-                   'axiom_sdk_public_document_snapshot_tests', 'axiom_fc08_section_codec_tests']
+                   'axiom_sdk_public_document_snapshot_tests', 'axiom_fc08_section_codec_tests',
+                   'axiom_fc02_text_tests','axiom_fc03_image_facade_tests','axiom_fc05_connector_facade_tests',
+                   'axiom_fc08_section_consumer_tests','axiom_selection_summary_tests','axiom_selection_input_integration_tests',
+                   'axiom_minimal_windows_text_tool_entry_tests','axiom_minimal_windows_text_pipeline_tests',
+                   'axiom_windows_public_adapter_tests','axiom_fc00x_runtime_composition_tests','axiom_fc00x_runtime_facade_tests',
+                   'axiom_brush_batch_frame_retry_tests']
     else:
-        targets = ['axiom_web_runtime_adapter', 'axiom_canvas_demo_web', 'axiom_js_runtime']
+        targets = ['axiom_js_runtime']
     run(['cmake', '--build', build, '--target', *targets, '--parallel', '6'], env)
     if args.platform == 'windows':
-        run(['ctest', '--test-dir', build, '-R',
-             '^(SDKPublicDocumentSnapshot|SDKPublicDocumentOperations|SDKPublicDocumentIdentity|SDKPublicResources)$',
-             '--no-tests=error', '--output-on-failure'], env)
+        required = {'SDKPublicDocumentSnapshot','SDKPublicDocumentOperations','SDKPublicDocumentIdentity','SDKPublicResources',
+                    'FC02Text','FC03ImageFacade','FC05ConnectorFacade','FC08SectionConsumer','SelectionBatch3Summary',
+                    'FC01ASelectionInputIntegration','FC02WindowsTextToolEntry','FC02WindowsTextToolFocus',
+                    'FC02WindowsTextToolTouchFocus','FC02WindowsTextToolAfterInk','FC02WindowsTextFormatControls',
+                    'FC02WindowsTextIngress','SDKWindowsPublicAdapter','FC00XRuntimeComposition','FC00XRuntimeFacade',
+                    'FC00XBrushBatchEvaluation','FC00XBrushPressureCapability','FC00XBrushBatchSemantics',
+                    'FC00XCanonicalBusyPreviewProgress','FC00XPreviewBusyCanonicalProgress','FC00XBusyCanonicalPendingFeedback',
+                    'FC00XFatalProviderFailure','FC00XCancelKeepsViewport','FC00XFitFullScene'}
+        run(['ctest', '--test-dir', build, '-R','^('+'|'.join(sorted(required))+')$',
+             '--no-tests=error', '--output-on-failure','--output-junit',build/'sdk-consumer-regressions.xml'], env)
+        cases=ET.parse(build/'sdk-consumer-regressions.xml').getroot().findall('.//testcase')
+        if {c.get('name') for c in cases}!=required or any(c.find(s) is not None for c in cases for s in ('failure','error','skipped')):
+            raise RuntimeError('missing, skipped or failed required native consumer regression')
         run([build / 'runtime/semantic/tests/axiom_fc08_section_codec_tests.exe'], env)
-        run([sys.executable, repo / 'verification/sdk_cpp_windows/run_external.py', '--build', build,
-             '--semantic-root', semantic, '--skia-root', skia, '--output', build / 'windows-external.json'], env)
-        demo = build / 'apps/minimal_runtime_host'
+        run(['cmake', '--install', build, '--component', 'AxiomSDK', '--prefix', prefix], env)
+        demo = build / ('dll-demo-' + args.revision[:12])
+        run([sys.executable, '-X', 'utf8', repo / 'verification/sdk_windows_dll/run_external.py', '--prefix', prefix,
+             '--output', build / 'windows-external.json', '--export-dir', demo], env)
     else:
         run([emsdk / 'node/24.19.0_64bit/node.exe', repo / 'verification/sdk_js/api_test.mjs'], env)
-        run([emsdk / 'node/24.19.0_64bit/node.exe', repo / 'verification/sdk_js/verify_browser.mjs', build / 'sdk/web', args.chrome], env)
-        demo = build / ('external-web-demo-' + args.revision[:12])
-        run([sys.executable, repo / 'verification/sdk_web_external/run_external.py', '--build', build,
-             '--semantic-root', semantic, '--skia-root', skia, '--emsdk', emsdk, '--chrome', args.chrome,
-             '--output', build / 'web-external.json', '--export-dir', demo], env)
-    run(['cmake', '--install', build, '--prefix', prefix], env)
-    assets = build_assets(args.platform, prefix, semantic, skia, demo, repo, args.output, args.revision)
-    verify_bundle(args.platform, assets[0], env, emsdk if args.platform == 'web' else None, args.chrome)
+        run([emsdk / 'node/24.19.0_64bit/node.exe', repo / 'verification/sdk_js/verify_browser.mjs', build / 'sdk/web', args.chrome,build/'js-browser.json'], env)
+        run(['cmake', '--install', build, '--prefix', prefix], env)
+        demo = prefix / 'js'
+    assets = build_consumer_assets(args.platform, prefix, demo, repo, args.output, args.revision)
     if args.platform == 'web':
-        if len(assets) != 3:
-            raise RuntimeError('standalone JavaScript SDK asset is missing')
-        verify_js_bundle(assets[2], env, emsdk, args.chrome)
+        verify_js_bundle(assets[0], env, emsdk, args.chrome)
+    else:
+        with tempfile.TemporaryDirectory(prefix='axiom-dll-zip-') as temp:
+            with zipfile.ZipFile(assets[0]) as archive:
+                archive.extractall(temp)
+            run([sys.executable, '-X', 'utf8', repo / 'verification/sdk_windows_dll/run_external.py', '--prefix', temp,
+                 '--output', build / 'windows-zip-external.json'], env)
 
 
 if __name__ == '__main__':

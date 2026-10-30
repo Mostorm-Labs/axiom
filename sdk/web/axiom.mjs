@@ -1,4 +1,4 @@
-export const SDK_VERSION = '1.0.0';
+export const SDK_VERSION = '1.0.0-preview.1';
 export class AxiomError extends Error {
   constructor(code, message = code, details = {}) { super(message); this.name = 'AxiomError'; this.code = code; this.details = details; }
 }
@@ -116,6 +116,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
     const owned=(value)=>{if(!value||value.owner!==id)throw new AxiomError('WRONG_RUNTIME');return value;};
     const api={
       version:SDK_VERSION, canvas:canonical,
+      readBuildInfo:()=>call('version'),
       readState:()=>call('state').value,
       readSelection:()=>call('selection').value,
       selectTool:async name=>{const value=enumValue({ink:0,select:1,objectEraser:2,partialEraser:2,hand:3,text:4},name);return enqueue(()=>{const result=call('control',{kind:'tool',value});if(name.endsWith('Eraser'))call('control',{kind:'eraser',mode:name==='objectEraser'?1:2});return result;});},

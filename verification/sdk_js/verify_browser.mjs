@@ -36,6 +36,7 @@ try {
   console.log(JSON.stringify(observation));
   const validFrames=value=>value?.status==='PASS'&&['pending-input','no-duplicate-completion','pending-resize','native-loss-before-dom','context-recovery'].every(id=>value.scenarios?.includes(id))&&value.delayed>0;
   if(result?.status!=='PASS'||!Array.isArray(result.results)||(framesOnly?!validFrames(result):result.results.length<40)||errors.length)throw Error('JS SDK browser acceptance failed');
+  if(!framesOnly&&process.env.AXIOM_EXPECTED_REVISION&&(result.buildInfo?.sourceRevision!==process.env.AXIOM_EXPECTED_REVISION||result.buildInfo?.dirty))throw Error('JS engine is not the frozen clean release revision');
   if(framesOnly){await send('Browser.close');}
   else {
   await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/frame_handoff.html`});

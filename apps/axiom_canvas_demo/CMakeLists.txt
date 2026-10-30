@@ -85,7 +85,7 @@ if(EMSCRIPTEN)
     target_include_directories(axiom_web_runtime_adapter PRIVATE ${PROJECT_SOURCE_DIR}/apps/minimal_runtime_host ${AXIOM_HOST_FONT_INCLUDE})
     target_compile_features(axiom_web_runtime_adapter PUBLIC cxx_std_20)
     target_compile_options(axiom_web_runtime_adapter PRIVATE -Wall -Wextra -Wpedantic -Werror)
-    if(CANVAS_SEMANTIC_ENABLE_PROTOBUF AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND CMAKE_BUILD_TYPE STREQUAL "Release")
+    if(AXIOM_INSTALL_DEVELOPER_COMPONENTS AND CANVAS_SEMANTIC_ENABLE_PROTOBUF AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS AND CMAKE_BUILD_TYPE STREQUAL "Release")
         install(TARGETS axiom_web_runtime_adapter ARCHIVE DESTINATION lib)
         install(FILES "${PROJECT_SOURCE_DIR}/runtime/composition/include/canvas/platform/web_runtime_adapter.hpp"
           DESTINATION include/canvas/platform)

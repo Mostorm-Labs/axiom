@@ -1,41 +1,32 @@
-# SDK preview integration status
+# SDK integration status
 
-This is a working integration note, not an acceptance or release record. The
-published `axiom-sdk-preview-20261030-fc536ad0` release corresponds to commit
-`fc536ad0586d58834d7abec0caeee1ea177ab9d2`. Later local changes are not part
-of that release until separately built and published. Historical SDK-00 and
-P31 drafts remain historical records; their proposed scope and status must
-not be read as a current inventory of all subsequently implemented features.
+Current implementation is the consumer SDK profile authorized by
+`.aegis/packages/AXIOM-SDK-CONSUMER-20261031-v0.1/package.json`. Historical SDK-00
+and P31 candidates retain their original status; they are not the inventory of
+this later explicit user-authorized consumer implementation.
 
-The [2026-10-31 consumer readiness review](consumer-readiness-review-20261031.md)
-records a successful single-DLL feasibility experiment, the repaired npm loader
-whitelist, and an open rapid-input/frame handoff failure reproduced by the
-external JS example. A passing 51-case core run is not full SDK acceptance.
+- JS pending-frame handoff is closed by the real delayed-fence RED/GREEN
+  regression. The SDK and shipped JS example cover controls, two erasers,
+  orthogonal connectors, text/fonts, Image/Crop, multiselection, containers,
+  snapshots, operation delivery/remote application and resources. See
+  `frame-handoff-closure.md` and `consumer-delivery-20261031.md`.
+- Windows now has a consumer `axiom.dll`, 13 explicit C/POD exports and a
+  caller-side C++ facade. The /MD interactive external app uses no internal
+  headers or component libraries. Native mouse/pointer/IMM32 collection reuses
+  the current owners. Independent handles, contact generations, response-buffer
+  ownership, callback reentry, format focus and controlled close are exercised.
+- `sdk/common/` is a private shared transport decoder over the existing
+  Composition/Facade; it adds no canonical, History or membership owner.
+- The preview workflow produces four matching consumer packages; the old
+  published 20261030-fc536ad0 assets remain immutable. A new preview exists only
+  once that exact tag's build and publication have succeeded.
+- Persistence/networking/resource blob storage remain application-owned.
+  Snapshot restore does not reconstruct Undo history or embed resource bytes.
+  In-memory operation delivery is not a persistence acknowledgement.
+- Physical IME, touch and DPI/long-running use remain PHYSICAL_PENDING.
+  The MSE-20/23/26 provider/fault gaps, historical qualification failures and
+  D07 Protobuf/Abseil injected-OOM hang are not closed by this SDK work.
 
-- Windows: the installed C++ SDK and external window integration test exist.
-  The external consumer is an automated integration test, not a full interactive
-  SDK application. Physical touch, native IME and long-running use still need
-  external-consumer validation.
-- Web: the C++/WASM SDK and legacy external browser consumer remain available.
-  Current JS artifacts are `axiom.mjs`, `axiom.wasm` and `axiom.data`; the
-  generated loader is an implementation detail under `internal/axiom.mjs`.
-  `sdk/web/` now implements the standalone JS API v1, modular engine, public
-  types, input/IME adapters and a JS-only consumer. It covers the existing
-  Facade controls, text/fonts, Image/Crop, containers, connectors/Sticky,
-  multiselection and public document/resource channels. The earlier sample
-  `control_api.mjs` remains a legacy helper, not the new SDK entry point.
-  The new package is validated in headless Chrome with real Runtime execution;
-  physical IME/touch and release acceptance remain separate.
-- Persistence and networking remain application responsibilities. Snapshot
-  restore does not restore Undo history; a local operation callback is not a
-  persistence acknowledgement. Section snapshot compatibility remains a
-  candidate as documented in `section-snapshot-compatibility.md`.
-- The real per-object permission, provider-failure and reservation-fault
-  variants for MSE-20/23/26 remain incomplete. Synthetic Chrome input is not
-  physical IME or touch evidence. The known D07 Protobuf/Abseil OOM hang remains
-  unresolved and is not qualified by the SDK preview.
-
-The user prioritized the standalone JS SDK; the interactive out-of-tree Windows
-SDK example is paused. Continue with cross-platform consumer/History regressions and physical
-Windows and Web input/IME testing and review the unresolved fault and API
-compatibility obligations before considering a stable release.
+Automated tests and exact commands are recorded separately from physical and
+Gate claims. Consumer API v1 is versioned; the preview does not promise an
+unchanging cross-version C++ ABI or release readiness.

@@ -34,6 +34,8 @@ option(CANVAS_POC05_ENABLE_SKIA "Render the POC-05 Windows canvas with Skia" OFF
 option(AXIOM_BUILD_VERIFICATION "Build verification-only native hooks and hosts" OFF)
 option(AXIOM_BUILD_BRUSH_LAB "Build the G4.5 programmable-brush qualification host" OFF)
 option(AXIOM_BUILD_DEBUG_UI "Build the G4.5 Debug UI contracts/controller" OFF)
+option(AXIOM_INSTALL_DEVELOPER_COMPONENTS "Install internal static archives for locked developer consumers" OFF)
+option(AXIOM_BUILD_WINDOWS_SDK "Build the Windows consumer DLL" OFF)
 option(CANVAS_BUILD_CONTROL "Build the shared RuntimeFacade control service" OFF)
 if(CANVAS_BUILD_ARC OR CANVAS_BUILD_POC06)
   message(FATAL_ERROR "Arc/FastInk are retired; use the current Runtime and SDK adapters or an earlier source revision for historical reproduction")
@@ -150,13 +152,14 @@ endif()
 if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
   add_subdirectory(runtime/render)
   add_subdirectory(runtime/composition)
+  add_subdirectory(sdk/common EXCLUDE_FROM_ALL)
   option(AXIOM_BUILD_JS_SDK "Build the standalone JavaScript/WASM SDK" OFF)
   if(EMSCRIPTEN AND AXIOM_BUILD_JS_SDK)
     add_subdirectory(sdk/web)
   endif()
   # Initial C++ consumer profile: Windows x64 Release with the locked static
   # Semantic and Skia SDKs. Other platforms require their own package profile.
-  if(WIN32 AND MSVC AND NOT EMSCRIPTEN AND CANVAS_SEMANTIC_ENABLE_PROTOBUF AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS
+  if(AXIOM_INSTALL_DEVELOPER_COMPONENTS AND WIN32 AND MSVC AND NOT EMSCRIPTEN AND CANVAS_SEMANTIC_ENABLE_PROTOBUF AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS
      AND CMAKE_BUILD_TYPE STREQUAL "Release" AND CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreaded")
     install(TARGETS canvas_runtime_composition canvas_runtime_editor canvas_runtime_interaction
       canvas_runtime_render canvas_runtime_scene canvas_runtime_text canvas_runtime_ink
@@ -173,7 +176,7 @@ if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/AxiomRuntimeConfig.cmake"
       DESTINATION lib/cmake/AxiomRuntime)
   endif()
-  if(EMSCRIPTEN AND CANVAS_SEMANTIC_ENABLE_PROTOBUF AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS
+  if(AXIOM_INSTALL_DEVELOPER_COMPONENTS AND EMSCRIPTEN AND CANVAS_SEMANTIC_ENABLE_PROTOBUF AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS
      AND CMAKE_BUILD_TYPE STREQUAL "Release")
     install(TARGETS canvas_runtime_composition canvas_runtime_editor canvas_runtime_interaction
       canvas_runtime_render canvas_runtime_scene canvas_runtime_text canvas_runtime_ink
@@ -194,6 +197,9 @@ if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/AxiomRuntimeConfig.cmake" DESTINATION lib/cmake/AxiomRuntime)
   endif()
   add_subdirectory(apps/minimal_runtime_host)
+  if(AXIOM_BUILD_WINDOWS_SDK AND WIN32 AND MSVC AND CANVAS_SEMANTIC_ENABLE_PROTOBUF AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_subdirectory(sdk/windows)
+  endif()
 endif()
 if(AXIOM_BUILD_DEBUG_UI)
   add_subdirectory(debug_ui)
