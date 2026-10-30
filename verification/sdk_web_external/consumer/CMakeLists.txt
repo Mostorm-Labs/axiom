@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.24)
 project(AxiomExternalWeb LANGUAGES CXX)
 find_package(AxiomRuntime CONFIG REQUIRED)
 add_executable(external_web main.cpp)
+if(NOT AXIOM_NLOHMANN_INCLUDE_DIR AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/json/nlohmann/json.hpp")
+  set(AXIOM_NLOHMANN_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/json")
+endif()
 if(NOT AXIOM_NLOHMANN_INCLUDE_DIR OR NOT EXISTS "${AXIOM_NLOHMANN_INCLUDE_DIR}/nlohmann/json.hpp")
   message(FATAL_ERROR "Set AXIOM_NLOHMANN_INCLUDE_DIR to the application's nlohmann/json include directory")
 endif()
@@ -14,3 +17,8 @@ target_link_options(external_web PRIVATE "-sMIN_WEBGL_VERSION=2" "-sMAX_WEBGL_VE
   "SHELL:--preload-file \"${CMAKE_CURRENT_SOURCE_DIR}/axiom-font.otf@/axiom-font.otf\""
   "SHELL:--preload-file \"${CMAKE_CURRENT_SOURCE_DIR}/fonts@/fonts\"")
 set_target_properties(external_web PROPERTIES SUFFIX ".js")
+add_custom_command(TARGET external_web POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/index.html" "$<TARGET_FILE_DIR:external_web>/index.html"
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/pointer_input.mjs" "$<TARGET_FILE_DIR:external_web>/pointer_input.mjs"
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/text_input.mjs" "$<TARGET_FILE_DIR:external_web>/text_input.mjs"
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/serve.py" "$<TARGET_FILE_DIR:external_web>/serve.py")

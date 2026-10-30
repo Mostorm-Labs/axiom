@@ -1,0 +1,125 @@
+name: Axiom SDK and demo preview release
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/sdk-preview-release.yml'
+      - 'tools/release/**'
+      - 'runtime/**'
+      - 'apps/axiom_canvas_demo/**'
+      - 'apps/minimal_runtime_host/**'
+      - 'verification/sdk_cpp_windows/**'
+      - 'verification/sdk_web_external/**'
+      - 'CMakeLists.txt'
+      - 'cmake/AxiomRuntime*'
+      - '*sdk.lock.json'
+  push:
+    tags:
+      - 'axiom-sdk-preview-*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: axiom-sdk-preview-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build and verify ${{ matrix.platform }}
+    runs-on: windows-2025
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows
+            semantic_target: windows-x64-msvc-static
+            skia_target: windows-x64-d3d12
+          - platform: web
+            semantic_target: web-wasm32
+            skia_target: web-wasm-webgl2
+    env:
+      PYTHONUTF8: '1'
+      AXIOM_SDK_STORE: ${{ github.workspace }}/out/sdk-store
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+          vsversion: '2026'
+          toolset: '14.51'
+      - name: Install build utilities
+        run: python -m pip install cmake==3.30.5 ninja==1.11.1.4
+      - name: Resolve locked Semantic SDK and lightweight dependencies
+        shell: pwsh
+        run: |
+          python tools/setup_build_environment.py --core --semantic --target '${{ matrix.semantic_target }}' --facts-output out/preview-facts.json --status
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/setup_build_environment.py --semantic --target '${{ matrix.semantic_target }}' --offline --status
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Install locked Emscripten toolchain
+        if: matrix.platform == 'web'
+        run: python tools/bootstrap_deps.py --web
+      - name: Fetch locked Skia SDK
+        run: >-
+          python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json
+          --lock r1-full-skia-sdk.lock.json --target ${{ matrix.skia_target }} --variant release
+      - name: Test release packaging rules
+        run: python -m unittest tools.release.tests.test_preview_package -v
+      - name: Build, test and package
+        shell: pwsh
+        run: |
+          $taskArgs = @('--platform', '${{ matrix.platform }}', '--facts', 'out/preview-facts.json', '--skia', '.deps/skia-sdk/${{ matrix.skia_target }}/release', '--build', 'out/preview-build-${{ matrix.platform }}', '--output', 'out/preview-assets', '--revision', '${{ github.sha }}')
+          if ('${{ matrix.platform }}' -eq 'web') {
+            $taskArgs += @('--emsdk', '.deps/emsdk', '--chrome', "$env:ProgramFiles\Google\Chrome\Application\chrome.exe")
+          }
+          python tools/release/build_preview.py @taskArgs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: axiom-preview-${{ matrix.platform }}
+          path: out/preview-assets/*.zip
+          if-no-files-found: error
+          retention-days: 14
+
+  publish:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/axiom-sdk-preview-')
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: axiom-preview-*
+          path: release-assets
+          merge-multiple: true
+      - name: Verify all assets and source identity
+        run: python tools/release/preview_package.py --verify-release release-assets --revision "$GITHUB_SHA"
+      - name: Publish immutable prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > release-notes.txt <<'EOF'
+          Preview SDK and demos for Windows x64 and Web/WASM. Packages include the locked Semantic and Skia SDKs and their licenses. This is an experimental prerelease, not a stable ABI or production readiness declaration.
+
+          Known limits: physical-input/IME coverage is incomplete; document persistence, synchronization and durable close are owned by the embedding application; Undo history is not restored from checkpoints. The known D07 Protobuf/Abseil allocation-failure hang is unresolved.
+
+          See each archive's README and manifest.json, and verify SHA256SUMS before use.
+          EOF
+          gh release create "$GITHUB_REF_NAME" --verify-tag --target "$GITHUB_SHA" --draft --prerelease --title "Axiom SDK preview $GITHUB_REF_NAME" --notes-file release-notes.txt
+          gh release upload "$GITHUB_REF_NAME" release-assets/*.zip release-assets/SHA256SUMS
+          gh release edit "$GITHUB_REF_NAME" --draft=false --prerelease --latest=false
