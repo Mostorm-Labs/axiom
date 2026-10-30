@@ -1,13 +1,18 @@
 #include "canvas/platform/windows_runtime_adapter.hpp"
 #include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/diagnostics.hpp"
 
 #define NOMINMAX
 #include <windows.h>
 #include <cassert>
 #include <cstdio>
 #include <thread>
+#include <type_traits>
 
 int main() {
+  // External Debug UI consumers need the adapter to be a diagnostics provider.
+  assert((std::is_base_of_v<canvas::runtime::PlatformDiagnostics,
+                            canvas::platform::WindowsRuntimeAdapter>));
   WNDCLASSW klass{};
   klass.hInstance = GetModuleHandleW(nullptr);
   klass.lpfnWndProc = DefWindowProcW;
@@ -24,6 +29,10 @@ int main() {
     DestroyWindow(window);
     return 77;
   }
+  const canvas::runtime::PlatformDiagnostics& diagnostics = adapter;
+  auto surface = diagnostics.readPlatformDiagnostics();
+  assert(surface.surfaceAvailable && surface.width == 256U && surface.height == 256U);
+  assert(surface.devicePixelRatio == 2.0F && surface.canonicalSurfaceGeneration != 0);
   assert(adapter.prepareFrame(true));
   assert(adapter.frameStatus().canonicalWorkId != 0);
   assert(adapter.present());
@@ -81,11 +90,15 @@ int main() {
   assert(!composition.submitContact(*third, batch));
   assert(composition.submitContact(*rebound, batch));
   assert(adapter.resize(320, 240, 2.0F));
+  surface = diagnostics.readPlatformDiagnostics();
+  assert(surface.surfaceAvailable && surface.width == 320U && surface.height == 240U);
   assert(adapter.prepareFrame(true));
   assert(adapter.present());
   assert(adapter.loseSurface());
+  assert(!diagnostics.readPlatformDiagnostics().surfaceAvailable);
   assert(!adapter.prepareFrame(true));
   assert(adapter.recoverSurface(320, 240, 2.0F));
+  assert(diagnostics.readPlatformDiagnostics().surfaceAvailable);
   assert(adapter.prepareFrame(true));
   assert(adapter.present());
   assert(adapter.shutdown());

@@ -1,4 +1,5 @@
 #include "host_font_resources.hpp"
+#include "canvas/debug_ui/snapshot_assembler.hpp"
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -48,7 +49,7 @@ int main(int argc, char** argv) {
     const bool checkFocus = mode != "entry";
     State state;
     state.host = std::make_unique<MinimalRuntimeHost>();
-    state.facade = std::make_unique<MinimalRuntimeFacade>(*state.host);
+    state.facade = &state.host->publicComposition().controlFacade();
     const auto instance = GetModuleHandleW(nullptr);
     WNDCLASSW klass{};
     klass.hInstance = instance;
@@ -73,6 +74,10 @@ int main(int argc, char** argv) {
         state.platformAdapter = std::make_unique<platform::WindowsRuntimeAdapter>(state.host->publicComposition(), owner);
         if (!state.platformAdapter->bind(800, 600, 1.0F)) return 77;
         assert(&state.host->publicComposition().controlFacade() == &composition.controlFacade());
+        debug_ui::DebugSnapshotAssembler assembler;
+        const auto snapshot = assembler.capture({state.facade, nullptr, nullptr, state.platformAdapter.get()});
+        assert(snapshot.platform.availability == debug_ui::DebugAvailability::kAvailable);
+        assert(snapshot.platform.value.width == 800 && snapshot.platform.value.height == 600);
         assert(!state.platformAdapter->loadHostFonts(L"missing-axiom-font.otf", L"fonts"));
         assert(state.platformAdapter->loadHostFonts(L"axiom-font.otf", L"fonts"));
         assert(!state.host->publicComposition().controlFacade().readFontCatalog().entries.empty());
@@ -373,7 +378,7 @@ int main(int argc, char** argv) {
         state.debugUi = std::make_unique<debug_ui::WindowsDebugUiHost>();
         assert(state.debugUi->initialize(owner));
         state.controller = std::make_unique<debug_ui::DebugController>(
-            debug_ui::DebugControllerContext{state.facade.get()});
+            debug_ui::DebugControllerContext{state.facade});
         state.controller->uiState().setWorkspace(debug_ui::WorkspaceId::kControl);
         state.debugUi->setController(state.controller.get());
         auto& io = ImGui::GetIO();
@@ -461,7 +466,7 @@ int main(int argc, char** argv) {
     state.debugUi = std::make_unique<debug_ui::WindowsDebugUiHost>();
     assert(state.debugUi->initialize(owner));
     state.controller = std::make_unique<debug_ui::DebugController>(
-        debug_ui::DebugControllerContext{state.facade.get()});
+        debug_ui::DebugControllerContext{state.facade});
     state.controller->uiState().setWorkspace(debug_ui::WorkspaceId::kControl);
     state.debugUi->setController(state.controller.get());
     auto& io = ImGui::GetIO();

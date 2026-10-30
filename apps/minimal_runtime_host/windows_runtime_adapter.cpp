@@ -89,6 +89,22 @@ WindowsFrameStatus WindowsRuntimeAdapter::frameStatus() const noexcept {
           impl_->frame.canonicalWork ? impl_->frame.canonicalWork->workId : 0U,
           impl_->frame.previewWork ? impl_->frame.previewWork->workId : 0U};
 }
+runtime::PlatformDiagnosticsSnapshot WindowsRuntimeAdapter::readPlatformDiagnostics() const noexcept {
+  runtime::PlatformDiagnosticsSnapshot out{};
+  if (std::this_thread::get_id() != impl_->thread) return out;
+  const auto surface = impl_->core.surfaceSnapshot();
+  out.canonicalSurfaceGeneration = surface.surfaceGeneration;
+  out.previewSurfaceGeneration = impl_->core.previewSurfaceGeneration();
+  out.width = surface.width;
+  out.height = surface.height;
+  out.devicePixelRatio = surface.devicePixelRatio;
+  out.presentCount = impl_->core.canonicalPresentCount();
+  out.surfaceAvailable = surface.available;
+  out.canonicalSurfaceMode = surface.available &&
+      impl_->core.canonicalBackend() == render::RenderTargetBackend::kD3D12
+      ? runtime::SurfaceMode::kGpuDefault : runtime::SurfaceMode::kCpuReference;
+  return out;
+}
 bool WindowsRuntimeAdapter::present() noexcept {
   if (std::this_thread::get_id() != impl_->thread || !impl_->bound || !impl_->prepared) return false;
   impl_->prepared = false;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "canvas/runtime/diagnostics.hpp"
 #include <cstdint>
 #include <memory>
 
@@ -16,10 +17,10 @@ struct WindowsFrameStatus final {
 
 // Borrowed owner and HWND must outlive the adapter. All methods run on the
 // Composition/window owner thread; shutdown before destroying either owner.
-class WindowsRuntimeAdapter final {
+class WindowsRuntimeAdapter final : public runtime::PlatformDiagnostics {
  public:
   WindowsRuntimeAdapter(runtime::RuntimeComposition&, void* hwnd);
-  ~WindowsRuntimeAdapter();
+  ~WindowsRuntimeAdapter() override;
   WindowsRuntimeAdapter(const WindowsRuntimeAdapter&) = delete;
   WindowsRuntimeAdapter& operator=(const WindowsRuntimeAdapter&) = delete;
   [[nodiscard]] bool bind(std::uint32_t width, std::uint32_t height, float scale) noexcept;
@@ -32,6 +33,7 @@ class WindowsRuntimeAdapter final {
   [[nodiscard]] bool loadHostFonts(const wchar_t* cjkPath, const wchar_t* catalogRoot) noexcept;
   [[nodiscard]] bool prepareFrame(bool forceCanonical = false) noexcept;
   [[nodiscard]] WindowsFrameStatus frameStatus() const noexcept;
+  [[nodiscard]] runtime::PlatformDiagnosticsSnapshot readPlatformDiagnostics() const noexcept override;
   // Call after the window's real platform paint/presentation opportunity.
   [[nodiscard]] bool present() noexcept;
   void reposition() noexcept;

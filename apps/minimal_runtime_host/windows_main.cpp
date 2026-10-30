@@ -1,5 +1,4 @@
 #include "minimal_runtime_host.hpp"
-#include "minimal_runtime_facade.hpp"
 #include "windows_presentation_cache.hpp"
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
 #include "canvas/debug_ui/controller.hpp"
@@ -36,7 +35,6 @@ constexpr UINT_PTR kTimer = 1U;
 constexpr UINT kTimerMs = 16U;
 constexpr UINT kOverlaySyncMessage = WM_APP + 1U;
 
-using canvas::minimal_runtime_host::MinimalRuntimeFacade;
 
 struct NativeContact final {
   canvas::input::PointerKey key{};
@@ -57,7 +55,7 @@ struct State final {
   canvas::runtime::TextRange nativeTextRange{};
   bool textFault=false;
   std::unique_ptr<MinimalRuntimeHost> host;
-  std::unique_ptr<MinimalRuntimeFacade> facade;
+  canvas::runtime::RuntimeFacade* facade = nullptr; // borrowed from host's Composition
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
   std::unique_ptr<canvas::debug_ui::DebugController> controller;
   std::unique_ptr<canvas::debug_ui::WindowsDebugUiHost> debugUi;
@@ -495,7 +493,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
     state.inputLog.reset(_wfsopen(logPath, L"w", _SH_DENYWR));
     std::free(logPath);
   }
-  state.facade = std::make_unique<MinimalRuntimeFacade>(*state.host);
+  state.facade = &state.host->publicComposition().controlFacade();
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
   state.debugUi = std::make_unique<canvas::debug_ui::WindowsDebugUiHost>();
 #endif
@@ -535,8 +533,8 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE, LPSTR, int show) {
 #if AXIOM_MINIMAL_HAS_DEBUG_UI
   if (!state.facade->setMultiSelectionPermission(canvas::runtime::MultiSelectionPermissionMode::kLocalSingleUser)) return 1;
   state.controller = std::make_unique<canvas::debug_ui::DebugController>(
-      canvas::debug_ui::DebugControllerContext{state.facade.get(), nullptr, nullptr,
-          state.facade.get(), nullptr, nullptr, nullptr,
+      canvas::debug_ui::DebugControllerContext{state.facade, nullptr, nullptr,
+          state.platformAdapter.get(), nullptr, nullptr, nullptr,
           [&state] { return canvas::minimal_runtime_host::chooseWindowsImageFile(state.window); }});
   state.debugUi->setController(state.controller.get());
   state.debugUi->setFocusAdmission([&state]{return admitWindowsDebugFocus(state);});

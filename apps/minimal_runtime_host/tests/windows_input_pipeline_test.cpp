@@ -32,7 +32,7 @@ void selectionUsesWindowMessagesAndLatchedShift() {
   using namespace canvas;
   mouseHistory.clear();fixtureTimeMs=100;
   State state{};state.host=std::make_unique<MinimalRuntimeHost>();
-  state.facade=std::make_unique<MinimalRuntimeFacade>(*state.host);
+  state.facade=&state.host->publicComposition().controlFacade();
   WNDCLASSW klass{};klass.hInstance=GetModuleHandleW(nullptr);klass.lpfnWndProc=windowProc;
   klass.lpszClassName=L"AxiomRegionSelectionInputTest";assert(RegisterClassW(&klass));
   const auto window=CreateWindowExW(0,klass.lpszClassName,L"region fixture",WS_OVERLAPPEDWINDOW,
@@ -81,7 +81,7 @@ BOOL CALLBACK findPreview(HWND w, LPARAM) {
 void mouseHistoryReachesRuntimeAfterShape() {
   State state{};
   state.host = std::make_unique<MinimalRuntimeHost>();
-  state.facade = std::make_unique<MinimalRuntimeFacade>(*state.host);
+  state.facade = &state.host->publicComposition().controlFacade();
   WNDCLASSW klass{}; klass.hInstance = GetModuleHandleW(nullptr);
   klass.lpfnWndProc = windowProc; klass.lpszClassName = L"AxiomMouseHistoryTest";
   assert(RegisterClassW(&klass));

@@ -22,6 +22,9 @@ int main() {
   CHECK(owner.open());
   canvas::platform::WindowsRuntimeAdapter platform(owner, window);
   if (!platform.bind(400, 300, 1.0F)) return 77;
+  const canvas::runtime::PlatformDiagnostics& diagnostics = platform;
+  CHECK(diagnostics.readPlatformDiagnostics().surfaceAvailable);
+  CHECK(diagnostics.readPlatformDiagnostics().width == 400U);
   CHECK(!platform.loadHostFonts(L"missing-font.otf", L"fonts"));
   CHECK(platform.loadHostFonts(L"axiom-font.otf", L"fonts"));
   auto& product = owner.controlFacade();
@@ -81,12 +84,15 @@ int main() {
   sample.sequence = 10; sample.timestampNs = 11000000; batch.samples = {sample};
   CHECK(owner.submitContact(*contact, batch));
   CHECK(platform.resize(320, 240, 1.0F));
+  CHECK(diagnostics.readPlatformDiagnostics().width == 320U);
   CHECK(platform.prepareFrame(true));
   CHECK(platform.frameStatus().canonicalWorkId != 0);
   CHECK(platform.present());
   CHECK(platform.loseSurface());
+  CHECK(!diagnostics.readPlatformDiagnostics().surfaceAvailable);
   CHECK(!platform.prepareFrame(true));
   CHECK(platform.recoverSurface(320, 240, 1.0F));
+  CHECK(diagnostics.readPlatformDiagnostics().surfaceAvailable);
   CHECK(platform.prepareFrame(true));
   CHECK(platform.present());
   CHECK(platform.shutdown()); CHECK(owner.close());

@@ -51,7 +51,7 @@ int main() {
     State state;
     std::FILE* log=nullptr;assert(fopen_s(&log,"windows-text-events.log","w")==0);state.inputLog.reset(log);
     state.host = std::make_unique<MinimalRuntimeHost>();
-    state.facade = std::make_unique<MinimalRuntimeFacade>(*state.host);
+    state.facade = &state.host->publicComposition().controlFacade();
     auto& composition = state.host->composition();
     assert(composition.bindSurface(640, 480));
     assert(canvas::minimal_runtime_host::bindHostTextFont(composition, "axiom-font.otf"));
