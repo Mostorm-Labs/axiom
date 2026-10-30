@@ -22,10 +22,14 @@ def main():
     parser.add_argument('--port', type=int, default=4186)
     args = parser.parse_args()
     directory = args.directory.resolve(strict=True)
-    if not directory.is_dir() or not (directory / 'index.html').is_file():
-        parser.error('directory must contain index.html')
+    if not directory.is_dir():
+        parser.error('directory must exist')
+    entry = 'index.html' if (directory / 'index.html').is_file() else 'example.html'
+    if not (directory / entry).is_file():
+        parser.error('directory must contain index.html or example.html')
     with ThreadingHTTPServer(('127.0.0.1', args.port), partial(DemoHandler, directory=str(directory))) as server:
-        print(f'http://127.0.0.1:{server.server_port}/', flush=True)
+        suffix = '' if entry == 'index.html' else entry
+        print(f'http://127.0.0.1:{server.server_port}/{suffix}', flush=True)
         server.serve_forever()
 
 

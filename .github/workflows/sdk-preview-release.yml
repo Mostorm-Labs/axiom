@@ -77,6 +77,9 @@ jobs:
       - name: Check public JavaScript SDK types
         if: matrix.platform == 'web'
         run: npx --yes --ignore-scripts --package typescript@5.9.3 -- tsc --noEmit --strict --target es2022 --module nodenext --moduleResolution nodenext verification/sdk_js/api_types_test.mts
+      - name: Test standalone JavaScript SDK server
+        if: matrix.platform == 'web'
+        run: python -m unittest verification.sdk_js.test_server -v
       - name: Build, test and package
         shell: pwsh
         run: |
