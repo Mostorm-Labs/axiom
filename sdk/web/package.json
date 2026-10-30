@@ -1,0 +1,9 @@
+{
+  "name": "@mostorm/axiom",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {".": {"types": "./axiom.d.mts", "import": "./axiom.mjs"}},
+  "files": ["*.mjs", "*.d.mts", "*.wasm", "*.data", "*.html", "serve.py", "licenses/**", "README.md"],
+  "engines": {"node": ">=22"}
+}

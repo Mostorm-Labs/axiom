@@ -62,6 +62,12 @@ class PreviewPackageTest(unittest.TestCase):
             verify_release(release, 'd' * 40)
             self.assertEqual(len((release / 'SHA256SUMS').read_text().splitlines()), 4)
             with self.assertRaises(ValueError):
+                verify_release(release, 'd' * 40, require_js=True)
+            package_tree(stage, release / 'axiom-sdk-js-preview.zip', ['payload'], 'd' * 40, 'js-sdk')
+            verify_release(release, 'd' * 40, require_js=True)
+            self.assertEqual(len((release / 'SHA256SUMS').read_text().splitlines()), 5)
+            (release / 'axiom-sdk-js-preview.zip').unlink()
+            with self.assertRaises(ValueError):
                 verify_release(release, 'e' * 40)
             (release / 'axiom-demo-web-preview.zip').unlink()
             with self.assertRaises(ValueError):

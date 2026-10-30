@@ -97,6 +97,18 @@ JavaScript and `.wasm` as WebAssembly; on some Windows systems the standard
 The status becomes READY only after both Runtime and DOM input handlers initialize.
 Tool buttons turn blue only after the Runtime accepts the selected tool; Undo,
 Redo and other one-shot actions leave the active tool unchanged.
+
+`consumer/control_api.mjs` is an application-side preview wrapper for this
+example's matching WASM bridge, not a stable standalone JavaScript SDK. Create
+it with `createCanvasControls({module, beforeCommand})`; the callback must
+finish any active native text composition. Commands are serialized and reject
+if the bridge rejects them. The adjacent `control_api.d.mts` describes this
+preview subset for TypeScript. For example, `await controls.selectShape('rectangle')`,
+`await controls.selectTool('objectEraser')`, `await controls.setSelectionMode('lasso')`,
+`await controls.group()` and `await controls.undo()`. See the module for the
+supported names; image, text, document, resource and multi-selection APIs are
+not covered by this wrapper. The wrapper schedules rendering after acceptance,
+which does not itself mean that a frame was presented.
 Object eraser removes a hit stroke; Partial eraser masks only the crossed area.
 New connectors use orthogonal routing by default, including connectors created
 from a selected object's attachment points. A clear aligned route can still be

@@ -1,0 +1,121 @@
+<!doctype html><meta charset="utf-8"><title>Independent JS SDK consumer</title>
+<style>.mount{width:400px;height:300px;display:inline-block}</style>
+<div id="one" class="mount"></div><div id="two" class="mount"></div><pre id="result">PENDING</pre>
+<script type="module">
+import {createRuntime,AxiomError} from './axiom.mjs';
+const results=[], errors=[], operations=[];
+const assert=(v,message)=>{if(!v)throw Error(message);results.push(message);};
+const pause=()=>new Promise(r=>setTimeout(r,50));
+const until=async(fn,label)=>{for(let i=0;i<120;i++){if(fn())return;await pause();}throw Error('timeout '+label);};
+const draw=async(runtime,x=40,y=40,width=100,height=80)=>{
+  const c=runtime.canvas,r=c.getBoundingClientRect();c.setPointerCapture=()=>{};c.hasPointerCapture=()=>false;
+  for(const [type,dx,dy] of [['pointerdown',0,0],['pointermove',width,height],['pointerup',width,height]]){
+    c.dispatchEvent(new PointerEvent(type,{pointerId:1,pointerType:'mouse',clientX:r.left+x+dx,clientY:r.top+y+dy,
+      buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true}));await pause();
+  }
+};
+try {
+  const a=await createRuntime({mount:document.getElementById('one'),documentId:'01ff'.padStart(32,'0'),onOperation:b=>operations.push(b),onError:e=>errors.push(e)});
+  const b=await createRuntime({mount:document.getElementById('two'),documentId:'02ff'.padStart(32,'0'),onError:e=>errors.push(e)});
+  assert(a.readState().documentId!==b.readState().documentId,'independent document identity');
+  await a.selectShape('rectangle');await draw(a);
+  assert(a.readState().objects===1 && b.readState().objects===0,'real pointer input and instance isolation');
+  const pixel=()=>{const c=a.canvas,g=c.getContext('webgl2'),p=new Uint8Array(4),f=g.getParameter(g.FRAMEBUFFER_BINDING),d=devicePixelRatio||1;g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(Math.round(80*d),c.height-Math.round(80*d),1,1,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);return p[2]>p[0]+20&&p[3]>0;};
+  for(let i=0;i<120&&!pixel();i++)await pause();assert(pixel(),'actual blue rectangle pixels');
+  await a.undo();assert(a.readState().objects===0,'real Undo');await a.redo();assert(a.readState().objects===1,'real Redo');
+  await a.zoomAt(100,100,2);assert(Math.abs(a.readState().camera.scale-2)<.001,'absolute viewport scale');
+  await a.selectTool('objectEraser');assert(a.readState().eraserMode===1,'object eraser readback');
+  await a.selectTool('partialEraser');assert(a.readState().eraserMode===2,'partial eraser readback');
+  const checkpoint={generation:a.readState().generation,documentRevision:'9007199254740993',recoveryFrontier:[8,1,16,1,24,1]};
+  const saved=await a.captureSnapshot(checkpoint);assert(saved.bytes.length>0 && saved.checkpointDigest.length>0,'owned snapshot and checkpoint digest');
+  const mount=document.createElement('div');mount.className='mount';document.body.append(mount);
+  const replicaOperations=[];
+  const replica=await createRuntime({mount,documentId:a.readState().documentId,restore:{bytes:saved.bytes,metadata:{...checkpoint,checkpointDigest:saved.checkpointDigest,resourceBinding:'55'}},onOperation:bytes=>replicaOperations.push(bytes),onError:e=>errors.push(e)});
+  assert(replica.readState().objects===1 && !replica.readState().canUndo,'fresh-owner checkpoint restore without invented History');
+  await a.createSticky({size:80,x:250,y:10});await pause();const remote=operations.at(-1);
+  await replica.applyRemoteOperation(remote);assert(replica.readState().objects===2,'real remote operation apply');
+  await replica.applyRemoteOperation(remote);assert(replica.readState().objects===2 && !replicaOperations.length,'remote deduplication without local echo');
+  await replica.close();mount.remove();await a.undo();
+  await a.selectTool('text');await draw(a,250,210);await pause();
+  const carrier=document.getElementById('one').querySelector('textarea');
+  carrier.dispatchEvent(new InputEvent('beforeinput',{inputType:'insertText',data:'你好 Axiom',bubbles:true,cancelable:true}));await pause();
+  assert(a.text.read().projection.length===8,'native carrier into real text owner');
+  await a.text.select(0,2);await a.text.replace('您好');
+  assert(a.text.read().projection[0]===24744,'public confirmed text replacement and selection');
+  try{await a.text.select(4294967296,0);throw Error('overflow range accepted');}catch(e){assert(e.code==='INVALID_REQUEST','text range cannot wrap to uint32: '+String(e));}
+  await a.text.format({bold:true});await a.text.finish();
+  assert(a.readState().objects===2,'text committed as object');
+  try{await a.selectTool('unknown');throw Error('unknown accepted');}catch(e){assert(e instanceof AxiomError && e.code==='INVALID_ARGUMENT','typed rejection');}
+  assert(operations.length>0 && operations.every(o=>o instanceof Uint8Array&&o.length),'owned operation byte delivery');
+  const foreignStamp=a.multi.read().stamp;
+  await a.close();await a.close();
+  a.canvas.dispatchEvent(new PointerEvent('pointerdown',{pointerId:1,pointerType:'mouse',clientX:10,clientY:10,bubbles:true}));
+  a.canvas.dispatchEvent(new MouseEvent('dblclick',{bubbles:true}));
+  try{a.readState();throw Error('closed read accepted');}catch(e){assert(e.code==='CLOSED','late calls reject after close');}
+  try{a.text.read();throw Error('closed text read accepted');}catch(e){assert(e.code==='CLOSED','late text reads reject after close');}
+  await b.selectShape('sticky');await draw(b);
+  assert(b.readState().objects===1,'second instance remains usable after first closes');
+  await b.selectTool('select');await b.setSelectionMode('rectangle');await draw(b,10,10,200,180);
+  let projection=b.multi.read();const opacity=projection.properties['3'];
+  assert(!opacity.available,'missing permission is not implicit authorization');
+  await b.multi.setPermission('localSingleUser');projection=b.multi.read();
+  const p=projection.properties['3'];assert(p.available && p.eligible.length===1,'explicit local permission projection');
+  try{b.multi.readValues(3,foreignStamp,p.eligible);throw Error('foreign stamp accepted');}catch(e){assert(e.code==='WRONG_RUNTIME','foreign Runtime stamps reject');}
+  await b.multi.setProperty(3,{type:'float',value:0.5},projection.stamp,p.eligible);
+  const after=b.multi.read();assert(after.properties['3'].uniformValue.value===0.5,'real multi-property readback');
+  try{await b.multi.setProperty(3,{type:'float',value:0.75},projection.stamp,p.eligible);throw Error('stale edit applied');}
+  catch(e){assert(e instanceof AxiomError && e.code.startsWith('MULTI_'),'stale multi edit rejects');}
+  await b.selectShape('ellipse');await draw(b,230,40);
+  await b.selectTool('select');await b.setSelectionMode('point');await draw(b,280,80,0,0);
+  assert(b.readSelection().kind===1 && b.readSelection().count===1,'single Shape style target');
+  const firstStyle=b.setAppearance({opacity:0.6}),staleStyle=b.setAppearance({opacity:0.7}).catch(e=>e);
+  await firstStyle;const styleError=await staleStyle;
+  assert(styleError instanceof AxiomError && styleError.code==='STALE_TARGET','queued single-object style rejects stale scope');
+  assert(Math.abs(b.readSelection().appearance.opacity-0.6)<.001,'stale style leaves first result intact');await b.undo();
+  await b.selectTool('select');await b.setSelectionMode('rectangle');await draw(b,5,5,370,190);
+  assert(b.readState().selected.length===2,'whole multiselection through real region input');
+  const grouped=await b.group();const groupId=grouped.section.objectId;
+  assert(b.readState().objects===3,'real Group wrapper creation');await b.enterGroup(groupId);
+  assert(b.readSelection().groupScope===groupId,'Group scope readback');await b.leaveGroup();await b.ungroup(groupId);
+  assert(b.readState().objects===2,'Ungroup preserves both children');
+  const section=await b.createSection({title:'JS Section',boundary:[0,0,400,250]});
+  assert(b.readSection(section.section.objectId).title==='JS Section','Section create and read');
+  await b.renameSection(section.section.objectId,'Renamed');assert(b.readSection(section.section.objectId).title==='Renamed','Section rename');
+  await b.releaseSection(section.section.objectId);
+  const connector=await b.createConnector({start:{point:[20,220]},end:{point:[300,260]}});
+  assert(b.readConnector(connector.objectId).routing===2,'programmatic orthogonal connector');
+  const beforeInvalid=b.readState().generation;
+  try{await b.setConnectorRouting({objectId:connector.objectId,routing:257});throw Error('overflow route accepted');}catch(e){assert(e.code==='INVALID_REQUEST','routing enum cannot truncate to a valid value');}
+  assert(b.readState().generation===beforeInvalid,'invalid routing is a zero-mutation rejection');
+  const png=document.createElement('canvas');png.width=png.height=4;png.getContext('2d').fillRect(0,0,4,4);
+  const imageBytes=new Uint8Array(await (await new Promise(resolve=>png.toBlob(resolve,'image/png'))).arrayBuffer());
+  const beforeImage=b.readState().objects;const imported=await b.importImage(imageBytes,'image/png');
+  assert(b.readState().objects===beforeImage+1 && b.readSelectedImage().objectId===imported.objectId,'real PNG import and selection');
+  const crop=await b.beginCrop(imported.objectId);const initialCrop=b.readCrop();
+  await b.updateCrop({token:crop.cropToken,sourceRect:initialCrop.content.sourceRect,width:initialCrop.content.width,height:initialCrop.content.height,scale:2});
+  assert(b.readCrop().scale===2,'real crop update readback');await b.cancelCrop(crop.cropToken);assert(!b.readCrop().active,'crop cancellation');
+  png.width=6;png.height=2;const replacement=new Uint8Array(await (await new Promise(resolve=>png.toBlob(resolve,'image/png'))).arrayBuffer());
+  await b.replaceImage(replacement,'image/png');assert(b.readSelectedImage().content.intrinsicWidth===6,'real image replacement');
+  await b.undo();assert(b.readSelectedImage().content.intrinsicWidth===4,'image replacement Undo');
+  const beforeLoss=b.readState().objects;
+  const canvases=[b.canvas,document.getElementById('two').querySelectorAll('canvas')[1]];
+  const extensions=canvases.map(c=>c.getContext('webgl2').getExtension('WEBGL_lose_context'));
+  assert(extensions.every(Boolean),'actual WebGL loss extension');extensions.forEach(e=>e.loseContext());
+  await until(()=>!b.readState().surface.available,'surface loss');extensions.forEach(e=>e.restoreContext());
+  await until(()=>b.readState().surface.available,'surface restore');assert(b.readState().objects===beforeLoss,'context restore preserves canonical objects');
+  document.getElementById('two').style.width='420px';await until(()=>b.readState().surface.width===420,'resize observer');
+  assert(b.canvas.width===Math.round(420*(devicePixelRatio||1)),'physical drawing buffer resize');
+  await b.close();
+  const resourceId='ab'.padStart(32,'0');
+  const resources=await createRuntime({mount:document.getElementById('two'),builtinFonts:false,initialResources:{revision:'1',binding:'22',entries:[{resourceId,kind:1,revision:'1',sha256:'sha256:4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7cce23c7785459a',byteLength:'1',decodeVersion:1,layoutVersion:0,metadata:[8,1,16,1,24,1,32,1]}]}});
+  const token=resources.resources.token(resourceId);
+  try{await resources.resources.publish(token,new Uint8Array([2]));throw Error('bad hash accepted');}catch(e){assert(e.code==='RESOURCE_REJECTED','resource hash mismatch rejection');}
+  await resources.resources.publish(token,new Uint8Array([1]));assert(resources.resources.receipt(resourceId).state===1,'real byte validation receipt');
+  await resources.close();
+  try{await createRuntime({mount:document.getElementById('two'),documentId:'01ff'.padStart(32,'0'),restore:{bytes:new Uint8Array([0]),metadata:{documentRevision:'1',recoveryFrontier:[],checkpointDigest:[],resourceBinding:'1'}}});throw Error('bad restore accepted');}
+  catch(e){assert(e.code==='OPEN_REJECTED','malformed checkpoint rejects');}
+  assert(document.getElementById('one').children.length===0 && document.getElementById('two').children.length===0,'DOM disposal');
+  assert(errors.length===0,'no runtime errors');
+  document.getElementById('result').textContent=JSON.stringify({status:'PASS',results});
+}catch(error){document.getElementById('result').textContent=JSON.stringify({status:'FAIL',results,error:String(error.stack||error),errors:errors.map(String)});}
+</script>

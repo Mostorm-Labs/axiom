@@ -13,6 +13,8 @@ on:
       - 'verification/sdk_web_external/**'
       - 'CMakeLists.txt'
       - 'cmake/AxiomRuntime*'
+      - 'sdk/web/**'
+      - 'verification/sdk_js/**'
       - '*sdk.lock.json'
   push:
     tags:
@@ -72,6 +74,9 @@ jobs:
           --lock r1-full-skia-sdk.lock.json --target ${{ matrix.skia_target }} --variant release
       - name: Test release packaging rules
         run: python -m unittest tools.release.tests.test_preview_package -v
+      - name: Check public JavaScript SDK types
+        if: matrix.platform == 'web'
+        run: npx --yes --ignore-scripts --package typescript@5.9.3 -- tsc --noEmit --strict --target es2022 --module nodenext --moduleResolution nodenext verification/sdk_js/api_types_test.mts
       - name: Build, test and package
         shell: pwsh
         run: |
@@ -105,7 +110,7 @@ jobs:
           path: release-assets
           merge-multiple: true
       - name: Verify all assets and source identity
-        run: python tools/release/preview_package.py --verify-release release-assets --revision "$GITHUB_SHA"
+        run: python tools/release/preview_package.py --verify-release release-assets --require-js --revision "$GITHUB_SHA"
       - name: Publish immutable prerelease
         env:
           GH_TOKEN: ${{ github.token }}

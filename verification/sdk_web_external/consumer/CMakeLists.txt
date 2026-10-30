@@ -20,5 +20,7 @@ set_target_properties(external_web PROPERTIES SUFFIX ".js")
 add_custom_command(TARGET external_web POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/index.html" "$<TARGET_FILE_DIR:external_web>/index.html"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/pointer_input.mjs" "$<TARGET_FILE_DIR:external_web>/pointer_input.mjs"
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/control_api.mjs" "$<TARGET_FILE_DIR:external_web>/control_api.mjs"
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/control_api.d.mts" "$<TARGET_FILE_DIR:external_web>/control_api.d.mts"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/text_input.mjs" "$<TARGET_FILE_DIR:external_web>/text_input.mjs"
   COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/serve.py" "$<TARGET_FILE_DIR:external_web>/serve.py")

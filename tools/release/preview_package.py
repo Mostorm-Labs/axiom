@@ -64,7 +64,8 @@ def build_assets(platform, prefix, semantic, skia, demo, repo, output, revision)
     output.mkdir(parents=True, exist_ok=True)
     sdk_name = f'axiom-sdk-{platform}-preview.zip'
     demo_name = f'axiom-demo-{platform}-preview.zip'
-    if (output / sdk_name).exists() or (output / demo_name).exists():
+    js_name = 'axiom-sdk-js-preview.zip'
+    if (output / sdk_name).exists() or (output / demo_name).exists() or (platform == 'web' and (output / js_name).exists()):
         raise ValueError('refusing to overwrite an existing release asset')
     config = prefix / 'lib/cmake/AxiomRuntime/AxiomRuntimeConfig.cmake'
     if not config.is_file() or any(sha256(root / 'manifest.json') not in config.read_text(encoding='utf-8')
@@ -129,7 +130,7 @@ def build_assets(platform, prefix, semantic, skia, demo, repo, output, revision)
             app_required = ['axiom_minimal_runtime_host_windows.exe', 'icudtl.dat', 'axiom-font.otf', 'fonts/catalog.json']
         else:
             app_required = ['index.html', 'external_web.js', 'external_web.wasm', 'external_web.data',
-                            'pointer_input.mjs', 'text_input.mjs', 'serve.py']
+                            'pointer_input.mjs', 'text_input.mjs', 'control_api.mjs', 'control_api.d.mts', 'serve.py']
             for name in app_required:
                 copy_file(demo / name, app / name)
             copy_file(repo / 'assets/fonts/noto-sans-cjk-sc/LICENSE.txt', app / 'licenses/noto-cjk-LICENSE.txt')
@@ -141,15 +142,27 @@ def build_assets(platform, prefix, semantic, skia, demo, repo, output, revision)
             instructions = 'Run python serve.py and open its printed URL. The server sets the required .mjs MIME type.\n'
         (app / 'README.md').write_text('Axiom Demo preview.\n' + instructions, encoding='utf-8')
         package_tree(app, output / demo_name, ['README.md', *app_required], revision, platform + '-demo')
-    return [output / sdk_name, output / demo_name]
+        if platform == 'web' and (prefix / 'js').is_dir():
+            js = root / 'js-package'
+            shutil.copytree(prefix / 'js', js, symlinks=True)
+            package_tree(js, output / js_name,
+                         ['axiom.mjs', 'axiom.d.mts', 'axiom-runtime.mjs', 'axiom-runtime.wasm',
+                          'axiom-runtime.data', 'pointer_input.mjs', 'text_input.mjs', 'example.html',
+                          'serve.py', 'package.json', 'README.md', 'licenses/nlohmann-json-LICENSE.MIT'], revision, 'js-sdk')
+    assets = [output / sdk_name, output / demo_name]
+    if platform == 'web' and (prefix / 'js').is_dir():
+        assets.append(output / js_name)
+    return assets
 
 
-def verify_release(directory, revision):
+def verify_release(directory, revision, require_js=False):
     expected = {f'axiom-{kind}-{platform}-preview.zip'
                 for kind in ('sdk', 'demo') for platform in ('windows', 'web')}
+    if require_js:
+        expected.add('axiom-sdk-js-preview.zip')
     paths = {p.name: p for p in Path(directory).glob('*.zip')}
     if set(paths) != expected:
-        raise ValueError(f'expected exactly four SDK/demo assets, got {sorted(paths)}')
+        raise ValueError(f'expected exactly {sorted(expected)}, got {sorted(paths)}')
     for name, path in sorted(paths.items()):
         with zipfile.ZipFile(path) as z:
             names = z.namelist()
@@ -176,13 +189,14 @@ def verify_release(directory, revision):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--verify-release', type=Path)
+    p.add_argument('--require-js', action='store_true')
     p.add_argument('--platform', choices=['windows', 'web'])
     for name in ('prefix', 'semantic', 'skia', 'demo', 'repo', 'output'):
         p.add_argument('--' + name, type=Path)
     p.add_argument('--revision', required=True)
     args = p.parse_args()
     if args.verify_release:
-        verify_release(args.verify_release, args.revision)
+        verify_release(args.verify_release, args.revision, require_js=args.require_js)
         return
     if not all((args.platform, args.prefix, args.semantic, args.skia, args.demo, args.repo, args.output)):
         p.error('packaging requires --platform, --prefix, --semantic, --skia, --demo, --repo and --output')

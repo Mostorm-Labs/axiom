@@ -52,7 +52,8 @@ with tempfile.TemporaryDirectory(prefix='axiom-web-sdk-') as tmp:
        '-DProtobuf_DIR='+str(a.semantic_root.resolve()/'lib/cmake/protobuf'),
        '-DCMAKE_PREFIX_PATH='+str(a.semantic_root.resolve()),
        '-DCanvasSkia_DIR='+str(skia/'lib/cmake/CanvasSkia')],
-      ['cmake','--build',str(build)]]
+      ['cmake','--build',str(build)],
+      [str(a.emsdk/'node/24.19.0_64bit/node.exe'), str(Path(__file__).parent/'control_api_test.mjs')]]
     commands[1].append('-DAXIOM_NLOHMANN_INCLUDE_DIR='+str(source/'json'))
     for command in commands:
         run=subprocess.run(command,text=True,capture_output=True,env=env,check=False)
@@ -62,6 +63,8 @@ with tempfile.TemporaryDirectory(prefix='axiom-web-sdk-') as tmp:
     else:
         shutil.copyfile(source/'index.html',build/'index.html')
         shutil.copyfile(source/'pointer_input.mjs',build/'pointer_input.mjs')
+        shutil.copyfile(source/'control_api.mjs',build/'control_api.mjs')
+        shutil.copyfile(source/'control_api.d.mts',build/'control_api.d.mts')
         shutil.copyfile(source/'text_input.mjs',build/'text_input.mjs')
         shutil.copyfile(source/'serve.py',build/'serve.py')
         command=[str(a.emsdk/'node/24.19.0_64bit/node.exe'),str(Path(__file__).parent/'verify_browser.mjs'),
@@ -109,7 +112,7 @@ with tempfile.TemporaryDirectory(prefix='axiom-web-sdk-') as tmp:
                 manifest.write_bytes(original)
         if result['status']=='PASS_SCOPED' and a.export_dir:
             files=['index.html','external_web.js','external_web.wasm','external_web.data',
-                   'pointer_input.mjs','text_input.mjs','serve.py']
+                   'pointer_input.mjs','text_input.mjs','control_api.mjs','control_api.d.mts','serve.py']
             for name in files:
                 if not (build/name).is_file(): raise RuntimeError('missing browser asset: '+name)
             destination=a.export_dir.resolve()

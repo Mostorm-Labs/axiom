@@ -43,8 +43,8 @@ if (!new URLSearchParams(location.search).has('selftest')) {
 </script><script src="external_web.js"></script>
 <script type="module">
 try {
-const [{installPointerInput},{installTextInput}] = await Promise.all([
-  import('./pointer_input.mjs'), import('./text_input.mjs')]);
+const [{installPointerInput},{installTextInput},{createCanvasControls}] = await Promise.all([
+  import('./pointer_input.mjs'), import('./text_input.mjs'), import('./control_api.mjs')]);
 await runtimeReady;
 const manual = !new URLSearchParams(location.search).has('selftest');
 const canvas = document.getElementById('surface');
@@ -63,6 +63,8 @@ if (manual) {
   textInput = installTextInput({module:Module, handle:1, canvas, stage:document.getElementById('stage'),
     schedule:()=>{Module._sdk_schedule();queueMicrotask(syncFormat);}});
   window.externalTextInput = textInput;
+  const controls = createCanvasControls({module:Module, beforeCommand:()=>textInput.finish()});
+  window.externalCanvasControls = controls;
   const button = document.getElementById('external-text-tool');
   button.addEventListener('click', async()=>{
     try {
@@ -83,14 +85,14 @@ if (manual) {
     } catch (error) { document.getElementById('result').textContent = `FAIL: ${error}`; }
   });
   const invoke = async(action, value, selectedButton=null) => {
-    try { await textInput.finish(); if (!Module._sdk_control(action,value)) throw new Error('Control rejected'); if(selectedButton)selectTool(selectedButton); refreshStatus(); Module._sdk_schedule(); }
+    try { await controls.control(action,value); if(selectedButton)selectTool(selectedButton); refreshStatus(); }
     catch(error) { document.getElementById('result').textContent=`FAIL: ${error}`; }
   };
   document.getElementById('external-select').addEventListener('click',event=>invoke(0,1,event.currentTarget));
   for (const button of document.querySelectorAll('[data-action]'))
     button.addEventListener('click',()=>invoke(Number(button.dataset.action),Number(button.dataset.value),button.hasAttribute('data-tool') ? button : null));
   for (const button of document.querySelectorAll('[data-section]')) button.addEventListener('click',async()=>{
-    try { await textInput.finish(); if(!Module._sdk_section(Number(button.dataset.section)))throw new Error('Section/group command rejected'); refreshStatus(); Module._sdk_schedule(); }
+    try { await controls.section(Number(button.dataset.section)); refreshStatus(); }
     catch(error) { document.getElementById('result').textContent=`FAIL: ${error}`; }
   });
   const font=document.getElementById('external-font');
@@ -152,7 +154,7 @@ if (manual) {
     const rect=canvas.getBoundingClientRect();
     const x=(event.clientX-rect.left)*Module._sdk_logical_width()/rect.width;
     const y=(event.clientY-rect.top)*Module._sdk_logical_height()/rect.height;
-    const ok=event.ctrlKey ? Module._sdk_view(1,x,y,Math.exp(-event.deltaY*.01)) :
+    const ok=event.ctrlKey ? Module._sdk_view(1,x,y,Module._sdk_camera_scale()*Math.exp(-event.deltaY*.01)) :
       Module._sdk_view(0,-event.deltaX,-event.deltaY,1);
     if(!ok) document.getElementById('result').textContent='FAIL: viewport navigation rejected';
     textInput.sync();Module._sdk_schedule();event.preventDefault();

@@ -52,6 +52,10 @@ try {
   await cdp.send('Emulation.setDeviceMetricsOverride',{width:900,height:700,deviceScaleFactor:2,mobile:false});
   await until(`(()=>{const r=document.getElementById('stage').getBoundingClientRect(),c=document.getElementById('surface');return c.width===Math.round(r.width*2) && c.height===Math.round(r.height*2) && Module._sdk_logical_width()===r.width})()`,'resize and DPR');
   await until(`window.externalTextInput && !document.getElementById('external-text-tool').hidden`,'text tool');
+  if (!await evaluate(`typeof window.externalCanvasControls?.selectTool === 'function' && typeof window.externalCanvasControls?.group === 'function'`))
+    throw new Error('named canvas control API is missing');
+  const namedControl = await cdp.send('Runtime.evaluate',{expression:`window.externalCanvasControls.selectTool('ink').then(()=>true)`,awaitPromise:true,returnByValue:true});
+  if (namedControl.exceptionDetails || namedControl.result.value !== true) throw new Error('named Ink command failed');
   const point=async(x,y)=>await evaluate(`(()=>{const r=document.getElementById('stage').getBoundingClientRect();return {x:r.left+${x},y:r.top+${y}}})()`);
   const clickAndDrag=async(start,end)=>{
     const a=await point(...start), b=await point(...end);
@@ -214,10 +218,16 @@ try {
   await evaluate(`document.getElementById('external-section').click()`);
   await until(`Module._sdk_object_count()===${beforeShape + 4}`,'Section creation');
   if (!await evaluate(`!!Module._sdk_camera_scale`)) throw new Error('viewport navigation is missing');
-  const oldScale=await evaluate('Module._sdk_camera_scale()');
   const wheelPoint=await point(300,200);
+  if (!await evaluate('Module._sdk_view(1,300,200,1)')) throw new Error('could not initialize zoom');
+  const oldScale=await evaluate('Module._sdk_camera_scale()');
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...wheelPoint,deltaX:0,deltaY:-60,modifiers:2});
-  await until(`Module._sdk_camera_scale()!==${oldScale}`,'wheel zoom');
+  await until(`Module._sdk_camera_scale()>${oldScale}+0.01`,'first wheel zoom');
+  const firstScale=await evaluate('Module._sdk_camera_scale()');
+  await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...wheelPoint,deltaX:0,deltaY:-60,modifiers:2});
+  await until(`Module._sdk_camera_scale()>${firstScale}+0.01`,'cumulative wheel zoom');
+  await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...wheelPoint,deltaX:0,deltaY:60,modifiers:2});
+  await until(`Math.abs(Module._sdk_camera_scale()-${firstScale})<0.01`,'reverse wheel zoom');
   if(events.some(e=>e.method==='Runtime.exceptionThrown'))throw new Error('browser exception');
   // A misconfigured generic server must not claim the input handlers are ready.
   badServer=http.createServer(async(req,res)=>{try{

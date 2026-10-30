@@ -49,6 +49,18 @@ def verify_bundle(platform, archive, env, emsdk=None, chrome=None):
             run([emsdk / 'node/24.19.0_64bit/node.exe',
                  Path(__file__).resolve().parents[2] / 'verification/sdk_web_external/verify_manual_browser.mjs',
                  build, chrome], env)
+            run([emsdk / 'node/24.19.0_64bit/node.exe',
+                 Path(__file__).resolve().parents[2] / 'verification/sdk_js/verify_browser.mjs',
+                 root / 'sdk/js', chrome], env)
+
+
+def verify_js_bundle(archive, env, emsdk, chrome):
+    with tempfile.TemporaryDirectory(prefix='axiom-js-package-') as temp:
+        root = Path(temp).resolve()
+        with zipfile.ZipFile(archive) as package:
+            package.extractall(root)
+        run([emsdk / 'node/24.19.0_64bit/node.exe',
+             Path(__file__).resolve().parents[2] / 'verification/sdk_js/verify_browser.mjs', root, chrome], env)
 
 
 def main():
@@ -94,7 +106,7 @@ def main():
                     'EMSDK_PYTHON': sys.executable,
                     'EMSDK_NODE': str(emsdk / 'node/24.19.0_64bit/node.exe')})
         env['PATH'] = str(emsdk / 'upstream/emscripten') + os.pathsep + env['PATH']
-        configure += ['-DCMAKE_TOOLCHAIN_FILE=' + (emsdk / 'upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake').as_posix()]
+        configure += ['-DCMAKE_TOOLCHAIN_FILE=' + (emsdk / 'upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake').as_posix(), '-DAXIOM_BUILD_JS_SDK=ON']
     run(configure, env)
     if args.platform == 'windows':
         config = build / 'AxiomRuntimeConfig.cmake'
@@ -104,7 +116,7 @@ def main():
                    'axiom_sdk_public_document_identity_tests', 'axiom_sdk_public_document_operations_tests',
                    'axiom_sdk_public_document_snapshot_tests', 'axiom_fc08_section_codec_tests']
     else:
-        targets = ['axiom_web_runtime_adapter', 'axiom_canvas_demo_web']
+        targets = ['axiom_web_runtime_adapter', 'axiom_canvas_demo_web', 'axiom_js_runtime']
     run(['cmake', '--build', build, '--target', *targets, '--parallel', '6'], env)
     if args.platform == 'windows':
         run(['ctest', '--test-dir', build, '-R',
@@ -115,6 +127,8 @@ def main():
              '--semantic-root', semantic, '--skia-root', skia, '--output', build / 'windows-external.json'], env)
         demo = build / 'apps/minimal_runtime_host'
     else:
+        run([emsdk / 'node/24.19.0_64bit/node.exe', repo / 'verification/sdk_js/api_test.mjs'], env)
+        run([emsdk / 'node/24.19.0_64bit/node.exe', repo / 'verification/sdk_js/verify_browser.mjs', build / 'sdk/web', args.chrome], env)
         demo = build / ('external-web-demo-' + args.revision[:12])
         run([sys.executable, repo / 'verification/sdk_web_external/run_external.py', '--build', build,
              '--semantic-root', semantic, '--skia-root', skia, '--emsdk', emsdk, '--chrome', args.chrome,
@@ -122,6 +136,10 @@ def main():
     run(['cmake', '--install', build, '--prefix', prefix], env)
     assets = build_assets(args.platform, prefix, semantic, skia, demo, repo, args.output, args.revision)
     verify_bundle(args.platform, assets[0], env, emsdk if args.platform == 'web' else None, args.chrome)
+    if args.platform == 'web':
+        if len(assets) != 3:
+            raise RuntimeError('standalone JavaScript SDK asset is missing')
+        verify_js_bundle(assets[2], env, emsdk, args.chrome)
 
 
 if __name__ == '__main__':

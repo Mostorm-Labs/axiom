@@ -1,0 +1,28 @@
+<!doctype html><meta charset="utf-8"><title>Axiom JavaScript SDK</title>
+<style>body{margin:0;height:100vh;display:flex;flex-direction:column;font:14px system-ui}nav{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:#eef2f6}button[aria-pressed=true]{background:#a9d5ff}#canvas{flex:1;min-height:160px}#status{padding:5px;margin:0}</style>
+<nav id="tools"></nav><div id="canvas"></div><pre id="status">Loading SDK…</pre>
+<input id="file" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+const tools=document.getElementById('tools'),status=document.getElementById('status');
+const fail=e=>{status.textContent=`${e.code||'ERROR'}: ${e.message}`;};
+let sdk, active;
+const show=()=>{const s=sdk.readState();status.textContent=`${s.objects} objects · ${s.selected.length} selected · Zoom ${s.camera.scale.toFixed(2)}`;};
+const add=(label,action,isTool=false)=>{const button=document.createElement('button');button.textContent=label;button.type='button';tools.append(button);
+  button.onclick=async()=>{try{await action();if(isTool){active?.setAttribute('aria-pressed','false');active=button;active.setAttribute('aria-pressed','true');}show();}catch(e){fail(e);}};return button;};
+try{
+ sdk=await createRuntime({mount:document.getElementById('canvas'),permission:'localSingleUser',onError:fail,onChange:()=>show()});
+ for(const [label,tool] of [['Ink','ink'],['Select','select'],['Object eraser','objectEraser'],['Partial eraser','partialEraser'],['Hand','hand'],['Text','text']])add(label,()=>sdk.selectTool(tool),true);
+ for(const shape of ['rectangle','ellipse','triangle','sticky','arrow'])add(shape==='arrow'?'Connector':shape,()=>sdk.selectShape(shape),true);
+ for(const mode of ['point','rectangle','lasso'])add(`${mode} selection`,()=>sdk.setSelectionMode(mode),true);
+ for(const [label,action] of [['Undo',()=>sdk.undo()],['Redo',()=>sdk.redo()],['Fit',()=>sdk.fitContent()],['Group',()=>sdk.group()],['Ungroup',()=>sdk.ungroup()],['Enter group',()=>sdk.enterGroup()],['Leave group',()=>sdk.leaveGroup()],['Section',()=>sdk.createSection()],['Delete',()=>sdk.deleteSelection()]])add(label,action);
+ for(const [label,size] of [['Title',32],['Heading',24],['Subheading',20],['Body',16]]){const b=add(label,()=>sdk.text.format({fontSize:size}));b.onpointerdown=()=>sdk.text.completeComposition().catch(fail);}
+ for(const field of ['bold','italic','underline','strikethrough','bulleted']){const b=add(field,()=>sdk.text.format({[field]:!sdk.text.read().format[field]}));b.onpointerdown=()=>sdk.text.completeComposition().catch(fail);}
+ const file=document.getElementById('file');let replace=false;
+ add('Import image',()=>{replace=false;file.value='';file.click();});add('Replace image',()=>{replace=true;file.value='';file.click();});
+ file.onchange=async()=>{try{const f=file.files?.[0];if(!f)return;const bytes=new Uint8Array(await f.arrayBuffer());if(replace)await sdk.replaceImage(bytes,f.type);else await sdk.importImage(bytes,f.type);show();}catch(e){fail(e);}};
+ add('Crop',()=>sdk.beginCrop(sdk.readSelectedImage().objectId));add('Crop done',()=>sdk.commitCrop(sdk.readCrop().token));add('Crop cancel',()=>sdk.cancelCrop(sdk.readCrop().token));
+ active=tools.firstElementChild;active.setAttribute('aria-pressed','true');show();
+ window.addEventListener('pagehide',()=>{void sdk.close().catch(fail);},{once:true});
+}catch(e){fail(e);}
+</script>

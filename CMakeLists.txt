@@ -151,6 +151,10 @@ endif()
 if(CANVAS_BUILD_RENDER OR CANVAS_BUILD_RF01)
   add_subdirectory(runtime/render)
   add_subdirectory(runtime/composition)
+  option(AXIOM_BUILD_JS_SDK "Build the standalone JavaScript/WASM SDK" OFF)
+  if(EMSCRIPTEN AND AXIOM_BUILD_JS_SDK)
+    add_subdirectory(sdk/web)
+  endif()
   # Initial C++ consumer profile: Windows x64 Release with the locked static
   # Semantic and Skia SDKs. Other platforms require their own package profile.
   if(WIN32 AND MSVC AND NOT EMSCRIPTEN AND CANVAS_SEMANTIC_ENABLE_PROTOBUF AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS

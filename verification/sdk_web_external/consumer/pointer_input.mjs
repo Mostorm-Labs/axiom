@@ -8,6 +8,7 @@ export function installPointerInput({canvas, logicalSize, submit, lifecycle = gl
     if (!source) return;
     const previous = active.get(key);
     if ((phase === 0 && previous) || (phase !== 0 && !previous)) return;
+    if (previous && Math.round(event.timeStamp * 1000000) < previous.born) return;
     const rect = canvas.getBoundingClientRect(), [width, height] = logicalSize();
     if (!(rect.width > 0 && rect.height > 0 && width > 0 && height > 0)) return;
     const history = phase === 1 && event.getCoalescedEvents ? event.getCoalescedEvents() : [];
@@ -35,7 +36,7 @@ export function installPointerInput({canvas, logicalSize, submit, lifecycle = gl
         if (canvas.hasPointerCapture?.(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
         return;
       }
-      timestamp = time; active.set(key, {timestamp, fact});
+      timestamp = time; active.set(key, {timestamp, fact, born: previous?.born ?? Math.round(event.timeStamp * 1000000)});
     }
     if (phase === 2 || phase === 3) {
       active.delete(key);
@@ -50,17 +51,20 @@ export function installPointerInput({canvas, logicalSize, submit, lifecycle = gl
     ['lostpointercapture', e => { if (!canvas.hasPointerCapture?.(e.pointerId)) forward(e, 3); }],
   ];
   function cancelAll() {
-    for (const {fact} of active.values()) {
+    const pending = [...active.values()];
+    active.clear();
+    for (const {fact} of pending) {
       submit({...fact, phase: 3, timestampNs: fact.timestampNs + 1, historical: false});
       if (canvas.hasPointerCapture?.(fact.pointer)) canvas.releasePointerCapture(fact.pointer);
     }
-    active.clear();
   }
   for (const [name, listener] of listeners) canvas.addEventListener(name, listener);
   lifecycle?.addEventListener('blur', cancelAll);
-  return () => {
+  const dispose = () => {
     cancelAll();
     for (const [name, listener] of listeners) canvas.removeEventListener(name, listener);
     lifecycle?.removeEventListener('blur', cancelAll);
   };
+  dispose.cancelAll = cancelAll;
+  return dispose;
 }

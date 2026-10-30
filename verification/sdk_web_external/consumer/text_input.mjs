@@ -1,5 +1,7 @@
 // Native input carrier only. Runtime owns text, ranges, layout, history and IDs.
 export function installTextInput({module,handle,canvas,stage,schedule}) {
+  const events = new AbortController();
+  const listen = (target, type, handler) => target.addEventListener(type, handler, {signal: events.signal});
   const carrier=document.createElement('textarea');carrier.id='axiom-ime';carrier.setAttribute('aria-label','Canvas text input');carrier.spellcheck=false;
   // The carrier follows the caret for native IME placement, but pointer selection
   // belongs to the canvas. In particular it must not steal a double-click's second Down.
@@ -71,9 +73,9 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
     while((s=snapshot()).phase!==0 && s.exit!==4 && performance.now()<until)await new Promise(resolve=>setTimeout(resolve,8));
     if(s.phase!==0){fault=s.exit===4?'IME completion rejected; retry or cancel':'IME completion pending native result';stage.dataset.textError=fault;throw new Error(fault);}return true;
   }
-  carrier.addEventListener('compositionstart',()=>{nativeComposing=true;nativePreedit='';terminal=null;compositionRange=snapshot().selection;compositionToken=snapshot().token;enqueue({kind:0,epoch:++epoch});});
-  carrier.addEventListener('compositionupdate',event=>{nativePreedit=event.data;enqueue({kind:1,text:event.data});});
-  carrier.addEventListener('input',event=>{
+  listen(carrier,'compositionstart',()=>{nativeComposing=true;nativePreedit='';terminal=null;compositionRange=snapshot().selection;compositionToken=snapshot().token;enqueue({kind:0,epoch:++epoch});});
+  listen(carrier,'compositionupdate',event=>{nativePreedit=event.data;enqueue({kind:1,text:event.data});});
+  listen(carrier,'input',event=>{
     // compositionupdate precedes the browser's carrier mutation. Read native
     // selection only after input, relative to the pinned composition range.
     if(!nativeComposing || !event.isComposing || !compositionRange)return;
@@ -83,8 +85,8 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
     if(update?.kind===1 && update.text===nativePreedit)update.preeditSelection=[start,end-start];
     else enqueue({kind:1,text:nativePreedit,preeditSelection:[start,end-start]});
   });
-  carrier.addEventListener('compositionend',event=>{if(!nativeComposing)return;nativeComposing=false;terminal={epoch,wire:null};enqueue({kind:event.data?2:3,text:event.data,terminal});compositionRange=null;compositionToken=null;});
-  carrier.addEventListener('beforeinput',event=>{
+  listen(carrier,'compositionend',event=>{if(!nativeComposing)return;nativeComposing=false;terminal={epoch,wire:null};enqueue({kind:event.data?2:3,text:event.data,terminal});compositionRange=null;compositionToken=null;});
+  listen(carrier,'beforeinput',event=>{
     if(nativeComposing||event.isComposing||['insertCompositionText','deleteCompositionText','insertFromComposition'].includes(event.inputType))return;
     event.preventDefault();if(terminal && event.inputType==='insertText'){enqueue({kind:2,text:event.data||'',terminal});return;}
     if(['insertText','insertReplacementText'].includes(event.inputType))enqueue({kind:4,text:event.data||'',range:[carrier.selectionStart,carrier.selectionEnd-carrier.selectionStart]});
@@ -93,20 +95,20 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
     else if(event.inputType==='insertLineBreak'||event.inputType==='insertParagraph')enqueue({intent:2});
     else{fault=`Unsupported native input: ${event.inputType}`;stage.dataset.textError=fault;sync();}
   });
-  carrier.addEventListener('paste',event=>{if(nativeComposing)return;event.preventDefault();terminal=null;enqueue({kind:4,text:event.clipboardData.getData('text/plain')});});
-  carrier.addEventListener('keydown',event=>{
+  listen(carrier,'paste',event=>{if(nativeComposing)return;event.preventDefault();terminal=null;enqueue({kind:4,text:event.clipboardData.getData('text/plain')});});
+  listen(carrier,'keydown',event=>{
     terminal=null;if(event.isComposing||nativeComposing||event.keyCode===229){event.stopPropagation();return;}
     const kind=event.key==='Enter'?(event.ctrlKey?3:2):event.key==='Escape'?4:event.key==='Backspace'?8:event.key==='Delete'?9:event.key==='ArrowLeft'?10:event.key==='ArrowRight'?11:(event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='a'?12:undefined;
     if(kind!==undefined){event.preventDefault();event.stopPropagation();enqueue({intent:kind});}
   });
-  carrier.addEventListener('blur',()=>{if(snapshot().phase!==0)enqueue({intent:keepOnBlur?14:2});});
-  canvas.tabIndex=0;canvas.addEventListener('pointerdown',()=>{keepOnBlur=false;
+  listen(carrier,'blur',()=>{if(snapshot().phase!==0)enqueue({intent:keepOnBlur?14:2});});
+  canvas.tabIndex=0;listen(canvas,'pointerdown',()=>{keepOnBlur=false;
     // A canvas click is an editor pointer fact, not a focus exit. Moving focus
     // off the native carrier here would finish the session before Runtime can
     // locate the clicked glyph (or request native completion for an outside hit).
     if(snapshot().phase===0 || document.activeElement!==carrier)canvas.focus({preventScroll:true});
   });
-  canvas.addEventListener('dblclick',event=>{event.preventDefault();
+  listen(canvas,'dblclick',event=>{event.preventDefault();
     // Touch double-taps are already routed through Runtime's pointer path.
     // The browser's compatibility mouse event must not submit them again.
     if(event.sourceCapabilities?.firesTouchEvents)return;
@@ -116,5 +118,5 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
     canvas.focus({preventScroll:true});
     return intent(13,{x:event.clientX-rect.left,y:event.clientY-rect.top});
   }).catch(error=>{stage.dataset.textError=String(error);});});
-  return {snapshot,sync,intent,finish,complete,composing:()=>nativeComposing,error:()=>fault||geometryFault,fontCatalog,fontStatus,receipt,dispose(){disposed=true;carrier.remove();}};
+  return {snapshot,sync,intent,finish,complete,composing:()=>nativeComposing,error:()=>fault||geometryFault,fontCatalog,fontStatus,receipt,dispose(){disposed=true;events.abort();facts.length=0;notify();carrier.remove();}};
 }

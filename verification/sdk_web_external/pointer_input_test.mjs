@@ -49,4 +49,14 @@ send('pointerdown', {...base, pointerId: 12, timeStamp: 50});
 stop();
 assert.equal(facts.at(-1).phase, 3, 'dispose cancels active pointer');
 assert.equal(target.hasPointerCapture(12), false);
+const lateFacts=[];
+const lateTarget=new Target();
+const disposeLate=installPointerInput({canvas:lateTarget,logicalSize:()=>[200,100],lifecycle,
+  submit:fact=>{lateFacts.push(fact);return true;}});
+function lateSend(type,timeStamp){const e=new Event(type,{cancelable:true});for(const [key,value]of Object.entries({...base,timeStamp}))Object.defineProperty(e,key,{value});lateTarget.dispatchEvent(e);}
+lateSend('pointerdown',100);lateSend('pointerup',110);lateSend('pointerdown',200);
+const beforeLate=lateFacts.length;lateSend('pointerup',120);
+assert.equal(lateFacts.length,beforeLate,'a delayed terminal event must not close a reused pointer contact');
+lateSend('pointermove',210);assert.equal(lateFacts.at(-1).phase,1);
+disposeLate();
 console.log('pointer input tests PASS');
