@@ -89,3 +89,11 @@ candidate windows, physical touch and page teardown during composition remain
 manual checks. The provided `loadHostFonts` entry is the
 existing fixed application catalog and must run once at startup, before other
 resources or document content.
+
+Run `python serve.py --port 4186` from the exported directory and open the
+printed loopback URL. The supplied server explicitly serves `.mjs` as
+JavaScript and `.wasm` as WebAssembly; on some Windows systems the standard
+`python -m http.server` serves `.mjs` as `text/plain`, which browsers reject.
+The status becomes READY only after both Runtime and DOM input handlers initialize.
+Tool buttons turn blue only after the Runtime accepts the selected tool; Undo,
+Redo and other one-shot actions leave the active tool unchanged.

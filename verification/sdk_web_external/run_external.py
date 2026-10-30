@@ -21,6 +21,7 @@ env['EM_CONFIG'] = str(a.emsdk / '.emscripten')
 env['EMSDK_PYTHON'] = sys.executable
 env['EMSDK_NODE'] = str(a.emsdk / 'node/24.19.0_64bit/node.exe')
 env['EMSDK'] = str(a.emsdk)
+env['AXIOM_SDK_PYTHON'] = sys.executable
 env['PATH'] = str(a.emsdk / 'upstream/emscripten') + os.pathsep + env['PATH']
 result = {'status':'NOT_RUN','steps':[]}
 with tempfile.TemporaryDirectory(prefix='axiom-web-sdk-') as tmp:
@@ -62,6 +63,7 @@ with tempfile.TemporaryDirectory(prefix='axiom-web-sdk-') as tmp:
         shutil.copyfile(source/'index.html',build/'index.html')
         shutil.copyfile(source/'pointer_input.mjs',build/'pointer_input.mjs')
         shutil.copyfile(source/'text_input.mjs',build/'text_input.mjs')
+        shutil.copyfile(source/'serve.py',build/'serve.py')
         command=[str(a.emsdk/'node/24.19.0_64bit/node.exe'),str(Path(__file__).parent/'verify_browser.mjs'),
                  str(build),str(a.chrome.resolve())]
         try:
@@ -107,7 +109,7 @@ with tempfile.TemporaryDirectory(prefix='axiom-web-sdk-') as tmp:
                 manifest.write_bytes(original)
         if result['status']=='PASS_SCOPED' and a.export_dir:
             files=['index.html','external_web.js','external_web.wasm','external_web.data',
-                   'pointer_input.mjs','text_input.mjs']
+                   'pointer_input.mjs','text_input.mjs','serve.py']
             for name in files:
                 if not (build/name).is_file(): raise RuntimeError('missing browser asset: '+name)
             destination=a.export_dir.resolve()

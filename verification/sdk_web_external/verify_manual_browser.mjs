@@ -7,7 +7,7 @@ import {spawn} from 'node:child_process';
 const build=path.resolve(process.argv[2]), chrome=path.resolve(process.argv[3]);
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 const profile=await fs.mkdtemp(path.join(os.tmpdir(),'axiom-external-chrome-'));
-let server,browser,socket,failed=''; const events=[];
+let server,badServer,browser,socket,failed=''; const events=[];
 class CDP {
   constructor(ws){this.ws=ws;this.id=0;this.pending=new Map();ws.addEventListener('message',e=>{
     const m=JSON.parse(e.data); if(!m.id){events.push(m);return;}
@@ -20,16 +20,12 @@ class CDP {
   });}
 }
 try {
-  server=http.createServer(async(req,res)=>{try {
-    const name=decodeURIComponent(new URL(req.url,'http://127.0.0.1').pathname);
-    const target=path.resolve(build,'.'+(name==='/'?'/index.html':name));
-    if(!target.startsWith(build+path.sep))throw new Error('outside consumer');
-    const bytes=await fs.readFile(target);
-    res.setHeader('Content-Type',target.endsWith('.wasm')?'application/wasm':
-      /\.m?js$/.test(target)?'text/javascript':target.endsWith('.data')?'application/octet-stream':'text/html');
-    res.end(bytes);
-  }catch{res.statusCode=404;res.end();}});
-  await new Promise(r=>server.listen(0,'127.0.0.1',r));
+  server=spawn(process.env.AXIOM_SDK_PYTHON||'python',[path.join(build,'serve.py'),'--port','0','--directory',build],{stdio:['ignore','pipe','pipe'],windowsHide:true});
+  let base='',serverError=''; server.stdout.on('data',chunk=>{base+=String(chunk);});server.stderr.on('data',chunk=>{serverError+=String(chunk);});
+  for(let i=0;i<200 && !base.includes('\n') && server.exitCode===null;i++)await delay(50);
+  base=base.trim();if(!/^http:\/\/127\.0\.0\.1:\d+\/$/.test(base))throw new Error('SDK server did not start: '+serverError);
+  const moduleResponse=await fetch(base+'pointer_input.mjs');
+  if(!moduleResponse.ok || !/javascript/.test(moduleResponse.headers.get('content-type')||''))throw new Error('SDK server does not serve ES modules as JavaScript');
   const args=['--headless=new','--no-first-run','--no-default-browser-check','--enable-unsafe-swiftshader',
     '--use-angle=swiftshader','--remote-debugging-port=0',`--user-data-dir=${profile}`,'about:blank'];
   browser=spawn(chrome,args,{stdio:'ignore',windowsHide:true});
@@ -41,7 +37,7 @@ try {
   await new Promise((resolve,reject)=>{socket.addEventListener('open',resolve,{once:true});socket.addEventListener('error',reject,{once:true});});
   const cdp=new CDP(socket);await cdp.send('Runtime.enable');await cdp.send('Page.enable');
   await cdp.send('Emulation.setDeviceMetricsOverride',{width:1024,height:768,deviceScaleFactor:1,mobile:false});
-  await cdp.send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/index.html`});
+  await cdp.send('Page.navigate',{url:base+'index.html'});
   const evaluate=async expression=>{const r=await cdp.send('Runtime.evaluate',{expression,returnByValue:true});
     if(r.exceptionDetails)throw new Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
   async function until(expression,label){for(let i=0;i<600;i++){
@@ -63,7 +59,28 @@ try {
     await cdp.send('Input.dispatchMouseEvent',{type:'mouseMoved',...b,button:'left',buttons:1});
     await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',...b,button:'left',buttons:0,clickCount:1});
   };
-  await evaluate(`document.getElementById('external-text-tool').click()`);
+  const clickButton=async(id)=>{
+    const p=await evaluate(`(()=>{const r=document.getElementById('${id}').getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2}})()`);
+    await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',...p,button:'left',buttons:1,clickCount:1});
+    await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',...p,button:'left',buttons:0,clickCount:1});
+  };
+  if (!await evaluate(`document.getElementById('external-ink-tool').getAttribute('aria-pressed')==='true'`))
+    throw new Error('initial Ink tool is not indicated');
+  await clickButton('external-shape');
+  await delay(100);
+  await clickAndDrag([600,300],[700,380]);
+  await until(`Module._sdk_object_count()===1`,'physical button rectangle creation');
+  if (!await evaluate(`document.getElementById('external-shape').getAttribute('aria-pressed')==='true'`))
+    throw new Error('selected Rectangle tool is not indicated');
+  if (await evaluate(`document.getElementById('external-ink-tool').getAttribute('aria-pressed')`) !== 'false')
+    throw new Error('previous tool remains indicated');
+  await until(`(()=>{const c=document.getElementById('surface'),g=c.getContext('webgl2'),p=new Uint8Array(4),f=g.getParameter(g.FRAMEBUFFER_BINDING);g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(1300,c.height-680,1,1,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,f);return p[2]>p[0]+20 && p[3]>0;})()`,'rectangle visible on canvas');
+  await clickButton('external-undo');
+  await until(`Module._sdk_object_count()===0`,'physical undo button');
+  if (!await evaluate(`document.getElementById('external-shape').getAttribute('aria-pressed')==='true'`))
+    throw new Error('one-shot action incorrectly changed selected tool');
+  await clickButton('external-text-tool');
+  await until(`document.getElementById('external-text-tool').getAttribute('aria-pressed')==='true'`,'text selected state');
   const textPoint=await point(90,90);
   await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',...textPoint,button:'left',buttons:1,clickCount:1});
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',...textPoint,button:'left',buttons:0,clickCount:1});
@@ -92,6 +109,8 @@ try {
   await until(`Module._sdk_object_count()===${beforeShape + 1}`,'rectangle creation');
   if (!await evaluate(`!!Module._sdk_hover`)) throw new Error('connector hover is missing');
   await evaluate(`document.getElementById('external-select').click()`); await delay(100);
+  if (!await evaluate(`document.getElementById('external-select').getAttribute('aria-pressed')==='true' && document.getElementById('external-shape').getAttribute('aria-pressed')==='false'`))
+    throw new Error('Select tool indication is incorrect');
   const shapeCenter=await point(260,170);
   await cdp.send('Input.dispatchMouseEvent',{type:'mousePressed',...shapeCenter,button:'left',buttons:1,clickCount:1});
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseReleased',...shapeCenter,button:'left',buttons:0,clickCount:1});
@@ -145,14 +164,35 @@ try {
   await cdp.send('Input.dispatchMouseEvent',{type:'mouseWheel',...wheelPoint,deltaX:0,deltaY:-60,modifiers:2});
   await until(`Module._sdk_camera_scale()!==${oldScale}`,'wheel zoom');
   if(events.some(e=>e.method==='Runtime.exceptionThrown'))throw new Error('browser exception');
+  // A misconfigured generic server must not claim the input handlers are ready.
+  badServer=http.createServer(async(req,res)=>{try{
+    const name=decodeURIComponent(new URL(req.url,'http://127.0.0.1').pathname);
+    const target=path.resolve(build,'.'+(name==='/'?'/index.html':name));
+    if(!target.startsWith(build+path.sep))throw new Error('outside consumer');
+    const bytes=await fs.readFile(target);
+    res.setHeader('Content-Type',target.endsWith('.mjs')?'text/plain':target.endsWith('.wasm')?'application/wasm':
+      target.endsWith('.js')?'text/javascript':target.endsWith('.data')?'application/octet-stream':'text/html');res.end(bytes);
+  }catch{res.statusCode=404;res.end();}});
+  await new Promise(resolve=>badServer.listen(0,'127.0.0.1',resolve));
+  await cdp.send('Page.navigate',{url:`http://127.0.0.1:${badServer.address().port}/index.html?badmime=1`});
+  let badStatus='';
+  for(let i=0;i<200;i++){
+    if(!await evaluate(`location.search.includes('badmime=1')`)){await delay(50);continue;}
+    badStatus=await evaluate(`document.getElementById('result')?.textContent||''`);
+    if(badStatus.startsWith('FAIL: Web input setup failed'))break;
+    if(badStatus.startsWith('READY'))throw new Error('bad MIME incorrectly reported READY');
+    await delay(50);
+  }
+  if(!badStatus.startsWith('FAIL: Web input setup failed'))throw new Error('bad MIME failure was not reported: '+badStatus);
   console.log(JSON.stringify({status:'PASS_SCOPED',consumer:build,chrome,args,coverage:[
+    'correct MIME server and visible failure on incorrect MIME','real pointer button selection, blue active state and rendered pixels',
     'responsive canvas and DPR resize','synthetic Chrome IME composition/result and text size',
     'ink, rectangle and sticky','rectangle selection and group/ungroup','undo/redo',
     'synthetic image file import, crop zoom and cancel','Section creation','wheel zoom']}));
   try{await cdp.send('Browser.close');}catch{}
 } catch(e){failed=String(e.stack??e);console.error(failed);}
 finally {
-  socket?.close();browser?.kill();if(server)await new Promise(r=>server.close(r));
+  socket?.close();browser?.kill();server?.kill();if(badServer)await new Promise(resolve=>badServer.close(resolve));
   const temp=await fs.realpath(os.tmpdir()), resolved=await fs.realpath(profile);
   if(!resolved.startsWith(temp+path.sep)||!path.basename(resolved).startsWith('axiom-external-chrome-'))
     throw new Error('refusing to remove unexpected browser profile');

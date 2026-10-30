@@ -59,7 +59,9 @@ void tick() {
     }
   }
   if (interactive) {
-    if (!interactiveReady) { status("READY"); interactiveReady = true; }
+    if (!interactiveReady && EM_ASM_INT({ return window.__axiomHostReady ? 1 : 0; })) {
+      status("READY"); interactiveReady = true;
+    }
     return;
   }
   if (!upSeen && !recoveryStarted) { status("READY"); return; }

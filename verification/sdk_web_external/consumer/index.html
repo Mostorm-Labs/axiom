@@ -33,18 +33,30 @@ let runtimeReadyResolve;
 const runtimeReady = new Promise(resolve => { runtimeReadyResolve = resolve; });
 var Module={canvas:document.getElementById('surface'),onRuntimeInitialized:()=>runtimeReadyResolve(),
   onAbort:x=>{document.getElementById('result').textContent='FAIL: '+x}};
+window.addEventListener('error',event=>{document.getElementById('result').textContent='FAIL: '+(event.message||'Failed to load a page resource');});
+window.addEventListener('unhandledrejection',event=>{document.getElementById('result').textContent='FAIL: '+String(event.reason);});
 if (!new URLSearchParams(location.search).has('selftest')) {
   document.body.classList.add('manual'); document.getElementById('toolbar').hidden = false;
 }
 </script><script src="external_web.js"></script>
 <script type="module">
-import {installPointerInput} from './pointer_input.mjs';
-import {installTextInput} from './text_input.mjs';
+try {
+const [{installPointerInput},{installTextInput}] = await Promise.all([
+  import('./pointer_input.mjs'), import('./text_input.mjs')]);
 await runtimeReady;
 const manual = !new URLSearchParams(location.search).has('selftest');
 const canvas = document.getElementById('surface');
 let textInput;
 let syncFormat=()=>{};
+let currentTool = null;
+function selectTool(button) {
+  for (const item of document.querySelectorAll('[data-tool]'))
+    item.setAttribute('aria-pressed', item === button ? 'true' : 'false');
+  currentTool = button;
+}
+function refreshStatus() {
+  document.getElementById('result').textContent = `READY · ${currentTool?.textContent || 'Ink'} · Objects: ${Module._sdk_object_count()}`;
+}
 if (manual) {
   textInput = installTextInput({module:Module, handle:1, canvas, stage:document.getElementById('stage'),
     schedule:()=>{Module._sdk_schedule();queueMicrotask(syncFormat);}});
@@ -55,6 +67,7 @@ if (manual) {
       await textInput.finish();
       if (!Module._axiom_web_text_tool(1) || !Module._axiom_web_text_pump(1))
         throw new Error('Text tool rejected');
+      selectTool(button); refreshStatus();
       Module._sdk_schedule();
     } catch (error) { document.getElementById('result').textContent = `FAIL: ${error}`; }
   });
@@ -63,18 +76,19 @@ if (manual) {
     try {
       await textInput.finish();
       if (!Module._sdk_ink_tool()) throw new Error('Ink tool rejected');
+      selectTool(ink); refreshStatus();
       Module._sdk_schedule();
     } catch (error) { document.getElementById('result').textContent = `FAIL: ${error}`; }
   });
-  const invoke = async(action, value) => {
-    try { await textInput.finish(); if (!Module._sdk_control(action,value)) throw new Error('Control rejected'); Module._sdk_schedule(); }
+  const invoke = async(action, value, selectedButton=null) => {
+    try { await textInput.finish(); if (!Module._sdk_control(action,value)) throw new Error('Control rejected'); if(selectedButton)selectTool(selectedButton); refreshStatus(); Module._sdk_schedule(); }
     catch(error) { document.getElementById('result').textContent=`FAIL: ${error}`; }
   };
-  document.getElementById('external-select').addEventListener('click',()=>invoke(0,1));
+  document.getElementById('external-select').addEventListener('click',event=>invoke(0,1,event.currentTarget));
   for (const button of document.querySelectorAll('[data-action]'))
-    button.addEventListener('click',()=>invoke(Number(button.dataset.action),Number(button.dataset.value)));
+    button.addEventListener('click',()=>invoke(Number(button.dataset.action),Number(button.dataset.value),button.hasAttribute('data-tool') ? button : null));
   for (const button of document.querySelectorAll('[data-section]')) button.addEventListener('click',async()=>{
-    try { await textInput.finish(); if(!Module._sdk_section(Number(button.dataset.section)))throw new Error('Section/group command rejected'); Module._sdk_schedule(); }
+    try { await textInput.finish(); if(!Module._sdk_section(Number(button.dataset.section)))throw new Error('Section/group command rejected'); refreshStatus(); Module._sdk_schedule(); }
     catch(error) { document.getElementById('result').textContent=`FAIL: ${error}`; }
   });
   const font=document.getElementById('external-font');
@@ -147,12 +161,15 @@ if (manual) {
     Module._sdk_hover((event.clientX-rect.left)*Module._sdk_logical_width()/rect.width,
       (event.clientY-rect.top)*Module._sdk_logical_height()/rect.height);
   });
+  for (const element of [ink,button,document.getElementById('external-select'),...document.querySelectorAll('[data-action="0"],[data-action="1"],[data-action="2"]')]) element.dataset.tool='';
+  selectTool(ink);
 }
 const dispose = installPointerInput({canvas:document.getElementById('surface'),
   logicalSize:()=>[Module._sdk_logical_width(),Module._sdk_logical_height()], submit:f=>{
   const accepted=Module._sdk_input(f.source,f.pointer,f.phase,f.x,f.y,f.timestampNs,f.pressure,
     f.pressureAvailable,f.width,f.height,f.geometryAvailable,f.historical,f.shift);
   if(!accepted) document.getElementById('result').textContent='FAIL: pointer';
+  else if(manual) refreshStatus();
   if (textInput) queueMicrotask(()=>{textInput.sync();syncFormat();});
   return !!accepted;
 }});
@@ -170,4 +187,8 @@ const observer = manual ? new ResizeObserver(()=>{
 }) : null;
 observer?.observe(document.getElementById('stage'));
 window.addEventListener('pagehide', ()=>{ clearTimeout(resizeTimer); observer?.disconnect(); dispose(); textInput?.dispose(); Module._sdk_shutdown(); }, {once:true});
+window.__axiomHostReady = true;
+} catch(error) {
+  document.getElementById('result').textContent = `FAIL: Web input setup failed (${error}); use serve.py for JavaScript module MIME types`;
+}
 </script>
