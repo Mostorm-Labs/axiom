@@ -117,3 +117,11 @@ profile explicitly and has a bounded 45-second environment startup deadline.
 All SUT/frame deadlines/assertions remain unchanged. A manual probe-only workflow
 qualifies only Chrome availability and cannot publish or establish product PASS.
 The same local full browser/frame/example suite passed through this launcher.
+
+The independent hosted probe (run 41112537781, b9e94550) observed real
+Chrome 156.0.8078.48 reaching its debugging endpoint in 11,835 ms, longer than
+the old 10-second launcher window. This establishes the environment deadline
+cause. The 45-second bounded launcher qualified that same hosted environment;
+it does not relax Runtime frame or consumer assertions. Standard Web release
+jobs now run this environment preflight before the SDK build. CI evidence
+artifact names include the attempt number to retain prior failed observations.
