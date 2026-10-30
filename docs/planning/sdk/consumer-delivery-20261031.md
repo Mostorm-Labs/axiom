@@ -81,3 +81,29 @@ snapshots omit Undo history and resource blobs. A transport failure after
 invocation is not evidence of canonical rollback. Earlier releases remain
 immutable. The old static developer install is opt-in, not the default consumer
 payload; existing source C++ interfaces remain available for those developers.
+
+## Final transport admission correction
+
+Before publication, real external DLL testing reproduced a numeric-enum wrap:
+`256` could become tool `0`. The first `3ff3310a` tag's workflow was cancelled
+before publication; that tag and its evidence remain immutable. The shared
+transport now validates integer type and range before narrowing, including
+creation/selection/fit, permission, text kinds and Section actions. Native
+admission checks precede editor completion, so rejected enums preserve the
+active text session. Unknown multi actions reject rather than fall through to
+property mutation. External regressions cover four invalid scalar classes
+across five controls, text-session preservation, unknown multi rejection,
+real property application, stale rejection and Undo. This is SDK transport
+validation; no Runtime semantic owner, schema, SDK lock or frozen corpus changed.
+
+The external qualification explicitly uses /MD. Exported demo binaries are then
+built and executed with /MT, and inspected for VC runtime DLL imports, so the
+ready-to-run demo does not require a VC redistributable. Both variants consume
+only the same installed public SDK. Foreign-thread rejection occurs before
+acquiring a Context ownership reference, keeping destruction on its owner.
+
+A preserved browser-driver failure occurred after all engine/frame/example
+checks passed: the target socket closed before the Browser.close CDP response.
+The driver now requires actual Chrome process exit (code 0, no signal) rather
+than an acknowledgement on a destroyed target transport; timeouts/nonzero
+exits still fail. The same complete consumer/frame/example run then passed.

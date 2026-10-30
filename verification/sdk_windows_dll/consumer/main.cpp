@@ -404,6 +404,28 @@ int main(int argc, char**) {
             }
             return 0;
         }
+        if (argc > 1) {
+            for (const auto value : {axiom::Json(256),
+                                     axiom::Json(4294967296ULL),
+                                     axiom::Json(-1),
+                                     axiom::Json(1.5)}) {
+                for (const auto* kind : {"tool", "shape", "selectionMode", "fit", "permission"}) {
+                    const auto before = runtime.state();
+                    bool rejected = false;
+                    try {
+                        if (std::string(kind) == "permission")
+                            runtime.multi({{"action", "permission"}, {"mode", value}});
+                        else
+                            runtime.control(
+                                kind, {{std::string(kind) == "fit" ? "target" : "value", value}});
+                    } catch (const axiom::Error& e) {
+                        rejected = e.status == AXIOM_REJECTED;
+                    }
+                    CHECK(rejected);
+                    CHECK(runtime.state() == before);
+                }
+            }
+        }
         runtime.rectangle();
         const auto canvas = static_cast<HWND>(runtime.window());
         SendMessageW(canvas, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(30, 30));
@@ -473,6 +495,15 @@ int main(int argc, char**) {
             SendMessageW(canvas, WM_CHAR, L'好', 0);
             runtime.frame();
             CHECK(runtime.textSnapshot().at("projection").size() == 2);
+            const auto editingBefore = runtime.textSnapshot();
+            bool invalidEditRejected = false;
+            try {
+                runtime.control("tool", {{"value", 256}});
+            } catch (const axiom::Error& e) {
+                invalidEditRejected = e.status == AXIOM_REJECTED;
+            }
+            CHECK(invalidEditRejected);
+            CHECK(runtime.textSnapshot() == editingBefore);
             SendMessageW(canvas, WM_KILLFOCUS, reinterpret_cast<WPARAM>(window), 0);
             runtime.frame();
             CHECK(runtime.textSnapshot().at("phase") == 1);
@@ -490,6 +521,40 @@ int main(int argc, char**) {
             SendMessageW(canvas, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(10, 10));
             SendMessageW(canvas, WM_LBUTTONUP, 0, MAKELPARAM(320, 170));
             CHECK(runtime.selection().at("value").at("count").get<int>() >= 2);
+            runtime.permission(1);
+            const auto projection = runtime.readMulti();
+            const auto opacity = projection.at("properties").at("3");
+            CHECK(opacity.at("available").get<bool>());
+            const auto beforeUnknown = runtime.state();
+            bool unknownRejected = false;
+            try {
+                runtime.multi({{"action", "unknown"},
+                               {"stamp", projection.at("stamp")},
+                               {"eligible", opacity.at("eligible")},
+                               {"field", 3},
+                               {"value", {{"type", "float"}, {"value", 0.5}}}});
+            } catch (const axiom::Error& e) {
+                unknownRejected = e.status == AXIOM_REJECTED;
+            }
+            CHECK(unknownRejected);
+            CHECK(runtime.state() == beforeUnknown);
+            runtime.multiSet(3,
+                             {{"type", "float"}, {"value", 0.5}},
+                             projection.at("stamp"),
+                             opacity.at("eligible"));
+            CHECK(runtime.readMulti().at("properties").at("3").at("uniformValue").at("value") ==
+                  0.5);
+            bool staleRejected = false;
+            try {
+                runtime.multiSet(3,
+                                 {{"type", "float"}, {"value", 0.7}},
+                                 projection.at("stamp"),
+                                 opacity.at("eligible"));
+            } catch (const axiom::Error& e) {
+                staleRejected = e.status == AXIOM_REJECTED;
+            }
+            CHECK(staleRejected);
+            runtime.undo();
             auto selected = runtime.state();
             auto grouped =
                 runtime.section({{"action", 10},

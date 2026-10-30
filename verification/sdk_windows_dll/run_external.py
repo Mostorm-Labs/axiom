@@ -31,7 +31,8 @@ def verify(prefix, output, export=None):
         with tempfile.TemporaryDirectory(prefix='axiom-dll-consumer-') as temp:
             root=Path(temp)
             shutil.copytree(Path(__file__).parent/'consumer', root/'example')
-            run(['cmake','-S',root/'example','-B',root/'build','-G','Ninja','-DCMAKE_BUILD_TYPE=Release','-DAxiomSDK_DIR='+str(prefix/'lib/cmake/AxiomSDK')],root,records)
+            configure=['cmake','-S',root/'example','-G','Ninja','-DCMAKE_BUILD_TYPE=Release','-DAxiomSDK_DIR='+str(prefix/'lib/cmake/AxiomSDK')]
+            run([*configure,'-B',root/'build','-DAXIOM_EXAMPLE_CRT=MD'],root,records)
             run(['cmake','--build',root/'build'],root,records)
             # Use an unrelated CWD: assets must resolve from the deployed DLL/exe.
             run([root/'build/axiom_example.exe','--test'],Path(tempfile.gettempdir()),records)
@@ -52,10 +53,18 @@ def verify(prefix, output, export=None):
             if set(exported)!=expected:
                 raise RuntimeError(f'wrong v1 export surface: {exported}')
             if export:
+                # Deploy the demo with /MT, while retaining the independent
+                # /MD qualification above. Users need no VC redistributable.
+                run([*configure,'-B',root/'deploy','-DAXIOM_EXAMPLE_CRT=MT'],root,records)
+                run(['cmake','--build',root/'deploy','--target','axiom_example'],root,records)
+                run([root/'deploy/axiom_example.exe','--test'],Path(tempfile.gettempdir()),records)
+                run(['dumpbin','/dependents',root/'deploy/axiom_example.exe'],root,records)
+                if any(name in records[-1]['stdout'].lower() for name in ('vcruntime','msvcp','ucrtbase')):
+                    raise RuntimeError('deployed example unexpectedly needs a VC runtime DLL')
                 export=Path(export);export.mkdir(parents=True,exist_ok=False)
                 for name in ('axiom_example.exe','axiom.dll','icudtl.dat'):
-                    shutil.copy2(root/'build'/name,export/name)
-                shutil.copytree(root/'build/share',export/'share')
+                    shutil.copy2(root/'deploy'/name,export/name)
+                shutil.copytree(root/'deploy/share',export/'share')
             result={'status':'PASS','commands':records,'build_identity':identities[0],'dll_sha256':hashlib.sha256((prefix/'bin/axiom.dll').read_bytes()).hexdigest(),'exports':exported,'physical_ime_touch':'PHYSICAL_PENDING'}
     except Exception as e:
         result={'status':'FAIL','error':str(e),'commands':records}

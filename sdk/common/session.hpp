@@ -7,6 +7,8 @@
 
 namespace canvas::sdk {
 using Json = nlohmann::json;
+// Side-effect-free scalar admission, also used before native editor finish.
+void validateTransportEnums(const Json&);
 // Platform realization only. Canonical, input, text and History remain owned
 // by the borrowed RuntimeComposition and its facade.
 class SessionPlatform {

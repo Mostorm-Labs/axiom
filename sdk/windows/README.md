@@ -4,6 +4,8 @@ Windows x64. `axiom.dll` privately links the locked Runtime, Semantic and Skia
 implementations. Apps link only the small `axiom.lib` import stub. Headers and
 helper JSON code compile inside the application's own CRT; the DLL uses /MT.
 No Semantic/Skia CMake package or component archive is needed by consumers.
+The shipped demo and example default to /MT and need no VC redistributable;
+`-DAXIOM_EXAMPLE_CRT=MD` independently exercises a /MD caller against the same DLL.
 
 Activate an x64 MSVC developer shell, then from this extracted SDK:
 

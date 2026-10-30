@@ -35,6 +35,39 @@ TextInstance* instance(std::uintptr_t h) {
 } // namespace
 #include "text_bridge.inl"
 namespace canvas::sdk {
+void validateTransportEnums(const Json& j) {
+    const auto bounded = [](const Json& value, uint64_t max) {
+        if (!value.is_number_integer() || value.get<uint64_t>() > max)
+            throw std::invalid_argument("integer range");
+    };
+    const auto command = j.at("command").get<std::string>();
+    if (command == "control") {
+        const auto kind = j.at("kind").get<std::string>();
+        if (kind == "tool")
+            bounded(j.at("value"), 4);
+        else if (kind == "shape")
+            bounded(j.at("value"), 5);
+        else if (kind == "selectionMode")
+            bounded(j.at("value"), 2);
+        else if (kind == "fit")
+            bounded(j.value("target", Json(0)), 2);
+        else if (kind == "preset")
+            bounded(j.at("revision"), 0xffffffffULL);
+    } else if (command == "multi") {
+        const auto action = j.at("action").get<std::string>();
+        if (action == "permission")
+            bounded(j.at("mode"), 2);
+        else if (action != "read" && action != "values" && action != "set" && action != "width")
+            throw std::invalid_argument("multi action");
+    } else if (command == "text" && j.value("action", std::string{}) == "intent")
+        bounded(j.at("intent").at("kind"), 15);
+    else if (command == "textEdit")
+        bounded(j.at("kind"), 6);
+    else if (command == "section")
+        bounded(j.at("action"), 11);
+    else if (command == "pointer")
+        bounded(j.at("phase"), 3);
+}
 class Session::Impl {
   public:
     using J = Json;
@@ -387,7 +420,7 @@ class Session::Impl {
                     semantic::ResourceManifestEntry entry;
                     entry.resource_id = semantic::ResourceId{rawId(e.at("resourceId"))};
                     entry.resource_kind =
-                        static_cast<semantic::ResourceKind>(e.at("kind").get<unsigned>());
+                        static_cast<semantic::ResourceKind>(unsignedValue(e.at("kind"), 3));
                     entry.resource_revision = decimal(e.at("revision"));
                     entry.content_hash = e.at("sha256");
                     entry.byte_length = decimal(e.at("byteLength"));
@@ -505,7 +538,7 @@ class Session::Impl {
             e.sequence = s.nextInputSequence;
             if (j.contains("token"))
                 e.token = parseToken(j.at("token").dump().c_str());
-            const auto kind = j.at("kind").get<unsigned>();
+            const auto kind = unsignedValue(j.at("kind"), 6);
             if (kind != 4 && kind != 5)
                 return error("UNSUPPORTED");
             e.kind = static_cast<runtime::TextInputKind>(kind);
@@ -671,7 +704,7 @@ class Session::Impl {
                 return {{"ok",
                          f.setMultiSelectionPermission(
                              static_cast<runtime::MultiSelectionPermissionMode>(
-                                 j.at("mode").get<unsigned>()))},
+                                 unsignedValue(j.at("mode"), 2)))},
                         {"code", "PERMISSION_REJECTED"}};
             const auto projection = f.readMultiSelection();
             if (action == "read") {
@@ -779,7 +812,7 @@ class Session::Impl {
             p.timestampNs = j.at("timestampNs");
             p.x = j.at("x");
             p.y = j.at("y");
-            const auto phase = j.at("phase").get<unsigned>();
+            const auto phase = unsignedValue(j.at("phase"), 3);
             if (p.source < 1 || p.source > 3 || phase > 3)
                 return error("INVALID_INPUT");
             p.phase = phase == 0   ? input::PointerPhase::kDown
@@ -840,18 +873,18 @@ class Session::Impl {
             }
             if (kind == "tool") {
                 p.kind = K::kSelectTool;
-                p.tool = static_cast<runtime::CanvasToolKind>(j.at("value").get<unsigned>());
+                p.tool = static_cast<runtime::CanvasToolKind>(unsignedValue(j.at("value"), 4));
             } else if (kind == "preset") {
                 p.kind = K::kSelectPreset;
-                p.preset = {j.at("profileId"), j.at("revision")};
+                p.preset = {j.at("profileId"), unsignedValue(j.at("revision"), 0xffffffffU)};
             } else if (kind == "shape") {
                 p.kind = K::kSelectCreationPreset;
                 p.creationPreset =
-                    static_cast<runtime::CanvasCreationPreset>(j.at("value").get<unsigned>());
+                    static_cast<runtime::CanvasCreationPreset>(unsignedValue(j.at("value"), 5));
             } else if (kind == "selectionMode") {
                 p.kind = K::kSelectionAcquisitionMode;
                 p.selectionAcquisitionMode =
-                    static_cast<runtime::CanvasSelectionMode>(j.at("value").get<unsigned>());
+                    static_cast<runtime::CanvasSelectionMode>(unsignedValue(j.at("value"), 2));
             } else if (kind == "ink") {
                 p.kind = K::kInkOptions;
                 if (j.contains("size"))
@@ -885,7 +918,8 @@ class Session::Impl {
                 p.scale = j.at("scale");
             } else if (kind == "fit") {
                 p.kind = K::kFit;
-                p.fitTarget = static_cast<runtime::CanvasFitTarget>(j.value("target", 0U));
+                p.fitTarget = static_cast<runtime::CanvasFitTarget>(
+                    unsignedValue(j.value("target", J(0)), 2));
                 if (j.contains("objectId"))
                     p.objectId = rawId(j.at("objectId"));
             } else if (kind == "size") {
@@ -937,7 +971,7 @@ class Session::Impl {
             auto r = request();
             r.payload.kind = K::kSection;
             auto& p = r.payload.section;
-            const auto action = j.at("action").get<unsigned>();
+            const auto action = unsignedValue(j.at("action"), 11);
             if (action > 11)
                 return error("INVALID_VALUE");
             p.action = static_cast<runtime::SectionAction>(action);
@@ -1102,6 +1136,7 @@ std::string Session::call(std::string_view input, std::span<const std::uint8_t> 
         if (input.empty() || input.size() > 1048576 || data.size() > 134217728)
             throw std::invalid_argument("request length");
         auto j = Json::parse(input);
+        validateTransportEnums(j);
         std::vector<std::uint8_t> bytes(data.begin(), data.end());
         impl_->outputBytes.clear();
         return impl_->dispatch(j.at("command"), j, bytes).dump();

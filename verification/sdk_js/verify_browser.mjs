@@ -24,8 +24,16 @@ try {
   if(!port)throw Error('Chrome unavailable');const page=await fetch(`http://127.0.0.1:${port}/json/new?about:blank`,{method:'PUT'}).then(r=>r.json());
   socket=new WebSocket(page.webSocketDebuggerUrl);await new Promise((r,j)=>{socket.addEventListener('open',r,{once:true});socket.addEventListener('error',j,{once:true});});
   let serial=0;const pending=new Map(),errors=[],consoleErrors=[];
-  socket.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.id){const p=pending.get(m.id);pending.delete(m.id);clearTimeout(p.timer);m.error?p.reject(Error(JSON.stringify(m.error))):p.resolve(m.result);}else if(m.method==='Runtime.exceptionThrown')errors.push(m.params);else if(m.method==='Runtime.consoleAPICalled'&&m.params.type==='error')consoleErrors.push(m.params.args.map(a=>a.value??a.description).join(' '));});
-  const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++serial;const timer=setTimeout(()=>reject(Error('CDP timeout')),30000);pending.set(id,{resolve,reject,timer});socket.send(JSON.stringify({id,method,params}));});
+  socket.addEventListener('message',e=>{const m=JSON.parse(e.data);if(m.id){const p=pending.get(m.id);if(!p)return;pending.delete(m.id);clearTimeout(p.timer);m.error?p.reject(Error(JSON.stringify(m.error))):p.resolve(m.result);}else if(m.method==='Runtime.exceptionThrown')errors.push(m.params);else if(m.method==='Runtime.consoleAPICalled'&&m.params.type==='error')consoleErrors.push(m.params.args.map(a=>a.value??a.description).join(' '));});
+  const send=(method,params={})=>new Promise((resolve,reject)=>{const id=++serial;const timer=setTimeout(()=>{pending.delete(id);reject(Error(`CDP timeout: ${method}`));},30000);pending.set(id,{resolve,reject,timer});socket.send(JSON.stringify({id,method,params}));});
+  // Browser.close may tear down this target socket before its response arrives.
+  // Prove real process termination instead of waiting for a vanished transport.
+  const closeBrowser=()=>new Promise((resolve,reject)=>{
+    const done=(code,signal)=>{clearTimeout(timer);observation.browserExit={code,signal};code===0&&!signal?resolve():reject(Error(`Chrome exit: ${code}/${signal}`));};
+    const timer=setTimeout(()=>{browser.removeListener('exit',done);reject(Error('Chrome exit timeout'));},30000);
+    if(browser.exitCode!==null||browser.signalCode!==null){done(browser.exitCode,browser.signalCode);return;}
+    browser.once('exit',done);socket.send(JSON.stringify({id:++serial,method:'Browser.close',params:{}}));
+  });
   const browserVersion=await send('Browser.getVersion');
   await send('Runtime.enable');await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/`});
   let result;
@@ -37,7 +45,7 @@ try {
   const validFrames=value=>value?.status==='PASS'&&['pending-input','no-duplicate-completion','pending-resize','native-loss-before-dom','context-recovery'].every(id=>value.scenarios?.includes(id))&&value.delayed>0;
   if(result?.status!=='PASS'||!Array.isArray(result.results)||(framesOnly?!validFrames(result):result.results.length<40)||errors.length)throw Error('JS SDK browser acceptance failed');
   if(!framesOnly&&process.env.AXIOM_EXPECTED_REVISION&&(result.buildInfo?.sourceRevision!==process.env.AXIOM_EXPECTED_REVISION||result.buildInfo?.dirty))throw Error('JS engine is not the frozen clean release revision');
-  if(framesOnly){await send('Browser.close');}
+  if(framesOnly){await closeBrowser();}
   else {
   await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/frame_handoff.html`});
   let handoff;
@@ -60,7 +68,7 @@ try {
   observation.example={status:await evaluate(`document.getElementById('status').textContent`),toolIndicated:true,visibleRectangle:true,input:'Chrome CDP mouse'};
   if(errors.length)throw Error('Example exception');
   console.log(JSON.stringify({example:observation.example}));
-  await send('Browser.close');
+  await closeBrowser();
   }
 }catch(error){failure=error;console.error(error.stack||error);}
 finally{socket?.close();browser?.kill();if(server)await new Promise(r=>server.close(r));

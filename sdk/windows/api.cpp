@@ -67,10 +67,21 @@ uint64_t put(std::vector<uint8_t> data) {
 uint64_t put(std::string text) {
     return put(std::vector<uint8_t>(text.begin(), text.end()));
 }
-std::shared_ptr<Context> lookup(uint64_t id) {
+std::shared_ptr<Context> lookup(uint64_t id, int& code) {
     std::lock_guard lock(mutex);
     auto it = runtimes.find(id);
-    return it == runtimes.end() ? nullptr : it->second;
+    if (it == runtimes.end()) {
+        code = AXIOM_INVALID_HANDLE;
+        return nullptr;
+    }
+    // A rejected foreign thread must not become the last Context owner during
+    // concurrent close/abandon and destroy a thread-affine Runtime there.
+    if (it->second->thread != std::this_thread::get_id()) {
+        code = AXIOM_WRONG_THREAD;
+        return nullptr;
+    }
+    code = AXIOM_OK;
+    return it->second;
 }
 int status(const std::shared_ptr<Context>& c) {
     if (!c)
@@ -112,8 +123,11 @@ std::filesystem::path assetRoot(const wchar_t* root) {
 }
 template <class F> int checked(uint64_t id, F action) noexcept {
     try {
-        auto c = lookup(id);
-        auto code = status(c);
+        int code = AXIOM_OK;
+        auto c = lookup(id, code);
+        if (code)
+            return code;
+        code = status(c);
         if (code)
             return code;
         Guard guard(*c);
@@ -253,6 +267,13 @@ int axiom_call(axiom_runtime id,
     return checked(id, [&](Context& c) -> int {
         auto j = Json::parse(data, data + size);
         const auto cmd = j.at("command").get<std::string>();
+        try {
+            canvas::sdk::validateTransportEnums(j);
+        } catch (const std::exception& e) {
+            *out =
+                put(Json{{"ok", false}, {"code", "INVALID_REQUEST"}, {"message", e.what()}}.dump());
+            return AXIOM_OK;
+        }
         if (cmd == "open" || cmd == "close" || cmd == "pointer")
             return AXIOM_INVALID_ARGUMENT;
         if (!c.contacts.empty() && (cmd == "resize" || cmd == "lose"))

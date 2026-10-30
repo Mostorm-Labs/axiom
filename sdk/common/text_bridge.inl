@@ -75,8 +75,8 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_text_intent_json(std::uintptr_t h, const char
     if (!v || !data || std::strlen(data) > 8192) return 4;
     try {
         const auto j = TextJson::parse(data);
+        if(!j.at("kind").is_number_integer()||j.at("kind").get<std::uint64_t>()>static_cast<std::uint64_t>(runtime::TextIntentKind::kFormat))return 4;
         const int kind = j.at("kind").get<int>();
-        if (kind < 0 || kind > static_cast<int>(runtime::TextIntentKind::kFormat)) return 4;
         runtime::TextIntent request;
         request.kind = static_cast<runtime::TextIntentKind>(kind);
         request.clientId = decimal(j.at("clientId").get<std::string>());
