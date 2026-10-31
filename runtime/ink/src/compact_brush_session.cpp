@@ -22,25 +22,47 @@ bool CompactBrushSession::append(std::span<const TimedBrushSample> confirmed,std
     if(confirmedCount_>262144||confirmed.size()>262144-confirmedCount_||predicted.size()>1024)return false;
     // All input admission precedes retained state changes. Prefix chunks are
     // immutable; only the bounded pending window is copied for publication.
-    for(const auto& s:confirmed){
-        auto p=config_.pressureSource==BrushPressureSource::kDevice?s.pressure:previousPressure_;
-        if(lastSequence_&&config_.pressureSource==BrushPressureSource::kSimulated)
-            p=simulatedPressure(std::hypot(s.x-previousX_,s.y-previousY_),double(s.timestampNs-previousTime_)/1e9,previousPressure_);
-        const foundation::InkKnot k{s.x==0?0:s.x,s.y==0?0:s.y,static_cast<std::uint16_t>(std::lround(p*65535))};
-        if(!pending_.empty())pendingLength_+=std::hypot(k.x-lastKnot_.x,k.y-lastKnot_.y);
-        pending_.push_back(k);lastKnot_=k;++confirmedCount_;++metrics_.samples;
-        previousPressure_=p;
-        if(!lastSequence_||s.timestampNs>previousTime_){previousX_=s.x;previousY_=s.y;previousTime_=s.timestampNs;}
-        lastSequence_=s.sequence;lastTimestamp_=s.timestampNs;
+    const auto retain=[&](const foundation::InkKnot& k){
+        if(!pending_.empty())pendingLength_+=std::hypot(k.x-pending_.back().x,k.y-pending_.back().y);
+        pending_.push_back(k);
         if(pending_.size()>=64||pendingLength_>=32){
             auto chunk=std::make_shared<BrushPreviewDelta::Chunk>();chunk->previous=chunks_;
             chunk->knots=simplifyInkKnots(pending_,config_.geometryEpsilon,&metrics_.simplificationVisits);
             metrics_.generatedKnots+=chunk->knots.size();chunks_=std::move(chunk);
             pending_={k};pendingLength_=0;
         }
+    };
+    for(const auto& s:confirmed){
+        auto p=config_.pressureSource==BrushPressureSource::kDevice?s.pressure:previousPressure_;
+        if(lastSequence_&&config_.pressureSource==BrushPressureSource::kSimulated)
+            p=simulatedPressure(std::hypot(s.x-previousX_,s.y-previousY_),double(s.timestampNs-previousTime_)/1e9,previousPressure_);
+        const foundation::InkKnot k{s.x==0?0:s.x,s.y==0?0:s.y,static_cast<std::uint16_t>(std::lround(p*65535))};
+        if(config_.algorithmVersion==2){
+            if(!confirmedCount_){retain(k);curveStart_=k;}
+            else if(confirmedCount_>=2){
+                if(confirmedCount_==2){curveStart_=inkMidpoint(previousControl_,lastKnot_);retain(curveStart_);}
+                const auto end=inkMidpoint(lastKnot_,k);
+                std::vector<foundation::InkKnot> segment;
+                appendInkQuadratic(segment,curveStart_,lastKnot_,end);
+                for(const auto& knot:segment)retain(knot);
+                curveStart_=end;
+            }
+            previousControl_=lastKnot_;
+        }else retain(k);
+        lastKnot_=k;++confirmedCount_;++metrics_.samples;
+        previousPressure_=p;
+        if(!lastSequence_||s.timestampNs>previousTime_){previousX_=s.x;previousY_=s.y;previousTime_=s.timestampNs;}
+        lastSequence_=s.sequence;lastTimestamp_=s.timestampNs;
     }
     auto tail=std::make_shared<BrushPreviewDelta::Chunk>();tail->previous=chunks_;
-    tail->knots=simplifyInkKnots(pending_,config_.geometryEpsilon,&metrics_.simplificationVisits);metrics_.copiedKnots+=pending_.size();
+    auto pending=pending_;
+    if(config_.algorithmVersion==2&&confirmedCount_&&pending.back()!=lastKnot_)pending.push_back(lastKnot_);
+    tail->knots=simplifyInkKnots(pending,config_.geometryEpsilon,&metrics_.simplificationVisits);metrics_.copiedKnots+=pending.size();
+    if(config_.algorithmVersion==2&&!predicted.empty()){
+        auto speculative=*this;
+        if(!speculative.append(predicted,{}))return false;
+        preview_=speculative.preview_;return true;
+    }
     auto pressure=previousPressure_;auto x=previousX_,y=previousY_;auto stamp=previousTime_;
     for(const auto& s:predicted){
         pressure=config_.pressureSource==BrushPressureSource::kDevice?s.pressure:
@@ -58,7 +80,9 @@ std::vector<foundation::InkKnot> CompactBrushSession::knots()const {
     std::vector<foundation::InkKnot> result;
     for(auto it=chunks.rbegin();it!=chunks.rend();++it)for(const auto& k:(*it)->knots)
         if(result.empty()||result.back()!=k)result.push_back(k);
-    for(const auto& k:simplifyInkKnots(pending_,config_.geometryEpsilon))if(result.empty()||result.back()!=k)result.push_back(k);
+    auto pending=pending_;
+    if(config_.algorithmVersion==2&&confirmedCount_&&pending.back()!=lastKnot_)pending.push_back(lastKnot_);
+    for(const auto& k:simplifyInkKnots(pending,config_.geometryEpsilon))if(result.empty()||result.back()!=k)result.push_back(k);
     return result;
 }
 }

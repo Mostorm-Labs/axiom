@@ -6,6 +6,25 @@
 
 namespace canvas::ink {
 struct CoverageKnot final {double x=0,y=0,radius=0;};
+inline foundation::InkKnot inkMidpoint(const foundation::InkKnot& a,const foundation::InkKnot& b) noexcept {
+    return {a.x+(b.x-a.x)*.5,a.y+(b.y-a.y)*.5,
+            static_cast<std::uint16_t>((unsigned(a.pressure)+b.pressure+1)/2)};
+}
+// Midpoint quadratic fitting stays inside the control polygon. Flatten only
+// the bounded newly completed segment; persist this fitted centreline once.
+inline void appendInkQuadratic(std::vector<foundation::InkKnot>& out,
+    const foundation::InkKnot& a,const foundation::InkKnot& control,
+    const foundation::InkKnot& b,unsigned depth=0){
+    const auto mid=inkMidpoint(a,b);
+    if(depth>=8 || (std::hypot(control.x-mid.x,control.y-mid.y)<=.3 &&
+        std::abs(double(control.pressure)-mid.pressure)<=655.35)){
+        if(out.empty()||out.back()!=b)out.push_back(b);
+        return;
+    }
+    const auto left=inkMidpoint(a,control),right=inkMidpoint(control,b),split=inkMidpoint(left,right);
+    appendInkQuadratic(out,a,left,split,depth+1);
+    appendInkQuadratic(out,split,right,b,depth+1);
+}
 // RDP with an independent pressure interpolation constraint. Coordinates stay
 // binary64 and pressure is quantized before both preview and persistence.
 inline std::vector<foundation::InkKnot> simplifyInkKnots(std::span<const foundation::InkKnot> input,double epsilon=.25,std::uint64_t* visits=nullptr) {

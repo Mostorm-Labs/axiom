@@ -58,10 +58,11 @@ try {
   observation.browser=await send('Browser.getVersion');await send('Runtime.enable');await send('Page.enable');
   const deviceScaleFactor = Number(process.env.AXIOM_INK_TEST_DPR || 1);
   observation.deviceScaleFactor = deviceScaleFactor;
+  observation.brushRevision = Number(process.env.AXIOM_INK_TEST_REVISION || 1);
   await send('Emulation.setDeviceMetricsOverride',{width:1000,height:650,deviceScaleFactor,mobile:false});
   await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/`});
   for(let n=0;!await evaluate('Boolean(window.probe)');++n){if(n>300)throw Error('startup');await delay(50);}
-  await evaluate('probe.ready');observation.buildInfo=await evaluate('probe.info()');
+  await evaluate('probe.ready');await evaluate(`probe.revision(${observation.brushRevision})`);observation.buildInfo=await evaluate('probe.info()');
   const mouse=(type,x,y,held=false)=>send('Input.dispatchMouseEvent',{type,x,y,button:'left',buttons:type==='mousePressed'||held?1:0,clickCount:1});
   for(let index=0;index<7;++index){
     await evaluate(`probe.select(${index})`);const y=40+index*70;

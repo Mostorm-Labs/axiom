@@ -36,6 +36,7 @@ bool BrushSession::begin() {
     if (state_.package.compactConfig && !compact_) {
         CompactBrushConfig c;
         c.geometryEpsilon = std::min(.25, state_.package.compactConfig->size / 32.);
+        c.algorithmVersion = state_.package.compactConfig->algorithmVersion;
         c.pressureSource = state_.package.compactConfig->pressureSource == foundation::InkPressureSource::kDevice
             ? BrushPressureSource::kDevice : BrushPressureSource::kSimulated;
         compact_.emplace(c, state_.seed);

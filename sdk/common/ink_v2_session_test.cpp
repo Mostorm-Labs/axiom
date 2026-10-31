@@ -1,4 +1,5 @@
 #include "session.hpp"
+#include "canvas/semantic/codec.hpp"
 #include <stdexcept>
 #include <iostream>
 
@@ -23,7 +24,12 @@ public:
 void require(bool v,const char* m){if(!v)throw std::runtime_error(m);}
 }
 int main(){
-    sdk::Session session(std::make_unique<RasterHost>());
+    std::vector<std::uint8_t> lastOperation;
+    sdk::SessionCallbacks callbacks;callbacks.context=&lastOperation;
+    callbacks.operation=[](void* context,const std::uint8_t* data,std::size_t size)noexcept{
+        *static_cast<std::vector<std::uint8_t>*>(context)={data,data+size};
+    };
+    sdk::Session session(std::make_unique<RasterHost>(),callbacks);
     const auto call=[&](sdk::Json j){const auto reply=sdk::Json::parse(session.call(j.dump()));require(reply.value("ok",false),reply.dump().c_str());return reply;};
     call({{"command","open"},{"documentId",std::string(32,'9')},{"builtinFonts",false}});
     std::uint64_t timestamp=1'000'000;
@@ -39,6 +45,17 @@ int main(){
         const auto snapshot=call({{"command","snapshot"},{"generation",state.at("generation")},{"documentRevision","1"},{"recoveryFrontier",{8,1,16,1,24,1}}});
         require(!session.bytes().empty()&&snapshot.contains("checkpointDigest"),"native snapshot bytes");++pointer;
     }
+    // Editing public controls after selecting visual revision 2 must preserve
+    // its private evaluator/resource binding through real operation encoding.
+    call({{"command","control"},{"kind","preset"},{"profileId","chalk-compact-v1"},{"revision",2}});
+    auto config=call({{"command","readInkBrush"}}).at("value");config["size"]=30;
+    call({{"command","control"},{"kind","inkBrush"},{"value",config}});
+    require(call({{"command","readInkBrush"}}).at("value").at("size")==30,"visual preset config edit rejected");
+    for(unsigned phase:{0U,1U,2U}){timestamp+=10'000'000;call({{"command","pointer"},{"source",1},{"pointer",pointer},{"timestampNs",timestamp},{"phase",phase},{"x",30+40*phase},{"y",130},{"pressure",.99},{"pressureAvailable",false}});}
+    const auto visual=semantic::SemanticCodec::decodeProtobufOperation(lastOperation);
+    require(visual.ok(),"visual operation encoding");
+    const auto& bound=std::get<semantic::CompactStrokeContent>(std::get<semantic::AddStrokeOp>(visual.operation.payload).object.content).stroke.config;
+    require(bound.algorithmVersion==2&&bound.materialVersion==2&&bound.materialResourceId==foundation::kInkMaterialV2ResourceId,"public config edit reverted visual preset binding");
     const auto before=call({{"command","state"}}).at("value").at("generation");
     const auto rejected=sdk::Json::parse(session.call(R"({"command":"control","kind":"inkBrush","value":{"family":7}})"));
     require(!rejected.value("ok",true)&&call({{"command","state"}}).at("value").at("generation")==before,"invalid native config mutated document");

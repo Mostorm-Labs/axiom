@@ -107,15 +107,23 @@ BrushPackageResult BrushPackageCatalog::loadDefault(std::string_view profile,
   if(profile=="round-regular"||profile=="round-handdrawn"||profile=="laser-transient"||
      profile=="marker-compact-v1"||profile=="chalk-compact-v1"||
      profile=="crayon-wax-v1"||profile=="watercolor-lite-v1"){
-    if(revision!=1)return {{},{},{},"unknown_profile_or_revision"};
+    if((revision!=1&&revision!=2)||(profile=="laser-transient"&&revision!=1))return {{},{},{},"unknown_profile_or_revision"};
     BrushPackage p;p.profileId=profile;p.packageId=profile=="round-regular"?"00000000000000000000000000000051":profile=="round-handdrawn"?"00000000000000000000000000000052":"00000000000000000000000000000053";
     p.compactConfig=foundation::InkBrushConfig{};
+    p.revision=revision;
+    if(revision==2){
+        p.compactConfig->algorithmVersion=2;p.compactConfig->materialVersion=2;
+        p.compactConfig->materialResourceId=foundation::kInkMaterialV2ResourceId;
+        p.compactConfig->materialResourceSha256=foundation::kInkMaterialV2ResourceSha256;
+    }
     p.compactConfig->roundMode=profile=="round-regular"?foundation::InkRoundMode::kRegular:foundation::InkRoundMode::kHanddrawn;
     if(profile=="laser-transient"){p.compactConfig->family=foundation::InkFamily::kLaser;p.compactConfig->color={1,.1,.05,1};p.compactConfig->size=6;}
     if(profile=="marker-compact-v1"){p.packageId="00000000000000000000000000000054";p.compactConfig->family=foundation::InkFamily::kMarker;p.compactConfig->opacity=.5;}
     if(profile=="chalk-compact-v1"){p.packageId="00000000000000000000000000000055";p.compactConfig->family=foundation::InkFamily::kChalk;}
     if(profile=="crayon-wax-v1"){p.packageId="00000000000000000000000000000056";p.compactConfig->family=foundation::InkFamily::kCrayon;}
     if(profile=="watercolor-lite-v1"){p.packageId="00000000000000000000000000000057";p.compactConfig->family=foundation::InkFamily::kWatercolor;p.compactConfig->size=32;p.compactConfig->opacity=.65;}
+    if(revision==2&&profile=="chalk-compact-v1"){p.compactConfig->size=24;p.compactConfig->density=.72;p.compactConfig->textureScale=6;}
+    if(revision==2&&profile=="watercolor-lite-v1"){p.compactConfig->size=40;p.compactConfig->wetEdge=.85;p.compactConfig->textureScale=12;}
     p.vector.size=p.compactConfig->size;
     p.paint={p.compactConfig->color[0],p.compactConfig->color[1],p.compactConfig->color[2],p.compactConfig->color[3],p.compactConfig->opacity};
     return {p,{},brushPackageCanonicalDigest(p),{}};

@@ -1286,6 +1286,9 @@ class Session::Impl {
             } else if(kind=="inkBrush"){
                 p.kind=K::kInkBrushConfig;
                 const auto& v=j.at("value");auto& c=p.brushConfig;
+                // Public UI parameters do not replace the selected preset's
+                // immutable evaluator/resource binding with revision 1.
+                if(const auto selected=facade().readCanvasControlSnapshot(r.target).brushConfig)c=*selected;
                 if(!v.is_object())throw std::invalid_argument("brush config");
                 const std::array<const char*,15> allowed{"version","family","roundMode","pressureSource","size","opacity","color","markerAngle","markerFlatness","density","textureScale","deposition","wetEdge","laserFadeMs","laserTailLength"};
                 for(const auto& [key,value]:v.items()){(void)value;if(std::find(allowed.begin(),allowed.end(),key)==allowed.end())throw std::invalid_argument("unknown brush parameter");}

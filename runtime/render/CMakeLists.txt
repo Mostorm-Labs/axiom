@@ -62,6 +62,15 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
       list(APPEND CANVAS_COMPACT_MATERIAL_HEADERS "${CANVAS_CHALK_GENERATED_DIR}/ink_${material}_sksl.hpp")
     endforeach()
     add_custom_target(canvas_compact_material_assets DEPENDS ${CANVAS_COMPACT_MATERIAL_HEADERS})
+    add_custom_command(
+      OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/ink_material_v2_sksl.hpp"
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${CANVAS_CHALK_GENERATED_DIR}/ink_material_v2_sksl.hpp" "kInkMaterialV2Sksl"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/compact-material-v2/material.sksl"
+      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/compact-material-v2/material.sksl")
+    add_custom_target(canvas_compact_material_v2_assets DEPENDS "${CANVAS_CHALK_GENERATED_DIR}/ink_material_v2_sksl.hpp")
+    add_dependencies(canvas_runtime_render canvas_compact_material_v2_assets)
     add_dependencies(canvas_runtime_render canvas_compact_material_assets)
     add_custom_command(
       OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/chalk_shape_png.hpp"
@@ -271,7 +280,7 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     add_executable(axiom_ink_v2_material_tests tests/ink_v2_material_test.cpp)
     target_link_libraries(axiom_ink_v2_material_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
     target_include_directories(axiom_ink_v2_material_tests PRIVATE "${CANVAS_SKIA_SDK_ROOT}")
-    foreach(material marker chalk crayon water parity presets sampling cache scene-mask)
+    foreach(material marker chalk crayon water parity presets sampling cache scene-mask visual)
       add_test(NAME InkV2Material-${material} COMMAND axiom_ink_v2_material_tests ${material})
     endforeach()
 endif()

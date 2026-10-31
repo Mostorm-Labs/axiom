@@ -31,6 +31,16 @@ int main() {
         throw std::runtime_error("compact payload did not roundtrip");
     if(encoded.bytes.size()>16384+18*content.stroke.knots.size())
         throw std::runtime_error("compact bytes exceed budget");
+    auto visual=operation;
+    auto& visualConfig=std::get<CompactStrokeContent>(std::get<AddStrokeOp>(visual.payload).object.content).stroke.config;
+    visualConfig.algorithmVersion=2;visualConfig.materialVersion=2;
+    visualConfig.materialResourceId=canvas::foundation::kInkMaterialV2ResourceId;
+    visualConfig.materialResourceSha256=canvas::foundation::kInkMaterialV2ResourceSha256;
+    const auto visualEncoded=SemanticCodec::encodeProtobufOperation(visual);
+    if(!visualEncoded.ok())throw std::runtime_error("visual compact operation rejected");
+    const auto visualDecoded=SemanticCodec::decodeProtobufOperation(visualEncoded.bytes);
+    if(!visualDecoded.ok()||std::get<CompactStrokeContent>(std::get<AddStrokeOp>(visualDecoded.operation.payload).object.content)!=
+        std::get<CompactStrokeContent>(std::get<AddStrokeOp>(visual.payload).object.content))throw std::runtime_error("visual version/material binding changed in codec");
     auto invalid=operation;
     std::get<CompactStrokeContent>(std::get<AddStrokeOp>(invalid.payload).object.content).stroke.config.algorithmVersion=999;
     if(SemanticCodec::encodeProtobufOperation(invalid).ok())throw std::runtime_error("unknown evaluator accepted");

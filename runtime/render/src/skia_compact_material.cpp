@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include "ink_coverage_sksl.hpp"
 #include "ink_material_sksl.hpp"
+#include "ink_material_v2_sksl.hpp"
 
 namespace canvas::render::internal {
 namespace {
@@ -23,6 +24,13 @@ const sk_sp<SkRuntimeEffect>& coverageEffect(){
 const sk_sp<SkRuntimeEffect>& materialEffect(){
     static const auto effect=[] {
         auto result=SkRuntimeEffect::MakeForShader(SkString(reinterpret_cast<const char*>(kInkMaterialSksl), kInkMaterialSkslSize));
+        if(!result.effect)throw std::runtime_error(result.errorText.c_str());
+        return result.effect;
+    }();return effect;
+}
+const sk_sp<SkRuntimeEffect>& materialV2Effect(){
+    static const auto effect=[] {
+        auto result=SkRuntimeEffect::MakeForShader(SkString(reinterpret_cast<const char*>(kInkMaterialV2Sksl),kInkMaterialV2SkslSize));
         if(!result.effect)throw std::runtime_error(result.errorText.c_str());
         return result.effect;
     }();return effect;
@@ -59,7 +67,7 @@ void compositeCompactCoverageToSkCanvas(SkCanvas& canvas,const SkImage& image,
     SkMatrix local;
     if(!canvas.getTotalMatrix().invert(&local))return;
     local.preTranslate(float(deviceX),float(deviceY));
-    SkRuntimeShaderBuilder builder(materialEffect());
+    SkRuntimeShaderBuilder builder(config.materialVersion==2?materialV2Effect():materialEffect());
     builder.child("coverage")=image.makeShader(SkSamplingOptions(SkFilterMode::kLinear),local);
     builder.uniform("paint")=SkV4{float(config.color[0]),float(config.color[1]),float(config.color[2]),float(config.color[3]*config.opacity)};
     builder.uniform("family")=float(config.family);

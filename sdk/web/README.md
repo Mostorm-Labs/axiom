@@ -356,3 +356,11 @@ is excluded from snapshot/export. The Demo provides seven choices across six
 families. Persistent brushes preview their shape and material with an amber tint
 in the independent Skia surface, then hand off to canonical ink in the selected
 color and opacity. The transient laser retains its selected color while fading.
+
+Persistent compact profiles also support package revision 2. The Demo uses this
+revision for smoother midpoint-quadratic centerlines and distinct dry chalk,
+directional wax and transparent watercolor materials. Revision 1 stays readable
+with its original material. `selectBrush(profileId, 2)` selects the new version;
+later `setBrushConfig()` edits preserve that preset's internal evaluator/resource
+binding. No expanded dab/outline is stored. The Demo shows only controls relevant
+to the active brush and exposes the next stroke's color.

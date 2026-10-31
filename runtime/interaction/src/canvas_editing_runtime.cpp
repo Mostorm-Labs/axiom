@@ -2779,7 +2779,7 @@ interaction::SubmitResult CanvasEditingRuntime::submit(const semantic::SetTransf
 bool CanvasEditingRuntime::selectBrushProfile(std::string_view profileId,
                                            std::uint32_t revision) noexcept {
   if (!brushSessions_.empty() ||
-      (revision != 1U && !(profileId == "chalk-grain-v1" &&
+      (revision != 1U && revision != 2U && !(profileId == "chalk-grain-v1" &&
                             (revision == 2U || revision == 3U || revision == 4U)))) return false;
   const auto loaded = brushCatalog_.loadDefault(profileId, revision);
   if (!loaded) return false;
@@ -2831,7 +2831,7 @@ bool CanvasEditingRuntime::configureInkBrush(const foundation::InkBrushConfig& c
       config.family==foundation::InkFamily::kCrayon?"crayon-wax-v1":
       config.family==foundation::InkFamily::kWatercolor?"watercolor-lite-v1":
       config.roundMode==foundation::InkRoundMode::kRegular?"round-regular":"round-handdrawn";
-  selectedBrushRevision_=1;
+  selectedBrushRevision_=config.algorithmVersion==2?2:1;
   inkSize_=static_cast<float>(config.size);inkOpacity_=static_cast<float>(config.opacity);
   inkRed_=static_cast<float>(config.color[0]);inkGreen_=static_cast<float>(config.color[1]);inkBlue_=static_cast<float>(config.color[2]);inkAlpha_=static_cast<float>(config.color[3]);
   return true;

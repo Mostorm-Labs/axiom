@@ -1,6 +1,7 @@
 #include "canvas/render/skia_renderer.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/ink/brush_package_catalog.hpp"
+#include "canvas/ink/brush_session.hpp"
 #include "canvas/scene/bounds_system.hpp"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkSurface.h"
@@ -8,6 +9,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <fstream>
 
 using namespace canvas;
 namespace {
@@ -28,7 +30,49 @@ int main(int argc,char** argv){
     const std::string mode=argc>1?argv[1]:"marker";
     foundation::InkBrushConfig c;c.size=32;c.roundMode=foundation::InkRoundMode::kRegular;c.color={.1,.3,.8,1};
     const std::vector<foundation::InkKnot> knots{{32,64,32768},{224,64,32768}};
-    if(mode=="marker"){
+    if(mode=="visual"){
+        // Same size, paint, pressure and path: distinction must come from
+        // material, not the name or a wider default nib.
+        const auto chalk=ink::BrushPackageCatalog{}.loadDefault("chalk-compact-v1",2);
+        const auto water=ink::BrushPackageCatalog{}.loadDefault("watercolor-lite-v1",2);
+        require(bool(chalk)&&bool(water),"material visual revision missing");
+        c=*chalk.package.compactConfig;c.size=32;c.color={.1,.3,.8,1};c.opacity=1;
+        auto dry=draw(c,knots);c=*water.package.compactConfig;c.size=32;c.color={.1,.3,.8,1};c.opacity=1;
+        const auto wash=draw(c,knots);
+        unsigned pores=0,wetHoles=0;double edge=0,body=0;
+        for(unsigned y=58;y<70;++y)for(unsigned x=50;x<206;++x){pores+=alpha(dry,x,y)<30;wetHoles+=alpha(wash,x,y)<30;body+=alpha(wash,x,y);}
+        for(unsigned y=49;y<52;++y)for(unsigned x=50;x<206;++x)edge+=alpha(wash,x,y);
+        std::cout<<"chalk dry pores="<<pores<<" watercolor holes="<<wetHoles<<" edge/body="<<(edge/3)/(body/12)<<std::endl;
+        require(pores>180,"chalk lacks fine dry gaps");
+        require(wetHoles<10,"watercolor is porous like chalk");
+        require(edge/(3*156)>body/(12*156)*1.25,"watercolor lacks an observable pigment rim");
+        double chalkSum=0,waterSum=0,chalkSquares=0,waterSquares=0;
+        for(unsigned y=58;y<70;++y)for(unsigned x=50;x<206;++x){const auto a=alpha(dry,x,y),b=alpha(wash,x,y);chalkSum+=a;waterSum+=b;chalkSquares+=a*a;waterSquares+=b*b;}
+        const auto chalkVariance=chalkSquares/(12*156)-std::pow(chalkSum/(12*156),2);
+        const auto waterVariance=waterSquares/(12*156)-std::pow(waterSum/(12*156),2);
+        require(chalkVariance>waterVariance*1.25,"chalk/watercolor texture variance too similar");
+    }else if(mode=="swatch"){
+        require(argc>2,"swatch output path required");
+        std::ofstream out(argv[2],std::ios::binary);out<<"P6\n512 768\n255\n";
+        std::vector<std::vector<std::uint8_t>> rows;
+        const std::vector<foundation::InkKnot> path{{20,90,32768},{56,36,40000},{94,80,34000},{128,38,40000},{166,82,34000},{206,42,40000},{234,64,32768}};
+        for(auto profile:{"round-handdrawn","marker-compact-v1","chalk-compact-v1","crayon-wax-v1","watercolor-lite-v1","round-regular"})for(unsigned revision:{1,2}){
+            auto config=*ink::BrushPackageCatalog{}.loadDefault(profile,revision).package.compactConfig;
+            config.size=28;config.color={.12,.35,.7,1};
+            auto package=ink::BrushPackageCatalog{}.loadDefault(profile,revision).package;
+            package.compactConfig=config;package.compactConfig->pressureSource=foundation::InkPressureSource::kDevice;
+            ink::BrushSession stroke(1,ink::resolveBrushState(package,0));require(stroke.begin(),"swatch session");
+            ink::BrushPreviewDelta preview;
+            for(unsigned i=0;i<path.size();++i){const auto& k=path[i];ink::BrushSample s{k.x,k.y,double(k.pressure)/65535,true,i+1,std::uint64_t(i+1)*10'000'000,true};
+                require(stroke.append({&s,1},{},preview)==ink::BrushSessionError::kNone,"swatch append");}
+            ink::BrushCommitIntent intent;require(stroke.seal(intent)==ink::BrushSessionError::kNone,"swatch seal");
+            rows.push_back(draw(config,intent.knots));
+        }
+        for(unsigned row=0;row<6;++row)for(unsigned y=0;y<height;++y)for(unsigned col=0;col<2;++col)for(unsigned x=0;x<width;++x){
+            const auto& p=rows[row*2+col];const auto i=(y*width+x)*4;const auto a=p[i+3]/255.;
+            for(unsigned channel=0;channel<3;++channel)out.put(char(std::lround(p[i+channel]*a+255*(1-a))));
+        }
+    }else if(mode=="marker"){
         c.family=foundation::InkFamily::kMarker;c.markerAngle=0;
         auto narrow=draw(c,knots);c.markerAngle=1.5707963267948966;auto wide=draw(c,knots);
         require(sum(wide)>sum(narrow)*2,"marker angle does not change flat nib sweep");
@@ -48,7 +92,8 @@ int main(int argc,char** argv){
         unsigned low=255,high=0;for(unsigned x=60;x<190;++x){low=std::min(low,alpha(wet,x,64));high=std::max(high,alpha(wet,x,64));}
         require(high>low+5,"watercolor paper/interior is uniform");
     }else if(mode=="parity"){
-        for(const auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker,foundation::InkFamily::kChalk,foundation::InkFamily::kCrayon,foundation::InkFamily::kWatercolor}){
+        for(const unsigned revision:{1U,2U})for(const auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker,foundation::InkFamily::kChalk,foundation::InkFamily::kCrayon,foundation::InkFamily::kWatercolor}){
+            c=*ink::BrushPackageCatalog{}.loadDefault("round-regular",revision).package.compactConfig;
             c.family=family;c.opacity=.5;
             render::TransparentOverlaySkiaSurfaceProvider provider;require(provider.resize(width,height).code==render::BackendSubmissionCode::kAccepted,"resize");
             render::SkiaRenderer renderer;render::PreviewSurfaceController preview(renderer,provider);

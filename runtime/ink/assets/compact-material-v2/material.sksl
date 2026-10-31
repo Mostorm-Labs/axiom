@@ -1,0 +1,50 @@
+uniform shader coverage;
+uniform float4 paint;
+uniform float family;
+uniform float density;
+uniform float textureScale;
+uniform float deposition;
+uniform float wetEdge;
+uniform float2 seed;
+
+float hash(float2 p) {
+    float2 q=mod(floor(p),251.);
+    float n=mod(q.x*17.+q.y*131.,251.);
+    n=mod(n*n+43.,251.);n=mod(n*n+17.,251.);
+    return n/251.;
+}
+float noise(float2 p) {
+    float2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+    return mix(mix(hash(i),hash(i+float2(1,0)),f.x),
+               mix(hash(i+float2(0,1)),hash(i+float2(1,1)),f.x),f.y);
+}
+half4 main(float2 p) {
+    float c=coverage.eval(p).r;
+    float body=smoothstep(0.,.045,c);
+    float scale=max(.25,textureScale);
+    float paper=noise(p/scale+seed);
+    float fiber=noise(p/float2(scale*.8,scale*.20)+seed+float2(37,19));
+    float tooth=noise(p/.42+seed+float2(11,97));
+    float fine=hash(p*2.4+seed);
+    float alpha=body;
+    if(family==3.) {
+        // Dry pigment catches the paper tooth. Fine pores remain distributed
+        // throughout the body; broad paper noise never cuts big islands out.
+        float pore=smoothstep(.77-.43*density,.87-.43*density,.72*tooth+.28*fine);
+        float dryEdge=smoothstep(.015,.12+.04*(1.-paper),c);
+        alpha=dryEdge*pore*(.70+.22*fiber+.08*paper);
+    } else if(family==4.) {
+        // Wax leaves dense directional rub marks, with shallow paper valleys.
+        float rub=smoothstep(.67-.54*deposition,.83-.54*deposition,.72*fiber+.28*tooth);
+        alpha=body*(.27+.73*rub)*(.72+.28*deposition);
+    } else if(family==5.) {
+        // Continuous transparent wash, broad soft blooms and an inward pigment
+        // rim. Paper modulates concentration, not binary dry holes.
+        float bloom=noise(p/(scale*3.2)+seed+float2(43,71));
+        float rim=(1.-smoothstep(.10,.29,c))*wetEdge;
+        float concentration=.22+.08*paper+.12*bloom+.04*fiber;
+        alpha=body*clamp(concentration+.52*rim,0.,1.);
+    }
+    alpha*=paint.a;
+    return half4(paint.rgb*alpha,alpha);
+}

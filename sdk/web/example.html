@@ -171,19 +171,30 @@ try {
 
   const inkGroup = group(context, 'ink-parameters');
   const presetNames = {'round-regular':'规则圆头笔','round-handdrawn':'手绘圆头笔','laser-transient':'激光笔','marker-compact-v1':'马克笔','chalk-compact-v1':'粉笔','crayon-wax-v1':'蜡笔','watercolor-lite-v1':'轻量水彩','vector-solid-v1': '旧圆头笔', 'marker-flat-v1': '旧马克笔', 'chalk-grain-v1': '旧粉笔', 'membrane-v1': '纹理笔'};
-  const presets = [...new Map(sdk.brushPresets().map(preset => [preset.profileId, preset])).values()];
+  const presets = [...sdk.brushPresets().reduce((map,preset)=>{
+    const previous=map.get(preset.profileId);
+    if(!previous||preset.revision>previous.revision)map.set(preset.profileId,preset);
+    return map;
+  },new Map()).values()];
   const brush = select(inkGroup, '笔刷', 'ink-preset', [['', '切换预设…'], ...presets.map((preset, index) => [String(index), presetNames[preset.profileId] || `笔刷 ${index + 1}`])]);
+  const brushHint=document.createElement('span');brushHint.id='ink-hint';brushHint.className='hint';inkGroup.append(brushHint);
   brush.onchange = () => run(async () => { if (brush.value !== '') { const preset = presets[Number(brush.value)]; await sdk.selectBrush(preset.profileId, preset.revision); await sdk.selectTool('ink'); syncBrush(); } });
 
   const pressureMode=select(inkGroup,'压力来源','ink-pressure',[['1','模拟压力（默认）'],['2','设备压力（需设备能力）']]);
+  const inkColor=field(inkGroup,'笔迹颜色','color','ink-color');
+  inkColor.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c)await sdk.setBrushConfig({...c,color:rgba(inkColor.value,c.color[3])});});
   const inkControls={};
   for(const [key,label,min,max,step] of [['size','笔宽',1,128,1],['opacity','透明度',0,1,.05],['markerAngle','笔头角度',-3.14,3.14,.05],['markerFlatness','扁率',.05,1,.05],['density','粉笔覆盖率',0,1,.05],['textureScale','纸纹尺度',.25,32,.25],['deposition','蜡笔沉积',0,1,.05],['wetEdge','水彩湿边',0,1,.05]]){
     const control=field(inkGroup,label,'range','ink-'+key);control.min=min;control.max=max;control.step=step;inkControls[key]=control;
     control.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c)await sdk.setBrushConfig({...c,[key]:Number(control.value)});});
   }
-  const syncBrush=()=>{const c=sdk.readBrushConfig();for(const [key,control] of Object.entries(inkControls)){control.disabled=!c;if(c)control.value=c[key];}pressureMode.disabled=!c;if(c)pressureMode.value=String(c.pressureSource);};
+  const familyControls={1:['size','opacity'],2:['size','opacity','markerAngle','markerFlatness'],3:['size','opacity','density','textureScale'],4:['size','opacity','deposition','textureScale'],5:['size','opacity','wetEdge','textureScale'],6:['size','opacity']};
+  const familyHints={1:'平滑圆头 · 速度模拟粗细',2:'斜切扁头 · 半透明叠色',3:'干颗粒 · 纸面留白',4:'密实蜡质 · 方向纹理',5:'透明色洗 · 湿边积色',6:'临时光迹 · 自动消退'};
+  const syncBrush=()=>{const c=sdk.readBrushConfig();for(const [key,control] of Object.entries(inkControls)){control.disabled=!c;control.parentElement.hidden=!!c&&!familyControls[c.family]?.includes(key);if(c)control.value=c[key];}pressureMode.disabled=!c;pressureMode.parentElement.hidden=c?.family===6;inkColor.disabled=!c;if(c){pressureMode.value=String(c.pressureSource);inkColor.value=hex(c.color);}brushHint.textContent=c?(c.family===1&&c.roundMode===1?'平滑圆头 · 固定笔宽':familyHints[c.family]):'兼容笔刷';};
+  inkGroup.append(brushHint);
   pressureMode.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c)await sdk.setBrushConfig({...c,pressureSource:Number(pressureMode.value)});});
-  await sdk.selectBrush('round-handdrawn',1);syncBrush();
+  const initialPreset=presets.find(p=>p.profileId==='round-handdrawn');
+  await sdk.selectBrush(initialPreset.profileId,initialPreset.revision);brush.value=String(presets.indexOf(initialPreset));syncBrush();
 
   const selectionGroup = group(context, 'selection-parameters');
   const selectionMode = select(selectionGroup, '选择方式', 'selection-mode', [['point', '点选'], ['rectangle', '框选'], ['lasso', '套索']]);

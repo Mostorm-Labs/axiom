@@ -28,6 +28,7 @@ struct CompactBrushConfig final {
     double vHigh = 1200.0;
     double tauSeconds = 0.032;
     double geometryEpsilon = 0.25;
+    std::uint32_t algorithmVersion = 1;
 };
 
 // Runtime-owned signal normalizer used by compact authoring and by the
@@ -61,6 +62,8 @@ private:
     double pendingLength_=0;
     Metrics metrics_{};
     foundation::InkKnot lastKnot_{};
+    foundation::InkKnot previousControl_{};
+    foundation::InkKnot curveStart_{};
     double previousPressure_ = 0.5;
     double previousX_ = 0.0;
     double previousY_ = 0.0;

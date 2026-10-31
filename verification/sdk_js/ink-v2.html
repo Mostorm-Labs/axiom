@@ -4,15 +4,16 @@
 <script type="module">
 import {createRuntime} from './axiom.mjs';
 const checks={},errors=[],packets=[],owners=[],profiles=['round-regular','round-handdrawn','marker-compact-v1','chalk-compact-v1','crayon-wax-v1','watercolor-lite-v1','laser-transient'];
-const documentId='96'.repeat(16);let sdk,remote,checkpoint,liveBefore;
+const documentId='96'.repeat(16);let sdk,remote,checkpoint,liveBefore,brushRevision=1;
 const check=(v,k)=>{if(!v)throw Error(k);checks[k]=true;};
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 const hash=async bytes=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(n=>n.toString(16).padStart(2,'0')).join('');
 const png=(owner=sdk)=>owner.exportImage({bounds:[0,0,800,550],padding:0});
 const create=async(id,restore)=>{const owner=await createRuntime({mount:document.getElementById(id),documentId,permission:'localSingleUser',builtinFonts:false,...(restore?{restore}:{}),onError:e=>errors.push(String(e)),onOperation:b=>{if(id==='a')packets.push(b);}});owners.push(owner);return owner;};
 window.probe={
+ revision:value=>{brushRevision=value;},
  ready:(async()=>{sdk=await create('a');remote=await create('b');})(),info:()=>sdk.readBuildInfo(),diagnostics:()=>({checks,errors,state:sdk?.readState()}),
- async select(index){const profile=profiles[index];check(sdk.brushPresets().some(p=>p.profileId===profile&&p.revision===1),profile+'Selectable');await sdk.selectBrush(profile,1);const c=sdk.readBrushConfig();check(c&&c.pressureSource===1,profile+'DefaultSimulated');await sdk.setBrushConfig({...c,size:index===5?40:24,color:[.1,.25,.6,1],opacity:index===2?.45:.85});check(sdk.readBrushConfig().size===(index===5?40:24),profile+'ConfigReadback');liveBefore={objects:sdk.readState().objects,operations:packets.length,generation:sdk.readState().generation};},
+ async select(index){const profile=profiles[index],revision=index===6?1:brushRevision;check(sdk.brushPresets().some(p=>p.profileId===profile&&p.revision===revision),profile+'Selectable');await sdk.selectBrush(profile,revision);const c=sdk.readBrushConfig();check(c&&c.pressureSource===1,profile+'DefaultSimulated');await sdk.setBrushConfig({...c,size:index===5?40:24,color:[.1,.25,.6,1],opacity:index===2?.45:.85});check(sdk.readBrushConfig().size===(index===5?40:24),profile+'ConfigReadback');liveBefore={objects:sdk.readState().objects,operations:packets.length,generation:sdk.readState().generation};},
  async down(index){check(sdk.readState().objects===liveBefore.objects&&packets.length===liveBefore.operations,'previewTransient'+index);const p=document.querySelector('#a canvas:last-of-type');const g=p.getContext('webgl2'),pixels=new Uint8Array(p.width*p.height*4);g.readPixels(0,0,p.width,p.height,g.RGBA,g.UNSIGNED_BYTE,pixels);check(p.style.visibility!=='hidden'&&pixels.some((v,i)=>i%4===3&&v>0),'actualMaterialPreview'+index);
    // Nonzero alpha somewhere cannot prove that the stroke follows the pointer.
    // Check the held pointer's final path segment in framebuffer coordinates.
