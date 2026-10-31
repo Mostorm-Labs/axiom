@@ -1,4 +1,4 @@
-export const SDK_VERSION = '1.0.0-preview.2';
+export const SDK_VERSION = '1.0.0-preview.3';
 export class AxiomError extends Error {
   constructor(code, message = code, details = {}) { super(message); this.name = 'AxiomError'; this.code = code; this.details = details; }
 }
@@ -156,6 +156,14 @@ export async function createRuntime({mount, documentId, restore, initialResource
       version:SDK_VERSION, canvas:canonical,
       readBuildInfo:()=>call('version'),
       readState:()=>call('state').value,
+      readBackground:()=>call('background').value,
+      setBackground:async value=>{
+        if(!value||typeof value!=='object'||Object.keys(value).length!==3||
+          !['plain','dots','grid'].includes(value.mode)||
+          ![value.color,value.patternColor].every(c=>Array.isArray(c)&&c.length===4&&c.every(n=>typeof n==='number'&&Number.isFinite(n)&&n>=0&&n<=1))||
+          value.color[3]!==1)throw new AxiomError('INVALID_ARGUMENT');
+        return control({kind:'background',value:{mode:value.mode,color:[...value.color],patternColor:[...value.patternColor]}});
+      },
       readSelection:()=>call('selection').value,
       subscribeOperations:fn=>subscribe('operation',fn),subscribeState:fn=>subscribe('state',fn),
       dispatchEvents:()=>Promise.resolve().then(()=>{if(closed)throw new AxiomError('CLOSED');for(const s of listeners.values())s.paused=false;dispatch();}),

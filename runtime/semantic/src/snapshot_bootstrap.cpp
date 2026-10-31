@@ -89,6 +89,10 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
     if (!supportedSnapshotVersion(snapshot.schema_version) || snapshot.document_id.isZero()) {
         return rejectLoading(state, StatefulIssue::kInvalidApplicability);
     }
+    if (!foundation::validDocumentBackground(snapshot.background) ||
+        (snapshot.background != foundation::DocumentBackground{} &&
+         (snapshot.schema_version < 3 || (static_cast<unsigned>(capability) & 32U) == 0)))
+        return rejectLoading(state, StatefulIssue::kInvalidApplicability);
     if (!connectorShapeCapabilitySatisfied(snapshot))
         return rejectLoading(state, StatefulIssue::kInvalidKindVersion);
     if(snapshot.schema_version==3U) {
@@ -175,6 +179,7 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
     }
 
     SnapshotBootstrapResult result;
+    internal::ObjectStoreMutator::setDocumentBackground(objects, snapshot.background);
     result.restored = true;
     return result;
 }

@@ -1,4 +1,4 @@
-export const SDK_VERSION: '1.0.0-preview.2';
+export const SDK_VERSION: '1.0.0-preview.3';
 export class AxiomError extends Error {code: string; details: Record<string,unknown>; constructor(code:string,message?:string,details?:Record<string,unknown>);}
 export type Id128 = string;
 export type Revision = string;
@@ -9,6 +9,7 @@ export interface OperationPacket extends OperationMetadata {bytes:Uint8Array;}
 export interface DataStatus {attached:boolean;closing:boolean;fault:boolean;pending:number;pendingBytes:number;capacity:number;byteCapacity:number;statusCapacity:4096;statusRecords:number;latest:OperationMetadata|null;releasedOrdinal:Revision;}
 export interface Stamp {readonly owner:string;readonly token:[Revision,Revision,Revision,Revision,Revision,Revision,Revision,Revision];}
 export type Color = [number,number,number,number];
+export interface DocumentBackground {mode:'plain'|'dots'|'grid';color:Color;patternColor:Color;}
 export type PropertyValue = {type:'boolean';value:boolean}|{type:'float';value:number}|{type:'color';value:Color}|{type:'fill';value:Color|null}|{type:'blend'|'decoration';value:number}|{type:'stroke';value:Stroke|null};
 export interface Stroke {color:Color;width:number;cap:1|2|3;join:{kind:'miter';limit:number}|{kind:'round'|'bevel'};dash:{segments:number[];offset:number}|null;}
 export interface MultiProperty {total:number;eligible:Id128[];excluded:{objectId:Id128;reason:number}[];mixed:boolean;partial:boolean;available:boolean;availability:number;strokeWidthAvailable:boolean;uniformValue:PropertyValue|null;}
@@ -35,9 +36,11 @@ export interface RuntimeState {documentId:Id128;target:{runtimeEpoch:Revision;vi
 export interface SectionOptions {objectId?:Id128;objects?:Id128[];parentId?:Id128|null;title?:string;boundary?:[number,number,number,number];generation?:Revision;selectionRevision?:Revision;}
 export interface TextFormat {color?:[number,number,number,number];fontSize?:number;font?:Id128;bold?:boolean;italic?:boolean;underline?:boolean;strikethrough?:boolean;bulleted?:boolean;alignment?:1|2|3;}
 export interface Runtime {
-  readonly version:'1.0.0-preview.2'; readonly canvas:HTMLCanvasElement;
-  readBuildInfo():{ok:true;apiVersion:1;features:{shellAxis:1;resourceCustody:1};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
+  readonly version:'1.0.0-preview.3'; readonly canvas:HTMLCanvasElement;
+  readBuildInfo():{ok:true;apiVersion:1;features:{shellAxis:1;resourceCustody:1;documentBackground:1};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
   readState():RuntimeState;
+  readBackground():DocumentBackground;
+  setBackground(value:DocumentBackground):Promise<CommandResult>;
   subscribeOperations(listener:(packet:OperationPacket)=>void):()=>void;
   subscribeState(listener:(state:RuntimeState)=>void):()=>void;
   dispatchEvents():Promise<void>;

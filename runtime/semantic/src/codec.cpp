@@ -6,6 +6,7 @@
 
 #include "protobuf_codec_internal.hpp"
 #include "protobuf_object_mapping.hpp"
+#include "document_background_mapping.hpp"
 #include "container_operation_mapping.hpp"
 #include "container_operation_internal.hpp"
 
@@ -1423,6 +1424,7 @@ CodecResult SemanticCodec::encodeProtobufOperation(OperationKind kind) {
         case OperationKind::kUpdateResourceManifest: operation.mutable_payload()->mutable_update_resource_manifest(); break;
         case OperationKind::kSetSectionContent: operation.mutable_payload()->mutable_set_section_content(); break;
         case OperationKind::kEditContainerTopology: operation.mutable_payload()->mutable_edit_container_topology(); break;
+        case OperationKind::kSetDocumentBackground: operation.mutable_payload()->mutable_set_document_background(); break;
     }
     std::string bytes;
     if (!operation.SerializeToString(&bytes)) return {SemanticError::kMalformedWire, {}};
@@ -1588,6 +1590,13 @@ DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::u
                 else return false;
             }, operation.payload);
             break;
+        case auditoryworks::axiom::v1::OperationPayload::kSetDocumentBackground: {
+            SetDocumentBackgroundOp value;
+            const auto& item = decoded.payload().set_document_background();
+            payload_ok = item.has_value() && internal::fromProtobufBackground(item.value(), value.value);
+            operation.payload = value;
+            break;
+        }
         case auditoryworks::axiom::v1::OperationPayload::PAYLOAD_NOT_SET:
             return DecodedOperation({}, presence, {}, SemanticError::kMalformedWire);
     }
@@ -1647,6 +1656,7 @@ DecodedOperation SemanticCodec::decodeOperation(const std::vector<std::uint8_t>&
         case OperationKind::kUpdateResourceManifest: operation.payload = UpdateResourceManifestOp{}; break;
         case OperationKind::kSetSectionContent: operation.payload = SetSectionContentOp{}; break;
         case OperationKind::kEditContainerTopology: operation.payload = EditContainerTopologyOp{}; break;
+        case OperationKind::kSetDocumentBackground: operation.payload = SetDocumentBackgroundOp{}; break;
     }
     return {std::move(operation), {}, std::move(fields), SemanticError::kNone};
 }

@@ -1546,6 +1546,17 @@ semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
   return result;
 }
 
+bool CanvasEditingRuntime::setDocumentBackground(const foundation::DocumentBackground& value) {
+  if (!foundation::validDocumentBackground(value) || !canonicalWriteAdmission() ||
+      explicitIntentActive_ || !historySceneReady() || !snapshotCaptureReady() ||
+      (interaction_->textSession() &&
+       interaction_->textSession()->read().phase != runtime::TextPhase::kClosed)) return false;
+  if (semanticObjects_.documentBackground() == value) return true;
+  semantic::Operation operation{allocateOperationId(), documentId_, 1, 1,
+      semantic::SetDocumentBackgroundOp{value}};
+  return history_.executeUndoable(operation);
+}
+
 bool CanvasEditingRuntime::canonicalWriteAdmission() const noexcept {
   return !closed_ && !surfaceTransitionActive_ && surface_.available &&
          std::this_thread::get_id() == ownerThread_ && !publicationCallbackActive_;
@@ -3786,7 +3797,7 @@ SnapshotRestoreOutcome CanvasEditingRuntime::restoreSnapshotBeforeSurface(const 
       snapshot.document_id != documentId_ || sceneCoordinator_ == nullptr || sceneCompiler_ == nullptr) return SnapshotRestoreOutcome::kInvalid;
   try {
     auto state = semantic::DocumentRuntimeState::kLoading;
-    constexpr auto capability = semantic::SnapshotCapability::kShape2TriangleRichTextFormattingConnectorAndSectionV1;
+    constexpr auto capability = semantic::SnapshotCapability::kAllWithBackgroundV1;
     const auto restored = semantic::SnapshotBootstrapper::restore(snapshot, capability, state,
         semanticObjects_, manifest, semanticGeneration_, binding);
     if (!restored.restored) return SnapshotRestoreOutcome::kInvalid;
@@ -4487,7 +4498,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     }
   }
   applyContainerPreview(references.value());
-  const auto plan = render::FramePlanBuilder::build(frame, references.value());
+  const auto plan = render::FramePlanBuilder::build(frame, references.value(), semanticObjects_.documentBackground());
   if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
   const bool connectorCreation = creationMode_ &&
       (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow);
@@ -4897,7 +4908,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
     }
   }
   applyContainerPreview(references.value());
-  const auto plan = render::FramePlanBuilder::build(frame, references.value());
+  const auto plan = render::FramePlanBuilder::build(frame, references.value(), semanticObjects_.documentBackground());
   if (!plan) return false;
   const bool connectorCreation = creationMode_ &&
       (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow);

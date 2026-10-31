@@ -3,6 +3,7 @@
 #include "canvas/semantic/object_record.hpp"
 #include "canvas/semantic/container_operation.hpp"
 #include "canvas/semantic/resource_manifest_operation.hpp"
+#include "canvas/foundation/document_background.hpp"
 
 #include <cstdint>
 #include <variant>
@@ -43,12 +44,13 @@ struct EraseMaskRemoveItem final { ObjectId object_id{}; std::vector<ObjectId> m
 struct RemoveEraseMasksOp final { std::vector<EraseMaskRemoveItem> items; bool operator==(const RemoveEraseMasksOp&) const = default; };
 struct EditRichTextOp final { ObjectId object_id{}; RichTextDelta delta{}; bool operator==(const EditRichTextOp&) const = default; };
 struct SetConnectorContentOp final { ObjectId object_id{}; ConnectorContent content{}; bool operator==(const SetConnectorContentOp&) const = default; };
+struct SetDocumentBackgroundOp final { foundation::DocumentBackground value{}; bool operator==(const SetDocumentBackgroundOp&) const = default; };
 
 using OperationPayload = std::variant<
     InsertObjectsOp, DeleteObjectsOp, RestoreObjectsOp, SetPlacementsOp,
     SetTransformsOp, PatchPropertiesOp, SetObjectSizeOp,
     SetVectorPathGeometryOp, SetImageContentOp, AddStrokeOp, SplitStrokesOp,
     AddEraseMasksOp, RemoveEraseMasksOp, EditRichTextOp, SetConnectorContentOp, UpdateResourceManifestOp,
-    SetSectionContentOp, EditContainerTopologyOp>;
+    SetSectionContentOp, EditContainerTopologyOp, SetDocumentBackgroundOp>;
 
 } // namespace canvas::semantic

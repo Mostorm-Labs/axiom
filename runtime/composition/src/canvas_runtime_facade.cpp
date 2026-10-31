@@ -8,6 +8,11 @@
 
 namespace canvas::runtime {
 
+std::optional<foundation::DocumentBackground> CanvasRuntimeFacade::readBackground() const noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || runtime_.closed()) return std::nullopt;
+  return runtime_.documentBackground();
+}
+
 bool CanvasRuntimeFacade::setMultiSelectionPermission(MultiSelectionPermissionMode mode) noexcept {
   return composition_ && composition_->multiSelectionPort().setPermissionMode(mode);
 }
@@ -59,6 +64,8 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     bool applied = false;
 
     switch (p.kind) {
+      case CanvasControlPayloadKind::kDocumentBackground:
+        applied = runtime.setDocumentBackground(p.background); break;
       case CanvasControlPayloadKind::kSection:
       {
         const auto result=runtime.executeSectionIntent(p.section);

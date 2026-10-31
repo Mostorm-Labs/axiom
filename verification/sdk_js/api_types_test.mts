@@ -5,6 +5,10 @@ await sdk.selectShape('triangle');
 const projection=sdk.multi.read(), property=projection.properties['3'];
 await sdk.multi.setProperty(3,{type:'float',value:.5},projection.stamp,property.eligible);
 const color:Color=[0,0,1,1];await sdk.text.format({color,bold:true});
+await sdk.setBackground({mode:'dots',color:[1,1,1,1],patternColor:[0,0,0,.5]});
+const background=sdk.readBackground();background.mode;background.patternColor[3];
+// @ts-expect-error background modes are a closed vocabulary
+await sdk.setBackground({mode:'checkerboard',color,patternColor:color});
 await sdk.createConnector({start:{point:[1,2]},end:{objectId:sdk.readState().primary,port:4}});
 const checkpoint=await sdk.captureSnapshot({generation:sdk.readState().generation,documentRevision:'9007199254740993',recoveryFrontier:[8,1,16,1,24,1]});
 checkpoint.bytes.slice();checkpoint.checkpointDigest.slice();

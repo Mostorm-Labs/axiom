@@ -13,12 +13,17 @@ namespace canvas::interaction {
 bool historyExpectationsMatch(const semantic::ObjectStore& store,
                                std::span<const HistoryExpectation> expectations) noexcept {
     for (const auto& expected : expectations) {
+        if (expected.aspect == HistoryAspect::kDocumentBackground) {
+            if (store.documentBackground() != expected.background) return false;
+            continue;
+        }
         const auto* current = store.find(expected.objectId);
         if (!expected.record) { if (current != nullptr) return false; continue; }
         if (!current || current->kind != expected.record->kind ||
             current->kind_version != expected.record->kind_version) return false;
         const auto& record = *expected.record;
         switch (expected.aspect) {
+            case HistoryAspect::kDocumentBackground: break;
             case HistoryAspect::kTopology:
                 if (current->placement != record.placement || current->transform != record.transform) return false;
                 break;

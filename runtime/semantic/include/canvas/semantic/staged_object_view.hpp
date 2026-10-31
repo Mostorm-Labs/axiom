@@ -26,6 +26,7 @@ class StagedObjectView final : public ObjectStore {
     [[nodiscard]] bool stageCreate(ObjectRecord record);
     [[nodiscard]] bool stageReplace(ObjectRecord record);
     [[nodiscard]] bool stageDelete(const ObjectId& id);
+    void stageDocumentBackground(const foundation::DocumentBackground& value) noexcept;
 
   private:
     static bool childBefore(const ObjectRecord& left, const ObjectRecord& right);

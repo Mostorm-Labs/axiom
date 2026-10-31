@@ -62,6 +62,29 @@ strings for 64-bit revisions/tokens. Command promises resolve only after the
 Runtime's result is available; this does not acknowledge durable storage.
 Application callbacks are deferred and must not replace native IME results.
 
+Document backgrounds use complete value DTOs:
+
+```js
+await runtime.setBackground({
+  mode: 'dots', // 'plain', 'dots', or 'grid'
+  color: [1, 1, 1, 1],
+  patternColor: [0.7, 0.75, 0.8, 0.55],
+});
+const background = runtime.readBackground();
+```
+
+Color components must be finite numbers in `[0,1]`; background alpha must be `1`.
+`setBackground` replaces the complete value through the existing owner-thread
+control/Operation path. A no-op creates no History entry or outbound Operation.
+Background changes participate in Undo/Redo; compensation rejects if a remote
+background edit conflicts with the captured intention. Snapshots and Operation
+replay retain the settings; external Data/Axis still owns actual persistence and
+network delivery. Non-default settings require `document-background-v1` reader
+support; older snapshots retain their white background and legacy encoding.
+The pattern is anchored at world origin with 24-world-unit spacing, adaptively
+thinned at low zoom. It is not an object and does not affect content bounds,
+selection or erasing. The demo applies draft controls only when Apply is pressed.
+
 The Product Shell / Axis bridge adds `subscribeOperations`, `subscribeState` and
 their returned disposers. Operation subscription attaches volatile custody;
 `data.readNext`, `data.release`, `data.status` and `data.reportStatus` separate byte
@@ -76,6 +99,7 @@ See `docs/planning/sdk/shell-axis-integration.md` in the source repository.
 | Area | Public methods |
 |---|---|
 | Tools and style | `selectTool`, `selectShape`, `setSelectionMode`, `brushPresets`, `selectBrush`, `setInk`, `setEraser`, `setAppearance` |
+| Document background | `readBackground`, `setBackground` |
 | View and selection | `readState`, `readSelection`, `panBy`, `zoomAt`, `fitContent`, `fitSelection`, `fitObject`, `resizeSelection`, `transformSelection`, `deleteSelection`, `lockSelection`, `unlockSelection`, `orderSelection`, `setSelectionVisible` |
 | Text and IME | `text.read`, `text.create`, `text.edit`, `text.editAtPoint`, `text.replace`, `text.select`, `text.selectAll`, caret/delete/paragraph/width methods, `text.format`, `text.fonts`, `text.fontStatus`, `text.completeComposition`, `text.finish`, `text.escape`, `text.resync`, `text.retry` |
 | Image and crop | `importImage`, `replaceImage`, `resizeImage`, `readSelectedImage`, `beginCrop`, `readCrop`, `updateCrop`, `commitCrop`, `cancelCrop` |

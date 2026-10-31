@@ -6,12 +6,27 @@
 import {createRuntime} from './axiom.mjs';
 const tools=document.getElementById('tools'),status=document.getElementById('status');
 const fail=e=>{status.textContent=`${e.code||'ERROR'}: ${e.message}`;};
-let sdk, active;
-const show=()=>{const s=sdk.readState();status.textContent=`${s.objects} objects · ${s.selected.length} selected · Zoom ${s.camera.scale.toFixed(2)}`;};
-const add=(label,action,isTool=false)=>{const button=document.createElement('button');button.textContent=label;button.type='button';tools.append(button);
+let sdk, active, syncBackground=()=>{};
+const show=()=>{const s=sdk.readState();status.textContent=`${s.objects} objects · ${s.selected.length} selected · Zoom ${s.camera.scale.toFixed(2)}`;syncBackground();};
+const add=(label,action,isTool=false)=>{const button=document.createElement('button');button.textContent=label;button.type='button';if(isTool)button.dataset.tool='true';tools.append(button);
   button.onclick=async()=>{try{await action();if(isTool){active?.setAttribute('aria-pressed','false');active=button;active.setAttribute('aria-pressed','true');}show();}catch(e){fail(e);}};return button;};
 try{
  sdk=await createRuntime({mount:document.getElementById('canvas'),permission:'localSingleUser',onError:fail,onChange:()=>show()});
+ const backgroundMode=document.createElement('select');backgroundMode.id='background-mode';backgroundMode.setAttribute('aria-label','背景样式');
+ for(const [value,label] of [['plain','纯色'],['dots','点阵'],['grid','方格线']]){const option=document.createElement('option');option.value=value;option.textContent=label;backgroundMode.append(option);}
+ const colorInput=(id,label)=>{const wrapper=document.createElement('label');wrapper.textContent=label;const input=document.createElement('input');input.type='color';input.id=id;input.setAttribute('aria-label',label);wrapper.append(input);tools.append(wrapper);return input;};
+ tools.append(backgroundMode);
+ const backgroundColor=colorInput('background-color','底色'),patternColor=colorInput('background-pattern-color','点线颜色');
+ const preview=document.createElement('span');preview.setAttribute('aria-label','背景预览');preview.style.cssText='display:inline-block;width:48px;height:28px;border:1px solid #889';tools.append(preview);
+ let backgroundDirty=false,backgroundDraft=sdk.readBackground();
+ const hex=color=>'#'+color.slice(0,3).map(n=>Math.round(n*255).toString(16).padStart(2,'0')).join('');
+ const rgba=value=>[1,3,5].map(i=>parseInt(value.slice(i,i+2),16)/255).concat(1);
+ const previewDraft=()=>{const ink=`rgba(${backgroundDraft.patternColor.slice(0,3).map(n=>Math.round(n*255)).join(',')},${backgroundDraft.patternColor[3]})`;preview.style.backgroundColor=backgroundColor.value;preview.style.backgroundSize='12px 12px';preview.style.backgroundImage=backgroundMode.value==='dots'?`radial-gradient(circle,${ink} 1px,transparent 1.5px)`:backgroundMode.value==='grid'?`linear-gradient(${ink} 1px,transparent 1px),linear-gradient(90deg,${ink} 1px,transparent 1px)`:'none';};
+ for(const input of [backgroundMode,backgroundColor,patternColor])input.oninput=()=>{backgroundDirty=true;if(input===backgroundMode)backgroundDraft.mode=input.value;else if(input===backgroundColor)backgroundDraft.color=rgba(input.value);else backgroundDraft.patternColor=rgba(input.value).slice(0,3).concat(backgroundDraft.patternColor[3]);previewDraft();};
+ syncBackground=()=>{if(backgroundDirty)return;const value=sdk.readBackground();backgroundDraft=value;backgroundMode.value=value.mode;backgroundColor.value=hex(value.color);patternColor.value=hex(value.patternColor);previewDraft();};
+ const applyBackground=add('应用背景',async()=>{await sdk.setBackground(backgroundDraft);backgroundDirty=false;syncBackground();});applyBackground.id='background-apply';
+ const cancelBackground=add('取消更改',()=>{backgroundDirty=false;syncBackground();});cancelBackground.id='background-cancel';
+ syncBackground();
  for(const [label,tool] of [['Ink','ink'],['Select','select'],['Object eraser','objectEraser'],['Partial eraser','partialEraser'],['Hand','hand'],['Text','text']])add(label,()=>sdk.selectTool(tool),true);
  for(const shape of ['rectangle','ellipse','triangle','sticky','arrow'])add(shape==='arrow'?'Connector':shape,()=>sdk.selectShape(shape),true);
  for(const mode of ['point','rectangle','lasso'])add(`${mode} selection`,()=>sdk.setSelectionMode(mode),true);
@@ -22,7 +37,7 @@ try{
  add('Import image',()=>{replace=false;file.value='';file.click();});add('Replace image',()=>{replace=true;file.value='';file.click();});
  file.onchange=async()=>{try{const f=file.files?.[0];if(!f)return;const bytes=new Uint8Array(await f.arrayBuffer());if(replace)await sdk.replaceImage(bytes,f.type);else await sdk.importImage(bytes,f.type);show();}catch(e){fail(e);}};
  add('Crop',()=>sdk.beginCrop(sdk.readSelectedImage().objectId));add('Crop done',()=>sdk.commitCrop(sdk.readCrop().token));add('Crop cancel',()=>sdk.cancelCrop(sdk.readCrop().token));
- active=tools.firstElementChild;active.setAttribute('aria-pressed','true');show();
+ active=tools.querySelector('[data-tool]');active.setAttribute('aria-pressed','true');show();
  window.addEventListener('pagehide',()=>{void sdk.close().catch(fail);},{once:true});
 }catch(e){fail(e);}
 </script>

@@ -39,6 +39,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
  public:
 #endif
   ~CanvasRuntimeFacade() override;
+  [[nodiscard]] std::optional<foundation::DocumentBackground> readBackground() const noexcept override;
   [[nodiscard]] TextReceipt submitTextIntent(const TextIntent&) override;
   [[nodiscard]] TextReceipt submitTextInput(const TextInputEvent&) override;
   [[nodiscard]] TextEditorSnapshot readTextEditor() const override;

@@ -3,6 +3,7 @@
 #include "object_record_semantics_internal.hpp"
 #include "protobuf_codec_internal.hpp"
 #include "protobuf_object_mapping.hpp"
+#include "document_background_mapping.hpp"
 #include "sha256_internal.hpp"
 
 #include <algorithm>
@@ -42,13 +43,20 @@ std::array<std::uint8_t, 32> snapshotDigest(const auditoryworks::axiom::v1::Docu
         number(source.manifest().schema_version(),4);number(source.manifest().manifest_revision(),8);
         number(source.manifest().entries_size(),8);for(const auto& entry:source.manifest().entries())blob(entry);
         number(source.manifest().retired_entries_size(),8);for(const auto& entry:source.manifest().retired_entries())blob(entry);
+        // Absent background retains the released legacy projection byte-for-byte.
+        if (source.has_background()) {
+            const std::string extension = "axiom.document-background.v1";
+            number(extension.size(),4); framed.insert(framed.end(),extension.begin(),extension.end());
+            blob(source.background());
+        }
     }
     return internal::sha256(framed);
 }
 
-struct SnapshotFeatures final { bool triangle=false,text=false,formatting=false,section=false,label=false,connector=false; };
+struct SnapshotFeatures final { bool triangle=false,text=false,formatting=false,section=false,label=false,connector=false,background=false; };
 SnapshotFeatures snapshotFeatures(const SemanticSnapshot& snapshot) {
     SnapshotFeatures result;
+    result.background = snapshot.background != foundation::DocumentBackground{};
     for(const auto& object:snapshot.objects) {
         if(object.kind==ObjectKind::kShape && (object.kind_version==2 || object.kind_version==3)) {
             const auto* shape=std::get_if<ShapeContent>(&object.content);
@@ -83,12 +91,14 @@ std::vector<std::string> requiredCapabilities(const SnapshotFeatures& features) 
     if(features.label)result.push_back("shape-richtext-label-v1");
     if(features.connector)result.push_back("connector-shape-attachment-v1");
     if(features.section)result.push_back("section-v1");
+    if(features.background)result.push_back("document-background-v1");
     return result;
 }
 bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reader) {
     const auto bits=static_cast<unsigned>(reader);
-    if(bits>31U) return false;
+    if(bits>63U || !foundation::validDocumentBackground(snapshot.background)) return false;
     const auto features=snapshotFeatures(snapshot);
+    if (features.background && ((bits & 32U) == 0 || snapshot.schema_version < 3U)) return false;
     if((features.triangle && (bits&1U)==0) || (features.text && ((bits&2U)==0 || snapshot.schema_version<3))) return false;
     if(features.formatting && (bits&4U)==0)return false;
     if(features.section && ((bits&16U)==0 || snapshot.schema_version<3))return false;
@@ -181,6 +191,8 @@ static CodecResult encodeSnapshot(const SemanticSnapshot& snapshot, SnapshotCapa
     wire.mutable_document_id()->set_value(std::string(
         reinterpret_cast<const char*>(snapshot.document_id.value().bytes.data()), snapshot.document_id.value().bytes.size()));
     wire.set_schema_version(snapshot.schema_version);
+    if (snapshot.background != foundation::DocumentBackground{})
+        internal::toProtobufBackground(snapshot.background, *wire.mutable_background());
     for (const auto& object : objects) {
         auto* destination = wire.add_objects();
         if (!internal::toProtobufObjectRecord(object, *destination)) return {SemanticError::kInvalidSemanticValue, {}};
@@ -254,7 +266,7 @@ SnapshotDecodeResult SnapshotCodec::decode(const std::vector<std::uint8_t>& byte
     if (document_id.isZero()) return {SemanticError::kInvalidSemanticValue, std::nullopt};
     if (!supportedSnapshotVersion(wire.schema_version())) return {SemanticError::kUnsupportedVersion, std::nullopt};
     const bool has_extension = wire.has_manifest() || wire.has_document_revision() || wire.has_recovery_frontier() ||
-        wire.has_digest_algorithm() || wire.has_document_digest() || wire.has_capability_requirements() || wire.has_checkpoint_digest();
+        wire.has_digest_algorithm() || wire.has_document_digest() || wire.has_capability_requirements() || wire.has_checkpoint_digest() || wire.has_background();
     if (wire.schema_version() < 3U && has_extension) return {SemanticError::kInvalidSemanticValue, std::nullopt};
     if (wire.schema_version() >= 3U && (!wire.has_manifest() || !wire.has_document_revision() ||
         !wire.has_recovery_frontier() || !wire.has_digest_algorithm() || !wire.has_document_digest() ||
@@ -266,6 +278,10 @@ SnapshotDecodeResult SnapshotCodec::decode(const std::vector<std::uint8_t>& byte
     SemanticSnapshot result;
     result.document_id = document_id;
     result.schema_version = wire.schema_version();
+    if (wire.has_background() &&
+        (!internal::fromProtobufBackground(wire.background(), result.background) ||
+         result.background == foundation::DocumentBackground{}))
+        return {SemanticError::kInvalidSemanticValue, std::nullopt};
     result.manifest_present = wire.has_manifest();
     if (result.manifest_present && !internal::fromProtobufResourceManifest(wire.manifest(), result.manifest)) {
         return {SemanticError::kInvalidSemanticValue, std::nullopt};

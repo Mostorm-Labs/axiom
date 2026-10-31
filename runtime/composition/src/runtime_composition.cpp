@@ -137,13 +137,14 @@ DocumentSnapshotResult RuntimeCompositionCore::captureDocumentSnapshot(const Doc
     semantic::SemanticSnapshot snapshot{};
     snapshot.document_id = runtime_->documentId(); snapshot.schema_version = 3;
     snapshot.objects = runtime_->snapshotObjects(); snapshot.manifest = resources_.manifest;
+    snapshot.background = runtime_->documentBackground();
     snapshot.manifest_present = true; snapshot.document_revision = request.documentRevision;
     snapshot.recovery_frontier = request.recoveryFrontier;
     snapshot.capability_requirements = request.capabilityRequirements; snapshot.digest_algorithm = 1;
     if (snapshot.capability_requirements.empty() && !semantic::SnapshotCodec::populateRequirements(snapshot)) {
       result.status = DocumentSnapshotStatus::kInvalidCheckpoint; return result;
     }
-    constexpr auto capability = semantic::SnapshotCapability::kShape2TriangleRichTextFormattingConnectorAndSectionV1;
+    constexpr auto capability = semantic::SnapshotCapability::kAllWithBackgroundV1;
     if (!semantic::SnapshotCodec::bindDigests(snapshot, capability)) {
       result.status = DocumentSnapshotStatus::kInvalidCheckpoint; return result;
     }

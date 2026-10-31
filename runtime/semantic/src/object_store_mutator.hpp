@@ -31,6 +31,12 @@ class PreparedIndexedContainerApply final {
 // a store precondition; it is deliberately not an Operation outcome.
 class ObjectStoreMutator final {
   public:
+    static void setDocumentBackground(ObjectStore& store, const foundation::DocumentBackground& value) noexcept {
+        store.background_ = value;
+    }
+    static void swapDocumentBackground(ObjectStore& left, ObjectStore& right) noexcept {
+        std::swap(left.background_, right.background_);
+    }
     [[nodiscard]] static bool insertFresh(ReferenceObjectStore& store, ObjectRecord record);
     [[nodiscard]] static bool replaceExisting(ReferenceObjectStore& store, ObjectRecord record);
     [[nodiscard]] static bool eraseExisting(ReferenceObjectStore& store, const ObjectId& id);

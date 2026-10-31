@@ -506,6 +506,9 @@ class Runtime final {
     Json textSnapshot() {
         return invoke("text", {{"action", "snapshot"}}).value.at("value");
     }
+    Json read_background() { return invoke("background").value.at("value"); }
+    void set_background(const Json& value) { invoke("control", {{"kind", "background"}, {"value", value}}); }
+
     Json fonts() {
         return invoke("text", {{"action", "fonts"}}).value.at("value");
     }

@@ -851,6 +851,8 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
                 if constexpr (std::is_same_v<Payload, SetConnectorContentOp>) {
                     if (!validConnector(payload.content)) return {ValidationIssue::kInvalidLeaf};
                 }
+            } else if constexpr (std::is_same_v<Payload, SetDocumentBackgroundOp>) {
+                if (!foundation::validDocumentBackground(payload.value)) return {ValidationIssue::kInvalidLeaf};
             } else if constexpr (std::is_same_v<Payload, SetSectionContentOp> || std::is_same_v<Payload, EditContainerTopologyOp>) {
                 if (!internal::validateContainerOperation(payload)) return invalidCollection();
             } else if constexpr (std::is_same_v<Payload, UpdateResourceManifestOp>) {

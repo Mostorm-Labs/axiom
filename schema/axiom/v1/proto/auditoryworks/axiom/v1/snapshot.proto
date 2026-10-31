@@ -3,6 +3,7 @@ package auditoryworks.axiom.v1;
 
 import "auditoryworks/axiom/v1/common.proto";
 import "auditoryworks/axiom/v1/object.proto";
+import "auditoryworks/axiom/v1/document_background.proto";
 
 message ImageResourceMetadataV1 { uint32 schema_version = 1; uint32 pixel_width = 2; uint32 pixel_height = 3; uint32 color_policy = 4; }
 message FontResourceMetadataV1 { uint32 schema_version = 1; uint32 collection_index = 2; uint32 layout_profile = 3; }
@@ -19,6 +20,7 @@ message DocumentSnapshot {
   bytes document_digest = 8;
   bytes capability_requirements = 9;
   bytes checkpoint_digest = 10;
+  DocumentBackgroundV1 background = 11;
 }
 
 

@@ -122,7 +122,7 @@ DocumentRestoreStatus RuntimeComposition::openDocumentFromSnapshot(const Documen
     return DocumentRestoreStatus::kNotReady;
   if (request.expectedDocumentId.isZero() || request.resourceBinding == 0) return DocumentRestoreStatus::kInvalidSnapshot;
   try {
-    constexpr auto capability = semantic::SnapshotCapability::kShape2TriangleRichTextFormattingConnectorAndSectionV1;
+    constexpr auto capability = semantic::SnapshotCapability::kAllWithBackgroundV1;
     auto decoded = semantic::SnapshotCodec::decode(request.bytes, capability);
     if (!decoded.ok() || decoded.snapshot->schema_version != 3 || !decoded.snapshot->manifest_present ||
         decoded.snapshot->document_id.value() != request.expectedDocumentId ||
@@ -189,6 +189,7 @@ bool RuntimeComposition::bindInitialResourceManifest(const semantic::ResourceMan
                                                       std::uint64_t binding) noexcept {
   if (std::this_thread::get_id() != impl_->ownerThread || impl_->initialResourcesBound || impl_->interactionStarted ||
       impl_->core.readback().state != RuntimeCompositionState::kReady ||
+      impl_->core.canonicalCommitFence().ordinal.value() != 0 ||
       impl_->core.controlFacade().readTextEditor().phase != TextPhase::kClosed ||
       impl_->core.semanticObjectCount() != 0 || impl_->core.resources().manifest.manifest_revision != 0 ||
       !impl_->core.resources().manifest.entries.empty() || !impl_->core.resources().manifest.retired_entries.empty()) return false;

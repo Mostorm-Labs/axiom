@@ -1,4 +1,5 @@
 #include "protobuf_object_mapping.hpp"
+#include "document_background_mapping.hpp"
 #include "protobuf_owned_append.hpp"
 #include "container_operation_mapping.hpp"
 
@@ -395,6 +396,8 @@ bool toProtobufOperation(const Operation& source, p::Operation& destination) {
                 else if constexpr(std::is_same_v<S,SetRichTextLayoutStep>){auto* y=x->mutable_set_layout();y->set_target_kind_version(v.target_kind_version);if(v.layout)y->mutable_layout()->set_wrap_width(v.layout->wrap_width);}
                 else {auto* y=x->mutable_restore_state()->mutable_state();y->set_kind_version(v.state.kind_version);p::ObjectContent c;setRichText(v.state.content,&c);*y->mutable_document()=c.rich_text().document();if(c.rich_text().has_layout())*y->mutable_layout()=c.rich_text().layout();}
             },step);
+        } else if constexpr (std::is_same_v<T, SetDocumentBackgroundOp>) {
+            toProtobufBackground(value.value, *payload->mutable_set_document_background()->mutable_value());
         } else if constexpr (std::is_same_v<T, SetSectionContentOp> || std::is_same_v<T, EditContainerTopologyOp>) {
             if (!toProtobufContainerOperation(source.payload, *payload)) return false;
         } else if constexpr (std::is_same_v<T, SetConnectorContentOp>) {

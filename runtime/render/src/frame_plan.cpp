@@ -4,8 +4,9 @@ namespace canvas::render {
 
 foundation::Result<FramePlan> FramePlanBuilder::build(
     const FrameState& frame,
-    const ReferenceDrawList& referenceDrawList) {
-    if (!(referenceDrawList.frame == frame)) {
+    const ReferenceDrawList& referenceDrawList,
+    const foundation::DocumentBackground& background) {
+    if (!(referenceDrawList.frame == frame) || !foundation::validDocumentBackground(background)) {
         return foundation::Result<FramePlan>::failure(foundation::Error{
             foundation::ErrorCode::kInvalidArgument,
             "FrameState and ReferenceDrawList identity mismatch",
@@ -14,6 +15,7 @@ foundation::Result<FramePlan> FramePlanBuilder::build(
     return foundation::Result<FramePlan>::success(FramePlan{
         .frame = frame,
         .referenceDrawList = referenceDrawList,
+        .background = background,
     });
 }
 

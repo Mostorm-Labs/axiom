@@ -60,6 +60,16 @@ AtomicApplyResult applyPreparedPlanInternal(Store& store, const PreparedApplyPla
         return {};
     }
 
+    if (plan.background) {
+        if (!foundation::validDocumentBackground(*plan.background) || !plan.creates.empty() ||
+            !plan.replacements.empty() || !plan.deletes.empty() || plan.manifest) return {};
+#if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
+        if (canvas::qualification::notify(fc08Context, canvas::qualification::Point::kSemPublish, plan.operation)) return {};
+#endif
+        ObjectStoreMutator::setDocumentBackground(store, *plan.background);
+        return {AtomicApplyStatus::kApplied};
+    }
+
     if (reserved || plan.operation.kind() == OperationKind::kSetSectionContent || plan.operation.kind() == OperationKind::kEditContainerTopology) {
         try {
             if constexpr (std::is_same_v<Store, IndexedObjectStore>) {

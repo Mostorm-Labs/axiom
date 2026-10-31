@@ -1,4 +1,5 @@
 #pragma once
+#include "canvas/foundation/document_background.hpp"
 
 #include "canvas/foundation/object_id.hpp"
 #include "canvas/runtime/section_input.hpp"
@@ -93,6 +94,7 @@ enum class CanvasControlPayloadKind : std::uint8_t {
   kUnlockSelected,
   kSection,
   kSelectionAcquisitionMode,
+  kDocumentBackground,
 };
 
 enum class CanvasFitTarget : std::uint8_t { kContent, kSelection, kObject, kWorldRect };
@@ -118,6 +120,7 @@ struct CanvasControlPayload final {
   std::array<float, 4> worldRect{};
   SectionIntent section{};
   CanvasSelectionMode selectionAcquisitionMode = CanvasSelectionMode::kPoint;
+  foundation::DocumentBackground background{};
 };
 
 struct CanvasControlRequest final {

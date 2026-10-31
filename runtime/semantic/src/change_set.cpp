@@ -9,11 +9,13 @@ ChangeSet::ChangeSet(
     SemanticGeneration before_generation,
     SemanticGeneration after_generation,
     std::vector<ObjectSemanticChange> objects,
-    std::vector<ResourceManifestSemanticChange> resources) noexcept
+    std::vector<ResourceManifestSemanticChange> resources,
+    bool document_background_changed) noexcept
     : before_generation_(before_generation),
       after_generation_(after_generation),
       objects_(std::move(objects)),
-      resource_changes_(std::move(resources)) {}
+      resource_changes_(std::move(resources)),
+      document_background_changed_(document_background_changed) {}
 
 ChangeSet ChangeSet::fromChanges(
     SemanticGeneration before_generation,
@@ -52,11 +54,12 @@ ChangeSet ChangeSet::fromChanges(
     SemanticGeneration before_generation,
     SemanticGeneration after_generation,
     std::vector<ObjectSemanticChange> objects,
-    std::vector<ResourceManifestSemanticChange> resources) {
+    std::vector<ResourceManifestSemanticChange> resources,
+    bool document_background_changed) {
     std::sort(resources.begin(), resources.end(), [](const auto& left, const auto& right) {
         return left.resource_id.value < right.resource_id.value;
     });
-    return ChangeSet(before_generation, after_generation, std::move(objects), std::move(resources));
+    return ChangeSet(before_generation, after_generation, std::move(objects), std::move(resources), document_background_changed);
 }
 
 } // namespace canvas::semantic

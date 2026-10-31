@@ -496,6 +496,11 @@ bool normalizeOperationPayload(OperationPayload& payload) {
             } else if constexpr (std::is_same_v<Item, EditRichTextOp>) {
                 if (!validObjectId(value.object_id)) return false;
                 return normalizeRichTextDelta(value.delta);
+            } else if constexpr (std::is_same_v<Item, SetDocumentBackgroundOp>) {
+                if (!foundation::validDocumentBackground(value.value)) return false;
+                for (auto* color : {&value.value.color, &value.value.patternColor})
+                    for (auto& component : *color) if (component == 0) component = 0;
+                return true;
             } else if constexpr (std::is_same_v<Item, SetSectionContentOp> || std::is_same_v<Item, EditContainerTopologyOp>) {
                 return internal::normalizeContainerOperation(value);
             } else if constexpr (std::is_same_v<Item, UpdateResourceManifestOp>) {

@@ -17,6 +17,7 @@ namespace canvas::runtime {
 class RuntimeFacade {
  public:
   virtual ~RuntimeFacade() = default;
+  [[nodiscard]] virtual std::optional<foundation::DocumentBackground> readBackground() const noexcept { return std::nullopt; }
   [[nodiscard]] virtual SelectionSummary readSelectionSummary() const { return {}; }
   // Public C++ projection and intents; default implementations fail closed.
   // The concrete composition remains the only selection and History owner.

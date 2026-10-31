@@ -778,6 +778,55 @@ bool shouldIsolateInkEntry(const ReferenceTraversalEntry& entry,
            (isBrushReferenceEntry(entry) && !hasNonIdentityTransform(entry));
 }
 
+void drawDocumentBackground(SkCanvas& canvas, const FramePlan& plan) {
+    const auto& background = plan.background;
+    const auto color = [](const std::array<float,4>& value) {
+        return SkColor4f{value[0],value[1],value[2],value[3]};
+    };
+    canvas.clear(color(background.color).toSkColor());
+    if (background.mode == foundation::BackgroundMode::kPlain || background.patternColor[3] == 0) return;
+    const auto transform = matrix(plan.referenceDrawList.worldToView);
+    SkMatrix inverse;
+    if (!transform.invert(&inverse)) return;
+    const auto clip = rect(plan.referenceDrawList.viewportClip);
+    SkRect world;
+    inverse.mapRect(&world, clip);
+    const double scale = std::hypot(plan.referenceDrawList.worldToView.a,
+                                    plan.referenceDrawList.worldToView.b);
+    if (!world.isFinite() || !std::isfinite(scale) || scale <= 0) return;
+    double step = 24;
+    // Density is view-derived. The document retains the same world origin and
+    // pattern at every zoom; skip subdivisions rather than moving the grid.
+    while (step * scale < 12 || world.width()/step > 512 || world.height()/step > 512) {
+        step *= 2;
+        if (!std::isfinite(step)) return;
+    }
+    const double firstX = std::floor(world.left()/step)*step;
+    const double firstY = std::floor(world.top()/step)*step;
+    const unsigned columns = static_cast<unsigned>(std::ceil(world.width()/step)) + 2;
+    const unsigned rows = static_cast<unsigned>(std::ceil(world.height()/step)) + 2;
+    SkPaint paint;
+    paint.setAntiAlias(true); paint.setColor4f(color(background.patternColor), nullptr);
+    paint.setStrokeWidth(static_cast<float>(1/scale));
+    canvas.save(); scaleToDevice(canvas, plan.frame.metrics);
+    canvas.clipRect(clip); canvas.concat(transform);
+    if (background.mode == foundation::BackgroundMode::kDots) {
+        for (unsigned x=0;x<columns;++x) for (unsigned y=0;y<rows;++y)
+            canvas.drawCircle(static_cast<float>(firstX+x*step), static_cast<float>(firstY+y*step),
+                              static_cast<float>(1.2/scale), paint);
+    } else {
+        for (unsigned x=0;x<columns;++x) {
+            const auto position = static_cast<float>(firstX+x*step);
+            canvas.drawLine(position,world.top(),position,world.bottom(),paint);
+        }
+        for (unsigned y=0;y<rows;++y) {
+            const auto position = static_cast<float>(firstY+y*step);
+            canvas.drawLine(world.left(),position,world.right(),position,paint);
+        }
+    }
+    canvas.restore();
+}
+
 std::string digest(const std::vector<std::uint8_t>& bytes) {
     std::uint64_t value = 0xcbf29ce484222325ULL;
     for (std::uint8_t byte : bytes) { value ^= byte; value *= 0x100000001b3ULL; }
@@ -832,7 +881,7 @@ void drawTransientEntryToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
 BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images,
     SkiaTextResources* textResources, bool includeInk) {
-    if (!(plan.referenceDrawList.frame == plan.frame)) {
+    if (!(plan.referenceDrawList.frame == plan.frame) || !foundation::validDocumentBackground(plan.background)) {
         return BackendSubmissionResult::rejected("frame identity mismatch");
     }
     // An empty visibility result is a valid canonical frame: the scene may be
@@ -874,12 +923,12 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     }
     // Canonical surfaces are opaque document targets. Preview has its own
     // transparent clear in SkiaRenderer::renderPreview.
-    canvas.clear(SK_ColorWHITE);
+    drawDocumentBackground(canvas, plan);
     canvas.save();
     scaleToDevice(canvas, plan.frame.metrics);
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
-    const bool hasDrawableNonInk = std::any_of(
+    const bool hasDrawableNonInk = plan.background != foundation::DocumentBackground{} || std::any_of(
         plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
         isDrawableNonInkReferenceEntry);
     for (const auto& entry : plan.referenceDrawList.entries) {
@@ -904,7 +953,7 @@ void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
     scaleToDevice(canvas, plan.frame.metrics);
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
-    const bool hasDrawableNonInk = std::any_of(
+    const bool hasDrawableNonInk = plan.background != foundation::DocumentBackground{} || std::any_of(
         plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
         isDrawableNonInkReferenceEntry);
     for (const auto& entry : plan.referenceDrawList.entries) {
@@ -931,7 +980,7 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
         _lastIssue = issue;
         return BackendSubmissionResult::rejected(std::move(message));
     };
-    if (_config.width == 0U || _config.height == 0U) return reject(HeadlessSubmissionIssue::kInvalidConfiguration, "invalid raster dimensions");
+    if (_config.width == 0U || _config.height == 0U || !foundation::validDocumentBackground(plan.background)) return reject(HeadlessSubmissionIssue::kInvalidConfiguration, "invalid raster configuration");
     const std::uint64_t byteCount = static_cast<std::uint64_t>(_config.width) * _config.height * 4U;
     if (byteCount > std::numeric_limits<std::size_t>::max() || byteCount > 512ULL * 1024ULL * 1024ULL) return reject(HeadlessSubmissionIssue::kOverflow, "raster allocation overflow");
     if (_config.width != 256U || _config.height != 256U) return reject(HeadlessSubmissionIssue::kInvalidConfiguration, "headless raster must be 256x256");
@@ -971,12 +1020,13 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
     if (!surface) return reject(HeadlessSubmissionIssue::kRasterFailure, "unable to create raster surface");
     SkCanvas* canvas = surface->getCanvas();
     const auto background=_config.backgroundRgba;
-    canvas->clear(SkColorSetARGB(background&255U,background>>24U,(background>>16U)&255U,(background>>8U)&255U));
+    if (plan.background != foundation::DocumentBackground{}) drawDocumentBackground(*canvas, plan);
+    else canvas->clear(SkColorSetARGB(background&255U,background>>24U,(background>>16U)&255U,(background>>8U)&255U));
     canvas->save();
     scaleToDevice(*canvas, plan.frame.metrics);
     canvas->clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
-    const bool hasDrawableNonInk = std::any_of(
+    const bool hasDrawableNonInk = plan.background != foundation::DocumentBackground{} || std::any_of(
         plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
         isDrawableNonInkReferenceEntry);
     std::vector<semantic::ObjectKind> kinds;

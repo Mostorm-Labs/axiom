@@ -1,0 +1,91 @@
+<!doctype html><meta charset="utf-8"><title>Public SDK background regression</title>
+<style>body{margin:0;display:flex;gap:8px}.mount{width:256px;height:256px}</style>
+<div id="a" class="mount"></div><div id="b" class="mount"></div><div id="c" class="mount"></div>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+const documentId='1234567890abcdef1234567890abcdef', owners=[],errors=[];
+const normalized=value=>Array.isArray(value)?value.map(normalized):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,normalized(value[key])])):value;
+const same=(a,b)=>JSON.stringify(normalized(a))===JSON.stringify(normalized(b));
+const check=(value,message)=>{if(!value)throw Error(message);};
+const wait=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+async function create(id,restore){
+  const runtime=await createRuntime({mount:document.getElementById(id),documentId,builtinFonts:false,
+    permission:'localSingleUser',...(restore?{restore}:{}),onError:e=>errors.push({code:e.code,message:String(e)})});
+  runtime.data.attach({capacity:64}); owners.push(runtime); return runtime;
+}
+async function snapshot(runtime){
+  const metadata={generation:runtime.readState().generation,documentRevision:'7',recoveryFrontier:[8,1,16,1,24,7]};
+  const saved=await runtime.captureSnapshot(metadata);
+  return {saved,restore:{bytes:saved.bytes,metadata:{...metadata,checkpointDigest:saved.checkpointDigest,resourceBinding:'55'}}};
+}
+async function pixels(runtime){
+  await wait();const canvas=document.createElement('canvas');canvas.width=runtime.canvas.width;canvas.height=runtime.canvas.height;
+  const ctx=canvas.getContext('2d');ctx.drawImage(runtime.canvas,0,0);return ctx.getImageData(0,0,canvas.width,canvas.height).data;
+}
+function countRed(bytes){let count=0;for(let i=0;i<bytes.length;i+=4)if(bytes[i]>60&&bytes[i+2]<230)++count;return count;}
+function hash(bytes){let result=2166136261;for(const x of bytes)result=Math.imul(result^x,16777619);return result>>>0;}
+window.probe={errors,ready:null,legacyBytes:null,
+  info:()=>owners[0].readBuildInfo(),
+  run:async()=>{
+    const a=owners[0],checks={},diagnostics={};
+    const initial=a.readBackground();check(initial.mode==='plain'&&same(initial.color,[1,1,1,1]),'default white');
+    const values={mode:'plain',color:[0,0,1,1],patternColor:[1,0,0,1]};
+    await a.setBackground(values);await a.dispatchEvents();
+    const plain=await pixels(a);checks.solidPixels=plain.every((n,i)=>n===(i%4>=2?255:0));
+    const packets=[];let packet;while((packet=a.data.readNext(packets.at(-1)||null)))packets.push(packet);
+    check(packets.length===1,'one local background operation');
+    const generation=a.readState().generation;
+    for(const bad of [{...values,mode:'unknown'},{...values,color:[0,0,1,.5]},
+      {...values,color:[NaN,0,1,1]},{...values,patternColor:[0,Infinity,0,1]},
+      {...values,extra:true},{...values,color:['0',0,1,1]}]){
+      let rejected=false;try{await a.setBackground(bad);}catch{rejected=true;}check(rejected,'invalid background accepted');
+    }
+    checks.invalidAtomic=a.readState().generation===generation&&same(a.readBackground(),values);
+    diagnostics.invalid={beforeGeneration:generation,afterGeneration:a.readState().generation,actual:a.readBackground(),expected:values};
+    await a.setBackground({...values,mode:'dots'});const dots=await pixels(a),dotsCount=countRed(dots);
+    checks.dotPixels=dotsCount>0&&dotsCount<dots.length/16;
+    const dotsHash=hash(dots);const beforePan=a.readState().camera;
+    const red=(bytes,x,y)=>bytes[(y*256+x)*4];
+    await a.panBy(5,0);const shifted=await pixels(a);
+    await a.panBy(19,0);const afterPan=await pixels(a);
+    // Check world-space phase at literal positions. GPU circle edge coverage
+    // may vary by a subpixel across batches, so a full bitmap hash is no oracle.
+    checks.worldAligned=red(dots,24,24)>100&&red(shifted,19,24)>100&&red(shifted,24,24)===0&&red(afterPan,24,24)>100;
+    diagnostics.pan={before:beforePan,after:a.readState().camera,dotsHash,afterHash:hash(afterPan),beforeCount:dotsCount,afterCount:countRed(afterPan),samples:[red(dots,24,24),red(shifted,19,24),red(shifted,24,24),red(afterPan,24,24)]};
+    await a.zoomAt(0,0,2);checks.zoomDensity=countRed(await pixels(a))<dotsCount;
+    await a.setBackground({...values,mode:'grid'});const gridCount=countRed(await pixels(a));
+    checks.gridPixels=gridCount>dotsCount;
+    await a.undo();checks.undo=a.readBackground().mode==='dots';
+    await a.redo();checks.redo=a.readBackground().mode==='grid';
+    const committed=a.readBackground();
+    const saved=await snapshot(a);const c=await create('c',saved.restore);
+    checks.snapshotRestore=same(c.readBackground(),committed)&&c.readState().objects===0;
+    await c.setBackground(values);await c.undo();checks.editAfterRestore=same(c.readBackground(),committed);
+    const b=await create('b');
+    let next=null,previous=null,applied=0;
+    while((next=a.data.readNext(previous))){
+      const outcome=await b.applyRemoteOperations([next]);check(outcome[0].ok,'remote background rejected');previous=next;++applied;
+    }
+    checks.remoteReplay=applied>=4&&same(b.readBackground(),committed);
+    checks.noEcho=b.data.readNext()===null;
+    const beforeDuplicate=b.readState().generation;
+    const duplicate=await b.applyRemoteOperations([previous]);
+    checks.remoteDedup=duplicate[0].ok&&b.readState().generation===beforeDuplicate;
+    await b.setBackground({...values,mode:'plain',color:[0,1,0,1]});
+    const foreign=b.data.readNext();check(foreign,'remote conflict packet missing');
+    check((await a.applyRemoteOperations([foreign]))[0].ok,'remote update');
+    let conflict=false;try{await a.undo();}catch{conflict=true;}
+    checks.undoConflict=conflict&&same(a.readBackground().color,[0,1,0,1]);
+    checks.noObjects=owners.every(r=>r.readState().objects===0);
+    return {checks,dotsCount,gridCount,errors,diagnostics};
+  },
+  close:async()=>{
+    for(const runtime of owners){
+      let packet=null,last=null;while((packet=runtime.data.readNext(last)))last=packet;
+      if(last)runtime.data.release(last);
+      await runtime.close();
+    }
+  }
+};
+probe.ready=(async()=>{const a=await create('a');probe.legacyBytes=Array.from((await snapshot(a)).saved.bytes);return true;})();
+</script>

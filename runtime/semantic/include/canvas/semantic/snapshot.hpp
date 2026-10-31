@@ -23,6 +23,7 @@ enum class SnapshotCapability : std::uint8_t {
     // Section/1 requires an explicit reader capability and a v3 manifest.
     kSectionV1 = 16,
     kShape2TriangleRichTextFormattingConnectorAndSectionV1 = 31,
+    kAllWithBackgroundV1 = 63,
 };
 
 struct SemanticSnapshot final {
@@ -37,6 +38,7 @@ struct SemanticSnapshot final {
     std::vector<std::uint8_t> document_digest;
     std::vector<std::uint8_t> capability_requirements;
     std::vector<std::uint8_t> checkpoint_digest;
+    foundation::DocumentBackground background{};
 
     bool operator==(const SemanticSnapshot&) const = default;
 };

@@ -455,7 +455,7 @@ class Session::Impl {
             const auto b = runtime::readRuntimeBuildInfo();
             return {{"ok", true},
                     {"apiVersion", 1},
-                    {"features", {{"shellAxis", 1}, {"resourceCustody", 1}}},
+                    {"features", {{"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}}},
                     {"sdkVersion", AXIOM_SDK_VERSION},
                     {"sourceRevision", b.sourceRevision},
                     {"dirty", b.dirty},
@@ -711,6 +711,14 @@ class Session::Impl {
             if (ok)
                 (void)f.acknowledgeTextInput(e.token, e.sequence);
             return {{"ok", ok}, {"code", "TEXT_REJECTED"}, {"status", done->status}};
+        }
+        if (command == "background") {
+            const auto value = facade().readBackground();
+            if (!value) return error("NOT_READY");
+            const char* mode = value->mode == foundation::BackgroundMode::kPlain ? "plain" :
+                value->mode == foundation::BackgroundMode::kDots ? "dots" : "grid";
+            return {{"ok", true}, {"value", {{"mode", mode}, {"color", value->color},
+                                            {"patternColor", value->patternColor}}}};
         }
         if (command == "selection") {
             const auto s = facade().readSelectionSummary();
@@ -1060,6 +1068,34 @@ class Session::Impl {
                 p.kind = K::kSelectCreationPreset;
                 p.creationPreset =
                     static_cast<runtime::CanvasCreationPreset>(unsignedValue(j.at("value"), 5));
+            } else if (kind == "background") {
+                p.kind = K::kDocumentBackground;
+                const auto& value = j.at("value");
+                if (!value.is_object() || value.size() != 3 || !value.contains("mode") ||
+                    !value.contains("color") || !value.contains("patternColor"))
+                    throw std::invalid_argument("background fields");
+                const auto mode = value.at("mode").get<std::string>();
+                if (mode == "plain") p.background.mode = foundation::BackgroundMode::kPlain;
+                else if (mode == "dots") p.background.mode = foundation::BackgroundMode::kDots;
+                else if (mode == "grid") p.background.mode = foundation::BackgroundMode::kGrid;
+                else throw std::invalid_argument("background mode");
+                const auto color = [](const J& input) {
+                    if (!input.is_array() || input.size() != 4) throw std::invalid_argument("background color");
+                    std::array<float,4> output{};
+                    for (unsigned i=0;i<4;++i) {
+                        if (!input[i].is_number()) throw std::invalid_argument("background color component");
+                        const auto component = input[i].get<double>();
+                        if (!std::isfinite(component) || component < 0 || component > 1)
+                            throw std::invalid_argument("background color range");
+                        output[i] = static_cast<float>(component);
+                    }
+                    return output;
+                };
+                p.background.color = color(value.at("color"));
+                p.background.patternColor = color(value.at("patternColor"));
+                if (value.at("color")[3].get<double>() != 1.0 ||
+                    !foundation::validDocumentBackground(p.background))
+                    throw std::invalid_argument("background must be opaque");
             } else if (kind == "selectionMode") {
                 p.kind = K::kSelectionAcquisitionMode;
                 p.selectionAcquisitionMode =
@@ -1259,7 +1295,7 @@ class Session::Impl {
                 auto decoded = semantic::SnapshotCodec::decode(
                     outputBytes,
                     semantic::SnapshotCapability::
-                        kShape2TriangleRichTextFormattingConnectorAndSectionV1);
+                        kAllWithBackgroundV1);
                 if (!decoded.ok())
                     return error("SNAPSHOT_DECODE_FAILED");
                 result["checkpointDigest"] = decoded.snapshot->checkpoint_digest;

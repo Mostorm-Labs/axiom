@@ -18,12 +18,13 @@ namespace canvas::semantic { class OperationAdmission; }
 namespace canvas::interaction {
 class HistoryCommandAdmission;
 
-enum class HistoryAspect : std::uint8_t { kWholeRecord, kTransform, kSize, kPlacement, kProperties, kRichTextContent, kTopology };
+enum class HistoryAspect : std::uint8_t { kWholeRecord, kTransform, kSize, kPlacement, kProperties, kRichTextContent, kTopology, kDocumentBackground };
 struct HistoryExpectation final {
     semantic::ObjectId objectId{};
     std::optional<semantic::ObjectRecord> record;
     HistoryAspect aspect = HistoryAspect::kWholeRecord;
     std::vector<std::uint32_t> fields;
+    foundation::DocumentBackground background{};
 };
 [[nodiscard]] bool historyExpectationsMatch(const semantic::ObjectStore&,
                                           std::span<const HistoryExpectation>) noexcept;

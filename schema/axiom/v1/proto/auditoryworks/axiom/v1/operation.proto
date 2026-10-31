@@ -12,6 +12,7 @@ import "auditoryworks/axiom/v1/object.proto";
 import "auditoryworks/axiom/v1/snapshot.proto";
 
 import "auditoryworks/axiom/v1/container_operations.proto";
+import "auditoryworks/axiom/v1/document_background.proto";
 
 message InsertObjectsOp { repeated ObjectRecord objects = 1; }
 message DeleteObjectsOp { repeated Id128 object_ids = 1; }
@@ -61,6 +62,7 @@ message OperationPayload {
     UpdateResourceManifestOp update_resource_manifest = 16;
     SetSectionContentOp set_section_content = 17;
     EditContainerTopologyOp edit_container_topology = 18;
+    SetDocumentBackgroundOp set_document_background = 19;
   }
 }
 message Operation {

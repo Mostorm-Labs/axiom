@@ -61,7 +61,9 @@ PrepareResult prepareApplyPlan(const Operation& operation, const StatefulValidat
     StatefulResult status{};
     std::visit([&](const auto& payload) {
         using T = std::decay_t<decltype(payload)>;
-        if constexpr (std::is_same_v<T, DeleteObjectsOp>) {
+        if constexpr (std::is_same_v<T, SetDocumentBackgroundOp>) {
+            plan.background = payload.value;
+        } else if constexpr (std::is_same_v<T, DeleteObjectsOp>) {
             StagedObjectView staged(context.objects);
             DeleteClosure closure;
             status = resolveDeleteClosure(staged, payload.object_ids, &closure);

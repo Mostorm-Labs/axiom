@@ -14,6 +14,7 @@ namespace canvas::semantic::internal {
 struct PreparedChangeSet final {
     std::vector<ObjectSemanticChange> changes;
     std::vector<ResourceManifestSemanticChange> resource_changes;
+    bool document_background_changed = false;
 };
 
 [[nodiscard]] std::optional<PreparedChangeSet> prepareChangeSet(

@@ -291,6 +291,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     operationNamespace_ = origin; operationNamespaceBound_ = true; return true;
   }
   [[nodiscard]] bool snapshotCaptureReady() const noexcept { return textReady(); }
+  [[nodiscard]] foundation::DocumentBackground documentBackground() const noexcept { return semanticObjects_.documentBackground(); }
+  [[nodiscard]] bool setDocumentBackground(const foundation::DocumentBackground&);
   [[nodiscard]] std::vector<semantic::ObjectRecord> snapshotObjects() const { return semanticObjects_.allObjects(); }
   [[nodiscard]] SnapshotRestoreOutcome restoreSnapshotBeforeSurface(const semantic::SemanticSnapshot& snapshot,
       const semantic::SnapshotBootstrapper::CheckpointBinding& binding,
