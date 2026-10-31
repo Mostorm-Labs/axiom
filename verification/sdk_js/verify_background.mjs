@@ -83,7 +83,7 @@ try {
   observation.checks.noRuntimeErrors = observation.errors.length === 0;
   observation.checks.noUncaughtExceptions = observation.exceptions.length === 0;
   await send('Page.navigate', {url:`http://127.0.0.1:${server.address().port}/example.html`});
-  for (let n=0;!await evaluate("Boolean(document.getElementById('background-apply'))");++n) {
+  for (let n=0;!await evaluate("Boolean(document.getElementById('background-apply'))&&document.getElementById('tools').getAttribute('aria-busy')!=='true'");++n) {
     if(n>300)throw Error('Demo background controls did not initialize');
     await delay(50);
   }

@@ -9,6 +9,7 @@ const root = await fs.mkdtemp(path.join(os.tmpdir(), 'axiom-export-web-'));
 const files = path.join(root, 'consumer');
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 let browser, server, socket, failure;
+const downloadNames = new Map(), completedDownloads = new Set();
 const observation = {checks: {}, errors: [], exceptions: [], input: 'Chrome CDP mouse, public JS SDK, independent WASM instances'};
 try {
   await fs.mkdir(files);
@@ -46,6 +47,9 @@ try {
       pending.delete(message.id); clearTimeout(request.timer);
       message.error ? request.reject(Error(JSON.stringify(message.error))) : request.resolve(message.result);
     } else if (message.method === 'Runtime.exceptionThrown') observation.exceptions.push(message.params);
+    else if (message.method === 'Browser.downloadWillBegin') downloadNames.set(message.params.guid, message.params.suggestedFilename);
+    else if (message.method === 'Browser.downloadProgress' && message.params.state === 'completed')
+      completedDownloads.add(downloadNames.get(message.params.guid));
   });
   const send = (method, params = {}) => new Promise((resolve, reject) => {
     const id = ++serial;
@@ -100,14 +104,17 @@ try {
   observation.checks.noRuntimeErrors=observation.errors.length===0;
   // Exercise the actual Demo Blob/download flow into an isolated temporary directory.
   const downloads=path.join(root,'downloads');await fs.mkdir(downloads);
-  await send('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:downloads});
+  await send('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:downloads,eventsEnabled:true});
   await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/example.html`});
-  for(let n=0;!await evaluate("Boolean(document.getElementById('export-image'))");++n){if(n>300)throw Error('Demo export controls unavailable');await delay(50);}
+  for(let n=0;!await evaluate("Boolean(document.getElementById('export-image'))&&document.getElementById('tools').getAttribute('aria-busy')!=='true'");++n){if(n>300)throw Error('Demo export controls unavailable');await delay(50);}
   const downloaded={};
   for(const format of ['png','jpg','jpeg']){
     await evaluate(`(()=>{const select=document.getElementById('export-format');select.value='${format}';select.dispatchEvent(new Event('change'));document.getElementById('export-image').click();})()`);
     const filename=path.join(downloads,`axiom-board.${format}`);
-    for(let n=0;;++n){try{downloaded[format]=await fs.readFile(filename);break;}catch{if(n>150)throw Error('Demo download missing: '+format);await delay(50);}}
+    // Chrome can create the destination before its bytes are complete.
+    // Wait for the actual download completion fact before decoding the file.
+    for(let n=0;!completedDownloads.has(`axiom-board.${format}`);++n){if(n>150)throw Error('Demo download incomplete: '+format);await delay(50);}
+    downloaded[format]=await fs.readFile(filename);
   }
   observation.checks.demoDownloads=downloaded.png.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))&&['jpg','jpeg'].every(format=>downloaded[format][0]===255&&downloaded[format][1]===216);
   const expectedSize=await evaluate("(()=>{const r=document.getElementById('canvas').getBoundingClientRect();return [Math.ceil(r.width+32),Math.ceil(r.height+32)];})()");
