@@ -85,3 +85,10 @@ await sdk.appearance.setDefaults({cornerRadius:16});
 await sdk.appearance.patch({cornerRadius:"round"});
 // @ts-expect-error derived paths are not part of the appearance DTO
 await sdk.appearance.patch({roundedPath:[]});
+
+await sdk.setBrushConfig({family:3,pressureSource:1,density:.7,textureScale:8});
+const brushConfig=sdk.readBrushConfig();void brushConfig;
+// @ts-expect-error pressure source must be an explicit supported enum
+await sdk.setBrushConfig({family:3,pressureSource:'auto'});
+// @ts-expect-error unknown brush family must reject
+await sdk.setBrushConfig({family:7});

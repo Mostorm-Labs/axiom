@@ -1,0 +1,155 @@
+{
+  "schema_version": "0.1",
+  "package_id": "INK-V2-02-v0.1",
+  "verification_spec_ref": {
+    "path": "verification-spec.md",
+    "sha256": "1b67317e46c14945ea0dc3c488cd98e85fdd5240b5d32e9c0d80ef7996b54ccd"
+  },
+  "profile_scope": [
+    "marker",
+    "chalk",
+    "crayon"
+  ],
+  "obligations": [
+    {
+      "id": "V-PERSIST",
+      "requirement": "固化有效压力，不在回放重算",
+      "oracle": "真实 AddStroke/Snapshot/远端应用；禁用 live simulator/catalog 后恢复",
+      "acceptance": "压力/配置/seed/version exact roundtrip，输出几何在 frozen tolerance 内相同；缺失 evaluator/resource/version 明确拒绝",
+      "profile_scope": [
+        "marker",
+        "chalk",
+        "crayon"
+      ],
+      "blocking_reason": "数据无法确定性恢复或错误回放",
+      "evidence_required": "v-persist.json"
+    },
+    {
+      "id": "V-COMPACT",
+      "requirement": "新纹理数据不存展开 dab/outline/raw 副本",
+      "oracle": "实际 protobuf Operation 与 Snapshot 独立解码，字段计数和 byte 长度",
+      "acceptance": "dab/outline/raw 计数全为零；位置与压力只有一份；每笔数据 <=16KiB+18*K（K 为 retained knots，资源 blob 另计且全局去重）",
+      "profile_scope": [
+        "marker",
+        "chalk",
+        "crayon"
+      ],
+      "blocking_reason": "规范字节仍展开会违反用户空间目标",
+      "evidence_required": "v-compact.json"
+    },
+    {
+      "id": "V-SIZE",
+      "requirement": "实际空间明显下降，覆盖所有持久化出口",
+      "oracle": "同 trace 的当前 chalk-r4 实际编码；新算法的紧凑/诊断展开两种真实编码；不使用 gzip 比较",
+      "acceptance": "G05 N=2048/8192 的 chalk 新 Operation 与单笔 Snapshot 增量均 <=旧 chalk-r4 的30%；新纹理表示均 <=同算法诊断展开表示的40%；分别报告总量/新增资源/metadata，不移入别的字段绕过",
+      "profile_scope": [
+        "marker",
+        "chalk",
+        "crayon"
+      ],
+      "blocking_reason": "无法证明实际存储收益或把体积转移到其他出口",
+      "evidence_required": "v-size.json"
+    },
+    {
+      "id": "V-RESAMPLE",
+      "requirement": "压缩中心线不丢几何/压力特征",
+      "oracle": "独立距离/宽度 oracle，G01/G02 高密度基准",
+      "acceptance": "max 几何偏差 <=min(.25,size/32)；压力重采样误差 <=.02；短点与急转保留；120/240Hz 编码体积差 <=15%",
+      "profile_scope": [
+        "marker",
+        "chalk",
+        "crayon"
+      ],
+      "blocking_reason": "压缩导致几何/压力特征丢失",
+      "evidence_required": "v-resample.json"
+    },
+    {
+      "id": "V-WORK",
+      "requirement": "长笔画不逐次重算/复制完整历史",
+      "oracle": "G05 实际输入访问、历史复制、几何生成/上传 byte 计数，非墙钟伪计数",
+      "acceptance": "N=2048 相对512、8192相对2048的总工作量比均<=5；append 无全历史 one-shot 调用；seal 全量求值至多一次；几何正确性不能因性能优化放宽",
+      "profile_scope": [
+        "marker",
+        "chalk",
+        "crayon"
+      ],
+      "blocking_reason": "长笔画二次工作会破坏实时输入",
+      "evidence_required": "v-work.json"
+    },
+    {
+      "id": "V-CACHE",
+      "requirement": "派生内存有界且可丢弃",
+      "oracle": "G06 真实 retained/upload/tile bytes + 清缓存后恢复",
+      "acceptance": "derived<=32MiB、临时tile<=16MiB；无完整常驻 dab 影子；视口外不生成纹理 tile；连续无变化帧生成次数0；清缓存后同像素/容差结果",
+      "profile_scope": [
+        "marker",
+        "chalk",
+        "crayon"
+      ],
+      "blocking_reason": "无界派生数据会把规范存储问题转移到内存",
+      "evidence_required": "v-cache.json"
+    },
+    {
+      "id": "V-MATERIAL",
+      "requirement": "参数实际作用，笔型可区分",
+      "oracle": "相同轨迹材质矩阵 + 独立像素/coverage观察",
+      "acceptance": "马克笔角度/扁率改变几何；粉笔密度改变coverage；粉笔与蜡笔结构差异不是换色；同笔事件密度不造成无意义加深；opacity只应用一次",
+      "profile_scope": [
+        "marker",
+        "chalk",
+        "crayon"
+      ],
+      "blocking_reason": "参数失效或笔型只是改名",
+      "evidence_required": "v-material.json",
+      "scope_note": "仅marker/chalk/crayon；水彩在03"
+    },
+    {
+      "id": "V-LIFECYCLE",
+      "requirement": "预测/预览/提交/取消一致",
+      "oracle": "G07、data overload、retry/close、foreign token/source",
+      "acceptance": "prediction不改变confirmed/seed/提交；cancel无操作；每笔一次Undo；重试复用operation身份；正式材质预览与提交一致",
+      "profile_scope": [
+        "marker",
+        "chalk",
+        "crayon"
+      ],
+      "blocking_reason": "预测或取消泄漏为规范修改",
+      "evidence_required": "v-lifecycle.json"
+    },
+    {
+      "id": "V-CONSUMER",
+      "requirement": "公开接口与同构资源真正可用",
+      "oracle": "匹配 JS/types/WASM/resources Chrome外部消费者、原生shared Session、TS正负例",
+      "acceptance": "本包交付笔型可选择/读回，第三包覆盖全部六种；默认无压力可绘；invalid枚举/token/数值拒绝；不用private deep import；Demo实际参数影响图像",
+      "profile_scope": [
+        "marker",
+        "chalk",
+        "crayon"
+      ],
+      "blocking_reason": "内部测试不能证明外部能力可用",
+      "evidence_required": "v-consumer.json",
+      "scope_note": "只要求本包交付profile；03为全部六笔型（圆头两种模式）"
+    },
+    {
+      "id": "V-REGRESSION",
+      "requirement": "保留既有功能与旧数据读取",
+      "oracle": "基线旧brush fixtures、手绘两批/Table/Section/字体/导出consumer，boundary/descriptor/package检查",
+      "acceptance": "受影响必需项通过；新失败修复；历史失败绑定执行前真实记录，不直接沿用旧的22这个数量",
+      "profile_scope": [
+        "marker",
+        "chalk",
+        "crayon"
+      ],
+      "blocking_reason": "破坏已有数据/画板功能",
+      "evidence_required": "v-regression.json"
+    }
+  ],
+  "oracle_rules": [
+    "Tests observe real Runtime/SDK/encoded output, not source-string checks",
+    "Preserve pinned upstream reference and negative corpus; do not rewrite expected values to match product implementation",
+    "New tests/harnesses must implement the frozen oracle and record provenance",
+    "Reuse unchanged dependency evidence with exact source/build/input bindings instead of rerunning for status only"
+  ],
+  "wall_clock_timing": "corroborative_only",
+  "physical_device_and_hosted_windows_qualification": "optional_for_this_local_scope; do not claim verified if not run"
+}

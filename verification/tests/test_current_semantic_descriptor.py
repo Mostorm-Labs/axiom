@@ -63,6 +63,7 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
                         extra_fields[(Path(name).name, message.name)] = {field.number for field in fields}
         self.assertEqual(new_messages, {
             "paint.proto": {"PatternFillV1", "SketchStyleV1", "CornerStyleV1"},
+            "compact_stroke.proto": {"CompactBrushConfig", "CompactStrokeContent"},
             "document_background.proto": {"DocumentBackgroundV1", "SetDocumentBackgroundOp"},
             "table.proto": {"TableAxis", "TableCell", "TableGridStyle", "TableContent", "EditTableOp"},
             "section.proto": {"SectionContent"},
@@ -82,7 +83,7 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
             ("paint.proto", "FillStyleValue"): {3},
             ("property.proto", "PropertyValue"): {8,9},
             ("operation.proto", "OperationPayload"): {16, 17, 18, 19, 20},
-            ("object.proto", "ObjectContent"): {12, 13},
+            ("object.proto", "ObjectContent"): {12, 13, 14},
             ("object.proto", "ShapeContent"): {4},  # Existing FC02 label; accepted M01 BASE-01 source alignment.
             ("rich_text.proto", "TextStyle"): {7},
             ("rich_text.proto", "ParagraphStyle"): {5},
@@ -96,11 +97,12 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
         expected = descriptor.parse_descriptor((ROOT / ".aegis/materialized/FC-08/proposed-descriptor/descriptor.pb").read_bytes())
         actual = descriptor.parse_descriptor((DIRECTORY / "descriptor.current.pb").read_bytes())
         self.assertEqual(set(actual) - set(expected), {
-            "auditoryworks/axiom/v1/document_background.proto", "auditoryworks/axiom/v1/table.proto"})
+            "auditoryworks/axiom/v1/document_background.proto", "auditoryworks/axiom/v1/table.proto",
+            "auditoryworks/axiom/v1/compact_stroke.proto"})
         # Preserve the independently accepted FC08 artifact; compare every
         # original field and enum, allowing only the explicitly accepted tags.
         allowed = {("paint.proto", "FillStyleValue"): {3}, ("property.proto", "PropertyValue"): {8,9}, ("operation.proto", "OperationPayload"): {19, 20},
-                   ("object.proto", "ObjectContent"): {13},
+                   ("object.proto", "ObjectContent"): {13,14},
                    ("snapshot.proto", "DocumentSnapshot"): {11}}
         for filename, original in expected.items():
             current = actual[filename]

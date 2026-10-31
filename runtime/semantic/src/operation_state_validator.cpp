@@ -99,6 +99,8 @@ StatefulResult requireKindVersion(
     if (!isKnownObjectKind(record.kind) || !isKnownObjectKind(kind)) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
+    const bool compact = kind == ObjectKind::kVectorStroke && kind_version == 3U &&
+                          std::holds_alternative<CompactStrokeContent>(record.content);
     const bool brush_v2 = kind == ObjectKind::kVectorStroke && kind_version == 2U &&
                           std::holds_alternative<BrushStrokeContent>(record.content);
     const bool dab_v2 = kind == ObjectKind::kDabStroke && kind_version == 2U &&
@@ -108,7 +110,7 @@ StatefulResult requireKindVersion(
     const bool shape_v3 = kind == ObjectKind::kShape && kind_version == 3U &&
                           std::holds_alternative<ShapeContent>(record.content);
     if (record.kind != kind || record.kind_version != kind_version ||
-        (!brush_v2 && !dab_v2 && !shape_v2 && !shape_v3 && !(kind==ObjectKind::kRichText && (kind_version==2U || kind_version==3U)) && kind_version != 1U)) {
+        (!compact && !brush_v2 && !dab_v2 && !shape_v2 && !shape_v3 && !(kind==ObjectKind::kRichText && (kind_version==2U || kind_version==3U)) && kind_version != 1U)) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
     return StatefulResult{};
@@ -138,6 +140,7 @@ StatefulResult validateRecordStateForOperation(const ObjectRecord& record, State
          !(record.kind == ObjectKind::kRichText && (record.kind_version == 2U || record.kind_version == 3U) && std::holds_alternative<RichTextContent>(record.content)) &&
          !(record.kind == ObjectKind::kShape && (record.kind_version == 2U || record.kind_version == 3U) &&
            std::holds_alternative<ShapeContent>(record.content)) &&
+         !(record.kind == ObjectKind::kVectorStroke && record.kind_version == 3U && std::holds_alternative<CompactStrokeContent>(record.content)) &&
          !(record.kind == ObjectKind::kVectorStroke && record.kind_version == 2U &&
            std::holds_alternative<BrushStrokeContent>(record.content)) &&
          !(record.kind == ObjectKind::kDabStroke && record.kind_version == 2U &&

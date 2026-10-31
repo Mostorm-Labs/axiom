@@ -227,6 +227,8 @@ GeometryCount geometryUnits(const ObjectContent& content) noexcept {
         } else if constexpr (std::is_same_v<Item, DabStrokeContent>) {
             if (const auto* data = std::get_if<DabStrokeData>(&value.stroke.data)) return multiplyGeometryUnits(data->dabs.size(), geometry_accounting_v1::kDabInstance);
             return {0U, ValidationIssue::kIntegerOverflow};
+        } else if constexpr (std::is_same_v<Item, CompactStrokeContent>) {
+            return multiplyGeometryUnits(value.stroke.knots.size(),1);
         } else if constexpr (std::is_same_v<Item, DabBrushStrokeContent>) {
             return multiplyGeometryUnits(value.stroke.dab_output.dabs.size(), geometry_accounting_v1::kDabInstance);
         }
@@ -589,6 +591,8 @@ bool validSection(const SectionContent& value) noexcept {
 
 bool validObjectKindTriple(const ObjectRecord& object) noexcept {
     if (!validId(object.id)) return false;
+    if (object.kind == ObjectKind::kVectorStroke && object.kind_version == 3U)
+        return std::holds_alternative<CompactStrokeContent>(object.content);
     if (object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U) {
         return std::holds_alternative<BrushStrokeContent>(object.content);
     }
@@ -675,6 +679,8 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
     if (const auto* connector = std::get_if<ConnectorContent>(&object.content)) {
         if (!validConnector(*connector)) return false;
     }
+    if(const auto* compact=std::get_if<CompactStrokeContent>(&object.content))
+        if(object.kind!=ObjectKind::kVectorStroke||object.kind_version!=3U||!validCompactStroke(compact->stroke))return false;
     if (const auto* brush = std::get_if<BrushStrokeContent>(&object.content)) {
         if (object.kind != ObjectKind::kVectorStroke || object.kind_version != 2U) return false;
         if (brush->stroke.snapshot.snapshot_version != 2U || brush->stroke.snapshot.profile_id == 0U ||
@@ -814,10 +820,14 @@ ValidationResult validateEnvelope(
                (object.kind == ObjectKind::kDabStroke && object.kind_version == 2U &&
                 std::holds_alternative<DabBrushStrokeContent>(object.content));
     };
+    bool containsCompact = false;
+    bool onlyCompact = true;
     bool containsNewBrush = false;
     bool containsLegacyStroke = false;
     bool containsOther = false;
     const auto classify = [&](const ObjectRecord& object) noexcept {
+        const bool compact=object.kind==ObjectKind::kVectorStroke&&object.kind_version==3U&&std::holds_alternative<CompactStrokeContent>(object.content);
+        containsCompact|=compact;onlyCompact&=compact;
         const bool newBrush = isNewBrush(object);
         const bool legacyStroke = object.kind == ObjectKind::kVectorStroke &&
                                   object.kind_version == 1U &&
@@ -841,7 +851,8 @@ ValidationResult validateEnvelope(
     if (!presence.schema_version || !presence.payload_version || operation.schema_version != 1U ||
         (operation.payload_version != 1U &&
          !(containsNewBrush && !containsLegacyStroke && !containsOther &&
-           operation.payload_version == 2U))) {
+           operation.payload_version == 2U) &&
+         !(containsCompact&&onlyCompact&&operation.payload_version==3U))) {
         return {ValidationIssue::kUnsupportedVersion};
     }
     return {};

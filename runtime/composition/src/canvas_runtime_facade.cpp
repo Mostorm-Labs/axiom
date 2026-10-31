@@ -70,6 +70,8 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     switch (p.kind) {
       case CanvasControlPayloadKind::kDocumentBackground:
         applied = runtime.setDocumentBackground(p.background); break;
+      case CanvasControlPayloadKind::kInkBrushConfig:
+        applied=runtime.configureInkBrush(p.brushConfig);break;
       case CanvasControlPayloadKind::kSection:
       {
         const auto result=runtime.executeSectionIntent(p.section);
@@ -212,6 +214,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     out.axisLocalDurable = static_cast<std::uint8_t>(outcome.axis.localDurable);
     out.axisCloudSynced = static_cast<std::uint8_t>(outcome.axis.cloudSynced);
     out.preset = {runtime.selectedBrushProfile(), runtime.selectedBrushRevision()};
+    out.brushConfig=runtime.inkBrushConfig();
     out.size = runtime.inkSize(); out.opacity = runtime.inkOpacity();
     const auto color = runtime.inkColor(); out.color = {color[0], color[1], color[2], color[3]};
     out.eraserMode = runtime.eraserMode(); out.eraserDiameterLogicalPx = runtime.eraserDiameterLogicalPx();
@@ -530,7 +533,7 @@ std::vector<CanvasTargetKey> CanvasRuntimeFacade::mountedCanvasTargets() const {
   return target().runtimeEpoch==0||(ownerThread()&&runtime_.closed())?std::vector<CanvasTargetKey>{}:std::vector<CanvasTargetKey>{target()};
 }
 std::vector<BrushPresetRef> CanvasRuntimeFacade::brushPresets() const {
-  return {{"vector-solid-v1",1U},{"marker-flat-v1",1U},{"chalk-grain-v1",4U},{"membrane-v1",1U}};
+  return {{"round-regular",1U},{"round-handdrawn",1U},{"laser-transient",1U},{"marker-compact-v1",1U},{"chalk-compact-v1",1U},{"crayon-wax-v1",1U},{"watercolor-lite-v1",1U},{"vector-solid-v1",1U},{"marker-flat-v1",1U},{"chalk-grain-v1",4U},{"membrane-v1",1U}};
 }
 std::optional<CanvasControlReceipt> CanvasRuntimeFacade::canvasControlReceipt(CanvasControlReceiptKey key) const noexcept {
   auto receipt=service_->receipt(key);

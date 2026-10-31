@@ -495,7 +495,7 @@ class Session::Impl {
             const auto b = runtime::readRuntimeBuildInfo();
             return {{"ok", true},
                     {"apiVersion", 1},
-                    {"features", {{"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}, {"imageExport", 1}, {"table", 1}, {"sketchStyle",1}, {"patternFill",1}, {"appearancePreview",1}, {"sketchExtended",1}, {"vectorPath",1}, {"roundedCorners",1}, {"fontFallback",2}}},
+                    {"features", {{"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}, {"imageExport", 1}, {"table", 1}, {"sketchStyle",1}, {"patternFill",1}, {"appearancePreview",1}, {"sketchExtended",1}, {"vectorPath",1}, {"roundedCorners",1}, {"fontFallback",2}, {"inkV2",1}, {"compactStroke",1}, {"materialInk",1}, {"simulatedPressure",1}, {"devicePressure",1}, {"laserTransient",1}}},
                     {"sdkVersion", AXIOM_SDK_VERSION},
                     {"sourceRevision", b.sourceRevision},
                     {"dirty", b.dirty},
@@ -680,7 +680,9 @@ class Session::Impl {
         if (command == "frame") {
             if (lost)
                 return {{"ok", true}, {"pending", false}, {"lost", true}};
-            return adapter->frame(j.value("force", false));
+            auto result=adapter->frame(j.value("force", false));
+            if(facade().transientInkActive())result["retry"]=true;
+            return result;
         }
         if (command == "state")
             return {{"ok", true}, {"value", state()}};
@@ -877,6 +879,17 @@ class Session::Impl {
             for (const auto& p : facade().brushPresets())
                 entries.push_back({{"profileId", p.profileId}, {"revision", p.revision}});
             return {{"ok", true}, {"value", entries}};
+        }
+        if(command=="readInkBrush"){
+            const auto targets=facade().mountedCanvasTargets();
+            if(targets.empty())return error("NOT_READY");
+            const auto c=facade().readCanvasControlSnapshot(targets.front()).brushConfig;
+            if(!c)return {{"ok",true},{"value",nullptr}};
+            return {{"ok",true},{"value",{{"version",c->version},{"family",static_cast<unsigned>(c->family)},
+                {"roundMode",static_cast<unsigned>(c->roundMode)},{"pressureSource",static_cast<unsigned>(c->pressureSource)},
+                {"size",c->size},{"opacity",c->opacity},{"color",c->color},{"markerAngle",c->markerAngle},
+                {"markerFlatness",c->markerFlatness},{"density",c->density},{"textureScale",c->textureScale},
+                {"deposition",c->deposition},{"wetEdge",c->wetEdge},{"laserFadeMs",c->laserFadeMs},{"laserTailLength",c->laserTailLength}}}};
         }
         if (command == "readSection") {
             const auto s = facade().readSection(j.contains("objectId") ? rawId(j.at("objectId"))
@@ -1270,6 +1283,24 @@ class Session::Impl {
                 p.kind = K::kSelectionAcquisitionMode;
                 p.selectionAcquisitionMode =
                     static_cast<runtime::CanvasSelectionMode>(unsignedValue(j.at("value"), 2));
+            } else if(kind=="inkBrush"){
+                p.kind=K::kInkBrushConfig;
+                const auto& v=j.at("value");auto& c=p.brushConfig;
+                if(!v.is_object())throw std::invalid_argument("brush config");
+                const std::array<const char*,15> allowed{"version","family","roundMode","pressureSource","size","opacity","color","markerAngle","markerFlatness","density","textureScale","deposition","wetEdge","laserFadeMs","laserTailLength"};
+                for(const auto& [key,value]:v.items()){(void)value;if(std::find(allowed.begin(),allowed.end(),key)==allowed.end())throw std::invalid_argument("unknown brush parameter");}
+                c.version=v.contains("version")?unsignedValue(v.at("version"),1):1;
+                c.family=static_cast<foundation::InkFamily>(unsignedValue(v.at("family"),6));
+                if(v.contains("roundMode"))c.roundMode=static_cast<foundation::InkRoundMode>(unsignedValue(v.at("roundMode"),2));
+                if(v.contains("pressureSource"))c.pressureSource=static_cast<foundation::InkPressureSource>(unsignedValue(v.at("pressureSource"),2));
+                c.size=v.value("size",16.);c.opacity=v.value("opacity",1.);
+                if(v.contains("color"))c.color=v.at("color").get<std::array<double,4>>();
+                c.markerAngle=v.value("markerAngle",c.markerAngle);c.markerFlatness=v.value("markerFlatness",c.markerFlatness);
+                c.density=v.value("density",c.density);c.textureScale=v.value("textureScale",c.textureScale);
+                c.deposition=v.value("deposition",c.deposition);c.wetEdge=v.value("wetEdge",c.wetEdge);
+                if(v.contains("laserFadeMs"))c.laserFadeMs=unsignedValue(v.at("laserFadeMs"),10000);
+                c.laserTailLength=v.value("laserTailLength",c.laserTailLength);
+                if(!foundation::validInkBrushConfig(c))throw std::invalid_argument("invalid brush config");
             } else if (kind == "ink") {
                 p.kind = K::kInkOptions;
                 if (j.contains("size"))
@@ -1465,7 +1496,7 @@ class Session::Impl {
                 auto decoded = semantic::SnapshotCodec::decode(
                     outputBytes,
                     semantic::SnapshotCapability::
-                        kAllWithRoundedAndFontFallbackV1);
+                        kAllWithCompactStrokeV1);
                 if (!decoded.ok())
                     return error("SNAPSHOT_DECODE_FAILED");
                 result["checkpointDigest"] = decoded.snapshot->checkpoint_digest;

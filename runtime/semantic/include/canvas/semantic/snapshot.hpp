@@ -29,6 +29,7 @@ enum class SnapshotCapability : std::uint16_t {
     kAllWithSketchExtendedV1 = 511,
     kAllWithRoundedV1 = 1023,
     kAllWithRoundedAndFontFallbackV1 = 2047,
+    kAllWithCompactStrokeV1 = 4095,
 };
 
 struct SemanticSnapshot final {

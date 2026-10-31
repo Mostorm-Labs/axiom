@@ -56,12 +56,18 @@ class SkiaRenderer final {
 
     [[nodiscard]] std::uint64_t submissionCount() const noexcept { return submissions_; }
     [[nodiscard]] std::uint64_t rasterizationCount() const noexcept { return rasterizations_; }
+    struct CompactWork final {std::uint64_t generatedKnots=0,retainedBytes=0,temporaryBytes=0;};
+    [[nodiscard]] CompactWork compactWork()const noexcept{return compactWork_;}
+    void clearCompactCache() noexcept {compactCache_.reset();compactWork_.retainedBytes=0;}
 
   private:
     ImageResourceResolver* images_ = nullptr;
     SkiaTextResources textResources_;
     std::uint64_t submissions_ = 0;
     std::uint64_t rasterizations_ = 0;
+    struct CompactCache;
+    std::shared_ptr<CompactCache> compactCache_;
+    CompactWork compactWork_{};
 };
 
 } // namespace canvas::render

@@ -29,6 +29,12 @@ else()
 endif()
 
 if(BUILD_TESTING)
+  add_executable(axiom_ink_v2_runtime_tests tests/ink_v2_runtime_test.cpp)
+  target_link_libraries(axiom_ink_v2_runtime_tests PRIVATE canvas_runtime_composition)
+  add_test(NAME InkV2Runtime COMMAND axiom_ink_v2_runtime_tests)
+  add_executable(axiom_ink_v2_storage_tests tests/ink_v2_storage_test.cpp)
+  target_link_libraries(axiom_ink_v2_storage_tests PRIVATE canvas_runtime_composition)
+  add_test(NAME InkV2Storage COMMAND axiom_ink_v2_storage_tests)
   add_subdirectory(${PROJECT_SOURCE_DIR}/verification/fc04_mse
                    ${PROJECT_BINARY_DIR}/verification/fc04_mse)
   add_executable(axiom_selection_summary_tests tests/selection_summary_test.cpp)

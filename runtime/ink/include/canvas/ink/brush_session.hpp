@@ -2,6 +2,7 @@
 #include "canvas/ink/brush_commit_intent.hpp"
 #include "canvas/ink/brush_preview_delta.hpp"
 #include "canvas/ink/vector_path_node.hpp"
+#include "canvas/ink/compact_brush_session.hpp"
 #include <cstdint>
 #include <algorithm>
 #include <span>
@@ -24,6 +25,9 @@ class BrushSession final {
     void cancel() noexcept;
     [[nodiscard]] BrushSessionError error() const noexcept { return error_; }
     [[nodiscard]] BrushSessionMetrics metrics() const noexcept { return metrics_; }
+    [[nodiscard]] CompactBrushSession::Metrics compactMetrics() const noexcept {
+      return compact_ ? compact_->metrics() : CompactBrushSession::Metrics{};
+    }
   private:
     [[nodiscard]] std::optional<BrushSample> normalize(const BrushSample&) const;
     std::uint64_t id_;
@@ -34,5 +38,6 @@ class BrushSession final {
     std::vector<BrushSample> confirmed_;
     BrushSessionError error_ = BrushSessionError::kNone;
     BrushSessionMetrics metrics_{};
+    std::optional<CompactBrushSession> compact_;
 };
 }

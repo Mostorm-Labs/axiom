@@ -227,6 +227,7 @@ export async function createRuntime({mount, documentId, restore, initialResource
       setSelectionMode:async name=>control({kind:'selectionMode',value:enumValue({point:0,rectangle:1,lasso:2},name)}),
       setInk:options=>control({kind:'ink',...options}),setEraser:options=>control({kind:'eraser',...options}),
       brushPresets:()=>call('presets').value,selectBrush:(profileId,revision)=>control({kind:'preset',profileId,revision}),
+      setBrushConfig:value=>control({kind:'inkBrush',value}),readBrushConfig:()=>call('readInkBrush').value,
       setAppearance:options=>control({kind:'appearance',...options}),orderSelection:front=>control({kind:'order',front}),
       undo:()=>control({kind:'undo'}),redo:()=>control({kind:'redo'}),panBy:(x,y)=>control({kind:'pan',x,y}),
       zoomAt:(x,y,scale)=>control({kind:'zoom',x,y,scale}),fitContent:()=>control({kind:'fit'}),

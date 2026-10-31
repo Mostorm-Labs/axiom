@@ -1,0 +1,15 @@
+schema: auditoryworks.axiom.v1.compact-stroke
+version: 1
+status: user-authorized-scoped-extension
+contract: docs/planning/ink-v2/compact-stroke-v1-contract.md
+object_kind: 5
+kind_version: 3
+object_content_tag: 14
+add_stroke_payload_version: 3
+snapshot_schema: 3
+snapshot_reader_bit: 2048
+capability_requirement: compact-stroke-v1
+unknown_policy: fail_closed
+positions: interleaved_binary64_le
+pressure: uint16_le_effective
+max_knots: 262144

@@ -292,6 +292,8 @@ class Runtime final {
     Json presets() {
         return invoke("presets").value.at("value");
     }
+    void setBrushConfig(Json config) { control("inkBrush",{{"value",std::move(config)}}); }
+    Json readBrushConfig() { return invoke("readInkBrush").value.at("value"); }
     void brush(std::string profile, uint32_t revision) {
         control("preset", {{"profileId", profile}, {"revision", revision}});
     }

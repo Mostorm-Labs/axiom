@@ -1,0 +1,52 @@
+<!doctype html><meta charset="utf-8"><title>Ink v2 external SDK verification</title>
+<style>body{margin:0;background:#ddd}.mount{width:800px;height:550px}#b,#c{position:absolute;left:1000px;top:0}</style>
+<div id="a" class="mount"></div><div id="b" class="mount"></div><div id="c" class="mount"></div>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+const checks={},errors=[],packets=[],owners=[],profiles=['round-regular','round-handdrawn','marker-compact-v1','chalk-compact-v1','crayon-wax-v1','watercolor-lite-v1','laser-transient'];
+const documentId='96'.repeat(16);let sdk,remote,checkpoint,liveBefore;
+const check=(v,k)=>{if(!v)throw Error(k);checks[k]=true;};
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+const hash=async bytes=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(n=>n.toString(16).padStart(2,'0')).join('');
+const png=(owner=sdk)=>owner.exportImage({bounds:[0,0,800,550],padding:0});
+const create=async(id,restore)=>{const owner=await createRuntime({mount:document.getElementById(id),documentId,permission:'localSingleUser',builtinFonts:false,...(restore?{restore}:{}),onError:e=>errors.push(String(e)),onOperation:b=>{if(id==='a')packets.push(b);}});owners.push(owner);return owner;};
+window.probe={
+ ready:(async()=>{sdk=await create('a');remote=await create('b');})(),info:()=>sdk.readBuildInfo(),diagnostics:()=>({checks,errors,state:sdk?.readState()}),
+ async select(index){const profile=profiles[index];check(sdk.brushPresets().some(p=>p.profileId===profile&&p.revision===1),profile+'Selectable');await sdk.selectBrush(profile,1);const c=sdk.readBrushConfig();check(c&&c.pressureSource===1,profile+'DefaultSimulated');await sdk.setBrushConfig({...c,size:index===5?40:24,color:[.1,.25,.6,1],opacity:index===2?.45:.85});check(sdk.readBrushConfig().size===(index===5?40:24),profile+'ConfigReadback');liveBefore={objects:sdk.readState().objects,operations:packets.length,generation:sdk.readState().generation};},
+ async down(index){check(sdk.readState().objects===liveBefore.objects&&packets.length===liveBefore.operations,'previewTransient'+index);const p=document.querySelector('#a canvas:last-of-type');const g=p.getContext('webgl2'),pixels=new Uint8Array(p.width*p.height*4);g.readPixels(0,0,p.width,p.height,g.RGBA,g.UNSIGNED_BYTE,pixels);check(p.style.visibility!=='hidden'&&pixels.some((v,i)=>i%4===3&&v>0),'actualMaterialPreview'+index);
+   // Nonzero alpha somewhere cannot prove that the stroke follows the pointer.
+   // Check the held pointer's final path segment in framebuffer coordinates.
+   const dpr=p.width/800,cy=(40+index*70+Math.sin(6)*14)*dpr;
+   let nearPointer=0;for(let y=Math.max(0,Math.floor(cy-12*dpr));y<Math.min(p.height,cy+12*dpr);++y)
+     for(let x=Math.floor(380*dpr);x<Math.min(p.width,410*dpr);++x)nearPointer+=pixels[((p.height-1-y)*p.width+x)*4+3];
+   check(nearPointer>0,'previewAtPointer'+index);
+   if(index<6){let red=0,green=0,blue=0;for(let i=0;i<pixels.length;i+=4){red+=pixels[i];green+=pixels[i+1];blue+=pixels[i+2];}
+     check(red>green&&green>blue,'amberPreview'+index);
+   }
+ },
+ async up(index){if(index<6){
+   check(sdk.readState().objects===liveBefore.objects+1&&packets.length===liveBefore.operations+1,'singleAddStroke'+index);
+   const c=sdk.canvas,g=c.getContext('webgl2'),pixels=new Uint8Array(c.width*c.height*4),dpr=c.width/800;
+   g.readPixels(0,0,c.width,c.height,g.RGBA,g.UNSIGNED_BYTE,pixels);
+   let red=0,green=0,blue=0;for(let y=Math.floor((20+index*70)*dpr);y<Math.min(c.height,(60+index*70)*dpr);++y)
+     for(let x=Math.floor(50*dpr);x<410*dpr;++x){const i=((c.height-1-y)*c.width+x)*4;red+=pixels[i];green+=pixels[i+1];blue+=pixels[i+2];}
+   check(blue>green&&green>red,'canonicalSelectedPaint'+index);
+   for(let wait=0;wait<1000 && document.querySelector('#a canvas:last-of-type').style.visibility!=='hidden';wait+=40) await delay(40);
+   check(document.querySelector('#a canvas:last-of-type').style.visibility==='hidden','previewRetiredAfterCanonical'+index);
+   await sdk.undo();check(sdk.readState().objects===liveBefore.objects,'singleUndo'+index);await sdk.redo();check(sdk.readState().objects===liveBefore.objects+1,'singleRedo'+index);
+ }else{check(sdk.readState().objects===liveBefore.objects&&packets.length===liveBefore.operations,'laserNoCanonicalMutation');await delay(1200);check(document.querySelector('#a canvas:last-of-type').style.visibility==='hidden','laserFadesWithoutNewInput');}return {checks};},
+ async persist(){
+   const metadata={generation:sdk.readState().generation,documentRevision:'18',recoveryFrontier:[8,1,16,1,24,18]};checkpoint=await sdk.captureSnapshot(metadata);
+   const restored=await create('c',{bytes:checkpoint.bytes,metadata:{...metadata,checkpointDigest:checkpoint.checkpointDigest,resourceBinding:'900'}});
+   const expected=await hash((await png()).bytes);check(await hash((await png(restored)).bytes)===expected,'compactSnapshotExactRenderWithoutCatalog');
+   for(const bytes of packets)await remote.applyRemoteOperation(bytes);check(await hash((await png(remote)).bytes)===expected,'compactRemoteExactRender');
+   for(const value of [{family:0},{family:7},{family:3,density:2},{family:5,wetEdge:-1},{family:1,pressureSource:0},{family:1,size:0},{family:1,materialVersion:99}]){let rejected=false;try{await sdk.setBrushConfig(value);}catch{rejected=true;}check(rejected,'invalidConfig'+Object.keys(checks).length);}
+   return {checks,bytes:Array.from((await png()).bytes),snapshotBytes:checkpoint.bytes.length};
+ },
+ async lifecycle(){
+   const expected=await hash((await png()).bytes);const a=sdk.canvas.getContext('webgl2').getExtension('WEBGL_lose_context');a.loseContext();await delay(80);a.restoreContext();await delay(500);check(await hash((await png()).bytes)===expected,'contextLossRestoresCompactScene');
+   document.getElementById('a').style.width='900px';await delay(200);document.getElementById('a').style.width='800px';await delay(200);check(await hash((await png()).bytes)===expected,'resizeRestoresCompactScene');return {checks};
+ },
+ async close(){for(const owner of owners)await owner.close();return {checks,errors};}
+};
+</script>

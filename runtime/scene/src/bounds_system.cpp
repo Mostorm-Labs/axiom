@@ -90,6 +90,10 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record,
                 result = have ? foundation::unionRects(result, r) : r; have = true;
             }
             return result;
+        } else if constexpr (std::is_same_v<T, semantic::CompactStrokeContent>) {
+            foundation::WorldRect result{};bool have=false;const auto radius=static_cast<float>(content.stroke.config.size);
+            for(const auto& k:content.stroke.knots){foundation::WorldRect r{static_cast<float>(k.x)-radius,static_cast<float>(k.y)-radius,static_cast<float>(k.x)+radius,static_cast<float>(k.y)+radius};result=have?foundation::unionRects(result,r):r;have=true;}
+            return result;
         } else if constexpr (std::is_same_v<T, semantic::BrushStrokeContent>) {
             const auto& outline = content.stroke.vector_output.outline;
             if (outline.empty()) return {};

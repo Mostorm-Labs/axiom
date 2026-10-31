@@ -1,4 +1,5 @@
 #pragma once
+#include "canvas/ink/laser_trail.hpp"
 #include "canvas/runtime/table_input.hpp"
 #include "canvas/runtime/appearance.hpp"
 #include "canvas/runtime/image_export.hpp"
@@ -321,6 +322,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   bool textTool() const noexcept {return textTool_;}
   [[nodiscard]] bool selectBrushProfile(std::string_view profileId,
                                         std::uint32_t revision = 1U) noexcept;
+  [[nodiscard]] bool configureInkBrush(const foundation::InkBrushConfig&) noexcept;
+  void advanceLaserPresentation(std::uint64_t monotonicNs) noexcept;
+  [[nodiscard]] bool laserActive()const noexcept{return laserTrails_.activeCount()!=0;}
+  [[nodiscard]] std::optional<foundation::InkBrushConfig> inkBrushConfig() const noexcept;
   [[nodiscard]] bool setInkOptions(float size, float red, float green, float blue,
                                    float alpha, float opacity) noexcept;
   void clearInkSizeOverride() noexcept;
@@ -735,6 +740,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unordered_map<std::uint64_t, std::uint64_t> brushSessionSeeds_;
   std::unordered_map<std::uint64_t, std::vector<ink::reference::StrokeOutlinePoint>> brushPreviews_;
   ToolMode toolMode_ = ToolMode::kBrush;
+  std::optional<foundation::InkBrushConfig> inkBrushConfig_;
+  ink::LaserTrail laserTrails_;
+  std::uint64_t laserRevision_=0;
   bool panTool_ = false;
   std::uint32_t eraserMode_ = 2U;
   std::unordered_map<input::PointerKey, std::pair<float, float>, input::PointerKeyHash> panPointers_;

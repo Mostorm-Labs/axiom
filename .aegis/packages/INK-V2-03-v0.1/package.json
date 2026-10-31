@@ -1,0 +1,91 @@
+{
+  "schema_version": "0.1",
+  "package_id": "INK-V2-03-v0.1",
+  "task_id": "INK-V2-03",
+  "status": "PREPARED_NOT_DISPATCHED",
+  "purpose": "轻量水彩与六笔型消费者闭环",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/sdk-shell-axis-bridge"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "af5b1778284211c3834957084dd0a03e48308d69",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "p32_authorized": false,
+  "authorization_reason": "用户本轮仅要求先写好实施包，尚未请求执行本包",
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "dependencies": [
+    {
+      "package_id": "INK-V2-01-v0.1",
+      "package_ref": {
+        "repository_path": ".aegis/packages/INK-V2-01-v0.1/package.json",
+        "sha256": "e29f79f1166ede03d2c2244600db36cf10edac6a559610db4a0b40e263b0936e"
+      },
+      "required_result": "Exact source/result manifest and applicable required evidence for the dependency; a plan/final message is insufficient",
+      "ancestry": "reconcile valid descendant and dirty overlay; do not require historical HEAD equality"
+    },
+    {
+      "package_id": "INK-V2-02-v0.1",
+      "package_ref": {
+        "repository_path": ".aegis/packages/INK-V2-02-v0.1/package.json",
+        "sha256": "39faefd557c7ec42fbecdb1ab6bed22e0ca7b74c6805bc34c8d91dd84db9dfea"
+      },
+      "required_result": "Exact source/result manifest and applicable required evidence for the dependency; a plan/final message is insufficient",
+      "ancestry": "reconcile valid descendant and dirty overlay; do not require historical HEAD equality"
+    }
+  ],
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "80a0beeb10958c9c5d29e0889699717d8c9eacc7e9547c486a0a98723f2ca5c2"
+  },
+  "baseline_lock_ref": {
+    "path": "baseline.lock.json",
+    "sha256": "921f70e3a875bb246d06139adaca2bdcf1895e7893bf2295d23361153f72e366"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "3c7d7c42ced92315d62be84680b3ffcab04c6cccb5e017bc5182015f0f032920"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "4bb4b4f94ac62f62404f010f0b21469d0d601a0732115d8f534f51497b27ba06"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "8500ff3cd642b8ced1c072a2849fb10d82178313021a72ada50f46f3939d90e1"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "4082f401e6d00213332d48ca85c213cf7b4a5819774ec4c11c1693d1a2b3f73f"
+  },
+  "proposed_design_ref": {
+    "path": "design-proposal.md",
+    "sha256": "a87f53bab5e9383962f1dda16f63df4862ed4c6eccb778c9bb74fce45b836f40"
+  },
+  "requirements_ref": {
+    "path": "requirements.md",
+    "sha256": "fe6ceabc5fda84a405d4bd36a8c0b394e629b08b37d3a924d83adeb594869d22"
+  },
+  "verification_spec_ref": {
+    "path": "verification-spec.md",
+    "sha256": "1b67317e46c14945ea0dc3c488cd98e85fdd5240b5d32e9c0d80ef7996b54ccd"
+  },
+  "task_plan_ref": {
+    "path": "task-plan.md",
+    "sha256": "b5fb755169288bd692808923380947f44c0cdedab4556f8f3959e0c8f620106c"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/INK-V2-03-v0.1",
+    "state": "local_prepared_files",
+    "remote_materialization_ref": null,
+    "no_commit_or_publication_claimed": true
+  },
+  "semantic_status": "new compact carrier/version IDs remain proposed until versioned contract binding at implementation preflight",
+  "handoff_dispatched": false
+}

@@ -53,12 +53,13 @@ std::array<std::uint8_t, 32> snapshotDigest(const auditoryworks::axiom::v1::Docu
     return internal::sha256(framed);
 }
 
-struct SnapshotFeatures final { bool triangle=false,text=false,formatting=false,section=false,label=false,connector=false,background=false,table=false,sketch=false,pattern=false,extendedSketch=false,corners=false,fontFallback=false; };
+struct SnapshotFeatures final { bool triangle=false,text=false,formatting=false,section=false,label=false,connector=false,background=false,table=false,sketch=false,pattern=false,extendedSketch=false,corners=false,fontFallback=false,compact=false; };
 SnapshotFeatures snapshotFeatures(const SemanticSnapshot& snapshot) {
     SnapshotFeatures result;
     for(const auto& entry:snapshot.manifest.entries)result.fontFallback=result.fontFallback||(entry.resource_kind==ResourceKind::kFont&&entry.layout_version==2);
     result.background = snapshot.background != foundation::DocumentBackground{};
     for(const auto& object:snapshot.objects) {
+        result.compact=result.compact||std::holds_alternative<CompactStrokeContent>(object.content);
         if(object.kind==ObjectKind::kShape && (object.kind_version==2 || object.kind_version==3)) {
             const auto* shape=std::get_if<ShapeContent>(&object.content);
             result.triangle=result.triangle || (shape && shape->shape_kind==3);
@@ -90,6 +91,7 @@ SnapshotFeatures snapshotFeatures(const SemanticSnapshot& snapshot) {
 }
 std::vector<std::string> requiredCapabilities(const SnapshotFeatures& features) {
     std::vector<std::string> result{"resource-manifest-v1"};
+    if(features.compact)result.push_back("compact-stroke-v1");
     if(features.text)result.push_back("richtext-fixed-width-v2");
     if(features.formatting)result.push_back("richtext-formatting-v3");
     if(features.triangle)result.push_back("shape2-triangle-v1");
@@ -107,8 +109,9 @@ std::vector<std::string> requiredCapabilities(const SnapshotFeatures& features) 
 }
 bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reader) {
     const auto bits=static_cast<unsigned>(reader);
-    if(bits>2047U || !foundation::validDocumentBackground(snapshot.background)) return false;
+    if(bits>4095U || !foundation::validDocumentBackground(snapshot.background)) return false;
     const auto features=snapshotFeatures(snapshot);
+    if(features.compact&&((bits&2048U)==0||snapshot.schema_version!=3U))return false;
     if(features.corners&&((bits&512U)==0||snapshot.schema_version<3U))return false;
     if(features.fontFallback&&((bits&1024U)==0||snapshot.schema_version<3U))return false;
     if(features.extendedSketch && ((bits&256U)==0 || snapshot.schema_version<3U))return false;
@@ -153,6 +156,7 @@ bool supportedSnapshotVersion(std::uint32_t version) noexcept {
 }
 
 bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability capability, const ObjectRecord& object) noexcept {
+    if(std::holds_alternative<CompactStrokeContent>(object.content))return schema_version==3U&&(static_cast<unsigned>(capability)&2048U)!=0;
     for(const auto& p:object.properties.entries)if(p.field_id==0x103U&&(schema_version!=3U||(static_cast<unsigned>(capability)&512U)==0))return false;
     for(const auto& e:object.properties.entries) if(std::holds_alternative<SketchStyleV1>(e.value) || (std::holds_alternative<FillStyleValue>(e.value)&&std::holds_alternative<PatternFillV1>(std::get<FillStyleValue>(e.value))))
         if(schema_version!=3U || (static_cast<unsigned>(capability)&128U)==0)return false;

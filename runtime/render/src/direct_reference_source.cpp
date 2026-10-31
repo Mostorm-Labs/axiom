@@ -213,6 +213,16 @@ void encodeContent(CanonicalWriter& out, const semantic::ObjectContent& content,
         } else if constexpr (std::is_same_v<T, semantic::VectorStrokeContent> ||
                              std::is_same_v<T, semantic::DabStrokeContent>) {
             encodeStroke(out, value.stroke);
+        } else if constexpr (std::is_same_v<T, semantic::CompactStrokeContent>) {
+            const auto& c=value.stroke.config;
+            out.u32(c.version);out.u32(c.algorithmVersion);out.u32(c.signalVersion);out.u32(c.materialVersion);
+            out.u32(static_cast<unsigned>(c.family));out.u32(static_cast<unsigned>(c.roundMode));out.u32(static_cast<unsigned>(c.pressureSource));
+            out.f64(c.size);out.f64(c.opacity);for(auto x:c.color)out.f64(x);
+            out.f64(c.markerAngle);out.f64(c.markerFlatness);out.f64(c.density);out.f64(c.textureScale);out.f64(c.deposition);out.f64(c.wetEdge);
+            out.u32(c.laserFadeMs);out.f64(c.laserTailLength);
+            out.string(c.materialResourceId);out.string(c.materialResourceSha256);out.u32(c.materialSamplingVersion);
+            out.u64(value.stroke.seed);out.u64(value.stroke.knots.size());
+            for(const auto& k:value.stroke.knots){out.f64(k.x);out.f64(k.y);out.u32(k.pressure);}
         } else if constexpr (std::is_same_v<T, semantic::BrushStrokeContent>) {
             out.u32(value.stroke.snapshot.snapshot_version);
             out.u32(value.stroke.snapshot.package_revision);
@@ -430,6 +440,11 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
                                          record.placement.parent_id.has_value()});
         break;
     case semantic::ObjectKind::kVectorStroke:
+        if(record.kindVersion==3U){
+            if(const auto* value=std::get_if<semantic::CompactStrokeContent>(&record.content))
+                return foundation::Result<ReferenceCommand>::success(CompactStrokeReferenceCommand{*value});
+            break;
+        }
         if (record.kindVersion == 2U) {
             if (const auto* value = std::get_if<semantic::BrushStrokeContent>(&record.content))
                 return foundation::Result<ReferenceCommand>::success(BrushStrokeReferenceCommand{*value});

@@ -1,0 +1,72 @@
+{
+  "schema_version": "0.1",
+  "package_id": "INK-V2-01-v0.1",
+  "task_id": "INK-V2-01",
+  "status": "PREPARED_NOT_DISPATCHED",
+  "purpose": "信号、紧凑笔画基础、圆头笔和瞬态激光",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/sdk-shell-axis-bridge"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "af5b1778284211c3834957084dd0a03e48308d69",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "p32_authorized": false,
+  "authorization_reason": "用户本轮仅要求先写好实施包，尚未请求执行本包",
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "dependencies": [],
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "7491ec8398a11b4850394eb8b8831bd5f2c2bbeb86cfaa37bd10c84fd5a1c799"
+  },
+  "baseline_lock_ref": {
+    "path": "baseline.lock.json",
+    "sha256": "781407454b688f262c87098b8c44c140355c1536ffd8f537b55a7f47587f97b4"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "3b05af674681ccc32ea3161baa346914ba84d46d0e3837d45bc448ca04b50f25"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "3f1770973a97b262d4475636670eb7bf77badd81ac7872fb89faad132a039177"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "0002087dc3b972c064a6adac15136c14d8688f3f04fd787b8f1df96dc5f43004"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "5a984d6ab2210621fc4e047194a1856f39cb1db59df13911e22fbc018b0409c8"
+  },
+  "proposed_design_ref": {
+    "path": "design-proposal.md",
+    "sha256": "a87f53bab5e9383962f1dda16f63df4862ed4c6eccb778c9bb74fce45b836f40"
+  },
+  "requirements_ref": {
+    "path": "requirements.md",
+    "sha256": "fe6ceabc5fda84a405d4bd36a8c0b394e629b08b37d3a924d83adeb594869d22"
+  },
+  "verification_spec_ref": {
+    "path": "verification-spec.md",
+    "sha256": "1b67317e46c14945ea0dc3c488cd98e85fdd5240b5d32e9c0d80ef7996b54ccd"
+  },
+  "task_plan_ref": {
+    "path": "task-plan.md",
+    "sha256": "de52edefadacc12ac4a74e37bfb9e97084a06574560a6edd6aed2189edc01f36"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/INK-V2-01-v0.1",
+    "state": "local_prepared_files",
+    "remote_materialization_ref": null,
+    "no_commit_or_publication_claimed": true
+  },
+  "semantic_status": "new compact carrier/version IDs remain proposed until versioned contract binding at implementation preflight",
+  "handoff_dispatched": false
+}

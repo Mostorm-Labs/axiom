@@ -18,6 +18,7 @@ export interface OperationPacket extends OperationMetadata {bytes:Uint8Array;}
 export interface DataStatus {attached:boolean;closing:boolean;fault:boolean;pending:number;pendingBytes:number;capacity:number;byteCapacity:number;statusCapacity:4096;statusRecords:number;latest:OperationMetadata|null;releasedOrdinal:Revision;}
 export interface Stamp {readonly owner:string;readonly token:[Revision,Revision,Revision,Revision,Revision,Revision,Revision,Revision];}
 export type Color = [number,number,number,number];
+export interface InkBrushConfig {version?:1;family:1|2|3|4|5|6;roundMode?:1|2;pressureSource?:1|2;size?:number;opacity?:number;color?:Color;markerAngle?:number;markerFlatness?:number;density?:number;textureScale?:number;deposition?:number;wetEdge?:number;laserFadeMs?:number;laserTailLength?:number;}
 export interface DocumentBackground {mode:'plain'|'dots'|'grid';color:Color;patternColor:Color;}
 export type PropertyValue = {type:'boolean';value:boolean}|{type:'float';value:number}|{type:'color';value:Color}|{type:'fill';value:Color|null}|{type:'patternFill';value:{version:1;color:Color;kind:1|2;angle:number;gap:number;width:number}}|{type:'blend'|'decoration';value:number}|{type:'stroke';value:Stroke|null};
 export interface Stroke {color:Color;width:number;cap:1|2|3;join:{kind:'miter';limit:number}|{kind:'round'|'bevel'};dash:{segments:number[];offset:number}|null;}
@@ -82,7 +83,7 @@ export interface Runtime {
   table:TableAPI;
   appearance:AppearanceAPI;
   readonly version:'0.1.0'; readonly canvas:HTMLCanvasElement;
-  readBuildInfo():{ok:true;apiVersion:1;features:{shellAxis:1;resourceCustody:1;documentBackground:1;imageExport:1;table:1;sketchStyle:1;patternFill:1;appearancePreview:1;sketchExtended:1;vectorPath:1;roundedCorners:1;fontFallback:2};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
+  readBuildInfo():{ok:true;apiVersion:1;features:{shellAxis:1;resourceCustody:1;documentBackground:1;imageExport:1;table:1;sketchStyle:1;patternFill:1;appearancePreview:1;sketchExtended:1;vectorPath:1;roundedCorners:1;fontFallback:2;inkV2:1;compactStroke:1;materialInk:1;simulatedPressure:1;devicePressure:1;laserTransient:1};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
   readState():RuntimeState;
   readBackground():DocumentBackground;
   /** Read-only committed content; owned bytes. Default complete visible content, 16px padding. */
@@ -102,6 +103,7 @@ export interface Runtime {
   setInk(options:{size?:number;opacity?:number;color?:[number,number,number,number]}):Promise<CommandResult>;
   setEraser(options:{mode:1|2;diameter?:number}):Promise<CommandResult>;
   brushPresets():{profileId:string;revision:number}[];selectBrush(profileId:string,revision:number):Promise<CommandResult>;
+  setBrushConfig(value:InkBrushConfig):Promise<CommandResult>;readBrushConfig():Required<InkBrushConfig>|null;
   setAppearance(options:{selected?:boolean;fill?:Color;stroke?:Color;fillEnabled?:boolean;strokeEnabled?:boolean;strokeWidth?:number;opacity?:number}):Promise<CommandResult>;
   orderSelection(front:boolean):Promise<CommandResult>;
   undo():Promise<CommandResult>;redo():Promise<CommandResult>;panBy(x:number,y:number):Promise<CommandResult>;zoomAt(x:number,y:number,scale:number):Promise<CommandResult>;

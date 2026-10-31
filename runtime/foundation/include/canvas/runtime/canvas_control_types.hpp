@@ -1,4 +1,5 @@
 #pragma once
+#include "canvas/runtime/ink_brush.hpp"
 #include "canvas/foundation/document_background.hpp"
 
 #include "canvas/foundation/object_id.hpp"
@@ -95,6 +96,7 @@ enum class CanvasControlPayloadKind : std::uint8_t {
   kSection,
   kSelectionAcquisitionMode,
   kDocumentBackground,
+  kInkBrushConfig,
 };
 
 enum class CanvasFitTarget : std::uint8_t { kContent, kSelection, kObject, kWorldRect };
@@ -110,6 +112,7 @@ struct CanvasControlPayload final {
   double height = 80;
   bool flag = false;
   InkOptionsPatch ink{};
+  foundation::InkBrushConfig brushConfig{};
   EraserOptionsPatch eraser{};
   float x = 0.0F;
   float y = 0.0F;
@@ -180,6 +183,7 @@ struct CanvasControlReceipt final {
 };
 
 struct CanvasControlSnapshot final {
+  std::optional<foundation::InkBrushConfig> brushConfig;
   CanvasTargetKey target{};
   std::uint64_t controlRevision = 0;
   CanvasToolKind tool = CanvasToolKind::kInk;

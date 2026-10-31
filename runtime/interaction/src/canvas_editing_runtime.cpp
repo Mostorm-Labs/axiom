@@ -3,6 +3,7 @@
 #include "undoable_command.hpp"
 
 #include "canvas/semantic/brush_engine_codec.hpp"
+#include "canvas/semantic/codec.hpp"
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
 #include "qualification_checkpoint.hpp"
 #endif
@@ -342,6 +343,16 @@ std::uint64_t hashOutline(const std::vector<canvas::ink::reference::StrokeOutlin
   return hash;
 }
 
+std::uint64_t hashCompactKnots(const std::vector<canvas::foundation::InkKnot>& knots) noexcept {
+  auto hash = kFnvOffset;
+  for (const auto& knot : knots) {
+    hash = hashValue(hash, knot.x);
+    hash = hashValue(hash, knot.y);
+    hash = hashValue(hash, knot.pressure);
+  }
+  return hash;
+}
+
 canvas::foundation::WorldRect transformedBounds(
     const canvas::foundation::WorldRect& bounds,
     const canvas::semantic::Transform2D& transform) noexcept {
@@ -556,11 +567,20 @@ bool CanvasEditingRuntime::brushBatch(
     std::span<const input::PointerSample> samples,
     std::uint64_t session) noexcept {
   if (samples.empty()) return false;
+  if(laserTrails_.trails().contains(session)||
+      (samples.front().phase==input::PointerPhase::kDown&&inkBrushConfig_&&inkBrushConfig_->family==foundation::InkFamily::kLaser)){
+    const auto now=static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
+    if(samples.front().phase==input::PointerPhase::kDown){
+        if(!laserTrails_.begin(session,*inkBrushConfig_)||!previewController_||!previewProvider_||!previewController_->begin(1,session,1,previewProvider_->generation()))return false;
+        auto style=render::PreviewStyleOverride{};style.preferCapturedPaint=true;previewController_->setPresentationStyle(style);
+    }
+    for(const auto& s:samples){if(s.phase==input::PointerPhase::kCancel){laserTrails_.cancel(session);if(previewController_&&previewProvider_)(void)previewController_->retireSession(session,previewProvider_->generation());return true;}
+        if(!s.predicted&&!laserTrails_.append(session,s.x,s.y,now))return false;}
+    advanceLaserPresentation(now);return true;
+  }
   if (samples.front().phase == input::PointerPhase::kDown) {
-    const auto profile = selectedBrushProfile_ == "vector-solid-v1" ? 1U
-        : selectedBrushProfile_ == "marker-flat-v1" ? 2U
-        : selectedBrushProfile_ == "chalk-grain-v1" ? 3U : 4U;
-    if (!beginBrushSession(session, profile)) return false;
+    const auto loaded=brushCatalog_.loadDefault(selectedBrushProfile_,selectedBrushRevision_);
+    if(!loaded||!beginBrushSession(session,loaded.package,0x4500ULL+session))return false;
   }
   std::vector<ink::BrushSample> confirmed;
   std::vector<ink::BrushSample> predicted;
@@ -568,7 +588,7 @@ bool CanvasEditingRuntime::brushBatch(
   for (const auto& sample : samples) {
     if (sample.phase == input::PointerPhase::kCancel) break;
     const ink::BrushSample point{sample.x, sample.y, sample.pressure,
-                                 sample.capabilities.pressure, sample.sequence};
+                                 sample.capabilities.pressure, sample.sequence,sample.timestampNs,sample.capabilities.pressure};
     if (sample.predicted) predicted.push_back(point);
     else {
       // A confirmed observation replaces the preceding speculative tail.
@@ -1362,6 +1382,7 @@ void CanvasEditingRuntime::cancelAllPointers() noexcept {
     (void)pointer;
     session->cancel();
   }
+  laserTrails_.clear();
   brushSessions_.clear();
   brushSessionPackages_.clear();
   brushSessionSeeds_.clear();
@@ -1392,7 +1413,7 @@ bool CanvasEditingRuntime::beginBrushSession(std::uint64_t pointerId,
   std::lock_guard lock(previewStateMutex_);
   if (pointerId == 0U ||
       (package.profileId != "vector-solid-v1" && package.profileId != "marker-flat-v1" &&
-       package.profileId != "chalk-grain-v1" && package.profileId != "membrane-v1") ||
+       package.profileId != "chalk-grain-v1" && package.profileId != "membrane-v1" && !package.compactConfig) ||
       package.packageId.empty() ||
       brushSessions_.contains(pointerId)) return false;
   auto capturedPackage = package;
@@ -1402,6 +1423,8 @@ bool CanvasEditingRuntime::beginBrushSession(std::uint64_t pointerId,
   capturedPackage.paint.blue = inkBlue_;
   capturedPackage.paint.alpha = inkAlpha_;
   capturedPackage.paint.opacity = inkOpacity_;
+  if(capturedPackage.compactConfig&&inkBrushConfig_)capturedPackage.compactConfig=inkBrushConfig_;
+  if(capturedPackage.compactConfig){auto& c=*capturedPackage.compactConfig;c.size=inkSize_;c.opacity=inkOpacity_;c.color={inkRed_,inkGreen_,inkBlue_,inkAlpha_};}
   auto state = ink::resolveBrushState(capturedPackage, seed);
   brushPackageDigest_ = ink::brushPackageCanonicalDigest(package);
   brushResolvedStateDigest_ = kFnvOffset;
@@ -1432,6 +1455,8 @@ bool CanvasEditingRuntime::beginBrushSession(std::uint64_t pointerId,
     style.opacityMultiplier = 0.92F;
     style.overrideColor = true;
     style.overrideOpacity = true;
+    // Keep the product's amber handoff cue for compact and legacy brushes.
+    // The renderer preserves captured geometry/material and tints only paint.
     style.preferCapturedPaint = false;
     previewController_->setPresentationStyle(style);
   }
@@ -2760,6 +2785,7 @@ bool CanvasEditingRuntime::selectBrushProfile(std::string_view profileId,
   if (!loaded) return false;
   selectedBrushProfile_ = std::string(profileId);
   selectedBrushRevision_ = revision;
+  inkBrushConfig_=loaded.package.compactConfig;
   if (!inkSizeOverride_) inkSize_ = static_cast<float>(loaded.package.vector.size);
   if (!inkColorOverride_) {
     inkRed_ = static_cast<float>(loaded.package.paint.red);
@@ -2791,6 +2817,41 @@ bool CanvasEditingRuntime::setInkOptions(float size, float red, float green, flo
 }
 
 void CanvasEditingRuntime::clearInkSizeOverride() noexcept { inkSizeOverride_ = false; }
+std::optional<foundation::InkBrushConfig> CanvasEditingRuntime::inkBrushConfig() const noexcept {
+  auto config=inkBrushConfig_;
+  if(config){config->size=inkSize_;config->opacity=inkOpacity_;config->color={inkRed_,inkGreen_,inkBlue_,inkAlpha_};}
+  return config;
+}
+bool CanvasEditingRuntime::configureInkBrush(const foundation::InkBrushConfig& config) noexcept {
+  if(closed_||std::this_thread::get_id()!=ownerThread_||publicationCallbackActive_||!foundation::validInkBrushConfig(config))return false;
+  inkBrushConfig_=config;
+  selectedBrushProfile_=config.family==foundation::InkFamily::kLaser?"laser-transient":
+      config.family==foundation::InkFamily::kMarker?"marker-compact-v1":
+      config.family==foundation::InkFamily::kChalk?"chalk-compact-v1":
+      config.family==foundation::InkFamily::kCrayon?"crayon-wax-v1":
+      config.family==foundation::InkFamily::kWatercolor?"watercolor-lite-v1":
+      config.roundMode==foundation::InkRoundMode::kRegular?"round-regular":"round-handdrawn";
+  selectedBrushRevision_=1;
+  inkSize_=static_cast<float>(config.size);inkOpacity_=static_cast<float>(config.opacity);
+  inkRed_=static_cast<float>(config.color[0]);inkGreen_=static_cast<float>(config.color[1]);inkBlue_=static_cast<float>(config.color[2]);inkAlpha_=static_cast<float>(config.color[3]);
+  return true;
+}
+void CanvasEditingRuntime::advanceLaserPresentation(std::uint64_t now) noexcept {
+  std::vector<std::uint64_t> previous;
+  for(const auto& [id,t]:laserTrails_.trails()){(void)t;previous.push_back(id);}
+  (void)laserTrails_.tick(now);
+  if(!previewController_||!previewProvider_)return;
+  for(auto id:previous)if(!laserTrails_.trails().contains(id))(void)previewController_->retireSession(id,previewProvider_->generation());
+  const auto viewport=viewportController_->state();
+  for(const auto& [id,t]:laserTrails_.trails()){
+    ink::BrushPreviewDelta delta;delta.revision=++laserRevision_;delta.compactConfig=t.config;
+    const auto age=now>=t.points.back().time?now-t.points.back().time:0;
+    delta.compactConfig->opacity*=std::clamp(1.-double(age)/(double(t.config.laserFadeMs)*1e6),0.,1.);
+    auto chunk=std::make_shared<ink::BrushPreviewDelta::Chunk>();
+    for(const auto& p:t.points)chunk->knots.push_back({p.x,p.y,32768});delta.compactChunks=chunk;
+    (void)previewController_->updateForSession(id,delta,viewport.scale,viewport.translationX,viewport.translationY);
+  }
+}
 void CanvasEditingRuntime::clearInkColorOverride() noexcept { inkColorOverride_ = false; }
 void CanvasEditingRuntime::clearInkOpacityOverride() noexcept { inkOpacityOverride_ = false; }
 
@@ -3207,7 +3268,7 @@ bool CanvasEditingRuntime::eraserCancel(std::uint64_t pointerId) noexcept {
 bool CanvasEditingRuntime::appendBrushSample(std::uint64_t pointerId, double x, double y,
                                           double pressure, std::uint64_t sequence,
                                           bool predicted, bool renderPreview) noexcept {
-  const ink::BrushSample sample{x, y, pressure, true, sequence};
+  const ink::BrushSample sample{x, y, pressure, true, sequence,sequence,true};
   return predicted
       ? appendBrushSamples(pointerId, {}, std::span<const ink::BrushSample>(&sample, 1), renderPreview)
       : appendBrushSamples(pointerId, std::span<const ink::BrushSample>(&sample, 1), {}, renderPreview);
@@ -3346,30 +3407,45 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
   AXIOM_ANDROID_DIAG("finish begin pointer=%llu objects=%zu scene_gen=%llu", static_cast<unsigned long long>(pointerId), semanticObjects_.size(), static_cast<unsigned long long>(semanticGeneration_.current().value()));
   ink::BrushCommitIntent intent;
   if (it->second->seal(intent) != ink::BrushSessionError::kNone) return false;
-  brushSealedOutlineDigest_ = hashOutline(intent.outline);
+  brushSealedOutlineDigest_ = intent.compactConfig ? hashCompactKnots(intent.knots)
+                                                   : hashOutline(intent.outline);
   const auto package = brushSessionPackages_.at(pointerId);
   const auto seed = brushSessionSeeds_.at(pointerId);
   ink::BrushSession replay(pointerId, ink::resolveBrushState(package, seed));
     ink::BrushPreviewDelta replayPreview;
   ink::BrushCommitIntent replayIntent;
-  if (!replay.begin() ||
+  if (!intent.compactConfig && (!replay.begin() ||
       replay.append(intent.confirmed, {}, replayPreview) != ink::BrushSessionError::kNone ||
-      replay.seal(replayIntent) != ink::BrushSessionError::kNone) return false;
+      replay.seal(replayIntent) != ink::BrushSessionError::kNone)) return false;
   brushReplayDigest_ = hashOutline(replayIntent.outline);
-  if (brushReplayDigest_ != brushSealedOutlineDigest_) return false;
+  if (!intent.compactConfig && brushReplayDigest_ != brushSealedOutlineDigest_) return false;
   const bool usesDabs = (package.profileId == "chalk-grain-v1" &&
                          package.revision >= 2U && package.revision <= 4U) ||
                         package.profileId == "membrane-v1";
   if (usesDabs && replayIntent.dabDigest != intent.dabDigest) return false;
   if (!BrushCommitAdapter::valid(intent, package)) return false;
-  brushDigest_ = hashValue(hashValue(hashValue(kFnvOffset, brushSealedOutlineDigest_),
-                                     brushReplayDigest_), intent.revision);
   const auto operationId = localOperationOrdinal();
   if (operationId == 0U) return false;
   const auto objectId = allocateObjectIdentity(foundation::ObjectId::fromUint64(operationId));
   if (objectId.isZero()) return false;
   const auto operation = BrushCommitAdapter::build(
       intent, package, operationId, documentId_, localOperationIdentity(operationId), objectId);
+  if (intent.compactConfig) {
+    // Compact replay starts from persisted effective pressure, never from raw
+    // device samples or the live simulator. Verify the actual codec boundary.
+    const auto encoded = semantic::SemanticCodec::encodeProtobufOperation(operation);
+    if (!encoded.ok()) return false;
+    const auto decoded = semantic::SemanticCodec::decodeProtobufOperation(encoded.bytes);
+    if (!decoded.ok()) return false;
+    const auto* stroke = std::get_if<semantic::AddStrokeOp>(&decoded.operation.payload);
+    const auto* content = stroke ? std::get_if<semantic::CompactStrokeContent>(&stroke->object.content) : nullptr;
+    if (!content || content->stroke.config != *intent.compactConfig ||
+        content->stroke.seed != intent.seed || content->stroke.knots != intent.knots) return false;
+    brushReplayDigest_ = hashCompactKnots(content->stroke.knots);
+    if (brushReplayDigest_ != brushSealedOutlineDigest_) return false;
+  }
+  brushDigest_ = hashValue(hashValue(hashValue(kFnvOffset, brushSealedOutlineDigest_),
+                                     brushReplayDigest_), intent.revision);
   semantic::Operation inverse;
   inverse.id = allocateOperationId();
   if (inverse.id.isZero()) return false;
@@ -3830,7 +3906,7 @@ SnapshotRestoreOutcome CanvasEditingRuntime::restoreSnapshotBeforeSurface(const 
       snapshot.document_id != documentId_ || sceneCoordinator_ == nullptr || sceneCompiler_ == nullptr) return SnapshotRestoreOutcome::kInvalid;
   try {
     auto state = semantic::DocumentRuntimeState::kLoading;
-    constexpr auto capability = semantic::SnapshotCapability::kAllWithRoundedAndFontFallbackV1;
+    constexpr auto capability = semantic::SnapshotCapability::kAllWithCompactStrokeV1;
     const auto restored = semantic::SnapshotBootstrapper::restore(snapshot, capability, state,
         semanticObjects_, manifest, semanticGeneration_, binding);
     if (!restored.restored) return SnapshotRestoreOutcome::kInvalid;

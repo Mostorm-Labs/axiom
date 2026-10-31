@@ -1,4 +1,5 @@
 #include "canvas/render/skia_scene_renderer.hpp"
+#include "canvas/ink/compact_geometry.hpp"
 
 #include "include/codec/SkCodec.h"
 #include "include/core/SkBitmap.h"
@@ -12,6 +13,8 @@
 #include "include/core/SkShader.h"
 #include "include/core/SkTileMode.h"
 #include "include/core/SkPathBuilder.h"
+#include "include/core/SkSurface.h"
+#include "include/effects/SkRuntimeEffect.h"
 
 #include <algorithm>
 #include <cmath>

@@ -14,6 +14,7 @@ import "auditoryworks/axiom/v1/connector.proto";
 import "auditoryworks/axiom/v1/section.proto";
 
 import "auditoryworks/axiom/v1/table.proto";
+import "auditoryworks/axiom/v1/compact_stroke.proto";
 
 message Placement { Id128 parent_id = 1; OrderKey order_key = 2; }
 message ShapeContent { uint32 shape_kind = 1; double width = 2; double height = 3; RichTextContent label = 4; }
@@ -36,6 +37,7 @@ message ObjectContent {
     DabBrushStrokeContent dab_brush_stroke = 11;
     SectionContent section = 12;
     TableContent table = 13;
+    CompactStrokeContent compact_stroke = 14;
   }
 }
 message ObjectRecord {

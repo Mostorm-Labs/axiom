@@ -88,6 +88,10 @@ struct TableReferenceCommand final {
     std::optional<std::size_t> activeCell = std::nullopt;
     bool operator==(const TableReferenceCommand&) const = default;
 };
+struct CompactStrokeReferenceCommand final {
+    semantic::CompactStrokeContent content;
+    bool operator==(const CompactStrokeReferenceCommand&) const=default;
+};
 using ReferenceCommand = std::variant<
     ShapeReferenceCommand,
     ImageReferenceCommand,
@@ -100,7 +104,7 @@ using ReferenceCommand = std::variant<
     GroupReferenceCommand,
     BrushStrokeReferenceCommand,
     DabBrushStrokeReferenceCommand,
-    SectionReferenceCommand, TableReferenceCommand>;
+    SectionReferenceCommand, TableReferenceCommand, CompactStrokeReferenceCommand>;
 
 struct ReferenceTraversalEntry final {
     RuntimeSceneRecord record;

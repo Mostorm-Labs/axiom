@@ -338,3 +338,21 @@ Appearance values/patches add `cornerRadius` in object-local units [0,16384], in
 The application font catalog adds Excalifont and Xiaolai v3.126 under OFL1.1. Font selection still uses owned resource IDs through existing `text.format({font})` and Table cell format. Excalifont carries explicit one-hop Xiaolai fallback in font metadata schema/layout version2; bytes/hashes/resource revisions remain in the existing resource owner. Fallback is shared C++ shaping/rendering, never browser/OS font selection or canonical run rewriting. Missing/corrupt bytes or unsupported metadata reject/diagnose explicitly. Snapshot requires `font-fallback-v2` (bit1024); full internal reader profile2047. Old v1 font resources and ordinary API lifetime/thread rules are unchanged.
 
 The Demo has tools, appearance properties, text/object properties, then board tools. Create/edit/select text to choose the font; the selector is not an implicit mutation of unrelated objects or global settings. Assets keep original upstream names and copyright; UI display labels can be separate. Renaming/modifying a font does not remove its OFL obligations or transfer upstream design ownership. SDK0.1.0 remains an unpublished candidate; Windows DLL ABI requires separate Windows evidence.
+
+Ink v2 adds `setBrushConfig` / `readBrushConfig` on the root facade. Families are
+round=1, marker=2, chalk=3, crayon=4, watercolor-lite=5, transient laser=6.
+`pressureSource:1` (simulated) is the default regardless of browser pressure;
+`pressureSource:2` requires a pressure-capable source and valid pressure on every
+sample. Invalid config/unknown fields reject without changing the document.
+`roundMode:1|2`, size/opacity/color, markerAngle/markerFlatness, density,
+textureScale/deposition/wetEdge and laserFadeMs/laserTailLength are owned values.
+Readback returns a copy. Owner-thread queue, error and close semantics are unchanged.
+Configuration freezes for each new session; changes affect subsequent sessions.
+New persistent profiles save one compact spine plus effective pressure, config,
+seed and versioned built-in resource binding. They contain no raw/dab/outline
+copies. The internal compact-stroke-v1 reader bit is 2048 (full profile4095).
+Old brush records remain readable. Laser creates no Operations or Undo entries and
+is excluded from snapshot/export. The Demo provides seven choices across six
+families. Persistent brushes preview their shape and material with an amber tint
+in the independent Skia surface, then hand off to canonical ink in the selected
+color and opacity. The transient laser retains its selected color while fading.

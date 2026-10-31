@@ -10,12 +10,19 @@
 #include "include/core/SkPaint.h"
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkSurface.h"
+#include "include/core/SkImage.h"
+#include <unordered_map>
 
 #include <cmath>
 #include <algorithm>
 #include <type_traits>
 
 namespace canvas::render {
+struct SkiaRenderer::CompactCache final {
+    struct Entry {std::shared_ptr<const ink::BrushPreviewDelta::Chunk> prefix;sk_sp<SkSurface> surface;foundation::InkBrushConfig config;};
+    std::unordered_map<std::uint64_t,Entry> entries;
+    std::uint64_t generation=0;float scale=0,x=0,y=0,px=0,py=0;int width=0,height=0;
+};
 namespace {
 void drawAcquisition(SkCanvas& canvas,const EditingOverlay& overlay) {
     SkPaint paint;paint.setAntiAlias(true);paint.setStrokeWidth(1.5F);
@@ -292,6 +299,63 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
         }
     };
     auto drawContour = [&](const PreviewGeometry::Contour& contour) {
+        if(contour.compactConfig&&contour.compactChunks){
+            auto config=*contour.compactConfig;
+            if (!style.preferCapturedPaint) {
+                if (style.overrideColor)
+                    config.color = {style.red, style.green, style.blue, 1.0};
+                // As with outline/dab previews, this is the effective overlay
+                // alpha. Do not multiply by the captured stroke opacity again.
+                if (style.overrideOpacity) {
+                    config.color[3] = 1.0;
+                    config.opacity = alpha;
+                }
+            }
+            const auto info=acquired.frame.surface->imageInfo();
+            const auto bytes=std::uint64_t(info.width())*info.height()*4;
+            if(!compactCache_||compactCache_->generation!=geometry.surfaceGeneration.value()||compactCache_->scale!=geometry.viewport.scale||
+               compactCache_->x!=geometry.viewport.translationX||compactCache_->y!=geometry.viewport.translationY||compactCache_->px!=geometry.logicalToPhysicalX||compactCache_->py!=geometry.logicalToPhysicalY||compactCache_->width!=info.width()||compactCache_->height!=info.height()){
+                compactCache_=std::make_shared<CompactCache>();compactCache_->generation=geometry.surfaceGeneration.value();
+                compactCache_->scale=geometry.viewport.scale;compactCache_->x=geometry.viewport.translationX;compactCache_->y=geometry.viewport.translationY;
+                compactCache_->px=geometry.logicalToPhysicalX;compactCache_->py=geometry.logicalToPhysicalY;compactCache_->width=info.width();compactCache_->height=info.height();
+            }
+            auto& cache=*compactCache_;
+            // Persistent coverage is view-bounded and disposable. Large hosts
+            // fall back to clipped reconstruction rather than exceed budget.
+            if(bytes>8*1024*1024){
+                std::vector<const ink::BrushPreviewDelta::Chunk*> chunks;
+                for(auto c=contour.compactChunks.get();c;c=c->previous.get())chunks.push_back(c);
+                std::vector<foundation::InkKnot> knots;
+                for(auto i=chunks.rbegin();i!=chunks.rend();++i)knots.insert(knots.end(),(*i)->knots.begin(),(*i)->knots.end());
+                compactWork_.generatedKnots+=knots.size();internal::drawCompactStrokeToSkCanvas(*canvas,config,knots,contour.compactSeed);return;
+            }
+            if(!cache.entries.contains(contour.session)&&bytes*(cache.entries.size()+1)>24*1024*1024)cache.entries.clear();
+            auto& entry=cache.entries[contour.session];
+            auto prefix=contour.compactChunks->previous;
+            std::vector<const ink::BrushPreviewDelta::Chunk*> added;
+            auto c=prefix;
+            while(c&&c!=entry.prefix){added.push_back(c.get());c=c->previous;}
+            if(!entry.surface||c!=entry.prefix||entry.config!=config){
+                entry.surface=SkSurfaces::Raster(info);if(!entry.surface)return;
+                entry.surface->getCanvas()->clear(SK_ColorBLACK);entry.prefix.reset();added.clear();
+                for(auto v=prefix;v;v=v->previous)added.push_back(v.get());
+            }
+            auto* stable=entry.surface->getCanvas();stable->save();
+            stable->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);
+            stable->translate(geometry.viewport.translationX,geometry.viewport.translationY);stable->scale(geometry.viewport.scale,geometry.viewport.scale);
+            for(auto i=added.rbegin();i!=added.rend();++i){compactWork_.generatedKnots+=(*i)->knots.size();internal::drawCompactCoverageToSkCanvas(*stable,config,(*i)->knots);}
+            stable->restore();entry.prefix=prefix;entry.config=config;
+            auto combined=SkSurfaces::Raster(info);if(!combined)return;
+            auto* temporary=combined->getCanvas();temporary->clear(SK_ColorBLACK);
+            temporary->drawImage(entry.surface->makeImageSnapshot(),0,0);
+            temporary->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);
+            temporary->translate(geometry.viewport.translationX,geometry.viewport.translationY);temporary->scale(geometry.viewport.scale,geometry.viewport.scale);
+            compactWork_.generatedKnots+=contour.compactChunks->knots.size();
+            internal::drawCompactCoverageToSkCanvas(*temporary,config,contour.compactChunks->knots);
+            internal::compositeCompactCoverageToSkCanvas(*canvas,*combined->makeImageSnapshot(),config,contour.compactSeed);
+            compactWork_.retainedBytes=bytes*cache.entries.size();compactWork_.temporaryBytes=bytes;
+            return;
+        }
         SkPaint contourPaint = paint;
         if (contour.hasPaint && style.preferCapturedPaint) {
             const float effectiveAlpha = std::clamp(contour.alpha * contour.opacity, 0.0F, 1.0F);

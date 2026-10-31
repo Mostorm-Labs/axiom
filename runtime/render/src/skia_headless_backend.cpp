@@ -256,6 +256,8 @@ HeadlessSubmissionIssue validateCommand(const ReferenceTraversalEntry& entry) no
                     return HeadlessSubmissionIssue::kUnsupportedGeometry;
                 }
             }
+        } else if constexpr (std::is_same_v<T, CompactStrokeReferenceCommand>) {
+            if(!semantic::validCompactStroke(command.content.stroke))return HeadlessSubmissionIssue::kUnsupportedGeometry;
         } else if constexpr (std::is_same_v<T, BrushStrokeReferenceCommand>) {
             if (command.content.stroke.vector_output.outline.empty()) {
                 return HeadlessSubmissionIssue::kUnsupportedGeometry;
@@ -604,6 +606,8 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 dabColor.a *= stroke.brush.opacity * dab.opacity;
                 drawSolidRect(canvas, foundation::WorldRect{static_cast<float>(dab.center.x - dab.size / 2.0), static_cast<float>(dab.center.y - dab.size / 2.0), static_cast<float>(dab.center.x + dab.size / 2.0), static_cast<float>(dab.center.y + dab.size / 2.0)}, dabColor);
             }
+        } else if constexpr (std::is_same_v<T, CompactStrokeReferenceCommand>) {
+            internal::drawCompactStrokeToSkCanvas(canvas,command.content.stroke.config,command.content.stroke.knots,command.content.stroke.seed);
         } else if constexpr (std::is_same_v<T, BrushStrokeReferenceCommand>) {
             const auto& stroke = command.content.stroke;
             if (stroke.vector_output.outline.empty()) return;
@@ -793,7 +797,8 @@ void eraseMasks(SkCanvas& canvas, const ReferenceTraversalEntry& entry) {
 }
 
 bool isInkReferenceEntry(const ReferenceTraversalEntry& entry) noexcept {
-    return std::holds_alternative<VectorStrokeReferenceCommand>(entry.command) ||
+    return std::holds_alternative<CompactStrokeReferenceCommand>(entry.command) ||
+           std::holds_alternative<VectorStrokeReferenceCommand>(entry.command) ||
            std::holds_alternative<DabStrokeReferenceCommand>(entry.command) ||
            std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
            std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
@@ -808,7 +813,8 @@ bool isDrawableNonInkReferenceEntry(const ReferenceTraversalEntry& entry) noexce
 }
 
 bool isBrushReferenceEntry(const ReferenceTraversalEntry& entry) noexcept {
-    return std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
+    return std::holds_alternative<CompactStrokeReferenceCommand>(entry.command) ||
+           std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
            std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command);
 }
 
@@ -946,7 +952,7 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
         return BackendSubmissionResult::rejected("invalid transform or clip");
     }
     for (const auto& entry : plan.referenceDrawList.entries) {
-        const bool brushEntry = std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
+        const bool brushEntry = std::holds_alternative<CompactStrokeReferenceCommand>(entry.command) || std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
                                 std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command) ||
                                 std::holds_alternative<RichTextReferenceCommand>(entry.command);
         if (!(brushEntry ? validBrushRect(entry.record.visualBounds)
@@ -1041,7 +1047,7 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
     if (plan.referenceDrawList.entries.empty()) return reject(HeadlessSubmissionIssue::kEmptyPlan, "empty reference draw list");
     if (!validAffine(plan.referenceDrawList.worldToView) || !validRect(plan.referenceDrawList.viewportClip)) return reject(HeadlessSubmissionIssue::kUnsupportedGeometry, "invalid transform or clip");
     for (const auto& entry : plan.referenceDrawList.entries) {
-        const bool brushEntry = std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
+        const bool brushEntry = std::holds_alternative<CompactStrokeReferenceCommand>(entry.command) || std::holds_alternative<BrushStrokeReferenceCommand>(entry.command) ||
                                 std::holds_alternative<DabBrushStrokeReferenceCommand>(entry.command) ||
                                 std::holds_alternative<RichTextReferenceCommand>(entry.command);
         if (!(brushEntry ? validBrushRect(entry.record.visualBounds)

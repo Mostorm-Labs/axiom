@@ -66,6 +66,7 @@ std::string canonical(const BrushPackage& value) {
         << value.grain.resourceVersion << '|' << value.grain.density << '|'
         << value.grain.spacing << '|' << value.grain.opacity;
   }
+  if(value.compactConfig){const auto& c=*value.compactConfig;out<<"|compact-v1|"<<static_cast<unsigned>(c.family)<<'|'<<static_cast<unsigned>(c.roundMode)<<'|'<<static_cast<unsigned>(c.pressureSource)<<'|'<<c.version<<'|'<<c.algorithmVersion<<'|'<<c.signalVersion<<'|'<<c.materialVersion<<'|'<<c.size<<'|'<<c.opacity<<'|'<<c.markerAngle<<'|'<<c.markerFlatness<<'|'<<c.density<<'|'<<c.textureScale<<'|'<<c.deposition<<'|'<<c.wetEdge<<'|'<<c.laserFadeMs<<'|'<<c.laserTailLength<<'|'<<c.color[0]<<'|'<<c.color[1]<<'|'<<c.color[2]<<'|'<<c.color[3]<<'|'<<c.materialResourceId<<'|'<<c.materialResourceSha256<<'|'<<c.materialSamplingVersion;}
   return out.str();
 }
 

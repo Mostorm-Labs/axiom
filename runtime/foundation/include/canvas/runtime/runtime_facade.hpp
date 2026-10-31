@@ -21,6 +21,7 @@ namespace canvas::runtime {
 class RuntimeFacade {
  public:
   virtual ~RuntimeFacade() = default;
+  [[nodiscard]] virtual bool transientInkActive() const noexcept { return false; }
   [[nodiscard]] virtual ImageExportResult exportImage(const ImageExportOptions&) noexcept { return {}; }
   [[nodiscard]] virtual std::optional<foundation::DocumentBackground> readBackground() const noexcept { return std::nullopt; }
   [[nodiscard]] virtual SelectionSummary readSelectionSummary() const { return {}; }

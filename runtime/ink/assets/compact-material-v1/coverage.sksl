@@ -1,0 +1,13 @@
+
+            uniform float2 a; uniform float2 b; uniform float2 radii;
+            uniform float2 axis; uniform float flatness;
+            half4 main(float2 p) {
+                float2 q=p-a, v=b-a;
+                q=float2(dot(q,axis),dot(q,float2(-axis.y,axis.x))/flatness);
+                v=float2(dot(v,axis),dot(v,float2(-axis.y,axis.x))/flatness);
+                float t=clamp(dot(q,v)/max(dot(v,v),0.000001),0.,1.);
+                float r=mix(radii.x,radii.y,t);
+                float d=length(q-t*v)/max(r,0.0001);
+                half c=half(max(0.,1.-d));
+                return half4(c,c,c,1.);
+            }

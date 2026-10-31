@@ -15,6 +15,7 @@ add_library(canvas_runtime_ink STATIC
   src/vector_path_node.cpp
   src/chalk_dab_evaluator.cpp
     src/brush_session.cpp
+  src/compact_brush_session.cpp
     src/brush_preview_handoff.cpp
   src/legacy_v1_readonly.cpp)
 target_sources(canvas_runtime_ink PRIVATE src/vector_stroke_reference.cpp)
@@ -41,6 +42,19 @@ else()
   target_compile_options(canvas_runtime_ink PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 if(BUILD_TESTING)
+  add_executable(axiom_ink_v2_pressure_tests tests/ink_v2_pressure_test.cpp)
+  target_link_libraries(axiom_ink_v2_pressure_tests PRIVATE canvas_runtime_ink)
+  target_compile_features(axiom_ink_v2_pressure_tests PRIVATE cxx_std_20)
+  add_test(NAME InkV2Pressure COMMAND axiom_ink_v2_pressure_tests)
+  add_executable(axiom_ink_v2_pen_tests tests/ink_v2_pen_test.cpp)
+  target_link_libraries(axiom_ink_v2_pen_tests PRIVATE canvas_runtime_ink)
+  add_test(NAME InkV2Pen COMMAND axiom_ink_v2_pen_tests)
+  add_executable(axiom_ink_v2_laser_tests tests/ink_v2_laser_test.cpp)
+  target_link_libraries(axiom_ink_v2_laser_tests PRIVATE canvas_runtime_ink)
+  add_test(NAME InkV2Laser COMMAND axiom_ink_v2_laser_tests)
+  add_executable(axiom_ink_v2_resample_tests tests/ink_v2_resample_test.cpp)
+  target_link_libraries(axiom_ink_v2_resample_tests PRIVATE canvas_runtime_ink)
+  add_test(NAME InkV2Resample COMMAND axiom_ink_v2_resample_tests)
   add_executable(axiom_ink_engine_tests tests/ink_engine_test.cpp)
   target_link_libraries(axiom_ink_engine_tests PRIVATE canvas_runtime_ink)
   target_compile_features(axiom_ink_engine_tests PRIVATE cxx_std_20)

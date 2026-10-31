@@ -26,6 +26,7 @@ struct MultiSelectionControlWork;
 // CanvasEditingRuntime; it never creates a second document or history owner.
 class CanvasRuntimeFacade : public RuntimeFacade {
  public:
+  [[nodiscard]] bool transientInkActive() const noexcept override { return runtime_.laserActive(); }
 #if defined(AXIOM_RUNTIME_QUALIFICATION)
   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
                       CanvasTargetKey target,std::uint64_t runtimeInstance = 1,

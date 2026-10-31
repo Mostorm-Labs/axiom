@@ -143,3 +143,10 @@ Appearance values/patches add `cornerRadius` in object-local units [0,16384], in
 The application font catalog adds Excalifont and Xiaolai v3.126 under OFL1.1. Font selection still uses owned resource IDs through existing `text.format({font})` and Table cell format. Excalifont carries explicit one-hop Xiaolai fallback in font metadata schema/layout version2; bytes/hashes/resource revisions remain in the existing resource owner. Fallback is shared C++ shaping/rendering, never browser/OS font selection or canonical run rewriting. Missing/corrupt bytes or unsupported metadata reject/diagnose explicitly. Snapshot requires `font-fallback-v2` (bit1024); full internal reader profile2047. Old v1 font resources and ordinary API lifetime/thread rules are unchanged.
 
 The Demo has tools, appearance properties, text/object properties, then board tools. Create/edit/select text to choose the font; the selector is not an implicit mutation of unrelated objects or global settings. Assets keep original upstream names and copyright; UI display labels can be separate. Renaming/modifying a font does not remove its OFL obligations or transfer upstream design ownership. SDK0.1.0 remains an unpublished candidate; Windows DLL ABI requires separate Windows evidence.
+
+Ink v2 caller-side wrapper adds `setBrushConfig(Json)` / `readBrushConfig()` using
+the existing JSON command transport. Family values1..6 and explicit pressure source
+1=simulated(default),2=device are shared with Web. No internal C++ BrushSession,
+Skia object, allocation or STL ownership crosses the DLL ABI. Configuration is
+copied and frozen per new session; invalid versions/enums/numbers reject. This
+Mac/Web execution does not qualify a Windows DLL or a physical pressure device.

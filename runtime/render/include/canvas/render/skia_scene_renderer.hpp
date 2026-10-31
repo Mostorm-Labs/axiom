@@ -8,10 +8,20 @@
 #include <span>
 
 class SkCanvas;
+class SkImage;
 namespace canvas::render { class ImageResourceResolver; }
 namespace canvas::render { class SkiaTextResources; }
 
 namespace canvas::render::internal {
+void drawCompactStrokeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
+                                std::span<const foundation::InkKnot>,std::uint64_t seed=0);
+// Disposable scalar distance coverage. The material is evaluated once after
+// stable prefix and replaceable tail have been combined with max coverage.
+void drawCompactCoverageToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
+                                  std::span<const foundation::InkKnot>);
+void compositeCompactCoverageToSkCanvas(SkCanvas&,const SkImage&,
+                                       const foundation::InkBrushConfig&,std::uint64_t seed=0,
+                                       int deviceX=0,int deviceY=0);
 
 // Shared Skia scene contract used by both the headless reference backend and
 // SkiaRenderer/provider production path. The implementation is kept in the

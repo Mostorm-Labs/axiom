@@ -1,4 +1,5 @@
 #pragma once
+#include "canvas/semantic/compact_stroke.hpp"
 
 #include "canvas/semantic/property_value.hpp"
 #include "canvas/semantic/semantic_geometry.hpp"
@@ -422,6 +423,6 @@ using ObjectContent = std::variant<
     GroupContent,
     BrushStrokeContent,
     DabBrushStrokeContent,
-    SectionContent, TableContent>;
+    SectionContent, TableContent, CompactStrokeContent>;
 
 } // namespace canvas::semantic

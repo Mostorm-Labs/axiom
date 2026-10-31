@@ -351,6 +351,10 @@ bool normalizeContent(ObjectContent& content) {
                 return normalizeStroke(value.stroke);
             } else if constexpr (std::is_same_v<Item, DabStrokeContent>) {
                 return normalizeStroke(value.stroke);
+            } else if constexpr (std::is_same_v<Item, CompactStrokeContent>) {
+                if(!validCompactStroke(value.stroke))return false;
+                for(auto& knot:value.stroke.knots)if(!normalizeDouble(knot.x)||!normalizeDouble(knot.y))return false;
+                return true;
             } else if constexpr (std::is_same_v<Item, BrushStrokeContent>) {
                 auto& snapshot = value.stroke.snapshot;
                 if (!normalizeDouble(snapshot.vector.size) || !normalizeDouble(snapshot.vector.thinning) ||
