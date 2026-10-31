@@ -1,7 +1,98 @@
 # Axiom repository instructions for AI agents
 
-These instructions apply to the entire repository. Read them before changing build,
-dependency, CI, or workflow code.
+These instructions apply to the entire repository. Read them before planning or
+changing implementation, public APIs, builds, dependencies, CI, or workflows.
+
+## Architecture and public API boundaries
+
+### Understand ownership before coding
+
+Before implementation, inspect the affected modules and identify the existing state
+owner, command/commit path, dependency direction, and public entry point. State the
+intended scope and API impact in the implementation plan or progress update. Extend
+the existing owner instead of adding a shortcut around it.
+
+Use `docs/notion/manifest.yaml` to locate current authority. For SDK work, also read
+the relevant contracts in `docs/planning/sdk/js-v1-contract.md`,
+`docs/planning/sdk/windows-consumer-v1.md`, and
+`docs/planning/sdk/shell-axis-preview-contract.md`. Distinguish current authority,
+draft/proposed documents, historical designs, implementation reality, and evidence.
+An old diagram or an existing internal method does not by itself authorize a new
+public API. This file guides implementation; it does not redefine semantic schemas
+or freeze a new ABI.
+
+### Module responsibilities
+
+| Area | Responsibility and boundary |
+| --- | --- |
+| `sdk/web`, `sdk/windows` | Consumer entry points, transport types, validation, and platform integration. Delegate editing behavior to shared Runtime owners. |
+| `sdk/common` | Private Session decoding and adaptation. Do not create another document, selection, or history owner here. |
+| `runtime/composition`, `runtime/control` | Runtime assembly, ownership, command admission, execution coordination, and receipts. Keep concrete composition internals private. |
+| `runtime/input`, `runtime/interaction`, `runtime/ink`, `runtime/text` | Shared input, editing sessions, tool behavior, and text behavior. Platform adapters feed these existing paths. |
+| `runtime/semantic` | Canonical document state, Operations, validation, atomic apply, and codecs. Canonical mutations follow the existing OperationEngine path. |
+| `runtime/scene`, `runtime/render` | Derived scene, spatial data, rendering, and presentation. These are not alternate canonical document owners. |
+| `runtime/foundation`, `schema` | Shared contracts/value types and versioned formats. A header being under `include/` does not make it a consumer SDK contract. |
+| `apps`, `debug_ui`, `verification` | Hosts, demos, adapters, and verification. Some platform adapters are reused by the SDK; inspect actual dependencies before moving or deleting code. |
+
+The usual consumer path is Shell -> SDK facade/transport -> private Session/adapters
+-> shared Runtime owners -> OperationEngine -> canonical document, with derived
+scene/render state for presentation. High-frequency input and IME use their existing
+adapter paths; do not force them through a new parallel command implementation.
+Keep product navigation/account/UI in the Shell and storage/network/synchronization
+in the external Data/Axis owner. Runtime commit, local durability, presentation, and
+cloud acknowledgement are distinct states.
+
+### Keep consumer contracts separate from implementation
+
+- Web consumers use the root exports in `sdk/web/axiom.mjs` and the types in
+  `sdk/web/axiom.d.mts`. Keep the WASM module, HEAP access, bridge exports, and native
+  wrappers behind the facade; do not return them as public business APIs or require
+  private deep imports.
+- Windows consumers use `sdk/windows/include/axiom/api.h`: a C/POD ABI with opaque
+  handles and explicit buffer ownership. Do not pass internal C++ classes, STL
+  objects, exceptions, or cross-CRT allocation ownership across the DLL boundary.
+  `axiom.hpp` is a caller-side wrapper; its application-owned C++ values do not make
+  internal C++ Runtime interfaces part of the DLL ABI.
+- The source developer profile, including `RuntimeComposition` and its abstract
+  facade, is separate from the ordinary JS/DLL consumer contract. Keep its Pimpl
+  boundary and keep `AXIOM_INSTALL_DEVELOPER_COMPONENTS` opt-in. Do not copy its
+  broader semantic C++ types into the consumer SDK or enable qualification seams
+  for normal consumers.
+- Public value DTOs, ObjectId/DocumentId, opaque tokens, read-only state snapshots,
+  serialized Operation/Snapshot/resource bytes, and documented host surface handles
+  are valid contracts. Specify ownership and lifetime for every buffer or handle.
+- Do not expose `RuntimeCompositionCore`, `CanvasEditingRuntime`, mutable object
+  stores, selection/history owners, scene/compiler internals, or Skia/GPU/tile
+  objects through public fields, pointers, references, accessors, or debug commands.
+  Do not duplicate canonical state, editing rules, history, or identity allocation
+  in an SDK, demo, UI, or platform wrapper.
+
+### Implement and verify the actual boundary
+
+For each new or changed public capability:
+
+1. Reuse the owning Runtime path and expose the smallest capability needed by the
+   consumer. If the public contract has a gap, describe and address it explicitly;
+   do not reach into private state to work around it.
+2. Define request/result DTOs, validation, ID/token widths, version compatibility,
+   buffer copy/borrow/release rules, lifetime, thread/reentrancy behavior, and
+   error/receipt semantics. Preserve full identity/generation stamps and lossless
+   integer transport. Do not equate admission with commit or persistence.
+3. Update the matching public declarations, bindings, contract documentation, and
+   relevant external-consumer verification. Cover invalid, stale, or foreign
+   handles/tokens when the changed capability uses them.
+4. Inspect JS package exports, DLL export symbols, CMake install rules, and release
+   packaging as well as source headers. Normal consumer packages must not install
+   private Runtime headers or standalone internal/dependency archives, or expose
+   test/qualification interfaces.
+5. Run checks appropriate to the affected path. The runtime boundary checker is
+   useful but does not cover every current SDK entry point; use real exported SDK
+   calls and package/consumer checks when those boundaries change. Web verification
+   must use matching JS declarations/wrapper, WASM, and resources from the build.
+
+For the current local development workflow, use the Web/WASM SDK demo as the primary
+interactive verification path. Shared Runtime behavior belongs in the shared owner;
+a Web pass alone does not establish another platform's ABI or packaging correctness.
 
 ## Dependency policy: consume published SDKs first
 
