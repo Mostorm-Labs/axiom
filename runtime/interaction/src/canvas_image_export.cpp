@@ -132,6 +132,7 @@ runtime::ImageExportResult CanvasEditingRuntime::exportImage(
         if (!imageResolver_ || imageResolver_->resolve(image->content.resource_id)->state != render::ImageResourceState::kReady)
           return error(ImageExportStatus::kResourceUnavailable);
       }
+      if(const auto* table=std::get_if<render::TableReferenceCommand>(&entry.command))if(!validLayout(table->layout))return error(ImageExportStatus::kResourceUnavailable);
       if (const auto* rich = std::get_if<render::RichTextReferenceCommand>(&entry.command))
         if (!validLayout(rich->layout)) return error(ImageExportStatus::kResourceUnavailable);
       if (const auto* shape = std::get_if<render::ShapeReferenceCommand>(&entry.command))

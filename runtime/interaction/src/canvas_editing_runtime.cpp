@@ -1,4 +1,5 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
+#include "canvas/semantic/table_content.hpp"
 #include "undoable_command.hpp"
 
 #include "canvas/semantic/brush_engine_codec.hpp"
@@ -769,6 +770,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   if (selectionMode_ || creationMode_ || creationActive() || panTool_) {
     for (const auto& sample : routedSamples) {
       if (!sample.key.valid()) continue;
+      if(!sample.predicted&&sample.capabilities.tool!=input::PointerTool::kFinger&&tablePointer(sample.key,sample.phase,sample.x,sample.y))continue;
       if (selectionMode_ && (sample.capabilities.tool==input::PointerTool::kFinger ||
           coordinator_->hasContact(sample.key))) {
         const auto routing=coordinator_->route(sample);
@@ -786,6 +788,9 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
         if (!routing.routesToInk) continue;
       }
       if (!dispatchRuntime_.submit(sample)) return false;
+      if(selectionMode_&&selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint&&selectedObjectCount()==1&&(sample.phase==input::PointerPhase::kDown||sample.phase==input::PointerPhase::kUp)){
+        runtime::TextIntent cell;cell.object=selection_.primary();cell.viewX=sample.x;cell.viewY=sample.y;(void)tableTargetAt(cell);
+      }
       if (selectionMode_ && selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint && !textTool_ &&
           (!interaction_->textSession() ||
            interaction_->textSession()->read().phase == runtime::TextPhase::kClosed))
@@ -1716,7 +1721,7 @@ bool CanvasEditingRuntime::submitHistoryIntent(std::span<const semantic::Operati
 
 bool CanvasEditingRuntime::textReady() const noexcept {
   return canonicalWriteAdmission() && historySceneReady() && brushSessions_.empty() && eraserTraces_.empty() && keyedStrokeIds_.empty() &&
-         creations_.empty() && panPointers_.empty() && dispatchRuntime_.activeCount()==0 && !selectionTransformActive();
+         creations_.empty() && panPointers_.empty() && dispatchRuntime_.activeCount()==0 && !selectionTransformActive() && !tableResize_;
 }
 bool CanvasEditingRuntime::textWritable(semantic::ObjectId id) const noexcept {
   const auto* current=semanticObjects_.find(id);
@@ -1784,6 +1789,7 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
   if(forward.kind()==semantic::OperationKind::kSetObjectSize) aspect=interaction::HistoryAspect::kSize;
   if(forward.kind()==semantic::OperationKind::kSetPlacements) aspect=interaction::HistoryAspect::kPlacement;
   if(forward.kind()==semantic::OperationKind::kPatchProperties) aspect=interaction::HistoryAspect::kProperties;
+  if(forward.kind()==semantic::OperationKind::kEditTable) aspect=interaction::HistoryAspect::kRichTextContent;
   if(forward.kind()==semantic::OperationKind::kEditRichText) aspect=interaction::HistoryAspect::kRichTextContent;
   std::vector<interaction::HistoryExpectation> before,after;
   const auto capture=[&](semantic::ObjectId id,const semantic::ObjectRecord* post) {
@@ -3798,7 +3804,7 @@ SnapshotRestoreOutcome CanvasEditingRuntime::restoreSnapshotBeforeSurface(const 
       snapshot.document_id != documentId_ || sceneCoordinator_ == nullptr || sceneCompiler_ == nullptr) return SnapshotRestoreOutcome::kInvalid;
   try {
     auto state = semantic::DocumentRuntimeState::kLoading;
-    constexpr auto capability = semantic::SnapshotCapability::kAllWithBackgroundV1;
+    constexpr auto capability = semantic::SnapshotCapability::kAllWithTableV1;
     const auto restored = semantic::SnapshotBootstrapper::restore(snapshot, capability, state,
         semanticObjects_, manifest, semanticGeneration_, binding);
     if (!restored.restored) return SnapshotRestoreOutcome::kInvalid;
@@ -4387,8 +4393,15 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       }
     }
   }
+  if(textLayoutService_)for(auto& entry:references.value().entries)if(auto* table=std::get_if<semantic::TableContent>(&entry.record.content)){
+    if(tableResize_&&entry.record.objectId==tableResize_->object){auto& axes=tableResize_->column.isZero()?table->rows:table->columns;const auto id=tableResize_->column.isZero()?tableResize_->row:tableResize_->column;for(auto& a:axes)if(a.id==id)a.size=tableResize_->preview;for(std::size_t i=0;i<table->cells.size();++i)table->cells[i].text.layout=semantic::RichTextLayout{table->columns[i%table->columns.size()].size-12};}
+    entry.record.textLayout=textLayoutService_->resolveTable(entry.record.objectId,*table);entry.command=render::TableReferenceCommand{*table,entry.record.textLayout};
+  }
+  for(auto& entry:references.value().entries)if(auto* command=std::get_if<render::TableReferenceCommand>(&entry.command);command&&selectedObjectCount()==1&&entry.record.objectId==selection_.primary())command->activeCell=semantic::tableCellIndex(command->content,tableRow_,tableColumn_);
   if (interaction_->textSession() && textLayoutService_) {
     if (const auto object = textPresentation()) {
+      if(const auto* table=std::get_if<semantic::TableContent>(&object->content))for(auto& entry:references.value().entries)if(entry.record.objectId==object->id){entry.record.content=*table;entry.record.textLayout=textLayoutService_->resolveTable(object->id,*table);entry.command=render::TableReferenceCommand{*table,entry.record.textLayout};}
+
       const semantic::RichTextContent* content = std::get_if<semantic::RichTextContent>(&object->content);
       const semantic::ShapeContent* shape = std::get_if<semantic::ShapeContent>(&object->content);
       if (shape != nullptr && shape->label.has_value()) content = &*shape->label;

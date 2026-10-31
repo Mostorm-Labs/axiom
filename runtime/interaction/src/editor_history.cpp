@@ -81,6 +81,7 @@ bool supportedForward(const semantic::Operation& operation) noexcept {
         case OperationKind::kPatchProperties:
         case OperationKind::kSetObjectSize:
         case OperationKind::kSetImageContent:
+        case OperationKind::kEditTable:
         case OperationKind::kEditRichText:
         case OperationKind::kSetConnectorContent:
             return true;
@@ -100,6 +101,7 @@ bool supportedInverse(const semantic::Operation& operation) noexcept {
         case OperationKind::kPatchProperties:
         case OperationKind::kSetObjectSize:
         case OperationKind::kSetImageContent:
+        case OperationKind::kEditTable:
         case OperationKind::kEditRichText:
         case OperationKind::kSetConnectorContent:
             return true;

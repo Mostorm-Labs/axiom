@@ -1,4 +1,4 @@
-export const SDK_VERSION: '0.0.1';
+export const SDK_VERSION: '0.1.0';
 export class AxiomError extends Error {code: string; details: Record<string,unknown>; constructor(code:string,message?:string,details?:Record<string,unknown>);}
 export type Id128 = string;
 export type Revision = string;
@@ -26,7 +26,7 @@ export interface MultiProjection {available:boolean;stamp:Stamp;roots:Id128[];pr
 export interface ResourceToken {readonly owner:string;readonly instance:Revision;resourceId:Id128;documentBinding:Revision;providerEpoch:Revision;resourceVersion:Revision;expectedSha256:string;requestId:Revision;lifetimeGeneration:Revision;}
 export interface ResourceCatalog {revision:Revision;binding:Revision;entries:(InitialResources['entries'][number]&{token:ResourceToken|null})[];}
 export interface InitialResources {revision:Revision;binding:Revision;entries:{resourceId:Id128;kind:1|2|3;revision:Revision;sha256:string;byteLength:Revision;decodeVersion:number;layoutVersion:number;metadata:number[]}[];}
-export interface TextToken {runtime:Revision;attachment:Revision;view:Revision;adapter:Revision;session:Revision;projection:Revision;document:Id128;object:Id128;}
+export interface TextToken {runtime:Revision;attachment:Revision;view:Revision;adapter:Revision;session:Revision;projection:Revision;document:Id128;object:Id128;row:Id128;column:Id128;}
 export interface TextSnapshot {phase:0|1|2|3|4;token:TextToken;sequence:Revision;composition:Revision;effect:Revision;projection:number[];preedit:number[];selection:[number,number];replacement:[number,number];width:number;format:TextFormat;formatObject:Id128;mixedFormat:boolean;geometry:{available:boolean;caret:number[];selection:number[][];diagnostics:string[]};}
 export interface FontEntry {id:Id128;family:string;revision:Revision;contentHash:string;byteLength:number;status:number;diagnostic:string;}
 export interface FontCatalog {entries:FontEntry[];manifestRevision:Revision;bindingGeneration:Revision;}
@@ -41,12 +41,25 @@ export interface RuntimeOptions {
   restore?: {bytes:Uint8Array;metadata:{documentRevision:Revision;recoveryFrontier:number[];checkpointDigest:number[];resourceBinding:Revision}};
 }
 export interface CommandResult {ok:true;requestId?:Revision;revision?:Revision;section?:{objectId:Id128;operationId:Id128;generation:Revision;canonical:number;projection:number;failure:number};}
-export interface RuntimeState {documentId:Id128;target:{runtimeEpoch:Revision;viewId:Revision;viewEpoch:Revision;attachmentEpoch:Revision};generation:Revision;selectionRevision:Revision;selectionMode:0|1|2;eraserMode:1|2;tool:number;shape:number;creationMode:boolean;objects:number;activeContacts:number;selected:Id128[];primary:Id128;canUndo:boolean;canRedo:boolean;text:{phase:number;session:Revision;sequence:Revision;composition:Revision;selection:[number,number]};lastCommit:{operationId:Id128;runtimeEpoch:Revision;ordinal:Revision;presentedGeneration:Revision;localDurable:DataProgress;cloudSynced:DataProgress};data:Omit<DataStatus,'latest'>&{latest:Omit<OperationMetadata,'owner'>|null};camera:{scale:number;x:number;y:number};surface:{available:boolean;width:number;height:number};}
+export interface RuntimeState {documentId:Id128;target:{runtimeEpoch:Revision;viewId:Revision;viewEpoch:Revision;attachmentEpoch:Revision};generation:Revision;selectionRevision:Revision;selectionMode:0|1|2;eraserMode:1|2;tool:number;shape:number;creationMode:boolean;objects:number;activeContacts:number;selected:Id128[];primary:Id128;canUndo:boolean;canRedo:boolean;text:{phase:number;session:Revision;sequence:Revision;composition:Revision;selection:[number,number]};lastCommit:{operationId:Id128;runtimeEpoch:Revision;ordinal:Revision;presentedGeneration:Revision;localDurable:DataProgress;cloudSynced:DataProgress};data:Omit<DataStatus,'latest'>&{latest:Omit<OperationMetadata,'owner'>|null};table:{objectId:Id128;rowId:Id128;columnId:Id128};camera:{scale:number;x:number;y:number};surface:{available:boolean;width:number;height:number};}
 export interface SectionOptions {objectId?:Id128;objects?:Id128[];parentId?:Id128|null;title?:string;boundary?:[number,number,number,number];generation?:Revision;selectionRevision?:Revision;}
 export interface TextFormat {color?:[number,number,number,number];fontSize?:number;font?:Id128;bold?:boolean;italic?:boolean;underline?:boolean;strikethrough?:boolean;bulleted?:boolean;alignment?:1|2|3;}
+export interface TableTarget {objectId:Id128;rowId:Id128;columnId:Id128;generation?:Revision;}
+export type TableSnapshot = {available:false}|{available:true;editable:boolean;objectId:Id128;rowId:Id128;columnId:Id128;rows:{id:Id128;size:number}[];columns:{id:Id128;size:number}[];cells:{text:string;fill:Color;format:TextFormat;mixedFormat:boolean}[];grid:{version:1;color:Color;width:number};generation:Revision;};
+export interface TableAPI {
+ create(options?:{rows?:number;columns?:number;x?:number;y?:number;generation?:Revision}):Promise<CommandResult&{objectId:Id128;generation:Revision}>;
+ navigate(direction:1|-1):Promise<CommandResult>;
+ read(objectId?:Id128):TableSnapshot;select(target:TableTarget):Promise<CommandResult>;edit(target:TableTarget):Promise<TextSnapshot>;
+ insertRow(options:{objectId:Id128;index:number;generation?:Revision}):Promise<CommandResult>;insertColumn(options:{objectId:Id128;index:number;generation?:Revision}):Promise<CommandResult>;
+ removeRow(options:{objectId:Id128;rowId:Id128;generation?:Revision}):Promise<CommandResult>;removeColumn(options:{objectId:Id128;columnId:Id128;generation?:Revision}):Promise<CommandResult>;
+ setRowHeight(options:{objectId:Id128;rowId:Id128;size:number;generation?:Revision}):Promise<CommandResult>;setColumnWidth(options:{objectId:Id128;columnId:Id128;size:number;generation?:Revision}):Promise<CommandResult>;
+ setCellStyle(options:TableTarget&{fill?:Color;format?:Pick<TextFormat,'color'|'fontSize'|'font'|'bold'|'alignment'>}):Promise<CommandResult>;
+ setGridStyle(options:{objectId:Id128;color?:Color;width?:number;generation?:Revision}):Promise<CommandResult>;
+}
 export interface Runtime {
-  readonly version:'0.0.1'; readonly canvas:HTMLCanvasElement;
-  readBuildInfo():{ok:true;apiVersion:1;features:{shellAxis:1;resourceCustody:1;documentBackground:1;imageExport:1};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
+  table:TableAPI;
+  readonly version:'0.1.0'; readonly canvas:HTMLCanvasElement;
+  readBuildInfo():{ok:true;apiVersion:1;features:{shellAxis:1;resourceCustody:1;documentBackground:1;imageExport:1;table:1};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
   readState():RuntimeState;
   readBackground():DocumentBackground;
   /** Read-only committed content; owned bytes. Default complete visible content, 16px padding. */

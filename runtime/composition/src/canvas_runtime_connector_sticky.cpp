@@ -126,5 +126,12 @@ ConnectorSnapshot CanvasRuntimeFacade::readConnectorState(semantic::ObjectId id)
   }
   return snapshot;
 }
+TableResult CanvasRuntimeFacade::tableCommand(const TableRequest& request) {
+  if(!ownerThread()||!composition_||!composition_->canMutate())return {};
+  return runtime_.tableCommand(request);
+}
+TableSnapshot CanvasRuntimeFacade::readTable(foundation::ObjectId id) const {
+  return ownerThread()?runtime_.tableSnapshot(id):TableSnapshot{};
+}
 StickySnapshot CanvasRuntimeFacade::readSelectedSticky() const { if(runtime_.selectedObjectCount()!=1U)return {}; StickySnapshot r{}; const auto* o=runtime_.textRecord(runtime_.selection_.primary()); if(o&&o->kind==semantic::ObjectKind::kSticky){r.available=true;r.objectId=o->id;r.content=std::get<semantic::StickyContent>(o->content);} return r; }
 }

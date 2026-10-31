@@ -4,8 +4,8 @@ using TextJson=nlohmann::json;
 std::string hexId(foundation::ObjectId id){std::string text;constexpr char hex[]="0123456789abcdef";for(auto b:id.bytes){text+=hex[b>>4];text+=hex[b&15];}return text;}
 foundation::ObjectId rawId(const std::string& text){if(text.size()!=32)throw std::invalid_argument("Id128");foundation::ObjectId id;const auto digit=[](char c)->int{if(c>='0'&&c<='9')return c-'0';if(c>='a'&&c<='f')return c-'a'+10;throw std::invalid_argument("hex");};for(std::size_t i=0;i<16;++i)id.bytes[i]=static_cast<std::uint8_t>(digit(text[i*2])*16+digit(text[i*2+1]));return id;}
 std::uint64_t decimal(const std::string& value){if(value.empty()||value.size()>20||value.find_first_not_of("0123456789")!=std::string::npos)throw std::invalid_argument("uint64");std::size_t count=0;auto number=std::stoull(value,&count);if(count!=value.size())throw std::invalid_argument("uint64");return number;}
-TextJson jsonToken(const runtime::TextSessionToken& t){return {{"runtime",std::to_string(t.runtimeInstance)},{"attachment",std::to_string(t.attachment)},{"view",std::to_string(t.view)},{"adapter",std::to_string(t.adapter)},{"session",std::to_string(t.session)},{"projection",std::to_string(t.projection)},{"document",hexId(t.document)},{"object",hexId(t.object)}};}
-runtime::TextSessionToken parseToken(const char* value){if(!value || std::strlen(value)>1024)throw std::invalid_argument("token");const auto j=TextJson::parse(value);return {decimal(j.at("runtime").get<std::string>()),decimal(j.at("attachment").get<std::string>()),decimal(j.at("view").get<std::string>()),decimal(j.at("adapter").get<std::string>()),decimal(j.at("session").get<std::string>()),decimal(j.at("projection").get<std::string>()),rawId(j.at("document").get<std::string>()),rawId(j.at("object").get<std::string>())};}
+TextJson jsonToken(const runtime::TextSessionToken& t){return {{"runtime",std::to_string(t.runtimeInstance)},{"attachment",std::to_string(t.attachment)},{"view",std::to_string(t.view)},{"adapter",std::to_string(t.adapter)},{"session",std::to_string(t.session)},{"projection",std::to_string(t.projection)},{"document",hexId(t.document)},{"object",hexId(t.object)},{"row",hexId(t.row)},{"column",hexId(t.column)}};}
+runtime::TextSessionToken parseToken(const char* value){if(!value || std::strlen(value)>1024)throw std::invalid_argument("token");const auto j=TextJson::parse(value);return {decimal(j.at("runtime").get<std::string>()),decimal(j.at("attachment").get<std::string>()),decimal(j.at("view").get<std::string>()),decimal(j.at("adapter").get<std::string>()),decimal(j.at("session").get<std::string>()),decimal(j.at("projection").get<std::string>()),rawId(j.at("document").get<std::string>()),rawId(j.at("object").get<std::string>()),j.contains("row")?rawId(j.at("row").get<std::string>()):foundation::ObjectId{},j.contains("column")?rawId(j.at("column").get<std::string>()):foundation::ObjectId{}};}
 TextJson jsonTarget(const runtime::CanvasTargetKey& t) {
     return {{"runtimeEpoch", std::to_string(t.runtimeEpoch)}, {"viewId", std::to_string(t.viewId)},
             {"viewEpoch", std::to_string(t.viewEpoch)}, {"attachmentEpoch", std::to_string(t.attachmentEpoch)}};
@@ -83,6 +83,8 @@ EMSCRIPTEN_KEEPALIVE int axiom_web_text_intent_json(std::uintptr_t h, const char
         request.requestId = decimal(j.at("requestId").get<std::string>());
         request.target = parseTarget(j.at("target"));
         request.token = parseToken(j.at("token").dump().c_str());
+        if(j.contains("row"))request.row=rawId(j.at("row").get<std::string>());
+        if(j.contains("column"))request.column=rawId(j.at("column").get<std::string>());
         if (j.contains("object")) request.object = rawId(j.at("object").get<std::string>());
         request.viewX = j.value("x", 0.0F); request.viewY = j.value("y", 0.0F);
         request.width = j.value("width", 320.0);

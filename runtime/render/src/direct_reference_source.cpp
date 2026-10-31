@@ -182,6 +182,11 @@ void encodeContent(CanonicalWriter& out, const semantic::ObjectContent& content,
                     encodeRichTextCanonical(out, label);
                 });
             }
+        } else if constexpr (std::is_same_v<T, semantic::TableContent>) {
+            out.u64(value.rows.size());for(const auto& a:value.rows){out.id(a.id);out.f64(a.size);}
+            out.u64(value.columns.size());for(const auto& a:value.columns){out.id(a.id);out.f64(a.size);}
+            for(const auto& c:value.cells){out.color(c.fill);encodeRichTextCanonical(out,c.text);}
+            out.u32(value.grid.version);out.color(value.grid.color);out.f64(value.grid.width);
         } else if constexpr (std::is_same_v<T, semantic::ImageContent>) {
             out.id(value.resource_id.value);
             out.f64(value.intrinsic_width); out.f64(value.intrinsic_height);
@@ -450,6 +455,9 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
     case semantic::ObjectKind::kGroup:
         if (std::holds_alternative<semantic::GroupContent>(record.content))
             return foundation::Result<ReferenceCommand>::success(GroupReferenceCommand{});
+        break;
+    case semantic::ObjectKind::kTable:
+        if(const auto* value=std::get_if<semantic::TableContent>(&record.content))return foundation::Result<ReferenceCommand>::success(TableReferenceCommand{*value,record.textLayout});
         break;
     case semantic::ObjectKind::kSection:
         if (const auto* value=std::get_if<semantic::SectionContent>(&record.content))

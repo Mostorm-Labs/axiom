@@ -73,6 +73,13 @@
   </div>
   <div class="dialog-actions"><button id="export-cancel" type="button">取消</button><button id="export-image" type="button" class="primary">导出图片</button></div>
 </dialog>
+<dialog id="table-panel" aria-labelledby="table-title">
+  <h2 id="table-title">插入表格</h2><div class="settings">
+    <label>行数<input id="table-rows" type="number" value="3" min="1" max="64" step="1"></label>
+    <label>列数<input id="table-columns" type="number" value="3" min="1" max="64" step="1"></label>
+    <span class="hint">最多 1024 个单元格。确认后点击画板放置，Esc 取消。双击单元格编辑文字。</span>
+  </div><div class="dialog-actions"><button id="table-cancel">取消</button><button id="table-place" class="primary">在画板放置</button></div>
+</dialog>
 <script type="module">
 import {createRuntime} from './axiom.mjs';
 const $ = id => document.getElementById(id);
@@ -125,6 +132,22 @@ try {
   for (const [shape, label, code] of [['rectangle', '矩形', 0], ['ellipse', '椭圆', 1], ['triangle', '三角形', 2], ['line', '直线', 3], ['arrow', '连线', 4], ['sticky', '便签', 5]])
     addTool(label, `shape:${code}`, () => sdk.selectShape(shape));
   addTool('Eraser', 'tool:2', () => sdk.selectTool('partialEraser'));
+  button(drawingGroup,'表格',()=> $('table-panel').showModal(),'table-open');
+  let tablePlacement=null;
+  $('table-cancel').onclick=()=> $('table-panel').close();
+  $('table-place').onclick=()=>run(async()=>{
+    const rows=Number($('table-rows').value),columns=Number($('table-columns').value);
+    if(!Number.isInteger(rows)||!Number.isInteger(columns)||rows<1||columns<1||rows>64||columns>64||rows*columns>1024)throw Error('请输入有效行列数，总单元格不超过 1024');
+    await sdk.text.finish();await sdk.selectTool('select');tablePlacement={rows,columns};$('table-panel').close();
+    sdk.canvas.style.cursor='crosshair';status.textContent='点击画板放置表格，Esc 取消';
+  });
+  const cancelPlacement=()=>{tablePlacement=null;sdk.canvas.style.cursor='';};
+  $('canvas').addEventListener('pointerdown',event=>{if(tablePlacement){event.preventDefault();event.stopImmediatePropagation();$('canvas').setPointerCapture(event.pointerId);}},true);
+  $('canvas').addEventListener('pointerup',event=>{if(!tablePlacement)return;event.preventDefault();event.stopImmediatePropagation();const placement=tablePlacement;cancelPlacement();const rect=sdk.canvas.getBoundingClientRect(),camera=sdk.readState().camera;
+    void run(()=>sdk.table.create({...placement,x:(event.clientX-rect.left-camera.x)/camera.scale,y:(event.clientY-rect.top-camera.y)/camera.scale}));},true);
+  $('canvas').addEventListener('pointercancel',cancelPlacement,true);
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&tablePlacement){cancelPlacement();show();}});
+
 
   const file = $('file'); let replaceImage = false;
   const chooseImage = replace => { replaceImage = replace; file.value = ''; file.click(); };
@@ -173,6 +196,27 @@ try {
   }
   textGroup.onpointerdown = () => { void sdk.text.completeComposition().catch(fail); };
 
+  const tableGroup=group(context,'table-parameters');
+  const cellName=document.createElement('span');tableGroup.append(cellName);
+  const tableTarget=()=>{const t=sdk.table.read();return {objectId:t.objectId,rowId:t.rowId,columnId:t.columnId,generation:t.generation};};
+  button(tableGroup,'编辑文字',()=>sdk.table.edit(tableTarget()),'table-edit');
+  for(const axis of ['Row','Column']){
+    const label=axis==='Row'?'行':'列';
+    button(tableGroup,`+ ${label}`,()=>{const t=sdk.table.read(),axes=axis==='Row'?t.rows:t.columns,key=axis==='Row'?t.rowId:t.columnId;return sdk.table[`insert${axis}`]({objectId:t.objectId,index:axes.findIndex(a=>a.id===key)+1,generation:t.generation});},`table-add-${axis.toLowerCase()}`);
+    button(tableGroup,`删${label}`,()=>{const t=tableTarget();return sdk.table[`remove${axis}`](t);},`table-remove-${axis.toLowerCase()}`);
+  }
+  const rowHeight=field(tableGroup,'行高','number','table-row-height'),columnWidth=field(tableGroup,'列宽','number','table-column-width');
+  for(const input of [rowHeight,columnWidth]){input.min='24';input.max='16384';input.step='1';}
+  rowHeight.onchange=()=>run(()=>sdk.table.setRowHeight({...tableTarget(),size:Number(rowHeight.value)}));
+  columnWidth.onchange=()=>run(()=>sdk.table.setColumnWidth({...tableTarget(),size:Number(columnWidth.value)}));
+  const cellFill=field(tableGroup,'底色','color','table-cell-fill'),cellText=field(tableGroup,'文字','color','table-cell-color'),cellSize=field(tableGroup,'字号','number','table-cell-size');cellSize.min='1';cellSize.max='512';
+  cellFill.onchange=()=>run(()=>sdk.table.setCellStyle({...tableTarget(),fill:rgba(cellFill.value)}));
+  cellText.onchange=()=>run(()=>sdk.table.setCellStyle({...tableTarget(),format:{color:rgba(cellText.value)}}));
+  cellSize.onchange=()=>run(()=>sdk.table.setCellStyle({...tableTarget(),format:{fontSize:Number(cellSize.value)}}));
+  const cellBold=button(tableGroup,'B',()=>{const t=sdk.table.read(),i=t.rows.findIndex(a=>a.id===t.rowId)*t.columns.length+t.columns.findIndex(a=>a.id===t.columnId);return sdk.table.setCellStyle({...tableTarget(),format:{bold:!t.cells[i].format.bold}});},'table-cell-bold');
+  const cellAlign=select(tableGroup,'对齐','table-cell-align',[['1','左'],['2','中'],['3','右']]);cellAlign.onchange=()=>run(()=>sdk.table.setCellStyle({...tableTarget(),format:{alignment:Number(cellAlign.value)}}));
+  const gridColor=field(tableGroup,'网格','color','table-grid-color'),gridWidth=field(tableGroup,'线宽','number','table-grid-width');gridWidth.min='0';gridWidth.max='16';gridWidth.step='.5';
+  const applyGrid=()=>sdk.table.setGridStyle({objectId:sdk.table.read().objectId,color:rgba(gridColor.value),width:Number(gridWidth.value)});gridColor.onchange=gridWidth.onchange=()=>run(applyGrid);
   const imageGroup = group(context, 'image-parameters');
   button(imageGroup, '替换图片', () => chooseImage(true), 'image-replace');
   const crop = button(imageGroup, '裁剪', () => sdk.beginCrop(sdk.readSelectedImage().objectId), 'image-crop');
@@ -207,6 +251,13 @@ try {
   // The Demo does not maintain another selection or editing owner.
   syncContext = state => {
     const selected = sdk.readSelection(), text = sdk.text.read(), image = sdk.readSelectedImage(), cropping = sdk.readCrop();
+    const table=sdk.table.read();tableGroup.hidden=!table.available;
+    if(table.available){const r=table.rows.findIndex(a=>a.id===table.rowId),c=table.columns.findIndex(a=>a.id===table.columnId),cell=table.cells[r*table.columns.length+c];
+      cellName.textContent=`单元格 ${r+1} 行 ${c+1} 列`;
+      setValue(rowHeight,table.rows[r].size);setValue(columnWidth,table.columns[c].size);setValue(cellFill,hex(cell.fill));setValue(cellText,hex(cell.format.color??[0,0,0,1]));setValue(cellSize,cell.format.fontSize??16);setValue(cellAlign,cell.format.alignment??1);cellBold.setAttribute('aria-pressed',String(Boolean(cell.format.bold)));setValue(gridColor,hex(table.grid.color));setValue(gridWidth,table.grid.width);
+      for(const input of tableGroup.querySelectorAll('button,input,select'))input.disabled=!table.editable;
+      $('table-remove-row').disabled=!table.editable||table.rows.length===1;$('table-remove-column').disabled=!table.editable||table.columns.length===1;
+    }
     const capability = action => selected.actions[actionIndex[action]]?.available === true;
     const activeKey = state.creationMode ? `shape:${state.shape}` : `tool:${state.tool}`;
     for (const element of toolButtons) element.setAttribute('aria-pressed', String(element.dataset.tool === activeKey));

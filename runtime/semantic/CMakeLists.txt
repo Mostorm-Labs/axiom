@@ -7,6 +7,7 @@ add_library(canvas_runtime_semantic STATIC
     src/idempotency.cpp
     src/object_index.cpp
     src/reference_object_store.cpp
+    src/table_content.cpp
     src/semantic_types.cpp
     src/container_operation_normalization.cpp
     src/container_operation_validation.cpp

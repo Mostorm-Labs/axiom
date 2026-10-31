@@ -13,6 +13,8 @@ import "auditoryworks/axiom/v1/connector.proto";
 
 import "auditoryworks/axiom/v1/section.proto";
 
+import "auditoryworks/axiom/v1/table.proto";
+
 message Placement { Id128 parent_id = 1; OrderKey order_key = 2; }
 message ShapeContent { uint32 shape_kind = 1; double width = 2; double height = 3; RichTextContent label = 4; }
 enum ImageContentMode { IMAGE_CONTENT_MODE_INVALID = 0; IMAGE_CONTENT_MODE_FIT = 1; IMAGE_CONTENT_MODE_FILL = 2; IMAGE_CONTENT_MODE_STRETCH = 3; }
@@ -33,6 +35,7 @@ message ObjectContent {
     BrushStrokeContent brush_stroke = 10;
     DabBrushStrokeContent dab_brush_stroke = 11;
     SectionContent section = 12;
+    TableContent table = 13;
   }
 }
 message ObjectRecord {

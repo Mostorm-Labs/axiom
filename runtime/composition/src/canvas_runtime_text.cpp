@@ -240,6 +240,7 @@ std::size_t CanvasRuntimeFacade::processIngress(std::uint64_t sequence) {
                     editSelectionRoot = runtime_.resolveSelectionRoot(intent->object);
                     if (editSelectionRoot.isZero()) editAllowed = false;
                 }
+                (void)runtime_.tableTargetAt(*intent);
                 intent->kind = TextIntentKind::kEdit;
             }
             const auto result = enteredGroup ? receipt(TextStatus::kObserved,intent->requestId) : !editAllowed ? receipt(TextStatus::kRejected,intent->requestId) : !isTargetCurrent(intent->target)

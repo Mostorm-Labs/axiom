@@ -78,6 +78,7 @@ struct TextDecoration final {
     semantic::ColorValue color{};
 };
 struct TextLayoutSnapshot final {
+    std::vector<std::shared_ptr<const TextLayoutSnapshot>> tableCells;
     foundation::WorldRect localBounds{};
     LayoutContext context{};
     std::string profile = std::string(kTextStackProfile);
@@ -123,6 +124,8 @@ class RichTextLayoutService final {
     void setContext(LayoutContext);
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
     resolve(foundation::ObjectId, const semantic::RichTextContent&);
+    [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
+    resolveTable(foundation::ObjectId, const semantic::TableContent&);
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>
     resolveSectionTitle(foundation::ObjectId, const semantic::SectionContent&);
     [[nodiscard]] std::shared_ptr<const TextLayoutSnapshot>

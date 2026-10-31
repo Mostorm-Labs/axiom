@@ -1425,6 +1425,7 @@ CodecResult SemanticCodec::encodeProtobufOperation(OperationKind kind) {
         case OperationKind::kSetSectionContent: operation.mutable_payload()->mutable_set_section_content(); break;
         case OperationKind::kEditContainerTopology: operation.mutable_payload()->mutable_edit_container_topology(); break;
         case OperationKind::kSetDocumentBackground: operation.mutable_payload()->mutable_set_document_background(); break;
+        case OperationKind::kEditTable: operation.mutable_payload()->mutable_edit_table(); break;
     }
     std::string bytes;
     if (!operation.SerializeToString(&bytes)) return {SemanticError::kMalformedWire, {}};
@@ -1590,6 +1591,11 @@ DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::u
                 else return false;
             }, operation.payload);
             break;
+        case auditoryworks::axiom::v1::OperationPayload::kEditTable: {
+            EditTableOp value;const auto& item=decoded.payload().edit_table();
+            payload_ok=item.has_object_id()&&mapId(item.object_id(),value.object_id)&&item.has_action()&&item.action()>=1&&item.action()<=6&&item.has_expected()&&item.has_replacement()&&internal::fromProtobufTableContent(item.expected(),value.expected)&&internal::fromProtobufTableContent(item.replacement(),value.replacement);
+            value.action=static_cast<TableEditKind>(item.action());operation.payload=std::move(value);break;
+        }
         case auditoryworks::axiom::v1::OperationPayload::kSetDocumentBackground: {
             SetDocumentBackgroundOp value;
             const auto& item = decoded.payload().set_document_background();
@@ -1657,6 +1663,7 @@ DecodedOperation SemanticCodec::decodeOperation(const std::vector<std::uint8_t>&
         case OperationKind::kSetSectionContent: operation.payload = SetSectionContentOp{}; break;
         case OperationKind::kEditContainerTopology: operation.payload = EditContainerTopologyOp{}; break;
         case OperationKind::kSetDocumentBackground: operation.payload = SetDocumentBackgroundOp{}; break;
+        case OperationKind::kEditTable: operation.payload = EditTableOp{}; break;
     }
     return {std::move(operation), {}, std::move(fields), SemanticError::kNone};
 }

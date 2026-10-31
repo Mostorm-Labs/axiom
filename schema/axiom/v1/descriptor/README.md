@@ -29,3 +29,9 @@ python -m unittest verification.tests.test_current_semantic_descriptor
 
 Neither artifact is refreshed automatically by validation. Intentional future
 schema changes require an explicit diff and baseline update in their own scope.
+
+The user-accepted Table/1 extension (`docs/planning/sdk/table-v1-contract.json`)
+adds `table.proto`, ObjectContent tag 13 and OperationPayload tag 20 to the current
+artifact. The historical lock and independently accepted FC08 descriptor remain
+unchanged. Verification preserves every historical field/enum and limits the
+additive delta to the explicitly accepted background/Table extensions.

@@ -16,6 +16,7 @@ PrepareResult rejected(StatefulResult e) { return PrepareResult{PrepareDispositi
 
 bool referencesResource(const ObjectRecord& object, const ResourceId& resource) {
     bool found = false;
+    if(const auto* table=std::get_if<TableContent>(&object.content))for(const auto& c:table->cells)for(const auto& p:c.text.document.paragraphs)for(const auto& r:p.runs)if(r.style.font_resource_id==resource)return true;
     std::visit([&](const auto& content) {
         using T = std::decay_t<decltype(content)>;
         if constexpr (std::is_same_v<T, ImageContent>) {
@@ -89,6 +90,12 @@ PrepareResult prepareApplyPlan(const Operation& operation, const StatefulValidat
         else if constexpr (std::is_same_v<T, SetSectionContentOp> || std::is_same_v<T, EditContainerTopologyOp>) {
             status = internal::prepareContainerOperation(payload, context.objects, plan);
         }
+        else if constexpr (std::is_same_v<T, EditTableOp>) {
+            const auto* old=context.objects.find(payload.object_id);
+            const auto* value=old?std::get_if<TableContent>(&old->content):nullptr;
+            if(!value||old->kind!=ObjectKind::kTable||old->kind_version!=1||*value!=payload.expected){status={StatefulIssue::kInvalidApplicability};return;}
+            auto next=*old;next.content=payload.replacement;plan.replacements.push_back(std::move(next));
+        }
         else if constexpr (std::is_same_v<T, UpdateResourceManifestOp>) {
             if (context.manifest == nullptr || !validateResourceManifest(*context.manifest) || payload.expected_manifest_revision != context.manifest->manifest_revision) { status = {StatefulIssue::kInvalidApplicability}; return; }
             std::vector<ResourceId> action_ids;
@@ -134,6 +141,12 @@ PrepareResult prepareApplyPlan(const Operation& operation, const StatefulValidat
             content = std::get_if<RichTextContent>(&object.content);
         else if (const auto* shape = std::get_if<ShapeContent>(&object.content); shape && shape->label)
             content = &*shape->label;
+        if(const auto* table=std::get_if<TableContent>(&object.content)){
+            for(const auto& cell:table->cells)for(const auto& p:cell.text.document.paragraphs)for(const auto& run:p.runs){
+                if(!context.manifest||!run.style.font_resource_id)return false;
+                if(std::none_of(context.manifest->entries.begin(),context.manifest->entries.end(),[&](const auto& e){return e.resource_id==*run.style.font_resource_id&&e.resource_kind==ResourceKind::kFont;}))return false;
+            }
+        }
         if (!content) return true;
         if(!context.manifest || !validateResourceManifest(*context.manifest)) return false;
         for(const auto& paragraph:content->document.paragraphs) for(const auto& run:paragraph.runs) {

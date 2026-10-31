@@ -137,6 +137,12 @@ ObjectRecord record(ObjectKind kind, std::uint64_t id) {
     case ObjectKind::kSticky:
         value.content = canvas::semantic::StickyContent{60.0, 70.0};
         break;
+    case ObjectKind::kTable: {
+        canvas::semantic::TableContent table;table.rows={{ObjectId::fromUint64(5001),48}};table.columns={{ObjectId::fromUint64(5002),120}};
+        canvas::semantic::TableCell cell;cell.text.layout=canvas::semantic::RichTextLayout{108};table.cells.push_back(cell);value.content=std::move(table);break;
+    }
+    case ObjectKind::kSection:
+        value.content=canvas::semantic::SectionContent{};break;
     case ObjectKind::kGroup:
         value.content = canvas::semantic::GroupContent{};
         break;
@@ -223,7 +229,8 @@ int main() {
     assert(!stale.hasValue());
     assert(stale.error().code == canvas::foundation::ErrorCode::kInvalidRevision);
 
-    ObjectRecord page = record(static_cast<ObjectKind>(10), 10);
+    ObjectRecord page = record(ObjectKind::kShape, 10);
+    page.kind = static_cast<ObjectKind>(255); // Explicit unknown kind; 10 is now Section.
     assert(ObjectStoreMutator::insertFresh(store, page));
     const auto rejected = scene.replace(SemanticReadView(store, SemanticGeneration(8)));
     assert(!rejected.hasValue());

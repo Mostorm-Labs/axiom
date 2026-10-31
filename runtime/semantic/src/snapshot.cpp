@@ -53,7 +53,7 @@ std::array<std::uint8_t, 32> snapshotDigest(const auditoryworks::axiom::v1::Docu
     return internal::sha256(framed);
 }
 
-struct SnapshotFeatures final { bool triangle=false,text=false,formatting=false,section=false,label=false,connector=false,background=false; };
+struct SnapshotFeatures final { bool triangle=false,text=false,formatting=false,section=false,label=false,connector=false,background=false,table=false; };
 SnapshotFeatures snapshotFeatures(const SemanticSnapshot& snapshot) {
     SnapshotFeatures result;
     result.background = snapshot.background != foundation::DocumentBackground{};
@@ -67,6 +67,7 @@ SnapshotFeatures snapshotFeatures(const SemanticSnapshot& snapshot) {
         result.text=result.text || (object.kind==ObjectKind::kRichText && object.kind_version>=2);
         result.formatting=result.formatting || (object.kind==ObjectKind::kRichText && object.kind_version==3);
         result.section=result.section || object.kind==ObjectKind::kSection;
+        result.table=result.table || object.kind==ObjectKind::kTable;
     }
     for (const auto& object : snapshot.objects) {
         if (object.kind != ObjectKind::kConnector) continue;
@@ -92,12 +93,14 @@ std::vector<std::string> requiredCapabilities(const SnapshotFeatures& features) 
     if(features.connector)result.push_back("connector-shape-attachment-v1");
     if(features.section)result.push_back("section-v1");
     if(features.background)result.push_back("document-background-v1");
+    if(features.table)result.push_back("table-v1");
     return result;
 }
 bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reader) {
     const auto bits=static_cast<unsigned>(reader);
-    if(bits>63U || !foundation::validDocumentBackground(snapshot.background)) return false;
+    if(bits>127U || !foundation::validDocumentBackground(snapshot.background)) return false;
     const auto features=snapshotFeatures(snapshot);
+    if(features.table && ((bits&64U)==0 || snapshot.schema_version<3U))return false;
     if (features.background && ((bits & 32U) == 0 || snapshot.schema_version < 3U)) return false;
     if((features.triangle && (bits&1U)==0) || (features.text && ((bits&2U)==0 || snapshot.schema_version<3))) return false;
     if(features.formatting && (bits&4U)==0)return false;
@@ -121,6 +124,7 @@ bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reade
         const RichTextContent* rich = nullptr;
         if (object.kind == ObjectKind::kRichText && object.kind_version >= 2) rich = std::get_if<RichTextContent>(&object.content);
         else if (object.kind == ObjectKind::kShape && object.kind_version == 3) { const auto* shape = std::get_if<ShapeContent>(&object.content); if (shape && shape->label) rich = &*shape->label; }
+        if(const auto* table=std::get_if<TableContent>(&object.content))for(const auto& c:table->cells)for(const auto& p:c.text.document.paragraphs)for(const auto& r:p.runs){if(!r.style.font_resource_id||std::none_of(snapshot.manifest.entries.begin(),snapshot.manifest.entries.end(),[&](const auto& e){return e.resource_id==*r.style.font_resource_id&&e.resource_kind==ResourceKind::kFont;}))return false;}
         if (!rich) continue;
         for(const auto& paragraph:rich->document.paragraphs) for(const auto& run:paragraph.runs) {
             if(!run.style.font_resource_id)return false;
@@ -136,6 +140,7 @@ bool supportedSnapshotVersion(std::uint32_t version) noexcept {
 }
 
 bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability capability, const ObjectRecord& object) noexcept {
+    if (object.kind == ObjectKind::kTable) return schema_version==3U && (static_cast<unsigned>(capability)&64U)!=0;
     if (object.kind == ObjectKind::kSection)
         return schema_version == 3U && (static_cast<unsigned>(capability) & 16U) != 0U;
     if (object.kind == ObjectKind::kRichText && object.kind_version == 3U)

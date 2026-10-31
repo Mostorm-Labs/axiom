@@ -197,3 +197,52 @@ Invalid options reject without partial bytes, and render/encoding failure
 reports `EXPORT_FAILED`. This version performs synchronous raster/encoding work;
 large exports can briefly occupy the owner thread. Web verification does not
 establish Windows DLL/device qualification.
+
+## Tables
+
+`runtime.table` is the public Table/1 capability. Create an independently stored
+leaf object; its cells do not become separate selectable document objects:
+
+```js
+const {objectId} = await runtime.table.create({rows: 3, columns: 3, x: 40, y: 40});
+const table = runtime.table.read(objectId);
+if (table.available) {
+  const cell = {objectId, rowId: table.rows[0].id, columnId: table.columns[0].id};
+  await runtime.table.edit(cell);
+  await runtime.text.replace('Hello');
+  await runtime.text.finish();
+  await runtime.table.setCellStyle({...cell, fill: [0.9, 0.95, 1, 1], format: {bold: true}});
+  await runtime.table.insertRow({objectId, index: 1});
+  await runtime.table.setColumnWidth({objectId, columnId: cell.columnId, size: 160});
+}
+```
+
+Rows/columns have Runtime-allocated stable IDs; indices describe insertion position
+only. Cell readback is row-major and contains owned text/style values, not internal
+RichText or scene objects. `read()` without an ID reads the single selected table.
+Commands accept an optional exact decimal `generation`; an omitted generation is
+captured at submission, before entering the command queue. Refresh after stale or
+conflicting results. `TABLE_REJECTED` preserves canonical state and History.
+
+Methods: `create`, `read`, `select`, `edit`, `navigate(1|-1)`, `insertRow`,
+`insertColumn`, `removeRow`, `removeColumn`, `setRowHeight`, `setColumnWidth`,
+`setCellStyle`, `setGridStyle`. Cell methods use `objectId,rowId,columnId`; axis
+methods use `objectId` and the corresponding stable axis ID. Insertion takes
+`objectId,index`. Size methods take `size`. Cell styles accept `fill` and `format`
+(color, fontSize, font, bold, alignment). Grid style accepts `color,width`.
+
+Limits: 1..64 rows/columns, at most 1024 cells, dimensions 24..16384 world units,
+text at most 1 MiB per table; grid width 0..16 and font size 1..512. Cells wrap with
+6-unit padding and clip at fixed row height. The last row/column cannot be removed.
+Select a cell, double-click or press Enter to edit; Tab/Shift+Tab navigates while
+not editing. Drag internal row/column boundaries to preview size, release to
+commit, or cancel the pointer to discard. IME uses the existing native fact lane.
+
+Table edits, Snapshot restore, Operation transfer, conditional Undo/Redo and
+PNG/JPEG export use shared Runtime owners. Version 1 conservatively rejects an
+edit or compensation if its captured table content conflicts with remote changes;
+it does not promise automatic merging of independent concurrent cell edits.
+Table snapshots require `table-v1` capability; unsupported readers reject instead
+of dropping table data. Grid paint version 1 is independent of boundary geometry;
+future hand-drawn styles require an explicit version/capability extension. They
+are not exposed by this version.

@@ -19,6 +19,7 @@ released:
   - {id: 8, symbol: Sticky, content_branch: sticky, current_version: 1, accepted_versions: [1]}
   - {id: 9, symbol: Group, content_branch: group, current_version: 1, accepted_versions: [1]}
   - {id: 10, symbol: Section, content_branch: section, current_version: 1, accepted_versions: [1]}
+  - {id: 11, symbol: Table, content_branch: table, current_version: 1, accepted_versions: [1]}
 invariants:
   page_object_kind: forbidden
   synthetic_document_root: forbidden
@@ -27,3 +28,7 @@ invariants:
 fc08_publication:
   authority: FC08-P12-P13-accepted
   execution_package: .aegis/packages/FC-08-SECTION-A-v0.1/package.json
+
+table_publication:
+  authority: docs/planning/sdk/table-v1-contract.json
+  scope: user-accepted-table-v1-extension

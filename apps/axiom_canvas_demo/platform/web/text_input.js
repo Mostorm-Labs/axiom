@@ -39,7 +39,7 @@ export function installTextInput({module,handle,canvas,stage,schedule}) {
         if(!fact.intentClient)fact.intentClient=String(fact.clientId??0xFC0207);
         if(!fact.intentRequest)fact.intentRequest=fact.requestId===undefined?String(++intentSequence):String(fact.requestId);
         const request={kind:fact.intent,clientId:fact.intentClient,requestId:fact.intentRequest,target:fact.target??s.target,token:fact.token??s.token,x:fact.x??0,y:fact.y??0,width:fact.width??320};
-        if(fact.object!==undefined)request.object=fact.object;if(fact.format!==undefined)request.format=fact.format;
+        if(fact.row!==undefined)request.row=fact.row;if(fact.column!==undefined)request.column=fact.column;if(fact.object!==undefined)request.object=fact.object;if(fact.format!==undefined)request.format=fact.format;
         result=withString(JSON.stringify(request),data=>module._axiom_web_text_intent_json(handle,data));
         if(result===1){pump();fact.receipt=receipt(fact.intentClient,fact.intentRequest);result=fact.receipt?.status??4;}
       }

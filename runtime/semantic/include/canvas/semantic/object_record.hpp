@@ -23,6 +23,7 @@ enum class ObjectKind : std::uint8_t {
     kSticky = 8,
     kGroup = 9,
     kSection = 10,
+    kTable = 11,
 };
 
 // Placement is one atomic structural semantic value. The store deliberately

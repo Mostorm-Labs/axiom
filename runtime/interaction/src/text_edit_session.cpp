@@ -1,4 +1,5 @@
 #include "canvas/interaction/text_edit_session.hpp"
+#include "canvas/semantic/table_content.hpp"
 
 #include "canvas/interaction/session_manager.hpp"
 #include "canvas/semantic/rich_text_state.hpp"
@@ -192,6 +193,7 @@ semantic::ObjectId TextEditSession::identity() {
 }
 const semantic::RichTextContent* TextEditSession::richContent(
     const semantic::ObjectRecord& record) const noexcept {
+    if(const auto* t=std::get_if<TableContent>(&record.content)){const auto i=tableCellIndex(*t,targetRow_,targetColumn_);return i?&t->cells[*i].text:nullptr;}
     if (record.kind == semantic::ObjectKind::kRichText)
         return std::get_if<semantic::RichTextContent>(&record.content);
     if (shapeLabelTarget(record)) {
@@ -234,7 +236,7 @@ void TextEditSession::refresh() {
     if (!base_)
         return;
     const auto* current = owner_.textRecord(base_->id);
-    if (!current || richContent(*current) == nullptr) {
+    if (!current || !owner_.textWritable(base_->id) || richContent(*current) == nullptr) {
         detach();
         return;
     }
@@ -398,6 +400,14 @@ runtime::TextStatus TextEditSession::finish(bool keepEditor) {
 runtime::TextStatus TextEditSession::applyObjectDelta(const ObjectRecord& base, RichTextDelta delta) {
     if (!owner_.textReady() || !owner_.textWritable(base.id))
         return TextStatus::kRejected;
+    if(const auto* table=std::get_if<TableContent>(&base.content)){
+        delta.delta_version=3;TableContent next;
+        if(!prepareTableTextDelta(*table,targetRow_,targetColumn_,delta,next))return TextStatus::kRejected;
+        if(next==*table)return TextStatus::kObserved;
+        const Operation forward{owner_.allocateTextOperation(),owner_.textDocument(),1,1,EditTableOp{base.id,TableEditKind::kText,*table,next}};
+        const Operation inverse{owner_.allocateTextOperation(),owner_.textDocument(),1,1,EditTableOp{base.id,TableEditKind::kText,next,*table}};
+        Applying guard(applying_);if(!owner_.applyTextOperation(forward,inverse))return TextStatus::kRejected;lastOperation_=forward.id.value();return TextStatus::kApplied;
+    }
     bool v3=base.kind_version==3;
     for(const auto& step:delta.steps)if(const auto* restore=std::get_if<RestoreRichTextStateStep>(&step))v3=v3 || restore->state.kind_version==3;
     delta.delta_version = v3?3:2;
@@ -537,7 +547,7 @@ runtime::TextStatus TextEditSession::replace(TextRange range, const std::u16stri
                 break;
             start = end + 1;
         } while (start <= projected.size());
-        const auto version = shapeLabelTarget(*base_) ? 3U : base_->kind_version;
+        const auto version = shapeLabelTarget(*base_) || base_->kind==ObjectKind::kTable ? 3U : base_->kind_version;
         const auto result = applyDelta(
             {version >= 3U ? 3U : 2U,
              {RestoreRichTextStateStep{{version, std::move(restored)}}}, {}});
@@ -651,7 +661,7 @@ runtime::TextStatus TextEditSession::format(const TextFormatPatch& patch) {
         }
         p.runs=std::move(runs);
     }
-    auto version=base_->kind_version;
+    auto version=base_->kind==ObjectKind::kTable?3U:base_->kind_version;
     if(patch.strikethrough.value_or(false) || patch.bulleted.value_or(false))version=3;
     if(version==3 && !content.layout)content.layout=RichTextLayout{state_.width};
     const auto* baseContent = richContent(*base_);
@@ -725,11 +735,14 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
             return outcome(TextStatus::kRejected, request.requestId);
         if (!std::isfinite(request.viewX) || !std::isfinite(request.viewY))
             return outcome(TextStatus::kRejected, request.requestId);
+        if(request.kind==TextIntentKind::kCreate){targetRow_={};targetColumn_={};}
         std::optional<ObjectRecord> existing;
         if (request.kind == TextIntentKind::kEdit) {
             const auto* value = owner_.textRecord(request.object);
             if (!value || !owner_.textWritable(value->id))
                 return outcome(TextStatus::kRejected, request.requestId);
+            targetRow_=request.row;targetColumn_=request.column;
+            if(value->kind!=ObjectKind::kTable&&(!targetRow_.isZero()||!targetColumn_.isZero()))return outcome(TextStatus::kRejected,request.requestId);
             if (value->kind == ObjectKind::kSticky) {
                 // Sticky text is represented by the existing single RichText
                 // child contract. Create the child lazily on first edit so an
@@ -795,6 +808,7 @@ runtime::TextReceipt TextEditSession::intent(const TextIntent& request) {
                         1,
                         owner_.textDocument().value(),
                         existing ? existing->id : identity()};
+        state_.token.row=targetRow_;state_.token.column=targetColumn_;
         journal_.clear();
         terminal_.reset();
         failed_.reset();
@@ -1039,9 +1053,7 @@ std::optional<semantic::ObjectRecord> TextEditSession::presentation() {
     const auto* original=base_?richContent(*base_):nullptr;
     if(original && !state_.composition && !original->document.paragraphs.empty()){
         // Empty paragraphs still need the admitted font for a real caret metric.
-        auto* content = object.kind == ObjectKind::kShape
-            ? &*std::get<ShapeContent>(object.content).label
-            : std::get_if<RichTextContent>(&object.content);
+        auto* content = const_cast<RichTextContent*>(richContent(object));
         if (!content) return std::nullopt;
         for(auto& p:content->document.paragraphs)if(p.runs.empty())p.runs.push_back({"",style_});
         return object;
@@ -1062,7 +1074,9 @@ std::optional<semantic::ObjectRecord> TextEditSession::presentation() {
         if(p.runs.empty())p.runs.push_back({"",style_});content.document.paragraphs.push_back(std::move(p));++index;
         if(end==std::u16string::npos)break;start=end+1;
     }while(start<=visible.size());
-    if (shapeLabelTarget(object)) {
+    if(auto* table=std::get_if<TableContent>(&object.content)){
+        const auto i=tableCellIndex(*table,targetRow_,targetColumn_);if(!i)return {};table->cells[*i].text=std::move(content);
+    }else if (shapeLabelTarget(object)) {
         object.kind_version = 3U;
         std::get<semantic::ShapeContent>(object.content).label = std::move(content);
     } else

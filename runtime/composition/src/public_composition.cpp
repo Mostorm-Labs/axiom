@@ -122,7 +122,7 @@ DocumentRestoreStatus RuntimeComposition::openDocumentFromSnapshot(const Documen
     return DocumentRestoreStatus::kNotReady;
   if (request.expectedDocumentId.isZero() || request.resourceBinding == 0) return DocumentRestoreStatus::kInvalidSnapshot;
   try {
-    constexpr auto capability = semantic::SnapshotCapability::kAllWithBackgroundV1;
+    constexpr auto capability = semantic::SnapshotCapability::kAllWithTableV1;
     auto decoded = semantic::SnapshotCodec::decode(request.bytes, capability);
     if (!decoded.ok() || decoded.snapshot->schema_version != 3 || !decoded.snapshot->manifest_present ||
         decoded.snapshot->document_id.value() != request.expectedDocumentId ||

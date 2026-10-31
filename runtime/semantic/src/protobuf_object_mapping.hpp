@@ -8,7 +8,10 @@ namespace auditoryworks::axiom::v1 { class ObjectRecord; class Operation; }
 namespace auditoryworks::axiom::v1 { class SectionContent; }
 namespace auditoryworks::axiom::v1 { class ResourceManifest; class ResourceManifestEntry; class ResourceManifestTombstone; }
 
+namespace auditoryworks::axiom::v1 { class TableContent; }
 namespace canvas::semantic::internal {
+[[nodiscard]] bool toProtobufTableContent(const TableContent&, auditoryworks::axiom::v1::TableContent&);
+[[nodiscard]] bool fromProtobufTableContent(const auditoryworks::axiom::v1::TableContent&, TableContent&);
 [[nodiscard]] bool toProtobufSectionContent(const SectionContent&, auditoryworks::axiom::v1::SectionContent&);
 [[nodiscard]] bool fromProtobufSectionContent(const auditoryworks::axiom::v1::SectionContent&, SectionContent&);
 [[nodiscard]] bool toProtobufOperation(const Operation&, auditoryworks::axiom::v1::Operation&);

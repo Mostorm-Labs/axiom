@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "canvas/render/direct_reference_source.hpp"
 #include "canvas/render/reference_draw_list.hpp"
 
@@ -68,6 +69,9 @@ RuntimeSceneRecord expectedRecord(std::uint64_t id, ObjectKind kind, std::uint64
     record.eraseMasks = {{ObjectId::fromUint64(9000U + id),
                           canvas::semantic::FilledPathMask{}}};
     switch (kind) {
+    case ObjectKind::kSection:
+    case ObjectKind::kTable:
+        throw std::invalid_argument("This historical fixture covers the original nine object kinds");
     case ObjectKind::kShape: record.content = canvas::semantic::ShapeContent{7U, 10.0, 20.0}; break;
     case ObjectKind::kImage: record.content = canvas::semantic::ImageContent{}; break;
     case ObjectKind::kVectorPath: record.content = canvas::semantic::VectorPathContent{}; break;
@@ -123,6 +127,9 @@ ObjectRecord fixtureRecord(std::uint64_t id, ObjectKind kind, std::uint64_t orde
     record.erase_masks = {{ObjectId::fromUint64(9000U + id),
                            canvas::semantic::FilledPathMask{}}};
     switch (kind) {
+    case ObjectKind::kSection:
+    case ObjectKind::kTable:
+        throw std::invalid_argument("This historical fixture covers the original nine object kinds");
     case ObjectKind::kShape: record.content = canvas::semantic::ShapeContent{7U, 10.0, 20.0}; break;
     case ObjectKind::kImage: record.content = canvas::semantic::ImageContent{}; break;
     case ObjectKind::kVectorPath: record.content = canvas::semantic::VectorPathContent{}; break;
@@ -293,7 +300,10 @@ void emitsNineKindsInVisibilityOrder() {
         assert(list.entries[i].record.referenceGeometryDigest == expected->referenceGeometryDigest);
         assert(list.entries[i].record.directDependencies == expected->directDependencies);
         switch (expectedKinds[i]) {
-        case ObjectKind::kShape:
+        case ObjectKind::kSection:
+    case ObjectKind::kTable:
+        throw std::invalid_argument("This historical fixture covers the original nine object kinds");
+    case ObjectKind::kShape:
             assert(std::get<canvas::render::ShapeReferenceCommand>(list.entries[i].command).content ==
                    std::get<canvas::semantic::ShapeContent>(expected->content));
             break;

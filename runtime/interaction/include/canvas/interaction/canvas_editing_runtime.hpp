@@ -1,4 +1,5 @@
 #pragma once
+#include "canvas/runtime/table_input.hpp"
 #include "canvas/runtime/image_export.hpp"
 namespace canvas::runtime { class CanvasRuntimeFacade; class MultiSelectionPort; }
 #include "canvas/interaction/text_edit_session.hpp"
@@ -651,6 +652,14 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   runtime::TextGeometrySnapshot textGeometry(const runtime::CanvasTargetKey&);
   std::optional<std::uint32_t> textHit(const semantic::ObjectRecord&,float,float);
   semantic::ObjectId hitTextAtView(float,float);
+  [[nodiscard]] runtime::TableResult tableCommand(const runtime::TableRequest&);
+  [[nodiscard]] runtime::TableSnapshot tableSnapshot(semantic::ObjectId = {}) const;
+  bool tableTargetAt(runtime::TextIntent&);
+  bool tablePointer(const input::PointerKey&,input::PointerPhase,float,float);
+  semantic::ObjectId tableObject_{},tableRow_{},tableColumn_{};
+  struct TableResize {input::PointerKey key;semantic::ObjectId object,row,column;double start=0,size=0,preview=0;std::uint64_t generation=0;};
+  std::optional<TableResize> tableResize_;
+
   bool enterGroupAtViewPoint(float,float);
   bool textPointer(const input::PointerSample&);
   bool observeTouchTextTap(const input::PointerSample&);

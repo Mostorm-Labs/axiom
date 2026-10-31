@@ -407,6 +407,8 @@ class Runtime final {
     Json readConnector(std::string id) {
         return connector({{"action", "read"}, {"objectId", id}}).at("value");
     }
+    Json table(Json args) { return invoke("table",std::move(args)).value; }
+    Json readTable(std::string id = {}) { Json args={{"action","read"}};if(!id.empty())args["objectId"]=id;return table(std::move(args)).at("value"); }
     Json stickyOptions(Json args) {
         return invoke("sticky", std::move(args)).value;
     }

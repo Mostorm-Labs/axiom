@@ -8,6 +8,7 @@
 #include "canvas/runtime/image_input.hpp"
 #include "canvas/runtime/image_export.hpp"
 #include "canvas/runtime/connector_sticky_input.hpp"
+#include "canvas/runtime/table_input.hpp"
 
 #include <utility>
 #include <vector>
@@ -91,6 +92,8 @@ class RuntimeFacade {
   [[nodiscard]] virtual StickyCommandReceipt createSticky(const StickyCreateRequest&) { return {}; }
   [[nodiscard]] virtual ConnectorSnapshot readSelectedConnector() const { return {}; }
   [[nodiscard]] virtual ConnectorSnapshot readConnectorState(semantic::ObjectId) const { return {}; }
+  [[nodiscard]] virtual TableResult tableCommand(const TableRequest&) { return {}; }
+  [[nodiscard]] virtual TableSnapshot readTable(foundation::ObjectId = {}) const { return {}; }
   [[nodiscard]] virtual StickySnapshot readSelectedSticky() const { return {}; }
   [[nodiscard]] virtual ProductControlReceipt submitSelectionPointer(
       const SelectionPointerRequest& request) noexcept {

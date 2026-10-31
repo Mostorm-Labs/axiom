@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstring>
 #include <map>
+#include <set>
 #include <stdexcept>
 #include <thread>
 #if defined(__EMSCRIPTEN__)
@@ -412,6 +413,7 @@ class Session::Impl {
         const auto m = owner->surfaceMetrics();
         const auto o = owner->hostObservation();
         const auto text = facade().readTextEditor();
+        const auto table = facade().readTable();
         return {
             {"documentId", hexId(*owner->documentId())},
             {"target", jsonTarget(s.target)},
@@ -442,6 +444,7 @@ class Session::Impl {
               {"localDurable", s.axisLocalDurable},
               {"cloudSynced", s.axisCloudSynced}}},
             {"data", dataStatus()},
+            {"table",{{"objectId",hexId(table.object)},{"rowId",hexId(table.row)},{"columnId",hexId(table.column)}}},
             {"camera",
              {{"scale", s.cameraScale}, {"x", s.cameraTranslationX}, {"y", s.cameraTranslationY}}},
             {"surface",
@@ -455,7 +458,7 @@ class Session::Impl {
             const auto b = runtime::readRuntimeBuildInfo();
             return {{"ok", true},
                     {"apiVersion", 1},
-                    {"features", {{"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}, {"imageExport", 1}}},
+                    {"features", {{"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}, {"imageExport", 1}, {"table", 1}}},
                     {"sdkVersion", AXIOM_SDK_VERSION},
                     {"sourceRevision", b.sourceRevision},
                     {"dirty", b.dirty},
@@ -901,6 +904,34 @@ class Session::Impl {
                     {"code", "CONNECTOR_REJECTED"},
                     {"reason", result.reason},
                     {"objectId", hexId(result.objectId)}};
+        }
+        if(command=="table"){
+            const auto action=j.at("action").get<std::string>();
+            const std::map<std::string,runtime::TableAction> actions{{"create",runtime::TableAction::kCreate},{"select",runtime::TableAction::kSelect},{"insertRow",runtime::TableAction::kInsertRow},{"insertColumn",runtime::TableAction::kInsertColumn},{"removeRow",runtime::TableAction::kRemoveRow},{"removeColumn",runtime::TableAction::kRemoveColumn},{"rowHeight",runtime::TableAction::kRowHeight},{"columnWidth",runtime::TableAction::kColumnWidth},{"cellStyle",runtime::TableAction::kCellStyle},{"gridStyle",runtime::TableAction::kGridStyle},{"next",runtime::TableAction::kNextCell},{"previous",runtime::TableAction::kPreviousCell}};
+            const auto id=j.contains("objectId")?rawId(j.at("objectId")):foundation::ObjectId{};
+            if(j.contains("objectId")&&(id.isZero()||action=="create"))throw std::invalid_argument("table object identity");
+            if(action!="create"&&action!="read"&&action!="next"&&action!="previous"&&!j.contains("objectId"))throw std::invalid_argument("table object identity");
+            if(action=="read"){
+                if(j.size()>(j.contains("objectId")?3U:2U))throw std::invalid_argument("table read field");
+                const auto s=facade().readTable(id);if(!s.available)return {{"ok",true},{"value",{{"available",false}}}};
+                J rows=J::array(),columns=J::array(),cells=J::array();
+                for(const auto& a:s.content.rows)rows.push_back({{"id",hexId(a.id)},{"size",a.size}});
+                for(const auto& a:s.content.columns)columns.push_back({{"id",hexId(a.id)},{"size",a.size}});
+                for(const auto& cell:s.content.cells){std::string text;J format=J::object();bool mixed=false;std::optional<semantic::TextStyle> first;
+                    bool firstParagraph=true;for(const auto& p:cell.text.document.paragraphs){if(!firstParagraph)text+="\n";firstParagraph=false;for(const auto& run:p.runs){text+=run.text;if(first&&*first!=run.style)mixed=true;if(!first){first=run.style;runtime::TextFormatPatch patch;patch.color=std::array<float,4>{run.style.color.r,run.style.color.g,run.style.color.b,run.style.color.a};patch.fontSize=run.style.font_size;patch.bold=run.style.weight>=600;patch.alignment=static_cast<unsigned>(p.style.alignment);format=jsonFormat(patch);}}}
+                    cells.push_back({{"text",text},{"fill",{cell.fill.r,cell.fill.g,cell.fill.b,cell.fill.a}},{"format",format},{"mixedFormat",mixed}});}
+                return {{"ok",true},{"value",{{"available",true},{"editable",s.editable},{"objectId",hexId(s.object)},{"rowId",hexId(s.row)},{"columnId",hexId(s.column)},{"rows",rows},{"columns",columns},{"cells",cells},{"grid",{{"version",s.content.grid.version},{"color",{s.content.grid.color.r,s.content.grid.color.g,s.content.grid.color.b,s.content.grid.color.a}},{"width",s.content.grid.width}}},{"generation",std::to_string(s.generation)}}}};
+            }
+            const auto it=actions.find(action);if(it==actions.end())throw std::invalid_argument("table action");
+            const std::set<std::string> allowed{"command","action","objectId","rowId","columnId","generation","rows","columns","index","x","y","size","fill","format","color","width"};for(const auto& field:j.items())if(!allowed.contains(field.key()))throw std::invalid_argument("table field");
+            const auto number=[](const J& v){if(!v.is_number())throw std::invalid_argument("table number");const auto n=v.get<double>();if(!std::isfinite(n))throw std::invalid_argument("table number");return n;};
+            runtime::TableRequest r;r.action=it->second;r.object=id;r.generation=decimal(j.at("generation"));
+            if(j.contains("rowId"))r.row=rawId(j.at("rowId"));if(j.contains("columnId"))r.column=rawId(j.at("columnId"));
+            if(j.contains("rows"))r.rows=unsignedValue(j.at("rows"),64);if(j.contains("columns"))r.columns=unsignedValue(j.at("columns"),64);if(j.contains("index"))r.index=unsignedValue(j.at("index"),64);
+            if(j.contains("x"))r.x=number(j.at("x"));if(j.contains("y"))r.y=number(j.at("y"));if(j.contains("size"))r.size=number(j.at("size"));
+            const auto color=[](const J& v){const auto c=v.get<std::array<float,4>>();for(auto n:c)if(!std::isfinite(n)||n<0||n>1)throw std::invalid_argument("table color");return c;};
+            if(j.contains("fill"))r.fill=color(j.at("fill"));if(j.contains("color"))r.gridColor=color(j.at("color"));if(j.contains("width"))r.gridWidth=number(j.at("width"));if(j.contains("format"))r.format=parseFormat(j.at("format"));
+            const auto result=facade().tableCommand(r);return {{"ok",result.applied},{"code","TABLE_REJECTED"},{"objectId",hexId(result.object)},{"generation",std::to_string(result.generation)}};
         }
         if (command == "sticky") {
             if (j.at("action") == "read") {
@@ -1363,7 +1394,7 @@ class Session::Impl {
                 auto decoded = semantic::SnapshotCodec::decode(
                     outputBytes,
                     semantic::SnapshotCapability::
-                        kAllWithBackgroundV1);
+                        kAllWithTableV1);
                 if (!decoded.ok())
                     return error("SNAPSHOT_DECODE_FAILED");
                 result["checkpointDigest"] = decoded.snapshot->checkpoint_digest;

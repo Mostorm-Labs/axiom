@@ -1,4 +1,5 @@
 #include "canvas/scene/bounds_system.hpp"
+#include "canvas/semantic/table_content.hpp"
 
 #include "canvas/scene/reference_geometry.hpp"
 #include "canvas/scene/derived_geometry.hpp"
@@ -19,6 +20,8 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record,
         using T = std::decay_t<decltype(content)>;
         if constexpr (std::is_same_v<T, semantic::ShapeContent>) {
             return {0.0F, 0.0F, static_cast<float>(content.width), static_cast<float>(content.height)};
+        } else if constexpr (std::is_same_v<T, semantic::TableContent>) {
+            return {0,0,static_cast<float>(semantic::tableWidth(content)),static_cast<float>(semantic::tableHeight(content))};
         } else if constexpr (std::is_same_v<T, semantic::ImageContent>) {
             return {0.0F, 0.0F, static_cast<float>(content.width), static_cast<float>(content.height)};
         } else if constexpr (std::is_same_v<T, semantic::StickyContent>) {
@@ -164,6 +167,7 @@ BoundsResult computeBounds(const semantic::ObjectRecord& record,
                 }
             }
         }
+        if(const auto* t=std::get_if<semantic::TableContent>(&record.content))return static_cast<float>(t->grid.width/2);
         return record.kind == semantic::ObjectKind::kConnector ? 2.0F : 0.0F;
     }();
     result.visual = {result.geometry.left - stroke, result.geometry.top - stroke,

@@ -4,6 +4,7 @@
 #include "canvas/render/brush_outline_skia_path.hpp"
 #include "canvas/render/image_crop_geometry.hpp"
 #include "canvas/text/text_layout.hpp"
+#include "canvas/semantic/table_content.hpp"
 #include "include/core/SkMatrix.h"
 #include "include/core/SkPathUtils.h"
 #include "include/pathops/SkPathOps.h"
@@ -81,6 +82,15 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path) {
             const auto h=scene::arrowHead(*g);SkPathBuilder b;b.moveTo(h.tip.x,h.tip.y);b.lineTo(h.left.x,h.left.y);b.lineTo(h.right.x,h.right.y);b.close();
             if(!unite(path,b.detach()))return Hit::kInvalid;
         }
+        break;
+    }
+    case semantic::ObjectKind::kTable: {
+        const auto* t=std::get_if<semantic::TableContent>(&r.content);if(!t)return Hit::kInvalid;
+        for(std::size_t i=0;i<t->cells.size();++i){const auto area=semantic::tableCellRect(*t,i);const auto cell=rectangle(area[0],area[1],area[2]-area[0],area[3]-area[1]);
+            if(t->cells[i].fill.a>0&&!unite(path,cell))return Hit::kInvalid;
+            if(r.textLayout&&i<r.textLayout->tableCells.size())if(const auto& layout=r.textLayout->tableCells[i])for(const auto& line:layout->lines)if(line.utf8End>line.utf8Start){const auto& b=line.bounds;const auto text=rectangle(area[0]+6+b.left,area[1]+6+b.top,b.right-b.left,b.bottom-b.top);const auto clipped=Op(text,cell,kIntersect_SkPathOp);if(!clipped||!unite(path,*clipped))return Hit::kInvalid;}
+        }
+        if(t->grid.width>0&&t->grid.color.a>0){const auto width=semantic::tableWidth(*t),height=semantic::tableHeight(*t);double x=0,y=0;SkPathBuilder lines;lines.moveTo(0,0);lines.lineTo(0,f(height));for(const auto& a:t->columns){x+=a.size;lines.moveTo(f(x),0);lines.lineTo(f(x),f(height));}lines.moveTo(0,0);lines.lineTo(f(width),0);for(const auto& a:t->rows){y+=a.size;lines.moveTo(0,f(y));lines.lineTo(f(width),f(y));}if(!unite(path,stroke(lines.detach(),t->grid.width)))return Hit::kInvalid;}
         break;
     }
     case semantic::ObjectKind::kImage: {

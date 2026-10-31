@@ -1,0 +1,20 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+import "auditoryworks/axiom/v1/common.proto";
+import "auditoryworks/axiom/v1/paint.proto";
+import "auditoryworks/axiom/v1/rich_text.proto";
+message TableAxis { Id128 id = 1; double size = 2; }
+message TableCell { RichTextContent text = 1; ColorValue fill = 2; }
+message TableGridStyle { uint32 version = 1; ColorValue color = 2; double width = 3; }
+message TableContent {
+  repeated TableAxis rows = 1;
+  repeated TableAxis columns = 2;
+  repeated TableCell cells = 3;
+  TableGridStyle grid = 4;
+}
+message EditTableOp {
+  Id128 object_id = 1;
+  uint32 action = 2;
+  TableContent expected = 3;
+  TableContent replacement = 4;
+}

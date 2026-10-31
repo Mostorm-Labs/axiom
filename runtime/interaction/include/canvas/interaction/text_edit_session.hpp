@@ -62,6 +62,7 @@ class TextEditSession final {
     std::optional<semantic::ObjectRecord> base_;
     semantic::TextStyle style_{};
     semantic::ParagraphStyle paragraphStyle_{semantic::ParagraphAlignment::kLeft,1,0,0};
+    semantic::ObjectId targetRow_{},targetColumn_{};
     bool typingStyle_ = false;
     semantic::ObjectRecord draft_{};
     std::deque<std::pair<runtime::TextInputEvent, runtime::TextReceipt>> journal_;

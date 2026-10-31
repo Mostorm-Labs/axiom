@@ -209,7 +209,9 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
         if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
             shape != nullptr && shape->label.has_value()) label = &*shape->label;
         semantic::Transform2D projectedTransform = record.transform;
-        const auto layout = textService && record.kind == semantic::ObjectKind::kRichText
+        const auto layout = textService && record.kind == semantic::ObjectKind::kTable
+            ? textService->resolveTable(record.id,std::get<semantic::TableContent>(record.content))
+            : textService && record.kind == semantic::ObjectKind::kRichText
             ? [&]() {
                 const auto& content = std::get<semantic::RichTextContent>(record.content);
                 if (record.placement.parent_id) {

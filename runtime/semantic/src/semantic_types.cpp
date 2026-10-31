@@ -11,12 +11,12 @@ OperationKind Operation::kind() const noexcept {
 
 bool isKnownObjectKind(ObjectKind kind) noexcept {
     const auto value = static_cast<std::uint8_t>(kind);
-    return value >= 1U && value <= 10U;
+    return value >= 1U && value <= 11U;
 }
 
 bool isKnownOperationKind(OperationKind kind) noexcept {
     const auto value = static_cast<std::uint8_t>(kind);
-    return value >= 1U && value <= 19U;
+    return value >= 1U && value <= 20U;
 }
 
 } // namespace canvas::semantic

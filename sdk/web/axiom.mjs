@@ -1,4 +1,4 @@
-export const SDK_VERSION = '0.0.1';
+export const SDK_VERSION = '0.1.0';
 export class AxiomError extends Error {
   constructor(code, message = code, details = {}) { super(message); this.name = 'AxiomError'; this.code = code; this.details = details; }
 }
@@ -141,6 +141,21 @@ export async function createRuntime({mount, documentId, restore, initialResource
       const stamp=selected?call('state').value:null;
       return enqueue(()=>call('control',{...args,...(stamp?{expectedGeneration:stamp.generation,expectedSelectionRevision:stamp.selectionRevision}:{})}));
     };
+    const tableOptions=(action,options={})=>{
+      const fields={create:['rows','columns','x','y'],select:['objectId','rowId','columnId'],insertRow:['objectId','index'],insertColumn:['objectId','index'],removeRow:['objectId','rowId','columnId'],removeColumn:['objectId','rowId','columnId'],rowHeight:['objectId','rowId','columnId','size'],columnWidth:['objectId','rowId','columnId','size'],cellStyle:['objectId','rowId','columnId','fill','format'],gridStyle:['objectId','color','width'],next:[],previous:[]}[action];
+      if(!options||typeof options!=='object'||Array.isArray(options)||Object.keys(options).some(k=>k!=='generation'&&!fields.includes(k)))throw new AxiomError('INVALID_ARGUMENT');
+      const request={...options};for(const key of ['fill','color'])if(Array.isArray(request[key]))request[key]=[...request[key]];
+      if(request.format&&typeof request.format==='object'){request.format={...request.format};if(Array.isArray(request.format.color))request.format.color=[...request.format.color];}
+      return request;
+    };
+    const tableCommand=(action,options={})=>{
+      let request;try{request=tableOptions(action,options);request.generation??=call('state').value.generation;}catch(error){return Promise.reject(error);}
+      return enqueue(()=>call('table',{...request,action}));
+    };
+    const tableEdit=options=>{
+      let request;try{request=tableOptions('select',options);request.generation??=call('state').value.generation;}catch(error){return Promise.reject(error);}
+      return enqueue(async()=>{const r=call('table',{...request,action:'select'});canonical.focus({preventScroll:true});await text.intent(1,{object:r.objectId,row:request.rowId,column:request.columnId});if(text.error())throw new AxiomError('TEXT_REJECTED',text.error());return text.snapshot();});
+    };
     const section=(action,options={})=>enqueue(()=>call('section',{action,...options}));
     const textIntent=(kind,options={})=>enqueue(async()=>{const result=await text.intent(kind,options);if(text.error())throw new AxiomError('TEXT_REJECTED',text.error());return result;},false);
     const owned=(value)=>{if(!value||value.owner!==id)throw new AxiomError('WRONG_RUNTIME');return value;};
@@ -211,6 +226,15 @@ export async function createRuntime({mount, documentId, restore, initialResource
       group:()=>enqueue(()=>{const s=call('state').value;return call('section',{action:10,objects:s.selected,generation:s.generation,selectionRevision:s.selectionRevision});}),
       ungroup:objectId=>enqueue(()=>{const s=call('state').value;return call('section',{action:11,objectId:objectId??s.primary,generation:s.generation,selectionRevision:s.selectionRevision});}),
       enterGroup:objectId=>enqueue(()=>{const s=call('state').value;return call('section',{action:8,objectId:objectId??s.primary});}),leaveGroup:()=>section(9),
+      table:{
+        create:options=>tableCommand('create',options),read:objectId=>call('table',{action:'read',...(objectId?{objectId}:{})}).value,
+        select:options=>tableCommand('select',options),
+        edit:tableEdit,
+        navigate:direction=>tableCommand(enumValue({'1':'next','-1':'previous'},String(direction))),
+        insertRow:options=>tableCommand('insertRow',options),insertColumn:options=>tableCommand('insertColumn',options),
+        removeRow:options=>tableCommand('removeRow',options),removeColumn:options=>tableCommand('removeColumn',options),
+        setRowHeight:options=>tableCommand('rowHeight',options),setColumnWidth:options=>tableCommand('columnWidth',options),
+        setCellStyle:options=>tableCommand('cellStyle',options),setGridStyle:options=>tableCommand('gridStyle',options)},
       text:{read:()=>{if(closed)throw new AxiomError('CLOSED');return text.snapshot();},fonts:()=>{if(closed)throw new AxiomError('CLOSED');return text.fontCatalog();},fontStatus:id=>{if(closed)throw new AxiomError('CLOSED');return text.fontStatus(id);},
         create:(x,y,width=320)=>textIntent(0,{x,y,width}),edit:object=>textIntent(1,{object}),editAtPoint:(x,y)=>textIntent(13,{x,y}),
         replace:(value,range)=>{if(typeof value!=='string'||value.length>65536)return Promise.reject(new AxiomError('INVALID_ARGUMENT'));return enqueue(()=>{const s=text.snapshot();return call('textEdit',{kind:4,token:s.token,range:range??s.selection,units:Array.from({length:value.length},(_,i)=>value.charCodeAt(i))});},false);},
@@ -249,6 +273,10 @@ export async function createRuntime({mount, documentId, restore, initialResource
         try{await tail;await text.finish();call('close');disposeInput?.();disposeInput=undefined;closed=true;cleanup();text=undefined;module=null;}
         catch(error){if(['PUBLICATION_PENDING','SHUTDOWN_FAILED','CLOSE_FAILED'].includes(error.code)){closeBarrier=true;disposeInput?.();disposeInput=undefined;text.dispose();}closing=false;schedule();throw error;}}
     };
+    listen('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||e.isComposing||text.snapshot().phase!==0)return;const t=api.table.read();if(!t.available||!t.editable)return;
+      if(e.key==='Tab'){e.preventDefault();void api.table.navigate(e.shiftKey?-1:1).catch(emitError);}
+      if(e.key==='Enter'){e.preventDefault();void api.table.edit({objectId:t.objectId,rowId:t.rowId,columnId:t.columnId}).catch(emitError);}
+    });
     schedule();return Object.freeze(api);
   } catch(error) {try{if(module)call('close');}catch{}closed=true;cleanup();throw error;}
 }

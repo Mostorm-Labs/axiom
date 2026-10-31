@@ -374,6 +374,11 @@ bool normalizeContent(ObjectContent& content) {
                 return true;
             } else if constexpr (std::is_same_v<Item, ConnectorContent>) {
                 return normalizeConnector(value);
+            } else if constexpr (std::is_same_v<Item, TableContent>) {
+                for(auto& axis:value.rows) if(!normalizeDouble(axis.size))return false;
+                for(auto& axis:value.columns) if(!normalizeDouble(axis.size))return false;
+                for(auto& cell:value.cells) if(!normalizeRichTextContent(cell.text)||!normalizeColor(cell.fill))return false;
+                return normalizeColor(value.grid.color)&&normalizeDouble(value.grid.width);
             } else if constexpr (std::is_same_v<Item, SectionContent>) {
                 return normalizeSection(value);
             } else if constexpr (std::is_same_v<Item, StickyContent>) {
@@ -496,6 +501,8 @@ bool normalizeOperationPayload(OperationPayload& payload) {
             } else if constexpr (std::is_same_v<Item, EditRichTextOp>) {
                 if (!validObjectId(value.object_id)) return false;
                 return normalizeRichTextDelta(value.delta);
+            } else if constexpr (std::is_same_v<Item, EditTableOp>) {
+                return internal::normalizeTableContent(value.expected)&&internal::normalizeTableContent(value.replacement);
             } else if constexpr (std::is_same_v<Item, SetDocumentBackgroundOp>) {
                 if (!foundation::validDocumentBackground(value.value)) return false;
                 for (auto* color : {&value.value.color, &value.value.patternColor})
@@ -524,6 +531,11 @@ bool normalizeOperationPayload(OperationPayload& payload) {
 
 } // namespace
 
+bool internal::normalizeTableContent(TableContent& content) {
+    ObjectContent value=content;
+    if(!normalizeContent(value))return false;
+    content=std::get<TableContent>(std::move(value));return true;
+}
 bool internal::normalizeSectionContent(SectionContent& content) {
     return normalizeSection(content);
 }

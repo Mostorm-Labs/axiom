@@ -1,0 +1,60 @@
+<!doctype html><meta charset="utf-8"><title>Public SDK Table regression</title>
+<style>body{margin:0}.mount{width:800px;height:500px}#b,#c{position:absolute;left:850px;top:0}</style>
+<div id="a" class="mount"></div><div id="b" class="mount"></div><div id="c" class="mount"></div>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+const documentId='99999999999999999999999999999999',owners=[],errors=[],packets=[];
+let sdk,objectId,remoteEcho=0;const remotePackets=[],checks={};
+const check=(value,name)=>{if(!value)throw Error(name);checks[name]=true;};
+const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+const wait=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+async function create(id,restore){const r=await createRuntime({mount:document.getElementById(id),documentId,permission:'localSingleUser',...(restore?{restore,builtinFonts:false}:{}),onError:e=>errors.push(String(e)),onOperation:bytes=>{if(id==='a')packets.push(bytes);else if(id==='b'){++remoteEcho;remotePackets.push(bytes);}}});owners.push(r);return r;}
+const target=s=>({objectId:s.objectId,rowId:s.rowId,columnId:s.columnId});
+const content=s=>({rows:s.rows,columns:s.columns,cells:s.cells,grid:s.grid});
+async function decode(image){const bitmap=await createImageBitmap(new Blob([image.bytes],{type:image.mimeType}));const c=document.createElement('canvas');c.width=bitmap.width;c.height=bitmap.height;const ctx=c.getContext('2d');ctx.drawImage(bitmap,0,0);bitmap.close();return ctx;}
+window.probe={ready:(async()=>{sdk=await create('a');})(),info:()=>sdk.readBuildInfo(),
+ async run(){
+  check(typeof sdk.table?.create==='function','publicTableAPI');
+  objectId=(await sdk.table.create({rows:2,columns:2,x:20,y:20})).objectId;
+  let s=sdk.table.read(objectId);check(s.available&&s.rows.length===2&&s.columns.length===2&&s.cells.length===4,'create2x2');
+  const row=s.rows[0].id,column=s.columns[0].id,originalColumn=s.columns[1].id;
+  await sdk.table.setCellStyle({...target(s),fill:[1,0,0,1],format:{fontSize:20,bold:true}});
+  const png=await sdk.exportImage({bounds:[20,20,260,116],padding:0});const ctx=await decode(png);check(ctx.getImageData(90,30,1,1).data[0]>245&&ctx.getImageData(90,30,1,1).data[1]<10,'pngCellFill');
+  await sdk.table.edit({objectId,rowId:row,columnId:column});
+  const editor=sdk.text.read();check(editor.phase===1&&editor.token.row===row&&editor.token.column===column&&editor.geometry.available,'cellEditorIdentityAndGeometry');
+  await sdk.text.replace('表格 ABC');await sdk.text.finish();check(sdk.table.read(objectId).cells[0].text==='表格 ABC','sharedTextEditing');
+  await sdk.table.insertRow({objectId,index:0});s=sdk.table.read(objectId);check(s.rows[1].id===row&&s.cells[2].text==='表格 ABC','rowInsertPreservesCell');
+  await sdk.table.insertColumn({objectId,index:1});s=sdk.table.read(objectId);check(s.columns[2].id===originalColumn&&s.cells[3].text==='表格 ABC','columnInsertPreservesCell');
+  await sdk.table.removeColumn({objectId,columnId:s.columns[1].id});s=sdk.table.read(objectId);check(s.cells[2].text==='表格 ABC','columnDeletePreservesText');
+  await sdk.table.setRowHeight({objectId,rowId:row,size:80});await sdk.table.setColumnWidth({objectId,columnId:column,size:160});s=sdk.table.read(objectId);check(s.rows[1].size===80&&s.columns[0].size===160,'axisSizes');
+  const before=content(s);await sdk.table.setGridStyle({objectId,color:[0,0,1,1],width:2});const after=content(sdk.table.read(objectId));await sdk.undo();check(same(content(sdk.table.read(objectId)),before),'undoGrid');await sdk.redo();check(same(content(sdk.table.read(objectId)),after),'redoGrid');
+  const generation=sdk.readState().generation;
+  for(const call of [()=>sdk.table.create({rows:0}),()=>sdk.table.setGridStyle({objectId,rowId:row,action:'removeRow'}),()=>sdk.table.create({objectId}),()=>sdk.table.select({objectId:'00000000000000000000000000000000',rowId:row,columnId:column}),()=>sdk.table.create({rows:1.5}),()=>sdk.table.create({rows:64,columns:64}),()=>sdk.table.setRowHeight({objectId,rowId:row,size:NaN}),()=>sdk.table.setCellStyle({objectId,rowId:row,columnId:column,fill:[2,0,0,1]}),()=>sdk.table.setGridStyle({objectId,version:2}),()=>sdk.table.removeRow({objectId,rowId:'11111111111111111111111111111111'}),()=>sdk.table.setRowHeight({objectId,rowId:row,size:70,generation:'0'})]){
+    let rejected=false;try{await call();}catch{rejected=true;}check(rejected,'invalidArgument'+Object.keys(checks).length);check(sdk.readState().generation===generation,'rejectionAtomic'+Object.keys(checks).length);
+  }
+  const image=await sdk.exportImage({format:'jpeg'});check(image.bytes[0]===255&&image.bytes[1]===216,'jpegExport');
+  const metadata={generation,documentRevision:'11',recoveryFrontier:[8,1,16,1,24,11]},saved=await sdk.captureSnapshot(metadata);
+  const reopened=await create('c',{bytes:saved.bytes,metadata:{...metadata,checkpointDigest:saved.checkpointDigest,resourceBinding:'78'}});
+  check(same(content(reopened.table.read(objectId)),content(sdk.table.read(objectId))),'snapshotRestore');
+  let missingFont=false;try{await reopened.exportImage();}catch(error){missingFont=error.code==='RESOURCE_UNAVAILABLE';}check(missingFont,'restoreRequiresFontCustody');
+  for(const entry of sdk.resources.list().entries)if(entry.token){const token=reopened.resources.token(entry.resourceId);if(token)await reopened.resources.publish(token,sdk.resources.readBytes(entry.token));}
+  const restoredPixels=(await decode(await reopened.exportImage())).getImageData(0,0,280,176).data;let dark=0;for(let i=0;i<restoredPixels.length;i+=4)if(restoredPixels[i]<70&&restoredPixels[i+1]<70&&restoredPixels[i+2]<70&&restoredPixels[i+3]>200)++dark;check(dark>10,'restoredFontTextRendered');
+  await reopened.table.insertColumn({objectId,index:1});check(reopened.table.read(objectId).columns[2].id===originalColumn,'editAfterRestore');
+  const remote=await create('b');for(const bytes of packets)await remote.applyRemoteOperation(bytes);
+  check(same(content(remote.table.read(objectId)),content(sdk.table.read(objectId))),'remoteReplay');check(remoteEcho===0,'remoteNoEcho');
+  const independent=await remote.table.create({rows:1,columns:1,x:500,y:20});check(independent.objectId!==objectId&&remote.table.read(independent.objectId).rows[0].id!==row,'independentRuntimeIdentities');
+
+  await remote.table.setGridStyle({objectId,color:[0.1,0.2,0.8,1],width:2});await wait();await sdk.applyRemoteOperation(remotePackets.at(-1));
+  const conflictGeneration=sdk.readState().generation,conflictContent=content(sdk.table.read(objectId));let conflict=false;try{await sdk.undo();}catch{conflict=true;}check(conflict&&sdk.readState().generation===conflictGeneration&&same(content(sdk.table.read(objectId)),conflictContent),'remoteConflictPreservesUndoTarget');
+  await sdk.table.select({objectId,rowId:row,columnId:column});await sdk.selectTool('select');await sdk.panBy(30,25);await sdk.zoomAt(20,20,1.25);
+  await wait();return {checks,errors};
+ },
+ target:()=>target(sdk.table.read(objectId)),read:()=>sdk.table.read(objectId),state:()=>sdk.readState(),text:()=>sdk.text.read(),
+ edit:async()=>{await sdk.table.edit(target(sdk.table.read(objectId)));await wait();},
+ finish:()=>sdk.text.finish(),
+ focus:()=>sdk.canvas.focus(),interact:async()=>{await sdk.text.finish();await sdk.fitSelection();await wait();return true;},
+ cancelPointer:()=>sdk.canvas.dispatchEvent(new PointerEvent('pointercancel',{pointerId:1,pointerType:'mouse',bubbles:true})),
+ point:(localX,localY)=>{const c=sdk.readState().camera,r=sdk.canvas.getBoundingClientRect();return {x:r.left+(20+localX)*c.scale+c.x,y:r.top+(20+localY)*c.scale+c.y};},
+ async close(){for(const r of owners)await r.close();}
+};
+</script>

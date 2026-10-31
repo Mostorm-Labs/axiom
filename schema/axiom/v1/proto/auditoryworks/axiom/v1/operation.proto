@@ -42,6 +42,8 @@ message ResourceExpectation { Id128 resource_id = 1; uint32 state = 2; uint64 re
 message ReactivateResource { ResourceManifestEntry entry = 1; Id128 expected_removal_operation_id = 2; ResourceManifestEntry expected_preimage = 3; bytes expected_lineage_token = 4; }
 message UpdateResourceManifestOp { repeated ResourceManifestEntry upserts = 1; repeated Id128 removes = 2; repeated ResourceExpectation expectations = 3; repeated ReactivateResource reactivations = 4; uint64 expected_manifest_revision = 5; }
 
+import "auditoryworks/axiom/v1/table.proto";
+
 message OperationPayload {
   oneof payload {
     InsertObjectsOp insert_objects = 1;
@@ -63,6 +65,7 @@ message OperationPayload {
     SetSectionContentOp set_section_content = 17;
     EditContainerTopologyOp edit_container_topology = 18;
     SetDocumentBackgroundOp set_document_background = 19;
+    EditTableOp edit_table = 20;
   }
 }
 message Operation {

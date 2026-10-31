@@ -1,4 +1,6 @@
 #include "canvas/text/text_layout.hpp"
+#include "canvas/semantic/table_content.hpp"
+#include "canvas/semantic/table_content.hpp"
 #include "sha256.h"
 
 #include <algorithm>
@@ -782,5 +784,18 @@ EditingGeometry RichTextLayoutService::stickyEditingGeometry(
     }
     return geometry;
 }
-LayoutMetrics RichTextLayoutService::metrics() const noexcept { return impl_->counters; }
+LayoutMetrics RichTextLayoutService::metrics() const noexcept { return impl_->counters; }std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveTable(foundation::ObjectId id,const semantic::TableContent& table) {
+    auto result=std::make_shared<TextLayoutSnapshot>();
+    result->localBounds={0,0,static_cast<float>(semantic::tableWidth(table)),static_cast<float>(semantic::tableHeight(table))};
+    result->digest="table-v1:";
+    for(std::size_t i=0;i<table.cells.size();++i){
+        auto key=id;const auto& row=table.rows[i/table.columns.size()].id;const auto& col=table.columns[i%table.columns.size()].id;
+        for(std::size_t n=0;n<16;++n)key.bytes[n]^=row.bytes[n]^col.bytes[(n+7)%16];
+        auto layout=resolve(key,table.cells[i].text);result->tableCells.push_back(layout);
+        if(layout){result->digest+=layout->digest+":";result->fonts.insert(result->fonts.end(),layout->fonts.begin(),layout->fonts.end());result->diagnostics.insert(result->diagnostics.end(),layout->diagnostics.begin(),layout->diagnostics.end());}
+        else result->diagnostics.push_back("TableCellLayoutUnavailable");
+    }
+    return result;
+}
+
 }

@@ -54,6 +54,7 @@ RuntimeSceneProjection projectRuntimeScene(
         else if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
                  shape != nullptr && shape->label.has_value())
             textContent = &*shape->label;
+        if(record.kind==semantic::ObjectKind::kTable&&textService)projection.records.back().textLayout=textService->resolveTable(record.id,std::get<semantic::TableContent>(record.content));
         if (textService != nullptr && record.kind == semantic::ObjectKind::kShape) {
             auto& derived = projection.records.back();
             derived.textLayout = textService->resolveShape(record.id,
@@ -173,6 +174,7 @@ bool isSupportedRuntimeKind(semantic::ObjectKind kind) noexcept {
     case semantic::ObjectKind::kConnector:
     case semantic::ObjectKind::kSticky:
     case semantic::ObjectKind::kGroup:
+    case semantic::ObjectKind::kTable:
     case semantic::ObjectKind::kSection:
         return true;
     }

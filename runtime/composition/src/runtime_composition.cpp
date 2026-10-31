@@ -144,7 +144,7 @@ DocumentSnapshotResult RuntimeCompositionCore::captureDocumentSnapshot(const Doc
     if (snapshot.capability_requirements.empty() && !semantic::SnapshotCodec::populateRequirements(snapshot)) {
       result.status = DocumentSnapshotStatus::kInvalidCheckpoint; return result;
     }
-    constexpr auto capability = semantic::SnapshotCapability::kAllWithBackgroundV1;
+    constexpr auto capability = semantic::SnapshotCapability::kAllWithTableV1;
     if (!semantic::SnapshotCodec::bindDigests(snapshot, capability)) {
       result.status = DocumentSnapshotStatus::kInvalidCheckpoint; return result;
     }

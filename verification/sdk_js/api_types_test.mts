@@ -36,3 +36,19 @@ await sdk.captureSnapshot({generation:1,documentRevision:'1',recoveryFrontier:[]
 await sdk.createConnector({start:{objectId:'a',port:99},end:{point:[0,0]}});
 const e=new AxiomError('STALE_TARGET');e.details;
 await sdk.close();
+
+const tableCreated=await sdk.table.create({rows:3,columns:3});
+const table=sdk.table.read(tableCreated.objectId);
+if(table.available){
+ const cell={objectId:table.objectId,rowId:table.rows[0].id,columnId:table.columns[0].id,generation:table.generation};
+ await sdk.table.edit(cell);await sdk.text.replace('cell');await sdk.text.finish();
+ await sdk.table.setCellStyle({...cell,fill:[1,1,1,1],format:{bold:true,alignment:2}});
+ await sdk.table.setColumnWidth({objectId:table.objectId,columnId:cell.columnId,size:160});
+}
+await sdk.table.navigate(1);
+// @ts-expect-error Runtime owns row and column identity allocation
+await sdk.table.create({rowIds:['internal']});
+// @ts-expect-error no internal canonical TableContent write API
+await sdk.table.replaceContent({});
+// @ts-expect-error hand-drawn grid styles require a later versioned capability
+await sdk.table.setGridStyle({objectId:'id',roughness:1});

@@ -38,6 +38,7 @@ SemanticChangeFlags replacementFlag(OperationKind kind) {
     case OperationKind::kSetObjectSize:
     case OperationKind::kSetVectorPathGeometry:
     case OperationKind::kSetImageContent:
+    case OperationKind::kEditTable:
     case OperationKind::kEditRichText:
     case OperationKind::kSetConnectorContent:
     case OperationKind::kSetSectionContent:

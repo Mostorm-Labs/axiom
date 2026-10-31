@@ -28,6 +28,7 @@ enum class OperationKind : std::uint8_t {
     kSetSectionContent = 17,
     kEditContainerTopology = 18,
     kSetDocumentBackground = 19,
+    kEditTable = 20,
 };
 
 struct Operation final {

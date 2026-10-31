@@ -543,6 +543,7 @@ Json writeContent(const ObjectContent& value) {
         [](const GroupContent&) {
             Json result = Json::object(); result["group"] = Json::object(); return result;
         },
+        [](const TableContent&) -> Json { throw std::invalid_argument("Table is unsupported by the legacy G1 projection"); },
         [](const SectionContent&) -> Json {
             // The historical G1 projection has no Section representation.
             throw std::invalid_argument("Section is unsupported by the legacy G1 projection");

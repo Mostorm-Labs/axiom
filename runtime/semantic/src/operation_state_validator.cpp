@@ -29,6 +29,7 @@ namespace {
 }
 
 [[nodiscard]] bool supportsField(ObjectKind kind, std::uint32_t field_id) noexcept {
+    if (kind == ObjectKind::kTable) return field_id>=1U && field_id<=4U;
     if (kind == ObjectKind::kSection) return field_id == 0x3U || field_id == 0x100U;
     switch (field_id) {
         case 0x00000001U:

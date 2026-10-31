@@ -38,7 +38,7 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
                     for field in message.fields:
                         self.assertIn(field, messages[message.name].fields)
 
-    def test_additions_are_limited_to_resource_release_and_fc02_text(self):
+    def test_additions_are_limited_to_accepted_feature_extensions(self):
         before = descriptor.parse_descriptor((DIRECTORY / "descriptor.lock.pb").read_bytes())
         after = descriptor.parse_descriptor((DIRECTORY / "descriptor.current.pb").read_bytes())
         new_messages = {}
@@ -54,6 +54,8 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
                     if fields:
                         extra_fields[(Path(name).name, message.name)] = {field.number for field in fields}
         self.assertEqual(new_messages, {
+            "document_background.proto": {"DocumentBackgroundV1", "SetDocumentBackgroundOp"},
+            "table.proto": {"TableAxis", "TableCell", "TableGridStyle", "TableContent", "EditTableOp"},
             "section.proto": {"SectionContent"},
             "container_operations.proto": {
                 "ContainerStructuralExpectation", "ContainerChildExpectation", "ContainerChildrenExpectation",
@@ -68,21 +70,37 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
                 "ResourceManifest", "RecoveryFrontierV1", "CapabilityRequirementsV1"},
         })
         self.assertEqual(extra_fields, {
-            ("operation.proto", "OperationPayload"): {16, 17, 18},
-            ("object.proto", "ObjectContent"): {12},
+            ("operation.proto", "OperationPayload"): {16, 17, 18, 19, 20},
+            ("object.proto", "ObjectContent"): {12, 13},
             ("object.proto", "ShapeContent"): {4},  # Existing FC02 label; accepted M01 BASE-01 source alignment.
             ("rich_text.proto", "TextStyle"): {7},
             ("rich_text.proto", "ParagraphStyle"): {5},
             ("rich_text.proto", "RichTextContent"): {2},
             ("rich_text.proto", "RichTextStep"): {7, 8},
             ("rich_text.proto", "RichTextDelta"): {3},
-            ("snapshot.proto", "DocumentSnapshot"): set(range(4, 11)),
+            ("snapshot.proto", "DocumentSnapshot"): set(range(4, 12)),
         })
 
-    def test_fc08_publication_matches_the_independent_accepted_descriptor(self):
+    def test_fc08_baseline_is_preserved_with_only_accepted_background_and_table_additions(self):
         expected = descriptor.parse_descriptor((ROOT / ".aegis/materialized/FC-08/proposed-descriptor/descriptor.pb").read_bytes())
         actual = descriptor.parse_descriptor((DIRECTORY / "descriptor.current.pb").read_bytes())
-        self.assertEqual(actual, expected)
+        self.assertEqual(set(actual) - set(expected), {
+            "auditoryworks/axiom/v1/document_background.proto", "auditoryworks/axiom/v1/table.proto"})
+        # Preserve the independently accepted FC08 artifact; compare every
+        # original field and enum, allowing only the explicitly accepted tags.
+        allowed = {("operation.proto", "OperationPayload"): {19, 20},
+                   ("object.proto", "ObjectContent"): {13},
+                   ("snapshot.proto", "DocumentSnapshot"): {11}}
+        for filename, original in expected.items():
+            current = actual[filename]
+            self.assertEqual(original.enums, current.enums)
+            messages = {m.name: m for m in current.messages}
+            self.assertEqual(set(messages), {m.name for m in original.messages})
+            for message in original.messages:
+                self.assertTrue(set(message.fields) <= set(messages[message.name].fields))
+                additions = set(messages[message.name].fields) - set(message.fields)
+                self.assertEqual({field.number for field in additions},
+                                 allowed.get((Path(filename).name, message.name), set()))
 
     def test_corrupt_current_or_historical_artifacts_are_rejected(self):
         with tempfile.TemporaryDirectory() as directory:

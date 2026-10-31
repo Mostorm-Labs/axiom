@@ -18,7 +18,7 @@ bool matrix(const Transform2D& t) {
 }
 bool knownVersion(ObjectKind k,std::uint32_t v) {
     const auto kind=static_cast<std::uint8_t>(k);
-    return kind>=1U&&kind<=10U&&(v==1U||(k==ObjectKind::kShape&&(v==2U||v==3U))||
+    return kind>=1U&&kind<=11U&&(v==1U||(k==ObjectKind::kShape&&(v==2U||v==3U))||
         (k==ObjectKind::kRichText&&(v==2U||v==3U))||(k==ObjectKind::kVectorStroke&&v==2U));
 }
 bool nodes(const std::vector<ContainerStructuralExpectation>& values) {

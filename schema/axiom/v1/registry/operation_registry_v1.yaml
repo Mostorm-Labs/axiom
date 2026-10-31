@@ -23,6 +23,7 @@ operations:
   - {id: 16, tag: 16, symbol: UpdateResourceManifest, payload: UpdateResourceManifestOp}
   - {id: 17, tag: 17, symbol: SetSectionContent, payload: SetSectionContentOp}
   - {id: 18, tag: 18, symbol: EditContainerTopology, payload: EditContainerTopologyOp}
+  - {id: 20, tag: 20, symbol: EditTable, payload: EditTableOp}
 validation_pipeline:
   - wire_preflight
   - envelope_validation
@@ -44,3 +45,7 @@ versioned_payload_boundary:
 fc08_publication:
   authority: FC08-P12-P13-accepted
   implementation_status: semantic_operation_engine_17_18_supported_history_scene_host_pending
+
+table_publication:
+  authority: docs/planning/sdk/table-v1-contract.json
+  guard: exact-table-before-state

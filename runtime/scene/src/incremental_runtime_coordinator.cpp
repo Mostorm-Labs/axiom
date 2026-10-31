@@ -406,8 +406,8 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::refreshTextR
                  shape != nullptr && shape->label.has_value())
             textContent = &*shape->label;
         const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
-        if (textContent == nullptr && shape == nullptr && section == nullptr) continue;
-        auto layout=section ? textLayoutService_->resolveSectionTitle(record.objectId,*section)
+        if (textContent == nullptr && shape == nullptr && section == nullptr && record.kind!=semantic::ObjectKind::kTable) continue;
+        auto layout=std::holds_alternative<semantic::TableContent>(record.content) ? textLayoutService_->resolveTable(record.objectId,std::get<semantic::TableContent>(record.content)) : section ? textLayoutService_->resolveSectionTitle(record.objectId,*section)
                           : shape ? textLayoutService_->resolveShape(record.objectId, *shape, record.transform)
                           : textLayoutService_->resolve(record.objectId,*textContent);
         if(record.textLayout && record.textLayout->digest==layout->digest) continue;

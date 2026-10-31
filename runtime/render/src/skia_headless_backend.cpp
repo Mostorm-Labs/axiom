@@ -1,4 +1,5 @@
 #include "canvas/render/skia_headless_backend.hpp"
+#include "canvas/semantic/table_content.hpp"
 #include "skia_geometry_internal.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "canvas/render/image_crop_geometry.hpp"
@@ -354,7 +355,21 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
     const auto& record = entry.record;
     std::visit([&](const auto& command) {
         using T = std::decay_t<decltype(command)>;
-        if constexpr (std::is_same_v<T, ShapeReferenceCommand>) {
+        if constexpr (std::is_same_v<T, TableReferenceCommand>) {
+            const auto& table=command.content;
+            SkPaint layer;layer.setAlphaf(objectOpacity(record));canvas.saveLayer(nullptr,&layer);
+            for(std::size_t i=0;i<table.cells.size();++i){const auto r=semantic::tableCellRect(table,i);const auto area=SkRect::MakeLTRB(skScalar(r[0]),skScalar(r[1]),skScalar(r[2]),skScalar(r[3]));
+                SkPaint fill;fill.setColor4f(color(table.cells[i].fill));canvas.drawRect(area,fill);
+                if(textResources&&command.layout&&i<command.layout->tableCells.size()&&command.layout->tableCells[i]){
+                    canvas.save();canvas.clipRect(area);canvas.translate(skScalar(r[0]+6),skScalar(r[1]+6));textResources->draw(canvas,*command.layout->tableCells[i]);canvas.restore();}
+            }
+            if(table.grid.width>0){SkPaint grid;grid.setAntiAlias(true);grid.setColor4f(color(table.grid.color));grid.setStrokeWidth(skScalar(table.grid.width));
+                double x=0,y=0;const auto width=semantic::tableWidth(table),height=semantic::tableHeight(table);
+                canvas.drawLine(0,0,0,skScalar(height),grid);for(const auto& col:table.columns){x+=col.size;canvas.drawLine(skScalar(x),0,skScalar(x),skScalar(height),grid);}
+                canvas.drawLine(0,0,skScalar(width),0,grid);for(const auto& row:table.rows){y+=row.size;canvas.drawLine(0,skScalar(y),skScalar(width),skScalar(y),grid);}}
+            if(command.activeCell&&*command.activeCell<table.cells.size()){const auto r=semantic::tableCellRect(table,*command.activeCell);SkPaint outline;outline.setAntiAlias(true);outline.setStyle(SkPaint::kStroke_Style);outline.setColor(SkColorSetRGB(45,109,218));outline.setStrokeWidth(2);canvas.drawRect(SkRect::MakeLTRB(skScalar(r[0]+1),skScalar(r[1]+1),skScalar(r[2]-1),skScalar(r[3]-1)),outline);}
+            canvas.restore();
+        } else if constexpr (std::is_same_v<T, ShapeReferenceCommand>) {
             const auto drawLabel = [&] {
                 if (textResources == nullptr || !command.labelLayout) return;
                 canvas.save();

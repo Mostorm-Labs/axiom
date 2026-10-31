@@ -46,9 +46,10 @@ std::string digest(const std::string& value) {
 std::vector<std::uint8_t> semanticBytes(const Host& host) {
   // Codec is the existing canonical serialization owner; qualification only
   // reads the store via the existing test utility.
-  const auto encoded = canvas::semantic::SnapshotCodec::encode({
-      canvas::semantic::DocumentId(canvas::foundation::ObjectId::fromUint64(1U)),
-      2U, Access::objects(host)});
+  canvas::semantic::SemanticSnapshot snapshot;
+  snapshot.document_id=canvas::semantic::DocumentId(canvas::foundation::ObjectId::fromUint64(1U));
+  snapshot.schema_version=2U;snapshot.objects=Access::objects(host);
+  const auto encoded=canvas::semantic::SnapshotCodec::encode(snapshot);
   require(encoded.ok(), "canonical snapshot encoding unavailable");
   return encoded.bytes;
 }

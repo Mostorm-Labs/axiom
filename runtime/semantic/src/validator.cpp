@@ -1,5 +1,6 @@
 #include "canvas/semantic/validator.hpp"
 #include "canvas/semantic/rich_text_state.hpp"
+#include "canvas/semantic/table_content.hpp"
 #include "canvas/semantic/geometry_accounting_v1.hpp"
 
 #include "object_record_semantics_internal.hpp"
@@ -352,6 +353,7 @@ bool validPropertyValue(std::uint32_t field_id, const PropertyValue& value) noex
 }
 
 bool fieldAppliesToObjectKind(ObjectKind kind, std::uint32_t field_id) noexcept {
+    if (kind == ObjectKind::kTable) return field_id>=1U && field_id<=4U;
     if (kind == ObjectKind::kSection) return field_id == 0x3U || field_id == 0x100U;
     switch (field_id) {
         case 0x00000001U:
@@ -601,6 +603,8 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
             return std::holds_alternative<StickyContent>(object.content);
         case ObjectKind::kGroup:
             return std::holds_alternative<GroupContent>(object.content);
+        case ObjectKind::kTable:
+            return std::holds_alternative<TableContent>(object.content);
         case ObjectKind::kSection:
             return std::holds_alternative<SectionContent>(object.content);
     }
@@ -609,6 +613,9 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
 
 bool validObjectRecordStructure(const ObjectRecord& object) {
     if (!validObjectKindTriple(object) || !validPropertyBag(object.kind, object.properties)) return false;
+    if (const auto* table = std::get_if<TableContent>(&object.content)) {
+        if (!internal::validateTableContent(*table) || !object.erase_masks.empty()) return false;
+    }
     if (const auto* section = std::get_if<SectionContent>(&object.content)) {
         if (!validSection(*section) || !object.erase_masks.empty()) return false;
     }
@@ -701,6 +708,38 @@ bool validPatch(const PropertyPatch& patch) noexcept {
     return false;
 }
 
+bool validTableEditChange(const EditTableOp& edit) {
+    const auto& before=edit.expected;const auto& after=edit.replacement;
+    const auto inserted=[](const TableContent& a,const TableContent& b){
+        if(a.grid!=b.grid)return false;
+        const bool row=b.rows.size()==a.rows.size()+1&&b.columns==a.columns;
+        const bool col=b.columns.size()==a.columns.size()+1&&b.rows==a.rows;
+        if(!row&&!col)return false;
+        const auto& small=row?a.rows:a.columns;const auto& large=row?b.rows:b.columns;
+        std::size_t matched=0;for(const auto& item:large)if(matched<small.size()&&item==small[matched])++matched;
+        if(matched!=small.size())return false;
+        for(std::size_t i=0;i<a.cells.size();++i){const auto j=tableCellIndex(b,a.rows[i/a.columns.size()].id,a.columns[i%a.columns.size()].id);if(!j||a.cells[i]!=b.cells[*j])return false;}return true;
+    };
+    if(edit.action==TableEditKind::kInsert)return inserted(before,after);
+    if(edit.action==TableEditKind::kRemove)return inserted(after,before);
+    if(edit.action==TableEditKind::kResize){
+        if(before.grid!=after.grid||before.rows.size()!=after.rows.size()||before.columns.size()!=after.columns.size())return false;
+        std::size_t changes=0;const auto axes=[&](const auto& a,const auto& b){for(std::size_t i=0;i<a.size();++i){if(a[i].id!=b[i].id)return false;if(a[i].size!=b[i].size)++changes;}return true;};
+        if(!axes(before.rows,after.rows)||!axes(before.columns,after.columns)||changes>1)return false;
+        for(std::size_t i=0;i<before.cells.size();++i)if(before.cells[i].fill!=after.cells[i].fill||before.cells[i].text.document!=after.cells[i].text.document)return false;return true;
+    }
+    if(before.rows!=after.rows||before.columns!=after.columns)return false;
+    if(edit.action==TableEditKind::kGridStyle)return before.cells==after.cells;
+    if(before.grid!=after.grid)return false;
+    std::size_t changes=0;
+    const auto plain=[](const RichTextContent& t){std::string text;bool first=true;for(const auto& p:t.document.paragraphs){if(!first)text+='\n';first=false;for(const auto& r:p.runs)text+=r.text;}return text;};
+    for(std::size_t i=0;i<before.cells.size();++i){const auto& a=before.cells[i];const auto& b=after.cells[i];if(a==b)continue;if(++changes>1||a.text.layout!=b.text.layout)return false;
+        if(edit.action==TableEditKind::kText){if(a.fill!=b.fill)return false;}
+        else if(edit.action==TableEditKind::kCellStyle){if(plain(a.text)!=plain(b.text))return false;}
+        else return false;
+    }
+    return true;
+}
 bool allUnique(std::vector<ObjectId> values) {
     std::sort(values.begin(), values.end());
     return std::adjacent_find(values.begin(), values.end()) == values.end();
@@ -724,6 +763,15 @@ bool propertyAppliesToObjectKind(ObjectKind kind,std::uint32_t fieldId) noexcept
     return fieldAppliesToObjectKind(kind,fieldId);
 }
 
+bool internal::validateTableContent(const TableContent& t) noexcept {
+    if(t.rows.empty()||t.columns.empty()||t.rows.size()>64||t.columns.size()>64||t.rows.size()*t.columns.size()>1024||t.cells.size()!=t.rows.size()*t.columns.size())return false;
+    const auto axes=[](const auto& values){for(std::size_t i=0;i<values.size();++i){const auto& a=values[i];if(a.id.isZero()||!std::isfinite(a.size)||a.size<24||a.size>16384)return false;for(std::size_t j=0;j<i;++j)if(values[j].id==a.id)return false;}return true;};
+    if(!axes(t.rows)||!axes(t.columns)||t.grid.version!=1||!validColor(t.grid.color)||!std::isfinite(t.grid.width)||t.grid.width<0||t.grid.width>16)return false;
+    std::size_t bytes=0;
+    for(std::size_t i=0;i<t.cells.size();++i){const auto& c=t.cells[i];if(!validColor(c.fill)||!validRichTextDocument(c.text.document)||!validRichTextLayoutState(3,c.text)||!c.text.layout||c.text.layout->wrap_width!=t.columns[i%t.columns.size()].size-12)return false;
+        for(const auto& p:c.text.document.paragraphs)for(const auto& r:p.runs){if(!r.style.font_resource_id||r.style.font_size<1||r.style.font_size>512)return false;bytes+=r.text.size();if(bytes>1048576)return false;}}
+    return true;
+}
 bool internal::validateSectionContent(const SectionContent& content) noexcept {
     return validSection(content);
 }
@@ -851,6 +899,8 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
                 if constexpr (std::is_same_v<Payload, SetConnectorContentOp>) {
                     if (!validConnector(payload.content)) return {ValidationIssue::kInvalidLeaf};
                 }
+            } else if constexpr (std::is_same_v<Payload, EditTableOp>) {
+                if(!validId(payload.object_id)||static_cast<unsigned>(payload.action)<1||static_cast<unsigned>(payload.action)>6||!internal::validateTableContent(payload.expected)||!internal::validateTableContent(payload.replacement)||!validTableEditChange(payload))return {ValidationIssue::kInvalidLeaf};
             } else if constexpr (std::is_same_v<Payload, SetDocumentBackgroundOp>) {
                 if (!foundation::validDocumentBackground(payload.value)) return {ValidationIssue::kInvalidLeaf};
             } else if constexpr (std::is_same_v<Payload, SetSectionContentOp> || std::is_same_v<Payload, EditContainerTopologyOp>) {

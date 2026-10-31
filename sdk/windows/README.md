@@ -106,3 +106,9 @@ includePattern and optional generation fence. Limits are 8192 per axis and
 filenames belong to the caller. Response buffers retain the existing C ABI
 copy/release ownership; no new DLL symbol or rendering handle is exposed. Automated Windows DLL and external-consumer verification runs in release CI;
 physical device qualification remains separate.
+
+Table/1 shares the Session `table` command vocabulary with Web (see the Web README).
+The caller-side wrapper provides `table(Json)` and `readTable(id)`; command calls
+must include the generation observed from readback. No new DLL export, internal
+object handle or dependency header is required. Windows device/IME acceptance is
+separate from the local Web and native tests.

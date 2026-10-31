@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/render/render_backend.hpp"
 
@@ -100,6 +101,9 @@ RuntimeSceneRecord distinguishableRecord(std::uint64_t id, ObjectKind kind,
     record.directDependencies = {ObjectId::fromUint64(7000U + index),
                                  ObjectId::fromUint64(8000U + index)};
     switch (kind) {
+    case ObjectKind::kSection:
+    case ObjectKind::kTable:
+        throw std::invalid_argument("This historical fixture covers the original nine object kinds");
     case ObjectKind::kShape:
         record.content = canvas::semantic::ShapeContent{73U, 10.0 + index, 20.0 + index};
         break;
@@ -128,7 +132,10 @@ ReferenceDrawList distinguishableDrawList(const FrameState& frame) {
         RuntimeSceneRecord record = distinguishableRecord(71U + index, kind, index);
         ReferenceCommand command;
         switch (kind) {
-        case ObjectKind::kShape:
+        case ObjectKind::kSection:
+    case ObjectKind::kTable:
+        throw std::invalid_argument("This historical fixture covers the original nine object kinds");
+    case ObjectKind::kShape:
             command = ShapeReferenceCommand{std::get<canvas::semantic::ShapeContent>(record.content)};
             break;
         case ObjectKind::kImage: command = ImageReferenceCommand{std::get<ImageContent>(record.content)}; break;
@@ -204,7 +211,10 @@ void assertCompleteNineKindPlan(const FramePlan& plan) {
         assert(entry.contributesPixels == (expectedKinds[index] != ObjectKind::kGroup));
         assert(entry.command.index() == index);
         switch (expectedKinds[index]) {
-        case ObjectKind::kShape:
+        case ObjectKind::kSection:
+    case ObjectKind::kTable:
+        throw std::invalid_argument("This historical fixture covers the original nine object kinds");
+    case ObjectKind::kShape:
             assert(std::get<ShapeReferenceCommand>(entry.command).content ==
                    std::get<canvas::semantic::ShapeContent>(entry.record.content));
             break;

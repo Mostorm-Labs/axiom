@@ -66,7 +66,7 @@ int main() {
     // Invalid/no-route create fails atomically with a typed reason.
     auto invalid=wire;invalid.objectId=id(104);
     invalid.content.start.value=semantic::FreePointEndpoint{{230,130}};
-    const auto count=c.semanticObjectCount(),before=c.readback().semanticGeneration;
+    const auto count=c.semanticObjectCount();const auto before=c.readback().semanticGeneration;
     assert(f.createConnector(invalid).reason==runtime::ConnectorFailureReason::kNoRouteInDomain);
     assert(c.semanticObjectCount()==count&&c.readback().semanticGeneration==before);
     auto straight=invalid;straight.objectId=id(106);straight.content.routing=semantic::ConnectorRouting::kStraight;

@@ -46,11 +46,19 @@ struct EditRichTextOp final { ObjectId object_id{}; RichTextDelta delta{}; bool 
 struct SetConnectorContentOp final { ObjectId object_id{}; ConnectorContent content{}; bool operator==(const SetConnectorContentOp&) const = default; };
 struct SetDocumentBackgroundOp final { foundation::DocumentBackground value{}; bool operator==(const SetDocumentBackgroundOp&) const = default; };
 
+enum class TableEditKind : std::uint8_t { kInsert=1, kRemove=2, kResize=3, kCellStyle=4, kGridStyle=5, kText=6 };
+struct EditTableOp final {
+    ObjectId object_id{};
+    TableEditKind action = TableEditKind::kText;
+    TableContent expected{}, replacement{};
+    bool operator==(const EditTableOp&) const = default;
+};
+
 using OperationPayload = std::variant<
     InsertObjectsOp, DeleteObjectsOp, RestoreObjectsOp, SetPlacementsOp,
     SetTransformsOp, PatchPropertiesOp, SetObjectSizeOp,
     SetVectorPathGeometryOp, SetImageContentOp, AddStrokeOp, SplitStrokesOp,
     AddEraseMasksOp, RemoveEraseMasksOp, EditRichTextOp, SetConnectorContentOp, UpdateResourceManifestOp,
-    SetSectionContentOp, EditContainerTopologyOp, SetDocumentBackgroundOp>;
+    SetSectionContentOp, EditContainerTopologyOp, SetDocumentBackgroundOp, EditTableOp>;
 
 } // namespace canvas::semantic

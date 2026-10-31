@@ -24,6 +24,7 @@ enum class SnapshotCapability : std::uint8_t {
     kSectionV1 = 16,
     kShape2TriangleRichTextFormattingConnectorAndSectionV1 = 31,
     kAllWithBackgroundV1 = 63,
+    kAllWithTableV1 = 127,
 };
 
 struct SemanticSnapshot final {
