@@ -1,0 +1,19 @@
+{
+  "task_id": "AXIOM-SDK-PRIVATE-NPM-PUBLISH",
+  "repository": "Mostorm-Labs/axiom",
+  "task_anchor": {"revision": "d5d8f795e4774df49bd3b390ed7b8fa9c068cd84", "relation": "ancestor"},
+  "authorization": "User requests GitHub CI to publish the built Web SDK to the provided private npm registry under @axiom and supplies its credential for that purpose.",
+  "p32_authorized": true,
+  "allowed_files": [".github/workflows/sdk-preview-release.yml", "sdk/web/package.json", "sdk/web/README.md", "tools/release/build_preview.py", "tools/release/npm_publish.py", "tools/release/tests/test_npm_publish.py", "docs/planning/sdk/sdk-preview-release.md", "docs/planning/sdk/private-npm-publication-20261031.md", "docs/planning/sdk/evidence/20261031-private-npm/**", ".aegis/packages/AXIOM-SDK-NPM-PUBLISH-v0.1/package.json"],
+  "credential_binding": "GitHub Actions repository Secret AXIOM_NPM_TOKEN; never a source, fixture, archive or log value",
+  "execution_closure_contract": {
+    "required_changes": ["Use @axiom/axiom with explicit private registry and preview tag", "Publish only the existing verified same-revision Web Release asset after the SDK tag release succeeds", "Validate source identity, version, hashes, required assets, safe paths and credential exclusion before npm publication", "Update the actual external npm consumer and user documentation", "Configure the user-supplied GitHub Secret"],
+    "forbidden_changes": ["Runtime behavior or public API changes", "Semantic/Skia SDK lock edits or dependency rebuilds", "Literal credentials in tracked files", "Publishing from pull requests", "Publishing an ad hoc local test version", "Merging main or replacing old evidence"],
+    "required_tests": ["Release/npm guard unit regressions with a witnessed RED", "Real npm pack/dry-run and offline scoped consumer install/typecheck using actual built SDK bytes", "Actual Chrome/WASM qualification of the extracted npm payload", "Workflow lint and secret-reference inspection"],
+    "hosted_verification": {"required": [], "optional": ["First real SDK tag build and private publication; not triggered by this task"]},
+    "terminal_success": "Tests pass, workflow and consumer naming agree, Secret configured without exposure, exact implementation committed and pushed with evidence and first-publication limitations reported",
+    "terminal_blockers": ["Missing registry identity", "Registry credential rejected", "GitHub secret permission unavailable", "Package/hash/consumer regression failure"],
+    "continue_until_terminal_state": true
+  },
+  "reference_note": "The supplied Feishu page could not be retrieved. The explicitly supplied registry/scope and successful authenticated registry read provide the executable publication configuration. Its page password is not materialized."
+}

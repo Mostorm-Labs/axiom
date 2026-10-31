@@ -1,9 +1,10 @@
 {
-  "name": "@mostorm/axiom",
+  "name": "@axiom/axiom",
   "version": "1.0.0-preview.1",
   "type": "module",
-  "private": true,
+  "private": false,
+  "publishConfig": {"registry": "http://npm.nearhub.cc/", "tag": "preview"},
   "exports": {".": {"types": "./axiom.d.mts", "import": "./axiom.mjs"}},
-  "files": ["*.mjs", "internal/**", "*.d.mts", "*.wasm", "*.data", "*.html", "serve.py", "licenses/**", "README.md"],
+  "files": ["*.mjs", "internal/**", "*.d.mts", "*.wasm", "*.data", "*.html", "serve.py", "licenses/**", "README.md", "manifest.json"],
   "engines": {"node": ">=22"}
 }

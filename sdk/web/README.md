@@ -25,13 +25,37 @@ buffers, DPR, pointer capture, resize and WebGL context restoration. Run
 module. No Emscripten or C++ compiler is required to consume the built JS package.
 The distribution can also be packed locally with `npm pack --ignore-scripts`.
 Its whitelist includes the internal loader; release verification exercises the
-extracted npm package in Chrome as well as the ZIP. `private: true` prevents
-accidental registry publication and does not prevent local packing/installing.
+extracted npm package in Chrome as well as the ZIP. The package is named
+`@axiom/axiom`; `publishConfig` binds it to the private Nearhub registry and the
+`preview` distribution tag. `private: false` enables publication; access control
+is enforced by the private registry.
 The three main artifacts are `axiom.mjs`, `axiom.wasm` and `axiom.data`.
 The Emscripten loader lives in `internal/axiom.mjs`; applications import only
 the public root `axiom.mjs`. Keep the `internal/` directory, both input modules,
 declarations and the `licenses/` directory alongside them. For bundlers that relocate the
 data/WASM, pass `assetBaseURL` pointing to the deployed engine assets.
+
+To install from the private registry, put the following in your application's
+`.npmrc` and set `NODE_AUTH_TOKEN` in your environment. Do not commit credentials:
+
+```ini
+@axiom:registry=http://npm.nearhub.cc/
+//npm.nearhub.cc/:always-auth=true
+//npm.nearhub.cc/:_authToken=${NODE_AUTH_TOKEN}
+```
+
+```sh
+npm install @axiom/axiom@preview
+```
+
+```js
+import {createRuntime} from '@axiom/axiom';
+```
+
+Use a browser ESM bundler or deploy the package files with their relative layout
+preserved; installing this browser SDK does not provide Node.js rendering. For
+repeatable deployments, pin the exact version instead of the moving `preview` tag.
+The npm package retains the Release `manifest.json` and its source/file identities.
 
 API version 1 uses 32-character lowercase hexadecimal object IDs and decimal
 strings for 64-bit revisions/tokens. Command promises resolve only after the

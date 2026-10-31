@@ -92,7 +92,7 @@ def verify_js_bundle(archive, env, emsdk, chrome):
         consumer = extracted / 'package'
         required = ['axiom.mjs', 'internal/axiom.mjs', 'axiom.d.mts', 'axiom.wasm',
                     'axiom.data', 'pointer_input.mjs', 'text_input.mjs',
-                    'example.html', 'serve.py']
+                    'example.html', 'serve.py', 'package.json', 'README.md', 'manifest.json']
         required += [path.relative_to(root).as_posix()
                      for path in (root / 'licenses').rglob('*') if path.is_file()]
         for name in required:
@@ -109,7 +109,7 @@ def verify_js_bundle(archive, env, emsdk, chrome):
         subprocess.run([str(arg) for arg in install], cwd=application, env=env, check=True)
         types = (verifier.parent / 'api_types_test.mts').read_text(encoding='utf-8')
         (application / 'consumer.mts').write_text(
-            types.replace("'../../sdk/web/axiom.mjs'", "'@mostorm/axiom'"), encoding='utf-8')
+            types.replace("'../../sdk/web/axiom.mjs'", "'@axiom/axiom'"), encoding='utf-8')
         typecheck = [node, node_root / 'node_modules/npm/bin/npm-cli.js', 'exec',
                      '--yes', '--ignore-scripts', '--package', 'typescript@5.9.3', '--',
                      'tsc', '--noEmit', '--strict', '--target', 'es2022', '--module',

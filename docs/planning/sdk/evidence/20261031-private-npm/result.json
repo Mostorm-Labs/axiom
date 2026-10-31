@@ -1,0 +1,57 @@
+{
+  "status": "CI_IMPLEMENTED_LOCAL_QUALIFICATION_PASS",
+  "base_revision": "d5d8f795e4774df49bd3b390ed7b8fa9c068cd84",
+  "materialized_ref": "refs/heads/codex/sdk-shell-axis-bridge",
+  "npm": {
+    "name": "@axiom/axiom",
+    "registry": "http://npm.nearhub.cc/",
+    "tag": "preview",
+    "secret": "AXIOM_NPM_TOKEN",
+    "registry_authenticated_read_http_status": 200,
+    "secret_set_exit_code": 0,
+    "published": false,
+    "first_hosted_tag_publish": "NOT_RUN"
+  },
+  "verification": {
+    "unit_tests": 17,
+    "skipped": 0,
+    "actionlint": {
+      "version": "1.7.12",
+      "exit_code": 0
+    },
+    "npm_publish_dry_run_exit_code": 0,
+    "real_npm_offline_scoped_install": "PASS",
+    "typescript_consumer": "PASS",
+    "actual_chrome_zip_and_npm": "PASS"
+  },
+  "commands": [
+    {
+      "command": "py -3.12 -m unittest tools.release.tests.test_npm_publish tools.release.tests.test_preview_package tools.release.tests.test_consumer_package -v",
+      "exit_code": 0
+    },
+    {
+      "command": "out/npm-publish/actionlint/actionlint.exe .github/workflows/sdk-preview-release.yml",
+      "exit_code": 0
+    },
+    {
+      "command": "node npm-cli.js publish --dry-run --ignore-scripts --json --registry=http://npm.nearhub.cc/ --tag=preview",
+      "cwd": "out/npm-publish/prepared",
+      "exit_code": 0
+    },
+    {
+      "command": "tools.release.build_preview.verify_js_bundle(out/npm-publish/candidate-sdk.zip, environment, emsdk-6.0.6, Chrome)",
+      "python": "3.12",
+      "exit_code": 0,
+      "detail": "Real npm pack, offline install, TypeScript 5.9.3 and two actual Chrome/WASM consumers"
+    }
+  ],
+  "qualification_note": "Existing qualified compiled payload plus current candidate metadata; earlier dirty build stamp is retained. Not a new exact-revision Release artifact. First tag CI will rebuild from a clean exact commit.",
+  "candidate_zip_sha256": "ac628e9abdec4cd5f3d7da959221a2abf4905f45b546ad83bc494b671e98dbc1",
+  "actionlint_download_sha256": "6e7241b51e6817ea6a047693d8e6fed13b31819c9a0dd6c5a726e1592d22f6e9",
+  "feishu_body": "UNAVAILABLE_JS_SHELL_ONLY",
+  "https_probe": "TLS handshake failed; explicitly supplied HTTP endpoint used",
+  "remaining": [
+    "First actual private registry write and hosted workflow not run",
+    "No new release or physical acceptance claim"
+  ]
+}

@@ -44,6 +44,38 @@ a draft, uploads all verified assets/identities, then publishes it as a
 prerelease (`latest=false`). Failed or existing assets are never overwritten.
 PR/manual runs build and verify without publishing.
 
+After the GitHub prerelease succeeds, `publish-npm` downloads that run's verified
+Web asset and publishes `@axiom/axiom` to `http://npm.nearhub.cc/` using the
+`preview` npm distribution tag. `tools/release/npm_publish.py` first checks the
+exact commit, package/SDK version, manifest member hashes, required assets, safe
+paths and private registry policy. It extracts the original bytes without
+rewriting the package. The npm tarball retains `manifest.json`, loader, WASM/data,
+types, input adapters, example and licenses.
+
+The repository Secret `AXIOM_NPM_TOKEN` supplies `NODE_AUTH_TOKEN` only to this
+tag-only job's publish step. `actions/setup-node` creates a temporary npm config;
+no literal credential belongs in Git, a ZIP, a tarball, or an Actions artifact.
+PRs and manual diagnostic/build runs never enter the publish job or receive this
+Secret. Authentication and actual publish errors fail the job; success of the
+GitHub release job alone is not proof that npm publication succeeded.
+
+Before each new release, update **both** `sdk/version.json` and
+`sdk/web/package.json` to the same unused prerelease version, then push a new
+`axiom-sdk-preview-*` tag containing the workflow changes. Registry versions are
+immutable: conflicts must fail, not overwrite an older package. An interrupted
+publish can be retried with Actions' rerun-failed-jobs facility; if the registry
+already accepted the version, inspect its identity instead of forcing a rewrite.
+The initial implementation configures the Secret and tests a local dry-run; it
+does not create a new tag or publish an ad hoc test version.
+
+Applications configure `@axiom:registry=http://npm.nearhub.cc/` and an environment
+token as shown in `sdk/web/README.md`, then install `@axiom/axiom@preview` or pin an
+exact version. This private registry currently accepts HTTP while its HTTPS
+endpoint fails TLS negotiation. The registry operator can migrate it to HTTPS;
+the package metadata, workflow and consumers must then change together. The
+provided Feishu page returned only its JavaScript document shell, so its protected
+document content was not used as a source of additional requirements.
+
 This is a preview, not a Gate or stable release. Physical IME/touch/DPI coverage,
 MSE-20/23/26 and the deferred D07 injected-OOM hang remain separate obligations.
 Applications own persistence, networking, resource storage and durable close;
