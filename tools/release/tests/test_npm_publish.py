@@ -1,6 +1,7 @@
 import hashlib
 import importlib.util
 import json
+import re
 from pathlib import Path
 import tempfile
 import unittest
@@ -21,6 +22,12 @@ class NpmPublicationTest(unittest.TestCase):
         self.assertEqual(package['publishConfig'], {'registry': REGISTRY, 'tag': 'preview'})
         self.assertIn('manifest.json', package['files'])
         self.assertEqual(package['version'], json.loads((REPO / 'sdk/version.json').read_text())['version'])
+        wrapper = (REPO / 'sdk/web/axiom.mjs').read_text()
+        types = (REPO / 'sdk/web/axiom.d.mts').read_text()
+        versions = re.findall(r"SDK_VERSION\s*(?:=|:)\s*'([^']+)'", wrapper + '\n' + types)
+        versions += re.findall(r"readonly version:\s*'([^']+)'", types)
+        self.assertEqual(versions, [package['version']] * 3,
+                         'wrapper, declarations and native engine must report one SDK version')
 
     def prepare(self, archive, output, revision=REVISION):
         spec = importlib.util.find_spec('tools.release.npm_publish')

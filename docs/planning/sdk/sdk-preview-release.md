@@ -60,7 +60,10 @@ Secret. Authentication and actual publish errors fail the job; success of the
 GitHub release job alone is not proof that npm publication succeeded.
 
 Before each new release, update **both** `sdk/version.json` and
-`sdk/web/package.json` to the same unused prerelease version, then push a new
+`sdk/web/package.json`, plus the exported version strings in `sdk/web/axiom.mjs`
+and `sdk/web/axiom.d.mts`, to the same unused prerelease version. The packaging
+unit checks enforce these identities before the long build; the external DLL
+verifier reads its expected version from the installed SDK version file. Push a new
 `axiom-sdk-preview-*` tag containing the workflow changes. Registry versions are
 immutable: conflicts must fail, not overwrite an older package. An interrupted
 publish can be retried with Actions' rerun-failed-jobs facility; if the registry
