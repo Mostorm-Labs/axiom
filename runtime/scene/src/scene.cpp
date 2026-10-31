@@ -281,8 +281,14 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
 
 foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
     RuntimeSceneProjection projection) const {
-    return foundation::Result<PreparedPublication>::success(
-        PreparedPublication{std::move(projection)});
+    try {
+        return foundation::Result<PreparedPublication>::success(
+            PreparedPublication{std::move(projection)});
+    } catch (const std::bad_alloc&) {
+        return foundation::Result<PreparedPublication>::failure(
+            makeError(foundation::ErrorCode::kOutOfMemory,
+                      "Unable to prepare RuntimeScene lookup index"));
+    }
 }
 
 foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncremental(
@@ -312,7 +318,9 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
 
 void RuntimeScene::publish(PreparedPublication publication) noexcept {
     _stableProjection = std::move(_projection);
+    _stableLookup = std::move(_lookup);
     _projection = std::move(publication.projection);
+    _lookup = std::move(publication.lookup);
 }
 
 foundation::Result<RuntimeSceneProjection> RuntimeScene::apply(

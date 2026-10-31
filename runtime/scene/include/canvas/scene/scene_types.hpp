@@ -17,6 +17,7 @@
 #include <memory>
 #include <span>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace canvas::text { struct TextLayoutSnapshot; class RichTextLayoutService; }
@@ -116,10 +117,17 @@ class RuntimeScene final {
                    ? std::span<const RuntimeSceneRecord>(_stableProjection.records)
                    : std::span<const RuntimeSceneRecord>(_projection.records);
     }
-    [[nodiscard]] const RuntimeSceneRecord* find(semantic::ObjectId id) const noexcept {
-        return (_publicationGate != nullptr && _publicationGate->transactionActive)
-                   ? _stableProjection.find(id)
-                   : _projection.find(id);
+    [[nodiscard]] const RuntimeSceneRecord* find(semantic::ObjectId id,
+                                                std::uint64_t* comparedIds = nullptr) const noexcept {
+        const bool stable = _publicationGate != nullptr && _publicationGate->transactionActive;
+        const auto& index = stable ? _stableLookup : _lookup;
+        const auto& records = stable ? _stableProjection.records : _projection.records;
+        const auto found = std::lower_bound(index.begin(), index.end(), id,
+            [comparedIds](const auto& entry, semantic::ObjectId key) {
+                if (comparedIds) ++*comparedIds;
+                return entry.first < key;
+            });
+        return found != index.end() && found->first == id ? &records[found->second] : nullptr;
     }
 
     foundation::Result<RuntimeSceneProjection> replace(
@@ -129,8 +137,16 @@ class RuntimeScene final {
 
   private:
     friend class IncrementalRuntimeTestAccess;
+    using LookupIndex = std::vector<std::pair<semantic::ObjectId, std::size_t>>;
     struct PreparedPublication final {
         RuntimeSceneProjection projection;
+        LookupIndex lookup;
+        explicit PreparedPublication(RuntimeSceneProjection value) : projection(std::move(value)) {
+            lookup.reserve(projection.records.size());
+            for (std::size_t i = 0; i < projection.records.size(); ++i)
+                lookup.emplace_back(projection.records[i].objectId, i);
+            std::sort(lookup.begin(), lookup.end());
+        }
     };
 
     friend class IncrementalRuntimeCoordinator;
@@ -151,6 +167,8 @@ class RuntimeScene final {
 
     RuntimeSceneProjection _projection;
     RuntimeSceneProjection _stableProjection;
+    LookupIndex _lookup;
+    LookupIndex _stableLookup;
     ScenePublicationGate* _publicationGate = nullptr;
     text::RichTextLayoutService* _textLayoutService = nullptr;
     bool deferConnectorRoutes_ = false;

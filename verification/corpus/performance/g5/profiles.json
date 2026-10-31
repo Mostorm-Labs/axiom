@@ -1,0 +1,20 @@
+{
+  "schema_version": "g5-preparation-v1",
+  "seed": 42,
+  "threshold_policy": "observational; no product SLO or Gate threshold is accepted by this preparation",
+  "ink": {
+    "profile": "vector-solid-v1",
+    "revision": 1,
+    "sample_counts": [64, 256, 1024, 4096],
+    "repeats": 5,
+    "delivery": "all samples retained; one DOM pointer event per sample; one animation frame per eight samples",
+    "warmup": "one separate 32-sample stroke, retained in warmup results"
+  },
+  "large_canvas": {
+    "object_counts": [1000, 10000, 50000, 100000],
+    "engineering_only_counts": [1000000],
+    "required_families": ["sparse", "dense-grid", "text-heavy", "font-cold", "font-warm", "FC-12-mixed"],
+    "execution_status": "NOT_IMPLEMENTED_BY_PREPARATION",
+    "reason": "Requires WP-G5-00 fixture/profile acceptance and FC-12/13 bindings. Ink timing is not a large-canvas substitute."
+  }
+}

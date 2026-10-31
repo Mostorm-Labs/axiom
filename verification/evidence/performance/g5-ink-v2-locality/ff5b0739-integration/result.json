@@ -1,0 +1,386 @@
+{
+  "classification": "MEASURED",
+  "official_gate_pass_claimed": false,
+  "artifact_binding": "fd4517daaab42b007d4237a57a52392969722f346b3f8d20c7c9a37880ce4153",
+  "checks": {
+    "all_runs_valid": true,
+    "executable_unchanged": true
+  },
+  "scope": "native BrushSession component only",
+  "host": "macOS-27.0.1-arm64-arm-64bit",
+  "summary": [
+    {
+      "profile": "round-handdrawn",
+      "samples": 512,
+      "batch_size": 1,
+      "repeats": 3,
+      "append_ms": {
+        "count": 1536,
+        "p50": 0.00125,
+        "p95": 0.002708,
+        "p99": 0.003667,
+        "max": 0.01925,
+        "mean": 0.0014924134114583333
+      },
+      "seal_ms": {
+        "count": 3,
+        "p50": 0.008208,
+        "p95": 0.011666,
+        "p99": 0.011666,
+        "max": 0.011666,
+        "mean": 0.009179999999999999
+      },
+      "replay_ms": {
+        "count": 3,
+        "p50": 0.143917,
+        "p95": 0.176625,
+        "p99": 0.176625,
+        "max": 0.176625,
+        "mean": 0.14940299999999998
+      },
+      "max_copied_historical_samples": 0
+    },
+    {
+      "profile": "round-handdrawn",
+      "samples": 512,
+      "batch_size": 8,
+      "repeats": 3,
+      "append_ms": {
+        "count": 192,
+        "p50": 0.002875,
+        "p95": 0.004209,
+        "p99": 0.005916,
+        "max": 0.011708,
+        "mean": 0.0030603177083333333
+      },
+      "seal_ms": {
+        "count": 3,
+        "p50": 0.00775,
+        "p95": 0.026,
+        "p99": 0.026,
+        "max": 0.026,
+        "mean": 0.013694333333333334
+      },
+      "replay_ms": {
+        "count": 3,
+        "p50": 0.117792,
+        "p95": 0.121334,
+        "p99": 0.121334,
+        "max": 0.121334,
+        "mean": 0.11887533333333333
+      },
+      "max_copied_historical_samples": 0
+    },
+    {
+      "profile": "round-handdrawn",
+      "samples": 2048,
+      "batch_size": 1,
+      "repeats": 3,
+      "append_ms": {
+        "count": 6144,
+        "p50": 0.000917,
+        "p95": 0.002334,
+        "p99": 0.002792,
+        "max": 0.041333,
+        "mean": 0.001197779296875
+      },
+      "seal_ms": {
+        "count": 3,
+        "p50": 0.015417,
+        "p95": 0.029625,
+        "p99": 0.029625,
+        "max": 0.029625,
+        "mean": 0.019902666666666666
+      },
+      "replay_ms": {
+        "count": 3,
+        "p50": 0.407,
+        "p95": 0.46275,
+        "p99": 0.46275,
+        "max": 0.46275,
+        "mean": 0.39238866666666666
+      },
+      "max_copied_historical_samples": 0
+    },
+    {
+      "profile": "round-handdrawn",
+      "samples": 2048,
+      "batch_size": 8,
+      "repeats": 3,
+      "append_ms": {
+        "count": 768,
+        "p50": 0.002041,
+        "p95": 0.003125,
+        "p99": 0.0035,
+        "max": 0.025459,
+        "mean": 0.00221538671875
+      },
+      "seal_ms": {
+        "count": 3,
+        "p50": 0.007833,
+        "p95": 0.0195,
+        "p99": 0.0195,
+        "max": 0.0195,
+        "mean": 0.011458333333333334
+      },
+      "replay_ms": {
+        "count": 3,
+        "p50": 0.289958,
+        "p95": 0.29775,
+        "p99": 0.29775,
+        "max": 0.29775,
+        "mean": 0.291972
+      },
+      "max_copied_historical_samples": 0
+    },
+    {
+      "profile": "round-handdrawn",
+      "samples": 8192,
+      "batch_size": 1,
+      "repeats": 3,
+      "append_ms": {
+        "count": 24576,
+        "p50": 0.000625,
+        "p95": 0.001667,
+        "p99": 0.002083,
+        "max": 0.016333,
+        "mean": 0.0008022972005208333
+      },
+      "seal_ms": {
+        "count": 3,
+        "p50": 0.024083,
+        "p95": 0.053792,
+        "p99": 0.053792,
+        "max": 0.053792,
+        "mean": 0.033791666666666664
+      },
+      "replay_ms": {
+        "count": 3,
+        "p50": 0.941333,
+        "p95": 1.263542,
+        "p99": 1.263542,
+        "max": 1.263542,
+        "mean": 1.0187359999999999
+      },
+      "max_copied_historical_samples": 0
+    },
+    {
+      "profile": "round-handdrawn",
+      "samples": 8192,
+      "batch_size": 8,
+      "repeats": 3,
+      "append_ms": {
+        "count": 3072,
+        "p50": 0.001292,
+        "p95": 0.002083,
+        "p99": 0.002333,
+        "max": 0.009083,
+        "mean": 0.0013959993489583331
+      },
+      "seal_ms": {
+        "count": 3,
+        "p50": 0.016333,
+        "p95": 0.017917,
+        "p99": 0.017917,
+        "max": 0.017917,
+        "mean": 0.016680666666666667
+      },
+      "replay_ms": {
+        "count": 3,
+        "p50": 0.766292,
+        "p95": 0.774916,
+        "p99": 0.774916,
+        "max": 0.774916,
+        "mean": 0.7400553333333333
+      },
+      "max_copied_historical_samples": 0
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "samples": 512,
+      "batch_size": 1,
+      "repeats": 3,
+      "append_ms": {
+        "count": 1536,
+        "p50": 0.000459,
+        "p95": 0.001042,
+        "p99": 0.00125,
+        "max": 0.0015,
+        "mean": 0.0005801946614583333
+      },
+      "seal_ms": {
+        "count": 3,
+        "p50": 0.001833,
+        "p95": 0.0025,
+        "p99": 0.0025,
+        "max": 0.0025,
+        "mean": 0.002014
+      },
+      "replay_ms": {
+        "count": 3,
+        "p50": 0.051125,
+        "p95": 0.052292,
+        "p99": 0.052292,
+        "max": 0.052292,
+        "mean": 0.050166999999999996
+      },
+      "max_copied_historical_samples": 0
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "samples": 512,
+      "batch_size": 8,
+      "repeats": 3,
+      "append_ms": {
+        "count": 192,
+        "p50": 0.001208,
+        "p95": 0.00175,
+        "p99": 0.001833,
+        "max": 0.001958,
+        "mean": 0.0012582135416666666
+      },
+      "seal_ms": {
+        "count": 3,
+        "p50": 0.001667,
+        "p95": 0.00175,
+        "p99": 0.00175,
+        "max": 0.00175,
+        "mean": 0.0016946666666666666
+      },
+      "replay_ms": {
+        "count": 3,
+        "p50": 0.045667,
+        "p95": 0.046125,
+        "p99": 0.046125,
+        "max": 0.046125,
+        "mean": 0.04577766666666666
+      },
+      "max_copied_historical_samples": 0
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "samples": 2048,
+      "batch_size": 1,
+      "repeats": 3,
+      "append_ms": {
+        "count": 6144,
+        "p50": 0.000417,
+        "p95": 0.001084,
+        "p99": 0.00125,
+        "max": 0.002542,
+        "mean": 0.0005620390624999999
+      },
+      "seal_ms": {
+        "count": 3,
+        "p50": 0.004583,
+        "p95": 0.007875,
+        "p99": 0.007875,
+        "max": 0.007875,
+        "mean": 0.005541333333333333
+      },
+      "replay_ms": {
+        "count": 3,
+        "p50": 0.169167,
+        "p95": 0.19325,
+        "p99": 0.19325,
+        "max": 0.19325,
+        "mean": 0.173403
+      },
+      "max_copied_historical_samples": 0
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "samples": 2048,
+      "batch_size": 8,
+      "repeats": 3,
+      "append_ms": {
+        "count": 768,
+        "p50": 0.001084,
+        "p95": 0.001625,
+        "p99": 0.001792,
+        "max": 0.003542,
+        "mean": 0.0011675963541666666
+      },
+      "seal_ms": {
+        "count": 3,
+        "p50": 0.004,
+        "p95": 0.004125,
+        "p99": 0.004125,
+        "max": 0.004125,
+        "mean": 0.004013666666666666
+      },
+      "replay_ms": {
+        "count": 3,
+        "p50": 0.15425,
+        "p95": 0.156875,
+        "p99": 0.156875,
+        "max": 0.156875,
+        "mean": 0.15512499999999999
+      },
+      "max_copied_historical_samples": 0
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "samples": 8192,
+      "batch_size": 1,
+      "repeats": 3,
+      "append_ms": {
+        "count": 24576,
+        "p50": 0.000416,
+        "p95": 0.001083,
+        "p99": 0.00125,
+        "max": 0.018708,
+        "mean": 0.0005328507080078125
+      },
+      "seal_ms": {
+        "count": 3,
+        "p50": 0.015,
+        "p95": 0.022,
+        "p99": 0.022,
+        "max": 0.022,
+        "mean": 0.017097333333333332
+      },
+      "replay_ms": {
+        "count": 3,
+        "p50": 0.621417,
+        "p95": 0.629917,
+        "p99": 0.629917,
+        "max": 0.629917,
+        "mean": 0.623903
+      },
+      "max_copied_historical_samples": 0
+    },
+    {
+      "profile": "chalk-compact-v1",
+      "samples": 8192,
+      "batch_size": 8,
+      "repeats": 3,
+      "append_ms": {
+        "count": 3072,
+        "p50": 0.001,
+        "p95": 0.001583,
+        "p99": 0.001791,
+        "max": 0.002125,
+        "mean": 0.0010714778645833335
+      },
+      "seal_ms": {
+        "count": 3,
+        "p50": 0.012917,
+        "p95": 0.01325,
+        "p99": 0.01325,
+        "max": 0.01325,
+        "mean": 0.012930666666666667
+      },
+      "replay_ms": {
+        "count": 3,
+        "p50": 0.563459,
+        "p95": 0.579708,
+        "p99": 0.579708,
+        "max": 0.579708,
+        "mean": 0.568875
+      },
+      "max_copied_historical_samples": 0
+    }
+  ],
+  "source_tree_sha256": "6c7a73df621e5cfc0183680bd9f9b68b02b73afb0b945f75006731673d9eb686"
+}

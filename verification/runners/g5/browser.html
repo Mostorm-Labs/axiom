@@ -1,0 +1,121 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Axiom G5 preparation: public SDK timing consumer</title>
+<style>body{margin:0}#mount{width:800px;height:500px}</style>
+<div id="mount"></div>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+import {statistics, unavailableMetrics} from './browser_metrics.mjs';
+const errors = [], frames = [], runs = [];
+const profile=new URLSearchParams(location.search).get('profile')||'vector-solid-v1';
+let active = null, finished = null, runtime;
+const nextFrame = () => new Promise(resolve => requestAnimationFrame(resolve));
+const starts = new WeakMap();
+const types = ['pointerdown', 'pointermove', 'pointerup', 'pointercancel'];
+// Capture begins before the real SDK's canvas listener; bubbling ends after
+// synchronous Runtime processing. Observer overhead is included and disclosed.
+for (const type of types) {
+  document.addEventListener(type, event => {
+    if (active && event.target === runtime?.canvas) starts.set(event, performance.now());
+  }, true);
+  document.addEventListener(type, event => {
+    const start = starts.get(event);
+    if (start === undefined || !active) return;
+    const end = performance.now();
+    let coalesced = [];
+    try { coalesced = event.getCoalescedEvents?.() || []; } catch {}
+    active.events.push({type, start, end, duration: end - start, trusted: event.isTrusted,
+      pointerId: event.pointerId, timestamp: event.timeStamp, coalescedCount: coalesced.length,
+      x: event.clientX, y: event.clientY});
+    if (type === 'pointerup') active.upCompletedAt = end;
+  });
+}
+const longTasks = [];
+let longTaskSupported = PerformanceObserver.supportedEntryTypes?.includes('longtask') || false;
+if (longTaskSupported) new PerformanceObserver(list => {
+  for (const e of list.getEntries()) longTasks.push({start: e.startTime, duration: e.duration});
+}).observe({type:'longtask', buffered:true});
+function tick(time) { if (active) active.raf.push(time); requestAnimationFrame(tick); }
+requestAnimationFrame(tick);
+async function settle(timeout = 15000) {
+  const start = performance.now();
+  for (;;) {
+    const state = runtime.readState();
+    if (state.activeContacts === 0 && BigInt(state.lastCommit.presentedGeneration) >= BigInt(state.generation)) {
+      await nextFrame(); await nextFrame(); return state;
+    }
+    if (performance.now() - start > timeout) throw Error(`canonical receipt timeout: ${JSON.stringify(state)}`);
+    await nextFrame();
+  }
+}
+window.probe = {
+  ready: (async () => {
+    runtime = await createRuntime({mount:document.querySelector('#mount'),
+      documentId:'00000000000000000000000000000542', builtinFonts:false, permission:'localSingleUser',
+      onError: error => errors.push({code:error.code, message:String(error)}),
+      onFrame: receipt => frames.push({time:performance.now(), receipt})});
+    runtime.data.attach({capacity:1024});
+    await settle();
+    try { await runtime.selectBrush(profile, 1); }
+    catch(error){throw Error(JSON.stringify({stage:'selectBrush',profile,details:error.details,state:runtime.readState(),presets:runtime.brushPresets()}));}
+    await settle();
+    return true;
+  })(),
+  info: () => {
+    const gl = runtime.canvas.getContext('webgl2'), ext = gl.getExtension('WEBGL_debug_renderer_info');
+    return {build:runtime.readBuildInfo(), profile, userAgent:navigator.userAgent, dpr:devicePixelRatio,
+      hardwareConcurrency:navigator.hardwareConcurrency,
+      webgl:{vendor:gl.getParameter(gl.VENDOR), renderer:gl.getParameter(gl.RENDERER),
+        unmaskedVendor:ext ? gl.getParameter(ext.UNMASKED_VENDOR_WEBGL) : null,
+        unmaskedRenderer:ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : null},
+      targets:[...document.querySelectorAll('canvas')].map(c=>({id:c.id,width:c.width,height:c.height})),
+      instrumentation:'document capture/bubble timing includes observer overhead; RAF observer active; no pixel capture in timed region',
+      longTaskSupported};
+  },
+  begin: async (count, label, warmup = false) => {
+    if (active) throw Error('measurement already active');
+    await settle();
+    const state = runtime.readState(), rect = runtime.canvas.getBoundingClientRect();
+    active = {count, label, warmup, start:performance.now(), before:state, events:[], raf:[], frameCursor:frames.length};
+    return {x:rect.x,y:rect.y};
+  },
+  waitFrame: () => nextFrame().then(()=>true),
+  end: async () => {
+    const after = await settle(), run = active;
+    if (!run) throw Error('no measurement active');
+    active = null;
+    run.end = performance.now(); run.after = after;
+    run.frameReceipts = frames.slice(run.frameCursor);
+    run.longTasks = longTaskSupported ? longTasks.filter(e=>e.start>=run.start && e.start<run.end) : null;
+    const moves = run.events.filter(e=>e.type==='pointermove').map(e=>e.duration);
+    const receipt = run.frameReceipts.find(e=>run.upCompletedAt!==undefined && e.time>=run.upCompletedAt);
+    run.metrics = {pointer_move_dispatch_ms:statistics(moves),
+      pointer_down_dispatch_ms:statistics(run.events.filter(e=>e.type==='pointerdown').map(e=>e.duration)),
+      pointer_up_commit_dispatch_ms:statistics(run.events.filter(e=>e.type==='pointerup').map(e=>e.duration)),
+      raf_interval_ms:statistics(run.raf.slice(1).map((t,i)=>t-run.raf[i])),
+      up_to_canonical_callback_ms:receipt ? receipt.time-run.upCompletedAt : null,
+      ...unavailableMetrics()};
+    run.checks = {all_events_delivered:run.events.length===run.count,
+      terminal_events:run.events[0]?.type==='pointerdown' && run.events.at(-1)?.type==='pointerup',
+      native_events:run.events.every(e=>e.trusted),
+      commit_observed:after.objects===run.before.objects+1 && BigInt(after.generation)>BigInt(run.before.generation),
+      canonical_receipt:BigInt(after.lastCommit.presentedGeneration)>=BigInt(after.generation),
+      contact_retired:after.activeContacts===0};
+    runs.push(run); finished = run;
+    return run;
+  },
+  idle: async () => {
+    await settle(); const start=frames.length;
+    for(let i=0;i<12;++i) await nextFrame();
+    return {canonical_callback_count:frames.length-start,
+      preview_submission_count:null, reason:'Root SDK does not expose preview provider counters.'};
+  },
+  result: () => ({runs, errors, last:finished}),
+  close: async () => {
+    await settle(); await runtime.dispatchEvents();
+    const state=runtime.data.status();
+    if(state.latest)runtime.data.release(state.latest);
+    for(let i=0;;++i)try{await runtime.close();return true;}catch(e){if(e.code!=='BUSY'||i>120)throw e;await nextFrame();}
+  },
+};
+</script>

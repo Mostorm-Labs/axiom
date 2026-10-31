@@ -1,0 +1,91 @@
+{
+  "format": "axiom-build-environment-v2",
+  "host": "macos-arm64",
+  "target": "web-wasm32",
+  "environment": {
+    "AXIOM_DEPS_DIR": "/Users/qing/Desktop/sources/git/deps/axiom/darwin-arm64",
+    "AXIOM_SEMANTIC_HOST_ROOT": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f",
+    "AXIOM_PROTOC": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f/bin/protoc",
+    "AXIOM_SEMANTIC_RUNTIME_ROOT": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+    "AXIOM_SEMANTIC_SDK_ROOT": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+    "CMAKE_PREFIX_PATH": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b"
+  },
+  "core": {
+    "enabled": false,
+    "depsLockSha256": "11f19f907af2b489951773d4ccec6e766123b1e0b7b11faa4ce6d9f443906e4b"
+  },
+  "semantic": {
+    "enabled": true,
+    "mode": "v2",
+    "lockSha256": "edc69603f4ab43b045abbd67792795ca98273844a71eddd59710dd9bebd3e514",
+    "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea",
+    "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970",
+    "indexSha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5",
+    "resolution": {
+      "format": "axiom-sdk-resolution-v1",
+      "family": "semantic",
+      "host": "macos-arm64",
+      "target": "web-wasm32",
+      "index": {
+        "identity": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea",
+        "sha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5",
+        "root": "/Users/qing/Library/Application Support/Axiom/sdk/release-sets/semantic/14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea/semantic-sdk-index.json",
+        "source": "store",
+        "networkUsed": false
+      },
+      "artifacts": [
+        {
+          "family": "semantic",
+          "kind": "host-tools",
+          "key": "macos-universal",
+          "identity": "12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f",
+          "sha256": "3a5f3aa354128897945fd84217ae6570caa7f44511e3e051e3948142c15a8146",
+          "root": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/host-tools/12e9d8868325cf7935b8a84d31284d933847229e1a1fa9d1d03d0eb9d5dc101f",
+          "source": "store",
+          "networkUsed": false
+        },
+        {
+          "family": "semantic",
+          "kind": "runtimes",
+          "key": "web-wasm32",
+          "identity": "4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+          "sha256": "b93a507efdab549ed0da4966e77b700c03f8796ca472e02bd53d238c7fcdaa5d",
+          "root": "/Users/qing/Library/Application Support/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b",
+          "source": "store",
+          "networkUsed": false
+        }
+      ],
+      "networkUsed": false,
+      "metadata": {
+        "releaseSetId": "14e3d492c9b7f9705dcb89df8dd3f8abbddb7d1bc026bf3084de45bdc317d5ea",
+        "releaseTag": "semantic-sdk-v2-14e3d492c9b7f970",
+        "indexSha256": "f207d71d3ba0614755ff2a4533581dd227dd369219e090a95478819ff8a79bc5",
+        "hostTool": "macos-universal",
+        "target": "web-wasm32",
+        "protobufVersion": "36.0",
+        "abseilVersion": "20250512.1",
+        "abi": {
+          "buildType": "Release",
+          "cxxRuntime": "libc++",
+          "cxxStandard": 20,
+          "exceptions": true,
+          "linkage": "static",
+          "pic": true,
+          "pthread": false,
+          "rtti": true,
+          "sanitizer": "none"
+        },
+        "toolchain": {
+          "cmakeVersion": "cmake version 3.30.5",
+          "compiler": "emscripten",
+          "compilerTarget": "wasm32-unknown-emscripten",
+          "compilerVersion": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 6.0.6 (ce75e06884093bcefb86a6b8fd56a5d62a4cc245)",
+          "cxxRuntime": "libc++",
+          "emscriptenVersion": "6.0.6",
+          "llvmVersion": "22.1.8",
+          "ninjaVersion": "1.11.1.git.kitware.jobserver-1"
+        }
+      }
+    }
+  }
+}

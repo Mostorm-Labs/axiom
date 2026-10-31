@@ -260,6 +260,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     publicationGate_.observation = &IncrementalRuntimeCoordinator::observePublication;
     publicationGate_.observationContext = this;
     runtimeScene_._stableProjection = runtimeScene_._projection;
+    runtimeScene_._stableLookup = runtimeScene_._lookup;
     binding_._scene._stablePublishedRecords = binding_._scene._publishedRecords;
     binding_._scene._stablePublishedBounds = binding_._scene._publishedBounds;
     binding_._scene._stableInvalidationGeneration = binding_._scene._invalidationGeneration;
@@ -361,6 +362,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
     publicationGate_.observation = &IncrementalRuntimeCoordinator::observePublication;
     publicationGate_.observationContext = this;
     runtimeScene_._stableProjection = runtimeScene_._projection;
+    runtimeScene_._stableLookup = runtimeScene_._lookup;
     binding_._scene._stablePublishedRecords = binding_._scene._publishedRecords;
     binding_._scene._stablePublishedBounds = binding_._scene._publishedBounds;
     binding_._scene._stableInvalidationGeneration = binding_._scene._invalidationGeneration;
@@ -429,19 +431,22 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::refreshTextR
     if(delta.mutations.empty()) return foundation::Result<SceneSyncReceipt>::success(
         {published.revision(),runtimeScene_.generation(),SceneSyncDisposition::kAppliedIncremental,
          SceneApplyReceipt{published.revision(),published.revision(),0,0,0,{}},std::nullopt});
+    auto preparedRuntime = runtimeScene_.prepare(std::move(next));
+    if (!preparedRuntime) return foundation::Result<SceneSyncReceipt>::failure(preparedRuntime.error());
     publicationGate_.previousGeneration=runtimeScene_.generation();
     publicationGate_.previousRevision=published.revision();
-    publicationGate_.generation=next.generation; publicationGate_.revision=delta.afterRevision;
+    publicationGate_.generation=preparedRuntime.value().projection.generation; publicationGate_.revision=delta.afterRevision;
     publicationGate_.transactionActive=true;
     publicationGate_.observation=&IncrementalRuntimeCoordinator::observePublication;
     publicationGate_.observationContext=this;
     runtimeScene_._stableProjection=runtimeScene_._projection;
+    runtimeScene_._stableLookup=runtimeScene_._lookup;
     binding_._scene._stablePublishedRecords=binding_._scene._publishedRecords;
     binding_._scene._stablePublishedBounds=binding_._scene._publishedBounds;
     binding_._scene._stableInvalidationGeneration=binding_._scene._invalidationGeneration;
     binding_._scene._stablePublishedInvalidation=binding_._scene._publishedInvalidation;
-    pendingGeneration_=next.generation; pendingRevision_=delta.afterRevision;
-    pendingPublication_=RuntimeScene::PreparedPublication{std::move(next)};
+    pendingGeneration_=preparedRuntime.value().projection.generation; pendingRevision_=delta.afterRevision;
+    pendingPublication_=std::move(preparedRuntime.value());
     auto applied=binding_._scene.applyPreparedDelta(std::move(delta),
         &IncrementalRuntimeCoordinator::transactionCheckpoint,this,
         &IncrementalRuntimeCoordinator::publishPending,this);
@@ -479,19 +484,22 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::publishConne
     if(delta.mutations.empty()) return foundation::Result<SceneSyncReceipt>::success(
         {published.revision(),runtimeScene_.generation(),SceneSyncDisposition::kAppliedIncremental,
          SceneApplyReceipt{published.revision(),published.revision(),0,0,0,{}},std::nullopt});
+    auto preparedRuntime = runtimeScene_.prepare(std::move(next));
+    if (!preparedRuntime) return foundation::Result<SceneSyncReceipt>::failure(preparedRuntime.error());
     publicationGate_.previousGeneration=runtimeScene_.generation();
     publicationGate_.previousRevision=published.revision();
-    publicationGate_.generation=next.generation; publicationGate_.revision=delta.afterRevision;
+    publicationGate_.generation=preparedRuntime.value().projection.generation; publicationGate_.revision=delta.afterRevision;
     publicationGate_.transactionActive=true;
     publicationGate_.observation=&IncrementalRuntimeCoordinator::observePublication;
     publicationGate_.observationContext=this;
     runtimeScene_._stableProjection=runtimeScene_._projection;
+    runtimeScene_._stableLookup=runtimeScene_._lookup;
     binding_._scene._stablePublishedRecords=binding_._scene._publishedRecords;
     binding_._scene._stablePublishedBounds=binding_._scene._publishedBounds;
     binding_._scene._stableInvalidationGeneration=binding_._scene._invalidationGeneration;
     binding_._scene._stablePublishedInvalidation=binding_._scene._publishedInvalidation;
-    pendingGeneration_=next.generation; pendingRevision_=delta.afterRevision;
-    pendingPublication_=RuntimeScene::PreparedPublication{std::move(next)};
+    pendingGeneration_=preparedRuntime.value().projection.generation; pendingRevision_=delta.afterRevision;
+    pendingPublication_=std::move(preparedRuntime.value());
     auto applied=binding_._scene.applyPreparedDelta(std::move(delta),
         &IncrementalRuntimeCoordinator::transactionCheckpoint,this,
         &IncrementalRuntimeCoordinator::publishPending,this);

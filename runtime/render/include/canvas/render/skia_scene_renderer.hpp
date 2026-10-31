@@ -13,8 +13,14 @@ namespace canvas::render { class ImageResourceResolver; }
 namespace canvas::render { class SkiaTextResources; }
 
 namespace canvas::render::internal {
+struct CompactRasterWork final {
+    std::uint64_t allocatedTiles = 0;
+    std::uint64_t allocatedPixels = 0;
+    std::uint64_t compositedPixels = 0;
+};
 void drawCompactStrokeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
-                                std::span<const foundation::InkKnot>,std::uint64_t seed=0);
+                                std::span<const foundation::InkKnot>,std::uint64_t seed=0,
+                                CompactRasterWork* work=nullptr);
 // Disposable scalar distance coverage. The material is evaluated once after
 // stable prefix and replaceable tail have been combined with max coverage.
 void drawCompactCoverageToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
