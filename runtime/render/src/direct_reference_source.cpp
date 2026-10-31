@@ -265,6 +265,7 @@ void encodePropertyValue(CanonicalWriter& out, const semantic::PropertyValue& pr
         } else if constexpr (std::is_same_v<T, semantic::FillStyleValue>) {
             out.byte(static_cast<std::uint8_t>(value.index()));
             if (const auto* fill = std::get_if<semantic::SolidFill>(&value)) out.color(fill->color);
+            if (const auto* fill = std::get_if<semantic::PatternFillV1>(&value)) {out.u64(fill->version);out.color(fill->color);out.byte(static_cast<std::uint8_t>(fill->kind));out.f64(fill->angle);out.f64(fill->gap);out.f64(fill->width);}
         } else if constexpr (std::is_same_v<T, semantic::StrokeStyleValue>) {
             out.byte(static_cast<std::uint8_t>(value.index()));
             if (const auto* stroke = std::get_if<semantic::SolidStroke>(&value)) {
@@ -281,6 +282,9 @@ void encodePropertyValue(CanonicalWriter& out, const semantic::PropertyValue& pr
                     out.f64(dash->offset);
                 }
             }
+        } else if constexpr(std::is_same_v<T,semantic::CornerStyleV1>) {out.u64(value.version);out.f64(value.radius);
+        } else if constexpr(std::is_same_v<T,semantic::SketchStyleV1>) {
+            out.u64(value.version);out.u64(value.seed);out.f64(value.roughness);out.boolean(value.enabled);
         } else {
             out.byte(static_cast<std::uint8_t>(value));
         }

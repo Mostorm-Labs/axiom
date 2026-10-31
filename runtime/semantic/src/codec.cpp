@@ -762,10 +762,13 @@ bool mapPropertyValue(const auditoryworks::axiom::v1::PropertyValue& source, can
     using P=auditoryworks::axiom::v1::PropertyValue;
     auto color = [](const auditoryworks::axiom::v1::ColorValue& s, canvas::semantic::ColorValue& d) { if(!s.has_r()||!s.has_g()||!s.has_b()||!s.has_a()) return false; d={s.r(),s.g(),s.b(),s.a()}; return true; };
     switch(source.value_case()) {
+      case P::kCornerStyle: {const auto& s=source.corner_style();if(!s.has_version()||!s.has_radius())return false;destination=canvas::semantic::CornerStyleV1{s.version(),s.radius()};return true;}
+      case P::kSketchStyle: { const auto& s=source.sketch_style();if(!s.has_version()||!s.has_seed()||!s.has_roughness()||!s.has_enabled())return false;destination=canvas::semantic::SketchStyleV1{s.version(),s.seed(),s.roughness(),s.enabled()};return true; }
       case P::kBoolValue: destination=source.bool_value(); return true;
       case P::kF32Value: destination=source.f32_value(); return true;
       case P::kColorValue: { canvas::semantic::ColorValue d; if(!color(source.color_value(),d)) return false; destination=d; return true; }
       case P::kFillStyle: {
+        if(source.fill_style().has_pattern()){const auto& f=source.fill_style().pattern();canvas::semantic::ColorValue c;if(!f.has_version()||!f.has_color()||!color(f.color(),c)||!f.has_kind()||!f.has_angle()||!f.has_gap()||!f.has_width())return false;destination=canvas::semantic::FillStyleValue{canvas::semantic::PatternFillV1{f.version(),c,static_cast<canvas::semantic::PatternKind>(f.kind()),f.angle(),f.gap(),f.width()}};return true;}
         if(source.fill_style().has_none()) { destination=canvas::semantic::FillStyleValue{canvas::semantic::NoFill{}}; return true; }
         if(source.fill_style().has_solid() && source.fill_style().solid().has_color()) { canvas::semantic::ColorValue d; if(!color(source.fill_style().solid().color(),d)) return false; destination=canvas::semantic::FillStyleValue{canvas::semantic::SolidFill{d}}; return true; }
         return false;

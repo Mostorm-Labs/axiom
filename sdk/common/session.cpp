@@ -227,6 +227,34 @@ class Session::Impl {
     static J colorJson(semantic::ColorValue c) {
         return {c.r, c.g, c.b, c.a};
     }
+    static J appearanceValues(const runtime::AppearanceValues& v) {
+        static constexpr const char* fills[]={"none","solid","hachure","crosshatch"};
+        return {{"enabled",v.enabled},{"roughness",v.roughness},{"seed",v.seed?J(std::to_string(v.seed)):J(nullptr)},{"styleVersion",1},
+          {"fillKind",fills[static_cast<unsigned>(v.fillKind)]},{"fill",colorJson(v.fill)},{"stroke",colorJson(v.stroke)},
+          {"cornerRadius",v.cornerRadius},{"angle",v.angle},{"gap",v.gap},{"hatchWidth",v.hatchWidth},{"strokeWidth",v.strokeWidth},{"strokeEnabled",v.strokeEnabled},{"opacity",v.opacity},{"dash",v.dash},{"dashOffset",v.dashOffset}};
+    }
+    static runtime::AppearancePatch appearancePatch(const J& j) {
+        if(!j.is_object())throw std::invalid_argument("appearance patch");
+        const std::set<std::string> fields{"cornerRadius","enabled","roughness","reseed","fillKind","fill","angle","gap","hatchWidth","stroke","strokeEnabled","strokeWidth","opacity","dash","dashOffset"};
+        for(const auto& f:j.items())if(!fields.contains(f.key()))throw std::invalid_argument("appearance field");
+        const auto number=[](const J& value){if(!value.is_number()||!std::isfinite(value.get<double>()))throw std::invalid_argument("appearance number");return value.get<double>();};
+        runtime::AppearancePatch p;
+        if(j.contains("enabled"))p.enabled=j.at("enabled").get<bool>();
+        if(j.contains("strokeEnabled"))p.strokeEnabled=j.at("strokeEnabled").get<bool>();
+        if(j.contains("reseed"))p.reseed=j.at("reseed").get<bool>();
+        if(j.contains("cornerRadius"))p.cornerRadius=number(j.at("cornerRadius"));
+        if(j.contains("roughness"))p.roughness=number(j.at("roughness"));
+        if(j.contains("angle"))p.angle=number(j.at("angle"));
+        if(j.contains("gap"))p.gap=number(j.at("gap"));
+        if(j.contains("hatchWidth"))p.hatchWidth=number(j.at("hatchWidth"));
+        if(j.contains("strokeWidth"))p.strokeWidth=number(j.at("strokeWidth"));
+        if(j.contains("opacity"))p.opacity=number(j.at("opacity"));
+        if(j.contains("dashOffset"))p.dashOffset=number(j.at("dashOffset"));
+        if(j.contains("fill"))p.fill=color(j.at("fill"));if(j.contains("stroke"))p.stroke=color(j.at("stroke"));
+        if(j.contains("dash")){if(!j.at("dash").is_array()||j.at("dash").size()>64)throw std::invalid_argument("dash");p.dash=std::vector<double>{};for(const auto& n:j.at("dash"))p.dash->push_back(number(n));}
+        if(j.contains("fillKind")){const auto f=j.at("fillKind").get<std::string>();if(f=="none")p.fillKind=runtime::AppearanceFill::kNone;else if(f=="solid")p.fillKind=runtime::AppearanceFill::kSolid;else if(f=="hachure")p.fillKind=runtime::AppearanceFill::kDiagonal;else if(f=="crosshatch")p.fillKind=runtime::AppearanceFill::kCrosshatch;else throw std::invalid_argument("fill kind");}
+        return p;
+    }
     static J propertyJson(const semantic::PropertyValue& value) {
         return std::visit(
             [](const auto& v) -> J {
@@ -238,6 +266,7 @@ class Session::Impl {
                 else if constexpr (std::is_same_v<T, semantic::ColorValue>)
                     return {{"type", "color"}, {"value", colorJson(v)}};
                 else if constexpr (std::is_same_v<T, semantic::FillStyleValue>) {
+                    if(const auto* p=std::get_if<semantic::PatternFillV1>(&v))return {{"type","patternFill"},{"value",{{"version",p->version},{"color",colorJson(p->color)},{"kind",static_cast<unsigned>(p->kind)},{"angle",p->angle},{"gap",p->gap},{"width",p->width}}}};
                     const auto* fill = std::get_if<semantic::SolidFill>(&v);
                     return {{"type", "fill"},
                             {"value", fill ? colorJson(fill->color) : J(nullptr)}};
@@ -258,7 +287,11 @@ class Session::Impl {
                     else
                         j["dash"] = nullptr;
                     return {{"type", "stroke"}, {"value", j}};
-                } else
+                } else if constexpr(std::is_same_v<T,semantic::CornerStyleV1>)
+                    return {{"type","cornerStyle"},{"value",{{"version",v.version},{"radius",v.radius}}}};
+                else if constexpr(std::is_same_v<T,semantic::SketchStyleV1>)
+                    return {{"type","sketchStyle"},{"value",{{"version",v.version},{"seed",std::to_string(v.seed)},{"roughness",v.roughness},{"enabled",v.enabled}}}};
+                else
                     return {{"type",
                              std::is_same_v<T, semantic::BlendModeValue> ? "blend" : "decoration"},
                             {"value", v}};
@@ -278,6 +311,10 @@ class Session::Impl {
             if (v.is_null())
                 return semantic::FillStyleValue{semantic::NoFill{}};
             return semantic::FillStyleValue{semantic::SolidFill{color(v)}};
+        }
+        if(type=="patternFill") {
+            if(!v.is_object()||v.size()!=6)throw std::invalid_argument("pattern fill");
+            return semantic::FillStyleValue{semantic::PatternFillV1{static_cast<std::uint32_t>(unsignedValue(v.at("version"),1)),color(v.at("color")),static_cast<semantic::PatternKind>(unsignedValue(v.at("kind"),2)),v.at("angle").get<double>(),v.at("gap").get<double>(),v.at("width").get<double>()}};
         }
         if (type == "blend")
             return static_cast<semantic::BlendModeValue>(unsignedValue(v, 1));
@@ -458,7 +495,7 @@ class Session::Impl {
             const auto b = runtime::readRuntimeBuildInfo();
             return {{"ok", true},
                     {"apiVersion", 1},
-                    {"features", {{"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}, {"imageExport", 1}, {"table", 1}}},
+                    {"features", {{"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}, {"imageExport", 1}, {"table", 1}, {"sketchStyle",1}, {"patternFill",1}, {"appearancePreview",1}, {"sketchExtended",1}, {"vectorPath",1}, {"roundedCorners",1}, {"fontFallback",2}}},
                     {"sdkVersion", AXIOM_SDK_VERSION},
                     {"sourceRevision", b.sourceRevision},
                     {"dirty", b.dirty},
@@ -905,6 +942,40 @@ class Session::Impl {
                     {"reason", result.reason},
                     {"objectId", hexId(result.objectId)}};
         }
+        if(command=="vectorPath") {
+            const auto action=j.at("action").get<std::string>();const std::set<std::string> allowed=action=="create"?std::set<std::string>{"command","action","objectId","commands","fillRule","x","y"}:std::set<std::string>{"command","action","objectId"};
+            if(action!="create"&&action!="read")throw std::invalid_argument("path action");for(const auto& e:j.items())if(!allowed.contains(e.key()))throw std::invalid_argument("path field");
+            if(action=="create") {
+                runtime::VectorPathCreateRequest request;request.objectId=j.contains("objectId")?rawId(j.at("objectId")):foundation::ObjectId{};if(j.contains("objectId")&&request.objectId.isZero())throw std::invalid_argument("zero object id");request.transform.tx=j.value("x",0.);request.transform.ty=j.value("y",0.);
+                const auto rule=j.value("fillRule",std::string("nonzero"));if(rule!="nonzero"&&rule!="evenodd")throw std::invalid_argument("fill rule");request.geometry.fill_rule=rule=="evenodd"?semantic::FillRule::kEvenOdd:semantic::FillRule::kNonZero;
+                const auto point=[](const J& value){if(!value.is_array()||value.size()!=2)throw std::invalid_argument("path point tuple");const auto p=value.get<std::array<double,2>>();if(!std::isfinite(p[0])||!std::isfinite(p[1]))throw std::invalid_argument("path point");return semantic::Vec2{p[0],p[1]};};
+                const auto& commands=j.at("commands");if(!commands.is_array()||commands.empty()||commands.size()>4096)throw std::invalid_argument("path commands");
+                for(const auto& c:commands){if(!c.is_object())throw std::invalid_argument("path command");const auto op=c.at("op").get<std::string>();const std::set<std::string> fields=op=="close"?std::set<std::string>{"op"}:op=="quad"?std::set<std::string>{"op","control","point"}:op=="cubic"?std::set<std::string>{"op","control1","control2","point"}:std::set<std::string>{"op","point"};for(const auto& e:c.items())if(!fields.contains(e.key()))throw std::invalid_argument("path command field");
+                    if(op=="move")request.geometry.commands.push_back(semantic::MoveTo{point(c.at("point"))});else if(op=="line")request.geometry.commands.push_back(semantic::LineTo{point(c.at("point"))});else if(op=="quad")request.geometry.commands.push_back(semantic::QuadTo{point(c.at("control")),point(c.at("point"))});else if(op=="cubic")request.geometry.commands.push_back(semantic::CubicTo{point(c.at("control1")),point(c.at("control2")),point(c.at("point"))});else if(op=="close")request.geometry.commands.push_back(semantic::ClosePath{});else throw std::invalid_argument("path op");}
+                const auto result=facade().createVectorPath(request);if(!result.applied)return error(result.error==runtime::VectorPathError::kBusy?"BUSY":result.error==runtime::VectorPathError::kInvalid?"INVALID_ARGUMENT":"REJECTED");return {{"ok",true},{"objectId",hexId(result.objectId)},{"generation",std::to_string(result.generation)}};
+            }
+            const auto result=facade().readVectorPath(j.contains("objectId")?rawId(j.at("objectId")):foundation::ObjectId{});J commands=J::array();
+            const auto p=[](semantic::Vec2 v){return J::array({v.x,v.y});};for(const auto& command:result.geometry.commands)commands.push_back(std::visit([&](const auto& c)->J{using T=std::decay_t<decltype(c)>;if constexpr(std::is_same_v<T,semantic::MoveTo>)return {{"op","move"},{"point",p(c.point)}};else if constexpr(std::is_same_v<T,semantic::LineTo>)return {{"op","line"},{"point",p(c.end)}};else if constexpr(std::is_same_v<T,semantic::QuadTo>)return {{"op","quad"},{"control",p(c.control)},{"point",p(c.end)}};else if constexpr(std::is_same_v<T,semantic::CubicTo>)return {{"op","cubic"},{"control1",p(c.control1)},{"control2",p(c.control2)},{"point",p(c.end)}};else return {{"op","close"}};},command));
+            return {{"ok",true},{"value",{{"available",result.available},{"objectId",hexId(result.objectId)},{"fillRule",result.geometry.fill_rule==semantic::FillRule::kEvenOdd?"evenodd":"nonzero"},{"commands",commands},{"transform",{result.transform.a,result.transform.b,result.transform.c,result.transform.d,result.transform.tx,result.transform.ty}},{"appearance",appearanceValues(result.appearance)},{"generation",std::to_string(result.generation)}}}};
+        }
+        if(command=="appearance") {
+            const auto action=j.at("action").get<std::string>();
+            const std::map<std::string,std::set<std::string>> fields{{"read",{}},{"readDefaults",{}},{"patch",{"patch","stamp","eligible"}},{"defaults",{"patch"}},{"begin",{"stamp","eligible"}},{"preview",{"token","patch"}},{"commit",{"token"}},{"cancel",{"token"}}};
+            const auto accepted=fields.find(action);if(accepted==fields.end())throw std::invalid_argument("appearance action");
+            for(const auto& f:j.items())if(f.key()!="command"&&f.key()!="action"&&!accepted->second.contains(f.key()))throw std::invalid_argument("appearance command");
+            if(action=="read"||action=="readDefaults"){
+                const auto s=facade().readAppearance(action=="readDefaults");J objects=J::array();for(const auto& o:s.objects)objects.push_back({{"objectId",hexId(o.object)},{"values",appearanceValues(o.values)}});
+                return {{"ok",true},{"value",{{"available",s.available},{"writable",s.writable},{"stamp",stampJson(s.stamp)},{"eligible",ids(s.eligible)},{"excluded",ids(s.excluded)},{"fillEligible",ids(s.fillEligible)},{"fillExcluded",ids(s.fillExcluded)},{"strokeEligible",ids(s.strokeEligible)},{"strokeExcluded",ids(s.strokeExcluded)},{"radiusEligible",ids(s.radiusEligible)},{"radiusExcluded",ids(s.radiusExcluded)},{"values",appearanceValues(s.values)},{"mixed",s.mixed},{"objects",objects}}}};
+            }
+            const std::map<std::string,runtime::AppearanceAction> actions{{"patch",runtime::AppearanceAction::kPatch},{"defaults",runtime::AppearanceAction::kDefaults},{"begin",runtime::AppearanceAction::kBegin},{"preview",runtime::AppearanceAction::kPreview},{"commit",runtime::AppearanceAction::kCommit},{"cancel",runtime::AppearanceAction::kCancel}};
+            const auto a=actions.find(action);if(a==actions.end())throw std::invalid_argument("appearance action");runtime::AppearanceRequest r;r.action=a->second;
+            if(j.contains("patch"))r.patch=appearancePatch(j.at("patch"));
+            if(action=="patch"||action=="begin"){r.stamp=parseStamp(j.at("stamp"));if(!j.at("eligible").is_array()||j.at("eligible").size()>65535)throw std::invalid_argument("appearance roots");for(const auto& id:j.at("eligible"))r.eligible.push_back(rawId(id));}
+            if(action=="preview"||action=="commit"||action=="cancel"){try{const auto& t=j.at("token");if(!t.is_object()||t.size()!=2)throw std::invalid_argument("appearance token");r.token={parseStamp(t.at("stamp")),decimal(t.at("serial"))};}catch(...){runtime::AppearanceRequest cancel;cancel.action=runtime::AppearanceAction::kCancel;(void)facade().appearanceCommand(cancel);throw;}}
+            const auto result=facade().appearanceCommand(r);
+            if(!result.applied)return error(result.error==runtime::AppearanceError::kStale?"STALE_APPEARANCE":result.error==runtime::AppearanceError::kInvalid?"INVALID_ARGUMENT":result.error==runtime::AppearanceError::kBusy?"BUSY":"REJECTED");
+            return {{"ok",true},{"applied",true},{"changed",result.changed},{"generation",std::to_string(result.generation)},{"token",{{"stamp",stampJson(result.token.stamp)},{"serial",std::to_string(result.token.serial)}}}};
+        }
         if(command=="table"){
             const auto action=j.at("action").get<std::string>();
             const std::map<std::string,runtime::TableAction> actions{{"create",runtime::TableAction::kCreate},{"select",runtime::TableAction::kSelect},{"insertRow",runtime::TableAction::kInsertRow},{"insertColumn",runtime::TableAction::kInsertColumn},{"removeRow",runtime::TableAction::kRemoveRow},{"removeColumn",runtime::TableAction::kRemoveColumn},{"rowHeight",runtime::TableAction::kRowHeight},{"columnWidth",runtime::TableAction::kColumnWidth},{"cellStyle",runtime::TableAction::kCellStyle},{"gridStyle",runtime::TableAction::kGridStyle},{"next",runtime::TableAction::kNextCell},{"previous",runtime::TableAction::kPreviousCell}};
@@ -918,7 +989,7 @@ class Session::Impl {
                 for(const auto& a:s.content.rows)rows.push_back({{"id",hexId(a.id)},{"size",a.size}});
                 for(const auto& a:s.content.columns)columns.push_back({{"id",hexId(a.id)},{"size",a.size}});
                 for(const auto& cell:s.content.cells){std::string text;J format=J::object();bool mixed=false;std::optional<semantic::TextStyle> first;
-                    bool firstParagraph=true;for(const auto& p:cell.text.document.paragraphs){if(!firstParagraph)text+="\n";firstParagraph=false;for(const auto& run:p.runs){text+=run.text;if(first&&*first!=run.style)mixed=true;if(!first){first=run.style;runtime::TextFormatPatch patch;patch.color=std::array<float,4>{run.style.color.r,run.style.color.g,run.style.color.b,run.style.color.a};patch.fontSize=run.style.font_size;patch.bold=run.style.weight>=600;patch.alignment=static_cast<unsigned>(p.style.alignment);format=jsonFormat(patch);}}}
+                    bool firstParagraph=true;for(const auto& p:cell.text.document.paragraphs){if(!firstParagraph)text+="\n";firstParagraph=false;for(const auto& run:p.runs){text+=run.text;if(first&&*first!=run.style)mixed=true;if(!first){first=run.style;runtime::TextFormatPatch patch;patch.color=std::array<float,4>{run.style.color.r,run.style.color.g,run.style.color.b,run.style.color.a};patch.fontSize=run.style.font_size;if(run.style.font_resource_id)patch.font=run.style.font_resource_id->value;patch.bold=run.style.weight>=600;patch.alignment=static_cast<unsigned>(p.style.alignment);format=jsonFormat(patch);}}}
                     cells.push_back({{"text",text},{"fill",{cell.fill.r,cell.fill.g,cell.fill.b,cell.fill.a}},{"format",format},{"mixedFormat",mixed}});}
                 return {{"ok",true},{"value",{{"available",true},{"editable",s.editable},{"objectId",hexId(s.object)},{"rowId",hexId(s.row)},{"columnId",hexId(s.column)},{"rows",rows},{"columns",columns},{"cells",cells},{"grid",{{"version",s.content.grid.version},{"color",{s.content.grid.color.r,s.content.grid.color.g,s.content.grid.color.b,s.content.grid.color.a}},{"width",s.content.grid.width}}},{"generation",std::to_string(s.generation)}}}};
             }
@@ -1394,7 +1465,7 @@ class Session::Impl {
                 auto decoded = semantic::SnapshotCodec::decode(
                     outputBytes,
                     semantic::SnapshotCapability::
-                        kAllWithTableV1);
+                        kAllWithRoundedAndFontFallbackV1);
                 if (!decoded.ok())
                     return error("SNAPSHOT_DECODE_FAILED");
                 result["checkpointDigest"] = decoded.snapshot->checkpoint_digest;

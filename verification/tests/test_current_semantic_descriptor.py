@@ -15,6 +15,14 @@ DIRECTORY = ROOT / "schema/axiom/v1/descriptor"
 
 
 class CurrentSemanticDescriptorTest(unittest.TestCase):
+    def assert_historical_enums(self, original, current):
+        before={e.name:e for e in original.enums};after={e.name:e for e in current.enums}
+        self.assertEqual(set(after)-set(before), {"PatternKind"} if original.name.endswith("/paint.proto") else set())
+        for name, enum in before.items():
+            expected=enum.values+(("PROPERTY_VALUE_SKETCH_STYLE_V1",8),("PROPERTY_VALUE_CORNER_STYLE_V1",9)) if name=="PropertyValueKind" else enum.values
+            self.assertEqual(after[name].values,expected)
+        if "PatternKind" in after:self.assertEqual(after["PatternKind"].values,(("PATTERN_INVALID",0),("PATTERN_DIAGONAL",1),("PATTERN_CROSSHATCH",2)))
+
     def test_historical_freeze_retains_its_exact_identity(self):
         self.assertEqual(
             contract.validate_descriptor_hash(ROOT, "descriptor.lock"),
@@ -31,7 +39,7 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
         for name, original in before.items():
             with self.subTest(file=name):
                 current = after[name]
-                self.assertEqual(original.enums, current.enums)
+                self.assert_historical_enums(original,current)
                 messages = {message.name: message for message in current.messages}
                 for message in original.messages:
                     self.assertIn(message.name, messages)
@@ -54,6 +62,7 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
                     if fields:
                         extra_fields[(Path(name).name, message.name)] = {field.number for field in fields}
         self.assertEqual(new_messages, {
+            "paint.proto": {"PatternFillV1", "SketchStyleV1", "CornerStyleV1"},
             "document_background.proto": {"DocumentBackgroundV1", "SetDocumentBackgroundOp"},
             "table.proto": {"TableAxis", "TableCell", "TableGridStyle", "TableContent", "EditTableOp"},
             "section.proto": {"SectionContent"},
@@ -65,11 +74,13 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
             },
             "rich_text.proto": {"RichTextLayoutV2", "RichTextStateV2", "SetRichTextLayoutStep", "RestoreRichTextStateStep"},
             "operation.proto": {"ResourceExpectation", "ReactivateResource", "UpdateResourceManifestOp"},
-            "snapshot.proto": {"ImageResourceMetadataV1", "FontResourceMetadataV1",
+            "snapshot.proto": {"FontResourceMetadataV2", "ImageResourceMetadataV1", "FontResourceMetadataV1",
                 "BrushResourceMetadataV1", "ResourceManifestEntry", "ResourceManifestTombstone",
                 "ResourceManifest", "RecoveryFrontierV1", "CapabilityRequirementsV1"},
         })
         self.assertEqual(extra_fields, {
+            ("paint.proto", "FillStyleValue"): {3},
+            ("property.proto", "PropertyValue"): {8,9},
             ("operation.proto", "OperationPayload"): {16, 17, 18, 19, 20},
             ("object.proto", "ObjectContent"): {12, 13},
             ("object.proto", "ShapeContent"): {4},  # Existing FC02 label; accepted M01 BASE-01 source alignment.
@@ -88,14 +99,14 @@ class CurrentSemanticDescriptorTest(unittest.TestCase):
             "auditoryworks/axiom/v1/document_background.proto", "auditoryworks/axiom/v1/table.proto"})
         # Preserve the independently accepted FC08 artifact; compare every
         # original field and enum, allowing only the explicitly accepted tags.
-        allowed = {("operation.proto", "OperationPayload"): {19, 20},
+        allowed = {("paint.proto", "FillStyleValue"): {3}, ("property.proto", "PropertyValue"): {8,9}, ("operation.proto", "OperationPayload"): {19, 20},
                    ("object.proto", "ObjectContent"): {13},
                    ("snapshot.proto", "DocumentSnapshot"): {11}}
         for filename, original in expected.items():
             current = actual[filename]
-            self.assertEqual(original.enums, current.enums)
+            self.assert_historical_enums(original,current)
             messages = {m.name: m for m in current.messages}
-            self.assertEqual(set(messages), {m.name for m in original.messages})
+            self.assertEqual(set(messages)-{m.name for m in original.messages}, {"PatternFillV1","SketchStyleV1","CornerStyleV1"} if filename.endswith("/paint.proto") else {"FontResourceMetadataV2"} if filename.endswith("/snapshot.proto") else set())
             for message in original.messages:
                 self.assertTrue(set(message.fields) <= set(messages[message.name].fields))
                 additions = set(messages[message.name].fields) - set(message.fields)

@@ -8,6 +8,10 @@ add_library(canvas_runtime_scene STATIC
     src/bounds_system.cpp
     src/hierarchy_geometry.cpp
     src/reference_geometry.cpp
+    src/sketch_geometry.cpp
+    src/sketch_extended_geometry.cpp
+    src/corner_geometry.cpp
+    src/rounded_sketch_geometry.cpp
     src/derived_geometry.cpp
     src/connector_router.cpp
     src/scene_impact.cpp
@@ -53,4 +57,22 @@ endif()
 if(CANVAS_RF01_BUILD_TESTS AND BUILD_TESTING)
     add_subdirectory(testing)
     add_subdirectory(tests)
+endif()
+
+if(NOT MSVC)
+  set_property(SOURCE src/sketch_geometry.cpp src/sketch_extended_geometry.cpp
+    src/corner_geometry.cpp
+    src/rounded_sketch_geometry.cpp APPEND PROPERTY COMPILE_OPTIONS -ffp-contract=off)
+endif()
+
+add_executable(axiom_sketch_path_probe tools/sketch_path_probe.cpp)
+target_link_libraries(axiom_sketch_path_probe PRIVATE canvas_runtime_scene)
+if(EMSCRIPTEN)
+  target_link_options(axiom_sketch_path_probe PRIVATE -sENVIRONMENT=node -sEXIT_RUNTIME=1 -sALLOW_MEMORY_GROWTH=1)
+endif()
+
+add_executable(axiom_corner_path_probe tools/corner_path_probe.cpp)
+target_link_libraries(axiom_corner_path_probe PRIVATE canvas_runtime_scene)
+if(EMSCRIPTEN)
+  target_link_options(axiom_corner_path_probe PRIVATE -sENVIRONMENT=node -sEXIT_RUNTIME=1 -sALLOW_MEMORY_GROWTH=1)
 endif()

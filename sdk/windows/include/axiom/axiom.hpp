@@ -407,11 +407,15 @@ class Runtime final {
     Json readConnector(std::string id) {
         return connector({{"action", "read"}, {"objectId", id}}).at("value");
     }
+    Json appearanceCommand(Json args) { return invoke("appearance",std::move(args)).value; }
+    Json readAppearance(bool defaults=false) {return appearanceCommand({{"action",defaults?"readDefaults":"read"}}).at("value");}
     Json table(Json args) { return invoke("table",std::move(args)).value; }
     Json readTable(std::string id = {}) { Json args={{"action","read"}};if(!id.empty())args["objectId"]=id;return table(std::move(args)).at("value"); }
     Json stickyOptions(Json args) {
         return invoke("sticky", std::move(args)).value;
     }
+    Json createVectorPath(Json args) {args["action"]="create";return invoke("vectorPath",std::move(args)).value;}
+    Json readVectorPath(std::string id={}) {Json args={{"action","read"}};if(!id.empty())args["objectId"]=id;return invoke("vectorPath",std::move(args)).value.at("value");}
     Json createSticky(Json args) {
         args["action"] = "create";
         return stickyOptions(args);

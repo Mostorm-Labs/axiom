@@ -112,3 +112,34 @@ The caller-side wrapper provides `table(Json)` and `readTable(id)`; command call
 must include the generation observed from readback. No new DLL export, internal
 object handle or dependency header is required. Windows device/IME acceptance is
 separate from the local Web and native tests.
+
+
+Sketch appearance v1 uses the shared Session `appearance` vocabulary. The caller-side
+wrapper has `appearanceCommand(Json)` and `readAppearance(defaults=false)`; no new DLL export,
+C++ Runtime object or rendering handle crosses the ABI. Actions are read/readDefaults,
+patch/defaults, begin/preview/commit/cancel. Forward the full eight-element decimal
+stamp array and explicit eligible IDs for patch/begin; preserve both stamp and decimal
+serial in preview/commit/cancel tokens. Readbacks/buffers follow the existing owned JSON
+and C buffer rules. Rejections do not imply a commit. See the Web README for parameters,
+applicability and seed/session lifetime. Web/native shared-path checks do not qualify
+Windows DLL packaging or native HWND/IME behavior; those require a Windows build.
+
+
+### Sketch v1 extended object capability
+
+`readBuildInfo().features.sketchExtended === 1` / shared Session feature `sketchExtended: 1` extends appearance to VectorPath, Table grids and Section document boundaries. `strokeEligible`/`strokeExcluded` and `fillEligible`/`fillExcluded` report per-parameter applicability. Table grid paint remains exclusively in `table.setGridStyle`; generic stroke/fill patches reject when all selected targets are inapplicable. Group is not recursive.
+
+`createVectorPath({commands, fillRule?, x?, y?, objectId?})` returns `{objectId, generation}` after shared owner application; omitted identity is allocated by Runtime. Commands are owned value tuples (`move`/`line`: `point`, `quad`: `control`/`point`, `cubic`: `control1`/`control2`/`point`, `close`), at most 4096, finite coordinates with absolute value ≤1e7, exact two-number points. Fill rule is `nonzero` or `evenodd`. `readVectorPath(objectId?)` returns owned canonical commands, transform, appearance and generation, never a mutable path or private engine handle. Windows caller-side equivalents take/return owned Json through the unchanged C transport ABI.
+
+New paths always retain versioned appearance metadata even with sketch disabled; canonical curve geometry/fill rule are preserved. Open outlines are not implicitly closed. Snapshot reader capability `extended-sketch-v1` uses the additive internal bit 256 (current full profile 511); older profile 255 rejects these object extensions, including disabled metadata. SDK version 0.1.0 and styleVersion 1 are distinct. Preview/patch/error/thread/lifetime rules remain those of the shared appearance owner. This local development verification does not establish Windows DLL ABI qualification.
+
+Windows keeps the existing `appearance(Json)` creation-palette control. Versioned object patch/session requests use `appearanceCommand(Json)` with `readAppearance(bool defaults=false)`, avoiding an overload that differs only by return type.
+
+
+### Rounded corners / handwriting resources
+
+Appearance values/patches add `cornerRadius` in object-local units [0,16384], independent of roughness. Radius0 clears the canonical property. Rectangle/triangle and Connector support it; `radiusEligible/radiusExcluded` report applicability, with mixed values only across eligible roots. The requested radius is clamped geometrically to prevent overlapping fillets. Existing preview/token/History semantics apply, and creation defaults materialize only on supported object kinds. Connector route/endpoints stay canonical; only its displayed interior bends round within obstacle constraints. Snapshot requires `rounded-corners-v1` (bit512).
+
+The application font catalog adds Excalifont and Xiaolai v3.126 under OFL1.1. Font selection still uses owned resource IDs through existing `text.format({font})` and Table cell format. Excalifont carries explicit one-hop Xiaolai fallback in font metadata schema/layout version2; bytes/hashes/resource revisions remain in the existing resource owner. Fallback is shared C++ shaping/rendering, never browser/OS font selection or canonical run rewriting. Missing/corrupt bytes or unsupported metadata reject/diagnose explicitly. Snapshot requires `font-fallback-v2` (bit1024); full internal reader profile2047. Old v1 font resources and ordinary API lifetime/thread rules are unchanged.
+
+The Demo has tools, appearance properties, text/object properties, then board tools. Create/edit/select text to choose the font; the selector is not an implicit mutation of unrelated objects or global settings. Assets keep original upstream names and copyright; UI display labels can be separate. Renaming/modifying a font does not remove its OFL obligations or transfer upstream design ownership. SDK0.1.0 remains an unpublished candidate; Windows DLL ABI requires separate Windows evidence.

@@ -1,4 +1,5 @@
 #include "canvas/render/selection_region_geometry.hpp"
+#include "canvas/scene/sketch_geometry.hpp"
 #if CANVAS_RENDER_HAS_SKIA
 #include "skia_geometry_internal.hpp"
 #include "canvas/render/brush_outline_skia_path.hpp"
@@ -24,15 +25,18 @@ SkPath stroke(const SkPath& path,double width,SkPaint::Cap cap=SkPaint::kButt_Ca
 bool unite(SkPath& a,const SkPath& b){auto r=Op(a,b,kUnion_SkPathOp);if(!r)return false;a=*r;return true;}
 bool fillVisible(const RuntimeSceneRecord& r) {
     for(const auto& p:r.properties.entries)if(p.field_id==0x100U)if(const auto* v=std::get_if<semantic::FillStyleValue>(&p.value)) {
-        const auto* solid=std::get_if<semantic::SolidFill>(v);return solid&&solid->color.a>0;
+        const auto* solid=std::get_if<semantic::SolidFill>(v);if(const auto* pattern=std::get_if<semantic::PatternFillV1>(v))return pattern->color.a>0;return solid&&solid->color.a>0;
     }
-    return true;
+    return r.kind!=semantic::ObjectKind::kVectorPath || std::none_of(r.properties.entries.begin(),r.properties.entries.end(),[](const auto& p){return p.field_id==0x102U;});
 }
-Hit geometry(const RuntimeSceneRecord& r,SkPath& path) {
+Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decorations) {
     switch(r.kind) {
     case semantic::ObjectKind::kVectorPath: {
         const auto* c=std::get_if<semantic::VectorPathContent>(&r.content);if(!c)return Hit::kInvalid;
-        if(fillVisible(r))path=internal::semanticPath(c->geometry);break;
+        const auto body=internal::semanticPath(c->geometry);
+        if(fillVisible(r))path=body;
+        for(const auto& e:r.properties.entries)if(e.field_id==0x101U)if(const auto* v=std::get_if<semantic::StrokeStyleValue>(&e.value))if(const auto* s=std::get_if<semantic::SolidStroke>(v);s&&s->color.a>0&&s->width>0)if(!unite(path,skpathutils::FillPathWithPaint(body,internal::geometryStrokePaint(*s))))return Hit::kInvalid;
+        break;
     }
     case semantic::ObjectKind::kVectorStroke: {
         if(const auto* c=std::get_if<semantic::BrushStrokeContent>(&r.content)) {
@@ -74,6 +78,11 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path) {
             const auto* solid=std::get_if<semantic::SolidStroke>(v);if(!solid)return Hit::kMiss;style=*solid;
         }
         if(style.width<=0||style.color.a<=0)return Hit::kMiss;
+        if(std::any_of(r.properties.entries.begin(),r.properties.entries.end(),[](const auto& e){return e.field_id==0x103U;})) {
+            const auto rounded=scene::sketchGeometry(r.content,r.properties,g);if(!rounded)return Hit::kInvalid;
+            path=stroke(internal::semanticPath(rounded->outline),style.width*rounded->outlineWidthScale);
+            break;
+        }
         for(std::size_t i=1;i<g->route.size();++i) {
             SkPathBuilder b;b.moveTo(g->route[i-1].x,g->route[i-1].y);b.lineTo(g->route[i].x,g->route[i].y);
             if(!unite(path,skpathutils::FillPathWithPaint(b.detach(),internal::geometryStrokePaint(style))))return Hit::kInvalid;
@@ -91,6 +100,13 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path) {
             if(r.textLayout&&i<r.textLayout->tableCells.size())if(const auto& layout=r.textLayout->tableCells[i])for(const auto& line:layout->lines)if(line.utf8End>line.utf8Start){const auto& b=line.bounds;const auto text=rectangle(area[0]+6+b.left,area[1]+6+b.top,b.right-b.left,b.bottom-b.top);const auto clipped=Op(text,cell,kIntersect_SkPathOp);if(!clipped||!unite(path,*clipped))return Hit::kInvalid;}
         }
         if(t->grid.width>0&&t->grid.color.a>0){const auto width=semantic::tableWidth(*t),height=semantic::tableHeight(*t);double x=0,y=0;SkPathBuilder lines;lines.moveTo(0,0);lines.lineTo(0,f(height));for(const auto& a:t->columns){x+=a.size;lines.moveTo(f(x),0);lines.lineTo(f(x),f(height));}lines.moveTo(0,0);lines.lineTo(f(width),0);for(const auto& a:t->rows){y+=a.size;lines.moveTo(0,f(y));lines.lineTo(f(width),f(y));}if(!unite(path,stroke(lines.detach(),t->grid.width)))return Hit::kInvalid;}
+        break;
+    }
+    case semantic::ObjectKind::kSection: {
+        const auto* c=std::get_if<semantic::SectionContent>(&r.content);if(!c)return Hit::kInvalid;
+        // Keep the established whole-boundary acquisition area. Membership and
+        // header semantics still use the stable authored rectangle.
+        path=rectangle(c->boundary.x,c->boundary.y,c->boundary.width,c->boundary.height);
         break;
     }
     case semantic::ObjectKind::kImage: {
@@ -121,7 +137,12 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path) {
         else if(c->shape_kind==2)b.addOval(rect(0,0,c->width,c->height));
         else if(c->shape_kind==3){b.moveTo(f(c->width/2),0);b.lineTo(f(c->width),f(c->height));b.lineTo(0,f(c->height));b.close();}
         else return Hit::kUnsupported;
-        const auto shape=b.detach();if(fillVisible(r))path=shape;
+        // Preserve the established Skia oval/conic representation for unrounded shapes.
+        // Replacing it with an equivalent cubic ellipse can make a union with
+        // particular rough strokes fail in Skia PathOps.
+        const bool rounded=std::any_of(r.properties.entries.begin(),r.properties.entries.end(),[](const auto& p){return p.field_id==0x103U;});
+        const auto derived=rounded?scene::sketchGeometry(r.content,r.properties):nullptr;
+        const auto shape=derived?internal::semanticPath(derived->body):b.detach();if(fillVisible(r))path=shape;
         for(const auto& p:r.properties.entries)if(p.field_id==0x101U)if(const auto* v=std::get_if<semantic::StrokeStyleValue>(&p.value))
             if(const auto* solid=std::get_if<semantic::SolidStroke>(v);solid&&solid->width>0&&solid->color.a>0)
                 if(!unite(path,skpathutils::FillPathWithPaint(shape,internal::geometryStrokePaint(*solid))))return Hit::kInvalid;
@@ -149,6 +170,17 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path) {
     }
     default:return Hit::kUnsupported;
     }
+    if(const auto sketch=scene::sketchGeometry(r.content,r.properties,std::get_if<scene::ConnectorGeometry>(&r.derivedGeometry))) {
+        double width=r.kind==semantic::ObjectKind::kConnector?4:r.kind==semantic::ObjectKind::kSection?1:0;
+        if(const auto* table=std::get_if<semantic::TableContent>(&r.content))width=table->grid.color.a>0?table->grid.width:0;
+        for(const auto& e:r.properties.entries)if(const auto* v=std::get_if<semantic::StrokeStyleValue>(&e.value)){if(const auto* s=std::get_if<semantic::SolidStroke>(v))width=s->color.a>0?s->width:0;else width=0;}
+        // The visible set is a union, but acquisition need not first Boolean-union
+        // a complex random outline with its body. Skia PathOps can reject that
+        // intermediate union even when both parts are individually valid.
+        const bool roundedConnector=r.kind==semantic::ObjectKind::kConnector&&std::any_of(r.properties.entries.begin(),r.properties.entries.end(),[](const auto& p){return p.field_id==0x103U;});
+        if(width>0&&!roundedConnector)decorations.push_back(stroke(internal::semanticPath(sketch->outline),width));
+        if(width>0&&!sketch->arrowFill.commands.empty())decorations.push_back(internal::semanticPath(sketch->arrowFill));
+    }
     for(const auto& mask:r.eraseMasks) {
         SkPath eraser;
         if(const auto* filled=std::get_if<semantic::FilledPathMask>(&mask.geometry))eraser=internal::semanticPath(filled->path);
@@ -156,9 +188,11 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path) {
             SkPathBuilder b;b.moveTo(f(s.p0.position.x),f(s.p0.position.y));b.cubicTo(f(s.control1.x),f(s.control1.y),f(s.control2.x),f(s.control2.y),f(s.p1.position.x),f(s.p1.position.y));
             if(!unite(eraser,stroke(b.detach(),2*std::max(s.p0.radius,s.p1.radius),SkPaint::kRound_Cap)))return Hit::kInvalid;
         }
-        auto remaining=Op(path,eraser,kDifference_SkPathOp);if(!remaining)return Hit::kInvalid;path=*remaining;
+        const auto subtract=[&](SkPath& candidate){auto remaining=Op(candidate,eraser,kDifference_SkPathOp);if(!remaining)return false;candidate=*remaining;return true;};
+        if(!subtract(path))return Hit::kInvalid;
+        for(auto& decoration:decorations)if(!subtract(decoration))return Hit::kInvalid;
     }
-    return path.isFinite()?Hit::kHit:Hit::kInvalid;
+    return path.isFinite()&&std::all_of(decorations.begin(),decorations.end(),[](const auto& p){return p.isFinite();})?Hit::kHit:Hit::kInvalid;
 }
 }
 SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord& record,std::span<const foundation::WorldPoint> region) noexcept {
@@ -174,18 +208,26 @@ SelectionGeometryHit intersectVisibleSelectionGeometry(const RuntimeSceneRecord&
             if(i==0)regionPath.moveTo(lx,ly);else regionPath.lineTo(lx,ly);
         }
         regionPath.close();auto selection=regionPath.detach();SkPath visible;
-        const auto status=geometry(record,visible);if(status!=Hit::kHit)return status;
-        if(visible.isEmpty())return Hit::kMiss;
-        // Include boundary contact within the Skia path kernel's local precision.
-        // This is a narrow 1e-4 local-unit tolerance, never an AABB fallback.
-        const auto overlap=Op(visible,selection,kIntersect_SkPathOp);
-        if(!overlap)return Hit::kInvalid;
-        if(!overlap->isEmpty())return Hit::kHit;
-        // Do not union a subpixel stroke into an even-odd selection: Skia may
-        // collapse its interior. Test the narrow contact ring separately.
-        const auto contact=Op(visible,stroke(selection,2e-4),kIntersect_SkPathOp);
-        if(!contact)return Hit::kInvalid;
-        return contact->isEmpty()?Hit::kMiss:Hit::kHit;
+        std::vector<SkPath> decorations;decorations.reserve(2);
+        const auto status=geometry(record,visible,decorations);if(status!=Hit::kHit)return status;
+        const auto intersects=[&](const SkPath& part){
+            if(part.isEmpty())return Hit::kMiss;
+            const auto overlap=Op(part,selection,kIntersect_SkPathOp);
+            if(!overlap)return Hit::kInvalid;
+            if(!overlap->isEmpty())return Hit::kHit;
+            // Preserve the existing narrow local contact tolerance, independently
+            // of each part's winding/fill rule. No AABB hit fallback.
+            const auto contact=Op(part,stroke(selection,2e-4),kIntersect_SkPathOp);
+            if(!contact)return Hit::kInvalid;
+            return contact->isEmpty()?Hit::kMiss:Hit::kHit;
+        };
+        // A proven intersection with any visible component proves intersection
+        // with their union. Do not ask a complex irrelevant outline to invalidate
+        // a filled-body hit. Unsupported/missing layout was rejected by geometry.
+        const auto hit=intersects(visible);if(hit==Hit::kHit)return hit;
+        bool invalid=hit==Hit::kInvalid;
+        for(const auto& part:decorations){const auto next=intersects(part);if(next==Hit::kHit)return next;invalid=invalid||next==Hit::kInvalid;}
+        return invalid?Hit::kInvalid:Hit::kMiss;
     } catch(const std::bad_alloc&){return Hit::kInvalid;}
 }
 }

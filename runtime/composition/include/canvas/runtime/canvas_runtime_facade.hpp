@@ -65,6 +65,10 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   [[nodiscard]] StickyCommandReceipt createSticky(const StickyCreateRequest&) override;
   [[nodiscard]] ConnectorSnapshot readSelectedConnector() const override;
   [[nodiscard]] ConnectorSnapshot readConnectorState(semantic::ObjectId) const override;
+  [[nodiscard]] VectorPathResult createVectorPath(const VectorPathCreateRequest&) override;
+  [[nodiscard]] VectorPathSnapshot readVectorPath(foundation::ObjectId = {}) const override;
+  [[nodiscard]] AppearanceSnapshot readAppearance(bool = false) const override;
+  [[nodiscard]] AppearanceResult appearanceCommand(const AppearanceRequest&) override;
   [[nodiscard]] TableResult tableCommand(const TableRequest&) override;
   [[nodiscard]] TableSnapshot readTable(foundation::ObjectId = {}) const override;
   [[nodiscard]] StickySnapshot readSelectedSticky() const override;

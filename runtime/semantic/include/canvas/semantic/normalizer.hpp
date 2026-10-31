@@ -47,5 +47,6 @@ struct NormalizeResult final {
 // The same accepted defaults that canonical normalization elides from a bag.
 // Callers must check the field's applicability to the object's kind separately.
 [[nodiscard]] std::optional<PropertyValue> propertyDefaultValue(std::uint32_t fieldId) noexcept;
+[[nodiscard]] std::optional<PropertyValue> propertyDefaultValue(ObjectKind, std::uint32_t fieldId) noexcept;
 
 } // namespace canvas::semantic

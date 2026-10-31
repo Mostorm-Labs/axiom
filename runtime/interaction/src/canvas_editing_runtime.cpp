@@ -67,6 +67,9 @@ bool validAppearance(const runtime::CanvasAppearance& a) {
   return validColor(a.fill)&&validColor(a.stroke)&&std::isfinite(a.strokeWidth)&&
       a.strokeWidth>0&&std::isfinite(a.opacity)&&a.opacity>=0&&a.opacity<=1;
 }
+bool usesDerivedAppearance(const semantic::PropertyBag& bag) {
+  for(const auto& p:bag.entries){if(p.field_id==0x102U||p.field_id==0x103U)return true;if(const auto* fill=std::get_if<semantic::FillStyleValue>(&p.value);fill&&std::holds_alternative<semantic::PatternFillV1>(*fill))return true;}return false;
+}
 semantic::PropertyBag appearanceProperties(const runtime::CanvasAppearance& a,bool shape) {
   const auto color=[](runtime::RgbaColor c){return semantic::ColorValue{c.r,c.g,c.b,c.a};};
   semantic::PropertyBag bag;
@@ -101,10 +104,14 @@ std::string sceneContentStamp(const canvas::scene::InspectionRecord& record) {
         out << value.index();
         std::visit([&](const auto& fill) {
           using F = std::decay_t<decltype(fill)>;
-          if constexpr (std::is_same_v<F, semantic::SolidFill>) {
+          if constexpr (std::is_same_v<F, semantic::SolidFill> || std::is_same_v<F, semantic::PatternFillV1>) {
             out << fill.color.r << ',' << fill.color.g << ',' << fill.color.b << ',' << fill.color.a;
+            if constexpr(std::is_same_v<F,semantic::PatternFillV1>)out << ':' << fill.version << ':' << static_cast<unsigned>(fill.kind) << ':' << fill.angle << ':' << fill.gap << ':' << fill.width;
           }
         }, value);
+      } else if constexpr (std::is_same_v<T, semantic::CornerStyleV1>) {out << value.version << ":" << value.radius;
+      } else if constexpr (std::is_same_v<T, semantic::SketchStyleV1>) {
+        out << value.version << ':' << value.seed << ':' << value.roughness << ':' << value.enabled;
       } else if constexpr (std::is_same_v<T, semantic::StrokeStyleValue>) {
         out << value.index();
         std::visit([&](const auto& stroke) {
@@ -357,6 +364,10 @@ canvas::foundation::WorldRect transformedBounds(
   }
   return result;
 }
+canvas::foundation::WorldRect interactionBounds(const canvas::RuntimeSceneRecord& record) noexcept {
+  return canvas::interaction::usesDerivedAppearance(record.properties)?transformedBounds(record.geometryBounds,record.transform):record.worldBounds;
+}
+
 
 canvas::foundation::WorldRect viewBounds(
     const canvas::foundation::WorldRect& world,
@@ -430,7 +441,7 @@ void CanvasEditingRuntime::refreshResourceManifestServices() noexcept {
       if (entry.resource_kind != semantic::ResourceKind::kFont) continue;
       textLayoutService_->registerFont({entry.resource_id,
                                         entry.content_hash.substr(7U),
-                                        fontCollectionIndex(entry.metadata)});
+                                        fontCollectionIndex(entry.metadata),semantic::fontFallbackResource(entry.metadata)});
     }
   }
   (void)refreshResourceDerivedState();
@@ -456,6 +467,7 @@ void CanvasEditingRuntime::close() noexcept {
   canvas::qualification::deactivateGroup(fc08Qualification_.get());
 #endif
   if (closed_) return;
+  clearAppearancePreview();
   abortExplicitIntent();
   cancelConnectorRouting();
   if (surfaceTransitionActive_) {
@@ -984,7 +996,8 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
           (semanticRecord->kind != semantic::ObjectKind::kShape &&
            semanticRecord->kind != semantic::ObjectKind::kImage &&
            semanticRecord->kind != semantic::ObjectKind::kSticky)) continue;
-      const auto& bounds = record.worldBounds;
+      const auto* projected=sceneCoordinator_?sceneCoordinator_->runtimeScene().find(record.objectId):nullptr;
+      const auto bounds=projected?interactionBounds(*projected):record.worldBounds;
       const std::array<foundation::WorldPoint, 4> points{{
           {(bounds.left + bounds.right) * 0.5F, bounds.top - gap},
           {bounds.right + gap, (bounds.top + bounds.bottom) * 0.5F},
@@ -1027,7 +1040,8 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
            record->kind != canvas::SceneObjectKind::kSticky) ||
           std::find(selection_.selected().begin(), selection_.selected().end(), id) !=
               selection_.selected().end()) continue;
-      targets.push_back({id, record->worldBounds, false, false});
+      const auto* projected=sceneCoordinator_->runtimeScene().find(id);
+      targets.push_back({id, projected?interactionBounds(*projected):record->worldBounds, false, false});
     }
     creation.setSnapTargets(std::move(targets));
     creation.setSnapScale(viewportController_->state().scale);
@@ -1048,8 +1062,10 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     const auto seed = ++creationSerial_ + (std::uint64_t{1} << 48U);
     const auto objectId = allocateObjectIdentity(foundation::ObjectId::fromUint64(seed));
     if (objectId.isZero()) { eraseSession(); return false; }
-    if (!creation.begin(key, creationPreset_, CreationStyle{appearanceProperties(futureAppearance_,
-                        creationPreset_<=CreationPreset::kTriangle)},
+    const bool filledCreation=creationPreset_<=CreationPreset::kTriangle || (creationPreset_==CreationPreset::kSticky&&futureStyleConfigured_);
+    auto creationProperties=appearanceProperties(futureAppearance_,filledCreation);
+    materializeAppearance(creationProperties,filledCreation,creationPreset_==CreationPreset::kSticky,creationPreset_!=CreationPreset::kSticky&&creationPreset_!=CreationPreset::kEllipse);
+    if (!creation.begin(key, creationPreset_, CreationStyle{std::move(creationProperties)},
                         {content.first, content.second}, viewport, seed, objectId)) { eraseSession(); return false; }
   canonicalPresentationDirty_ = true;
     if (platformPresentationDeferred_) transientOverlayDirty_ = true;
@@ -1235,6 +1251,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
             break;
         }
         target.properties = appearanceProperties(futureAppearance_, true);
+        materializeAppearance(target.properties,true,target.kind==semantic::ObjectKind::kSticky,target.kind==semantic::ObjectKind::kShape&&(std::get<semantic::ShapeContent>(target.content).shape_kind==1||std::get<semantic::ShapeContent>(target.content).shape_kind==3));
         connectorContent->end.value = semantic::AttachedEndpoint{
             target.id, semantic::StablePortAnchor{targetPort}};
         inserted.push_back(std::move(target));
@@ -2023,16 +2040,19 @@ bool CanvasEditingRuntime::unlockSelectedObjects() noexcept {
 
 bool CanvasEditingRuntime::setFutureAppearance(const runtime::CanvasAppearance& appearance) noexcept {
   if(!validAppearance(appearance))return false;
+  if(!futureAppearance_.fillEnabled&&appearance.fillEnabled)futureStyle_.fillKind=runtime::AppearanceFill::kSolid;
   futureAppearance_=appearance; return true;
 }
 bool CanvasEditingRuntime::setSelectedAppearance(const runtime::CanvasAppearance& appearance) noexcept {
   if (selectedObjectCount()!=1U) return false;
   const auto* before=semanticObjects_.find(selection_.primary());
   if(!before || selectedObjectLocked() || !validAppearance(appearance) ||
-      (before->kind!=semantic::ObjectKind::kShape && before->kind!=semantic::ObjectKind::kConnector))return false;
+      (before->kind!=semantic::ObjectKind::kShape && before->kind!=semantic::ObjectKind::kConnector && before->kind!=semantic::ObjectKind::kSticky))return false;
   semantic::PatchPropertiesOp forward,inverse;
-  auto desiredProperties = appearanceProperties(appearance,before->kind==semantic::ObjectKind::kShape);
+  auto desiredProperties = appearanceProperties(appearance,before->kind!=semantic::ObjectKind::kConnector);
+  if(before->kind==semantic::ObjectKind::kSticky&&std::none_of(before->properties.entries.begin(),before->properties.entries.end(),[](const auto& p){return p.field_id==0x102U;}))desiredProperties.entries.push_back({0x102U,semantic::SketchStyleV1{1,allocateSketchSeed(),1,false}});
   for (auto& entry : desiredProperties.entries) {
+    if(entry.field_id==0x100U&&appearance.fillEnabled)for(const auto& old:before->properties.entries)if(old.field_id==0x100U)if(const auto* f=std::get_if<semantic::FillStyleValue>(&old.value))if(const auto* pattern=std::get_if<semantic::PatternFillV1>(f)){auto p=*pattern;p.color={appearance.fill.r,appearance.fill.g,appearance.fill.b,appearance.fill.a};entry.value=semantic::FillStyleValue{p};}
     if (entry.field_id == 0x101U && appearance.strokeEnabled) {
       const auto current = std::find_if(before->properties.entries.begin(),
           before->properties.entries.end(), [](const auto& item) { return item.field_id == 0x101U; });
@@ -2196,6 +2216,11 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
     selectionView_.reset();
     return false;
   }
+  std::optional<canvas::RuntimeSceneRecord> appearanceRecord;
+  if (appearanceSession_ && appearanceSessionCurrent()) {
+    appearanceRecord = *record;
+    if (applyAppearanceToRecord(*appearanceRecord)) record = &*appearanceRecord;
+  }
   const auto viewport = viewportController_->state();
   const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
       ? viewport.scale : 1.0F;
@@ -2230,7 +2255,7 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
     // outline used by the selection chrome.  Using geometryBounds here leaves
     // the top and left ports inside the outline whenever a stroke expands the
     // visual bounds, which makes those two ports look offset from the object.
-    const auto& bounds = cropBounds ? cropBounds->visual : record->visualBounds;
+    const auto& bounds = cropBounds ? cropBounds->visual : usesDerivedAppearance(record->properties)?record->geometryBounds:record->visualBounds;
     // Acute stroke joins can expand visual bounds asymmetrically. Keep the
     // transverse port axes at the authored geometry center, as the semantic
     // StablePort anchors do; only the outward gap follows the visible outline.
@@ -2278,7 +2303,8 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
     point(bounds.left, axisY);
   }
   if (transformDrag_.active()) attachmentPoints.clear();
-  auto overlayBounds=cropBounds ? cropBounds->visual : record->visualBounds;
+  const bool sketchChrome=usesDerivedAppearance(record->properties);
+  auto overlayBounds=cropBounds ? cropBounds->visual : sketchChrome?record->geometryBounds:record->visualBounds;
   if(sectionBoundaryDrag_) {
     const auto& b=sectionBoundaryDrag_->preview.boundary;
     overlayBounds={static_cast<float>(b.x),static_cast<float>(b.y),static_cast<float>(b.x+b.width),static_cast<float>(b.y+b.height)};
@@ -2490,7 +2516,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     if (!transformDrag_.begin(targets)) return false;
     editingPointer_ = key;
     editingInitial_ = t;
-    editingLocalBounds_ = bounds.visual;
+    editingLocalBounds_ = usesDerivedAppearance(object->properties)?bounds.geometry:bounds.visual;
     editingDownWorld_ = {world.first,world.second};
     editingGeneration_ = semanticGeneration_.current();
     editingCameraGeneration_=cameraGeneration();editingMetricsGeneration_=surface_.metricsGeneration;
@@ -2572,7 +2598,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
         const auto* record = sceneCoordinator_->runtimeScene().find(objectId);
         if (record == nullptr) continue;
         if (record->objectId == selection_.primary()) continue;
-        targets.push_back({record->objectId, viewBounds(record->worldBounds, viewport),
+        targets.push_back({record->objectId, viewBounds(interactionBounds(*record), viewport),
                            false, transformOverrides_.find(record->objectId) != nullptr});
       }
       const auto resolved = snapResolver_.resolve(
@@ -3804,7 +3830,7 @@ SnapshotRestoreOutcome CanvasEditingRuntime::restoreSnapshotBeforeSurface(const 
       snapshot.document_id != documentId_ || sceneCoordinator_ == nullptr || sceneCompiler_ == nullptr) return SnapshotRestoreOutcome::kInvalid;
   try {
     auto state = semantic::DocumentRuntimeState::kLoading;
-    constexpr auto capability = semantic::SnapshotCapability::kAllWithTableV1;
+    constexpr auto capability = semantic::SnapshotCapability::kAllWithRoundedAndFontFallbackV1;
     const auto restored = semantic::SnapshotBootstrapper::restore(snapshot, capability, state,
         semanticObjects_, manifest, semanticGeneration_, binding);
     if (!restored.restored) return SnapshotRestoreOutcome::kInvalid;
@@ -4014,6 +4040,7 @@ bool CanvasEditingRuntime::resizeSurface(const render::SurfaceMetrics& metrics) 
 
 bool CanvasEditingRuntime::loseSurface() noexcept {
   if (closed_ || std::this_thread::get_id() != ownerThread_) return false;
+  clearAppearancePreview();
   resetTouchTextTap();
   if (surfaceTransitionActive_) {
     surfaceAbortRequested_ = true;
@@ -4255,9 +4282,16 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     });
     visibility.value().visibleRecords = ids.size();
   }
+  if(appearanceSession_&&appearanceSessionCurrent()){
+    auto& ids=visibility.value().backToFront;
+    for(const auto& o:appearanceSession_->after)if(sceneCoordinator_->runtimeScene().find(o.id)&&std::find(ids.begin(),ids.end(),o.id)==ids.end())ids.push_back(o.id);
+    if(appearanceSession_->routingChanged)for(const auto& record:sceneCoordinator_->runtimeScene().records())if(record.kind==semantic::ObjectKind::kConnector&&std::find(ids.begin(),ids.end(),record.objectId)==ids.end())ids.push_back(record.objectId);
+    std::sort(ids.begin(),ids.end(),[&](auto a,auto b){return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a),*sceneCoordinator_->runtimeScene().find(b));});visibility.value().visibleRecords=ids.size();
+  }
   auto references = render::DirectReferenceSource::build(
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
   if (!references) { AXIOM_ANDROID_DIAG("present references failed"); return false; }
+  applyAppearancePreview(references.value());
   if (transformDrag_.active()) for(auto& entry:references.value().entries) {
     if(entry.record.kind!=semantic::ObjectKind::kConnector)continue;
     const auto* object=semanticObjects_.find(entry.record.objectId);
@@ -4806,9 +4840,16 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
     });
     visibility.value().visibleRecords = ids.size();
   }
+  if(appearanceSession_&&appearanceSessionCurrent()){
+    auto& ids=visibility.value().backToFront;
+    for(const auto& o:appearanceSession_->after)if(sceneCoordinator_->runtimeScene().find(o.id)&&std::find(ids.begin(),ids.end(),o.id)==ids.end())ids.push_back(o.id);
+    if(appearanceSession_->routingChanged)for(const auto& record:sceneCoordinator_->runtimeScene().records())if(record.kind==semantic::ObjectKind::kConnector&&std::find(ids.begin(),ids.end(),record.objectId)==ids.end())ids.push_back(record.objectId);
+    std::sort(ids.begin(),ids.end(),[&](auto a,auto b){return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a),*sceneCoordinator_->runtimeScene().find(b));});visibility.value().visibleRecords=ids.size();
+  }
   auto references = render::DirectReferenceSource::build(
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
   if (!references) return false;
+  applyAppearancePreview(references.value());
   const auto composeTransform = [](const semantic::Transform2D& parent,
                                    const semantic::Transform2D& child) {
     return semantic::Transform2D{

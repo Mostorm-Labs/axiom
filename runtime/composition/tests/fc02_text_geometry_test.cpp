@@ -1661,9 +1661,11 @@ TEST(FC02Formatting, ImportedFamiliesAreNamedSelectableAndActuallyRender) {
     using namespace runtime;
     ASSERT_EQ(h.intent(TextIntentKind::kCreate).status, TextStatus::kApplied);
     const auto options = h.facade.readTextEditor().fonts;
-    ASSERT_EQ(options.size(), 12U);
     const std::vector<std::string> names{"Comic Neue", "Fira Sans", "IBM Plex Mono", "IBM Plex Sans",
-        "Inter", "Inter Tight", "Open Sans", "Oswald", "Roboto", "STIX Two Text", "Ubuntu"};
+        "Inter", "Inter Tight", "Open Sans", "Oswald", "Roboto", "STIX Two Text", "Ubuntu",
+        "Excalifont", "Xiaolai"};
+    ASSERT_EQ(options.size(), names.size() + 1U);
+    ASSERT_EQ(options.front().name, "Noto Sans CJK SC");
     ASSERT_EQ(h.input(TextInputKind::kReplace, u"Axiom 123").status, TextStatus::kApplied);
     ASSERT_EQ(h.intent(TextIntentKind::kSelectAll).status, TextStatus::kObserved);
     for (const auto& name : names) {

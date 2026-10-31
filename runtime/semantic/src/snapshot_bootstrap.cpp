@@ -22,6 +22,11 @@ bool supportedSnapshotVersion(std::uint32_t version) noexcept {
 }
 
 bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability capability, const ObjectRecord& object) noexcept {
+    for(const auto& p:object.properties.entries)if(p.field_id==0x103U&&(schema_version!=3U||(static_cast<unsigned>(capability)&512U)==0))return false;
+    for(const auto& e:object.properties.entries) if(std::holds_alternative<SketchStyleV1>(e.value) || (std::holds_alternative<FillStyleValue>(e.value)&&std::holds_alternative<PatternFillV1>(std::get<FillStyleValue>(e.value))))
+        if(schema_version!=3U || (static_cast<unsigned>(capability)&128U)==0)return false;
+    if(object.kind==ObjectKind::kVectorPath||object.kind==ObjectKind::kTable||object.kind==ObjectKind::kSection)
+        for(const auto& e:object.properties.entries)if(std::holds_alternative<SketchStyleV1>(e.value)||(std::holds_alternative<FillStyleValue>(e.value)&&std::holds_alternative<PatternFillV1>(std::get<FillStyleValue>(e.value)))||(object.kind==ObjectKind::kSection&&e.field_id==0x101U))if(schema_version!=3U||(static_cast<unsigned>(capability)&256U)==0)return false;
     if (object.kind == ObjectKind::kTable) return schema_version==3U && (static_cast<unsigned>(capability)&64U)!=0;
     if (object.kind == ObjectKind::kSection)
         return schema_version == 3U && (static_cast<unsigned>(capability) & 16U) != 0U;
@@ -102,6 +107,7 @@ SnapshotBootstrapResult restoreImpl(const SemanticSnapshot& snapshot,
            checkpoint->checkpoint_digest!=snapshot.checkpoint_digest || !SnapshotCodec::encode(snapshot,capability).ok())
             return rejectLoading(state,StatefulIssue::kInvalidApplicability);
     }
+    for(const auto& e:snapshot.manifest.entries)if(e.resource_kind==ResourceKind::kFont&&e.layout_version==2&&(static_cast<unsigned>(capability)&1024U)==0)return rejectWithoutFailure(StatefulIssue::kInvalidApplicability);
     if (snapshot.schema_version >= 3U && (!snapshot.manifest_present || !validateResourceManifest(snapshot.manifest) ||
         snapshot.digest_algorithm != 1U || snapshot.document_digest.size() != 32U ||
         snapshot.checkpoint_digest.size() != 32U || snapshot.recovery_frontier.empty() ||

@@ -331,6 +331,12 @@ bool validPropertyValue(std::uint32_t field_id, const PropertyValue& value) noex
             return std::visit([](const auto& fill) -> bool {
                 using Fill = std::decay_t<decltype(fill)>;
                 if constexpr (std::is_same_v<Fill, NoFill>) return true;
+                else if constexpr (std::is_same_v<Fill, PatternFillV1>)
+                    return fill.version == 1 && validColor(fill.color) &&
+                        (fill.kind == PatternKind::kDiagonal || fill.kind == PatternKind::kCrosshatch) &&
+                        std::isfinite(fill.angle) && fill.angle >= -180 && fill.angle <= 180 &&
+                        std::isfinite(fill.gap) && fill.gap >= 2 && fill.gap <= 1024 &&
+                        std::isfinite(fill.width) && fill.width >= .1 && fill.width <= 64;
                 else return validColor(fill.color);
             }, std::get<FillStyleValue>(value));
         case 0x00000101U:
@@ -340,6 +346,11 @@ bool validPropertyValue(std::uint32_t field_id, const PropertyValue& value) noex
                 if constexpr (std::is_same_v<Stroke, NoStroke>) return true;
                 else return validStrokeStyle(stroke);
             }, std::get<StrokeStyleValue>(value));
+        case 0x103U: {const auto* v=std::get_if<CornerStyleV1>(&value);return v&&v->version==1&&std::isfinite(v->radius)&&v->radius>=0&&v->radius<=16384;}
+        case 0x102U: {
+            const auto* style = std::get_if<SketchStyleV1>(&value);
+            return style && style->version == 1 && style->seed != 0 && std::isfinite(style->roughness) && style->roughness >= 0 && style->roughness <= 3;
+        }
         case 0x00000200U:
         case 0x00000201U:
             if (const auto* decoration = std::get_if<ConnectorDecorationValue>(&value)) {
@@ -353,8 +364,9 @@ bool validPropertyValue(std::uint32_t field_id, const PropertyValue& value) noex
 }
 
 bool fieldAppliesToObjectKind(ObjectKind kind, std::uint32_t field_id) noexcept {
-    if (kind == ObjectKind::kTable) return field_id>=1U && field_id<=4U;
-    if (kind == ObjectKind::kSection) return field_id == 0x3U || field_id == 0x100U;
+    if(field_id==0x103U)return kind==ObjectKind::kShape||kind==ObjectKind::kConnector;
+    if (kind == ObjectKind::kTable) return (field_id>=1U && field_id<=4U) || field_id==0x102U;
+    if (kind == ObjectKind::kSection) return field_id == 0x3U || field_id == 0x100U || field_id==0x101U || field_id==0x102U;
     switch (field_id) {
         case 0x00000001U:
         case 0x00000002U:
@@ -369,6 +381,8 @@ bool fieldAppliesToObjectKind(ObjectKind kind, std::uint32_t field_id) noexcept 
         case 0x00000101U:
             return kind == ObjectKind::kShape || kind == ObjectKind::kVectorPath ||
                    kind == ObjectKind::kConnector || kind == ObjectKind::kSticky;
+        case 0x102U:
+            return kind == ObjectKind::kShape || kind == ObjectKind::kConnector || kind == ObjectKind::kSticky || kind == ObjectKind::kVectorPath;
         case 0x00000200U:
         case 0x00000201U:
             return kind == ObjectKind::kConnector;
@@ -382,6 +396,11 @@ bool validPropertyBag(ObjectKind kind, const PropertyBag& bag) {
     for (std::size_t index = 0; index < bag.entries.size(); ++index) {
         const auto& entry = bag.entries[index];
         if (!fieldAppliesToObjectKind(kind, entry.field_id) || !validPropertyValue(entry.field_id, entry.value)) return false;
+        if (const auto* fill = std::get_if<FillStyleValue>(&entry.value); fill && std::holds_alternative<PatternFillV1>(*fill) && kind != ObjectKind::kShape && kind != ObjectKind::kSticky && kind != ObjectKind::kVectorPath && kind != ObjectKind::kSection) return false;
+        if(kind==ObjectKind::kSticky && entry.field_id==0x100U && std::holds_alternative<NoFill>(std::get<FillStyleValue>(entry.value)) &&
+            std::none_of(bag.entries.begin(),bag.entries.end(),[](const auto& p){return p.field_id==0x102U&&std::holds_alternative<SketchStyleV1>(p.value);}))return false;
+        if(kind==ObjectKind::kSection && entry.field_id==0x101U &&
+            std::none_of(bag.entries.begin(),bag.entries.end(),[](const auto& p){return p.field_id==0x102U&&std::holds_alternative<SketchStyleV1>(p.value);}))return false;
         if (index > 0U && bag.entries[index - 1U].field_id >= entry.field_id) return false;
     }
     return true;
@@ -640,9 +659,12 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
     }
     if (const auto* path = std::get_if<VectorPathContent>(&object.content)) {
         if (!validVectorPath(path->geometry)) return false;
+        const bool styled=std::any_of(object.properties.entries.begin(),object.properties.entries.end(),[](const auto& p){return std::holds_alternative<SketchStyleV1>(p.value)||(std::holds_alternative<FillStyleValue>(p.value)&&std::holds_alternative<PatternFillV1>(std::get<FillStyleValue>(p.value)));});
+        if(styled&&!validateSketchVectorPath(path->geometry))return false;
     }
     if (const auto* shape = std::get_if<ShapeContent>(&object.content)) {
         if (!validShapeForVersion(*shape, object.kind_version)) return false;
+        if(shape->shape_kind!=1&&shape->shape_kind!=3&&std::any_of(object.properties.entries.begin(),object.properties.entries.end(),[](const auto& p){return p.field_id==0x103U;}))return false;
     }
     if (const auto* image = std::get_if<ImageContent>(&object.content)) {
         if (!validImage(*image)) return false;
@@ -701,7 +723,7 @@ bool validPatch(const PropertyPatch& patch) noexcept {
                    (patch.field_id == 0x00000001U || patch.field_id == 0x00000002U ||
                     patch.field_id == 0x00000003U || patch.field_id == 0x00000004U ||
                     patch.field_id == 0x00000100U || patch.field_id == 0x00000101U ||
-                    patch.field_id == 0x00000200U || patch.field_id == 0x00000201U);
+                    patch.field_id == 0x00000200U || patch.field_id == 0x00000201U || patch.field_id == 0x102U || patch.field_id == 0x103U);
         case PropertyPatchAction::kInvalid:
             return false;
     }
@@ -957,6 +979,13 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
             return {};
         },
         operation.payload);
+}
+
+bool validateSketchVectorPath(const VectorPathGeometry& path) noexcept {
+    if(path.commands.size()>4096 || !validVectorPath(path))return false;
+    const auto point=[](Vec2 p){return std::abs(p.x)<=1e7&&std::abs(p.y)<=1e7;};
+    for(const auto& c:path.commands)if(!std::visit([&](const auto& v){using T=std::decay_t<decltype(v)>;if constexpr(std::is_same_v<T,MoveTo>)return point(v.point);else if constexpr(std::is_same_v<T,ClosePath>)return true;else if constexpr(std::is_same_v<T,QuadTo>)return point(v.control)&&point(v.end);else if constexpr(std::is_same_v<T,CubicTo>)return point(v.control1)&&point(v.control2)&&point(v.end);else return point(v.end);},c))return false;
+    return true;
 }
 
 } // namespace canvas::semantic

@@ -1,5 +1,6 @@
 #include "canvas/render/skia_headless_backend.hpp"
 #include "canvas/semantic/table_content.hpp"
+#include "canvas/scene/sketch_geometry.hpp"
 #include "skia_geometry_internal.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "canvas/render/image_crop_geometry.hpp"
@@ -349,6 +350,33 @@ SkPaint strokePaint(const semantic::SolidStroke& stroke,bool antiAlias=false) {
     return internal::geometryStrokePaint(stroke,antiAlias);
 }
 
+bool drawSketchAppearance(SkCanvas& canvas,const RuntimeSceneRecord& record,bool applyOpacity=true) {
+    const auto* route=std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry);
+    // Preserve the existing diagnostic renderer for terminal routing failures.
+    // Pending remains a styled interactive route; failure is never disguised as ink.
+    if(route && route->status!=runtime::ConnectorRouteStatus::kReady &&
+       route->status!=runtime::ConnectorRouteStatus::kPending) return false;
+    auto derived=scene::sketchGeometry(record.content,record.properties,route);
+    const bool sticky=record.kind==semantic::ObjectKind::kSticky;
+    if(!derived&&!sticky)return false;
+    semantic::VectorPathGeometry regular;
+    if(!derived){const auto& c=std::get<semantic::StickyContent>(record.content);regular.commands={semantic::MoveTo{{0,0}},semantic::LineTo{{c.width,0}},semantic::LineTo{{c.width,c.height}},semantic::LineTo{{0,c.height}},semantic::ClosePath{}};}
+    const auto& body=derived?derived->body:regular;
+    semantic::FillStyleValue fill=sticky?semantic::FillStyleValue{semantic::SolidFill{{1,1,.5F,1}}}:semantic::FillStyleValue{semantic::NoFill{}};
+    for(const auto& e:record.properties.entries)if(e.field_id==0x100U)if(const auto* v=std::get_if<semantic::FillStyleValue>(&e.value))fill=*v;
+    SkPaint layer;layer.setAlphaf(applyOpacity?objectOpacity(record):1);canvas.saveLayer(nullptr,&layer);
+    if(const auto* solid=std::get_if<semantic::SolidFill>(&fill);solid&&solid->color.a>0){SkPaint p;p.setAntiAlias(true);p.setColor4f(color(solid->color));drawPath(canvas,body,p);}
+    if(const auto* pattern=std::get_if<semantic::PatternFillV1>(&fill);pattern&&derived){canvas.save();canvas.clipPath(internal::semanticPath(body));SkPaint p;p.setAntiAlias(true);p.setColor4f(color(pattern->color));p.setStyle(SkPaint::kStroke_Style);p.setStrokeWidth(skScalar(pattern->width));drawPath(canvas,derived->hatches,p);canvas.restore();}
+    const semantic::SolidStroke legacy{{1,128.F/255,0,1},4};
+    const semantic::SolidStroke sectionBorder{{.4F,.45F,.5F,.65F},1,semantic::StrokeCap::kButt,semantic::MiterJoin{4},semantic::SolidDash{}};
+    const auto* stroke=objectStroke(record);
+    bool explicitStroke=false;for(const auto& e:record.properties.entries)explicitStroke=explicitStroke||e.field_id==0x101U;
+    if(!stroke&&!explicitStroke&&record.kind==semantic::ObjectKind::kConnector)stroke=&legacy;
+    if(!stroke&&!explicitStroke&&record.kind==semantic::ObjectKind::kSection)stroke=&sectionBorder;
+    if(stroke&&stroke->width>0&&stroke->color.a>0){auto p=strokePaint(*stroke,true);if(derived)p.setStrokeWidth(skScalar(stroke->width*derived->outlineWidthScale));drawPath(canvas,derived?derived->outline:regular,p);if(derived&&!derived->arrowFill.commands.empty()){p.setStyle(SkPaint::kFill_Style);p.setPathEffect(nullptr);drawPath(canvas,derived->arrowFill,p);}}
+    canvas.restore();return true;
+}
+
 void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageResourceResolver* images,
                  SkiaTextResources* textResources, bool antiAliasConnectors = false,
                  bool legacyHeadlessGolden = false) {
@@ -358,22 +386,23 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
         if constexpr (std::is_same_v<T, TableReferenceCommand>) {
             const auto& table=command.content;
             SkPaint layer;layer.setAlphaf(objectOpacity(record));canvas.saveLayer(nullptr,&layer);
-            for(std::size_t i=0;i<table.cells.size();++i){const auto r=semantic::tableCellRect(table,i);const auto area=SkRect::MakeLTRB(skScalar(r[0]),skScalar(r[1]),skScalar(r[2]),skScalar(r[3]));
-                SkPaint fill;fill.setColor4f(color(table.cells[i].fill));canvas.drawRect(area,fill);
-                if(textResources&&command.layout&&i<command.layout->tableCells.size()&&command.layout->tableCells[i]){
-                    canvas.save();canvas.clipRect(area);canvas.translate(skScalar(r[0]+6),skScalar(r[1]+6));textResources->draw(canvas,*command.layout->tableCells[i]);canvas.restore();}
-            }
-            if(table.grid.width>0){SkPaint grid;grid.setAntiAlias(true);grid.setColor4f(color(table.grid.color));grid.setStrokeWidth(skScalar(table.grid.width));
-                double x=0,y=0;const auto width=semantic::tableWidth(table),height=semantic::tableHeight(table);
-                canvas.drawLine(0,0,0,skScalar(height),grid);for(const auto& col:table.columns){x+=col.size;canvas.drawLine(skScalar(x),0,skScalar(x),skScalar(height),grid);}
-                canvas.drawLine(0,0,skScalar(width),0,grid);for(const auto& row:table.rows){y+=row.size;canvas.drawLine(0,skScalar(y),skScalar(width),skScalar(y),grid);}}
+            for(std::size_t i=0;i<table.cells.size();++i){const auto r=semantic::tableCellRect(table,i);SkPaint fill;fill.setColor4f(color(table.cells[i].fill));canvas.drawRect(SkRect::MakeLTRB(skScalar(r[0]),skScalar(r[1]),skScalar(r[2]),skScalar(r[3])),fill);}
+            if(table.grid.width>0){SkPaint grid;grid.setAntiAlias(true);grid.setColor4f(color(table.grid.color));grid.setStyle(SkPaint::kStroke_Style);
+                const auto sketch=scene::sketchGeometry(record.content,record.properties);grid.setStrokeWidth(skScalar(table.grid.width*(sketch?sketch->outlineWidthScale:1)));
+                if(sketch)drawPath(canvas,sketch->outline,grid);
+                else {double x=0,y=0;const auto width=semantic::tableWidth(table),height=semantic::tableHeight(table);
+                    canvas.drawLine(0,0,0,skScalar(height),grid);for(const auto& col:table.columns){x+=col.size;canvas.drawLine(skScalar(x),0,skScalar(x),skScalar(height),grid);}
+                    canvas.drawLine(0,0,skScalar(width),0,grid);for(const auto& row:table.rows){y+=row.size;canvas.drawLine(0,skScalar(y),skScalar(width),skScalar(y),grid);}}}
+            for(std::size_t i=0;i<table.cells.size();++i)if(textResources&&command.layout&&i<command.layout->tableCells.size()&&command.layout->tableCells[i]){
+                const auto r=semantic::tableCellRect(table,i);canvas.save();canvas.clipRect(SkRect::MakeLTRB(skScalar(r[0]),skScalar(r[1]),skScalar(r[2]),skScalar(r[3])));canvas.translate(skScalar(r[0]+6),skScalar(r[1]+6));textResources->draw(canvas,*command.layout->tableCells[i]);canvas.restore();}
             if(command.activeCell&&*command.activeCell<table.cells.size()){const auto r=semantic::tableCellRect(table,*command.activeCell);SkPaint outline;outline.setAntiAlias(true);outline.setStyle(SkPaint::kStroke_Style);outline.setColor(SkColorSetRGB(45,109,218));outline.setStrokeWidth(2);canvas.drawRect(SkRect::MakeLTRB(skScalar(r[0]+1),skScalar(r[1]+1),skScalar(r[2]-1),skScalar(r[3]-1)),outline);}
             canvas.restore();
         } else if constexpr (std::is_same_v<T, ShapeReferenceCommand>) {
             const auto drawLabel = [&] {
                 if (textResources == nullptr || !command.labelLayout) return;
                 canvas.save();
-                if (command.content.shape_kind == 2U) {
+                if(const auto rounded=scene::sketchGeometry(record.content,record.properties);rounded&&std::any_of(record.properties.entries.begin(),record.properties.entries.end(),[](const auto& e){return e.field_id==0x103U;}))canvas.clipPath(internal::semanticPath(rounded->body));
+                else if (command.content.shape_kind == 2U) {
                     SkPathBuilder ovalPath;
                     ovalPath.addOval(SkRect::MakeXYWH(
                         0.0F, 0.0F, skScalar(command.content.width),
@@ -415,6 +444,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                     canvas.restore();
                 }
             };
+            if(drawSketchAppearance(canvas,record)){drawLabel();return;}
             const auto fill = propertyColor(record, 0x00000100U, {1.0F, 0.0F, 0.0F, 1.0F});
             if (command.content.shape_kind == 3U) {
                 SkPathBuilder path;
@@ -525,6 +555,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 nullptr, SkCanvas::kStrict_SrcRectConstraint);
             canvas.restore();
         } else if constexpr (std::is_same_v<T, VectorPathReferenceCommand>) {
+            if(drawSketchAppearance(canvas,record))return;
             SkPaint paint; paint.setAntiAlias(false); paint.setColor4f(color(propertyColor(record, 0x00000100U, {0.0F, 0.0F, 1.0F, 1.0F}))); drawPath(canvas, command.content.geometry, paint);
         } else if constexpr (std::is_same_v<T, RichTextReferenceCommand>) {
             if (command.layout && textResources) {
@@ -619,6 +650,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 internal::drawDabInstancesToSkCanvas(canvas, stroke.dab_output.dabs, color);
             }
         } else if constexpr (std::is_same_v<T, ConnectorReferenceCommand>) {
+            if(drawSketchAppearance(canvas,record))return;
             const auto* start = std::get_if<semantic::FreePointEndpoint>(&command.content.start.value);
             const auto* end = std::get_if<semantic::FreePointEndpoint>(&command.content.end.value);
             const auto* derived = std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry);
@@ -685,7 +717,8 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 ? foundation::WorldRect{record.visualBounds.left, record.visualBounds.top,
                                         record.visualBounds.left + width, record.visualBounds.top + height}
                 : foundation::WorldRect{0.0F, 0.0F, width, height};
-            drawSolidRect(canvas, bounds, {1.0F, 1.0F, 0.5F, 1.0F});
+            if(legacyHeadlessGolden&&record.properties.entries.empty())drawSolidRect(canvas,bounds,{1,1,.5F,1});
+            else (void)drawSketchAppearance(canvas,record);
             if (command.labelLayout && textResources) {
                 canvas.save();
                 canvas.clipRect(SkRect::MakeXYWH(0.0F, 0.0F, width, height));
@@ -713,12 +746,13 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
         } else if constexpr (std::is_same_v<T, SectionReferenceCommand>) {
             const auto& b=command.content.boundary;
             const auto area=SkRect::MakeXYWH(skScalar(b.x),skScalar(b.y),skScalar(b.width),skScalar(b.height));
-            const auto fill=propertyColor(record,0x100U,{0,0,0,0});
-            if(fill.a>0)drawSolidRect(canvas,{skScalar(b.x),skScalar(b.y),skScalar(b.x+b.width),skScalar(b.y+b.height)},fill);
-            // Boundary chrome is presentation only, never a persisted stroke.
-            SkPaint border;border.setAntiAlias(true);border.setColor4f({.4F,.45F,.5F,.65F});
-            border.setStyle(SkPaint::kStroke_Style);border.setStrokeWidth(1);
-            canvas.drawRect(area,border);
+            SkPaint opacity;opacity.setAlphaf(objectOpacity(record));canvas.saveLayer(nullptr,&opacity);
+            if(!drawSketchAppearance(canvas,record,false)) {
+                const auto fill=propertyColor(record,0x100U,{0,0,0,0});
+                if(fill.a>0)drawSolidRect(canvas,{skScalar(b.x),skScalar(b.y),skScalar(b.x+b.width),skScalar(b.y+b.height)},fill);
+                // Unstyled legacy boundary presentation; versioned document appearance is above.
+                SkPaint border;border.setAntiAlias(true);border.setColor4f({.4F,.45F,.5F,.65F});border.setStyle(SkPaint::kStroke_Style);border.setStrokeWidth(1);canvas.drawRect(area,border);
+            }
             if(command.titleLayout&&textResources) {
                 canvas.save();
                 canvas.clipRect(SkRect::MakeXYWH(skScalar(b.x),skScalar(b.y),skScalar(b.width),
@@ -727,6 +761,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 textResources->draw(canvas,*command.titleLayout);
                 canvas.restore();
             }
+            canvas.restore();
         } else if constexpr (std::is_same_v<T, GroupReferenceCommand>) {
             // Group is an ordered traversal entry with no pixel contribution.
         }

@@ -11,7 +11,7 @@
 
 namespace canvas::semantic {
 
-enum class SnapshotCapability : std::uint8_t {
+enum class SnapshotCapability : std::uint16_t {
     kLegacyV1 = 0,
     kShape2Triangle = 1,
     // Explicit capability bits; 0/1 retain their released identities.
@@ -25,6 +25,10 @@ enum class SnapshotCapability : std::uint8_t {
     kShape2TriangleRichTextFormattingConnectorAndSectionV1 = 31,
     kAllWithBackgroundV1 = 63,
     kAllWithTableV1 = 127,
+    kAllWithSketchV1 = 255,
+    kAllWithSketchExtendedV1 = 511,
+    kAllWithRoundedV1 = 1023,
+    kAllWithRoundedAndFontFallbackV1 = 2047,
 };
 
 struct SemanticSnapshot final {

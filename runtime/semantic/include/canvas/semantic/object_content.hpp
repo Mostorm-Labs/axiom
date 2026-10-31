@@ -223,8 +223,8 @@ struct TableCell final {
     ColorValue fill{1,1,1,1};
     bool operator==(const TableCell&) const = default;
 };
-// Versioned grid paint is independent of row/column geometry. Future line
-// styles require a new explicit supported version, never an implicit fallback.
+// Versioned grid paint is independent of row/column geometry. SketchStyleV1
+// separately versions derived grid paths; grid color/width remain owned here.
 struct TableGridStyle final {
     std::uint32_t version = 1;
     ColorValue color{0.25F,0.28F,0.32F,1};

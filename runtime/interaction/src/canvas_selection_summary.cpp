@@ -33,7 +33,7 @@ void aggregate(runtime::SelectionPropertyAggregate& out,
             if (p.field_id == out.fieldId)
                 value = p.value;
         if (!value)
-            value = semantic::propertyDefaultValue(out.fieldId);
+            value = semantic::propertyDefaultValue(record.kind,out.fieldId);
         if (!value)
             continue;
         ++out.knownRoots;
@@ -176,7 +176,12 @@ runtime::SelectionSummary CanvasEditingRuntime::selectionSummary() const noexcep
                         member = semanticObjects_.find(*member->placement.parent_id);
                     }
                 }
-            bounds = bounds ? foundation::unionRects(*bounds, r->worldBounds) : r->worldBounds;
+            auto stable=r->worldBounds;
+            if(std::any_of(r->properties.entries.begin(),r->properties.entries.end(),[](const auto& p){return p.field_id==0x102U||(std::holds_alternative<semantic::FillStyleValue>(p.value)&&std::holds_alternative<semantic::PatternFillV1>(std::get<semantic::FillStyleValue>(p.value)));})){
+                const auto& b=r->geometryBounds;const auto& t=r->transform;bool first=true;
+                for(double x:{double(b.left),double(b.right)})for(double y:{double(b.top),double(b.bottom)}){const float wx=static_cast<float>(t.a*x+t.c*y+t.tx),wy=static_cast<float>(t.b*x+t.d*y+t.ty);foundation::WorldRect point{wx,wy,wx,wy};stable=first?point:foundation::unionRects(stable,point);first=false;}
+            }
+            bounds = bounds ? foundation::unionRects(*bounds, stable) : stable;
         }
         out.bounds =
             ready ? runtime::SelectionBoundsSummary{S::kAvailable, R::kNone, bounds}

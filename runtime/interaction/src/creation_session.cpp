@@ -100,7 +100,12 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
       const bool endpointFeature = candidate->sourceFeature ==
           (increasing ? interaction::SnapFeatureKind::kMaxEdge : interaction::SnapFeatureKind::kMinEdge);
       if (!center && !endpointFeature) return;
-      endpoint += (center ? 2.0F : 1.0F) * candidate->correction / snapScale_;
+      const float snapped = endpoint + (center ? 2.0F : 1.0F) * candidate->correction / snapScale_;
+      // A center/edge snap must not collapse or reverse a positive box extent.
+      // In particular, a small box starting on an existing edge can otherwise
+      // snap its center back to that fixed edge and submit an invalid zero size.
+      if (boxPreset && (increasing ? snapped <= fixed : snapped >= fixed)) return;
+      endpoint = snapped;
       preview_.snapped = true;
       // The movable endpoint is the only endpoint that can be attached by a
       // drag.  Preserve the target identity while the resolver supplies the

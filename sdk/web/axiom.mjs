@@ -141,6 +141,21 @@ export async function createRuntime({mount, documentId, restore, initialResource
       const stamp=selected?call('state').value:null;
       return enqueue(()=>call('control',{...args,...(stamp?{expectedGeneration:stamp.generation,expectedSelectionRevision:stamp.selectionRevision}:{})}));
     };
+    const readAppearance=(defaults=false)=>{
+      const result=call('appearance',{action:defaults?'readDefaults':'read'}).value;
+      return {...result,stamp:{owner:id,token:result.stamp}};
+    };
+    const appearanceCommand=(action,patch,observation,token)=>{
+      let request,foreign=false;try{
+        if(observation)foreign=observation.stamp?.owner!==id;
+        if(token)foreign=foreign||token.owner!==id;
+        request=structuredClone({action,...(patch===undefined?{}:{patch}),...(observation?{stamp:observation.stamp?.token,eligible:observation.eligible}:{}),...(token?{token:{stamp:token.stamp,serial:token.serial}}:{})});
+      }catch(error){return Promise.reject(new AxiomError('INVALID_ARGUMENT',String(error)));}
+      return enqueue(()=>{
+        if(foreign){try{call('appearance',{action:'cancel',token:{stamp:Array(8).fill('0'),serial:'0'}});}catch{}throw new AxiomError('WRONG_RUNTIME');}
+        const result=call('appearance',request);return {...result,token:{...result.token,owner:id}};
+      },false);
+    };
     const tableOptions=(action,options={})=>{
       const fields={create:['rows','columns','x','y'],select:['objectId','rowId','columnId'],insertRow:['objectId','index'],insertColumn:['objectId','index'],removeRow:['objectId','rowId','columnId'],removeColumn:['objectId','rowId','columnId'],rowHeight:['objectId','rowId','columnId','size'],columnWidth:['objectId','rowId','columnId','size'],cellStyle:['objectId','rowId','columnId','fill','format'],gridStyle:['objectId','color','width'],next:[],previous:[]}[action];
       if(!options||typeof options!=='object'||Array.isArray(options)||Object.keys(options).some(k=>k!=='generation'&&!fields.includes(k)))throw new AxiomError('INVALID_ARGUMENT');
@@ -226,6 +241,16 @@ export async function createRuntime({mount, documentId, restore, initialResource
       group:()=>enqueue(()=>{const s=call('state').value;return call('section',{action:10,objects:s.selected,generation:s.generation,selectionRevision:s.selectionRevision});}),
       ungroup:objectId=>enqueue(()=>{const s=call('state').value;return call('section',{action:11,objectId:objectId??s.primary,generation:s.generation,selectionRevision:s.selectionRevision});}),
       enterGroup:objectId=>enqueue(()=>{const s=call('state').value;return call('section',{action:8,objectId:objectId??s.primary});}),leaveGroup:()=>section(9),
+      appearance:{
+        read:()=>readAppearance(),
+        readDefaults:()=>readAppearance(true),
+        patch:(patch,observation=readAppearance())=>appearanceCommand('patch',patch,observation),
+        setDefaults:patch=>appearanceCommand('defaults',patch),
+        begin:(observation=readAppearance())=>appearanceCommand('begin',undefined,observation),
+        updatePreview:(token,patch)=>appearanceCommand('preview',patch,undefined,token),
+        commit:token=>appearanceCommand('commit',undefined,undefined,token),
+        cancel:token=>appearanceCommand('cancel',undefined,undefined,token)
+      },
       table:{
         create:options=>tableCommand('create',options),read:objectId=>call('table',{action:'read',...(objectId?{objectId}:{})}).value,
         select:options=>tableCommand('select',options),
@@ -260,6 +285,8 @@ export async function createRuntime({mount, documentId, restore, initialResource
       beginCrop:objectId=>enqueue(()=>call('image',{action:'crop',objectId})),
       updateCrop:options=>enqueue(()=>call('image',{action:'update',...options})),
       commitCrop:token=>enqueue(()=>call('image',{action:'done',token})),cancelCrop:token=>enqueue(()=>call('image',{action:'cancel',token})),
+      createVectorPath:options=>{let args;try{args=structuredClone(options);}catch(error){return Promise.reject(new AxiomError('INVALID_ARGUMENT',String(error)));}return enqueue(()=>call('vectorPath',{action:'create',...args}));},
+      readVectorPath:objectId=>call('vectorPath',{action:'read',...(objectId?{objectId}:{})}).value,
       createConnector:options=>enqueue(()=>call('connector',{action:'create',...options,objectId:options?.objectId??newId()})),
       setConnectorRouting:options=>enqueue(()=>call('connector',{action:'routing',...options})),
       readConnector:objectId=>call('connector',{action:'read',...(objectId?{objectId}:{})}).value,

@@ -246,3 +246,95 @@ Table snapshots require `table-v1` capability; unsupported readers reject instea
 of dropping table data. Grid paint version 1 is independent of boundary geometry;
 future hand-drawn styles require an explicit version/capability extension. They
 are not exposed by this version.
+
+
+## Sketch appearance v1
+
+Check `readBuildInfo().features.sketchStyle`, `patternFill` and `appearancePreview`
+(all `1`) before offering these controls. `runtime.appearance` edits Shape
+(rectangle/ellipse/triangle), Connector/line/arrow and Sticky plates. With
+`features.sketchExtended === 1`, it also edits VectorPath, shared Table grid
+roughness and Section document boundaries. Group itself is excluded and never
+recursively edits its children. Images, text and freehand strokes keep their
+existing owners. Table grid paint remains in `table.setGridStyle`, with explicit
+per-parameter eligibility as documented below.
+
+```js
+await runtime.appearance.setDefaults({enabled: true, roughness: 1});
+const observation = runtime.appearance.read();
+await runtime.appearance.patch({fillKind: 'hachure', gap: 8, hatchWidth: 1}, observation);
+const {token} = await runtime.appearance.begin();
+await runtime.appearance.updatePreview(token, {roughness: 1.75}); // any number in [0,3]
+await runtime.appearance.commit(token); // one atomic Operation / History entry
+// Alternatively await runtime.appearance.cancel(token).
+```
+
+`read()` returns canonical values, per-parameter `mixed` names, eligible/excluded
+roots, per-object owned values and a complete opaque `stamp`. Seed differences do
+not make roughness mixed. `fillEligible/fillExcluded` separately describe plate
+fill applicability, including Connector exclusions. Patches keep unmentioned
+fields and each object's seed. The observation argument is captured at call time
+when omitted. An explicit old observation rejects after selection, generation,
+scene, permission or lifetime changes; it never retargets a different selection.
+
+`begin()` captures exact targets/preimages. Updates accumulate in one local preview
+and publish no canonical Operation. `commit()` publishes once; unchanged commits
+and cancellation publish nothing. Export and `read()` use committed content during
+preview. Do not keep a token after commit/cancel, resize/rebind, selection/document
+change or close. Foreign, malformed or stale tokens reject and clear the preview.
+SDK calls are owner-thread queued and reuse normal close/reentry/receipt rules.
+`applied` is Runtime application, not external persistence or cloud acknowledgement.
+Tokens and stamps are instance-scoped owned DTOs; retain every identity component.
+All uint64 seed/stamp/serial values use decimal strings, never JS Number.
+
+`enabled:false` keeps an allocated seed; enabling again and changing roughness,
+color, opacity or fill reuse it. `roughness:0` keeps the seed and regular outline;
+it does not disable pattern fill. `reseed:true` explicitly chooses another stroke,
+with normal Undo/Redo. `styleVersion:1` is read-only, distinct from SDK version.
+Copying canonical objects preserves appearance. Unsupported versions/readers reject.
+Snapshot v3 requires bit128 plus `sketch-style-v1` / `pattern-fill-v1` requirements;
+no historical descriptor is rewritten. Operations use the extended closed property
+codec; consumers must reject unknown properties rather than discard them.
+
+`fillKind` is `none`, `solid`, `hachure` or `crosshatch`; colors are RGBA `[0,1]`.
+Pattern parameters: angle `[-180,180]` degrees, gap `[2,1024]`, hatchWidth `[.1,64]`;
+resolved defaults are `-45`, `8`, `1`. Density/width do not track outline width.
+On existing plates, pattern parameters require a pattern fill. `strokeWidth` is
+`[.01,1024]`, opacity `[0,1]`; `dash:[]` clears dashing, otherwise provide an even
+list of at most64 positive lengths. Dashed outlines use one pass. Closed paint
+clear semantics remove their color; enabling a missing paint resolves the regular
+palette (Sticky's absent plate remains yellow). Seedless future defaults retain
+color/density/width preferences while disabled and do not enter document Undo.
+
+`readDefaults()` and `setDefaults(patch)` address future creation separately.
+Runtime reserves a transient seed for creation preview and materializes that same
+seed at commit. Preview/committed rendering/export use shared C++ paths, never a
+Shell drawing implementation. Generation is bounded:8192 hatch segments,32768
+commands,4096 connector segments; over-dense hatching uses a deterministic,
+origin-aligned integer stride. Cache budget is64 entries/131072 commands per thread;
+paint colors, opacity, transform and camera do not resample paths. See the scoped
+[design contract](../../docs/planning/sdk/sketch-v1-design.md) for algorithm identity.
+
+Sticky's first changed appearance patch also materializes its v1 metadata/seed when
+`enabled:false`. Explicit None without that record rejects, preventing old codecs
+from silently eliding it into a yellow plate. No-op patches do not create metadata.
+This is a compatibility requirement of the existing Sticky default, not another
+selection or History owner.
+
+
+### Sketch v1 extended object capability
+
+`readBuildInfo().features.sketchExtended === 1` / shared Session feature `sketchExtended: 1` extends appearance to VectorPath, Table grids and Section document boundaries. `strokeEligible`/`strokeExcluded` and `fillEligible`/`fillExcluded` report per-parameter applicability. Table grid paint remains exclusively in `table.setGridStyle`; generic stroke/fill patches reject when all selected targets are inapplicable. Group is not recursive.
+
+`createVectorPath({commands, fillRule?, x?, y?, objectId?})` returns `{objectId, generation}` after shared owner application; omitted identity is allocated by Runtime. Commands are owned value tuples (`move`/`line`: `point`, `quad`: `control`/`point`, `cubic`: `control1`/`control2`/`point`, `close`), at most 4096, finite coordinates with absolute value ≤1e7, exact two-number points. Fill rule is `nonzero` or `evenodd`. `readVectorPath(objectId?)` returns owned canonical commands, transform, appearance and generation, never a mutable path or private engine handle. Windows caller-side equivalents take/return owned Json through the unchanged C transport ABI.
+
+New paths always retain versioned appearance metadata even with sketch disabled; canonical curve geometry/fill rule are preserved. Open outlines are not implicitly closed. Snapshot reader capability `extended-sketch-v1` uses the additive internal bit 256 (current full profile 511); older profile 255 rejects these object extensions, including disabled metadata. SDK version 0.1.0 and styleVersion 1 are distinct. Preview/patch/error/thread/lifetime rules remain those of the shared appearance owner. This local development verification does not establish Windows DLL ABI qualification.
+
+
+### Rounded corners / handwriting resources
+
+Appearance values/patches add `cornerRadius` in object-local units [0,16384], independent of roughness. Radius0 clears the canonical property. Rectangle/triangle and Connector support it; `radiusEligible/radiusExcluded` report applicability, with mixed values only across eligible roots. The requested radius is clamped geometrically to prevent overlapping fillets. Existing preview/token/History semantics apply, and creation defaults materialize only on supported object kinds. Connector route/endpoints stay canonical; only its displayed interior bends round within obstacle constraints. Snapshot requires `rounded-corners-v1` (bit512).
+
+The application font catalog adds Excalifont and Xiaolai v3.126 under OFL1.1. Font selection still uses owned resource IDs through existing `text.format({font})` and Table cell format. Excalifont carries explicit one-hop Xiaolai fallback in font metadata schema/layout version2; bytes/hashes/resource revisions remain in the existing resource owner. Fallback is shared C++ shaping/rendering, never browser/OS font selection or canonical run rewriting. Missing/corrupt bytes or unsupported metadata reject/diagnose explicitly. Snapshot requires `font-fallback-v2` (bit1024); full internal reader profile2047. Old v1 font resources and ordinary API lifetime/thread rules are unchanged.
+
+The Demo has tools, appearance properties, text/object properties, then board tools. Create/edit/select text to choose the font; the selector is not an implicit mutation of unrelated objects or global settings. Assets keep original upstream names and copyright; UI display labels can be separate. Renaming/modifying a font does not remove its OFL obligations or transfer upstream design ownership. SDK0.1.0 remains an unpublished candidate; Windows DLL ABI requires separate Windows evidence.

@@ -4,6 +4,7 @@
 #include "axiom/host_text_font.hpp"
 
 #include <filesystem>
+#include <algorithm>
 #include <fstream>
 #include <iterator>
 namespace canvas::minimal_runtime_host {
@@ -64,6 +65,12 @@ inline bool bindHostTextFonts(runtime::RuntimeCompositionCore& composition,
     for (const auto& font : kHostImportedFonts)
         if (!add(foundation::ObjectId::fromUint64(font.id), catalogRoot / font.file,
                  font.sha256, font.bytes)) return false;
+    for(const auto& font:kHostImportedFonts)if(font.fallback) {
+        const auto id=foundation::ObjectId::fromUint64(font.id);
+        const auto entry=std::find_if(manifest.entries.begin(),manifest.entries.end(),[&](const auto& e){return e.resource_id.value==id;});
+        if(entry==manifest.entries.end())return false;
+        entry->layout_version=2;entry->metadata={8,2,16,0,24,1,34,16};const auto fallback=foundation::ObjectId::fromUint64(font.fallback);entry->metadata.insert(entry->metadata.end(),fallback.bytes.begin(),fallback.bytes.end());
+    }
     if (!semantic::normalizeResourceManifest(manifest) ||
         !composition.bindManifest(manifest, 1)) return false;
     for (auto& item : pending)

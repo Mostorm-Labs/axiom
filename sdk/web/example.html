@@ -24,6 +24,9 @@
   label { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
   input[type=color] { width: 30px; height: 30px; padding: 2px; border: 1px solid #d7dee8; border-radius: 6px; background: white; cursor: pointer; }
   input[type=number] { width: 68px; padding: 4px 6px; }
+  input[type=range] { width: 100px; accent-color: #3978cf; }
+  label[data-mixed=true]::after { content: "混合"; color: #946317; font-size: 10px; }
+  .mixed-value { color: #946317; font-size: 11px; }
   input[type=checkbox] { accent-color: #3978cf; }
   select { max-width: 170px; padding: 4px 8px; }
   .hint { color: #8290a3; white-space: nowrap; }
@@ -47,6 +50,7 @@
 <header id="tools" aria-busy="true" inert>
   <nav class="toolbar-row" aria-label="绘制工具"><span class="row-label">工具</span><div id="drawing-tools" class="row-content"></div></nav>
   <nav class="toolbar-row" aria-label="工具与对象参数"><span class="row-label">参数</span><div id="context-tools" class="row-content"><span id="context-title"></span></div></nav>
+  <nav class="toolbar-row" aria-label="文字与对象属性"><span class="row-label">属性</span><div id="detail-tools" class="row-content"></div></nav>
   <nav class="toolbar-row" aria-label="画板操作"><span class="row-label">画板</span><div id="board-tools" class="row-content"></div></nav>
 </header>
 <div id="canvas"></div>
@@ -120,7 +124,7 @@ const rgba = (value, alpha = 1) => [1, 3, 5].map(i => parseInt(value.slice(i, i 
 const setValue = (input, value) => { if (document.activeElement !== input) input.value = value; };
 try {
   sdk = await createRuntime({mount: $('canvas'), permission: 'localSingleUser', onError: fail, onChange: show});
-  const drawing = $('drawing-tools'), context = $('context-tools'), board = $('board-tools');
+  const drawing = $('drawing-tools'), context = $('context-tools'), details = $('detail-tools'), board = $('board-tools');
   const drawingGroup = group(drawing);
   const toolButtons = [];
   const addTool = (label, key, action, parent = drawingGroup) => {
@@ -133,6 +137,13 @@ try {
     addTool(label, `shape:${code}`, () => sdk.selectShape(shape));
   addTool('Eraser', 'tool:2', () => sdk.selectTool('partialEraser'));
   button(drawingGroup,'表格',()=> $('table-panel').showModal(),'table-open');
+  const pathSamples={
+    hole:[{op:'move',point:[0,0]},{op:'line',point:[160,0]},{op:'line',point:[160,160]},{op:'line',point:[0,160]},{op:'close'},{op:'move',point:[40,40]},{op:'line',point:[120,40]},{op:'line',point:[120,120]},{op:'line',point:[40,120]},{op:'close'}],
+    curve:[{op:'move',point:[0,50]},{op:'quad',control:[50,-20],point:[100,50]},{op:'cubic',control1:[130,110],control2:[165,-10],point:[200,50]}]
+  };
+  const addPath=kind=>run(async()=>{await sdk.text.finish();await sdk.selectTool('select');const camera=sdk.readState().camera,rect=sdk.canvas.getBoundingClientRect();await sdk.createVectorPath({commands:pathSamples[kind],fillRule:kind==='hole'?'evenodd':'nonzero',x:(rect.width/2-camera.x)/camera.scale-80,y:(rect.height/2-camera.y)/camera.scale-80});});
+  button(drawingGroup,'带孔路径',()=>addPath('hole'),'path-hole');
+  button(drawingGroup,'开放曲线',()=>addPath('curve'),'path-curve');
   let tablePlacement=null;
   $('table-cancel').onclick=()=> $('table-panel').close();
   $('table-place').onclick=()=>run(async()=>{
@@ -182,21 +193,87 @@ try {
   fill.onchange = () => run(() => sdk.setAppearance({fill: rgba(fill.value, sdk.readSelection().appearance.fill[3])}));
   stroke.onchange = () => run(() => sdk.setAppearance({stroke: rgba(stroke.value, sdk.readSelection().appearance.stroke[3])}));
   strokeWidth.onchange = () => run(() => sdk.setAppearance({strokeWidth: Number(strokeWidth.value)}));
-  const sizeGroup = group(context, 'size-parameters');
+  const sketchGroup=group(context,'sketch-parameters');
+  const styleScope=document.createElement('span');styleScope.className='hint';sketchGroup.append(styleScope);
+  const sketchEnabled=field(sketchGroup,'手绘','checkbox','sketch-enabled');
+  const roughness=field(sketchGroup,'程度','range','sketch-roughness');roughness.min='0';roughness.max='3';roughness.step='.01';
+  const roughLabel=document.createElement('output');roughLabel.id='sketch-degree';roughLabel.style.minWidth='30px';sketchGroup.append(roughLabel);
+  const quickStyle=select(sketchGroup,'快选','sketch-preset',[['','自定义'],['0','规则'],['1','轻微'],['2','明显']]);
+  const styleFill=select(sketchGroup,'填充','sketch-fill-kind',[['none','无'],['solid','纯色'],['hachure','斜线'],['crosshatch','交叉线']]);
+  const styleColor=field(sketchGroup,'填充色','color','sketch-fill-color');
+  const styleStrokeEnabled=field(sketchGroup,'描边','checkbox','sketch-stroke-enabled');
+  const styleStroke=field(sketchGroup,'描边色','color','sketch-stroke-color');
+  const styleWidth=field(sketchGroup,'线宽','number','sketch-stroke-width');styleWidth.min='.1';styleWidth.max='1024';styleWidth.step='.5';
+  const styleOpacity=field(sketchGroup,'透明度','number','sketch-opacity');styleOpacity.min='0';styleOpacity.max='1';styleOpacity.step='.05';
+  const styleDash=select(sketchGroup,'线型','sketch-dash',[['solid','实线'],['dash','虚线']]);
+  const hatchGap=field(sketchGroup,'间距','number','sketch-gap');hatchGap.min='2';hatchGap.max='1024';hatchGap.step='1';
+  const hatchWidth=field(sketchGroup,'排线宽','number','sketch-hatch-width');hatchWidth.min='.1';hatchWidth.max='64';hatchWidth.step='.1';
+  const hatchAngle=field(sketchGroup,'角度','number','sketch-angle');hatchAngle.min='-180';hatchAngle.max='180';hatchAngle.step='5';
+  const radius=field(sketchGroup,'圆角','range','corner-radius');radius.min='0';radius.max='128';radius.step='.5';
+  const radiusValue=field(sketchGroup,'半径','number','corner-radius-value');radiusValue.min='0';radiusValue.max='16384';radiusValue.step='.5';radiusValue.title='对象本地单位；按形状与线段尺寸限制实际圆角';
+  const sketchDetails=group(details,'sketch-details');
+  for(const input of [styleOpacity,styleDash,hatchGap,hatchWidth,hatchAngle])sketchDetails.append(input.parentElement);
+  let styleDrag=null,styleDragCanceled=false;
+  const editingDefaults=()=>sdk.readSelection().count===0;
+  const appearancePatch=patch=>editingDefaults()?sdk.appearance.setDefaults(patch):sdk.appearance.patch(patch);
+  quickStyle.onchange=()=>{if(quickStyle.value!=='')void run(()=>appearancePatch({enabled:true,roughness:Number(quickStyle.value)}));};
+  sketchEnabled.onchange=()=>run(()=>appearancePatch({enabled:sketchEnabled.checked}));
+  styleFill.onchange=()=>run(()=>appearancePatch({fillKind:styleFill.value}));
+  styleColor.onchange=()=>run(()=>appearancePatch({fill:rgba(styleColor.value)}));
+  styleStrokeEnabled.onchange=()=>run(()=>appearancePatch({strokeEnabled:styleStrokeEnabled.checked}));
+  styleStroke.onchange=()=>run(()=>appearancePatch({stroke:rgba(styleStroke.value),strokeEnabled:true}));
+  styleWidth.onchange=()=>run(()=>appearancePatch({strokeWidth:Number(styleWidth.value),strokeEnabled:true}));
+  styleOpacity.onchange=()=>run(()=>appearancePatch({opacity:Number(styleOpacity.value)}));
+  styleDash.onchange=()=>run(()=>appearancePatch({dash:styleDash.value==='dash'?[8,5]:[]}));
+  hatchGap.onchange=()=>run(()=>appearancePatch({gap:Number(hatchGap.value)}));
+  hatchWidth.onchange=()=>run(()=>appearancePatch({hatchWidth:Number(hatchWidth.value)}));
+  hatchAngle.onchange=()=>run(()=>appearancePatch({angle:Number(hatchAngle.value)}));
+  const startStyleDrag=(fieldName='roughness')=>{
+    if(styleDrag)return styleDrag;
+    const defaults=editingDefaults();
+    const begin=defaults?Promise.resolve(null):sdk.appearance.begin();
+    styleDrag={defaults,begin,tail:begin,touched:false,fieldName};return styleDrag;
+  };
+  roughness.onpointerdown=()=>{styleDragCanceled=false;startStyleDrag();};
+  roughness.onkeydown=event=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(event.key))styleDragCanceled=false;};
+  roughness.oninput=()=>{
+    if(styleDragCanceled)return;
+    const drag=startStyleDrag(),degree=Number(roughness.value);drag.degree=degree;drag.touched=true;roughLabel.value=degree.toFixed(2);
+    drag.tail=drag.tail.then(async()=>{if(drag.defaults)return;const begin=await drag.begin;return sdk.appearance.updatePreview(begin.token,{enabled:true,roughness:degree});});
+    drag.tail.catch(fail);
+  };
+  const finishStyleDrag=cancel=>{
+    const drag=styleDrag;if(!drag)return;styleDrag=null;if(cancel)styleDragCanceled=true;
+    void run(async()=>{await drag.tail;if(!drag.defaults){const begin=await drag.begin;await(cancel?sdk.appearance.cancel(begin.token):sdk.appearance.commit(begin.token));}else if(!cancel&&drag.touched)await sdk.appearance.setDefaults(drag.fieldName==='cornerRadius'?{cornerRadius:drag.degree}:{enabled:true,roughness:drag.degree});if(cancel){const value=(drag.defaults?sdk.appearance.readDefaults():sdk.appearance.read()).values;roughness.value=value.roughness;radius.value=value.cornerRadius;radiusValue.value=value.cornerRadius;}});
+  };
+  radius.onpointerdown=()=>{styleDragCanceled=false;startStyleDrag('cornerRadius');};
+  radius.onkeydown=()=>{styleDragCanceled=false;};
+  radius.oninput=()=>{if(styleDragCanceled)return;const drag=startStyleDrag('cornerRadius'),degree=Number(radius.value);drag.degree=degree;drag.touched=true;radiusValue.value=degree;drag.tail=drag.tail.then(async()=>{if(!drag.defaults){const begin=await drag.begin;await sdk.appearance.updatePreview(begin.token,{cornerRadius:degree});}});drag.tail.catch(fail);};
+  radius.onchange=radius.onpointerup=()=>finishStyleDrag(false);radius.onpointercancel=()=>finishStyleDrag(true);
+  radiusValue.onchange=()=>run(()=>appearancePatch({cornerRadius:Number(radiusValue.value)}));
+  roughness.onchange=()=>finishStyleDrag(false);
+  roughness.onpointerup=()=>finishStyleDrag(false);
+  roughness.onpointercancel=()=>finishStyleDrag(true);
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&styleDrag){event.preventDefault();finishStyleDrag(true);}});
+  const sizeGroup = group(details, 'size-parameters');
   const width = field(sizeGroup, '宽', 'number', 'object-width'), height = field(sizeGroup, '高', 'number', 'object-height');
   for (const input of [width, height]) { input.min = '.1'; input.step = '1'; input.onchange = () => run(() => sdk.resizeSelection(Number(width.value), Number(height.value))); }
 
   const textGroup = group(context, 'text-parameters');
+  const textDetails=group(details,'text-details');
+  const fontChoices=[['','选择字体…'],...sdk.text.fonts().entries.map(f=>[f.id,f.family==='Excalifont'?'Excalifont · 手绘':f.family==='Xiaolai'?'Xiaolai · 小赖':f.family])];
+  const fontFamily=select(textGroup,'字体','text-font',fontChoices);fontFamily.onchange=()=>{if(fontFamily.value)void run(()=>sdk.text.format({font:fontFamily.value}));};
+  const fontHint=document.createElement('span');fontHint.className='hint';fontHint.textContent='Excalifont 中文使用小赖回退';textGroup.append(fontHint);
   const fontSize = select(textGroup, '字号', 'text-size', [['', '设置字号…'], ['32', 'Title · 32'], ['24', 'Heading · 24'], ['20', 'Subheading · 20'], ['16', 'Body · 16']]);
   fontSize.onchange = () => run(() => sdk.text.format({fontSize: Number(fontSize.value)}));
   const textButtons = [];
   for (const [name, label] of [['bold', 'B'], ['italic', 'I'], ['underline', 'U'], ['strikethrough', '删除线'], ['bulleted', '项目符号']]) {
     const element = button(textGroup, label, () => sdk.text.format({[name]: !sdk.text.read().format[name]}));
-    element.title = name; element.setAttribute('aria-label', name); textButtons.push([name, element]);
+    element.title = name; element.setAttribute('aria-label', name); textButtons.push([name, element]);textDetails.append(element);
   }
-  textGroup.onpointerdown = () => { void sdk.text.completeComposition().catch(fail); };
+  textGroup.onpointerdown = textDetails.onpointerdown = () => { void sdk.text.completeComposition().catch(fail); };
 
-  const tableGroup=group(context,'table-parameters');
+  const tableGroup=group(details,'table-parameters');
   const cellName=document.createElement('span');tableGroup.append(cellName);
   const tableTarget=()=>{const t=sdk.table.read();return {objectId:t.objectId,rowId:t.rowId,columnId:t.columnId,generation:t.generation};};
   button(tableGroup,'编辑文字',()=>sdk.table.edit(tableTarget()),'table-edit');
@@ -214,16 +291,17 @@ try {
   cellText.onchange=()=>run(()=>sdk.table.setCellStyle({...tableTarget(),format:{color:rgba(cellText.value)}}));
   cellSize.onchange=()=>run(()=>sdk.table.setCellStyle({...tableTarget(),format:{fontSize:Number(cellSize.value)}}));
   const cellBold=button(tableGroup,'B',()=>{const t=sdk.table.read(),i=t.rows.findIndex(a=>a.id===t.rowId)*t.columns.length+t.columns.findIndex(a=>a.id===t.columnId);return sdk.table.setCellStyle({...tableTarget(),format:{bold:!t.cells[i].format.bold}});},'table-cell-bold');
+  const cellFont=select(tableGroup,'字体','table-cell-font',fontChoices);cellFont.onchange=()=>{if(cellFont.value)void run(()=>sdk.table.setCellStyle({...tableTarget(),format:{font:cellFont.value}}));};
   const cellAlign=select(tableGroup,'对齐','table-cell-align',[['1','左'],['2','中'],['3','右']]);cellAlign.onchange=()=>run(()=>sdk.table.setCellStyle({...tableTarget(),format:{alignment:Number(cellAlign.value)}}));
   const gridColor=field(tableGroup,'网格','color','table-grid-color'),gridWidth=field(tableGroup,'线宽','number','table-grid-width');gridWidth.min='0';gridWidth.max='16';gridWidth.step='.5';
   const applyGrid=()=>sdk.table.setGridStyle({objectId:sdk.table.read().objectId,color:rgba(gridColor.value),width:Number(gridWidth.value)});gridColor.onchange=gridWidth.onchange=()=>run(applyGrid);
-  const imageGroup = group(context, 'image-parameters');
+  const imageGroup = group(details, 'image-parameters');
   button(imageGroup, '替换图片', () => chooseImage(true), 'image-replace');
   const crop = button(imageGroup, '裁剪', () => sdk.beginCrop(sdk.readSelectedImage().objectId), 'image-crop');
-  const cropGroup = group(context, 'crop-parameters');
+  const cropGroup = group(details, 'crop-parameters');
   button(cropGroup, '完成裁剪', () => sdk.commitCrop(sdk.readCrop().token), 'crop-done');
   button(cropGroup, '取消裁剪', () => sdk.cancelCrop(sdk.readCrop().token), 'crop-cancel');
-  const objectGroup = group(context, 'object-actions');
+  const objectGroup = group(details, 'object-actions');
   const groupButton = button(objectGroup, '组合', () => sdk.group());
   const ungroupButton = button(objectGroup, '取消组合', () => sdk.ungroup());
   const enterGroup = button(objectGroup, '进入组合', () => sdk.enterGroup());
@@ -253,6 +331,7 @@ try {
     const selected = sdk.readSelection(), text = sdk.text.read(), image = sdk.readSelectedImage(), cropping = sdk.readCrop();
     const table=sdk.table.read();tableGroup.hidden=!table.available;
     if(table.available){const r=table.rows.findIndex(a=>a.id===table.rowId),c=table.columns.findIndex(a=>a.id===table.columnId),cell=table.cells[r*table.columns.length+c];
+      setValue(cellFont,cell.format.font??'');
       cellName.textContent=`单元格 ${r+1} 行 ${c+1} 列`;
       setValue(rowHeight,table.rows[r].size);setValue(columnWidth,table.columns[c].size);setValue(cellFill,hex(cell.fill));setValue(cellText,hex(cell.format.color??[0,0,0,1]));setValue(cellSize,cell.format.fontSize??16);setValue(cellAlign,cell.format.alignment??1);cellBold.setAttribute('aria-pressed',String(Boolean(cell.format.bold)));setValue(gridColor,hex(table.grid.color));setValue(gridWidth,table.grid.width);
       for(const input of tableGroup.querySelectorAll('button,input,select'))input.disabled=!table.editable;
@@ -275,10 +354,38 @@ try {
       setValue(fill, hex(appearance.fill)); setValue(stroke, hex(appearance.stroke)); setValue(strokeWidth, appearance.strokeWidth);
       fill.disabled = !appearance.fillEnabled; stroke.disabled = strokeWidth.disabled = !appearance.strokeEnabled;
     }
+    const defaults=selected.count===0,styleState=defaults?sdk.appearance.readDefaults():sdk.appearance.read();
+    sketchGroup.hidden=defaults?!state.creationMode:styleState.eligible.length===0;
+    sketchDetails.hidden=sketchGroup.hidden;
+    if(!sketchGroup.hidden){
+      const v=styleState.values,mixed=new Set(styleState.mixed);
+      styleScope.textContent=defaults?'新建默认':styleState.excluded.length?`${styleState.eligible.length} 可调 / ${styleState.excluded.length} 排除`:'';
+      if(!styleDrag){sketchEnabled.checked=v.enabled;sketchEnabled.indeterminate=mixed.has('enabled');setValue(roughness,v.roughness);roughLabel.value=mixed.has('roughness')?'混合':Number(v.roughness).toFixed(2);}
+      styleStrokeEnabled.checked=v.strokeEnabled;styleStrokeEnabled.indeterminate=mixed.has('strokeEnabled');
+      setValue(quickStyle,[0,1,2].includes(v.roughness)?String(v.roughness):'');
+      setValue(styleFill,v.fillKind);setValue(styleColor,hex(v.fill));setValue(styleStroke,hex(v.stroke));setValue(styleWidth,v.strokeWidth);setValue(styleOpacity,v.opacity);setValue(styleDash,v.dash.length?'dash':'solid');setValue(hatchGap,v.gap);setValue(hatchWidth,v.hatchWidth);setValue(hatchAngle,v.angle);
+      for(const input of [...sketchGroup.querySelectorAll('input,select'),...sketchDetails.querySelectorAll('input,select')])input.disabled=!styleState.writable;
+      const radiusAvailable=defaults?state.creationMode&&![1,5].includes(state.shape):styleState.radiusEligible.length>0;
+      for(const input of [radius,radiusValue]){input.parentElement.hidden=!radiusAvailable;input.disabled=!styleState.writable||!radiusAvailable;input.parentElement.dataset.mixed=String(mixed.has('cornerRadius'));}
+      if(!styleDrag){radius.max=String(Math.max(128,v.cornerRadius));setValue(radius,v.cornerRadius);setValue(radiusValue,v.cornerRadius);}
+      const fillAvailable=defaults||styleState.fillEligible.length>0;
+      const strokeAvailable=defaults||styleState.strokeEligible.length>0;
+      for(const input of [styleStrokeEnabled,styleStroke,styleWidth,styleDash]){input.disabled=!styleState.writable||!strokeAvailable;input.parentElement.hidden=!strokeAvailable;}
+      for(const input of [styleFill,styleColor])input.parentElement.hidden=!fillAvailable;
+      if(!defaults&&!strokeAvailable&&styleState.eligible.length)styleScope.textContent='网格笔触';
+      styleFill.disabled=styleColor.disabled=!styleState.writable||!fillAvailable;
+      for(const input of [hatchGap,hatchWidth,hatchAngle]){input.parentElement.hidden=!['hachure','crosshatch'].includes(v.fillKind);input.disabled=!styleState.writable||!fillAvailable;}
+      for(const [input,key] of [[styleFill,'fillKind'],[styleColor,'fill'],[styleStroke,'stroke'],[styleWidth,'strokeWidth'],[styleOpacity,'opacity'],[hatchGap,'gap'],[hatchWidth,'hatchWidth'],[hatchAngle,'angle']]){input.title=mixed.has(key)?'多个对象的值不同':'';input.parentElement.dataset.mixed=String(mixed.has(key));}
+      appearanceGroup.hidden=true;
+    }
     sizeGroup.hidden = selected.count !== 1 || !capability('size');
     if (!sizeGroup.hidden) { setValue(width, Number(selected.width.toFixed(2))); setValue(height, Number(selected.height.toFixed(2))); }
     textGroup.hidden = !(state.tool === 4 || text.phase !== 0 || selected.kind === 4);
+    textDetails.hidden=textGroup.hidden;
     if (!textGroup.hidden) {
+      setValue(fontFamily,text.format.font??'');fontFamily.disabled=text.phase===0&&(!text.formatObject||/^0+$/.test(text.formatObject));
+      fontHint.textContent=fontFamily.disabled?'点击画板开始输入，再选择字体':'Excalifont 中文使用小赖回退';
+      fontHint.hidden=!fontFamily.disabled&&fontFamily.value!==sdk.text.fonts().entries.find(f=>f.family==='Excalifont')?.id;
       const size = text.format.fontSize;
       if (size && !Array.from(fontSize.options).some(option => option.value === String(size))) fontSize.add(new Option(String(size), String(size)));
       setValue(fontSize, size ? String(size) : '');

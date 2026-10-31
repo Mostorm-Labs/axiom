@@ -3,7 +3,7 @@
 #include <algorithm>
 namespace canvas::interaction {
 struct CanvasEditingRuntime::ConnectorPreviewRouting {
-    std::uint64_t generation=0;
+    std::uint64_t generation=0, appearanceRevision=0;
     semantic::ObjectId selected{};
     std::optional<semantic::Transform2D> transform;
     std::vector<std::pair<semantic::ObjectId, semantic::Transform2D>> transforms;
@@ -30,10 +30,13 @@ scene::ConnectorGeometry CanvasEditingRuntime::previewConnectorGeometry(const se
     if(creationActive()&&creationPreview().valid&&creationPreview().record.kind==semantic::ObjectKind::kConnector)
         creation=creationPreview().record;
     const std::optional<semantic::Transform2D> current=transform?std::optional(*transform):std::nullopt;
+    const auto appearanceRevision = appearanceSession_ && appearanceSession_->routingChanged ? appearancePreviewRevision_ : 0;
     if(!connectorPreviewRouting_||connectorPreviewRouting_->generation!=semanticGeneration_.current().value()||
+       connectorPreviewRouting_->appearanceRevision!=appearanceRevision||
        connectorPreviewRouting_->selected!=selection_.primary()||connectorPreviewRouting_->transform!=current||
        connectorPreviewRouting_->transforms!=transforms||connectorPreviewRouting_->creation!=creation) {
         auto next=std::make_shared<ConnectorPreviewRouting>();next->generation=semanticGeneration_.current().value();
+        next->appearanceRevision=appearanceRevision;
         next->selected=selection_.primary();next->transform=current;next->transforms=transforms;next->creation=creation;
         next->source=semanticObjects_.allObjects();
         for(auto& object:next->source) {
@@ -46,6 +49,8 @@ scene::ConnectorGeometry CanvasEditingRuntime::previewConnectorGeometry(const se
             }
             object.transform=scene::composeTransform(inverseParent,found->second);
         }
+        if(appearanceSession_)for(auto& object:next->source)
+            for(const auto& preview:appearanceSession_->after)if(object.id==preview.id)object.properties=preview.properties;
         next->source=scene::projectWorldObjects(next->source);
         if(creation)next->queue.push_back(*creation);
         else for(const auto& object:next->source) {
@@ -65,7 +70,7 @@ scene::ConnectorGeometry CanvasEditingRuntime::previewConnectorGeometry(const se
     return route;
 }
 unsigned CanvasEditingRuntime::serviceConnectorPreviewRouting(unsigned quanta) {
-    if(!transformDrag_.active()&&!creationActive()) {connectorPreviewRouting_.reset();return 0;}
+    if(!transformDrag_.active()&&!creationActive()&&(!appearanceSession_||!appearanceSession_->routingChanged)) {connectorPreviewRouting_.reset();return 0;}
     if(!connectorPreviewRouting_)return 0;
     auto& preview=*connectorPreviewRouting_;
     unsigned used=0;

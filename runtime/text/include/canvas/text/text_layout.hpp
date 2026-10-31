@@ -31,6 +31,7 @@ struct FontResourceDescriptor final {
     semantic::ResourceId resourceId{};
     std::string sha256;
     int collectionIndex = 0;
+    std::optional<semantic::ResourceId> fallback = std::nullopt;
 };
 struct FontObservation final {
     semantic::ResourceId resourceId{};

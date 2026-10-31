@@ -231,6 +231,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
       out.selectedAppearance.fillEnabled = false;
       out.selectedAppearance.strokeEnabled = false;
       out.selectedAppearance.opacity = 1.0F;
+      if(record->kind==semantic::ObjectKind::kSticky){out.selectedAppearance.fillEnabled=true;out.selectedAppearance.fill={1,1,.5F,1};}
       for (const auto& entry : record->properties.entries) {
         if (entry.field_id == 1U) {
           if (const auto* value = std::get_if<bool>(&entry.value)) out.selectedVisible = *value;
@@ -238,6 +239,8 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
           if (const auto* value = std::get_if<float>(&entry.value)) out.selectedAppearance.opacity = *value;
         } else if (entry.field_id == 0x100U) {
           if (const auto* style = std::get_if<semantic::FillStyleValue>(&entry.value)) {
+            if(std::holds_alternative<semantic::NoFill>(*style))out.selectedAppearance.fillEnabled=false;
+            if(const auto* fill=std::get_if<semantic::PatternFillV1>(style)){out.selectedAppearance.fillEnabled=true;out.selectedAppearance.fill={fill->color.r,fill->color.g,fill->color.b,fill->color.a};}
             if (const auto* fill = std::get_if<semantic::SolidFill>(style)) {
               out.selectedAppearance.fillEnabled = true;
               out.selectedAppearance.fill = {fill->color.r, fill->color.g, fill->color.b, fill->color.a};
@@ -334,7 +337,7 @@ void CanvasRuntimeFacade::setTarget(CanvasTargetKey target) noexcept {
   std::scoped_lock lock(ingressMutex_);
   if (binding_ == nullptr) return;
   const auto previous = binding_->target();
-  if (previous != target) {runtime_.cancelRegionSelection();if (service_ != nullptr) service_->destroyTarget(previous);}
+  if (previous != target) {runtime_.clearAppearancePreview();runtime_.cancelRegionSelection();if (service_ != nullptr) service_->destroyTarget(previous);}
   binding_->setTarget(target);
 }
 const CanvasTargetKey& CanvasRuntimeFacade::target() const noexcept { return binding_->target(); }

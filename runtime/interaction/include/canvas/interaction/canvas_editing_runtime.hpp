@@ -1,5 +1,6 @@
 #pragma once
 #include "canvas/runtime/table_input.hpp"
+#include "canvas/runtime/appearance.hpp"
 #include "canvas/runtime/image_export.hpp"
 namespace canvas::runtime { class CanvasRuntimeFacade; class MultiSelectionPort; }
 #include "canvas/interaction/text_edit_session.hpp"
@@ -827,6 +828,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<interaction::SubmitResult> tryCommitSectionDrop(const semantic::SetTransformsOp&) noexcept;
   runtime::SectionOutcome executeSectionCommand(const runtime::SectionIntent&,const semantic::SetTransformsOp* confirmedDrop) noexcept;
   void applyContainerPreview(render::ReferenceDrawList&);
+  void applyAppearancePreview(render::ReferenceDrawList&);
+  bool applyAppearanceToRecord(canvas::RuntimeSceneRecord&);
   semantic::SemanticGeneration presentedSemanticGeneration_{};
   render::SurfaceGeneration presentedSurfaceGeneration_{};
   render::MetricsGeneration presentedMetricsGeneration_{};
@@ -940,6 +943,20 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   input::PointerKey latestCreationPointer_{};
   CreationPreset creationPreset_ = CreationPreset::kRectangle;
   runtime::CanvasAppearance futureAppearance_{};
+  runtime::AppearanceValues futureStyle_=[] {runtime::AppearanceValues v;v.fillKind=runtime::AppearanceFill::kSolid;return v;}();
+  bool futureStyleConfigured_=false;
+  struct AppearanceSession { runtime::AppearanceToken token; std::vector<semantic::ObjectRecord> before,after;std::vector<std::uint64_t> seeds; bool routingChanged=false; };
+  std::optional<AppearanceSession> appearanceSession_;
+  std::uint64_t appearanceSerial_=0, appearancePreviewRevision_=0;
+  std::uint64_t allocateSketchSeed();
+  runtime::AppearanceValues appearanceDefaults() const;
+  void materializeAppearance(semantic::PropertyBag&,bool,bool sticky=false,bool rounded=false);
+  void materializeStructuralAppearance(semantic::ObjectRecord&);
+  runtime::AppearanceValues appearanceValuesFor(const semantic::ObjectRecord&) const;
+  runtime::AppearanceSnapshot appearanceSnapshot(const runtime::MultiSelectionProjection&,bool) const;
+  runtime::AppearanceResult appearanceCommand(const runtime::AppearanceRequest&,const runtime::MultiSelectionProjection&);
+  bool appearanceSessionCurrent() const;
+  void clearAppearancePreview();
   std::uint64_t creationSerial_ = 0;
   bool creationMode_ = false;
   std::thread::id ownerThread_{};

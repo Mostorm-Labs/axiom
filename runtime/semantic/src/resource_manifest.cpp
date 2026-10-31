@@ -34,9 +34,16 @@ std::vector<std::uint8_t> resourceManifestLineageToken(const canvas::foundation:
  const auto digest = internal::sha256(projection);
  return {digest.begin(), digest.end()};
 }
+std::optional<ResourceId> fontFallbackResource(const std::vector<std::uint8_t>& metadata) noexcept {
+ if(metadata.size()<24||metadata[0]!=8||metadata[1]!=2||metadata[2]!=16)return std::nullopt;
+ std::size_t offset=3;unsigned count=0;std::uint64_t collection=0;for(;;){if(offset>=metadata.size()||count>=5)return std::nullopt;const auto byte=metadata[offset++];collection|=std::uint64_t(byte&127U)<<(7*count++);if(!(byte&128U)){if((count>1&&(byte&127U)==0)||collection>0xffffffffULL)return std::nullopt;break;}}
+ if(offset+20!=metadata.size()||metadata[offset]!=24||metadata[offset+1]!=1||metadata[offset+2]!=34||metadata[offset+3]!=16)return std::nullopt;
+ ResourceId id;std::copy_n(metadata.begin()+static_cast<std::ptrdiff_t>(offset+4),16,id.value.bytes.begin());if(id.value.isZero())return std::nullopt;return id;
+}
 bool resourceKindMetadataValid(ResourceKind kind,const std::vector<std::uint8_t>& metadata) noexcept {
  const auto limit = kind == ResourceKind::kFont ? 8192U : 4096U;
  if(metadata.empty() || metadata.size()>limit || !kindValid(kind)) return false;
+ if(kind==ResourceKind::kFont&&metadata.size()>1&&metadata[0]==8&&metadata[1]==2)return fontFallbackResource(metadata).has_value();
  // Metadata is a canonical protobuf message with explicit required fields.
  // Keep this validator renderer independent and reject unknown/duplicate fields.
  std::size_t offset = 0U;
@@ -72,7 +79,7 @@ bool resourceKindMetadataValid(ResourceKind kind,const std::vector<std::uint8_t>
  return (values[1] == 1U || values[1] == 2U) && values[2] > 0U && values[3] > 0U && values[4] == 1U;
 }
 bool validateResourceManifestEntry(const ResourceManifestEntry& e) noexcept {
- return idValid(e.resource_id)&&kindValid(e.resource_kind)&&e.resource_revision>0&&contentHashValid(e.content_hash)&&e.byte_length>0&&e.decode_version==1U&&(e.resource_kind==ResourceKind::kFont ? e.layout_version==1U : e.layout_version==0U)&&resourceKindMetadataValid(e.resource_kind,e.metadata);
+ return idValid(e.resource_id)&&kindValid(e.resource_kind)&&e.resource_revision>0&&contentHashValid(e.content_hash)&&e.byte_length>0&&e.decode_version==1U&&(e.resource_kind==ResourceKind::kFont ? ((e.layout_version==1U&&!fontFallbackResource(e.metadata))||(e.layout_version==2U&&fontFallbackResource(e.metadata).has_value())) : e.layout_version==0U)&&resourceKindMetadataValid(e.resource_kind,e.metadata);
 }
 bool normalizeResourceManifestEntry(ResourceManifestEntry& e) noexcept { return validateResourceManifestEntry(e); }
 bool normalizeResourceManifest(ResourceManifest& m) noexcept {
@@ -85,6 +92,10 @@ bool validateResourceManifest(const ResourceManifest& m) noexcept {
  if(m.schema_version!=1U||m.entries.size()>65535U||m.retired_entries.size()>65535U) return false;
  for(std::size_t i=0;i<m.entries.size();++i){if(!validateResourceManifestEntry(m.entries[i]))return false;if(i&&!(m.entries[i-1].resource_id.value<m.entries[i].resource_id.value))return false;}
  for(std::size_t i=0;i<m.retired_entries.size();++i){const auto&t=m.retired_entries[i];if(!idValid(t.resource_id)||t.retired_revision==0||t.removal_operation_id.isZero()||t.lineage_token.size()!=32||!validateResourceManifestEntry(t.preimage)||t.preimage.resource_id!=t.resource_id||t.last_content_hash!=t.preimage.content_hash||t.retired_revision!=t.preimage.resource_revision+1)return false;if(i&&!(m.retired_entries[i-1].resource_id.value<t.resource_id.value))return false;}
+ for(const auto& entry:m.entries)if(const auto fallback=fontFallbackResource(entry.metadata)) {
+  const auto target=std::find_if(m.entries.begin(),m.entries.end(),[&](const auto& v){return v.resource_id==*fallback;});
+  if(target==m.entries.end()||target->resource_id==entry.resource_id||target->resource_kind!=ResourceKind::kFont||target->layout_version!=1||fontFallbackResource(target->metadata))return false;
+ }
  for (const auto& entry : m.entries) for (const auto& tombstone : m.retired_entries) if (entry.resource_id == tombstone.resource_id && (entry.resource_kind != tombstone.preimage.resource_kind || entry.resource_revision <= tombstone.retired_revision)) return false;
  return true;
 }

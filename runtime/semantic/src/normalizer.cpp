@@ -11,12 +11,20 @@
 #include <type_traits>
 
 namespace canvas::semantic {
+std::optional<PropertyValue> propertyDefaultValue(ObjectKind kind, std::uint32_t fieldId) noexcept {
+    if (kind == ObjectKind::kSticky && fieldId == 0x100U)
+        return PropertyValue{FillStyleValue{SolidFill{{1,1,.5F,1}}}};
+    if (kind == ObjectKind::kSection && fieldId == 0x101U)
+        return PropertyValue{StrokeStyleValue{SolidStroke{{.4F,.45F,.5F,.65F},1,StrokeCap::kButt,MiterJoin{4},SolidDash{}}}};
+    return propertyDefaultValue(fieldId);
+}
 std::optional<PropertyValue> propertyDefaultValue(std::uint32_t fieldId) noexcept {
     switch (fieldId) {
         case 0x00000001U: return PropertyValue{true};
         case 0x00000002U: return PropertyValue{false};
         case 0x00000003U: return PropertyValue{1.0F};
         case 0x00000004U: return PropertyValue{BlendModeValue::kNormal};
+        case 0x103U: return PropertyValue{CornerStyleV1{}};
         case 0x00000100U: return PropertyValue{FillStyleValue{NoFill{}}};
         case 0x00000101U: return PropertyValue{StrokeStyleValue{NoStroke{}}};
         case 0x00000200U:
@@ -81,9 +89,15 @@ bool normalizePropertyValue(PropertyValue& value) {
                     [](auto& fill) -> bool {
                         using Fill = std::decay_t<decltype(fill)>;
                         if constexpr (std::is_same_v<Fill, NoFill>) return true;
+                        else if constexpr (std::is_same_v<Fill, PatternFillV1>)
+                            return normalizeColor(fill.color) && normalizeDouble(fill.angle) && normalizeDouble(fill.gap) && normalizeDouble(fill.width);
                         else return normalizeColor(fill.color);
                     },
                     item);
+            } else if constexpr (std::is_same_v<Item, CornerStyleV1>) {
+                return item.version==1 && normalizeDouble(item.radius) && item.radius>=0 && item.radius<=16384;
+            } else if constexpr (std::is_same_v<Item, SketchStyleV1>) {
+                return normalizeDouble(item.roughness);
             } else if constexpr (std::is_same_v<Item, StrokeStyleValue>) {
                 return std::visit(
                     [](auto& stroke) -> bool {
@@ -107,11 +121,6 @@ bool normalizePropertyValue(PropertyValue& value) {
             }
         },
         value);
-}
-
-bool isExplicitDefaultProperty(const PropertyEntry& entry) noexcept {
-    const auto defaultValue = propertyDefaultValue(entry.field_id);
-    return defaultValue && *defaultValue == entry.value;
 }
 
 template <typename Vector, typename Compare>
@@ -391,10 +400,16 @@ bool normalizeContent(ObjectContent& content) {
 }
 
 bool normalizeObject(ObjectRecord& object) {
+    for(const auto& p:object.properties.entries)if(p.field_id==0x103U) {
+        const auto* shape=std::get_if<ShapeContent>(&object.content);
+        if(object.kind!=ObjectKind::kConnector && !(object.kind==ObjectKind::kShape&&shape&&(shape->shape_kind==1||shape->shape_kind==3)))return false;
+    }
+    if(object.kind==ObjectKind::kTable)for(const auto& entry:object.properties.entries)if(!((entry.field_id>=1U&&entry.field_id<=4U)||entry.field_id==0x102U))return false;
     if (object.kind == ObjectKind::kSection) {
         // Reject forbidden Section properties before explicit defaults disappear.
         for (const auto& entry : object.properties.entries) {
-            if (entry.field_id != 0x3U && entry.field_id != 0x100U) return false;
+            if(entry.field_id==0x101U && std::none_of(object.properties.entries.begin(),object.properties.entries.end(),[](const auto& e){return e.field_id==0x102U&&std::holds_alternative<SketchStyleV1>(e.value);}))return false;
+            if (entry.field_id != 0x3U && entry.field_id != 0x100U && entry.field_id != 0x101U && entry.field_id != 0x102U) return false;
         }
     }
     if (!validObjectId(object.id)) return false;
@@ -411,7 +426,7 @@ bool normalizeObject(ObjectRecord& object) {
     }
     object.properties.entries.erase(
         std::remove_if(object.properties.entries.begin(), object.properties.entries.end(),
-                       isExplicitDefaultProperty), object.properties.entries.end());
+                       [&](const auto& entry) { const auto d = propertyDefaultValue(object.kind,entry.field_id); return d && *d == entry.value; }), object.properties.entries.end());
     if (!normalizeContent(object.content) || !normalizeEraseMasks(object.erase_masks)) return false;
     return true;
 }

@@ -19,7 +19,7 @@ export interface DataStatus {attached:boolean;closing:boolean;fault:boolean;pend
 export interface Stamp {readonly owner:string;readonly token:[Revision,Revision,Revision,Revision,Revision,Revision,Revision,Revision];}
 export type Color = [number,number,number,number];
 export interface DocumentBackground {mode:'plain'|'dots'|'grid';color:Color;patternColor:Color;}
-export type PropertyValue = {type:'boolean';value:boolean}|{type:'float';value:number}|{type:'color';value:Color}|{type:'fill';value:Color|null}|{type:'blend'|'decoration';value:number}|{type:'stroke';value:Stroke|null};
+export type PropertyValue = {type:'boolean';value:boolean}|{type:'float';value:number}|{type:'color';value:Color}|{type:'fill';value:Color|null}|{type:'patternFill';value:{version:1;color:Color;kind:1|2;angle:number;gap:number;width:number}}|{type:'blend'|'decoration';value:number}|{type:'stroke';value:Stroke|null};
 export interface Stroke {color:Color;width:number;cap:1|2|3;join:{kind:'miter';limit:number}|{kind:'round'|'bevel'};dash:{segments:number[];offset:number}|null;}
 export interface MultiProperty {total:number;eligible:Id128[];excluded:{objectId:Id128;reason:number}[];mixed:boolean;partial:boolean;available:boolean;availability:number;strokeWidthAvailable:boolean;uniformValue:PropertyValue|null;}
 export interface MultiProjection {available:boolean;stamp:Stamp;roots:Id128[];properties:Record<string,MultiProperty>;}
@@ -44,6 +44,23 @@ export interface CommandResult {ok:true;requestId?:Revision;revision?:Revision;s
 export interface RuntimeState {documentId:Id128;target:{runtimeEpoch:Revision;viewId:Revision;viewEpoch:Revision;attachmentEpoch:Revision};generation:Revision;selectionRevision:Revision;selectionMode:0|1|2;eraserMode:1|2;tool:number;shape:number;creationMode:boolean;objects:number;activeContacts:number;selected:Id128[];primary:Id128;canUndo:boolean;canRedo:boolean;text:{phase:number;session:Revision;sequence:Revision;composition:Revision;selection:[number,number]};lastCommit:{operationId:Id128;runtimeEpoch:Revision;ordinal:Revision;presentedGeneration:Revision;localDurable:DataProgress;cloudSynced:DataProgress};data:Omit<DataStatus,'latest'>&{latest:Omit<OperationMetadata,'owner'>|null};table:{objectId:Id128;rowId:Id128;columnId:Id128};camera:{scale:number;x:number;y:number};surface:{available:boolean;width:number;height:number};}
 export interface SectionOptions {objectId?:Id128;objects?:Id128[];parentId?:Id128|null;title?:string;boundary?:[number,number,number,number];generation?:Revision;selectionRevision?:Revision;}
 export interface TextFormat {color?:[number,number,number,number];fontSize?:number;font?:Id128;bold?:boolean;italic?:boolean;underline?:boolean;strikethrough?:boolean;bulleted?:boolean;alignment?:1|2|3;}
+export type AppearanceStamp = readonly [Revision,Revision,Revision,Revision,Revision,Revision,Revision,Revision];
+export interface AppearanceValues {
+ enabled:boolean;roughness:number;seed:Revision|null;styleVersion:1;fillKind:'none'|'solid'|'hachure'|'crosshatch';
+ cornerRadius:number;fill:Color;stroke:Color;angle:number;gap:number;hatchWidth:number;strokeWidth:number;strokeEnabled:boolean;opacity:number;dash:number[];dashOffset:number;
+}
+export type AppearancePatch = Partial<Omit<AppearanceValues,'seed'|'styleVersion'>> & {reseed?:boolean};
+export interface AppearanceSnapshot {available:boolean;writable:boolean;stamp:Stamp;eligible:Id128[];excluded:Id128[];fillEligible:Id128[];fillExcluded:Id128[];strokeEligible:Id128[];strokeExcluded:Id128[];radiusEligible:Id128[];radiusExcluded:Id128[];values:AppearanceValues;mixed:(keyof AppearanceValues)[];objects:{objectId:Id128;values:AppearanceValues}[];}
+export interface AppearanceToken {readonly owner:string;readonly stamp:AppearanceStamp;readonly serial:Revision;}
+export interface AppearanceResult extends CommandResult {applied:true;changed:boolean;generation:Revision;token:AppearanceToken;}
+export interface AppearanceAPI {
+ read():AppearanceSnapshot;readDefaults():AppearanceSnapshot;
+ patch(patch:AppearancePatch,observation?:Pick<AppearanceSnapshot,'stamp'|'eligible'>):Promise<AppearanceResult>;
+ setDefaults(patch:AppearancePatch):Promise<AppearanceResult>;
+ begin(observation?:Pick<AppearanceSnapshot,'stamp'|'eligible'>):Promise<AppearanceResult>;
+ updatePreview(token:AppearanceToken,patch:AppearancePatch):Promise<AppearanceResult>;
+ commit(token:AppearanceToken):Promise<AppearanceResult>;cancel(token:AppearanceToken):Promise<AppearanceResult>;
+}
 export interface TableTarget {objectId:Id128;rowId:Id128;columnId:Id128;generation?:Revision;}
 export type TableSnapshot = {available:false}|{available:true;editable:boolean;objectId:Id128;rowId:Id128;columnId:Id128;rows:{id:Id128;size:number}[];columns:{id:Id128;size:number}[];cells:{text:string;fill:Color;format:TextFormat;mixedFormat:boolean}[];grid:{version:1;color:Color;width:number};generation:Revision;};
 export interface TableAPI {
@@ -56,10 +73,16 @@ export interface TableAPI {
  setCellStyle(options:TableTarget&{fill?:Color;format?:Pick<TextFormat,'color'|'fontSize'|'font'|'bold'|'alignment'>}):Promise<CommandResult>;
  setGridStyle(options:{objectId:Id128;color?:Color;width?:number;generation?:Revision}):Promise<CommandResult>;
 }
+export type VectorPathCommand = {op:'move'|'line';point:[number,number]}|{op:'quad';control:[number,number];point:[number,number]}|{op:'cubic';control1:[number,number];control2:[number,number];point:[number,number]}|{op:'close'};
+export interface VectorPathOptions {objectId?:Id128;commands:VectorPathCommand[];fillRule?:'nonzero'|'evenodd';x?:number;y?:number;}
+export interface VectorPathSnapshot {available:boolean;objectId:Id128;commands:VectorPathCommand[];fillRule:'nonzero'|'evenodd';transform:[number,number,number,number,number,number];appearance:AppearanceValues;generation:Revision;}
 export interface Runtime {
+  createVectorPath(options:VectorPathOptions):Promise<{objectId:Id128;generation:Revision}>;
+  readVectorPath(objectId?:Id128):VectorPathSnapshot;
   table:TableAPI;
+  appearance:AppearanceAPI;
   readonly version:'0.1.0'; readonly canvas:HTMLCanvasElement;
-  readBuildInfo():{ok:true;apiVersion:1;features:{shellAxis:1;resourceCustody:1;documentBackground:1;imageExport:1;table:1};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
+  readBuildInfo():{ok:true;apiVersion:1;features:{shellAxis:1;resourceCustody:1;documentBackground:1;imageExport:1;table:1;sketchStyle:1;patternFill:1;appearancePreview:1;sketchExtended:1;vectorPath:1;roundedCorners:1;fontFallback:2};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
   readState():RuntimeState;
   readBackground():DocumentBackground;
   /** Read-only committed content; owned bytes. Default complete visible content, 16px padding. */

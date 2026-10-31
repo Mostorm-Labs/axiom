@@ -1,0 +1,100 @@
+{
+  "task": "sketch-v1",
+  "status": "user-accepted-scoped-execution-contract",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "af5b1778284211c3834957084dd0a03e48308d69",
+    "relation": "ancestor"
+  },
+  "authority": [
+    "user explicit implementation request 2026-10-31",
+    "AGENTS.md",
+    "docs/planning/sdk/sketch-v1-design.md"
+  ],
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "versioned canonical sketch and pattern values, validation, registry, normalization, codecs/current descriptor, capability rejection",
+        "shared deterministic bounded generator, cache, shape/connector/sticky rendering preview export bounds hit",
+        "Runtime seed lifecycle, atomic appearance patches, session preview commit cancel, per-parameter multi readback, separate defaults",
+        "matching JS/TS Session Windows wrapper and working Web Demo controls"
+      ],
+      "forbidden_changes": [
+        "dependency rebuilds or dependency lock changes",
+        "Table grid sketch, VectorPath holes, Section sketch, font or brush refactor",
+        "SDK mutable internal owner exposure",
+        "new synchronization conflict protocol",
+        "published assets/tags overwrite",
+        "formal Gate claims"
+      ]
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "SKETCH-SEM",
+          "command_or_oracle": "native semantic codec/normalization/snapshot capability and unknown-version tests",
+          "expected_result": "exact values/seed roundtrip; invalid and unsupported inputs reject"
+        },
+        {
+          "id": "SKETCH-GEN",
+          "command_or_oracle": "native/WASM deterministic generator fixtures and visual matrix",
+          "expected_result": "same path data, bounded output/hulls, roughness continuity, stable connector endpoints"
+        },
+        {
+          "id": "SKETCH-RUNTIME",
+          "command_or_oracle": "real Runtime and Chrome consumer appearance lifecycle/history/multi/restore/remote tests",
+          "expected_result": "preview no canonical operation; commit exactly one; no-op/cancel none; stale/foreign rejects; seeds retained"
+        },
+        {
+          "id": "SKETCH-RENDER",
+          "command_or_oracle": "Chrome actual matching assets matrix/export/input and table regression",
+          "expected_result": "consistent body/hit/bounds/render, usable UI, Table/1 preserved"
+        },
+        {
+          "id": "SKETCH-REGRESSION",
+          "command_or_oracle": "configured CTest, JS/types, boundary and package/schema checks",
+          "expected_result": "affected checks pass; preexisting unrelated failures named separately"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "Windows DLL CI and physical device validation"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "native logs",
+        "Chrome results",
+        "matching JS/types/WASM/resource identity",
+        "repo local implementation report"
+      ],
+      "corroborative": [
+        "manual visual review"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "required feature paths implemented and affected verification passes",
+        "local usable Web page",
+        "remaining platform verification limitations and historical failures recorded"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}

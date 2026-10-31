@@ -53,9 +53,10 @@ std::array<std::uint8_t, 32> snapshotDigest(const auditoryworks::axiom::v1::Docu
     return internal::sha256(framed);
 }
 
-struct SnapshotFeatures final { bool triangle=false,text=false,formatting=false,section=false,label=false,connector=false,background=false,table=false; };
+struct SnapshotFeatures final { bool triangle=false,text=false,formatting=false,section=false,label=false,connector=false,background=false,table=false,sketch=false,pattern=false,extendedSketch=false,corners=false,fontFallback=false; };
 SnapshotFeatures snapshotFeatures(const SemanticSnapshot& snapshot) {
     SnapshotFeatures result;
+    for(const auto& entry:snapshot.manifest.entries)result.fontFallback=result.fontFallback||(entry.resource_kind==ResourceKind::kFont&&entry.layout_version==2);
     result.background = snapshot.background != foundation::DocumentBackground{};
     for(const auto& object:snapshot.objects) {
         if(object.kind==ObjectKind::kShape && (object.kind_version==2 || object.kind_version==3)) {
@@ -68,6 +69,9 @@ SnapshotFeatures snapshotFeatures(const SemanticSnapshot& snapshot) {
         result.formatting=result.formatting || (object.kind==ObjectKind::kRichText && object.kind_version==3);
         result.section=result.section || object.kind==ObjectKind::kSection;
         result.table=result.table || object.kind==ObjectKind::kTable;
+        for(const auto& e:object.properties.entries){result.corners=result.corners||std::holds_alternative<CornerStyleV1>(e.value);result.sketch=result.sketch||std::holds_alternative<SketchStyleV1>(e.value);if(const auto* f=std::get_if<FillStyleValue>(&e.value))result.pattern=result.pattern||std::holds_alternative<PatternFillV1>(*f);}
+        if(object.kind==ObjectKind::kVectorPath||object.kind==ObjectKind::kTable||object.kind==ObjectKind::kSection)
+            for(const auto& e:object.properties.entries)if(std::holds_alternative<SketchStyleV1>(e.value)||(std::holds_alternative<FillStyleValue>(e.value)&&std::holds_alternative<PatternFillV1>(std::get<FillStyleValue>(e.value)))||(object.kind==ObjectKind::kSection&&e.field_id==0x101U))result.extendedSketch=true;
     }
     for (const auto& object : snapshot.objects) {
         if (object.kind != ObjectKind::kConnector) continue;
@@ -94,12 +98,21 @@ std::vector<std::string> requiredCapabilities(const SnapshotFeatures& features) 
     if(features.section)result.push_back("section-v1");
     if(features.background)result.push_back("document-background-v1");
     if(features.table)result.push_back("table-v1");
+    if(features.sketch)result.push_back("sketch-style-v1");
+    if(features.pattern)result.push_back("pattern-fill-v1");
+    if(features.corners)result.push_back("rounded-corners-v1");
+    if(features.fontFallback)result.push_back("font-fallback-v2");
+    if(features.extendedSketch)result.push_back("extended-sketch-v1");
     return result;
 }
 bool capabilityProfile(const SemanticSnapshot& snapshot,SnapshotCapability reader) {
     const auto bits=static_cast<unsigned>(reader);
-    if(bits>127U || !foundation::validDocumentBackground(snapshot.background)) return false;
+    if(bits>2047U || !foundation::validDocumentBackground(snapshot.background)) return false;
     const auto features=snapshotFeatures(snapshot);
+    if(features.corners&&((bits&512U)==0||snapshot.schema_version<3U))return false;
+    if(features.fontFallback&&((bits&1024U)==0||snapshot.schema_version<3U))return false;
+    if(features.extendedSketch && ((bits&256U)==0 || snapshot.schema_version<3U))return false;
+    if((features.sketch||features.pattern) && ((bits&128U)==0 || snapshot.schema_version<3U))return false;
     if(features.table && ((bits&64U)==0 || snapshot.schema_version<3U))return false;
     if (features.background && ((bits & 32U) == 0 || snapshot.schema_version < 3U)) return false;
     if((features.triangle && (bits&1U)==0) || (features.text && ((bits&2U)==0 || snapshot.schema_version<3))) return false;
@@ -140,6 +153,13 @@ bool supportedSnapshotVersion(std::uint32_t version) noexcept {
 }
 
 bool snapshotObjectSupported(std::uint32_t schema_version, SnapshotCapability capability, const ObjectRecord& object) noexcept {
+    for(const auto& p:object.properties.entries)if(p.field_id==0x103U&&(schema_version!=3U||(static_cast<unsigned>(capability)&512U)==0))return false;
+    for(const auto& e:object.properties.entries) if(std::holds_alternative<SketchStyleV1>(e.value) || (std::holds_alternative<FillStyleValue>(e.value)&&std::holds_alternative<PatternFillV1>(std::get<FillStyleValue>(e.value))))
+        if(schema_version!=3U || (static_cast<unsigned>(capability)&128U)==0)return false;
+    if(object.kind==ObjectKind::kVectorPath || object.kind==ObjectKind::kTable || object.kind==ObjectKind::kSection)
+        for(const auto& e:object.properties.entries)
+            if(e.field_id==0x102U || (object.kind==ObjectKind::kSection && e.field_id==0x101U) || (std::holds_alternative<FillStyleValue>(e.value)&&std::holds_alternative<PatternFillV1>(std::get<FillStyleValue>(e.value))))
+                if(schema_version!=3U || (static_cast<unsigned>(capability)&256U)==0)return false;
     if (object.kind == ObjectKind::kTable) return schema_version==3U && (static_cast<unsigned>(capability)&64U)!=0;
     if (object.kind == ObjectKind::kSection)
         return schema_version == 3U && (static_cast<unsigned>(capability) & 16U) != 0U;

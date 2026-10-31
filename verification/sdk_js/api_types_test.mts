@@ -52,3 +52,36 @@ await sdk.table.create({rowIds:['internal']});
 await sdk.table.replaceContent({});
 // @ts-expect-error hand-drawn grid styles require a later versioned capability
 await sdk.table.setGridStyle({objectId:'id',roughness:1});
+const appearance=sdk.appearance.read();
+await sdk.appearance.patch({enabled:true,roughness:1.25,fillKind:'crosshatch',gap:8,hatchWidth:1},appearance);
+const appearanceEdit=await sdk.appearance.begin(appearance);
+await sdk.appearance.updatePreview(appearanceEdit.token,{roughness:2.1});
+await sdk.appearance.cancel(appearanceEdit.token);
+await sdk.appearance.setDefaults({enabled:true,roughness:.5,fillKind:'hachure'});
+// @ts-expect-error Runtime owns seed allocation and explicit reseed
+await sdk.appearance.patch({seed:'123'});
+// @ts-expect-error version negotiation is not a writable UI property
+await sdk.appearance.patch({styleVersion:2});
+// @ts-expect-error full opaque session identity is required
+await sdk.appearance.commit({serial:'1'});
+// @ts-expect-error roughness is continuous numeric input
+await sdk.appearance.patch({roughness:'high'});
+
+void sdk.createVectorPath({commands:[{op:'move',point:[0,0]},{op:'quad',control:[30,40],point:[100,0]},{op:'close'}],fillRule:'evenodd'});
+const vectorSnapshot=sdk.readVectorPath();const strokeTargets:string[]=sdk.appearance.read().strokeEligible;void vectorSnapshot;void strokeTargets;
+// @ts-expect-error unknown fill rule rejects at transport
+void sdk.createVectorPath({commands:[],fillRule:'alternate'});
+// @ts-expect-error a quadratic command requires its control point
+void sdk.createVectorPath({commands:[{op:'quad',point:[0,0]}]});
+
+const roundedVersion:1=sdk.readBuildInfo().features.roundedCorners;
+const fontFallbackVersion:2=sdk.readBuildInfo().features.fontFallback;
+const radiusTargets:string[]=sdk.appearance.read().radiusEligible;
+void roundedVersion;void fontFallbackVersion;void radiusTargets;
+await sdk.appearance.patch({cornerRadius:24});
+await sdk.appearance.updatePreview(appearanceEdit.token,{cornerRadius:12.5});
+await sdk.appearance.setDefaults({cornerRadius:16});
+// @ts-expect-error corner radius remains numeric, continuous local units
+await sdk.appearance.patch({cornerRadius:"round"});
+// @ts-expect-error derived paths are not part of the appearance DTO
+await sdk.appearance.patch({roundedPath:[]});

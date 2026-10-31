@@ -36,4 +36,6 @@ struct ValidationResult final {
 // This publishes no new property, default, mutation or registry semantics.
 [[nodiscard]] bool propertyAppliesToObjectKind(ObjectKind, std::uint32_t fieldId) noexcept;
 
+[[nodiscard]] bool validateSketchVectorPath(const VectorPathGeometry&) noexcept;
+
 } // namespace canvas::semantic

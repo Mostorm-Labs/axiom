@@ -66,7 +66,7 @@ MultiSelectionProjection MultiSelectionPort::read() const noexcept {
         std::optional<semantic::PropertyValue> value;
         for (const auto& entry : record->properties.entries)
           if (entry.field_id == field) { value = entry.value; break; }
-        if (!value) value = semantic::propertyDefaultValue(field);
+        if (!value) value = semantic::propertyDefaultValue(record->kind,field);
         if (!value) return {};
         if (field == 0x101U) {
           const auto* stroke = std::get_if<semantic::StrokeStyleValue>(&*value);
@@ -118,7 +118,7 @@ std::optional<std::vector<MultiSelectionRootPropertyValue>> MultiSelectionPort::
       std::optional<semantic::PropertyValue> value;
       for (const auto& entry : record->properties.entries)
         if (entry.field_id == field) { value = entry.value; break; }
-      if (!value) value = semantic::propertyDefaultValue(field);
+      if (!value) value = semantic::propertyDefaultValue(record->kind,field);
       if (!value) return {};
       values.push_back({id, std::move(*value)});
     }
@@ -188,7 +188,7 @@ MultiSelectionSubmitReceipt MultiSelectionPort::submitPropertyImpl(
       std::optional<semantic::PropertyValue> prior;
       for (const auto& entry : record->properties.entries)
         if (entry.field_id == field) { prior = entry.value; break; }
-      if (!prior) prior = semantic::propertyDefaultValue(field);
+      if (!prior) prior = semantic::propertyDefaultValue(record->kind,field);
       if (!prior) return {};
       auto next = value;
       if (strokeWidth) {
