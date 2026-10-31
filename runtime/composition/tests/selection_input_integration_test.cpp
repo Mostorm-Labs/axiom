@@ -122,12 +122,12 @@ TEST_F(SelectionInput, NewSelectionAndDeletionCannotBeOverwrittenByOldRegion) {
 TEST_F(SelectionInput, MetricsAndSourceLossCancelOnlyOwnedRegion) {
     click(140,130);ASSERT_TRUE(pointer(input::PointerPhase::kDown,20,20));
     ASSERT_TRUE(pointer(input::PointerPhase::kMove,500,200));
-    ASSERT_TRUE(c.registerSource(9109));ASSERT_TRUE(c.unregisterSource(9109,++seq,seq*1000000));
+    ASSERT_TRUE(c.registerSource(9109));++seq;ASSERT_TRUE(c.unregisterSource(9109,seq,seq*1000000));
     EXPECT_TRUE(snapshot().regionSelectionActive);
     ASSERT_TRUE(c.resizeSurface(810,610));(void)pointer(input::PointerPhase::kUp,500,200);
     EXPECT_EQ(selected(),std::vector{a});EXPECT_FALSE(snapshot().regionSelectionActive);
     ASSERT_TRUE(pointer(input::PointerPhase::kDown,20,20));
-    ASSERT_TRUE(c.unregisterSource(9100,++seq,seq*1000000));
+    ++seq;ASSERT_TRUE(c.unregisterSource(9100,seq,seq*1000000));
     EXPECT_FALSE(snapshot().regionSelectionActive);EXPECT_EQ(selected(),std::vector{a});
 }
 TEST_F(SelectionInput, RegionDoesNotConsumeRedoOrChangeCanonicalOutcome) {
@@ -433,16 +433,26 @@ TEST(SelectionBatch2Runtime, RealShapeCreationLeavesSectionTopologyAdmissible) {
         input::PlatformPointerSample p;p.source=6008;p.pointer=1;p.sequence=++sequence;p.timestampNs=sequence*1000000;p.phase=phase;p.x=x;p.y=y;
         input::PlatformPointerBatch batch;batch.samples={p};return c.submit(batch);
     };
+    std::vector<foundation::ObjectId> createdIds;
     for(unsigned i=0;i<3;++i) {
         runtime::CanvasControlRequest q;q.target=f.mountedCanvasTargets().front();q.clientId=6008;q.requestId=++request;
         q.payload.kind=runtime::CanvasControlPayloadKind::kSelectCreationPreset;q.payload.creationPreset=static_cast<runtime::CanvasCreationPreset>(i);
         ASSERT_EQ(f.submitCanvasControl(q).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
         const float x=100+static_cast<float>(i)*160;
         ASSERT_TRUE(pointer(input::PointerPhase::kDown,x,100));ASSERT_TRUE(pointer(input::PointerPhase::kMove,x+80,160));ASSERT_TRUE(pointer(input::PointerPhase::kUp,x+80,160));
+        // Identity is opaque and Runtime-namespaced. Observe the newly committed
+        // object without assuming allocator bits or changing the input sequence.
+        const auto objects=c.qualificationRuntime().snapshotObjects();
+        ASSERT_EQ(objects.size(),i+1U);
+        const auto added=std::find_if(objects.begin(),objects.end(),[&](const auto& object) {
+            return std::find(createdIds.begin(),createdIds.end(),object.id)==createdIds.end();
+        });
+        ASSERT_NE(added,objects.end());ASSERT_FALSE(added->id.isZero());
+        createdIds.push_back(added->id);
     }
     ASSERT_EQ(c.semanticObjectCount(),3U);
-    const auto* second=c.qualificationRuntime().qualificationObjectRecord(foundation::ObjectId::fromUint64((std::uint64_t{1}<<48)+2));
-    const auto* third=c.qualificationRuntime().qualificationObjectRecord(foundation::ObjectId::fromUint64((std::uint64_t{1}<<48)+3));
+    const auto* second=c.qualificationRuntime().qualificationObjectRecord(createdIds[1]);
+    const auto* third=c.qualificationRuntime().qualificationObjectRecord(createdIds[2]);
     ASSERT_NE(second,nullptr);ASSERT_NE(third,nullptr);EXPECT_NE(second->placement.order_key,third->placement.order_key);
     EXPECT_LT(second->placement.order_key,third->placement.order_key);
     EXPECT_GT(second->placement.order_key,semantic::OrderKey({0xFEU,0xFFU,0xFFU}));
