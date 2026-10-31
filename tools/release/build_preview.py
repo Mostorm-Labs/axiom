@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build, independently exercise, and package one locked Axiom preview target."""
+"""Build, independently exercise, and package one locked Axiom SDK release target."""
 import argparse
 import json
 import os
@@ -109,7 +109,7 @@ def verify_js_bundle(archive, env, emsdk, chrome):
         subprocess.run([str(arg) for arg in install], cwd=application, env=env, check=True)
         types = (verifier.parent / 'api_types_test.mts').read_text(encoding='utf-8')
         (application / 'consumer.mts').write_text(
-            types.replace("'../../sdk/web/axiom.mjs'", "'@axiom/axiom'"), encoding='utf-8')
+            types.replace("'../../sdk/web/axiom.mjs'", "'@mostorm/axiom'"), encoding='utf-8')
         typecheck = [node, node_root / 'node_modules/npm/bin/npm-cli.js', 'exec',
                      '--yes', '--ignore-scripts', '--package', 'typescript@5.9.3', '--',
                      'tsc', '--noEmit', '--strict', '--target', 'es2022', '--module',
@@ -117,6 +117,11 @@ def verify_js_bundle(archive, env, emsdk, chrome):
         print('COMMAND', json.dumps([str(arg) for arg in typecheck]), flush=True)
         subprocess.run([str(arg) for arg in typecheck], cwd=application, env=env, check=True)
         run([node, verifier, consumer, chrome,evidence/'npm-browser.json'], env)
+        # Exercise the current persistent-background, image-export and identity
+        # capabilities through the actual packed consumer, including its Demo.
+        for feature in ('background', 'image_export', 'object_identity'):
+            run([node, verifier.parent / ('verify_' + feature + '.mjs'), consumer,
+                 chrome, evidence / ('npm-' + feature + '.json')], env)
 
 
 def main():
@@ -134,7 +139,7 @@ def main():
     actual_revision = subprocess.check_output(['git', '-C', str(repo), 'rev-parse', 'HEAD'], text=True).strip()
     dirty = subprocess.check_output(['git', '-C', str(repo), 'status', '--porcelain'], text=True).strip()
     if actual_revision != args.revision or dirty:
-        raise RuntimeError('preview artifacts require the exact requested revision and a clean source checkout')
+        raise RuntimeError('release artifacts require the exact requested revision and a clean source checkout')
     facts = json.loads(args.facts.read_text(encoding='utf-8'))
     env = os.environ.copy()
     env.update(facts['environment'])
@@ -170,6 +175,9 @@ def main():
         targets = ['axiom_sdk', 'axiom_sdk_public_resources_tests',
                    'axiom_sdk_public_document_identity_tests', 'axiom_sdk_public_document_operations_tests',
                    'axiom_sdk_public_document_snapshot_tests', 'axiom_fc08_section_codec_tests',
+                   'axiom_sdk_public_operation_identity_tests', 'axiom_sdk_public_object_identity_tests',
+                   'axiom_sdk_public_document_background_tests', 'axiom_sdk_public_image_export_tests',
+                   'axiom_sdk_public_selection_input_tests',
                    'axiom_fc02_text_tests','axiom_fc03_image_facade_tests','axiom_fc05_connector_facade_tests',
                    'axiom_fc08_section_consumer_tests','axiom_selection_summary_tests','axiom_selection_input_integration_tests',
                    'axiom_minimal_windows_text_tool_entry_tests','axiom_minimal_windows_text_pipeline_tests',
@@ -180,6 +188,8 @@ def main():
     run(['cmake', '--build', build, '--target', *targets, '--parallel', '6'], env)
     if args.platform == 'windows':
         required = {'SDKPublicDocumentSnapshot','SDKPublicDocumentOperations','SDKPublicDocumentIdentity','SDKPublicResources',
+                    'SDKPublicOperationIdentity','SDKPublicObjectIdentity','SDKPublicObjectIdentityProcessIsolation',
+                    'SDKPublicDocumentBackground','SDKPublicImageExport','SDKPublicSelectionInput',
                     'FC02Text','FC03ImageFacade','FC05ConnectorFacade','FC08SectionConsumer','SelectionBatch3Summary',
                     'FC01ASelectionInputIntegration','FC02WindowsTextToolEntry','FC02WindowsTextToolFocus',
                     'FC02WindowsTextToolTouchFocus','FC02WindowsTextToolAfterInk','FC02WindowsTextFormatControls',

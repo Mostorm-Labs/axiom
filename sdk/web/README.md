@@ -1,5 +1,11 @@
 # Axiom JavaScript SDK
 
+Versioning uses `x.y.z`: `z` for small improvements and fixes; `y` for small feature
+iterations (reset `z`); `x` for large feature iterations (reset `y` and `z`). A
+release with multiple change levels uses the highest one. API/ABI and data-format
+compatibility are declared separately in the contracts and release notes.
+
+
 Import `createRuntime` from `axiom.mjs`. The SDK loads its matching modular WASM
 engine and creates two canvases inside the supplied empty mount element.
 Every instance has its own WASM memory, Runtime and input listeners. Serve all
@@ -26,8 +32,8 @@ module. No Emscripten or C++ compiler is required to consume the built JS packag
 The distribution can also be packed locally with `npm pack --ignore-scripts`.
 Its whitelist includes the internal loader; release verification exercises the
 extracted npm package in Chrome as well as the ZIP. The package is named
-`@axiom/axiom`; `publishConfig` binds it to the private Nearhub registry and the
-`preview` distribution tag. `private: false` enables publication; access control
+`@mostorm/axiom`; `publishConfig` binds it to the private Nearhub registry and the
+`latest` distribution tag. `private: false` enables publication; access control
 is enforced by the private registry.
 The three main artifacts are `axiom.mjs`, `axiom.wasm` and `axiom.data`.
 The Emscripten loader lives in `internal/axiom.mjs`; applications import only
@@ -39,22 +45,22 @@ To install from the private registry, put the following in your application's
 `.npmrc` and set `NODE_AUTH_TOKEN` in your environment. Do not commit credentials:
 
 ```ini
-@axiom:registry=http://npm.nearhub.cc/
+@mostorm:registry=http://npm.nearhub.cc/
 //npm.nearhub.cc/:always-auth=true
 //npm.nearhub.cc/:_authToken=${NODE_AUTH_TOKEN}
 ```
 
 ```sh
-npm install @axiom/axiom@preview
+npm install @mostorm/axiom@0.0.1
 ```
 
 ```js
-import {createRuntime} from '@axiom/axiom';
+import {createRuntime} from '@mostorm/axiom';
 ```
 
 Use a browser ESM bundler or deploy the package files with their relative layout
 preserved; installing this browser SDK does not provide Node.js rendering. For
-repeatable deployments, pin the exact version instead of the moving `preview` tag.
+repeatable deployments, pin the exact version instead of the moving `latest` tag.
 The npm package retains the Release `manifest.json` and its source/file identities.
 
 API version 1 uses 32-character lowercase hexadecimal object IDs and decimal
@@ -146,7 +152,7 @@ Shell/Axis extensions require a matching rebuilt wrapper/WASM and are not added
 to previously published immutable assets. See the checked declarations for the
 exact supported API. Unsupported operations reject with `AxiomError`.
 
-Image export (`imageExport: 1`, matching `1.0.0-preview.4` wrapper/WASM):
+Image export (`imageExport: 1`, introduced in `1.0.0-preview.4`; use matching wrapper/WASM versions):
 
 ```js
 const image = await runtime.exportImage({format: 'png', scale: 2});

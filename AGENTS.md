@@ -190,3 +190,15 @@ reintroduced.
 Before adding any dependency-install step, first check the repository lock files,
 `docs/semantic-sdk-store.md`, and the existing setup scripts. Prefer reuse of accepted
 artifacts over downloading or compiling a new copy.
+
+## SDK versioning and publication
+
+Follow `sdk/VERSIONING.md` and the user's `x.y.z` iteration rule: `z` for small
+improvements/fixes, `y` for small feature iterations (reset `z`), and `x` for large
+feature iterations (reset `y` and `z`). A release containing multiple levels uses
+the highest one. Use numeric versions without prerelease suffixes. Keep the version
+in `sdk/version.json`, Web package/wrapper/types, all platform SDKs and Demo
+manifests identical. Publish immutable `axiom-sdk-vx.y.z` GitHub tags and matching
+`@mostorm/axiom@x.y.z` npm packages with the `latest` distribution tag. The initial
+release requested in this session is `0.0.1`. Version labels do not replace the
+separate API/ABI/data compatibility contracts or platform verification.

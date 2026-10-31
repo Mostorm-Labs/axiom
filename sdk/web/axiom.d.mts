@@ -1,4 +1,4 @@
-export const SDK_VERSION: '1.0.0-preview.4';
+export const SDK_VERSION: '0.0.1';
 export class AxiomError extends Error {code: string; details: Record<string,unknown>; constructor(code:string,message?:string,details?:Record<string,unknown>);}
 export type Id128 = string;
 export type Revision = string;
@@ -45,7 +45,7 @@ export interface RuntimeState {documentId:Id128;target:{runtimeEpoch:Revision;vi
 export interface SectionOptions {objectId?:Id128;objects?:Id128[];parentId?:Id128|null;title?:string;boundary?:[number,number,number,number];generation?:Revision;selectionRevision?:Revision;}
 export interface TextFormat {color?:[number,number,number,number];fontSize?:number;font?:Id128;bold?:boolean;italic?:boolean;underline?:boolean;strikethrough?:boolean;bulleted?:boolean;alignment?:1|2|3;}
 export interface Runtime {
-  readonly version:'1.0.0-preview.4'; readonly canvas:HTMLCanvasElement;
+  readonly version:'0.0.1'; readonly canvas:HTMLCanvasElement;
   readBuildInfo():{ok:true;apiVersion:1;features:{shellAxis:1;resourceCustody:1;documentBackground:1;imageExport:1};sdkVersion:string;sourceRevision:string;dirty:boolean;platform:string};
   readState():RuntimeState;
   readBackground():DocumentBackground;

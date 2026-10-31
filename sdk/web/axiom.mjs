@@ -1,4 +1,4 @@
-export const SDK_VERSION = '1.0.0-preview.4';
+export const SDK_VERSION = '0.0.1';
 export class AxiomError extends Error {
   constructor(code, message = code, details = {}) { super(message); this.name = 'AxiomError'; this.code = code; this.details = details; }
 }

@@ -16,7 +16,7 @@ import zipfile
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tools.release.consumer_package import JS_REQUIRED
 
-PACKAGE_NAME = '@axiom/axiom'
+PACKAGE_NAME = '@mostorm/axiom'
 REGISTRY = 'http://npm.nearhub.cc/'
 
 
@@ -59,14 +59,14 @@ def prepare_package(archive, output, revision):
         package = json.loads(z.read('package.json'))
         if package.get('name') != PACKAGE_NAME or package.get('private') is not False:
             raise ValueError('npm scope/name/private policy mismatch')
-        if package.get('publishConfig') != {'registry': REGISTRY, 'tag': 'preview'}:
+        if package.get('publishConfig') != {'registry': REGISTRY, 'tag': 'latest'}:
             raise ValueError('npm registry/tag policy mismatch')
         if package.get('scripts'):
             raise ValueError('lifecycle scripts are forbidden in this consumer payload')
         version = package.get('version', '')
         if (version != manifest.get('sdk_version') or not re.fullmatch(
-                r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*', version)):
-            raise ValueError('preview npm version mismatch')
+                r'(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)', version)):
+            raise ValueError('release npm version mismatch')
         if 'manifest.json' not in package.get('files', []):
             raise ValueError('npm whitelist must retain release provenance')
         # No output mutation until all identity, hash and package-policy checks pass.
@@ -77,7 +77,7 @@ def prepare_package(archive, output, revision):
             with z.open(name) as source, target.open('xb') as destination:
                 shutil.copyfileobj(source, destination)
     return {'name': PACKAGE_NAME, 'version': version, 'registry': REGISTRY,
-            'tag': 'preview', 'source_revision': revision}
+            'tag': 'latest', 'source_revision': revision}
 
 
 if __name__ == '__main__':

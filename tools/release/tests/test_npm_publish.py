@@ -17,9 +17,9 @@ REGISTRY = 'http://npm.nearhub.cc/'
 class NpmPublicationTest(unittest.TestCase):
     def test_package_is_publishable_only_to_the_requested_scope_and_registry(self):
         package = json.loads((REPO / 'sdk/web/package.json').read_text())
-        self.assertEqual(package['name'], '@axiom/axiom')
+        self.assertEqual(package['name'], '@mostorm/axiom')
         self.assertIs(package.get('private'), False)
-        self.assertEqual(package['publishConfig'], {'registry': REGISTRY, 'tag': 'preview'})
+        self.assertEqual(package['publishConfig'], {'registry': REGISTRY, 'tag': 'latest'})
         self.assertIn('manifest.json', package['files'])
         self.assertEqual(package['version'], json.loads((REPO / 'sdk/version.json').read_text())['version'])
         wrapper = (REPO / 'sdk/web/axiom.mjs').read_text()
@@ -59,7 +59,7 @@ class NpmPublicationTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp); archive = self.archive(root); output = root / 'npm'
             result = self.prepare(archive, output)
-            self.assertEqual(result['name'], '@axiom/axiom')
+            self.assertEqual(result['name'], '@mostorm/axiom')
             with zipfile.ZipFile(archive) as z:
                 for name in z.namelist():
                     self.assertEqual((output / name).read_bytes(), z.read(name))
@@ -79,8 +79,8 @@ class NpmPublicationTest(unittest.TestCase):
                     self.prepare(archive, root / 'npm')
 
     def test_rejects_foreign_registry_scope_private_and_lifecycle_scripts(self):
-        for metadata in ({'name': '@other/axiom'}, {'private': True},
-                         {'publishConfig': {'registry': 'https://registry.npmjs.org/', 'tag': 'preview'}},
+        for metadata in ({'name': '@other/axiom'}, {'name': '@axiom/axiom'}, {'private': True},
+                         {'publishConfig': {'registry': 'https://registry.npmjs.org/', 'tag': 'latest'}},
                          {'scripts': {'prepublishOnly': 'untrusted'}}):
             with self.subTest(metadata=metadata), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp); archive = self.archive(root, metadata=metadata)
@@ -112,8 +112,8 @@ class NpmPublicationTest(unittest.TestCase):
                 self.prepare(archive, output)
             self.assertEqual((output / 'keep').read_text(), 'user work')
 
-    def test_rejects_stable_version_and_missing_npm_provenance(self):
-        for metadata in ({'version': '1.0.0'}, {'files': ['*.mjs']}):
+    def test_rejects_prerelease_or_malformed_version_and_missing_npm_provenance(self):
+        for metadata in ({'version': '1.0.0-preview.1'}, {'version': '01.0.0'}, {'files': ['*.mjs']}):
             with self.subTest(metadata=metadata), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp); archive = self.archive(root, metadata=metadata)
                 with self.assertRaises(ValueError):

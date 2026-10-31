@@ -23,12 +23,12 @@ class ConsumerPayloadTest(unittest.TestCase):
     def test_same_revision_is_insufficient_when_platform_versions_differ(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);release=root/'release';release.mkdir()
-            for name,kind in {'axiom-sdk-windows-preview.zip':'windows-sdk','axiom-sdk-js-preview.zip':'js-sdk','axiom-demo-windows-preview.zip':'windows-demo','axiom-demo-web-preview.zip':'web-demo'}.items():
+            for name,kind in {'axiom-sdk-windows.zip':'windows-sdk','axiom-sdk-js.zip':'js-sdk','axiom-demo-windows.zip':'windows-demo','axiom-demo-web.zip':'web-demo'}.items():
                 stage=root/kind;stage.mkdir();(stage/'payload').write_bytes(b'packaging fixture, not product evidence')
                 if kind=='windows-sdk':
                     (stage/'lib').mkdir();(stage/'lib/axiom.lib').write_bytes(b'import stub fixture')
-                if kind=='js-sdk':(stage/'package.json').write_text(json.dumps({'version':'1.0.0-preview.1'}))
-                package_tree(stage,release/name,['payload'],'d'*40,kind,version='1.0.0-preview.2' if kind=='web-demo' else '1.0.0-preview.1')
+                if kind=='js-sdk':(stage/'package.json').write_text(json.dumps({'version':'0.0.1'}))
+                package_tree(stage,release/name,['payload'],'d'*40,kind,version='0.0.2' if kind=='web-demo' else '0.0.1')
             with self.assertRaisesRegex(ValueError,'versions differ'):
                 verify_release(release,'d'*40)
             self.assertFalse((release/'SHA256SUMS').exists())

@@ -1,4 +1,10 @@
-# Axiom Windows consumer SDK preview
+# Axiom Windows consumer SDK
+
+Versioning uses `x.y.z`: `z` for small improvements and fixes; `y` for small feature
+iterations (reset `z`); `x` for large feature iterations (reset `y` and `z`). A
+release with multiple change levels uses the highest one. API/ABI and data-format
+compatibility are declared separately in the contracts and release notes.
+
 
 Windows x64. `axiom.dll` privately links the locked Runtime, Semantic and Skia
 implementations. Apps link only the small `axiom.lib` import stub. Headers and
@@ -21,7 +27,7 @@ ICU data and font assets next to the executable. The app's working directory may
 be unrelated. Keep `licenses/` when redistributing. Imported fonts retain their
 individual licenses under `share/axiom/fonts`. An explicit absolute assetRoot may
 override DLL-relative font discovery; ICU data must accompany the executable.
-This prerelease is not a cross-version C++ ABI promise.
+This 0.x release is not a cross-version C++ ABI promise.
 
 ```cpp
 #include <axiom/axiom.hpp>
@@ -82,7 +88,7 @@ republish matching resources using their manifest tokens. The known D07
 Protobuf/Abseil injected-OOM hang remains unresolved. Physical IME/touch/DPI
 acceptance remains separate from synthetic/native automated regression.
 
-Image export (`imageExport: 1`, preview.4 and later matching binaries) is a read-only
+Image export (`imageExport: 1`, use matching SDK binaries) is a read-only
 owner-thread query over committed content:
 
 ```cpp
@@ -98,6 +104,5 @@ match the Web `exportImage` contract, including bounds, scale, quality, backgrou
 includePattern and optional generation fence. Limits are 8192 per axis and
 16,777,216 pixels; oversized queries reject before raster allocation. Storage and
 filenames belong to the caller. Response buffers retain the existing C ABI
-copy/release ownership; no new DLL symbol or rendering handle is exposed. This
-change has local source/header and shared Runtime verification; Windows DLL/device
-qualification requires the matching Windows build.
+copy/release ownership; no new DLL symbol or rendering handle is exposed. Automated Windows DLL and external-consumer verification runs in release CI;
+physical device qualification remains separate.

@@ -1,0 +1,116 @@
+{
+  "task": "mostorm-sdk-0.0.1-release",
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "85f3343a23393de4a554b498eed3c1bdd7963f32",
+    "relation": "ancestor"
+  },
+  "authorization": "User explicitly requested committing/pushing the Demo UI, a new SDK release, and actual npm publication with the @mostorm scope and newly supplied registry credential. User subsequently specified 0.0.1 without preview for both GitHub and npm; this explicitly supersedes the earlier preview.5/version/tag decisions. User also defined x.y.z iteration levels: z improvements, y small features, x large features; persist these rules without changing this first 0.0.1 release.",
+  "authority": [
+    "AGENTS.md",
+    "docs/planning/sdk/sdk-preview-release.md",
+    "docs/planning/sdk/js-v1-contract.md",
+    "docs/planning/sdk/windows-consumer-v1.md",
+    "docs/planning/sdk/shell-axis-preview-contract.md"
+  ],
+  "decisions": {
+    "name": "@mostorm/axiom",
+    "version": "0.0.1",
+    "registry": "http://npm.nearhub.cc/",
+    "distributionTag": "latest",
+    "release": "Use tag axiom-sdk-v0.0.1, the existing Windows/Web exact-source consumer pipeline, a regular GitHub Release (not a prerelease), four ZIP assets without preview in their names, and subsequent verified npm publication. No overwrite and no claim of production/Gate/device qualification.",
+    "credential": "Use the existing AXIOM_NPM_TOKEN repository Secret for Actions and isolated temporary environment-backed npm configuration for local verification; never store literal credentials in Git, packages, artifacts or logs.",
+    "boundary": "Only distribution metadata, release tooling/workflow/docs and verification change; preserve the public facade and opaque C/POD ABI. Do not ship internal Runtime/Semantic/Skia headers or component archives.",
+    "preflight": "New credential accepted by npm whoami; @mostorm/axiom does not yet exist. The requested 0.0.1 identity is unused. Demo source is committed separately as 65f7895f135cf4190a0121c738ceb1be58fe6d60.",
+    "versionPolicy": "sdk/VERSIONING.md: z improvements/fixes, y small feature iterations with z reset, x large feature iterations with y/z reset; highest applicable level per release."
+  },
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "push reviewed Demo UI",
+        "align SDK version strings at 0.0.1",
+        "update npm scope in metadata, verified preparation, external type consumer, workflow and current consumer docs",
+        "include background/export and identity public-consumer regression coverage in the existing release pipeline",
+        "configure the user-provided publish credential through the existing repository Secret",
+        "commit/push release preparation and a new immutable SDK version tag",
+        "persist the user-defined version policy in SDK documentation and AGENTS.md"
+      ],
+      "forbidden_changes": [
+        "literal credentials in tracked files or payloads",
+        "dependency source rebuilds or lock changes",
+        "skip or weaken existing release requirements",
+        "overwrite registry versions or published assets",
+        "new canonical semantics or consumer exposure of internal rendering owners",
+        "claim production/Gate/physical device qualification"
+      ]
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "REL-METADATA",
+          "command_or_oracle": "release packaging/npm policy tests and strict SDK JS/TS checks",
+          "expected_result": "new scope and all version identities match; foreign scopes/registry/credentials and corrupt packages reject",
+          "blocking_reason": "prevents wrong or unsafe npm payload"
+        },
+        {
+          "id": "REL-CONSUMERS",
+          "command_or_oracle": "existing Windows external /MD and C LoadLibrary consumers, exact-source ZIP/npm consumers, public background/export/identity regressions and actual Chrome/WASM execution",
+          "expected_result": "all existing and newly selected release checks pass",
+          "blocking_reason": "prevents publishing an unqualified or mismatched SDK"
+        },
+        {
+          "id": "REL-PUBLISHED",
+          "command_or_oracle": "verify GitHub release source/manifests/SHA256SUMS; npm version/tag/integrity; fresh registry installation and actual browser consumer",
+          "expected_result": "published @mostorm/axiom 0.0.1 contains the same verified Web release bytes and works outside the checkout",
+          "blocking_reason": "pipeline or upload success alone is not proof of usable publication"
+        }
+      ]
+    },
+    "hosted_verification": {
+      "required": [
+        "sdk-preview-release.yml Windows and Web jobs",
+        "immutable regular GitHub release publication",
+        "actual npm publication or verified recovery of that exact payload"
+      ],
+      "optional": [
+        "physical Windows IME/touch/DPI acceptance"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "exact result revision and tag",
+        "Actions run/jobs",
+        "GitHub release manifests/checksums",
+        "registry readback and fresh-install verification"
+      ],
+      "corroborative": [
+        "local Demo screenshots"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "source and new SDK tag pushed",
+        "matching Windows/Web SDKs and demos published",
+        "@mostorm/axiom@0.0.1 available from the requested registry with latest tag",
+        "fresh published consumer checks pass",
+        "report links, install command, exact version and remaining qualification limits"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE"
+      ]
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true
+    }
+  }
+}
