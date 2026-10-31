@@ -112,18 +112,18 @@ struct Host {
   }
   runtime::DocumentRestoreRequest checkpoint() {
     auto& facade = owner.controlFacade();
-    runtime::DocumentSnapshotRequest request{};
-    request.expectedSemanticGeneration = facade.readCanvasControlSnapshot(
+    runtime::DocumentSnapshotRequest checkpointRequest{};
+    checkpointRequest.expectedSemanticGeneration = facade.readCanvasControlSnapshot(
         facade.mountedCanvasTargets().front()).semanticGeneration;
-    request.documentRevision = 1; request.recoveryFrontier = {8, 1, 16, 1, 24, 1};
-    const auto saved = owner.captureDocumentSnapshot(request);
+    checkpointRequest.documentRevision = 1; checkpointRequest.recoveryFrontier = {8, 1, 16, 1, 24, 1};
+    const auto saved = owner.captureDocumentSnapshot(checkpointRequest);
     EXPECT_EQ(saved.status, runtime::DocumentSnapshotStatus::kCaptured);
     const auto decoded = semantic::SnapshotCodec::decode(saved.bytes, kSnapshotCapability);
     EXPECT_TRUE(decoded.ok());
     runtime::DocumentRestoreRequest restore{};
     restore.bytes = saved.bytes; restore.expectedDocumentId = owner.documentId().value();
-    restore.documentRevision = request.documentRevision;
-    restore.recoveryFrontier = request.recoveryFrontier; restore.resourceBinding = 55;
+    restore.documentRevision = checkpointRequest.documentRevision;
+    restore.recoveryFrontier = checkpointRequest.recoveryFrontier; restore.resourceBinding = 55;
     if (decoded.ok()) restore.checkpointDigest = decoded.snapshot->checkpoint_digest;
     return restore;
   }

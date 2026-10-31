@@ -202,3 +202,9 @@ manifests identical. Publish immutable `vx.y.z` GitHub tags and matching
 `@mostorm/axiom@x.y.z` npm packages with the `latest` distribution tag. The initial
 release requested in this session is `0.0.1`. Version labels do not replace the
 separate API/ABI/data compatibility contracts or platform verification.
+
+A tag becomes immutable once its SDK is published as a GitHub Release or npm
+version. To repair an unpublished candidate created by the current release task,
+first cancel its run, preserve its exact revision/evidence, and confirm neither
+publication exists. Updating that owned candidate requires an exact old-ref lease
+and a complete new release verification run. Never rewrite published tags/assets.

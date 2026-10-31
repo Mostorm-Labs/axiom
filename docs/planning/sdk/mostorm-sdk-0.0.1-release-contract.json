@@ -119,6 +119,8 @@
     "prior_run": "https://github.com/Mostorm-Labs/axiom/actions/runs/41192755452",
     "reason": "Full local external-consumer check exposed a Demo selector still tied to the old English rectangle label. Keep the same drawing/pixel oracle, select the current semantic data-tool attribute with historical fallback, and cancel the old run before any publication.",
     "final_tag": "v0.0.1",
-    "preservation": "The earlier unpublished candidate reference remains unchanged; no existing Git ref, Release asset or npm version is overwritten."
+    "preservation": "The earlier axiom-sdk-v0.0.1 reference remains unchanged. A later v0.0.1 candidate also stopped before publication when MSVC reported a shadowed local in an added public-identity test. Repair that test name, preserve both run/revision records, and update only this task-owned unpublished v0.0.1 candidate using the exact prior-ref lease after confirming no GitHub Release or npm version exists. Never overwrite published SDK assets.",
+    "second_unpublished_revision": "574e809e8003608d3f513a9cabce6c2854c7bd3b",
+    "second_run": "https://github.com/Mostorm-Labs/axiom/actions/runs/41193246633"
   }
 }
