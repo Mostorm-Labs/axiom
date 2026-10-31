@@ -1,4 +1,4 @@
-export const SDK_VERSION = '1.0.0-preview.3';
+export const SDK_VERSION = '1.0.0-preview.4';
 export class AxiomError extends Error {
   constructor(code, message = code, details = {}) { super(message); this.name = 'AxiomError'; this.code = code; this.details = details; }
 }
@@ -81,9 +81,9 @@ export async function createRuntime({mount, documentId, restore, initialResource
     } catch(error) { emitError(error); }
   };
   const schedule = () => { if(!closed && !closing && !scheduled)scheduled=requestAnimationFrame(render); };
-  const enqueue = (fn, finish = true) => {
+  const enqueue = (fn, finish = true, notify = true) => {
     if(closing || closed || closeBarrier)return Promise.reject(new AxiomError(closeBarrier?'DOCUMENT_CLOSING':'CLOSED'));
-    const task = tail.then(async()=>{if(closed)throw new AxiomError('CLOSED');if(finish)await text?.finish();const result=await fn();changed();schedule();return result;});
+    const task = tail.then(async()=>{if(closed)throw new AxiomError('CLOSED');if(finish)await text?.finish();const result=await fn();if(notify){changed();schedule();}return result;});
     tail=task.catch(()=>{});return task;
   };
   const cleanup = () => {
@@ -156,6 +156,26 @@ export async function createRuntime({mount, documentId, restore, initialResource
       version:SDK_VERSION, canvas:canonical,
       readBuildInfo:()=>call('version'),
       readState:()=>call('state').value,
+      exportImage:async (options={})=>{
+        const keys=['format','scale','padding','quality','background','includePattern','bounds','generation'];
+        if(!options||typeof options!=='object'||Array.isArray(options)||Object.keys(options).some(key=>!keys.includes(key)))throw new AxiomError('INVALID_ARGUMENT');
+        const value={};
+        for(const key of Object.keys(options)){
+          const input=options[key];
+          if(key==='format'&&!['png','jpg','jpeg'].includes(input)||
+             key==='scale'&&!(typeof input==='number'&&Number.isFinite(input)&&input>0)||
+             key==='quality'&&!(typeof input==='number'&&Number.isFinite(input)&&input>=0&&input<=1)||
+             key==='padding'&&!(Number.isInteger(input)&&input>=0&&input<=1024)||
+             key==='includePattern'&&typeof input!=='boolean'||
+             key==='generation'&&!(typeof input==='string'&&/^(0|[1-9][0-9]*)$/.test(input)&&BigInt(input)<=18446744073709551615n)||
+             key==='bounds'&&!(Array.isArray(input)&&input.length===4&&input.every(n=>typeof n==='number'&&Number.isFinite(n))&&input[0]<input[2]&&input[1]<input[3])||
+             key==='background'&&!(input==='document'||input==='transparent'||Array.isArray(input)&&input.length===4&&input.every(n=>typeof n==='number'&&Number.isFinite(n)&&n>=0&&n<=1)&&input[3]===1))
+            throw new AxiomError('INVALID_ARGUMENT');
+          value[key]=Array.isArray(input)?[...input]:input;
+        }
+        if(value.background==='transparent'&&value.format&&value.format!=='png')throw new AxiomError('INVALID_ARGUMENT','Transparent background requires PNG');
+        return enqueue(()=>{const result=call('exportImage',{options:value});return {...result.value,bytes:module.HEAPU8.slice(module._axiom_js_bytes(),module._axiom_js_bytes()+module._axiom_js_size())};},false,false);
+      },
       readBackground:()=>call('background').value,
       setBackground:async value=>{
         if(!value||typeof value!=='object'||Object.keys(value).length!==3||

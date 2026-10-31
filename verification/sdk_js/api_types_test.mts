@@ -1,11 +1,19 @@
 import {createRuntime,AxiomError,type Color} from '../../sdk/web/axiom.mjs';
 const sdk=await createRuntime({mount:document.createElement('div'),permission:'localSingleUser',onOperation:bytes=>{bytes.slice();}});
+const imageExportVersion:1=sdk.readBuildInfo().features.imageExport;
+void imageExportVersion;
 await sdk.selectTool('objectEraser');
 await sdk.selectShape('triangle');
 const projection=sdk.multi.read(), property=projection.properties['3'];
 await sdk.multi.setProperty(3,{type:'float',value:.5},projection.stamp,property.eligible);
 const color:Color=[0,0,1,1];await sdk.text.format({color,bold:true});
 await sdk.setBackground({mode:'dots',color:[1,1,1,1],patternColor:[0,0,0,.5]});
+const exported=await sdk.exportImage({format:'jpg',scale:2,background:[1,1,1,1],generation:sdk.readState().generation});
+exported.bytes.slice();exported.mimeType;exported.bounds[3];exported.generation;
+// @ts-expect-error formats are closed
+await sdk.exportImage({format:'webp'});
+// @ts-expect-error generations retain exact decimal representation
+await sdk.exportImage({generation:123});
 const background=sdk.readBackground();background.mode;background.patternColor[3];
 // @ts-expect-error background modes are a closed vocabulary
 await sdk.setBackground({mode:'checkerboard',color,patternColor:color});

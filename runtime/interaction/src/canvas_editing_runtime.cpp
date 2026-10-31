@@ -415,6 +415,7 @@ CanvasEditingRuntime::CanvasEditingRuntime(render::ViewId viewId)
 void CanvasEditingRuntime::bindResourceServices(
     render::ImageResourceResolver* images,
     text::RichTextLayoutService* textService) noexcept {
+  imageResolver_ = images;
   skiaRenderer_.setImageResolver(images);
   previewRenderer_.setImageResolver(images);
   textLayoutService_ = textService;

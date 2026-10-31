@@ -1,4 +1,5 @@
 #pragma once
+#include "canvas/runtime/image_export.hpp"
 namespace canvas::runtime { class CanvasRuntimeFacade; class MultiSelectionPort; }
 #include "canvas/interaction/text_edit_session.hpp"
 #include "canvas/semantic/snapshot_bootstrap.hpp"
@@ -291,6 +292,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     operationNamespace_ = origin; operationNamespaceBound_ = true; return true;
   }
   [[nodiscard]] bool snapshotCaptureReady() const noexcept { return textReady(); }
+  [[nodiscard]] runtime::ImageExportResult exportImage(const runtime::ImageExportOptions&) noexcept;
   [[nodiscard]] foundation::DocumentBackground documentBackground() const noexcept { return semanticObjects_.documentBackground(); }
   [[nodiscard]] bool setDocumentBackground(const foundation::DocumentBackground&);
   [[nodiscard]] std::vector<semantic::ObjectRecord> snapshotObjects() const { return semanticObjects_.allObjects(); }
@@ -824,6 +826,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unique_ptr<canvas::IncrementalRuntimeCoordinator> sceneCoordinator_;
   std::unique_ptr<canvas::ISemanticSceneCompiler> sceneCompiler_;
   text::RichTextLayoutService* textLayoutService_ = nullptr;
+  render::ImageResourceResolver* imageResolver_ = nullptr;
+  bool imageExportActive_ = false;
   std::unique_ptr<render::RenderViewRuntime> selectionView_;
   // Owner-controlled presentation override; never part of Semantic or Scene.
   std::optional<semantic::ObjectRecord> imageCropPresentation_;

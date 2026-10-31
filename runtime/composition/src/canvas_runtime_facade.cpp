@@ -8,6 +8,10 @@
 
 namespace canvas::runtime {
 
+ImageExportResult CanvasRuntimeFacade::exportImage(const ImageExportOptions& options) noexcept {
+  return runtime_.exportImage(options);
+}
+
 std::optional<foundation::DocumentBackground> CanvasRuntimeFacade::readBackground() const noexcept {
   if (std::this_thread::get_id() != ownerThread_ || runtime_.closed()) return std::nullopt;
   return runtime_.documentBackground();

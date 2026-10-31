@@ -145,3 +145,49 @@ The published `20261031-4fc3ebfe` preview contains the preceding JS SDK. The new
 Shell/Axis extensions require a matching rebuilt wrapper/WASM and are not added
 to previously published immutable assets. See the checked declarations for the
 exact supported API. Unsupported operations reject with `AxiomError`.
+
+Image export (`imageExport: 1`, matching `1.0.0-preview.4` wrapper/WASM):
+
+```js
+const image = await runtime.exportImage({format: 'png', scale: 2});
+// Caller owns image.bytes; Shell chooses filename/storage/download behavior.
+const blob = new Blob([image.bytes], {type: image.mimeType});
+```
+
+`exportImage()` captures committed visible content, including objects outside the
+viewport and negative coordinates. It excludes hidden objects, selection handles,
+caret, provisional creation, IME preedit and drag/crop previews, and does not finish
+text or change the document, History, selection, camera or outbound queue. Empty
+boards use the current viewport. The shared Runtime renders an independent raster
+target through the existing Scene/Skia path; it does not capture the live canvas.
+
+Options: `format` is `png` (default), `jpg` or `jpeg` (both JPEG); `scale` is finite
+positive pixels per world unit (default 1); `padding` is integer output pixels
+0..1024 (default 16); `quality` is 0..1 (default .92, JPEG only). `bounds` optionally
+selects world `[left,top,right,bottom]`; otherwise complete visible content bounds
+are used. Dimensions round up. Returned `bounds` include padding and rounding;
+`generation` is the exact committed generation as a decimal string. Optional
+`generation` rejects a stale query with `STALE_TARGET`.
+
+`background` is `document` (default), `transparent` (PNG only), or an opaque RGBA
+`Color` for a solid override. `includePattern: false` suppresses document dots/grid.
+Transparency excludes all background pixels. Transparent JPEG requests reject.
+Object erase masks reveal the selected background, without transparent holes or
+black JPEG patches in opaque exports.
+
+The result contains an owned `Uint8Array bytes`, `mimeType` (`image/png` or
+`image/jpeg`), `width`, `height`, `bounds`, and `generation`; no heap views, rendering
+objects or native owners escape. The query is serialized on the Runtime owner
+thread and rejects closed, unavailable, reentrant or conflicting publication calls.
+The Windows caller wrapper offers `export_image(options)` over the unchanged JSON
+C ABI: `Response.bytes` is caller-owned and `Response.value["value"]` contains the
+same metadata. No new DLL exports or internal headers are required.
+
+Dimensions are limited to 8192 per axis and 16,777,216 total pixels, with at most
+128 MiB encoded bytes. `EXPORT_TOO_LARGE` rejects before allocating the raster;
+reduce scale or request smaller bounds. Missing/failed image or required font
+resources reject with `RESOURCE_UNAVAILABLE`; export never saves placeholders.
+Invalid options reject without partial bytes, and render/encoding failure
+reports `EXPORT_FAILED`. This version performs synchronous raster/encoding work;
+large exports can briefly occupy the owner thread. Web verification does not
+establish Windows DLL/device qualification.

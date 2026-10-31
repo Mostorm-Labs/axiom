@@ -455,7 +455,7 @@ class Session::Impl {
             const auto b = runtime::readRuntimeBuildInfo();
             return {{"ok", true},
                     {"apiVersion", 1},
-                    {"features", {{"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}}},
+                    {"features", {{"shellAxis", 1}, {"resourceCustody", 1}, {"documentBackground", 1}, {"imageExport", 1}}},
                     {"sdkVersion", AXIOM_SDK_VERSION},
                     {"sourceRevision", b.sourceRevision},
                     {"dirty", b.dirty},
@@ -711,6 +711,74 @@ class Session::Impl {
             if (ok)
                 (void)f.acknowledgeTextInput(e.token, e.sequence);
             return {{"ok", ok}, {"code", "TEXT_REJECTED"}, {"status", done->status}};
+        }
+        if (command == "exportImage") {
+            runtime::ImageExportOptions options;
+            const auto& input = j.at("options");
+            if (!input.is_object()) throw std::invalid_argument("export options");
+            for (auto it = input.begin(); it != input.end(); ++it)
+                if (it.key() != "format" && it.key() != "scale" && it.key() != "padding" &&
+                    it.key() != "quality" && it.key() != "background" && it.key() != "includePattern" &&
+                    it.key() != "bounds" && it.key() != "generation") throw std::invalid_argument("export field");
+            const auto format = input.value("format", std::string{"png"});
+            if (format == "png") options.format = runtime::ImageExportFormat::kPng;
+            else if (format == "jpg" || format == "jpeg") options.format = runtime::ImageExportFormat::kJpeg;
+            else throw std::invalid_argument("export format");
+            const auto number = [](const J& value) {
+                if (!value.is_number()) throw std::invalid_argument("export number");
+                const auto n = value.get<double>();
+                if (!std::isfinite(n)) throw std::invalid_argument("export finite number");
+                return n;
+            };
+            if (input.contains("scale")) options.scale = number(input.at("scale"));
+            if (input.contains("quality")) options.quality = number(input.at("quality"));
+            if (input.contains("padding")) {
+                const auto value = number(input.at("padding"));
+                if (value < 0 || value > 1024 || std::floor(value) != value) throw std::invalid_argument("export padding");
+                options.padding = static_cast<std::uint32_t>(value);
+            }
+            if (input.contains("generation")) options.expectedGeneration = decimal(input.at("generation"));
+            if (input.contains("includePattern")) {
+                if (!input.at("includePattern").is_boolean()) throw std::invalid_argument("export pattern");
+                options.includePattern = input.at("includePattern").get<bool>();
+            }
+            if (input.contains("bounds")) {
+                const auto& value = input.at("bounds");
+                if (!value.is_array() || value.size() != 4) throw std::invalid_argument("export bounds");
+                options.bounds = std::array<double,4>{number(value[0]),number(value[1]),number(value[2]),number(value[3])};
+            }
+            if (input.contains("background")) {
+                const auto& value = input.at("background");
+                if (value == "document") options.background = runtime::ImageExportBackground::kDocument;
+                else if (value == "transparent") options.background = runtime::ImageExportBackground::kTransparent;
+                else {
+                    if (!value.is_array() || value.size() != 4) throw std::invalid_argument("export background");
+                    options.background = runtime::ImageExportBackground::kSolid;
+                    for (std::size_t i=0; i<4; ++i) {
+                        const auto n = number(value[i]);
+                        if (n < 0 || n > 1 || (i == 3 && n != 1)) throw std::invalid_argument("export opaque color");
+                        options.backgroundColor[i] = static_cast<float>(n);
+                    }
+                }
+            }
+            auto image = facade().exportImage(options);
+            using S = runtime::ImageExportStatus;
+            if (image.status != S::kExported) {
+                switch (image.status) {
+                    case S::kInvalidArgument: return error("INVALID_ARGUMENT");
+                    case S::kTooLarge: return error("EXPORT_TOO_LARGE");
+                    case S::kStale: return error("STALE_TARGET");
+                    case S::kResourceUnavailable: return error("RESOURCE_UNAVAILABLE");
+                    case S::kWrongThread: return error("WRONG_THREAD");
+                    case S::kNotReady: return error("NOT_READY");
+                    case S::kBusy: return error("BUSY");
+                    case S::kUnsupported: return error("UNSUPPORTED");
+                    default: return error("EXPORT_FAILED");
+                }
+            }
+            outputBytes = std::move(image.bytes);
+            return {{"ok",true},{"value",{{"mimeType",image.mimeType},{"width",image.width},
+                {"height",image.height},{"bounds",image.bounds},{"generation",std::to_string(image.generation)}}}};
         }
         if (command == "background") {
             const auto value = facade().readBackground();

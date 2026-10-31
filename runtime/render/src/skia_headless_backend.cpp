@@ -779,6 +779,7 @@ bool shouldIsolateInkEntry(const ReferenceTraversalEntry& entry,
 }
 
 void drawDocumentBackground(SkCanvas& canvas, const FramePlan& plan) {
+    if (plan.transparentBackground) { canvas.clear(SK_ColorTRANSPARENT); return; }
     const auto& background = plan.background;
     const auto color = [](const std::array<float,4>& value) {
         return SkColor4f{value[0],value[1],value[2],value[3]};
@@ -921,19 +922,20 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
             }
         }
     }
-    // Canonical surfaces are opaque document targets. Preview has its own
-    // transparent clear in SkiaRenderer::renderPreview.
+    // Live canonical targets use an opaque document background; isolated image
+    // exports may request transparency. Preview has its own transparent clear.
     drawDocumentBackground(canvas, plan);
     canvas.save();
     scaleToDevice(canvas, plan.frame.metrics);
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
-    const bool hasDrawableNonInk = plan.background != foundation::DocumentBackground{} || std::any_of(
+    const bool hasDrawableNonInk = plan.transparentBackground || plan.background != foundation::DocumentBackground{} || std::any_of(
         plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
         isDrawableNonInkReferenceEntry);
     for (const auto& entry : plan.referenceDrawList.entries) {
         if (!includeInk && isInkReferenceEntry(entry)) continue;
-        const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk);
+        const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk) ||
+            (plan.isolateEraseMasks && !entry.record.eraseMasks.empty());
         canvas.save();
         if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
         canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
@@ -953,12 +955,13 @@ void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
     scaleToDevice(canvas, plan.frame.metrics);
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
-    const bool hasDrawableNonInk = plan.background != foundation::DocumentBackground{} || std::any_of(
+    const bool hasDrawableNonInk = plan.transparentBackground || plan.background != foundation::DocumentBackground{} || std::any_of(
         plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
         isDrawableNonInkReferenceEntry);
     for (const auto& entry : plan.referenceDrawList.entries) {
         if (!isInkReferenceEntry(entry)) continue;
-        const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk);
+        const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk) ||
+            (plan.isolateEraseMasks && !entry.record.eraseMasks.empty());
         canvas.save();
         if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
         canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
@@ -1020,19 +1023,20 @@ BackendSubmissionResult SkiaHeadlessBackend::submit(const FramePlan& plan) {
     if (!surface) return reject(HeadlessSubmissionIssue::kRasterFailure, "unable to create raster surface");
     SkCanvas* canvas = surface->getCanvas();
     const auto background=_config.backgroundRgba;
-    if (plan.background != foundation::DocumentBackground{}) drawDocumentBackground(*canvas, plan);
+    if (plan.transparentBackground || plan.background != foundation::DocumentBackground{}) drawDocumentBackground(*canvas, plan);
     else canvas->clear(SkColorSetARGB(background&255U,background>>24U,(background>>16U)&255U,(background>>8U)&255U));
     canvas->save();
     scaleToDevice(*canvas, plan.frame.metrics);
     canvas->clipRect(rect(plan.referenceDrawList.viewportClip));
     const SkMatrix worldMatrix = matrix(plan.referenceDrawList.worldToView);
-    const bool hasDrawableNonInk = plan.background != foundation::DocumentBackground{} || std::any_of(
+    const bool hasDrawableNonInk = plan.transparentBackground || plan.background != foundation::DocumentBackground{} || std::any_of(
         plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
         isDrawableNonInkReferenceEntry);
     std::vector<semantic::ObjectKind> kinds;
     kinds.reserve(plan.referenceDrawList.entries.size());
     for (const auto& entry : plan.referenceDrawList.entries) {
-        const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk);
+        const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk) ||
+            (plan.isolateEraseMasks && !entry.record.eraseMasks.empty());
         canvas->save();
         if (isolatedInk) canvas->saveLayer(nullptr, nullptr);
         canvas->concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));

@@ -81,3 +81,23 @@ Snapshots do not restore Undo history and do not embed resource blobs; persist a
 republish matching resources using their manifest tokens. The known D07
 Protobuf/Abseil injected-OOM hang remains unresolved. Physical IME/touch/DPI
 acceptance remains separate from synthetic/native automated regression.
+
+Image export (`imageExport: 1`, preview.4 and later matching binaries) is a read-only
+owner-thread query over committed content:
+
+```cpp
+auto image = runtime.export_image({{"format", "jpeg"}, {"scale", 2}});
+// image.bytes is application-owned; image.value["value"] holds
+// mimeType, width, height, world bounds and exact decimal-string generation.
+```
+
+Default export covers complete visible content with 16 output pixels of padding,
+including objects outside the current camera. It excludes editor chrome and
+uncommitted previews. `png`, `jpg` and `jpeg` are supported; JPEG is opaque. Options
+match the Web `exportImage` contract, including bounds, scale, quality, background,
+includePattern and optional generation fence. Limits are 8192 per axis and
+16,777,216 pixels; oversized queries reject before raster allocation. Storage and
+filenames belong to the caller. Response buffers retain the existing C ABI
+copy/release ownership; no new DLL symbol or rendering handle is exposed. This
+change has local source/header and shared Runtime verification; Windows DLL/device
+qualification requires the matching Windows build.

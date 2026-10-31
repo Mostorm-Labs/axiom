@@ -1,0 +1,98 @@
+<!doctype html><meta charset="utf-8"><title>Public SDK image export regression</title>
+<style>body{margin:0;display:flex;gap:8px}.mount{width:256px;height:256px}</style>
+<div id="a" class="mount"></div><div id="b" class="mount"></div>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+const documentId='1234567890abcdef1234567890abcdef',errors=[];
+const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+const check=(condition,message)=>{if(!condition)throw Error(message);};
+const bytesEqual=(a,b)=>a.length===b.length&&a.every((v,i)=>v===b[i]);
+async function decode(image){
+  const bitmap=await createImageBitmap(new Blob([image.bytes],{type:image.mimeType}));
+  check(bitmap.width===image.width&&bitmap.height===image.height,'decoded size');
+  const c=document.createElement('canvas');c.width=bitmap.width;c.height=bitmap.height;
+  const ctx=c.getContext('2d');ctx.drawImage(bitmap,0,0);bitmap.close();
+  return {pixels:ctx.getImageData(0,0,c.width,c.height).data,at:(x,y)=>Array.from(ctx.getImageData(x,y,1,1).data)};
+}
+const checkpoint=async sdk=>{const metadata={generation:sdk.readState().generation,documentRevision:'7',recoveryFrontier:[8,1,16,1,24,7]};const saved=await sdk.captureSnapshot(metadata);return {bytes:saved.bytes,metadata:{...metadata,checkpointDigest:saved.checkpointDigest,resourceBinding:'55'}};};
+const expectReject=async(fn,code)=>{let caught;try{await fn();}catch(error){caught=error;}check(caught&&(!code||caught.code===code),`expected ${code}, got ${caught}`);};
+const state=sdk=>{const s=sdk.readState();return {generation:s.generation,camera:s.camera,selected:s.selected,canUndo:s.canUndo,canRedo:s.canRedo,selectionRevision:s.selectionRevision,objects:s.objects,data:sdk.data.status()};};
+let sdk;
+window.probe={errors,ready:null,get sdk(){return sdk;},info:()=>sdk.readBuildInfo(),rect:()=>{const r=sdk.canvas.getBoundingClientRect();return {x:r.x,y:r.y};},
+ initial:async()=>{
+   const empty=await sdk.exportImage({padding:0});check(empty.width===256&&empty.height===256,'empty viewport');
+   check(same((await decode(empty)).at(10,10),[255,255,255,255]),'empty white');
+   await sdk.setBackground({mode:'grid',color:[0,1,0,1],patternColor:[1,0,0,1]});
+   const region={bounds:[0,0,48,48],padding:0};
+   const grid=await decode(await sdk.exportImage(region));check(grid.at(24,24)[0]>100&&same(grid.at(12,12),[0,255,0,255]),'pattern pixels');
+   check(same((await decode(await sdk.exportImage({...region,includePattern:false}))).at(24,24),[0,255,0,255]),'pattern excluded');
+   check(same((await decode(await sdk.exportImage({...region,background:[0,0,1,1]}))).at(24,24),[0,0,255,255]),'solid override');
+   check((await decode(await sdk.exportImage({...region,background:'transparent'}))).at(24,24)[3]===0,'transparent excludes pattern');
+   await sdk.setBackground({mode:'plain',color:[1,1,1,1],patternColor:[0,0,0,.5]});
+   return {empty:true,documentPattern:true,patternExcluded:true,solidOverride:true,transparentPattern:true};
+ },
+ content:async()=>{
+   const saved=await checkpoint(sdk),before=state(sdk),image=await sdk.exportImage({padding:0});
+   check(image.width===600&&image.height===80&&same(image.bounds,[-100,20,400+100,100]),'offscreen/negative bounds '+JSON.stringify({bounds:image.bounds,width:image.width,height:image.height}));
+   const decoded=await decode(image);
+   check(same(decoded.at(10,10),[255,0,0,255])&&same(decoded.at(590,10),[0,0,255,255])&&same(decoded.at(300,10),[255,255,255,255]),'literal object pixels');
+   check(same(before,state(sdk)),'state changed');
+   const after=await checkpoint(sdk);check(bytesEqual(saved.bytes,after.bytes),'snapshot mutated');
+   const transparent=await sdk.exportImage({padding:0,background:'transparent'});
+   check((await decode(transparent)).at(300,10)[3]===0,'alpha missing');
+   const copied=image.bytes.slice();
+   for(const format of ['jpg','jpeg']){
+     const jpeg=await sdk.exportImage({format,padding:0});check(jpeg.mimeType==='image/jpeg'&&jpeg.bytes[0]===255&&jpeg.bytes[1]===216,'JPEG format');
+     const pixel=(await decode(jpeg)).at(10,10);check(pixel[0]>240&&pixel[1]<15&&pixel[2]<15,'JPEG pixel');
+   }
+   check(bytesEqual(copied,image.bytes),'bytes borrowed from WASM');
+   const large=await sdk.exportImage({padding:8,scale:2});check(large.width===1216&&large.height===176,'scale/padding');
+   for(const options of [null,{bad:true},{format:'webp'},{scale:NaN},{scale:Infinity},{scale:0},{padding:-1},{padding:1.5},{quality:2},{includePattern:1},{bounds:[1,0,0,1]},{bounds:[0,0,Infinity,1]},{background:[1,0,0,.5]},{background:'transparent',format:'jpg'},{generation:7},{generation:'18446744073709551616'}])await expectReject(()=>sdk.exportImage(options),'INVALID_ARGUMENT');
+   await expectReject(()=>sdk.exportImage({scale:1000}),'EXPORT_TOO_LARGE');
+   await expectReject(()=>sdk.exportImage({bounds:[0,0,5000,5000],padding:0}),'EXPORT_TOO_LARGE');
+   await expectReject(()=>sdk.exportImage({generation:'999999'}),'STALE_TARGET');
+   check(same(before,state(sdk)),'invalid export mutated state');
+   await sdk.setSelectionVisible(false);const hidden=await sdk.exportImage({padding:0});check(hidden.width===100&&hidden.bounds[0]===-100,'hidden object exported');await sdk.undo();
+   await sdk.panBy(17,23);const panned=await sdk.exportImage({padding:0});check(bytesEqual(panned.bytes,image.bytes),'camera changed export');
+   return {fullContent:true,pngAlpha:true,jpegAliases:true,ownedBytes:true,scalePadding:true,readOnlySnapshot:true,readOnlyState:true,invalidAtomic:true,limits:true,stale:true,hiddenExcluded:true,cameraIndependent:true};
+ },
+ creation:async(name='activeCreationExcluded')=>{
+   const before=state(sdk),image=await sdk.exportImage({padding:0});
+   check(image.width===600&&image.height===80,'provisional creation included');check(same(before,state(sdk)),'active creation changed');
+   return {[name]:true};
+ },
+ imageAndText:async()=>{
+   const c=document.createElement('canvas');c.width=16;c.height=16;const ctx=c.getContext('2d');ctx.fillStyle='#00ff00';ctx.fillRect(0,0,16,16);
+   const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));
+   await sdk.importImage(new Uint8Array(await blob.arrayBuffer()),'image/png');
+   await sdk.transformSelection([1,0,0,1,200,40]);
+   const rendered=await sdk.exportImage({bounds:[200,40,216,56],padding:0});check(same((await decode(rendered)).at(8,8),[0,255,0,255]),'image pixels');
+   const saved=await checkpoint(sdk);
+   const missing=await createRuntime({mount:document.getElementById('b'),documentId,builtinFonts:false,permission:'localSingleUser',restore:saved,onError:e=>errors.push({code:e.code,message:String(e)})});
+   await expectReject(()=>missing.exportImage({padding:0}),'RESOURCE_UNAVAILABLE');await missing.close();
+   await sdk.text.create(10,140);await sdk.text.replace('Export text');
+   const before=state(sdk),editor=sdk.text.read();
+   const active=await sdk.exportImage({padding:0});check(same(before,state(sdk))&&same(editor,sdk.text.read()),'export finished text');
+   await sdk.text.finish();
+   const textImage=await sdk.exportImage({bounds:[0,130,256,230],padding:0});const pixels=(await decode(textImage)).pixels;
+   let dark=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]<100&&pixels[i+1]<100&&pixels[i+2]<100&&pixels[i+3]===255)++dark;
+   check(dark>20,'text missing '+dark);
+   const missingFont=await createRuntime({mount:document.getElementById('b'),documentId,builtinFonts:false,permission:'localSingleUser',restore:await checkpoint(sdk)});
+   await expectReject(()=>missingFont.exportImage({bounds:[0,130,256,230],padding:0}),'RESOURCE_UNAVAILABLE');await missingFont.close();
+   return {imagePixels:true,missingResourceRejected:true,activeTextPreserved:true,committedTextRendered:true,missingFontRejected:true,activeTextGeneration:active.generation===before.generation};
+ },
+ erasedInk:async()=>{
+   const ink=await createRuntime({mount:document.getElementById('b'),documentId:'01e00000000000000000000000000000',builtinFonts:false});
+   await ink.applyRemoteOperation(new Uint8Array(await (await fetch('./image_export_erased.bin')).arrayBuffer()));
+   const options={bounds:[0,0,40,10],padding:0};
+   const opaque=await decode(await ink.exportImage(options));
+   check(same(opaque.at(20,5),[255,255,255,255])&&same(opaque.at(5,5),[0,0,0,255]),'opaque erased background');
+   const jpeg=await decode(await ink.exportImage({...options,format:'jpeg'}));check(jpeg.at(20,5).slice(0,3).every(n=>n>240),'JPEG black erased patch');
+   const transparent=await decode(await ink.exportImage({...options,background:'transparent'}));check(transparent.at(20,5)[3]===0&&transparent.at(5,5)[3]===255,'transparent erased background');
+   await ink.close();return {opaqueErasedInk:true,jpegErasedInk:true,transparentErasedInk:true};
+ },
+ close:async()=>{let last=null,p;while((p=sdk.data.readNext(last)))last=p;if(last)sdk.data.release(last);await sdk.close();},
+ closed:async()=>{await expectReject(()=>sdk.exportImage(),'CLOSED');return true;}
+};
+probe.ready=(async()=>{sdk=await createRuntime({mount:document.getElementById('a'),documentId,permission:'localSingleUser',onError:e=>errors.push({code:e.code,message:String(e)})});sdk.data.attach({capacity:128});})();
+</script>

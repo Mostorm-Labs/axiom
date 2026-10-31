@@ -49,3 +49,13 @@ TypeScript positive/negative consumers; packaged assets with the same factory,
 engine, wasm, data and collector modules. Physical IME/touch results and stable
 release acceptance remain separate evidence. Do not claim stability from merely
 enumerating declarations or a successful synthetic test name.
+
+
+Image export extension (preview.4): `exportImage` is a queued read-only capability;
+it does not call text finish or schedule live presentation. Requests/results and
+limits are defined in `image-export-v1-contract.json` and `sdk/web/README.md`.
+The Runtime owns canonical frame preparation and the shared renderer. The root
+facade returns an owned byte copy and value metadata only. Demo Blob/download
+behavior remains in the Shell. This extension adds no canonical operation or
+consumer-visible rendering owner and does not retroactively change published
+preview assets.

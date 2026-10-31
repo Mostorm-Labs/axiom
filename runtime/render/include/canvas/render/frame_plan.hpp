@@ -13,6 +13,9 @@ struct FramePlan final {
     const FrameState frame;
     const ReferenceDrawList referenceDrawList;
     const foundation::DocumentBackground background{};
+    const bool transparentBackground = false;
+    // Image export composites per-object erase masks over its chosen background.
+    const bool isolateEraseMasks = false;
 
     bool operator==(const FramePlan&) const = default;
 };
@@ -22,7 +25,8 @@ class FramePlanBuilder final {
     [[nodiscard]] static foundation::Result<FramePlan> build(
         const FrameState& frame,
         const ReferenceDrawList& referenceDrawList,
-        const foundation::DocumentBackground& background = {});
+        const foundation::DocumentBackground& background = {},
+        bool transparentBackground = false, bool isolateEraseMasks = false);
 };
 
 } // namespace canvas::render

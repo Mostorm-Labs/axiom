@@ -37,6 +37,24 @@ try{
  add('Import image',()=>{replace=false;file.value='';file.click();});add('Replace image',()=>{replace=true;file.value='';file.click();});
  file.onchange=async()=>{try{const f=file.files?.[0];if(!f)return;const bytes=new Uint8Array(await f.arrayBuffer());if(replace)await sdk.replaceImage(bytes,f.type);else await sdk.importImage(bytes,f.type);show();}catch(e){fail(e);}};
  add('Crop',()=>sdk.beginCrop(sdk.readSelectedImage().objectId));add('Crop done',()=>sdk.commitCrop(sdk.readCrop().token));add('Crop cancel',()=>sdk.cancelCrop(sdk.readCrop().token));
+ const exportFormat=document.createElement('select');exportFormat.id='export-format';exportFormat.setAttribute('aria-label','图片格式');
+ for(const value of ['png','jpg','jpeg']){const option=document.createElement('option');option.value=value;option.textContent=value.toUpperCase();exportFormat.append(option);}
+ const exportScale=document.createElement('select');exportScale.id='export-scale';exportScale.setAttribute('aria-label','导出倍率');
+ for(const value of [1,2,4]){const option=document.createElement('option');option.value=value;option.textContent=`${value}×`;exportScale.append(option);}
+ tools.append(exportFormat,exportScale);
+ const checkInput=(id,label,checked)=>{const wrapper=document.createElement('label');const input=document.createElement('input');input.type='checkbox';input.id=id;input.checked=checked;wrapper.append(input,document.createTextNode(label));tools.append(wrapper);return input;};
+ const transparent=checkInput('export-transparent','透明背景',false),includePattern=checkInput('export-pattern','包含点线',true);
+ exportFormat.onchange=()=>{transparent.disabled=exportFormat.value!=='png';if(transparent.disabled)transparent.checked=false;};
+ const exportButton=add('导出图片',async()=>{
+   exportButton.disabled=true;
+   try{
+     const format=exportFormat.value;
+     const image=await sdk.exportImage({format,scale:Number(exportScale.value),background:transparent.checked?'transparent':'document',includePattern:includePattern.checked});
+     const url=URL.createObjectURL(new Blob([image.bytes],{type:image.mimeType})),link=document.createElement('a');
+     link.href=url;link.download=`axiom-board.${format}`;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+   }catch(error){if(error.code==='EXPORT_TOO_LARGE')error.message='图片尺寸过大，请降低导出倍率或缩小画板内容范围';throw error;}
+   finally{exportButton.disabled=false;}
+ });exportButton.id='export-image';
  active=tools.querySelector('[data-tool]');active.setAttribute('aria-pressed','true');show();
  window.addEventListener('pagehide',()=>{void sdk.close().catch(fail);},{once:true});
 }catch(e){fail(e);}

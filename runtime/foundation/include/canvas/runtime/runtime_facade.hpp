@@ -6,6 +6,7 @@
 #include "canvas/runtime/selection_summary.hpp"
 #include "canvas/runtime/text_input.hpp"
 #include "canvas/runtime/image_input.hpp"
+#include "canvas/runtime/image_export.hpp"
 #include "canvas/runtime/connector_sticky_input.hpp"
 
 #include <utility>
@@ -17,6 +18,7 @@ namespace canvas::runtime {
 class RuntimeFacade {
  public:
   virtual ~RuntimeFacade() = default;
+  [[nodiscard]] virtual ImageExportResult exportImage(const ImageExportOptions&) noexcept { return {}; }
   [[nodiscard]] virtual std::optional<foundation::DocumentBackground> readBackground() const noexcept { return std::nullopt; }
   [[nodiscard]] virtual SelectionSummary readSelectionSummary() const { return {}; }
   // Public C++ projection and intents; default implementations fail closed.
