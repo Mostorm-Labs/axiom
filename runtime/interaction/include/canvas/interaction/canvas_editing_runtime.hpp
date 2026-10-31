@@ -283,6 +283,13 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     documentId_ = id; return true;
   }
   [[nodiscard]] semantic::DocumentId documentId() const noexcept { return documentId_; }
+  // Composition supplies a fresh origin before open, including checkpoint recovery.
+  // Standalone qualification owners retain their deterministic numeric fixture IDs.
+  [[nodiscard]] bool setInitialOperationNamespace(foundation::ObjectId origin) noexcept {
+    if (origin.isZero() || operationNamespaceBound_ || closed_ || surface_.available ||
+        semanticObjects_.size() != 0U || submittedOperationCount_ != 0U) return false;
+    operationNamespace_ = origin; operationNamespaceBound_ = true; return true;
+  }
   [[nodiscard]] bool snapshotCaptureReady() const noexcept { return textReady(); }
   [[nodiscard]] std::vector<semantic::ObjectRecord> snapshotObjects() const { return semanticObjects_.allObjects(); }
   [[nodiscard]] SnapshotRestoreOutcome restoreSnapshotBeforeSurface(const semantic::SemanticSnapshot& snapshot,
@@ -626,6 +633,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] semantic::Operation legacyStrokeOperation(
       const ink::StrokeRecord&, std::uint64_t operationId) const;
   [[nodiscard]] std::uint64_t localOperationOrdinal() const noexcept;
+  [[nodiscard]] semantic::OperationId localOperationIdentity(std::uint64_t ordinal) const noexcept;
   [[nodiscard]] bool historySceneReady() const noexcept;
   [[nodiscard]] bool canonicalWriteAdmission() const noexcept;
   [[nodiscard]] bool prepareExplicitIntentInternal(std::span<const semantic::Operation>, bool);
@@ -753,6 +761,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   semantic::ResourceManifest* resourceManifestPort_ = &resourceManifest_;
   semantic::DocumentId documentId_{canvas::foundation::ObjectId::fromUint64(1U)};
   std::uint64_t nextHistoryOperationOrdinal_ = (std::uint64_t{1} << 63U);
+  foundation::ObjectId operationNamespace_{};
+  bool operationNamespaceBound_ = false;
     std::uint64_t nextTextIdentity_ = 1;
   bool textTool_=false;
   runtime::TextSessionToken caretToken_{};

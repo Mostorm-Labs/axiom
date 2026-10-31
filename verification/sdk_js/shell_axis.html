@@ -34,6 +34,17 @@ try{
   assert(replayed.every(r=>r.ok&&r.source===4)&&recovered.readState().objects===2&&!recovered.readState().canUndo&&recovered.data.status().pending===0,'local replay uses RestoreReplay without new local output or History');
   await recovered.applyReplayOperation(packets[0].bytes);assert(recovered.readState().objects===2,'local replay retains original OperationId and deduplicates');
   await recovered.close();replayMount.remove();
+  const checkpoint={generation:a.readState().generation,documentRevision:'1',recoveryFrontier:[8,1,16,1,24,1]};
+  const saved=await a.captureSnapshot(checkpoint);
+  const restoredMount=document.createElement('div');restoredMount.className='mount';document.body.append(restoredMount);
+  const restored=await createRuntime({...options,mount:restoredMount,restore:{bytes:saved.bytes,metadata:{...checkpoint,checkpointDigest:saved.checkpointDigest,resourceBinding:'55'}}});
+  restored.data.attach();const restoredPackets=[];
+  const restoredStop=restored.subscribeOperations(p=>restoredPackets.push(p));
+  await restored.createSticky({size:80,x:200});await restored.undo();await restored.redo();await restored.dispatchEvents();
+  const ids=[...packets,...restoredPackets].map(p=>p.operationId);
+  assert(restoredPackets.length===3&&new Set(ids).size===ids.length,'checkpoint recovery edit and Undo/Redo have fresh OperationIds across independent WASM owners');
+  assert(restored.readState().objects===3,'restored edit and History preserve checkpoint objects');
+  restoredStop();restored.data.release(restoredPackets.at(-1));await restored.close();restoredMount.remove();
   await a.dispatchEvents();assert(states.length>0,'shell observes controls/history/Axis state');
   stop();stopState();
   rejected=false;try{await a.close();}catch(e){rejected=e.code==='PUBLICATION_PENDING';}

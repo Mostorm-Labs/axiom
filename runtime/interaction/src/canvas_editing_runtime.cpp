@@ -1250,7 +1250,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     }
   }
   semantic::Operation operation{
-      semantic::OperationId(foundation::ObjectId::fromUint64(ordinal)), documentId_,
+      localOperationIdentity(ordinal), documentId_,
       1U, 1U, semantic::InsertObjectsOp{std::move(inserted)}};
   const auto inverseId = allocateOperationId();
   if (inverseId.isZero()) return false;
@@ -2972,7 +2972,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   semantic::Operation operation;
   const auto operationOrdinal = localOperationOrdinal();
   if (operationOrdinal == 0U) return false;
-  operation.id = semantic::OperationId(foundation::ObjectId::fromUint64(operationOrdinal));
+  operation.id = localOperationIdentity(operationOrdinal);
   operation.document_id = documentId_;
   operation.schema_version = 1U;
   operation.payload_version = 1U;
@@ -3318,7 +3318,7 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
   const auto operationId = localOperationOrdinal();
   if (operationId == 0U) return false;
   const auto operation = BrushCommitAdapter::build(
-      intent, package, operationId, documentId_);
+      intent, package, operationId, documentId_, localOperationIdentity(operationId));
   semantic::Operation inverse;
   inverse.id = allocateOperationId();
   if (inverse.id.isZero()) return false;
@@ -3718,11 +3718,17 @@ void CanvasEditingRuntime::publishAdmitted() noexcept {
 
 semantic::OperationId CanvasEditingRuntime::allocateOperationId() {
   while (nextHistoryOperationOrdinal_ != 0U) {
-    const auto id = semantic::OperationId(
-        foundation::ObjectId::fromUint64(nextHistoryOperationOrdinal_++));
-    if (!appliedOperations_.find(id).has_value()) return id;
+    const auto id = localOperationIdentity(nextHistoryOperationOrdinal_++);
+    if (!id.isZero() && !appliedOperations_.find(id).has_value()) return id;
   }
   return {};
+}
+
+semantic::OperationId CanvasEditingRuntime::localOperationIdentity(std::uint64_t ordinal) const noexcept {
+  auto id = foundation::ObjectId::fromUint64(ordinal);
+  for (std::size_t index = 0; index < id.bytes.size(); ++index)
+    id.bytes[index] ^= operationNamespace_.bytes[index];
+  return semantic::OperationId{id};
 }
 
 std::uint64_t CanvasEditingRuntime::localOperationOrdinal() const noexcept {
@@ -3731,7 +3737,8 @@ std::uint64_t CanvasEditingRuntime::localOperationOrdinal() const noexcept {
   auto ordinal = static_cast<std::uint64_t>(submittedOperationCount_ + 1U);
   while (ordinal != 0U && ordinal < (std::uint64_t{1} << 63U)) {
     const auto id = foundation::ObjectId::fromUint64(ordinal);
-    if (!appliedOperations_.find(semantic::OperationId(id)).has_value() &&
+    const auto operationId = localOperationIdentity(ordinal);
+    if (!operationId.isZero() && !appliedOperations_.find(operationId).has_value() &&
         !semanticObjects_.contains(id)) return ordinal;
     ++ordinal;
   }

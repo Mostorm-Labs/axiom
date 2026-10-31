@@ -1,0 +1,12 @@
+{
+  "task_id": "AXIOM-SDK-RECOVERY-REPAIR-20261031",
+  "version": 1,
+  "base_revision": "1a8bc6a037d6943682ffcc304829530b646cf424",
+  "authorization": "User explicitly requests repairing restored OperationId reuse and the two reported regressions in this conversation.",
+  "scope": "Runtime-owned fresh local Operation identity at open/restore, actual public SDK recovery regressions, and diagnosis/repair of FC02WindowsTouchShapeLabelEntry and G4InkPlaygroundSelection fixtures or their directly implicated production paths.",
+  "owners": ["runtime/composition", "runtime/interaction", "verification/sdk_windows_dll", "verification/sdk_js", "verification/runtime_qualification/tests/ink_playground_test.cpp", "apps/minimal_runtime_host/tests/windows_text_tool_entry_test.cpp"],
+  "invariants": ["Replay and remote IDs remain unchanged", "Wire Id128 and historical descriptor locks remain unchanged", "No reconstructed checkpoint operation ledger", "No SDK callback ID rewriting", "Native event timestamps, touch thresholds and surface admission remain truthful", "Prior packages and failure evidence immutable"],
+  "verification": ["Published DLL probe RED then rebuilt DLL probe GREEN", "Public Runtime identity across fresh owners, snapshot restore and Undo/Redo", "Actual external Windows DLL and Chrome/WASM consumers", "92 retained regressions, plus SDKPublicOperationIdentity and SDKPublicSelectionInput replacing the retired G4InkPlaygroundSelection fixture, no zero-match or skipped success"],
+  "fixture_retirement_authorization": "User asks to remove stale Ink Playground application fixtures after application deletion; retain the valid ingress invariant at the current public Runtime boundary.",
+  "excluded": ["D07 injected OOM repair", "SDK lock changes", "Global Aegis registries", "Main merge", "Release replacement", "Physical acceptance claims"]
+}

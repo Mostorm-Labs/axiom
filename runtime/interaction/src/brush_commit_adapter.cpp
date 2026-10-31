@@ -77,9 +77,12 @@ semantic::Operation BrushCommitAdapter::build(
     const ink::BrushCommitIntent& intent,
     const ink::BrushPackage& package,
     std::uint64_t operationId,
-    semantic::DocumentId documentId) noexcept {
+    semantic::DocumentId documentId,
+    semantic::OperationId canonicalOperationId) noexcept {
   semantic::Operation operation;
-  operation.id = semantic::OperationId(canvas::foundation::ObjectId::fromUint64(operationId));
+  operation.id = canonicalOperationId.isZero()
+      ? semantic::OperationId(canvas::foundation::ObjectId::fromUint64(operationId))
+      : canonicalOperationId;
   operation.document_id = documentId;
   operation.schema_version = 1U;
   operation.payload_version = 2U;

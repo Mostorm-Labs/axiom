@@ -116,6 +116,29 @@ int main() {
                 recovered.state().at("objects")==2 && !recovered.state().at("canUndo").get<bool>() &&
                 recovered.dataStatus().at("pending")==0,"local replay was remote/echoed/recorded as History");
         require(recovered.close(),"replay close failed");
+        const auto checkpoint=a.snapshot({{"generation",a.state().at("generation")},
+            {"documentRevision","1"},{"recoveryFrontier",{8,1,16,1,24,1}}});
+        auto restoreOptions=options;
+        restoreOptions.open["restore"]={{"documentRevision","1"},
+            {"recoveryFrontier",{8,1,16,1,24,1}},
+            {"checkpointDigest",checkpoint.value.at("checkpointDigest")},{"resourceBinding","55"}};
+        restoreOptions.snapshot=checkpoint.bytes;
+        axiom::Runtime restored(restoreOptions);restored.attachData();
+        std::vector<J> restoredMetadata;
+        const auto restoredListener=restored.subscribe(AXIOM_EVENT_OPERATION,
+            [&](uint32_t,const J& event,std::span<const uint8_t>){restoredMetadata.push_back(event);});
+        restored.createSticky({{"objectId","00000000000000000000000000006101"},{"size",80}});
+        restored.undo();restored.redo();restored.dispatchEvents();
+        require(restoredMetadata.size()==3 && restored.state().at("objects")==3,
+            "restored edit/History failed");
+        for (size_t i=0;i<restoredMetadata.size();++i) {
+            for (const auto& old:metadata)
+                require(old.at("operationId")!=restoredMetadata[i].at("operationId"),"recovery reused checkpoint OperationId");
+            for (size_t j=0;j<i;++j)
+                require(restoredMetadata[j].at("operationId")!=restoredMetadata[i].at("operationId"),"Undo/Redo reused OperationId");
+        }
+        restored.unsubscribe(restoredListener);restored.releaseOperations(restoredMetadata.back());
+        require(restored.close(),"restored owner close failed");
         a.unsubscribe(listener);
         const auto count = metadata.size();
         require(!a.close(), "close silently dropped retained operations");

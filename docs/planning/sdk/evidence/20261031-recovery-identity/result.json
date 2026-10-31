@@ -1,0 +1,60 @@
+{
+  "status": "REPAIR_VERIFIED",
+  "base_revision": "1a8bc6a037d6943682ffcc304829530b646cf424",
+  "materialized_ref": "refs/heads/codex/sdk-shell-axis-bridge",
+  "source_binding": "source-hashes.json; containing Git commit materializes this source/evidence pair",
+  "build_identity": {
+    "apiVersion": 1,
+    "dirty": true,
+    "features": {
+      "resourceCustody": 1,
+      "shellAxis": 1
+    },
+    "ok": true,
+    "platform": "windows",
+    "sdkVersion": "1.0.0-preview.1",
+    "sourceRevision": "1a8bc6a037d6943682ffcc304829530b646cf424"
+  },
+  "artifact_sha256": {
+    "out\\sdk-recovery-fix\\windows\\bin\\axiom.dll": "ef509e12436ff8c4b1b32f427d289f9d3aa76c9b32276052b0a2cebf7c049d5a",
+    "out\\preview-fresh-web\\sdk\\web\\internal\\axiom.wasm": "bcb4fb124e9c2ea5d9bd2543872c18f0bb172e5311834cfc5333668ed2d6c91c",
+    "out\\preview-fresh-web\\sdk\\web\\axiom.mjs": "f2ff1c519a688fb6eb537127e40bc92c62a2a28218e3abbdc1f3989bccf3712c",
+    "out\\preview-fresh-web\\sdk\\web\\internal\\axiom.mjs": "704f9a8c54125be582cb7b211fd16d37d6abcb533d882cb2b89e6d060d1074c6",
+    "out\\preview-fresh-web\\sdk\\web\\internal\\axiom.data": "afba06991ac1e6c785ddb2c967ffb7f4d079a2d77fb6397bacb394a171df8ff1"
+  },
+  "native_ctest": {
+    "passed": 94,
+    "failed": 0,
+    "skipped": 0,
+    "retained_from_prior_matrix": 92,
+    "new_tests": [
+      "SDKPublicOperationIdentity",
+      "SDKPublicSelectionInput"
+    ],
+    "retired": "G4InkPlaygroundSelection"
+  },
+  "touch_additional_consecutive_passes": 3,
+  "python_passed": 18,
+  "external_windows": "PASS",
+  "chrome": {
+    "status": "PASS",
+    "general_assertions": 52,
+    "shell_axis_assertions": 20,
+    "uncaught_exceptions": [],
+    "console_note": "Raw debug stderr/console output is preserved; not an empty-console claim"
+  },
+  "published_dll_probe_before": "FAIL",
+  "rebuilt_dll_probe_after": "PASS twice in independent processes",
+  "observed_operation_ids": [
+    "8fa453ff64d010813bc4435215b5ee3c",
+    "f019e3f5ffc6f95fab7457eb571de076",
+    "e61f0acacc911581e077c0b4bd075841",
+    "51a7d005cdb6b4cb7b7af7851f11cc60"
+  ],
+  "physical_ime_touch": "PHYSICAL_PENDING",
+  "remaining": [
+    "D07 injected Protobuf/Abseil OOM deferred",
+    "Entropy-source failure not fault-injected",
+    "No new release or full SDK/DEV/P34/PHYS acceptance claim"
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "cwd": "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas",
+  "commands": [
+    {
+      "command": "python tools/setup_build_environment.py --core --semantic --facts-output out/sdk-recovery-fix/native-facts.json --status",
+      "exit_code": 0
+    },
+    {
+      "command": "python tools/setup_build_environment.py --semantic --offline --status",
+      "exit_code": 0
+    },
+    {
+      "command": "python tools/setup_build_environment.py --semantic --target web-wasm32 --facts-output out/sdk-recovery-fix/web-facts.json --status",
+      "exit_code": 0
+    },
+    {
+      "command": "python tools/setup_build_environment.py --semantic --target web-wasm32 --offline --status",
+      "exit_code": 0
+    },
+    {
+      "command": "out/sdk-public-api-audit/probe-build/api_audit.exe",
+      "exit_code": 1,
+      "expected": "RED against unchanged published DLL; duplicate IDs"
+    },
+    {
+      "command": "ctest --test-dir out/preview-fresh-windows -R ^SDKPublicOperationIdentity$ --output-on-failure --no-tests=error",
+      "exit_code": 1,
+      "expected": "RED before Runtime repair; ID uniqueness assertion"
+    },
+    {
+      "command": "ctest --test-dir out/preview-fresh-windows -R ^G4InkPlaygroundSelection$ --output-on-failure --no-tests=error",
+      "exit_code": 1,
+      "expected": "Baseline failure; unbound surface"
+    },
+    {
+      "command": "ctest --test-dir out/preview-fresh-windows -R ^FC02WindowsTouchShapeLabelEntry$ --repeat until-fail:3 --output-on-failure --no-tests=error",
+      "exit_code": null,
+      "outcome": "FAIL before fixture-clock repair; wrapper did not retain CTest numeric exit, raw failed assertion/timestamps preserved"
+    },
+    {
+      "command": "cmake -S . -B out/preview-fresh-windows",
+      "environment": "VS 2026 vcvars64, emitted native facts imported",
+      "exit_code": 0
+    },
+    {
+      "command": "cmake --build out/preview-fresh-windows --parallel 6 --target axiom_editor_history_tests axiom_fc01_selected_actions_tests axiom_fc02_text_consumer_tests axiom_fc02_text_tests axiom_fc03_image_facade_tests axiom_fc04_mse_fault_probe axiom_fc05_connector_facade_tests axiom_fc08_section_consumer_tests axiom_fc08_section_geometry_tests axiom_image_resource_tests axiom_ink_playground_tests axiom_minimal_section_debug_ui_tests axiom_minimal_windows_image_debug_ui_tests axiom_minimal_windows_input_pipeline_tests axiom_minimal_windows_text_pipeline_tests axiom_minimal_windows_text_tool_entry_tests axiom_region_selection_tests axiom_render_headless_skia_tests axiom_sdk_public_document_identity_tests axiom_sdk_public_document_operations_tests axiom_sdk_public_document_snapshot_tests axiom_sdk_public_resources_tests axiom_selection_coverage_tests axiom_selection_input_integration_tests axiom_selection_session_tests axiom_selection_summary_tests axiom_selection_summary_ui_tests canvas_fc03_image_scene_test axiom_sdk_public_operation_identity_tests axiom_sdk_public_selection_input_tests",
+      "exit_code": 0
+    },
+    {
+      "command": "ctest --test-dir out/preview-fresh-windows --tests-from-file C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-recovery-fix\\regression-names.txt --no-tests=error --output-on-failure --output-junit C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-recovery-fix\\regression.xml",
+      "exit_code": 0,
+      "result": "94 passed, 0 failures, 0 skipped"
+    },
+    {
+      "command": "ctest --test-dir out/preview-fresh-windows -R ^FC02WindowsTouchShapeLabelEntry$ --repeat until-fail:3 --no-tests=error --output-on-failure --output-junit C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-recovery-fix\\touch-repeat.xml",
+      "exit_code": 0,
+      "result": "three consecutive passes"
+    },
+    {
+      "command": "cmake --install out/preview-fresh-windows --prefix out/sdk-recovery-fix/windows --component AxiomSDK",
+      "exit_code": 0
+    },
+    {
+      "command": "python verification/sdk_windows_dll/run_external.py --prefix out/sdk-recovery-fix/windows --output out/sdk-recovery-fix/external-windows.json",
+      "environment": "VS 2026 vcvars64",
+      "exit_code": 0,
+      "nested_commands": "external-windows.json"
+    },
+    {
+      "command": "cmake -S . -B out/preview-fresh-web && cmake --build out/preview-fresh-web --target axiom_js_runtime --parallel 5",
+      "environment": "emsdk-6.0.6 emsdk_env and emitted web facts imported",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "C:\\Users\\Chado\\AppData\\Local\\Axiom\\toolchains\\emsdk-6.0.6\\node\\24.19.0_64bit\\node.exe",
+        "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\verification\\sdk_js\\verify_browser.mjs",
+        "out/preview-fresh-web/sdk/web",
+        "C:/Program Files/Google/Chrome/Application/chrome.exe",
+        "out/sdk-recovery-fix/browser.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": "python -m unittest verification.tests.test_current_semantic_descriptor verification.tests.test_semantic_contract verification.tests.test_fc02_host_contract verification.tests.test_host_text_font_resource -v",
+      "environment": "emitted native facts including AXIOM_PROTOC imported",
+      "exit_code": 0,
+      "result": "18 passed, 0 skipped"
+    },
+    {
+      "command": "Unchanged recovery-identity/main.cpp and CMakeLists.txt copied to fresh temp application; cmake configure/build; executable invoked twice from outside checkout",
+      "exit_code": 0,
+      "location": {
+        "prefix": "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-recovery-fix\\windows",
+        "root": "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-recovery-probe-e5cb0b93f0854f0ab52544136380c36f"
+      },
+      "results": [
+        "probe-green-1.json",
+        "probe-green-2.json"
+      ]
+    }
+  ],
+  "setup_notes": [
+    "Initial new test compilation had incorrect StickyContent arity and eraser enum; corrected before passing qualification.",
+    "An initial Node launch used a nonexistent bin/node.exe path; corrected to the actually installed node.exe. No launch failure was counted as a passing test."
+  ]
+}

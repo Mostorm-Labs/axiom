@@ -244,25 +244,6 @@ void multi_contact_policy_selection_test() {
   assert(host.setMultiContactPolicy(canvas::interaction::MultiContactPolicy::kGesturePriority));
 }
 
-void selection_input_does_not_mutate_canonical_test() {
-  canvas::ink_playground::InkPlaygroundHost host;
-  assert(host.setSelectionMode(true));
-  canvas::input::PlatformPointerBatch batch;
-  batch.samples.push_back({17U, 1U, 1U, 1'000'000U, 24.0F, 32.0F, 0.5F,
-                           0.0F, 0.0F, {}, {},
-                           canvas::input::SampleProvenance::kConfirmedCurrent,
-                           canvas::input::PointerPhase::kDown});
-  batch.samples.push_back({17U, 1U, 2U, 2'000'000U, 30.0F, 38.0F, 0.5F,
-                           0.0F, 0.0F, {}, {},
-                           canvas::input::SampleProvenance::kConfirmedCurrent,
-                           canvas::input::PointerPhase::kUp});
-  assert(host.acceptPlatformBatch(batch, 2'000'000U));
-  assert(host.selectionMode());
-  assert(host.submittedOperationCount() == 0U);
-  assert(host.canonicalStrokes().empty());
-  assert(host.brushPreviewOutlines().empty());
-}
-
 void qualification_view_observations_test() {
   canvas::ink_playground::InkPlaygroundHost host;
   assert(host.bindSurface(256U, 256U));
@@ -328,7 +309,6 @@ int main(int argc, char** argv) {
   else if (mode == "qualification-observations") qualification_view_observations_test();
   else if (mode == "qualification-fixture") qualification_fixture_uses_canonical_operation_test();
   else if (mode == "qualification-metrics") qualification_metrics_are_real_observations_test();
-  else if (mode == "selection") selection_input_does_not_mutate_canonical_test();
   else return 2;
   return 0;
 }

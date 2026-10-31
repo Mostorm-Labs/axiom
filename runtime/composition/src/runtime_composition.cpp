@@ -10,6 +10,7 @@
 #include <atomic>
 #include <chrono>
 #include <limits>
+#include <random>
 #include <string>
 
 namespace canvas::runtime {
@@ -86,8 +87,23 @@ bool RuntimeCompositionCore::canMutate() const noexcept {
   return state_ == RuntimeCompositionState::kReady && !surfaceTransitionActive_;
 }
 bool RuntimeCompositionCore::open() noexcept {
-  return std::this_thread::get_id() == ownerThread_ && runtimeInstanceId_ != 0U &&
-      state_ == RuntimeCompositionState::kCreated && transition(RuntimeCompositionState::kBound);
+  if (std::this_thread::get_id() != ownerThread_ || runtimeInstanceId_ == 0U ||
+      state_ != RuntimeCompositionState::kCreated) return false;
+  try {
+    // The ephemeral frame instance counter and a restored document's ordinal
+    // cannot identify new canonical operations across processes/WASM modules.
+    // The supported Windows/WASM toolchains use OS/Web Crypto entropy here.
+    // Never fall back to time, a process counter, or a restored ordinal.
+    std::random_device entropy;
+    foundation::ObjectId origin{};
+    for (std::size_t index = 0; index < origin.bytes.size(); index += 4) {
+      const auto word = entropy();
+      for (std::size_t byte = 0; byte < 4; ++byte)
+        origin.bytes[index + byte] = static_cast<std::uint8_t>(word >> (byte * 8));
+    }
+    if (!runtime_->setInitialOperationNamespace(origin)) return false;
+    return transition(RuntimeCompositionState::kBound);
+  } catch (...) { return false; }
 }
 bool RuntimeCompositionCore::openDocument(semantic::DocumentId id) noexcept {
   if (std::this_thread::get_id() != ownerThread_ || runtimeInstanceId_ == 0U ||

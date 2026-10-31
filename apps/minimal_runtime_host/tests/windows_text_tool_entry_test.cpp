@@ -10,6 +10,14 @@
 
 namespace {
 POINTER_INFO nativePointer{};
+bool syntheticPointerClock = false;
+ULONGLONG pointerClockMs = 0;
+ULONGLONG observedTickCount64() {
+    return syntheticPointerClock ? pointerClockMs : ::GetTickCount64();
+}
+DWORD observedTickCount() {
+    return syntheticPointerClock ? static_cast<DWORD>(pointerClockMs) : ::GetTickCount();
+}
 BOOL observedPointer(UINT32 id, POINTER_INFO* out) {
     if (id != nativePointer.pointerId)
         return FALSE;
@@ -33,6 +41,8 @@ SHORT observedKeyState(int) {
 #define GetPointerTouchInfoHistory noTouchHistory
 #define GetPointerTouchInfo noTouchInfo
 #define GetKeyState observedKeyState
+#define GetTickCount64 observedTickCount64
+#define GetTickCount observedTickCount
 #define WinMain AxiomWindowEntryForTextToolTest
 #include "../windows_main.cpp"
 #undef WinMain
@@ -40,6 +50,8 @@ SHORT observedKeyState(int) {
 #undef GetPointerTouchInfoHistory
 #undef GetPointerTouchInfo
 #undef GetKeyState
+#undef GetTickCount64
+#undef GetTickCount
 
 int main(int argc, char** argv) {
     _set_error_mode(_OUT_TO_STDERR);
@@ -164,10 +176,13 @@ int main(int argc, char** argv) {
             assert(state.facade->submitCanvasControl(control).state == runtime::ProductControlState::kQueued);
             assert(composition.ownerPump());
         };
-        DWORD clock = GetTickCount();
+        // These are synthetic native facts, not hardware delivery timings.
+        // Synchronous rendering must not turn a 120 ms double tap into a
+        // >500 ms pair or turn a 40 ms tap into a long press under CPU load.
+        pointerClockMs = GetTickCount64();
+        syntheticPointerClock = true;
         const auto touch = [&](UINT message, UINT32 id, int x, int y, DWORD elapsed = 40) {
-            Sleep(elapsed);
-            clock = GetTickCount();
+            pointerClockMs += elapsed;
             nativePointer = {};
             nativePointer.pointerType = PT_TOUCH;
             nativePointer.pointerId = id;
@@ -175,7 +190,7 @@ int main(int argc, char** argv) {
             nativePointer.hwndTarget = owner;
             nativePointer.ptPixelLocation = {x, y};
             assert(ClientToScreen(owner, &nativePointer.ptPixelLocation));
-            nativePointer.dwTime = clock;
+            nativePointer.dwTime = static_cast<DWORD>(pointerClockMs);
             nativePointer.pointerFlags = message == WM_POINTERUP ? POINTER_FLAG_UP :
                 message == WM_POINTERDOWN ? POINTER_FLAG_DOWN | POINTER_FLAG_INCONTACT :
                                             POINTER_FLAG_UPDATE | POINTER_FLAG_INCONTACT;
@@ -210,6 +225,7 @@ int main(int argc, char** argv) {
             const auto generation = composition.controlFacade().readRuntimeState().identity.documentRevision;
             // The tap that selected the Shape plus the next rapid tap enters
             // its label editor; touch must not depend on promoted mouse clicks.
+            if (preset == 0) Sleep(600); // Processing delay does not alter source event facts.
             tap(centerX, y + 40, 120);
             assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);
             assert(state.facade->readTextEditor().token.object == selected);
