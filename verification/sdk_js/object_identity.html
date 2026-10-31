@@ -1,0 +1,82 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>SDK ObjectId recovery and writer regression</title>
+<style>
+body { margin: 8px; display: grid; grid-template-columns: 400px 400px; gap: 16px; }
+.mount { width: 400px; height: 300px; }
+</style>
+<div id="a" class="mount"></div><div id="b" class="mount"></div><div id="c" class="mount"></div>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+const documentId = '1234567890abcdef1234567890abcdef';
+const owners = new Map(), errors = [], events = [];
+for (const type of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel', 'lostpointercapture'])
+  document.addEventListener(type, event => events.push({type, target: event.target.id,
+    x: event.clientX, y: event.clientY, pointer: event.pointerId}), true);
+for (const type of ['blur', 'focus']) window.addEventListener(type, () => events.push({type}));
+async function create(name, restore) {
+  const packets = [];
+  const runtime = await createRuntime({
+    mount: document.getElementById(name), documentId, builtinFonts: false,
+    permission: 'localSingleUser', ...(restore ? {restore} : {}),
+    onError: error => errors.push({owner: name, code: error.code, message: String(error)}),
+  });
+  runtime.data.attach({capacity: 64});
+  const stop = runtime.subscribeOperations(packet => packets.push(packet));
+  owners.set(name, {runtime, packets, stop});
+}
+const entry = name => owners.get(name);
+window.probe = {
+  errors,
+  events,
+  ready: (async () => { await create('a'); await create('b'); return true; })(),
+  info: () => entry('a').runtime.readBuildInfo(),
+  state: name => entry(name).runtime.readState(),
+  primary: name => entry(name).runtime.readSelection().primary,
+  rect: name => {
+    const bounds = entry(name).runtime.canvas.getBoundingClientRect();
+    return {x: bounds.left, y: bounds.top};
+  },
+  select: async (name, tool) => tool === 'rectangle'
+    ? entry(name).runtime.selectShape(tool) : entry(name).runtime.selectTool(tool),
+  settle: async name => {
+    await entry(name).runtime.dispatchEvents();
+    return {state: entry(name).runtime.readState(), packets: entry(name).packets.length};
+  },
+  restore: async () => {
+    const source = entry('a').runtime;
+    const metadata = {generation: source.readState().generation, documentRevision: '1',
+      recoveryFrontier: [8, 1, 16, 1, 24, 1]};
+    const saved = await source.captureSnapshot(metadata);
+    await create('c', {bytes: saved.bytes,
+      metadata: {...metadata, checkpointDigest: saved.checkpointDigest, resourceBinding: '55'}});
+    return entry('c').runtime.readState();
+  },
+  history: async (name, undo) => {
+    await entry(name).runtime[undo ? 'undo' : 'redo']();
+    await entry(name).runtime.dispatchEvents();
+    return entry(name).runtime.readState();
+  },
+  merge: async (target, source, latest = false) => {
+    await entry(source).runtime.dispatchEvents();
+    const packet = latest ? entry(source).packets.at(-1) : entry(source).packets[0];
+    const outcomes = await entry(target).runtime.applyRemoteOperations([packet]);
+    await entry(target).runtime.dispatchEvents();
+    return {outcomes, state: entry(target).runtime.readState(), packets: entry(target).packets.length};
+  },
+  close: async () => {
+    for (const {runtime, packets, stop} of owners.values()) {
+      await runtime.dispatchEvents();
+      if (packets.length) runtime.data.release(packets.at(-1));
+      stop();
+      for (let attempt = 0; ; ++attempt) {
+        try { await runtime.close(); break; }
+        catch (error) {
+          if (error.code !== 'BUSY' || attempt >= 100) throw error;
+          await new Promise(resolve => setTimeout(resolve, 50));
+        }
+      }
+    }
+  },
+};
+</script>

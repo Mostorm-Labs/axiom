@@ -78,7 +78,8 @@ semantic::Operation BrushCommitAdapter::build(
     const ink::BrushPackage& package,
     std::uint64_t operationId,
     semantic::DocumentId documentId,
-    semantic::OperationId canonicalOperationId) noexcept {
+    semantic::OperationId canonicalOperationId,
+    semantic::ObjectId canonicalObjectId) noexcept {
   semantic::Operation operation;
   operation.id = canonicalOperationId.isZero()
       ? semantic::OperationId(canvas::foundation::ObjectId::fromUint64(operationId))
@@ -88,7 +89,8 @@ semantic::Operation BrushCommitAdapter::build(
   operation.payload_version = 2U;
 
   semantic::ObjectRecord object;
-  object.id = canvas::foundation::ObjectId::fromUint64(operationId);
+  object.id = canonicalObjectId.isZero()
+      ? canvas::foundation::ObjectId::fromUint64(operationId) : canonicalObjectId;
   const bool texturedDab = (package.profileId == "chalk-grain-v1" &&
                             package.revision >= 2U && package.revision <= 4U) ||
                            package.profileId == "membrane-v1";

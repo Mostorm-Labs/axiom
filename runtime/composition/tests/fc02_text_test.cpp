@@ -662,7 +662,7 @@ TEST(FC02Facade, FakeImeCommitsThroughRealHistoryAndCanonicalStore) {
     ASSERT_EQ(h.intent(TextIntentKind::kCreate).status, TextStatus::kApplied);
     EXPECT_EQ(h.composition.semanticObjectCount(), 0U);
     EXPECT_EQ(h.operations(), 0U);
-    EXPECT_NE(h.facade.readTextEditor().token.object.bytes[15], 0);
+    EXPECT_FALSE(h.facade.readTextEditor().token.object.isZero());
     ASSERT_EQ(h.send(h.event(TextInputKind::kBegin)).status, TextStatus::kObserved);
     for (const auto* value : {u"n", u"ni", u"\u4F60"})
         EXPECT_EQ(h.send(h.event(TextInputKind::kUpdate, value)).status, TextStatus::kObserved);

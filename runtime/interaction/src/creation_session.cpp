@@ -25,13 +25,14 @@ semantic::OrderKey makeOrder(std::uint64_t seed) {
 
 bool CreationSession::begin(input::PointerKey pointer, CreationPreset preset, CreationStyle style,
                             foundation::WorldPoint start, foundation::WorldRect viewport,
-                            std::uint64_t objectSeed) noexcept {
+                            std::uint64_t objectSeed, semantic::ObjectId objectId) noexcept {
   if (!pointer.valid() || !finitePoint(start) || !viewport.isFiniteAndOrdered() ||
       viewport.right <= viewport.left || viewport.bottom <= viewport.top || active()) return false;
   pointer_ = pointer; objectSeed_ = objectSeed; preset_ = preset; style_ = std::move(style); viewport_ = viewport;
   preview_ = {}; preview_.active = true; preview_.preset = preset; preview_.start = start; preview_.end = start; preview_.viewport = viewport;
   snappedEndpoint_.reset();
-  preview_.record.id = makeId(objectSeed); preview_.record.placement.order_key = makeOrder(objectSeed); preview_.record.properties = style_.properties;
+  preview_.record.id = objectId.isZero() ? makeId(objectSeed) : objectId;
+  preview_.record.placement.order_key = makeOrder(objectSeed); preview_.record.properties = style_.properties;
   return rebuild(start);
 }
 

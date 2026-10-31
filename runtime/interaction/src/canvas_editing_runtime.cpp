@@ -1040,9 +1040,11 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
       creation.setStartAttachment(start);
     }
     const auto seed = ++creationSerial_ + (std::uint64_t{1} << 48U);
+    const auto objectId = allocateObjectIdentity(foundation::ObjectId::fromUint64(seed));
+    if (objectId.isZero()) { eraseSession(); return false; }
     if (!creation.begin(key, creationPreset_, CreationStyle{appearanceProperties(futureAppearance_,
                         creationPreset_<=CreationPreset::kTriangle)},
-                        {content.first, content.second}, viewport, seed)) { eraseSession(); return false; }
+                        {content.first, content.second}, viewport, seed, objectId)) { eraseSession(); return false; }
   canonicalPresentationDirty_ = true;
     if (platformPresentationDeferred_) transientOverlayDirty_ = true;
     else (void)presentTransientOverlayFrame(nextCanonicalFrameId());
@@ -1170,7 +1172,8 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
         };
         const std::uint32_t targetPort = oppositePort(sourcePort);
         semantic::ObjectRecord target{};
-        target.id = foundation::ObjectId::fromUint64(targetOrdinal);
+        target.id = allocateObjectIdentity(foundation::ObjectId::fromUint64(targetOrdinal));
+        if (target.id.isZero()) return false;
         target.kind = semantic::ObjectKind::kShape;
         target.kind_version = 1U;
         target.placement.order_key = semantic::OrderKey{{0xFD, 0xFE,
@@ -1717,7 +1720,9 @@ bool CanvasEditingRuntime::textWritable(semantic::ObjectId id) const noexcept {
 }
 semantic::ObjectId CanvasEditingRuntime::allocateTextIdentity() {
   while(nextTextIdentity_!=0) {
-    auto id=foundation::ObjectId::fromUint64(nextTextIdentity_++);id.bytes[15]=0xF2;
+    auto legacyId=foundation::ObjectId::fromUint64(nextTextIdentity_++);legacyId.bytes[15]=0xF2;
+    const auto id=allocateObjectIdentity(legacyId);
+    if(id.isZero())return {};
     bool found=semanticObjects_.contains(id);
     for(const auto& object:semanticObjects_.allObjects())if(const auto* rich=std::get_if<semantic::RichTextContent>(&object.content))
       for(const auto& paragraph:rich->document.paragraphs)found=found || paragraph.id==id;
@@ -3317,15 +3322,17 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
                                      brushReplayDigest_), intent.revision);
   const auto operationId = localOperationOrdinal();
   if (operationId == 0U) return false;
+  const auto objectId = allocateObjectIdentity(foundation::ObjectId::fromUint64(operationId));
+  if (objectId.isZero()) return false;
   const auto operation = BrushCommitAdapter::build(
-      intent, package, operationId, documentId_, localOperationIdentity(operationId));
+      intent, package, operationId, documentId_, localOperationIdentity(operationId), objectId);
   semantic::Operation inverse;
   inverse.id = allocateOperationId();
   if (inverse.id.isZero()) return false;
   inverse.document_id = documentId_;
   inverse.schema_version = 1U;
   inverse.payload_version = 1U;
-  inverse.payload = semantic::DeleteObjectsOp{{foundation::ObjectId::fromUint64(operationId)}};
+  inverse.payload = semantic::DeleteObjectsOp{{objectId}};
   PublicationReservation publication(localOperationSink_, operation);
   if (!publication) {
       (void)cancelBrushSession(pointerId);
@@ -3729,6 +3736,20 @@ semantic::OperationId CanvasEditingRuntime::localOperationIdentity(std::uint64_t
   for (std::size_t index = 0; index < id.bytes.size(); ++index)
     id.bytes[index] ^= operationNamespace_.bytes[index];
   return semantic::OperationId{id};
+}
+
+foundation::ObjectId CanvasEditingRuntime::allocateObjectIdentity(foundation::ObjectId legacyIdentity) noexcept {
+  if (!operationNamespaceBound_) return legacyIdentity;
+  while (nextObjectIdentityOrdinal_ != 0U) {
+    auto id = foundation::ObjectId::fromUint64(nextObjectIdentityOrdinal_++);
+    // Separate generated objects/paragraphs from the operation ordinal domain.
+    // Composition supplies fresh entropy on every open, including restore.
+    id.bytes[15] = 0x4FU;
+    for (std::size_t index = 0; index < id.bytes.size(); ++index)
+      id.bytes[index] ^= operationNamespace_.bytes[index];
+    if (!id.isZero() && !semanticObjects_.contains(id)) return id;
+  }
+  return {};
 }
 
 std::uint64_t CanvasEditingRuntime::localOperationOrdinal() const noexcept {

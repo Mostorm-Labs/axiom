@@ -634,6 +634,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
       const ink::StrokeRecord&, std::uint64_t operationId) const;
   [[nodiscard]] std::uint64_t localOperationOrdinal() const noexcept;
   [[nodiscard]] semantic::OperationId localOperationIdentity(std::uint64_t ordinal) const noexcept;
+  // Public owners share one namespace/counter for every automatically allocated
+  // object or RichText identity. Unbound qualification fixtures keep numeric IDs.
+  [[nodiscard]] foundation::ObjectId allocateObjectIdentity(foundation::ObjectId legacyIdentity) noexcept;
   [[nodiscard]] bool historySceneReady() const noexcept;
   [[nodiscard]] bool canonicalWriteAdmission() const noexcept;
   [[nodiscard]] bool prepareExplicitIntentInternal(std::span<const semantic::Operation>, bool);
@@ -763,6 +766,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::uint64_t nextHistoryOperationOrdinal_ = (std::uint64_t{1} << 63U);
   foundation::ObjectId operationNamespace_{};
   bool operationNamespaceBound_ = false;
+  std::uint64_t nextObjectIdentityOrdinal_ = 1;
     std::uint64_t nextTextIdentity_ = 1;
   bool textTool_=false;
   runtime::TextSessionToken caretToken_{};
