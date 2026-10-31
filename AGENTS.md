@@ -198,7 +198,7 @@ improvements/fixes, `y` for small feature iterations (reset `z`), and `x` for la
 feature iterations (reset `y` and `z`). A release containing multiple levels uses
 the highest one. Use numeric versions without prerelease suffixes. Keep the version
 in `sdk/version.json`, Web package/wrapper/types, all platform SDKs and Demo
-manifests identical. Publish immutable `axiom-sdk-vx.y.z` GitHub tags and matching
+manifests identical. Publish immutable `vx.y.z` GitHub tags and matching
 `@mostorm/axiom@x.y.z` npm packages with the `latest` distribution tag. The initial
 release requested in this session is `0.0.1`. Version labels do not replace the
 separate API/ABI/data compatibility contracts or platform verification.

@@ -30,11 +30,11 @@ verification includes actual Chrome/WebGL2, real npm packing, outside-checkout
 installation, positive/negative TypeScript consumers, and packed identity,
 background and image-export APIs plus Demo downloads.
 
-Only a new `axiom-sdk-v*` tag publishes. The tag must exactly equal
-`axiom-sdk-v<SDK version>`. After both jobs pass, CI creates a draft, uploads verified
+Only a new `v[0-9]*` tag publishes. The tag must exactly equal
+`v<SDK version>`. After both jobs pass, CI creates a draft, uploads verified
 assets and identities, and publishes a regular Release as latest. Manual/PR runs
 build and verify without publishing. Existing releases/assets are never overwritten.
-For 0.0.1 the tag is `axiom-sdk-v0.0.1` and title is `Axiom SDK 0.0.1`.
+For 0.0.1 the tag is `v0.0.1` and title is `Axiom SDK 0.0.1`.
 
 After GitHub publication, `publish-npm` extracts that run's verified Web asset using
 `tools/release/npm_publish.py`, checks exact provenance, hashes, paths, required

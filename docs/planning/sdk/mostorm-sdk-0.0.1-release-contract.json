@@ -22,7 +22,7 @@
     "version": "0.0.1",
     "registry": "http://npm.nearhub.cc/",
     "distributionTag": "latest",
-    "release": "Use tag axiom-sdk-v0.0.1, the existing Windows/Web exact-source consumer pipeline, a regular GitHub Release (not a prerelease), four ZIP assets without preview in their names, and subsequent verified npm publication. No overwrite and no claim of production/Gate/device qualification.",
+    "release": "Use tag v0.0.1, the existing Windows/Web exact-source consumer pipeline, a regular GitHub Release (not a prerelease), four ZIP assets without preview in their names, and subsequent verified npm publication. No overwrite and no claim of production/Gate/device qualification.",
     "credential": "Use the existing AXIOM_NPM_TOKEN repository Secret for Actions and isolated temporary environment-backed npm configuration for local verification; never store literal credentials in Git, packages, artifacts or logs.",
     "boundary": "Only distribution metadata, release tooling/workflow/docs and verification change; preserve the public facade and opaque C/POD ABI. Do not ship internal Runtime/Semantic/Skia headers or component archives.",
     "preflight": "New credential accepted by npm whoami; @mostorm/axiom does not yet exist. The requested 0.0.1 identity is unused. Demo source is committed separately as 65f7895f135cf4190a0121c738ceb1be58fe6d60.",
@@ -112,5 +112,13 @@
     "return_policy": {
       "continue_until_terminal_state": true
     }
+  },
+  "candidate_reconciliation": {
+    "prior_unpublished_tag": "axiom-sdk-v0.0.1",
+    "prior_source_revision": "cc1ba2e48e394eea79367b63cb2def52b3222a2a",
+    "prior_run": "https://github.com/Mostorm-Labs/axiom/actions/runs/41192755452",
+    "reason": "Full local external-consumer check exposed a Demo selector still tied to the old English rectangle label. Keep the same drawing/pixel oracle, select the current semantic data-tool attribute with historical fallback, and cancel the old run before any publication.",
+    "final_tag": "v0.0.1",
+    "preservation": "The earlier unpublished candidate reference remains unchanged; no existing Git ref, Release asset or npm version is overwritten."
   }
 }

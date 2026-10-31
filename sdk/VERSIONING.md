@@ -14,7 +14,7 @@ Axiom SDK 使用 `x.y.z` 三段非负整数版本号，不使用前导零或 `pr
 
 每次发布须同时更新 `sdk/version.json`、`sdk/web/package.json`、
 `sdk/web/axiom.mjs` 和 `sdk/web/axiom.d.mts` 的版本标识。各平台构建、Demo 和包清单
-必须来自同一提交、使用同一版本。GitHub 标签为 `axiom-sdk-vx.y.z`，普通 Release
+必须来自同一提交、使用同一版本。GitHub 标签为 `vx.y.z`，普通 Release
 标题为 `Axiom SDK x.y.z`；npm 包为 `@mostorm/axiom@x.y.z`，默认分发标签为 `latest`。
 
 已发布版本、标签与文件不可覆盖。发布说明应记录迭代级别、功能与修复、验证结果及

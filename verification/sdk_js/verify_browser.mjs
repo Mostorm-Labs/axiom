@@ -64,8 +64,9 @@ try {
   const evaluate=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
   const until=async(expression,label)=>{for(let i=0;i<300;i++){if(await evaluate(expression))return;await delay(50);}throw Error('Example timeout: '+label);};
   await until(`document.getElementById('status')?.textContent.includes('0 objects')`,'startup');
-  await evaluate(`[...document.querySelectorAll('button')].find(b=>b.textContent==='rectangle').click()`);
-  await until(`[...document.querySelectorAll('button')].find(b=>b.textContent==='rectangle')?.getAttribute('aria-pressed')==='true'`,'tool receipt');
+  const rectangleButton = `(document.querySelector('[data-tool="shape:0"]')||[...document.querySelectorAll('button')].find(b=>b.textContent==='rectangle'))`;
+  await evaluate(`${rectangleButton}.click()`);
+  await until(`${rectangleButton}?.getAttribute('aria-pressed')==='true'`,'tool receipt');
   const point=await evaluate(`(()=>{const r=document.getElementById('canvas').getBoundingClientRect();return {x:r.left+60,y:r.top+60}})()`);
   await send('Input.dispatchMouseEvent',{type:'mousePressed',...point,button:'left',buttons:1,clickCount:1});
   await send('Input.dispatchMouseEvent',{type:'mouseMoved',x:point.x+100,y:point.y+70,button:'left',buttons:1});
