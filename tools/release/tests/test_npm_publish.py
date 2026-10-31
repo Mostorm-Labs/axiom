@@ -29,7 +29,7 @@ class NpmPublicationTest(unittest.TestCase):
         return prepare_package(archive, output, revision)
 
     def archive(self, root, *, metadata=None, revision=REVISION, kind='js-sdk',
-                extra=None, corrupt=None, version='1.0.0-preview.1'):
+                extra=None, corrupt=None, version=None):
         package = json.loads((REPO / 'sdk/web/package.json').read_text())
         package.update(metadata or {})
         payload = {name: b'verification fixture, not product evidence' for name in JS_REQUIRED}
@@ -37,7 +37,7 @@ class NpmPublicationTest(unittest.TestCase):
         payload['package.json'] = json.dumps(package).encode()
         payload.update(extra or {})
         manifest = {'format': 'axiom-sdk-preview-v1', 'kind': kind,
-                    'source_revision': revision, 'sdk_version': version,
+                    'source_revision': revision, 'sdk_version': package['version'] if version is None else version,
                     'files': {k: hashlib.sha256(v).hexdigest() for k, v in payload.items()}}
         if corrupt:
             payload[corrupt] += b'tampered'
@@ -65,7 +65,7 @@ class NpmPublicationTest(unittest.TestCase):
             self.assertFalse((root / 'npm').exists())
 
     def test_rejects_wrong_source_kind_or_version(self):
-        for options in ({'revision': 'e'*40}, {'kind': 'web-demo'}, {'version': '1.0.0-preview.2'}):
+        for options in ({'revision': 'e'*40}, {'kind': 'web-demo'}, {'version': '99.0.0-preview.1'}):
             with self.subTest(options=options), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp); archive = self.archive(root, **options)
                 with self.assertRaisesRegex(ValueError, 'identity|version'):
