@@ -215,6 +215,123 @@ int main() {
         require(renderer.renderFrame(lifecycleProvider,preparePlan,nullptr,&slice).code==BackendSubmissionCode::kRejected,
                 "old preparation generation accepted");
         renderer.clearRenderCache();
+        // World sources cover newly exposed content after zooming out. The
+        // old view deliberately does not contain this stroke's full extent.
+        {
+            SkiaRenderer worldRenderer;
+            auto wide=stroke(901);auto& wideStroke=std::get<CompactStrokeReferenceCommand>(wide.command).content.stroke;
+            wideStroke.knots={{-240,50,32768},{500,50,32768}};wide.record.content=std::get<CompactStrokeReferenceCommand>(wide.command).content;
+            wide.record.worldBounds={-260,30,520,70};
+            auto exactFrame=plan(700,{wide});
+            require(worldRenderer.renderFrame(provider,exactFrame).code==BackendSubmissionCode::kAccepted,"world exact setup");
+            const auto presents=provider.presentCount(),submissions=worldRenderer.submissionCount();
+            NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& entries){entries={wide};return true;};
+            for(unsigned n=0;n<128;++n){
+                require(worldRenderer.renderNavigation(provider,{.5F,64,32},exactFrame.frame,query).code==BackendSubmissionCode::kAccepted,
+                        "world navigation rejected");
+                if(!worldRenderer.navigationWork().pending)break;
+                require(n<127,"world navigation never completes");
+            }
+            const auto image=pixels(provider);
+            // world x=-80 -> view x=24; outside the old [0,256] screenshot.
+            require(image[(57*256+24)*4]<180,"zoom out lost content outside old viewport");
+            require(worldRenderer.submissionCount()==submissions&&provider.presentCount()>presents,
+                    "world navigation manufactured canonical submission");
+            require(worldRenderer.navigationWork().tilesBuilt>0,"world tiles not built");
+            const auto cleanPresents=provider.presentCount();
+            require(worldRenderer.renderNavigation(provider,{.5F,64,32},exactFrame.frame,query).code==BackendSubmissionCode::kAccepted&&
+                    provider.presentCount()==cleanPresents,"clean navigation presented twice");
+        }
+        {
+            TestSurface longSurface;require(longSurface.resize(256,128).code==BackendSubmissionCode::kAccepted,"long target");
+            SkiaRenderer nav;RenderCacheOptions bounded;bounded.navigationMaxSteps=8;nav.setRenderCacheOptions(bounded);
+            auto longEntry=stroke(910);auto& content=std::get<CompactStrokeReferenceCommand>(longEntry.command).content;
+            content.stroke.knots.clear();
+            for(unsigned k=0;k<4096;++k)content.stroke.knots.push_back({-100.+k*.1,64,32768});
+            longEntry.record.content=content;longEntry.record.worldBounds={-130,35,340,93};
+            auto current=plan(710,{longEntry});
+            NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e={longEntry};return true;};
+            require(nav.renderNavigation(longSurface,{1,0,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"long navigation");
+            require(nav.navigationWork().pending&&nav.navigationWork().knotSteps<=256,
+                    "long stroke did not yield inside coverage");
+            const auto beforeKnot=nav.navigationWork().knotSteps;
+            // Slight camera motion does not obsolete a world-addressed job.
+            require(nav.renderNavigation(longSurface,{1,-.1F,0},current.frame,query).code==BackendSubmissionCode::kAccepted,
+                    "world job camera update");
+            require(nav.navigationWork().knotSteps>beforeKnot,"camera update starved world job");
+            // A camera change cancels its partially rasterized tile; old work
+            // must not publish after target loss or a resource epoch change.
+            require(longSurface.lose().code==BackendSubmissionCode::kAccepted,"nav lost");
+            require(nav.renderNavigation(longSurface,{.5F,0,0},current.frame,query).code!=BackendSubmissionCode::kAccepted,
+                    "lost navigation accepted");
+            require(longSurface.resize(256,128).code==BackendSubmissionCode::kAccepted,"nav restore");
+            require(nav.renderNavigation(longSurface,{1,0,0},current.frame,query).code==BackendSubmissionCode::kRejected,
+                    "old nav generation accepted");
+        }
+        {
+            SkiaRenderer nav;auto solid=stroke(930);semantic::BrushStrokeContent vector;
+            vector.stroke.snapshot.paint={0,0,0,1,.5,1,1};
+            vector.stroke.vector_output.outline={{-200,30},{600,30},{600,90},{-200,90}};
+            solid.command=BrushStrokeReferenceCommand{vector};solid.record.content=vector;
+            solid.record.kindVersion=2;solid.record.worldBounds={-200,30,600,90};
+            auto current=plan(720,{solid});
+            NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e={solid};return true;};
+            for(unsigned n=0;n<128;++n){
+                require(nav.renderNavigation(provider,{1,0,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"vector navigation");
+                if(!nav.navigationWork().pending)break;require(n<127,"vector nav loop");
+            }
+            const auto image=pixels(provider);
+            for(unsigned x:{1U,63U,127U,128U,129U,254U})
+                require(image[(60*256+x)*4]>=126&&image[(60*256+x)*4]<=129,"gutter or fallback double-blended vector ink");
+            const auto built=nav.navigationWork().tilesBuilt;
+            // Pan exposes at most one new column; interior world rasters stay reusable.
+            require(nav.renderNavigation(provider,{1,-1,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"world reuse pan");
+            require(nav.navigationWork().tilesBuilt<=built+2,"camera pan rebuilt all world rasters");
+            nav.setImageResolver(nullptr);
+            require(nav.renderNavigation(provider,{1,-1,0},current.frame,query).code==BackendSubmissionCode::kAccepted&&
+                    nav.navigationWork().tilesBuilt<=(built+8),"resource reset unusable");
+        }
+        {
+            SkiaRenderer nav;auto entry=stroke(950);auto frame=plan(730,{entry});
+            NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e={entry};return true;};
+            for(unsigned n=0;n<128;++n){
+                require(nav.renderNavigation(provider,{1,-10,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"parent setup");
+                if(!nav.navigationWork().pending)break;require(n<127,"parent setup loop");
+            }
+            RenderCacheOptions singleStep;singleStep.navigationMaxSteps=1;nav.setRenderCacheOptions(singleStep);
+            // Rebuild the base plane with deterministic one-quantum admission.
+            for(unsigned n=0;n<256;++n){
+                require(nav.renderNavigation(provider,{1,-10,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"fallback base");
+                if(!nav.navigationWork().pending)break;require(n<255,"fallback base loop");
+            }
+            const auto fallbackBefore=nav.navigationWork().fallbackUses;
+            require(nav.renderNavigation(provider,{1.5F,-12,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,
+                    "parent scale switch");
+            require(nav.navigationWork().fallbackUses>fallbackBefore,"ready parent coverage not selected");
+            // Changed sources in the same world cells invalidate retained pixels.
+            auto& config=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke.config;
+            config.color={1,0,0,1};entry.record.content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            auto next=plan(731,{entry});
+            for(unsigned n=0;n<128;++n){
+                require(nav.renderNavigation(provider,{1,0,0},next.frame,query).code==BackendSubmissionCode::kAccepted,"new content nav");
+                if(!nav.navigationWork().pending)break;require(n<127,"new content loop");
+            }
+            const auto red=pixels(provider);require(red[(50*256+80)*4]>red[(50*256+80)*4+2],"stale world content survived scene change");
+            RenderCacheOptions tiny;tiny.maxEntries=1;nav.setRenderCacheOptions(tiny);
+            const auto presents=provider.presentCount();
+            require(nav.renderNavigation(provider,{1,0,0},next.frame,query).code!=BackendSubmissionCode::kAccepted&&
+                    provider.presentCount()==presents,"nonconvergent residency published navigation");
+        }
+        {
+            SkiaRenderer nav;
+            auto entry=stroke(960);auto invalid=plan(740,{entry});
+            NavigationSourceQuery malformed=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){
+                e={entry,entry};return true;
+            };
+            const auto presents=provider.presentCount();
+            require(nav.renderNavigation(provider,{1,0,0},invalid.frame,malformed).code!=BackendSubmissionCode::kAccepted&&
+                    provider.presentCount()==presents,"duplicate world source double-painted");
+        }
         // Navigation feedback is a separate submit and cannot manufacture a
         // canonical frame identity. Exact rendering after it must match Direct.
         compare(plan(90,{a}));

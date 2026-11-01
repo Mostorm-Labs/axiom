@@ -5,6 +5,7 @@
 #include "canvas/render/skia_ink_backend.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "skia_render_cache_internal.hpp"
+#include "skia_navigation_tiles.hpp"
 
 #include "include/core/SkCanvas.h"
 #include "include/core/SkBlendMode.h"
@@ -245,10 +246,23 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     canvas->restore();provider.release();
     return provider.present();
 }
+BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
+    const CanonicalViewportTransform& camera,const FrameState& current,const NavigationSourceQuery& query){
+    if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
+        resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
+    if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
+    try{const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,renderCacheOptions_,resourceBudget_);
+        if(result.code!=BackendSubmissionCode::kAccepted)navigationTiles_.reset();return result;}
+    catch(const std::bad_alloc&){navigationTiles_.reset();return BackendSubmissionResult::retry("world navigation allocation failure");}
+}
+void SkiaRenderer::cancelNavigationWork() noexcept {if(navigationTiles_)navigationTiles_->cancelWork();}
+NavigationWork SkiaRenderer::navigationWork() const noexcept {
+    return navigationTiles_?navigationTiles_->work:NavigationWork{};
+}
 void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
     clearRenderCache();resourceBudget_.reset();renderCacheOptions_=options;
 }
-void SkiaRenderer::clearRenderCache() noexcept {navigationCache_.reset();if(renderCache_)renderCache_->clear();}
+void SkiaRenderer::clearRenderCache() noexcept {navigationTiles_.reset();navigationCache_.reset();if(renderCache_)renderCache_->clear();}
 RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{return renderCache_?renderCache_->work:RenderCacheWork{};}
 RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
 

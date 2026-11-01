@@ -40,6 +40,10 @@ const sk_sp<SkRuntimeEffect>& materialV2Effect(){
 
 void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
                                   std::span<const foundation::InkKnot> knots){
+    drawCompactCoverageRangeToSkCanvas(canvas,config,knots,0,knots.size());
+}
+void drawCompactCoverageRangeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
+    std::span<const foundation::InkKnot> knots,std::size_t begin,std::size_t end){
     if(knots.empty())return;
     SkRuntimeShaderBuilder builder(coverageEffect());
     const bool marker=config.family==foundation::InkFamily::kMarker;
@@ -48,7 +52,7 @@ void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushCo
     builder.uniform("flatness")=float(marker?config.markerFlatness:1.);
     SkPaint paint;paint.setBlendMode(SkBlendMode::kLighten);
     const auto clip=canvas.getLocalClipBounds();
-    for(std::size_t i=0;i<knots.size();++i){
+    for(std::size_t i=begin;i<std::min(end,knots.size());++i){
         const auto& a=knots[i?i-1:0];const auto& b=knots[i];
         const auto ra=ink::compactRadius(config,a.pressure),rb=ink::compactRadius(config,b.pressure);
         const auto r=float(std::max(ra,rb));

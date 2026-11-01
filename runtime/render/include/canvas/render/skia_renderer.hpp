@@ -8,6 +8,7 @@
 #include "canvas/render/editing_overlay.hpp"
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/render/render_cache.hpp"
+#include "canvas/render/navigation_sources.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
 #include "canvas/render/damage_tracker.hpp"
 #include "canvas/ink/programmable_brush.hpp"
@@ -19,7 +20,7 @@
 class SkCanvas;
 
 namespace canvas::render {
-namespace internal {class SkiaRenderCache;}
+namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;}
 
 struct CanonicalStrokePoint;
 struct CanonicalViewportTransform;
@@ -38,6 +39,11 @@ class SkiaRenderer final {
     // Approximate navigation feedback only; never a canonical coverage receipt.
     [[nodiscard]] BackendSubmissionResult renderNavigation(
         SkiaSurfaceProvider&, const CanonicalViewportTransform&, const FrameState&);
+    [[nodiscard]] BackendSubmissionResult renderNavigation(
+        SkiaSurfaceProvider&, const CanonicalViewportTransform&, const FrameState&,
+        const NavigationSourceQuery&);
+    [[nodiscard]] NavigationWork navigationWork() const noexcept;
+    void cancelNavigationWork() noexcept;
     [[nodiscard]] BackendSubmissionResult renderTransientOverlay(
         SkiaSurfaceProvider& provider, const FramePlan& plan,
         const EditingOverlay* selectionOverlay);
@@ -73,6 +79,7 @@ class SkiaRenderer final {
     [[nodiscard]] RenderDamage renderDamage() const;
 
   private:
+    std::shared_ptr<internal::SkiaNavigationTiles> navigationTiles_;
     struct NavigationCache;
     std::shared_ptr<NavigationCache> navigationCache_;
     std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;

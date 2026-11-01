@@ -488,10 +488,10 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
 
 } // namespace
 
-foundation::Result<ReferenceDrawList> DirectReferenceSource::build(
+static foundation::Result<ReferenceDrawList> buildSources(
     const FrameState& frame,
     const VisibilityResult& visibility,
-    const RuntimeScene& runtimeScene) {
+    const RuntimeScene& runtimeScene,bool canonical) {
     if (frame.sceneGeneration != visibility.sceneGeneration ||
         frame.sceneReadToken != visibility.sceneReadToken ||
         frame.sceneGeneration != runtimeScene.generation()) {
@@ -539,9 +539,18 @@ foundation::Result<ReferenceDrawList> DirectReferenceSource::build(
             .command = std::move(command.value()),
         });
     }
-    list.canonicalBytes = canonicalBytes(list);
-    list.digest = stableDigest(list.canonicalBytes);
+    if(canonical){list.canonicalBytes = canonicalBytes(list);
+    list.digest = stableDigest(list.canonicalBytes);}
     return foundation::Result<ReferenceDrawList>::success(std::move(list));
+}
+
+foundation::Result<ReferenceDrawList> DirectReferenceSource::build(
+    const FrameState& frame,const VisibilityResult& visibility,const RuntimeScene& scene){
+    return buildSources(frame,visibility,scene,true);
+}
+foundation::Result<ReferenceDrawList> DirectReferenceSource::buildNavigation(
+    const FrameState& frame,const VisibilityResult& visibility,const RuntimeScene& scene){
+    return buildSources(frame,visibility,scene,false);
 }
 
 } // namespace canvas::render

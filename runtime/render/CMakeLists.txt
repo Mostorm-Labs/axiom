@@ -129,7 +129,7 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_renderer.cpp)
-    target_sources(canvas_runtime_render PRIVATE src/skia_render_cache.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_render_cache.cpp src/skia_navigation_tiles.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_brush_renderer.cpp)
     target_link_libraries(canvas_runtime_render PRIVATE CanvasSkia::Skia CanvasSkia::Paragraph)
     target_compile_definitions(canvas_runtime_render PUBLIC CANVAS_RENDER_HAS_SKIA=1)

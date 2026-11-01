@@ -13,6 +13,8 @@ struct RenderCacheOptions final {
     bool tileCandidate=false;
     double tileWorldSize=256;
     std::int32_t tileScale=0;
+    // Owner work policy for navigation feedback. Not a public SLO.
+    std::size_t navigationMaxSteps=64;
 };
 // Cooperative owner-thread policy, not a frame-latency guarantee. A group is
 // atomic; a single expensive group can exceed the time target.

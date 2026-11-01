@@ -4275,7 +4275,9 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
      exact->sceneGeneration!=semanticGeneration_.current() || exact->sceneReadToken.value()!=sceneRevision() ||
      exact->surfaceGeneration.value()!=surface_.generation || exact->metricsGeneration.value()!=surface_.metricsGeneration ||
      previewActive() || !pendingCanonicalIdentities_.empty() || selectionOverlay() ||
-     creationActive() || selectionTransformActive() || regionSelectionActive()){
+     creationActive() || selectionTransformActive() || regionSelectionActive() ||
+     semanticObjects_.documentBackground()!=foundation::DocumentBackground{}){
+      skiaRenderer_.cancelNavigationWork();
       navigationActive_=false;navigationExactPreparation_=false;return false;
   }
   const auto generation=cameraGeneration();
@@ -4283,15 +4285,30 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       navigationCameraGeneration_=generation;navigationChangedAt_=now;navigationActive_=true;navigationExactPreparation_=false;
   }
   if(!navigationActive_)return false;
-  if(!coordinator_->viewportClaimed() && now-navigationChangedAt_>=std::chrono::milliseconds(100)){
+  if(!coordinator_->viewportClaimed() && now-navigationChangedAt_>=std::chrono::milliseconds(100) &&
+     skiaRenderer_.navigationWork().coverageComplete){
+      skiaRenderer_.cancelNavigationWork();
       navigationActive_=false;navigationExactPreparation_=true;return false;
   }
-  if(navigationSubmittedGeneration_==generation)return true;
+  if(navigationSubmittedGeneration_==generation && !skiaRenderer_.navigationWork().pending)return true;
   const auto& camera=viewportController_->state();
+  // Runtime owns the Scene query and ordered immutable commands. Render asks
+  // for whole world tile regions, including its filter gutter.
+  const render::NavigationSourceQuery query=[&](const foundation::WorldRect& region,
+      std::vector<render::ReferenceTraversalEntry>& entries){
+      const auto found=runtimeSceneHost_->query(SceneQuery{region});
+      if(!found || found.value().revision!=exact->sceneReadToken)return false;
+      const render::VisibilityResult visibility{exact->sceneGeneration,exact->sceneReadToken,
+          region,found.value().diagnostics.candidatesExamined,found.value().backToFront.size(),
+          found.value().backToFront};
+      auto sources=render::DirectReferenceSource::buildNavigation(*exact,visibility,sceneCoordinator_->runtimeScene());
+      if(!sources)return false;
+      entries=std::move(sources.value().entries);return true;
+  };
   const auto result=skiaRenderer_.renderNavigation(*activeSurfaceProvider(),
-      {camera.scale,camera.translationX,camera.translationY},*exact);
+      {camera.scale,camera.translationX,camera.translationY},*exact,query);
   if(result.code!=render::BackendSubmissionCode::kAccepted){navigationActive_=false;return false;}
-  navigationSubmittedGeneration_=generation;presented=true;
+  navigationSubmittedGeneration_=generation;presented=skiaRenderer_.navigationWork().presented;
   return true;
 }
 

@@ -26,10 +26,19 @@ int main(){
  require(r.setViewportZoomAt(1.1F,100,60),"zoom");
  const auto start=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
  bool presented=false;
- require(r.serviceNavigationPresentation(start,presented)&&presented,"navigation feedback missing");
+ require(r.serviceNavigationPresentation(start,presented),"navigation work missing");
+ unsigned coldSteps=0;
+ while(!presented){
+  require(r.serviceNavigationPresentation(start,presented),"cold navigation abandoned");
+  require(++coldSteps<128,"complete navigation coverage never presented");
+ }
  require(!r.lastSubmittedCanonicalFrame()&&r.canonicalPresentationDirty(),"navigation created canonical coverage");
- presented=false;require(r.serviceNavigationPresentation(start+std::chrono::milliseconds(10),presented)&&!presented,"clean navigation submitted twice");
- require(!r.serviceNavigationPresentation(start+std::chrono::seconds(1),presented),"navigation never settles");
+ unsigned refinementSteps=0;
+ while(r.serviceNavigationPresentation(start+std::chrono::seconds(1),presented))
+  require(++refinementSteps<128&&!r.lastSubmittedCanonicalFrame(),"navigation refinement published canonical work");
+ unsigned navigationSteps=0;
+ while(r.serviceNavigationPresentation(start+std::chrono::seconds(1),presented))
+  require(++navigationSteps<128&&!r.lastSubmittedCanonicalFrame(),"navigation never settles or publishes canonical work");
  unsigned yields=0;
  while(!r.presentCanonicalFrame(r.nextCanonicalFrameId(),0)){
   require(r.canonicalPresentationRetryable()&&r.canonicalPresentationDirty(),"preparation lost exact demand");

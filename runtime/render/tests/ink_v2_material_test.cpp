@@ -126,6 +126,20 @@ int main(int argc,char** argv){
             require(preview.geometry().contours.front().compactConfig==c,"preview tint mutated captured material config");
         }
     }else if(mode=="sampling"){
+        // Resuming coverage must keep the predecessor at the range boundary
+        // and max-combine overlap exactly once, including material opacity.
+        std::vector<foundation::InkKnot> path;
+        for(unsigned i=0;i<130;++i)path.push_back({20.+i*1.5,40.+std::sin(i*.2)*20,std::uint16_t(20000+i*200)});
+        auto full=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(width,height));
+        auto ranged=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(width,height));
+        full->getCanvas()->clear(SK_ColorBLACK);ranged->getCanvas()->clear(SK_ColorBLACK);
+        render::internal::drawCompactCoverageToSkCanvas(*full->getCanvas(),c,path);
+        for(std::size_t begin=0;begin<path.size();begin+=17)
+            render::internal::drawCompactCoverageRangeToSkCanvas(*ranged->getCanvas(),c,path,begin,begin+17);
+        std::vector<std::uint8_t> fullPixels(width*height*4),rangePixels(fullPixels.size());
+        require(full->readPixels(full->imageInfo(),fullPixels.data(),width*4,0,0)&&
+                ranged->readPixels(ranged->imageInfo(),rangePixels.data(),width*4,0,0)&&
+                fullPixels==rangePixels,"resumed coverage differs from full authority");
         c.family=foundation::InkFamily::kChalk;
         auto sparse=draw(c,knots);std::vector<foundation::InkKnot> dense;
         for(unsigned i=32;i<=224;++i)dense.push_back({double(i),64,32768});
