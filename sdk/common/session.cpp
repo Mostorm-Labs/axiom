@@ -946,7 +946,8 @@ class Session::Impl {
                 result = f.setConnectorRouting(r);
             } else if (action == "create") {
                 runtime::ConnectorCreateRequest r;
-                r.objectId = rawId(j.at("objectId"));
+                r.objectId = j.contains("objectId") ? rawId(j.at("objectId")) : foundation::ObjectId{};
+                if(j.contains("objectId") && r.objectId.isZero())throw std::invalid_argument("zero object id");
                 r.content.start = endpoint(j.at("start"));
                 r.content.end = endpoint(j.at("end"));
                 r.content.routing = static_cast<semantic::ConnectorRouting>(
@@ -1032,7 +1033,8 @@ class Session::Impl {
                           {"height", s.content.height}}}};
             }
             runtime::StickyCreateRequest r;
-            r.objectId = rawId(j.at("objectId"));
+            r.objectId = j.contains("objectId") ? rawId(j.at("objectId")) : foundation::ObjectId{};
+            if(j.contains("objectId") && r.objectId.isZero())throw std::invalid_argument("zero object id");
             r.content = {j.at("size"), j.at("size")};
             r.transform.tx = j.value("x", 0.0);
             r.transform.ty = j.value("y", 0.0);

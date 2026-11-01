@@ -1,0 +1,24 @@
+<!doctype html><meta charset="utf-8"><title>Shared Controller consumer</title>
+<div id="mount" style="width:640px;height:480px"></div><pre id="result">PENDING</pre>
+<script type="module">
+import {createController} from './axiom.mjs';
+const results=[],assert=(v,m)=>{if(!v)throw Error(m);results.push(m);};
+try{
+ const errors=[];const c=await createController({mount:document.getElementById('mount'),documentId:'a'.repeat(32),onError:e=>errors.push(String(e))});
+ assert(!('canvas'in c)&&!('call'in c),'portable facade contains no raw engine/surface');
+ assert((await c.readBuildInfo()).sdkVersion===c.version,'matching common/Web/WASM version');
+ let observed;const off=c.subscribeState(s=>observed=s);await c.dispatchEvents();await new Promise(r=>setTimeout(r,100));assert(observed.documentId==='a'.repeat(32),'async owned state event');off();
+ await c.selectShape('rectangle');
+ const canvas=document.querySelector('canvas');const rect=canvas.getBoundingClientRect();canvas.setPointerCapture=()=>{};canvas.hasPointerCapture=()=>false;
+ for(const [phase,x,y]of [['pointerdown',40,40],['pointermove',140,100],['pointerup',140,100]]){canvas.dispatchEvent(new PointerEvent(phase,{pointerId:1,pointerType:'mouse',clientX:rect.left+x,clientY:rect.top+y,buttons:phase==='pointerup'?0:1,bubbles:true,cancelable:true}));await new Promise(r=>setTimeout(r,50));}
+ assert((await c.readState()).objects===1,'native browser input reaches shared Runtime');
+ await c.undo();assert((await c.readState()).objects===0,'Controller Undo');await c.redo();assert((await c.readState()).objects===1,'Controller Redo');
+ for(const profile of ['round-handdrawn','marker-compact-v1','chalk-compact-v1','crayon-wax-v1','watercolor-lite-v1']){await c.selectBrush(profile,profile==='round-handdrawn'?2:3);assert(!!await c.readBrushConfig(),profile+' readback');}
+ await c.selectTool('partialEraser');assert((await c.readState()).eraserMode===2,'partial eraser mode');
+ await c.text.create(200,200,200);await c.text.replace('Shared TS');assert((await c.text.read()).projection.length===9,'text through real shared facade');await c.text.finish();
+ const s=await c.readState();const saved=await c.captureSnapshot({generation:s.generation,documentRevision:'9007199254740993',recoveryFrontier:[8,1,16,1,24,1]});assert(saved.bytes.byteLength>0,'owned snapshot buffer');
+ const image=await c.exportImage();assert(image.bytes.byteLength>0,'shared image export');
+ await c.close();await c.close();assert(!document.getElementById('mount').children.length,'close disposes browser Host');
+ assert(errors.length===0,'no runtime errors');document.getElementById('result').textContent=JSON.stringify({status:'PASS',results});
+}catch(e){document.getElementById('result').textContent=JSON.stringify({status:'FAIL',error:String(e.stack||e),results});}
+</script>

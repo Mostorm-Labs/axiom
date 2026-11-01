@@ -24,7 +24,9 @@ class NpmPublicationTest(unittest.TestCase):
         self.assertEqual(package['version'], json.loads((REPO / 'sdk/version.json').read_text())['version'])
         wrapper = (REPO / 'sdk/web/axiom.mjs').read_text()
         types = (REPO / 'sdk/web/axiom.d.mts').read_text()
-        versions = re.findall(r"SDK_VERSION\s*(?:=|:)\s*'([^']+)'", wrapper + '\n' + types)
+        common = (REPO / 'sdk/api/axiom.mjs').read_text()
+        declarations = (REPO / 'sdk/api/axiom.d.mts').read_text()
+        versions = re.findall(r"SDK_VERSION\s*(?:=|:)\s*'([^']+)'", common + '\n' + declarations)
         versions += re.findall(r"readonly version:\s*'([^']+)'", types)
         self.assertEqual(versions, [package['version']] * 3,
                          'wrapper, declarations and native engine must report one SDK version')
