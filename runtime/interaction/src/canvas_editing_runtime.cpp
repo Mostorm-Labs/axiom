@@ -4948,6 +4948,10 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
     worldViewport.right = std::max(worldViewport.right, worldCorners[i].x);
     worldViewport.bottom = std::max(worldViewport.bottom, worldCorners[i].y);
   }
+  // Canonical and preview providers have independent generations. Validate
+  // the transient plan against the provider it actually renders into.
+  auto* target = platformPresentationDeferred_ ? activeSurfaceProvider() : previewProvider_;
+  if (target == nullptr) return false;
   const render::FrameState frame{
       viewId_,
       render::CameraState{foundation::WorldPoint{
@@ -4961,7 +4965,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
                               surface_.devicePixelRatio,
                               surface_.displayScale},
       semanticGeneration_.current(), runtimeSceneHost_->revision(),
-      render::SurfaceGeneration{surface_.generation},
+      render::SurfaceGeneration{target->generation()},
        render::MetricsGeneration{surface_.metricsGeneration}, render::FrameId{frameId},
       foundation::WorldRect{0.0F, 0.0F, surface_.logicalWidth,
                             surface_.logicalHeight}};
@@ -5179,8 +5183,6 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   // Deferred editing uses the canonical target's warm cache for approximate
   // full replacement feedback. No SkImage crosses contexts and no canonical
   // receipt is issued until the terminal semantic frame is presented.
-  auto* target = platformPresentationDeferred_ ? activeSurfaceProvider() : previewProvider_;
-  if (target == nullptr) return false;
   auto& renderer = platformPresentationDeferred_ ? skiaRenderer_ : previewRenderer_;
   const auto rendered = renderer.renderTransientOverlay(
       *target, plan.value(), selectionOverlay());

@@ -475,7 +475,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   runtime_->advanceLaserPresentation(static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count()));
   const bool shouldCanonical = forceCanonical || runtime_->canonicalPresentationDirty();
   if (nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
-  const bool editingTransient=!forceCanonical && (runtime_->creationActive() ||
+  const bool editingTransient=runtime_->platformPresentationDeferred() && !forceCanonical && (runtime_->creationActive() ||
       runtime_->selectionTransformActive() || runtime_->regionSelectionActive());
   const bool transientRendered=editingTransient && runtime_->transientOverlayDirty() &&
       runtime_->retryTransientOverlayFrame();

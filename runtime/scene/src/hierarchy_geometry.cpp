@@ -50,7 +50,7 @@ std::vector<semantic::ObjectRecord> projectWorldObjects(std::span<const semantic
             }
             parent=ancestor.placement.parent_id;
         }
-        for(const auto [field,value]:{std::pair{1U,visible},std::pair{2U,locked}}) {
+        for(const auto& [field,value]:{std::pair{1U,visible},std::pair{2U,locked}}) {
             if((field==1U&&value)||(field==2U&&!value))continue;
             auto found=std::find_if(record.properties.entries.begin(),record.properties.entries.end(),[&](const auto& p){return p.field_id==field;});
             if(found==record.properties.entries.end())record.properties.entries.push_back({field,value});else found->value=value;
