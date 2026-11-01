@@ -124,15 +124,15 @@ void drawCompactContourCoverageToSkCanvas(SkCanvas& canvas,const foundation::Ink
     // be drawn separately: AA edges accumulate when drawn again with its pair.
     for(std::size_t first=0;first+1<contour.patches.size();++first){
         const auto end=first+2;
-        SkPathBuilder path;const auto& start=contour.patches[first];path.moveTo(start.leftStart.x,start.leftStart.y);
-        for(std::size_t i=first;i<end;++i){const auto& p=contour.patches[i];path.quadTo(p.leftControl.x,p.leftControl.y,p.leftEnd.x,p.leftEnd.y);}
-        const auto& last=contour.patches[end-1];path.lineTo(last.rightEnd.x,last.rightEnd.y);
-        for(std::size_t i=end;i-->first;){const auto& p=contour.patches[i];path.quadTo(p.rightControl.x,p.rightControl.y,p.rightStart.x,p.rightStart.y);}
+        SkPathBuilder path;const auto& start=contour.patches[first];path.moveTo(static_cast<SkScalar>(start.leftStart.x),static_cast<SkScalar>(start.leftStart.y));
+        for(std::size_t i=first;i<end;++i){const auto& p=contour.patches[i];path.quadTo(static_cast<SkScalar>(p.leftControl.x),static_cast<SkScalar>(p.leftControl.y),static_cast<SkScalar>(p.leftEnd.x),static_cast<SkScalar>(p.leftEnd.y));}
+        const auto& last=contour.patches[end-1];path.lineTo(static_cast<SkScalar>(last.rightEnd.x),static_cast<SkScalar>(last.rightEnd.y));
+        for(std::size_t i=end;i-->first;){const auto& p=contour.patches[i];path.quadTo(static_cast<SkScalar>(p.rightControl.x),static_cast<SkScalar>(p.rightControl.y),static_cast<SkScalar>(p.rightStart.x),static_cast<SkScalar>(p.rightStart.y));}
         path.close();canvas.drawPath(path.detach(),paint);
     }
-    for(const auto& cap:contour.caps){canvas.save();canvas.translate(cap.x,cap.y);
-        if(config.family==foundation::InkFamily::kMarker){canvas.rotate(config.markerAngle*57.29577951308232);canvas.scale(1,config.markerFlatness);}
-        canvas.drawCircle(0,0,cap.radius,paint);canvas.restore();}
+    for(const auto& cap:contour.caps){canvas.save();canvas.translate(static_cast<SkScalar>(cap.x),static_cast<SkScalar>(cap.y));
+        if(config.family==foundation::InkFamily::kMarker){canvas.rotate(static_cast<SkScalar>(config.markerAngle*57.29577951308232));canvas.scale(1,static_cast<SkScalar>(config.markerFlatness));}
+        canvas.drawCircle(0,0,static_cast<SkScalar>(cap.radius),paint);canvas.restore();}
 }
 void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
                                   std::span<const foundation::InkKnot> knots,double startDistance,double totalDistance,std::uint64_t seed){

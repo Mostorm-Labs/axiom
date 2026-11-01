@@ -391,12 +391,12 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
             const auto& table=command.content;
             SkPaint layer;layer.setAlphaf(objectOpacity(record));canvas.saveLayer(nullptr,&layer);
             for(std::size_t i=0;i<table.cells.size();++i){const auto r=semantic::tableCellRect(table,i);SkPaint fill;fill.setColor4f(color(table.cells[i].fill));canvas.drawRect(SkRect::MakeLTRB(skScalar(r[0]),skScalar(r[1]),skScalar(r[2]),skScalar(r[3])),fill);}
-            if(table.grid.width>0){SkPaint grid;grid.setAntiAlias(true);grid.setColor4f(color(table.grid.color));grid.setStyle(SkPaint::kStroke_Style);
-                const auto sketch=scene::sketchGeometry(record.content,record.properties);grid.setStrokeWidth(skScalar(table.grid.width*(sketch?sketch->outlineWidthScale:1)));
-                if(sketch)drawPath(canvas,sketch->outline,grid);
+            if(table.grid.width>0){SkPaint gridPaint;gridPaint.setAntiAlias(true);gridPaint.setColor4f(color(table.grid.color));gridPaint.setStyle(SkPaint::kStroke_Style);
+                const auto sketch=scene::sketchGeometry(record.content,record.properties);gridPaint.setStrokeWidth(skScalar(table.grid.width*(sketch?sketch->outlineWidthScale:1)));
+                if(sketch)drawPath(canvas,sketch->outline,gridPaint);
                 else {double x=0,y=0;const auto width=semantic::tableWidth(table),height=semantic::tableHeight(table);
-                    canvas.drawLine(0,0,0,skScalar(height),grid);for(const auto& col:table.columns){x+=col.size;canvas.drawLine(skScalar(x),0,skScalar(x),skScalar(height),grid);}
-                    canvas.drawLine(0,0,skScalar(width),0,grid);for(const auto& row:table.rows){y+=row.size;canvas.drawLine(0,skScalar(y),skScalar(width),skScalar(y),grid);}}}
+                    canvas.drawLine(0,0,0,skScalar(height),gridPaint);for(const auto& col:table.columns){x+=col.size;canvas.drawLine(skScalar(x),0,skScalar(x),skScalar(height),gridPaint);}
+                    canvas.drawLine(0,0,skScalar(width),0,gridPaint);for(const auto& row:table.rows){y+=row.size;canvas.drawLine(0,skScalar(y),skScalar(width),skScalar(y),gridPaint);}}}
             for(std::size_t i=0;i<table.cells.size();++i)if(textResources&&command.layout&&i<command.layout->tableCells.size()&&command.layout->tableCells[i]){
                 const auto r=semantic::tableCellRect(table,i);canvas.save();canvas.clipRect(SkRect::MakeLTRB(skScalar(r[0]),skScalar(r[1]),skScalar(r[2]),skScalar(r[3])));canvas.translate(skScalar(r[0]+6),skScalar(r[1]+6));textResources->draw(canvas,*command.layout->tableCells[i]);canvas.restore();}
             if(command.activeCell&&*command.activeCell<table.cells.size()){const auto r=semantic::tableCellRect(table,*command.activeCell);SkPaint outline;outline.setAntiAlias(true);outline.setStyle(SkPaint::kStroke_Style);outline.setColor(SkColorSetRGB(45,109,218));outline.setStrokeWidth(2);canvas.drawRect(SkRect::MakeLTRB(skScalar(r[0]+1),skScalar(r[1]+1),skScalar(r[2]-1),skScalar(r[3]-1)),outline);}
