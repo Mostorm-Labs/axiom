@@ -128,20 +128,11 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         self.assertNotIn("android", workflow.lower())
         self.assertNotIn("windows", workflow.lower())
 
-    def test_g45_workflow_is_narrow_consumer_only_cross_platform_qualification(self):
+    def test_g45_manual_workflow_preserves_consumer_only_qualification(self):
         workflow = (WORKFLOWS / "g4-5-programmable-brush.yml").read_text(
             encoding="utf-8"
         )
         trigger = trigger_block("g4-5-programmable-brush.yml")
-        for path in (
-            '"runtime/ink/**"',
-            '"apps/brush_lab/**"',
-            '"verification/runtime_qualification/**"',
-            '"verification/corpus/brush/g4_5/**"',
-            '".aegis/packages/GT-G4-5/**"',
-            '".github/workflows/g4-5-programmable-brush.yml"',
-        ):
-            self.assertIn(path, trigger)
         self.assertIn("workflow_dispatch:", trigger)
         self.assertIn("windows-2025", workflow)
         self.assertIn("ubuntu-24.04", workflow)
@@ -154,6 +145,27 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         self.assertNotIn("bootstrap_deps.py --semantic-codec", workflow)
         self.assertNotIn("tools/skia/build.py", workflow)
         self.assertIn("actions/upload-artifact@v4", workflow)
+
+    def test_task_qualification_is_explicit_and_not_a_product_release_dependency(self):
+        for name in ('g4-5-programmable-brush.yml', 'g4-6-c-qualification.yml',
+                     'g4-7-qualification.yml'):
+            workflow = (WORKFLOWS / name).read_text(encoding="utf-8")
+            events = workflow.split("on:\n", 1)[1].split("\npermissions:", 1)[0].split("\nconcurrency:", 1)[0]
+            self.assertIn("  workflow_dispatch:", events)
+            for automatic in ("  pull_request:", "  push:", "  schedule:", "  workflow_run:"):
+                self.assertNotIn(automatic, events, name)
+            self.assertIn("actions/upload-artifact@v4", workflow)
+        release = (WORKFLOWS / "sdk-preview-release.yml").read_text(encoding="utf-8")
+        for name in ('g4-5-programmable-brush.yml', 'g4-6-c-qualification.yml', 'g4-7-qualification.yml'):
+            self.assertNotIn(name, release)
+        self.assertIn("  pull_request:", release)
+        self.assertIn("  push:", release)
+        self.assertIn("tools/release/build_preview.py", release)
+        builder = (ROOT / "tools/release/build_preview.py").read_text(encoding="utf-8")
+        for required in ('SDKWindowsPublicAdapter', 'FC02Text', 'FC00XRuntimeComposition',
+                         'axiom_fc08_section_codec_tests.exe', 'verify_browser.mjs',
+                         'sdk-consumer-regressions.xml'):
+            self.assertIn(required, builder)
 
 
 if __name__ == "__main__":
