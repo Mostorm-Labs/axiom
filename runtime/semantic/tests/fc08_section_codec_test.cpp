@@ -296,7 +296,7 @@ TEST(Fc08SectionA, SectionPropertiesRejectForbiddenDefaultsAndClearWithoutMutati
     ASSERT_EQ(OperationEngine{}.apply(operation(InsertObjectsOp{{object}}), ApplySource::kLocalInteraction,
         objects, ledger, generation, clock).disposition, ApplyDisposition::kApplied);
     const auto before = objects.allObjects();
-    for (const auto field_id : {1U, 2U, 4U, 0x101U}) {
+    for (const auto field_id : {1U, 2U, 4U}) {
         const auto command = operation(PatchPropertiesOp{{{object.id, field_id, PropertyPatchAction::kClear, {}}}}, 20 + field_id);
         EXPECT_NE(OperationEngine{}.apply(command, ApplySource::kLocalInteraction, objects, ledger,
             generation, clock).disposition, ApplyDisposition::kApplied);
@@ -306,4 +306,22 @@ TEST(Fc08SectionA, SectionPropertiesRejectForbiddenDefaultsAndClearWithoutMutati
         EXPECT_FALSE(ledger.find(command.id).has_value());
     }
 }
+TEST(Fc08SectionA, ExtendedAppearanceAllowsStrokeClearWithOwnedCommitIdentity) {
+    // sketch_extended_v1 makes strokeStyle applicable to Section. Clearing an
+    // absent stroke is valid; setting one still requires versioned metadata.
+    const auto object = section();
+    ReferenceObjectStore objects; AppliedOperationLedger ledger;
+    SemanticGenerationState generation; CanonicalCommitClock clock(RuntimeEpoch(17));
+    ASSERT_EQ(OperationEngine{}.apply(operation(InsertObjectsOp{{object}}), ApplySource::kLocalInteraction,
+        objects, ledger, generation, clock).disposition, ApplyDisposition::kApplied);
+    const auto before = objects.allObjects();
+    const auto command = operation(PatchPropertiesOp{{{object.id, 0x101U, PropertyPatchAction::kClear, {}}}}, 301);
+    ASSERT_EQ(OperationEngine{}.apply(command, ApplySource::kLocalInteraction, objects, ledger,
+        generation, clock).disposition, ApplyDisposition::kApplied);
+    EXPECT_EQ(objects.allObjects(), before);
+    EXPECT_EQ(generation.current().value(), 2U);
+    EXPECT_EQ(clock.lastCommittedOrdinal().value(), 2U);
+    EXPECT_TRUE(ledger.find(command.id).has_value());
+}
+
 } // namespace

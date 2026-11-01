@@ -250,12 +250,12 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     if(old.a<=0 || old.d!=old.a || old.b!=0 || old.c!=0){
         provider.release();return BackendSubmissionResult::retry("navigation transform ineligible");
     }
-    const float ratio=camera.scale/old.a;
+    const float ratio=static_cast<float>(camera.scale/old.a);
     const float sx=current.metrics.physicalWidth/current.metrics.logicalWidth;
     const float sy=current.metrics.physicalHeight/current.metrics.logicalHeight;
     auto* canvas=acquired.frame.surface->getCanvas();
     canvas->save();canvas->resetMatrix();canvas->clear(cache->background);
-    canvas->translate((camera.translationX-ratio*old.tx)*sx,(camera.translationY-ratio*old.ty)*sy);
+    canvas->translate(static_cast<SkScalar>((camera.translationX-ratio*old.tx)*sx),static_cast<SkScalar>((camera.translationY-ratio*old.ty)*sy));
     canvas->scale(ratio,ratio);
     canvas->drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));
     canvas->restore();provider.release();

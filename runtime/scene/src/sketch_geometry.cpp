@@ -356,10 +356,10 @@ std::shared_ptr<const SketchGeometry> sketchGeometry(const semantic::ObjectConte
         k.kind = static_cast<int>(s->shape_kind);
         k.w = s->width;
         k.h = s->height;
-    } else if (const auto *s = std::get_if<StickyContent>(&content)) {
+    } else if (const auto *sticky = std::get_if<StickyContent>(&content)) {
         k.kind = 1;
-        k.w = s->width;
-        k.h = s->height;
+        k.w = sticky->width;
+        k.h = sticky->height;
     } else if (std::holds_alternative<ConnectorContent>(content) && route) {
         k.kind = 4;
         k.route = route->route;

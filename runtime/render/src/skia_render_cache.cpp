@@ -173,11 +173,11 @@ bool SkiaRenderCache::drawTiles(SkCanvas& canvas,const FramePlan& plan){
         const auto result=drawReferencePlanToSkCanvas(*draw,tilePlan,nullptr,nullptr,true,nullptr,&grid);
         draw->restore();if(result.code!=BackendSubmissionCode::kAccepted)return false;
         auto crop=canvas.makeSurface(info.makeWH(rect.width(),rect.height()));if(!crop)return false;
-        crop->getCanvas()->clear(SK_ColorTRANSPARENT);crop->getCanvas()->drawImage(scratch_->makeImageSnapshot(),-rect.left(),-rect.top());
+        crop->getCanvas()->clear(SK_ColorTRANSPARENT);crop->getCanvas()->drawImage(scratch_->makeImageSnapshot(),static_cast<SkScalar>(-rect.left()),static_cast<SkScalar>(-rect.top()));
         auto image=crop->makeImageSnapshot();if(!image||!tiles_->complete(*request))return false;
         tileEntries_.emplace(key,TileEntry{request->generation,image,rect,std::move(lease)});(void)scheduler_.finish(job,request->generation);++work.tileRasters;
     }
-    canvas.save();canvas.resetMatrix();for(const auto& key:keys){const auto& e=tileEntries_.at(key);canvas.drawImage(e.image,float(e.device.left()),float(e.device.top()));}canvas.restore();
+    canvas.save();canvas.resetMatrix();for(const auto& key:keys){const auto& e=tileEntries_.at(key);canvas.drawImage(e.image,static_cast<SkScalar>(e.device.left()),static_cast<SkScalar>(e.device.top()));}canvas.restore();
     return true;
 }
 SkiaRenderCache::Preparation SkiaRenderCache::prepare(
@@ -273,13 +273,13 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         if(exhausted())return yield();
         if(!pending_){
             if(!ensureScratch(canvas))return Preparation::kFallback;
-            const auto admission=admissions_.find(entry.record.objectId);if(admission==admissions_.end())return Preparation::kFallback;
+            const auto admissionEntry=admissions_.find(entry.record.objectId);if(admissionEntry==admissions_.end())return Preparation::kFallback;
             auto* target=scratch_->getCanvas();target->resetMatrix();target->clear(SK_ColorTRANSPARENT);
             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
             const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
             auto raster=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget);
             target->restore();
-            pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,admission->second.crop,std::move(raster)});
+            pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,admissionEntry->second.crop,std::move(raster)});
             ++work.misses;
         }
         if(pending_->id!=entry.record.objectId||RenderSourceResolver::resolve(pending_->validity,validity)!=RenderSourceKind::kRasterCache){

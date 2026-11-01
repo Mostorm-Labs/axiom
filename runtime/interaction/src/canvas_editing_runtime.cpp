@@ -279,7 +279,7 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
           (propertyBool(record.properties, 2U, false) ? static_cast<std::uint32_t>(canvas::SceneRecordFlags::kLocked) : 0U));
       std::uint64_t slot = 1469598103934665603ULL;
       for (const auto byte : record.objectId.bytes) { slot ^= byte; slot *= 1099511628211ULL; }
-      const auto generation = sceneContentGeneration(record);
+      const auto contentGeneration = sceneContentGeneration(record);
       auto order = canvas::SceneOrderKey(record.placement.order_key.bytes());
       if(hierarchical) {
         std::array<std::uint8_t,8> bytes{};
@@ -290,9 +290,9 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
       const auto hitSlot = allocateSlot(hitSlots_, hitSlotsUsed_,
           static_cast<std::uint32_t>(slot ^ 0x9e3779b9U), record.objectId);
       result.records.push_back({record.objectId, canvas::SceneOrderKey(order.bytes()), kind, flags,
-                                record.worldBounds, canvas::ContentRevision(generation),
-                                canvas::RenderPayloadRef{renderSlot, generation},
-                                canvas::HitGeometryRef{hitSlot, generation}, record.transform,
+                                record.worldBounds, canvas::ContentRevision(contentGeneration),
+                                canvas::RenderPayloadRef{renderSlot, contentGeneration},
+                                canvas::HitGeometryRef{hitSlot, contentGeneration}, record.transform,
                                 record.derivedGeometry, record.properties, hierarchical?traversalOrdinal:0});
     }
     return foundation::Result<canvas::CompiledSceneSnapshot>::success(std::move(result));
@@ -4086,6 +4086,12 @@ bool CanvasEditingRuntime::commitSurfaceBinding(
       return false;
     }
   }
+  // GPU snapshots and compact prefix surfaces belong to the old provider
+  // context. Release them before a provider resize destroys that context.
+  skiaRenderer_.clearRenderCache();
+  skiaRenderer_.clearCompactCache();
+  previewRenderer_.clearRenderCache();
+  previewRenderer_.clearCompactCache();
   const auto result = appBinding_->updateSurfacePair(metrics,
       pendingCanonicalProvider_, pendingPreviewProvider_, restoring, surface_.generation == 0U,
       [this] { return !closed_ && !surfaceAbortRequested_; });
@@ -4157,6 +4163,10 @@ bool CanvasEditingRuntime::loseSurface() noexcept {
   if (editingPointer_.valid()) cancelSelectionTransform();
   std::lock_guard providerLock(previewProviderMutex_);
   std::lock_guard stateLock(previewStateMutex_);
+  skiaRenderer_.clearRenderCache();
+  skiaRenderer_.clearCompactCache();
+  previewRenderer_.clearRenderCache();
+  previewRenderer_.clearCompactCache();
   appBinding_->invalidateSurfacePair();
   pendingCanonicalProvider_.reset();
   pendingPreviewProvider_.reset();
@@ -4989,6 +4999,10 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
     worldViewport.right = std::max(worldViewport.right, worldCorners[i].x);
     worldViewport.bottom = std::max(worldViewport.bottom, worldCorners[i].y);
   }
+  // Canonical and preview providers have independent generations. Validate
+  // the transient plan against the provider it actually renders into.
+  auto* target = platformPresentationDeferred_ ? activeSurfaceProvider() : previewProvider_;
+  if (target == nullptr) return false;
   const render::FrameState frame{
       viewId_,
       render::CameraState{foundation::WorldPoint{
@@ -5002,7 +5016,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
                               surface_.devicePixelRatio,
                               surface_.displayScale},
       semanticGeneration_.current(), runtimeSceneHost_->revision(),
-      render::SurfaceGeneration{surface_.generation},
+      render::SurfaceGeneration{target->generation()},
        render::MetricsGeneration{surface_.metricsGeneration}, render::FrameId{frameId},
       foundation::WorldRect{0.0F, 0.0F, surface_.logicalWidth,
                             surface_.logicalHeight}};
@@ -5220,8 +5234,6 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, b
   // Deferred editing uses the canonical target's warm cache for approximate
   // full replacement feedback. No SkImage crosses contexts and no canonical
   // receipt is issued until the terminal semantic frame is presented.
-  auto* target = platformPresentationDeferred_ ? activeSurfaceProvider() : previewProvider_;
-  if (target == nullptr) return false;
   auto& renderer = platformPresentationDeferred_ ? skiaRenderer_ : previewRenderer_;
   const auto rendered = renderer.renderTransientOverlay(
       *target, plan.value(), selectionOverlay());

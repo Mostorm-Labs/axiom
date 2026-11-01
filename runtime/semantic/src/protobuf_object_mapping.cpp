@@ -420,7 +420,7 @@ bool toProtobufOperation(const Operation& source, p::Operation& destination) {
             },step);
         } else if constexpr (std::is_same_v<T, EditTableOp>) {
             auto* x=payload->mutable_edit_table();setId(value.object_id,x->mutable_object_id());x->set_action(static_cast<unsigned>(value.action));
-            return toProtobufTableContent(value.expected,*x->mutable_expected())&&toProtobufTableContent(value.replacement,*x->mutable_replacement());
+            if (!toProtobufTableContent(value.expected,*x->mutable_expected()) || !toProtobufTableContent(value.replacement,*x->mutable_replacement())) return false;
         } else if constexpr (std::is_same_v<T, SetDocumentBackgroundOp>) {
             toProtobufBackground(value.value, *payload->mutable_set_document_background()->mutable_value());
         } else if constexpr (std::is_same_v<T, SetSectionContentOp> || std::is_same_v<T, EditContainerTopologyOp>) {
