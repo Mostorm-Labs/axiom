@@ -117,3 +117,33 @@ Raw local logs remain under ignored out/rn-sdk-deps; durable follow-up evidence
 must bind exact clean source revision and artifact hashes. Packaging now creates
 XCFramework and Apple resource bundle before hashing and atomically publishes the
 staged directory; dirty/foreign inputs reject before consumer output appears.
+
+## Durable delivery update
+
+SDK 0.1.0 was merged via PR #158 and published at main revision
+`07126c4c378afdfba8636bd2cd0452c271357136`. Tag workflow
+[41309580105](https://github.com/Mostorm-Labs/axiom/actions/runs/41309580105)
+passed Windows/Web verification, GitHub publication and npm publication.
+`@mostorm/axiom@0.1.0` was published with `latest`; hosted version readback passed.
+Local registry reads still reject with 401 (no credential changes were made).
+The downloaded GitHub JS ZIP matches SHA-256 and passed its real external browser
+52-case, frame, Shell/Axis and Demo regression at that exact clean revision.
+
+RN implementation source `d7ce720aa4f6b139011a9593e2623535e1d3adb1`
+is available in draft PR #159. At that clean source, macOS, iOS device/simulator
+and Android arm64 native installs were rebuilt using locked SDKs, then staged with
+matching resources and exact hashes. Android RN arm64 Debug App and Release AAR build; the AAR contains
+only arm64 native payloads. iOS RN arm64 simulator App builds, launches and displays
+the Controller state/toolbar with an attached Session. This establishes module/view
+startup, not pointer drawing, IME, physical input or all lifecycle acceptance.
+
+Evidence is checked in under `evidence/2026-11-01/` with SHA-256 manifest. It records
+platform limitations and the separate published SDK identity. Windows RN build,
+macOS RN App, native IME and four-platform physical evidence remain open, so RN
+version 0.2.0 is **NOT_QUALIFIED** and is not published to npm.
+
+For a local symlink installation, Metro needs the staged package in `watchFolders`
+and the consumer's node_modules in `resolver.nodeModulesPaths`. An installed npm
+package does not need this development symlink setup. Apple simulator verification
+must request `ARCHS=arm64 ONLY_ACTIVE_ARCH=YES`; the initial XCFramework does not
+contain x86_64. Set both Podfile and application deployment target to iOS 17.

@@ -6,7 +6,7 @@ const results=[],assert=(v,m)=>{if(!v)throw Error(m);results.push(m);};
 try{
  const errors=[];const c=await createController({mount:document.getElementById('mount'),documentId:'a'.repeat(32),onError:e=>errors.push(String(e))});
  assert(!('canvas'in c)&&!('call'in c),'portable facade contains no raw engine/surface');
- assert((await c.readBuildInfo()).sdkVersion===c.version,'matching common/Web/WASM version');
+ const buildInfo=await c.readBuildInfo();assert(buildInfo.sdkVersion===c.version,'matching common/Web/WASM version');
  let observed;const off=c.subscribeState(s=>observed=s);await c.dispatchEvents();await new Promise(r=>setTimeout(r,100));assert(observed.documentId==='a'.repeat(32),'async owned state event');off();
  await c.selectShape('rectangle');
  const canvas=document.querySelector('canvas');const rect=canvas.getBoundingClientRect();canvas.setPointerCapture=()=>{};canvas.hasPointerCapture=()=>false;
@@ -19,6 +19,6 @@ try{
  const s=await c.readState();const saved=await c.captureSnapshot({generation:s.generation,documentRevision:'9007199254740993',recoveryFrontier:[8,1,16,1,24,1]});assert(saved.bytes.byteLength>0,'owned snapshot buffer');
  const image=await c.exportImage();assert(image.bytes.byteLength>0,'shared image export');
  await c.close();await c.close();assert(!document.getElementById('mount').children.length,'close disposes browser Host');
- assert(errors.length===0,'no runtime errors');document.getElementById('result').textContent=JSON.stringify({status:'PASS',results});
+ assert(errors.length===0,'no runtime errors');document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,buildInfo});
 }catch(e){document.getElementById('result').textContent=JSON.stringify({status:'FAIL',error:String(e.stack||e),results});}
 </script>

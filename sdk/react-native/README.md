@@ -53,3 +53,9 @@ Android additionally needs the accepted NDK 27.2.12479018 (`--ndk <path>`).
 Install the staged package using `npm install <absolute-package-path>`; source
 `sdk/react-native` intentionally contains no native binaries and is not a
 self-contained consumer package.
+
+For local `file:` symlink development, add the staged package's real path to
+Metro `watchFolders` and the app's `node_modules` to `resolver.nodeModulesPaths`.
+On Apple Silicon simulator builds, request `ARCHS=arm64 ONLY_ACTIVE_ARCH=YES`;
+the development XCFramework does not contain an x86_64 simulator slice. Set both
+Podfile and the application target to iOS 17 or newer.
