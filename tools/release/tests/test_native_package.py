@@ -10,6 +10,13 @@ REPO = Path(__file__).resolve().parents[3]
 
 
 class NativePackageTest(unittest.TestCase):
+    def test_native_host_projects_are_concrete_and_use_accepted_ndk(self):
+        gradle = (REPO / 'sdk/react-native/android/build.gradle').read_text()
+        self.assertIn("ndkVersion '27.2.12479018'", gradle)
+        windows = (REPO / 'sdk/react-native/windows/ExperimentalFeatures.props').read_text()
+        self.assertNotIn('{{', windows)
+        self.assertIn('<UseExperimentalNuget', windows)
+
     def setUp(self):
         self.source = patch('tools.release.native_package.source_identity', return_value=('a'*40, False))
         self.source.start()

@@ -25,7 +25,7 @@
 
       See https://microsoft.github.io/react-native-windows/docs/nuget
     -->
-    <UseExperimentalNuget>{{useNuGets}}</UseExperimentalNuget>
+    <UseExperimentalNuget Condition="'$(UseExperimentalNuget)' == ''">true</UseExperimentalNuget>
 
     <ReactExperimentalFeaturesSet>true</ReactExperimentalFeaturesSet>
   </PropertyGroup>

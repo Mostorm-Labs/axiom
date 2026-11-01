@@ -12,6 +12,7 @@ def nativeSdk = project.findProperty('axiomNativeSdkRoot') ?: file('../native/an
 android {
  namespace 'dev.mostorm.axiom'
  compileSdk 36
+ ndkVersion '27.2.12479018'
  defaultConfig {
   minSdk 26
   externalNativeBuild { cmake { arguments "-DAXIOM_NATIVE_SDK_ROOT=${nativeSdk}"; cppFlags '-std=c++20' } }
