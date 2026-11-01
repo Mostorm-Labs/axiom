@@ -67,11 +67,11 @@ TEST(SemanticTypes, NumericNormalizationRejectsNonFiniteAndCanonicalizesNegative
 }
 
 TEST(SemanticTypes, RegistryIsExplicitAndClosed) {
-    for (std::uint8_t value = 1; value <= 10; ++value) {
+    for (std::uint8_t value = 1; value <= 11; ++value) {
         EXPECT_TRUE(isKnownObjectKind(static_cast<ObjectKind>(value)));
     }
     EXPECT_FALSE(isKnownObjectKind(static_cast<ObjectKind>(0)));
-    EXPECT_FALSE(isKnownObjectKind(static_cast<ObjectKind>(11)));
+    EXPECT_FALSE(isKnownObjectKind(static_cast<ObjectKind>(12)));
 
     for (std::uint8_t value = 1; value <= 15; ++value) {
         EXPECT_TRUE(isKnownOperationKind(static_cast<OperationKind>(value)));
@@ -80,7 +80,9 @@ TEST(SemanticTypes, RegistryIsExplicitAndClosed) {
     EXPECT_TRUE(isKnownOperationKind(static_cast<OperationKind>(16)));
     EXPECT_TRUE(isKnownOperationKind(static_cast<OperationKind>(17)));
     EXPECT_TRUE(isKnownOperationKind(static_cast<OperationKind>(18)));
-    EXPECT_FALSE(isKnownOperationKind(static_cast<OperationKind>(19)));
+    EXPECT_TRUE(isKnownOperationKind(static_cast<OperationKind>(19)));
+    EXPECT_TRUE(isKnownOperationKind(static_cast<OperationKind>(20)));
+    EXPECT_FALSE(isKnownOperationKind(static_cast<OperationKind>(21)));
 }
 
 TEST(SemanticTypes, SemanticGenerationIsASeparateStrongRuntimeLocalToken) {
