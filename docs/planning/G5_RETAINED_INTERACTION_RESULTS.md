@@ -84,3 +84,11 @@ Verification provenance: the full52 SDK checks,105 ink checks,34 G5 tests and
 refinement. The final artifact was checked with native render-cache, actual
 WebGL full renderer corpus, public handoff7/navigation5,1000 browser workload,
 Runtime boundary/ABI/workspace checks. Raw artifacts identify each build.
+
+Main integration: the implementation was committed as04088ce2 and integrated
+with main@07126c4c in01fb9b39. Native G5 reran34/34; actual WebGL probe and full
+public SDK browser checks passed on the combined source. Full root diagnostic
+improved to225/246 with21 failures, all names already in the preceding27; six
+previous failures no longer reproduce. Exact-main attribution of the remaining
+failures is still incomplete. Integration logs and source-tree/artifact identity
+are retained under verification/evidence/performance/g5-main-integration/.

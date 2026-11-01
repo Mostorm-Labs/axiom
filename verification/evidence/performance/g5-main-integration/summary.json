@@ -1,0 +1,49 @@
+{
+  "repository": "Mostorm-Labs/axiom",
+  "head": "01fb9b39238f04a8de97ea32272d51348e40b1b3",
+  "tree": "71726adcd4386e267377d6a70f288e8536472496",
+  "main_integrated": "07126c4c378afdfba8636bd2cd0452c271357136",
+  "g5_tests": {
+    "passed": 34,
+    "failed": 0
+  },
+  "webgl": "PASS",
+  "sdk_browser": "PASS",
+  "root": {
+    "total": 246,
+    "passed": 225,
+    "failed": [
+      "canvas_fc02_shape_label_scene (Subprocess aborted)",
+      "canvas_g2_a3_full_incremental_equivalence (Subprocess aborted)",
+      "G3HeadlessCanvasDemo (Subprocess aborted)",
+      "FC00XRuntimeComposition (Subprocess aborted)",
+      "FC04.MSE-11 (Failed)",
+      "FC04.MSE-20 (Failed)",
+      "FC04.MSE-23 (Failed)",
+      "FC04.MSE-24 (Failed)",
+      "FC04.MSE-25 (Failed)",
+      "FC04.MSE-26 (Failed)",
+      "FC01Creation-width-style (Subprocess aborted)",
+      "G4InkPlaygroundComposition (Subprocess aborted)",
+      "G4InkPlaygroundSurface (Subprocess aborted)",
+      "G4InkPlaygroundRepeatedStrokes (Subprocess aborted)",
+      "G4MultiPointerPlayground (Subprocess aborted)",
+      "G4ViewportGestureState (Subprocess aborted)",
+      "G46BQueryStructure (Subprocess aborted)",
+      "G46PlaygroundTransform (Subprocess aborted)",
+      "G46CQualificationBundle (Subprocess aborted)",
+      "G46CQualificationBehavior (Failed)",
+      "G45BrushRuntimePipeline (Subprocess aborted)"
+    ],
+    "new_failure_names_vs_previous_g5": [],
+    "resolved_failure_names_vs_previous_g5": [
+      "FC01ASelectionInputIntegration (Failed)",
+      "FC01CreationPreview (Subprocess aborted)",
+      "FC01SelectedActions (Subprocess aborted)",
+      "FC02Text (Failed)",
+      "FC04.MSE-18 (Failed)",
+      "FC05ConnectorDragPreview (Subprocess aborted)"
+    ]
+  },
+  "artifact_note": "Built from the exact integration source tree before its merge commit was recorded. Embedded SDK sourceRevision reports04088ce2 with dirty=true; artifact SHA identifies these observations. No physical platform or P34 PASS."
+}
