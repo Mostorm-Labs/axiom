@@ -4,6 +4,47 @@
 #include <iostream>
 using namespace canvas;
 void require(bool ok,const char* msg){if(!ok)throw std::runtime_error(msg);}
+class DemandRuntime final : public interaction::CanvasEditingRuntime {
+public:
+ void bounded(){navigationExactPreparation_=true;}
+ void ordinary(){navigationExactPreparation_=false;}
+ bool attempt(std::uint64_t id){return presentCanonicalFrame(id,0,false);}
+};
+void retainedDemand(){
+ DemandRuntime r;require(r.bindSurface(256,128)&&r.registerInputSource(7,"exact-demand")&&r.selectBrushProfile("round-handdrawn",4),"demand setup");
+ r.setPlatformPresentationDeferred(true);std::uint64_t sequence=0;
+ for(unsigned n=0;n<80;++n){
+  input::PlatformPointerBatch b;
+  for(unsigned i=0;i<3;++i){input::PlatformPointerSample s;s.source=7;s.pointer=1;s.sequence=++sequence;s.timestampNs=sequence*8000000;
+   s.x=20+i*80;s.y=20+(n%8)*10;s.phase=i==0?input::PointerPhase::kDown:i==2?input::PointerPhase::kUp:input::PointerPhase::kMove;b.samples.push_back(s);}
+  require(r.acceptPlatformBatch(b,b.samples.back().timestampNs),"demand input");
+ }
+ require(r.setSelectionMode(true),"idle selection tool");
+ r.ordinary();const auto first=r.nextCanonicalFrameId();
+ require(!r.attempt(first)&&r.canonicalPresentationRetryable()&&!r.lastSubmittedCanonicalFrame(),"demand did not yield");
+ unsigned retries=0;while(!r.attempt(r.nextCanonicalFrameId()))require(r.canonicalPresentationRetryable()&&++retries<32,"demand did not converge");
+ require(r.lastSubmittedCanonicalFrame()->frameId.value()==first,
+         "unchanged exact retry rebuilt a new frame identity instead of retaining demand");
+ require(r.setViewportZoomAt(1.1F,128,64),"demand camera");r.bounded();
+ const auto replacement=r.nextCanonicalFrameId();require(!r.attempt(replacement)&&r.canonicalPresentationRetryable(),"new camera reused old prepared pixels");
+ require(r.setViewportZoomAt(1.2F,128,64),"superseding camera");r.bounded();
+ const auto latest=r.nextCanonicalFrameId();retries=0;
+ while(!r.attempt(r.nextCanonicalFrameId()))require(r.canonicalPresentationRetryable()&&++retries<32,"superseding demand convergence");
+ require(r.lastSubmittedCanonicalFrame()->frameId.value()>=latest,"superseded frame identity submitted");
+ require(r.setViewportZoomAt(1.3F,128,64),"resource demand camera");r.bounded();
+ require(!r.attempt(r.nextCanonicalFrameId())&&r.canonicalPresentationRetryable(),"resource demand setup");
+ require(r.refreshResourceDerivedState(),"resource update");
+ const auto resourceFrame=r.nextCanonicalFrameId();retries=0;
+ while(!r.attempt(r.nextCanonicalFrameId()))require(r.canonicalPresentationRetryable()&&++retries<32,"resource demand convergence");
+ require(r.lastSubmittedCanonicalFrame()->frameId.value()>=resourceFrame,"resource change retained old demand identity");
+ require(r.setViewportZoomAt(1.4F,128,64),"loss demand camera");r.bounded();
+ require(!r.attempt(r.nextCanonicalFrameId())&&r.canonicalPresentationRetryable(),"loss demand setup");
+ require(r.loseSurface()&&!r.attempt(r.nextCanonicalFrameId()),"lost demand presented");
+ require(r.rebindSurface(),"demand restore");r.bounded();const auto restored=r.nextCanonicalFrameId();retries=0;
+ while(!r.attempt(r.nextCanonicalFrameId()))require(r.canonicalPresentationRetryable()&&++retries<32,"restored demand convergence");
+ require(r.lastSubmittedCanonicalFrame()->frameId.value()>=restored&&
+         r.lastSubmittedCanonicalFrame()->surfaceGeneration.value()==r.surface().generation,"old surface demand survived restore");
+}
 void deferredShapeDrag(){
  runtime::RuntimeCompositionCore c;require(c.open(),"shape open");
  auto canonical=std::make_unique<render::RasterSkiaSurfaceProvider>();auto* target=canonical.get();
@@ -61,15 +102,16 @@ void deferredShapeDrag(){
 void drawAfterZoom(bool settling, bool cancel){
  interaction::CanvasEditingRuntime r;
  require(r.bindSurface(256,128)&&r.registerInputSource(7,"draw-after-zoom"),"draw setup");
- require(r.selectBrushProfile("round-handdrawn",3),"draw brush");
+ require(r.selectBrushProfile("round-handdrawn",4),"draw brush");
  r.setPlatformPresentationDeferred(true);
  input::PlatformPointerSample s;s.source=7;s.pointer=1;s.sequence=0;s.timestampNs=0;
  const auto pointer=[&](input::PointerPhase phase,float x,float y){
   ++s.sequence;++s.timestampNs;s.phase=phase;s.x=x;s.y=y;
   require(r.acceptPlatformBatch({{s}},s.sequence),"draw sample");
  };
- for(unsigned i=0;i<8;++i){pointer(input::PointerPhase::kDown,30,20+i*10);pointer(input::PointerPhase::kUp,180,20+i*10);}
- require(r.presentCanonicalFrame(r.nextCanonicalFrameId(),0),"draw initial exact");
+ for(unsigned i=0;i<160;++i){pointer(input::PointerPhase::kDown,30,20+(i%8)*10);pointer(input::PointerPhase::kUp,180,20+(i%8)*10);}
+ {unsigned attempts=0;while(!r.presentCanonicalFrame(r.nextCanonicalFrameId(),0))
+   require(r.canonicalPresentationRetryable()&&++attempts<64,"draw initial exact");}
  interaction::PreviewPresentationCapture capture;std::uint64_t count=0;
  require(r.capturePreviewPresentation(capture)&&r.renderPreviewPresentation(capture,&count)&&r.acknowledgePreviewPresentation(capture,count),"draw initial preview");
  const auto exact=*r.lastSubmittedCanonicalFrame();
@@ -104,6 +146,7 @@ void drawAfterZoom(bool settling, bool cancel){
  require(!r.serviceNavigationPresentation(start+std::chrono::seconds(3),presented),"draw lost target reused");
 }
 int main(){
+ retainedDemand();
  deferredShapeDrag();
  drawAfterZoom(false,false);drawAfterZoom(true,false);drawAfterZoom(false,true);
  interaction::CanvasEditingRuntime r;
@@ -113,13 +156,14 @@ int main(){
  input::PlatformPointerSample s;s.source=7;s.pointer=1;s.sequence=1;s.timestampNs=1;s.x=30;s.y=50;s.phase=input::PointerPhase::kDown;
  require(r.acceptPlatformBatch({{s}},1),"down");s.sequence=2;s.timestampNs=2;s.x=120;s.phase=input::PointerPhase::kUp;
  require(r.acceptPlatformBatch({{s}},2),"up");
- for(unsigned i=1;i<8;++i){
-  s.phase=input::PointerPhase::kDown;s.x=30;s.y=20+i*10;s.sequence=2*i+1;s.timestampNs=s.sequence;
+ for(unsigned i=1;i<80;++i){
+  s.phase=input::PointerPhase::kDown;s.x=30;s.y=20+(i%8)*10;s.sequence=2*i+1;s.timestampNs=s.sequence;
   require(r.acceptPlatformBatch({{s}},s.sequence),"extra down");
   s.phase=input::PointerPhase::kUp;s.x=120;++s.sequence;s.timestampNs=s.sequence;
   require(r.acceptPlatformBatch({{s}},s.sequence),"extra up");
  }
- require(r.presentCanonicalFrame(r.nextCanonicalFrameId(),0),"exact");
+ {unsigned attempts=0;while(!r.presentCanonicalFrame(r.nextCanonicalFrameId(),0))
+   require(r.canonicalPresentationRetryable()&&++attempts<64,"exact");}
  interaction::PreviewPresentationCapture preview;std::uint64_t previewCount=0;
  require(r.capturePreviewPresentation(preview)&&r.renderPreviewPresentation(preview,&previewCount)&&r.acknowledgePreviewPresentation(preview,previewCount),"preview feedback");
  const auto exact=*r.lastSubmittedCanonicalFrame();

@@ -1,0 +1,310 @@
+{
+  "classification": "PASS_WITH_FINDINGS",
+  "basis": "local WebGL/native diagnostics; no platform device Gate or P34 decision",
+  "measurements": [
+    {
+      "strokes": 100,
+      "scenario": "zoom",
+      "before": {
+        "maxRafCallbackMs": 58.60000002384186,
+        "maxCanonicalAttemptMs": 57.7,
+        "exactReceiptDelayMs": 95.40000009536743,
+        "reuseAttempts": 0,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "d85d9c7535250917842fd75af770da09803d6cb8fe64d579980777680ddc5be1",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "2779ca681a8fdad663d66a76e305e1bfd492bb118a0668830f319ac60aae1f29",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "f507f06c61dcd981dc520bd6684f8937f2591c3c037a20348f537a48c640ae29"
+        }
+      },
+      "after": {
+        "maxRafCallbackMs": 41.199999928474426,
+        "maxCanonicalAttemptMs": 10.0,
+        "exactReceiptDelayMs": 125.5,
+        "reuseAttempts": 6,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "d85d9c7535250917842fd75af770da09803d6cb8fe64d579980777680ddc5be1",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "56627c48ecec7e16bc9fd861e247ef5a9e3b6d60a4581d3152029d7e13ee3825",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "88a3b6fdd3d0df5d9d72fc39502dcb5c80ba7175b0362545fdfc9ad07244f842"
+        }
+      },
+      "pixelParity": true
+    },
+    {
+      "strokes": 100,
+      "scenario": "drag",
+      "before": {
+        "maxRafCallbackMs": 2.299999952316284,
+        "maxCanonicalAttemptMs": 1.7,
+        "exactReceiptDelayMs": 30.399999976158142,
+        "reuseAttempts": 0,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "c5ed2a58c6abf17e251e89810f9ec59ae3ba136e3ab1eae2add7db106f337092",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "2779ca681a8fdad663d66a76e305e1bfd492bb118a0668830f319ac60aae1f29",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "f507f06c61dcd981dc520bd6684f8937f2591c3c037a20348f537a48c640ae29"
+        }
+      },
+      "after": {
+        "maxRafCallbackMs": 2.5,
+        "maxCanonicalAttemptMs": 1.8,
+        "exactReceiptDelayMs": 30.799999952316284,
+        "reuseAttempts": 0,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "c5ed2a58c6abf17e251e89810f9ec59ae3ba136e3ab1eae2add7db106f337092",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "56627c48ecec7e16bc9fd861e247ef5a9e3b6d60a4581d3152029d7e13ee3825",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "88a3b6fdd3d0df5d9d72fc39502dcb5c80ba7175b0362545fdfc9ad07244f842"
+        }
+      },
+      "pixelParity": true
+    },
+    {
+      "strokes": 100,
+      "scenario": "ink",
+      "before": {
+        "maxRafCallbackMs": 49.5,
+        "maxCanonicalAttemptMs": 48.7,
+        "exactReceiptDelayMs": 92.79999995231628,
+        "reuseAttempts": 0,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "be4b323be3a2f7cc16125b3c7bfaf0db60d79801ac40a921467946c1270a309f",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "2779ca681a8fdad663d66a76e305e1bfd492bb118a0668830f319ac60aae1f29",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "f507f06c61dcd981dc520bd6684f8937f2591c3c037a20348f537a48c640ae29"
+        }
+      },
+      "after": {
+        "maxRafCallbackMs": 15.300000071525574,
+        "maxCanonicalAttemptMs": 8.3,
+        "exactReceiptDelayMs": 125.29999995231628,
+        "reuseAttempts": 5,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "be4b323be3a2f7cc16125b3c7bfaf0db60d79801ac40a921467946c1270a309f",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "56627c48ecec7e16bc9fd861e247ef5a9e3b6d60a4581d3152029d7e13ee3825",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "88a3b6fdd3d0df5d9d72fc39502dcb5c80ba7175b0362545fdfc9ad07244f842"
+        }
+      },
+      "pixelParity": true
+    },
+    {
+      "strokes": 500,
+      "scenario": "zoom",
+      "before": {
+        "maxRafCallbackMs": 241.5,
+        "maxCanonicalAttemptMs": 240.2,
+        "exactReceiptDelayMs": 266.5,
+        "reuseAttempts": 0,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "5015339c9919f47c7d82e9c7473dd6690a9fa77b2be67ad896e4b3874ebbba9b",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "2779ca681a8fdad663d66a76e305e1bfd492bb118a0668830f319ac60aae1f29",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "f507f06c61dcd981dc520bd6684f8937f2591c3c037a20348f537a48c640ae29"
+        }
+      },
+      "after": {
+        "maxRafCallbackMs": 38.5,
+        "maxCanonicalAttemptMs": 15.9,
+        "exactReceiptDelayMs": 574.2999999523163,
+        "reuseAttempts": 33,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "5015339c9919f47c7d82e9c7473dd6690a9fa77b2be67ad896e4b3874ebbba9b",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "56627c48ecec7e16bc9fd861e247ef5a9e3b6d60a4581d3152029d7e13ee3825",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "88a3b6fdd3d0df5d9d72fc39502dcb5c80ba7175b0362545fdfc9ad07244f842"
+        }
+      },
+      "pixelParity": true
+    },
+    {
+      "strokes": 500,
+      "scenario": "drag",
+      "before": {
+        "maxRafCallbackMs": 7.399999976158142,
+        "maxCanonicalAttemptMs": 6.1,
+        "exactReceiptDelayMs": 26.399999976158142,
+        "reuseAttempts": 0,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "87ccf3b6e02865907ef1a7e0fe9d6b83f3ea7c35cf4e3e266a7d178a7d1c3df1",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "2779ca681a8fdad663d66a76e305e1bfd492bb118a0668830f319ac60aae1f29",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "f507f06c61dcd981dc520bd6684f8937f2591c3c037a20348f537a48c640ae29"
+        }
+      },
+      "after": {
+        "maxRafCallbackMs": 6.700000047683716,
+        "maxCanonicalAttemptMs": 5.9,
+        "exactReceiptDelayMs": 27.399999976158142,
+        "reuseAttempts": 0,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "87ccf3b6e02865907ef1a7e0fe9d6b83f3ea7c35cf4e3e266a7d178a7d1c3df1",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "56627c48ecec7e16bc9fd861e247ef5a9e3b6d60a4581d3152029d7e13ee3825",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "88a3b6fdd3d0df5d9d72fc39502dcb5c80ba7175b0362545fdfc9ad07244f842"
+        }
+      },
+      "pixelParity": true
+    },
+    {
+      "strokes": 500,
+      "scenario": "ink",
+      "before": {
+        "maxRafCallbackMs": 233.29999995231628,
+        "maxCanonicalAttemptMs": 232.2,
+        "exactReceiptDelayMs": 308,
+        "reuseAttempts": 0,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "8a2d7e3071fb7e22e5951ed21ffc495b79865797329c52b48468799a9843fc7f",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "2779ca681a8fdad663d66a76e305e1bfd492bb118a0668830f319ac60aae1f29",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "f507f06c61dcd981dc520bd6684f8937f2591c3c037a20348f537a48c640ae29"
+        }
+      },
+      "after": {
+        "maxRafCallbackMs": 17.199999928474426,
+        "maxCanonicalAttemptMs": 13.3,
+        "exactReceiptDelayMs": 509.3000000715256,
+        "reuseAttempts": 28,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "8a2d7e3071fb7e22e5951ed21ffc495b79865797329c52b48468799a9843fc7f",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "56627c48ecec7e16bc9fd861e247ef5a9e3b6d60a4581d3152029d7e13ee3825",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "88a3b6fdd3d0df5d9d72fc39502dcb5c80ba7175b0362545fdfc9ad07244f842"
+        }
+      },
+      "pixelParity": true
+    },
+    {
+      "strokes": 1000,
+      "scenario": "zoom",
+      "before": {
+        "maxRafCallbackMs": 496.3000000715256,
+        "maxCanonicalAttemptMs": 493.5,
+        "exactReceiptDelayMs": 507.5,
+        "reuseAttempts": 0,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "f5a75df2ec9cdfdef7af0d9883257e8af52cf0ab0f1f9332870a5ca22edb1978",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "2779ca681a8fdad663d66a76e305e1bfd492bb118a0668830f319ac60aae1f29",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "f507f06c61dcd981dc520bd6684f8937f2591c3c037a20348f537a48c640ae29"
+        }
+      },
+      "after": {
+        "maxRafCallbackMs": 62.799999952316284,
+        "maxCanonicalAttemptMs": 30.6,
+        "exactReceiptDelayMs": 1949.2999999523163,
+        "reuseAttempts": 116,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "f5a75df2ec9cdfdef7af0d9883257e8af52cf0ab0f1f9332870a5ca22edb1978",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "43cd2bdba75c19af848575b856ec249ffe10430fd20774cc05ff0b29cecb1cb0",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "88a3b6fdd3d0df5d9d72fc39502dcb5c80ba7175b0362545fdfc9ad07244f842"
+        }
+      },
+      "pixelParity": true
+    },
+    {
+      "strokes": 1000,
+      "scenario": "drag",
+      "before": {
+        "maxRafCallbackMs": 371,
+        "maxCanonicalAttemptMs": 367.5,
+        "exactReceiptDelayMs": 516.6999999284744,
+        "reuseAttempts": 0,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "98f686c0b819a26b52d3dce76579c6a5ac9b992fc7347a54c3c8241383ced0f8",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "2779ca681a8fdad663d66a76e305e1bfd492bb118a0668830f319ac60aae1f29",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "f507f06c61dcd981dc520bd6684f8937f2591c3c037a20348f537a48c640ae29"
+        }
+      },
+      "after": {
+        "maxRafCallbackMs": 986.8999999761581,
+        "maxCanonicalAttemptMs": 64.0,
+        "exactReceiptDelayMs": 1410.1000000238419,
+        "reuseAttempts": 82,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "98f686c0b819a26b52d3dce76579c6a5ac9b992fc7347a54c3c8241383ced0f8",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "43cd2bdba75c19af848575b856ec249ffe10430fd20774cc05ff0b29cecb1cb0",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "88a3b6fdd3d0df5d9d72fc39502dcb5c80ba7175b0362545fdfc9ad07244f842"
+        }
+      },
+      "pixelParity": true
+    },
+    {
+      "strokes": 1000,
+      "scenario": "ink",
+      "before": {
+        "maxRafCallbackMs": 472,
+        "maxCanonicalAttemptMs": 470.2,
+        "exactReceiptDelayMs": 623.5,
+        "reuseAttempts": 0,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "257bd00c4d505475f948c10ecee06ca5196aaccc4be1b68aa17bf9e9572b2eea",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "2779ca681a8fdad663d66a76e305e1bfd492bb118a0668830f319ac60aae1f29",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "f507f06c61dcd981dc520bd6684f8937f2591c3c037a20348f537a48c640ae29"
+        }
+      },
+      "after": {
+        "maxRafCallbackMs": 44.10000002384186,
+        "maxCanonicalAttemptMs": 27.8,
+        "exactReceiptDelayMs": 2128,
+        "reuseAttempts": 124,
+        "reuseRebuildCountsZero": true,
+        "rgbaSha256": "257bd00c4d505475f948c10ecee06ca5196aaccc4be1b68aa17bf9e9572b2eea",
+        "artifactSha256": {
+          "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+          "axiom.wasm": "43cd2bdba75c19af848575b856ec249ffe10430fd20774cc05ff0b29cecb1cb0",
+          "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+          "internal/axiom.mjs": "88a3b6fdd3d0df5d9d72fc39502dcb5c80ba7175b0362545fdfc9ad07244f842"
+        }
+      },
+      "pixelParity": true
+    }
+  ],
+  "findings": [
+    "Total exact settle time remains higher after slicing; do not claim settle speedup.",
+    "1000-stroke live transient drag still performs expensive synchronous capacity fallback; canonical terminal is now cooperative.",
+    "Concurrent foreign multi-platform builds heavily affected wall times.",
+    "Root CTest:219/246;27 named findings retained. Exact-main differential attribution not completed.",
+    "Initial500 ink samples differed across generated operation identities; paired fresh runs have exact pixel parity. The initial difference is not attributed to input timing."
+  ]
+}

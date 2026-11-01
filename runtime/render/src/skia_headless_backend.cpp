@@ -987,9 +987,19 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkiaTextResources* textResources, bool includeInk, SkiaRenderCache* cache, const CompactDeviceGrid* grid) {
     const auto validation=validateReferencePlan(plan);
     if(validation.code!=BackendSubmissionCode::kAccepted)return validation;
-    // Live canonical targets use an opaque document background; isolated image
-    // exports may request transparency. Preview has its own transparent clear.
-    drawDocumentBackground(canvas, plan);
+    drawReferenceBackgroundToSkCanvas(canvas,plan);
+    drawValidatedReferenceRangeToSkCanvas(canvas,plan,0,plan.referenceDrawList.entries.size(),
+                                         images,textResources,includeInk,cache,grid);
+    return BackendSubmissionResult::accepted();
+}
+
+void drawReferenceBackgroundToSkCanvas(SkCanvas& canvas,const FramePlan& plan) {
+    drawDocumentBackground(canvas,plan);
+}
+
+void drawValidatedReferenceRangeToSkCanvas(SkCanvas& canvas,const FramePlan& plan,
+    std::size_t begin,std::size_t end,ImageResourceResolver* images,SkiaTextResources* textResources,
+    bool includeInk,SkiaRenderCache* cache,const CompactDeviceGrid* grid) {
     canvas.save();
     scaleToDevice(canvas, plan.frame.metrics);
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
@@ -997,7 +1007,8 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     const bool hasDrawableNonInk = plan.transparentBackground || plan.background != foundation::DocumentBackground{} || std::any_of(
         plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
         isDrawableNonInkReferenceEntry);
-    for (const auto& entry : plan.referenceDrawList.entries) {
+    for (std::size_t index=begin;index<end;++index) {
+        const auto& entry=plan.referenceDrawList.entries[index];
         if (!includeInk && isInkReferenceEntry(entry)) continue;
         const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk) ||
             (plan.isolateEraseMasks && !entry.record.eraseMasks.empty());
@@ -1015,7 +1026,6 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
         canvas.restore();
     }
     canvas.restore();
-    return BackendSubmissionResult::accepted();
 }
 
 void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,const SkPicture* coverage,const CompactDeviceGrid* grid,CompactRasterWork* work,bool compatibleCoverage,CompactCoverageTargets* targets) {
@@ -1025,7 +1035,7 @@ void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraver
 
 void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
                               ImageResourceResolver* images,
-                              SkiaTextResources* textResources, SkiaRenderCache* cache) {
+                              SkiaTextResources* textResources, SkiaRenderCache* cache, bool approximateRetainedRuns) {
     canvas.save();
     scaleToDevice(canvas, plan.frame.metrics);
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
@@ -1033,7 +1043,9 @@ void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
     const bool hasDrawableNonInk = plan.transparentBackground || plan.background != foundation::DocumentBackground{} || std::any_of(
         plan.referenceDrawList.entries.begin(), plan.referenceDrawList.entries.end(),
         isDrawableNonInkReferenceEntry);
-    for (const auto& entry : plan.referenceDrawList.entries) {
+    for (std::size_t index=0;index<plan.referenceDrawList.entries.size();++index) {
+        if(approximateRetainedRuns&&cache&&cache->compositeRetainedRun(canvas,plan,index,true))continue;
+        const auto& entry=plan.referenceDrawList.entries[index];
         if (!isInkReferenceEntry(entry)) continue;
         const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk) ||
             (plan.isolateEraseMasks && !entry.record.eraseMasks.empty());

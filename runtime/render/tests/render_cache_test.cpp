@@ -128,6 +128,192 @@ int main(int argc,char** argv) {
             require(actual==expected,"cached/direct pixels differ");
         };
         {
+            // Capacity, not object count, must not force unchanged coverage to
+            // rerasterize on every transform. Exact preparation is the warmup.
+            SkiaRenderer retained,oracle;oracle.setRenderCacheOptions(disabled);
+            RenderCacheOptions bounded;bounded.maxEntries=2;retained.setRenderCacheOptions(bounded);
+            std::vector<ReferenceTraversalEntry> sources;
+            for(unsigned i=0;i<1000;++i)sources.push_back(stroke(20000+i,20+(i%6)*12));
+            semantic::ObjectRecord object;object.id=ObjectId::fromUint64(30000);
+            object.kind=semantic::ObjectKind::kShape;object.kind_version=1;
+            object.content=semantic::ShapeContent{1,60,40};object.transform.tx=50;object.transform.ty=30;
+            const auto projected=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
+            sources.push_back({projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(object.content)}});
+            RenderPreparationBudget slice;slice.maxGroups=64;slice.maxCoverageSteps=4096;slice.maxMicroseconds=1000000;
+            const auto initial=plan(560,sources);BackendSubmissionResult result;
+            unsigned attempts=0;
+            do{result=retained.renderFrame(provider,initial,nullptr,&slice);require(++attempts<100,"1000 source warmup stalled");}
+            while(result.code==BackendSubmissionCode::kRetry);
+            require(result.code==BackendSubmissionCode::kAccepted,"1000 source warmup");
+            const auto rasterized=retained.renderCacheWork().rasterizedGroups;
+
+            EditingOverlay overlay(initial.frame);
+            EditingOverlayInput selected;selected.selectedObject=object.id;selected.selected=true;selected.worldBounds=sources.back().record.worldBounds;
+            require(overlay.update(selected),"1000 source shape selection");
+            for(unsigned i=0;i<4;++i){
+                sources.back().record.transform.tx+=7;
+                const auto moved=plan(561+i,sources);
+                require(retained.renderTransientOverlay(provider,moved,&overlay).code==BackendSubmissionCode::kAccepted,"1000 source live frame");
+                require(oracle.renderTransientOverlay(reference,moved,&overlay).code==BackendSubmissionCode::kAccepted&&pixels(provider)==pixels(reference),"retained opaque prefix pixels differ");
+                require(retained.renderCacheWork().rasterizedGroups==rasterized+i+1,"1000 source drag rerasterized unchanged background");
+                require(retained.renderCacheWork().entries<=bounded.maxEntries,"interaction bypassed object capacity");
+            }
+        }
+        {
+            // The active stroke can be in the middle of accumulated ink. Its
+            // transform must not invalidate both unchanged traversal segments.
+            SkiaRenderer retained,oracle;oracle.setRenderCacheOptions(disabled);
+            RenderCacheOptions bounded;bounded.maxEntries=2;retained.setRenderCacheOptions(bounded);
+            std::vector<ReferenceTraversalEntry> sources;
+            for(unsigned i=0;i<24;++i)sources.push_back(stroke(32000+i,20+(i%6)*12));
+            const auto initial=plan(558,sources);EditingOverlay overlay(initial.frame);
+            EditingOverlayInput selection;selection.selectedObject=sources[12].record.objectId;
+            selection.selected=true;selection.worldBounds=sources[12].record.worldBounds;
+            require(overlay.update(selection),"middle stroke selection");
+            RenderPreparationBudget slice;slice.maxGroups=64;slice.maxCoverageSteps=4096;slice.maxMicroseconds=1000000;
+            BackendSubmissionResult result;unsigned attempts=0;
+            do{result=retained.renderFrame(provider,initial,&overlay,&slice);require(++attempts<64,"selected stroke preparation stalled");}
+            while(result.code==BackendSubmissionCode::kRetry);
+            require(result.code==BackendSubmissionCode::kAccepted,"selected stroke preparation");
+            const auto rasterized=retained.renderCacheWork().rasterizedGroups;
+            for(unsigned i=0;i<3;++i){
+                sources[12].record.transform.tx+=5;
+                const auto moved=plan(559+i,sources);
+                require(retained.renderTransientOverlay(provider,moved,&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,moved,&overlay).code==BackendSubmissionCode::kAccepted,"middle stroke drag");
+                require(retained.renderCacheWork().rasterizedGroups<=rasterized+i+1,"active stroke invalidated unchanged front/back coverage");
+                const auto actual=pixels(provider),expected=pixels(reference);unsigned maximum=0;
+                for(std::size_t n=0;n<actual.size();++n)maximum=std::max(maximum,unsigned(std::abs(int(actual[n])-int(expected[n]))));
+                require(maximum<=3,"middle stroke reordered retained content");
+            }
+        }
+        {
+            // Retaining all static content under the active object changes
+            // occlusion. Runs on both sides must stay at their traversal slot.
+            SkiaRenderer retained,oracle;oracle.setRenderCacheOptions(disabled);
+            RenderCacheOptions bounded;bounded.maxEntries=2;retained.setRenderCacheOptions(bounded);
+            semantic::ObjectRecord object;object.id=ObjectId::fromUint64(31000);
+            object.kind=semantic::ObjectKind::kShape;object.kind_version=1;
+            object.content=semantic::ShapeContent{1,80,70};object.transform.tx=60;object.transform.ty=25;
+            const auto projected=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
+            ReferenceTraversalEntry shape{projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(object.content)}};
+            auto erased=stroke(31001);semantic::FilledPathMask mask;
+            mask.path.commands={semantic::MoveTo{{80,0}},semantic::LineTo{{105,0}},semantic::LineTo{{105,128}},semantic::LineTo{{80,128}},semantic::ClosePath{}};
+            std::vector sources{erased,stroke(31003,45),shape,stroke(31004,50),stroke(31005,55)};
+            RenderPreparationBudget slice;slice.maxGroups=2;
+            const auto warm=[&](const FramePlan& demand){
+                BackendSubmissionResult r;unsigned attempts=0;
+                do{r=retained.renderFrame(provider,demand,nullptr,&slice);require(++attempts<64,"ordered runs never warm");}
+                while(r.code==BackendSubmissionCode::kRetry);
+                require(r.code==BackendSubmissionCode::kAccepted&&oracle.renderFrame(reference,demand).code==BackendSubmissionCode::kAccepted&&pixels(provider)==pixels(reference),"canonical used approximate run pixels");
+            };
+            warm(plan(565,sources));const auto builds=retained.renderCacheWork().retainedRunBuilds;
+            const auto overlayPlan=plan(565,sources);EditingOverlay overlay(overlayPlan.frame);
+            for(unsigned i=0;i<3;++i){
+                sources[2].record.transform.tx+=13;
+                const auto moved=plan(566+i,sources);
+                require(retained.renderTransientOverlay(provider,moved,&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,moved,&overlay).code==BackendSubmissionCode::kAccepted,"ordered live frame");
+                const auto actual=pixels(provider),expected=pixels(reference);unsigned maximum=0;
+                for(std::size_t n=0;n<actual.size();++n)maximum=std::max(maximum,unsigned(std::abs(int(actual[n])-int(expected[n]))));
+                require(maximum<=2,"ordered run changes occlusion/erase or excessive quantization");
+            }
+            require(retained.renderCacheWork().retainedRunBuilds==builds&&retained.renderCacheWork().retainedRunHits>=6,"transform rebuilt static front/back runs");
+            // Content, order, camera, target and resource changes must never
+            // reuse old pixels, including remove/readd with a repeated ID.
+            auto content=std::get<CompactStrokeReferenceCommand>(sources[0].command).content;
+            sources[0].record.eraseMasks={{ObjectId::fromUint64(31002),mask}};
+            content.stroke.knots[1].y=95;sources[0].command=CompactStrokeReferenceCommand{content};sources[0].record.content=content;
+            warm(plan(570,sources));std::swap(sources[0],sources[4]);warm(plan(571,sources));
+            warm(plan(572,sources,1,{1.25,0,0,1.25,-4,-8}));
+            retained.setImageResolver(nullptr);warm(plan(573,sources));
+            // Creation replays transparent ink runs, never the opaque prefix
+            // snapshot (which would erase the newly authored object).
+            overlay.setCreationPreview(object,{});const auto creation=plan(574,sources);
+            require(retained.renderTransientOverlay(provider,creation,&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,creation,&overlay).code==BackendSubmissionCode::kAccepted,"retained creation");
+            const auto actual=pixels(provider),expected=pixels(reference);unsigned maximum=0;
+            for(std::size_t n=0;n<actual.size();++n)maximum=std::max(maximum,unsigned(std::abs(int(actual[n])-int(expected[n]))));
+            require(maximum<=3,"creation retained opaque backdrop or changed ink ordering");
+            const auto presents=provider.presentCount();const auto generation=provider.generation();
+            require(retained.renderTransientOverlay(provider,plan(575,sources,generation+1),&overlay).code==BackendSubmissionCode::kRejected&&provider.presentCount()==presents,"stale retained run presented");
+            TestSurface other;require(other.resize(256,128).code==BackendSubmissionCode::kAccepted,"other target");
+            require(retained.renderTransientOverlay(other,plan(576,sources),&overlay).code==BackendSubmissionCode::kAccepted&&oracle.renderTransientOverlay(reference,plan(576,sources),&overlay).code==BackendSubmissionCode::kAccepted&&pixels(other)==pixels(reference),"retained pixels crossed provider target");
+        }
+        {
+            // One unsupported source must not force all background ink to
+            // raster synchronously or publish the partially prepared target.
+            semantic::ObjectRecord object;object.id=ObjectId::fromUint64(9701);
+            object.kind=semantic::ObjectKind::kShape;object.kind_version=1;
+            object.content=semantic::ShapeContent{1,70,45};object.transform.tx=70;object.transform.ty=50;
+            const auto projected=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
+            ReferenceTraversalEntry shape{projected.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(object.content)}};
+            auto a=stroke(9702),b=stroke(9703,70),unsupported=stroke(9704,90);
+            unsupported.record.transform.tx=3;
+            for(bool chrome:{false,true}){
+                SkiaRenderer mixed,oracle;oracle.setRenderCacheOptions(disabled);
+                const auto demand=plan(570,{a,shape,b,unsupported});
+                EditingOverlay overlay(demand.frame);RenderPreparationBudget slice;slice.maxGroups=1;slice.maxCoverageSteps=1;
+                const auto before=pixels(provider);const auto presents=provider.presentCount();
+                require(mixed.renderFrame(provider,demand,chrome?&overlay:nullptr,&slice).code==BackendSubmissionCode::kRetry,
+                        "mixed scene bypassed cooperative ink preparation");
+                require(pixels(provider)==before&&provider.presentCount()==presents,"mixed preparation published partial pixels");
+                unsigned attempts=0;BackendSubmissionResult result;
+                do{result=mixed.renderFrame(provider,demand,chrome?&overlay:nullptr,&slice);require(++attempts<32,"mixed preparation never converges");}
+                while(result.code==BackendSubmissionCode::kRetry);
+                require(result.code==BackendSubmissionCode::kAccepted&&mixed.renderCacheWork().preparationSlices>1,
+                        "mixed preparation did not resume");
+                require(oracle.renderFrame(reference,demand,chrome?&overlay:nullptr).code==BackendSubmissionCode::kAccepted&&pixels(provider)==pixels(reference),
+                        "mixed prepared pixels differ from Direct");
+                const auto misses=mixed.renderCacheWork().misses;
+                require(mixed.renderFrame(provider,demand,chrome?&overlay:nullptr,&slice).code==BackendSubmissionCode::kAccepted&&
+                        mixed.renderCacheWork().misses==misses,"mixed scene discarded reusable ink");
+            }
+            // Capacity denial is local too, including an otherwise valid
+            // source larger than the retained budget. Keep order and masks.
+            for(bool oversized:{false,true}){
+                SkiaRenderer limited,oracle;oracle.setRenderCacheOptions(disabled);
+                RenderCacheOptions options;options.maxEntries=1;
+                if(oversized)options.maxEntryBytes=6000;
+                limited.setRenderCacheOptions(options);
+                auto large=stroke(9710);auto content=std::get<CompactStrokeReferenceCommand>(large.command).content;
+                content.stroke.config.size=100;large.command=CompactStrokeReferenceCommand{content};large.record.content=content;
+                auto small=stroke(9711);content=std::get<CompactStrokeReferenceCommand>(small.command).content;
+                content.stroke.knots={{20,95,32768},{35,95,32768}};small.command=CompactStrokeReferenceCommand{content};small.record.content=content;
+                const auto demand=plan(571,oversized?std::vector{large,shape,small}:std::vector{a,shape,b});
+                RenderPreparationBudget slice;slice.maxCoverageSteps=1;
+                BackendSubmissionResult result;unsigned attempts=0;
+                const auto directBefore=limited.renderCacheWork().directGroups;
+                do{result=limited.renderFrame(provider,demand,nullptr,&slice);require(++attempts<32,"capacity-limited prepare loops");}
+                while(result.code==BackendSubmissionCode::kRetry);
+                require(result.code==BackendSubmissionCode::kAccepted&&limited.renderCacheWork().preparationBudgetEntries>0&&
+                        limited.renderCacheWork().entries==1,"capacity denial disabled all local preparation");
+                require(oracle.renderFrame(reference,demand).code==BackendSubmissionCode::kAccepted&&pixels(provider)==pixels(reference),
+                        "local capacity fallback changed pixels");
+                require(limited.renderCacheWork().directGroups<=directBefore+1,
+                        "budget fallback accumulated compact raster work in final submission");
+                // Superseding a partial streamed frame must discard its prefix,
+                // including order/background/resource decisions, before submit.
+                auto pending=plan(572,{a,shape,b},1,{1.2,0,0,1.2,-5,-2});
+                require(limited.renderFrame(provider,pending,nullptr,&slice).code==BackendSubmissionCode::kRetry,
+                        "stream supersession setup");
+                limited.setImageResolver(nullptr);
+                auto erased=a;erased.record.objectId=ObjectId::fromUint64(9713);semantic::FilledPathMask erase;
+                erase.path.commands={semantic::MoveTo{{40,0}},semantic::LineTo{{60,0}},semantic::LineTo{{60,128}},semantic::LineTo{{40,128}},semantic::ClosePath{}};
+                erased.record.eraseMasks={{ObjectId::fromUint64(9712),erase}};erased.record.transform.tx=3;
+                auto changed=b;auto material=std::get<CompactStrokeReferenceCommand>(changed.command).content;
+                material.stroke.config.opacity=.3;changed.command=CompactStrokeReferenceCommand{material};changed.record.content=material;
+                foundation::DocumentBackground backdrop;backdrop.color={.2F,.4F,.6F,1.F};
+                auto replacement=plan(573,{changed,shape,erased,a},1,{1.1,0,0,1.1,-2,-1},{0,0,256,128},backdrop,true);
+                attempts=0;
+                do{result=limited.renderFrame(provider,replacement,nullptr,&slice);require(++attempts<32,"superseded stream loops");}
+                while(result.code==BackendSubmissionCode::kRetry);
+                require(result.code==BackendSubmissionCode::kAccepted&&oracle.renderFrame(reference,replacement).code==BackendSubmissionCode::kAccepted&&
+                        pixels(provider)==pixels(reference),"superseded stream kept stale order/material/background");
+                const auto retainedMisses=limited.renderCacheWork().misses;
+                require(limited.renderFrame(provider,replacement,nullptr,&slice).code==BackendSubmissionCode::kAccepted&&
+                        limited.renderCacheWork().misses==retainedMisses,
+                        "identical streamed demand restarted after completion");
+            }
+        }
+        {
             semantic::ObjectRecord object;object.id=ObjectId::fromUint64(880);
             object.kind=semantic::ObjectKind::kShape;object.kind_version=1;
             object.content=semantic::ShapeContent{1,80,50};object.transform.tx=80;object.transform.ty=65;
@@ -383,10 +569,15 @@ int main(int argc,char** argv) {
         }
         require(direct.renderFrame(reference,replacement).code==BackendSubmissionCode::kAccepted&&
                 pixels(provider)==pixels(reference),"replacement camera differs from Direct");
-        // Non-convergent residency falls back once instead of retrying forever.
+        // Capacity-denied sources stream in order without requiring residency for all objects.
         RenderCacheOptions tooSmall;tooSmall.maxEntries=1;renderer.setRenderCacheOptions(tooSmall);
-        require(renderer.renderFrame(provider,preparePlan,nullptr,&slice).code==BackendSubmissionCode::kAccepted,
-                "insufficient cache capacity did not fall back");
+        {
+            BackendSubmissionResult result;unsigned attempts=0;
+            do{result=renderer.renderFrame(provider,preparePlan,nullptr,&slice);
+                require(++attempts<32,"insufficient cache capacity did not converge");
+            }while(result.code==BackendSubmissionCode::kRetry);
+            require(result.code==BackendSubmissionCode::kAccepted,"capacity stream rejected");
+        }
         require(direct.renderFrame(reference,preparePlan).code==BackendSubmissionCode::kAccepted&&
                 pixels(provider)==pixels(reference),"capacity fallback differs from Direct");
         {RenderCacheOptions options;options.gpuCoverageCandidate=gpuCandidate;renderer.setRenderCacheOptions(options);}

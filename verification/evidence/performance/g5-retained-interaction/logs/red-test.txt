@@ -1,0 +1,8 @@
+Fail-first reproduction before retained-run implementation:
+command: out/g5-settle/native-on/g5_render_cache
+exit: 134
+libc++abi: terminating due to uncaught exception of type std::runtime_error: 1000 source drag rerasterized unchanged background
+
+The final test permits the existing one Direct shape raster per frame and rejects
+any extra background rasterization. It also compares Direct pixels each live
+frame. The final G5RenderCache test and full G5 suite pass.

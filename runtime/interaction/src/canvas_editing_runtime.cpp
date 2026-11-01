@@ -461,6 +461,7 @@ CanvasEditingRuntime::CanvasEditingRuntime(render::ViewId viewId)
 void CanvasEditingRuntime::bindResourceServices(
     render::ImageResourceResolver* images,
     text::RichTextLayoutService* textService) noexcept {
+  ++presentationResourceEpoch_;exactDemand_.reset();
   imageResolver_ = images;
   skiaRenderer_.setImageResolver(images);
   previewRenderer_.setImageResolver(images);
@@ -483,6 +484,7 @@ void CanvasEditingRuntime::refreshResourceManifestServices() noexcept {
 
 bool CanvasEditingRuntime::refreshResourceDerivedState() noexcept {
   if (closed_ || std::this_thread::get_id() != ownerThread_) return false;
+  ++presentationResourceEpoch_;exactDemand_.reset();
   if (sceneCoordinator_ != nullptr && textLayoutService_ != nullptr) {
     const auto refreshed = sceneCoordinator_->refreshTextResources();
     if (!refreshed) return false;
@@ -508,6 +510,7 @@ void CanvasEditingRuntime::close() noexcept {
     surfaceAbortRequested_ = true;
     surface_.available = false;
     closed_ = true;
+    exactDemand_.reset();
     frameCoordinator_.close();
     return;
   }
@@ -515,6 +518,7 @@ void CanvasEditingRuntime::close() noexcept {
   pendingPreviewProvider_.reset();
   cancelAllPointers();
   if (previewController_ != nullptr) (void)previewController_->cancel();
+  exactDemand_.reset();
   frameCoordinator_.close();
   surface_.available = false;
   closed_ = true;
@@ -796,6 +800,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
       publicationCallbackActive_) return false;
   (void)observationTimeNs;
   if (batch.samples.empty()) return false;
+  exactDemand_.reset();
   const auto source = batch.samples.front().source;
   if (appBinding_ == nullptr) return false;
   if (!appBinding_->hasInputSource(source)) {
@@ -1378,6 +1383,7 @@ void CanvasEditingRuntime::onSessionCancel(
 }
 
 void CanvasEditingRuntime::cancelAllPointers() noexcept {
+  exactDemand_.reset();
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
   canvas::qualification::clearGroup(fc08Qualification_.get());
 #endif
@@ -4029,6 +4035,7 @@ void CanvasEditingRuntime::publishSurfaceBinding() noexcept {
   frameCoordinator_.invalidate(render::FrameRole::kPreview);
   lastSubmittedCanonicalFrame_.reset();
   lastSubmittedCanonicalFrameState_.reset();
+  exactDemand_.reset();
   lastPresentedCanonicalFrame_.reset();
   lastPresentedCanonicalFrameState_.reset();
   presentedSurfaceGeneration_ = {};
@@ -4139,6 +4146,7 @@ bool CanvasEditingRuntime::resizeSurface(const render::SurfaceMetrics& metrics) 
 
 bool CanvasEditingRuntime::loseSurface() noexcept {
   if (closed_ || std::this_thread::get_id() != ownerThread_) return false;
+  exactDemand_.reset();
   clearAppearancePreview();
   resetTouchTextTap();
   if (surfaceTransitionActive_) {
@@ -4343,8 +4351,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   frameIdHighWater_ = frameId;
   if (runtimeSceneHost_ == nullptr || sceneCoordinator_ == nullptr ||
       activeSurfaceProvider() == nullptr) { AXIOM_ANDROID_DIAG("present reject missing deps"); return false; }
-  const auto semanticGeneration = semanticGeneration_.current();
   if (!recoverHistoryScene()) { AXIOM_ANDROID_DIAG("present reject scene generation"); return false; }
+  const auto semanticGeneration = semanticGeneration_.current();
   const auto viewport = viewportController_->state();
   const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
       ? viewport.scale : 1.0F;
@@ -4373,7 +4381,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     worldViewport.right = std::max(worldViewport.right, worldCorners[i].x);
     worldViewport.bottom = std::max(worldViewport.bottom, worldCorners[i].y);
   }
-  const render::FrameState frame{
+  const render::FrameState requestedFrame{
       viewId_,
       render::CameraState{foundation::WorldPoint{
                               (centerX - viewport.translationX) / zoom,
@@ -4392,14 +4400,35 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
        render::MetricsGeneration{surface_.metricsGeneration}, render::FrameId{frameId},
       foundation::WorldRect{0.0F, 0.0F, surface_.logicalWidth,
                             surface_.logicalHeight}};
+  const auto textState=interaction_->textSession()?interaction_->textSession()->read():runtime::TextEditorSnapshot{};
+  const bool retainDemand=platformPresentationDeferred_ &&
+      !creationActive() &&
+      !selectionTransformActive() && !regionSelectionActive() && !imageCropPresentation_ &&
+      !appearanceSession_ && !tableResize_ && brushSessions_.empty() && eraserTraces_.empty() &&
+      textState.phase==runtime::TextPhase::kClosed;
+  const auto sameDemand=[&](const render::FrameState& a,const render::FrameState& b){
+    return a.viewId==b.viewId && a.camera==b.camera && a.worldViewport==b.worldViewport &&
+      a.metrics==b.metrics && a.sceneGeneration==b.sceneGeneration && a.sceneReadToken==b.sceneReadToken &&
+      a.surfaceGeneration==b.surfaceGeneration && a.metricsGeneration==b.metricsGeneration && a.viewportClip==b.viewportClip;
+  };
+  if(!retainDemand || !exactDemand_ || exactDemandProvider_!=activeSurfaceProvider() ||
+     exactDemandDocument_!=documentId_ || exactDemandResourceEpoch_!=presentationResourceEpoch_ ||
+     exactDemandSelectionRevision_!=selection_.revision() ||
+     !sameDemand(exactDemand_->frame,requestedFrame) || exactDemand_->background!=semanticObjects_.documentBackground())
+    exactDemand_.reset();
+  // Unsubmitted work retains its original identity and canonical byte digest.
+  // Attempts consume new high-water IDs, but no new logical frame is invented.
+  const auto& frame=exactDemand_?exactDemand_->frame:requestedFrame;
+  if(exactDemand_)AXIOM_FRAME_TIMING_ADD(exact_demand_reuse,1);
   const render::RuntimeFrameCapture canonicalCapture{
       {frame.viewId, frame.frameId, frame.sceneReadToken.value(),
        frame.sceneGeneration.value(), frame.surfaceGeneration, frame.metricsGeneration},
       frame.metrics, render::FrameRole::kCanonical};
+  const auto buildDemand=[&]() -> std::shared_ptr<const render::FramePlan> {
   AXIOM_FRAME_TIMING_SCOPE(visibilityTiming,visibility);
   auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
   AXIOM_FRAME_TIMING_END(visibilityTiming);
-  if (!visibility) { AXIOM_ANDROID_DIAG("present visibility failed"); return false; }
+  if (!visibility) { AXIOM_ANDROID_DIAG("present visibility failed"); return {}; }
   // A selected object can be dragged into view from outside the canonical
   // visibility set. Extend only this view's transient traversal, never Scene.
   const auto transientObject = imageCropPresentation_ ? imageCropPresentation_->id : selection_.primary();
@@ -4458,7 +4487,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
   AXIOM_FRAME_TIMING_END(referenceTiming);
   AXIOM_FRAME_TIMING_SCOPE(adaptTiming,presentation_adapt);
-  if (!references) { AXIOM_ANDROID_DIAG("present references failed"); return false; }
+  if (!references) { AXIOM_ANDROID_DIAG("present references failed"); return {}; }
   applyAppearancePreview(references.value());
   if (transformDrag_.active()) for(auto& entry:references.value().entries) {
     if(entry.record.kind!=semantic::ObjectKind::kConnector)continue;
@@ -4559,7 +4588,6 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     }
   }
 
-  const auto textState=interaction_->textSession()?interaction_->textSession()->read():runtime::TextEditorSnapshot{};
   foundation::ObjectId placeholderTarget = singleSelectionAffordances()?selection_.primary():foundation::ObjectId{};
   if (textState.phase != runtime::TextPhase::kClosed && !textState.token.object.isZero())
     placeholderTarget = textState.token.object;
@@ -4716,7 +4744,16 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   applyContainerPreview(references.value());
   AXIOM_FRAME_TIMING_END(adaptTiming);
   const auto plan = render::FramePlanBuilder::build(frame, references.value(), semanticObjects_.documentBackground());
-  if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
+  if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return {}; }
+  return std::make_shared<const render::FramePlan>(std::move(plan.value()));
+  };
+  const auto plan=exactDemand_?exactDemand_:buildDemand();
+  if(!plan)return false;
+  if(retainDemand){
+    exactDemand_=plan;exactDemandProvider_=activeSurfaceProvider();exactDemandDocument_=documentId_;
+    exactDemandResourceEpoch_=presentationResourceEpoch_;
+    exactDemandSelectionRevision_=selection_.revision();
+  }
   const bool connectorCreation = creationMode_ &&
       (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow);
   if (selectionMode_ || connectorCreation || panTool_) (void)renderSelectionOverlay();
@@ -4755,20 +4792,24 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     if(geometry.available){selectionView_->editingOverlay().textCaret=geometry.caret;selectionView_->editingOverlay().textSelection=geometry.selection;}
     selectionView_->editingOverlay().textCaretVisible = textCaretVisible_;
   }
-  const render::RenderPreparationBudget preparation{};
-  const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value(),
-      selectionOverlay(), platformPresentationDeferred_ && navigationExactPreparation_
-          ? &preparation : nullptr);
+  render::RenderPreparationBudget preparation{};
+  // V4 contours can finish many cheap groups inside the same time/coverage
+  // allowance. Keep per-group checkpoints without a two-groups-per-RAF floor.
+  preparation.maxGroups=64;
+  const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), *plan,
+      selectionOverlay(), platformPresentationDeferred_ ? &preparation : nullptr);
   if (rendered.code != render::BackendSubmissionCode::kAccepted) {
     canonicalPresentationRetryable_ = rendered.code == render::BackendSubmissionCode::kRetry;
     AXIOM_FRAME_TIMING_OUTCOME(canonicalPresentationRetryable_?"retry":"rejected");
     if (canonicalPresentationRetryable_) canonicalPresentationDirty_ = true;
+    else exactDemand_.reset();
     AXIOM_ANDROID_DIAG("present skia failed: %s framegen=%llu providergen=%llu",
                        rendered.message.c_str(),
                        static_cast<unsigned long long>(frame.surfaceGeneration.value()),
                        static_cast<unsigned long long>(activeSurfaceProvider()->generation()));
     return false;
   }
+  exactDemand_.reset();
   // Publish the replacement identity only after the provider accepts it. A
   // busy backbuffer must not invalidate feedback for the last submitted
   // frame; successful newer submissions retain normal supersession rules.

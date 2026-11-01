@@ -562,7 +562,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   }
   // Owner-side derived resources can invalidate the current pixels without
   // mutating the semantic document or history.
-  void markCanonicalPresentationDirty() noexcept { canonicalPresentationDirty_ = true; navigationActive_=false; navigationExactPreparation_=false; navigationCameraGeneration_=cameraGeneration(); }
+  void markCanonicalPresentationDirty() noexcept { ++presentationResourceEpoch_;exactDemand_.reset(); canonicalPresentationDirty_ = true; navigationActive_=false; navigationExactPreparation_=false; navigationCameraGeneration_=cameraGeneration(); }
   void cancelConnectorRouting() noexcept;
   void bindResourceServices(render::ImageResourceResolver* images,
                             text::RichTextLayoutService* textService) noexcept;
@@ -871,6 +871,11 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::uint64_t navigationCameraGeneration_=0,navigationSubmittedGeneration_=0;
   std::chrono::steady_clock::time_point navigationChangedAt_{};
   bool navigationActive_=false, navigationExactPreparation_=false;
+  std::shared_ptr<const render::FramePlan> exactDemand_;
+  const render::SkiaSurfaceProvider* exactDemandProvider_=nullptr;
+  semantic::DocumentId exactDemandDocument_{};
+  std::uint64_t exactDemandResourceEpoch_=0,presentationResourceEpoch_=0;
+  std::uint64_t exactDemandSelectionRevision_=0;
   bool canonicalPresentationDirty_ = false;
   bool connectorRoutingPending_ = false;
   semantic::ConnectorRouting connectorRoutingPreset_ = semantic::ConnectorRouting::kStraight;

@@ -1,0 +1,39 @@
+{
+  "command": [
+    "/Users/qing/.nvm/versions/node/v22.14.0/bin/node",
+    "/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/verification/sdk_js/verify_browser.mjs",
+    "out/g5-settle/web-on/sdk/web",
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "out/g5-mixed/sdk-closed.json"
+  ],
+  "consumer": "/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/axiom-js-sdk-IT8Dob/consumer",
+  "exceptions": [],
+  "consoleErrors": [],
+  "browserVersion": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/156.0.8078.74",
+    "revision": "@d331de35ca8ab1358c7a17e4bd41627d55eaef51",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "jsVersion": "15.6.75.25"
+  },
+  "startup": {
+    "executable": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "args": [
+      "--headless=new",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--enable-unsafe-swiftshader",
+      "--use-angle=swiftshader",
+      "--remote-debugging-port=0",
+      "--user-data-dir=/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/axiom-js-sdk-IT8Dob/profile",
+      "about:blank"
+    ],
+    "profile": "/var/folders/42/2dc6d_bs7s55xyt4kb8smyvc0000gn/T/axiom-js-sdk-IT8Dob/profile",
+    "elapsedMs": 4763,
+    "exitCode": null,
+    "signal": null,
+    "stderr": "\nDevTools listening on ws://127.0.0.1:53341/devtools/browser/12b1d3a5-911b-47a3-b27c-c82e159b9758\nTrying to load the allocator multiple times. This is *not* supported.\n[18711:10880509:1101/191114.231476:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[18711:10880878:1101/191114.232108:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[18711:10880509:1101/191114.232601:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[18711:10880878:1101/191114.232707:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[18711:10880509:1101/191114.232919:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[18711:10880878:1101/191114.233007:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[18711:10880509:1101/191114.233300:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[18711:10880878:1101/191114.233401:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[18711:10880509:1101/191114.233609:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[18711:10880878:1101/191114.233686:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[18711:10880509:1101/191114.266319:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n[18711:10880878:1101/191114.266558:ERROR:ui/display/mac/cv_display_link_mac.mm:188] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670\n"
+  },
+  "exitCode": 1,
+  "error": "Error: CDP timeout: Runtime.evaluate"
+}

@@ -1,0 +1,6928 @@
+{
+  "operationSha256": "c62e70d6f1c0f4b6dd81d524bee590ee73f4db2a6e1188f59904c5585a5886f4",
+  "runnerSha256": "e325bcf4d1a551bdbccb87384501b63f7dc44d59175263c7fe34db27602655cc",
+  "schema": "g5-mixed-scene-v1",
+  "brushConfig": {
+    "color": [
+      0.05000000074505806,
+      0.10000000149011612,
+      0.20000000298023224,
+      1
+    ],
+    "density": 0.65,
+    "deposition": 0.8,
+    "easing": 1,
+    "endCap": true,
+    "endTaper": 0,
+    "family": 1,
+    "laserFadeMs": 1000,
+    "laserTailLength": 300,
+    "markerAngle": 0.7853981633974483,
+    "markerFlatness": 0.25,
+    "opacity": 1,
+    "pressureModel": 2,
+    "pressureSource": 1,
+    "roundMode": 2,
+    "size": 16,
+    "smoothing": 0.61,
+    "startCap": true,
+    "startTaper": 0,
+    "streamline": 0.13,
+    "textureScale": 8,
+    "thinning": 0.99,
+    "version": 2,
+    "wetEdge": 0.4
+  },
+  "scenario": "ink",
+  "stateBefore": {
+    "activeContacts": 0,
+    "camera": {
+      "scale": 1,
+      "x": 0.00030517578125,
+      "y": 0.0001220703125
+    },
+    "canRedo": false,
+    "canUndo": true,
+    "creationMode": false,
+    "data": {
+      "attached": true,
+      "byteCapacity": 33554432,
+      "capacity": 4096,
+      "closing": false,
+      "fault": false,
+      "latest": {
+        "afterGeneration": "105",
+        "beforeGeneration": "104",
+        "binding": "1",
+        "cloudSynced": 0,
+        "commit": {
+          "ordinal": "105",
+          "runtimeEpoch": "1"
+        },
+        "documentId": "00000000000000000000000000000543",
+        "kind": 5,
+        "localDurable": 0,
+        "operationId": "19af41f8f24f5cb3421e015c163c3b78",
+        "source": 0,
+        "version": 1
+      },
+      "pending": 105,
+      "pendingBytes": 74200,
+      "releasedOrdinal": "0",
+      "statusCapacity": 4096,
+      "statusRecords": 0
+    },
+    "documentId": "00000000000000000000000000000543",
+    "eraserMode": 2,
+    "generation": "105",
+    "lastCommit": {
+      "cloudSynced": 0,
+      "localDurable": 0,
+      "operationId": "19af41f8f24f5cb3421e015c163c3b78",
+      "ordinal": "105",
+      "presentedGeneration": "105",
+      "runtimeEpoch": "1"
+    },
+    "objects": 103,
+    "primary": "17af41f8f24f5c33421e015c163c3b37",
+    "selected": [
+      "17af41f8f24f5c33421e015c163c3b37"
+    ],
+    "selectionMode": 0,
+    "selectionRevision": "3",
+    "shape": 0,
+    "surface": {
+      "available": true,
+      "height": 500,
+      "width": 800
+    },
+    "table": {
+      "columnId": "00000000000000000000000000000000",
+      "objectId": "00000000000000000000000000000000",
+      "rowId": "00000000000000000000000000000000"
+    },
+    "target": {
+      "attachmentEpoch": "2",
+      "runtimeEpoch": "1",
+      "viewEpoch": "1",
+      "viewId": "1"
+    },
+    "text": {
+      "composition": "0",
+      "phase": 0,
+      "selection": [
+        20,
+        0
+      ],
+      "sequence": "2",
+      "session": "1"
+    },
+    "tool": 0
+  },
+  "selectionBefore": null,
+  "selectionAfter": null,
+  "count": 100,
+  "dpr": 2,
+  "reverse": false,
+  "brush": {
+    "profile": "round-handdrawn",
+    "revision": 4
+  },
+  "scope": "fixed-timestamp synthetic pointer corpus; single-thread CPU wall elapsed, nested exclusive/inclusive; GL submission and exact receipt are not GPU execution or physical presentation",
+  "inputEnded": 6990.399999976158,
+  "exactReceiptDelayMs": 125.29999995231628,
+  "raw": {
+    "raf": [
+      {
+        "name": "",
+        "start": 6082.199999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6098.299999952316,
+        "duration": 8.700000047683716
+      },
+      {
+        "name": "",
+        "start": 6107,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6114.899999976158,
+        "duration": 8.100000023841858
+      },
+      {
+        "name": "",
+        "start": 6123,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6131.699999928474,
+        "duration": 7.900000095367432
+      },
+      {
+        "name": "",
+        "start": 6139.600000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6148.799999952316,
+        "duration": 7.5
+      },
+      {
+        "name": "",
+        "start": 6156.299999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6165.399999976158,
+        "duration": 7.399999976158142
+      },
+      {
+        "name": "",
+        "start": 6172.799999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6181.899999976158,
+        "duration": 7.399999976158142
+      },
+      {
+        "name": "",
+        "start": 6189.299999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6198.299999952316,
+        "duration": 7.700000047683716
+      },
+      {
+        "name": "",
+        "start": 6206,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6215.100000023842,
+        "duration": 7.899999976158142
+      },
+      {
+        "name": "",
+        "start": 6223,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6231.600000023842,
+        "duration": 8
+      },
+      {
+        "name": "",
+        "start": 6239.600000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6248,
+        "duration": 8.199999928474426
+      },
+      {
+        "name": "",
+        "start": 6256.199999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6265.399999976158,
+        "duration": 8.399999976158142
+      },
+      {
+        "name": "",
+        "start": 6273.799999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6282.199999928474,
+        "duration": 8.5
+      },
+      {
+        "name": "",
+        "start": 6290.699999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6298.299999952316,
+        "duration": 8.899999976158142
+      },
+      {
+        "name": "",
+        "start": 6307.199999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6315.5,
+        "duration": 8.5
+      },
+      {
+        "name": "",
+        "start": 6324,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6332.100000023842,
+        "duration": 8.399999976158142
+      },
+      {
+        "name": "",
+        "start": 6340.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6348.399999976158,
+        "duration": 8.600000023841858
+      },
+      {
+        "name": "",
+        "start": 6357,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6364.699999928474,
+        "duration": 8.600000023841858
+      },
+      {
+        "name": "",
+        "start": 6373.299999952316,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "render",
+        "start": 6381.5,
+        "duration": 8.100000023841858
+      },
+      {
+        "name": "",
+        "start": 6389.600000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6398.299999952316,
+        "duration": 8.100000023841858
+      },
+      {
+        "name": "",
+        "start": 6406.399999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6414.699999928474,
+        "duration": 8.300000071525574
+      },
+      {
+        "name": "",
+        "start": 6423,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6431.799999952316,
+        "duration": 8
+      },
+      {
+        "name": "",
+        "start": 6439.799999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6448.100000023842,
+        "duration": 7.899999976158142
+      },
+      {
+        "name": "",
+        "start": 6456,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6465,
+        "duration": 7.899999976158142
+      },
+      {
+        "name": "",
+        "start": 6472.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6482.199999928474,
+        "duration": 2.600000023841858
+      },
+      {
+        "name": "",
+        "start": 6484.799999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6497.799999952316,
+        "duration": 3
+      },
+      {
+        "name": "",
+        "start": 6500.799999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6515.399999976158,
+        "duration": 0.3999999761581421
+      },
+      {
+        "name": "",
+        "start": 6515.799999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6531.600000023842,
+        "duration": 0.2999999523162842
+      },
+      {
+        "name": "",
+        "start": 6531.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6569.199999928474,
+        "duration": 0.40000009536743164
+      },
+      {
+        "name": "",
+        "start": 6569.600000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6582.199999928474,
+        "duration": 8.600000023841858
+      },
+      {
+        "name": "",
+        "start": 6590.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6598.399999976158,
+        "duration": 2.799999952316284
+      },
+      {
+        "name": "",
+        "start": 6601.199999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6614.799999952316,
+        "duration": 5.300000071525574
+      },
+      {
+        "name": "",
+        "start": 6620.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6631.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 6631.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6648.699999928474,
+        "duration": 5
+      },
+      {
+        "name": "",
+        "start": 6653.699999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6665,
+        "duration": 4.899999976158142
+      },
+      {
+        "name": "",
+        "start": 6669.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6681.299999952316,
+        "duration": 5.200000047683716
+      },
+      {
+        "name": "",
+        "start": 6686.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6698.299999952316,
+        "duration": 5.300000071525574
+      },
+      {
+        "name": "",
+        "start": 6703.600000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6715.399999976158,
+        "duration": 5.700000047683716
+      },
+      {
+        "name": "",
+        "start": 6721.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6731.299999952316,
+        "duration": 5.399999976158142
+      },
+      {
+        "name": "",
+        "start": 6736.699999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6747.699999928474,
+        "duration": 6
+      },
+      {
+        "name": "",
+        "start": 6753.699999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6764.799999952316,
+        "duration": 6.100000023841858
+      },
+      {
+        "name": "",
+        "start": 6770.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6782,
+        "duration": 6
+      },
+      {
+        "name": "",
+        "start": 6788,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6798.299999952316,
+        "duration": 6.5
+      },
+      {
+        "name": "",
+        "start": 6804.799999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6814.799999952316,
+        "duration": 6.5
+      },
+      {
+        "name": "",
+        "start": 6821.299999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6832.100000023842,
+        "duration": 6.299999952316284
+      },
+      {
+        "name": "",
+        "start": 6838.399999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6848.5,
+        "duration": 6.299999952316284
+      },
+      {
+        "name": "",
+        "start": 6854.799999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6864.799999952316,
+        "duration": 6.399999976158142
+      },
+      {
+        "name": "",
+        "start": 6871.199999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6882.100000023842,
+        "duration": 6.799999952316284
+      },
+      {
+        "name": "",
+        "start": 6888.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6898.399999976158,
+        "duration": 6.700000047683716
+      },
+      {
+        "name": "",
+        "start": 6905.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6915,
+        "duration": 7
+      },
+      {
+        "name": "",
+        "start": 6922,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6931.600000023842,
+        "duration": 6.899999976158142
+      },
+      {
+        "name": "",
+        "start": 6938.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6948.199999928474,
+        "duration": 6.900000095367432
+      },
+      {
+        "name": "",
+        "start": 6955.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6964.5,
+        "duration": 7.100000023841858
+      },
+      {
+        "name": "",
+        "start": 6971.600000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6981.899999976158,
+        "duration": 7.200000047683716
+      },
+      {
+        "name": "",
+        "start": 6989.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 6998.799999952316,
+        "duration": 15.300000071525574
+      },
+      {
+        "name": "render",
+        "start": 7014.899999976158,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "render",
+        "start": 7031.600000023842,
+        "duration": 7.5
+      },
+      {
+        "name": "render",
+        "start": 7048.899999976158,
+        "duration": 7.100000023841858
+      },
+      {
+        "name": "render",
+        "start": 7064.899999976158,
+        "duration": 7.100000023841858
+      },
+      {
+        "name": "render",
+        "start": 7082.100000023842,
+        "duration": 7.399999976158142
+      },
+      {
+        "name": "render",
+        "start": 7097.899999976158,
+        "duration": 8.299999952316284
+      },
+      {
+        "name": "render",
+        "start": 7115.399999976158,
+        "duration": 0.2999999523162842
+      }
+    ],
+    "events": [
+      {
+        "start": 6082.199999928474,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6107,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6123,
+        "duration": 0.6000000238418579,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6139.699999928474,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6156.399999976158,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6172.799999952316,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6189.299999952316,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6206,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6223,
+        "duration": 0.3999999761581421,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6239.600000023842,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6256.199999928474,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6273.799999952316,
+        "duration": 0.3999999761581421,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6290.699999928474,
+        "duration": 0.40000009536743164,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6307.199999928474,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6324,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6340.5,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6357,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6373.399999976158,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6389.600000023842,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6406.399999976158,
+        "duration": 0.6000000238418579,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6423,
+        "duration": 0.3999999761581421,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6439.799999952316,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6456,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6472.899999976158,
+        "duration": 0.6000000238418579,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6484.799999952316,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6500.799999952316,
+        "duration": 0.6000000238418579,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6515.799999952316,
+        "duration": 0.3999999761581421,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6531.899999976158,
+        "duration": 0.6000000238418579,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6569.600000023842,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 6590.899999976158,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      }
+    ],
+    "frames": [
+      {
+        "time": 7115.699999928474,
+        "receipt": {
+          "presented": "72"
+        }
+      }
+    ],
+    "errors": [],
+    "active": false,
+    "before": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 1,
+        "x": 0.00030517578125,
+        "y": 0.0001220703125
+      },
+      "canRedo": false,
+      "canUndo": true,
+      "creationMode": false,
+      "data": {
+        "attached": true,
+        "byteCapacity": 33554432,
+        "capacity": 4096,
+        "closing": false,
+        "fault": false,
+        "latest": {
+          "afterGeneration": "105",
+          "beforeGeneration": "104",
+          "binding": "1",
+          "cloudSynced": 0,
+          "commit": {
+            "ordinal": "105",
+            "runtimeEpoch": "1"
+          },
+          "documentId": "00000000000000000000000000000543",
+          "kind": 5,
+          "localDurable": 0,
+          "operationId": "19af41f8f24f5cb3421e015c163c3b78",
+          "source": 0,
+          "version": 1
+        },
+        "pending": 105,
+        "pendingBytes": 74200,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "00000000000000000000000000000543",
+      "eraserMode": 2,
+      "generation": "105",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "19af41f8f24f5cb3421e015c163c3b78",
+        "ordinal": "105",
+        "presentedGeneration": "105",
+        "runtimeEpoch": "1"
+      },
+      "objects": 103,
+      "primary": "17af41f8f24f5c33421e015c163c3b37",
+      "selected": [
+        "17af41f8f24f5c33421e015c163c3b37"
+      ],
+      "selectionMode": 0,
+      "selectionRevision": "3",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 500,
+        "width": 800
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          20,
+          0
+        ],
+        "sequence": "2",
+        "session": "1"
+      },
+      "tool": 0
+    },
+    "inputEnded": 6990.399999976158,
+    "after": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 2.4596025943756104,
+        "x": -583.8402099609375,
+        "y": -364.90020751953125
+      },
+      "canRedo": false,
+      "canUndo": true,
+      "creationMode": false,
+      "data": {
+        "attached": true,
+        "byteCapacity": 33554432,
+        "capacity": 4096,
+        "closing": false,
+        "fault": false,
+        "latest": {
+          "afterGeneration": "106",
+          "beforeGeneration": "105",
+          "binding": "1",
+          "cloudSynced": 0,
+          "commit": {
+            "ordinal": "106",
+            "runtimeEpoch": "1"
+          },
+          "documentId": "00000000000000000000000000000543",
+          "kind": 10,
+          "localDurable": 0,
+          "operationId": "18af41f8f24f5c33421e015c163c3b78",
+          "source": 0,
+          "version": 1
+        },
+        "pending": 106,
+        "pendingBytes": 75057,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "00000000000000000000000000000543",
+      "eraserMode": 2,
+      "generation": "106",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "18af41f8f24f5c33421e015c163c3b78",
+        "ordinal": "106",
+        "presentedGeneration": "106",
+        "runtimeEpoch": "1"
+      },
+      "objects": 104,
+      "primary": "17af41f8f24f5c33421e015c163c3b37",
+      "selected": [
+        "17af41f8f24f5c33421e015c163c3b37"
+      ],
+      "selectionMode": 0,
+      "selectionRevision": "3",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 500,
+        "width": 800
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          20,
+          0
+        ],
+        "sequence": "2",
+        "session": "1"
+      },
+      "tool": 0
+    },
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)",
+    "pointerTimes": [
+      {
+        "start": 6601.199999928474,
+        "duration": 0.8000000715255737
+      },
+      {
+        "start": 6620.100000023842,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 6631.899999976158,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 6653.699999928474,
+        "duration": 0.30000007152557373
+      },
+      {
+        "start": 6670,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 6686.5,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 6703.600000023842,
+        "duration": 0.19999992847442627
+      },
+      {
+        "start": 6721.100000023842,
+        "duration": 0.19999992847442627
+      },
+      {
+        "start": 6736.699999928474,
+        "duration": 0.20000004768371582
+      },
+      {
+        "start": 6753.699999928474,
+        "duration": 0.40000009536743164
+      },
+      {
+        "start": 6770.899999976158,
+        "duration": 0.20000004768371582
+      },
+      {
+        "start": 6788,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 6804.799999952316,
+        "duration": 0.5
+      },
+      {
+        "start": 6821.299999952316,
+        "duration": 0.30000007152557373
+      },
+      {
+        "start": 6838.399999976158,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 6854.799999952316,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 6871.199999928474,
+        "duration": 0.30000007152557373
+      },
+      {
+        "start": 6888.899999976158,
+        "duration": 0.20000004768371582
+      },
+      {
+        "start": 6905.100000023842,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 6922,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 6938.5,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 6955.100000023842,
+        "duration": 0.19999992847442627
+      },
+      {
+        "start": 6971.600000023842,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 6989.100000023842,
+        "duration": 1.2999999523162842
+      }
+    ],
+    "fences": [
+      {
+        "name": "fenceSync",
+        "start": 3716.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3716.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3717.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3717.6999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3720.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3720.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3753.6999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3753.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3754,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3754.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3754.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3754.2999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3754.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 3754.899999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3754.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3756.100000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3756.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3756.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3796.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 3797,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3797,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3798.1999999284744,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3798.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3798.2999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 3798.399999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3798.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3814.6999999284744,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3814.6999999284744,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 3818.1999999284744,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3818.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3832.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3832.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3834.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3834.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3834.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3834.2999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3834.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3834.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3834.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 3834.7999999523163,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3834.7999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3849,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3849.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3865,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3865.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3865.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3873.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3882.2999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3882.2999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3884.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3884.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3884.6999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3884.7999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3884.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3885,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3885.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3885.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3885.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 3885.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3885.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3898.5,
+        "duration": 0.10000002384185791,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3898.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3898.6999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3900.7999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3900.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3901,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3901,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3901.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3901.2999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3901.2999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3901.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3901.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 3901.6999999284744,
+        "duration": 0.10000002384185791,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3901.7999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3914.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3915,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3932.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3932.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3948.2999999523163,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3948.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3948.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 3948.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3948.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3977.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3977.2999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3981.2999999523163,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3981.2999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3981.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 3981.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3981.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3998.899999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 3998.899999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 4001.7999999523163,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4001.7999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4015.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4015.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4016.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4017,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4017.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4017.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4017.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4017.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4017.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 4017.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4017.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4031.7999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4031.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4048.5,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4048.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4048.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4057.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4065.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4065.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4067.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4067.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4067.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4067.7999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4067.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4068,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4068.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4068.1999999284744,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4068.2999999523163,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 4068.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4068.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4081.899999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4081.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4081.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 4082.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4082.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4098.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4098.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4115.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4115.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4132,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4132,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 4132.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4132.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4148.699999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 4151.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4151.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4165.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4165.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4175.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4181.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4181.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4183.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4183.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4183.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4184.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4184.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4184.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4184.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4184.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4184.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 4184.899999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4184.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4198.799999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4198.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4199,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 4199,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4199.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4215.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4215.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4232.199999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4232.199999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 4232.399999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4232.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4248.899999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 4251.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4251.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4265.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4265.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4274.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4281.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4281.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4283.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4283.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4284,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4284.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4284.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4284.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4284.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4284.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4284.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 4284.799999952316,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4284.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4298.699999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4298.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4298.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4300.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4300.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4300.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4300.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4300.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4301,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4301.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4301.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4301.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 4301.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4301.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4314.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4314.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4332.299999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4332.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4332.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 4332.399999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4332.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4348.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4348.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4373,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4373.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4382.199999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4382.199999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 4382.399999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4382.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4399,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 4401.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4401.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4414.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4414.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4416.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4416.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4416.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4416.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4416.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4416.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4416.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 4416.899999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4416.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4431.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4431.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4448.199999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4448.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4448.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4457.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4464.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4464.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4466.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4466.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4466.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4466.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4466.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4466.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4467,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4467.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4467.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 4467.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4467.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4482,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4482.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4482.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4483.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4483.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4483.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4483.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4484.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4484.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4484.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4484.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4484.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 4484.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4484.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4498.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4499,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4515.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4515.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4532.299999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4532.299999952316,
+        "duration": 0.10000002384185791,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4532.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 4532.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4532.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4561,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4561,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4565,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 4565,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 5256.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 5264.799999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 5412.899999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 5414.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 5431.699999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 5783.799999952316,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 5798.399999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6484.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6484.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6498,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6498,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6499.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6499.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6499.799999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6499.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6499.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6500.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6500.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6500.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6500.299999952316,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 6500.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6500.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6515.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6515.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6531.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6531.699999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6569.199999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6569.199999928474,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6569.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 6569.399999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6569.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6582.199999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6582.199999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6601,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6601,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 6620.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6631.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6648.699999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6653.699999928474,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6665,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6669.899999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6681.299999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6686.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6698.299999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6703.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6715.399999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6721.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6731.299999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6736.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6747.799999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6753.699999928474,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6764.799999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6770.799999952316,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6782,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6788,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6798.299999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6804.799999952316,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6814.799999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6821.199999928474,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6832.100000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6838.399999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6848.5,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6854.799999952316,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6864.799999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6871.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6882.100000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6888.899999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6898.399999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6905,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6915,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6921.899999976158,
+        "duration": 0.10000002384185791,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6931.699999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6938.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6948.199999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6955.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6964.600000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6971.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6981.899999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 6989.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 6998.799999952316,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 7006.899999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 7014,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 7014.899999976158,
+        "duration": 0.10000002384185791,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 7031.699999928474,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 7106.100000023842,
+        "duration": 0.09999990463256836,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 7115.399999976158,
+        "duration": 0,
+        "status": 37148
+      }
+    ]
+  },
+  "exceptions": [],
+  "timingRows": [
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "173",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "122",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6098700000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 8000000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6700000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 1400000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4700000,
+          "exclusive_ns": 4700000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 103,
+        "encoded_bytes": 81087,
+        "plan_entries": 103,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 3,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "174",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "123",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6115300000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7500000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6300000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4500000,
+          "exclusive_ns": 4500000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 1000000,
+          "exclusive_ns": 1000000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 103,
+        "encoded_bytes": 81087,
+        "plan_entries": 103,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 3,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "175",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "124",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6132100000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6100000,
+          "exclusive_ns": 1000000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4400000,
+          "exclusive_ns": 4400000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "176",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "125",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6149100000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7100000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6000000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5800000,
+          "exclusive_ns": 1000000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3800000,
+          "exclusive_ns": 3800000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 1000000,
+          "exclusive_ns": 1000000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "177",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "126",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6165700000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6900000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5700000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5700000,
+          "exclusive_ns": 1200000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3400000,
+          "exclusive_ns": 3400000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 900000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "178",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "127",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6182200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6900000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5900000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4200000,
+          "exclusive_ns": 4200000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "179",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "128",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6198600000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7200000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6100000,
+          "exclusive_ns": 1100000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4400000,
+          "exclusive_ns": 4400000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "180",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "129",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6215500000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7200000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6100000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 5100000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "181",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "130",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6231900000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6400000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6400000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5300000,
+          "exclusive_ns": 5300000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "182",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "131",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6248400000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7600000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6500000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 5100000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "183",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "132",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6265700000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7800000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6700000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6700000,
+          "exclusive_ns": 1300000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5000000,
+          "exclusive_ns": 5000000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "184",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "133",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6282500000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 8000000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 7000000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 7000000,
+          "exclusive_ns": 1000000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5400000,
+          "exclusive_ns": 5400000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "185",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "134",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6298600000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 8300000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 7000000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 7000000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5600000,
+          "exclusive_ns": 5600000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "186",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "135",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6315800000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7900000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 7000000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6800000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5700000,
+          "exclusive_ns": 5700000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "187",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "136",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6332500000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7700000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6800000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6800000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 5100000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 102,
+        "encoded_bytes": 80755,
+        "plan_entries": 102,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 2,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "188",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "137",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6348700000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 8000000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6900000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6800000,
+          "exclusive_ns": 1300000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4900000,
+          "exclusive_ns": 4900000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 101,
+        "encoded_bytes": 80306,
+        "plan_entries": 101,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 1,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "189",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "138",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6365100000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 8000000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6900000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6800000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5500000,
+          "exclusive_ns": 5500000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 101,
+        "encoded_bytes": 80306,
+        "plan_entries": 101,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 1,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "190",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "139",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6381800000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7600000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6400000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5200000,
+          "exclusive_ns": 5200000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 101,
+        "encoded_bytes": 80306,
+        "plan_entries": 101,
+        "prepare_knots": 1500,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 1,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "191",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "140",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6398600000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7600000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6700000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4900000,
+          "exclusive_ns": 4900000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 1000000,
+          "exclusive_ns": 1000000,
+          "calls": 49
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 15
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 101,
+        "encoded_bytes": 80306,
+        "plan_entries": 101,
+        "prepare_knots": 1500,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 1,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "192",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "141",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6415100000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7600000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6700000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5200000,
+          "exclusive_ns": 5200000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 96,
+        "encoded_bytes": 76321,
+        "plan_entries": 96,
+        "prepare_knots": 1425,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 1,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "193",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "142",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6432100000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6400000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4800000,
+          "exclusive_ns": 4800000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 96,
+        "encoded_bytes": 76321,
+        "plan_entries": 96,
+        "prepare_knots": 1425,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 1,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "194",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "143",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6448400000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7400000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6400000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6400000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 5100000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 96,
+        "encoded_bytes": 76321,
+        "plan_entries": 96,
+        "prepare_knots": 1425,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 1,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "195",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "144",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6465300000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6500000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4900000,
+          "exclusive_ns": 4900000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 96,
+        "encoded_bytes": 76321,
+        "plan_entries": 96,
+        "prepare_knots": 1425,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 1,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "196",
+      "semantic": "105",
+      "scene": "105",
+      "camera": "150",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6582500000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 8100000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 7200000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 7000000,
+          "exclusive_ns": 1300000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5000000,
+          "exclusive_ns": 5000000,
+          "calls": 51
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 51
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 13
+        }
+      },
+      "counts": {
+        "candidates": 103,
+        "sources": 86,
+        "encoded_bytes": 68351,
+        "plan_entries": 86,
+        "prepare_knots": 1275,
+        "built_groups": 13,
+        "coverage_tiles": 51,
+        "coverage_pixels": 3287040,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 1,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "197",
+      "semantic": "106",
+      "scene": "106",
+      "camera": "151",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 6999000000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 8100000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6900000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 5100000,
+          "calls": 51
+        },
+        "material_submit": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 900000,
+          "calls": 51
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 13
+        }
+      },
+      "counts": {
+        "candidates": 104,
+        "sources": 87,
+        "encoded_bytes": 69288,
+        "plan_entries": 87,
+        "prepare_knots": 1297,
+        "built_groups": 13,
+        "coverage_tiles": 51,
+        "coverage_pixels": 3287040,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 1,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "198",
+      "semantic": "106",
+      "scene": "106",
+      "camera": "151",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 7031700000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7200000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6800000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6700000,
+          "exclusive_ns": 1100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4800000,
+          "exclusive_ns": 4800000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3227648,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "199",
+      "semantic": "106",
+      "scene": "106",
+      "camera": "151",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 7048900000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6900000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 1100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4700000,
+          "exclusive_ns": 4700000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 49
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 15
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3131392,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "200",
+      "semantic": "106",
+      "scene": "106",
+      "camera": "151",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 7064900000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6900000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6500000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 5300000,
+          "exclusive_ns": 5300000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3184640,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "201",
+      "semantic": "106",
+      "scene": "106",
+      "camera": "151",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 7082200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7100000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6800000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 1300000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4700000,
+          "exclusive_ns": 4700000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 50
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3184640,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "202",
+      "semantic": "106",
+      "scene": "106",
+      "camera": "151",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 7097900000,
+      "outcome": "accepted",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 8000000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 7800000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 2
+        },
+        "cache_begin": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 7300000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "cache_draw": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 87
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 6000000,
+          "exclusive_ns": 6000000,
+          "calls": 41
+        },
+        "material_submit": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 41
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 11
+        },
+        "scene_draw": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "navigation_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "provider_present": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 11,
+        "coverage_tiles": 41,
+        "coverage_pixels": 2594816,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    }
+  ],
+  "image": {
+    "width": 1600,
+    "height": 1000,
+    "rgbaSha256": "be4b323be3a2f7cc16125b3c7bfaf0db60d79801ac40a921467946c1270a309f",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+  },
+  "sha256": {
+    "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+    "axiom.wasm": "56627c48ecec7e16bc9fd861e247ef5a9e3b6d60a4581d3152029d7e13ee3825",
+    "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+    "internal/axiom.mjs": "88a3b6fdd3d0df5d9d72fc39502dcb5c80ba7175b0362545fdfc9ad07244f842"
+  }
+}
