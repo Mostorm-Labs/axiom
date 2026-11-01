@@ -54,13 +54,22 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     const double scale=camera.scale*ratio;
     if(!std::isfinite(scale)||scale<=0||scale<1./65536||scale>65536)
         return BackendSubmissionResult::retry("world navigation scale range");
-    const int level=std::clamp(int(std::ceil(std::log2(scale))),-16,16);
+    int level=std::clamp(int(std::ceil(std::log2(scale))),-16,16);
     const foundation::WorldRect visible{
         -camera.translationX/camera.scale,-camera.translationY/camera.scale,
         (frame.metrics.logicalWidth-camera.translationX)/camera.scale,
         (frame.metrics.logicalHeight-camera.translationY)/camera.scale};
-    const auto keys=grid_.coverage(visible,level,256);
-    if(keys.empty())return BackendSubmissionResult::retry("world navigation coverage limit");
+    const auto maximumTiles=std::min(options.maxEntries,options.maxBytes/(tileBytes*3));
+    auto keys=grid_.coverage(visible,level,256);
+    auto parents=grid_.coverage(visible,level-1,256);
+    // Feedback resolution is disposable. Retina metrics and crossing a scale
+    // bucket must not turn a bounded navigation opportunity into Direct raster
+    // of the whole scene. Coarsen until both planes can reside simultaneously.
+    while(level>-16&&(keys.empty()||parents.empty()||keys.size()+parents.size()>maximumTiles)){
+        --level;keys=grid_.coverage(visible,level,256);parents=grid_.coverage(visible,level-1,256);
+    }
+    if(keys.empty()||parents.empty()||keys.size()+parents.size()>maximumTiles)
+        return BackendSubmissionResult::retry("world navigation residency cannot converge");
     // Query the complete tile bounds (including filter gutter), never the old
     // viewport snapshot. Queries own Scene traversal and return immutable data.
     std::map<TileKey,std::shared_ptr<const Sources>> desired;
@@ -103,12 +112,8 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
     };
     // A single coarser plane supplies complete world coverage before sharpening.
     // Its cells remain world anchored and are independently replaceable.
-    const auto parents=grid_.coverage(visible,level-1,256);
     if(job_&&std::find(keys.begin(),keys.end(),job_->key)==keys.end()&&
        std::find(parents.begin(),parents.end(),job_->key)==parents.end())cancel();
-    const auto maximumTiles=std::min(options.maxEntries,options.maxBytes/(tileBytes*3));
-    if(keys.size()+parents.size()>maximumTiles)
-        return BackendSubmissionResult::retry("world navigation residency cannot converge");
     std::erase_if(tiles_,[](const auto& row){return !row.second.image;});
     const auto scene=frame.sceneReadToken.value();
     for(auto& [key,tile]:tiles_){

@@ -1,0 +1,45 @@
+<!doctype html><meta charset="utf-8"><title>Navigation feedback cadence</title>
+<style>body{margin:0}#mount{width:800px;height:500px}</style><div id="mount"></div>
+<pre id="result">PENDING</pre>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+const errors=[],results=[],samples=[],bindings=new WeakMap();
+const proto=WebGL2RenderingContext.prototype,originals=new Map();
+let active=false,draws=0,fences=0,polls=0,frames=0,sdk;
+const wrap=(name,fn)=>{originals.set(name,proto[name]);proto[name]=fn(proto[name]);};
+wrap('bindFramebuffer',raw=>function(target,fb){if(target===this.FRAMEBUFFER||target===this.DRAW_FRAMEBUFFER)bindings.set(this,fb);return raw.call(this,target,fb);});
+for(const name of ['drawArrays','drawElements','drawArraysInstanced','drawElementsInstanced'])
+  wrap(name,raw=>function(...args){if(active&&!bindings.get(this))++draws;return raw.apply(this,args);});
+wrap('fenceSync',raw=>function(...args){if(active)++fences;return raw.apply(this,args);});
+wrap('clientWaitSync',raw=>function(...args){const status=raw.apply(this,args);if(active){++polls;if(status===this.ALREADY_SIGNALED||status===this.CONDITION_SATISFIED)return this.TIMEOUT_EXPIRED;}return status;});
+const raf=()=>new Promise(requestAnimationFrame);
+const until=async(fn,label)=>{for(let n=0;n<300;++n){if(fn())return;await raf();}throw Error(label);};
+const check=(ok,label)=>{if(!ok)throw Error(label);results.push(label);};
+try{
+  sdk=await createRuntime({mount:document.getElementById('mount'),builtinFonts:false,permission:'localSingleUser',onError:e=>errors.push(String(e)),onFrame:()=>++frames});
+  sdk.canvas.setPointerCapture=()=>{};sdk.canvas.hasPointerCapture=()=>false;
+  sdk.data.attach({capacity:64});await sdk.selectBrush('round-handdrawn',1);
+  const pointer=(type,x,y)=>sdk.canvas.dispatchEvent(new PointerEvent(type,{pointerId:1,pointerType:'mouse',clientX:x,clientY:y,buttons:type==='pointerup'?0:1,bubbles:true,cancelable:true}));
+  for(let n=0;n<8;++n){
+    const prior=frames;pointer('pointerdown',220,150+n*20);pointer('pointermove',450,160+n*20);pointer('pointerup',480,160+n*20);
+    await until(()=>frames>prior&&sdk.readState().lastCommit.presentedGeneration===sdk.readState().generation,'canonical stroke receipt');
+  }
+  for(let n=0;n<8;++n)await raf();
+  const before=sdk.readState(),prior=frames;active=true;
+  for(let n=0;n<24;++n){
+    sdk.canvas.dispatchEvent(new WheelEvent('wheel',{clientX:400,clientY:250,deltaY:n<12?-2:2,ctrlKey:true,bubbles:true,cancelable:true}));
+    const start=performance.now(),count=draws;await raf();samples.push({start,duration:performance.now()-start,draws:draws-count});
+  }
+  active=false;
+  check(fences===0&&polls===0,'navigation-only feedback never waits for a canonical completion fence');
+  check(samples.filter(s=>s.draws>0).length>=20,'continuous pinch updates the display while refinement is pending');
+  check(frames===prior,'navigation feedback creates no canonical receipt');
+  const after=sdk.readState();check(after.generation===before.generation&&after.objects===before.objects,'navigation preserves canonical document');
+  await until(()=>frames>prior,'settled exact receipt');
+  check(!errors.length,'no rendering errors');
+  for(let packet;(packet=sdk.data.readNext());)sdk.data.release(packet);
+  await sdk.close();
+  document.getElementById('result').textContent=JSON.stringify({status:'PASS',results,samples,fences,polls,errors});
+}catch(e){active=false;document.getElementById('result').textContent=JSON.stringify({status:'FAIL',error:String(e),results,samples,fences,polls,errors});}
+finally{for(const [name,raw]of originals)proto[name]=raw;}
+</script>

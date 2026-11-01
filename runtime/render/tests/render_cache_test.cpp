@@ -243,6 +243,49 @@ int main() {
                     provider.presentCount()==cleanPresents,"clean navigation presented twice");
         }
         {
+            // Retina pinch crosses a scale bucket immediately. The feedback
+            // plane must reduce resolution to fit its budget, not abandon
+            // navigation for an unbounded synchronous exact render.
+            RasterSkiaSurfaceProvider retina;
+            require(retina.resize(1600,1000).code==BackendSubmissionCode::kAccepted,"retina target");
+            SkiaRenderer nav;
+            const FrameState current{ViewId{1},{},{0,0,800,500},{800,500,1600,1000,2,1},
+                semantic::SemanticGeneration{705},SceneRevision{705},SurfaceGeneration{1},MetricsGeneration{1},FrameId{705}};
+            NavigationSourceQuery empty=[](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e.clear();return true;};
+            const auto submissions=nav.submissionCount();
+            for(unsigned n=0;n<128;++n){
+                require(nav.renderNavigation(retina,{1.02F,-8,-5},current,empty).code==BackendSubmissionCode::kAccepted,
+                        "retina pinch fell back to synchronous exact drawing");
+                if(!nav.navigationWork().pending)break;
+                require(n<127,"budget-adapted navigation never converged");
+            }
+            require(nav.navigationWork().coverageComplete&&retina.presentCount()>0&&nav.submissionCount()==submissions,
+                    "budget-adapted feedback missing or qualified canonical");
+            require(nav.navigationWork().retainedBytes<=RenderCacheOptions{}.maxBytes,"retina navigation exceeded budget");
+        }
+        {
+            TestSurface feedback;require(feedback.resize(256,128).code==BackendSubmissionCode::kAccepted,"cold feedback target");
+            SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=1;nav.setRenderCacheOptions(options);
+            auto entry=stroke(908);auto exact=plan(709,{entry});
+            require(nav.renderFrame(feedback,exact).code==BackendSubmissionCode::kAccepted,"cold feedback exact");
+            const auto before=pixels(feedback);
+            const auto presents=feedback.presentCount(),submissions=nav.submissionCount();
+            NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e={entry};return true;};
+            require(nav.renderNavigation(feedback,{1.2F,-25.6F,-12.8F},exact.frame,query).code==BackendSubmissionCode::kAccepted,
+                    "cold pinch feedback rejected");
+            require(nav.navigationWork().pending&&nav.navigationWork().presented&&feedback.presentCount()==presents+1,
+                    "cold pinch froze while world tiles were preparing");
+            require(pixels(feedback)!=before&&nav.submissionCount()==submissions,"cold feedback did not move pixels or qualified canonical");
+            // A viewport screenshot may supply feedback only inside its known
+            // coverage. Zoom-out must keep the complete display until world
+            // coverage exists, never bring back the rectangular crop.
+            const auto prior=feedback.presentCount();
+            require(nav.renderNavigation(feedback,{.5F,64,32},exact.frame,query).code==BackendSubmissionCode::kAccepted,
+                    "cold zoom-out rejected");
+            require(!nav.navigationWork().coverageComplete&&feedback.presentCount()==prior,
+                    "partial screenshot was stretched over newly exposed content");
+        }
+        {
             TestSurface longSurface;require(longSurface.resize(256,128).code==BackendSubmissionCode::kAccepted,"long target");
             SkiaRenderer nav;RenderCacheOptions bounded;bounded.navigationMaxSteps=8;nav.setRenderCacheOptions(bounded);
             auto longEntry=stroke(910);auto& content=std::get<CompactStrokeReferenceCommand>(longEntry.command).content;

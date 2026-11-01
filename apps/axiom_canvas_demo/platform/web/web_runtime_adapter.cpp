@@ -140,11 +140,15 @@ WebFrameResult WebRuntimeAdapter::prepareFrame(bool force) noexcept {
       work.canonicalWork->attachmentEpoch == impl_->confirmed->attachmentEpoch &&
       work.canonicalWork->frame == impl_->confirmed->frame)
     work.canonicalWork.reset();
-  if (!work.canonicalWork && !work.previewWork && !work.navigationPresented)
+  // Navigation feedback has no completion receipt. Provider present already
+  // flushes ordered GPU work; putting it in the canonical fence slot stalls
+  // the next camera pose behind disposable tile/refinement work. Canonical and
+  // ARC preview submissions retain their qualified completion fences.
+  if (!work.canonicalWork && !work.previewWork)
     return impl_->core.canonicalPresentationDirty() ||
            (impl_->core.previewActive() && impl_->core.previewRenderState().dirty)
         ? WebFrameResult::kRetry : WebFrameResult::kIdle;
-  if (((work.canonicalWork || work.navigationPresented) && !impl_->canonicalFence.insert(impl_->canonical)) ||
+  if ((work.canonicalWork && !impl_->canonicalFence.insert(impl_->canonical)) ||
       (work.previewWork && !impl_->previewFence.insert(impl_->preview))) {
     impl_->discard(); return rejected("insert GPU fence");
   }

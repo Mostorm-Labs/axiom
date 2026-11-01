@@ -15,6 +15,7 @@
 #include "include/core/SkImage.h"
 #include <unordered_map>
 #include <unordered_set>
+#include <optional>
 
 #include <cmath>
 #include <algorithm>
@@ -28,6 +29,7 @@ struct SkiaRenderer::NavigationCache final {
     WorldToViewAffine transform;
     resources::ResourceLease lease;
     SkColor background=SK_ColorWHITE;
+    std::optional<CanonicalViewportTransform> feedbackCamera;
 };
 struct SkiaRenderer::CompactCache final {
     struct Entry {std::shared_ptr<const ink::BrushPreviewDelta::Chunk> prefix;sk_sp<SkSurface> surface;foundation::InkBrushConfig config;};
@@ -252,7 +254,28 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
         resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
     if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
     try{const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,renderCacheOptions_,resourceBudget_);
-        if(result.code!=BackendSubmissionCode::kAccepted)navigationTiles_.reset();return result;}
+        if(result.code!=BackendSubmissionCode::kAccepted){navigationTiles_.reset();return result;}
+        // While world cells are cold, an exact retained image can follow the
+        // camera immediately ONLY when it covers the entire requested view.
+        // Newly exposed regions still require world-source coverage; never
+        // restore the old zoom-out rectangular crop or qualify this as exact.
+        const auto cache=navigationCache_;
+        if(!navigationTiles_->work.presented&&!navigationTiles_->work.coverageComplete&&cache&&cache->frame){
+            const auto& old=cache->transform;
+            const auto previous=cache->feedbackCamera;
+            const bool changed=!previous||previous->scale!=camera.scale||
+                previous->translationX!=camera.translationX||previous->translationY!=camera.translationY;
+            const double ratio=camera.scale/old.a;
+            const double x=camera.translationX-ratio*old.tx,y=camera.translationY-ratio*old.ty;
+            if(changed&&old.a>0&&old.d==old.a&&old.b==0&&old.c==0&&x<=0&&y<=0&&
+               x+cache->frame->metrics.logicalWidth*ratio>=current.metrics.logicalWidth&&
+               y+cache->frame->metrics.logicalHeight*ratio>=current.metrics.logicalHeight){
+                const auto feedback=renderNavigation(provider,camera,current);
+                if(feedback.code!=BackendSubmissionCode::kAccepted)return feedback;
+                cache->feedbackCamera=camera;navigationTiles_->work.presented=true;
+            }
+        }
+        return result;}
     catch(const std::bad_alloc&){navigationTiles_.reset();return BackendSubmissionResult::retry("world navigation allocation failure");}
 }
 void SkiaRenderer::cancelNavigationWork() noexcept {if(navigationTiles_)navigationTiles_->cancelWork();}
