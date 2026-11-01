@@ -30,10 +30,10 @@ void drawCompactStrokeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
 // Disposable scalar distance coverage. The material is evaluated once after
 // stable prefix and replaceable tail have been combined with max coverage.
 void drawCompactCoverageToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
-                                  std::span<const foundation::InkKnot>);
+                                  std::span<const foundation::InkKnot>,double startDistance=0,double totalDistance=-1);
 // Same coverage equation, with original predecessor at a resumed offset.
 void drawCompactCoverageRangeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
-    std::span<const foundation::InkKnot>,std::size_t begin,std::size_t end);
+    std::span<const foundation::InkKnot>,std::size_t begin,std::size_t end,double beginDistance=-1,double totalDistance=-1);
 void compositeCompactCoverageToSkCanvas(SkCanvas&,const SkImage&,
                                        const foundation::InkBrushConfig&,std::uint64_t seed=0,
                                        int deviceX=0,int deviceY=0);

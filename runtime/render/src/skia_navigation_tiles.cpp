@@ -1,5 +1,6 @@
 #include "skia_navigation_tiles.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
+#include "canvas/ink/compact_geometry.hpp"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkPaint.h"
 #include <algorithm>
@@ -193,11 +194,14 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         if(const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command)){
             const auto& stroke=compact->content.stroke;auto* coverage=job.coverage->getCanvas();
             if(job.knot==0){
+                job.distance=0;job.totalDistance=ink::compactLength(stroke.knots);
                 coverage->resetMatrix();coverage->clear(SK_ColorBLACK);
                 coverage->setMatrix(job.surface->getCanvas()->getTotalMatrix());
             }
             const auto end=std::min(job.knot+32,stroke.knots.size());
-            drawCompactCoverageRangeToSkCanvas(*coverage,stroke.config,stroke.knots,job.knot,end);
+            drawCompactCoverageRangeToSkCanvas(*coverage,stroke.config,stroke.knots,job.knot,end,job.distance,job.totalDistance);
+            for(std::size_t i=std::max(std::size_t(1),job.knot);i<end;++i)
+                job.distance+=std::hypot(stroke.knots[i].x-stroke.knots[i-1].x,stroke.knots[i].y-stroke.knots[i-1].y);
             work.knotSteps+=end-job.knot;job.knot=end;++steps;
             if(job.knot<stroke.knots.size())continue;
             compositeCompactCoverageToSkCanvas(*job.surface->getCanvas(),*job.coverage->makeImageSnapshot(),stroke.config,stroke.seed);

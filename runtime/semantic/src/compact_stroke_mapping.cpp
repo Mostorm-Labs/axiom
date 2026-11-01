@@ -24,6 +24,11 @@ void setCompactStroke(const CompactStrokeContent& source,auditoryworks::axiom::v
     d.set_density(c.density);d.set_texture_scale(c.textureScale);d.set_deposition(c.deposition);d.set_wet_edge(c.wetEdge);
     d.set_material_resource_id(c.materialResourceId);d.set_material_resource_sha256(c.materialResourceSha256);d.set_material_sampling_version(c.materialSamplingVersion);
     d.set_laser_fade_ms(c.laserFadeMs);d.set_laser_tail_length(c.laserTailLength);
+    if(c.version==2){
+        d.set_thinning(c.thinning);d.set_streamline(c.streamline);d.set_smoothing(c.smoothing);
+        d.set_easing(static_cast<unsigned>(c.easing));d.set_pressure_model(static_cast<unsigned>(c.pressureModel));
+        d.set_start_taper(c.startTaper);d.set_end_taper(c.endTaper);d.set_start_cap(c.startCap);d.set_end_cap(c.endCap);
+    }
     out.set_seed(s.seed);out.set_knot_count(static_cast<std::uint32_t>(s.knots.size()));
     std::string xy,p;xy.reserve(s.knots.size()*16);p.reserve(s.knots.size()*2);
     for(const auto& k:s.knots){append(xy,std::bit_cast<std::uint64_t>(k.x),8);append(xy,std::bit_cast<std::uint64_t>(k.y),8);append(p,k.pressure,2);}
@@ -48,6 +53,14 @@ bool getCompactStroke(const auditoryworks::axiom::v1::CompactStrokeContent& in,C
     c.materialResourceId=d.material_resource_id();c.materialResourceSha256=d.material_resource_sha256();c.materialSamplingVersion=d.material_sampling_version();
     if(d.has_laser_fade_ms())c.laserFadeMs=d.laser_fade_ms();
     if(d.has_laser_tail_length())c.laserTailLength=d.laser_tail_length();
+    if(c.version==2){
+        if(!d.has_thinning()||!d.has_streamline()||!d.has_smoothing()||!d.has_easing()||!d.has_pressure_model()||
+           !d.has_start_taper()||!d.has_end_taper()||!d.has_start_cap()||!d.has_end_cap())return false;
+        c.thinning=d.thinning();c.streamline=d.streamline();c.smoothing=d.smoothing();
+        c.easing=static_cast<foundation::InkEasing>(d.easing());c.pressureModel=static_cast<foundation::InkPressureModel>(d.pressure_model());
+        c.startTaper=d.start_taper();c.endTaper=d.end_taper();c.startCap=d.start_cap();c.endCap=d.end_cap();
+    }else if(d.has_thinning()||d.has_streamline()||d.has_smoothing()||d.has_easing()||d.has_pressure_model()||
+             d.has_start_taper()||d.has_end_taper()||d.has_start_cap()||d.has_end_cap())return false;
     if(!foundation::validInkBrushConfig(c,true))return false;
     s.seed=in.seed();s.knots.clear();s.knots.reserve(in.knot_count());
     for(std::size_t i=0;i<in.knot_count();++i) {

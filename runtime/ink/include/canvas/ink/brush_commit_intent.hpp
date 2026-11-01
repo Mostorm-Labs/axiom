@@ -17,6 +17,7 @@ struct BrushSample final {
     std::uint64_t sequence = 0;
     std::uint64_t timestampNs = 0;
     bool pressureCapability = false;
+    bool terminal = false;
 };
 
 // Confirmed-only transient handoff. Runtime Core, not BrushSession, owns

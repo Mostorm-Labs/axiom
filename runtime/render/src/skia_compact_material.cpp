@@ -10,6 +10,7 @@
 #include <cmath>
 #include <stdexcept>
 #include "ink_coverage_sksl.hpp"
+#include "ink_coverage_v3_sksl.hpp"
 #include "ink_material_sksl.hpp"
 #include "ink_material_v2_sksl.hpp"
 
@@ -18,6 +19,13 @@ namespace {
 const sk_sp<SkRuntimeEffect>& coverageEffect(){
     static const auto effect=[] {
         auto result=SkRuntimeEffect::MakeForShader(SkString(reinterpret_cast<const char*>(kInkCoverageSksl), kInkCoverageSkslSize));
+        if(!result.effect)throw std::runtime_error(result.errorText.c_str());
+        return result.effect;
+    }();return effect;
+}
+const sk_sp<SkRuntimeEffect>& coverageV3Effect(){
+    static const auto effect=[] {
+        auto result=SkRuntimeEffect::MakeForShader(SkString(reinterpret_cast<const char*>(kInkCoverageV3Sksl),kInkCoverageV3SkslSize));
         if(!result.effect)throw std::runtime_error(result.errorText.c_str());
         return result.effect;
     }();return effect;
@@ -39,12 +47,47 @@ const sk_sp<SkRuntimeEffect>& materialV2Effect(){
 }
 
 void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
-                                  std::span<const foundation::InkKnot> knots){
-    drawCompactCoverageRangeToSkCanvas(canvas,config,knots,0,knots.size());
+                                  std::span<const foundation::InkKnot> knots,double startDistance,double totalDistance){
+    if(config.algorithmVersion!=3){drawCompactCoverageRangeToSkCanvas(canvas,config,knots,0,knots.size());return;}
+    if(knots.empty())return;
+    const auto points=ink::compactCoverage(config,knots,startDistance,totalDistance);
+    if(totalDistance<0)totalDistance=startDistance+ink::compactLength(knots);
+    SkMatrix inverse;if(!canvas.getTotalMatrix().invert(&inverse))return;
+    const auto pixelWidth=std::max(std::hypot(inverse.getScaleX(),inverse.getSkewY()),std::hypot(inverse.getSkewX(),inverse.getScaleY()));
+    SkRuntimeShaderBuilder builder(coverageV3Effect());
+    builder.uniform("aaWidth")=pixelWidth;
+    const bool marker=config.family==foundation::InkFamily::kMarker;
+    const auto angle=marker?config.markerAngle:0.;
+    builder.uniform("axis")=SkV2{float(std::cos(angle)),float(std::sin(angle))};
+    builder.uniform("flatness")=float(marker?config.markerFlatness:1.);
+    SkPaint paint;paint.setBlendMode(SkBlendMode::kLighten);
+    const auto clip=canvas.getLocalClipBounds();
+    const bool startCap=startDistance>1e-6||config.startCap||config.startTaper>0;
+    const bool endCap=startDistance+ink::compactLength(knots)<totalDistance-1e-6||config.endCap||config.endTaper>0;
+    for(std::size_t i=0;i<points.size();++i){
+        const auto& a=points[i?i-1:0];const auto& b=points[i];
+        const auto radius=float(std::max(a.radius,b.radius));if(radius<=0)continue;
+        const auto support=radius+pixelWidth;
+        auto bounds=SkRect::MakeLTRB(float(std::min(a.x,b.x))-support,float(std::min(a.y,b.y))-support,
+                                   float(std::max(a.x,b.x))+support,float(std::max(a.y,b.y))+support);
+        if(!SkRect::Intersects(bounds,clip))continue;
+        builder.uniform("a")=SkV2{float(a.x),float(a.y)};builder.uniform("b")=SkV2{float(b.x),float(b.y)};
+        builder.uniform("radii")=SkV2{float(a.radius),float(b.radius)};
+        // Omit the initial standalone disk for a butt cap.
+        if(i==0&&!startCap&&points.size()>1)continue;
+        builder.uniform("clipCaps")=SkV2{float(i==1&&!startCap),float(i+1==points.size()&&!endCap)};
+        paint.setShader(builder.makeShader());canvas.drawRect(bounds,paint);
+    }
 }
 void drawCompactCoverageRangeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
-    std::span<const foundation::InkKnot> knots,std::size_t begin,std::size_t end){
-    if(knots.empty())return;
+    std::span<const foundation::InkKnot> knots,std::size_t begin,std::size_t end,double beginDistance,double totalDistance){
+    if(knots.empty()||begin>=knots.size()||end<=begin)return;
+    if(config.algorithmVersion==3){
+        const auto first=begin?begin-1:0;const auto last=std::min(end,knots.size());
+        if(beginDistance<0)beginDistance=ink::compactLength(knots.first(first+1));
+        if(totalDistance<0)totalDistance=ink::compactLength(knots);
+        drawCompactCoverageToSkCanvas(canvas,config,knots.subspan(first,last-first),beginDistance,totalDistance);return;
+    }
     SkRuntimeShaderBuilder builder(coverageEffect());
     const bool marker=config.family==foundation::InkFamily::kMarker;
     const auto angle=marker?config.markerAngle:0.;

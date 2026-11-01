@@ -17,6 +17,7 @@ struct TimedBrushSample final {
     std::uint64_t sequence = 0;
     std::uint64_t timestampNs = 0;
     bool pressureCapability = false;
+    bool terminal = false;
 };
 
 struct CompactBrushConfig final {
@@ -29,6 +30,8 @@ struct CompactBrushConfig final {
     double tauSeconds = 0.032;
     double geometryEpsilon = 0.25;
     std::uint32_t algorithmVersion = 1;
+    foundation::InkPressureModel pressureModel=foundation::InkPressureModel::kTimedSpeed;
+    double size=16,streamline=.5,smoothing=.5,endTaper=0;
 };
 
 // Runtime-owned signal normalizer used by compact authoring and by the
@@ -59,7 +62,8 @@ private:
     std::uint64_t seed_ = 0;
     std::uint64_t confirmedCount_=0,lastSequence_=0,lastTimestamp_=0;
     std::vector<foundation::InkKnot> pending_;
-    double pendingLength_=0;
+    double pendingLength_=0, prefixLength_=0;
+    double filteredX_=0,filteredY_=0;
     Metrics metrics_{};
     foundation::InkKnot lastKnot_{};
     foundation::InkKnot previousControl_{};

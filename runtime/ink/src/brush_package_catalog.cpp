@@ -107,11 +107,11 @@ BrushPackageResult BrushPackageCatalog::loadDefault(std::string_view profile,
   if(profile=="round-regular"||profile=="round-handdrawn"||profile=="laser-transient"||
      profile=="marker-compact-v1"||profile=="chalk-compact-v1"||
      profile=="crayon-wax-v1"||profile=="watercolor-lite-v1"){
-    if((revision!=1&&revision!=2)||(profile=="laser-transient"&&revision!=1))return {{},{},{},"unknown_profile_or_revision"};
+    if((revision!=1&&revision!=2&&!(revision==3&&(profile=="round-regular"||profile=="round-handdrawn"||profile=="marker-compact-v1")))||(profile=="laser-transient"&&revision!=1))return {{},{},{},"unknown_profile_or_revision"};
     BrushPackage p;p.profileId=profile;p.packageId=profile=="round-regular"?"00000000000000000000000000000051":profile=="round-handdrawn"?"00000000000000000000000000000052":"00000000000000000000000000000053";
     p.compactConfig=foundation::InkBrushConfig{};
     p.revision=revision;
-    if(revision==2){
+    if(revision>=2){
         p.compactConfig->algorithmVersion=2;p.compactConfig->materialVersion=2;
         p.compactConfig->materialResourceId=foundation::kInkMaterialV2ResourceId;
         p.compactConfig->materialResourceSha256=foundation::kInkMaterialV2ResourceSha256;
@@ -124,6 +124,11 @@ BrushPackageResult BrushPackageCatalog::loadDefault(std::string_view profile,
     if(profile=="watercolor-lite-v1"){p.packageId="00000000000000000000000000000057";p.compactConfig->family=foundation::InkFamily::kWatercolor;p.compactConfig->size=32;p.compactConfig->opacity=.65;}
     if(revision==2&&profile=="chalk-compact-v1"){p.compactConfig->size=24;p.compactConfig->density=.72;p.compactConfig->textureScale=6;}
     if(revision==2&&profile=="watercolor-lite-v1"){p.compactConfig->size=40;p.compactConfig->wetEdge=.85;p.compactConfig->textureScale=12;}
+    if(revision==3){auto& c=*p.compactConfig;c.version=2;c.algorithmVersion=3;c.signalVersion=2;
+        c.thinning=profile=="round-regular"?0:profile=="marker-compact-v1"?.5:.99;
+        c.streamline=.13;c.smoothing=.61;c.pressureModel=foundation::InkPressureModel::kDistance;
+        c.endTaper=profile=="round-handdrawn"?16:0;
+    }
     p.vector.size=p.compactConfig->size;
     p.paint={p.compactConfig->color[0],p.compactConfig->color[1],p.compactConfig->color[2],p.compactConfig->color[3],p.compactConfig->opacity};
     return {p,{},brushPackageCanonicalDigest(p),{}};

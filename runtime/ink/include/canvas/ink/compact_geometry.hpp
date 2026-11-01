@@ -47,12 +47,59 @@ inline std::vector<foundation::InkKnot> simplifyInkKnots(std::span<const foundat
     return result;
 }
 inline double compactRadius(const foundation::InkBrushConfig& config,std::uint16_t pressure) noexcept {
-    if(config.family==foundation::InkFamily::kRound&&config.roundMode==foundation::InkRoundMode::kRegular)return config.size*.5;
+    if(config.algorithmVersion!=3&&config.family==foundation::InkFamily::kRound&&config.roundMode==foundation::InkRoundMode::kRegular)return config.size*.5;
+    if(config.algorithmVersion==3){
+        auto t=.5+config.thinning*(double(pressure)/65535.-.5);
+        switch(config.easing){
+            case foundation::InkEasing::kEaseIn:t*=t;break;
+            case foundation::InkEasing::kEaseOut:t=t*(2-t);break;
+            case foundation::InkEasing::kSmoothstep:t=t*t*(3-2*t);break;
+            default:break;
+        }
+        return config.size*std::max(.0001,t);
+    }
     return config.size*(.25+.5*(double(pressure)/65535.0));
 }
-inline std::vector<CoverageKnot> compactCoverage(const foundation::InkBrushConfig& config,std::span<const foundation::InkKnot> knots) {
-    std::vector<CoverageKnot> result;result.reserve(knots.size());
-    for(const auto& k:knots)result.push_back({k.x,k.y,compactRadius(config,k.pressure)});
+inline double compactLength(std::span<const foundation::InkKnot> knots) noexcept {
+    double length=0;for(std::size_t i=1;i<knots.size();++i)
+        length+=std::hypot(knots[i].x-knots[i-1].x,knots[i].y-knots[i-1].y);
+    return length;
+}
+inline std::vector<CoverageKnot> compactCoverage(const foundation::InkBrushConfig& config,
+    std::span<const foundation::InkKnot> knots,double startDistance=0,double totalDistance=-1) {
+    std::vector<CoverageKnot> result;if(knots.empty())return result;
+    if(totalDistance<0)totalDistance=startDistance+compactLength(knots);
+    const bool taper=config.algorithmVersion==3&&totalDistance>1e-6;
+    const auto envelope=[&](double at){
+        const auto ease=[](double x){x=std::clamp(x,0.,1.);return x*x*(3-2*x);};
+        return taper?std::min(config.startTaper>0?ease(at/config.startTaper):1.,
+            config.endTaper>0?ease((totalDistance-at)/config.endTaper):1.):1.;
+    };
+    double distance=startDistance;
+    result.push_back({knots.front().x,knots.front().y,compactRadius(config,knots.front().pressure)*envelope(distance)});
+    for(std::size_t i=1;i<knots.size();++i){
+        const auto& a=knots[i-1];const auto& b=knots[i];const auto length=std::hypot(b.x-a.x,b.y-a.y);
+        // Taper envelopes are nonlinear. Subdivide just their transition region;
+        // body geometry keeps the existing compact segment count.
+        const bool transition=taper&&((config.startTaper>0&&distance<config.startTaper)||
+            (config.endTaper>0&&distance+length>totalDistance-config.endTaper));
+        std::vector<double> cuts{0,1};
+        if(transition&&length>0){
+            const auto add=[&](double from,double to){
+                from=std::max(distance,from);to=std::min(distance+length,to);if(to<=from)return;
+                const auto count=std::max(1U,static_cast<unsigned>(std::ceil((to-from)/std::max(.5,config.size/16))));
+                for(unsigned j=0;j<=count;++j)cuts.push_back(std::clamp((from+(to-from)*double(j)/count-distance)/length,0.,1.));
+            };
+            if(config.startTaper>0)add(0,config.startTaper);
+            if(config.endTaper>0)add(totalDistance-config.endTaper,totalDistance);
+            std::sort(cuts.begin(),cuts.end());cuts.erase(std::unique(cuts.begin(),cuts.end()),cuts.end());
+        }
+        for(std::size_t j=1;j<cuts.size();++j){const auto t=cuts[j];
+            const auto pressure=static_cast<std::uint16_t>(std::lround(a.pressure+(double(b.pressure)-a.pressure)*t));
+            result.push_back({a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t,compactRadius(config,pressure)*envelope(distance+length*t)});
+        }
+        distance+=length;
+    }
     return result;
 }
 }

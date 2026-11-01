@@ -92,3 +92,7 @@ const brushConfig=sdk.readBrushConfig();void brushConfig;
 await sdk.setBrushConfig({family:3,pressureSource:'auto'});
 // @ts-expect-error unknown brush family must reject
 await sdk.setBrushConfig({family:7});
+
+void sdk.setBrushConfig({family:1,version:2,thinning:.99,streamline:.13,smoothing:.61,easing:1,pressureModel:2,startTaper:0,endTaper:16,startCap:true,endCap:true});
+// @ts-expect-error pressure model is a closed versioned enum
+void sdk.setBrushConfig({family:1,pressureModel:3});
