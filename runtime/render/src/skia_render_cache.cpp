@@ -226,8 +226,8 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         // Admission is deterministic for the entire demand. Drop ineligible
         // and stale residents before filling it; never evict a prepared prefix.
         for(auto it=entries_.begin();it!=entries_.end();){
-            const auto admitted=admissions_.find(it->first);const auto* group=groups_.find(it->first);
-            if(admitted==admissions_.end()||admitted->second.kind!=AdmissionKind::kRaster||!group||
+            const auto admissionEntry=admissions_.find(it->first);const auto* group=groups_.find(it->first);
+            if(admissionEntry==admissions_.end()||admissionEntry->second.kind!=AdmissionKind::kRaster||!group||
                RenderSourceResolver::resolve(it->second.validity,{group->revisions,targetEpoch_,false})!=RenderSourceKind::kRasterCache){
                 work.retainedBytes-=it->second.bytes;it=entries_.erase(it);
             }else ++it;
@@ -277,9 +277,9 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             auto* target=scratch_->getCanvas();target->resetMatrix();target->clear(SK_ColorTRANSPARENT);
             configureScratch(*target,plan,entryMatrix(canvas,plan,entry));
             const auto& stroke=std::get<CompactStrokeReferenceCommand>(entry.command).content.stroke;
-            auto raster=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget);
+            auto rasterJob=std::make_unique<CompactStrokeRasterJob>(*target,stroke.config,stroke.knots,nullptr,options.gpuCoverageCandidate,budget);
             target->restore();
-            pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,admissionEntry->second.crop,std::move(raster)});
+            pending_=std::make_unique<Pending>(Pending{entry.record.objectId,validity,admissionEntry->second.crop,std::move(rasterJob)});
             ++work.misses;
         }
         if(pending_->id!=entry.record.objectId||RenderSourceResolver::resolve(pending_->validity,validity)!=RenderSourceKind::kRasterCache){
@@ -304,12 +304,12 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             captureRunEntry(plan,preparationCursor_,resident.image,resident.bounds.left(),resident.bounds.top());
         }else captureRunEntry(plan,preparationCursor_,scratch_->makeImageSnapshot());
         if(streamFrame_){
-            auto* target=composite_->getCanvas();
+            auto* compositeTarget=composite_->getCanvas();
             if(stored){const auto& cached=entries_.at(entry.record.objectId);
-                target->drawImage(cached.image,float(cached.bounds.left()),float(cached.bounds.top()));
+                compositeTarget->drawImage(cached.image,float(cached.bounds.left()),float(cached.bounds.top()));
             }else{
-                target->save();target->clipIRect(crop);
-                target->drawImage(scratch_->makeImageSnapshot(),0,0);target->restore();
+                compositeTarget->save();compositeTarget->clipIRect(crop);
+                compositeTarget->drawImage(scratch_->makeImageSnapshot(),0,0);compositeTarget->restore();
                 ++work.rasterizedGroups;
             }
         }else if(!stored){
