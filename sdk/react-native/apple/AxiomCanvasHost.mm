@@ -69,9 +69,17 @@
  axiom_native_sample s{1,1,std::uint64_t(event.timestamp*1e9),float(p.x),float(p.y),0,0,0,phase,0,0,0};
  (void)axiom_native_input(_sessionToken.UTF8String,_attachment,&s,1);
 }
-- (void)mouseDown:(NSEvent*)event{[self.window makeFirstResponder:self];_mouse=YES;[self sendMouse:event phase:0];}
-- (void)mouseDragged:(NSEvent*)event{if(_mouse)[self sendMouse:event phase:1];}
-- (void)mouseUp:(NSEvent*)event{if(_mouse)[self sendMouse:event phase:2];_mouse=NO;}
+- (void)mouseDown:(NSEvent*)event{
+ [self.window makeFirstResponder:self];_mouse=YES;[self sendMouse:event phase:0];
+ // AppKit can keep the event-tracking loop ahead of the display timer. Give
+ // the Runtime one immediate display opportunity so the independent preview
+ // layer is visible from the first drag sample.
+ [self serviceFrame];
+}
+- (void)mouseDragged:(NSEvent*)event{
+ if(_mouse){[self sendMouse:event phase:1];[self serviceFrame];}
+}
+- (void)mouseUp:(NSEvent*)event{if(_mouse){[self sendMouse:event phase:2];[self serviceFrame];}_mouse=NO;}
 #else
 - (void)sendTouches:(NSSet<UITouch*>*)touches event:(UIEvent*)event phase:(unsigned)phase{
  if(!_attachment)return;
