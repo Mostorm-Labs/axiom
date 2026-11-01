@@ -32,6 +32,7 @@ struct CompactBrushConfig final {
     std::uint32_t algorithmVersion = 1;
     foundation::InkPressureModel pressureModel=foundation::InkPressureModel::kTimedSpeed;
     double size=16,streamline=.5,smoothing=.5,endTaper=0;
+    std::optional<foundation::InkBrushConfig> geometryConfig;
 };
 
 // Runtime-owned signal normalizer used by compact authoring and by the
@@ -58,7 +59,18 @@ private:
     [[nodiscard]] double simulatedPressure(double distance, double dt,
                                            double previousPressure) const noexcept;
 
+    bool appendQuality(std::span<const TimedBrushSample>,std::span<const TimedBrushSample>);
+    void retainQuality(foundation::InkKnot);
+    void acceptQualityPoint(const reference::StrokePoint&);
+    void publishQuality(bool terminal);
     CompactBrushConfig config_{};
+    std::vector<TimedBrushSample> qualityStartup_;
+    std::vector<reference::StrokePoint> qualityPending_;
+    bool qualityInitialized_=false;
+    double qualityPressure_=.5,qualityRunning_=0;
+    reference::StrokePoint qualityLast_{};
+    std::optional<CompactContourCompiler> qualityContour_;
+    std::shared_ptr<const BrushPreviewDelta::Chunk> qualityConfirmed_;
     std::uint64_t seed_ = 0;
     std::uint64_t confirmedCount_=0,lastSequence_=0,lastTimestamp_=0;
     std::vector<foundation::InkKnot> pending_;

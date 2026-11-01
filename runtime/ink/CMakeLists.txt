@@ -16,6 +16,8 @@ add_library(canvas_runtime_ink STATIC
   src/chalk_dab_evaluator.cpp
     src/brush_session.cpp
   src/compact_brush_session.cpp
+  src/compact_brush_quality.cpp
+  src/compact_contour.cpp
     src/brush_preview_handoff.cpp
   src/legacy_v1_readonly.cpp)
 target_sources(canvas_runtime_ink PRIVATE src/vector_stroke_reference.cpp)
@@ -49,6 +51,9 @@ if(BUILD_TESTING)
   target_link_libraries(axiom_ink_v2_pressure_tests PRIVATE canvas_runtime_ink)
   target_compile_features(axiom_ink_v2_pressure_tests PRIVATE cxx_std_20)
   add_test(NAME InkV2Pressure COMMAND axiom_ink_v2_pressure_tests)
+  add_executable(axiom_vector_quality_tests tests/vector_quality_test.cpp)
+  target_link_libraries(axiom_vector_quality_tests PRIVATE canvas_runtime_ink)
+  add_test(NAME InkV2VectorQuality COMMAND axiom_vector_quality_tests)
   add_executable(axiom_vector_tuning_tests tests/vector_tuning_test.cpp)
   target_link_libraries(axiom_vector_tuning_tests PRIVATE canvas_runtime_ink)
   add_test(NAME InkV2VectorTuning COMMAND axiom_vector_tuning_tests)

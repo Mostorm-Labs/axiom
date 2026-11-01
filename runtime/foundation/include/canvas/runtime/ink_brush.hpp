@@ -47,7 +47,7 @@ inline bool validInkBrushConfig(const InkBrushConfig& c, bool persistent=false) 
     const bool legacy=c.version==1 && (c.algorithmVersion==1||c.algorithmVersion==2) && c.signalVersion==1 &&
         c.thinning==.5 && c.streamline==.5 && c.smoothing==.5 && c.easing==InkEasing::kLinear &&
         c.pressureModel==InkPressureModel::kTimedSpeed && c.startTaper==0 && c.endTaper==0 && c.startCap && c.endCap;
-    const bool tuned=c.version==2 && c.algorithmVersion==3 && c.signalVersion==2 &&
+    const bool tuned=c.version==2 && ((c.algorithmVersion==3 && c.signalVersion==2)||(c.algorithmVersion==4 && c.signalVersion==3)) &&
         (c.family==InkFamily::kRound||c.family==InkFamily::kMarker) &&
         std::isfinite(c.thinning)&&c.thinning>=-1&&c.thinning<=1 && unit(c.streamline)&&unit(c.smoothing) &&
         static_cast<unsigned>(c.easing)>=1&&static_cast<unsigned>(c.easing)<=4 &&

@@ -51,6 +51,12 @@ int main() {
     const auto tunedDecoded=SemanticCodec::decodeProtobufOperation(tunedBytes.bytes);
     if(!tunedDecoded.ok()||std::get<CompactStrokeContent>(std::get<AddStrokeOp>(tunedDecoded.operation.payload).object.content)!=
        std::get<CompactStrokeContent>(std::get<AddStrokeOp>(tuned.payload).object.content))throw std::runtime_error("tuned controls did not persist");
+    t.algorithmVersion=4;t.signalVersion=3;t.endTaper=0;
+    const auto qualityBytes=SemanticCodec::encodeProtobufOperation(tuned);
+    if(!qualityBytes.ok())throw std::runtime_error("quality compact encode");
+    const auto qualityDecoded=SemanticCodec::decodeProtobufOperation(qualityBytes.bytes);
+    if(!qualityDecoded.ok()||std::get<CompactStrokeContent>(std::get<AddStrokeOp>(qualityDecoded.operation.payload).object.content)!=
+       std::get<CompactStrokeContent>(std::get<AddStrokeOp>(tuned.payload).object.content))throw std::runtime_error("quality evaluator binding changed in codec");
     const auto legacyAgain=SemanticCodec::encodeProtobufOperation(decoded.operation);
     if(!legacyAgain.ok()||legacyAgain.bytes!=encoded.bytes)throw std::runtime_error("legacy compact wire encoding changed");
     t.version=1;if(SemanticCodec::encodeProtobufOperation(tuned).ok())throw std::runtime_error("new tuning accepted as old config");

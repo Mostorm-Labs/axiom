@@ -47,8 +47,8 @@ inline std::vector<foundation::InkKnot> simplifyInkKnots(std::span<const foundat
     return result;
 }
 inline double compactRadius(const foundation::InkBrushConfig& config,std::uint16_t pressure) noexcept {
-    if(config.algorithmVersion!=3&&config.family==foundation::InkFamily::kRound&&config.roundMode==foundation::InkRoundMode::kRegular)return config.size*.5;
-    if(config.algorithmVersion==3){
+    if(config.algorithmVersion<3&&config.family==foundation::InkFamily::kRound&&config.roundMode==foundation::InkRoundMode::kRegular)return config.size*.5;
+    if(config.algorithmVersion>=3){
         auto t=.5+config.thinning*(double(pressure)/65535.-.5);
         switch(config.easing){
             case foundation::InkEasing::kEaseIn:t*=t;break;

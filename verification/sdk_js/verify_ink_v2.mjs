@@ -68,9 +68,10 @@ try {
     await evaluate(`probe.select(${index})`);const y=40+index*70;
     await mouse('mousePressed',50,y);await delay(30);
     for(let k=1;k<=12;++k){await mouse('mouseMoved',50+k*30,y+Math.sin(k*.5)*14,true);await delay(10);}
-    await delay(100);await evaluate(`probe.down(${index})`);
+    await delay(100);
     const preview=await send('Page.captureScreenshot',{format:'png'});
     await fs.writeFile(path.resolve(process.argv[4]).replace(/\.json$/,`-preview-${index}.png`),Buffer.from(preview.data,'base64'));
+    await evaluate(`probe.down(${index})`);
     await mouse('mouseReleased',410,y+Math.sin(6)*14);await delay(150);
     Object.assign(observation.checks,(await evaluate(`probe.up(${index})`)).checks);
   }
@@ -78,20 +79,23 @@ try {
   await fs.writeFile(path.resolve(process.argv[4]).replace(/\.json$/,'-render.png'),Buffer.from(persist.bytes));
   Object.assign(observation.checks,(await evaluate('probe.lifecycle()')).checks);
   const done=await evaluate('probe.close()');Object.assign(observation.checks,done.checks);observation.errors=done.errors;
-  if(observation.brushRevision===3){
+  if(observation.brushRevision>=3){
     await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/example.html`});
     for(let attempt=0;!await evaluate(`document.querySelector('#tools')?.getAttribute('aria-busy')==='false'`);++attempt){
       if(attempt>300)throw Error('tuning Demo startup');await delay(50);
     }
     const controls=await evaluate(`Object.fromEntries(['size','thinning','streamline','smoothing','startTaper','endTaper','easing','pressure-model'].map(k=>[k,document.getElementById('ink-'+k)?.value]))`);
     observation.demoControls=controls;
-    observation.checks.demoVectorDefaults=controls.size==='16'&&controls.thinning==='0.99'&&controls.streamline==='0.13'&&controls.smoothing==='0.61'&&controls.endTaper==='16'&&controls.easing==='1'&&controls['pressure-model']==='2';
+    observation.checks.demoVectorDefaults=controls.size==='16'&&controls.thinning==='0.99'&&controls.streamline==='0.13'&&controls.smoothing==='0.61'&&controls.endTaper===(observation.brushRevision>=4?'0':'16')&&controls.easing==='1'&&controls['pressure-model']==='2';
     const demo=await send('Page.captureScreenshot',{format:'png'});
     await fs.writeFile(path.resolve(process.argv[4]).replace(/\.json$/,'-demo.png'),Buffer.from(demo.data,'base64'));
     const mounted=await evaluate(`(()=>{const r=document.getElementById('canvas').getBoundingClientRect();return {left:r.left,top:r.top,width:r.width,height:r.height};})()`);
     const y=mounted.top+Math.min(110,mounted.height/2);
     await mouse('mousePressed',100,y);for(let k=1;k<=16;++k){await mouse('mouseMoved',100+k*25,y+Math.sin(k*.3)*45,true);await delay(12);}
-    await mouse('mouseReleased',500,y+Math.sin(4.8)*45);await delay(250);
+    // Slow the final real motion before lifting: distance pressure should recover
+    // a small round end without a forced taper or a stationary-release dot.
+    for(let k=1;k<=8;++k){await mouse('mouseMoved',500+k*2,y+Math.sin(4.8)*45,true);await delay(12);}
+    await mouse('mouseReleased',516,y+Math.sin(4.8)*45);await delay(250);
     observation.checks.demoDrawCommits=await evaluate(`document.getElementById('status').textContent.startsWith('1 objects')`);
     const drawn=await send('Page.captureScreenshot',{format:'png'});
     await fs.writeFile(path.resolve(process.argv[4]).replace(/\.json$/,'-demo-stroke.png'),Buffer.from(drawn.data,'base64'));

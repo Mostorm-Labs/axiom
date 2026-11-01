@@ -4,6 +4,7 @@
 #include "include/core/SkImage.h"
 #include "include/core/SkPaint.h"
 #include "include/core/SkPicture.h"
+#include "include/core/SkPathBuilder.h"
 #include "include/core/SkSurface.h"
 #include "include/effects/SkRuntimeEffect.h"
 #include <algorithm>
@@ -37,6 +38,15 @@ const sk_sp<SkRuntimeEffect>& materialEffect(){
         return result.effect;
     }();return effect;
 }
+const sk_sp<SkRuntimeEffect>& vectorMaterialEffect(){
+    static const auto effect=[] {
+        auto result=SkRuntimeEffect::MakeForShader(SkString(R"sksl(
+            uniform shader coverage; uniform float4 paint;
+            half4 main(float2 p){half a=half(coverage.eval(p).r*paint.a);return half4(half3(paint.rgb)*a,a);}
+        )sksl"));
+        if(!result.effect)throw std::runtime_error(result.errorText.c_str());return result.effect;
+    }();return effect;
+}
 const sk_sp<SkRuntimeEffect>& materialV2Effect(){
     static const auto effect=[] {
         auto result=SkRuntimeEffect::MakeForShader(SkString(reinterpret_cast<const char*>(kInkMaterialV2Sksl),kInkMaterialV2SkslSize));
@@ -46,8 +56,28 @@ const sk_sp<SkRuntimeEffect>& materialV2Effect(){
 }
 }
 
+void drawCompactContourCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,const ink::CompactContour& contour){
+    SkPaint paint;paint.setAntiAlias(true);paint.setBlendMode(SkBlendMode::kLighten);
+    paint.setColor(SK_ColorWHITE);
+    // Each adjacent pair is one overlapping ribbon. The compiler carries the
+    // preceding patch across chunk boundaries, so every pair is rasterized
+    // exactly once regardless of input batching. A pending last patch must not
+    // be drawn separately: AA edges accumulate when drawn again with its pair.
+    for(std::size_t first=0;first+1<contour.patches.size();++first){
+        const auto end=first+2;
+        SkPathBuilder path;const auto& start=contour.patches[first];path.moveTo(start.leftStart.x,start.leftStart.y);
+        for(std::size_t i=first;i<end;++i){const auto& p=contour.patches[i];path.quadTo(p.leftControl.x,p.leftControl.y,p.leftEnd.x,p.leftEnd.y);}
+        const auto& last=contour.patches[end-1];path.lineTo(last.rightEnd.x,last.rightEnd.y);
+        for(std::size_t i=end;i-->first;){const auto& p=contour.patches[i];path.quadTo(p.rightControl.x,p.rightControl.y,p.rightStart.x,p.rightStart.y);}
+        path.close();canvas.drawPath(path.detach(),paint);
+    }
+    for(const auto& cap:contour.caps){canvas.save();canvas.translate(cap.x,cap.y);
+        if(config.family==foundation::InkFamily::kMarker){canvas.rotate(config.markerAngle*57.29577951308232);canvas.scale(1,config.markerFlatness);}
+        canvas.drawCircle(0,0,cap.radius,paint);canvas.restore();}
+}
 void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
                                   std::span<const foundation::InkKnot> knots,double startDistance,double totalDistance){
+    if(config.algorithmVersion==4){drawCompactContourCoverageToSkCanvas(canvas,config,ink::compileCompactContour(config,knots));return;}
     if(config.algorithmVersion!=3){drawCompactCoverageRangeToSkCanvas(canvas,config,knots,0,knots.size());return;}
     if(knots.empty())return;
     const auto points=ink::compactCoverage(config,knots,startDistance,totalDistance);
@@ -82,6 +112,17 @@ void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushCo
 void drawCompactCoverageRangeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,std::size_t begin,std::size_t end,double beginDistance,double totalDistance){
     if(knots.empty()||begin>=knots.size()||end<=begin)return;
+    if(config.algorithmVersion==4){
+        // Compatibility entry point. Stateful navigation uses a retained
+        // compiler so prefix traversal is not repeated between render slices.
+        ink::CompactContourCompiler compiler(config);ink::CompactContour discarded,emitted;
+        if(totalDistance<0)totalDistance=ink::compactLength(knots);
+        if(begin)compiler.append(knots.first(begin),totalDistance,discarded);
+        const auto last=std::min(end,knots.size());
+        compiler.append(knots.subspan(begin,last-begin),totalDistance,emitted);
+        if(last==knots.size())compiler.finish(totalDistance,emitted);
+        drawCompactContourCoverageToSkCanvas(canvas,config,emitted);return;
+    }
     if(config.algorithmVersion==3){
         const auto first=begin?begin-1:0;const auto last=std::min(end,knots.size());
         if(beginDistance<0)beginDistance=ink::compactLength(knots.first(first+1));
@@ -115,9 +156,10 @@ void compositeCompactCoverageToSkCanvas(SkCanvas& canvas,const SkImage& image,
     SkMatrix local;
     if(!canvas.getTotalMatrix().invert(&local))return;
     local.preTranslate(float(deviceX),float(deviceY));
-    SkRuntimeShaderBuilder builder(config.materialVersion==2?materialV2Effect():materialEffect());
+    SkRuntimeShaderBuilder builder(config.algorithmVersion==4?vectorMaterialEffect():config.materialVersion==2?materialV2Effect():materialEffect());
     builder.child("coverage")=image.makeShader(SkSamplingOptions(SkFilterMode::kLinear),local);
     builder.uniform("paint")=SkV4{float(config.color[0]),float(config.color[1]),float(config.color[2]),float(config.color[3]*config.opacity)};
+    if(config.algorithmVersion==4){SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);return;}
     builder.uniform("family")=float(config.family);
     builder.uniform("density")=float(config.density);builder.uniform("textureScale")=float(config.textureScale);
     builder.uniform("deposition")=float(config.deposition);builder.uniform("wetEdge")=float(config.wetEdge);

@@ -1313,7 +1313,7 @@ class Session::Impl {
                 if(v.contains("laserFadeMs"))c.laserFadeMs=unsignedValue(v.at("laserFadeMs"),10000);
                 c.laserTailLength=v.value("laserTailLength",c.laserTailLength);
                 if(tune&&(c.family==foundation::InkFamily::kRound||c.family==foundation::InkFamily::kMarker)){
-                    c.version=2;c.algorithmVersion=3;c.signalVersion=2;
+                    c.version=2;if(c.algorithmVersion<3){c.algorithmVersion=4;c.signalVersion=3;}
                     c.thinning=v.value("thinning",c.thinning);c.streamline=v.value("streamline",c.streamline);c.smoothing=v.value("smoothing",c.smoothing);
                     if(v.contains("easing"))c.easing=static_cast<foundation::InkEasing>(unsignedValue(v.at("easing"),4));
                     if(v.contains("pressureModel"))c.pressureModel=static_cast<foundation::InkPressureModel>(unsignedValue(v.at("pressureModel"),2));

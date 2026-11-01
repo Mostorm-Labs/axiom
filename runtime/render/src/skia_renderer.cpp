@@ -491,7 +491,8 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
             auto* stable=entry.surface->getCanvas();stable->save();
             stable->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);
             stable->translate(geometry.viewport.translationX,geometry.viewport.translationY);stable->scale(geometry.viewport.scale,geometry.viewport.scale);
-            for(auto i=added.rbegin();i!=added.rend();++i){compactWork_.generatedKnots+=(*i)->knots.size();internal::drawCompactCoverageToSkCanvas(*stable,config,(*i)->knots,(*i)->startDistance,contour.compactChunks->totalDistance);}
+            for(auto i=added.rbegin();i!=added.rend();++i){compactWork_.generatedKnots+=(*i)->knots.size();if(config.algorithmVersion==4)internal::drawCompactContourCoverageToSkCanvas(*stable,config,(*i)->contour);
+                else internal::drawCompactCoverageToSkCanvas(*stable,config,(*i)->knots,(*i)->startDistance,contour.compactChunks->totalDistance);}
             stable->restore();entry.prefix=prefix;entry.config=config;
             auto combined=SkSurfaces::Raster(info);if(!combined)return;
             auto* temporary=combined->getCanvas();temporary->clear(SK_ColorBLACK);
@@ -499,7 +500,8 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
             temporary->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);
             temporary->translate(geometry.viewport.translationX,geometry.viewport.translationY);temporary->scale(geometry.viewport.scale,geometry.viewport.scale);
             compactWork_.generatedKnots+=contour.compactChunks->knots.size();
-            internal::drawCompactCoverageToSkCanvas(*temporary,config,contour.compactChunks->knots,contour.compactChunks->startDistance,contour.compactChunks->totalDistance);
+            if(config.algorithmVersion==4)internal::drawCompactContourCoverageToSkCanvas(*temporary,config,contour.compactChunks->contour);
+            else internal::drawCompactCoverageToSkCanvas(*temporary,config,contour.compactChunks->knots,contour.compactChunks->startDistance,contour.compactChunks->totalDistance);
             internal::compositeCompactCoverageToSkCanvas(*canvas,*combined->makeImageSnapshot(),config,contour.compactSeed);
             compactWork_.retainedBytes=bytes*cache.entries.size();compactWork_.temporaryBytes=bytes;
             return;

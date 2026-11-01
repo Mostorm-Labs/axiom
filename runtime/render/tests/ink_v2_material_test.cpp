@@ -2,9 +2,12 @@
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/ink/brush_package_catalog.hpp"
 #include "canvas/ink/brush_session.hpp"
+#include "canvas/ink/compact_geometry.hpp"
 #include "canvas/scene/bounds_system.hpp"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkSurface.h"
+#include "include/core/SkPathBuilder.h"
+#include "include/core/SkPaint.h"
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -30,7 +33,75 @@ int main(int argc,char** argv){
     const std::string mode=argc>1?argv[1]:"marker";
     foundation::InkBrushConfig c;c.size=32;c.roundMode=foundation::InkRoundMode::kRegular;c.color={.1,.3,.8,1};
     const std::vector<foundation::InkKnot> knots{{32,64,32768},{224,64,32768}};
-    if(mode=="tuning"){
+    if(mode=="quality"){
+        c=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        c.thinning=0;
+        std::vector<foundation::InkKnot> jitter;
+        for(unsigned i=0;i<100;++i)jitter.push_back({20+i*2.1,64+24*std::sin(i*.075)+1.5*std::sin(i*2.3),32768});
+        const auto fitted=ink::compileCompactContour(c,jitter);
+        require(fitted.patches.size()>3,"quadratic outline missing");
+        for(std::size_t i=1;i<fitted.patches.size();++i){const auto& a=fitted.patches[i-1];const auto& b=fitted.patches[i];
+            for(const auto sides:{std::array{a.leftControl,a.leftEnd,b.leftStart,b.leftControl},std::array{a.rightControl,a.rightEnd,b.rightStart,b.rightControl}}){
+                const auto u=ink::ContourPoint{sides[1].x-sides[0].x,sides[1].y-sides[0].y};
+                const auto v=ink::ContourPoint{sides[3].x-sides[2].x,sides[3].y-sides[2].y};
+                require(sides[1]==sides[2]&&std::abs(u.x*v.y-u.y*v.x)<1e-8,"outline has tangent discontinuity");}}
+        const auto image=draw(c,jitter);double roughness=0;std::vector<double> edge;
+        for(unsigned x=35;x<210;++x){unsigned first=0;for(unsigned y=15;y<110;++y)if(alpha(image,x,y)>=128){first=y;break;}
+            const auto a=first?alpha(image,x,first-1):0,b=alpha(image,x,first);edge.push_back(first-1+(127.5-a)/std::max(1.,double(b)-a));}
+        for(std::size_t i=1;i+1<edge.size();++i)roughness+=std::abs(edge[i+1]-2*edge[i]+edge[i-1]);
+        std::cout<<"quality edge roughness="<<roughness<<std::endl;
+        // Compare to the actual independent pinned contour at this exact scale;
+        // pixel edge quantization itself contributes to second differences.
+        std::vector<ink::reference::VectorStrokeInput> raw;
+        for(auto k:jitter)raw.push_back({k.x,k.y,.5});
+        ink::reference::StrokeOptions opts;opts.size=16;opts.thinning=0;opts.streamline=0;opts.smoothing=.61;opts.simulate_pressure=false;opts.last=true;
+        const auto contour=ink::reference::getStrokeOutlinePoints(ink::reference::getStrokePoints(raw,opts),opts);
+        auto oracle=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(width,height));oracle->getCanvas()->clear(SK_ColorTRANSPARENT);
+        SkPathBuilder reference;reference.moveTo(contour[0].x,contour[0].y);
+        ink::reference::StrokeOutlinePoint control=contour[1],last{(contour[1].x+contour[2].x)*.5,(contour[1].y+contour[2].y)*.5};
+        reference.quadTo(control.x,control.y,last.x,last.y);
+        for(std::size_t i=2;i+1<contour.size();++i){control={2*last.x-control.x,2*last.y-control.y};last={(contour[i].x+contour[i+1].x)*.5,(contour[i].y+contour[i+1].y)*.5};reference.quadTo(control.x,control.y,last.x,last.y);}
+        reference.close();SkPaint paint;paint.setAntiAlias(true);paint.setColor(SK_ColorBLACK);oracle->getCanvas()->drawPath(reference.detach(),paint);
+        std::vector<std::uint8_t> oraclePixels(width*height*4);require(oracle->readPixels(oracle->imageInfo(),oraclePixels.data(),width*4,0,0),"oracle readback");
+        std::vector<double> oracleEdge;
+        for(unsigned x=35;x<210;++x){unsigned first=0;for(unsigned y=15;y<110;++y)if(alpha(oraclePixels,x,y)>=128){first=y;break;}
+            const auto a=first?alpha(oraclePixels,x,first-1):0,b=alpha(oraclePixels,x,first);oracleEdge.push_back(first-1+(127.5-a)/std::max(1.,double(b)-a));}
+        double oracleRoughness=0;for(std::size_t i=1;i+1<oracleEdge.size();++i)oracleRoughness+=std::abs(oracleEdge[i+1]-2*oracleEdge[i]+oracleEdge[i-1]);
+        std::cout<<"oracle roughness="<<oracleRoughness<<std::endl;
+        require(roughness<oracleRoughness*1.15,"continuous outline rougher than reference");
+        for(bool tapered:{false,true})for(auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker}){
+            auto package=ink::BrushPackageCatalog{}.loadDefault(family==foundation::InkFamily::kRound?"round-handdrawn":"marker-compact-v1",4).package;
+            c=*package.compactConfig;c.startTaper=tapered?8:0;c.endTaper=tapered?24:0;package.compactConfig=c;
+            ink::BrushSession session(1,ink::resolveBrushState(package,42));require(session.begin(),"quality begin");
+            render::TransparentOverlaySkiaSurfaceProvider provider;require(provider.resize(width,height).code==render::BackendSubmissionCode::kAccepted,"quality resize");
+            render::SkiaRenderer renderer;render::PreviewSurfaceController preview(renderer,provider);require(preview.begin(1,1,1,provider.generation()),"quality preview begin");
+            render::PreviewStyleOverride style;style.preferCapturedPaint=true;ink::BrushPreviewDelta delta;
+            for(unsigned i=0;i<180;++i){ink::BrushSample sample{10+i*1.25,64+std::sin(i*.07)*16,0,false,i+1,std::uint64_t(i)*8'000'000,false,i==179};
+                require(session.append({&sample,1},{},delta)==ink::BrushSessionError::kNone&&preview.update(delta)&&preview.renderIfDirty(style),"quality preview");}
+            ink::BrushCommitIntent intent;require(session.seal(intent)==ink::BrushSessionError::kNone,"quality seal");
+            std::vector<std::uint8_t> pixels(width*height*4);require(provider.readbackRgba(pixels).code==render::BackendSubmissionCode::kAccepted,"quality pixels");
+            const auto expected=draw(c,intent.knots);unsigned different=0,maxDifference=0;for(std::size_t i=3;i<pixels.size();i+=4){auto d=unsigned(std::abs(int(pixels[i])-int(expected[i])));different+=d>2;maxDifference=std::max(maxDifference,d);}
+            std::cout<<"quality preview diff="<<different<<" max="<<maxDifference<<std::endl;
+            require(different==0,"quality preview/canonical geometry mismatch");
+        }
+
+        c=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;c.thinning=0;c.startTaper=8;c.endTaper=24;
+        const auto sparse=draw(c,{{20,64,32768},{220,64,32768}});
+        require(alpha(sparse,100,67)>128,"sparse tapered path loses full-width middle");
+        c=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
+        std::vector<foundation::InkKnot> crossing{{20,30,20000},{80,95,36000},{150,30,28000},{80,95,42000},{220,50,22000},{40,55,32000}};
+        auto full=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(width,height));full->getCanvas()->clear(SK_ColorBLACK);
+        auto ranged=SkSurfaces::Raster(full->imageInfo());ranged->getCanvas()->clear(SK_ColorBLACK);
+        render::internal::drawCompactCoverageToSkCanvas(*full->getCanvas(),c,crossing);
+        ink::CompactContourCompiler compiler(c);const auto total=ink::compactLength(crossing);
+        for(std::size_t begin=0;begin<crossing.size();begin+=2){ink::CompactContour emitted;const auto end=std::min(begin+2,crossing.size());
+            compiler.append(std::span(crossing).subspan(begin,end-begin),total,emitted);
+            if(end==crossing.size())compiler.finish(total,emitted);
+            render::internal::drawCompactContourCoverageToSkCanvas(*ranged->getCanvas(),c,emitted);}
+        std::vector<std::uint8_t> a(width*height*4),b(a.size());
+        require(full->readPixels(full->imageInfo(),a.data(),width*4,0,0)&&ranged->readPixels(ranged->imageInfo(),b.data(),width*4,0,0),"range readback");
+        for(std::size_t i=0;i<a.size();++i)require(std::abs(int(a[i])-int(b[i]))<=2,"stateful contour range differs at turn");
+    }else if(mode=="tuning"){
         c=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",3).package.compactConfig;
         c.size=24;c.thinning=0;c.startTaper=0;c.endTaper=32;
         const std::vector<foundation::InkKnot> line{{32,64,32768},{224,64,32768}};

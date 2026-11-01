@@ -29,6 +29,7 @@ void drawCompactStrokeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
                                 CompactRasterWork* work=nullptr, const SkPicture* coverage=nullptr, const CompactDeviceGrid* grid=nullptr);
 // Disposable scalar distance coverage. The material is evaluated once after
 // stable prefix and replaceable tail have been combined with max coverage.
+void drawCompactContourCoverageToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,const ink::CompactContour&);
 void drawCompactCoverageToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
                                   std::span<const foundation::InkKnot>,double startDistance=0,double totalDistance=-1);
 // Same coverage equation, with original predecessor at a resumed offset.

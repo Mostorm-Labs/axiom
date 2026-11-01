@@ -73,6 +73,7 @@ int main(){
     const auto tunedOperation=semantic::SemanticCodec::decodeProtobufOperation(lastOperation);
     require(tunedOperation.ok(),"tuned operation encoding");
     const auto& stroke=std::get<semantic::CompactStrokeContent>(std::get<semantic::AddStrokeOp>(tunedOperation.operation.payload).object.content).stroke;
+    require(stroke.config.algorithmVersion==4&&stroke.config.signalVersion==3,"public tuning promotion missed quality evaluator");
     require(stroke.knots.back().pressure<=stroke.knots.front().pressure,"stationary release inflated pressure");
     const auto before=call({{"command","state"}}).at("value").at("generation");
     const auto rejected=sdk::Json::parse(session.call(R"({"command":"control","kind":"inkBrush","value":{"family":7}})"));
