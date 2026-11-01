@@ -70,5 +70,14 @@ int main(){
  for(auto sample:trace){auto prediction=sample;prediction.sequence+=1000;prediction.x+=40;prediction.timestampNs+=30'000'000;
    need(waxSingle.append({&sample,1},{})&&waxPredicted.append({&sample,1},{&prediction,1}),"wax append");}
  need(waxWhole.knots()==waxSingle.knots()&&waxWhole.knots()==waxPredicted.knots(),"wax prediction or batching changes commit");
+ for(const auto profile:{"chalk-compact-v1","watercolor-lite-v1"}){
+   const auto package=ink::BrushPackageCatalog{}.loadDefault(profile,3);need(bool(package),"drywet preset");
+   need(ink::brushPackageCanonicalDigest(package.package)!=ink::brushPackageCanonicalDigest(ink::BrushPackageCatalog{}.loadDefault(profile,2).package),"drywet digest aliases old revision");
+   auto config=base;config.algorithmVersion=6;config.geometryConfig=package.package.compactConfig;
+   ink::CompactBrushSession whole(config),single(config),predicted(config);need(whole.append(trace,{}),"drywet batch");
+   for(auto sample:trace){auto prediction=sample;prediction.sequence+=1000;prediction.x+=40;prediction.timestampNs+=30'000'000;
+     need(single.append({&sample,1},{})&&predicted.append({&sample,1},{&prediction,1}),"drywet append");}
+   need(whole.knots()==single.knots()&&whole.knots()==predicted.knots(),"drywet prediction or batching changes commit");
+ }
  std::cout<<"VectorQuality: PF endpoints, batches, prediction, release, device/timed pressure, tap, bounded dense input passed\n";
 }

@@ -37,11 +37,13 @@ int main(){
     for(unsigned n:{2048U,8192U}){
         auto old=stroke("chalk-grain-v1",4,n);auto oldBytes=semantic::SemanticCodec::encodeProtobufOperation(old);
         require(oldBytes.ok(),"legacy chalk baseline encoding");const auto oldSnapshot=snapshot(&std::get<semantic::AddStrokeOp>(old.payload).object).size()-envelope;
-        for(const char* profile:{"marker-compact-v1","chalk-compact-v1","crayon-wax-v1","watercolor-lite-v1"}){
-            auto op=stroke(profile,1,n);auto encoded=semantic::SemanticCodec::encodeProtobufOperation(op);require(encoded.ok(),"compact op encoding");
+        for(const char* profile:{"marker-compact-v1","chalk-compact-v1","crayon-wax-v1","watercolor-lite-v1"})for(unsigned revision:{1U,3U}){
+            if(revision==3&&(std::string_view(profile)=="marker-compact-v1"||std::string_view(profile)=="crayon-wax-v1"))continue;
+            auto op=stroke(profile,revision,n);auto encoded=semantic::SemanticCodec::encodeProtobufOperation(op);require(encoded.ok(),"compact op encoding");
             const auto& object=std::get<semantic::AddStrokeOp>(op.payload).object;
             const auto& compact=std::get<semantic::CompactStrokeContent>(object.content).stroke;
             const auto bytes=snapshot(&object).size()-envelope;
+            std::cerr<<"storage profile="<<profile<<" revision="<<revision<<" knots="<<compact.knots.size()<<" bytes="<<encoded.bytes.size()<<std::endl;
             require(encoded.bytes.size()<=16384+18*compact.knots.size(),"compact byte budget");
             require(encoded.bytes.size()<=oldBytes.bytes.size()*.3&&bytes<=oldSnapshot*.3,"compact did not reduce actual legacy encoding");
             // Same evaluator/config/seed, with the exact retained linear
@@ -59,7 +61,7 @@ int main(){
             auto expandedBytes=semantic::SemanticCodec::encodeProtobufOperation(diagnosticOp);require(expandedBytes.ok(),"diagnostic expanded encoding");
             const auto expandedSnapshot=snapshot(&diagnostic).size()-envelope;
             require(encoded.bytes.size()<=expandedBytes.bytes.size()*.4&&bytes<=expandedSnapshot*.4,"compact did not reduce diagnostic encoding");
-            std::cout<<"{\"profile\":\""<<profile<<"\",\"samples\":"<<n<<",\"knots\":"<<compact.knots.size()<<",\"operation_bytes\":"<<encoded.bytes.size()<<",\"snapshot_delta_bytes\":"<<bytes<<",\"legacy_operation_bytes\":"<<oldBytes.bytes.size()<<",\"legacy_snapshot_delta_bytes\":"<<oldSnapshot<<",\"diagnostic_operation_bytes\":"<<expandedBytes.bytes.size()<<",\"diagnostic_snapshot_delta_bytes\":"<<expandedSnapshot<<",\"resource_delta_bytes\":0,\"persisted_dabs\":0,\"persisted_raw\":0,\"persisted_outline\":0}\n";
+            std::cout<<"{\"profile\":\""<<profile<<"\",\"revision\":"<<revision<<",\"samples\":"<<n<<",\"knots\":"<<compact.knots.size()<<",\"operation_bytes\":"<<encoded.bytes.size()<<",\"snapshot_delta_bytes\":"<<bytes<<",\"legacy_operation_bytes\":"<<oldBytes.bytes.size()<<",\"legacy_snapshot_delta_bytes\":"<<oldSnapshot<<",\"diagnostic_operation_bytes\":"<<expandedBytes.bytes.size()<<",\"diagnostic_snapshot_delta_bytes\":"<<expandedSnapshot<<",\"resource_delta_bytes\":0,\"persisted_dabs\":0,\"persisted_raw\":0,\"persisted_outline\":0}\n";
         }
     }
 }

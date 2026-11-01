@@ -165,3 +165,9 @@ Crayon `crayon-wax-v1` revision 3 uses existing brush control JSON fields with
 pressure-responsive pigment and a new immutable material binding. No DLL export
 or transport layout changes. Web/native host evidence does not qualify Windows
 DLL/device rendering.
+
+Chalk/watercolor package revision 3 also reuse the existing brush control JSON
+transport with pressure/contact, thinning, streamline, easing, pressure model,
+taper and caps. Smoothing is fixed at .5. Resource/evaluator binding is selected
+by the preset, not caller-supplied engine IDs. Historical revisions remain valid.
+No DLL ABI changes; native host/Web results do not qualify Windows rendering.

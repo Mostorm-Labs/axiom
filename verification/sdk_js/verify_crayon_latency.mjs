@@ -12,7 +12,9 @@ const root = await fs.mkdtemp(path.join(os.tmpdir(), 'axiom-crayon-latency-'));
 const files = path.join(root, 'consumer');
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 let browser, server, socket, failure;
-const observation = {checks: {}, errors: [], exceptions: [], input: 'Chrome CDP mouse; public SDK Demo; per point waits two RAFs; timing includes CDP and scheduling'};
+const brush=process.env.AXIOM_INK_TEST_BRUSH||'crayon';
+if(!['crayon','chalk','watercolor'].includes(brush))throw Error('invalid brush workload');
+const observation = {brush,checks: {}, errors: [], exceptions: [], input: 'Chrome CDP mouse; public SDK Demo; per point waits two RAFs; timing includes CDP and scheduling'};
 try {
   await fs.mkdir(files);
   const hashes = {};
@@ -67,7 +69,7 @@ try {
   for(let n=0;!await evaluate('Boolean(window.probe)');++n){if(n>300)throw Error('startup');await delay(50);}
   await evaluate('probe.ready');await evaluate(`probe.revision(${observation.brushRevision})`);observation.buildInfo=await evaluate('probe.info()');
   const mouse=(type,x,y,held=false)=>send('Input.dispatchMouseEvent',{type,x,y,button:'left',buttons:type==='mousePressed'||held?1:0,clickCount:1});
-  await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/example.html?brush=crayon`});
+  await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/example.html?brush=${brush}`});
   for(let n=0;!await evaluate(`document.querySelector('#tools')?.getAttribute('aria-busy')==='false'`);++n){if(n>300)throw Error('demo startup');await delay(50);}
   await evaluate(`(()=>{const c=document.getElementById('ink-size');c.value='32';c.dispatchEvent(new Event('change'));})()`);await delay(150);
   const mounted=await evaluate(`(()=>{const r=document.getElementById('canvas').getBoundingClientRect();return {left:r.left,top:r.top,width:r.width,height:r.height};})()`);

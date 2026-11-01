@@ -23,6 +23,7 @@ void CompactBrushSession::retainQuality(foundation::InkKnot k){
     if(!cut)return;
     auto chunk=std::make_shared<BrushPreviewDelta::Chunk>();chunk->previous=chunks_;chunk->startDistance=prefixLength_;
     chunk->knots.assign(pending_.begin(),pending_.begin()+cut+1);
+    if(config_.algorithmVersion==6)chunk->knots=simplifyInkKnots(chunk->knots,config_.geometryEpsilon,&metrics_.simplificationVisits);
     prefixLength_+=arc(chunk->knots);chunk->totalDistance=prefixLength_;
     if(config_.algorithmVersion==4)qualityContour_->append(chunk->knots,prefixLength_+remaining,chunk->contour);
     metrics_.generatedKnots+=chunk->knots.size();chunks_=std::move(chunk);
@@ -50,6 +51,7 @@ void CompactBrushSession::publishQuality(bool terminal){
         if(tail->knots.empty()||tail->knots.back()!=k)tail->knots.push_back(k);
     }
     if(tail->knots.empty())return;
+    if(config_.algorithmVersion==6)tail->knots=simplifyInkKnots(tail->knots,config_.geometryEpsilon,&metrics_.simplificationVisits);
     tail->totalDistance=prefixLength_+arc(tail->knots);
     if(config_.algorithmVersion==4){compiler.append(tail->knots,tail->totalDistance,tail->contour);compiler.finish(tail->totalDistance,tail->contour);}
     metrics_.copiedKnots+=tail->knots.size();metrics_.generatedKnots+=tail->knots.size();

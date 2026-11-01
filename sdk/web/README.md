@@ -372,8 +372,8 @@ to the active brush and exposes the next stroke's color.
 4 smoothstep), `pressureModel` (1 timed speed, 2 distance proxy),
 `startTaper`/`endTaper` [0,4096] world units, and `startCap`/`endCap`.
 Round and marker revisions 3/4 select config v2; changing these controls on an old
-round/marker preset explicitly promotes subsequent sessions. Chalk, watercolor and laser reject
-non-default vector tuning; crayon revision 3 admits its documented subset. Config version is a compatibility discriminator, not
+round/marker preset explicitly promotes subsequent sessions. Legacy chalk/watercolor and laser reject non-default vector tuning;
+crayon/chalk/watercolor revision 3 admit their documented subset. Config version is a compatibility discriminator, not
 a consumer-chosen engine/resource binding. Unsupported versions reject.
 
 Controls freeze at session begin and affect the next session. Existing owner-thread
@@ -403,3 +403,17 @@ wax coverage and `textureScale` paper scale. Existing width/opacity, thinning,
 streamline, easing, pressure model, taper and cap fields use the same owned control
 transport and session-begin capture. There is no per-dab or image API/persistence.
 Preview, canonical, image export and replay share the same Skia helper.
+
+
+### Chalk and watercolor revision 3
+
+`selectBrush("chalk-compact-v1", 3)` / `selectBrush("watercolor-lite-v1", 3)`
+reuse config v2 controls and simulated-pressure defaults. Pressure changes width
+and pigment concentration/contact. Chalk exposes density and textureScale;
+watercolor exposes wetEdge and textureScale. Both support thinning, streamline,
+easing, pressureModel, taper and caps. Smoothing remains fixed at .5 for these
+sweep materials; outline smoothing is a round/marker capability. Revision 1/2
+records replay unchanged; the new immutable evaluator/resource requires a matching
+reader. No expanded dabs or image masks are persisted. Same-stroke max coverage
+applies opacity once; separate strokes use SrcOver. Watercolor is a procedural
+wash without diffusion, canvas color pickup or fluid simulation.

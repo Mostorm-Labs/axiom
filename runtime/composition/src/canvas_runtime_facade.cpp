@@ -533,7 +533,7 @@ std::vector<CanvasTargetKey> CanvasRuntimeFacade::mountedCanvasTargets() const {
   return target().runtimeEpoch==0||(ownerThread()&&runtime_.closed())?std::vector<CanvasTargetKey>{}:std::vector<CanvasTargetKey>{target()};
 }
 std::vector<BrushPresetRef> CanvasRuntimeFacade::brushPresets() const {
-  return {{"round-regular",1U},{"round-regular",2U},{"round-regular",3U},{"round-regular",4U},{"round-handdrawn",1U},{"round-handdrawn",2U},{"round-handdrawn",3U},{"round-handdrawn",4U},{"laser-transient",1U},{"marker-compact-v1",1U},{"marker-compact-v1",2U},{"marker-compact-v1",3U},{"marker-compact-v1",4U},{"chalk-compact-v1",1U},{"chalk-compact-v1",2U},{"crayon-wax-v1",1U},{"crayon-wax-v1",2U},{"crayon-wax-v1",3U},{"watercolor-lite-v1",1U},{"watercolor-lite-v1",2U},{"vector-solid-v1",1U},{"marker-flat-v1",1U},{"chalk-grain-v1",4U},{"membrane-v1",1U}};
+  return {{"round-regular",1U},{"round-regular",2U},{"round-regular",3U},{"round-regular",4U},{"round-handdrawn",1U},{"round-handdrawn",2U},{"round-handdrawn",3U},{"round-handdrawn",4U},{"laser-transient",1U},{"marker-compact-v1",1U},{"marker-compact-v1",2U},{"marker-compact-v1",3U},{"marker-compact-v1",4U},{"chalk-compact-v1",1U},{"chalk-compact-v1",2U},{"chalk-compact-v1",3U},{"crayon-wax-v1",1U},{"crayon-wax-v1",2U},{"crayon-wax-v1",3U},{"watercolor-lite-v1",1U},{"watercolor-lite-v1",2U},{"watercolor-lite-v1",3U},{"vector-solid-v1",1U},{"marker-flat-v1",1U},{"chalk-grain-v1",4U},{"membrane-v1",1U}};
 }
 std::optional<CanvasControlReceipt> CanvasRuntimeFacade::canvasControlReceipt(CanvasControlReceiptKey key) const noexcept {
   auto receipt=service_->receipt(key);

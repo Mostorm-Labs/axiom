@@ -1312,7 +1312,7 @@ class Session::Impl {
                 c.deposition=v.value("deposition",c.deposition);c.wetEdge=v.value("wetEdge",c.wetEdge);
                 if(v.contains("laserFadeMs"))c.laserFadeMs=unsignedValue(v.at("laserFadeMs"),10000);
                 c.laserTailLength=v.value("laserTailLength",c.laserTailLength);
-                if(tune&&(c.family==foundation::InkFamily::kRound||c.family==foundation::InkFamily::kMarker||c.algorithmVersion==5)){
+                if(tune&&(c.family==foundation::InkFamily::kRound||c.family==foundation::InkFamily::kMarker||c.algorithmVersion==5||c.algorithmVersion==6)){
                     c.version=2;if(c.algorithmVersion<3){c.algorithmVersion=4;c.signalVersion=3;}
                     c.thinning=v.value("thinning",c.thinning);c.streamline=v.value("streamline",c.streamline);c.smoothing=v.value("smoothing",c.smoothing);
                     if(v.contains("easing"))c.easing=static_cast<foundation::InkEasing>(unsignedValue(v.at("easing"),4));
@@ -1320,8 +1320,8 @@ class Session::Impl {
                     c.startTaper=v.value("startTaper",c.startTaper);c.endTaper=v.value("endTaper",c.endTaper);
                     c.startCap=v.value("startCap",c.startCap);c.endCap=v.value("endCap",c.endCap);
                 }
-                if(tune&&c.family!=foundation::InkFamily::kRound&&c.family!=foundation::InkFamily::kMarker&&c.algorithmVersion!=5)
-                    throw std::invalid_argument("vector tuning requires round or marker");
+                if(tune&&c.family!=foundation::InkFamily::kRound&&c.family!=foundation::InkFamily::kMarker&&c.algorithmVersion!=5&&c.algorithmVersion!=6)
+                    throw std::invalid_argument("tuning unsupported for this brush revision");
                 if(!foundation::validInkBrushConfig(c))throw std::invalid_argument("invalid brush config");
             } else if (kind == "ink") {
                 p.kind = K::kInkOptions;

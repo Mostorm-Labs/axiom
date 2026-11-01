@@ -13,6 +13,8 @@ inline constexpr std::string_view kInkMaterialV2ResourceId="ink-compact-material
 inline constexpr std::string_view kInkMaterialV2ResourceSha256="b0e6138c822bd95da1fdf6b6f87d4b3d3e55f83d7dbbbb2475a993b6e28db104";
 inline constexpr std::string_view kInkCrayonV3ResourceId="ink-crayon-material-v3";
 inline constexpr std::string_view kInkCrayonV3ResourceSha256="dd0b39a4689fa850609a71f3f8453ca318acd1850cc062ecda9bd0397a5db2e9";
+inline constexpr std::string_view kInkDryWetV3ResourceId="ink-chalk-watercolor-v3";
+inline constexpr std::string_view kInkDryWetV3ResourceSha256="ad598308c466463170e0841ef6ecb0a144097763057d31cfd0fde1076a40d3e1";
 enum class InkFamily : std::uint32_t { kRound=1, kMarker=2, kChalk=3, kCrayon=4, kWatercolor=5, kLaser=6 };
 enum class InkPressureSource : std::uint32_t { kSimulated=1, kDevice=2 };
 enum class InkEasing : std::uint32_t { kLinear=1, kEaseIn=2, kEaseOut=3, kSmoothstep=4 };
@@ -49,17 +51,20 @@ inline bool validInkBrushConfig(const InkBrushConfig& c, bool persistent=false) 
     const bool crayon=c.family==InkFamily::kCrayon&&c.algorithmVersion==5&&c.signalVersion==3&&c.smoothing==.5&&
         c.materialVersion==3&&c.materialSamplingVersion==1&&c.materialResourceId==kInkCrayonV3ResourceId&&
         c.materialResourceSha256==kInkCrayonV3ResourceSha256;
+    const bool drywet=(c.family==InkFamily::kChalk||c.family==InkFamily::kWatercolor)&&c.algorithmVersion==6&&
+        c.signalVersion==3&&c.smoothing==.5&&c.materialVersion==4&&c.materialSamplingVersion==1&&
+        c.materialResourceId==kInkDryWetV3ResourceId&&c.materialResourceSha256==kInkDryWetV3ResourceSha256;
     const bool legacy=c.version==1 && (c.algorithmVersion==1||c.algorithmVersion==2) && c.signalVersion==1 &&
         c.thinning==.5 && c.streamline==.5 && c.smoothing==.5 && c.easing==InkEasing::kLinear &&
         c.pressureModel==InkPressureModel::kTimedSpeed && c.startTaper==0 && c.endTaper==0 && c.startCap && c.endCap;
-    const bool tuned=c.version==2 && ((c.algorithmVersion==3 && c.signalVersion==2)||(c.algorithmVersion==4 && c.signalVersion==3)||crayon) &&
-        (c.family==InkFamily::kRound||c.family==InkFamily::kMarker||crayon) &&
+    const bool tuned=c.version==2 && ((c.algorithmVersion==3 && c.signalVersion==2)||(c.algorithmVersion==4 && c.signalVersion==3)||crayon||drywet) &&
+        (c.family==InkFamily::kRound||c.family==InkFamily::kMarker||crayon||drywet) &&
         std::isfinite(c.thinning)&&c.thinning>=-1&&c.thinning<=1 && unit(c.streamline)&&unit(c.smoothing) &&
         static_cast<unsigned>(c.easing)>=1&&static_cast<unsigned>(c.easing)<=4 &&
         (c.pressureModel==InkPressureModel::kTimedSpeed||c.pressureModel==InkPressureModel::kDistance) &&
         std::isfinite(c.startTaper)&&c.startTaper>=0&&c.startTaper<=4096 &&
         std::isfinite(c.endTaper)&&c.endTaper>=0&&c.endTaper<=4096;
-    return (legacy||tuned) && (material||materialV2||crayon) &&
+    return (legacy||tuned) && (material||materialV2||crayon||drywet) &&
         family>=1 && family<=(persistent?5U:6U) &&
         (c.roundMode==InkRoundMode::kRegular||c.roundMode==InkRoundMode::kHanddrawn) &&
         (c.pressureSource==InkPressureSource::kSimulated||c.pressureSource==InkPressureSource::kDevice) &&

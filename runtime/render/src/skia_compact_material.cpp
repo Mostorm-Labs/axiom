@@ -18,6 +18,8 @@
 #include "ink_material_v2_sksl.hpp"
 #include "crayon_coverage_v3_sksl.hpp"
 #include "crayon_material_v3_sksl.hpp"
+#include "drywet_coverage_v3_sksl.hpp"
+#include "drywet_material_v3_sksl.hpp"
 
 namespace canvas::render::internal {
 namespace {
@@ -63,14 +65,27 @@ const sk_sp<SkRuntimeEffect>& crayonMaterialEffect(){
         if(!result.effect)throw std::runtime_error(result.errorText.c_str());return result.effect;
     }();return effect;
 }
-void drawCrayonCoverage(SkCanvas& canvas,const foundation::InkBrushConfig& config,
+const sk_sp<SkRuntimeEffect>& dryWetEffect(bool material){
+    static const auto coverage=[] {
+        auto r=SkRuntimeEffect::MakeForShader(SkString(reinterpret_cast<const char*>(kDryWet_coverage_v3),kDryWet_coverage_v3Size));
+        if(!r.effect)throw std::runtime_error(r.errorText.c_str());return r.effect;
+    }();
+    static const auto paint=[] {
+        auto r=SkRuntimeEffect::MakeForShader(SkString(reinterpret_cast<const char*>(kDryWet_material_v3),kDryWet_material_v3Size));
+        if(!r.effect)throw std::runtime_error(r.errorText.c_str());return r.effect;
+    }();
+    return material?paint:coverage;
+}
+void drawPressureMaterialCoverage(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,std::size_t begin,std::size_t end,double distance,double total,std::uint64_t seed){
     if(knots.empty()||begin>=knots.size())return;
     if(distance<0)distance=ink::compactLength(knots.first(begin));
-    SkRuntimeShaderBuilder builder(crayonCoverageEffect());
+    SkRuntimeShaderBuilder builder(config.algorithmVersion==6?dryWetEffect(false):crayonCoverageEffect());
     if(total<0)total=ink::compactLength(knots);
     builder.uniform("totalDistance")=float(total);builder.uniform("taper")=SkV2{float(config.startTaper),float(config.endTaper)};
-    builder.uniform("textureScale")=float(config.textureScale);builder.uniform("deposition")=float(config.deposition);
+    builder.uniform("textureScale")=float(config.textureScale);
+    if(config.algorithmVersion==6){builder.uniform("family")=float(config.family);builder.uniform("density")=float(config.density);}
+    else builder.uniform("deposition")=float(config.deposition);
     builder.uniform("seed")=SkV2{float(seed&65535U),float((seed>>16)&65535U)};
     SkPaint paint;paint.setBlendMode(SkBlendMode::kLighten);
     const auto clip=canvas.getLocalClipBounds();
@@ -121,7 +136,7 @@ void drawCompactContourCoverageToSkCanvas(SkCanvas& canvas,const foundation::Ink
 }
 void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
                                   std::span<const foundation::InkKnot> knots,double startDistance,double totalDistance,std::uint64_t seed){
-    if(config.algorithmVersion==5){drawCrayonCoverage(canvas,config,knots,0,knots.size(),startDistance,totalDistance,seed);return;}
+    if(config.algorithmVersion==5||config.algorithmVersion==6){drawPressureMaterialCoverage(canvas,config,knots,0,knots.size(),startDistance,totalDistance,seed);return;}
     if(config.algorithmVersion==4){drawCompactContourCoverageToSkCanvas(canvas,config,ink::compileCompactContour(config,knots));return;}
     if(config.algorithmVersion!=3){drawCompactCoverageRangeToSkCanvas(canvas,config,knots,0,knots.size());return;}
     if(knots.empty())return;
@@ -156,7 +171,7 @@ void drawCompactCoverageToSkCanvas(SkCanvas& canvas,const foundation::InkBrushCo
 }
 void drawCompactCoverageRangeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
     std::span<const foundation::InkKnot> knots,std::size_t begin,std::size_t end,double beginDistance,double totalDistance,std::uint64_t seed){
-    if(config.algorithmVersion==5){drawCrayonCoverage(canvas,config,knots,begin,end,beginDistance,totalDistance,seed);return;}
+    if(config.algorithmVersion==5||config.algorithmVersion==6){drawPressureMaterialCoverage(canvas,config,knots,begin,end,beginDistance,totalDistance,seed);return;}
     if(knots.empty()||begin>=knots.size()||end<=begin)return;
     if(config.algorithmVersion==4){
         // Compatibility entry point. Stateful navigation uses a retained
@@ -202,9 +217,14 @@ void compositeCompactCoverageToSkCanvas(SkCanvas& canvas,const SkImage& image,
     SkMatrix local;
     if(!canvas.getTotalMatrix().invert(&local))return;
     local.preTranslate(float(deviceX),float(deviceY));
-    SkRuntimeShaderBuilder builder(config.materialVersion==3?crayonMaterialEffect():config.algorithmVersion==4?vectorMaterialEffect():config.materialVersion==2?materialV2Effect():materialEffect());
+    SkRuntimeShaderBuilder builder(config.materialVersion==4?dryWetEffect(true):config.materialVersion==3?crayonMaterialEffect():config.algorithmVersion==4?vectorMaterialEffect():config.materialVersion==2?materialV2Effect():materialEffect());
     builder.child("coverage")=image.makeShader(SkSamplingOptions(SkFilterMode::kLinear),local);
     builder.uniform("paint")=SkV4{float(config.color[0]),float(config.color[1]),float(config.color[2]),float(config.color[3]*config.opacity)};
+    if(config.materialVersion==4){
+        builder.uniform("family")=float(config.family);builder.uniform("textureScale")=float(config.textureScale);
+        builder.uniform("wetEdge")=float(config.wetEdge);builder.uniform("seed")=SkV2{float(seed&65535U),float((seed>>16)&65535U)};
+        SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);return;
+    }
     if(config.algorithmVersion==4||config.materialVersion==3){SkPaint paint;paint.setShader(builder.makeShader());canvas.drawPaint(paint);return;}
     builder.uniform("family")=float(config.family);
     builder.uniform("density")=float(config.density);builder.uniform("textureScale")=float(config.textureScale);
@@ -222,9 +242,9 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
         while(!job.step(canvas,config,knots,seed,*targets,true,work)){}
         return;
     }
-    // V3 keeps its qualified hybrid/CPU path. V5 owns target-compatible
+    // V3 keeps its qualified hybrid/CPU path. V5/V6 own target-compatible
     // procedural coverage; do not substitute it for other evaluators' AA.
-    compatibleCoverage=config.algorithmVersion==5;
+    compatibleCoverage=config.algorithmVersion==5||config.algorithmVersion==6;
     // Tiles are device-clipped; no allocation scales with a long stroke AABB.
     const auto deviceClip=canvas.getDeviceClipBounds();
     const auto clip=grid?SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom):deviceClip;const auto matrix=canvas.getTotalMatrix();
@@ -383,7 +403,7 @@ bool CompactStrokeRasterJob::step(SkCanvas& canvas,const foundation::InkBrushCon
         tileInterior_.translate(-x_,-y_);
         // Legacy coverage is a continuous gradient throughout its body;
         // its exact GPU execution is unqualified and stays CPU-backed.
-        tile_=targets.acquire(canvas,w,h,hybrid_||(compatible&&config.algorithmVersion==5),work);
+        tile_=targets.acquire(canvas,w,h,hybrid_||(compatible&&(config.algorithmVersion==5||config.algorithmVersion==6)),work);
         if(!tile_)throw std::bad_alloc();
         hybrid_=hybrid_&&tile_->getCanvas()->recordingContext();
         if(work){if(tile_->getCanvas()->recordingContext())++work->gpuTiles;else ++work->cpuTiles;}

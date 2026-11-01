@@ -82,6 +82,15 @@ int main(){
     const auto waxOperation=semantic::SemanticCodec::decodeProtobufOperation(lastOperation);require(waxOperation.ok(),"wax operation encoding");
     const auto& waxBound=std::get<semantic::CompactStrokeContent>(std::get<semantic::AddStrokeOp>(waxOperation.operation.payload).object.content).stroke.config;
     require(waxBound.algorithmVersion==5&&waxBound.materialVersion==3&&waxBound.thinning==.5,"SDK config edit discarded wax evaluator");
+    for(const auto profile:{"chalk-compact-v1","watercolor-lite-v1"}){
+        call({{"command","control"},{"kind","preset"},{"profileId",profile},{"revision",3}});
+        auto config=call({{"command","readInkBrush"}}).at("value");config["thinning"]=.4;config["streamline"]=.2;
+        call({{"command","control"},{"kind","inkBrush"},{"value",config}});
+        ++pointer;for(unsigned phase:{0U,1U,2U}){timestamp+=10'000'000;call({{"command","pointer"},{"source",1},{"pointer",pointer},{"timestampNs",timestamp},{"phase",phase},{"x",30+40*phase},{"y",210},{"pressure",.5},{"pressureAvailable",false}});}
+        const auto decoded=semantic::SemanticCodec::decodeProtobufOperation(lastOperation);require(decoded.ok(),"drywet operation codec");
+        const auto& bound=std::get<semantic::CompactStrokeContent>(std::get<semantic::AddStrokeOp>(decoded.operation.payload).object.content).stroke.config;
+        require(bound.algorithmVersion==6&&bound.materialVersion==4&&bound.thinning==.4,"SDK lost pressure texture evaluator");
+    }
     const auto before=call({{"command","state"}}).at("value").at("generation");
     const auto rejected=sdk::Json::parse(session.call(R"({"command":"control","kind":"inkBrush","value":{"family":7}})"));
     require(!rejected.value("ok",true)&&call({{"command","state"}}).at("value").at("generation")==before,"invalid native config mutated document");

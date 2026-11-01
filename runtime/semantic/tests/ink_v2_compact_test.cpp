@@ -66,6 +66,15 @@ int main() {
     if(!waxDecoded.ok()||std::get<CompactStrokeContent>(std::get<AddStrokeOp>(waxDecoded.operation.payload).object.content)!=
        std::get<CompactStrokeContent>(std::get<AddStrokeOp>(wax.payload).object.content))throw std::runtime_error("wax pressure/resource binding lost");
     waxConfig.materialResourceSha256="bad";if(SemanticCodec::encodeProtobufOperation(wax).ok())throw std::runtime_error("wax resource mismatch accepted");
+    for(const auto family:{canvas::foundation::InkFamily::kChalk,canvas::foundation::InkFamily::kWatercolor}){
+        waxConfig.family=family;waxConfig.algorithmVersion=6;waxConfig.materialVersion=4;
+        waxConfig.materialResourceId=canvas::foundation::kInkDryWetV3ResourceId;waxConfig.materialResourceSha256=canvas::foundation::kInkDryWetV3ResourceSha256;
+        const auto bytes=SemanticCodec::encodeProtobufOperation(wax);if(!bytes.ok())throw std::runtime_error("drywet encode rejected");
+        const auto decoded=SemanticCodec::decodeProtobufOperation(bytes.bytes);
+        if(!decoded.ok()||std::get<CompactStrokeContent>(std::get<AddStrokeOp>(decoded.operation.payload).object.content)!=
+           std::get<CompactStrokeContent>(std::get<AddStrokeOp>(wax.payload).object.content))throw std::runtime_error("drywet binding lost");
+        waxConfig.materialResourceSha256="bad";if(SemanticCodec::encodeProtobufOperation(wax).ok())throw std::runtime_error("drywet bad resource accepted");
+    }
     const auto legacyAgain=SemanticCodec::encodeProtobufOperation(decoded.operation);
     if(!legacyAgain.ok()||legacyAgain.bytes!=encoded.bytes)throw std::runtime_error("legacy compact wire encoding changed");
     t.version=1;if(SemanticCodec::encodeProtobufOperation(tuned).ok())throw std::runtime_error("new tuning accepted as old config");

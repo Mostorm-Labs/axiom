@@ -164,8 +164,8 @@ int main(int argc,char** argv) {
         {
             // Integration oracle for new brush evaluators through G5's
             // bounded canonical path, including material seed and AA contours.
-            for(const auto profile:{"round-handdrawn","marker-compact-v1","crayon-wax-v1"}){
-                const auto revision=std::string_view(profile)=="crayon-wax-v1"?3:4;
+            for(const auto profile:{"round-handdrawn","marker-compact-v1","crayon-wax-v1","chalk-compact-v1","watercolor-lite-v1"}){
+                const auto revision=(std::string_view(profile)=="round-handdrawn"||std::string_view(profile)=="marker-compact-v1")?4:3;
                 auto entry=stroke(885);
                 auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
                 content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,revision).package.compactConfig;

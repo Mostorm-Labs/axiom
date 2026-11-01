@@ -20,7 +20,8 @@ std::uint64_t run(unsigned n,const char* profile,unsigned revision=1){
 }
 void retinaPrefix(){
     using namespace canvas;
-    auto p=ink::BrushPackageCatalog{}.loadDefault("crayon-wax-v1",3).package;p.compactConfig->size=32;
+    for(const auto profile:{"crayon-wax-v1","chalk-compact-v1","watercolor-lite-v1"}){
+    auto p=ink::BrushPackageCatalog{}.loadDefault(profile,3).package;p.compactConfig->size=32;
     ink::BrushSession session(1,ink::resolveBrushState(p,42));if(!session.begin())throw std::runtime_error("retina begin");
     render::TransparentOverlaySkiaSurfaceProvider surface;if(surface.resize(2000,1300).code!=render::BackendSubmissionCode::kAccepted)throw std::runtime_error("retina surface");
     render::SkiaRenderer renderer;render::PreviewSurfaceController preview(renderer,surface);
@@ -39,7 +40,9 @@ void retinaPrefix(){
         if(!preview.begin(1,contact,1,surface.generation())||!preview.updateForSession(contact,delta)||!preview.renderIfDirty())throw std::runtime_error("retina contacts");
         const auto w=renderer.compactWork();if(w.retainedBytes+w.temporaryBytes>32*1024*1024)throw std::runtime_error("multi-contact retina budget");
     }
+    }
 }
 int main(int argc,char** argv){if(argc>1){retinaPrefix();return 0;}for(const char* profile:{"round-handdrawn","marker-compact-v1","chalk-compact-v1","crayon-wax-v1","watercolor-lite-v1"}){auto a=run(512,profile),b=run(2048,profile),c=run(8192,profile);if(b>5*a||c>5*b)throw std::runtime_error("quadratic preview geometry work");}
-    auto a=run(512,"crayon-wax-v1",3),b=run(2048,"crayon-wax-v1",3),c=run(8192,"crayon-wax-v1",3);
-    if(b>5*a||c>5*b)throw std::runtime_error("quadratic pressure crayon preview work");}
+    for(const auto profile:{"crayon-wax-v1","chalk-compact-v1","watercolor-lite-v1"}){
+    auto a=run(512,profile,3),b=run(2048,profile,3),c=run(8192,profile,3);
+    if(b>5*a||c>5*b)throw std::runtime_error("quadratic pressure material preview work");}}

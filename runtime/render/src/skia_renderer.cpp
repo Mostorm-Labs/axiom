@@ -494,10 +494,10 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
             auto& cache=*compactCache_;
             // Persistent coverage is view-bounded and disposable. Large hosts
             // fall back to clipped reconstruction rather than exceed budget.
-            const bool crayon=config.algorithmVersion==5;
+            const bool gpuMaterial=config.algorithmVersion==5||config.algorithmVersion==6;
             // Keep a 2x 1000x650 view incremental: two view surfaces fit the
             // existing 32MiB aggregate budget. Oversized views stay bounded.
-            const std::uint64_t surfaceLimit=crayon?16*1024*1024:8*1024*1024;
+            const std::uint64_t surfaceLimit=gpuMaterial?16*1024*1024:8*1024*1024;
             if(bytes>surfaceLimit){
                 std::vector<const ink::BrushPreviewDelta::Chunk*> chunks;
                 for(auto c=contour.compactChunks.get();c;c=c->previous.get())chunks.push_back(c);
@@ -505,7 +505,7 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
                 for(auto i=chunks.rbegin();i!=chunks.rend();++i)knots.insert(knots.end(),(*i)->knots.begin(),(*i)->knots.end());
                 compactWork_.generatedKnots+=knots.size();internal::drawCompactStrokeToSkCanvas(*canvas,config,knots,contour.compactSeed);return;
             }
-            const auto stableLimit=crayon?32*1024*1024-bytes:
+            const auto stableLimit=gpuMaterial?32*1024*1024-bytes:
                 cache.scratch?32*1024*1024-2*bytes:24*1024*1024;
             const auto nextCount=cache.entries.size()+(cache.entries.contains(contour.session)?0:1);
             if(bytes*nextCount>stableLimit)cache.entries.clear();
@@ -515,7 +515,7 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
             auto c=prefix;
             while(c&&c!=entry.prefix){added.push_back(c.get());c=c->previous;}
             if(!entry.surface||c!=entry.prefix||entry.config!=config){
-                entry.surface=crayon?acquired.frame.surface->makeSurface(info):SkSurfaces::Raster(info);
+                entry.surface=gpuMaterial?acquired.frame.surface->makeSurface(info):SkSurfaces::Raster(info);
                 if(!entry.surface)return;
                 entry.surface->getCanvas()->clear(SK_ColorBLACK);entry.prefix.reset();added.clear();
                 for(auto v=prefix;v;v=v->previous)added.push_back(v.get());
@@ -528,8 +528,8 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
             stable->restore();entry.prefix=prefix;entry.config=config;
             // Use the target backend, retaining one disposable scratch. A CPU
             // Raster here interprets every procedural shader pixel on Web.
-            if(crayon&&!cache.scratch)cache.scratch=acquired.frame.surface->makeSurface(info);
-            auto combined=crayon?cache.scratch:SkSurfaces::Raster(info);if(!combined)return;
+            if(gpuMaterial&&!cache.scratch)cache.scratch=acquired.frame.surface->makeSurface(info);
+            auto combined=gpuMaterial?cache.scratch:SkSurfaces::Raster(info);if(!combined)return;
             auto* temporary=combined->getCanvas();temporary->resetMatrix();temporary->clear(SK_ColorBLACK);
             temporary->drawImage(entry.surface->makeImageSnapshot(),0,0);
             temporary->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);

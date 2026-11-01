@@ -1,0 +1,37 @@
+uniform shader coverage;
+uniform float4 paint;
+uniform float family;
+uniform float textureScale;
+uniform float wetEdge;
+uniform float2 seed;
+float hash(float2 p) {
+    float2 q=mod(floor(p),251.);
+    float n=mod(q.x*17.+q.y*131.,251.);
+    n=mod(n*n+43.,251.);n=mod(n*n+17.,251.);
+    return n/251.;
+}
+float noise(float2 p) {
+    float2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+    return mix(mix(hash(i),hash(i+float2(1,0)),f.x),
+               mix(hash(i+float2(0,1)),hash(i+float2(1,1)),f.x),f.y);
+}
+half4 main(float2 p) {
+    float4 field=coverage.eval(p);
+    float alpha=field.r;
+    if(family==5.) {
+        float scale=max(.25,textureScale);
+        float cloud=noise(p/(scale*1.8)+seed+float2(43,71));
+        float paper=noise(p/(scale*.24)+seed);
+        float fine=noise(p/.7+seed+float2(11,97));
+        // Small organic irregularity, not a periodic sequence of dab disks.
+        float boundary=.018+.045*paper+.015*fine;
+        float body=smoothstep(boundary,boundary+.20,field.r);
+        float pressure=clamp(field.g/max(.0001,field.r),0.,1.);
+        float flow=.22+.46*pressure;
+        float concentration=flow*(.72+.28*cloud)*(.92+.08*paper);
+        float rim=smoothstep(boundary,boundary+.09,field.r)*(1.-smoothstep(.17,.36,field.r));
+        alpha=body*concentration+rim*wetEdge*.07*(.3+.7*cloud);
+    }
+    alpha=clamp(alpha,0.,1.)*paint.a;
+    return half4(paint.rgb*alpha,alpha);
+}

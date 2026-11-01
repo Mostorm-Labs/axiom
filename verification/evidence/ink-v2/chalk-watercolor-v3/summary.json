@@ -1,0 +1,394 @@
+{
+  "repository": "github.com/Mostorm-Labs/axiom",
+  "source_revision": "1229d0a12092107516b5c2cc1ea8a5750dfc76ae",
+  "branch": "codex/chalk-watercolor-material-v3",
+  "dirty": true,
+  "classification": "LOCAL_REVIEW_READY_WITH_BASELINE_FINDINGS",
+  "migration": {
+    "from": "f2e391cd13180cd7627561c911120dcec058e5ee",
+    "to": "1229d0a12092107516b5c2cc1ea8a5750dfc76ae",
+    "preserved": "G5 pooled targets, cooperative jobs, navigation/timing; prior stash retained"
+  },
+  "material": {
+    "id": "ink-chalk-watercolor-v3",
+    "version": 4,
+    "algorithmVersion": 6,
+    "signalVersion": 3,
+    "samplingVersion": 1,
+    "sha256": "ad598308c466463170e0841ef6ecb0a144097763057d31cfd0fde1076a40d3e1",
+    "sources": [
+      "coverage.sksl",
+      "material.sksl"
+    ],
+    "kind": "builtin-procedural-material",
+    "external_resource_bytes": 0
+  },
+  "profiles": {
+    "chalk-compact-v1": 3,
+    "watercolor-lite-v1": 3
+  },
+  "storage": {
+    "records": [
+      {
+        "profile": "marker-compact-v1",
+        "revision": 1,
+        "samples": 2048,
+        "knots": 514,
+        "operation_bytes": 9653,
+        "snapshot_delta_bytes": 9622,
+        "legacy_operation_bytes": 255687,
+        "legacy_snapshot_delta_bytes": 255635,
+        "diagnostic_operation_bytes": 74117,
+        "diagnostic_snapshot_delta_bytes": 74084,
+        "resource_delta_bytes": 0,
+        "persisted_dabs": 0,
+        "persisted_raw": 0,
+        "persisted_outline": 0
+      },
+      {
+        "profile": "chalk-compact-v1",
+        "revision": 1,
+        "samples": 2048,
+        "knots": 514,
+        "operation_bytes": 9653,
+        "snapshot_delta_bytes": 9622,
+        "legacy_operation_bytes": 255687,
+        "legacy_snapshot_delta_bytes": 255635,
+        "diagnostic_operation_bytes": 74117,
+        "diagnostic_snapshot_delta_bytes": 74084,
+        "resource_delta_bytes": 0,
+        "persisted_dabs": 0,
+        "persisted_raw": 0,
+        "persisted_outline": 0
+      },
+      {
+        "profile": "chalk-compact-v1",
+        "revision": 3,
+        "samples": 2048,
+        "knots": 510,
+        "operation_bytes": 9643,
+        "snapshot_delta_bytes": 9612,
+        "legacy_operation_bytes": 255687,
+        "legacy_snapshot_delta_bytes": 255635,
+        "diagnostic_operation_bytes": 74323,
+        "diagnostic_snapshot_delta_bytes": 74290,
+        "resource_delta_bytes": 0,
+        "persisted_dabs": 0,
+        "persisted_raw": 0,
+        "persisted_outline": 0
+      },
+      {
+        "profile": "crayon-wax-v1",
+        "revision": 1,
+        "samples": 2048,
+        "knots": 514,
+        "operation_bytes": 9653,
+        "snapshot_delta_bytes": 9622,
+        "legacy_operation_bytes": 255687,
+        "legacy_snapshot_delta_bytes": 255635,
+        "diagnostic_operation_bytes": 74117,
+        "diagnostic_snapshot_delta_bytes": 74084,
+        "resource_delta_bytes": 0,
+        "persisted_dabs": 0,
+        "persisted_raw": 0,
+        "persisted_outline": 0
+      },
+      {
+        "profile": "watercolor-lite-v1",
+        "revision": 1,
+        "samples": 2048,
+        "knots": 514,
+        "operation_bytes": 9653,
+        "snapshot_delta_bytes": 9622,
+        "legacy_operation_bytes": 255687,
+        "legacy_snapshot_delta_bytes": 255635,
+        "diagnostic_operation_bytes": 74117,
+        "diagnostic_snapshot_delta_bytes": 74084,
+        "resource_delta_bytes": 0,
+        "persisted_dabs": 0,
+        "persisted_raw": 0,
+        "persisted_outline": 0
+      },
+      {
+        "profile": "watercolor-lite-v1",
+        "revision": 3,
+        "samples": 2048,
+        "knots": 508,
+        "operation_bytes": 9607,
+        "snapshot_delta_bytes": 9576,
+        "legacy_operation_bytes": 255687,
+        "legacy_snapshot_delta_bytes": 255635,
+        "diagnostic_operation_bytes": 74323,
+        "diagnostic_snapshot_delta_bytes": 74290,
+        "resource_delta_bytes": 0,
+        "persisted_dabs": 0,
+        "persisted_raw": 0,
+        "persisted_outline": 0
+      },
+      {
+        "profile": "marker-compact-v1",
+        "revision": 1,
+        "samples": 8192,
+        "knots": 2050,
+        "operation_bytes": 37307,
+        "snapshot_delta_bytes": 37274,
+        "legacy_operation_bytes": 1020615,
+        "legacy_snapshot_delta_bytes": 1020563,
+        "diagnostic_operation_bytes": 295302,
+        "diagnostic_snapshot_delta_bytes": 295269,
+        "resource_delta_bytes": 0,
+        "persisted_dabs": 0,
+        "persisted_raw": 0,
+        "persisted_outline": 0
+      },
+      {
+        "profile": "chalk-compact-v1",
+        "revision": 1,
+        "samples": 8192,
+        "knots": 2050,
+        "operation_bytes": 37307,
+        "snapshot_delta_bytes": 37274,
+        "legacy_operation_bytes": 1020615,
+        "legacy_snapshot_delta_bytes": 1020563,
+        "diagnostic_operation_bytes": 295302,
+        "diagnostic_snapshot_delta_bytes": 295269,
+        "resource_delta_bytes": 0,
+        "persisted_dabs": 0,
+        "persisted_raw": 0,
+        "persisted_outline": 0
+      },
+      {
+        "profile": "chalk-compact-v1",
+        "revision": 3,
+        "samples": 8192,
+        "knots": 2046,
+        "operation_bytes": 37297,
+        "snapshot_delta_bytes": 37264,
+        "legacy_operation_bytes": 1020615,
+        "legacy_snapshot_delta_bytes": 1020563,
+        "diagnostic_operation_bytes": 295527,
+        "diagnostic_snapshot_delta_bytes": 295494,
+        "resource_delta_bytes": 0,
+        "persisted_dabs": 0,
+        "persisted_raw": 0,
+        "persisted_outline": 0
+      },
+      {
+        "profile": "crayon-wax-v1",
+        "revision": 1,
+        "samples": 8192,
+        "knots": 2050,
+        "operation_bytes": 37307,
+        "snapshot_delta_bytes": 37274,
+        "legacy_operation_bytes": 1020615,
+        "legacy_snapshot_delta_bytes": 1020563,
+        "diagnostic_operation_bytes": 295302,
+        "diagnostic_snapshot_delta_bytes": 295269,
+        "resource_delta_bytes": 0,
+        "persisted_dabs": 0,
+        "persisted_raw": 0,
+        "persisted_outline": 0
+      },
+      {
+        "profile": "watercolor-lite-v1",
+        "revision": 1,
+        "samples": 8192,
+        "knots": 2050,
+        "operation_bytes": 37307,
+        "snapshot_delta_bytes": 37274,
+        "legacy_operation_bytes": 1020615,
+        "legacy_snapshot_delta_bytes": 1020563,
+        "diagnostic_operation_bytes": 295302,
+        "diagnostic_snapshot_delta_bytes": 295269,
+        "resource_delta_bytes": 0,
+        "persisted_dabs": 0,
+        "persisted_raw": 0,
+        "persisted_outline": 0
+      },
+      {
+        "profile": "watercolor-lite-v1",
+        "revision": 3,
+        "samples": 8192,
+        "knots": 2043,
+        "operation_bytes": 37243,
+        "snapshot_delta_bytes": 37210,
+        "legacy_operation_bytes": 1020615,
+        "legacy_snapshot_delta_bytes": 1020563,
+        "diagnostic_operation_bytes": 295527,
+        "diagnostic_snapshot_delta_bytes": 295494,
+        "resource_delta_bytes": 0,
+        "persisted_dabs": 0,
+        "persisted_raw": 0,
+        "persisted_outline": 0
+      }
+    ],
+    "note": "legacy revision1 comparison preserved; added revision3 checks for chalk/watercolor. Crayon3 is unchanged and was diagnostic-only; its existing unsimplified carrier is outside this material revision."
+  },
+  "full_ctest": {
+    "total": 246,
+    "passed": 219,
+    "failures": [
+      "canvas_fc02_shape_label_scene",
+      "canvas_g2_a3_full_incremental_equivalence",
+      "G3HeadlessCanvasDemo",
+      "FC01ASelectionInputIntegration",
+      "FC02Text",
+      "FC00XRuntimeComposition",
+      "FC04.MSE-11",
+      "FC04.MSE-18",
+      "FC04.MSE-20",
+      "FC04.MSE-23",
+      "FC04.MSE-24",
+      "FC04.MSE-25",
+      "FC04.MSE-26",
+      "FC01CreationPreview",
+      "FC01Creation-width-style",
+      "FC01SelectedActions",
+      "FC05ConnectorDragPreview",
+      "G4InkPlaygroundComposition",
+      "G4InkPlaygroundSurface",
+      "G4InkPlaygroundRepeatedStrokes",
+      "G4MultiPointerPlayground",
+      "G4ViewportGestureState",
+      "G46BQueryStructure",
+      "G46PlaygroundTransform",
+      "G46CQualificationBundle",
+      "G46CQualificationBehavior",
+      "G45BrushRuntimePipeline"
+    ],
+    "prior_baseline_names": [
+      "canvas_fc02_shape_label_scene",
+      "canvas_g2_a3_full_incremental_equivalence",
+      "G3HeadlessCanvasDemo",
+      "FC02Text",
+      "FC00XRuntimeComposition",
+      "FC04.MSE-11",
+      "FC04.MSE-20",
+      "FC04.MSE-23",
+      "FC04.MSE-24",
+      "FC04.MSE-25",
+      "FC04.MSE-26",
+      "FC01Creation-width-style",
+      "G4InkPlaygroundComposition",
+      "G4InkPlaygroundSurface",
+      "G4InkPlaygroundRepeatedStrokes",
+      "G4MultiPointerPlayground",
+      "G4ViewportGestureState",
+      "G46BQueryStructure",
+      "G46PlaygroundTransform",
+      "G46CQualificationBundle",
+      "G46CQualificationBehavior",
+      "G45BrushRuntimePipeline"
+    ],
+    "delta_names": [
+      "FC01ASelectionInputIntegration",
+      "FC01CreationPreview",
+      "FC01SelectedActions",
+      "FC04.MSE-18",
+      "FC05ConnectorDragPreview"
+    ],
+    "delta_attribution": "Four direct UI cases reproduce at clean 1229d0a1 under matching Debug configuration; FC04.MSE-18 invokes two of those tests and fails on their nonzero exit. No extra brush failure."
+  },
+  "browser": {
+    "final-browser-dpr1.json": {
+      "status": "PASS",
+      "checks": 105
+    },
+    "final-browser-dpr2.json": {
+      "status": "PASS",
+      "checks": 105
+    }
+  },
+  "gpu": "actual Chrome WebGL/Ganesh cache, resumed, Direct, navigation parity PASS; probe resource binding captured",
+  "seam": {
+    "pressure_ramp_error_before": 4.29219,
+    "after": 0.00078125,
+    "metric": "mean absolute alpha error, sparse vs subdivided same pressure ramp"
+  },
+  "physical_touch_status": "NOT_PERFORMED",
+  "windows_qualification": "NOT_PERFORMED",
+  "visual_user_acceptance": "PENDING",
+  "limitations": [
+    "procedural watercolor wash, no fluid diffusion or canvas pickup",
+    "same stroke uses max contact/pigment, separate strokes use SrcOver",
+    "old material revisions unchanged; matching new reader required",
+    "latency observation includes CDP scheduling/two RAFs; no timing Gate"
+  ],
+  "runtime_boundary": "PASS 116 contracts",
+  "typescript": "PASS",
+  "git_diff_check": "PASS",
+  "focused_tests": {
+    "passed": 10,
+    "failed": 0,
+    "log": "final-focused.log"
+  },
+  "latency": {
+    "watercolor": {
+      "status": "PASS",
+      "input_plus_two_RAFs": true,
+      "p50_ms": [
+        50.021083000000544,
+        50.005833999999595
+      ],
+      "release_ms": [
+        66.3623749999997,
+        33.04145900000003
+      ]
+    },
+    "chalk": {
+      "status": "PASS",
+      "input_plus_two_RAFs": true,
+      "p50_ms": [
+        49.98262499999964,
+        50.01079200000095
+      ],
+      "release_ms": [
+        65.57033299999966,
+        32.037750000001324
+      ]
+    }
+  },
+  "demo_urls": [
+    "http://127.0.0.1:4198/example.html?brush=watercolor&v=chalk-watercolor-v3-g5",
+    "http://127.0.0.1:4198/example.html?brush=chalk&v=chalk-watercolor-v3-g5"
+  ],
+  "source_sha256": {
+    "runtime/composition/src/canvas_runtime_facade.cpp": "aec89ed818b94669c5623532b9e33df507efadf3b49a018018f710b048c64570",
+    "runtime/composition/tests/ink_v2_storage_test.cpp": "fb40b3617d082bbcd5b99a22c30acf5bd2add06214ddd0cc64486bb19d15660f",
+    "runtime/foundation/include/canvas/runtime/ink_brush.hpp": "96be7d55ea910d0d86d32b104bbbbf7323b3e9234b12d31db79fb961f0a4ab2b",
+    "runtime/ink/src/brush_package_catalog.cpp": "bdebf7bcb5cdde0098e09046602df988d4d8f1c7fee859f6d0904a33af2728b1",
+    "runtime/ink/src/compact_brush_quality.cpp": "21b6eb6781c4c482ecef9a08db65fbbcf00eb6cc2e03ad38354399e85718c35f",
+    "runtime/ink/src/compact_brush_session.cpp": "4136f024dcfdc867c0db174b13f51a4c01b00ee75e8ed5d4f4acf9c69af5eebc",
+    "runtime/ink/tests/vector_quality_test.cpp": "0396068866e3b6a1397108f0f548dfa1b0e073c9deb2ab2ec5720ea5622cc0fd",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "d0dda2f16adc5c93bf327d9e415f9a4ba8c01626dc3b35b83f5786df4db23f9d",
+    "runtime/render/CMakeLists.txt": "e1d380596f114bded4eb85462314393795b9f2d598259111ecb3ff2c2ac2785e",
+    "runtime/render/src/skia_compact_material.cpp": "f0197c8f3f7878cfd447b4c9578b54e9428e45d8101ddcba7a397348383f8bb9",
+    "runtime/render/src/skia_renderer.cpp": "9457ea94b4dd99d7d66218e9107481e393dbe53db9d4ec9697549e6731f63711",
+    "runtime/render/tests/ink_v2_material_test.cpp": "6c4542557d136c909bd56cb4b954081479deb125f753c54f3d2caeca7555199c",
+    "runtime/render/tests/ink_v2_work_test.cpp": "d7e2fdfbf3507924a6f69bd0cd7f6dae2436ee51688839482a8913ffdf434b65",
+    "runtime/render/tests/render_cache_test.cpp": "1c0827f74c1ca096d3d98b2884e9ed38f9ced6bc81d391ea5b5c448699527a26",
+    "runtime/semantic/tests/ink_v2_compact_test.cpp": "d83768bcac05f8a30617632cfa9f152c0aab226daf4a7aa5c7fbcc74dd65b05b",
+    "sdk/common/ink_v2_session_test.cpp": "8491599bb0664fb4d1026c6e4bd85b56dd866586165af03857471ebf486e0991",
+    "sdk/common/session.cpp": "68a9f90d27ada28e148ff02e4c74453b8c58fc7597917f6387e3124bef2286cd",
+    "sdk/web/README.md": "9cd853be804105f49904d0b9b39b182d98a741157da4b1b88d5cb92f5d2923f7",
+    "sdk/web/example.html": "9c38f4651a243d966dedb5d1250d2ed6051b40f3747a27460b820540f8025e9f",
+    "sdk/windows/README.md": "c15b95f59467fa10e6762a44a6d9c2eea6cd97abb11fef576c99678f63f969c0",
+    "verification/sdk_js/ink-v2.html": "c82c63db3f486325efa18434fb7486a7c763f1bed28e4b55927bc071715b3ece",
+    "verification/sdk_js/verify_crayon_latency.mjs": "31fed0bf6c6c07fe21f1f2150726d08a89e06380b044ee3a50a0768e4dd916de",
+    "docs/planning/ink-v2/chalk-watercolor-v3.md": "3305702481cc7e81bf1372431e3a4313c10417460795960da1a3d08b9d488d3e",
+    "verification/sdk_js/verify_material_gpu.mjs": "5fbaec1dcb882475e39d2f05fb467cd5251083f79df138b62870c4f1109d728b",
+    "runtime/ink/assets/chalk-watercolor-v3/material.sksl": "519e8651e514f5b7a5114bfa413d09ab48e479f96b7dd28a2b0425380d5ea238",
+    "runtime/ink/assets/chalk-watercolor-v3/coverage.sksl": "e67aafcf85ec2b37802cbca1aec358003c5ddb17ad21a487c4f31a9b91f804ed",
+    "runtime/ink/assets/chalk-watercolor-v3/manifest.json": "3bc950710a02aec348691d9451169a6601efb4b656cdddb172bd0c79ba2214fe"
+  },
+  "new_profile_tests": "All new material, storage, signal and SDK checks pass; full-root failures named separately.",
+  "delivery_authorization": "User authorized commit, push and merge into main, and cleanup of the verified migrated chalk/watercolor stash. Unrelated archived POC-06 stash is retained.",
+  "precommit_verification": {
+    "focused_tests": 10,
+    "failed": 0,
+    "runtime_boundary_contracts": 116,
+    "typescript": "PASS",
+    "evidence_and_source_hashes": "PASS",
+    "git_diff_check": "PASS"
+  }
+}

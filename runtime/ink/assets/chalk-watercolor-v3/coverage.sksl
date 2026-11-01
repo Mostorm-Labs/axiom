@@ -1,0 +1,62 @@
+// Revision 3: union of captured centreline contact and effective pressure.
+uniform float2 a;
+uniform float2 b;
+uniform float2 radii;
+uniform float2 pressures;
+uniform float startDistance;
+uniform float totalDistance;
+uniform float2 taper;
+uniform float2 clipCaps;
+uniform float family;
+uniform float density;
+uniform float textureScale;
+uniform float2 seed;
+float hash(float2 p) {
+    float2 q=mod(floor(p),251.);
+    float n=mod(q.x*17.+q.y*131.,251.);
+    n=mod(n*n+43.,251.);n=mod(n*n+17.,251.);
+    return n/251.;
+}
+float noise(float2 p) {
+    float2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+    return mix(mix(hash(i),hash(i+float2(1,0)),f.x),
+               mix(hash(i+float2(0,1)),hash(i+float2(1,1)),f.x),f.y);
+}
+half4 main(float2 p) {
+    float2 v=b-a;
+    float len=length(v);
+    float2 tangent=len>.00001?v/len:float2(1,0);
+    float along=dot(p-a,tangent);
+    float t=clamp(along/max(len,.00001),0.,1.);
+    float at=startDistance+clamp(along,0.,len);
+    float start=taper.x>0.?clamp(at/taper.x,0.,1.):1.;
+    float end=taper.y>0.?clamp((totalDistance-at)/taper.y,0.,1.):1.;
+    float radius=max(.0001,mix(radii.x,radii.y,t)*min(start*(2.-start),1.-pow(1.-end,3.)));
+    float pressure=clamp(mix(pressures.x,pressures.y,t),0.,1.);
+    float contact=clamp(1.-length(p-mix(a,b,t))/radius,0.,1.);
+    float cap=1.;
+    if(clipCaps.x>0.)cap*=smoothstep(-.325,.325,along);
+    if(clipCaps.y>0.)cap*=1.-smoothstep(len-.325,len+.325,along);
+    if(family==5.) {
+        // Keep geometry separate from concentration. Wet edge is evaluated
+        // after the max union so inner segment caps cannot become pigment rings.
+        // Carry concentration weighted by contact. Extend the linear pressure
+        // field over a segment's support so subdividing a straight pressure
+        // ramp cannot introduce constant-pressure endpoint disks.
+        float washPressure=clamp(mix(pressures.x,pressures.y,len>.00001?along/len:0.),0.,1.);
+        return half4(contact*cap,washPressure*contact*cap,0,1);
+    }
+    float scale=max(.25,textureScale);
+    float clusters=noise(p/(scale*.55)+seed);
+    float tooth=noise(p/(scale*.22)+seed+float2(11,97));
+    float dust=noise(p/.40+seed+float2(71,37));
+    float height=.46*clusters+.39*tooth+.15*dust;
+    // Pressure reaches paper valleys; density controls the dry pigment fraction.
+    float threshold=.67-.27*density-.15*pressure;
+    float pigment=smoothstep(threshold-.055,threshold+.08,height);
+    float fringe=(1.-tooth)*.045+(1.-clusters)*.055;
+    float edge=smoothstep(0.,max(.65/radius,.15+.10*(1.-pressure)),contact-fringe)*cap;
+    float flow=.38+.48*pressure;
+    float alpha=edge*pigment*flow*(.78+.22*dust);
+    return half4(alpha,alpha,alpha,1);
+}

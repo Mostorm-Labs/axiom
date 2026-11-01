@@ -35,10 +35,66 @@ int main(int argc,char** argv){
     const std::string mode=argc>1?argv[1]:"marker";
     foundation::InkBrushConfig c;c.size=32;c.roundMode=foundation::InkRoundMode::kRegular;c.color={.1,.3,.8,1};
     const std::vector<foundation::InkKnot> knots{{32,64,32768},{224,64,32768}};
-    if(mode=="wax"){
-        const auto loaded=ink::BrushPackageCatalog{}.loadDefault("crayon-wax-v1",3);
+    if(mode=="drywet"){
+        for(const auto profile:{"chalk-compact-v1","watercolor-lite-v1"}){
+            const auto loaded=ink::BrushPackageCatalog{}.loadDefault(profile,3);
+            require(bool(loaded),"pressure chalk/watercolor revision missing");
+            c=*loaded.package.compactConfig;c.size=32;c.thinning=0;c.opacity=1;
+            const auto light=draw(c,{{32,64,10000},{224,64,10000}});
+            const auto firm=draw(c,{{32,64,55000},{224,64,55000}});
+            require(sum(firm)>sum(light)*1.35,"pressure does not change material at fixed width");
+            unsigned holes=0;double mean=0,variance=0,nearDifference=0,farDifference=0,edge=0,body=0;
+            for(unsigned x=48;x<208;++x){for(unsigned y=58;y<70;++y){const auto a=alpha(firm,x,y);holes+=a<35;mean+=a;variance+=a*a;
+                nearDifference+=std::abs(int(a)-int(alpha(firm,x+1,y)));farDifference+=std::abs(int(a)-int(alpha(firm,x+7,y)));}
+                edge+=alpha(firm,x,50);body+=alpha(firm,x,64);}
+            mean/=1920;variance=variance/1920-mean*mean;
+            std::cout<<profile<<" pigment="<<sum(light)<<"/"<<sum(firm)<<" holes="<<holes<<" mean="<<mean<<" variance="<<variance<<" correlation="<<nearDifference/farDifference<<" edge/body="<<edge/body<<std::endl;
+            if(c.family==foundation::InkFamily::kChalk){
+                require(holes>80&&holes<900,"chalk needs clustered pores with continuous pigment");
+                require(nearDifference<farDifference*.85,"chalk pores remain uncorrelated salt-and-pepper");
+                require(variance>1200,"chalk lacks dry pigment contrast");
+            }else{
+                require(holes<5&&mean>45&&mean<170,"watercolor is opaque or has dry holes");
+                require(variance>8&&variance<900,"watercolor lacks gentle concentration variation");
+                require(edge<body*.95,"watercolor has a uniform dark hose rim");
+            }
+            if(c.family==foundation::InkFamily::kChalk){auto sparse=c,dense=c;sparse.density=.1;dense.density=.9;
+                require(sum(draw(dense,knots))>sum(draw(sparse,knots))*1.5,"chalk density no longer controls paper contact");
+            }else{std::vector<foundation::InkKnot> ramp;for(unsigned x=32;x<=224;x+=2)ramp.push_back({double(x),64,std::uint16_t(12000+(x-32)*42000/192)});
+                const auto sparseRamp=draw(c,{{32,64,12000},{224,64,54000}}),denseRamp=draw(c,ramp);
+                double error=0;for(unsigned y=56;y<72;++y)for(unsigned x=48;x<208;++x)error+=std::abs(int(alpha(sparseRamp,x,y))-int(alpha(denseRamp,x,y)));
+                std::cout<<"watercolor pressure-ramp sample error="<<error/(16*160)<<std::endl;
+                require(error/(16*160)<1.2,"pressure concentration forms segment-dependent patches");
+                auto dry=c,wet=c;dry.wetEdge=0;wet.wetEdge=1;
+                require(draw(dry,knots)!=draw(wet,knots),"watercolor wetEdge ignored");}
+            const std::vector<foundation::InkKnot> retrace{{32,64,32768},{224,64,32768},{32,64,32768},{224,64,32768}};
+            require(draw(c,retrace)==draw(c,knots),"self-overlap creates internal pigment ring");
+            std::vector<foundation::InkKnot> dense;for(unsigned x=32;x<=224;x+=2)dense.push_back({double(x),64,32768});
+            require(draw(c,knots,1,0,0,42)==draw(c,dense,1,0,0,42),"sample density changes material");
+            require(draw(c,knots,1,0,0,42)!=draw(c,knots,1,0,0,43),"material ignores captured seed");
+            auto half=c;half.opacity=.5;require(std::abs(double(sum(draw(half,knots)))/sum(draw(c,knots))-.5)<.02,"stroke opacity accumulated per segment");
+        }
+        if(argc>2){
+            std::ofstream file(argv[2],std::ios::binary);file<<"P6\n512 512\n255\n";
+            std::vector<std::vector<std::uint8_t>> swatches;
+            for(const auto profile:{"chalk-compact-v1","watercolor-lite-v1"})for(unsigned row=0;row<2;++row)for(unsigned revision:{2U,3U}){
+                auto package=ink::BrushPackageCatalog{}.loadDefault(profile,revision).package;auto& config=*package.compactConfig;config.size=32;
+                config.color=config.family==foundation::InkFamily::kChalk?std::array<double,4>{.1,.32,.9,1}:std::array<double,4>{.8,.18,.25,1};
+                config.pressureSource=foundation::InkPressureSource::kDevice;
+                ink::BrushSession session(1,ink::resolveBrushState(package,42));require(session.begin(),"material swatch session");ink::BrushPreviewDelta delta;
+                for(unsigned i=0;i<140;++i){ink::BrushSample input{20+i*1.55,row?64+std::sin(i*.055)*24:64,.25+.55*i/139,true,i+1,std::uint64_t(i)*8'000'000,true,i==139};
+                    require(session.append({&input,1},{},delta)==ink::BrushSessionError::kNone,"material swatch input");}
+                ink::BrushCommitIntent intent;require(session.seal(intent)==ink::BrushSessionError::kNone,"material swatch seal");swatches.push_back(draw(config,intent.knots,1,0,0,42));}
+            for(unsigned row=0;row<4;++row)for(unsigned y=0;y<height;++y)for(unsigned col=0;col<2;++col)for(unsigned x=0;x<width;++x){
+                const auto& p=swatches[row*2+col];const auto offset=(y*width+x)*4;
+                for(unsigned channel=0;channel<3;++channel)file.put(char(std::min(255U,unsigned(p[offset+channel])+255-p[offset+3])));}
+        }
+    }else if(mode=="wax"||mode=="drywet-parity"){
+        for(const auto profile:mode=="wax"?std::vector<const char*>{"crayon-wax-v1"}:std::vector<const char*>{"chalk-compact-v1","watercolor-lite-v1"}){
+        const auto loaded=ink::BrushPackageCatalog{}.loadDefault(profile,3);
         require(bool(loaded),"pressure crayon revision missing");c=*loaded.package.compactConfig;
-        require(c.algorithmVersion==5&&c.signalVersion==3&&c.materialVersion==3,"crayon evaluator binding");
+        if(mode=="wax")require(c.algorithmVersion==5&&c.signalVersion==3&&c.materialVersion==3,"crayon evaluator binding");
+        else require(c.algorithmVersion==6&&c.signalVersion==3&&c.materialVersion==4,"drywet evaluator binding");
         c.size=24;c.thinning=0;c.opacity=1;
         require(ink::compactRadius(c,10000)==ink::compactRadius(c,55000),"pressure pigment fixture changed width");
         const auto light=draw(c,{{32,64,10000},{224,64,10000}});
@@ -47,7 +103,7 @@ int main(int argc,char** argv){
         unsigned translucent=0,opaque=0;double center=0,edge=0;
         for(unsigned x=48;x<208;++x){for(unsigned y=54;y<74;++y){const auto a=alpha(firm,x,y);translucent+=a>10&&a<235;opaque+=a>245;}
             center+=alpha(firm,x,64);edge+=alpha(firm,x,74);}
-        require(translucent>2000&&opaque<100,"crayon remains a solid scraped ribbon");
+        if(mode=="wax")require(translucent>2000&&opaque<100,"crayon remains a solid scraped ribbon");
         require(edge<center*.7&&edge>center*.015,"crayon lacks soft grain edge");
         auto translucentConfig=c;translucentConfig.opacity=.5;const auto halfOpacity=draw(translucentConfig,{{32,64,55000},{224,64,55000}});
         require(std::abs(double(sum(halfOpacity))/sum(firm)-.5)<.02,"whole-stroke opacity applied more than once");
@@ -100,10 +156,11 @@ int main(int argc,char** argv){
         require(full->readPixels(full->imageInfo(),a.data(),width*4,0,0),"seed reference readback");
         auto seeded=SkSurfaces::Raster(full->imageInfo());seeded->getCanvas()->clear(SK_ColorBLACK);
         render::internal::drawCompactCoverageToSkCanvas(*seeded->getCanvas(),c,intent.knots,0,-1,43);
-        require(seeded->readPixels(seeded->imageInfo(),b.data(),width*4,0,0)&&a!=b,"seed has no effect on pigment");
+        require(seeded->readPixels(seeded->imageInfo(),b.data(),width*4,0,0)&&(c.family==foundation::InkFamily::kWatercolor||a!=b),"seed has no effect on pigment");
         auto tapered=c;tapered.startTaper=16;tapered.endTaper=24;
         const auto taperedLine=draw(tapered,sparse);
-        require(alpha(taperedLine,34,68)<alpha(pixels,34,68)&&alpha(taperedLine,220,68)<alpha(pixels,220,68),"wax taper ignored");
+        if(mode=="wax")require(alpha(taperedLine,34,68)<alpha(pixels,34,68)&&alpha(taperedLine,220,68)<alpha(pixels,220,68),"wax taper ignored");
+        else require(sum(taperedLine)<sum(pixels)*.96,"pressure material taper ignored");
         if(argc>2){
             std::vector<std::vector<std::uint8_t>> swatches;
             const std::vector<foundation::InkKnot> curve{{20,84,15000},{50,40,20000},{86,80,30000},{125,40,40000},{164,80,54000},{206,42,42000},{236,65,24000}};
@@ -122,7 +179,7 @@ int main(int argc,char** argv){
                 const auto& p=swatches[row*2+col];const auto offset=(y*width+x)*4;
                 for(unsigned channel=0;channel<3;++channel)file.put(char(std::min(255U,unsigned(p[offset+channel])+255-p[offset+3])));}
         }
-        std::cout<<"wax light/firm="<<sum(light)<<"/"<<sum(firm)<<" translucent="<<translucent<<" edge/body="<<edge/center<<std::endl;
+        std::cout<<profile<<" light/firm="<<sum(light)<<"/"<<sum(firm)<<" translucent="<<translucent<<" edge/body="<<edge/center<<std::endl;}
     }else if(mode=="quality"){
 
         c=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
@@ -374,8 +431,10 @@ int main(int argc,char** argv){
             require(preview.retireSession(i+1,provider.generation()),"preview retirement");
         }
         std::cout<<"cache_retained_bytes="<<renderer.compactWork().retainedBytes<<" temporary_bytes="<<renderer.compactWork().temporaryBytes<<'\n';
-    }else if(mode=="scene-mask"||mode=="wax-mask"){
-        if(mode=="wax-mask"){c=*ink::BrushPackageCatalog{}.loadDefault("crayon-wax-v1",3).package.compactConfig;c.size=32;}
+    }else if(mode=="scene-mask"||mode=="wax-mask"||mode=="drywet-mask"){
+        for(const auto profile:mode=="drywet-mask"?std::vector<const char*>{"chalk-compact-v1","watercolor-lite-v1"}:std::vector<const char*>{"crayon-wax-v1"}){
+        if(mode=="drywet-mask"){c=*ink::BrushPackageCatalog{}.loadDefault(profile,3).package.compactConfig;c.size=32;}
+        else if(mode=="wax-mask"){c=*ink::BrushPackageCatalog{}.loadDefault("crayon-wax-v1",3).package.compactConfig;c.size=32;}
         else c.family=foundation::InkFamily::kChalk;
         semantic::ObjectRecord object;object.id=foundation::ObjectId::fromUint64(1);
         object.kind=semantic::ObjectKind::kVectorStroke;object.kind_version=3;
@@ -404,7 +463,7 @@ int main(int argc,char** argv){
         std::vector<std::uint8_t> pixels(width*height*4);
         require(provider.readbackRgba(pixels).code==render::BackendSubmissionCode::kAccepted,"mask readback");
         require(alpha(pixels,128,64)==0&&alpha(pixels,80,64)>0,"compact erase mask did not preserve only unmasked pixels");
-        std::cout<<"compact scene bounds + FramePlan + Skia mask accepted\n";
+        std::cout<<"compact scene bounds + FramePlan + Skia mask accepted\n";}
     }else if(mode=="presets"){
         for(const auto profile:{"marker-compact-v1","chalk-compact-v1","crayon-wax-v1","watercolor-lite-v1"}){
             const auto p=ink::BrushPackageCatalog{}.loadDefault(profile,1);
