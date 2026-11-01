@@ -536,7 +536,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     return frameIdHighWater_ == std::numeric_limits<std::uint64_t>::max()
                ? 0U : frameIdHighWater_ + 1U;
   }
-  [[nodiscard]] bool presentTransientOverlayFrame(std::uint64_t frameId) noexcept;
+  [[nodiscard]] bool presentTransientOverlayFrame(std::uint64_t frameId, bool frameOpportunity = false) noexcept;
   [[nodiscard]] bool retryTransientOverlayFrame() noexcept;
   [[nodiscard]] bool clearTransientOverlay() noexcept;
   [[nodiscard]] bool transientOverlayDirty() const noexcept {

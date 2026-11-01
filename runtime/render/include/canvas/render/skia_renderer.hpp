@@ -41,7 +41,7 @@ class SkiaRenderer final {
         SkiaSurfaceProvider&, const CanonicalViewportTransform&, const FrameState&);
     [[nodiscard]] BackendSubmissionResult renderNavigation(
         SkiaSurfaceProvider&, const CanonicalViewportTransform&, const FrameState&,
-        const NavigationSourceQuery&);
+        const NavigationSourceQuery&, bool allowPrewarm=false);
     [[nodiscard]] NavigationWork navigationWork() const noexcept;
     void cancelNavigationWork() noexcept;
     [[nodiscard]] BackendSubmissionResult renderTransientOverlay(

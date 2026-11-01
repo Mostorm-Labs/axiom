@@ -54,7 +54,7 @@ void compositeCompactCoverageToSkCanvas(SkCanvas&,const SkImage&,
 // intentionally topmost while a Shape/Connector is being authored.
 void drawInkEntriesToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,
-    SkiaTextResources* textResources = nullptr);
+    SkiaTextResources* textResources = nullptr, SkiaRenderCache* cache = nullptr);
 // Reuse the canonical renderer command mapping for a view-owned provisional
 // object. This value never enters Semantic or RuntimeScene storage.
 void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,

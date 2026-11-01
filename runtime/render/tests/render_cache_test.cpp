@@ -81,6 +81,16 @@ std::vector<std::uint8_t> pixels(SkiaSurfaceProvider& provider) {
     require(provider.readbackRgba(output).code==BackendSubmissionCode::kAccepted,"readback");
     return output;
 }
+// Real browser GPU completion requires an event-loop turn between owner ticks.
+// Keep that yield in the private harness; production never sleeps or waits.
+template<class... Args>
+BackendSubmissionResult navigate(SkiaRenderer& renderer, SkiaSurfaceProvider& provider,
+    const CanonicalViewportTransform& camera, Args&&... args) {
+#if defined(G5_TEST_WEBGL)
+    emscripten_sleep(1);
+#endif
+    return renderer.renderNavigation(provider,camera,std::forward<Args>(args)...);
+}
 class FailingPresent final : public SkiaSurfaceProvider {
   public:
     TestSurface raster;bool fail=true;
@@ -116,6 +126,40 @@ int main(int argc,char** argv) {
                 std::cerr<<"frame="<<frame.frame.frameId.value()<<" different channels="<<differences<<" max="<<maxError<<'\n';}
             require(actual==expected,"cached/direct pixels differ");
         };
+        {
+            semantic::ObjectRecord object;object.id=ObjectId::fromUint64(880);
+            object.kind=semantic::ObjectKind::kShape;object.kind_version=1;
+            object.content=semantic::ShapeContent{1,80,50};object.transform.tx=80;object.transform.ty=65;
+            const auto projection=projectRuntimeScene({&object,1},semantic::SemanticGeneration{1});
+            ReferenceTraversalEntry shape{projection.records.front(),true,ShapeReferenceCommand{std::get<semantic::ShapeContent>(object.content)}};
+            SkiaRenderer cached,oracle;oracle.setRenderCacheOptions(disabled);
+            auto ink=stroke(879);auto initial=plan(580,{ink,shape});
+            require(cached.renderFrame(provider,initial).code==BackendSubmissionCode::kAccepted,"warm canonical editing source");
+            const auto canonicalMisses=cached.renderCacheWork().misses;
+            EditingOverlay overlay(initial.frame);require(overlay.update({.selectedObject=object.id,.worldBounds=shape.record.worldBounds,.objectTransform=object.transform,.selected=true,.active=true}),"drag chrome");
+            const auto compareOverlay=[&](const FramePlan& frame){
+                require(cached.renderTransientOverlay(provider,frame,&overlay).code==BackendSubmissionCode::kAccepted&&
+                        oracle.renderTransientOverlay(reference,frame,&overlay).code==BackendSubmissionCode::kAccepted&&
+                        pixels(provider)==pixels(reference),"cached transient differs from Direct");
+            };
+            compareOverlay(initial);
+            require(cached.renderCacheWork().misses==canonicalMisses&&cached.renderCacheWork().hits>0,
+                    "first transient frame discarded canonical ink raster");
+            require(cached.renderCacheWork().misses>0,"transient editing bypasses shared ink cache");
+            const auto built=cached.renderCacheWork().misses;
+            shape.record.transform.tx+=20;compareOverlay(plan(581,{ink,shape}));
+            require(cached.renderCacheWork().misses==built&&cached.renderCacheWork().hits>0,"moving shape rerasterized unchanged ink");
+            overlay.setCreationPreview(object,{});compareOverlay(plan(582,{ink}));
+            const auto afterCreation=cached.renderCacheWork().misses;
+            object.transform.tx+=10;overlay.setCreationPreview(object,{});compareOverlay(plan(583,{ink}));
+            require(cached.renderCacheWork().misses==afterCreation,"creation replays unchanged ink Direct");
+            compareOverlay(plan(584,{ink},1,{1.25,0,0,1.25,-5,-6}));
+            auto masked=ink;semantic::FilledPathMask mask;
+            mask.path.commands={semantic::MoveTo{{40,0}},semantic::LineTo{{60,0}},semantic::LineTo{{60,128}},semantic::LineTo{{40,128}},semantic::ClosePath{}};
+            masked.record.eraseMasks={{ObjectId::fromUint64(881),mask}};
+            compareOverlay(plan(585,{masked,shape}));
+            cached.setImageResolver(nullptr);compareOverlay(plan(586,{masked,shape}));
+        }
 #if defined(G5_TEST_WEBGL)
         // Multiple device-grid boundaries, partial edge extents, transparent
         // material and resource denial are exercised on the actual GL context.
@@ -186,6 +230,29 @@ int main(int argc,char** argv) {
         // One long source must yield within the stroke; no intermediate target
         // pixels or receipt may escape, including on camera supersession.
         {
+            // Conservative Scene visibility can include geometry wholly outside
+            // the acquired clip. It must not abandon cooperative preparation
+            // and synchronously draw every other source.
+            auto invisible=stroke(890,-200);invisible.record.worldBounds={0,-250,256,128};
+            auto visible=stroke(891),other=stroke(892,70);
+            renderer.clearRenderCache();RenderPreparationBudget one;one.maxGroups=1;
+            one.maxMicroseconds=1000000;one.maxCoverageSteps=1;
+            const auto demand=plan(589,{invisible,visible,other});
+            const auto presents=provider.presentCount();
+            require(renderer.renderFrame(provider,demand,nullptr,&one).code==BackendSubmissionCode::kRetry&&
+                    provider.presentCount()==presents,"offscreen candidate forced synchronous exact fallback");
+            unsigned tries=0;BackendSubmissionResult result;
+            do{result=renderer.renderFrame(provider,demand,nullptr,&one);require(++tries<100,"offscreen preparation did not converge");}
+            while(result.code==BackendSubmissionCode::kRetry);
+            require(result.code==BackendSubmissionCode::kAccepted&&direct.renderFrame(reference,demand).code==BackendSubmissionCode::kAccepted&&
+                    pixels(provider)==pixels(reference),"offscreen preparation changed exact pixels");
+            const auto moved=plan(590,{invisible,visible,other},1,{1,0,0,1,0,240});
+            do{result=renderer.renderFrame(provider,moved,nullptr,&one);require(++tries<200,"offscreen admission camera update");}
+            while(result.code==BackendSubmissionCode::kRetry);
+            require(result.code==BackendSubmissionCode::kAccepted&&direct.renderFrame(reference,moved).code==BackendSubmissionCode::kAccepted&&
+                    pixels(provider)==pixels(reference),"offscreen admission survived camera change");
+        }
+        {
             auto longStroke=stroke(91);
             auto& content=std::get<CompactStrokeReferenceCommand>(longStroke.command).content;
             content.stroke.config.version=2;content.stroke.config.algorithmVersion=3;content.stroke.config.signalVersion=2;
@@ -196,13 +263,14 @@ int main(int argc,char** argv) {
             renderer.clearRenderCache();
             const auto previous=pixels(provider);const auto presents=provider.presentCount();
             const auto stepsBefore=renderer.renderCacheWork().preparationCoverageSteps;
+            const auto allocationsBefore=renderer.renderCacheWork().coverageTargetAllocations;
             RenderPreparationBudget bounded;bounded.maxGroups=1;bounded.maxMicroseconds=1000000;bounded.maxCoverageSteps=1;
             const auto demand=plan(595,{longStroke},1,{1.2,0,0,1.2,-6.3,-2.8});
             require(renderer.renderFrame(provider,demand,nullptr,&bounded).code==BackendSubmissionCode::kRetry,
                     "single long stroke monopolizes an exact preparation opportunity");
             require(provider.presentCount()==presents&&pixels(provider)==previous,"partial stroke escaped preparation");
             require(renderer.renderCacheWork().preparationCoverageSteps==stepsBefore+1,"single-step admission exceeded");
-            require(renderer.renderCacheWork().coverageTargetAllocations<=4,"temporary coverage residency unbounded");
+            require(renderer.renderCacheWork().coverageTargetAllocations<=allocationsBefore+4,"temporary coverage residency unbounded");
             auto replacement=plan(596,{longStroke},1,{.9,0,0,.9,8.7,4.3});
             unsigned retries=0;BackendSubmissionResult result;
             do{result=renderer.renderFrame(provider,replacement,nullptr,&bounded);++retries;require(retries<200,"resumed stroke never converges");}
@@ -327,7 +395,7 @@ int main(int argc,char** argv) {
             const auto presents=provider.presentCount(),submissions=worldRenderer.submissionCount();
             NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& entries){entries={wide};return true;};
             for(unsigned n=0;n<128;++n){
-                require(worldRenderer.renderNavigation(provider,{.5F,64,32},exactFrame.frame,query).code==BackendSubmissionCode::kAccepted,
+                require(navigate(worldRenderer,provider,{.5F,64,32},exactFrame.frame,query).code==BackendSubmissionCode::kAccepted,
                         "world navigation rejected");
                 if(!worldRenderer.navigationWork().pending)break;
                 require(n<127,"world navigation never completes");
@@ -339,7 +407,7 @@ int main(int argc,char** argv) {
                     "world navigation manufactured canonical submission");
             require(worldRenderer.navigationWork().tilesBuilt>0,"world tiles not built");
             const auto cleanPresents=provider.presentCount();
-            require(worldRenderer.renderNavigation(provider,{.5F,64,32},exactFrame.frame,query).code==BackendSubmissionCode::kAccepted&&
+            require(navigate(worldRenderer,provider,{.5F,64,32},exactFrame.frame,query).code==BackendSubmissionCode::kAccepted&&
                     provider.presentCount()==cleanPresents,"clean navigation presented twice");
         }
         {
@@ -354,7 +422,7 @@ int main(int argc,char** argv) {
             NavigationSourceQuery empty=[](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e.clear();return true;};
             const auto submissions=nav.submissionCount();
             for(unsigned n=0;n<128;++n){
-                require(nav.renderNavigation(retina,{1.02F,-8,-5},current,empty).code==BackendSubmissionCode::kAccepted,
+                require(navigate(nav,retina,{1.02F,-8,-5},current,empty).code==BackendSubmissionCode::kAccepted,
                         "retina pinch fell back to synchronous exact drawing");
                 if(!nav.navigationWork().pending)break;
                 require(n<127,"budget-adapted navigation never converged");
@@ -364,23 +432,36 @@ int main(int argc,char** argv) {
             require(nav.navigationWork().retainedBytes<=RenderCacheOptions{}.maxBytes,"retina navigation exceeded budget");
         }
         {
+            FailingPresent failed;require(failed.resize(256,128).code==BackendSubmissionCode::kAccepted,"feedback failure target");
+            failed.fail=false;SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=1;
+            nav.setRenderCacheOptions(options);const auto exact=plan(708,{stroke(907)});
+            require(nav.renderFrame(failed,exact).code==BackendSubmissionCode::kAccepted,"feedback failure exact");
+            failed.fail=true;
+            NavigationSourceQuery query=[](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e={stroke(907)};return true;};
+            require(navigate(nav,failed,{1.2F,-25.6F,-12.8F},exact.frame,query).code!=BackendSubmissionCode::kAccepted,
+                    "failed retained feedback present reported accepted");
+        }
+        {
             TestSurface feedback;require(feedback.resize(256,128).code==BackendSubmissionCode::kAccepted,"cold feedback target");
-            SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=1;nav.setRenderCacheOptions(options);
+            SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;nav.setRenderCacheOptions(options);
             auto entry=stroke(908);auto exact=plan(709,{entry});
             require(nav.renderFrame(feedback,exact).code==BackendSubmissionCode::kAccepted,"cold feedback exact");
             const auto before=pixels(feedback);
             const auto presents=feedback.presentCount(),submissions=nav.submissionCount();
-            NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e={entry};return true;};
-            require(nav.renderNavigation(feedback,{1.2F,-25.6F,-12.8F},exact.frame,query).code==BackendSubmissionCode::kAccepted,
+            bool sawQuery=false;
+            NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){
+                require(feedback.presentCount()>presents,"cold source query ran before latest-camera feedback");
+                sawQuery=true;e={entry};return true;};
+            require(navigate(nav,feedback,{1.2F,-25.6F,-12.8F},exact.frame,query).code==BackendSubmissionCode::kAccepted,
                     "cold pinch feedback rejected");
-            require(nav.navigationWork().pending&&nav.navigationWork().presented&&feedback.presentCount()==presents+1,
+            require(sawQuery&&nav.navigationWork().pending&&nav.navigationWork().presented&&feedback.presentCount()==presents+1,
                     "cold pinch froze while world tiles were preparing");
             require(pixels(feedback)!=before&&nav.submissionCount()==submissions,"cold feedback did not move pixels or qualified canonical");
             // A viewport screenshot may supply feedback only inside its known
             // coverage. Zoom-out must keep the complete display until world
             // coverage exists, never bring back the rectangular crop.
             const auto prior=feedback.presentCount();
-            require(nav.renderNavigation(feedback,{.5F,64,32},exact.frame,query).code==BackendSubmissionCode::kAccepted,
+            require(navigate(nav,feedback,{.5F,64,32},exact.frame,query).code==BackendSubmissionCode::kAccepted,
                     "cold zoom-out rejected");
             require(!nav.navigationWork().coverageComplete&&feedback.presentCount()==prior,
                     "partial screenshot was stretched over newly exposed content");
@@ -394,21 +475,25 @@ int main(int argc,char** argv) {
             longEntry.record.content=content;longEntry.record.worldBounds={-130,35,340,93};
             auto current=plan(710,{longEntry});
             NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e={longEntry};return true;};
-            require(nav.renderNavigation(longSurface,{1,0,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"long navigation");
+            require(navigate(nav,longSurface,{1,0,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"long navigation");
             require(nav.navigationWork().pending&&nav.navigationWork().knotSteps<=256,
                     "long stroke did not yield inside coverage");
             const auto beforeKnot=nav.navigationWork().knotSteps;
             // Slight camera motion does not obsolete a world-addressed job.
-            require(nav.renderNavigation(longSurface,{1,-.1F,0},current.frame,query).code==BackendSubmissionCode::kAccepted,
+            require(navigate(nav,longSurface,{1,-.1F,0},current.frame,query).code==BackendSubmissionCode::kAccepted,
                     "world job camera update");
             require(nav.navigationWork().knotSteps>beforeKnot,"camera update starved world job");
-            // A camera change cancels its partially rasterized tile; old work
-            // must not publish after target loss or a resource epoch change.
+            const auto cancelled=nav.navigationWork().cancelledJobs;
+            const auto discarded=nav.navigationWork().discardedKnotSteps;
+            require(navigate(nav,longSurface,{1,-10000,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"obsolete world demand");
+            require(nav.navigationWork().cancelledJobs>cancelled&&nav.navigationWork().discardedKnotSteps>discarded,
+                    "obsolete world job was retained or discarded work unaccounted");
+            // Old work must not publish after target loss or resource change.
             require(longSurface.lose().code==BackendSubmissionCode::kAccepted,"nav lost");
-            require(nav.renderNavigation(longSurface,{.5F,0,0},current.frame,query).code!=BackendSubmissionCode::kAccepted,
+            require(navigate(nav,longSurface,{.5F,0,0},current.frame,query).code!=BackendSubmissionCode::kAccepted,
                     "lost navigation accepted");
             require(longSurface.resize(256,128).code==BackendSubmissionCode::kAccepted,"nav restore");
-            require(nav.renderNavigation(longSurface,{1,0,0},current.frame,query).code==BackendSubmissionCode::kRejected,
+            require(navigate(nav,longSurface,{1,0,0},current.frame,query).code==BackendSubmissionCode::kRejected,
                     "old nav generation accepted");
         }
         {
@@ -420,7 +505,7 @@ int main(int argc,char** argv) {
             auto current=plan(720,{solid});
             NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e={solid};return true;};
             for(unsigned n=0;n<128;++n){
-                require(nav.renderNavigation(provider,{1,0,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"vector navigation");
+                require(navigate(nav,provider,{1,0,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"vector navigation");
                 if(!nav.navigationWork().pending)break;require(n<127,"vector nav loop");
             }
             const auto image=pixels(provider);
@@ -428,27 +513,27 @@ int main(int argc,char** argv) {
                 require(image[(60*256+x)*4]>=126&&image[(60*256+x)*4]<=129,"gutter or fallback double-blended vector ink");
             const auto built=nav.navigationWork().tilesBuilt;
             // Pan exposes at most one new column; interior world rasters stay reusable.
-            require(nav.renderNavigation(provider,{1,-1,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"world reuse pan");
+            require(navigate(nav,provider,{1,-1,0},current.frame,query).code==BackendSubmissionCode::kAccepted,"world reuse pan");
             require(nav.navigationWork().tilesBuilt<=built+2,"camera pan rebuilt all world rasters");
             nav.setImageResolver(nullptr);
-            require(nav.renderNavigation(provider,{1,-1,0},current.frame,query).code==BackendSubmissionCode::kAccepted&&
+            require(navigate(nav,provider,{1,-1,0},current.frame,query).code==BackendSubmissionCode::kAccepted&&
                     nav.navigationWork().tilesBuilt<=(built+8),"resource reset unusable");
         }
         {
             SkiaRenderer nav;auto entry=stroke(950);auto frame=plan(730,{entry});
             NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e={entry};return true;};
             for(unsigned n=0;n<128;++n){
-                require(nav.renderNavigation(provider,{1,-10,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"parent setup");
+                require(navigate(nav,provider,{1,-10,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"parent setup");
                 if(!nav.navigationWork().pending)break;require(n<127,"parent setup loop");
             }
             RenderCacheOptions singleStep;singleStep.navigationMaxSteps=1;nav.setRenderCacheOptions(singleStep);
             // Rebuild the base plane with deterministic one-quantum admission.
             for(unsigned n=0;n<256;++n){
-                require(nav.renderNavigation(provider,{1,-10,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"fallback base");
+                require(navigate(nav,provider,{1,-10,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,"fallback base");
                 if(!nav.navigationWork().pending)break;require(n<255,"fallback base loop");
             }
             const auto fallbackBefore=nav.navigationWork().fallbackUses;
-            require(nav.renderNavigation(provider,{1.5F,-12,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,
+            require(navigate(nav,provider,{1.5F,-12,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,
                     "parent scale switch");
             require(nav.navigationWork().fallbackUses>fallbackBefore,"ready parent coverage not selected");
             // Changed sources in the same world cells invalidate retained pixels.
@@ -456,13 +541,13 @@ int main(int argc,char** argv) {
             config.color={1,0,0,1};entry.record.content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
             auto next=plan(731,{entry});
             for(unsigned n=0;n<128;++n){
-                require(nav.renderNavigation(provider,{1,0,0},next.frame,query).code==BackendSubmissionCode::kAccepted,"new content nav");
+                require(navigate(nav,provider,{1,0,0},next.frame,query).code==BackendSubmissionCode::kAccepted,"new content nav");
                 if(!nav.navigationWork().pending)break;require(n<127,"new content loop");
             }
             const auto red=pixels(provider);require(red[(50*256+80)*4]>red[(50*256+80)*4+2],"stale world content survived scene change");
             RenderCacheOptions tiny;tiny.maxEntries=1;nav.setRenderCacheOptions(tiny);
             const auto presents=provider.presentCount();
-            require(nav.renderNavigation(provider,{1,0,0},next.frame,query).code!=BackendSubmissionCode::kAccepted&&
+            require(navigate(nav,provider,{1,0,0},next.frame,query).code!=BackendSubmissionCode::kAccepted&&
                     provider.presentCount()==presents,"nonconvergent residency published navigation");
         }
         {
@@ -472,23 +557,83 @@ int main(int argc,char** argv) {
                 e={entry,entry};return true;
             };
             const auto presents=provider.presentCount();
-            require(nav.renderNavigation(provider,{1,0,0},invalid.frame,malformed).code!=BackendSubmissionCode::kAccepted&&
+            require(navigate(nav,provider,{1,0,0},invalid.frame,malformed).code!=BackendSubmissionCode::kAccepted&&
                     provider.presentCount()==presents,"duplicate world source double-painted");
         }
+        {
+            // With no complete feedback, a generous time/query grant can
+            // prepare multiple cheap cells; one-cell admission freezes cold views.
+            SkiaRenderer nav;RenderCacheOptions options;options.navigationMicroseconds=1000000;
+            options.navigationMaxQueries=8;nav.setRenderCacheOptions(options);
+            const auto frame=plan(749,{stroke(969)});
+            NavigationSourceQuery empty=[](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e.clear();return true;};
+            require(navigate(nav,provider,{1,0,0},frame.frame,empty).code==BackendSubmissionCode::kAccepted,"cold grant");
+            require(nav.navigationWork().coverageComplete&&nav.navigationWork().initializations>1,"cold setup ignored available time/query grant");
+        }
+        {
+            // Work policy includes new Scene queries and cold target setup.
+            SkiaRenderer nav;RenderCacheOptions options;options.navigationMicroseconds=1000000;
+            options.navigationMaxQueries=1;options.navigationPrewarmTiles=2;nav.setRenderCacheOptions(options);
+            auto frame=plan(750,{stroke(970)});unsigned calls=0;
+            NavigationSourceQuery empty=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){++calls;e.clear();return true;};
+            for(unsigned i=0;i<128;++i){
+                const auto old=calls;
+                const auto initializations=nav.navigationWork().initializations;
+                require(navigate(nav,provider,{1,0,0},frame.frame,empty).code==BackendSubmissionCode::kAccepted,"query-bound navigation");
+                require(calls<=old+1&&nav.navigationWork().initializations<=initializations+1,"one opportunity exceeded query/initialization admission");
+                if(!nav.navigationWork().pending)break;require(i<127,"query-bounded navigation never converges");
+            }
+            const auto levelChanges=nav.navigationWork().levelChanges;
+            for(float scale:{1.01F,.99F,1.02F,.98F})
+                require(navigate(nav,provider,{scale,0,0},frame.frame,empty).code==BackendSubmissionCode::kAccepted,"scale boundary navigation");
+            require(nav.navigationWork().levelChanges==levelChanges,"scale boundary jitter rebuilds adjacent levels");
+            // Finish current visible work, then explicitly grant idle work.
+            for(unsigned i=0;i<128;++i){
+                require(navigate(nav,provider,{1,0,0},frame.frame,empty).code==BackendSubmissionCode::kAccepted,"settled navigation");
+                if(!nav.navigationWork().pending)break;require(i<127,"visible work never completes");
+            }
+            const auto presents=provider.presentCount(),submissions=nav.submissionCount();
+            for(unsigned i=0;i<16;++i)require(navigate(nav,provider,{1,0,0},frame.frame,empty,true).code==BackendSubmissionCode::kAccepted,"idle prewarm");
+            require(nav.navigationWork().prewarmTiles>0&&nav.navigationWork().prewarmTiles<=2,"idle prewarm is absent or unbounded");
+            require(nav.navigationWork().retainedBytes<=options.maxBytes&&nav.submissionCount()==submissions,"prewarm exceeded residency or created canonical work");
+            require(provider.presentCount()<=presents+2,"idle prewarm repeatedly presented unchanged pixels");
+            const auto oldCalls=calls;
+            for(unsigned i=0;i<4;++i)require(navigate(nav,provider,{1,0,0},frame.frame,empty,true).code==BackendSubmissionCode::kAccepted,"clean idle");
+            require(calls==oldCalls,"bounded prewarm continued admitting cold work");
+        }
+#if defined(G5_TEST_WEBGL)
+        {
+            // GPU is allowed to lag: zero-timeout completion polls may refuse
+            // further refinement; latest-camera composition must still present.
+            TestSurface surface;require(surface.resize(256,128).code==BackendSubmissionCode::kAccepted,"capacity target");
+            SkiaRenderer nav;RenderCacheOptions options;options.navigationMaxSteps=1;options.navigationMicroseconds=1000000;
+            nav.setRenderCacheOptions(options);const auto frame=plan(760,{stroke(980)});
+            require(nav.renderFrame(surface,frame).code==BackendSubmissionCode::kAccepted,"capacity exact");
+            NavigationSourceQuery empty=[](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& e){e.clear();return true;};
+            EM_ASM({const p=WebGL2RenderingContext.prototype;window.g5OriginalPoll=p.clientWaitSync;
+                p.clientWaitSync=function(...args){window.g5MaximumWait=Math.max(window.g5MaximumWait||0,args[2]);const result=window.g5OriginalPoll.apply(this,args);return result===this.WAIT_FAILED?result:this.TIMEOUT_EXPIRED;};});
+            const auto presents=surface.presentCount();
+            for(unsigned i=0;i<12;++i)require(navigate(nav,surface,{1.1F+float(i)*.002F,-14,-7},frame.frame,empty).code==BackendSubmissionCode::kAccepted,"capacity feedback");
+            EM_ASM({WebGL2RenderingContext.prototype.clientWaitSync=window.g5OriginalPoll;});
+            require(nav.navigationWork().gpuThrottles>0&&surface.presentCount()>presents+5,"GPU backlog blocks camera feedback or refinement is unbounded");
+            require(EM_ASM_INT({return window.g5MaximumWait||0;})==0,"navigation waits on GPU completion");
+            require(nav.submissionCount()==1,"capacity feedback created canonical submission");
+        }
+#endif
         // Navigation feedback is a separate submit and cannot manufacture a
         // canonical frame identity. Exact rendering after it must match Direct.
         compare(plan(90,{a}));
         const auto exactRaster=renderer.rasterizationCount();
         const auto oldPresent=provider.presentCount();
         const auto beforeNavigation=pixels(provider);
-        require(renderer.renderNavigation(provider,{1.1F,4.F,-3.F},
+        require(navigate(renderer,provider,{1.1F,4.F,-3.F},
             plan(90,{a}).frame).code==BackendSubmissionCode::kAccepted,
             "navigation reprojection unavailable");
         require(provider.presentCount()==oldPresent+1 && renderer.rasterizationCount()==exactRaster,
             "navigation rebuilt canonical stroke geometry");
         require(pixels(provider)!=beforeNavigation,"navigation present did not move visible pixels");
         auto stale=plan(91,{a});
-        require(renderer.renderNavigation(provider,{1.1F,4.F,-3.F},stale.frame).code!=BackendSubmissionCode::kAccepted,
+        require(navigate(renderer,provider,{1.1F,4.F,-3.F},stale.frame).code!=BackendSubmissionCode::kAccepted,
             "navigation reused another scene revision");
         compare(plan(92,{a},1,{1.1,0,0,1.1,4,-3}));
         renderer.clearRenderCache();

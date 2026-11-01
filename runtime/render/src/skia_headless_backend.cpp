@@ -1025,7 +1025,7 @@ void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraver
 
 void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
                               ImageResourceResolver* images,
-                              SkiaTextResources* textResources) {
+                              SkiaTextResources* textResources, SkiaRenderCache* cache) {
     canvas.save();
     scaleToDevice(canvas, plan.frame.metrics);
     canvas.clipRect(rect(plan.referenceDrawList.viewportClip));
@@ -1037,6 +1037,11 @@ void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
         if (!isInkReferenceEntry(entry)) continue;
         const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk) ||
             (plan.isolateEraseMasks && !entry.record.eraseMasks.empty());
+        if(cache){
+            try{if(cache->draw(canvas,plan,entry,isolatedInk))continue;}
+            catch(const std::bad_alloc&){cache->clear();}
+            cache->noteDirect();
+        }
         canvas.save();
         if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
         canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));

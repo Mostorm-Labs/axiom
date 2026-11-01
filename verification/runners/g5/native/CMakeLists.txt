@@ -83,7 +83,7 @@ if(EMSCRIPTEN)
   target_compile_definitions(g5_render_cache_gpu PRIVATE G5_TEST_WEBGL=1)
   target_compile_options(g5_render_cache_gpu PRIVATE -fexceptions)
   target_compile_features(g5_render_cache_gpu PRIVATE cxx_std_20)
-  target_link_options(g5_render_cache_gpu PRIVATE -fexceptions -sMODULARIZE=1 -sEXPORT_NAME=createCacheProbe -sENVIRONMENT=web -sALLOW_MEMORY_GROWTH=1 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -sEXIT_RUNTIME=1)
+  target_link_options(g5_render_cache_gpu PRIVATE -fexceptions -sASYNCIFY=1 -sMODULARIZE=1 -sEXPORT_NAME=createCacheProbe -sENVIRONMENT=web -sALLOW_MEMORY_GROWTH=1 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -sEXIT_RUNTIME=1)
 endif()
 
 add_executable(g5_navigation "${AXIOM_G5_SOURCE}/runtime/composition/tests/navigation_presentation_test.cpp")

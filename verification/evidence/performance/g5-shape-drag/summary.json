@@ -1,0 +1,60 @@
+{
+  "classification": "PASS_WITH_FINDINGS",
+  "physical_platform_classification": "BLOCKED_EVIDENCE",
+  "official_gate_issued": false,
+  "before": {
+    "drawStart": 9666.200000047684,
+    "firstPreviewDelayMs": 1622.3999999761581,
+    "maxPointerMs": 1657.2999999523163,
+    "maxDrawRafMs": 2.100000023841858,
+    "maxGapMs": 1658.8999999761581
+  },
+  "final": {
+    "drawStart": 9031.100000023842,
+    "firstPreviewDelayMs": 18.399999976158142,
+    "maxPointerMs": 1.100000023841858,
+    "maxDrawRafMs": 2,
+    "maxGapMs": 18.699999928474426
+  },
+  "empty_background": {
+    "drawStart": 333.2000000476837,
+    "firstPreviewDelayMs": 17.899999976158142,
+    "maxPointerMs": 1.899999976158142,
+    "maxDrawRafMs": 1.5,
+    "maxGapMs": 18.200000047683716
+  },
+  "before_final_pixel_sha256_equal": true,
+  "final_checks": {
+    "singleCommit": true,
+    "noCanonicalDuringDrag": true,
+    "moved": true,
+    "feedback": true,
+    "noErrors": true
+  },
+  "empty_checks": {
+    "singleCommit": true,
+    "noCanonicalDuringDrag": true,
+    "moved": true,
+    "feedback": true,
+    "noErrors": true
+  },
+  "native_tests": {
+    "passed": 27,
+    "failed": 0
+  },
+  "sdk_browser": "PASS",
+  "frame_handoff": "PASS",
+  "navigation": "PASS",
+  "limits": [
+    "synthetic DOM input and GL submissions; no physical input-to-photon timing",
+    "cold/evicted/unsupported groups can fall back to Direct",
+    "visible traversal/reference encoding still scales with scene size",
+    "CPU mutable brush-tail bottleneck remains separate",
+    "no full-root or physical-platform PASS"
+  ],
+  "webgl_direct_pixel_parity": {
+    "exit_code": 0,
+    "non_timing_errors": []
+  },
+  "cancel_restoration": "canonical request and qualified completion required; focused test passed after strengthening assertion"
+}

@@ -187,7 +187,10 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             auto device=entryMatrix(canvas,plan,entry).mapRect(support);device.outset(2,2);
             if(!device.isFinite())return Preparation::kFallback;
             SkIRect crop;device.roundOut(&crop);
-            if(!crop.intersect(canvas.getDeviceClipBounds()))return Preparation::kFallback;
+            if(!crop.intersect(canvas.getDeviceClipBounds())){
+                admissions_.insert_or_assign(entry.record.objectId,Admission{SkIRect::MakeEmpty()});
+                continue;
+            }
             const auto allocation=std::uint64_t(crop.width())*crop.height()*4;
             if(allocation>options.maxEntryBytes||allocation>options.maxBytes||bytes>options.maxBytes-allocation)
                 return Preparation::kFallback;
@@ -201,6 +204,8 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         (steps&&std::chrono::steady_clock::now()-start>=std::chrono::microseconds(slice.maxMicroseconds));};
     const auto yield=[&]{++work.preparationYields;return Preparation::kPending;};
     for(const auto& entry:plan.referenceDrawList.entries){
+        const auto admission=admissions_.find(entry.record.objectId);
+        if(admission!=admissions_.end()&&admission->second.crop.isEmpty())continue;
         const auto* group=groups_.find(entry.record.objectId);if(!group)return Preparation::kFallback;
         const auto found=entries_.find(entry.record.objectId);
         const RenderCacheValidity validity{group->revisions,targetEpoch_,false};
@@ -282,6 +287,12 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
     // SrcOver isolated groups are independent of the destination. Unknown
     // effects and destination-dependent erase stay on the Direct path.
     if(!options.enabled||!compact||!isolated||!source.contributesPixels||!options.maxEntries)return false;
+    // begin() invalidates these admission results with camera/clip/content.
+    // A conservative Scene hit outside the acquired clip contributes nothing.
+    if(admissionReady_){
+        const auto admission=admissions_.find(source.record.objectId);
+        if(admission!=admissions_.end()&&admission->second.crop.isEmpty())return true;
+    }
     const auto* group=groups_.find(source.record.objectId);if(!group)return false;
     const RenderCacheValidity validity{group->revisions,targetEpoch_,false};
     auto found=entries_.find(source.record.objectId);

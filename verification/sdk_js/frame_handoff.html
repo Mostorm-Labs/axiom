@@ -37,8 +37,9 @@ try{
   await until(()=>frames>0,'initial real presentation');
   await sdk.selectShape('rectangle');
   held=true;
-  pointer('pointerdown',40,40);
+  await sdk.zoomAt(0,0,1.01);
   await until(()=>delayed>0,'real pending GPU fence');
+  pointer('pointerdown',40,40);
   pointer('pointermove',160,140);pointer('pointerup',160,140);
   check(sdk.readState().objects===1,'canonical input committed while prior fence pending');
   held=false;

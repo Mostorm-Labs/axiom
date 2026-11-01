@@ -9,7 +9,9 @@
 #include "include/core/SkSurface.h"
 #include "include/core/SkImage.h"
 #include <map>
+#include <atomic>
 
+class SkCanvas;
 namespace canvas::render::internal {
 class SkiaNavigationTiles final {
  public:
@@ -17,7 +19,8 @@ class SkiaNavigationTiles final {
     void cancelWork(){cancel();work.pending=false;work.presented=false;}
     BackendSubmissionResult render(SkiaSurfaceProvider&,const CanonicalViewportTransform&,
         const FrameState&,const NavigationSourceQuery&,std::uint64_t resourceEpoch,
-        const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>);
+        const RenderCacheOptions&,std::shared_ptr<resources::ResourceBudgetManager>,bool allowPrewarm=false,
+        const std::function<bool()>& retainedFeedback={});
  private:
     struct Sources {std::uint64_t scene=0;std::vector<ReferenceTraversalEntry> entries;resources::ResourceLease lease;};
     struct Tile {
@@ -32,7 +35,8 @@ class SkiaNavigationTiles final {
         sk_sp<SkSurface> surface,coverage;
         std::size_t source=0,knot=0;
         double distance=0,totalDistance=0;
-        std::uint64_t id=0;
+        std::uint64_t id=0,steps=0;
+        bool prewarm=false;
         resources::ResourceLease lease;
     };
     std::map<TileKey,Tile> tiles_;
@@ -46,6 +50,13 @@ class SkiaNavigationTiles final {
     CanonicalViewportTransform camera_{};
     std::uint64_t scene_=0;
     bool dirty_=true;
+    std::optional<int> level_;
+    std::size_t warmed_=0;
+    struct Completion {std::atomic<bool> done=false;};
+    std::vector<std::shared_ptr<Completion>> gpuBatches_;
+    struct Patch {TileKey source;foundation::WorldRect area;};
+    bool coverage(std::span<const TileKey>,std::uint64_t scene,std::vector<Patch>&);
+    void compose(SkCanvas&,std::span<const Patch>,const CanonicalViewportTransform&,const FrameState&);
     void cancel();
 };
 }

@@ -1198,7 +1198,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   // pointer-up flash seen on Windows.
   transientOverlayDirty_ = false;
   transientOverlayHandoffPending_ = true;
-  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(true);
+  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(!platformPresentationDeferred_);
   if (!commit.has_value()) {
     return true;
   }
@@ -2488,7 +2488,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       if (phase == input::PointerPhase::kUp) {
         const bool accepted = !editingChanged_ || transformDrag_.commit();
         const bool handoff = accepted && editingChanged_;
-        if (handoff) { transientOverlayHandoffPending_ = true; if (previewProvider_) previewProvider_->setOverlayVisible(true); }
+        if (handoff) { transientOverlayHandoffPending_ = true; if (previewProvider_) previewProvider_->setOverlayVisible(!platformPresentationDeferred_); }
         cancelSelectionTransform();
         if (!handoff) (void)clearTransientOverlay();
         return accepted;
@@ -2731,7 +2731,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       const bool needsHandoff = accepted && editingChanged_;
       if (needsHandoff) {
         transientOverlayHandoffPending_ = true;
-        if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(true);
+        if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(!platformPresentationDeferred_);
       }
       cancelSelectionTransform();
       // A click on an already selected Shape draws an opaque transient copy,
@@ -4271,19 +4271,35 @@ bool CanvasEditingRuntime::previewActive() const noexcept {
 bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clock::time_point now, bool& presented) noexcept {
   presented=false;
   const auto* exact=lastPresentedCanonicalFrameState_.get();
+  // A live preview or its seal changes navigation eligibility, not the cost
+  // of rebuilding this camera. Keep exact preparation cooperative until a
+  // replacement is submitted, including when input interrupts the settle.
+  navigationExactPreparation_=platformPresentationDeferred_ && exact &&
+      surface_.available && exact->surfaceGeneration.value()==surface_.generation &&
+      exact->metricsGeneration.value()==surface_.metricsGeneration &&
+      exact->camera.generation.value()!=cameraGeneration();
   if(!exact || !surface_.available || !activeSurfaceProvider() ||
      lastSubmittedCanonicalFrame_ || !canonicalPresentationDirty_ ||
      exact->sceneGeneration!=semanticGeneration_.current() || exact->sceneReadToken.value()!=sceneRevision() ||
      exact->surfaceGeneration.value()!=surface_.generation || exact->metricsGeneration.value()!=surface_.metricsGeneration ||
-     previewActive() || !pendingCanonicalIdentities_.empty() || selectionOverlay() ||
+     !pendingCanonicalIdentities_.empty() || selectionOverlay() ||
      creationActive() || selectionTransformActive() || regionSelectionActive() ||
      semanticObjects_.documentBackground()!=foundation::DocumentBackground{}){
       skiaRenderer_.cancelNavigationWork();
-      navigationActive_=false;navigationExactPreparation_=false;return false;
+      navigationActive_=false;return false;
+  }
+  // Viewport-only canonical work has no semantic handoff to satisfy while
+  // confirmed input is still arriving. Let Composition submit the independent
+  // latest preview without spending this opportunity on background refinement.
+  if(!brushSessions_.empty()){
+      skiaRenderer_.cancelNavigationWork();navigationActive_=false;return navigationExactPreparation_;
+  }
+  if(previewActive()){
+      skiaRenderer_.cancelNavigationWork();navigationActive_=false;return false;
   }
   const auto generation=cameraGeneration();
   if(navigationCameraGeneration_!=generation){
-      navigationCameraGeneration_=generation;navigationChangedAt_=now;navigationActive_=true;navigationExactPreparation_=false;
+      navigationCameraGeneration_=generation;navigationChangedAt_=now;navigationActive_=true;
   }
   if(!navigationActive_)return false;
   if(!coordinator_->viewportClaimed() && now-navigationChangedAt_>=std::chrono::milliseconds(100) &&
@@ -4291,7 +4307,9 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       skiaRenderer_.cancelNavigationWork();
       navigationActive_=false;navigationExactPreparation_=true;return false;
   }
-  if(navigationSubmittedGeneration_==generation && !skiaRenderer_.navigationWork().pending)return true;
+  const bool idlePrewarm=!coordinator_->viewportClaimed()&&
+      now-navigationChangedAt_>=std::chrono::milliseconds(40);
+  if(navigationSubmittedGeneration_==generation && !skiaRenderer_.navigationWork().pending && !idlePrewarm)return true;
   const auto& camera=viewportController_->state();
   // Runtime owns the Scene query and ordered immutable commands. Render asks
   // for whole world tile regions, including its filter gutter.
@@ -4307,7 +4325,7 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
       entries=std::move(sources.value().entries);return true;
   };
   const auto result=skiaRenderer_.renderNavigation(*activeSurfaceProvider(),
-      {camera.scale,camera.translationX,camera.translationY},*exact,query);
+      {camera.scale,camera.translationX,camera.translationY},*exact,query,idlePrewarm);
   if(result.code!=render::BackendSubmissionCode::kAccepted){navigationActive_=false;return false;}
   navigationSubmittedGeneration_=generation;presented=skiaRenderer_.navigationWork().presented;
   return true;
@@ -4891,7 +4909,10 @@ bool CanvasEditingRuntime::receivePlatformPresented(
   return true;
 }
 
-bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) noexcept {
+bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, bool frameOpportunity) noexcept {
+  // Deferred hosts consume only the latest transform at a display opportunity.
+  // Pointer callbacks never build/rasterize a complete transient scene.
+  if(platformPresentationDeferred_&&!frameOpportunity){transientOverlayDirty_=true;return true;}
   std::lock_guard renderLock(previewRenderMutex_);
   std::lock_guard providerLock(previewProviderMutex_);
   transientOverlayDirty_ = true;
@@ -5155,15 +5176,21 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
         ? std::optional(previewConnectorGeometry(creationPreview().record)) : std::nullopt;
     selectionView_->editingOverlay().setCreationPreview(previewRecord, guides, route);
   }
-  const auto rendered = previewRenderer_.renderTransientOverlay(
-      *previewProvider_, plan.value(), selectionOverlay());
+  // Deferred editing uses the canonical target's warm cache for approximate
+  // full replacement feedback. No SkImage crosses contexts and no canonical
+  // receipt is issued until the terminal semantic frame is presented.
+  auto* target = platformPresentationDeferred_ ? activeSurfaceProvider() : previewProvider_;
+  if (target == nullptr) return false;
+  auto& renderer = platformPresentationDeferred_ ? skiaRenderer_ : previewRenderer_;
+  const auto rendered = renderer.renderTransientOverlay(
+      *target, plan.value(), selectionOverlay());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) return false;
   if (frameCoordinator_.submit(render::FrameRole::kPreview, frame.frameId, false) !=
       render::RuntimeFrameDisposition::kAccepted) return false;
   if (frameCoordinator_.receive({previewCapture.identity, render::FrameRole::kPreview,
                                  true, render::RuntimePresentEvidence::kApproximate}) !=
       render::RuntimeFrameDisposition::kAccepted) return false;
-  previewProvider_->setOverlayVisible(true);
+  previewProvider_->setOverlayVisible(!platformPresentationDeferred_);
   transientOverlayDirty_ = false;
   return true;
 }
@@ -5171,7 +5198,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
 bool CanvasEditingRuntime::retryTransientOverlayFrame() noexcept {
   if (!transientOverlayDirty_) return true;
   if (!creationActive() && !selectionTransformActive() && !regionSelectionActive()) return clearTransientOverlay();
-  return presentTransientOverlayFrame(nextCanonicalFrameId());
+  return presentTransientOverlayFrame(nextCanonicalFrameId(),true);
 }
 
 bool CanvasEditingRuntime::clearTransientOverlay() noexcept {

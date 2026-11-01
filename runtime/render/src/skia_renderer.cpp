@@ -259,34 +259,32 @@ BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& prov
     return provider.present();
 }
 BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
-    const CanonicalViewportTransform& camera,const FrameState& current,const NavigationSourceQuery& query){
+    const CanonicalViewportTransform& camera,const FrameState& current,const NavigationSourceQuery& query,bool allowPrewarm){
     if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
         resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
     if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
-    try{const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,renderCacheOptions_,resourceBudget_);
-        if(result.code!=BackendSubmissionCode::kAccepted){navigationTiles_.reset();return result;}
-        // While world cells are cold, an exact retained image can follow the
-        // camera immediately ONLY when it covers the entire requested view.
-        // Newly exposed regions still require world-source coverage; never
-        // restore the old zoom-out rectangular crop or qualify this as exact.
-        const auto cache=navigationCache_;
-        if(!navigationTiles_->work.presented&&!navigationTiles_->work.coverageComplete&&cache&&cache->frame){
-            const auto& old=cache->transform;
-            const auto previous=cache->feedbackCamera;
-            const bool changed=!previous||previous->scale!=camera.scale||
-                previous->translationX!=camera.translationX||previous->translationY!=camera.translationY;
-            const double ratio=camera.scale/old.a;
-            const double x=camera.translationX-ratio*old.tx,y=camera.translationY-ratio*old.ty;
-            if(changed&&old.a>0&&old.d==old.a&&old.b==0&&old.c==0&&x<=0&&y<=0&&
-               x+cache->frame->metrics.logicalWidth*ratio>=current.metrics.logicalWidth&&
-               y+cache->frame->metrics.logicalHeight*ratio>=current.metrics.logicalHeight){
-                const auto feedback=renderNavigation(provider,camera,current);
-                if(feedback.code!=BackendSubmissionCode::kAccepted)return feedback;
-                cache->feedbackCamera=camera;navigationTiles_->work.presented=true;
-            }
-        }
-        return result;}
-    catch(const std::bad_alloc&){navigationTiles_.reset();return BackendSubmissionResult::retry("world navigation allocation failure");}
+    std::optional<BackendSubmissionResult> feedbackFailure;
+    const auto retained=[&]()->bool{
+        const auto cache=navigationCache_;if(!cache||!cache->frame)return false;
+        const auto& old=cache->transform;const auto previous=cache->feedbackCamera;
+        const bool changed=!previous||previous->scale!=camera.scale||
+            previous->translationX!=camera.translationX||previous->translationY!=camera.translationY;
+        const double ratio=camera.scale/old.a;
+        const double x=camera.translationX-ratio*old.tx,y=camera.translationY-ratio*old.ty;
+        // Complete current viewport only. A cold zoom-out never uses cropped pixels.
+        if(!changed||old.a<=0||old.d!=old.a||old.b!=0||old.c!=0||x>0||y>0||
+           x+cache->frame->metrics.logicalWidth*ratio<current.metrics.logicalWidth||
+           y+cache->frame->metrics.logicalHeight*ratio<current.metrics.logicalHeight)return false;
+        const auto feedback=renderNavigation(provider,camera,current);
+        if(feedback.code!=BackendSubmissionCode::kAccepted){feedbackFailure=feedback;return false;}
+        cache->feedbackCamera=camera;return true;
+    };
+    try{
+        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,renderCacheOptions_,resourceBudget_,allowPrewarm,retained);
+        if(feedbackFailure){navigationTiles_.reset();return *feedbackFailure;}
+        if(result.code!=BackendSubmissionCode::kAccepted)navigationTiles_.reset();
+        return result;
+    }catch(const std::bad_alloc&){navigationTiles_.reset();return BackendSubmissionResult::retry("world navigation allocation failure");}
 }
 void SkiaRenderer::cancelNavigationWork() noexcept {if(navigationTiles_)navigationTiles_->cancelWork();}
 NavigationWork SkiaRenderer::navigationWork() const noexcept {
@@ -310,6 +308,21 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         return BackendSubmissionResult::rejected(acquired.message);
     }
     auto* canvas = acquired.frame.surface->getCanvas();
+    if(acquired.frame.generation!=plan.frame.surfaceGeneration.value()||
+       acquired.frame.surface->width()!=int(plan.frame.metrics.physicalWidth)||
+       acquired.frame.surface->height()!=int(plan.frame.metrics.physicalHeight)){
+        provider.release();return BackendSubmissionResult::rejected("stale transient target");
+    }
+    const auto validation=internal::validateReferencePlan(plan);
+    if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
+    internal::SkiaRenderCache* cache=nullptr;
+    try{
+        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
+            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
+        if(!renderCache_)renderCache_=std::make_shared<internal::SkiaRenderCache>();
+        renderCache_->budget=resourceBudget_;renderCache_->options=renderCacheOptions_;
+        renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_);cache=renderCache_.get();
+    }catch(const std::bad_alloc&){clearRenderCache();}
     // Selection/creation transient presentation is a complete replacement
     // frame for the overlay window.  Drawing only the moved object on a
     // transparent surface leaves the old canonical pixels visible underneath
@@ -318,7 +331,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     // whole scene first and then add the editing chrome.
     const auto scene = internal::drawReferencePlanToSkCanvas(
         *canvas, plan, images_, &textResources_,
-        !selectionOverlay->creationPreview().has_value());
+        !selectionOverlay->creationPreview().has_value(),cache);
     if (scene.code != BackendSubmissionCode::kAccepted) {
         provider.release();
         return scene;
@@ -326,7 +339,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     if (selectionOverlay->creationPreview()) {
         internal::drawTransientObjectToSkCanvas(*canvas, plan,
                                                  *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
-        internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
+        internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_,cache);
     }
     canvas->save();
     canvas->scale(plan.frame.metrics.physicalWidth / plan.frame.metrics.logicalWidth,

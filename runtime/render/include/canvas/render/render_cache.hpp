@@ -17,6 +17,11 @@ struct RenderCacheOptions final {
     std::size_t navigationMaxSteps=64;
     // V3 GPU saturated interior + pinned CPU exact edge; legacy stays CPU.
     bool gpuCoverageCandidate=true;
+    // Navigation admission policies, internal only; neither preempts a query
+    // nor promises a display deadline. Prewarm is optional and never pins demand.
+    std::uint64_t navigationMicroseconds=2000;
+    std::size_t navigationMaxQueries=4;
+    std::size_t navigationPrewarmTiles=2;
 };
 // Cooperative owner-thread admission policy, not a frame-latency guarantee.
 // Coverage checkpoints bound work inside an individual compact stroke.
