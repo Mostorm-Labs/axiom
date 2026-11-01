@@ -147,3 +147,27 @@ and the consumer's node_modules in `resolver.nodeModulesPaths`. An installed npm
 package does not need this development symlink setup. Apple simulator verification
 must request `ARCHS=arm64 ONLY_ACTIVE_ARCH=YES`; the initial XCFramework does not
 contain x86_64. Set both Podfile and application deployment target to iOS 17.
+
+## iPhone physical follow-up
+
+On 2026-11-01 (Asia/Shanghai), the signed Release consumer was installed and run
+on a connected iPhone 15 Pro with iOS 27.2. The initial consumer trapped in UIKit
+before Axiom startup because the RN 0.83 template did not adopt UIScene. The
+external consumer was updated to SceneDelegate + UIApplicationSceneManifest;
+Axiom SDK bytes/source were not redesigned. The App then launched with bundled
+JS and independent Skia/Metal surfaces.
+
+The user drew real finger strokes and confirmed the explicit checklist normal:
+partial eraser live effect, object erase at completion, Undo/Redo, two-finger
+zoom, detach/reattach retaining strokes/History, and background/foreground.
+Runtime logs record 16 successful pointer commits, and the final screenshot
+shows 9 objects, generation 23, contacts 0 and zoom 1.21. See
+[evidence/2026-11-01-iphone15pro/observation.json](evidence/2026-11-01-iphone15pro/observation.json)
+for the exact scope, sources and artifact hashes. Consumer App/SceneDelegate/
+Info.plist are retained there for reproduction.
+
+This closes the listed iOS manual smoke observations only. Native IME, Pencil/
+real pressure, rotation resize, measured performance, detailed render counters
+and the other platforms remain unqualified. Screen recording was unavailable on
+this device; screenshots and Runtime logs were retained. RN 0.2.0 remains private
+and NOT_QUALIFIED. No Gate or P34 acceptance is issued.
