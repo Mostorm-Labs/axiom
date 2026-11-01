@@ -1,0 +1,4913 @@
+{
+  "operationSha256": "02ce05cd74132e81354e4acf9a7a84083dcecc6e6818db980a420a2a692b86ec",
+  "runnerSha256": "e63fbc5e755f339c732207c1a48c6f33c39c46fcde3d867f7cc8b28a61590030",
+  "schema": "g5-mixed-scene-v1",
+  "brushConfig": {
+    "color": [
+      0.05000000074505806,
+      0.10000000149011612,
+      0.20000000298023224,
+      1
+    ],
+    "density": 0.65,
+    "deposition": 0.8,
+    "easing": 1,
+    "endCap": true,
+    "endTaper": 0,
+    "family": 1,
+    "laserFadeMs": 1000,
+    "laserTailLength": 300,
+    "markerAngle": 0.7853981633974483,
+    "markerFlatness": 0.25,
+    "opacity": 1,
+    "pressureModel": 2,
+    "pressureSource": 1,
+    "roundMode": 2,
+    "size": 16,
+    "smoothing": 0.61,
+    "startCap": true,
+    "startTaper": 0,
+    "streamline": 0.13,
+    "textureScale": 8,
+    "thinning": 0.99,
+    "version": 2,
+    "wetEdge": 0.4
+  },
+  "scenario": "ink",
+  "stateBefore": {
+    "activeContacts": 0,
+    "camera": {
+      "scale": 1,
+      "x": 0.00030517578125,
+      "y": 0.0001220703125
+    },
+    "canRedo": false,
+    "canUndo": true,
+    "creationMode": false,
+    "data": {
+      "attached": true,
+      "byteCapacity": 33554432,
+      "capacity": 4096,
+      "closing": false,
+      "fault": false,
+      "latest": {
+        "afterGeneration": "505",
+        "beforeGeneration": "504",
+        "binding": "1",
+        "cloudSynced": 0,
+        "commit": {
+          "ordinal": "505",
+          "runtimeEpoch": "1"
+        },
+        "documentId": "00000000000000000000000000000543",
+        "kind": 5,
+        "localDurable": 0,
+        "operationId": "666ac2388d128b5a1e30843ae023d570",
+        "source": 0,
+        "version": 1
+      },
+      "pending": 505,
+      "pendingBytes": 366600,
+      "releasedOrdinal": "0",
+      "statusCapacity": 4096,
+      "statusRecords": 0
+    },
+    "documentId": "00000000000000000000000000000543",
+    "eraserMode": 2,
+    "generation": "505",
+    "lastCommit": {
+      "cloudSynced": 0,
+      "localDurable": 0,
+      "operationId": "666ac2388d128b5a1e30843ae023d570",
+      "ordinal": "505",
+      "presentedGeneration": "505",
+      "runtimeEpoch": "1"
+    },
+    "objects": 503,
+    "primary": "686ac2388d128bda1e30843ae023d53f",
+    "selected": [
+      "686ac2388d128bda1e30843ae023d53f"
+    ],
+    "selectionMode": 0,
+    "selectionRevision": "3",
+    "shape": 0,
+    "surface": {
+      "available": true,
+      "height": 500,
+      "width": 800
+    },
+    "table": {
+      "columnId": "00000000000000000000000000000000",
+      "objectId": "00000000000000000000000000000000",
+      "rowId": "00000000000000000000000000000000"
+    },
+    "target": {
+      "attachmentEpoch": "2",
+      "runtimeEpoch": "1",
+      "viewEpoch": "1",
+      "viewId": "1"
+    },
+    "text": {
+      "composition": "0",
+      "phase": 0,
+      "selection": [
+        20,
+        0
+      ],
+      "sequence": "2",
+      "session": "1"
+    },
+    "tool": 0
+  },
+  "selectionBefore": null,
+  "selectionAfter": null,
+  "count": 500,
+  "dpr": 2,
+  "reverse": false,
+  "brush": {
+    "profile": "round-handdrawn",
+    "revision": 4
+  },
+  "scope": "fixed-timestamp synthetic pointer corpus; single-thread CPU wall elapsed, nested exclusive/inclusive; GL submission and exact receipt are not GPU execution or physical presentation",
+  "inputEnded": 14488.300000071526,
+  "exactReceiptDelayMs": 308,
+  "raw": {
+    "raf": [
+      {
+        "name": "",
+        "start": 13046,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13062.600000023842,
+        "duration": 175.5
+      },
+      {
+        "name": "",
+        "start": 13238.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13239,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 13239,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13245.899999976158,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "",
+        "start": 13246,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13262.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 13262.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13279,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "",
+        "start": 13279.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13295.899999976158,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "",
+        "start": 13296,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13312.600000023842,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 13312.600000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13329.300000071526,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 13329.300000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13345.200000047684,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 13345.200000047684,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13362,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "",
+        "start": 13362.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13379.300000071526,
+        "duration": 233.29999995231628
+      },
+      {
+        "name": "",
+        "start": 13612.600000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13613.5,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 13613.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13628.700000047684,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "",
+        "start": 13628.800000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13645.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 13645.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13662.800000071526,
+        "duration": 0.09999990463256836
+      },
+      {
+        "name": "",
+        "start": 13662.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13678.800000071526,
+        "duration": 0.09999990463256836
+      },
+      {
+        "name": "",
+        "start": 13678.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13696,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 13696,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13712.399999976158,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "",
+        "start": 13712.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13728.300000071526,
+        "duration": 0.09999990463256836
+      },
+      {
+        "name": "",
+        "start": 13728.399999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13744.300000071526,
+        "duration": 208.79999995231628
+      },
+      {
+        "name": "",
+        "start": 13953.100000023842,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "render",
+        "start": 13954,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 13954,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13962.600000023842,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "",
+        "start": 13962.700000047684,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13978.5,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 13978.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 13995.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 13995.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14012.5,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "",
+        "start": 14012.600000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14029.300000071526,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 14029.300000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14045.200000047684,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "",
+        "start": 14045.300000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14062.300000071526,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 14062.300000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14079.300000071526,
+        "duration": 3.799999952316284
+      },
+      {
+        "name": "",
+        "start": 14083.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14095.100000023842,
+        "duration": 3.700000047683716
+      },
+      {
+        "name": "",
+        "start": 14098.800000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14110.800000071526,
+        "duration": 6.299999952316284
+      },
+      {
+        "name": "",
+        "start": 14117.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14127.800000071526,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 14127.800000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14160.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 14160.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14162.800000071526,
+        "duration": 0
+      },
+      {
+        "name": "",
+        "start": 14162.800000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14178.100000023842,
+        "duration": 6.100000023841858
+      },
+      {
+        "name": "",
+        "start": 14184.200000047684,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14195.899999976158,
+        "duration": 5.900000095367432
+      },
+      {
+        "name": "",
+        "start": 14201.800000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14211.899999976158,
+        "duration": 6.200000047683716
+      },
+      {
+        "name": "",
+        "start": 14218.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14228.600000023842,
+        "duration": 6.200000047683716
+      },
+      {
+        "name": "",
+        "start": 14234.800000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14245.200000047684,
+        "duration": 6.299999952316284
+      },
+      {
+        "name": "",
+        "start": 14251.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14262.800000071526,
+        "duration": 6.299999952316284
+      },
+      {
+        "name": "",
+        "start": 14269.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14279.200000047684,
+        "duration": 5.899999976158142
+      },
+      {
+        "name": "",
+        "start": 14285.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14296.100000023842,
+        "duration": 6.100000023841858
+      },
+      {
+        "name": "",
+        "start": 14302.200000047684,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14311.800000071526,
+        "duration": 6.199999928474426
+      },
+      {
+        "name": "",
+        "start": 14318,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14328.5,
+        "duration": 6.399999976158142
+      },
+      {
+        "name": "",
+        "start": 14334.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14345.899999976158,
+        "duration": 6.400000095367432
+      },
+      {
+        "name": "",
+        "start": 14352.300000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14362.700000047684,
+        "duration": 6.600000023841858
+      },
+      {
+        "name": "",
+        "start": 14369.300000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14377.600000023842,
+        "duration": 6.600000023841858
+      },
+      {
+        "name": "",
+        "start": 14384.200000047684,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14395.100000023842,
+        "duration": 6.799999952316284
+      },
+      {
+        "name": "",
+        "start": 14401.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14412.5,
+        "duration": 6.899999976158142
+      },
+      {
+        "name": "",
+        "start": 14419.399999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14428.100000023842,
+        "duration": 6.799999952316284
+      },
+      {
+        "name": "",
+        "start": 14434.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14444.300000071526,
+        "duration": 6.899999976158142
+      },
+      {
+        "name": "",
+        "start": 14451.200000047684,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14462.800000071526,
+        "duration": 7
+      },
+      {
+        "name": "",
+        "start": 14469.800000071526,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14479.200000047684,
+        "duration": 7.199999928474426
+      },
+      {
+        "name": "",
+        "start": 14486.399999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14496.100000023842,
+        "duration": 182.20000004768372
+      },
+      {
+        "name": "render",
+        "start": 14678.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14695.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14712.600000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14727.700000047684,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "render",
+        "start": 14745.800000071526,
+        "duration": 0.09999990463256836
+      },
+      {
+        "name": "render",
+        "start": 14761.399999976158,
+        "duration": 0.10000002384185791
+      },
+      {
+        "name": "render",
+        "start": 14778.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 14795.800000071526,
+        "duration": 0.5
+      }
+    ],
+    "events": [
+      {
+        "start": 13046.100000023842,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13238.200000047684,
+        "duration": 0.6999999284744263,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13239,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13246,
+        "duration": 0.3999999761581421,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13262.899999976158,
+        "duration": 0.7000000476837158,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13279.100000023842,
+        "duration": 0.3999999761581421,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13296,
+        "duration": 0.6000000238418579,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13312.600000023842,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13329.300000071526,
+        "duration": 0.5999999046325684,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13345.200000047684,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13362.100000023842,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13612.700000047684,
+        "duration": 0.6000000238418579,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13613.5,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13628.800000071526,
+        "duration": 0.7999999523162842,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13645.899999976158,
+        "duration": 0.6000000238418579,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13662.899999976158,
+        "duration": 0.6000000238418579,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13678.899999976158,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13696,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13712.5,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13728.399999976158,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13953.200000047684,
+        "duration": 0.6000000238418579,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13954,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13962.800000071526,
+        "duration": 0.7999999523162842,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13978.5,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 13995.899999976158,
+        "duration": 0.6000000238418579,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 14012.600000023842,
+        "duration": 0.6000000238418579,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 14029.300000071526,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 14045.300000071526,
+        "duration": 0.3999999761581421,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 14062.300000071526,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      },
+      {
+        "start": 14083.100000023842,
+        "duration": 0.5,
+        "trusted": false,
+        "ctrlKey": true
+      }
+    ],
+    "frames": [
+      {
+        "time": 13612.600000023842,
+        "receipt": {
+          "presented": "280"
+        }
+      },
+      {
+        "time": 13953.100000023842,
+        "receipt": {
+          "presented": "281"
+        }
+      },
+      {
+        "time": 14083.100000023842,
+        "receipt": {
+          "presented": "282"
+        }
+      },
+      {
+        "time": 14796.300000071526,
+        "receipt": {
+          "presented": "283"
+        }
+      }
+    ],
+    "errors": [],
+    "active": false,
+    "before": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 1,
+        "x": 0.00030517578125,
+        "y": 0.0001220703125
+      },
+      "canRedo": false,
+      "canUndo": true,
+      "creationMode": false,
+      "data": {
+        "attached": true,
+        "byteCapacity": 33554432,
+        "capacity": 4096,
+        "closing": false,
+        "fault": false,
+        "latest": {
+          "afterGeneration": "505",
+          "beforeGeneration": "504",
+          "binding": "1",
+          "cloudSynced": 0,
+          "commit": {
+            "ordinal": "505",
+            "runtimeEpoch": "1"
+          },
+          "documentId": "00000000000000000000000000000543",
+          "kind": 5,
+          "localDurable": 0,
+          "operationId": "666ac2388d128b5a1e30843ae023d570",
+          "source": 0,
+          "version": 1
+        },
+        "pending": 505,
+        "pendingBytes": 366600,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "00000000000000000000000000000543",
+      "eraserMode": 2,
+      "generation": "505",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "666ac2388d128b5a1e30843ae023d570",
+        "ordinal": "505",
+        "presentedGeneration": "505",
+        "runtimeEpoch": "1"
+      },
+      "objects": 503,
+      "primary": "686ac2388d128bda1e30843ae023d53f",
+      "selected": [
+        "686ac2388d128bda1e30843ae023d53f"
+      ],
+      "selectionMode": 0,
+      "selectionRevision": "3",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 500,
+        "width": 800
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          20,
+          0
+        ],
+        "sequence": "2",
+        "session": "1"
+      },
+      "tool": 0
+    },
+    "inputEnded": 14488.300000071526,
+    "after": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 2.4596025943756104,
+        "x": -583.8402099609375,
+        "y": -364.90020751953125
+      },
+      "canRedo": false,
+      "canUndo": true,
+      "creationMode": false,
+      "data": {
+        "attached": true,
+        "byteCapacity": 33554432,
+        "capacity": 4096,
+        "closing": false,
+        "fault": false,
+        "latest": {
+          "afterGeneration": "506",
+          "beforeGeneration": "505",
+          "binding": "1",
+          "cloudSynced": 0,
+          "commit": {
+            "ordinal": "506",
+            "runtimeEpoch": "1"
+          },
+          "documentId": "00000000000000000000000000000543",
+          "kind": 10,
+          "localDurable": 0,
+          "operationId": "676ac2388d128bda1e30843ae023d570",
+          "source": 0,
+          "version": 1
+        },
+        "pending": 506,
+        "pendingBytes": 367457,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "00000000000000000000000000000543",
+      "eraserMode": 2,
+      "generation": "506",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "676ac2388d128bda1e30843ae023d570",
+        "ordinal": "506",
+        "presentedGeneration": "506",
+        "runtimeEpoch": "1"
+      },
+      "objects": 504,
+      "primary": "686ac2388d128bda1e30843ae023d53f",
+      "selected": [
+        "686ac2388d128bda1e30843ae023d53f"
+      ],
+      "selectionMode": 0,
+      "selectionRevision": "3",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 500,
+        "width": 800
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          20,
+          0
+        ],
+        "sequence": "2",
+        "session": "1"
+      },
+      "tool": 0
+    },
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)",
+    "pointerTimes": [
+      {
+        "start": 14098.800000071526,
+        "duration": 1.1999999284744263
+      },
+      {
+        "start": 14117.100000023842,
+        "duration": 0.5
+      },
+      {
+        "start": 14127.800000071526,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 14160.100000023842,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 14162.899999976158,
+        "duration": 0.30000007152557373
+      },
+      {
+        "start": 14184.200000047684,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 14201.800000071526,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 14218.100000023842,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 14234.800000071526,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 14251.5,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 14269.100000023842,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 14285.100000023842,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 14302.200000047684,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 14318,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 14334.899999976158,
+        "duration": 0.30000007152557373
+      },
+      {
+        "start": 14352.300000071526,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 14369.300000071526,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 14384.200000047684,
+        "duration": 0.19999992847442627
+      },
+      {
+        "start": 14401.899999976158,
+        "duration": 0.30000007152557373
+      },
+      {
+        "start": 14419.399999976158,
+        "duration": 0.30000007152557373
+      },
+      {
+        "start": 14434.899999976158,
+        "duration": 0.30000007152557373
+      },
+      {
+        "start": 14451.200000047684,
+        "duration": 0.2999999523162842
+      },
+      {
+        "start": 14469.800000071526,
+        "duration": 0.19999992847442627
+      },
+      {
+        "start": 14486.399999976158,
+        "duration": 1.9000000953674316
+      }
+    ],
+    "fences": [
+      {
+        "name": "fenceSync",
+        "start": 8005.300000071526,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8006.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8012.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8027.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8046.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8062.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8078.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8096.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8113,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8128.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8146,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 8358.800000071526,
+        "duration": 0.09999990463256836,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8359.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8362.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8378.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8396.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8412.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8429.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8446.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8462.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8479.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8495.600000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 8737.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8738,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8746.100000023842,
+        "duration": 0.10000002384185791,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8762.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8778.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8796.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8811.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8828.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8846.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 8863,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 9073.200000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9074.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9079.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9095,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9112.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9128.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9146,
+        "duration": 0.10000002384185791,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9162.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9179.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9195.200000047684,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 9213,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9213,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9214.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9214.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9216.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9217,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9217,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9217.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9217.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9217.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9217.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9217.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9217.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9217.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9218.300000071526,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9218.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9227.899999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9227.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9227.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9230.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9230.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9230.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9230.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9230.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9231,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9231,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9231.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9231.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9231.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9231.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9231.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9246.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9246.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9263,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9263.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9279.300000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9279.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9279.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9282.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9282.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9282.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9282.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9282.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9282.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9282.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9282.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9282.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9283,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9283.200000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9283.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9313.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9313.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9329.300000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9329.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9329.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9331.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9331.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9332,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9332.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9332.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9332.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9332.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9332.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9332.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9332.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9332.899999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9332.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9346,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9346.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9362.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9362.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9378.399999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9378.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9378.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9381.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9381.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9381.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9381.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9381.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9422.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9422.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9423,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9423,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9424.100000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9424.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9424.100000023842,
+        "duration": 0.10000002384185791,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9426.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9426.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9426.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9426.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9426.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9426.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9426.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9426.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9426.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9427.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9427.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9429.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9429.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9445.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9445.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9462,
+        "duration": 0.10000002384185791,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9462.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9462.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9464.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9464.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9464.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9464.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9464.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9464.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9465.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9465.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9465.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9465.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9465.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9491.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9491.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9494.5,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9494.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9494.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9497,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9497,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9497.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9497.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9497.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9497.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9497.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9497.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9497.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9497.899999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9497.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9512.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9512.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9537.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9537.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9544.700000047684,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9544.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9544.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9546.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9546.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9546.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9547,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9547,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9547.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9547.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9547.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9547.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9547.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9547.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9583.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9583.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9596.300000071526,
+        "duration": 0.09999990463256836,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9596.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9596.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9597.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9597.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9597.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9598,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9598.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9598.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9611.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9611.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9629.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9630,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9645.300000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9645.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9645.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9645.399999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9645.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9662.300000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9662.300000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 9665.700000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9665.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9679.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9679.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9681.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9681.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9681.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9681.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9681.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9681.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9681.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9682,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9682.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9682.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9682.399999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9682.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9695.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9695.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9712.600000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9712.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9712.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9714.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9714.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9715,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9715.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9715.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9715.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9715.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9715.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9715.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9715.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9715.899999976158,
+        "duration": 0.10000002384185791,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9716,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9728.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9728.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9744.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9744.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9762.300000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9762.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9762.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9764.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9764.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9765.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9765.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9765.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9765.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9765.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9765.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9765.800000071526,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9765.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9791.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9791.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9796.300000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9796.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9796.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9798.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9798.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9798.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9799,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9799,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9799.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9799.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9799.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9799.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9799.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9799.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9799.899999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9799.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9812,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9812,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9831.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9831.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9846.300000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9846.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9846.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9848.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9848.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9848.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9848.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9849,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9849.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9849.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9849.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9849.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9849.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9849.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9849.700000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9849.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9885.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9885.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9896,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9896,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9896,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9898.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9898.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9898.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9898.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9898.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9898.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9898.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9898.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9899,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9899.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9899.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 9899.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9899.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9912.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9912.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9939.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9939.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9946.100000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9946.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 9946.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10172.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10172.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10172.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10172.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10173,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10173.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10173.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10173.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10174,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10174.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10174.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10174.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10175.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10175.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10175.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10176,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10176.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10176.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10178.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 10179.399999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10180.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10196,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10212.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10228.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10245.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10262.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10278.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10296.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10311.800000071526,
+        "duration": 0.09999990463256836,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10311.899999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 10522.399999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10523.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10528.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10545.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10562.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10578.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10595.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10612.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10628.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10645.899999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 10879.800000071526,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10880.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10896.300000071526,
+        "duration": 0.09999990463256836,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10912.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10928.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10946,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10961.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10978.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 10994.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11012.5,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 11227.800000071526,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11228.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11246.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11262.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11279.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11296.200000047684,
+        "duration": 0.10000002384185791,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11312.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11329.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11346,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11362.899999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 11545,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11545.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11561.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11578.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11596.300000071526,
+        "duration": 0.09999990463256836,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11613,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11629.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11646,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11661,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11679.200000047684,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 11845.200000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11845.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11862.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11879.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 11896,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 12102.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 12112.600000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 12485.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 12496.200000047684,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 13238,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13239,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13245.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13262.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13279,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13296,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13312.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13329.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13345.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13362.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13379.300000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 13612.5,
+        "duration": 0.10000002384185791,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13613.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13628.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13645.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13662.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13678.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13696,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13712.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13728.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13744.300000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 13953,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13954,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13962.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13978.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 13995.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14012.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14029.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14045.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14062.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14079.300000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14082.700000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14082.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14095.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14095.200000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14097.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14097.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14097.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14097.899999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14098,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14098.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14098.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14098.300000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14098.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14098.399999976158,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 14098.600000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14098.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "fenceSync",
+        "start": 14117.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14127.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14160.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14162.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14178.100000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14184.200000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14195.899999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14201.700000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14211.899999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14218.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14228.600000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14234.700000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14245.200000047684,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14251.5,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14262.800000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14269.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14279.200000047684,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14285.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14296.100000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14302.200000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14311.800000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14318,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14328.5,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14334.800000071526,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14345.899999976158,
+        "duration": 0.10000002384185791,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14352.300000071526,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14362.700000047684,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14369.300000071526,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14377.600000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14384.100000023842,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14395.200000047684,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14401.800000071526,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14412.5,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14419.300000071526,
+        "duration": 0.09999990463256836,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14428.100000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14434.899999976158,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14444.300000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14451.200000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14462.800000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14469.700000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14479.200000047684,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14486.300000071526,
+        "duration": 0.09999990463256836,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14496.100000023842,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14666.399999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14666.399999976158,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "fenceSync",
+        "start": 14678.200000047684,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "fenceSync",
+        "start": 14678.300000071526,
+        "duration": 0,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14678.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14678.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14695.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14695.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14712.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14712.600000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14727.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14727.700000047684,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14745.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14745.800000071526,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14761.399999976158,
+        "duration": 0.10000002384185791,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14761.5,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14778.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14778.100000023842,
+        "duration": 0,
+        "status": 37147
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14795.800000071526,
+        "duration": 0,
+        "status": 37148
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 14795.800000071526,
+        "duration": 0,
+        "status": 37148
+      }
+    ]
+  },
+  "exceptions": [],
+  "timingRows": [
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "299",
+      "semantic": "505",
+      "scene": "505",
+      "camera": "122",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 13063400000,
+      "outcome": "accepted",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 174300000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 1400000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 171000000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 2
+        },
+        "cache_begin": {
+          "inclusive_ns": 1200000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_draw": {
+          "inclusive_ns": 158300000,
+          "exclusive_ns": 2400000,
+          "calls": 503
+        },
+        "coverage_record": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 500
+        },
+        "scratch_draw": {
+          "inclusive_ns": 154200000,
+          "exclusive_ns": 1100000,
+          "calls": 500
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 136600000,
+          "exclusive_ns": 136600000,
+          "calls": 1650
+        },
+        "material_submit": {
+          "inclusive_ns": 16500000,
+          "exclusive_ns": 16500000,
+          "calls": 1650
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 1300000,
+          "exclusive_ns": 1300000,
+          "calls": 500
+        },
+        "scene_draw": {
+          "inclusive_ns": 158900000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "navigation_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "provider_present": {
+          "inclusive_ns": 10700000,
+          "exclusive_ns": 10700000,
+          "calls": 1
+        }
+      },
+      "counts": {
+        "candidates": 503,
+        "sources": 503,
+        "encoded_bytes": 399887,
+        "plan_entries": 503,
+        "prepare_knots": 0,
+        "built_groups": 0,
+        "coverage_tiles": 1650,
+        "coverage_pixels": 108134400,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "300",
+      "semantic": "505",
+      "scene": "505",
+      "camera": "132",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 13380100000,
+      "outcome": "accepted",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 232200000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 1400000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 228900000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 2
+        },
+        "cache_begin": {
+          "inclusive_ns": 1100000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_draw": {
+          "inclusive_ns": 216000000,
+          "exclusive_ns": 2600000,
+          "calls": 502
+        },
+        "coverage_record": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 500
+        },
+        "scratch_draw": {
+          "inclusive_ns": 211200000,
+          "exclusive_ns": 1300000,
+          "calls": 500
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 191300000,
+          "exclusive_ns": 191300000,
+          "calls": 1725
+        },
+        "material_submit": {
+          "inclusive_ns": 18600000,
+          "exclusive_ns": 18600000,
+          "calls": 1725
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 1800000,
+          "exclusive_ns": 1800000,
+          "calls": 500
+        },
+        "scene_draw": {
+          "inclusive_ns": 216400000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "navigation_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "provider_present": {
+          "inclusive_ns": 11200000,
+          "exclusive_ns": 11200000,
+          "calls": 1
+        }
+      },
+      "counts": {
+        "candidates": 503,
+        "sources": 502,
+        "encoded_bytes": 399555,
+        "plan_entries": 502,
+        "prepare_knots": 0,
+        "built_groups": 0,
+        "coverage_tiles": 1725,
+        "coverage_pixels": 112128000,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "301",
+      "semantic": "505",
+      "scene": "505",
+      "camera": "141",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 13745200000,
+      "outcome": "accepted",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 207500000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 1400000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 204400000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 2
+        },
+        "cache_begin": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_draw": {
+          "inclusive_ns": 193400000,
+          "exclusive_ns": 2400000,
+          "calls": 476
+        },
+        "coverage_record": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 475
+        },
+        "scratch_draw": {
+          "inclusive_ns": 189400000,
+          "exclusive_ns": 1300000,
+          "calls": 450
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 171200000,
+          "exclusive_ns": 171200000,
+          "calls": 1575
+        },
+        "material_submit": {
+          "inclusive_ns": 16900000,
+          "exclusive_ns": 16900000,
+          "calls": 1575
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 1600000,
+          "exclusive_ns": 1600000,
+          "calls": 450
+        },
+        "scene_draw": {
+          "inclusive_ns": 193700000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "navigation_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "provider_present": {
+          "inclusive_ns": 9500000,
+          "exclusive_ns": 9500000,
+          "calls": 1
+        }
+      },
+      "counts": {
+        "candidates": 503,
+        "sources": 476,
+        "encoded_bytes": 379181,
+        "plan_entries": 476,
+        "prepare_knots": 0,
+        "built_groups": 0,
+        "coverage_tiles": 1575,
+        "coverage_pixels": 101836800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": true,
+      "view": "1",
+      "frame": "302",
+      "semantic": "506",
+      "scene": "506",
+      "camera": "151",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 14496800000,
+      "outcome": "accepted",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 174600000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 1100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 171900000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 2
+        },
+        "cache_begin": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_draw": {
+          "inclusive_ns": 162200000,
+          "exclusive_ns": 1200000,
+          "calls": 427
+        },
+        "coverage_record": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 426
+        },
+        "scratch_draw": {
+          "inclusive_ns": 159500000,
+          "exclusive_ns": 700000,
+          "calls": 401
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 142800000,
+          "exclusive_ns": 142800000,
+          "calls": 1431
+        },
+        "material_submit": {
+          "inclusive_ns": 16000000,
+          "exclusive_ns": 16000000,
+          "calls": 1431
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 1100000,
+          "exclusive_ns": 1100000,
+          "calls": 401
+        },
+        "scene_draw": {
+          "inclusive_ns": 162700000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "navigation_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "provider_present": {
+          "inclusive_ns": 8400000,
+          "exclusive_ns": 8400000,
+          "calls": 1
+        }
+      },
+      "counts": {
+        "candidates": 504,
+        "sources": 427,
+        "encoded_bytes": 340268,
+        "plan_entries": 427,
+        "prepare_knots": 0,
+        "built_groups": 0,
+        "coverage_tiles": 1431,
+        "coverage_pixels": 91478016,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0
+      }
+    }
+  ],
+  "image": {
+    "width": 1600,
+    "height": 1000,
+    "rgbaSha256": "8a2d7e3071fb7e22e5951ed21ffc495b79865797329c52b48468799a9843fc7f",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+  },
+  "sha256": {
+    "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+    "axiom.wasm": "2779ca681a8fdad663d66a76e305e1bfd492bb118a0668830f319ac60aae1f29",
+    "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+    "internal/axiom.mjs": "f507f06c61dcd981dc520bd6684f8937f2591c3c037a20348f537a48c640ae29"
+  }
+}

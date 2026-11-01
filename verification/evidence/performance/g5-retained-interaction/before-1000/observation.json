@@ -1,0 +1,5298 @@
+{
+  "operationSha256": "04b15011798ab42145e1c14dce6fe771a51fa48c59aa1257b7653aff6b35966e",
+  "runnerSha256": "e63fbc5e755f339c732207c1a48c6f33c39c46fcde3d867f7cc8b28a61590030",
+  "schema": "g5-mixed-scene-v1",
+  "brushConfig": {
+    "color": [
+      0.05000000074505806,
+      0.10000000149011612,
+      0.20000000298023224,
+      1
+    ],
+    "density": 0.65,
+    "deposition": 0.8,
+    "easing": 1,
+    "endCap": true,
+    "endTaper": 0,
+    "family": 1,
+    "laserFadeMs": 1000,
+    "laserTailLength": 300,
+    "markerAngle": 0.7853981633974483,
+    "markerFlatness": 0.25,
+    "opacity": 1,
+    "pressureModel": 2,
+    "pressureSource": 1,
+    "roundMode": 2,
+    "size": 16,
+    "smoothing": 0.61,
+    "startCap": true,
+    "startTaper": 0,
+    "streamline": 0.13,
+    "textureScale": 8,
+    "thinning": 0.99,
+    "version": 2,
+    "wetEdge": 0.4
+  },
+  "scenario": "drag",
+  "stateBefore": {
+    "activeContacts": 0,
+    "camera": {
+      "scale": 1,
+      "x": 0,
+      "y": 0
+    },
+    "canRedo": false,
+    "canUndo": true,
+    "creationMode": false,
+    "data": {
+      "attached": true,
+      "byteCapacity": 33554432,
+      "capacity": 4096,
+      "closing": false,
+      "fault": false,
+      "latest": {
+        "afterGeneration": "1004",
+        "beforeGeneration": "1003",
+        "binding": "1",
+        "cloudSynced": 0,
+        "commit": {
+          "ordinal": "1004",
+          "runtimeEpoch": "1"
+        },
+        "documentId": "00000000000000000000000000000543",
+        "kind": 1,
+        "localDurable": 0,
+        "operationId": "9b1786b808b79e81b68bc445d8d96f51",
+        "source": 0,
+        "version": 1
+      },
+      "pending": 1004,
+      "pendingBytes": 731974,
+      "releasedOrdinal": "0",
+      "statusCapacity": 4096,
+      "statusRecords": 0
+    },
+    "documentId": "00000000000000000000000000000543",
+    "eraserMode": 2,
+    "generation": "1004",
+    "lastCommit": {
+      "cloudSynced": 0,
+      "localDurable": 0,
+      "operationId": "9b1786b808b79e81b68bc445d8d96f51",
+      "ordinal": "1004",
+      "presentedGeneration": "1004",
+      "runtimeEpoch": "1"
+    },
+    "objects": 1003,
+    "primary": "9a1786b808b79e01b68bc445d8d96f1e",
+    "selected": [
+      "9a1786b808b79e01b68bc445d8d96f1e"
+    ],
+    "selectionMode": 0,
+    "selectionRevision": "2",
+    "shape": 0,
+    "surface": {
+      "available": true,
+      "height": 500,
+      "width": 800
+    },
+    "table": {
+      "columnId": "00000000000000000000000000000000",
+      "objectId": "00000000000000000000000000000000",
+      "rowId": "00000000000000000000000000000000"
+    },
+    "target": {
+      "attachmentEpoch": "2",
+      "runtimeEpoch": "1",
+      "viewEpoch": "1",
+      "viewId": "1"
+    },
+    "text": {
+      "composition": "0",
+      "phase": 0,
+      "selection": [
+        20,
+        0
+      ],
+      "sequence": "2",
+      "session": "1"
+    },
+    "tool": 0
+  },
+  "selectionBefore": {
+    "actions": [
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": false,
+        "reason": 18,
+        "state": 0
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": false,
+        "reason": 11,
+        "state": 0
+      },
+      {
+        "available": false,
+        "reason": 12,
+        "state": 0
+      },
+      {
+        "available": false,
+        "reason": 14,
+        "state": 0
+      },
+      {
+        "available": false,
+        "reason": 13,
+        "state": 2
+      },
+      {
+        "available": false,
+        "reason": 13,
+        "state": 2
+      },
+      {
+        "available": false,
+        "reason": 13,
+        "state": 2
+      }
+    ],
+    "appearance": {
+      "fill": [
+        0.25,
+        0.550000011920929,
+        0.8500000238418579,
+        1
+      ],
+      "fillEnabled": true,
+      "opacity": 1,
+      "stroke": [
+        0.10000000149011612,
+        0.20000000298023224,
+        0.30000001192092896,
+        1
+      ],
+      "strokeEnabled": true,
+      "strokeWidth": 2
+    },
+    "bounds": [
+      499,
+      319,
+      641,
+      431
+    ],
+    "count": 1,
+    "generation": "1004",
+    "groupScope": null,
+    "height": 110,
+    "kind": 1,
+    "primary": "9f1786b808b79e01b68bc445d8d96f1e",
+    "reason": 0,
+    "roots": [
+      "9f1786b808b79e01b68bc445d8d96f1e"
+    ],
+    "selectionRevision": "3",
+    "status": 1,
+    "transform": [
+      1,
+      0,
+      0,
+      1,
+      500,
+      320
+    ],
+    "width": 140
+  },
+  "selectionAfter": {
+    "actions": [
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": false,
+        "reason": 18,
+        "state": 0
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": true,
+        "reason": 0,
+        "state": 1
+      },
+      {
+        "available": false,
+        "reason": 11,
+        "state": 0
+      },
+      {
+        "available": false,
+        "reason": 12,
+        "state": 0
+      },
+      {
+        "available": false,
+        "reason": 14,
+        "state": 0
+      },
+      {
+        "available": false,
+        "reason": 13,
+        "state": 2
+      },
+      {
+        "available": false,
+        "reason": 13,
+        "state": 2
+      },
+      {
+        "available": false,
+        "reason": 13,
+        "state": 2
+      }
+    ],
+    "appearance": {
+      "fill": [
+        0.25,
+        0.550000011920929,
+        0.8500000238418579,
+        1
+      ],
+      "fillEnabled": true,
+      "opacity": 1,
+      "stroke": [
+        0.10000000149011612,
+        0.20000000298023224,
+        0.30000001192092896,
+        1
+      ],
+      "strokeEnabled": true,
+      "strokeWidth": 2
+    },
+    "bounds": [
+      556,
+      243,
+      698,
+      355
+    ],
+    "count": 1,
+    "generation": "1005",
+    "groupScope": null,
+    "height": 110,
+    "kind": 1,
+    "primary": "9f1786b808b79e01b68bc445d8d96f1e",
+    "reason": 0,
+    "roots": [
+      "9f1786b808b79e01b68bc445d8d96f1e"
+    ],
+    "selectionRevision": "3",
+    "status": 1,
+    "transform": [
+      1,
+      0,
+      0,
+      1,
+      557,
+      244
+    ],
+    "width": 140
+  },
+  "count": 1000,
+  "dpr": 2,
+  "reverse": false,
+  "brush": {
+    "profile": "round-handdrawn",
+    "revision": 4
+  },
+  "scope": "fixed-timestamp synthetic pointer corpus; single-thread CPU wall elapsed, nested exclusive/inclusive; GL submission and exact receipt are not GPU execution or physical presentation",
+  "inputEnded": 32851.89999997616,
+  "exactReceiptDelayMs": 865.3999999761581,
+  "raw": {
+    "raf": [
+      {
+        "name": "render",
+        "start": 25500.299999952316,
+        "duration": 2.399999976158142
+      },
+      {
+        "name": "",
+        "start": 25502.699999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 25516.899999976158,
+        "duration": 187.39999997615814
+      },
+      {
+        "name": "",
+        "start": 25704.299999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 25705.299999952316,
+        "duration": 460.8000000715256
+      },
+      {
+        "name": "",
+        "start": 26166.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 26167,
+        "duration": 541.5
+      },
+      {
+        "name": "",
+        "start": 26708.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 26709.299999952316,
+        "duration": 373.10000002384186
+      },
+      {
+        "name": "",
+        "start": 27082.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 27084,
+        "duration": 492.10000002384186
+      },
+      {
+        "name": "",
+        "start": 27576.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 27576.899999976158,
+        "duration": 453.39999997615814
+      },
+      {
+        "name": "",
+        "start": 28030.299999952316,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 28031.100000023842,
+        "duration": 448.89999997615814
+      },
+      {
+        "name": "",
+        "start": 28480,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 28480.699999928474,
+        "duration": 369.40000009536743
+      },
+      {
+        "name": "",
+        "start": 28850.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 28850.899999976158,
+        "duration": 368.2999999523163
+      },
+      {
+        "name": "",
+        "start": 29219.199999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 29219.899999976158,
+        "duration": 376.5
+      },
+      {
+        "name": "",
+        "start": 29596.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 29597.199999928474,
+        "duration": 361.90000009536743
+      },
+      {
+        "name": "",
+        "start": 29959.199999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 29959.899999976158,
+        "duration": 354.5
+      },
+      {
+        "name": "",
+        "start": 30314.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 30316.399999976158,
+        "duration": 355
+      },
+      {
+        "name": "",
+        "start": 30671.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 30672.199999928474,
+        "duration": 353.90000009536743
+      },
+      {
+        "name": "",
+        "start": 31026.100000023842,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 31026.699999928474,
+        "duration": 356
+      },
+      {
+        "name": "",
+        "start": 31382.699999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 31383.299999952316,
+        "duration": 356.60000002384186
+      },
+      {
+        "name": "",
+        "start": 31739.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 31740.600000023842,
+        "duration": 358.1999999284744
+      },
+      {
+        "name": "",
+        "start": 32098.899999976158,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 32099.5,
+        "duration": 374.1999999284744
+      },
+      {
+        "name": "",
+        "start": 32473.699999928474,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 32474.399999976158,
+        "duration": 374.10000002384186
+      },
+      {
+        "name": "",
+        "start": 32848.5,
+        "duration": 0
+      },
+      {
+        "name": "render",
+        "start": 32852.299999952316,
+        "duration": 9.100000023841858
+      },
+      {
+        "name": "render",
+        "start": 32867.199999928474,
+        "duration": 3.8000000715255737
+      },
+      {
+        "name": "render",
+        "start": 32883.5,
+        "duration": 1.899999976158142
+      },
+      {
+        "name": "render",
+        "start": 32900,
+        "duration": 5.899999976158142
+      },
+      {
+        "name": "render",
+        "start": 32916.199999928474,
+        "duration": 6.200000047683716
+      },
+      {
+        "name": "render",
+        "start": 32933.699999928474,
+        "duration": 62.60000002384186
+      },
+      {
+        "name": "render",
+        "start": 32996.60000002384,
+        "duration": 7.899999976158142
+      },
+      {
+        "name": "render",
+        "start": 33004.699999928474,
+        "duration": 6.600000023841858
+      },
+      {
+        "name": "render",
+        "start": 33016.799999952316,
+        "duration": 6.100000023841858
+      },
+      {
+        "name": "render",
+        "start": 33033.39999997616,
+        "duration": 6.399999976158142
+      },
+      {
+        "name": "render",
+        "start": 33050.10000002384,
+        "duration": 5.899999976158142
+      },
+      {
+        "name": "render",
+        "start": 33066.799999952316,
+        "duration": 6.399999976158142
+      },
+      {
+        "name": "render",
+        "start": 33083.39999997616,
+        "duration": 6.600000023841858
+      },
+      {
+        "name": "render",
+        "start": 33100.10000002384,
+        "duration": 6
+      },
+      {
+        "name": "render",
+        "start": 33116.799999952316,
+        "duration": 6.200000047683716
+      },
+      {
+        "name": "render",
+        "start": 33133.5,
+        "duration": 7.199999928474426
+      },
+      {
+        "name": "render",
+        "start": 33150.199999928474,
+        "duration": 6.400000095367432
+      },
+      {
+        "name": "render",
+        "start": 33166.799999952316,
+        "duration": 6.899999976158142
+      },
+      {
+        "name": "render",
+        "start": 33183.5,
+        "duration": 6.5
+      },
+      {
+        "name": "render",
+        "start": 33200.199999928474,
+        "duration": 7.300000071525574
+      },
+      {
+        "name": "render",
+        "start": 33216.799999952316,
+        "duration": 6.100000023841858
+      },
+      {
+        "name": "render",
+        "start": 33233.39999997616,
+        "duration": 6.799999952316284
+      },
+      {
+        "name": "render",
+        "start": 33250.199999928474,
+        "duration": 6.5
+      },
+      {
+        "name": "render",
+        "start": 33266.799999952316,
+        "duration": 6.800000071525574
+      },
+      {
+        "name": "render",
+        "start": 33283.39999997616,
+        "duration": 6.399999976158142
+      },
+      {
+        "name": "render",
+        "start": 33300.199999928474,
+        "duration": 7
+      },
+      {
+        "name": "render",
+        "start": 33316.89999997616,
+        "duration": 6.100000023841858
+      },
+      {
+        "name": "render",
+        "start": 33333.5,
+        "duration": 7.199999928474426
+      },
+      {
+        "name": "render",
+        "start": 33350.199999928474,
+        "duration": 6.200000047683716
+      },
+      {
+        "name": "render",
+        "start": 33366.10000002384,
+        "duration": 7
+      },
+      {
+        "name": "render",
+        "start": 33383.5,
+        "duration": 6.600000023841858
+      },
+      {
+        "name": "render",
+        "start": 33400.199999928474,
+        "duration": 6.700000047683716
+      },
+      {
+        "name": "render",
+        "start": 33416.799999952316,
+        "duration": 6.600000023841858
+      },
+      {
+        "name": "render",
+        "start": 33433.39999997616,
+        "duration": 6.399999976158142
+      },
+      {
+        "name": "render",
+        "start": 33450.10000002384,
+        "duration": 6.299999952316284
+      },
+      {
+        "name": "render",
+        "start": 33466.799999952316,
+        "duration": 6.300000071525574
+      },
+      {
+        "name": "render",
+        "start": 33484.799999952316,
+        "duration": 6.600000023841858
+      },
+      {
+        "name": "render",
+        "start": 33500.10000002384,
+        "duration": 6.099999904632568
+      },
+      {
+        "name": "render",
+        "start": 33516.699999928474,
+        "duration": 6.600000023841858
+      },
+      {
+        "name": "render",
+        "start": 33533.39999997616,
+        "duration": 6.5
+      },
+      {
+        "name": "render",
+        "start": 33550.299999952316,
+        "duration": 6.300000071525574
+      },
+      {
+        "name": "render",
+        "start": 33566.10000002384,
+        "duration": 6.899999976158142
+      },
+      {
+        "name": "render",
+        "start": 33583.60000002384,
+        "duration": 6.899999976158142
+      },
+      {
+        "name": "render",
+        "start": 33600.199999928474,
+        "duration": 6.700000047683716
+      },
+      {
+        "name": "render",
+        "start": 33616.60000002384,
+        "duration": 6.199999928474426
+      },
+      {
+        "name": "render",
+        "start": 33633.5,
+        "duration": 6.5
+      },
+      {
+        "name": "render",
+        "start": 33650.199999928474,
+        "duration": 6.800000071525574
+      },
+      {
+        "name": "render",
+        "start": 33666.89999997616,
+        "duration": 6.700000047683716
+      },
+      {
+        "name": "render",
+        "start": 33682.89999997616,
+        "duration": 6.899999976158142
+      },
+      {
+        "name": "render",
+        "start": 33700.299999952316,
+        "duration": 4.800000071525574
+      },
+      {
+        "name": "render",
+        "start": 33716.89999997616,
+        "duration": 0.3999999761581421
+      }
+    ],
+    "events": [],
+    "frames": [
+      {
+        "time": 33717.299999952316,
+        "receipt": {
+          "presented": "306"
+        }
+      }
+    ],
+    "errors": [],
+    "active": false,
+    "before": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "canRedo": false,
+      "canUndo": true,
+      "creationMode": false,
+      "data": {
+        "attached": true,
+        "byteCapacity": 33554432,
+        "capacity": 4096,
+        "closing": false,
+        "fault": false,
+        "latest": {
+          "afterGeneration": "1004",
+          "beforeGeneration": "1003",
+          "binding": "1",
+          "cloudSynced": 0,
+          "commit": {
+            "ordinal": "1004",
+            "runtimeEpoch": "1"
+          },
+          "documentId": "00000000000000000000000000000543",
+          "kind": 1,
+          "localDurable": 0,
+          "operationId": "9b1786b808b79e81b68bc445d8d96f51",
+          "source": 0,
+          "version": 1
+        },
+        "pending": 1004,
+        "pendingBytes": 731974,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "00000000000000000000000000000543",
+      "eraserMode": 2,
+      "generation": "1004",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "9b1786b808b79e81b68bc445d8d96f51",
+        "ordinal": "1004",
+        "presentedGeneration": "1004",
+        "runtimeEpoch": "1"
+      },
+      "objects": 1003,
+      "primary": "9f1786b808b79e01b68bc445d8d96f1e",
+      "selected": [
+        "9f1786b808b79e01b68bc445d8d96f1e"
+      ],
+      "selectionMode": 0,
+      "selectionRevision": "3",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 500,
+        "width": 800
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          20,
+          0
+        ],
+        "sequence": "2",
+        "session": "1"
+      },
+      "tool": 1
+    },
+    "inputEnded": 32851.89999997616,
+    "after": {
+      "activeContacts": 0,
+      "camera": {
+        "scale": 1,
+        "x": 0,
+        "y": 0
+      },
+      "canRedo": false,
+      "canUndo": true,
+      "creationMode": false,
+      "data": {
+        "attached": true,
+        "byteCapacity": 33554432,
+        "capacity": 4096,
+        "closing": false,
+        "fault": false,
+        "latest": {
+          "afterGeneration": "1005",
+          "beforeGeneration": "1004",
+          "binding": "1",
+          "cloudSynced": 0,
+          "commit": {
+            "ordinal": "1005",
+            "runtimeEpoch": "1"
+          },
+          "documentId": "00000000000000000000000000000543",
+          "kind": 5,
+          "localDurable": 0,
+          "operationId": "991786b808b79e81b68bc445d8d96f51",
+          "source": 0,
+          "version": 1
+        },
+        "pending": 1005,
+        "pendingBytes": 732100,
+        "releasedOrdinal": "0",
+        "statusCapacity": 4096,
+        "statusRecords": 0
+      },
+      "documentId": "00000000000000000000000000000543",
+      "eraserMode": 2,
+      "generation": "1005",
+      "lastCommit": {
+        "cloudSynced": 0,
+        "localDurable": 0,
+        "operationId": "991786b808b79e81b68bc445d8d96f51",
+        "ordinal": "1005",
+        "presentedGeneration": "1005",
+        "runtimeEpoch": "1"
+      },
+      "objects": 1003,
+      "primary": "9f1786b808b79e01b68bc445d8d96f1e",
+      "selected": [
+        "9f1786b808b79e01b68bc445d8d96f1e"
+      ],
+      "selectionMode": 0,
+      "selectionRevision": "3",
+      "shape": 0,
+      "surface": {
+        "available": true,
+        "height": 500,
+        "width": 800
+      },
+      "table": {
+        "columnId": "00000000000000000000000000000000",
+        "objectId": "00000000000000000000000000000000",
+        "rowId": "00000000000000000000000000000000"
+      },
+      "target": {
+        "attachmentEpoch": "2",
+        "runtimeEpoch": "1",
+        "viewEpoch": "1",
+        "viewId": "1"
+      },
+      "text": {
+        "composition": "0",
+        "phase": 0,
+        "selection": [
+          20,
+          0
+        ],
+        "sequence": "2",
+        "session": "1"
+      },
+      "tool": 1
+    },
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)",
+    "pointerTimes": [
+      {
+        "start": 25502.699999928474,
+        "duration": 1.600000023841858
+      },
+      {
+        "start": 25704.299999952316,
+        "duration": 0.8999999761581421
+      },
+      {
+        "start": 26166.199999928474,
+        "duration": 0.40000009536743164
+      },
+      {
+        "start": 26708.5,
+        "duration": 0.5
+      },
+      {
+        "start": 27082.5,
+        "duration": 1.100000023841858
+      },
+      {
+        "start": 27576.100000023842,
+        "duration": 0.5999999046325684
+      },
+      {
+        "start": 28030.299999952316,
+        "duration": 0.6000000238418579
+      },
+      {
+        "start": 28480,
+        "duration": 0.5
+      },
+      {
+        "start": 28850.100000023842,
+        "duration": 0.5999999046325684
+      },
+      {
+        "start": 29219.199999928474,
+        "duration": 0.5
+      },
+      {
+        "start": 29596.5,
+        "duration": 0.5
+      },
+      {
+        "start": 29959.199999928474,
+        "duration": 0.5
+      },
+      {
+        "start": 30314.5,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 30671.5,
+        "duration": 0.5
+      },
+      {
+        "start": 31026.100000023842,
+        "duration": 0.5
+      },
+      {
+        "start": 31382.699999928474,
+        "duration": 0.40000009536743164
+      },
+      {
+        "start": 31739.899999976158,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 32098.899999976158,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 32473.799999952316,
+        "duration": 0.3999999761581421
+      },
+      {
+        "start": 32848.5,
+        "duration": 3.399999976158142
+      }
+    ],
+    "fences": [
+      {
+        "name": "fenceSync",
+        "start": 33704.299999952316,
+        "duration": 0.10000002384185791,
+        "status": null
+      },
+      {
+        "name": "clientWaitSync",
+        "start": 33716.89999997616,
+        "duration": 0,
+        "status": 37148
+      }
+    ]
+  },
+  "exceptions": [],
+  "timingRows": [
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1251",
+      "semantic": "1004",
+      "scene": "1004",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 25500400000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 2000000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 1500000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 0,
+        "coverage_tiles": 0,
+        "coverage_pixels": 0,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1271",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 32853500000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7700000,
+          "exclusive_ns": 1200000,
+          "calls": 1
+        },
+        "visibility": {
+          "inclusive_ns": 1100000,
+          "exclusive_ns": 1100000,
+          "calls": 1
+        },
+        "reference_build": {
+          "inclusive_ns": 2500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "reference_entries": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "reference_encode": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "reference_digest": {
+          "inclusive_ns": 1100000,
+          "exclusive_ns": 1100000,
+          "calls": 1
+        },
+        "presentation_adapt": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "frame_plan": {
+          "inclusive_ns": 1000000,
+          "exclusive_ns": 1000000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 1600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "prepare_scan": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        }
+      },
+      "counts": {
+        "candidates": 1003,
+        "sources": 1003,
+        "encoded_bytes": 798387,
+        "plan_entries": 1003,
+        "prepare_knots": 15000,
+        "built_groups": 0,
+        "coverage_tiles": 0,
+        "coverage_pixels": 0,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 3,
+        "prepare_budget": 488,
+        "exact_demand_reuse": 0
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1272",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 32867300000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 3400000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 2900000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 1900000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 1800000,
+          "exclusive_ns": 1800000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 0,
+        "coverage_tiles": 0,
+        "coverage_pixels": 0,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1273",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 32883600000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 1600000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 1200000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 0,
+        "coverage_tiles": 0,
+        "coverage_pixels": 0,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1274",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 32900000000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 5700000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5000000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 1000000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 3600000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 2500000,
+          "exclusive_ns": 2500000,
+          "calls": 29
+        },
+        "material_submit": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 29
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 8
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 8,
+        "coverage_tiles": 29,
+        "coverage_pixels": 1900544,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1275",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 32916400000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 5700000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 1200000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 1100000,
+          "exclusive_ns": 1100000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 3600000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 2100000,
+          "exclusive_ns": 2100000,
+          "calls": 30
+        },
+        "material_submit": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 30
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 10
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 10,
+        "coverage_tiles": 30,
+        "coverage_pixels": 1966080,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1276",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 32933800000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 62300000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 61800000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 1000000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 60300000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 5
+        },
+        "material_submit": {
+          "inclusive_ns": 59700000,
+          "exclusive_ns": 59700000,
+          "calls": 5
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 1,
+        "coverage_tiles": 5,
+        "coverage_pixels": 327680,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1277",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 32996600000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 7000000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 1400000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 1300000,
+          "exclusive_ns": 1300000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3200000,
+          "exclusive_ns": 3200000,
+          "calls": 39
+        },
+        "material_submit": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 39
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 12
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 12,
+        "coverage_tiles": 39,
+        "coverage_pixels": 2555904,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1278",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33004700000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6400000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5900000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4600000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3000000,
+          "exclusive_ns": 3000000,
+          "calls": 41
+        },
+        "material_submit": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 41
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 11
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 11,
+        "coverage_tiles": 41,
+        "coverage_pixels": 2686976,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1279",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33016800000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 5800000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5400000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4300000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3300000,
+          "exclusive_ns": 3300000,
+          "calls": 33
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 33
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 12
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 12,
+        "coverage_tiles": 33,
+        "coverage_pixels": 2162688,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1280",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33033500000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6000000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5600000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4500000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3000000,
+          "exclusive_ns": 3000000,
+          "calls": 40
+        },
+        "material_submit": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 40
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 12
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 12,
+        "coverage_tiles": 40,
+        "coverage_pixels": 2621440,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1281",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33050200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 5500000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4300000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 2900000,
+          "exclusive_ns": 2900000,
+          "calls": 41
+        },
+        "material_submit": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 41
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 11
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 11,
+        "coverage_tiles": 41,
+        "coverage_pixels": 2686976,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1282",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33066800000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6100000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5600000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4600000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3000000,
+          "exclusive_ns": 3000000,
+          "calls": 41
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 41
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 13
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 13,
+        "coverage_tiles": 41,
+        "coverage_pixels": 2686976,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1283",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33083600000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6100000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5700000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3300000,
+          "exclusive_ns": 3300000,
+          "calls": 43
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 43
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 12
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 12,
+        "coverage_tiles": 43,
+        "coverage_pixels": 2818048,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1284",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33100200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 5700000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4200000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3200000,
+          "exclusive_ns": 3200000,
+          "calls": 39
+        },
+        "material_submit": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 39
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 12
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 12,
+        "coverage_tiles": 39,
+        "coverage_pixels": 2555904,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1285",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33116900000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 5900000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5600000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4700000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3300000,
+          "exclusive_ns": 3300000,
+          "calls": 42
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 42
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 14
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 14,
+        "coverage_tiles": 42,
+        "coverage_pixels": 2752512,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1286",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33133600000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6900000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6500000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 1200000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3100000,
+          "exclusive_ns": 3100000,
+          "calls": 44
+        },
+        "material_submit": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 44
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 13
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 13,
+        "coverage_tiles": 44,
+        "coverage_pixels": 2883584,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1287",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33150200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6100000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5700000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4900000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3400000,
+          "exclusive_ns": 3400000,
+          "calls": 44
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 44
+        },
+        "raster_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 9
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 44,
+        "coverage_pixels": 2883584,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1288",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33166900000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6100000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 1200000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3100000,
+          "exclusive_ns": 3100000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 50
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1289",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33183500000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6300000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5800000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5000000,
+          "exclusive_ns": 1000000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3100000,
+          "exclusive_ns": 3100000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 900000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1290",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33200200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7100000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 1000000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5200000,
+          "exclusive_ns": 1100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3200000,
+          "exclusive_ns": 3200000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 900000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1291",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33216900000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 5800000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5500000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4700000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3200000,
+          "exclusive_ns": 3200000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1292",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33233600000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6000000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5200000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3500000,
+          "exclusive_ns": 3500000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1293",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33250200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6300000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5700000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4000000,
+          "exclusive_ns": 4000000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 50
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1294",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33266900000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 1000000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4900000,
+          "exclusive_ns": 1000000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3500000,
+          "exclusive_ns": 3500000,
+          "calls": 48
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 48
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 16,
+        "coverage_tiles": 48,
+        "coverage_pixels": 3145728,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1295",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33283500000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6200000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5800000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 1300000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3200000,
+          "exclusive_ns": 3200000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 50
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1296",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33300200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6700000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6300000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4500000,
+          "exclusive_ns": 4500000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1297",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33316900000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 5900000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5500000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3600000,
+          "exclusive_ns": 3600000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1298",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33333500000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 7000000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 900000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5400000,
+          "exclusive_ns": 1600000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3400000,
+          "exclusive_ns": 3400000,
+          "calls": 48
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 48
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 16,
+        "coverage_tiles": 48,
+        "coverage_pixels": 3145728,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1299",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33350200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6000000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5500000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4700000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3200000,
+          "exclusive_ns": 3200000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 50
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1300",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33366200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6200000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3800000,
+          "exclusive_ns": 3800000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1301",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33383500000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6300000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5900000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3600000,
+          "exclusive_ns": 3600000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1302",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33400200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6400000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6100000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5000000,
+          "exclusive_ns": 1600000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3000000,
+          "exclusive_ns": 3000000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 50
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1303",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33416900000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6200000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5800000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 1300000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3500000,
+          "exclusive_ns": 3500000,
+          "calls": 48
+        },
+        "material_submit": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 48
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 16,
+        "coverage_tiles": 48,
+        "coverage_pixels": 3145728,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1304",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33433600000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6000000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5800000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4900000,
+          "exclusive_ns": 1100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3100000,
+          "exclusive_ns": 3100000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 50
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1305",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33450200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 5900000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5700000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3500000,
+          "exclusive_ns": 3500000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1306",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33466800000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6000000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5800000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5000000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3300000,
+          "exclusive_ns": 3300000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1307",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33484900000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6000000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 1800000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 2800000,
+          "exclusive_ns": 2800000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1308",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33500100000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 5900000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5600000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4800000,
+          "exclusive_ns": 1300000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3000000,
+          "exclusive_ns": 3000000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1309",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33516800000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6300000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6000000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5200000,
+          "exclusive_ns": 1200000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3400000,
+          "exclusive_ns": 3400000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1310",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33533500000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6100000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5800000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5000000,
+          "exclusive_ns": 1100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3600000,
+          "exclusive_ns": 3600000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 300000,
+          "exclusive_ns": 300000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1311",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33550300000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6000000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5700000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 900000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3600000,
+          "exclusive_ns": 3600000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1312",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33566200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 1000000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3900000,
+          "exclusive_ns": 3900000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1313",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33583700000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6700000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6400000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 800000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5200000,
+          "exclusive_ns": 1000000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3500000,
+          "exclusive_ns": 3500000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 50
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1314",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33600200000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6000000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 800000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3600000,
+          "exclusive_ns": 3600000,
+          "calls": 48
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 48
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 16,
+        "coverage_tiles": 48,
+        "coverage_pixels": 3145728,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1315",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33616800000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 5800000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5600000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 200000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 4900000,
+          "exclusive_ns": 1000000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3400000,
+          "exclusive_ns": 3400000,
+          "calls": 50
+        },
+        "material_submit": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 50
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 14,
+        "coverage_tiles": 50,
+        "coverage_pixels": 3276800,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1316",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33633600000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6200000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 5900000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5100000,
+          "exclusive_ns": 700000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3900000,
+          "exclusive_ns": 3900000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1317",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33650300000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6000000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5500000,
+          "exclusive_ns": 1000000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4000000,
+          "exclusive_ns": 4000000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1318",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33667000000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6300000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6100000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5200000,
+          "exclusive_ns": 1100000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 3400000,
+          "exclusive_ns": 3400000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 700000,
+          "exclusive_ns": 700000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1319",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33683000000,
+      "outcome": "retry",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 6600000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 6300000,
+          "exclusive_ns": 200000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 5500000,
+          "exclusive_ns": 1000000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 4000000,
+          "exclusive_ns": 4000000,
+          "calls": 49
+        },
+        "material_submit": {
+          "inclusive_ns": 500000,
+          "exclusive_ns": 500000,
+          "calls": 49
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 15,
+        "coverage_tiles": 49,
+        "coverage_pixels": 3211264,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    },
+    {
+      "version": 1,
+      "settle": false,
+      "view": "1",
+      "frame": "1320",
+      "semantic": "1005",
+      "scene": "1005",
+      "camera": "1",
+      "surface": "1",
+      "metrics": "1",
+      "start_ns": 33700300000,
+      "outcome": "accepted",
+      "stages": {
+        "attempt": {
+          "inclusive_ns": 3700000,
+          "exclusive_ns": 500000,
+          "calls": 1
+        },
+        "render": {
+          "inclusive_ns": 3200000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        },
+        "acquire": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "validation": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_begin": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "group_update": {
+          "inclusive_ns": 600000,
+          "exclusive_ns": 600000,
+          "calls": 1
+        },
+        "damage": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "cache_prepare": {
+          "inclusive_ns": 2400000,
+          "exclusive_ns": 300000,
+          "calls": 1
+        },
+        "cpu_coverage": {
+          "inclusive_ns": 1700000,
+          "exclusive_ns": 1700000,
+          "calls": 20
+        },
+        "material_submit": {
+          "inclusive_ns": 400000,
+          "exclusive_ns": 400000,
+          "calls": 20
+        },
+        "scene_draw": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "navigation_snapshot": {
+          "inclusive_ns": 0,
+          "exclusive_ns": 0,
+          "calls": 1
+        },
+        "provider_present": {
+          "inclusive_ns": 100000,
+          "exclusive_ns": 100000,
+          "calls": 1
+        }
+      },
+      "counts": {
+        "candidates": 0,
+        "sources": 0,
+        "encoded_bytes": 0,
+        "plan_entries": 0,
+        "prepare_knots": 0,
+        "built_groups": 6,
+        "coverage_tiles": 20,
+        "coverage_pixels": 1310720,
+        "gpu_interior_pixels": 0,
+        "cpu_edge_pixels": 0,
+        "prepare_direct": 0,
+        "prepare_budget": 0,
+        "exact_demand_reuse": 1
+      }
+    }
+  ],
+  "image": {
+    "width": 1600,
+    "height": 1000,
+    "rgbaSha256": "0d571a3fe861a7c07df8989ad44c4b81ce6d69bace91b3fc49ecd480ec59fe29",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+  },
+  "sha256": {
+    "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+    "axiom.wasm": "56627c48ecec7e16bc9fd861e247ef5a9e3b6d60a4581d3152029d7e13ee3825",
+    "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+    "internal/axiom.mjs": "88a3b6fdd3d0df5d9d72fc39502dcb5c80ba7175b0362545fdfc9ad07244f842"
+  }
+}

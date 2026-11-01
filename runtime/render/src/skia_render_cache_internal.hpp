@@ -18,14 +18,33 @@ class SkiaRenderCache final {
     RenderCacheOptions options{};
     RenderCacheWork work{};
     RenderDamage damage{};
-    void begin(const FramePlan&, const void* target, SkSurface&, std::uint64_t resourceEpoch);
+    void begin(const FramePlan&, const void* target, SkSurface&, std::uint64_t resourceEpoch, foundation::ObjectId activeSource = {});
     // Called only after full plan validation. False executes permanent Direct.
     bool draw(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,bool isolated,bool composite=true);
     enum class Preparation { kReady, kPending, kFallback };
-    Preparation prepare(SkCanvas&,const FramePlan&,const RenderPreparationBudget&);
+    Preparation prepare(SkCanvas&,const FramePlan&,const RenderPreparationBudget&,ImageResourceResolver*,SkiaTextResources*);
+    bool compositePreparedFrame(SkCanvas&);
+    // Retained ordered compact runs qualify approximate editing only. Exact
+    // frames still consume per-object/streamed composition in original order.
+    void drawTransientScene(SkCanvas&,const FramePlan&,ImageResourceResolver*,SkiaTextResources*,bool includeInk);
+    bool compositeRetainedRun(SkCanvas&,const FramePlan&,std::size_t& index,bool inkPass=false);
     void clear() noexcept;
     void noteDirect() noexcept {++work.directGroups;++work.rasterizedGroups;}
   private:
+    struct RunStamp {foundation::ObjectId id;RenderGroupRevisions revisions;bool operator==(const RunStamp&)const=default;};
+    struct RetainedRun {
+        std::size_t begin=0,end=0,next=0;
+        std::vector<RunStamp> stamps;
+        sk_sp<SkSurface> building,prefix;
+        sk_sp<SkImage> image,prefixImage;
+        resources::ResourceLease lease;
+        std::size_t bytes=0;
+    };
+    std::vector<RetainedRun> runs_;
+    foundation::ObjectId activeSource_{};
+    void planRuns(SkCanvas&,const FramePlan&);
+    void captureRunEntry(const FramePlan&,std::size_t,const sk_sp<SkImage>&,int x=0,int y=0);
+    bool validRun(const RetainedRun&,const FramePlan&)const;
     struct Entry {RenderCacheValidity validity;sk_sp<SkImage> image;SkIRect bounds;std::size_t bytes=0;std::uint64_t used=0;resources::ResourceLease lease;};
     std::unordered_map<foundation::ObjectId,Entry,foundation::ObjectIdHash> entries_;
     struct TileEntry {std::uint64_t generation;sk_sp<SkImage> image;SkIRect device;resources::ResourceLease lease;};
@@ -39,13 +58,22 @@ class SkiaRenderCache final {
     CompactCoverageTargets coverageTargets_;
     struct Pending {foundation::ObjectId id;RenderCacheValidity validity;SkIRect crop;std::unique_ptr<CompactStrokeRasterJob> raster;};
     std::unique_ptr<Pending> pending_;
-    struct Admission {SkIRect crop;};
+    enum class AdmissionKind {kRaster,kEmpty,kDirect};
+    struct Admission {SkIRect crop;AdmissionKind kind=AdmissionKind::kRaster;};
     std::unordered_map<foundation::ObjectId,Admission,foundation::ObjectIdHash> admissions_;
-    bool admissionReady_=false;
+    bool admissionReady_=false,streamFrame_=false,compositeReady_=false;
+    sk_sp<SkSurface> composite_;
+    resources::ResourceLease compositeLease_;
+    foundation::DocumentBackground preparationBackground_{};
+    bool preparationTransparent_=false,preparationIsolate_=false;
+    void resetPreparation();
+    bool ensureComposite(SkCanvas&,const FramePlan&);
+    void flushPreparation();
+    std::size_t preparationCursor_=0;
     bool ensureScratch(SkCanvas&);
     SkMatrix entryMatrix(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&)const;
     void configureScratch(SkCanvas&,const FramePlan&,const SkMatrix&);
-    bool store(SkCanvas&,const ReferenceTraversalEntry&,const RenderCacheValidity&,const SkIRect&,bool composite);
+    bool store(SkCanvas&,const ReferenceTraversalEntry&,const RenderCacheValidity&,const SkIRect&,bool composite,bool preservePrepared=false);
     void noteCoverage(const CompactRasterWork&);
     resources::ResourceLease scratchLease_;
     sk_sp<SkSurface> scratch_;

@@ -47,6 +47,12 @@ void compositeCompactCoverageToSkCanvas(SkCanvas&,const SkImage&,
 // Shared Skia scene contract used by both the headless reference backend and
 // SkiaRenderer/provider production path. The implementation is kept in the
 // render target so there is one validation and nine-command mapping.
+// Validated subranges share the exact traversal/isolation mapping with Direct.
+// Used only for bounded offscreen composition, never partial target publication.
+void drawReferenceBackgroundToSkCanvas(SkCanvas&,const FramePlan&);
+void drawValidatedReferenceRangeToSkCanvas(SkCanvas&,const FramePlan&,
+    std::size_t begin,std::size_t end,ImageResourceResolver*,SkiaTextResources*,
+    bool includeInk=true,SkiaRenderCache* cache=nullptr,const CompactDeviceGrid* grid=nullptr);
 [[nodiscard]] BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,
     SkiaTextResources* textResources = nullptr, bool includeInk = true,
@@ -55,7 +61,8 @@ void compositeCompactCoverageToSkCanvas(SkCanvas&,const SkImage&,
 // intentionally topmost while a Shape/Connector is being authored.
 void drawInkEntriesToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,
-    SkiaTextResources* textResources = nullptr, SkiaRenderCache* cache = nullptr);
+    SkiaTextResources* textResources = nullptr, SkiaRenderCache* cache = nullptr,
+    bool approximateRetainedRuns = false);
 // Reuse the canonical renderer command mapping for a view-owned provisional
 // object. This value never enters Semantic or RuntimeScene storage.
 void drawTransientObjectToSkCanvas(SkCanvas& canvas, const FramePlan& plan,

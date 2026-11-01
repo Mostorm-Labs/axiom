@@ -1,0 +1,184 @@
+{
+  "schema": "g5-retained-interaction-v1",
+  "scope": "100/500/1000 synthetic pointer corpus, Chrome WebGL2 DPR2; host load was elevated",
+  "technique": "bounded ordered retained compact runs, separate opaque prefix for whole-scene overlay, original-order fallback",
+  "semantic": "no changes",
+  "canonical": "exact direct path and canonical receipt conditions preserved",
+  "physical_platforms": "BLOCKED_EVIDENCE",
+  "root_diagnostic": {
+    "configuration": "root Release assertion-enabled diagnostic; locked prebuilt Semantic/Skia SDKs",
+    "total": 246,
+    "passed": 219,
+    "failed": [
+      "canvas_fc02_shape_label_scene (Subprocess aborted)",
+      "canvas_g2_a3_full_incremental_equivalence (Subprocess aborted)",
+      "G3HeadlessCanvasDemo (Subprocess aborted)",
+      "FC01ASelectionInputIntegration (Failed)",
+      "FC02Text (Failed)",
+      "FC00XRuntimeComposition (Subprocess aborted)",
+      "FC04.MSE-11 (Failed)",
+      "FC04.MSE-18 (Failed)",
+      "FC04.MSE-20 (Failed)",
+      "FC04.MSE-23 (Failed)",
+      "FC04.MSE-24 (Failed)",
+      "FC04.MSE-25 (Failed)",
+      "FC04.MSE-26 (Failed)",
+      "FC01CreationPreview (Subprocess aborted)",
+      "FC01Creation-width-style (Subprocess aborted)",
+      "FC01SelectedActions (Subprocess aborted)",
+      "FC05ConnectorDragPreview (Subprocess aborted)",
+      "G4InkPlaygroundComposition (Subprocess aborted)",
+      "G4InkPlaygroundSurface (Subprocess aborted)",
+      "G4InkPlaygroundRepeatedStrokes (Subprocess aborted)",
+      "G4MultiPointerPlayground (Subprocess aborted)",
+      "G4ViewportGestureState (Subprocess aborted)",
+      "G46BQueryStructure (Subprocess aborted)",
+      "G46PlaygroundTransform (Subprocess aborted)",
+      "G46CQualificationBundle (Subprocess aborted)",
+      "G46CQualificationBehavior (Failed)",
+      "G45BrushRuntimePipeline (Subprocess aborted)"
+    ],
+    "new_failure_names_vs_previous_slice": [],
+    "resolved_failure_names_vs_previous_slice": [],
+    "attribution": "Failure names match prior slice. Exact-main attribution remains incomplete; not all classified pre-existing."
+  },
+  "workloads": [
+    {
+      "count": 100,
+      "measurements": [
+        {
+          "phase": "before",
+          "raf_max_ms": 3.399999976158142,
+          "raf_p95_ms": 2.5,
+          "live_raf_max_ms": 3.399999976158142,
+          "pointer_max_ms": 2,
+          "exact_receipt_ms": 30.100000023841858,
+          "rgba_sha256": "e252050132c6c005446b6dd37034de7e5650acd48be9465378beda1c74acbd9f",
+          "live_callback_count": 19,
+          "live_callback_start_gap_max_ms": 17.399999976158142,
+          "live_callback_start_gap_p95_ms": 17.399999976158142
+        },
+        {
+          "phase": "after",
+          "raf_max_ms": 5,
+          "raf_p95_ms": 3.3000000715255737,
+          "live_raf_max_ms": 5,
+          "pointer_max_ms": 3.200000047683716,
+          "exact_receipt_ms": 27.5,
+          "rgba_sha256": "e252050132c6c005446b6dd37034de7e5650acd48be9465378beda1c74acbd9f",
+          "live_callback_count": 19,
+          "live_callback_start_gap_max_ms": 18.399999976158142,
+          "live_callback_start_gap_p95_ms": 18.399999976158142
+        }
+      ],
+      "final_pixels_equal": true
+    },
+    {
+      "count": 500,
+      "measurements": [
+        {
+          "phase": "before",
+          "raf_max_ms": 9.400000095367432,
+          "raf_p95_ms": 7.100000023841858,
+          "live_raf_max_ms": 8.299999952316284,
+          "pointer_max_ms": 2.700000047683716,
+          "exact_receipt_ms": 24,
+          "rgba_sha256": "b719751d3f6cd118f3878ad8a34fe6c621266373fd5ef98b99a894968e77d8e9",
+          "live_callback_count": 19,
+          "live_callback_start_gap_max_ms": 17.5,
+          "live_callback_start_gap_p95_ms": 17.5
+        },
+        {
+          "phase": "after",
+          "raf_max_ms": 15.600000023841858,
+          "raf_p95_ms": 12.299999952316284,
+          "live_raf_max_ms": 14.799999952316284,
+          "pointer_max_ms": 4.5,
+          "exact_receipt_ms": 34.60000002384186,
+          "rgba_sha256": "b719751d3f6cd118f3878ad8a34fe6c621266373fd5ef98b99a894968e77d8e9",
+          "live_callback_count": 20,
+          "live_callback_start_gap_max_ms": 17.399999976158142,
+          "live_callback_start_gap_p95_ms": 17.399999976158142
+        }
+      ],
+      "final_pixels_equal": true
+    },
+    {
+      "count": 1000,
+      "measurements": [
+        {
+          "phase": "before",
+          "raf_max_ms": 541.5,
+          "raf_p95_ms": 448.89999997615814,
+          "live_raf_max_ms": 541.5,
+          "pointer_max_ms": 3.399999976158142,
+          "exact_receipt_ms": 865.3999999761581,
+          "rgba_sha256": "0d571a3fe861a7c07df8989ad44c4b81ce6d69bace91b3fc49ecd480ec59fe29",
+          "live_callback_count": 20,
+          "live_callback_start_gap_max_ms": 542.2999999523163,
+          "live_callback_start_gap_p95_ms": 542.2999999523163
+        },
+        {
+          "phase": "after",
+          "raf_max_ms": 18.899999976158142,
+          "raf_p95_ms": 14,
+          "live_raf_max_ms": 16.5,
+          "pointer_max_ms": 5.5,
+          "exact_receipt_ms": 1015,
+          "rgba_sha256": "0d571a3fe861a7c07df8989ad44c4b81ce6d69bace91b3fc49ecd480ec59fe29",
+          "live_callback_count": 22,
+          "live_callback_start_gap_max_ms": 18.0,
+          "live_callback_start_gap_p95_ms": 17.40000009536743
+        }
+      ],
+      "final_pixels_equal": true
+    }
+  ],
+  "native_g5": {
+    "passed": 34,
+    "failed": 0
+  },
+  "webgl_probe": "PASS",
+  "sdk_navigation": "PASS",
+  "sdk_browser": {
+    "status": "PASS",
+    "checks": 52
+  },
+  "sdk_ink": {
+    "status": "PASS",
+    "checks": 105
+  },
+  "source_revision": "5254b087468db9e91e04f35c705f77f63040e103",
+  "dirty": true,
+  "source_diff_sha256": "e9b02ce7722e5f4f08f4a8847a3ac932e691d21bc7f8533bfc2a4a58b4ee3952",
+  "findings": [
+    "Canonical settle remains about one second at1000 sources",
+    "Small scene after samples run under greater host load; no small scene speedup claimed",
+    "Retained segments qualify approximate live feedback only",
+    "Runs are warmed by cooperative exact preparation; cold/complex content safe fallback remains"
+  ],
+  "accepted_final_1000": {
+    "live_callback_max_ms": 28.40000009536743,
+    "live_callback_gap_max_ms": 31.899999976158142,
+    "all_callback_max_ms": 28.40000009536743,
+    "receipt_ms": 1281,
+    "rgba_sha256": "0d571a3fe861a7c07df8989ad44c4b81ce6d69bace91b3fc49ecd480ec59fe29"
+  },
+  "accepted_final_webgl_probe": "PASS",
+  "intermediate_regression": {
+    "path": "final-1000",
+    "cause": "selection change invalidated unrelated runs; fixed to invalidate only containing run",
+    "accepted": false
+  },
+  "accepted_final_sdk": {
+    "handoff": {
+      "status": "PASS",
+      "checks": 7
+    },
+    "navigation": {
+      "status": "PASS",
+      "checks": 5
+    }
+  },
+  "verification_artifact_note": "Earlier full52 SDK and105 ink checks precede the final selection-invalidation refinement; final artifact has new render-cache native, actual WebGL corpus, handoff7/navigation5 and1000 browser checks. Full root219/246 and G5 34/34 were before that narrow refinement."
+}

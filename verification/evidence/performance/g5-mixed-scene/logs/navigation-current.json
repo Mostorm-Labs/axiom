@@ -1,0 +1,146 @@
+{
+  "scope": "Chrome WebGL2 DPR2, synthetic ctrl-wheel and deliberately delayed completion polls; not physical input-to-photon",
+  "result": {
+    "status": "PASS",
+    "results": [
+      "navigation completion capacity polls never block the CPU",
+      "continuous pinch updates the display while refinement is pending",
+      "navigation feedback creates no canonical receipt",
+      "navigation preserves canonical document",
+      "no rendering errors"
+    ],
+    "samples": [
+      {
+        "start": 2074.899999976158,
+        "duration": 31.299999952316284,
+        "draws": 1
+      },
+      {
+        "start": 2107,
+        "duration": 3,
+        "draws": 1
+      },
+      {
+        "start": 2111,
+        "duration": 13.099999904632568,
+        "draws": 1
+      },
+      {
+        "start": 2124.899999976158,
+        "duration": 15.799999952316284,
+        "draws": 1
+      },
+      {
+        "start": 2141.5,
+        "duration": 15.899999976158142,
+        "draws": 1
+      },
+      {
+        "start": 2158.1999999284744,
+        "duration": 16,
+        "draws": 1
+      },
+      {
+        "start": 2175.0999999046326,
+        "duration": 15.600000023841858,
+        "draws": 1
+      },
+      {
+        "start": 2191.5999999046326,
+        "duration": 15.800000071525574,
+        "draws": 1
+      },
+      {
+        "start": 2208.0999999046326,
+        "duration": 15.900000095367432,
+        "draws": 1
+      },
+      {
+        "start": 2224.899999976158,
+        "duration": 15.699999928474426,
+        "draws": 1
+      },
+      {
+        "start": 2241.5,
+        "duration": 16.59999990463257,
+        "draws": 1
+      },
+      {
+        "start": 2258.899999976158,
+        "duration": 15,
+        "draws": 1
+      },
+      {
+        "start": 2274.6999999284744,
+        "duration": 15.899999976158142,
+        "draws": 1
+      },
+      {
+        "start": 2291.399999976158,
+        "duration": 15.899999976158142,
+        "draws": 1
+      },
+      {
+        "start": 2308.1999999284744,
+        "duration": 15.800000071525574,
+        "draws": 1
+      },
+      {
+        "start": 2324.6999999284744,
+        "duration": 15.899999976158142,
+        "draws": 1
+      },
+      {
+        "start": 2341.399999976158,
+        "duration": 16.100000023841858,
+        "draws": 1
+      },
+      {
+        "start": 2358.1999999284744,
+        "duration": 16,
+        "draws": 1
+      },
+      {
+        "start": 2375.0999999046326,
+        "duration": 15.5,
+        "draws": 1
+      },
+      {
+        "start": 2391.5,
+        "duration": 15.799999952316284,
+        "draws": 1
+      },
+      {
+        "start": 2408.0999999046326,
+        "duration": 16,
+        "draws": 1
+      },
+      {
+        "start": 2425,
+        "duration": 16.299999952316284,
+        "draws": 1
+      },
+      {
+        "start": 2442.0999999046326,
+        "duration": 15.200000047683716,
+        "draws": 1
+      },
+      {
+        "start": 2458.0999999046326,
+        "duration": 15.700000047683716,
+        "draws": 0
+      }
+    ],
+    "fences": 2,
+    "polls": 47,
+    "maxWait": 0,
+    "errors": []
+  },
+  "exceptions": [],
+  "sha256": {
+    "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+    "axiom.wasm": "43cd2bdba75c19af848575b856ec249ffe10430fd20774cc05ff0b29cecb1cb0",
+    "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+    "internal/axiom.mjs": "88a3b6fdd3d0df5d9d72fc39502dcb5c80ba7175b0362545fdfc9ad07244f842"
+  }
+}

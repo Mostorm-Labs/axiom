@@ -37,7 +37,8 @@ void editor(){
         actual->referenceGeometryDigest==r.referenceGeometryDigest&&actual->directDependencies==r.directDependencies,"production full oracle mismatch");
     }
   }
-  require(runtime.presentCanonicalFrame(runtime.nextCanonicalFrameId(),0),"canonical frame");
+  {unsigned attempts=0;while(!runtime.presentCanonicalFrame(runtime.nextCanonicalFrameId(),0))
+    require(runtime.canonicalPresentationRetryable()&&++attempts<128,"canonical frame");}
   require(runtime.undo()&&runtime.semanticObjectCount()==31&&runtime.redo()&&runtime.semanticObjectCount()==32,"undo/redo");
   std::cout<<"32 editor strokes use local delta; full oracle and history agree\n";
 }

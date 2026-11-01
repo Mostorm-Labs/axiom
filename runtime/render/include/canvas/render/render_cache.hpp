@@ -39,6 +39,9 @@ struct RenderCacheWork final {
     std::size_t coverageBytes=0,scratchPeakBytes=0;
     std::uint64_t tileRequests=0,tileRasters=0,tileHits=0;
     std::uint64_t preparationSlices=0,preparationYields=0;
+    std::uint64_t retainedRunBuilds=0,retainedRunHits=0;
+    std::size_t retainedRunBytes=0;
+    std::uint64_t preparationDirectEntries=0,preparationBudgetEntries=0;
 };
 enum class RenderSourceKind { kDirect, kRasterCache };
 struct RenderCacheValidity final {

@@ -106,17 +106,18 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         renderCache_->budget=resourceBudget_;
         renderCache_->options=renderCacheOptions_;
         AXIOM_FRAME_TIMING_SCOPE(beginTiming,cache_begin);
-        renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_);
+        renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_,
+            selectionOverlay?selectionOverlay->selectedObject():foundation::ObjectId{});
         cache=renderCache_.get();
     } catch(const std::bad_alloc&) {clearRenderCache();}
-    if(preparation && cache && selectionOverlay==nullptr){
+    if(preparation && cache){
         auto* target=acquired.frame.surface->getCanvas();target->save();
         target->scale(metrics.physicalWidth/metrics.logicalWidth,metrics.physicalHeight/metrics.logicalHeight);
         const auto& clip=plan.referenceDrawList.viewportClip;
         target->clipRect(SkRect::MakeLTRB(clip.left,clip.top,clip.right,clip.bottom));
         auto prepared=internal::SkiaRenderCache::Preparation::kFallback;
         const auto beforePreparation=cache->work.rasterizedGroups;
-        try{AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation);}
+        try{AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation,images_,&textResources_);}
         catch(const std::bad_alloc&){cache->clear();}
         target->restore();
         rasterizations_+=cache->work.rasterizedGroups-beforePreparation;
@@ -126,7 +127,8 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     }
     const auto beforeRaster=cache?cache->work.rasterizedGroups:0;
     AXIOM_FRAME_TIMING_SCOPE(sceneTiming,scene_draw);
-    const auto result = internal::drawReferencePlanToSkCanvas(
+    const auto result = (preparation && cache && cache->compositePreparedFrame(*acquired.frame.surface->getCanvas()))
+        ? BackendSubmissionResult::accepted() : internal::drawReferencePlanToSkCanvas(
         *acquired.frame.surface->getCanvas(), plan, images_, &textResources_,true,cache);
     AXIOM_FRAME_TIMING_END(sceneTiming);
     if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr) {
@@ -322,7 +324,8 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
             resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
         if(!renderCache_)renderCache_=std::make_shared<internal::SkiaRenderCache>();
         renderCache_->budget=resourceBudget_;renderCache_->options=renderCacheOptions_;
-        renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_);cache=renderCache_.get();
+        renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_,
+            selectionOverlay?selectionOverlay->selectedObject():foundation::ObjectId{});cache=renderCache_.get();
     }catch(const std::bad_alloc&){clearRenderCache();}
     // Selection/creation transient presentation is a complete replacement
     // frame for the overlay window.  Drawing only the moved object on a
@@ -330,9 +333,10 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     // it, which looks like a duplicated object during a drag.  The reference
     // plan already contains any transient transform overrides, so render the
     // whole scene first and then add the editing chrome.
-    const auto scene = internal::drawReferencePlanToSkCanvas(
-        *canvas, plan, images_, &textResources_,
-        !selectionOverlay->creationPreview().has_value(),cache);
+    const auto includeInk=!selectionOverlay->creationPreview().has_value();
+    BackendSubmissionResult scene;
+    if(cache){cache->drawTransientScene(*canvas,plan,images_,&textResources_,includeInk);scene=BackendSubmissionResult::accepted();}
+    else scene=internal::drawReferencePlanToSkCanvas(*canvas,plan,images_,&textResources_,includeInk);
     if (scene.code != BackendSubmissionCode::kAccepted) {
         provider.release();
         return scene;
@@ -340,7 +344,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     if (selectionOverlay->creationPreview()) {
         internal::drawTransientObjectToSkCanvas(*canvas, plan,
                                                  *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
-        internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_,cache);
+        internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_,cache,true);
     }
     canvas->save();
     canvas->scale(plan.frame.metrics.physicalWidth / plan.frame.metrics.logicalWidth,

@@ -1,0 +1,1138 @@
+Test project /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/out/g5-coverage-alignment/full-native
+        Start  13: canvas_fc02_shape_label_scene
+        Start  18: canvas_g2_a3_full_incremental_equivalence
+        Start 105: G3HeadlessCanvasDemo
+        Start 124: FC01ASelectionInputIntegration
+  1/246 Test  #18: canvas_g2_a3_full_incremental_equivalence ...Subprocess aborted***Exception:   0.40 sec
+Assertion failed: (actual.referenceGeometryDigest == expected.referenceGeometry), function assertExpected, file full_incremental_equivalence_test.cpp, line 59.
+
+        Start 127: FC02Text
+  2/246 Test  #13: canvas_fc02_shape_label_scene ...............Subprocess aborted***Exception:   1.02 sec
+Assertion failed: (projected.records[0].referenceGeometryDigest != digest), function operator(), file shape_label_scene_test.cpp, line 64.
+
+        Start 145: FC00XRuntimeComposition
+  3/246 Test #124: FC01ASelectionInputIntegration ..............***Failed    1.41 sec
+Running main() from /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 29 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 27 tests from SelectionInput
+[ RUN      ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves
+[       OK ] SelectionInput.BlankDownIsPendingUpClearsAndShiftEmptyPreserves (7 ms)
+[ RUN      ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched
+[       OK ] SelectionInput.BlankDragUsesPreciseRegionAndShiftDownIsLatched (1 ms)
+[ RUN      ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument
+[axiom] ingress rejected samples=0
+[       OK ] SelectionInput.CancelAndLateUpPreserveSelectionAndDocument (1 ms)
+[ RUN      ] SelectionInput.SwitchToHandPreservesSelection
+[       OK ] SelectionInput.SwitchToHandPreservesSelection (0 ms)
+[ RUN      ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt
+[       OK ] SelectionInput.ExplicitRegionStartsOverObjectWithoutTransformingIt (4 ms)
+[ RUN      ] SelectionInput.EllipseTriangleCornersAndZoomDprHaveSamePreciseResult
+[axiom] present begin frame=3 objects=3 scene_records=3
+[       OK ] SelectionInput.EllipseTriangleCornersAndZoomDprHaveSamePreciseResult (11 ms)
+[ RUN      ] SelectionInput.NewSelectionAndDeletionCannotBeOverwrittenByOldRegion
+[axiom] present begin frame=3 objects=4 scene_records=4
+[       OK ] SelectionInput.NewSelectionAndDeletionCannotBeOverwrittenByOldRegion (25 ms)
+[ RUN      ] SelectionInput.MetricsAndSourceLossCancelOnlyOwnedRegion
+[       OK ] SelectionInput.MetricsAndSourceLossCancelOnlyOwnedRegion (1 ms)
+[ RUN      ] SelectionInput.RegionDoesNotConsumeRedoOrChangeCanonicalOutcome
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=4 scene_records=4
+[       OK ] SelectionInput.RegionDoesNotConsumeRedoOrChangeCanonicalOutcome (7 ms)
+[ RUN      ] SelectionInput.DeletingOriginalSelectionDoesNotRestoreDeletedIdentity
+[axiom] present begin frame=3 objects=2 scene_records=2
+[       OK ] SelectionInput.DeletingOriginalSelectionDoesNotRestoreDeletedIdentity (2 ms)
+[ RUN      ] SelectionInput.SceneMutationRequeriesAtUpButCameraMutationCancels
+[axiom] present begin frame=3 objects=3 scene_records=3
+[       OK ] SelectionInput.SceneMutationRequeriesAtUpButCameraMutationCancels (2 ms)
+[ RUN      ] SelectionInput.SecondFingerNavigationCancelsRegionBeforeTakingOver
+[       OK ] SelectionInput.SecondFingerNavigationCancelsRegionBeforeTakingOver (0 ms)
+[ RUN      ] SelectionInput.SectionRegionBackgroundIsSelectableWithoutContent
+[       OK ] SelectionInput.SectionRegionBackgroundIsSelectableWithoutContent (1 ms)
+[ RUN      ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade
+[       OK ] SelectionInput.MultipleRootsRejectSingleObjectEditingAtRuntimeAndFacade (0 ms)
+[ RUN      ] SelectionInput.QueuedPropertyEditRejectsChangedSemanticGeneration
+[       OK ] SelectionInput.QueuedPropertyEditRejectsChangedSemanticGeneration (0 ms)
+[ RUN      ] SelectionInput.MultipleRootsHaveNoSingleObjectHandlesOrPorts
+[       OK ] SelectionInput.MultipleRootsHaveNoSingleObjectHandlesOrPorts (0 ms)
+[ RUN      ] SelectionInput.FitSelectionIncludesAllRootsWithoutChangingDocument
+[axiom] present begin frame=2 objects=3 scene_records=3
+[       OK ] SelectionInput.FitSelectionIncludesAllRootsWithoutChangingDocument (2 ms)
+[ RUN      ] SelectionInput.MixedSelectionDoesNotExposePrimaryConnectorAsSingleEditableTarget
+[       OK ] SelectionInput.MixedSelectionDoesNotExposePrimaryConnectorAsSingleEditableTarget (1 ms)
+[ RUN      ] SelectionInput.RegionExcludesHiddenAndLockedWhilePointCanInspectLockedObject
+[       OK ] SelectionInput.RegionExcludesHiddenAndLockedWhilePointCanInspectLockedObject (0 ms)
+[ RUN      ] SelectionInput.AddResolvesRetainedRootsAfterExternalReparent
+[       OK ] SelectionInput.AddResolvesRetainedRootsAfterExternalReparent (2 ms)
+[ RUN      ] SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement
+/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/runtime/composition/tests/selection_input_integration_test.cpp:315: Failure
+Value of: editor.previewSurfaceProvider()->overlayVisible()
+  Actual: false
+Expected: true
+
+[  FAILED  ] SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement (0 ms)
+[ RUN      ] SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation
+[       OK ] SelectionInput.MixedLockedSelectionRejectsDeletionInBothOrdersWithoutHistoryMutation (0 ms)
+[ RUN      ] SelectionInput.SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSelectable
+[       OK ] SelectionInput.SectionBackgroundDoesNotMaskContentAndBoundaryRemainsSelectable (44 ms)
+[ RUN      ] SelectionInput.RealBrushRegionUsesPublishedVisibleOutlineWithoutDocumentWrites
+[axiom] finish begin pointer=1 objects=3 scene_gen=1
+[axiom] scene apply pointer=1 ok=1 objects=4 scene_gen=2
+[       OK ] SelectionInput.RealBrushRegionUsesPublishedVisibleOutlineWithoutDocumentWrites (2 ms)
+[ RUN      ] SelectionInput.SectionAreaPrefersContentAndWholeBoundaryProducesNonredundantRoots
+[       OK ] SelectionInput.SectionAreaPrefersContentAndWholeBoundaryProducesNonredundantRoots (46 ms)
+[ RUN      ] SelectionInput.ImportedCropFrameExcludesTrimmedSourceAndCropKeepsInputOwnership
+[       OK ] SelectionInput.ImportedCropFrameExcludesTrimmedSourceAndCropKeepsInputOwnership (2 ms)
+[ RUN      ] SelectionInput.MiterStrokeOutsideNominalBoundsStillReachesPreciseRegionQuery
+[       OK ] SelectionInput.MiterStrokeOutsideNominalBoundsStillReachesPreciseRegionQuery (0 ms)
+[----------] 27 tests from SelectionInput (178 ms total)
+
+[----------] 1 test from SelectionBatch2Runtime
+[ RUN      ] SelectionBatch2Runtime.RealShapeCreationLeavesSectionTopologyAdmissible
+[       OK ] SelectionBatch2Runtime.RealShapeCreationLeavesSectionTopologyAdmissible (1 ms)
+[----------] 1 test from SelectionBatch2Runtime (1 ms total)
+
+[----------] 1 test from SelectionGroupScope
+[ RUN      ] SelectionGroupScope.KeepsAndUpdatesGroupOutlineDuringChildDrag
+[       OK ] SelectionGroupScope.KeepsAndUpdatesGroupOutlineDuringChildDrag (19 ms)
+[----------] 1 test from SelectionGroupScope (19 ms total)
+
+[----------] Global test environment tear-down
+[==========] 29 tests from 3 test suites ran. (200 ms total)
+[  PASSED  ] 28 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] SelectionInput.StaleRegionRetiresVisiblePreviewAfterCanonicalReplacement
+
+ 1 FAILED TEST
+
+        Start 163: FC04.MSE-11
+  4/246 Test #105: G3HeadlessCanvasDemo ........................Subprocess aborted***Exception:   1.91 sec
+Assertion failed: (field(evidence, "visibility_ids") == "[501,502,503,504,505,506,507,508]"), function assertStageCorrelation, file headless_canvas_demo_test.cpp, line 191.
+
+        Start 170: FC04.MSE-18
+  5/246 Test #163: FC04.MSE-11 .................................***Failed    0.99 sec
+Running main() from /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/.deps/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = MultiSelectionMSE.MSE_11
+[==========] Running 0 tests from 0 test suites.
+No tests ran. Check that tests exist and are not disabled or filtered out.
+
+For sharded runs, this error indicates an empty shard. This can happen if you have more shards than tests, or if --gtest_filter leaves a shard with no tests.
+
+To permit empty shards (e.g., when debugging with a filter), specify 
+--gtest_fail_if_no_test_selected=false.
+
+        Start 172: FC04.MSE-20
+  6/246 Test #172: FC04.MSE-20 .................................***Failed    0.01 sec
+Running main() from /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/.deps/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = MultiSelectionMSE.MSE_20
+[==========] Running 0 tests from 0 test suites.
+No tests ran. Check that tests exist and are not disabled or filtered out.
+
+For sharded runs, this error indicates an empty shard. This can happen if you have more shards than tests, or if --gtest_filter leaves a shard with no tests.
+
+To permit empty shards (e.g., when debugging with a filter), specify 
+--gtest_fail_if_no_test_selected=false.
+
+        Start 175: FC04.MSE-23
+  7/246 Test #175: FC04.MSE-23 .................................***Failed    0.02 sec
+Running main() from /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/.deps/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = MultiSelectionMSE.MSE_23
+[==========] Running 0 tests from 0 test suites.
+No tests ran. Check that tests exist and are not disabled or filtered out.
+
+For sharded runs, this error indicates an empty shard. This can happen if you have more shards than tests, or if --gtest_filter leaves a shard with no tests.
+
+To permit empty shards (e.g., when debugging with a filter), specify 
+--gtest_fail_if_no_test_selected=false.
+
+        Start 176: FC04.MSE-24
+  8/246 Test #176: FC04.MSE-24 .................................***Failed    0.02 sec
+Running main() from /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/.deps/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = MultiSelectionMSE.MSE_24
+[==========] Running 0 tests from 0 test suites.
+No tests ran. Check that tests exist and are not disabled or filtered out.
+
+For sharded runs, this error indicates an empty shard. This can happen if you have more shards than tests, or if --gtest_filter leaves a shard with no tests.
+
+To permit empty shards (e.g., when debugging with a filter), specify 
+--gtest_fail_if_no_test_selected=false.
+
+        Start 177: FC04.MSE-25
+  9/246 Test #177: FC04.MSE-25 .................................***Failed    0.02 sec
+Running main() from /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/.deps/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = MultiSelectionMSE.MSE_25
+[==========] Running 0 tests from 0 test suites.
+No tests ran. Check that tests exist and are not disabled or filtered out.
+
+For sharded runs, this error indicates an empty shard. This can happen if you have more shards than tests, or if --gtest_filter leaves a shard with no tests.
+
+To permit empty shards (e.g., when debugging with a filter), specify 
+--gtest_fail_if_no_test_selected=false.
+
+        Start 178: FC04.MSE-26
+ 10/246 Test #178: FC04.MSE-26 .................................***Failed    0.01 sec
+Running main() from /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/.deps/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = MultiSelectionMSE.MSE_26
+[==========] Running 0 tests from 0 test suites.
+No tests ran. Check that tests exist and are not disabled or filtered out.
+
+For sharded runs, this error indicates an empty shard. This can happen if you have more shards than tests, or if --gtest_filter leaves a shard with no tests.
+
+To permit empty shards (e.g., when debugging with a filter), specify 
+--gtest_fail_if_no_test_selected=false.
+
+        Start 198: FC01CreationPreview
+ 11/246 Test #145: FC00XRuntimeComposition .....................Subprocess aborted***Exception:   1.61 sec
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=3 objects=0 scene_records=0
+[axiom] present begin frame=4 objects=0 scene_records=0
+[axiom] present begin frame=5 objects=0 scene_records=0
+[axiom] present begin frame=6 objects=0 scene_records=0
+[axiom] present begin frame=7 objects=0 scene_records=0
+[axiom] present begin frame=8 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=0 scene_records=0
+Assertion failed: (interrupted.rebindSurface({400.0F, 300.0F, 400U, 300U, 1.0F, 1.0F})), function failedCandidatesKeepAcceptedBindingAndReentrantCloseAborts, file runtime_composition_test.cpp, line 116.
+
+        Start 206: FC01Creation-width-style
+ 12/246 Test #198: FC01CreationPreview .........................Subprocess aborted***Exception:   1.35 sec
+[axiom] present begin frame=1 objects=0 scene_records=0
+Assertion failed: (host.presentTransientOverlayFrame(host.nextCanonicalFrameId())), function create_move_changes_real_pixels_without_canonical_mutation, file creation_control_binding_test.cpp, line 194.
+
+        Start 211: FC01SelectedActions
+ 13/246 Test #206: FC01Creation-width-style ....................Subprocess aborted***Exception:   2.05 sec
+Assertion failed: (service.processPending(1) == 1), function queued_width_patch_preserves_remote_style, file creation_control_binding_test.cpp, line 290.
+
+        Start 212: FC05ConnectorDragPreview
+ 14/246 Test #211: FC01SelectedActions .........................Subprocess aborted***Exception:   1.88 sec
+Assertion failed: (host.presentTransientOverlayFrame(host.nextCanonicalFrameId())), function connector_preview_follows_transient_target_without_canonical_edit, file selected_actions_test.cpp, line 326.
+
+        Start 219: G4InkPlaygroundComposition
+ 15/246 Test #212: FC05ConnectorDragPreview ....................Subprocess aborted***Exception:   1.75 sec
+Assertion failed: (host.presentTransientOverlayFrame(host.nextCanonicalFrameId())), function connector_preview_follows_transient_target_without_canonical_edit, file selected_actions_test.cpp, line 326.
+
+        Start 221: G4InkPlaygroundSurface
+ 16/246 Test #219: G4InkPlaygroundComposition ..................Subprocess aborted***Exception:   1.65 sec
+Assertion failed: (host.commitStroke(17, 71)), function composition_test, file ink_playground_test.cpp, line 29.
+
+        Start 223: G4InkPlaygroundRepeatedStrokes
+ 17/246 Test #221: G4InkPlaygroundSurface ......................Subprocess aborted***Exception:   1.62 sec
+[axiom] present begin frame=1 objects=0 scene_records=0
+Assertion failed: (host.resizeSurface(800, 450)), function surface_test, file ink_playground_test.cpp, line 53.
+
+        Start 225: G4MultiPointerPlayground
+ 18/246 Test #223: G4InkPlaygroundRepeatedStrokes ..............Subprocess aborted***Exception:   1.24 sec
+Assertion failed: (host.commitStroke(21, 121)), function repeated_strokes_test, file ink_playground_test.cpp, line 81.
+
+        Start 227: G4ViewportGestureState
+ 19/246 Test #225: G4MultiPointerPlayground ....................Subprocess aborted***Exception:   1.15 sec
+Assertion failed: (host.commitStroke(second, 102, 202)), function multipointer_test, file ink_playground_test.cpp, line 139.
+
+        Start 233: G46BQueryStructure
+ 20/246 Test #227: G4ViewportGestureState ......................Subprocess aborted***Exception:   1.14 sec
+Assertion failed: (host.commitStroke(third, 403, 403)), function viewport_gesture_state_test, file ink_playground_test.cpp, line 206.
+
+        Start 236: G46PlaygroundTransform
+ 21/246 Test #170: FC04.MSE-18 .................................***Failed    8.43 sec
+Running main() from /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/.deps/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = MultiSelectionMSE.MSE_18
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from MultiSelectionMSE
+[ RUN      ] MultiSelectionMSE.MSE_18
+Test project /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/out/g5-coverage-alignment/full-native
+    Start 211: FC01SelectedActions
+1/1 Test #211: FC01SelectedActions ..............Subprocess aborted***Exception:   2.80 sec
+Assertion failed: (host.presentTransientOverlayFrame(host.nextCanonicalFrameId())), function connector_preview_follows_transient_target_without_canonical_edit, file selected_actions_test.cpp, line 326.
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   2.83 sec
+
+The following tests FAILED:
+	211 - FC01SelectedActions (Subprocess aborted)
+Errors while running CTest
+/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/verification/fc04_mse/mse_01_27_test.cpp:314: Failure
+Expected equality of these values:
+  std::system(invocation.c_str())
+    Which is: 2048
+  0
+"/opt/homebrew/bin/ctest" --test-dir "/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/out/g5-coverage-alignment/full-native" -R "^FC01SelectedActions$" --output-on-failure --no-tests=error
+Google Test trace:
+/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/verification/fc04_mse/mse_01_27_test.cpp:303: FC01SelectedActions
+
+Test project /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/out/g5-coverage-alignment/full-native
+    Start 125: FC08SectionConsumer
+1/1 Test #125: FC08SectionConsumer ..............   Passed    1.17 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   1.19 sec
+Test project /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/out/g5-coverage-alignment/full-native
+    Start 149: FC03ImageFacade
+1/1 Test #149: FC03ImageFacade ..................   Passed    0.93 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.95 sec
+Test project /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/out/g5-coverage-alignment/full-native
+    Start 126: FC05ConnectorFacade
+1/1 Test #126: FC05ConnectorFacade ..............   Passed    1.17 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   1.19 sec
+Test project /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/out/g5-coverage-alignment/full-native
+    Start 212: FC05ConnectorDragPreview
+1/1 Test #212: FC05ConnectorDragPreview .........Subprocess aborted***Exception:   1.54 sec
+Assertion failed: (host.presentTransientOverlayFrame(host.nextCanonicalFrameId())), function connector_preview_follows_transient_target_without_canonical_edit, file selected_actions_test.cpp, line 326.
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   1.56 sec
+
+The following tests FAILED:
+	212 - FC05ConnectorDragPreview (Subprocess aborted)
+Errors while running CTest
+/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/verification/fc04_mse/mse_01_27_test.cpp:314: Failure
+Expected equality of these values:
+  std::system(invocation.c_str())
+    Which is: 2048
+  0
+"/opt/homebrew/bin/ctest" --test-dir "/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/out/g5-coverage-alignment/full-native" -R "^FC05ConnectorDragPreview$" --output-on-failure --no-tests=error
+Google Test trace:
+/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/verification/fc04_mse/mse_01_27_test.cpp:303: FC05ConnectorDragPreview
+
+[  FAILED  ] MultiSelectionMSE.MSE_18 (7935 ms)
+[----------] 1 test from MultiSelectionMSE (7935 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (7935 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] MultiSelectionMSE.MSE_18
+
+ 1 FAILED TEST
+
+        Start 239: G46CQualificationBundle
+ 22/246 Test #233: G46BQueryStructure ..........................Subprocess aborted***Exception:   1.78 sec
+Assertion failed: (begin != std::string::npos && end != std::string::npos && end > begin), function snap_pointer_path_uses_scene_query, file viewport_query_structure_test.cpp, line 17.
+
+        Start 240: G46CQualificationBehavior
+ 23/246 Test #236: G46PlaygroundTransform ......................Subprocess aborted***Exception:   1.77 sec
+[axiom] finish begin pointer=700 objects=0 scene_gen=0
+[axiom] scene apply pointer=700 ok=1 objects=1 scene_gen=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+Assertion failed: (host.presentCanonicalFrame(host.canonicalFrameCount()+1U, 0.0, false)), function pixels, file selection_transform_test.cpp, line 20.
+
+        Start 241: G45BrushRuntimePipeline
+ 24/246 Test #239: G46CQualificationBundle .....................Subprocess aborted***Exception:   1.79 sec
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+[axiom] present begin frame=3 objects=3 scene_records=3
+select-deselect: PASS
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+[axiom] present begin frame=3 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=3 scene_records=3
+multi-select: PASS
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+[axiom] present begin frame=3 objects=3 scene_records=3
+handle-hover: PASS
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+[axiom] present begin frame=3 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=3 scene_records=3
+[axiom] present begin frame=5 objects=3 scene_records=3
+[axiom] present begin frame=6 objects=3 scene_records=3
+libc++abi: terminating due to uncaught exception of type std::runtime_error: missing editing overlay
+
+        Start  85: InkV2RetinaPreview
+ 25/246 Test #240: G46CQualificationBehavior ...................***Failed    1.79 sec
+runner failed unexpectedly: select-deselect: PASS
+multi-select: PASS
+handle-hover: PASS
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+[axiom] present begin frame=3 objects=3 scene_records=3
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+[axiom] present begin frame=3 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=3 scene_records=3
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+[axiom] present begin frame=3 objects=3 scene_records=3
+[axiom] present begin frame=1 objects=3 scene_records=3
+[axiom] present begin frame=2 objects=3 scene_records=3
+[axiom] present begin frame=3 objects=3 scene_records=3
+[axiom] present begin frame=4 objects=3 scene_records=3
+[axiom] present begin frame=5 objects=3 scene_records=3
+[axiom] present begin frame=6 objects=3 scene_records=3
+libc++abi: terminating due to uncaught exception of type std::runtime_error: missing editing overlay
+
+
+        Start  84: InkV2Work
+ 26/246 Test #241: G45BrushRuntimePipeline .....................Subprocess aborted***Exception:   1.82 sec
+[axiom] finish begin pointer=1812 objects=1 scene_gen=1
+[axiom] scene apply pointer=1812 ok=1 objects=2 scene_gen=2
+[axiom] present begin frame=1 objects=2 scene_records=2
+Assertion failed: (host.presentCanonicalFrame(host.canonicalFrameCount() + 1U, 0.0)), function canonicalPixels, file brush_runtime_pipeline_test.cpp, line 12.
+
+        Start  98: InkV2Material-wax
+ 27/246 Test  #98: InkV2Material-wax ...........................   Passed   14.96 sec
+        Start 101: InkV2Material-drywet-parity
+ 28/246 Test #101: InkV2Material-drywet-parity .................   Passed   10.13 sec
+        Start  74: G5RenderCache
+ 29/246 Test  #74: G5RenderCache ...............................   Passed   19.88 sec
+        Start  93: InkV2Material-cache
+ 30/246 Test  #93: InkV2Material-cache .........................   Passed   13.11 sec
+        Start 117: G3Visibility
+ 31/246 Test #117: G3Visibility ................................   Passed    0.46 sec
+        Start  96: InkV2Material-tuning
+ 32/246 Test  #96: InkV2Material-tuning ........................   Passed    9.61 sec
+        Start 118: G3DirectReference
+ 33/246 Test #118: G3DirectReference ...........................   Passed    1.96 sec
+        Start 167: FC04.MSE-15
+ 34/246 Test #167: FC04.MSE-15 .................................   Passed    1.28 sec
+        Start 143: SDKPublicObjectIdentityProcessIsolation
+ 35/246 Test #143: SDKPublicObjectIdentityProcessIsolation .....   Passed    1.48 sec
+        Start 100: InkV2Material-drywet
+ 36/246 Test #100: InkV2Material-drywet ........................   Passed    0.60 sec
+        Start  20: canvas_g2_a6_incremental_equivalence
+ 37/246 Test  #20: canvas_g2_a6_incremental_equivalence ........   Passed    0.51 sec
+        Start 151: SketchSemantic
+ 38/246 Test #151: SketchSemantic ..............................   Passed    1.83 sec
+        Start 189: FC02MinimalTextConsumer
+ 39/246 Test #189: FC02MinimalTextConsumer .....................   Passed    2.89 sec
+        Start  90: InkV2Material-parity
+ 40/246 Test  #90: InkV2Material-parity ........................   Passed    1.23 sec
+        Start  24: canvas_g2_a5_d6_spatial_index_benchmark
+ 41/246 Test  #24: canvas_g2_a5_d6_spatial_index_benchmark .....   Passed    3.98 sec
+        Start 152: G5Navigation
+ 42/246 Test #152: G5Navigation ................................   Passed    6.11 sec
+        Start 230: DUIM1ViewControls
+ 43/246 Test #230: DUIM1ViewControls ...........................   Passed    1.05 sec
+        Start 160: FC04.MSE-08
+ 44/246 Test #160: FC04.MSE-08 .................................   Passed    1.02 sec
+        Start 238: G47QualificationReplay
+ 45/246 Test #238: G47QualificationReplay ......................   Passed    3.45 sec
+        Start 122: InkV2Storage
+ 46/246 Test #122: InkV2Storage ................................   Passed    2.76 sec
+        Start 137: SDKPublicDocumentOperations
+ 47/246 Test #137: SDKPublicDocumentOperations .................   Passed    1.18 sec
+        Start 150: TableSemantic
+ 48/246 Test #150: TableSemantic ...............................   Passed    1.11 sec
+        Start 128: FC00XBrushBatchEvaluation
+ 49/246 Test #128: FC00XBrushBatchEvaluation ...................   Passed    1.25 sec
+        Start 229: DUIM1ToolOptions
+ 50/246 Test #229: DUIM1ToolOptions ............................   Passed    1.03 sec
+        Start 209: FC01SnapCreationDifferential
+ 51/246 Test #209: FC01SnapCreationDifferential ................   Passed    1.05 sec
+        Start 140: SDKPublicDocumentBackground
+ 52/246 Test #140: SDKPublicDocumentBackground .................   Passed    1.04 sec
+        Start 195: G3WebSurfaceHost
+ 53/246 Test #195: G3WebSurfaceHost ............................   Passed    1.08 sec
+        Start 242: F08FrameQualification
+ 54/246 Test #242: F08FrameQualification .......................   Passed    1.19 sec
+        Start 141: SDKPublicImageExport
+ 55/246 Test #141: SDKPublicImageExport ........................   Passed    1.13 sec
+        Start 139: SDKPublicOperationIdentity
+ 56/246 Test #139: SDKPublicOperationIdentity ..................   Passed    1.12 sec
+        Start 148: FC00XRuntimeFacade
+ 57/246 Test #148: FC00XRuntimeFacade ..........................   Passed    1.04 sec
+        Start 210: FC01HostPublicationTruth
+ 58/246 Test #210: FC01HostPublicationTruth ....................   Passed    1.03 sec
+        Start 190: FC00XMinimalRuntimeHost
+ 59/246 Test #190: FC00XMinimalRuntimeHost .....................   Passed    1.04 sec
+        Start 135: SDKPublicResources
+ 60/246 Test #135: SDKPublicResources ..........................   Passed    1.04 sec
+        Start 123: SelectionBatch3Summary
+ 61/246 Test #123: SelectionBatch3Summary ......................   Passed    1.06 sec
+        Start  45: FC00XContentRevisionStyle
+ 62/246 Test  #45: FC00XContentRevisionStyle ...................   Passed    1.02 sec
+        Start  83: G4SkiaChalkContinuousTexture
+ 63/246 Test  #83: G4SkiaChalkContinuousTexture ................   Passed    0.03 sec
+        Start 121: InkV2Runtime
+ 64/246 Test #121: InkV2Runtime ................................   Passed    1.33 sec
+        Start 136: SDKPublicDocumentIdentity
+ 65/246 Test #136: SDKPublicDocumentIdentity ...................   Passed    1.10 sec
+        Start  97: InkV2Material-quality
+ 66/246 Test  #97: InkV2Material-quality .......................   Passed    0.88 sec
+        Start  19: canvas_g2_a4_scene_delta
+ 67/246 Test  #19: canvas_g2_a4_scene_delta ....................   Passed    0.47 sec
+        Start 196: FC01CreationSession
+ 68/246 Test #196: FC01CreationSession .........................   Passed    0.50 sec
+        Start 245: DUIM1RuntimeFacade
+ 69/246 Test #245: DUIM1RuntimeFacade ..........................   Passed    1.12 sec
+        Start 231: DUIM1PlatformControl
+ 70/246 Test #231: DUIM1PlatformControl ........................   Passed    1.06 sec
+        Start 144: SDKPublicSelectionInput
+ 71/246 Test #144: SDKPublicSelectionInput .....................   Passed    1.14 sec
+        Start  78: G47TextPipeline
+ 72/246 Test  #78: G47TextPipeline .............................   Passed    0.11 sec
+        Start 237: G47TextHost
+ 73/246 Test #237: G47TextHost .................................   Passed    1.18 sec
+        Start 138: SDKPublicDocumentSnapshot
+ 74/246 Test #138: SDKPublicDocumentSnapshot ...................   Passed    1.05 sec
+        Start  82: G4SkiaChalkTexture
+ 75/246 Test  #82: G4SkiaChalkTexture ..........................   Passed    0.04 sec
+        Start 232: DUIM1Qualification
+ 76/246 Test #232: DUIM1Qualification ..........................   Passed    1.22 sec
+        Start  80: G4WindowsSkiaInkViewport
+ 77/246 Test  #80: G4WindowsSkiaInkViewport ....................   Passed    0.02 sec
+        Start  77: G47ImageResource
+ 78/246 Test  #77: G47ImageResource ............................   Passed    0.05 sec
+        Start 113: G3PreviewSurface
+ 79/246 Test #113: G3PreviewSurface ............................   Passed    0.02 sec
+        Start  46: FC01ARegionSelection
+ 80/246 Test  #46: FC01ARegionSelection ........................   Passed    0.53 sec
+        Start 188: InkV2NativeSession
+ 81/246 Test #188: InkV2NativeSession ..........................   Passed    0.07 sec
+        Start 106: G3HeadlessSkia
+ 82/246 Test #106: G3HeadlessSkia ..............................   Passed    0.04 sec
+        Start 193: G3DemoHitSelect
+ 83/246 Test #193: G3DemoHitSelect .............................   Passed    1.06 sec
+        Start 103: G3RuntimeAppBinding
+ 84/246 Test #103: G3RuntimeAppBinding .........................   Passed    0.02 sec
+        Start  70: G45BrushComplexity
+ 85/246 Test  #70: G45BrushComplexity ..........................   Passed    0.16 sec
+        Start 116: G46EditingOverlay
+ 86/246 Test #116: G46EditingOverlay ...........................   Passed    0.01 sec
+        Start 112: G3SkiaSurfaceProvider
+ 87/246 Test #112: G3SkiaSurfaceProvider .......................   Passed    0.02 sec
+        Start  81: G4SkiaBrushPrimitiveDab
+ 88/246 Test  #81: G4SkiaBrushPrimitiveDab .....................   Passed    0.02 sec
+        Start 243: G45BrushCommitAdapter
+ 89/246 Test #243: G45BrushCommitAdapter .......................   Passed    0.39 sec
+        Start 104: FC00XRuntimeIsolation
+ 90/246 Test #104: FC00XRuntimeIsolation .......................   Passed    0.02 sec
+        Start  17: canvas_g2_a2_dependency_closure
+ 91/246 Test  #17: canvas_g2_a2_dependency_closure .............   Passed    0.01 sec
+        Start  30: G4InteractionSessionManager
+ 92/246 Test  #30: G4InteractionSessionManager .................   Passed    0.02 sec
+        Start  76: G5RenderDamage
+ 93/246 Test  #76: G5RenderDamage ..............................   Passed    0.02 sec
+        Start 244: C1AppleContract
+ 94/246 Test #244: C1AppleContract .............................   Passed    0.53 sec
+        Start 119: G3FrameOrchestration
+ 95/246 Test #119: G3FrameOrchestration ........................   Passed    0.02 sec
+        Start 114: G3SurfacePresentation
+ 96/246 Test #114: G3SurfacePresentation .......................   Passed    0.02 sec
+        Start  55: InkV2VectorQuality
+ 97/246 Test  #55: InkV2VectorQuality ..........................   Passed    0.05 sec
+        Start   4: G47TextLayout
+ 98/246 Test   #4: G47TextLayout ...............................   Passed    0.05 sec
+        Start  79: G45BrushOutlineSkiaPath
+ 99/246 Test  #79: G45BrushOutlineSkiaPath .....................   Passed    0.02 sec
+        Start  47: SelectionBatch2Coverage
+100/246 Test  #47: SelectionBatch2Coverage .....................   Passed    0.49 sec
+        Start 111: G3RenderTargetSwitching
+101/246 Test #111: G3RenderTargetSwitching .....................   Passed    0.01 sec
+        Start  75: G5TileWork
+102/246 Test  #75: G5TileWork ..................................   Passed    0.01 sec
+        Start  28: canvas_fc01_derived_geometry
+103/246 Test  #28: canvas_fc01_derived_geometry ................   Passed    0.02 sec
+        Start 194: G3WindowsSurfaceAdapter
+104/246 Test #194: G3WindowsSurfaceAdapter .....................   Passed    0.60 sec
+        Start  50: G4PlatformNormalization
+105/246 Test  #50: G4PlatformNormalization .....................   Passed    0.01 sec
+        Start  44: G46BViewportConstraints
+106/246 Test  #44: G46BViewportConstraints .....................   Passed    0.01 sec
+        Start   8: canvas_rf01_scene_binding
+107/246 Test   #8: canvas_rf01_scene_binding ...................   Passed    0.02 sec
+        Start  22: canvas_g2_a6_recovery
+108/246 Test  #22: canvas_g2_a6_recovery .......................   Passed    0.02 sec
+        Start  16: FC03ImageScene
+109/246 Test  #16: FC03ImageScene ..............................   Passed    0.02 sec
+        Start  21: canvas_g2_a6_atomic_publication
+110/246 Test  #21: canvas_g2_a6_atomic_publication .............   Passed    0.02 sec
+        Start   9: canvas_g2_a0_semantic_generation_binding
+111/246 Test   #9: canvas_g2_a0_semantic_generation_binding ....   Passed    0.02 sec
+        Start   5: FC08SectionGeometry
+112/246 Test   #5: FC08SectionGeometry .........................   Passed    0.02 sec
+        Start   6: canvas_rf01_scene_atomicity
+113/246 Test   #6: canvas_rf01_scene_atomicity .................   Passed    0.02 sec
+        Start  10: canvas_g2_a1_runtime_record_projection
+114/246 Test  #10: canvas_g2_a1_runtime_record_projection ......   Passed    0.02 sec
+        Start  35: G4EditorHistory
+115/246 Test  #35: G4EditorHistory .............................   Passed    0.03 sec
+        Start   7: canvas_rf01_full_rebuild
+116/246 Test   #7: canvas_rf01_full_rebuild ....................   Passed    0.02 sec
+        Start 120: G4CanonicalHandoff
+117/246 Test #120: G4CanonicalHandoff ..........................   Passed    0.01 sec
+        Start 115: G3FrameState
+118/246 Test #115: G3FrameState ................................   Passed    0.01 sec
+        Start 110: FC00XFrameCoordinator
+119/246 Test #110: FC00XFrameCoordinator .......................   Passed    0.01 sec
+        Start 192: G3Camera
+120/246 Test #192: G3Camera ....................................   Passed    0.34 sec
+        Start 246: G45BrushLab
+121/246 Test #246: G45BrushLab .................................   Passed    0.01 sec
+        Start 174: FC04.MSE-22
+122/246 Test #174: FC04.MSE-22 .................................   Passed    0.23 sec
+        Start  37: G4SessionConflict
+123/246 Test  #37: G4SessionConflict ...........................   Passed    0.01 sec
+        Start  32: G4TransformSession
+124/246 Test  #32: G4TransformSession ..........................   Passed    0.01 sec
+        Start  26: canvas_rf01_module_boundaries
+125/246 Test  #26: canvas_rf01_module_boundaries ...............   Passed    0.21 sec
+        Start  40: G4MultiContactCoordinator
+126/246 Test  #40: G4MultiContactCoordinator ...................   Passed    0.01 sec
+        Start   3: InkV2Compact
+127/246 Test   #3: InkV2Compact ................................   Passed    0.03 sec
+        Start  43: C0ViewportInteractionController
+128/246 Test  #43: C0ViewportInteractionController .............   Passed    0.01 sec
+        Start  42: C0CanvasInteractionCoordinator
+129/246 Test  #42: C0CanvasInteractionCoordinator ..............   Passed    0.02 sec
+        Start  73: G45CanonicalBrushCommit
+130/246 Test  #73: G45CanonicalBrushCommit .....................   Passed    0.02 sec
+        Start  12: FC05Route
+131/246 Test  #12: FC05Route ...................................   Passed    0.03 sec
+        Start  53: InkVisualQuality
+132/246 Test  #53: InkVisualQuality ............................   Passed    0.01 sec
+        Start  33: G46TransformHandleDrag
+133/246 Test  #33: G46TransformHandleDrag ......................   Passed    0.02 sec
+        Start  39: G4GestureArbiter
+134/246 Test  #39: G4GestureArbiter ............................   Passed    0.02 sec
+        Start  71: G45ProgrammableBrush
+135/246 Test  #71: G45ProgrammableBrush ........................   Passed    0.01 sec
+        Start  57: InkV2Pen
+136/246 Test  #57: InkV2Pen ....................................   Passed    0.01 sec
+        Start  11: canvas_g2_a2_bounds_system
+137/246 Test  #11: canvas_g2_a2_bounds_system ..................   Passed    0.02 sec
+        Start  61: G4PointerTrace
+138/246 Test  #61: G4PointerTrace ..............................   Passed    0.01 sec
+        Start  14: canvas_g2_a2_reference_geometry
+139/246 Test  #14: canvas_g2_a2_reference_geometry .............   Passed    0.01 sec
+        Start  41: G4ViewportGesture
+140/246 Test  #41: G4ViewportGesture ...........................   Passed    0.01 sec
+        Start  63: G4MultiPointerReplay
+141/246 Test  #63: G4MultiPointerReplay ........................   Passed    0.01 sec
+        Start  34: G4EraserSession
+142/246 Test  #34: G4EraserSession .............................   Passed    0.01 sec
+        Start  62: G4PreviewModel
+143/246 Test  #62: G4PreviewModel ..............................   Passed    0.01 sec
+        Start  60: G4InkEngine
+144/246 Test  #60: G4InkEngine .................................   Passed    0.01 sec
+        Start  49: G4MultiPointerFoundation
+145/246 Test  #49: G4MultiPointerFoundation ....................   Passed    0.01 sec
+        Start 218: FC01SelectedPreimageMatrix
+146/246 Test #218: FC01SelectedPreimageMatrix ..................   Passed    0.07 sec
+        Start   2: DUIM1BuildInfo
+147/246 Test   #2: DUIM1BuildInfo ..............................   Passed    0.01 sec
+        Start 125: FC08SectionConsumer
+148/246 Test #125: FC08SectionConsumer .........................   Passed    0.09 sec
+        Start 142: SDKPublicObjectIdentity
+149/246 Test #142: SDKPublicObjectIdentity .....................   Passed    0.13 sec
+        Start  64: G45BrushPackage
+150/246 Test  #64: G45BrushPackage .............................   Passed    0.01 sec
+        Start  51: C1CommonIngress
+151/246 Test  #51: C1CommonIngress .............................   Passed    0.01 sec
+        Start  72: G45PerfectFreehandReference
+152/246 Test  #72: G45PerfectFreehandReference .................   Passed    0.01 sec
+        Start  25: canvas_rf01_damage_view
+153/246 Test  #25: canvas_rf01_damage_view .....................   Passed    0.02 sec
+        Start  59: InkV2Resample
+154/246 Test  #59: InkV2Resample ...............................   Passed    0.01 sec
+        Start  15: canvas_g2_a2_scene_impact
+155/246 Test  #15: canvas_g2_a2_scene_impact ...................   Passed    0.01 sec
+        Start  56: InkV2VectorTuning
+156/246 Test  #56: InkV2VectorTuning ...........................   Passed    0.01 sec
+        Start  58: InkV2Laser
+157/246 Test  #58: InkV2Laser ..................................   Passed    0.01 sec
+        Start   1: DUIM1Control
+158/246 Test   #1: DUIM1Control ................................   Passed    0.01 sec
+        Start  31: G4SelectionSession
+159/246 Test  #31: G4SelectionSession ..........................   Passed    0.01 sec
+        Start  67: G45BrushSession
+160/246 Test  #67: G45BrushSession .............................   Passed    0.01 sec
+        Start  48: G4InputRouter
+161/246 Test  #48: G4InputRouter ...............................   Passed    0.01 sec
+        Start  65: G45BrushPackageCatalog
+162/246 Test  #65: G45BrushPackageCatalog ......................   Passed    0.02 sec
+        Start  38: G4SessionLifecycle
+163/246 Test  #38: G4SessionLifecycle ..........................   Passed    0.01 sec
+        Start  68: G45BrushOperationIntent
+164/246 Test  #68: G45BrushOperationIntent .....................   Passed    0.01 sec
+        Start  54: InkV2Pressure
+165/246 Test  #54: InkV2Pressure ...............................   Passed    0.01 sec
+        Start  69: G45BrushPreviewHandoff
+166/246 Test  #69: G45BrushPreviewHandoff ......................   Passed    0.01 sec
+        Start  66: G45BrushPlan
+167/246 Test  #66: G45BrushPlan ................................   Passed    0.01 sec
+        Start 191: FC00XMinimalPresentationCache
+168/246 Test #191: FC00XMinimalPresentationCache ...............   Passed    0.01 sec
+        Start  52: C1CrossPlatformFixtureParity
+169/246 Test  #52: C1CrossPlatformFixtureParity ................   Passed    0.01 sec
+        Start  92: InkV2Material-sampling
+170/246 Test  #92: InkV2Material-sampling ......................   Passed    0.09 sec
+        Start  27: canvas_rf01_public_abi_manifest
+171/246 Test  #27: canvas_rf01_public_abi_manifest .............   Passed    0.09 sec
+        Start 149: FC03ImageFacade
+172/246 Test #149: FC03ImageFacade .............................   Passed    0.09 sec
+        Start  99: InkV2Material-wax-mask
+173/246 Test  #99: InkV2Material-wax-mask ......................   Passed    0.03 sec
+        Start  29: F08FrameQualificationBoundary
+174/246 Test  #29: F08FrameQualificationBoundary ...............   Passed    0.06 sec
+        Start 228: G46BViewportFitHost
+175/246 Test #228: G46BViewportFitHost .........................   Passed    0.05 sec
+        Start 126: FC05ConnectorFacade
+176/246 Test #126: FC05ConnectorFacade .........................   Passed    0.05 sec
+        Start 147: FC00XFitFullScene
+177/246 Test #147: FC00XFitFullScene ...........................   Passed    0.05 sec
+        Start 102: InkV2Material-drywet-mask
+178/246 Test #102: InkV2Material-drywet-mask ...................   Passed    0.03 sec
+        Start 197: FC01CreationControlBinding
+179/246 Test #197: FC01CreationControlBinding ..................   Passed    0.05 sec
+        Start 130: FC00XBrushBatchSemantics
+180/246 Test #130: FC00XBrushBatchSemantics ....................   Passed    0.06 sec
+        Start 182: FC04MSEHistoryFaultUndo
+181/246 Test #182: FC04MSEHistoryFaultUndo .....................   Passed    0.02 sec
+        Start 159: FC04.MSE-07
+182/246 Test #159: FC04.MSE-07 .................................   Passed    0.02 sec
+        Start  88: InkV2Material-crayon
+183/246 Test  #88: InkV2Material-crayon ........................   Passed    0.03 sec
+        Start 154: FC04.MSE-02
+184/246 Test #154: FC04.MSE-02 .................................   Passed    0.03 sec
+        Start  95: InkV2Material-visual
+185/246 Test  #95: InkV2Material-visual ........................   Passed    0.03 sec
+        Start 216: FC01SelectedDependent
+186/246 Test #216: FC01SelectedDependent .......................   Passed    0.02 sec
+        Start 109: FC01TriangleConnectorRaster
+187/246 Test #109: FC01TriangleConnectorRaster .................   Passed    0.02 sec
+        Start  87: InkV2Material-chalk
+188/246 Test  #87: InkV2Material-chalk .........................   Passed    0.03 sec
+        Start  86: InkV2Material-marker
+189/246 Test  #86: InkV2Material-marker ........................   Passed    0.02 sec
+        Start 173: FC04.MSE-21
+190/246 Test #173: FC04.MSE-21 .................................   Passed    0.02 sec
+        Start 164: FC04.MSE-12
+191/246 Test #164: FC04.MSE-12 .................................   Passed    0.03 sec
+        Start 186: FC04MSEForwardFaultSemantic
+192/246 Test #186: FC04MSEForwardFaultSemantic .................   Passed    0.03 sec
+        Start 107: FC05ConnectorPendingRaster
+193/246 Test #107: FC05ConnectorPendingRaster ..................   Passed    0.02 sec
+        Start 215: FC01SelectedLocked
+194/246 Test #215: FC01SelectedLocked ..........................   Passed    0.02 sec
+        Start 181: SDKCppPublicMultiStrokeWidth
+195/246 Test #181: SDKCppPublicMultiStrokeWidth ................   Passed    0.02 sec
+        Start 184: FC04MSEMultiIntent
+196/246 Test #184: FC04MSEMultiIntent ..........................   Passed    0.03 sec
+        Start 155: FC04.MSE-03
+197/246 Test #155: FC04.MSE-03 .................................   Passed    0.02 sec
+        Start  89: InkV2Material-water
+198/246 Test  #89: InkV2Material-water .........................   Passed    0.02 sec
+        Start 183: FC04MSEHistoryFaultRedo
+199/246 Test #183: FC04MSEHistoryFaultRedo .....................   Passed    0.02 sec
+        Start 162: FC04.MSE-10
+200/246 Test #162: FC04.MSE-10 .................................   Passed    0.03 sec
+        Start 165: FC04.MSE-13
+201/246 Test #165: FC04.MSE-13 .................................   Passed    0.03 sec
+        Start  36: FC01EditorHistoryInverseFamilies
+202/246 Test  #36: FC01EditorHistoryInverseFamilies ............   Passed    0.01 sec
+        Start 217: FC01SelectedRemoteChild
+203/246 Test #217: FC01SelectedRemoteChild .....................   Passed    0.02 sec
+        Start 153: FC04.MSE-01
+204/246 Test #153: FC04.MSE-01 .................................   Passed    0.02 sec
+        Start 187: FC04MSEForwardFaultScene
+205/246 Test #187: FC04MSEForwardFaultScene ....................   Passed    0.03 sec
+        Start 185: FC04MSEMultiIntentFault
+206/246 Test #185: FC04MSEMultiIntentFault .....................   Passed    0.02 sec
+        Start 200: FC01CreationOwnerQueue
+207/246 Test #200: FC01CreationOwnerQueue ......................   Passed    0.02 sec
+        Start 220: G4InkPlaygroundHud
+208/246 Test #220: G4InkPlaygroundHud ..........................   Passed    0.01 sec
+        Start 131: FC00XCanonicalBusyPreviewProgress
+209/246 Test #131: FC00XCanonicalBusyPreviewProgress ...........   Passed    0.02 sec
+        Start 169: FC04.MSE-17
+210/246 Test #169: FC04.MSE-17 .................................   Passed    0.02 sec
+        Start 146: FC00XCancelKeepsViewport
+211/246 Test #146: FC00XCancelKeepsViewport ....................   Passed    0.02 sec
+        Start 129: FC00XBrushPressureCapability
+212/246 Test #129: FC00XBrushPressureCapability ................   Passed    0.02 sec
+        Start 171: FC04.MSE-19
+213/246 Test #171: FC04.MSE-19 .................................   Passed    0.02 sec
+        Start 234: G4AndroidPointerIdentity
+214/246 Test #234: G4AndroidPointerIdentity ....................   Passed    0.01 sec
+        Start 222: G4InkPlaygroundPreview
+215/246 Test #222: G4InkPlaygroundPreview ......................   Passed    0.01 sec
+        Start 205: FC01Creation-unregister
+216/246 Test #205: FC01Creation-unregister .....................   Passed    0.02 sec
+        Start 158: FC04.MSE-06
+217/246 Test #158: FC04.MSE-06 .................................   Passed    0.02 sec
+        Start 161: FC04.MSE-09
+218/246 Test #161: FC04.MSE-09 .................................   Passed    0.02 sec
+        Start 226: G4ProvisionalZeroMutation
+219/246 Test #226: G4ProvisionalZeroMutation ...................   Passed    0.02 sec
+        Start 224: G4InkPlaygroundPlatform
+220/246 Test #224: G4InkPlaygroundPlatform .....................   Passed    0.01 sec
+        Start  94: InkV2Material-scene-mask
+221/246 Test  #94: InkV2Material-scene-mask ....................   Passed    0.02 sec
+        Start 156: FC04.MSE-04
+222/246 Test #156: FC04.MSE-04 .................................   Passed    0.02 sec
+        Start 108: FC05StickyFractionalProduction
+223/246 Test #108: FC05StickyFractionalProduction ..............   Passed    0.02 sec
+        Start 201: FC01Creation-arrow
+224/246 Test #201: FC01Creation-arrow ..........................   Passed    0.02 sec
+        Start 235: G4MultiContactPolicySelection
+225/246 Test #235: G4MultiContactPolicySelection ...............   Passed    0.02 sec
+        Start 168: FC04.MSE-16
+226/246 Test #168: FC04.MSE-16 .................................   Passed    0.02 sec
+        Start 179: FC04.MSE-27
+227/246 Test #179: FC04.MSE-27 .................................   Passed    0.02 sec
+        Start 202: FC01Creation-arrow-arrow
+228/246 Test #202: FC01Creation-arrow-arrow ....................   Passed    0.02 sec
+        Start 180: SDKCppPublicMultiPermissionStale
+229/246 Test #180: SDKCppPublicMultiPermissionStale ............   Passed    0.02 sec
+        Start 133: FC00XBusyCanonicalPendingFeedback
+230/246 Test #133: FC00XBusyCanonicalPendingFeedback ...........   Passed    0.02 sec
+        Start 166: FC04.MSE-14
+231/246 Test #166: FC04.MSE-14 .................................   Passed    0.03 sec
+        Start 157: FC04.MSE-05
+232/246 Test #157: FC04.MSE-05 .................................   Passed    0.02 sec
+        Start 208: FC01Creation-target-capture
+233/246 Test #208: FC01Creation-target-capture .................   Passed    0.02 sec
+        Start 134: FC00XFatalProviderFailure
+234/246 Test #134: FC00XFatalProviderFailure ...................   Passed    0.02 sec
+        Start 207: FC01Creation-failed-down
+235/246 Test #207: FC01Creation-failed-down ....................   Passed    0.02 sec
+        Start 132: FC00XPreviewBusyCanonicalProgress
+236/246 Test #132: FC00XPreviewBusyCanonicalProgress ...........   Passed    0.01 sec
+        Start 213: FC01SelectedRemoteConflict
+237/246 Test #213: FC01SelectedRemoteConflict ..................   Passed    0.02 sec
+        Start 203: FC01Creation-arrow-arrow-pointer
+238/246 Test #203: FC01Creation-arrow-arrow-pointer ............   Passed    0.02 sec
+        Start 204: FC01Creation-line-line-pointer
+239/246 Test #204: FC01Creation-line-line-pointer ..............   Passed    0.02 sec
+        Start 214: FC01InsertHistory
+240/246 Test #214: FC01InsertHistory ...........................   Passed    0.02 sec
+        Start 199: FC01CreationSources
+241/246 Test #199: FC01CreationSources .........................   Passed    0.02 sec
+        Start  23: canvas_g2_a5_spatial_index_differential
+242/246 Test  #23: canvas_g2_a5_spatial_index_differential .....   Passed    0.02 sec
+        Start  91: InkV2Material-presets
+243/246 Test  #91: InkV2Material-presets .......................   Passed    0.02 sec
+244/246 Test #127: FC02Text ....................................***Failed  153.27 sec
+Running main() from /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/.deps/googletest/googletest/src/gtest_main.cc
+[==========] Running 79 tests from 10 test suites.
+[----------] Global test environment set-up.
+[----------] 5 tests from FC02Snapshot
+[ RUN      ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication
+[       OK ] FC02Snapshot.UnknownRequiredCapabilityRejectsBeforeTypedPublication (0 ms)
+[ RUN      ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue
+[       OK ] FC02Snapshot.TypedBootstrapMustVerifyDigestValue (0 ms)
+[ RUN      ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest
+[       OK ] FC02Snapshot.AcceptedSemanticProjectionForExplicitEmptyManifest (1 ms)
+[ RUN      ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore
+[       OK ] FC02Snapshot.MixedTriangleTextAndManifestRoundTripAndBoundRestore (2 ms)
+[ RUN      ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapability
+[       OK ] FC02Snapshot.LegacyTypedRestoreCannotBypassTextCapability (0 ms)
+[----------] 5 tests from FC02Snapshot (4 ms total)
+
+[----------] 1 test from FC02History
+[ RUN      ] FC02History.TextCompensationIsSupported
+[       OK ] FC02History.TextCompensationIsSupported (0 ms)
+[----------] 1 test from FC02History (0 ms total)
+
+[----------] 8 tests from FC02Semantic
+[ RUN      ] FC02Semantic.WidthCodecAndStrictPresenceRoundTrip
+[       OK ] FC02Semantic.WidthCodecAndStrictPresenceRoundTrip (0 ms)
+[ RUN      ] FC02Semantic.ExactRestorePreservesRunBoundariesAndUnrelatedTransform
+[       OK ] FC02Semantic.ExactRestorePreservesRunBoundariesAndUnrelatedTransform (0 ms)
+[ RUN      ] FC02Semantic.ShapeLabelUsesRichTextOperationWithoutCreatingChildObject
+[       OK ] FC02Semantic.ShapeLabelUsesRichTextOperationWithoutCreatingChildObject (0 ms)
+[ RUN      ] FC02Semantic.LegacyShapeVersionsRejectEmbeddedLabels
+[       OK ] FC02Semantic.LegacyShapeVersionsRejectEmbeddedLabels (0 ms)
+[ RUN      ] FC02Semantic.GuardAndInvalidSecondStepRejectAtomically
+[       OK ] FC02Semantic.GuardAndInvalidSecondStepRejectAtomically (0 ms)
+[ RUN      ] FC02Semantic.ExplicitMigrationAndInverseRestoreLegacyAbsence
+[       OK ] FC02Semantic.ExplicitMigrationAndInverseRestoreLegacyAbsence (0 ms)
+[ RUN      ] FC02Semantic.FirstShapeLabelCodecReplayGuardsAndLegacyUndo
+[       OK ] FC02Semantic.FirstShapeLabelCodecReplayGuardsAndLegacyUndo (0 ms)
+[ RUN      ] FC02Semantic.WirePresenceAndDecodedSemanticRejectionsLeaveStateUntouched
+[       OK ] FC02Semantic.WirePresenceAndDecodedSemanticRejectionsLeaveStateUntouched (0 ms)
+[----------] 8 tests from FC02Semantic (1 ms total)
+
+[----------] 13 tests from FC02Facade
+[ RUN      ] FC02Facade.ShapeLabelCanEnterTextSessionThroughFacade
+[       OK ] FC02Facade.ShapeLabelCanEnterTextSessionThroughFacade (2 ms)
+[ RUN      ] FC02Facade.PlainShapeFirstLabelPreservesIdentityAndEmptyEditHasNoHistory
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02Facade.PlainShapeFirstLabelPreservesIdentityAndEmptyEditHasNoHistory (5 ms)
+[ RUN      ] FC02Facade.ShapeLabelEntryRejectsInkLockedLostAndClosed
+[       OK ] FC02Facade.ShapeLabelEntryRejectsInkLockedLostAndClosed (0 ms)
+[ RUN      ] FC02Facade.FontCatalogIsReadOnlyAndTracksAdmittedResourceState
+---- failed to open <0> as a font
+[       OK ] FC02Facade.FontCatalogIsReadOnlyAndTracksAdmittedResourceState (0 ms)
+[ RUN      ] FC02Facade.FakeImeCommitsThroughRealHistoryAndCanonicalStore
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02Facade.FakeImeCommitsThroughRealHistoryAndCanonicalStore (0 ms)
+[ RUN      ] FC02Facade.ToolSwitchWaitsForRealImeCommitAndResizeKeepsSession
+[       OK ] FC02Facade.ToolSwitchWaitsForRealImeCommitAndResizeKeepsSession (0 ms)
+[ RUN      ] FC02Facade.CrossParagraphReplacementAndWidthUndoAreCanonical
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02Facade.CrossParagraphReplacementAndWidthUndoAreCanonical (1 ms)
+[ RUN      ] FC02Facade.InvalidOffsetsCancellationAndEmptyDraftLeaveNoObjects
+[       OK ] FC02Facade.InvalidOffsetsCancellationAndEmptyDraftLeaveNoObjects (0 ms)
+[ RUN      ] FC02Facade.PublicationReadCannotInvalidateOwnFinishingComposition
+[       OK ] FC02Facade.PublicationReadCannotInvalidateOwnFinishingComposition (2 ms)
+[ RUN      ] FC02Facade.TextOwnershipConsumesPointerLifecycleWithoutStartingInk
+[       OK ] FC02Facade.TextOwnershipConsumesPointerLifecycleWithoutStartingInk (4 ms)
+[ RUN      ] FC02Facade.FailedTerminalKeepsPreimageAndRetryDoesNotRewriteRejection
+[       OK ] FC02Facade.FailedTerminalKeepsPreimageAndRetryDoesNotRewriteRejection (0 ms)
+[ RUN      ] FC02Facade.AcknowledgedAndOldSessionEventsCannotReapplyAndFailedWidthPreservesRedo
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02Facade.AcknowledgedAndOldSessionEventsCannotReapplyAndFailedWidthPreservesRedo (3 ms)
+[ RUN      ] FC02Facade.ForcedCloseRejectsQueuedInputAndLateCallbacks
+[       OK ] FC02Facade.ForcedCloseRejectsQueuedInputAndLateCallbacks (0 ms)
+[----------] 13 tests from FC02Facade (21 ms total)
+
+[----------] 8 tests from FC02Formatting
+[ RUN      ] FC02Formatting.LeafPatchPreservesSelectionStylesAndUndo
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC02Formatting.LeafPatchPreservesSelectionStylesAndUndo (8 ms)
+[ RUN      ] FC02Formatting.ListAndStrikeChangeSharedLayoutAndCaret
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC02Formatting.ListAndStrikeChangeSharedLayoutAndCaret (2 ms)
+[ RUN      ] FC02Formatting.CjkBoldItalicKeepsVisibleGlyphsAndCaret
+[       OK ] FC02Formatting.CjkBoldItalicKeepsVisibleGlyphsAndCaret (4509 ms)
+[ RUN      ] FC02Formatting.MixedSelectionReportsAnySelectedEffectAndClearsItAtomically
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC02Formatting.MixedSelectionReportsAnySelectedEffectAndClearsItAtomically (4415 ms)
+[ RUN      ] FC02Formatting.MixedParagraphSelectionReportsAnyBulletAndExcludesEndParagraph
+[       OK ] FC02Formatting.MixedParagraphSelectionReportsAnyBulletAndExcludesEndParagraph (3764 ms)
+[ RUN      ] FC02Formatting.BoldAndItalicChangeRealCanonicalPixels
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC02Formatting.BoldAndItalicChangeRealCanonicalPixels (12720 ms)
+[ RUN      ] FC02Formatting.ImportedFamiliesAreNamedSelectableAndActuallyRender
+[       OK ] FC02Formatting.ImportedFamiliesAreNamedSelectableAndActuallyRender (3388 ms)
+[ RUN      ] FC02Formatting.VersionThreeObjectHasExplicitConsumerSupport
+[       OK ] FC02Formatting.VersionThreeObjectHasExplicitConsumerSupport (0 ms)
+[----------] 8 tests from FC02Formatting (28809 ms total)
+
+[----------] 20 tests from FC02ShapeLabel
+[ RUN      ] FC02ShapeLabel.EmptyCaretStartsInsideAllThreeShapeCenters
+[       OK ] FC02ShapeLabel.EmptyCaretStartsInsideAllThreeShapeCenters (8606 ms)
+[ RUN      ] FC02ShapeLabel.RealDownBeforeSecondDoubleClickDoesNotCreateOrBlockEditor
+[       OK ] FC02ShapeLabel.RealDownBeforeSecondDoubleClickDoesNotCreateOrBlockEditor (3010 ms)
+[ RUN      ] FC02ShapeLabel.ReenterUsesTheClickedGlyphAndPointerCanMoveCaret
+[       OK ] FC02ShapeLabel.ReenterUsesTheClickedGlyphAndPointerCanMoveCaret (2722 ms)
+[ RUN      ] FC02ShapeLabel.OutsideDownFinishesWithoutCreatingAnotherDraft
+[       OK ] FC02ShapeLabel.OutsideDownFinishesWithoutCreatingAnotherDraft (5479 ms)
+[ RUN      ] FC02ShapeLabel.FirstShapeLabelTextDefaultsToCenteredParagraph
+[       OK ] FC02ShapeLabel.FirstShapeLabelTextDefaultsToCenteredParagraph (3051 ms)
+[ RUN      ] FC02ShapeLabel.TriangleAndEllipseUseInteriorLayoutGeometry
+[       OK ] FC02ShapeLabel.TriangleAndEllipseUseInteriorLayoutGeometry (394 ms)
+[ RUN      ] FC02ShapeLabel.FixedTypographyPaddingEllipsisAndPlaceholderAreDerived
+[       OK ] FC02ShapeLabel.FixedTypographyPaddingEllipsisAndPlaceholderAreDerived (446 ms)
+[ RUN      ] FC02ShapeLabel.TypingLongLabelExpandsUpwardFromTheBottomEdge
+[       OK ] FC02ShapeLabel.TypingLongLabelExpandsUpwardFromTheBottomEdge (17219 ms)
+[ RUN      ] FC02ShapeLabel.EmptyPromptAppearsOnlyWhileShapeIsSelected
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[axiom] present begin frame=3 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.EmptyPromptAppearsOnlyWhileShapeIsSelected (2662 ms)
+[ RUN      ] FC02ShapeLabel.ExistingTextCaretFollowsTheRenderedLabelLine
+[       OK ] FC02ShapeLabel.ExistingTextCaretFollowsTheRenderedLabelLine (2537 ms)
+[ RUN      ] FC02ShapeLabel.CompositionPreeditChangesRenderedShapePixelsBeforeCommit
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.CompositionPreeditChangesRenderedShapePixelsBeforeCommit (2545 ms)
+[ RUN      ] FC02ShapeLabel.PreeditOverflowGrowsThePresentationWithoutCommittingTheShape
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.PreeditOverflowGrowsThePresentationWithoutCommittingTheShape (3864 ms)
+[ RUN      ] FC02ShapeLabel.UnselectedOverflowHasNoExpandPixelsOrExpandHit
+[axiom] present begin frame=1 objects=1 scene_records=1
+/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/runtime/composition/tests/fc02_text_geometry_test.cpp:824: Failure
+Expected: (white) > (20U), actual: 0 vs 20
+The selected affordance must also appear in the transient frame
+
+[axiom] present begin frame=3 objects=1 scene_records=1
+[axiom] present begin frame=4 objects=1 scene_records=1
+[  FAILED  ] FC02ShapeLabel.UnselectedOverflowHasNoExpandPixelsOrExpandHit (4005 ms)
+[ RUN      ] FC02ShapeLabel.ExpandAffordanceUsesUndoableRuntimeSizeOperation
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.ExpandAffordanceUsesUndoableRuntimeSizeOperation (2964 ms)
+[ RUN      ] FC02ShapeLabel.ExpandButtonRemainsClickableOutsideTheEllipseContour
+[       OK ] FC02ShapeLabel.ExpandButtonRemainsClickableOutsideTheEllipseContour (3945 ms)
+[ RUN      ] FC02ShapeLabel.ShrinkPreviewAndCommittedLabelKeepTheSameFontPixels
+[axiom] present begin frame=5 objects=1 scene_records=1
+/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/runtime/composition/tests/fc02_text_geometry_test.cpp:961: Failure
+Expected equality of these values:
+  blueMask(preview)
+    Which is: { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ... }
+  expected
+    Which is: { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ... }
+Live resize must re-layout at the new boundary without scaling the glyphs
+
+/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom-g5-settle-timing/runtime/composition/tests/fc02_text_geometry_test.cpp:963: Failure
+Expected equality of these values:
+  blueMask(overlay)
+    Which is: { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ... }
+  expected
+    Which is: { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ... }
+
+[  FAILED  ] FC02ShapeLabel.ShrinkPreviewAndCommittedLabelKeepTheSameFontPixels (3027 ms)
+[ RUN      ] FC02ShapeLabel.SelectedShapeEditorRetiresItsPreviousOpaqueSelectionPreview
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.SelectedShapeEditorRetiresItsPreviousOpaqueSelectionPreview (3417 ms)
+[ RUN      ] FC02ShapeLabel.RuntimeFacadeFormatsSelectedShapeLabelWithoutAnEditorSession
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC02ShapeLabel.RuntimeFacadeFormatsSelectedShapeLabelWithoutAnEditorSession (2775 ms)
+[ RUN      ] FC02ShapeLabel.WholeLabelFormattingPreservesEditorAndRejectsStaleTargets
+[       OK ] FC02ShapeLabel.WholeLabelFormattingPreservesEditorAndRejectsStaleTargets (2798 ms)
+[ RUN      ] FC02ShapeLabel.EmptyLabelCanBeFormattedAndLostWritesAreRejected
+[       OK ] FC02ShapeLabel.EmptyLabelCanBeFormattedAndLostWritesAreRejected (3348 ms)
+[----------] 20 tests from FC02ShapeLabel (78825 ms total)
+
+[----------] 6 tests from FC02StickyLabel
+[ RUN      ] FC02StickyLabel.TypingKeepsSizeUntilSelectedExpand
+[       OK ] FC02StickyLabel.TypingKeepsSizeUntilSelectedExpand (2985 ms)
+[ RUN      ] FC02StickyLabel.LongUnbrokenTextWrapsBeforeSquareExpansion
+[       OK ] FC02StickyLabel.LongUnbrokenTextWrapsBeforeSquareExpansion (3404 ms)
+[ RUN      ] FC02StickyLabel.SelectedExpandButtonCommitsSquareGrowth
+[       OK ] FC02StickyLabel.SelectedExpandButtonCommitsSquareGrowth (4394 ms)
+[ RUN      ] FC02StickyLabel.SelectedExpandButtonGrowsForHorizontalOverflow
+[       OK ] FC02StickyLabel.SelectedExpandButtonGrowsForHorizontalOverflow (3756 ms)
+[ RUN      ] FC02StickyLabel.WrappedTextThatFitsDoesNotShowExpand
+[       OK ] FC02StickyLabel.WrappedTextThatFitsDoesNotShowExpand (465 ms)
+[ RUN      ] FC02StickyLabel.SelectedExpandAfterManualScaleUsesVisibleButton
+[       OK ] FC02StickyLabel.SelectedExpandAfterManualScaleUsesVisibleButton (3140 ms)
+[----------] 6 tests from FC02StickyLabel (18147 ms total)
+
+[----------] 9 tests from FC02Geometry
+[ RUN      ] FC02Geometry.RealFontCaretPreeditFrameAndStaleGeometry
+[axiom] present begin frame=1 objects=0 scene_records=0
+[       OK ] FC02Geometry.RealFontCaretPreeditFrameAndStaleGeometry (4 ms)
+[ RUN      ] FC02Geometry.DrawnShapeFirstLabelHasRealCaretPreeditAndCanonicalPixels
+[axiom] present begin frame=3 objects=1 scene_records=1
+[       OK ] FC02Geometry.DrawnShapeFirstLabelHasRealCaretPreeditAndCanonicalPixels (3416 ms)
+[ RUN      ] FC02Geometry.IdleCaretBlinksWithoutEditingOrContinuousRedraw
+[axiom] present begin frame=1 objects=0 scene_records=0
+[axiom] present begin frame=2 objects=0 scene_records=0
+[axiom] present begin frame=3 objects=0 scene_records=0
+[axiom] present begin frame=4 objects=0 scene_records=0
+[       OK ] FC02Geometry.IdleCaretBlinksWithoutEditingOrContinuousRedraw (4156 ms)
+[ RUN      ] FC02Geometry.SharedGraphemeDeletionAndNativeCompletionFailure
+[       OK ] FC02Geometry.SharedGraphemeDeletionAndNativeCompletionFailure (2 ms)
+[ RUN      ] FC02Geometry.CompleteCompositionKeepsEditorAndFinalizesReceipt
+[       OK ] FC02Geometry.CompleteCompositionKeepsEditorAndFinalizesReceipt (1 ms)
+[ RUN      ] FC02Geometry.TextToolCreatesAndSelectsWithoutInkAndMissingGlyphIsExplicit
+[       OK ] FC02Geometry.TextToolCreatesAndSelectsWithoutInkAndMissingGlyphIsExplicit (2 ms)
+[ RUN      ] FC02Geometry.HostFontChinesePreeditAndCanonicalUseActualGlyphs
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC02Geometry.HostFontChinesePreeditAndCanonicalUseActualGlyphs (3099 ms)
+[ RUN      ] FC02Geometry.TextFrameShowsWrapExtentAfterEditingEnds
+[axiom] present begin frame=1 objects=1 scene_records=1
+[       OK ] FC02Geometry.TextFrameShowsWrapExtentAfterEditingEnds (3076 ms)
+[ RUN      ] FC02Geometry.CjkCaretStaysInsideItsLineAndTextFrame
+[       OK ] FC02Geometry.CjkCaretStaysInsideItsLineAndTextFrame (461 ms)
+[----------] 9 tests from FC02Geometry (14233 ms total)
+
+[----------] 4 tests from FC08SectionTextGeometry
+[ RUN      ] FC08SectionTextGeometry.DoubleClickGroupedShapeEntersScopeBeforeTextEditing
+[       OK ] FC08SectionTextGeometry.DoubleClickGroupedShapeEntersScopeBeforeTextEditing (2938 ms)
+[ RUN      ] FC08SectionTextGeometry.WrappedShapeEditingFollowsAncestorWorldPose
+[       OK ] FC08SectionTextGeometry.WrappedShapeEditingFollowsAncestorWorldPose (3185 ms)
+[ RUN      ] FC08SectionTextGeometry.MetadataTitleUsesRegisteredFontAndDrawsGlyphPixels
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=1 scene_records=1
+[       OK ] FC08SectionTextGeometry.MetadataTitleUsesRegisteredFontAndDrawsGlyphPixels (3087 ms)
+[ RUN      ] FC08SectionTextGeometry.LateFontPublicationRefreshesMetadataTitle
+[       OK ] FC08SectionTextGeometry.LateFontPublicationRefreshesMetadataTitle (2988 ms)
+[----------] 4 tests from FC08SectionTextGeometry (12200 ms total)
+
+[----------] 5 tests from SelectionBatch2Text
+[ RUN      ] SelectionBatch2Text.RealFontTextRegionUsesPublishedLayoutNotWrapBox
+[       OK ] SelectionBatch2Text.RealFontTextRegionUsesPublishedLayoutNotWrapBox (2 ms)
+[ RUN      ] SelectionBatch2Text.RealStickyRichTextChildIsOneUserFacingRoot
+[       OK ] SelectionBatch2Text.RealStickyRichTextChildIsOneUserFacingRoot (2 ms)
+[ RUN      ] SelectionBatch2Text.UnavailableFontGeometryDoesNotBecomeAnEmptySuccessfulQuery
+[       OK ] SelectionBatch2Text.UnavailableFontGeometryDoesNotBecomeAnEmptySuccessfulQuery (1 ms)
+[ RUN      ] SelectionBatch2Text.PartiallyAvailableMixedFontGeometryAlsoPreservesSelection
+[       OK ] SelectionBatch2Text.PartiallyAvailableMixedFontGeometryAlsoPreservesSelection (3 ms)
+[ RUN      ] SelectionBatch2Text.UnfilledShapeVisibleLabelParticipatesInRegionSelection
+[       OK ] SelectionBatch2Text.UnfilledShapeVisibleLabelParticipatesInRegionSelection (2 ms)
+[----------] 5 tests from SelectionBatch2Text (13 ms total)
+
+[----------] Global test environment tear-down
+[==========] 79 tests from 10 test suites ran. (152259 ms total)
+[  PASSED  ] 77 tests.
+[  FAILED  ] 2 tests, listed below:
+[  FAILED  ] FC02ShapeLabel.UnselectedOverflowHasNoExpandPixelsOrExpandHit
+[  FAILED  ] FC02ShapeLabel.ShrinkPreviewAndCommittedLabelKeepTheSameFontPixels
+
+ 2 FAILED TESTS
+
+245/246 Test  #84: InkV2Work ...................................   Passed  232.59 sec
+246/246 Test  #85: InkV2RetinaPreview ..........................   Passed  275.93 sec
+
+89% tests passed, 27 tests failed out of 246
+
+Total Test time (real) = 288.12 sec
+
+The following tests FAILED:
+	 13 - canvas_fc02_shape_label_scene (Subprocess aborted)
+	 18 - canvas_g2_a3_full_incremental_equivalence (Subprocess aborted)
+	105 - G3HeadlessCanvasDemo (Subprocess aborted)
+	124 - FC01ASelectionInputIntegration (Failed)
+	127 - FC02Text (Failed)
+	145 - FC00XRuntimeComposition (Subprocess aborted)
+	163 - FC04.MSE-11 (Failed)
+	170 - FC04.MSE-18 (Failed)
+	172 - FC04.MSE-20 (Failed)
+	175 - FC04.MSE-23 (Failed)
+	176 - FC04.MSE-24 (Failed)
+	177 - FC04.MSE-25 (Failed)
+	178 - FC04.MSE-26 (Failed)
+	198 - FC01CreationPreview (Subprocess aborted)
+	206 - FC01Creation-width-style (Subprocess aborted)
+	211 - FC01SelectedActions (Subprocess aborted)
+	212 - FC05ConnectorDragPreview (Subprocess aborted)
+	219 - G4InkPlaygroundComposition (Subprocess aborted)
+	221 - G4InkPlaygroundSurface (Subprocess aborted)
+	223 - G4InkPlaygroundRepeatedStrokes (Subprocess aborted)
+	225 - G4MultiPointerPlayground (Subprocess aborted)
+	227 - G4ViewportGestureState (Subprocess aborted)
+	233 - G46BQueryStructure (Subprocess aborted)
+	236 - G46PlaygroundTransform (Subprocess aborted)
+	239 - G46CQualificationBundle (Subprocess aborted)
+	240 - G46CQualificationBehavior (Failed)
+	241 - G45BrushRuntimePipeline (Subprocess aborted)
+Errors while running CTest
