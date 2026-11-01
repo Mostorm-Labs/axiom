@@ -129,7 +129,7 @@ bool endpoint(const semantic::ObjectRecord& c,const semantic::ConnectorEndpoint&
     const double maximum=std::max(std::abs(d.x),std::abs(d.y)); d.x/=maximum;d.y/=maximum;
     const auto* shape=std::get_if<semantic::ShapeContent>(&target->content);
     P p{},n{},cornerNormal{};
-    double radius=0;for(const auto& e:target->properties.entries)if(const auto* style=std::get_if<semantic::CornerStyleV1>(&e.value))radius=style->radius;
+    double radius=0;for(const auto& entry:target->properties.entries)if(const auto* style=std::get_if<semantic::CornerStyleV1>(&entry.value))radius=style->radius;
     semantic::Vec2 roundedPosition,roundedNormal;
     if(shape&&radius>0&&roundedShapePerimeter(*shape,radius,{d.x,d.y},roundedPosition,roundedNormal)){p={roundedPosition.x,roundedPosition.y};n={roundedNormal.x,roundedNormal.y};}
     else if (shape&&shape->shape_kind==2U) {

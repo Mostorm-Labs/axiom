@@ -1,27 +1,9 @@
 name: G4.5 Programmable Brush Qualification
 
+# Task-specific qualification is requested explicitly for a chosen ref. Product
+# Runtime/SDK changes are verified by the SDK consumer release workflow; they
+# must not automatically schedule historical qualification matrices.
 on:
-  pull_request:
-    paths:
-      - "runtime/ink/**"
-      - "runtime/foundation/**"
-      - "runtime/input/**"
-      - "runtime/render/**"
-      - "apps/brush_lab/**"
-      - "verification/runtime_qualification/**"
-      - "verification/runtime_qualification/**"
-      - "debug_ui/**"
-      - "verification/corpus/brush/g4_5/**"
-      - ".aegis/packages/GT-G4-5/**"
-      - ".aegis/packages/GT-G4.5-FINAL-VECTOR-CLOSURE/**"
-      - ".aegis/packages/GT-G4.5-WINDOWS-VIEWPORT-HANDOFF/**"
-      - ".github/workflows/g4-5-programmable-brush.yml"
-      - "CMakeLists.txt"
-      - "CMakePresets.json"
-      - "deps.lock.json"
-      - "r1-full-skia-sdk.lock.json"
-      - "tools/skia/**"
-      - "tools/bootstrap_deps.py"
   workflow_dispatch:
 
 concurrency:

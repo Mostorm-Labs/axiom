@@ -65,3 +65,27 @@ The regular version does not imply production, Gate or physical-input acceptance
 Physical IME/touch/DPI, recorded legacy failures and the deferred D07 injected-OOM
 work remain separate. Applications own persistence, synchronization, resource
 storage and durable close. Snapshot does not include resource blobs or Undo history.
+
+
+## CI routing
+
+`Axiom SDK and demo release` owns product PR verification and immutable tag
+publication. Its Windows regression set, Section codec, real DLL/LoadLibrary
+consumers, Chrome/WASM consumers, npm packing and archive checks remain mandatory.
+The lightweight `CI Boundary Contract` checks this routing on workflow changes.
+
+G4.5 Programmable Brush, GT-G4.6-C and GT-G4.7 are task-specific qualification
+workflows. They retain their build/test/evidence steps but run only through
+`workflow_dispatch`; shared Runtime, CMake, SDK or release changes do not schedule
+those matrices automatically. This routing change neither passes nor cancels any
+Gate obligation. A qualification owner requests a fresh run at the intended source
+ref when that separate evidence is needed, for example:
+
+```sh
+gh workflow run g4-7-qualification.yml --ref <qualification-source-ref>
+```
+
+No qualification workflow is a `needs` dependency of SDK publication. Other
+semantic, dependency and platform CI retain their own scoped triggers; their
+failures must be classified independently rather than being treated as SDK
+publication results.

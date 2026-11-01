@@ -1,18 +1,10 @@
 name: GT-G4.6-C Qualification
 
+# Task-specific qualification is requested explicitly for a chosen ref. Product
+# Runtime/SDK changes are verified by the SDK consumer release workflow; they
+# must not automatically schedule historical qualification matrices.
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - "verification/runtime_qualification/**"
-      - "runtime/**"
-      - "debug_ui/**"
-      - ".aegis/packages/GT-G4.6-C/**"
-      - ".aegis/results/GT-G4.6-C/**"
-      - ".github/workflows/g4-6-c-qualification.yml"
-      - "CMakeLists.txt"
-      - "r1-full-skia-sdk.lock.json"
-      - "tools/skia/**"
 
 permissions:
   contents: read
