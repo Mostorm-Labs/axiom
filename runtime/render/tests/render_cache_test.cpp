@@ -110,24 +110,83 @@ int main() {
                 std::cerr<<"frame="<<frame.frame.frameId.value()<<" different channels="<<differences<<" max="<<maxError<<'\n';}
             require(actual==expected,"cached/direct pixels differ");
         };
+        RenderCacheOptions tiled;tiled.tileCandidate=true;tiled.tileWorldSize=64;
+        renderer.setRenderCacheOptions(tiled);
+        const auto tileStroke=stroke(8);
+        compare(plan(500,{tileStroke}));
+        const auto tileRasters=renderer.renderCacheWork().tileRasters;
+        compare(plan(501,{tileStroke}));
+        require(tileRasters>1&&renderer.renderCacheWork().tileRasters==tileRasters,"clean tiles rerasterized");
+        require(renderer.renderCacheWork().tileHits>0,"tile source not used");
+        compare(plan(502,{tileStroke},1,{1.2,0,0,1.2,-6.3,-2.8}));
+        for(const unsigned material:{1U,2U})for(const auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker,foundation::InkFamily::kChalk,foundation::InkFamily::kCrayon,foundation::InkFamily::kWatercolor}){
+            auto entry=tileStroke;auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            content.stroke.config.family=family;content.stroke.config.materialVersion=material;
+            content.stroke.config.materialResourceId=material==1?foundation::kInkMaterialResourceId:foundation::kInkMaterialV2ResourceId;
+            content.stroke.config.materialResourceSha256=material==1?foundation::kInkMaterialResourceSha256:foundation::kInkMaterialV2ResourceSha256;
+            entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+            compare(plan(510,{entry}));compare(plan(511,{entry}));
+        }
+        compare(plan(512,{tileStroke,stroke(9,55)}));compare(plan(513,{stroke(9,55)}));
+        renderer.clearRenderCache();compare(plan(514,{tileStroke}));
+        foundation::DocumentBackground tileBackground;tileBackground.color={.2F,.4F,.7F,1.F};
+        compare(plan(515,{tileStroke},1,{}, {0,0,256,128},tileBackground));
+        compare(plan(516,{tileStroke},1,{}, {24,8,232,112},tileBackground));
+        compare(plan(517,{tileStroke},1,{}, {0,0,256,128},tileBackground));
+        compare(plan(518,{tileStroke},1,{}, {0,0,256,128},{},true));
+        renderer.setRenderCacheOptions({});
         const auto a=stroke(1);
+        // Navigation feedback is a separate submit and cannot manufacture a
+        // canonical frame identity. Exact rendering after it must match Direct.
+        compare(plan(90,{a}));
+        const auto exactRaster=renderer.rasterizationCount();
+        const auto oldPresent=provider.presentCount();
+        const auto beforeNavigation=pixels(provider);
+        require(renderer.renderNavigation(provider,{1.1F,4.F,-3.F},
+            plan(90,{a}).frame).code==BackendSubmissionCode::kAccepted,
+            "navigation reprojection unavailable");
+        require(provider.presentCount()==oldPresent+1 && renderer.rasterizationCount()==exactRaster,
+            "navigation rebuilt canonical stroke geometry");
+        require(pixels(provider)!=beforeNavigation,"navigation present did not move visible pixels");
+        auto stale=plan(91,{a});
+        require(renderer.renderNavigation(provider,{1.1F,4.F,-3.F},stale.frame).code!=BackendSubmissionCode::kAccepted,
+            "navigation reused another scene revision");
+        compare(plan(92,{a},1,{1.1,0,0,1.1,4,-3}));
+        renderer.clearRenderCache();
+
         compare(plan(1,{a}));
         const auto first=renderer.rasterizationCount();
         const auto original=pixels(provider);
         compare(plan(2,{a}));
         require(renderer.rasterizationCount()==first,"unchanged canonical stroke rasterized again");
         require(pixels(provider)==original,"cache changed pixels");
+        // Camera changes must reuse local coverage commands, while the
+        // final device-space raster remains exact to the permanent Direct path.
+        const auto recorded=renderer.renderCacheWork().coverageBuilds;
+        for(unsigned i=0;i<8;++i)
+            compare(plan(100+i,{a},1,{1.+(i+1)*.025,0,0,1.+(i+1)*.025,3.2*(i+1),-1.7*(i+1)}));
+        require(recorded>0 && renderer.renderCacheWork().coverageBuilds==recorded,
+                "camera change rebuilt compact coverage commands");
+        require(renderer.renderCacheWork().coverageHits>=8,
+                "camera-independent source was not reused");
+        compare(plan(2,{a}));
+        // Device raster work above is expected; append reuses this exact frame.
+        const auto afterCamera=renderer.rasterizationCount();
+        const auto scratchCount=renderer.renderCacheWork().scratchAllocations;
         const auto b=stroke(2,50);
         compare(plan(3,{a,b}));
-        require(renderer.rasterizationCount()==first+1,"append rerasterized unchanged content");
+        require(renderer.rasterizationCount()==afterCamera+1,"append rerasterized unchanged content");
+        require(renderer.renderCacheWork().scratchAllocations==scratchCount,
+                "each cache miss allocated another viewport scratch");
         compare(plan(4,{b,a}));
-        require(renderer.rasterizationCount()==first+1,"external order invalidates raster unnecessarily");
+        require(renderer.rasterizationCount()==afterCamera+1,"external order invalidates raster unnecessarily");
         compare(plan(5,{b}));
         auto moved=b;moved.record.transform.tx=5;compare(plan(6,{moved}));
         auto masked=moved;semantic::FilledPathMask mask;
         mask.path.commands={semantic::MoveTo{{100,0}},semantic::LineTo{{140,0}},semantic::LineTo{{140,128}},semantic::LineTo{{100,128}},semantic::ClosePath{}};
         masked.record.eraseMasks={{ObjectId::fromUint64(99),mask}};compare(plan(7,{masked}));
         compare(plan(8,{masked},1,{}, {50,10,200,100}));
+        compare(plan(81,{a,b},1,{}, {0,0,256,128}));
         compare(plan(9,{a,b},1,{1.25,0,0,1.25,-12.3,-6.7}));
         foundation::DocumentBackground background;background.color={.3F,.2F,.8F,1};
         compare(plan(10,{a,b},1,{}, {0,0,256,128},background));

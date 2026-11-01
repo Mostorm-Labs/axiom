@@ -84,3 +84,13 @@ if(EMSCRIPTEN)
   target_compile_features(g5_render_cache_gpu PRIVATE cxx_std_20)
   target_link_options(g5_render_cache_gpu PRIVATE -fexceptions -sMODULARIZE=1 -sEXPORT_NAME=createCacheProbe -sENVIRONMENT=web -sALLOW_MEMORY_GROWTH=1 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -sEXIT_RUNTIME=1)
 endif()
+
+add_executable(g5_navigation "${AXIOM_G5_SOURCE}/runtime/composition/tests/navigation_presentation_test.cpp")
+target_link_libraries(g5_navigation PRIVATE canvas_runtime_composition)
+target_compile_features(g5_navigation PRIVATE cxx_std_20)
+add_test(NAME G5Navigation COMMAND g5_navigation)
+
+add_executable(g5_tile_work "${AXIOM_G5_SOURCE}/runtime/render/tests/tile_work_test.cpp")
+target_link_libraries(g5_tile_work PRIVATE canvas_runtime_render)
+target_compile_features(g5_tile_work PRIVATE cxx_std_20)
+add_test(NAME G5TileWork COMMAND g5_tile_work)

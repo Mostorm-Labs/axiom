@@ -8,6 +8,7 @@
 #include "canvas/render/editing_overlay.hpp"
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/render/render_cache.hpp"
+#include "canvas/resources/resource_budget_manager.hpp"
 #include "canvas/render/damage_tracker.hpp"
 #include "canvas/ink/programmable_brush.hpp"
 
@@ -33,6 +34,9 @@ class SkiaRenderer final {
     [[nodiscard]] BackendSubmissionResult renderFrame(
         SkiaSurfaceProvider& provider, const FramePlan& plan,
         const EditingOverlay* selectionOverlay = nullptr);
+    // Approximate navigation feedback only; never a canonical coverage receipt.
+    [[nodiscard]] BackendSubmissionResult renderNavigation(
+        SkiaSurfaceProvider&, const CanonicalViewportTransform&, const FrameState&);
     [[nodiscard]] BackendSubmissionResult renderTransientOverlay(
         SkiaSurfaceProvider& provider, const FramePlan& plan,
         const EditingOverlay* selectionOverlay);
@@ -68,6 +72,9 @@ class SkiaRenderer final {
     [[nodiscard]] RenderDamage renderDamage() const;
 
   private:
+    struct NavigationCache;
+    std::shared_ptr<NavigationCache> navigationCache_;
+    std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
     ImageResourceResolver* images_ = nullptr;
     SkiaTextResources textResources_;
     std::uint64_t submissions_ = 0;

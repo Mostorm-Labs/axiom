@@ -20,9 +20,13 @@
 int main(int argc, char** argv) {
     using namespace canvas;
     using namespace canvas::render;
-    const FrameState frame{.worldViewport = {0, 0, 256, 256},
+    const FrameState frame{.viewId = ViewId{1},
+                           .worldViewport = {0, 0, 256, 256},
+                           .metrics = {256,256,256,256,1,1},
                            .sceneGeneration = semantic::SemanticGeneration{7},
-                           .surfaceGeneration = SurfaceGeneration{1}};
+                           .surfaceGeneration = SurfaceGeneration{1},
+                           .metricsGeneration = MetricsGeneration{1},
+                           .frameId = FrameId{1}};
     semantic::ImageContent image{};
     image.resource_id.value = foundation::ObjectId::fromUint64(42);
     image.intrinsic_width = 32; image.intrinsic_height = 32;

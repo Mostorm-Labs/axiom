@@ -382,7 +382,7 @@ bool drawSketchAppearance(SkCanvas& canvas,const RuntimeSceneRecord& record,bool
 
 void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageResourceResolver* images,
                  SkiaTextResources* textResources, bool antiAliasConnectors = false,
-                 bool legacyHeadlessGolden = false) {
+                 bool legacyHeadlessGolden = false, const SkPicture* coverage = nullptr, const internal::CompactDeviceGrid* grid = nullptr) {
     const auto& record = entry.record;
     std::visit([&](const auto& command) {
         using T = std::decay_t<decltype(command)>;
@@ -608,7 +608,7 @@ void drawCommand(SkCanvas& canvas, const ReferenceTraversalEntry& entry, ImageRe
                 drawSolidRect(canvas, foundation::WorldRect{static_cast<float>(dab.center.x - dab.size / 2.0), static_cast<float>(dab.center.y - dab.size / 2.0), static_cast<float>(dab.center.x + dab.size / 2.0), static_cast<float>(dab.center.y + dab.size / 2.0)}, dabColor);
             }
         } else if constexpr (std::is_same_v<T, CompactStrokeReferenceCommand>) {
-            internal::drawCompactStrokeToSkCanvas(canvas,command.content.stroke.config,command.content.stroke.knots,command.content.stroke.seed);
+            internal::drawCompactStrokeToSkCanvas(canvas,command.content.stroke.config,command.content.stroke.knots,command.content.stroke.seed,nullptr,coverage,grid);
         } else if constexpr (std::is_same_v<T, BrushStrokeReferenceCommand>) {
             const auto& stroke = command.content.stroke;
             if (stroke.vector_output.outline.empty()) return;
@@ -938,7 +938,7 @@ void drawTransientEntryToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
 
 BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images,
-    SkiaTextResources* textResources, bool includeInk, SkiaRenderCache* cache) {
+    SkiaTextResources* textResources, bool includeInk, SkiaRenderCache* cache, const CompactDeviceGrid* grid) {
     if (!(plan.referenceDrawList.frame == plan.frame) || !foundation::validDocumentBackground(plan.background)) {
         return BackendSubmissionResult::rejected("frame identity mismatch");
     }
@@ -1001,7 +1001,7 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
         canvas.save();
         if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
         canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
-        drawCommand(canvas, entry, images, textResources, true);
+        drawCommand(canvas, entry, images, textResources, true,false,nullptr,grid);
         eraseMasks(canvas, entry);
         if (isolatedInk) canvas.restore();
         canvas.restore();
@@ -1010,8 +1010,8 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     return BackendSubmissionResult::accepted();
 }
 
-void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry) {
-    drawCommand(canvas,entry,nullptr,nullptr,true);
+void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry,const SkPicture* coverage,const CompactDeviceGrid* grid) {
+    drawCommand(canvas,entry,nullptr,nullptr,true,false,coverage,grid);
     eraseMasks(canvas,entry);
 }
 

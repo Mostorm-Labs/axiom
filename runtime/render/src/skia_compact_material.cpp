@@ -3,6 +3,7 @@
 #include "include/core/SkCanvas.h"
 #include "include/core/SkImage.h"
 #include "include/core/SkPaint.h"
+#include "include/core/SkPicture.h"
 #include "include/core/SkSurface.h"
 #include "include/effects/SkRuntimeEffect.h"
 #include <algorithm>
@@ -79,10 +80,11 @@ void compositeCompactCoverageToSkCanvas(SkCanvas& canvas,const SkImage& image,
 
 void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConfig& config,
                                 std::span<const foundation::InkKnot> knots,std::uint64_t seed,
-                                CompactRasterWork* work){
+                                CompactRasterWork* work,const SkPicture* coverage,const CompactDeviceGrid* grid){
     if(knots.empty())return;
     // Tiles are device-clipped; no allocation scales with a long stroke AABB.
-    const auto clip=canvas.getDeviceClipBounds();const auto matrix=canvas.getTotalMatrix();
+    const auto deviceClip=canvas.getDeviceClipBounds();
+    const auto clip=grid?SkIRect::MakeLTRB(grid->left,grid->top,grid->right,grid->bottom):deviceClip;const auto matrix=canvas.getTotalMatrix();
     // Coverage has finite support within the centreline's maximum radius.
     // Keep the original clip-anchored grid and shader coordinates so culling
     // empty tiles cannot alter material noise, sampling, or seams.
@@ -99,12 +101,14 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
     for(int y=clip.top();y<clip.bottom();y+=256)for(int x=clip.left();x<clip.right();x+=256){
         const auto w=std::min(256,clip.right()-x),h=std::min(256,clip.bottom()-y);
         if(canCull&&!SkRect::Intersects(support,SkRect::MakeXYWH(float(x),float(y),float(w),float(h))))continue;
+        if(!SkIRect::Intersects(SkIRect::MakeXYWH(x,y,w,h),deviceClip))continue;
         auto tile=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(w,h));
         if(!tile)throw std::runtime_error("compact coverage tile allocation failed");
         if(work){++work->allocatedTiles;work->allocatedPixels+=std::uint64_t(w)*h;}
         auto* target=tile->getCanvas();target->clear(SK_ColorBLACK);
         target->translate(float(-x),float(-y));target->concat(matrix);
-        drawCompactCoverageToSkCanvas(*target,config,knots);
+        if(coverage)target->drawPicture(coverage);
+        else drawCompactCoverageToSkCanvas(*target,config,knots);
         canvas.save();canvas.resetMatrix();canvas.clipRect(SkRect::MakeXYWH(float(x),float(y),float(w),float(h)));
         // The tile remains unchanged for exact coverage/filter parity. Only
         // shade its finite support instead of running the material shader

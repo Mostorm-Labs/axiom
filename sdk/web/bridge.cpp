@@ -60,8 +60,12 @@ class WebPlatform final : public sdk::SessionPlatform {
         return adapter_ && adapter_->loseSurface();
     }
     sdk::Json frame(bool force) override {
-        const auto result =
-            adapter_->frameStatus().pending ? adapter_->pollFrame() : adapter_->prepareFrame(force);
+        auto result = adapter_->frameStatus().pending ? adapter_->pollFrame()
+                                                       : adapter_->prepareFrame(force);
+        // A completed fence frees this same owner opportunity for latest
+        // demand. Pending fences retain bounded backpressure and never block.
+        if (result == platform::WebFrameResult::kRetry && !adapter_->frameStatus().pending)
+            result = adapter_->prepareFrame(force);
         return {{"ok", result != platform::WebFrameResult::kRejected},
                 {"code", "FRAME_REJECTED"},
                 {"pending", adapter_->frameStatus().pending},

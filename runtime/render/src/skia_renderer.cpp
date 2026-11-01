@@ -20,6 +20,14 @@
 #include <type_traits>
 
 namespace canvas::render {
+struct SkiaRenderer::NavigationCache final {
+    const void* provider=nullptr;
+    sk_sp<SkImage> image;
+    std::unique_ptr<FrameState> frame;
+    WorldToViewAffine transform;
+    resources::ResourceLease lease;
+    SkColor background=SK_ColorWHITE;
+};
 struct SkiaRenderer::CompactCache final {
     struct Entry {std::shared_ptr<const ink::BrushPreviewDelta::Chunk> prefix;sk_sp<SkSurface> surface;foundation::InkBrushConfig config;};
     std::unordered_map<std::uint64_t,Entry> entries;
@@ -82,7 +90,10 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         }
     internal::SkiaRenderCache* cache=nullptr;
     try {
+        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
+            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
         if (!renderCache_) renderCache_=std::make_shared<internal::SkiaRenderCache>();
+        renderCache_->budget=resourceBudget_;
         renderCache_->options=renderCacheOptions_;
         renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_);
         cache=renderCache_.get();
@@ -157,6 +168,25 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         }
         canvas->restore();
     }
+    if(result.code==BackendSubmissionCode::kAccepted){
+        try {
+            const auto bytes=std::uint64_t(metrics.physicalWidth)*metrics.physicalHeight*4;
+            if(resourceBudget_ && renderCacheOptions_.enabled && bytes<=renderCacheOptions_.maxBytes && selectionOverlay==nullptr &&
+               plan.background.mode==foundation::BackgroundMode::kPlain && !plan.transparentBackground){
+                navigationCache_.reset();
+                const auto reservation=resourceBudget_->reserve(resources::ResourceClass::kNavigation,bytes,true);
+                if(!reservation)throw std::bad_alloc();
+                resources::ResourceLease lease(resourceBudget_,*reservation);
+                auto candidate=std::make_shared<NavigationCache>();candidate->lease=std::move(lease);
+                candidate->provider=&provider;candidate->image=acquired.frame.surface->makeImageSnapshot();
+                candidate->frame=std::make_unique<FrameState>(plan.frame);
+                candidate->transform=plan.referenceDrawList.worldToView;
+                const auto& color=plan.background.color;
+                candidate->background=SkColor4f{color[0],color[1],color[2],color[3]}.toSkColor();
+                navigationCache_=std::move(candidate);
+            }else navigationCache_.reset();
+        }catch(const std::bad_alloc&){navigationCache_.reset();}
+    }
     provider.release();
     if (result.code != BackendSubmissionCode::kAccepted) {clearRenderCache();return result;}
     ++submissions_;
@@ -166,10 +196,42 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     return presented;
 }
 
-void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
-    renderCacheOptions_=options;clearRenderCache();
+BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
+    const CanonicalViewportTransform& camera,const FrameState& current){
+    const auto cache=navigationCache_;
+    if(!cache || !cache->image || cache->provider!=&provider || !cache->frame ||
+       cache->frame->viewId!=current.viewId || cache->frame->sceneGeneration!=current.sceneGeneration ||
+       cache->frame->sceneReadToken!=current.sceneReadToken || cache->frame->metrics!=current.metrics ||
+       cache->frame->metricsGeneration!=current.metricsGeneration ||
+       cache->frame->surfaceGeneration!=current.surfaceGeneration ||
+       !std::isfinite(camera.scale)||camera.scale<=0 ||
+       !std::isfinite(camera.translationX)||!std::isfinite(camera.translationY))
+        return BackendSubmissionResult::retry("navigation source unavailable");
+    const auto acquired=provider.acquire();
+    if(acquired.code!=SkiaSurfaceAcquireCode::kAcquired || !acquired.frame.surface)
+        return BackendSubmissionResult::retry("navigation target unavailable");
+    if(acquired.frame.generation!=current.surfaceGeneration.value()){
+        provider.release();return BackendSubmissionResult::rejected("stale navigation surface");
+    }
+    const auto& old=cache->transform;
+    if(old.a<=0 || old.d!=old.a || old.b!=0 || old.c!=0){
+        provider.release();return BackendSubmissionResult::retry("navigation transform ineligible");
+    }
+    const float ratio=camera.scale/old.a;
+    const float sx=current.metrics.physicalWidth/current.metrics.logicalWidth;
+    const float sy=current.metrics.physicalHeight/current.metrics.logicalHeight;
+    auto* canvas=acquired.frame.surface->getCanvas();
+    canvas->save();canvas->resetMatrix();canvas->clear(cache->background);
+    canvas->translate((camera.translationX-ratio*old.tx)*sx,(camera.translationY-ratio*old.ty)*sy);
+    canvas->scale(ratio,ratio);
+    canvas->drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));
+    canvas->restore();provider.release();
+    return provider.present();
 }
-void SkiaRenderer::clearRenderCache() noexcept {if(renderCache_)renderCache_->clear();}
+void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
+    clearRenderCache();resourceBudget_.reset();renderCacheOptions_=options;
+}
+void SkiaRenderer::clearRenderCache() noexcept {navigationCache_.reset();if(renderCache_)renderCache_->clear();}
 RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{return renderCache_?renderCache_->work:RenderCacheWork{};}
 RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
 

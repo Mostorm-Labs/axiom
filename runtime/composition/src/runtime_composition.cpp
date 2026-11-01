@@ -475,7 +475,10 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   runtime_->advanceLaserPresentation(static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count()));
   const bool shouldCanonical = forceCanonical || runtime_->canonicalPresentationDirty();
   if (nextCanonicalWorkId_ == std::numeric_limits<std::uint64_t>::max()) return false;
-  if (shouldCanonical) {
+  if(shouldCanonical && !forceCanonical)
+    out.navigationPending=runtime_->serviceNavigationPresentation(
+        std::chrono::steady_clock::now(),out.navigationPresented);
+  if (shouldCanonical && !out.navigationPending) {
     const auto frameId = runtime_->nextCanonicalFrameId();
     if (frameId == 0U) return false;
     out.canonicalRequested = runtime_->presentCanonicalFrame(frameId, 0.0, false);
@@ -511,7 +514,7 @@ bool RuntimeCompositionCore::serviceFrameOpportunity(
   out.previewRevision = runtime_->previewRenderState().contentRevision;
   out.canonicalFrame = runtime_->lastSubmittedCanonicalFrame();
   out.canonicalWork = lastSubmittedCanonicalWork();
-  out.needsPaint = out.canonicalRequested || out.previewDirty ||
+  out.needsPaint = out.canonicalRequested || out.navigationPresented || out.previewDirty ||
       out.pendingCanonicalHandoff != 0U || out.canonicalFrame.has_value();
   return true;
 }

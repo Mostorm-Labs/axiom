@@ -9,14 +9,16 @@
 
 class SkCanvas;
 class SkImage;
+class SkPicture;
 namespace canvas::render { class ImageResourceResolver; }
 namespace canvas::render { class SkiaTextResources; }
 
 namespace canvas::render::internal {
 class SkiaRenderCache;
+struct CompactDeviceGrid final {int left=0,top=0,right=0,bottom=0;};
 // Only accepts an already validated isolated compact command; no second
 // geometry implementation is owned by the cache materializer.
-void drawValidatedIsolatedEntryToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&);
+void drawValidatedIsolatedEntryToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&,const SkPicture* coverage = nullptr, const CompactDeviceGrid* grid = nullptr);
 struct CompactRasterWork final {
     std::uint64_t allocatedTiles = 0;
     std::uint64_t allocatedPixels = 0;
@@ -24,7 +26,7 @@ struct CompactRasterWork final {
 };
 void drawCompactStrokeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
                                 std::span<const foundation::InkKnot>,std::uint64_t seed=0,
-                                CompactRasterWork* work=nullptr);
+                                CompactRasterWork* work=nullptr, const SkPicture* coverage=nullptr, const CompactDeviceGrid* grid=nullptr);
 // Disposable scalar distance coverage. The material is evaluated once after
 // stable prefix and replaceable tail have been combined with max coverage.
 void drawCompactCoverageToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
@@ -39,7 +41,7 @@ void compositeCompactCoverageToSkCanvas(SkCanvas&,const SkImage&,
 [[nodiscard]] BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,
     SkiaTextResources* textResources = nullptr, bool includeInk = true,
-    SkiaRenderCache* cache = nullptr);
+    SkiaRenderCache* cache = nullptr, const CompactDeviceGrid* grid = nullptr);
 // Repaint the dedicated ink lane after a transient creation object. Ink is
 // intentionally topmost while a Shape/Connector is being authored.
 void drawInkEntriesToSkCanvas(

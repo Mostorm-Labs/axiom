@@ -140,11 +140,11 @@ WebFrameResult WebRuntimeAdapter::prepareFrame(bool force) noexcept {
       work.canonicalWork->attachmentEpoch == impl_->confirmed->attachmentEpoch &&
       work.canonicalWork->frame == impl_->confirmed->frame)
     work.canonicalWork.reset();
-  if (!work.canonicalWork && !work.previewWork)
+  if (!work.canonicalWork && !work.previewWork && !work.navigationPresented)
     return impl_->core.canonicalPresentationDirty() ||
            (impl_->core.previewActive() && impl_->core.previewRenderState().dirty)
         ? WebFrameResult::kRetry : WebFrameResult::kIdle;
-  if ((work.canonicalWork && !impl_->canonicalFence.insert(impl_->canonical)) ||
+  if (((work.canonicalWork || work.navigationPresented) && !impl_->canonicalFence.insert(impl_->canonical)) ||
       (work.previewWork && !impl_->previewFence.insert(impl_->preview))) {
     impl_->discard(); return rejected("insert GPU fence");
   }

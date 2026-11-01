@@ -66,6 +66,8 @@ struct CanonicalCompletion final {
 struct RuntimeFrameOpportunity final {
   bool needsPaint = false;
   bool canonicalRequested = false;
+  bool navigationPending = false;
+  bool navigationPresented = false;
   bool previewActive = false;
   bool previewDirty = false;
   std::size_t pendingCanonicalHandoff = 0;

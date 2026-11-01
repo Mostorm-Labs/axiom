@@ -1,0 +1,161 @@
+{
+  "schema_version": "g5-camera-reuse-result-v1",
+  "classification": "PASS_WITH_FINDINGS",
+  "official_gate_pass_claimed": false,
+  "closure_complete": false,
+  "scope": "camera-independent coverage commands, pooled scratch, approximate navigation/exact settle, opt-in restricted Tile raster, cooperative work scheduling and render-resource budget",
+  "regression": {
+    "full_selected": 236,
+    "initial_passed": 213,
+    "initial_non_passing": [
+      "canvas_fc02_shape_label_scene",
+      "canvas_g2_a3_full_incremental_equivalence",
+      "G47ImageResource",
+      "G3HeadlessCanvasDemo",
+      "FC02Text",
+      "FC00XRuntimeComposition",
+      "FC04.MSE-11",
+      "FC04.MSE-20",
+      "FC04.MSE-23",
+      "FC04.MSE-24",
+      "FC04.MSE-25",
+      "FC04.MSE-26",
+      "FC01Creation-width-style",
+      "G4InkPlaygroundComposition",
+      "G4InkPlaygroundSurface",
+      "G4InkPlaygroundRepeatedStrokes",
+      "G4MultiPointerPlayground",
+      "G4ViewportGestureState",
+      "G46BQueryStructure",
+      "G46PlaygroundTransform",
+      "G46CQualificationBundle",
+      "G46CQualificationBehavior",
+      "G45BrushRuntimePipeline"
+    ],
+    "image_fixture_repaired": true,
+    "adjusted_non_passing": [
+      "FC00XRuntimeComposition",
+      "FC01Creation-width-style",
+      "FC02Text",
+      "FC04.MSE-11",
+      "FC04.MSE-20",
+      "FC04.MSE-23",
+      "FC04.MSE-24",
+      "FC04.MSE-25",
+      "FC04.MSE-26",
+      "G3HeadlessCanvasDemo",
+      "G45BrushRuntimePipeline",
+      "G46BQueryStructure",
+      "G46CQualificationBehavior",
+      "G46CQualificationBundle",
+      "G46PlaygroundTransform",
+      "G4InkPlaygroundComposition",
+      "G4InkPlaygroundRepeatedStrokes",
+      "G4InkPlaygroundSurface",
+      "G4MultiPointerPlayground",
+      "G4ViewportGestureState",
+      "canvas_fc02_shape_label_scene",
+      "canvas_g2_a3_full_incremental_equivalence"
+    ],
+    "new_names_after_fixture_repair": [],
+    "missing_prior_names": [],
+    "fc02": "Timeout at 240s in both focused retry and final full run",
+    "final": {
+      "selected": 236,
+      "passed": 214,
+      "non_passing": [
+        "canvas_fc02_shape_label_scene",
+        "canvas_g2_a3_full_incremental_equivalence",
+        "G3HeadlessCanvasDemo",
+        "FC02Text",
+        "FC00XRuntimeComposition",
+        "FC04.MSE-11",
+        "FC04.MSE-20",
+        "FC04.MSE-23",
+        "FC04.MSE-24",
+        "FC04.MSE-25",
+        "FC04.MSE-26",
+        "FC01Creation-width-style",
+        "G4InkPlaygroundComposition",
+        "G4InkPlaygroundSurface",
+        "G4InkPlaygroundRepeatedStrokes",
+        "G4MultiPointerPlayground",
+        "G4ViewportGestureState",
+        "G46BQueryStructure",
+        "G46PlaygroundTransform",
+        "G46CQualificationBundle",
+        "G46CQualificationBehavior",
+        "G45BrushRuntimePipeline"
+      ],
+      "new_names": [],
+      "removed_names": []
+    },
+    "source_scope": "Full suite exercised preceding candidate snapshot; subsequent exact-dependency-generation and LRU guard changes received focused 3/3 plus final GPU/browser rebuild verification. It is not a fresh whole-suite run of the final source hash."
+  },
+  "component": {
+    "selected": 25,
+    "passed": 25
+  },
+  "node": {
+    "selected": 134,
+    "passed": 134
+  },
+  "python": {
+    "selected": 193,
+    "failures": 4,
+    "skipped": 2
+  },
+  "gpu_parity": {
+    "code": 0,
+    "renderer": "ANGLE Metal Apple M2",
+    "tile_candidate": true
+  },
+  "limitations": [
+    "Tile raster/composite candidate remains opt-in: compact unmasked groups, integer device tile boundaries, opaque plain background; fractional/complex cases Direct.",
+    "Budget currently accounts new renderer sources/scratch/navigation, not all Runtime/Skia resources.",
+    "Recorded coverage reused across cameras; canonical device raster still rebuilds on camera change.",
+    "Navigation reprojects the last viewport only; newly exposed areas remain plain background until exact settle.",
+    "No physical Android/Windows/iOS evidence; no P34 or formal G5 PASS."
+  ],
+  "evidence_sha256": "verification/evidence/performance/g5-camera-reuse/SHA256.json",
+  "source_commit": "1d0b853779bb263929937f8ab87ba745ff990e9e",
+  "source_tree_sha256": "f93a6b4f59707e805d294705dacc119916c5d58547e18a751a7c3cef512c0e0c",
+  "web_final": [
+    {
+      "mode": "zoom",
+      "objects": 64,
+      "generation_unchanged": true,
+      "active_contacts": 0,
+      "gesture_raf_p50_ms": 0.20000004768371582,
+      "gesture_raf_max_ms": 0.7000000476837158,
+      "settle_callback_max_ms": 296,
+      "exact_settle_callback": true,
+      "errors": []
+    },
+    {
+      "mode": "touch",
+      "objects": 64,
+      "generation_unchanged": true,
+      "active_contacts": 0,
+      "gesture_raf_p50_ms": 0.20000004768371582,
+      "gesture_raf_max_ms": 0.5,
+      "settle_callback_max_ms": 381.09999990463257,
+      "exact_settle_callback": true,
+      "errors": []
+    }
+  ],
+  "terminal_state": "IMPLEMENTATION_CHECKPOINT_WITH_REMAINING_WORK",
+  "implementation_status": {
+    "camera_source": "implemented",
+    "scratch_reuse": "implemented, crop-rebase rejected",
+    "navigation": "implemented, exact settle retained",
+    "tile": "opt-in restricted raster and validity",
+    "scheduler": "cooperative first render consumer, exact dependency generations",
+    "budget": "shared renderer resources only; wider rollout pending"
+  },
+  "remaining_work": [
+    "Exact canonical raster/coverage performance and camera-independent material reuse.",
+    "General fractional/mask/text/image/effect Tile, scale bucket benchmark and default decision.",
+    "Unified Runtime-wide scheduler/executor and CPU/GPU/resource accounting rollout."
+  ]
+}

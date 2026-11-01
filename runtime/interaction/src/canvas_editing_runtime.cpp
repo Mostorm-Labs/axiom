@@ -4267,6 +4267,32 @@ bool CanvasEditingRuntime::previewActive() const noexcept {
   return previewController_ != nullptr && previewController_->active();
 }
 
+bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clock::time_point now, bool& presented) noexcept {
+  presented=false;
+  const auto* exact=lastPresentedCanonicalFrameState_.get();
+  if(!exact || !surface_.available || !activeSurfaceProvider() ||
+     lastSubmittedCanonicalFrame_ || !canonicalPresentationDirty_ ||
+     exact->sceneGeneration!=semanticGeneration_.current() || exact->sceneReadToken.value()!=sceneRevision() ||
+     exact->surfaceGeneration.value()!=surface_.generation || exact->metricsGeneration.value()!=surface_.metricsGeneration ||
+     previewActive() || !pendingCanonicalIdentities_.empty() || selectionOverlay() ||
+     creationActive() || selectionTransformActive() || regionSelectionActive()){
+      navigationActive_=false;return false;
+  }
+  const auto generation=cameraGeneration();
+  if(navigationCameraGeneration_!=generation){
+      navigationCameraGeneration_=generation;navigationChangedAt_=now;navigationActive_=true;
+  }
+  if(!navigationActive_ || (!coordinator_->viewportClaimed() &&
+      now-navigationChangedAt_>=std::chrono::milliseconds(100))){navigationActive_=false;return false;}
+  if(navigationSubmittedGeneration_==generation)return true;
+  const auto& camera=viewportController_->state();
+  const auto result=skiaRenderer_.renderNavigation(*activeSurfaceProvider(),
+      {camera.scale,camera.translationX,camera.translationY},*exact);
+  if(result.code!=render::BackendSubmissionCode::kAccepted){navigationActive_=false;return false;}
+  navigationSubmittedGeneration_=generation;presented=true;
+  return true;
+}
+
 bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
                                               double frameMs,
                                               bool retirePreview) noexcept {
@@ -4717,6 +4743,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   recordPresentation("canonical-submitted", pendingCanonicalIdentities_.size(), frameMs);
   ++canonicalFrameCount_;
   canonicalPresentationDirty_ = false;
+  navigationActive_=false;navigationCameraGeneration_=cameraGeneration();
   // Creation/selection overlays have no ARC handoff identity. Once their
   // replacement canonical frame has been accepted locally, retire them
   // immediately; brush previews remain gated by platform-qualified feedback

@@ -19,6 +19,7 @@ add_library(canvas_runtime_render STATIC
     src/presentation_tracker.cpp
     src/canonical_handoff.cpp
     src/preview_surface.cpp)
+target_link_libraries(canvas_runtime_render PUBLIC canvas_runtime_scheduling canvas_runtime_resources)
 
 if(EMSCRIPTEN AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR
                    CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH))
@@ -166,6 +167,10 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
     add_executable(axiom_render_cache_tests tests/render_cache_test.cpp)
     target_link_libraries(axiom_render_cache_tests PRIVATE canvas_runtime_render)
     add_test(NAME G5RenderCache COMMAND axiom_render_cache_tests)
+    add_executable(axiom_tile_work_tests tests/tile_work_test.cpp)
+    target_link_libraries(axiom_tile_work_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_tile_work_tests PRIVATE cxx_std_20)
+    add_test(NAME G5TileWork COMMAND axiom_tile_work_tests)
     add_executable(axiom_render_damage_tests tests/damage_ownership_test.cpp)
     target_link_libraries(axiom_render_damage_tests PRIVATE canvas_runtime_render)
     add_test(NAME G5RenderDamage COMMAND axiom_render_damage_tests)
