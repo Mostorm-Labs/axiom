@@ -120,10 +120,12 @@ TEST(SemanticTypes, OperationIdZeroPredicateSupportsConstantEvaluation) {
 TEST(SemanticTypes, OperationCarriesClosedTypedPayloadAndStrongDocumentId) {
     static_assert(!std::is_convertible_v<DocumentId, ObjectId>);
     static_assert(!std::is_convertible_v<ObjectId, DocumentId>);
-    static_assert(std::variant_size_v<OperationPayload> == 18);
+    static_assert(std::variant_size_v<OperationPayload> == 20);
     static_assert(std::is_same_v<std::variant_alternative_t<15, OperationPayload>, UpdateResourceManifestOp>);
     static_assert(std::is_same_v<std::variant_alternative_t<16, OperationPayload>, SetSectionContentOp>);
     static_assert(std::is_same_v<std::variant_alternative_t<17, OperationPayload>, EditContainerTopologyOp>);
+    static_assert(std::is_same_v<std::variant_alternative_t<18, OperationPayload>, SetDocumentBackgroundOp>);
+    static_assert(std::is_same_v<std::variant_alternative_t<19, OperationPayload>, EditTableOp>);
 
     Operation operation{};
     operation.payload = DeleteObjectsOp{{ObjectId::fromUint64(7U)}};
