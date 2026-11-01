@@ -136,6 +136,85 @@ int main() {
         compare(plan(518,{tileStroke},1,{}, {0,0,256,128},{},true));
         renderer.setRenderCacheOptions({});
         const auto a=stroke(1);
+        // Exact preparation is cooperative and offscreen: no partial pixels,
+        // present or canonical submission is published between bounded slices.
+        compare(plan(600,{a}));
+        const auto beforePrepare=pixels(provider);
+        const auto preparePresents=provider.presentCount();
+        const auto prepareSubmissions=renderer.submissionCount();
+        renderer.clearRenderCache();
+        RenderPreparationBudget slice; slice.maxGroups=1; slice.maxMicroseconds=1000000;
+        const std::vector sources{a,stroke(11,45),stroke(12,60),stroke(13,75)};
+        const auto preparePlan=plan(601,sources,1,{1.2,0,0,1.2,-6.3,-2.8});
+        for(unsigned i=0;i<3;++i){
+            const auto builds=renderer.renderCacheWork().rasterizedGroups;
+            require(renderer.renderFrame(provider,preparePlan,nullptr,&slice).code==BackendSubmissionCode::kRetry,
+                    "exact rebuild was not split into bounded opportunities");
+            require(renderer.renderCacheWork().rasterizedGroups==builds+1,"preparation exceeded group budget");
+            require(provider.presentCount()==preparePresents&&renderer.submissionCount()==prepareSubmissions,
+                    "partial preparation published canonical work");
+            require(pixels(provider)==beforePrepare,"preparation changed presented target");
+        }
+        require(renderer.renderFrame(provider,preparePlan,nullptr,&slice).code==BackendSubmissionCode::kAccepted,
+                "exact preparation did not converge");
+        require(direct.renderFrame(reference,preparePlan).code==BackendSubmissionCode::kAccepted,
+                "prepared oracle frame");
+        require(pixels(provider)==pixels(reference),"prepared frame differs from Direct");
+        require(renderer.renderCacheWork().preparationSlices>=4,"preparation work not observed");
+        // A newer camera supersedes pending exact pixels. Prepared rasters at
+        // the previous transform must not qualify the replacement frame.
+        renderer.clearRenderCache();
+        require(renderer.renderFrame(provider,preparePlan,nullptr,&slice).code==BackendSubmissionCode::kRetry,
+                "supersession setup did not yield");
+        const auto replacement=plan(602,sources,1,{.9,0,0,.9,8.7,4.3});
+        for(unsigned i=0;i<4;++i){
+            const auto result=renderer.renderFrame(provider,replacement,nullptr,&slice);
+            require(result.code==(i==3?BackendSubmissionCode::kAccepted:BackendSubmissionCode::kRetry),
+                    "camera change reused obsolete preparation");
+        }
+        require(direct.renderFrame(reference,replacement).code==BackendSubmissionCode::kAccepted&&
+                pixels(provider)==pixels(reference),"replacement camera differs from Direct");
+        // Non-convergent residency falls back once instead of retrying forever.
+        RenderCacheOptions tooSmall;tooSmall.maxEntries=1;renderer.setRenderCacheOptions(tooSmall);
+        require(renderer.renderFrame(provider,preparePlan,nullptr,&slice).code==BackendSubmissionCode::kAccepted,
+                "insufficient cache capacity did not fall back");
+        require(direct.renderFrame(reference,preparePlan).code==BackendSubmissionCode::kAccepted&&
+                pixels(provider)==pixels(reference),"capacity fallback differs from Direct");
+        renderer.setRenderCacheOptions({});
+        auto malformed=sources;std::get<CompactStrokeReferenceCommand>(malformed[1].command).content.stroke.config.size=-1;
+        const auto invalidBefore=pixels(provider);const auto invalidPresents=provider.presentCount();
+        require(renderer.renderFrame(provider,plan(603,malformed),nullptr,&slice).code==BackendSubmissionCode::kRejected,
+                "invalid geometry admitted by preparation");
+        require(pixels(provider)==invalidBefore&&provider.presentCount()==invalidPresents,
+                "invalid preparation changed presented target");
+        for(unsigned material:{1U,2U})for(auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker,foundation::InkFamily::kChalk,foundation::InkFamily::kCrayon,foundation::InkFamily::kWatercolor}){
+            renderer.clearRenderCache();auto varied=sources;
+            for(auto& entry:varied){auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+                content.stroke.config.family=family;content.stroke.config.materialVersion=material;
+                content.stroke.config.materialResourceId=material==1?foundation::kInkMaterialResourceId:foundation::kInkMaterialV2ResourceId;
+                content.stroke.config.materialResourceSha256=material==1?foundation::kInkMaterialResourceSha256:foundation::kInkMaterialV2ResourceSha256;
+                entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+            }
+            const auto frame=plan(604,varied,1,{1.2,0,0,1.2,-6.3,-2.8});
+            for(unsigned i=0;i<4;++i)
+                require(renderer.renderFrame(provider,frame,nullptr,&slice).code==
+                    (i==3?BackendSubmissionCode::kAccepted:BackendSubmissionCode::kRetry),"material preparation did not converge");
+            require(direct.renderFrame(reference,frame).code==BackendSubmissionCode::kAccepted&&
+                    pixels(provider)==pixels(reference),"prepared material differs from Direct");
+        }
+        renderer.clearRenderCache();
+        TestSurface lifecycleProvider;
+        require(lifecycleProvider.resize(256,128).code==BackendSubmissionCode::kAccepted,"lifecycle target");
+        require(renderer.renderFrame(lifecycleProvider,preparePlan,nullptr,&slice).code==BackendSubmissionCode::kRetry,
+                "loss preparation setup");
+        require(lifecycleProvider.lose().code==BackendSubmissionCode::kAccepted,"pending preparation loss");
+        const auto lostPresents=lifecycleProvider.presentCount();
+        require(renderer.renderFrame(lifecycleProvider,preparePlan,nullptr,&slice).code!=BackendSubmissionCode::kAccepted&&
+                lifecycleProvider.presentCount()==lostPresents,"lost preparation presented");
+        require(lifecycleProvider.resize(256,128).code==BackendSubmissionCode::kAccepted,"pending preparation restore");
+        require(renderer.renderFrame(lifecycleProvider,preparePlan,nullptr,&slice).code==BackendSubmissionCode::kRejected,
+                "old preparation generation accepted");
+        renderer.clearRenderCache();
         // Navigation feedback is a separate submit and cannot manufacture a
         // canonical frame identity. Exact rendering after it must match Direct.
         compare(plan(90,{a}));

@@ -4276,14 +4276,16 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
      exact->surfaceGeneration.value()!=surface_.generation || exact->metricsGeneration.value()!=surface_.metricsGeneration ||
      previewActive() || !pendingCanonicalIdentities_.empty() || selectionOverlay() ||
      creationActive() || selectionTransformActive() || regionSelectionActive()){
-      navigationActive_=false;return false;
+      navigationActive_=false;navigationExactPreparation_=false;return false;
   }
   const auto generation=cameraGeneration();
   if(navigationCameraGeneration_!=generation){
-      navigationCameraGeneration_=generation;navigationChangedAt_=now;navigationActive_=true;
+      navigationCameraGeneration_=generation;navigationChangedAt_=now;navigationActive_=true;navigationExactPreparation_=false;
   }
-  if(!navigationActive_ || (!coordinator_->viewportClaimed() &&
-      now-navigationChangedAt_>=std::chrono::milliseconds(100))){navigationActive_=false;return false;}
+  if(!navigationActive_)return false;
+  if(!coordinator_->viewportClaimed() && now-navigationChangedAt_>=std::chrono::milliseconds(100)){
+      navigationActive_=false;navigationExactPreparation_=true;return false;
+  }
   if(navigationSubmittedGeneration_==generation)return true;
   const auto& camera=viewportController_->state();
   const auto result=skiaRenderer_.renderNavigation(*activeSurfaceProvider(),
@@ -4710,8 +4712,10 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     if(geometry.available){selectionView_->editingOverlay().textCaret=geometry.caret;selectionView_->editingOverlay().textSelection=geometry.selection;}
     selectionView_->editingOverlay().textCaretVisible = textCaretVisible_;
   }
+  const render::RenderPreparationBudget preparation{};
   const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value(),
-                                                  selectionOverlay());
+      selectionOverlay(), platformPresentationDeferred_ && navigationExactPreparation_
+          ? &preparation : nullptr);
   if (rendered.code != render::BackendSubmissionCode::kAccepted) {
     canonicalPresentationRetryable_ = rendered.code == render::BackendSubmissionCode::kRetry;
     if (canonicalPresentationRetryable_) canonicalPresentationDirty_ = true;
@@ -4743,7 +4747,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   recordPresentation("canonical-submitted", pendingCanonicalIdentities_.size(), frameMs);
   ++canonicalFrameCount_;
   canonicalPresentationDirty_ = false;
-  navigationActive_=false;navigationCameraGeneration_=cameraGeneration();
+  navigationActive_=false;navigationExactPreparation_=false;navigationCameraGeneration_=cameraGeneration();
   // Creation/selection overlays have no ARC handoff identity. Once their
   // replacement canonical frame has been accepted locally, retire them
   // immediately; brush previews remain gated by platform-qualified feedback

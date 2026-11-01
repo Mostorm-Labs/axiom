@@ -19,7 +19,9 @@ class SkiaRenderCache final {
     RenderDamage damage{};
     void begin(const FramePlan&, const void* target, SkSurface&, std::uint64_t resourceEpoch);
     // Called only after full plan validation. False executes permanent Direct.
-    bool draw(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,bool isolated);
+    bool draw(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&,bool isolated,bool composite=true);
+    enum class Preparation { kReady, kPending, kFallback };
+    Preparation prepare(SkCanvas&,const FramePlan&,const RenderPreparationBudget&);
     void clear() noexcept;
     void noteDirect() noexcept {++work.directGroups;++work.rasterizedGroups;}
   private:

@@ -58,7 +58,7 @@ void drawAcquisition(SkCanvas& canvas,const EditingOverlay& overlay) {
 
 BackendSubmissionResult SkiaRenderer::renderFrame(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
-    const EditingOverlay* selectionOverlay) {
+    const EditingOverlay* selectionOverlay, const RenderPreparationBudget* preparation) {
     const auto& metrics=plan.frame.metrics;
     if(!std::isfinite(metrics.logicalWidth)||!std::isfinite(metrics.logicalHeight)||
        metrics.logicalWidth<=0||metrics.logicalHeight<=0||!metrics.physicalWidth||!metrics.physicalHeight)
@@ -88,6 +88,8 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         if(entry.record.objectId.isZero()||!uniqueSources.insert(entry.record.objectId).second){
             provider.release();return BackendSubmissionResult::rejected("invalid or duplicated render source identity");
         }
+    const auto validation=internal::validateReferencePlan(plan);
+    if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
     internal::SkiaRenderCache* cache=nullptr;
     try {
         if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
@@ -98,6 +100,21 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_);
         cache=renderCache_.get();
     } catch(const std::bad_alloc&) {clearRenderCache();}
+    if(preparation && cache && selectionOverlay==nullptr){
+        auto* target=acquired.frame.surface->getCanvas();target->save();
+        target->scale(metrics.physicalWidth/metrics.logicalWidth,metrics.physicalHeight/metrics.logicalHeight);
+        const auto& clip=plan.referenceDrawList.viewportClip;
+        target->clipRect(SkRect::MakeLTRB(clip.left,clip.top,clip.right,clip.bottom));
+        auto prepared=internal::SkiaRenderCache::Preparation::kFallback;
+        const auto beforePreparation=cache->work.rasterizedGroups;
+        try{prepared=cache->prepare(*target,plan,*preparation);}
+        catch(const std::bad_alloc&){cache->clear();}
+        target->restore();
+        rasterizations_+=cache->work.rasterizedGroups-beforePreparation;
+        if(prepared==internal::SkiaRenderCache::Preparation::kPending){
+            provider.release();return BackendSubmissionResult::retry("exact cache preparation pending");
+        }
+    }
     const auto beforeRaster=cache?cache->work.rasterizedGroups:0;
     const auto result = internal::drawReferencePlanToSkCanvas(
         *acquired.frame.surface->getCanvas(), plan, images_, &textResources_,true,cache);

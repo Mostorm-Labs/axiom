@@ -1,0 +1,35 @@
+Test project /Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/g5-integration/native/build
+    Start 22: G5RenderCache
+1/3 Test #22: G5RenderCache ....................   Passed    1.24 sec
+    Start 24: G5Navigation
+2/3 Test #24: G5Navigation .....................Subprocess aborted***Exception:   0.62 sec
+[axiom] finish begin pointer=1 objects=0 scene_gen=0
+[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1
+[axiom] finish begin pointer=2 objects=1 scene_gen=1
+[axiom] scene apply pointer=2 ok=1 objects=2 scene_gen=2
+[axiom] finish begin pointer=3 objects=2 scene_gen=2
+[axiom] scene apply pointer=3 ok=1 objects=3 scene_gen=3
+[axiom] finish begin pointer=4 objects=3 scene_gen=3
+[axiom] scene apply pointer=4 ok=1 objects=4 scene_gen=4
+[axiom] finish begin pointer=5 objects=4 scene_gen=4
+[axiom] scene apply pointer=5 ok=1 objects=5 scene_gen=5
+[axiom] finish begin pointer=6 objects=5 scene_gen=5
+[axiom] scene apply pointer=6 ok=1 objects=6 scene_gen=6
+[axiom] finish begin pointer=7 objects=6 scene_gen=6
+[axiom] scene apply pointer=7 ok=1 objects=7 scene_gen=7
+[axiom] finish begin pointer=8 objects=7 scene_gen=7
+[axiom] scene apply pointer=8 ok=1 objects=8 scene_gen=8
+[axiom] present begin frame=1 objects=8 scene_records=8
+[axiom] present begin frame=2 objects=8 scene_records=8
+libc++abi: terminating due to uncaught exception of type std::runtime_error: navigation settle was not cooperatively prepared
+
+    Start 25: G5TileWork
+3/3 Test #25: G5TileWork .......................   Passed    0.01 sec
+
+67% tests passed, 1 tests failed out of 3
+
+Total Test time (real) =   1.87 sec
+
+The following tests FAILED:
+	 24 - G5Navigation (Subprocess aborted)
+Errors while running CTest

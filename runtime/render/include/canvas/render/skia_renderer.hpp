@@ -33,7 +33,8 @@ class SkiaRenderer final {
     void setImageResolver(ImageResourceResolver* images) noexcept { images_ = images; ++resourceEpoch_; clearRenderCache(); }
     [[nodiscard]] BackendSubmissionResult renderFrame(
         SkiaSurfaceProvider& provider, const FramePlan& plan,
-        const EditingOverlay* selectionOverlay = nullptr);
+        const EditingOverlay* selectionOverlay = nullptr,
+        const RenderPreparationBudget* preparation = nullptr);
     // Approximate navigation feedback only; never a canonical coverage receipt.
     [[nodiscard]] BackendSubmissionResult renderNavigation(
         SkiaSurfaceProvider&, const CanonicalViewportTransform&, const FrameState&);

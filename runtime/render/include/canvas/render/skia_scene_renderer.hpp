@@ -35,6 +35,8 @@ void compositeCompactCoverageToSkCanvas(SkCanvas&,const SkImage&,
                                        const foundation::InkBrushConfig&,std::uint64_t seed=0,
                                        int deviceX=0,int deviceY=0);
 
+[[nodiscard]] BackendSubmissionResult validateReferencePlan(const FramePlan&);
+
 // Shared Skia scene contract used by both the headless reference backend and
 // SkiaRenderer/provider production path. The implementation is kept in the
 // render target so there is one validation and nine-command mapping.

@@ -37,3 +37,17 @@ Ink v2 已降低**单笔 authoring**的历史重算/数据体积，但 canonical
 5. Tile、Scheduler、ResourceBudget：在 correctness、coverage/handoff 和局部化计数成立之后再做，统一预算/调度。
 
 这些对应 Excalidraw“只重算变化、缓存不变结果”的原则，但 Axiom 还必须保持跨平台 Skia、Operation/Scene identity 与 CanonicalVisible 精确 receipt，不能把旧缓存/amber preview 当作新 canonical coverage。
+
+
+## Zoom cache policy follow-up
+
+The same pinned `renderElement.ts` lines 739–746 explicitly suppress zoom-driven
+bitmap regeneration while `appState.shouldCacheIgnoreZoom` is true. The cached
+bitmap is resampled during that gesture; the following `canSnapElement` comment
+also documents that behavior. When that flag clears, a changed zoom can rebuild
+the per-element bitmap. This does not prove zero settle work or a fixed maximum
+frame time in Excalidraw. Its capped element-sized canvas and reuse of shape data
+keep a different cost profile from Axiom's CPU compact coverage/material work.
+The Axiom follow-up in `G5_SETTLE_PREPARATION.md` preserves exact Direct output
+and spreads independent group rebuilds across owner frame opportunities; it does
+not claim Excalidraw pixel quality or performance equivalence.

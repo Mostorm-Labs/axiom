@@ -936,9 +936,7 @@ void drawTransientEntryToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
     canvas.restore();
 }
 
-BackendSubmissionResult drawReferencePlanToSkCanvas(
-    SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images,
-    SkiaTextResources* textResources, bool includeInk, SkiaRenderCache* cache, const CompactDeviceGrid* grid) {
+BackendSubmissionResult validateReferencePlan(const FramePlan& plan) {
     if (!(plan.referenceDrawList.frame == plan.frame) || !foundation::validDocumentBackground(plan.background)) {
         return BackendSubmissionResult::rejected("frame identity mismatch");
     }
@@ -979,6 +977,14 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
             }
         }
     }
+    return BackendSubmissionResult::accepted();
+}
+
+BackendSubmissionResult drawReferencePlanToSkCanvas(
+    SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images,
+    SkiaTextResources* textResources, bool includeInk, SkiaRenderCache* cache, const CompactDeviceGrid* grid) {
+    const auto validation=validateReferencePlan(plan);
+    if(validation.code!=BackendSubmissionCode::kAccepted)return validation;
     // Live canonical targets use an opaque document background; isolated image
     // exports may request transparency. Preview has its own transparent clear.
     drawDocumentBackground(canvas, plan);

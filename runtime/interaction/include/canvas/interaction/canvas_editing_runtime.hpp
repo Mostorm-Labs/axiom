@@ -562,7 +562,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   }
   // Owner-side derived resources can invalidate the current pixels without
   // mutating the semantic document or history.
-  void markCanonicalPresentationDirty() noexcept { canonicalPresentationDirty_ = true; navigationActive_=false; navigationCameraGeneration_=cameraGeneration(); }
+  void markCanonicalPresentationDirty() noexcept { canonicalPresentationDirty_ = true; navigationActive_=false; navigationExactPreparation_=false; navigationCameraGeneration_=cameraGeneration(); }
   void cancelConnectorRouting() noexcept;
   void bindResourceServices(render::ImageResourceResolver* images,
                             text::RichTextLayoutService* textService) noexcept;
@@ -870,7 +870,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unique_ptr<render::FrameState> lastPresentedCanonicalFrameState_;
   std::uint64_t navigationCameraGeneration_=0,navigationSubmittedGeneration_=0;
   std::chrono::steady_clock::time_point navigationChangedAt_{};
-  bool navigationActive_=false;
+  bool navigationActive_=false, navigationExactPreparation_=false;
   bool canonicalPresentationDirty_ = false;
   bool connectorRoutingPending_ = false;
   semantic::ConnectorRouting connectorRoutingPreset_ = semantic::ConnectorRouting::kStraight;

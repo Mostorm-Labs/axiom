@@ -1,0 +1,18 @@
+<!doctype html><meta charset="utf-8"><style>body{margin:0}#mount{width:800px;height:500px}</style><div id="mount"></div>
+<script type="module">
+import {createRuntime} from '/sdk/axiom.mjs';
+window.observation={raf:[],events:[],frames:[],errors:[],active:false};
+const rawRaf=window.requestAnimationFrame.bind(window);
+window.requestAnimationFrame=fn=>rawRaf(time=>{const start=performance.now();try{return fn(time);}finally{if(observation.active)observation.raf.push({name:fn.name,start,duration:performance.now()-start});}});
+const starts=new WeakMap();document.addEventListener('wheel',e=>{if(observation.active)starts.set(e,performance.now());},true);
+document.addEventListener('wheel',e=>{if(starts.has(e))observation.events.push({start:starts.get(e),duration:performance.now()-starts.get(e),trusted:e.isTrusted,ctrlKey:e.ctrlKey});});
+window.ready=(async()=>{
+ window.runtime=await createRuntime({mount:document.querySelector('#mount'),documentId:'00000000000000000000000000000543',builtinFonts:false,permission:'localSingleUser',onError:e=>observation.errors.push(String(e)),onFrame:r=>{if(observation.active)observation.frames.push({time:performance.now(),receipt:r});}});
+ runtime.data.attach({capacity:1024});await runtime.selectBrush('round-handdrawn',1);await settle();return true;
+})();
+window.settle=async()=>{for(let i=0;i<300;++i){await new Promise(rawRaf);const s=runtime.readState();if(s.activeContacts===0&&BigInt(s.lastCommit.presentedGeneration)>=BigInt(s.generation)){await new Promise(rawRaf);await new Promise(rawRaf);return s;}}throw Error('settle timeout');};
+window.start=()=>{observation.raf=[];observation.events=[];observation.frames=[];observation.before=runtime.readState();observation.active=true;};
+window.stop=async()=>{observation.inputEnded=performance.now();
+ for(let i=0;i<300;++i){await new Promise(rawRaf);if(performance.now()-observation.inputEnded>120&&observation.frames.some(x=>x.time>observation.inputEnded))break;if(i===299)throw Error('exact settle callback timeout');}
+ for(let i=0;i<4;++i)await new Promise(rawRaf);observation.active=false;observation.after=runtime.readState();const gl=runtime.canvas.getContext('webgl2'),ext=gl.getExtension('WEBGL_debug_renderer_info');observation.renderer=gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);return observation;};
+</script>
