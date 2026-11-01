@@ -31,6 +31,11 @@
   self.multipleTouchEnabled=YES;
 #endif
   _canonical=[CAMetalLayer layer];_preview=[CAMetalLayer layer];_preview.opaque=NO;
+  // Do not rely on AppKit/Core Animation's implicit sublayer ordering. The
+  // canonical surface is the base and the transparent preview must composite
+  // above it while a pointer session is active.
+  _canonical.zPosition=0.0;
+  _preview.zPosition=1.0;
   [self.layer addSublayer:_canonical];[self.layer addSublayer:_preview];
   __weak AxiomCanvasHost* weak=self;
   _timer=[NSTimer timerWithTimeInterval:1.0/60 repeats:YES block:^(NSTimer*){[weak serviceFrame];}];
