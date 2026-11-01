@@ -13,21 +13,21 @@ enum class Stage : std::size_t {
     attempt, visibility, reference_build, reference_entries, reference_encode,
     reference_digest, presentation_adapt, frame_plan, render, acquire,
     validation, cache_begin, group_update, damage, cache_prepare, prepare_scan,
-    cache_draw, coverage_record, scratch_draw, cpu_coverage, material_submit,
+    cache_draw, coverage_record, scratch_draw, cpu_coverage, gpu_coverage_submit, material_submit,
     raster_snapshot, scene_draw, navigation_snapshot, provider_present, count
 };
 inline constexpr const char* names[]{
     "attempt","visibility","reference_build","reference_entries","reference_encode",
     "reference_digest","presentation_adapt","frame_plan","render","acquire",
     "validation","cache_begin","group_update","damage","cache_prepare","prepare_scan",
-    "cache_draw","coverage_record","scratch_draw","cpu_coverage","material_submit",
+    "cache_draw","coverage_record","scratch_draw","cpu_coverage","gpu_coverage_submit","material_submit",
     "raster_snapshot","scene_draw","navigation_snapshot","provider_present"
 };
 enum class Counter : std::size_t { candidates, sources, encoded_bytes, plan_entries,
-    prepare_knots, built_groups, coverage_tiles, coverage_pixels, count };
+    prepare_knots, built_groups, coverage_tiles, coverage_pixels, gpu_interior_pixels, cpu_edge_pixels, count };
 static_assert(sizeof(names)/sizeof(*names)==static_cast<std::size_t>(Stage::count));
 inline constexpr const char* counterNames[]{"candidates","sources","encoded_bytes","plan_entries",
-    "prepare_knots","built_groups","coverage_tiles","coverage_pixels"};
+    "prepare_knots","built_groups","coverage_tiles","coverage_pixels","gpu_interior_pixels","cpu_edge_pixels"};
 static_assert(sizeof(counterNames)/sizeof(*counterNames)==static_cast<std::size_t>(Counter::count));
 struct Sample {std::uint64_t inclusive=0,exclusive=0,calls=0;};
 struct Scope;

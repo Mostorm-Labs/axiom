@@ -1,0 +1,29 @@
+{
+  "repository": "github.com/Mostorm-Labs/axiom",
+  "head": "a1f724cd2c6cc44c773253a5e9aa92f3272ed05c",
+  "dirty": true,
+  "source_sha256": {
+    "runtime/foundation/include/canvas/foundation/internal/frame_timing.hpp": "887088c8b7fd70d982e00f235bbfda3020d68fedfd1fca45e13ebbe5cc9e09ff",
+    "runtime/render/include/canvas/render/render_cache.hpp": "b0a9e626e424ffc0e21a1140e87ae6f1698e7495c494a600a53fc121af6f0b8d",
+    "runtime/render/include/canvas/render/skia_scene_renderer.hpp": "c4d9879d3d4682109fae4710ddee0d00be05d7c194bd98cfb1ece9adad9398fb",
+    "runtime/render/src/skia_compact_material.cpp": "74e5156796b0db3123e01ef60096b54e1a5261fb10ad8422ed416bc26b409182",
+    "runtime/render/src/skia_headless_backend.cpp": "b03acc7e52ad3504dd3f6f492de134d05367cb9ccde744ed5e74f3addfa32913",
+    "runtime/render/src/skia_render_cache.cpp": "2a4c51d2d7d9e094c5b6650c83d627a0bd45a4aacd53ddb0ffe00d21381c22ab",
+    "runtime/render/src/skia_render_cache_internal.hpp": "71760cc01e6a68bcbde473b19d26fd58c10caee1f10f91c0bc65214fabc58ae6",
+    "runtime/render/tests/render_cache_test.cpp": "59c5a53cdcdf8a1f8175fc23c564f7d970cb9049e784891fcf87eec7ae17bcf8",
+    "sdk/web/CMakeLists.txt": "63fd3d25dbb65ed8b5f824ea86daffcc4aab3013675ebfa311c08eaf230d7250",
+    "verification/evidence/performance/g5-settle-timing/browser_runner.mjs": "60caf7d85bd9a3c3f61ac40180958f215ee42a97206606bbb598a2e8c0f7af00",
+    "runtime/render/src/compact_raster_internal.hpp": "54b4e374e48ad0d689a25c208de00ffd713f7ecca093313a5767ac64ec3d5627"
+  },
+  "artifact_sha256": {
+    "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+    "axiom.d.mts": "82c1300cd65942b023c08d187070a28cca08476c8b2f52b9b6479592496d08e9",
+    "axiom.wasm": "0848a5bc8de5cae8c7aee79960c71d85b1dc48482b7f8df29dd3e256ca972c42",
+    "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+    "internal/axiom.mjs": "474ff4d0f1730a11ee3c30ac70198b72e64c33b20b24547ea2fb4e28a6fcf199"
+  },
+  "classification": "PASS_WITH_FINDINGS",
+  "qualified_path": "v3 saturated interior on Skia GPU with pinned CPU exact edges",
+  "full_gpu_gradient": "BLOCKED_EVIDENCE",
+  "physical_platforms": "BLOCKED_EVIDENCE"
+}

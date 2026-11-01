@@ -1,5 +1,6 @@
 #pragma once
 #include "canvas/render/render_cache.hpp"
+#include "compact_raster_internal.hpp"
 #include "canvas/render/render_group_manager.hpp"
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/render/tile/tile_grid.hpp"
@@ -35,6 +36,17 @@ class SkiaRenderCache final {
     bool drawTiles(SkCanvas&,const FramePlan&);
     struct Coverage {RenderGroupRevisions revisions;sk_sp<SkPicture> picture;std::size_t bytes=0;std::uint64_t used=0;resources::ResourceLease lease;};
     std::unordered_map<foundation::ObjectId,Coverage,foundation::ObjectIdHash> coverage_;
+    CompactCoverageTargets coverageTargets_;
+    struct Pending {foundation::ObjectId id;RenderCacheValidity validity;SkIRect crop;std::unique_ptr<CompactStrokeRasterJob> raster;};
+    std::unique_ptr<Pending> pending_;
+    struct Admission {SkIRect crop;};
+    std::unordered_map<foundation::ObjectId,Admission,foundation::ObjectIdHash> admissions_;
+    bool admissionReady_=false;
+    bool ensureScratch(SkCanvas&);
+    SkMatrix entryMatrix(SkCanvas&,const FramePlan&,const ReferenceTraversalEntry&)const;
+    void configureScratch(SkCanvas&,const FramePlan&,const SkMatrix&);
+    bool store(SkCanvas&,const ReferenceTraversalEntry&,const RenderCacheValidity&,const SkIRect&,bool composite);
+    void noteCoverage(const CompactRasterWork&);
     resources::ResourceLease scratchLease_;
     sk_sp<SkSurface> scratch_;
     std::unique_ptr<TileGrid> tiles_;

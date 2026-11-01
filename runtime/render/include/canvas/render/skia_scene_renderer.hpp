@@ -15,18 +15,21 @@ namespace canvas::render { class SkiaTextResources; }
 
 namespace canvas::render::internal {
 class SkiaRenderCache;
+struct CompactRasterWork;
+class CompactCoverageTargets;
 struct CompactDeviceGrid final {int left=0,top=0,right=0,bottom=0;};
 // Only accepts an already validated isolated compact command; no second
 // geometry implementation is owned by the cache materializer.
-void drawValidatedIsolatedEntryToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&,const SkPicture* coverage = nullptr, const CompactDeviceGrid* grid = nullptr);
+void drawValidatedIsolatedEntryToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&,const SkPicture* coverage = nullptr, const CompactDeviceGrid* grid = nullptr, CompactRasterWork* work = nullptr, bool compatibleCoverage = false, CompactCoverageTargets* targets = nullptr);
 struct CompactRasterWork final {
     std::uint64_t allocatedTiles = 0;
     std::uint64_t allocatedPixels = 0;
     std::uint64_t compositedPixels = 0;
+    std::uint64_t gpuTiles=0,cpuTiles=0,targetReuses=0,gpuInteriorPixels=0,cpuEdgePixels=0;
 };
 void drawCompactStrokeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
                                 std::span<const foundation::InkKnot>,std::uint64_t seed=0,
-                                CompactRasterWork* work=nullptr, const SkPicture* coverage=nullptr, const CompactDeviceGrid* grid=nullptr);
+                                CompactRasterWork* work=nullptr, const SkPicture* coverage=nullptr, const CompactDeviceGrid* grid=nullptr,bool compatibleCoverage=false, CompactCoverageTargets* targets=nullptr);
 // Disposable scalar distance coverage. The material is evaluated once after
 // stable prefix and replaceable tail have been combined with max coverage.
 void drawCompactCoverageToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,

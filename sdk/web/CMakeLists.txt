@@ -47,3 +47,15 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pointer_input.mjs" "${CMAKE_CURRENT_B
 install(FILES "$<TARGET_FILE:axiom_js_runtime>" DESTINATION js/internal)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/axiom.wasm"
   "${CMAKE_CURRENT_BINARY_DIR}/axiom.data" DESTINATION js)
+
+# Explicit verification probe; excluded from ordinary SDK builds/install.
+option(AXIOM_BUILD_G5_COVERAGE_PROBE "Build private exact coverage browser probe" OFF)
+if(AXIOM_BUILD_G5_COVERAGE_PROBE)
+  add_executable(g5_coverage_probe "${PROJECT_SOURCE_DIR}/runtime/render/tests/render_cache_test.cpp")
+  target_link_libraries(g5_coverage_probe PRIVATE canvas_runtime_render)
+  target_include_directories(g5_coverage_probe PRIVATE "${CANVAS_SKIA_SDK_ROOT}")
+  target_compile_definitions(g5_coverage_probe PRIVATE G5_TEST_WEBGL=1)
+  target_compile_options(g5_coverage_probe PRIVATE -fexceptions)
+  target_compile_features(g5_coverage_probe PRIVATE cxx_std_20)
+  target_link_options(g5_coverage_probe PRIVATE -fexceptions -sMODULARIZE=1 -sEXPORT_NAME=createCacheProbe -sENVIRONMENT=web -sALLOW_MEMORY_GROWTH=1 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -sEXIT_RUNTIME=1)
+endif()

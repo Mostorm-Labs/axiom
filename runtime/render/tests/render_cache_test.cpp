@@ -5,7 +5,9 @@
 #if defined(G5_TEST_WEBGL)
 #include "canvas/render/webgl_surface_backend.hpp"
 #include "include/core/SkSurface.h"
+#include "include/core/SkCanvas.h"
 #include "include/core/SkColorSpace.h"
+#include "../src/compact_raster_internal.hpp"
 #include <emscripten.h>
 #include <emscripten/html5.h>
 #endif
@@ -58,9 +60,9 @@ using TestSurface=RasterSkiaSurfaceProvider;
 FramePlan plan(std::uint64_t frameId, std::vector<ReferenceTraversalEntry> entries,
                std::uint64_t generation = 1, WorldToViewAffine transform = {},
                foundation::WorldRect clip = {0,0,256,128},
-               foundation::DocumentBackground background = {}, bool transparent=false) {
+               foundation::DocumentBackground background = {}, bool transparent=false, float dpr=1) {
     FrameState frame{ViewId{1}, CameraState{{0,0},1,0,CameraGeneration{1}},
-        {0,0,256,128}, {256,128,256,128,1,1}, semantic::SemanticGeneration{frameId},
+        {0,0,256,128}, {256/dpr,128/dpr,256,128,dpr,dpr}, semantic::SemanticGeneration{frameId},
         SceneRevision{frameId}, SurfaceGeneration{generation}, MetricsGeneration{1}, FrameId{frameId}};
     ReferenceDrawList list{frame}; list.viewportClip=clip;
     list.worldToView=transform; list.entries=std::move(entries);
@@ -95,21 +97,56 @@ class FailingPresent final : public SkiaSurfaceProvider {
     std::uint64_t presentCount()const noexcept override{return raster.presentCount();}
 };
 }
-int main() {
+int main(int argc,char** argv) {
+    const bool gpuCandidate=argc>1&&std::string_view(argv[1])=="--gpu-candidate";
     try {
         TestSurface provider;
         require(provider.resize(256,128).code==BackendSubmissionCode::kAccepted,"surface");
         SkiaRenderer renderer;
+
         TestSurface reference;require(reference.resize(256,128).code==BackendSubmissionCode::kAccepted,"oracle surface");
         SkiaRenderer direct;RenderCacheOptions disabled;disabled.enabled=false;direct.setRenderCacheOptions(disabled);
         auto compare=[&](const FramePlan& frame){
-            require(renderer.renderFrame(provider,frame).code==BackendSubmissionCode::kAccepted,"cached frame");
+            const auto rendered=renderer.renderFrame(provider,frame);
+            if(rendered.code!=BackendSubmissionCode::kAccepted)std::cerr<<"rejected frame="<<frame.frame.frameId.value()<<" reason="<<rendered.message<<'\n';
+            require(rendered.code==BackendSubmissionCode::kAccepted,"cached frame");
             require(direct.renderFrame(reference,frame).code==BackendSubmissionCode::kAccepted,"direct frame");
             const auto actual=pixels(provider),expected=pixels(reference);
             if(actual!=expected){unsigned differences=0,maxError=0;for(std::size_t i=0;i<actual.size();++i){differences+=actual[i]!=expected[i];maxError=std::max(maxError,unsigned(std::abs(int(actual[i])-int(expected[i]))));}
                 std::cerr<<"frame="<<frame.frame.frameId.value()<<" different channels="<<differences<<" max="<<maxError<<'\n';}
             require(actual==expected,"cached/direct pixels differ");
         };
+#if defined(G5_TEST_WEBGL)
+        // Multiple device-grid boundaries, partial edge extents, transparent
+        // material and resource denial are exercised on the actual GL context.
+        {
+            const auto acquired=provider.acquire();auto* canvas=acquired.frame.surface->getCanvas();
+            const auto info=SkImageInfo::MakeN32Premul(600,300);
+            for(const auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker})
+            for(unsigned transform=0;transform<3;++transform){
+                auto gpu=canvas->makeSurface(info),oracle=canvas->makeSurface(info);
+                foundation::InkBrushConfig config;config.version=2;config.algorithmVersion=3;config.signalVersion=2;
+                config.family=family;config.size=80;config.opacity=.37;config.startTaper=35;config.endTaper=60;
+                std::vector<foundation::InkKnot> knots;
+                for(unsigned k=0;k<70;++k)knots.push_back({-40.+k*10,145.+std::sin(k*.27)*65,static_cast<std::uint16_t>(10000+k*700)});
+                for(auto* surface:{gpu.get(),oracle.get()}){
+                    auto* target=surface->getCanvas();target->clear(SK_ColorTRANSPARENT);
+                    target->translate(transform==0?0.F:17.3F,-5.2F);target->scale(transform==1?.8F:1.2F,transform==2?.9F:1.2F);
+                    target->clipRect(SkRect::MakeLTRB(4,3,550,270));
+                }
+                internal::CompactCoverageTargets targets;internal::CompactRasterWork work;
+                auto denied=std::make_shared<resources::ResourceBudgetManager>(resources::BudgetLimits{1,1});
+                internal::CompactStrokeRasterJob job(*gpu->getCanvas(),config,knots,nullptr,true,transform==2?denied:nullptr);
+                while(!job.step(*gpu->getCanvas(),config,knots,77,targets,true,&work)){}
+                internal::drawCompactStrokeToSkCanvas(*oracle->getCanvas(),config,knots,77);
+                std::vector<std::uint8_t> a(600*300*4),b(a.size());
+                require(gpu->readPixels(info,a.data(),2400,0,0)&&oracle->readPixels(info,b.data(),2400,0,0),"seam readback");
+                require(a==b,"hybrid device tile seam differs from Direct");
+                if(transform==2)require(work.gpuTiles==0,"denied region budget still admitted hybrid work");
+            }
+            provider.release();
+        }
+#endif
         RenderCacheOptions tiled;tiled.tileCandidate=true;tiled.tileWorldSize=64;
         renderer.setRenderCacheOptions(tiled);
         const auto tileStroke=stroke(8);
@@ -134,8 +171,71 @@ int main() {
         compare(plan(516,{tileStroke},1,{}, {24,8,232,112},tileBackground));
         compare(plan(517,{tileStroke},1,{}, {0,0,256,128},tileBackground));
         compare(plan(518,{tileStroke},1,{}, {0,0,256,128},{},true));
-        renderer.setRenderCacheOptions({});
+        {RenderCacheOptions options;options.gpuCoverageCandidate=gpuCandidate;renderer.setRenderCacheOptions(options);}
         const auto a=stroke(1);
+#if defined(G5_TEST_WEBGL)
+        if(gpuCandidate){
+            auto tuned=a;auto& c=std::get<CompactStrokeReferenceCommand>(tuned.command).content;
+            c.stroke.config.version=2;c.stroke.config.algorithmVersion=3;c.stroke.config.signalVersion=2;
+            tuned.record.content=c;
+            compare(plan(590,{tuned}));
+            require(renderer.renderCacheWork().gpuCoverageTiles>0,"candidate did not execute GPU coverage");
+            std::cout<<"candidate GPU coverage tiles="<<renderer.renderCacheWork().gpuCoverageTiles<<'\n';
+        }
+#endif
+        // One long source must yield within the stroke; no intermediate target
+        // pixels or receipt may escape, including on camera supersession.
+        {
+            auto longStroke=stroke(91);
+            auto& content=std::get<CompactStrokeReferenceCommand>(longStroke.command).content;
+            content.stroke.config.version=2;content.stroke.config.algorithmVersion=3;content.stroke.config.signalVersion=2;
+            content.stroke.config.startTaper=25;content.stroke.config.endTaper=35;
+            content.stroke.knots.clear();
+            for(unsigned i=0;i<240;++i)content.stroke.knots.push_back({20.+i*.85,40.+std::sin(i*.06)*15,static_cast<std::uint16_t>(12000+i*170)});
+            longStroke.record.content=content;
+            renderer.clearRenderCache();
+            const auto previous=pixels(provider);const auto presents=provider.presentCount();
+            const auto stepsBefore=renderer.renderCacheWork().preparationCoverageSteps;
+            RenderPreparationBudget bounded;bounded.maxGroups=1;bounded.maxMicroseconds=1000000;bounded.maxCoverageSteps=1;
+            const auto demand=plan(595,{longStroke},1,{1.2,0,0,1.2,-6.3,-2.8});
+            require(renderer.renderFrame(provider,demand,nullptr,&bounded).code==BackendSubmissionCode::kRetry,
+                    "single long stroke monopolizes an exact preparation opportunity");
+            require(provider.presentCount()==presents&&pixels(provider)==previous,"partial stroke escaped preparation");
+            require(renderer.renderCacheWork().preparationCoverageSteps==stepsBefore+1,"single-step admission exceeded");
+            require(renderer.renderCacheWork().coverageTargetAllocations<=4,"temporary coverage residency unbounded");
+            auto replacement=plan(596,{longStroke},1,{.9,0,0,.9,8.7,4.3});
+            unsigned retries=0;BackendSubmissionResult result;
+            do{result=renderer.renderFrame(provider,replacement,nullptr,&bounded);++retries;require(retries<200,"resumed stroke never converges");}
+            while(result.code==BackendSubmissionCode::kRetry);
+            require(result.code==BackendSubmissionCode::kAccepted&&retries>1,"replacement stroke was not cooperative");
+            require(direct.renderFrame(reference,replacement).code==BackendSubmissionCode::kAccepted&&pixels(provider)==pixels(reference),
+                    "resumed tapered coverage differs from full-history Direct");
+            // Same source identity, changed canonical payload: discard partial
+            // coverage even when the camera and target generation did not move.
+            renderer.clearRenderCache();
+            require(renderer.renderFrame(provider,demand,nullptr,&bounded).code==BackendSubmissionCode::kRetry,"content replacement setup");
+            auto edited=longStroke;
+            auto& editedContent=std::get<CompactStrokeReferenceCommand>(edited.command).content;
+            editedContent.stroke.knots[100].y+=35;edited.record.content=editedContent;
+            const auto editedDemand=plan(596,{edited},1,{1.2,0,0,1.2,-6.3,-2.8});
+            retries=0;
+            do{result=renderer.renderFrame(provider,editedDemand,nullptr,&bounded);require(++retries<200,"changed source never converges");}
+            while(result.code==BackendSubmissionCode::kRetry);
+            require(result.code==BackendSubmissionCode::kAccepted&&direct.renderFrame(reference,editedDemand).code==BackendSubmissionCode::kAccepted&&
+                    pixels(provider)==pixels(reference),"partial coverage survived content replacement");
+            const auto allocations=renderer.renderCacheWork().coverageTargetAllocations;
+            compare(plan(597,{longStroke},1,{1.1,0,0,1.1,-3.1,2.7}));
+            require(renderer.renderCacheWork().coverageTargetAllocations==allocations,
+                    "camera rebuild allocates another compatible coverage target");
+            require(renderer.renderCacheWork().coverageTargetReuses>0,"coverage target never reused");
+#if defined(G5_TEST_WEBGL)
+            if(gpuCandidate){
+                const auto work=renderer.renderCacheWork();
+                require(work.gpuInteriorPixels>0&&work.cpuEdgePixels>0,"hybrid did not separate exact edges from saturated interior");
+                std::cout<<"hybrid interior="<<work.gpuInteriorPixels<<" exact-edge="<<work.cpuEdgePixels<<'\n';
+            }
+#endif
+        }
         // Exact preparation is cooperative and offscreen: no partial pixels,
         // present or canonical submission is published between bounded slices.
         compare(plan(600,{a}));
@@ -180,7 +280,7 @@ int main() {
                 "insufficient cache capacity did not fall back");
         require(direct.renderFrame(reference,preparePlan).code==BackendSubmissionCode::kAccepted&&
                 pixels(provider)==pixels(reference),"capacity fallback differs from Direct");
-        renderer.setRenderCacheOptions({});
+        {RenderCacheOptions options;options.gpuCoverageCandidate=gpuCandidate;renderer.setRenderCacheOptions(options);}
         auto malformed=sources;std::get<CompactStrokeReferenceCommand>(malformed[1].command).content.stroke.config.size=-1;
         const auto invalidBefore=pixels(provider);const auto invalidPresents=provider.presentCount();
         require(renderer.renderFrame(provider,plan(603,malformed),nullptr,&slice).code==BackendSubmissionCode::kRejected,
@@ -433,7 +533,7 @@ int main() {
         renderer.clearRenderCache();compare(plan(12,{a,b}));
         RenderCacheOptions tiny;tiny.maxBytes=1;tiny.maxEntryBytes=1;renderer.setRenderCacheOptions(tiny);
         compare(plan(13,{a,b}));require(renderer.renderCacheWork().retainedBytes==0,"budget exceeded");
-        renderer.setRenderCacheOptions({});
+        {RenderCacheOptions options;options.gpuCoverageCandidate=gpuCandidate;renderer.setRenderCacheOptions(options);}
         for(unsigned material:{1U,2U})for(auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker,foundation::InkFamily::kChalk,foundation::InkFamily::kCrayon,foundation::InkFamily::kWatercolor}){
             auto entry=a;auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
             content.stroke.config.family=family;content.stroke.config.materialVersion=material;
@@ -442,6 +542,60 @@ int main() {
             entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
             for(const auto& transform:std::vector<WorldToViewAffine>{{},{.8,.3,-.2,.9,40,10},{-1,0,0,1,256,0},{2,0,0,2,-100,-40}}){
                 compare(plan(20,{entry},1,transform));compare(plan(21,{entry},1,transform));
+            }
+        }
+        // Tuned algorithms, caps/tapers and DPR must use the same exact
+        // coverage in synchronous and resumable paths. In particular V3 AA
+        // depends on the acquired matrix, not a picture recorded at identity.
+        for(const auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker})
+        for(const bool caps:{false,true}){
+            auto entry=stroke(101);
+            auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            c.stroke.config.version=2;c.stroke.config.algorithmVersion=3;c.stroke.config.signalVersion=2;
+            c.stroke.config.family=family;c.stroke.config.startCap=caps;c.stroke.config.endCap=caps;
+            c.stroke.config.startTaper=caps?40:0;c.stroke.config.endTaper=caps?70:0;
+            c.stroke.knots.clear();
+            for(unsigned i=0;i<40;++i)c.stroke.knots.push_back({18.+i*5,55.+std::sin(i*.7)*14,static_cast<std::uint16_t>(7000+i*1300)});
+            entry.record.content=c;
+            for(const auto transform:std::vector<WorldToViewAffine>{{1.2,0,0,1.2,-6.3,-2.8},{.8,.3,-.2,.9,40,10}}){
+                compare(plan(211,{entry},1,transform));
+                compare(plan(212,{entry},1,transform,{0,0,128,64},{},false,2));
+            }
+            renderer.clearRenderCache();RenderPreparationBudget bounded;bounded.maxCoverageSteps=1;bounded.maxMicroseconds=1000000;
+            const auto demand=plan(213,{entry},1,{1.17,0,0,1.17,-20.3,-4.8});
+            unsigned tries=0;BackendSubmissionResult result;
+            do{result=renderer.renderFrame(provider,demand,nullptr,&bounded);require(++tries<300,"tuned preparation did not converge");}
+            while(result.code==BackendSubmissionCode::kRetry);
+            require(result.code==BackendSubmissionCode::kAccepted,"tuned preparation rejected");
+            require(direct.renderFrame(reference,demand).code==BackendSubmissionCode::kAccepted&&pixels(provider)==pixels(reference),
+                    "resumed cap/taper differs from Direct");
+        }
+        // Deterministic adversarial tuned corpus: crossing segments, changing
+        // radius, fractional device origins, nib rotation and alpha. Candidate
+        // must stay exactly equal; legacy and tiny/thin paths may fall back.
+        for(unsigned sample=0;sample<48;++sample){
+            auto entry=stroke(121);
+            auto& c=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+            c.stroke.config.version=2;c.stroke.config.algorithmVersion=3;c.stroke.config.signalVersion=2;
+            c.stroke.config.family=sample%2?foundation::InkFamily::kMarker:foundation::InkFamily::kRound;
+            c.stroke.config.materialVersion=2;c.stroke.config.materialResourceId=foundation::kInkMaterialV2ResourceId;
+            c.stroke.config.materialResourceSha256=foundation::kInkMaterialV2ResourceSha256;
+            c.stroke.config.size=sample%4==0?1:sample%4==1?16:sample%4==2?64:4096;
+            c.stroke.config.startCap=sample%3!=0;c.stroke.config.endCap=sample%3!=1;
+            c.stroke.config.startTaper=sample%3==0?0:20;c.stroke.config.endTaper=sample%3==1?0:55;
+            c.stroke.config.thinning=sample%3==0?1:sample%3==1?-.7:0;
+            c.stroke.config.markerAngle=std::fmod(sample*.23,6.283185307179586);c.stroke.config.markerFlatness=sample%3==0?.08:.4;
+            c.stroke.knots.clear();
+            for(unsigned k=0;k<45;++k)c.stroke.knots.push_back({128.+90*std::sin(k*.42),64.+45*std::cos(k*.57),static_cast<std::uint16_t>((sample*421+k*1621)%65536)});
+            entry.record.content=c;
+            const auto transform=sample%3==0?WorldToViewAffine{1.31,.2,-.17,.81,-4.73,8.42}:
+                sample%3==1?WorldToViewAffine{-1.1,0,0,.8,260.3,12.7}:WorldToViewAffine{.7,0,0,1.3,11.73,-4.28};
+            compare(plan(230+sample,{entry},1,transform,{0,0,256,128},{},sample%2==0));
+            if(sample%6==0){
+                semantic::FilledPathMask mask;
+                mask.path.commands={semantic::MoveTo{{95,0}},semantic::LineTo{{145,0}},semantic::LineTo{{145,128}},semantic::LineTo{{95,128}},semantic::ClosePath{}};
+                entry.record.eraseMasks={{ObjectId::fromUint64(999),mask}};
+                compare(plan(300+sample,{entry},1,transform,{4,3,250,125}));
             }
         }
         auto changed=a;auto& command=std::get<CompactStrokeReferenceCommand>(changed.command);
@@ -462,7 +616,7 @@ int main() {
         RenderCacheOptions small;small.maxEntryBytes=16;renderer.setRenderCacheOptions(small);
         compare(plan(27,{huge},provider.generation()));require(renderer.renderCacheWork().retainedBytes==0,"huge group requires giant texture");
         FailingPresent failed;require(failed.resize(256,128).code==BackendSubmissionCode::kAccepted,"failing target");
-        renderer.setRenderCacheOptions({});
+        {RenderCacheOptions options;options.gpuCoverageCandidate=gpuCandidate;renderer.setRenderCacheOptions(options);}
         require(renderer.renderFrame(failed,plan(28,{a})).code==BackendSubmissionCode::kRetry,"failed present reported accepted");
         require(renderer.renderCacheWork().retainedBytes==0,"failed present retained accepted raster state");
         failed.fail=false;require(renderer.renderFrame(failed,plan(29,{a})).code==BackendSubmissionCode::kAccepted,"present retry");

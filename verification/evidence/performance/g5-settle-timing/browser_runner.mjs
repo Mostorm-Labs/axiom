@@ -3,8 +3,12 @@ import {createHash} from 'node:crypto';
 import fs from 'node:fs/promises';import http from 'node:http';import path from 'node:path';
 const output=path.resolve(process.argv[2]),sdk=path.resolve(process.argv[3]);
 const count=Number(process.argv[4]||64),dpr=Number(process.argv[5]||2),reverse=process.argv[6]==='reverse';
+const brushRevision=Number(process.argv[7]||1);
 await fs.mkdir(output,{recursive:true});
+const settleFrames=Number(process.env.AXIOM_TIMING_SETTLE_FRAMES||300);
 let html=await fs.readFile('verification/evidence/performance/g5-world-navigation/browser-final/browser.html','utf8');
+html=html.replaceAll('i<300;',`i<${settleFrames};`).replaceAll('i===299',`i===${settleFrames-1}`);
+html=html.replace("selectBrush('round-handdrawn',1)",`selectBrush('round-handdrawn',${brushRevision})`);
 html=html.replace("import {createRuntime} from '/sdk/axiom.mjs';","import {createRuntime} from '/sdk/axiom.mjs'; let fixedUUID=1;crypto.randomUUID=()=>('00000000000040008000'+(fixedUUID++).toString(16).padStart(12,'0'));");
 const server=http.createServer(async(req,res)=>{try{
  const u=new URL(req.url,'http://localhost').pathname;
@@ -38,7 +42,7 @@ try{
  const raw=await page.evaluate(()=>stop());raw.fences=await page.evaluate(()=>g5Fences);
  console.log('settled');const image=await page.evaluate(async()=>{const c=runtime.canvas,g=c.getContext('webgl2'),binding=g.getParameter(g.FRAMEBUFFER_BINDING),p=new Uint8Array(c.width*c.height*4);g.bindFramebuffer(g.FRAMEBUFFER,null);g.readPixels(0,0,c.width,c.height,g.RGBA,g.UNSIGNED_BYTE,p);g.bindFramebuffer(g.FRAMEBUFFER,binding);const ext=g.getExtension('WEBGL_debug_renderer_info');const digest=await crypto.subtle.digest('SHA-256',p);return {rgbaSha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join(''),width:c.width,height:c.height,renderer:g.getParameter(ext.UNMASKED_RENDERER_WEBGL)};});
  const sha256={};for(const name of ['axiom.mjs','axiom.wasm','axiom.data','internal/axiom.mjs'])sha256[name]=createHash('sha256').update(await fs.readFile(path.join(sdk,name))).digest('hex');
- const observation={schema:'g5-settle-timing-v1',count,dpr,reverse,scope:'fixed-timestamp synthetic pointer corpus; single-thread CPU wall elapsed, nested exclusive/inclusive; GL submission and exact receipt are not GPU execution or physical presentation',inputEnded:ended,exactReceiptDelayMs:raw.frames.at(-1).time-ended,raw,exceptions,timingRows:lines.map(s=>JSON.parse(s.slice('AXIOM_FRAME_TIMING '.length))),image:{width:image.width,height:image.height,rgbaSha256:image.rgbaSha256,renderer:image.renderer},sha256};
+ const observation={schema:'g5-settle-timing-v1',count,dpr,reverse,brush:{profile:'round-handdrawn',revision:brushRevision},scope:'fixed-timestamp synthetic pointer corpus; single-thread CPU wall elapsed, nested exclusive/inclusive; GL submission and exact receipt are not GPU execution or physical presentation',inputEnded:ended,exactReceiptDelayMs:raw.frames.at(-1).time-ended,raw,exceptions,timingRows:lines.map(s=>JSON.parse(s.slice('AXIOM_FRAME_TIMING '.length))),image:{width:image.width,height:image.height,rgbaSha256:image.rgbaSha256,renderer:image.renderer},sha256};
  await fs.writeFile(path.join(output,'trace.log'),lines.join('\n')+'\n');await fs.writeFile(path.join(output,'observation.json'),JSON.stringify(observation,null,2));
  console.log(JSON.stringify({count,dpr,reverse,timingRows:lines.length,delay:observation.exactReceiptDelayMs,pixelSha256:observation.image.rgbaSha256,errors:raw.errors,exceptions}));
  if(raw.errors.length||exceptions.length)process.exitCode=1;

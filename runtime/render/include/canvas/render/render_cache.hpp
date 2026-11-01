@@ -15,17 +15,22 @@ struct RenderCacheOptions final {
     std::int32_t tileScale=0;
     // Owner work policy for navigation feedback. Not a public SLO.
     std::size_t navigationMaxSteps=64;
+    // V3 GPU saturated interior + pinned CPU exact edge; legacy stays CPU.
+    bool gpuCoverageCandidate=true;
 };
-// Cooperative owner-thread policy, not a frame-latency guarantee. A group is
-// atomic; a single expensive group can exceed the time target.
+// Cooperative owner-thread admission policy, not a frame-latency guarantee.
+// Coverage checkpoints bound work inside an individual compact stroke.
 struct RenderPreparationBudget final {
     std::size_t maxGroups=2;
-    std::uint64_t maxMicroseconds=4000;
+    std::uint64_t maxMicroseconds=8000;
+    std::size_t maxCoverageSteps=64;
 };
 struct RenderCacheWork final {
     std::uint64_t hits=0,misses=0,rasterizedGroups=0,directGroups=0,evictions=0;
     std::size_t retainedBytes=0,entries=0;
     std::uint64_t coverageBuilds=0,coverageHits=0,scratchAllocations=0;
+    std::uint64_t gpuCoverageTiles=0,cpuCoverageTiles=0,coverageTargetAllocations=0,coverageTargetReuses=0,preparationCoverageSteps=0;
+    std::uint64_t gpuInteriorPixels=0,cpuEdgePixels=0;
     std::size_t coverageBytes=0,scratchPeakBytes=0;
     std::uint64_t tileRequests=0,tileRasters=0,tileHits=0;
     std::uint64_t preparationSlices=0,preparationYields=0;
