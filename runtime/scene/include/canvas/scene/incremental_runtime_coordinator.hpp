@@ -47,6 +47,7 @@ struct RuntimeUpdatePlan final {
 class IncrementalRuntimeCoordinator final {
   public:
     explicit IncrementalRuntimeCoordinator(SceneBinding& binding) noexcept : binding_(binding) {
+        runtimeScene_._fullProjectionAuthority = true;
         runtimeScene_.setPublicationGate(&publicationGate_);
         binding_.setPublicationGate(&publicationGate_);
     }

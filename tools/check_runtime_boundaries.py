@@ -83,6 +83,18 @@ def main() -> int:
     if forbidden_targets.search(scene_cmake):
         failures.append("runtime/scene/CMakeLists.txt: forbidden renderer/platform target dependency")
 
+    # RF-01 may preserve a generation-bound change journal for compatibility,
+    # but new per-view/cache damage policy must live in Render Core.
+    scene_owner = (root / "runtime/scene/include/canvas/scene/scene.hpp").read_text(encoding="utf-8")
+    if re.search(r"\bDamageTracker\s+_", scene_owner) or "src/damage_tracker.cpp" in scene_cmake:
+        failures.append("runtime/scene: production render DamageTracker ownership must be in Render Core")
+    render_contracts = [root / "runtime/render/include/canvas/render" / name for name in
+                        ("damage_tracker.hpp", "render_group.hpp", "render_group_manager.hpp", "render_cache.hpp")]
+    existing_render_contracts = [path for path in render_contracts if path.exists()]
+    failures.extend(check_files(existing_render_contracts,
+        {key: value for key, value in FORBIDDEN_CONTRACT_PATTERNS.items()
+         if key not in {"derived scene", "Arc"}}, root))
+
     semantic_cmake = root / "runtime/semantic/CMakeLists.txt"
     if semantic_cmake.exists():
         semantic_cmake_text = semantic_cmake.read_text(encoding="utf-8")

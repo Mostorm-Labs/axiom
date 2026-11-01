@@ -1,5 +1,5 @@
 add_library(canvas_runtime_scene STATIC
-    src/damage_tracker.cpp
+    src/scene_change_journal.cpp
     src/direct_render_scene.cpp
     src/scene.cpp
     src/scene_binding.cpp

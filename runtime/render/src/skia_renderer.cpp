@@ -4,6 +4,7 @@
 #include "canvas/render/brush_outline_skia_path.hpp"
 #include "canvas/render/skia_ink_backend.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
+#include "skia_render_cache_internal.hpp"
 
 #include "include/core/SkCanvas.h"
 #include "include/core/SkBlendMode.h"
@@ -12,6 +13,7 @@
 #include "include/core/SkSurface.h"
 #include "include/core/SkImage.h"
 #include <unordered_map>
+#include <unordered_set>
 
 #include <cmath>
 #include <algorithm>
@@ -49,6 +51,10 @@ void drawAcquisition(SkCanvas& canvas,const EditingOverlay& overlay) {
 BackendSubmissionResult SkiaRenderer::renderFrame(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
     const EditingOverlay* selectionOverlay) {
+    const auto& metrics=plan.frame.metrics;
+    if(!std::isfinite(metrics.logicalWidth)||!std::isfinite(metrics.logicalHeight)||
+       metrics.logicalWidth<=0||metrics.logicalHeight<=0||!metrics.physicalWidth||!metrics.physicalHeight)
+        return BackendSubmissionResult::rejected("invalid frame surface metrics");
     const auto acquired = provider.acquire();
     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
         return acquired.code == SkiaSurfaceAcquireCode::kUnavailable
@@ -59,14 +65,31 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         provider.release();
         return BackendSubmissionResult::rejected("stale Skia surface generation");
     }
+    if(acquired.frame.surface->width()!=static_cast<int>(metrics.physicalWidth)||
+       acquired.frame.surface->height()!=static_cast<int>(metrics.physicalHeight)){
+        provider.release();return BackendSubmissionResult::rejected("frame target dimensions differ");
+    }
     if (plan.referenceDrawList.frame.surfaceGeneration != plan.frame.surfaceGeneration ||
         plan.referenceDrawList.frame.frameId != plan.frame.frameId ||
         plan.referenceDrawList.frame.sceneGeneration != plan.frame.sceneGeneration) {
         provider.release();
         return BackendSubmissionResult::rejected("inconsistent FramePlan identity");
     }
+    std::unordered_set<foundation::ObjectId,foundation::ObjectIdHash> uniqueSources;
+    for(const auto& entry:plan.referenceDrawList.entries)
+        if(entry.record.objectId.isZero()||!uniqueSources.insert(entry.record.objectId).second){
+            provider.release();return BackendSubmissionResult::rejected("invalid or duplicated render source identity");
+        }
+    internal::SkiaRenderCache* cache=nullptr;
+    try {
+        if (!renderCache_) renderCache_=std::make_shared<internal::SkiaRenderCache>();
+        renderCache_->options=renderCacheOptions_;
+        renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_);
+        cache=renderCache_.get();
+    } catch(const std::bad_alloc&) {clearRenderCache();}
+    const auto beforeRaster=cache?cache->work.rasterizedGroups:0;
     const auto result = internal::drawReferencePlanToSkCanvas(
-        *acquired.frame.surface->getCanvas(), plan, images_, &textResources_);
+        *acquired.frame.surface->getCanvas(), plan, images_, &textResources_,true,cache);
     if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr) {
         auto* canvas = acquired.frame.surface->getCanvas();
         if (selectionOverlay->creationPreview()) {
@@ -135,11 +158,20 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         canvas->restore();
     }
     provider.release();
-    if (result.code != BackendSubmissionCode::kAccepted) return result;
+    if (result.code != BackendSubmissionCode::kAccepted) {clearRenderCache();return result;}
     ++submissions_;
-    ++rasterizations_;
-    return provider.present();
+    rasterizations_+=cache?cache->work.rasterizedGroups-beforeRaster:1;
+    const auto presented=provider.present();
+    if(presented.code!=BackendSubmissionCode::kAccepted)clearRenderCache();
+    return presented;
 }
+
+void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
+    renderCacheOptions_=options;clearRenderCache();
+}
+void SkiaRenderer::clearRenderCache() noexcept {if(renderCache_)renderCache_->clear();}
+RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{return renderCache_?renderCache_->work:RenderCacheWork{};}
+RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
 
 BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     SkiaSurfaceProvider& provider, const FramePlan& plan,

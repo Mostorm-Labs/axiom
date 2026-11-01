@@ -4,6 +4,8 @@ option(CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH
     "Build the shared Skia programmable-DAB renderer" OFF)
 
 add_library(canvas_runtime_render STATIC
+    src/damage_tracker.cpp
+    src/render_group_manager.cpp
     src/selection_region_geometry.cpp
     src/visibility_resolver.cpp
     src/direct_reference_source.cpp
@@ -126,6 +128,7 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_renderer.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_render_cache.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_brush_renderer.cpp)
     target_link_libraries(canvas_runtime_render PRIVATE CanvasSkia::Skia CanvasSkia::Paragraph)
     target_compile_definitions(canvas_runtime_render PUBLIC CANVAS_RENDER_HAS_SKIA=1)
@@ -160,6 +163,12 @@ else()
 endif()
 
 if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_render_cache_tests tests/render_cache_test.cpp)
+    target_link_libraries(axiom_render_cache_tests PRIVATE canvas_runtime_render)
+    add_test(NAME G5RenderCache COMMAND axiom_render_cache_tests)
+    add_executable(axiom_render_damage_tests tests/damage_ownership_test.cpp)
+    target_link_libraries(axiom_render_damage_tests PRIVATE canvas_runtime_render)
+    add_test(NAME G5RenderDamage COMMAND axiom_render_damage_tests)
     add_executable(axiom_image_resource_tests tests/image_resource_test.cpp)
     target_link_libraries(axiom_image_resource_tests PRIVATE canvas_runtime_render)
     target_compile_features(axiom_image_resource_tests PRIVATE cxx_std_20)

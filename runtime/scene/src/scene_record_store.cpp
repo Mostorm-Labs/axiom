@@ -297,7 +297,7 @@ SceneRecordStore::prepareApply(std::span<const SceneMutation> mutations) const {
 }
 
 void SceneRecordStore::commit(PreparedUpdate&& update) noexcept {
-    if (!update._payload->delta.sceneDelta.mutations.empty()) {
+    if (update._payload->localized) {
         for (const SceneMutation& mutation : update._payload->delta.sceneDelta.mutations) {
             switch (mutation.kind) {
             case SceneMutationKind::kInsert: {

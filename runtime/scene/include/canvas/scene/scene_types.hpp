@@ -141,10 +141,21 @@ class RuntimeScene final {
     struct PreparedPublication final {
         RuntimeSceneProjection projection;
         LookupIndex lookup;
+        bool flatIndependent = true;
+        bool localized = false;
+        bool fullProjectionAuthority = false;
+        std::vector<RuntimeSceneRecord> changedRecords;
         explicit PreparedPublication(RuntimeSceneProjection value) : projection(std::move(value)) {
             lookup.reserve(projection.records.size());
-            for (std::size_t i = 0; i < projection.records.size(); ++i)
+            for (std::size_t i = 0; i < projection.records.size(); ++i) {
                 lookup.emplace_back(projection.records[i].objectId, i);
+                const auto& r = projection.records[i];
+                flatIndependent = flatIndependent && !r.placement.parent_id &&
+                    r.kind != semantic::ObjectKind::kConnector &&
+                    r.kind != semantic::ObjectKind::kGroup &&
+                    r.kind != semantic::ObjectKind::kSection &&
+                    r.kind != semantic::ObjectKind::kTable;
+            }
             std::sort(lookup.begin(), lookup.end());
         }
     };
@@ -169,6 +180,8 @@ class RuntimeScene final {
     RuntimeSceneProjection _stableProjection;
     LookupIndex _lookup;
     LookupIndex _stableLookup;
+    bool _flatIndependent = true;
+    bool _fullProjectionAuthority = false;
     ScenePublicationGate* _publicationGate = nullptr;
     text::RichTextLayoutService* _textLayoutService = nullptr;
     bool deferConnectorRoutes_ = false;

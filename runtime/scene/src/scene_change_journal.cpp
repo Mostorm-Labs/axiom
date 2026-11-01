@@ -1,4 +1,4 @@
-#include "canvas/scene/damage_tracker.hpp"
+#include "canvas/scene/scene_change_journal.hpp"
 
 #include "canvas/foundation/world_geometry.hpp"
 
@@ -60,14 +60,14 @@ void appendUnion(DamageSet& target, const DamageSet& source) {
 
 } // namespace
 
-DamageTracker::DamageTracker(DamageLimits limits) : _limits(limits) {
+SceneChangeJournal::SceneChangeJournal(DamageLimits limits) : _limits(limits) {
     _limits.maxJournalEntries = std::max<std::size_t>(1U, _limits.maxJournalEntries);
     _limits.maxRectCount = std::max<std::size_t>(1U, _limits.maxRectCount);
     _limits.maxBytes = std::max<std::size_t>(kEstimatedEntryBytes + kEstimatedRectBytes,
                                              _limits.maxBytes);
 }
 
-foundation::Result<PreparedDamage> DamageTracker::prepareReplace(
+foundation::Result<PreparedDamage> SceneChangeJournal::prepareReplace(
     SceneRevision beforeRevision,
     SceneRevision afterRevision,
     const WorldRect& oldContentBounds,
@@ -88,7 +88,7 @@ foundation::Result<PreparedDamage> DamageTracker::prepareReplace(
 }
 
 foundation::Result<PreparedDamage>
-DamageTracker::prepareApply(const CompiledSceneDelta& delta) const {
+SceneChangeJournal::prepareApply(const CompiledSceneDelta& delta) const {
     try {
         DamageSet damage{
             .afterExclusive = delta.beforeRevision,
@@ -178,7 +178,7 @@ DamageTracker::prepareApply(const CompiledSceneDelta& delta) const {
     }
 }
 
-foundation::Result<PreparedDamage> DamageTracker::prepareAppend(DamageSet damage) const {
+foundation::Result<PreparedDamage> SceneChangeJournal::prepareAppend(DamageSet damage) const {
     try {
         std::vector<DamageSet> journal = _journal;
         journal.push_back(std::move(damage));
@@ -212,13 +212,13 @@ foundation::Result<PreparedDamage> DamageTracker::prepareAppend(DamageSet damage
     }
 }
 
-void DamageTracker::commit(PreparedDamage damage) noexcept {
+void SceneChangeJournal::commit(PreparedDamage damage) noexcept {
     _journal.swap(damage._journal);
     _collapseCount = damage._collapseCount;
     _rejectedHints = damage._rejectedHints;
 }
 
-DamageSet DamageTracker::collect(SceneRevision afterExclusive,
+DamageSet SceneChangeJournal::collect(SceneRevision afterExclusive,
                                  SceneRevision throughInclusive) const {
     DamageSet result{
         .afterExclusive = afterExclusive,
@@ -241,7 +241,7 @@ DamageSet DamageTracker::collect(SceneRevision afterExclusive,
     return result;
 }
 
-void DamageTracker::compactThrough(SceneRevision minimumPresentedRevision) {
+void SceneChangeJournal::compactThrough(SceneRevision minimumPresentedRevision) {
     if (minimumPresentedRevision <= _compactedThrough) {
         return;
     }
@@ -251,7 +251,7 @@ void DamageTracker::compactThrough(SceneRevision minimumPresentedRevision) {
     });
 }
 
-DamageDiagnostics DamageTracker::diagnostics() const {
+DamageDiagnostics SceneChangeJournal::diagnostics() const {
     std::size_t rectCount = 0;
     for (const DamageSet& damage : _journal) {
         rectCount += damage.rects.size();

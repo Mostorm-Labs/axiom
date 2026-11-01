@@ -13,6 +13,10 @@ namespace canvas::render { class ImageResourceResolver; }
 namespace canvas::render { class SkiaTextResources; }
 
 namespace canvas::render::internal {
+class SkiaRenderCache;
+// Only accepts an already validated isolated compact command; no second
+// geometry implementation is owned by the cache materializer.
+void drawValidatedIsolatedEntryToSkCanvas(SkCanvas&,const ReferenceTraversalEntry&);
 struct CompactRasterWork final {
     std::uint64_t allocatedTiles = 0;
     std::uint64_t allocatedPixels = 0;
@@ -34,7 +38,8 @@ void compositeCompactCoverageToSkCanvas(SkCanvas&,const SkImage&,
 // render target so there is one validation and nine-command mapping.
 [[nodiscard]] BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images = nullptr,
-    SkiaTextResources* textResources = nullptr, bool includeInk = true);
+    SkiaTextResources* textResources = nullptr, bool includeInk = true,
+    SkiaRenderCache* cache = nullptr);
 // Repaint the dedicated ink lane after a transient creation object. Ink is
 // intentionally topmost while a Shape/Connector is being authored.
 void drawInkEntriesToSkCanvas(

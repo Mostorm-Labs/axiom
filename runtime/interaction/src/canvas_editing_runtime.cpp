@@ -86,7 +86,8 @@ semantic::PropertyBag appearanceProperties(const runtime::CanvasAppearance& a,bo
   return bag;
 }
 
-std::string sceneContentStamp(const canvas::scene::InspectionRecord& record) {
+template<class Record>
+std::string sceneContentStamp(const Record& record) {
   std::ostringstream out;
   out.precision(17);
   out << record.referenceGeometryDigest << '|';
@@ -162,7 +163,8 @@ std::string sceneContentStamp(const canvas::scene::InspectionRecord& record) {
   return out.str();
 }
 
-std::uint32_t sceneContentGeneration(const canvas::scene::InspectionRecord& record) {
+template<class Record>
+std::uint32_t sceneContentGeneration(const Record& record) {
   constexpr std::uint32_t kOffset = 2166136261U;
   constexpr std::uint32_t kPrime = 16777619U;
   auto hash = kOffset;
@@ -171,10 +173,6 @@ std::uint32_t sceneContentGeneration(const canvas::scene::InspectionRecord& reco
     hash *= kPrime;
   }
   return hash == 0U ? 1U : hash;
-}
-
-canvas::SceneOrderKey renderOrderKey(const canvas::scene::InspectionRecord& record) {
-  return canvas::SceneOrderKey(record.placement.order_key.bytes());
 }
 
 bool runtimeTraversalLess(const canvas::RuntimeSceneRecord& left,
@@ -230,15 +228,20 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
       const semantic::SemanticReadView& view) const override {
     const auto projection = canvas::scene::FullSceneCompiler::compile(view, nullptr, true);
     if (!projection) return foundation::Result<canvas::CompiledSceneSnapshot>::failure(projection.error());
-    canvas::CompiledSceneSnapshot result{canvas::SceneRevision(view.generation().value()), {}};
-    result.records.reserve(projection.value().records.size());
+    return compileRecords(std::span<const canvas::scene::InspectionRecord>(projection.value().records), view.generation(), true);
+  }
+  template<class Record>
+  foundation::Result<canvas::CompiledSceneSnapshot> compileRecords(
+      std::span<const Record> records, semantic::SemanticGeneration generation, bool prune) const {
+    canvas::CompiledSceneSnapshot result{canvas::SceneRevision(generation.value()), {}};
+    result.records.reserve(records.size());
     std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash> activeIds;
-    activeIds.reserve(projection.value().records.size());
-    for (const auto& record : projection.value().records) activeIds.insert(record.objectId);
-    for (auto it = renderSlots_.begin(); it != renderSlots_.end();) {
+    activeIds.reserve(records.size());
+    for (const auto& record : records) activeIds.insert(record.objectId);
+    if (prune) for (auto it = renderSlots_.begin(); it != renderSlots_.end();) {
       it = activeIds.contains(it->first) ? std::next(it) : renderSlots_.erase(it);
     }
-    for (auto it = hitSlots_.begin(); it != hitSlots_.end();) {
+    if (prune) for (auto it = hitSlots_.begin(); it != hitSlots_.end();) {
       it = activeIds.contains(it->first) ? std::next(it) : hitSlots_.erase(it);
     }
     const auto allocateSlot = [](auto& slots, auto& used, std::uint32_t candidate,
@@ -252,9 +255,9 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
         ++candidate;
       }
     };
-    const bool hierarchical=std::any_of(projection.value().records.begin(),projection.value().records.end(),[](const auto& r){return r.kind==semantic::ObjectKind::kSection||r.kind==semantic::ObjectKind::kGroup;});
+    const bool hierarchical=std::any_of(records.begin(),records.end(),[](const auto& r){return r.kind==semantic::ObjectKind::kSection||r.kind==semantic::ObjectKind::kGroup;});
     std::uint64_t traversalOrdinal=0;
-    for (const auto& record : projection.value().records) {
+    for (const auto& record : records) {
       ++traversalOrdinal;
       if(record.kind==semantic::ObjectKind::kGroup)continue;
       canvas::SceneObjectKind kind = canvas::SceneObjectKind::kShape;
@@ -276,7 +279,7 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
       std::uint64_t slot = 1469598103934665603ULL;
       for (const auto byte : record.objectId.bytes) { slot ^= byte; slot *= 1099511628211ULL; }
       const auto generation = sceneContentGeneration(record);
-      auto order = renderOrderKey(record);
+      auto order = canvas::SceneOrderKey(record.placement.order_key.bytes());
       if(hierarchical) {
         std::array<std::uint8_t,8> bytes{};
         for(unsigned i=0;i<8;++i)bytes[i]=static_cast<std::uint8_t>(traversalOrdinal>>(56-8*i));
@@ -299,6 +302,25 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
     (void)changes;
     return foundation::Result<canvas::CompiledSceneDelta>::failure(
         {foundation::ErrorCode::kRequiresFullRebuild, "editor scene changes use the shared full projection"});
+  }
+  foundation::Result<canvas::CompiledSceneDelta> compilePreparedDelta(
+      const semantic::SemanticReadView& view, const semantic::ChangeSet& changes,
+      std::span<const canvas::RuntimeSceneRecord> affected, const canvas::SceneReadView& before) const override {
+    auto compiled = compileRecords(affected, view.generation(), false);
+    if (!compiled) return foundation::Result<canvas::CompiledSceneDelta>::failure(compiled.error());
+    canvas::CompiledSceneDelta delta{before.revision(),
+      canvas::SceneRevision(std::max(before.revision().value()+1,view.generation().value())),{},std::nullopt};
+    for (const auto& change : changes.objects()) {
+      const auto* old = before.find(change.object_id);
+      const auto found = std::find_if(compiled.value().records.begin(),compiled.value().records.end(),
+        [&](const auto& r){return r.objectId==change.object_id;});
+      const bool haveNew = found!=compiled.value().records.end();
+      if (old && haveNew) {
+        if (*old != *found) delta.mutations.push_back({canvas::SceneMutationKind::kUpdate,change.object_id,*old,*found});
+      } else if (haveNew) delta.mutations.push_back({canvas::SceneMutationKind::kInsert,change.object_id,std::nullopt,*found});
+      else if (old) delta.mutations.push_back({canvas::SceneMutationKind::kRemove,change.object_id,*old,std::nullopt});
+    }
+    return foundation::Result<canvas::CompiledSceneDelta>::success(std::move(delta));
   }
  private:
   mutable std::unordered_map<foundation::ObjectId, std::uint32_t,

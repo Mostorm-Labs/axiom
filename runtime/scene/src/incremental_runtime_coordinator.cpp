@@ -15,7 +15,10 @@ namespace {
 class TextBoundsCompiler final : public ISemanticSceneCompiler {
   public:
     TextBoundsCompiler(const ISemanticSceneCompiler& delegate,const RuntimeSceneProjection& projection,
-                       const Scene& scene) : delegate_(delegate), projection_(projection), scene_(scene), before_(scene.revision()) {}
+                       const Scene& scene, bool localized = false,
+                       std::span<const RuntimeSceneRecord> affected = {})
+        : delegate_(delegate), projection_(projection), scene_(scene), before_(scene.revision()),
+          localized_(localized), affected_(affected) {}
     foundation::Result<CompiledSceneSnapshot> compileFull(const semantic::SemanticReadView& view) const override {
         auto result=delegate_.compileFull(view);
         if(result) {
@@ -26,7 +29,9 @@ class TextBoundsCompiler final : public ISemanticSceneCompiler {
     }
     foundation::Result<CompiledSceneDelta> compileDelta(const semantic::SemanticReadView& view,
                                                        const semantic::ChangeSet& changes) const override {
-        auto result=delegate_.compileDelta(view,changes);
+        auto result = localized_
+            ? delegate_.compilePreparedDelta(view, changes, affected_, scene_.read())
+            : delegate_.compileDelta(view, changes);
         if(result) {
             result.value().beforeRevision=before_;
             result.value().afterRevision=SceneRevision(std::max(before_.value()+1,view.generation().value()));
@@ -53,6 +58,8 @@ class TextBoundsCompiler final : public ISemanticSceneCompiler {
     }
     const ISemanticSceneCompiler& delegate_; const RuntimeSceneProjection& projection_;
     const Scene& scene_; SceneRevision before_;
+    bool localized_;
+    std::span<const RuntimeSceneRecord> affected_;
 };
 RuntimeSceneProjection projectionFromMaterialized(internal::FullMaterializedScene materialized) {
     RuntimeSceneProjection projection;
@@ -299,7 +306,8 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
                 return foundation::Result<SceneSyncReceipt>::failure(
                     {foundation::ErrorCode::kInvalidRecord, "Bounds participant rejected non-finite state"});
             }
-            binding_._scene.stageBounds(bounds.world, SceneRevision(input.after_generation.value()));
+            // Scene::applyPreparedDelta computes the complete post-delta union.
+            // A single changed object's bounds cannot replace the aggregate.
         }
         if (checkpointFails(RuntimeCheckpoint::kAfterBoundsPrepare)) {
             abortPublication();
@@ -313,10 +321,10 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::apply(
     pendingPublication_ = std::move(runtimePrepared.value());
     pendingGeneration_ = input.after_generation;
     pendingRevision_ = SceneRevision(input.after_generation.value());
-    const TextBoundsCompiler textCompiler(compiler,pendingPublication_->projection,binding_._scene);
+    const TextBoundsCompiler textCompiler(compiler,pendingPublication_->projection,binding_._scene,
+        pendingPublication_->localized, pendingPublication_->changedRecords);
     auto incremental = binding_.synchronize(
-        (textLayoutService_||deferConnectorRoutes_) ? static_cast<const ISemanticSceneCompiler&>(textCompiler) : compiler,
-        input, &IncrementalRuntimeCoordinator::transactionCheckpoint, this,
+        textCompiler, input, &IncrementalRuntimeCoordinator::transactionCheckpoint, this,
         &IncrementalRuntimeCoordinator::publishPending, this);
     if (incremental) {
         return incremental;
@@ -351,6 +359,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::recover(
     }
     auto runtimePrepared = runtimeScene_.prepare(
         projectionFromMaterialized(std::move(materialized.value())));
+    if (runtimePrepared) runtimePrepared.value().fullProjectionAuthority = true;
     if (!runtimePrepared) {
         return foundation::Result<SceneSyncReceipt>::failure(runtimePrepared.error());
     }
@@ -433,6 +442,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::refreshTextR
          SceneApplyReceipt{published.revision(),published.revision(),0,0,0,{}},std::nullopt});
     auto preparedRuntime = runtimeScene_.prepare(std::move(next));
     if (!preparedRuntime) return foundation::Result<SceneSyncReceipt>::failure(preparedRuntime.error());
+    preparedRuntime.value().fullProjectionAuthority = runtimeScene_._fullProjectionAuthority;
     publicationGate_.previousGeneration=runtimeScene_.generation();
     publicationGate_.previousRevision=published.revision();
     publicationGate_.generation=preparedRuntime.value().projection.generation; publicationGate_.revision=delta.afterRevision;
@@ -486,6 +496,7 @@ foundation::Result<SceneSyncReceipt> IncrementalRuntimeCoordinator::publishConne
          SceneApplyReceipt{published.revision(),published.revision(),0,0,0,{}},std::nullopt});
     auto preparedRuntime = runtimeScene_.prepare(std::move(next));
     if (!preparedRuntime) return foundation::Result<SceneSyncReceipt>::failure(preparedRuntime.error());
+    preparedRuntime.value().fullProjectionAuthority = runtimeScene_._fullProjectionAuthority;
     publicationGate_.previousGeneration=runtimeScene_.generation();
     publicationGate_.previousRevision=published.revision();
     publicationGate_.generation=preparedRuntime.value().projection.generation; publicationGate_.revision=delta.afterRevision;

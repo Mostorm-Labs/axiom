@@ -7,6 +7,8 @@
 #include "canvas/render/preview_surface.hpp"
 #include "canvas/render/editing_overlay.hpp"
 #include "canvas/render/frame_plan.hpp"
+#include "canvas/render/render_cache.hpp"
+#include "canvas/render/damage_tracker.hpp"
 #include "canvas/ink/programmable_brush.hpp"
 
 #include <cstdint>
@@ -16,6 +18,7 @@
 class SkCanvas;
 
 namespace canvas::render {
+namespace internal {class SkiaRenderCache;}
 
 struct CanonicalStrokePoint;
 struct CanonicalViewportTransform;
@@ -26,7 +29,7 @@ class SkiaRenderer final {
   public:
     SkiaRenderer() = default;
     explicit SkiaRenderer(ImageResourceResolver* images) : images_(images) {}
-    void setImageResolver(ImageResourceResolver* images) noexcept { images_ = images; }
+    void setImageResolver(ImageResourceResolver* images) noexcept { images_ = images; ++resourceEpoch_; clearRenderCache(); }
     [[nodiscard]] BackendSubmissionResult renderFrame(
         SkiaSurfaceProvider& provider, const FramePlan& plan,
         const EditingOverlay* selectionOverlay = nullptr);
@@ -59,6 +62,10 @@ class SkiaRenderer final {
     struct CompactWork final {std::uint64_t generatedKnots=0,retainedBytes=0,temporaryBytes=0;};
     [[nodiscard]] CompactWork compactWork()const noexcept{return compactWork_;}
     void clearCompactCache() noexcept {compactCache_.reset();compactWork_.retainedBytes=0;}
+    void setRenderCacheOptions(RenderCacheOptions options);
+    void clearRenderCache() noexcept;
+    [[nodiscard]] RenderCacheWork renderCacheWork() const noexcept;
+    [[nodiscard]] RenderDamage renderDamage() const;
 
   private:
     ImageResourceResolver* images_ = nullptr;
@@ -68,6 +75,9 @@ class SkiaRenderer final {
     struct CompactCache;
     std::shared_ptr<CompactCache> compactCache_;
     CompactWork compactWork_{};
+    std::shared_ptr<internal::SkiaRenderCache> renderCache_;
+    RenderCacheOptions renderCacheOptions_{};
+    std::uint64_t resourceEpoch_=0;
 };
 
 } // namespace canvas::render

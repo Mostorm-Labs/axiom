@@ -50,6 +50,7 @@ class SceneRecordStore final {
             std::map<std::pair<SceneOrderKey, ObjectId>, RecordHandle> orderIndex;
             RecordHandle nextHandle = 0;
             PreparedDelta delta;
+            bool localized = false;
         };
         PreparedUpdate(std::vector<SceneRecord> records,
                        std::unordered_map<ObjectId, std::size_t, foundation::ObjectIdHash> index)
@@ -59,6 +60,7 @@ class SceneRecordStore final {
         }
         explicit PreparedUpdate(PreparedDelta delta) : _payload(std::make_unique<Payload>()) {
             _payload->delta = std::move(delta);
+            _payload->localized = true;
         }
         std::unique_ptr<Payload> _payload;
     };

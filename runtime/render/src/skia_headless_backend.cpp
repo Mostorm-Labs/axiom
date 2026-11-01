@@ -21,6 +21,7 @@
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkSurface.h"
 #include "include/effects/SkDashPathEffect.h"
+#include "skia_render_cache_internal.hpp"
 
 #include <algorithm>
 #include <bit>
@@ -937,7 +938,7 @@ void drawTransientEntryToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
 
 BackendSubmissionResult drawReferencePlanToSkCanvas(
     SkCanvas& canvas, const FramePlan& plan, ImageResourceResolver* images,
-    SkiaTextResources* textResources, bool includeInk) {
+    SkiaTextResources* textResources, bool includeInk, SkiaRenderCache* cache) {
     if (!(plan.referenceDrawList.frame == plan.frame) || !foundation::validDocumentBackground(plan.background)) {
         return BackendSubmissionResult::rejected("frame identity mismatch");
     }
@@ -992,6 +993,11 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
         if (!includeInk && isInkReferenceEntry(entry)) continue;
         const bool isolatedInk = shouldIsolateInkEntry(entry, hasDrawableNonInk) ||
             (plan.isolateEraseMasks && !entry.record.eraseMasks.empty());
+        if (cache) {
+            try {if(cache->draw(canvas,plan,entry,isolatedInk)) continue;}
+            catch(const std::bad_alloc&) {cache->clear();}
+        }
+        if (cache) cache->noteDirect();
         canvas.save();
         if (isolatedInk) canvas.saveLayer(nullptr, nullptr);
         canvas.concat(SkMatrix::Concat(worldMatrix, matrix(entry.record.transform)));
@@ -1002,6 +1008,11 @@ BackendSubmissionResult drawReferencePlanToSkCanvas(
     }
     canvas.restore();
     return BackendSubmissionResult::accepted();
+}
+
+void drawValidatedIsolatedEntryToSkCanvas(SkCanvas& canvas,const ReferenceTraversalEntry& entry) {
+    drawCommand(canvas,entry,nullptr,nullptr,true);
+    eraseMasks(canvas,entry);
 }
 
 void drawInkEntriesToSkCanvas(SkCanvas& canvas, const FramePlan& plan,

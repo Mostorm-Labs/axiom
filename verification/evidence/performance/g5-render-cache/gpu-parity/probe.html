@@ -1,0 +1,8 @@
+<!doctype html><meta charset="utf-8"><title>G5 GPU cache parity</title>
+<script>
+window.cacheProbe={done:false,code:null,logs:[],errors:[]};
+</script>
+<script src="build/g5_render_cache_gpu.js"></script>
+<script>
+createCacheProbe({print:s=>cacheProbe.logs.push(s),printErr:s=>cacheProbe.errors.push(s),onExit:code=>{cacheProbe.code=code;cacheProbe.done=true;},onAbort:error=>{cacheProbe.errors.push(String(error));cacheProbe.done=true;cacheProbe.code=1;}}).catch(error=>{cacheProbe.errors.push(String(error));cacheProbe.done=true;cacheProbe.code=1;});
+</script>

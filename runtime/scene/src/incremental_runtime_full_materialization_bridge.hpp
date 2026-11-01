@@ -33,6 +33,10 @@ struct FullMaterializedScene final {
     std::vector<Record> records;
 };
 
+foundation::Result<FullMaterializedScene> materializeSceneRecords(
+    std::span<const semantic::ObjectRecord> records, semantic::SemanticGeneration generation,
+    text::RichTextLayoutService* textService = nullptr, bool deferRoutes = false);
+
 foundation::Result<FullMaterializedScene> materializeFullScene(
     const semantic::SemanticReadView& view, text::RichTextLayoutService* textService = nullptr, bool deferRoutes = false);
 
