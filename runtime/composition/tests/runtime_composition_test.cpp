@@ -166,6 +166,51 @@ void brushPixelsAndMetricsFenceUseTheAcceptedLogicalSpace() {
   }
 }
 
+void canonicalFeedbackKeepsAnUnfinishedBrushPreview() {
+  using namespace canvas;
+  runtime::RuntimeCompositionCore composition;
+  assert(composition.open() && composition.bindSurface(128U, 128U));
+  assert(composition.registerSource(94U));
+  assert(composition.setPlatformPresentationDeferred(true));
+  input::PlatformPointerBatch batch;
+  batch.samples.push_back({94U, 1U, 1U, 1000U, 20.0F, 40.0F, 0.5F, 0.0F, 0.0F,
+      {}, {}, input::SampleProvenance::kConfirmedCurrent, input::PointerPhase::kDown});
+  assert(composition.submit(batch));
+  batch.samples.front().sequence = 2U;
+  batch.samples.front().timestampNs = 2000U;
+  batch.samples.front().phase = input::PointerPhase::kMove;
+  batch.samples.front().x = 80.0F;
+  assert(composition.submit(batch));
+  runtime::RuntimeFrameOpportunity opportunity{};
+  assert(composition.serviceFrameOpportunity(false, opportunity));
+  assert(opportunity.previewWork && opportunity.canonicalWork);
+  assert(composition.finishFrameOpportunity({opportunity.previewWork, true}));
+  auto* provider = composition.qualificationRuntime().previewSurfaceProvider();
+  assert(provider->overlayVisible());
+  std::vector<std::uint8_t> before(128U * 128U * 4U), after(before.size());
+  assert(composition.readPreviewRgba(before));
+  assert(composition.receivePlatformPresented({*opportunity.canonicalWork,
+      render::PresentOutcome::kPresented, render::PresentEvidenceKind::kPlatformQualified,
+      std::nullopt}));
+  assert(provider->overlayVisible());
+  assert(composition.readPreviewRgba(after) && before == after);
+  assert(composition.semanticObjectCount() == 0U);
+  batch.samples.front().sequence = 3U;
+  batch.samples.front().timestampNs = 3000U;
+  batch.samples.front().phase = input::PointerPhase::kUp;
+  assert(composition.submit(batch));
+  runtime::RuntimeFrameOpportunity committed{};
+  assert(composition.serviceFrameOpportunity(false, committed));
+  if (committed.previewWork)
+    assert(composition.finishFrameOpportunity({committed.previewWork, true}));
+  assert(committed.canonicalWork);
+  assert(composition.receivePlatformPresented({*committed.canonicalWork,
+      render::PresentOutcome::kPresented, render::PresentEvidenceKind::kPlatformQualified,
+      std::nullopt}));
+  assert(composition.semanticObjectCount() == 1U);
+  assert(!composition.previewActive() && !provider->overlayVisible());
+}
+
 void logicalInputMatchesCanonicalAndPreviewPixels() {
   canvas::runtime::RuntimeCompositionCore composition;
   assert(composition.open());
@@ -664,6 +709,8 @@ void fitIncludesEarlierUnchangedObjects() {
 }
 
 int main(int argc, char** argv) {
+  if (argc > 1 && std::string(argv[1]) == "live-brush-preview") { canonicalFeedbackKeepsAnUnfinishedBrushPreview(); return 0; }
+  canonicalFeedbackKeepsAnUnfinishedBrushPreview();
   if (argc > 1 && std::string(argv[1]) == "fit-full-scene") { fitIncludesEarlierUnchangedObjects(); return 0; }
   if (argc > 1 && std::string(argv[1]) == "cancel-camera") { cancelPointersKeepsViewport(); return 0; }
   if (argc > 1 && std::string(argv[1]) == "r1") { canonicalFeedbackCannotQualifyAnotherInstance(); return 0; }

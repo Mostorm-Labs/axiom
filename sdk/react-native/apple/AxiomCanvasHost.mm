@@ -33,7 +33,11 @@
   _canonical=[CAMetalLayer layer];_preview=[CAMetalLayer layer];_preview.opaque=NO;
   [self.layer addSublayer:_canonical];[self.layer addSublayer:_preview];
   __weak AxiomCanvasHost* weak=self;
-  _timer=[NSTimer scheduledTimerWithTimeInterval:1.0/60 repeats:YES block:^(NSTimer*){[weak serviceFrame];}];
+  _timer=[NSTimer timerWithTimeInterval:1.0/60 repeats:YES block:^(NSTimer*){[weak serviceFrame];}];
+  // AppKit switches to NSEventTrackingRunLoopMode while the mouse is held
+  // and dragged. Common modes keep preview/canonical frame servicing alive
+  // during that mode instead of waiting until mouse-up.
+  [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
  }return self;
 }
 - (void)dealloc{[_timer invalidate];[self detach];}
