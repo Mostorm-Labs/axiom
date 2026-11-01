@@ -169,7 +169,7 @@ jobs:
           cat > release-notes.txt <<'EOF'
           Matching consumer SDK and demos for Windows x64 and JavaScript/WebAssembly. Windows apps link only axiom.lib and deploy axiom.dll plus runtime assets. JS apps import axiom.mjs with axiom.wasm and axiom.data. Semantic, Skia and Runtime component archives are private build inputs; their licenses are included. The 0.x SDK release does not imply production readiness or a cross-version C++ ABI declaration.
 
-          Includes persistent document backgrounds, full-board PNG/JPG/JPEG export, object identity recovery repairs, and the three-row contextual Web Demo. npm package: `@mostorm/axiom` at `http://npm.nearhub.cc/`.
+          Includes tables, extended vector paths and appearance, font fallback and rounded corners, compact pressure-responsive round/marker/chalk/crayon/watercolor brushes, GPU preview and G5 navigation improvements, persistent document backgrounds, PNG/JPG/JPEG export, and the contextual Web Demo. npm package: `@mostorm/axiom` at `http://npm.nearhub.cc/`.
 
           Known limits: physical-input/IME coverage is incomplete; document persistence, synchronization and durable close are owned by the embedding application; Undo history is not restored from checkpoints. The known D07 Protobuf/Abseil allocation-failure hang is unresolved.
 
