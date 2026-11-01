@@ -4079,6 +4079,12 @@ bool CanvasEditingRuntime::commitSurfaceBinding(
       return false;
     }
   }
+  // GPU snapshots and compact prefix surfaces belong to the old provider
+  // context. Release them before a provider resize destroys that context.
+  skiaRenderer_.clearRenderCache();
+  skiaRenderer_.clearCompactCache();
+  previewRenderer_.clearRenderCache();
+  previewRenderer_.clearCompactCache();
   const auto result = appBinding_->updateSurfacePair(metrics,
       pendingCanonicalProvider_, pendingPreviewProvider_, restoring, surface_.generation == 0U,
       [this] { return !closed_ && !surfaceAbortRequested_; });
@@ -4149,6 +4155,10 @@ bool CanvasEditingRuntime::loseSurface() noexcept {
   if (editingPointer_.valid()) cancelSelectionTransform();
   std::lock_guard providerLock(previewProviderMutex_);
   std::lock_guard stateLock(previewStateMutex_);
+  skiaRenderer_.clearRenderCache();
+  skiaRenderer_.clearCompactCache();
+  previewRenderer_.clearRenderCache();
+  previewRenderer_.clearCompactCache();
   appBinding_->invalidateSurfacePair();
   pendingCanonicalProvider_.reset();
   pendingPreviewProvider_.reset();
