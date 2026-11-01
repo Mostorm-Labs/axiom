@@ -1,3 +1,4 @@
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/ink/compact_geometry.hpp"
 #include "include/core/SkCanvas.h"
@@ -106,6 +107,9 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
         const auto w=std::min(256,clip.right()-x),h=std::min(256,clip.bottom()-y);
         if(canCull&&!SkRect::Intersects(support,SkRect::MakeXYWH(float(x),float(y),float(w),float(h))))continue;
         if(!SkIRect::Intersects(SkIRect::MakeXYWH(x,y,w,h),deviceClip))continue;
+        AXIOM_FRAME_TIMING_SCOPE(cpuTiming,cpu_coverage);
+        AXIOM_FRAME_TIMING_ADD(coverage_tiles,1);
+        AXIOM_FRAME_TIMING_ADD(coverage_pixels,std::uint64_t(w)*h);
         auto tile=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(w,h));
         if(!tile)throw std::runtime_error("compact coverage tile allocation failed");
         if(work){++work->allocatedTiles;work->allocatedPixels+=std::uint64_t(w)*h;}
@@ -113,6 +117,8 @@ void drawCompactStrokeToSkCanvas(SkCanvas& canvas,const foundation::InkBrushConf
         target->translate(float(-x),float(-y));target->concat(matrix);
         if(coverage)target->drawPicture(coverage);
         else drawCompactCoverageToSkCanvas(*target,config,knots);
+        AXIOM_FRAME_TIMING_END(cpuTiming);
+        AXIOM_FRAME_TIMING_SCOPE(materialTiming,material_submit);
         canvas.save();canvas.resetMatrix();canvas.clipRect(SkRect::MakeXYWH(float(x),float(y),float(w),float(h)));
         // The tile remains unchanged for exact coverage/filter parity. Only
         // shade its finite support instead of running the material shader

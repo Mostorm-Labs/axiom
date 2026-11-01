@@ -1,3 +1,4 @@
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/direct_reference_source.hpp"
 #include "canvas/text/text_layout.hpp"
 
@@ -521,6 +522,9 @@ static foundation::Result<ReferenceDrawList> buildSources(
         .canonicalBytes = {},
         .digest = {},
     };
+    AXIOM_FRAME_TIMING_ADD(candidates,visibility.candidatesExamined);
+    AXIOM_FRAME_TIMING_ADD(sources,visibility.backToFront.size());
+    AXIOM_FRAME_TIMING_SCOPE(entriesTiming,reference_entries);
     list.entries.reserve(visibility.backToFront.size());
     for (const foundation::ObjectId id : visibility.backToFront) {
         ++list.diagnostics.visibleIdsProcessed;
@@ -539,8 +543,15 @@ static foundation::Result<ReferenceDrawList> buildSources(
             .command = std::move(command.value()),
         });
     }
-    if(canonical){list.canonicalBytes = canonicalBytes(list);
-    list.digest = stableDigest(list.canonicalBytes);}
+    AXIOM_FRAME_TIMING_END(entriesTiming);
+    if(canonical){
+      AXIOM_FRAME_TIMING_SCOPE(encodeTiming,reference_encode);
+      list.canonicalBytes = canonicalBytes(list);
+      AXIOM_FRAME_TIMING_END(encodeTiming);
+      AXIOM_FRAME_TIMING_ADD(encoded_bytes,list.canonicalBytes.size());
+      AXIOM_FRAME_TIMING_SCOPE(digestTiming,reference_digest);
+      list.digest = stableDigest(list.canonicalBytes);
+    }
     return foundation::Result<ReferenceDrawList>::success(std::move(list));
 }
 

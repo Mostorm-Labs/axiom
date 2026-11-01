@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.30)
 project(canvas_v2_pocs VERSION 0.1.0 LANGUAGES C CXX)
 include(cmake/AxiomBuildInfo.cmake)
 
+option(AXIOM_ENABLE_FRAME_TIMING "Enable private canonical-frame stage diagnostics (not a release profile)" OFF)
+if(AXIOM_ENABLE_FRAME_TIMING)
+  add_compile_definitions(AXIOM_ENABLE_FRAME_TIMING=1)
+endif()
+
 option(CANVAS_POC01_BUILD_TESTS "Build POC-01 unit and acceptance tests" ON)
 option(CANVAS_POC01_ENABLE_SKIA "Build the Skia renderer and platform surfaces" OFF)
 option(CANVAS_POC01_ENABLE_SANITIZERS "Enable available address/undefined behavior sanitizers" OFF)

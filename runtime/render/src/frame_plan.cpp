@@ -1,3 +1,4 @@
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/frame_plan.hpp"
 
 namespace canvas::render {
@@ -6,6 +7,8 @@ foundation::Result<FramePlan> FramePlanBuilder::build(
     const FrameState& frame,
     const ReferenceDrawList& referenceDrawList,
     const foundation::DocumentBackground& background, bool transparentBackground, bool isolateEraseMasks) {
+    AXIOM_FRAME_TIMING_SCOPE(planTiming,frame_plan);
+    AXIOM_FRAME_TIMING_ADD(plan_entries,referenceDrawList.entries.size());
     if (!(referenceDrawList.frame == frame) || !foundation::validDocumentBackground(background)) {
         return foundation::Result<FramePlan>::failure(foundation::Error{
             foundation::ErrorCode::kInvalidArgument,

@@ -1,3 +1,4 @@
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "skia_render_cache_internal.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/ink/compact_geometry.hpp"
@@ -20,9 +21,13 @@ void SkiaRenderCache::begin(const FramePlan& plan,const void* target,SkSurface& 
     const auto previous=frame_?frame_->sceneReadToken:foundation::SceneRevision{};
     tiledFrame_=false;
     if(changed){tileEntries_.clear();if(tiles_)tiles_->invalidate();entries_.clear();work.retainedBytes=0;++targetEpoch_;}
+    AXIOM_FRAME_TIMING_SCOPE(groupTiming,group_update);
     auto updates=groups_.update(plan.referenceDrawList.entries,plan.referenceDrawList.viewportClip,resourceEpoch);
+    AXIOM_FRAME_TIMING_END(groupTiming);
+    AXIOM_FRAME_TIMING_SCOPE(damageTiming,damage);
     damage=DamageTracker{}.collect(previous,f.sceneReadToken,updates.contributions,
         changed?FullRedrawReason::kViewChanged:FullRedrawReason::kNone);
+    AXIOM_FRAME_TIMING_END(damageTiming);
     // Removed/cull-out groups never retain an unbounded raster representation.
     for(auto it=entries_.begin();it!=entries_.end();)if(!groups_.find(it->first)){
         work.retainedBytes-=it->second.bytes;it=entries_.erase(it);
@@ -56,6 +61,7 @@ void SkiaRenderCache::evict(std::size_t bytes){
 }
 sk_sp<SkPicture> SkiaRenderCache::coverage(const ReferenceTraversalEntry& source,
     const RenderGroup& group,const SkRect& support){
+    AXIOM_FRAME_TIMING_SCOPE(coverageTiming,coverage_record);
     const auto& r=group.revisions;
     auto found=coverage_.find(source.record.objectId);
     if(found!=coverage_.end()){
@@ -157,6 +163,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
        plan.referenceDrawList.entries.size()>options.maxEntries)return Preparation::kFallback;
     // Freeze applicability before building anything. All sources must fit
     // simultaneously, otherwise an eviction/rebuild loop could never converge.
+    AXIOM_FRAME_TIMING_SCOPE(scanTiming,prepare_scan);
     std::uint64_t bytes=0;
     for(const auto& entry:plan.referenceDrawList.entries){
         const auto* compact=std::get_if<CompactStrokeReferenceCommand>(&entry.command);
@@ -164,6 +171,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         if(!compact||!entry.contributesPixels||!entry.record.eraseMasks.empty()||
            t.a!=1||t.b!=0||t.c!=0||t.d!=1||t.tx!=0||t.ty!=0)return Preparation::kFallback;
         SkRect support=SkRect::MakeEmpty();
+        AXIOM_FRAME_TIMING_ADD(prepare_knots,compact->content.stroke.knots.size());
         for(const auto& k:compact->content.stroke.knots){
             const auto radius=ink::compactRadius(compact->content.stroke.config,k.pressure);
             support.join(SkRect::MakeLTRB(float(k.x-radius),float(k.y-radius),float(k.x+radius),float(k.y+radius)));
@@ -179,6 +187,7 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
             return Preparation::kFallback;
         bytes+=allocation;
     }
+    AXIOM_FRAME_TIMING_END(scanTiming);
     ++work.preparationSlices;
     const auto start=std::chrono::steady_clock::now();std::size_t built=0;
     for(const auto& entry:plan.referenceDrawList.entries){
@@ -192,11 +201,13 @@ SkiaRenderCache::Preparation SkiaRenderCache::prepare(
         }
         const auto evictions=work.evictions;
         if(!draw(canvas,plan,entry,true,false)||work.evictions!=evictions)return Preparation::kFallback;
+        AXIOM_FRAME_TIMING_ADD(built_groups,1);
         ++built;
     }
     return Preparation::kReady;
 }
 bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const ReferenceTraversalEntry& source,bool isolated,bool composite){
+    AXIOM_FRAME_TIMING_SCOPE(drawTiming,cache_draw);
     if(options.enabled && options.tileCandidate && !plan.referenceDrawList.entries.empty()){
         if(tiledFrame_)return true;
         if(source.record.objectId==plan.referenceDrawList.entries.front().record.objectId&&drawTiles(canvas,plan)){tiledFrame_=true;return true;}
@@ -251,7 +262,8 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
     const auto& clip=plan.referenceDrawList.viewportClip;
     target->clipRect(SkRect::MakeLTRB(clip.left,clip.top,clip.right,clip.bottom));
     target->setMatrix(matrix);
-    drawValidatedIsolatedEntryToSkCanvas(*target,source,commands.get());
+    {AXIOM_FRAME_TIMING_SCOPE(scratchTiming,scratch_draw);
+    drawValidatedIsolatedEntryToSkCanvas(*target,source,commands.get());}
     target->restore();
     // Own a physically cropped representation. A subset image is allowed to
     // retain its source allocation, which would undercount residency.
@@ -259,12 +271,14 @@ bool SkiaRenderCache::draw(SkCanvas& canvas,const FramePlan& plan,const Referenc
     auto reserved=budget?budget->reserve(resources::ResourceClass::kRaster,bytes,true):std::optional<std::uint64_t>{};
     if(budget&&!reserved){work.evictions+=entries_.size();entries_.clear();work.retainedBytes=0;reserved=budget->reserve(resources::ResourceClass::kRaster,bytes,true);if(!reserved)return false;}
     resources::ResourceLease lease(budget,reserved.value_or(0));
+    AXIOM_FRAME_TIMING_SCOPE(snapshotTiming,raster_snapshot);
     auto cropped=canvas.makeSurface(info.makeWH(crop.width(),crop.height()));
     if(!cropped)return false;
     cropped->getCanvas()->clear(SK_ColorTRANSPARENT);
     auto fullImage=scratch->makeImageSnapshot();if(!fullImage)return false;
     cropped->getCanvas()->drawImage(fullImage,static_cast<float>(-crop.left()),static_cast<float>(-crop.top()));
     auto image=cropped->makeImageSnapshot();if(!image)return false;
+    AXIOM_FRAME_TIMING_END(snapshotTiming);
     entries_.emplace(source.record.objectId,Entry{validity,image,crop,static_cast<std::size_t>(bytes),tick_,std::move(lease)});
     work.retainedBytes+=static_cast<std::size_t>(bytes);work.entries=entries_.size();++work.rasterizedGroups;
     if(composite){canvas.save();canvas.resetMatrix();canvas.drawImage(image,static_cast<float>(crop.left()),static_cast<float>(crop.top()));canvas.restore();}

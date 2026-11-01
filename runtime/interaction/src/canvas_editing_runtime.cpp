@@ -1,3 +1,4 @@
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/interaction/canvas_editing_runtime.hpp"
 #include "canvas/semantic/table_content.hpp"
 #include "undoable_command.hpp"
@@ -4315,6 +4316,7 @@ bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clo
 bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
                                               double frameMs,
                                               bool retirePreview) noexcept {
+  AXIOM_FRAME_TIMING_BEGIN(navigationExactPreparation_,viewId_.value(),frameId,semanticGeneration().value(),sceneRevision(),cameraGeneration(),surface_.generation,surface_.metricsGeneration);
   canonicalPresentationRetryable_ = false;
   AXIOM_ANDROID_DIAG("present begin frame=%llu objects=%zu scene_records=%zu", static_cast<unsigned long long>(frameId), semanticObjects_.size(), sceneCoordinator_ == nullptr ? 0U : sceneCoordinator_->runtimeScene().records().size());
   if (!surface_.available || frameId == 0U) { AXIOM_ANDROID_DIAG("present reject surface=%d frame=%llu", surface_.available ? 1 : 0, static_cast<unsigned long long>(frameId)); return false; }
@@ -4376,7 +4378,9 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       {frame.viewId, frame.frameId, frame.sceneReadToken.value(),
        frame.sceneGeneration.value(), frame.surfaceGeneration, frame.metricsGeneration},
       frame.metrics, render::FrameRole::kCanonical};
+  AXIOM_FRAME_TIMING_SCOPE(visibilityTiming,visibility);
   auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
+  AXIOM_FRAME_TIMING_END(visibilityTiming);
   if (!visibility) { AXIOM_ANDROID_DIAG("present visibility failed"); return false; }
   // A selected object can be dragged into view from outside the canonical
   // visibility set. Extend only this view's transient traversal, never Scene.
@@ -4431,8 +4435,11 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     if(appearanceSession_->routingChanged)for(const auto& record:sceneCoordinator_->runtimeScene().records())if(record.kind==semantic::ObjectKind::kConnector&&std::find(ids.begin(),ids.end(),record.objectId)==ids.end())ids.push_back(record.objectId);
     std::sort(ids.begin(),ids.end(),[&](auto a,auto b){return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a),*sceneCoordinator_->runtimeScene().find(b));});visibility.value().visibleRecords=ids.size();
   }
+  AXIOM_FRAME_TIMING_SCOPE(referenceTiming,reference_build);
   auto references = render::DirectReferenceSource::build(
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
+  AXIOM_FRAME_TIMING_END(referenceTiming);
+  AXIOM_FRAME_TIMING_SCOPE(adaptTiming,presentation_adapt);
   if (!references) { AXIOM_ANDROID_DIAG("present references failed"); return false; }
   applyAppearancePreview(references.value());
   if (transformDrag_.active()) for(auto& entry:references.value().entries) {
@@ -4689,6 +4696,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     }
   }
   applyContainerPreview(references.value());
+  AXIOM_FRAME_TIMING_END(adaptTiming);
   const auto plan = render::FramePlanBuilder::build(frame, references.value(), semanticObjects_.documentBackground());
   if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
   const bool connectorCreation = creationMode_ &&
@@ -4735,6 +4743,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
           ? &preparation : nullptr);
   if (rendered.code != render::BackendSubmissionCode::kAccepted) {
     canonicalPresentationRetryable_ = rendered.code == render::BackendSubmissionCode::kRetry;
+    AXIOM_FRAME_TIMING_OUTCOME(canonicalPresentationRetryable_?"retry":"rejected");
     if (canonicalPresentationRetryable_) canonicalPresentationDirty_ = true;
     AXIOM_ANDROID_DIAG("present skia failed: %s framegen=%llu providergen=%llu",
                        rendered.message.c_str(),
@@ -4791,6 +4800,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   // intentionally ignored here.  RuntimeFrameCoordinator can only qualify a
   // handoff after receivePlatformPresented() supplies matching platform facts.
   (void)retirePreview;
+  AXIOM_FRAME_TIMING_OUTCOME("accepted");
   return true;
 }
 

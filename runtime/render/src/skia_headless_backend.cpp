@@ -1,3 +1,4 @@
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/skia_headless_backend.hpp"
 #include "canvas/semantic/table_content.hpp"
 #include "canvas/scene/sketch_geometry.hpp"
@@ -937,6 +938,7 @@ void drawTransientEntryToSkCanvas(SkCanvas& canvas, const FramePlan& plan,
 }
 
 BackendSubmissionResult validateReferencePlan(const FramePlan& plan) {
+    AXIOM_FRAME_TIMING_SCOPE(validationTiming,validation);
     if (!(plan.referenceDrawList.frame == plan.frame) || !foundation::validDocumentBackground(plan.background)) {
         return BackendSubmissionResult::rejected("frame identity mismatch");
     }

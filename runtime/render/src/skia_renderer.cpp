@@ -1,3 +1,4 @@
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/skia_renderer.hpp"
 
 #include "canvas/render/skia_brush_renderer.hpp"
@@ -62,11 +63,14 @@ void drawAcquisition(SkCanvas& canvas,const EditingOverlay& overlay) {
 BackendSubmissionResult SkiaRenderer::renderFrame(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
     const EditingOverlay* selectionOverlay, const RenderPreparationBudget* preparation) {
+    AXIOM_FRAME_TIMING_SCOPE(renderTiming,render);
     const auto& metrics=plan.frame.metrics;
     if(!std::isfinite(metrics.logicalWidth)||!std::isfinite(metrics.logicalHeight)||
        metrics.logicalWidth<=0||metrics.logicalHeight<=0||!metrics.physicalWidth||!metrics.physicalHeight)
         return BackendSubmissionResult::rejected("invalid frame surface metrics");
+    AXIOM_FRAME_TIMING_SCOPE(acquireTiming,acquire);
     const auto acquired = provider.acquire();
+    AXIOM_FRAME_TIMING_END(acquireTiming);
     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
         return acquired.code == SkiaSurfaceAcquireCode::kUnavailable
             ? BackendSubmissionResult::retry(acquired.message)
@@ -100,6 +104,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         if (!renderCache_) renderCache_=std::make_shared<internal::SkiaRenderCache>();
         renderCache_->budget=resourceBudget_;
         renderCache_->options=renderCacheOptions_;
+        AXIOM_FRAME_TIMING_SCOPE(beginTiming,cache_begin);
         renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_);
         cache=renderCache_.get();
     } catch(const std::bad_alloc&) {clearRenderCache();}
@@ -110,7 +115,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         target->clipRect(SkRect::MakeLTRB(clip.left,clip.top,clip.right,clip.bottom));
         auto prepared=internal::SkiaRenderCache::Preparation::kFallback;
         const auto beforePreparation=cache->work.rasterizedGroups;
-        try{prepared=cache->prepare(*target,plan,*preparation);}
+        try{AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation);}
         catch(const std::bad_alloc&){cache->clear();}
         target->restore();
         rasterizations_+=cache->work.rasterizedGroups-beforePreparation;
@@ -119,8 +124,10 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         }
     }
     const auto beforeRaster=cache?cache->work.rasterizedGroups:0;
+    AXIOM_FRAME_TIMING_SCOPE(sceneTiming,scene_draw);
     const auto result = internal::drawReferencePlanToSkCanvas(
         *acquired.frame.surface->getCanvas(), plan, images_, &textResources_,true,cache);
+    AXIOM_FRAME_TIMING_END(sceneTiming);
     if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr) {
         auto* canvas = acquired.frame.surface->getCanvas();
         if (selectionOverlay->creationPreview()) {
@@ -189,6 +196,7 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         canvas->restore();
     }
     if(result.code==BackendSubmissionCode::kAccepted){
+        AXIOM_FRAME_TIMING_SCOPE(snapshotTiming,navigation_snapshot);
         try {
             const auto bytes=std::uint64_t(metrics.physicalWidth)*metrics.physicalHeight*4;
             if(resourceBudget_ && renderCacheOptions_.enabled && bytes<=renderCacheOptions_.maxBytes && selectionOverlay==nullptr &&
@@ -211,7 +219,9 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
     if (result.code != BackendSubmissionCode::kAccepted) {clearRenderCache();return result;}
     ++submissions_;
     rasterizations_+=cache?cache->work.rasterizedGroups-beforeRaster:1;
+    AXIOM_FRAME_TIMING_SCOPE(presentTiming,provider_present);
     const auto presented=provider.present();
+    AXIOM_FRAME_TIMING_END(presentTiming);
     if(presented.code!=BackendSubmissionCode::kAccepted)clearRenderCache();
     return presented;
 }
