@@ -31,6 +31,7 @@ class SkiaNavigationTiles final {
         std::shared_ptr<const Sources> sources;
         sk_sp<SkSurface> surface,coverage;
         std::size_t source=0,knot=0;
+        double distance=0,totalDistance=0;
         std::uint64_t id=0;
         resources::ResourceLease lease;
     };

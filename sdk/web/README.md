@@ -364,3 +364,27 @@ with its original material. `selectBrush(profileId, 2)` selects the new version;
 later `setBrushConfig()` edits preserve that preset's internal evaluator/resource
 binding. No expanded dab/outline is stored. The Demo shows only controls relevant
 to the active brush and exposes the next stroke's color.
+
+### Shared round/marker tuning
+
+`setBrushConfig` accepts owned numeric/boolean controls `thinning` [-1,1],
+`streamline`/`smoothing` [0,1], `easing` (1 linear, 2 ease-in, 3 ease-out,
+4 smoothstep), `pressureModel` (1 timed speed, 2 distance proxy),
+`startTaper`/`endTaper` [0,4096] world units, and `startCap`/`endCap`.
+Round and marker revision 3 select config v2; changing these controls on an old
+round/marker preset explicitly promotes subsequent sessions. Other families reject
+non-default vector tuning. Config version is a compatibility discriminator, not
+a consumer-chosen engine/resource binding. Unsupported versions reject.
+
+Controls freeze at session begin and affect the next session. Existing owner-thread
+command receipts and lifetime rules apply; admission is not presentation or durability.
+`readBrushConfig` returns copied values, including the supported tuning defaults for
+legacy presets. The Windows JSON control transport uses the same fields, validation
+and receipts without adding DLL exports or exposing C++ Runtime state.
+
+Streamline filters the centerline; smoothing controls midpoint quadratic fitting.
+It is not a promise that PF outline filtering has identical numeric semantics.
+Pressure-to-width easing is separate from pressure generation and whole-stroke opacity.
+Taper applies to world arc length and cap flags affect untapered endpoints.
+Replay uses persisted effective knots and config, never pressure simulation again.
+Historical config v1 bytes/interpretation remain unchanged; older readers reject v2.

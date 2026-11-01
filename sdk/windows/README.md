@@ -150,3 +150,12 @@ the existing JSON command transport. Family values1..6 and explicit pressure sou
 Skia object, allocation or STL ownership crosses the DLL ABI. Configuration is
 copied and frozen per new session; invalid versions/enums/numbers reject. This
 Mac/Web execution does not qualify a Windows DLL or a physical pressure device.
+
+Round/marker package revision 3 shares the Web vector tuning controls through
+`runtime.setBrushConfig(config)`. Config values
+include thinning [-1,1], streamline/smoothing [0,1], easing (1..4), pressureModel
+(1 timed speed, 2 distance proxy), startTaper/endTaper [0,4096] world units and
+startCap/endCap booleans. Use `runtime.readBrushConfig()` for a copied configuration. These
+are existing owner-thread JSON transport commands, not new exported C++/STL ABI.
+Changes affect subsequent sessions; config v2 operations require a matching reader.
+Actual Windows DLL/device qualification remains separate from native host tests.

@@ -885,11 +885,15 @@ class Session::Impl {
             if(targets.empty())return error("NOT_READY");
             const auto c=facade().readCanvasControlSnapshot(targets.front()).brushConfig;
             if(!c)return {{"ok",true},{"value",nullptr}};
-            return {{"ok",true},{"value",{{"version",c->version},{"family",static_cast<unsigned>(c->family)},
+            J value={{"version",c->version},{"family",static_cast<unsigned>(c->family)},
                 {"roundMode",static_cast<unsigned>(c->roundMode)},{"pressureSource",static_cast<unsigned>(c->pressureSource)},
                 {"size",c->size},{"opacity",c->opacity},{"color",c->color},{"markerAngle",c->markerAngle},
                 {"markerFlatness",c->markerFlatness},{"density",c->density},{"textureScale",c->textureScale},
-                {"deposition",c->deposition},{"wetEdge",c->wetEdge},{"laserFadeMs",c->laserFadeMs},{"laserTailLength",c->laserTailLength}}}};
+                {"deposition",c->deposition},{"wetEdge",c->wetEdge},{"laserFadeMs",c->laserFadeMs},{"laserTailLength",c->laserTailLength}};
+            value.update({{"thinning",c->thinning},{"streamline",c->streamline},{"smoothing",c->smoothing},
+                {"easing",static_cast<unsigned>(c->easing)},{"pressureModel",static_cast<unsigned>(c->pressureModel)},
+                {"startTaper",c->startTaper},{"endTaper",c->endTaper},{"startCap",c->startCap},{"endCap",c->endCap}});
+            return {{"ok",true},{"value",std::move(value)}};
         }
         if (command == "readSection") {
             const auto s = facade().readSection(j.contains("objectId") ? rawId(j.at("objectId"))
@@ -1290,9 +1294,14 @@ class Session::Impl {
                 // immutable evaluator/resource binding with revision 1.
                 if(const auto selected=facade().readCanvasControlSnapshot(r.target).brushConfig)c=*selected;
                 if(!v.is_object())throw std::invalid_argument("brush config");
-                const std::array<const char*,15> allowed{"version","family","roundMode","pressureSource","size","opacity","color","markerAngle","markerFlatness","density","textureScale","deposition","wetEdge","laserFadeMs","laserTailLength"};
+                const std::array<const char*,24> allowed{"version","family","roundMode","pressureSource","size","opacity","color","markerAngle","markerFlatness","density","textureScale","deposition","wetEdge","laserFadeMs","laserTailLength","thinning","streamline","smoothing","easing","pressureModel","startTaper","endTaper","startCap","endCap"};
                 for(const auto& [key,value]:v.items()){(void)value;if(std::find(allowed.begin(),allowed.end(),key)==allowed.end())throw std::invalid_argument("unknown brush parameter");}
-                c.version=v.contains("version")?unsignedValue(v.at("version"),1):1;
+                if(v.contains("version")){const auto requested=unsignedValue(v.at("version"),2);if(!requested)throw std::invalid_argument("brush version");}
+                bool tune=c.version==2 || (v.contains("version")&&v.at("version")==2);
+                const J currentTuning={{"thinning",c.thinning},{"streamline",c.streamline},{"smoothing",c.smoothing},
+                    {"easing",static_cast<unsigned>(c.easing)},{"pressureModel",static_cast<unsigned>(c.pressureModel)},
+                    {"startTaper",c.startTaper},{"endTaper",c.endTaper},{"startCap",c.startCap},{"endCap",c.endCap}};
+                for(const auto& [key,value]:currentTuning.items())if(v.contains(key)&&v.at(key)!=value)tune=true;
                 c.family=static_cast<foundation::InkFamily>(unsignedValue(v.at("family"),6));
                 if(v.contains("roundMode"))c.roundMode=static_cast<foundation::InkRoundMode>(unsignedValue(v.at("roundMode"),2));
                 if(v.contains("pressureSource"))c.pressureSource=static_cast<foundation::InkPressureSource>(unsignedValue(v.at("pressureSource"),2));
@@ -1303,6 +1312,16 @@ class Session::Impl {
                 c.deposition=v.value("deposition",c.deposition);c.wetEdge=v.value("wetEdge",c.wetEdge);
                 if(v.contains("laserFadeMs"))c.laserFadeMs=unsignedValue(v.at("laserFadeMs"),10000);
                 c.laserTailLength=v.value("laserTailLength",c.laserTailLength);
+                if(tune&&(c.family==foundation::InkFamily::kRound||c.family==foundation::InkFamily::kMarker)){
+                    c.version=2;c.algorithmVersion=3;c.signalVersion=2;
+                    c.thinning=v.value("thinning",c.thinning);c.streamline=v.value("streamline",c.streamline);c.smoothing=v.value("smoothing",c.smoothing);
+                    if(v.contains("easing"))c.easing=static_cast<foundation::InkEasing>(unsignedValue(v.at("easing"),4));
+                    if(v.contains("pressureModel"))c.pressureModel=static_cast<foundation::InkPressureModel>(unsignedValue(v.at("pressureModel"),2));
+                    c.startTaper=v.value("startTaper",c.startTaper);c.endTaper=v.value("endTaper",c.endTaper);
+                    c.startCap=v.value("startCap",c.startCap);c.endCap=v.value("endCap",c.endCap);
+                }
+                if(tune&&c.family!=foundation::InkFamily::kRound&&c.family!=foundation::InkFamily::kMarker)
+                    throw std::invalid_argument("vector tuning requires round or marker");
                 if(!foundation::validInkBrushConfig(c))throw std::invalid_argument("invalid brush config");
             } else if (kind == "ink") {
                 p.kind = K::kInkOptions;

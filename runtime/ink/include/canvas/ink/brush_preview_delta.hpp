@@ -43,7 +43,7 @@ struct BrushPreviewDelta final {
     std::uint64_t compactSeed=0;
     // Immutable shared chunks keep stable prefix publications O(1). New
     // revisions replace only the last chunk; consumers retain by shared owner.
-    struct Chunk final {std::shared_ptr<const Chunk> previous;std::vector<foundation::InkKnot> knots;};
+    struct Chunk final {std::shared_ptr<const Chunk> previous;std::vector<foundation::InkKnot> knots;double startDistance=0,totalDistance=0;};
     std::shared_ptr<const Chunk> compactChunks;
 };
 

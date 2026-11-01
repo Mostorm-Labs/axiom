@@ -25,6 +25,16 @@ message CompactBrushConfig {
   uint32 material_sampling_version=19;
   uint32 laser_fade_ms=20;
   double laser_tail_length=21;
+  // Config v2, evaluator 3; absent in legacy v1 records.
+  double thinning=22;
+  double streamline=23;
+  double smoothing=24;
+  uint32 easing=25;
+  uint32 pressure_model=26;
+  double start_taper=27;
+  double end_taper=28;
+  bool start_cap=29;
+  bool end_cap=30;
 }
 message CompactStrokeContent {
   CompactBrushConfig config=1;

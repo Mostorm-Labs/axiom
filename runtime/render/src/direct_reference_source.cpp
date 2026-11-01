@@ -222,6 +222,9 @@ void encodeContent(CanonicalWriter& out, const semantic::ObjectContent& content,
             out.f64(c.markerAngle);out.f64(c.markerFlatness);out.f64(c.density);out.f64(c.textureScale);out.f64(c.deposition);out.f64(c.wetEdge);
             out.u32(c.laserFadeMs);out.f64(c.laserTailLength);
             out.string(c.materialResourceId);out.string(c.materialResourceSha256);out.u32(c.materialSamplingVersion);
+            if(c.version==2){out.f64(c.thinning);out.f64(c.streamline);out.f64(c.smoothing);
+                out.u32(static_cast<unsigned>(c.easing));out.u32(static_cast<unsigned>(c.pressureModel));
+                out.f64(c.startTaper);out.f64(c.endTaper);out.u32(c.startCap);out.u32(c.endCap);}
             out.u64(value.stroke.seed);out.u64(value.stroke.knots.size());
             for(const auto& k:value.stroke.knots){out.f64(k.x);out.f64(k.y);out.u32(k.pressure);}
         } else if constexpr (std::is_same_v<T, semantic::BrushStrokeContent>) {

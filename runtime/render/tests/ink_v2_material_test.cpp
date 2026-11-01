@@ -30,7 +30,55 @@ int main(int argc,char** argv){
     const std::string mode=argc>1?argv[1]:"marker";
     foundation::InkBrushConfig c;c.size=32;c.roundMode=foundation::InkRoundMode::kRegular;c.color={.1,.3,.8,1};
     const std::vector<foundation::InkKnot> knots{{32,64,32768},{224,64,32768}};
-    if(mode=="visual"){
+    if(mode=="tuning"){
+        c=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",3).package.compactConfig;
+        c.size=24;c.thinning=0;c.startTaper=0;c.endTaper=32;
+        const std::vector<foundation::InkKnot> line{{32,64,32768},{224,64,32768}};
+        const auto tapered=draw(c,line);
+        require(alpha(tapered,230,64)==0,"taper leaves a terminal disk");
+        require(alpha(tapered,200,70)>alpha(tapered,216,70),"taper does not progressively narrow");
+        c.endTaper=0;c.startCap=false;c.endCap=false;
+        auto butt=draw(c,line);require(alpha(butt,27,64)==0&&alpha(butt,229,64)==0,"cap disabled still rounded");
+        c.startCap=true;c.endCap=true;auto round=draw(c,line);
+        require(alpha(round,27,64)>0&&alpha(round,229,64)>0,"round caps missing");
+        for(auto family:{foundation::InkFamily::kRound,foundation::InkFamily::kMarker}){
+            auto package=ink::BrushPackageCatalog{}.loadDefault(family==foundation::InkFamily::kRound?"round-handdrawn":"marker-compact-v1",3).package;
+            c=*package.compactConfig;c.endTaper=32;c.startTaper=8;package.compactConfig=c;
+            ink::BrushSession session(1,ink::resolveBrushState(package,42));require(session.begin(),"tuned preview begin");
+            render::TransparentOverlaySkiaSurfaceProvider provider;require(provider.resize(width,height).code==render::BackendSubmissionCode::kAccepted,"tuned provider resize");
+            render::SkiaRenderer renderer;render::PreviewSurfaceController preview(renderer,provider);
+            require(preview.begin(1,1,1,provider.generation()),"tuned controller begin");
+            ink::BrushPreviewDelta delta;render::PreviewStyleOverride style;style.preferCapturedPaint=true;
+            for(unsigned i=0;i<150;++i){const ink::BrushSample s{10+i*1.5,64+std::sin(i*.07)*12,0,false,i+1,std::uint64_t(i)*8'000'000,false};
+                require(session.append({&s,1},{},delta)==ink::BrushSessionError::kNone&&preview.update(delta)&&preview.renderIfDirty(style),"tuned preview update");}
+            ink::BrushCommitIntent intent;require(session.seal(intent)==ink::BrushSessionError::kNone,"tuned preview seal");
+            std::vector<std::uint8_t> pixels(width*height*4);require(provider.readbackRgba(pixels).code==render::BackendSubmissionCode::kAccepted,"tuned provider readback");
+            require(pixels==draw(c,intent.knots),"tapered chunk preview differs from canonical");
+            const auto submits=renderer.submissionCount();require(preview.renderIfDirty(style)&&renderer.submissionCount()==submits,"unchanged tuning preview resubmitted");
+        }
+        // High thinning creates subpixel tails; analytic coverage must carry
+        // fractional pixel alpha rather than drop a fine diagonal between rows.
+        auto hairline=c;hairline.thinning=1;hairline.startTaper=hairline.endTaper=0;
+        const std::vector<foundation::InkKnot> fine{{32,40,256},{220,87,256}};
+        const auto finePixels=draw(hairline,fine);
+        for(unsigned x=40;x<210;++x){unsigned coverage=0;const auto y=40.+(x-32)*.25;
+            for(unsigned row=unsigned(y)-1;row<=unsigned(y)+1;++row)coverage+=alpha(finePixels,x,row);
+            require(coverage>4,"subpixel diagonal has gaps");}
+        // The navigation tile scheduler resumes by ranges. Tuning and taper
+        // must preserve the same coverage there as direct and preview rendering.
+        c=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",3).package.compactConfig;
+        c.startTaper=8;c.endTaper=32;
+        std::vector<foundation::InkKnot> path;
+        for(unsigned i=0;i<130;++i)path.push_back({20.+i*1.5,64.+std::sin(i*.1)*10,std::uint16_t(20000+i*200)});
+        auto full=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(width,height));
+        auto ranged=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(width,height));
+        full->getCanvas()->clear(SK_ColorBLACK);ranged->getCanvas()->clear(SK_ColorBLACK);
+        render::internal::drawCompactCoverageToSkCanvas(*full->getCanvas(),c,path);
+        for(std::size_t begin=0;begin<path.size();begin+=17)
+            render::internal::drawCompactCoverageRangeToSkCanvas(*ranged->getCanvas(),c,path,begin,begin+17);
+        std::vector<std::uint8_t> a(width*height*4),b(a.size());
+        require(full->readPixels(full->imageInfo(),a.data(),width*4,0,0)&&ranged->readPixels(ranged->imageInfo(),b.data(),width*4,0,0)&&a==b,"tuned ranged coverage changed geometry");
+    }else if(mode=="visual"){
         // Same size, paint, pressure and path: distinction must come from
         // material, not the name or a wider default nib.
         const auto chalk=ink::BrushPackageCatalog{}.loadDefault("chalk-compact-v1",2);

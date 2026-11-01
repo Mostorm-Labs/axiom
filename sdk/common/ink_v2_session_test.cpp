@@ -56,6 +56,24 @@ int main(){
     require(visual.ok(),"visual operation encoding");
     const auto& bound=std::get<semantic::CompactStrokeContent>(std::get<semantic::AddStrokeOp>(visual.operation.payload).object.content).stroke.config;
     require(bound.algorithmVersion==2&&bound.materialVersion==2&&bound.materialResourceId==foundation::kInkMaterialV2ResourceId,"public config edit reverted visual preset binding");
+    // Real SDK decoding must admit the shared vector controls, preserve them
+    // through AddStroke, and not inflate the last knot on a delayed release.
+    call({{"command","control"},{"kind","preset"},{"profileId","round-handdrawn"},{"revision",2}});
+    auto tuned=call({{"command","readInkBrush"}}).at("value");
+    tuned["thinning"]=.99;tuned["streamline"]=.13;tuned["smoothing"]=.61;
+    tuned["easing"]=1;tuned["pressureModel"]=2;
+    tuned["startTaper"]=0;tuned["endTaper"]=16;tuned["startCap"]=true;tuned["endCap"]=true;
+    call({{"command","control"},{"kind","inkBrush"},{"value",tuned}});
+    const auto tuning=call({{"command","readInkBrush"}}).at("value");
+    for(const char* key:{"thinning","streamline","smoothing","easing","pressureModel","startTaper","endTaper","startCap","endCap"})
+        require(tuning.at(key)==tuned.at(key),"vector tuning readback lost a parameter");
+    ++pointer;
+    for(unsigned phase:{0U,1U,2U}){timestamp+=phase==2?200'000'000:10'000'000;
+        call({{"command","pointer"},{"source",1},{"pointer",pointer},{"timestampNs",timestamp},{"phase",phase},{"x",phase?180:30},{"y",180},{"pressure",.5},{"pressureAvailable",false}});}
+    const auto tunedOperation=semantic::SemanticCodec::decodeProtobufOperation(lastOperation);
+    require(tunedOperation.ok(),"tuned operation encoding");
+    const auto& stroke=std::get<semantic::CompactStrokeContent>(std::get<semantic::AddStrokeOp>(tunedOperation.operation.payload).object.content).stroke;
+    require(stroke.knots.back().pressure<=stroke.knots.front().pressure,"stationary release inflated pressure");
     const auto before=call({{"command","state"}}).at("value").at("generation");
     const auto rejected=sdk::Json::parse(session.call(R"({"command":"control","kind":"inkBrush","value":{"family":7}})"));
     require(!rejected.value("ok",true)&&call({{"command","state"}}).at("value").at("generation")==before,"invalid native config mutated document");

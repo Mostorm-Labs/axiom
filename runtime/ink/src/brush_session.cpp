@@ -37,6 +37,9 @@ bool BrushSession::begin() {
         CompactBrushConfig c;
         c.geometryEpsilon = std::min(.25, state_.package.compactConfig->size / 32.);
         c.algorithmVersion = state_.package.compactConfig->algorithmVersion;
+        const auto& config=*state_.package.compactConfig;
+        c.pressureModel=config.pressureModel;c.size=config.size;c.streamline=config.streamline;
+        c.smoothing=config.smoothing;c.endTaper=config.endTaper;
         c.pressureSource = state_.package.compactConfig->pressureSource == foundation::InkPressureSource::kDevice
             ? BrushPressureSource::kDevice : BrushPressureSource::kSimulated;
         compact_.emplace(c, state_.seed);
@@ -50,8 +53,8 @@ BrushSessionError BrushSession::append(std::span<const BrushSample> confirmed,
     if (!active_) { error_ = BrushSessionError::kInvalid; return error_; }
     if(compact_){
         std::vector<TimedBrushSample> c,p;
-        for(const auto& s:confirmed)c.push_back({s.x,s.y,s.pressure,s.pressurePresent,s.sequence,s.timestampNs,s.pressureCapability});
-        for(const auto& s:predicted)p.push_back({s.x,s.y,s.pressure,s.pressurePresent,s.sequence,s.timestampNs,s.pressureCapability});
+        for(const auto& s:confirmed)c.push_back({s.x,s.y,s.pressure,s.pressurePresent,s.sequence,s.timestampNs,s.pressureCapability,s.terminal});
+        for(const auto& s:predicted)p.push_back({s.x,s.y,s.pressure,s.pressurePresent,s.sequence,s.timestampNs,s.pressureCapability,s.terminal});
         if(!compact_->append(c,p))return error_=BrushSessionError::kPressure;
         out={};out.revision=++revision_;out.compactSeed=state_.seed;out.compactConfig=state_.package.compactConfig;out.compactChunks=compact_->chunks();
         out.hasPaint=true;const auto& paint=*out.compactConfig;

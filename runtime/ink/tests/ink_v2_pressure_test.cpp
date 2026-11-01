@@ -42,5 +42,13 @@ int main() {
     const std::array<ink::TimedBrushSample,2> backwards{{{9,0,0,false,3,20'000'001},{10,0,0,false,4,15'000'001}}};
     require(!plain.append(backwards,{}), "batch time rollback accepted");
     require(plain.confirmedCount()==count, "time rollback partially accepted");
+    // A stationary terminal observation must not turn a thin tail into a dot.
+    auto terminalConfig=ink::CompactBrushConfig{};terminalConfig.algorithmVersion=3;
+    ink::CompactBrushSession released(terminalConfig);
+    const std::array<ink::TimedBrushSample,2> run{{{0,0,0,false,1,1},{100,0,0,false,2,10'000'001}}};
+    require(released.append(run,{}),"terminal fixture");const auto moving=released.latestPressure();
+    const ink::TimedBrushSample stationary{100,0,0,false,3,210'000'001};
+    require(released.append({&stationary,1},{}),"stationary release rejected");
+    require(released.latestPressure()==moving,"stationary release increases simulated pressure");
     std::cout << "InkV2Pressure: simulated speed delta=" << slow.latestPressure()-fast.latestPressure() << '\n';
 }

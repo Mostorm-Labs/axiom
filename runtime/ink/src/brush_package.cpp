@@ -67,6 +67,10 @@ std::string canonical(const BrushPackage& value) {
         << value.grain.spacing << '|' << value.grain.opacity;
   }
   if(value.compactConfig){const auto& c=*value.compactConfig;out<<"|compact-v1|"<<static_cast<unsigned>(c.family)<<'|'<<static_cast<unsigned>(c.roundMode)<<'|'<<static_cast<unsigned>(c.pressureSource)<<'|'<<c.version<<'|'<<c.algorithmVersion<<'|'<<c.signalVersion<<'|'<<c.materialVersion<<'|'<<c.size<<'|'<<c.opacity<<'|'<<c.markerAngle<<'|'<<c.markerFlatness<<'|'<<c.density<<'|'<<c.textureScale<<'|'<<c.deposition<<'|'<<c.wetEdge<<'|'<<c.laserFadeMs<<'|'<<c.laserTailLength<<'|'<<c.color[0]<<'|'<<c.color[1]<<'|'<<c.color[2]<<'|'<<c.color[3]<<'|'<<c.materialResourceId<<'|'<<c.materialResourceSha256<<'|'<<c.materialSamplingVersion;}
+  if(value.compactConfig&&value.compactConfig->version==2){const auto& c=*value.compactConfig;
+    out<<"|vector-tuning-v2|"<<c.thinning<<'|'<<c.streamline<<'|'<<c.smoothing<<'|'<<static_cast<unsigned>(c.easing)
+       <<'|'<<static_cast<unsigned>(c.pressureModel)<<'|'<<c.startTaper<<'|'<<c.endTaper<<'|'<<c.startCap<<'|'<<c.endCap;
+  }
   return out.str();
 }
 

@@ -41,6 +41,19 @@ int main() {
     const auto visualDecoded=SemanticCodec::decodeProtobufOperation(visualEncoded.bytes);
     if(!visualDecoded.ok()||std::get<CompactStrokeContent>(std::get<AddStrokeOp>(visualDecoded.operation.payload).object.content)!=
         std::get<CompactStrokeContent>(std::get<AddStrokeOp>(visual.payload).object.content))throw std::runtime_error("visual version/material binding changed in codec");
+    auto tuned=visual;
+    auto& t=std::get<CompactStrokeContent>(std::get<AddStrokeOp>(tuned.payload).object.content).stroke.config;
+    t.version=2;t.algorithmVersion=3;t.signalVersion=2;t.thinning=.99;t.streamline=.13;t.smoothing=.61;
+    t.easing=canvas::foundation::InkEasing::kEaseOut;t.pressureModel=canvas::foundation::InkPressureModel::kDistance;
+    t.startTaper=8;t.endTaper=24;t.startCap=false;t.endCap=true;
+    const auto tunedBytes=SemanticCodec::encodeProtobufOperation(tuned);
+    if(!tunedBytes.ok())throw std::runtime_error("tuned compact encode");
+    const auto tunedDecoded=SemanticCodec::decodeProtobufOperation(tunedBytes.bytes);
+    if(!tunedDecoded.ok()||std::get<CompactStrokeContent>(std::get<AddStrokeOp>(tunedDecoded.operation.payload).object.content)!=
+       std::get<CompactStrokeContent>(std::get<AddStrokeOp>(tuned.payload).object.content))throw std::runtime_error("tuned controls did not persist");
+    const auto legacyAgain=SemanticCodec::encodeProtobufOperation(decoded.operation);
+    if(!legacyAgain.ok()||legacyAgain.bytes!=encoded.bytes)throw std::runtime_error("legacy compact wire encoding changed");
+    t.version=1;if(SemanticCodec::encodeProtobufOperation(tuned).ok())throw std::runtime_error("new tuning accepted as old config");
     auto invalid=operation;
     std::get<CompactStrokeContent>(std::get<AddStrokeOp>(invalid.payload).object.content).stroke.config.algorithmVersion=999;
     if(SemanticCodec::encodeProtobufOperation(invalid).ok())throw std::runtime_error("unknown evaluator accepted");
