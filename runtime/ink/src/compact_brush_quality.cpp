@@ -24,7 +24,7 @@ void CompactBrushSession::retainQuality(foundation::InkKnot k){
     auto chunk=std::make_shared<BrushPreviewDelta::Chunk>();chunk->previous=chunks_;chunk->startDistance=prefixLength_;
     chunk->knots.assign(pending_.begin(),pending_.begin()+cut+1);
     prefixLength_+=arc(chunk->knots);chunk->totalDistance=prefixLength_;
-    qualityContour_->append(chunk->knots,prefixLength_+remaining,chunk->contour);
+    if(config_.algorithmVersion==4)qualityContour_->append(chunk->knots,prefixLength_+remaining,chunk->contour);
     metrics_.generatedKnots+=chunk->knots.size();chunks_=std::move(chunk);
     pending_.erase(pending_.begin(),pending_.begin()+cut);pendingLength_=arc(pending_);
 }
@@ -51,7 +51,7 @@ void CompactBrushSession::publishQuality(bool terminal){
     }
     if(tail->knots.empty())return;
     tail->totalDistance=prefixLength_+arc(tail->knots);
-    compiler.append(tail->knots,tail->totalDistance,tail->contour);compiler.finish(tail->totalDistance,tail->contour);
+    if(config_.algorithmVersion==4){compiler.append(tail->knots,tail->totalDistance,tail->contour);compiler.finish(tail->totalDistance,tail->contour);}
     metrics_.copiedKnots+=tail->knots.size();metrics_.generatedKnots+=tail->knots.size();
     preview_=qualityConfirmed_=std::move(tail);(void)terminal;
 }

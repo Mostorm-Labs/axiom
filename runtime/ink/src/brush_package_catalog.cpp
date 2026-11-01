@@ -107,7 +107,7 @@ BrushPackageResult BrushPackageCatalog::loadDefault(std::string_view profile,
   if(profile=="round-regular"||profile=="round-handdrawn"||profile=="laser-transient"||
      profile=="marker-compact-v1"||profile=="chalk-compact-v1"||
      profile=="crayon-wax-v1"||profile=="watercolor-lite-v1"){
-    if((revision!=1&&revision!=2&&!((revision==3||revision==4)&&(profile=="round-regular"||profile=="round-handdrawn"||profile=="marker-compact-v1")))||(profile=="laser-transient"&&revision!=1))return {{},{},{},"unknown_profile_or_revision"};
+    if((revision!=1&&revision!=2&&!((revision==3||revision==4)&&(profile=="round-regular"||profile=="round-handdrawn"||profile=="marker-compact-v1"))&&!(revision==3&&profile=="crayon-wax-v1"))||(profile=="laser-transient"&&revision!=1))return {{},{},{},"unknown_profile_or_revision"};
     BrushPackage p;p.profileId=profile;p.packageId=profile=="round-regular"?"00000000000000000000000000000051":profile=="round-handdrawn"?"00000000000000000000000000000052":"00000000000000000000000000000053";
     p.compactConfig=foundation::InkBrushConfig{};
     p.revision=revision;
@@ -124,7 +124,7 @@ BrushPackageResult BrushPackageCatalog::loadDefault(std::string_view profile,
     if(profile=="watercolor-lite-v1"){p.packageId="00000000000000000000000000000057";p.compactConfig->family=foundation::InkFamily::kWatercolor;p.compactConfig->size=32;p.compactConfig->opacity=.65;}
     if(revision==2&&profile=="chalk-compact-v1"){p.compactConfig->size=24;p.compactConfig->density=.72;p.compactConfig->textureScale=6;}
     if(revision==2&&profile=="watercolor-lite-v1"){p.compactConfig->size=40;p.compactConfig->wetEdge=.85;p.compactConfig->textureScale=12;}
-    if(revision==3){auto& c=*p.compactConfig;c.version=2;c.algorithmVersion=3;c.signalVersion=2;
+    if(revision==3&&profile!="crayon-wax-v1"){auto& c=*p.compactConfig;c.version=2;c.algorithmVersion=3;c.signalVersion=2;
         c.thinning=profile=="round-regular"?0:profile=="marker-compact-v1"?.5:.99;
         c.streamline=.13;c.smoothing=.61;c.pressureModel=foundation::InkPressureModel::kDistance;
         c.endTaper=profile=="round-handdrawn"?16:0;
@@ -132,6 +132,12 @@ BrushPackageResult BrushPackageCatalog::loadDefault(std::string_view profile,
     if(revision==4){auto& c=*p.compactConfig;c.version=2;c.algorithmVersion=4;c.signalVersion=3;
         c.thinning=profile=="round-regular"?0:profile=="marker-compact-v1"?.5:.99;
         c.streamline=.13;c.smoothing=.61;c.pressureModel=foundation::InkPressureModel::kDistance;c.endTaper=0;
+    }
+    if(revision==3&&profile=="crayon-wax-v1"){auto& c=*p.compactConfig;
+        c.version=2;c.algorithmVersion=5;c.signalVersion=3;c.materialVersion=3;
+        c.materialResourceId=foundation::kInkCrayonV3ResourceId;c.materialResourceSha256=foundation::kInkCrayonV3ResourceSha256;
+        c.size=16;c.thinning=.65;c.streamline=.25;c.smoothing=.5;c.pressureModel=foundation::InkPressureModel::kDistance;
+        c.textureScale=6;c.deposition=.75;c.endTaper=0;
     }
     p.vector.size=p.compactConfig->size;
     p.paint={p.compactConfig->color[0],p.compactConfig->color[1],p.compactConfig->color[2],p.compactConfig->color[3],p.compactConfig->opacity};

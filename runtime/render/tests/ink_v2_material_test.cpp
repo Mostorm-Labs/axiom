@@ -8,6 +8,8 @@
 #include "include/core/SkSurface.h"
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkPaint.h"
+#include "include/core/SkPictureRecorder.h"
+#include "include/core/SkPicture.h"
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -19,11 +21,11 @@ namespace {
 constexpr unsigned width=256,height=128;
 void require(bool ok,const char* message){if(!ok)throw std::runtime_error(message);}
 std::vector<std::uint8_t> draw(const foundation::InkBrushConfig& config,
-                              const std::vector<foundation::InkKnot>& knots,float scale=1,float tx=0,float ty=0){
+                              const std::vector<foundation::InkKnot>& knots,float scale=1,float tx=0,float ty=0,std::uint64_t seed=0){
     render::RasterSkiaSurfaceProvider provider;require(provider.resize(width,height).code==render::BackendSubmissionCode::kAccepted,"resize");
     auto frame=provider.acquire();frame.frame.surface->getCanvas()->clear(SK_ColorTRANSPARENT);
     frame.frame.surface->getCanvas()->translate(tx,ty);frame.frame.surface->getCanvas()->scale(scale,scale);
-    render::internal::drawCompactStrokeToSkCanvas(*frame.frame.surface->getCanvas(),config,knots);
+    render::internal::drawCompactStrokeToSkCanvas(*frame.frame.surface->getCanvas(),config,knots,seed);
     provider.release();std::vector<std::uint8_t> pixels(width*height*4);require(provider.readbackRgba(pixels).code==render::BackendSubmissionCode::kAccepted,"readback");return pixels;
 }
 unsigned alpha(const std::vector<std::uint8_t>& p,unsigned x,unsigned y){return p[(y*width+x)*4+3];}
@@ -33,7 +35,96 @@ int main(int argc,char** argv){
     const std::string mode=argc>1?argv[1]:"marker";
     foundation::InkBrushConfig c;c.size=32;c.roundMode=foundation::InkRoundMode::kRegular;c.color={.1,.3,.8,1};
     const std::vector<foundation::InkKnot> knots{{32,64,32768},{224,64,32768}};
-    if(mode=="quality"){
+    if(mode=="wax"){
+        const auto loaded=ink::BrushPackageCatalog{}.loadDefault("crayon-wax-v1",3);
+        require(bool(loaded),"pressure crayon revision missing");c=*loaded.package.compactConfig;
+        require(c.algorithmVersion==5&&c.signalVersion==3&&c.materialVersion==3,"crayon evaluator binding");
+        c.size=24;c.thinning=0;c.opacity=1;
+        require(ink::compactRadius(c,10000)==ink::compactRadius(c,55000),"pressure pigment fixture changed width");
+        const auto light=draw(c,{{32,64,10000},{224,64,10000}});
+        const auto firm=draw(c,{{32,64,55000},{224,64,55000}});
+        require(sum(firm)>sum(light)*1.4,"pressure only changes width, not pigment");
+        unsigned translucent=0,opaque=0;double center=0,edge=0;
+        for(unsigned x=48;x<208;++x){for(unsigned y=54;y<74;++y){const auto a=alpha(firm,x,y);translucent+=a>10&&a<235;opaque+=a>245;}
+            center+=alpha(firm,x,64);edge+=alpha(firm,x,74);}
+        require(translucent>2000&&opaque<100,"crayon remains a solid scraped ribbon");
+        require(edge<center*.7&&edge>center*.015,"crayon lacks soft grain edge");
+        auto translucentConfig=c;translucentConfig.opacity=.5;const auto halfOpacity=draw(translucentConfig,{{32,64,55000},{224,64,55000}});
+        require(std::abs(double(sum(halfOpacity))/sum(firm)-.5)<.02,"whole-stroke opacity applied more than once");
+        std::vector<foundation::InkKnot> sparse{{32,64,32768},{224,64,32768}},dense;
+        for(unsigned i=0;i<=96;++i)dense.push_back({32.+i*2,64,32768});
+        require(draw(c,sparse)==draw(c,dense),"sample count changes dry pigment");
+        const auto pixels=draw(c,sparse);require(pixels==draw(c,sparse),"non-deterministic crayon");
+        // One shared material path must remain identical through chunks,
+        // seed, viewport and cache reconstruction.
+        auto package=loaded.package;package.compactConfig=c;
+        ink::BrushSession stroke(1,ink::resolveBrushState(package,42));require(stroke.begin(),"wax session");
+        render::TransparentOverlaySkiaSurfaceProvider provider;require(provider.resize(width,height).code==render::BackendSubmissionCode::kAccepted,"wax surface");
+        render::SkiaRenderer renderer;render::PreviewSurfaceController preview(renderer,provider);
+        require(preview.begin(1,1,1,provider.generation()),"wax preview begin");
+        render::PreviewStyleOverride style;style.preferCapturedPaint=true;ink::BrushPreviewDelta delta;
+        for(unsigned i=0;i<180;++i){ink::BrushSample sample{12+i*1.25,64+std::sin(i*.07)*16,.2+.6*i/179.,true,i+1,std::uint64_t(i)*8'000'000,true,i==179};
+            require(stroke.append({&sample,1},{},delta)==ink::BrushSessionError::kNone&&preview.update(delta)&&preview.renderIfDirty(style),"wax live preview");}
+        ink::BrushCommitIntent intent;require(stroke.seal(intent)==ink::BrushSessionError::kNone,"wax seal");
+        std::vector<std::uint8_t> live(width*height*4);require(provider.readbackRgba(live).code==render::BackendSubmissionCode::kAccepted,"wax readback");
+        require(live==draw(c,intent.knots,1,0,0,42),"wax preview/canonical mismatch");
+        const auto submits=renderer.compactWork().generatedKnots;
+        require(preview.renderIfDirty(style)&&renderer.compactWork().generatedKnots==submits,"no-op wax preview resubmits");
+        renderer.clearCompactCache();delta.revision++;require(preview.update(delta)&&preview.renderIfDirty(style),"wax cache rebuild");
+        std::vector<std::uint8_t> rebuilt(live.size());require(provider.readbackRgba(rebuilt).code==render::BackendSubmissionCode::kAccepted&&rebuilt==live,"wax cache changes pixels");
+        require(preview.updateViewport(1.25F,7.F,-8.F)&&preview.renderIfDirty(style),"wax transform");
+        require(provider.readbackRgba(rebuilt).code==render::BackendSubmissionCode::kAccepted&&rebuilt==draw(c,intent.knots,1.25F,7,-8,42),"wax viewport mismatch");
+        require(provider.resize(width,height).code==render::BackendSubmissionCode::kAccepted&&preview.rebind(provider.generation())&&preview.renderIfDirty(style),"wax rebind");
+        require(provider.readbackRgba(rebuilt).code==render::BackendSubmissionCode::kAccepted&&rebuilt==draw(c,intent.knots,1.25F,7,-8,42),"wax rebind changed pixels");
+        auto full=SkSurfaces::Raster(SkImageInfo::MakeN32Premul(width,height));full->getCanvas()->clear(SK_ColorBLACK);
+        auto ranged=SkSurfaces::Raster(full->imageInfo());ranged->getCanvas()->clear(SK_ColorBLACK);
+        render::internal::drawCompactCoverageToSkCanvas(*full->getCanvas(),c,intent.knots,0,-1,42);
+        double distance=0;
+        for(std::size_t begin=0;begin<intent.knots.size();begin+=17){const auto end=std::min(begin+17,intent.knots.size());
+            render::internal::drawCompactCoverageRangeToSkCanvas(*ranged->getCanvas(),c,intent.knots,begin,end,distance,-1,42);
+            for(auto i=std::max(std::size_t(1),begin);i<end;++i)distance+=std::hypot(intent.knots[i].x-intent.knots[i-1].x,intent.knots[i].y-intent.knots[i-1].y);}
+        std::vector<std::uint8_t> a(live.size()),b(live.size());
+        require(full->readPixels(full->imageInfo(),a.data(),width*4,0,0)&&ranged->readPixels(ranged->imageInfo(),b.data(),width*4,0,0)&&a==b,"wax ranged coverage mismatch");
+        // Canonical coverage pictures are recorded at world identity and
+        // replayed at the camera scale. They must not capture a device AA size.
+        SkPictureRecorder recorder;auto* recording=recorder.beginRecording(SkRect::MakeWH(256,128));
+        auto fineConfig=c;fineConfig.size=4;
+        render::internal::drawCompactCoverageToSkCanvas(*recording,fineConfig,intent.knots,0,-1,42);
+        auto picture=recorder.finishRecordingAsPicture();
+        auto recorded=SkSurfaces::Raster(full->imageInfo()),direct=SkSurfaces::Raster(full->imageInfo());
+        for(const auto scale:{.5F,2.F}){
+            recorded->getCanvas()->resetMatrix();recorded->getCanvas()->clear(SK_ColorBLACK);recorded->getCanvas()->scale(scale,scale);recorded->getCanvas()->drawPicture(picture);
+            direct->getCanvas()->resetMatrix();direct->getCanvas()->clear(SK_ColorBLACK);direct->getCanvas()->scale(scale,scale);
+            render::internal::drawCompactCoverageToSkCanvas(*direct->getCanvas(),fineConfig,intent.knots,0,-1,42);
+            require(recorded->readPixels(recorded->imageInfo(),a.data(),width*4,0,0)&&direct->readPixels(direct->imageInfo(),b.data(),width*4,0,0)&&a==b,"recorded wax coverage changes with camera");}
+        require(full->readPixels(full->imageInfo(),a.data(),width*4,0,0),"seed reference readback");
+        auto seeded=SkSurfaces::Raster(full->imageInfo());seeded->getCanvas()->clear(SK_ColorBLACK);
+        render::internal::drawCompactCoverageToSkCanvas(*seeded->getCanvas(),c,intent.knots,0,-1,43);
+        require(seeded->readPixels(seeded->imageInfo(),b.data(),width*4,0,0)&&a!=b,"seed has no effect on pigment");
+        auto tapered=c;tapered.startTaper=16;tapered.endTaper=24;
+        const auto taperedLine=draw(tapered,sparse);
+        require(alpha(taperedLine,34,68)<alpha(pixels,34,68)&&alpha(taperedLine,220,68)<alpha(pixels,220,68),"wax taper ignored");
+        if(argc>2){
+            std::vector<std::vector<std::uint8_t>> swatches;
+            const std::vector<foundation::InkKnot> curve{{20,84,15000},{50,40,20000},{86,80,30000},{125,40,40000},{164,80,54000},{206,42,42000},{236,65,24000}};
+            for(unsigned row=0;row<4;++row)for(unsigned revision:{2U,3U}){
+                auto cfg=*ink::BrushPackageCatalog{}.loadDefault("crayon-wax-v1",revision).package.compactConfig;
+                cfg.size=row==0?16:row==1?24:32;cfg.color={.75,.12,.16,1};
+                const auto k=row==0?std::vector<foundation::InkKnot>{{20,64,16000},{236,64,52000}}:curve;
+                auto pack=ink::BrushPackageCatalog{}.loadDefault("crayon-wax-v1",revision).package;pack.compactConfig=cfg;pack.compactConfig->pressureSource=foundation::InkPressureSource::kDevice;
+                ink::BrushSession authored(1,ink::resolveBrushState(pack,42));require(authored.begin(),"wax swatch begin");ink::BrushPreviewDelta output;
+                for(unsigned i=0;i<k.size();++i){const auto& point=k[i];ink::BrushSample input{point.x,point.y,point.pressure/65535.,true,i+1,std::uint64_t(i)*8'000'000,true,i+1==k.size()};
+                    require(authored.append({&input,1},{},output)==ink::BrushSessionError::kNone,"wax swatch append");}
+                ink::BrushCommitIntent sealed;require(authored.seal(sealed)==ink::BrushSessionError::kNone,"wax swatch seal");
+                swatches.push_back(draw(cfg,sealed.knots,1,0,0,42));}
+            std::ofstream file(argv[2],std::ios::binary);file<<"P6\n512 512\n255\n";
+            for(unsigned row=0;row<4;++row)for(unsigned y=0;y<height;++y)for(unsigned col=0;col<2;++col)for(unsigned x=0;x<width;++x){
+                const auto& p=swatches[row*2+col];const auto offset=(y*width+x)*4;
+                for(unsigned channel=0;channel<3;++channel)file.put(char(std::min(255U,unsigned(p[offset+channel])+255-p[offset+3])));}
+        }
+        std::cout<<"wax light/firm="<<sum(light)<<"/"<<sum(firm)<<" translucent="<<translucent<<" edge/body="<<edge/center<<std::endl;
+    }else if(mode=="quality"){
+
         c=*ink::BrushPackageCatalog{}.loadDefault("round-handdrawn",4).package.compactConfig;
         c.thinning=0;
         std::vector<foundation::InkKnot> jitter;
@@ -283,8 +374,9 @@ int main(int argc,char** argv){
             require(preview.retireSession(i+1,provider.generation()),"preview retirement");
         }
         std::cout<<"cache_retained_bytes="<<renderer.compactWork().retainedBytes<<" temporary_bytes="<<renderer.compactWork().temporaryBytes<<'\n';
-    }else if(mode=="scene-mask"){
-        c.family=foundation::InkFamily::kChalk;
+    }else if(mode=="scene-mask"||mode=="wax-mask"){
+        if(mode=="wax-mask"){c=*ink::BrushPackageCatalog{}.loadDefault("crayon-wax-v1",3).package.compactConfig;c.size=32;}
+        else c.family=foundation::InkFamily::kChalk;
         semantic::ObjectRecord object;object.id=foundation::ObjectId::fromUint64(1);
         object.kind=semantic::ObjectKind::kVectorStroke;object.kind_version=3;
         object.content=semantic::CompactStrokeContent{{c,42,knots}};

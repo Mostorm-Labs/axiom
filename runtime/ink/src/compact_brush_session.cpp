@@ -23,7 +23,7 @@ double CompactBrushSession::simulatedPressure(double distance,double dt,double p
     return std::clamp(pressure+(target-pressure)*(1-std::exp(-dt/config_.tauSeconds)),config_.pMin,config_.pMax);
 }
 bool CompactBrushSession::append(std::span<const TimedBrushSample> confirmed,std::span<const TimedBrushSample> predicted)noexcept {
-    if(config_.algorithmVersion==4)return appendQuality(confirmed,predicted);
+    if(config_.algorithmVersion==4||config_.algorithmVersion==5)return appendQuality(confirmed,predicted);
     auto sequence=lastSequence_,time=lastTimestamp_;
     for(const auto& s:confirmed){if(!validSample(s,sequence)||(sequence&&s.timestampNs<time))return false;sequence=s.sequence;time=s.timestampNs;}
     for(const auto& s:predicted){if(!validSample(s,sequence)||(sequence&&s.timestampNs<time))return false;sequence=s.sequence;time=s.timestampNs;}
@@ -137,10 +137,10 @@ bool CompactBrushSession::append(std::span<const TimedBrushSample> confirmed,std
     metrics_.generatedKnots+=tail->knots.size();preview_=std::move(tail);
     return true;
 }
-double CompactBrushSession::latestPressure()const noexcept{if(config_.algorithmVersion==4&&qualityConfirmed_&&!qualityConfirmed_->knots.empty())return double(qualityConfirmed_->knots.back().pressure)/65535;
+double CompactBrushSession::latestPressure()const noexcept{if((config_.algorithmVersion==4||config_.algorithmVersion==5)&&qualityConfirmed_&&!qualityConfirmed_->knots.empty())return double(qualityConfirmed_->knots.back().pressure)/65535;
     return confirmedCount_?double(lastKnot_.pressure)/65535:.5;}
 std::vector<foundation::InkKnot> CompactBrushSession::knots()const {
-    if(config_.algorithmVersion==4){
+    if(config_.algorithmVersion==4||config_.algorithmVersion==5){
         std::vector<const BrushPreviewDelta::Chunk*> pieces;
         for(auto p=qualityConfirmed_.get();p;p=p->previous.get())pieces.push_back(p);
         std::vector<foundation::InkKnot> result;

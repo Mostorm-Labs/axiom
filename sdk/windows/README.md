@@ -159,3 +159,9 @@ startCap/endCap booleans. Use `runtime.readBrushConfig()` for a copied configura
 are existing owner-thread JSON transport commands, not new exported C++/STL ABI.
 Changes affect subsequent sessions; config v2 operations require a matching reader.
 Actual Windows DLL/device qualification remains separate from native host tests.
+
+
+Crayon `crayon-wax-v1` revision 3 uses existing brush control JSON fields with
+pressure-responsive pigment and a new immutable material binding. No DLL export
+or transport layout changes. Web/native host evidence does not qualify Windows
+DLL/device rendering.

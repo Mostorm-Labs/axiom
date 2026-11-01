@@ -75,6 +75,13 @@ int main(){
     const auto& stroke=std::get<semantic::CompactStrokeContent>(std::get<semantic::AddStrokeOp>(tunedOperation.operation.payload).object.content).stroke;
     require(stroke.config.algorithmVersion==4&&stroke.config.signalVersion==3,"public tuning promotion missed quality evaluator");
     require(stroke.knots.back().pressure<=stroke.knots.front().pressure,"stationary release inflated pressure");
+    call({{"command","control"},{"kind","preset"},{"profileId","crayon-wax-v1"},{"revision",3}});
+    auto wax=call({{"command","readInkBrush"}}).at("value");wax["size"]=24;wax["thinning"]=.5;
+    call({{"command","control"},{"kind","inkBrush"},{"value",wax}});
+    ++pointer;for(unsigned phase:{0U,1U,2U}){timestamp+=10'000'000;call({{"command","pointer"},{"source",1},{"pointer",pointer},{"timestampNs",timestamp},{"phase",phase},{"x",30+40*phase},{"y",210},{"pressure",.5},{"pressureAvailable",false}});}
+    const auto waxOperation=semantic::SemanticCodec::decodeProtobufOperation(lastOperation);require(waxOperation.ok(),"wax operation encoding");
+    const auto& waxBound=std::get<semantic::CompactStrokeContent>(std::get<semantic::AddStrokeOp>(waxOperation.operation.payload).object.content).stroke.config;
+    require(waxBound.algorithmVersion==5&&waxBound.materialVersion==3&&waxBound.thinning==.5,"SDK config edit discarded wax evaluator");
     const auto before=call({{"command","state"}}).at("value").at("generation");
     const auto rejected=sdk::Json::parse(session.call(R"({"command":"control","kind":"inkBrush","value":{"family":7}})"));
     require(!rejected.value("ok",true)&&call({{"command","state"}}).at("value").at("generation")==before,"invalid native config mutated document");

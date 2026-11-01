@@ -62,5 +62,13 @@ int main(){
  ink::CompactBrushSession dense(base);
  for(unsigned i=0;i<4000;++i){ink::TimedBrushSample q{i*.01,50,0,false,i+1,std::uint64_t(i)*1'000'000};need(dense.append({&q,1},{}),"dense fixture");}
  need(dense.metrics().copiedKnots<4000ULL*512,"dense input causes unbounded tail copies");
+ const auto wax=ink::BrushPackageCatalog{}.loadDefault("crayon-wax-v1",3);need(bool(wax),"wax preset");
+ need(ink::brushPackageCanonicalDigest(wax.package)!=ink::brushPackageCanonicalDigest(ink::BrushPackageCatalog{}.loadDefault("crayon-wax-v1",2).package),"wax digest aliases old revision");
+ auto waxConfig=base;waxConfig.algorithmVersion=5;waxConfig.geometryConfig=wax.package.compactConfig;
+ ink::CompactBrushSession waxWhole(waxConfig),waxSingle(waxConfig),waxPredicted(waxConfig);
+ need(waxWhole.append(trace,{}),"wax batch");
+ for(auto sample:trace){auto prediction=sample;prediction.sequence+=1000;prediction.x+=40;prediction.timestampNs+=30'000'000;
+   need(waxSingle.append({&sample,1},{})&&waxPredicted.append({&sample,1},{&prediction,1}),"wax append");}
+ need(waxWhole.knots()==waxSingle.knots()&&waxWhole.knots()==waxPredicted.knots(),"wax prediction or batching changes commit");
  std::cout<<"VectorQuality: PF endpoints, batches, prediction, release, device/timed pressure, tap, bounded dense input passed\n";
 }

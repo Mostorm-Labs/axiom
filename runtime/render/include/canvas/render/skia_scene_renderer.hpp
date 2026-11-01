@@ -31,10 +31,10 @@ void drawCompactStrokeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
 // stable prefix and replaceable tail have been combined with max coverage.
 void drawCompactContourCoverageToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,const ink::CompactContour&);
 void drawCompactCoverageToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
-                                  std::span<const foundation::InkKnot>,double startDistance=0,double totalDistance=-1);
+                                  std::span<const foundation::InkKnot>,double startDistance=0,double totalDistance=-1,std::uint64_t seed=0);
 // Same coverage equation, with original predecessor at a resumed offset.
 void drawCompactCoverageRangeToSkCanvas(SkCanvas&,const foundation::InkBrushConfig&,
-    std::span<const foundation::InkKnot>,std::size_t begin,std::size_t end,double beginDistance=-1,double totalDistance=-1);
+    std::span<const foundation::InkKnot>,std::size_t begin,std::size_t end,double beginDistance=-1,double totalDistance=-1,std::uint64_t seed=0);
 void compositeCompactCoverageToSkCanvas(SkCanvas&,const SkImage&,
                                        const foundation::InkBrushConfig&,std::uint64_t seed=0,
                                        int deviceX=0,int deviceY=0);

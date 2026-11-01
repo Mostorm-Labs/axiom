@@ -204,7 +204,7 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
                 ink::CompactContour contours;job.contour->append({stroke.knots.data()+job.knot,end-job.knot},job.totalDistance,contours);
                 if(end==stroke.knots.size())job.contour->finish(job.totalDistance,contours);
                 drawCompactContourCoverageToSkCanvas(*coverage,stroke.config,contours);
-            }else drawCompactCoverageRangeToSkCanvas(*coverage,stroke.config,stroke.knots,job.knot,end,job.distance,job.totalDistance);
+            }else drawCompactCoverageRangeToSkCanvas(*coverage,stroke.config,stroke.knots,job.knot,end,job.distance,job.totalDistance,stroke.seed);
             for(std::size_t i=std::max(std::size_t(1),job.knot);i<end;++i)
                 job.distance+=std::hypot(stroke.knots[i].x-stroke.knots[i-1].x,stroke.knots[i].y-stroke.knots[i-1].y);
             work.knotSteps+=end-job.knot;job.knot=end;++steps;

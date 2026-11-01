@@ -34,6 +34,7 @@ struct SkiaRenderer::NavigationCache final {
 struct SkiaRenderer::CompactCache final {
     struct Entry {std::shared_ptr<const ink::BrushPreviewDelta::Chunk> prefix;sk_sp<SkSurface> surface;foundation::InkBrushConfig config;};
     std::unordered_map<std::uint64_t,Entry> entries;
+    sk_sp<SkSurface> scratch;
     std::uint64_t generation=0;float scale=0,x=0,y=0,px=0,py=0;int width=0,height=0;
 };
 namespace {
@@ -470,21 +471,29 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
             auto& cache=*compactCache_;
             // Persistent coverage is view-bounded and disposable. Large hosts
             // fall back to clipped reconstruction rather than exceed budget.
-            if(bytes>8*1024*1024){
+            const bool crayon=config.algorithmVersion==5;
+            // Keep a 2x 1000x650 view incremental: two view surfaces fit the
+            // existing 32MiB aggregate budget. Oversized views stay bounded.
+            const std::uint64_t surfaceLimit=crayon?16*1024*1024:8*1024*1024;
+            if(bytes>surfaceLimit){
                 std::vector<const ink::BrushPreviewDelta::Chunk*> chunks;
                 for(auto c=contour.compactChunks.get();c;c=c->previous.get())chunks.push_back(c);
                 std::vector<foundation::InkKnot> knots;
                 for(auto i=chunks.rbegin();i!=chunks.rend();++i)knots.insert(knots.end(),(*i)->knots.begin(),(*i)->knots.end());
                 compactWork_.generatedKnots+=knots.size();internal::drawCompactStrokeToSkCanvas(*canvas,config,knots,contour.compactSeed);return;
             }
-            if(!cache.entries.contains(contour.session)&&bytes*(cache.entries.size()+1)>24*1024*1024)cache.entries.clear();
+            const auto stableLimit=crayon?32*1024*1024-bytes:
+                cache.scratch?32*1024*1024-2*bytes:24*1024*1024;
+            const auto nextCount=cache.entries.size()+(cache.entries.contains(contour.session)?0:1);
+            if(bytes*nextCount>stableLimit)cache.entries.clear();
             auto& entry=cache.entries[contour.session];
             auto prefix=contour.compactChunks->previous;
             std::vector<const ink::BrushPreviewDelta::Chunk*> added;
             auto c=prefix;
             while(c&&c!=entry.prefix){added.push_back(c.get());c=c->previous;}
             if(!entry.surface||c!=entry.prefix||entry.config!=config){
-                entry.surface=SkSurfaces::Raster(info);if(!entry.surface)return;
+                entry.surface=crayon?acquired.frame.surface->makeSurface(info):SkSurfaces::Raster(info);
+                if(!entry.surface)return;
                 entry.surface->getCanvas()->clear(SK_ColorBLACK);entry.prefix.reset();added.clear();
                 for(auto v=prefix;v;v=v->previous)added.push_back(v.get());
             }
@@ -492,16 +501,19 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
             stable->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);
             stable->translate(geometry.viewport.translationX,geometry.viewport.translationY);stable->scale(geometry.viewport.scale,geometry.viewport.scale);
             for(auto i=added.rbegin();i!=added.rend();++i){compactWork_.generatedKnots+=(*i)->knots.size();if(config.algorithmVersion==4)internal::drawCompactContourCoverageToSkCanvas(*stable,config,(*i)->contour);
-                else internal::drawCompactCoverageToSkCanvas(*stable,config,(*i)->knots,(*i)->startDistance,contour.compactChunks->totalDistance);}
+                else internal::drawCompactCoverageToSkCanvas(*stable,config,(*i)->knots,(*i)->startDistance,contour.compactChunks->totalDistance,contour.compactSeed);}
             stable->restore();entry.prefix=prefix;entry.config=config;
-            auto combined=SkSurfaces::Raster(info);if(!combined)return;
-            auto* temporary=combined->getCanvas();temporary->clear(SK_ColorBLACK);
+            // Use the target backend, retaining one disposable scratch. A CPU
+            // Raster here interprets every procedural shader pixel on Web.
+            if(crayon&&!cache.scratch)cache.scratch=acquired.frame.surface->makeSurface(info);
+            auto combined=crayon?cache.scratch:SkSurfaces::Raster(info);if(!combined)return;
+            auto* temporary=combined->getCanvas();temporary->resetMatrix();temporary->clear(SK_ColorBLACK);
             temporary->drawImage(entry.surface->makeImageSnapshot(),0,0);
             temporary->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);
             temporary->translate(geometry.viewport.translationX,geometry.viewport.translationY);temporary->scale(geometry.viewport.scale,geometry.viewport.scale);
             compactWork_.generatedKnots+=contour.compactChunks->knots.size();
             if(config.algorithmVersion==4)internal::drawCompactContourCoverageToSkCanvas(*temporary,config,contour.compactChunks->contour);
-            else internal::drawCompactCoverageToSkCanvas(*temporary,config,contour.compactChunks->knots,contour.compactChunks->startDistance,contour.compactChunks->totalDistance);
+            else internal::drawCompactCoverageToSkCanvas(*temporary,config,contour.compactChunks->knots,contour.compactChunks->startDistance,contour.compactChunks->totalDistance,contour.compactSeed);
             internal::compositeCompactCoverageToSkCanvas(*canvas,*combined->makeImageSnapshot(),config,contour.compactSeed);
             compactWork_.retainedBytes=bytes*cache.entries.size();compactWork_.temporaryBytes=bytes;
             return;

@@ -372,8 +372,8 @@ to the active brush and exposes the next stroke's color.
 4 smoothstep), `pressureModel` (1 timed speed, 2 distance proxy),
 `startTaper`/`endTaper` [0,4096] world units, and `startCap`/`endCap`.
 Round and marker revisions 3/4 select config v2; changing these controls on an old
-round/marker preset explicitly promotes subsequent sessions. Other families reject
-non-default vector tuning. Config version is a compatibility discriminator, not
+round/marker preset explicitly promotes subsequent sessions. Chalk, watercolor and laser reject
+non-default vector tuning; crayon revision 3 admits its documented subset. Config version is a compatibility discriminator, not
 a consumer-chosen engine/resource binding. Unsupported versions reject.
 
 Controls freeze at session begin and affect the next session. Existing owner-thread
@@ -391,3 +391,15 @@ Pressure-to-width easing is separate from pressure generation and whole-stroke o
 Taper applies to world arc length and cap flags affect untapered endpoints.
 Replay uses persisted effective knots and config, never pressure simulation again.
 Historical config v1 bytes/interpretation remain unchanged; older readers reject v2.
+
+
+### Pressure crayon revision 3
+
+`selectBrush('crayon-wax-v1', 3)` selects a pressure-responsive dry crayon. It uses
+config v2 with a separately bound evaluator/material; old revisions keep their
+appearance. The compact carrier still stores only centerline/effective pressure.
+Pressure controls both width and pigment/texture contact. `deposition` controls
+wax coverage and `textureScale` paper scale. Existing width/opacity, thinning,
+streamline, easing, pressure model, taper and cap fields use the same owned control
+transport and session-begin capture. There is no per-dab or image API/persistence.
+Preview, canonical, image export and replay share the same Skia helper.

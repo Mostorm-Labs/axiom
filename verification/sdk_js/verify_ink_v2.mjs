@@ -80,15 +80,18 @@ try {
   Object.assign(observation.checks,(await evaluate('probe.lifecycle()')).checks);
   const done=await evaluate('probe.close()');Object.assign(observation.checks,done.checks);observation.errors=done.errors;
   if(observation.brushRevision>=3){
-    await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/example.html`});
+    await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/example.html${observation.brushRevision>=5?'?brush=crayon':''}`});
     for(let attempt=0;!await evaluate(`document.querySelector('#tools')?.getAttribute('aria-busy')==='false'`);++attempt){
       if(attempt>300)throw Error('tuning Demo startup');await delay(50);
     }
     const controls=await evaluate(`Object.fromEntries(['size','thinning','streamline','smoothing','startTaper','endTaper','easing','pressure-model'].map(k=>[k,document.getElementById('ink-'+k)?.value]))`);
     observation.demoControls=controls;
-    observation.checks.demoVectorDefaults=controls.size==='16'&&controls.thinning==='0.99'&&controls.streamline==='0.13'&&controls.smoothing==='0.61'&&controls.endTaper===(observation.brushRevision>=4?'0':'16')&&controls.easing==='1'&&controls['pressure-model']==='2';
+    observation.checks.demoVectorDefaults=observation.brushRevision>=5?controls.size==='16'&&controls.thinning==='0.65'&&controls.streamline==='0.25'&&controls.endTaper==='0':controls.size==='16'&&controls.thinning==='0.99'&&controls.streamline==='0.13'&&controls.smoothing==='0.61'&&controls.endTaper===(observation.brushRevision>=4?'0':'16')&&controls.easing==='1'&&controls['pressure-model']==='2';
     const demo=await send('Page.captureScreenshot',{format:'png'});
     await fs.writeFile(path.resolve(process.argv[4]).replace(/\.json$/,'-demo.png'),Buffer.from(demo.data,'base64'));
+    if(observation.brushRevision>=5){
+      await evaluate(`(()=>{const c=document.getElementById('ink-color');c.value='#cc3949';c.dispatchEvent(new Event('change'));})()`);await delay(150);
+    }
     const mounted=await evaluate(`(()=>{const r=document.getElementById('canvas').getBoundingClientRect();return {left:r.left,top:r.top,width:r.width,height:r.height};})()`);
     const y=mounted.top+Math.min(110,mounted.height/2);
     await mouse('mousePressed',100,y);for(let k=1;k<=16;++k){await mouse('mouseMoved',100+k*25,y+Math.sin(k*.3)*45,true);await delay(12);}
@@ -99,6 +102,18 @@ try {
     observation.checks.demoDrawCommits=await evaluate(`document.getElementById('status').textContent.startsWith('1 objects')`);
     const drawn=await send('Page.captureScreenshot',{format:'png'});
     await fs.writeFile(path.resolve(process.argv[4]).replace(/\.json$/,'-demo-stroke.png'),Buffer.from(drawn.data,'base64'));
+    if(observation.brushRevision>=5){
+      await evaluate(`(()=>{const c=document.getElementById('ink-size');c.value='32';c.dispatchEvent(new Event('change'));})()`);await delay(150);
+      for(let row=0;row<3;++row){
+        const base=mounted.top+40+row*75;await mouse('mousePressed',100,base);
+        let x=100;for(let k=1;k<=65;++k){x+=k<20?4:k<45?16:2;await mouse('mouseMoved',x,base+Math.sin(k*.08)*18,true);await delay(8);}
+        await mouse('mouseReleased',x,base+Math.sin(65*.08)*18);await delay(200);
+      }
+      observation.checks.demoCrayonRepeatedStrokes=await evaluate(`document.getElementById('status').textContent.startsWith('4 objects')`);
+      const swatch=await send('Page.captureScreenshot',{format:'png'});
+      await fs.writeFile(path.resolve(process.argv[4]).replace(/\.json$/,'-demo-crayon.png'),Buffer.from(swatch.data,'base64'));
+    }
+
   }
   observation.status=Object.values(observation.checks).every(Boolean)&&!observation.exceptions.length&&!observation.errors.length?'PASS':'FAIL';
   if(observation.status!=='PASS')failure=Error('Ink v2 browser checks failed');

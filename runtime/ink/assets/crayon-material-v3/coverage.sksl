@@ -1,0 +1,60 @@
+// Dry crayon pigment on paper. All inputs are captured stroke/world values.
+uniform float2 a;
+uniform float2 b;
+uniform float2 radii;
+uniform float2 pressures;
+uniform float startDistance;
+uniform float totalDistance;
+uniform float2 taper;
+uniform float textureScale;
+uniform float deposition;
+uniform float2 seed;
+// Fixed world-space feather; coverage pictures may be replayed at a new camera.
+const float featherWidth=.65;
+uniform float2 clipCaps;
+
+float hash(float2 p) {
+    float2 q=mod(floor(p),251.);
+    float n=mod(q.x*17.+q.y*131.,251.);
+    n=mod(n*n+43.,251.);n=mod(n*n+17.,251.);
+    return n/251.;
+}
+float noise(float2 p) {
+    float2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+    return mix(mix(hash(i),hash(i+float2(1,0)),f.x),
+               mix(hash(i+float2(0,1)),hash(i+float2(1,1)),f.x),f.y);
+}
+half4 main(float2 p) {
+    float2 v=b-a;
+    float lengthV=length(v);
+    float2 tangent=lengthV>.00001?v/lengthV:float2(1,0);
+    float2 normal=float2(-tangent.y,tangent.x);
+    float along=dot(p-a,tangent);
+    float t=clamp(along/max(lengthV,.00001),0.,1.);
+    float2 nearest=mix(a,b,t);
+    float at=startDistance+clamp(along,0.,lengthV);
+    float start=taper.x>0.?clamp(at/taper.x,0.,1.):1.;
+    float end=taper.y>0.?clamp((totalDistance-at)/taper.y,0.,1.):1.;
+    float radius=max(.0001,mix(radii.x,radii.y,t)*min(start*(2.-start),1.-pow(1.-end,3.)));
+    float pressure=clamp(mix(pressures.x,pressures.y,t),0.,1.);
+    float scale=max(.25,textureScale);
+    // Paper remains attached to world space. Arc length and transverse distance
+    // orient the finer rub marks; no per-event random stamp or accumulation.
+    float paper=noise(p/(scale*.24)+seed);
+    float tooth=noise(p/.65+seed+float2(11,97));
+    float fine=noise(p/.40+seed+float2(71,37));
+    float2 brush=float2(startDistance+along,dot(p-nearest,normal));
+    float rub=noise(brush/float2(scale*.8,max(.4,scale*.065))+seed+float2(37,19));
+    float contact=1.-length(p-nearest)/radius;
+    float fringe=(1.-paper)*.06+(1.-tooth)*.04;
+    float feather=max(featherWidth/radius,.18+.16*(1.-pressure));
+    float body=smoothstep(0.,feather,contact-fringe);
+    if(clipCaps.x>0.)body*=smoothstep(-featherWidth*.5,featherWidth*.5,along);
+    if(clipCaps.y>0.)body*=1.-smoothstep(lengthV-featherWidth*.5,lengthV+featherWidth*.5,along);
+    // More pressure deposits more wax and reaches further into paper valleys.
+    float threshold=.66-.36*deposition-.19*pressure;
+    float grain=smoothstep(threshold-.22,threshold+.22,.52*paper+.30*tooth+.18*rub);
+    float flow=.40+.56*sqrt(pressure);
+    float pigment=body*flow*(.24+.76*grain)*(.70+.20*tooth+.10*fine)*(.70+.30*deposition);
+    return half4(half(pigment),half(pigment),half(pigment),1.);
+}
