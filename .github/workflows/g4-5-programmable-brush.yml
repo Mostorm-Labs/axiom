@@ -8,9 +8,9 @@ on:
       - "runtime/input/**"
       - "runtime/render/**"
       - "apps/brush_lab/**"
-      - "apps/ink_playground/**"
+      - "verification/runtime_qualification/**"
+      - "verification/runtime_qualification/**"
       - "debug_ui/**"
-      - "arc/**"
       - "verification/corpus/brush/g4_5/**"
       - ".aegis/packages/GT-G4-5/**"
       - ".aegis/packages/GT-G4.5-FINAL-VECTOR-CLOSURE/**"
@@ -93,8 +93,7 @@ jobs:
             -DCANVAS_BUILD_RENDER=ON `
             -DCANVAS_RENDER_BUILD_TESTS=ON `
             -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON `
-            -DCANVAS_BUILD_ARC=ON `
-            -DCANVAS_BUILD_INK_PLAYGROUND=ON `
+            -DAXIOM_BUILD_RUNTIME_QUALIFICATION=ON `
             -DAXIOM_BUILD_DEBUG_UI=ON `
             -DAXIOM_DEBUG_UI_PROFILE=full `
             -DCANVAS_SKIA_SDK_ROOT="$sdkRoot" `
@@ -102,9 +101,7 @@ jobs:
             -DBUILD_TESTING=ON
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $buildTargets = @(
-            "axiom_ink_playground_windows",
             "axiom_ink_playground_tests",
-            "axiom_ink_playground_windows_pointer_utils_tests",
             "axiom_brush_runtime_pipeline_tests",
             "axiom_render_preview_surface_tests",
             "axiom_canonical_handoff_tests",
@@ -123,13 +120,11 @@ jobs:
           & out/g4-5-windows/apps/brush_lab/axiom_brush_lab.exe out/g4-5-windows-qualification
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Copy-Item out/g4-5-windows/apps/brush_lab/axiom_brush_lab.exe out/g4-5-windows-qualification/
-          Copy-Item out/g4-5-windows/apps/ink_playground/axiom_ink_playground_windows.exe out/g4-5-windows-qualification/
           Copy-Item out/g4-5-windows-qualification-ctest.log out/g4-5-windows-qualification/
           Copy-Item out/g4-5-windows-qualification-build.log out/g4-5-windows-qualification/
           Copy-Item out/g4-5-windows-environment.json out/g4-5-windows-qualification/build-environment.json
           $brushSha = (Get-FileHash out/g4-5-windows-qualification/axiom_brush_lab.exe -Algorithm SHA256).Hash.ToLower()
-          $inkSha = (Get-FileHash out/g4-5-windows-qualification/axiom_ink_playground_windows.exe -Algorithm SHA256).Hash.ToLower()
-          @{ source_revision = (git rev-parse HEAD); profile = "windows-x64"; executable_sha256 = $brushSha; brush_lab_sha256 = $brushSha; ink_playground_sha256 = $inkSha; focused_ctest = $ctestRegex; workflow_run_id = $env:GITHUB_RUN_ID; run_attempt = $env:GITHUB_RUN_ATTEMPT } |
+          @{ source_revision = (git rev-parse HEAD); profile = "windows-x64"; executable_sha256 = $brushSha; brush_lab_sha256 = $brushSha; focused_ctest = $ctestRegex; workflow_run_id = $env:GITHUB_RUN_ID; run_attempt = $env:GITHUB_RUN_ATTEMPT } |
             ConvertTo-Json | Set-Content -Encoding utf8NoBOM out/g4-5-windows-qualification/identity.json
       - uses: actions/upload-artifact@v4
         with:
@@ -275,7 +270,7 @@ jobs:
             -DCANVAS_BUILD_RENDER=ON \
             -DCANVAS_RENDER_BUILD_TESTS=ON \
             -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON \
-            -DCANVAS_BUILD_INK_PLAYGROUND=OFF \
+            -DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF \
             -DCANVAS_SKIA_SDK_ROOT="$sdk_root" \
             -DAXIOM_BUILD_BRUSH_LAB=ON \
             -DBUILD_TESTING=ON

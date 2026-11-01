@@ -25,6 +25,7 @@ struct PreparedApplyPlan final {
     std::vector<ObjectId> deletes;
     std::optional<DeleteClosure> delete_closure;
     std::optional<ResourceManifest> manifest;
+    std::optional<foundation::DocumentBackground> background;
     std::vector<ResourceManifestSemanticChange> resource_changes;
 };
 

@@ -6,7 +6,7 @@ on:
     paths:
       - "CMakeLists.txt"
       - "runtime/**"
-      - "apps/ink_playground/**"
+      - "verification/runtime_qualification/**"
       - "verification/**"
       - ".aegis/packages/GT-G4.7/**"
       - ".aegis/results/GT-G4.7/**"
@@ -21,7 +21,7 @@ on:
     paths:
       - "CMakeLists.txt"
       - "runtime/**"
-      - "apps/ink_playground/**"
+      - "verification/runtime_qualification/**"
       - "verification/**"
       - ".aegis/packages/GT-G4.7/**"
       - ".aegis/results/GT-G4.7/**"
@@ -60,17 +60,17 @@ jobs:
           $sdk=(Resolve-Path .deps/skia-sdk/windows-x64-d3d12/release).Path
           cmake -S . -B out/g47-windows -G Ninja `
             -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCANVAS_BUILD_POC01=OFF `
-            -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_BUILD_ARC=ON `
-            -DCANVAS_BUILD_INK_PLAYGROUND=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON `
+            -DCANVAS_BUILD_RF01=ON -DCANVAS_BUILD_RENDER=ON `
+            -DAXIOM_BUILD_RUNTIME_QUALIFICATION=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON `
             -DAXIOM_BUILD_DEBUG_UI=ON -DAXIOM_DEBUG_UI_PROFILE=full `
             -DCMAKE_CXX_FLAGS="/wd4100 /wd4702" `
             -DCANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH=ON `
             -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON -DCANVAS_RENDER_BUILD_TESTS=ON `
             -DCANVAS_SKIA_SDK_ROOT="$sdk" -DAXIOM_PROTOC="$env:AXIOM_PROTOC" `
             -DCMAKE_PREFIX_PATH="$env:CMAKE_PREFIX_PATH" -DBUILD_TESTING=ON
-          cmake --build out/g47-windows --config RelWithDebInfo --target axiom_text_layout_tests axiom_image_resource_tests axiom_text_pipeline_tests axiom_g47_text_host_tests axiom_g47_qualification_runner axiom_ink_playground_windows --parallel 2
+          cmake --build out/g47-windows --config RelWithDebInfo --target axiom_text_layout_tests axiom_image_resource_tests axiom_text_pipeline_tests axiom_g47_text_host_tests axiom_g47_qualification_runner --parallel 2
           ctest --test-dir out/g47-windows -C RelWithDebInfo -R "^(G47TextLayout|G47ImageResource|G47TextPipeline|G47TextHost|G47QualificationReplay)$" --output-on-failure
-          out/g47-windows/apps/ink_playground/axiom_g47_qualification_runner.exe out/g47-windows/qualification-100k 50000
+          out/g47-windows/verification/runtime_qualification/axiom_g47_qualification_runner.exe out/g47-windows/qualification-100k 50000
       - uses: actions/upload-artifact@v4
         with:
           name: g4-7-windows-${{ github.event.pull_request.head.sha || github.sha }}
@@ -78,8 +78,7 @@ jobs:
             out/g47-windows-environment.json
             out/g47-windows/Testing/Temporary/LastTest.log
             out/g47-windows/qualification-100k/
-            out/g47-windows/apps/ink_playground/axiom_ink_playground_windows.exe
-            out/g47-windows/apps/ink_playground/icudtl.dat
+            out/g47-windows/verification/runtime_qualification/icudtl.dat
           if-no-files-found: error
 
   web:
@@ -111,45 +110,7 @@ jobs:
           name: g4-7-web-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             out/g47-web-environment.json
-            out/g47-web/apps/ink_playground/axiom_ink_playground_web.js
-            out/g47-web/apps/ink_playground/axiom_ink_playground_web.wasm
-            apps/ink_playground/platform/web/index.html
-          if-no-files-found: error
-
-  android:
-    name: g4.7/android-qualification
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          persist-credentials: false
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
-      - uses: actions/setup-java@v4
-        with: { distribution: temurin, java-version: "17" }
-      - uses: gradle/actions/setup-gradle@v4
-        with: { gradle-version: "8.11.1" }
-      - name: Install CMake, Ninja and Android NDK
-        run: |
-          python -m pip install cmake==3.30.5 ninja==1.11.1.4
-          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.2.12479018" "cmake;3.30.5" || [[ "${PIPESTATUS[1]}" -eq 0 ]]
-          echo "ANDROID_NDK_ROOT=$ANDROID_HOME/ndk/27.2.12479018" >> "$GITHUB_ENV"
-      - name: Resolve locked Android SDKs
-        run: |
-          python tools/setup_build_environment.py --core --semantic --target android-arm64-v8a --facts-output out/g47-android-environment.json --status
-          python tools/skia/fetch.py --profile tools/skia/profiles/r1-full-v1.json --lock r1-full-skia-sdk.lock.json --target android-arm64-v8a-gles3 --variant release
-      - name: Build Android qualification target
-        run: |
-          python verification/tools/g47_configure.py android --facts out/g47-android-environment.json --build out/g47-android --skia .deps/skia-sdk/android-arm64-v8a-gles3/release --ndk "$ANDROID_NDK_ROOT"
-          cmake --build out/g47-android --target axiom_ink_playground_android --parallel 2
-          python verification/tools/g47_configure.py android --facts out/g47-android-environment.json --build out/g47-android --skia .deps/skia-sdk/android-arm64-v8a-gles3/release --ndk "$ANDROID_NDK_ROOT" --gradle-arguments-output out/g47-android-gradle-arguments.json
-          gradle -p apps/ink_playground/platform/android assembleDebug -PaxiomCmakeArguments="$PWD/out/g47-android-gradle-arguments.json"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: g4-7-android-${{ github.event.pull_request.head.sha || github.sha }}
-          path: |
-            out/g47-android-environment.json
-            out/g47-android/apps/ink_playground/libaxiom_ink_playground_android.so
-            apps/ink_playground/platform/android/app/build/outputs/apk/debug/app-debug.apk
+            out/g47-web/verification/runtime_qualification/axiom_ink_playground_web.js
+            out/g47-web/verification/runtime_qualification/axiom_ink_playground_web.wasm
+            verification/runtime_qualification/platform/web/index.html
           if-no-files-found: error

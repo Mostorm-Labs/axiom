@@ -1,0 +1,99 @@
+{
+  "schema_version": "g5-ink-v2-locality-results-v1",
+  "classification": "PASS_WITH_FINDINGS",
+  "official_gate_pass_claimed": false,
+  "g5_admission": "BLOCKED_UNVERIFIED_PREREQUISITES",
+  "basis_revision": "6c46f540c3fe5a3a38f4d0d5147e64f81a95dd0b",
+  "web": {
+    "before": {
+      "repeats": 3,
+      "objects_including_warmup": 33,
+      "last_callback_ms": [
+        331.19999998807907,
+        347.89999997615814,
+        380.7999999523163
+      ],
+      "median_last_callback_ms": 347.89999997615814,
+      "per_run_callback_p50_ms": [
+        197.60000002384186,
+        182.39999997615814,
+        214.4000000357628
+      ],
+      "median_callback_p50_ms": 197.60000002384186,
+      "artifact_bindings": [
+        "f56debd7a810e73fb24585f88f352def6d0e3c745c184dc43eda6c4a4060efb1",
+        "f56debd7a810e73fb24585f88f352def6d0e3c745c184dc43eda6c4a4060efb1",
+        "f56debd7a810e73fb24585f88f352def6d0e3c745c184dc43eda6c4a4060efb1"
+      ],
+      "source_tree_sha256": [
+        "c567cad60638ed03c9838b4374915d181f0d8c50187281323bcde50d94a67e3e",
+        "c567cad60638ed03c9838b4374915d181f0d8c50187281323bcde50d94a67e3e",
+        "c567cad60638ed03c9838b4374915d181f0d8c50187281323bcde50d94a67e3e"
+      ],
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+    },
+    "after": {
+      "repeats": 3,
+      "objects_including_warmup": 33,
+      "last_callback_ms": [
+        331.80000001192093,
+        331.89999997615814,
+        464
+      ],
+      "median_last_callback_ms": 331.89999997615814,
+      "per_run_callback_p50_ms": [
+        181.5,
+        200,
+        231
+      ],
+      "median_callback_p50_ms": 200,
+      "artifact_bindings": [
+        "d5bcd81c99f2ec7d97cf7f6b38549250065ae50d475f5f36b1c1fc994f8917f1",
+        "d5bcd81c99f2ec7d97cf7f6b38549250065ae50d475f5f36b1c1fc994f8917f1",
+        "d5bcd81c99f2ec7d97cf7f6b38549250065ae50d475f5f36b1c1fc994f8917f1"
+      ],
+      "source_tree_sha256": [
+        "07b9b730dd02da81f92e0823713f437502b2cde4cfc7030d01a6ae5cf0665582",
+        "07b9b730dd02da81f92e0823713f437502b2cde4cfc7030d01a6ae5cf0665582",
+        "07b9b730dd02da81f92e0823713f437502b2cde4cfc7030d01a6ae5cf0665582"
+      ],
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+    }
+  },
+  "limitations": [
+    "Headless Chrome native CDP mouse events; not physical latency",
+    "Some native runs overlap builds; native wall-clock speedups are diagnostic only",
+    "Web source/artifact bindings are stable per run; system load varies",
+    "No statistically established browser performance improvement",
+    "Full projection remains active"
+  ],
+  "work": {
+    "lookup": {
+      "lookups": 4097,
+      "compared_ids": 49166
+    },
+    "raster": {
+      "old_tiles": 6,
+      "new_tiles": 1,
+      "old_shaded_pixels": 356321,
+      "new_shaded_pixels": 2240,
+      "exact_pixel_cases": 450
+    },
+    "projection": [
+      {
+        "population": 1000,
+        "changed": 1,
+        "actual_all_objects_calls": 1,
+        "actual_copied_objects": 1000,
+        "classification": "FULL_PROJECTION_FINDING"
+      },
+      {
+        "population": 10000,
+        "changed": 1,
+        "actual_all_objects_calls": 1,
+        "actual_copied_objects": 10000,
+        "classification": "FULL_PROJECTION_FINDING"
+      }
+    ]
+  }
+}

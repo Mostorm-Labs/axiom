@@ -22,7 +22,9 @@ class BrushCommitAdapter final {
       const ink::BrushCommitIntent& intent,
       const ink::BrushPackage& package,
       std::uint64_t operationId,
-      semantic::DocumentId documentId) noexcept;
+      semantic::DocumentId documentId,
+      semantic::OperationId canonicalOperationId = {},
+      semantic::ObjectId canonicalObjectId = {}) noexcept;
 };
 
 }  // namespace canvas::interaction

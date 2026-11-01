@@ -1,4 +1,4 @@
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
 
 #include <cassert>
@@ -21,7 +21,7 @@ std::vector<std::uint8_t> readFixture(const char* name) {
 
 int main() {
   using namespace canvas;
-  runtime::RuntimeComposition composition;
+  runtime::RuntimeCompositionCore composition;
   assert(composition.open());
   assert(composition.bindSurface(256U, 256U));
   auto& facade = composition.controlFacade();
@@ -36,7 +36,7 @@ int main() {
   // An ordinary consumer supplies file bytes, not a prebuilt Manifest.
   // Rejecting this request leaves the actual Minimal Host unable to import.
   {
-    runtime::RuntimeComposition files;
+    runtime::RuntimeCompositionCore files;
     assert(files.open() && files.bindSurface(800, 600));
     auto& consumer = files.controlFacade();
     runtime::ImageImportRequest file;
@@ -74,7 +74,7 @@ int main() {
     assert(files.semanticObjectCount() == 1U);
   }
   for (const auto& bytes : {png, jpeg, webp}) {
-    runtime::RuntimeComposition ordinary;
+    runtime::RuntimeCompositionCore ordinary;
     assert(ordinary.open() && ordinary.bindSurface(800,600));
     auto& consumer = ordinary.controlFacade();
     runtime::CanvasControlRequest tool{};

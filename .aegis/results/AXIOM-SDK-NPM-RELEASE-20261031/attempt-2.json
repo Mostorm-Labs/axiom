@@ -1,0 +1,68 @@
+{
+  "status": "BLOCKED_REGISTRY_UPLOAD_LIMIT",
+  "package": "@axiom/axiom",
+  "version": "1.0.0-preview.2",
+  "dist_tag": "preview",
+  "published_to_npm": false,
+  "source_revision": "8e76ed252fdb8b8173451b14f1482c4c9568316d",
+  "tag": "axiom-sdk-preview-20261031-8e76ed25",
+  "run_id": 41161137303,
+  "run_url": "https://github.com/Mostorm-Labs/axiom/actions/runs/41161137303",
+  "run_attempt": 1,
+  "jobs": [
+    {
+      "name": "Build and verify windows",
+      "databaseId": 124418727679,
+      "conclusion": "success"
+    },
+    {
+      "name": "Build and verify web",
+      "databaseId": 124418727918,
+      "conclusion": "success"
+    },
+    {
+      "name": "browser-probe",
+      "databaseId": 124418729097,
+      "conclusion": "skipped"
+    },
+    {
+      "name": "publish",
+      "databaseId": 124420842330,
+      "conclusion": "success"
+    },
+    {
+      "name": "publish-npm",
+      "databaseId": 124420900772,
+      "conclusion": "failure"
+    }
+  ],
+  "github_release": "https://github.com/Mostorm-Labs/axiom/releases/tag/axiom-sdk-preview-20261031-8e76ed25",
+  "release_assets_sha256": {
+    "axiom-demo-web-preview.zip": "4b0e2dfd442c2e73a87b8e85640ea07016354650ebde0efb52db8d5fce2f137f",
+    "axiom-demo-windows-preview.zip": "f3993243f705876d86d8aab062ccf95d4260816fa408da45f399a74c44ecb342",
+    "axiom-sdk-js-preview.zip": "672fc0d7effb7a25d42b2d95167f9aecb8d7e504f74aab577ba0b8f609fe3d25",
+    "axiom-sdk-windows-preview.zip": "faaa3dfe29ec5a181390d13dbc786ecc814b432039b28e0cecbe87d3b221140c"
+  },
+  "registry_probe": {
+    "registry_status": 404,
+    "version_present": false
+  },
+  "failure": {
+    "code": "E413",
+    "http_status": 413,
+    "message": "Payload Too Large - request entity too large",
+    "tarball_size_mb": 20.8,
+    "estimated_base64_publish_body_mb": 28,
+    "frontend_header": "openresty",
+    "backend_limit": "not visible to this client"
+  },
+  "required_external_change": "Registry operator must increase the effective HTTP upload/body-size allowance across the proxy and backend; no server management access is provided",
+  "user_input_requested": true,
+  "resume": "After server configuration is changed, gh run rerun 41161137303 --repo Mostorm-Labs/axiom --failed; this reruns publish-npm against the existing exact verified artifact without rebuilding or retagging. Then verify registry version/dist-tag, downloaded tarball integrity and all member hashes against the GitHub Release.",
+  "preserved": [
+    "Failed run and original immutable tags",
+    "Windows/Web consumer qualification",
+    "Complete fonts/assets; package not reduced to bypass the server limit"
+  ],
+  "local_release_asset_download": "The metadata files downloaded; large ZIP download timed out locally. No local ZIP hash check is claimed."
+}

@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <string>
 #include <string_view>
+#include <optional>
+#include "canvas/runtime/ink_brush.hpp"
 
 namespace canvas::ink {
 
@@ -57,6 +59,7 @@ struct BrushGrainConfig final {
 };
 
 struct BrushPackage final {
+  std::optional<foundation::InkBrushConfig> compactConfig;
   // Stable logical selector. This is intentionally distinct from the
   // canonical 32-character manifest package identity.
   std::string profileId = "vector-solid-v1";

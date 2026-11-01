@@ -4,7 +4,11 @@ package auditoryworks.axiom.v1;
 message ColorValue { float r = 1; float g = 2; float b = 3; float a = 4; }
 message NoFill {}
 message SolidFill { ColorValue color = 1; }
-message FillStyleValue { oneof value { NoFill none = 1; SolidFill solid = 2; } }
+enum PatternKind { PATTERN_INVALID = 0; PATTERN_DIAGONAL = 1; PATTERN_CROSSHATCH = 2; }
+message PatternFillV1 { uint32 version = 1; ColorValue color = 2; PatternKind kind = 3; double angle = 4; double gap = 5; double width = 6; }
+message CornerStyleV1 { uint32 version = 1; double radius = 2; }
+message SketchStyleV1 { uint32 version = 1; uint64 seed = 2; double roughness = 3; bool enabled = 4; }
+message FillStyleValue { oneof value { NoFill none = 1; SolidFill solid = 2; PatternFillV1 pattern = 3; } }
 
 message NoStroke {}
 enum StrokeCap { STROKE_CAP_INVALID = 0; STROKE_CAP_BUTT = 1; STROKE_CAP_ROUND = 2; STROKE_CAP_SQUARE = 3; }

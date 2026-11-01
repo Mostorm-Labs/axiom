@@ -1,0 +1,41 @@
+TAP version 13
+# schema validation: 24 schemas and 24 fixtures valid
+# Subtest: fixture and common observation schemas are strict
+ok 1 - fixture and common observation schemas are strict
+  ---
+  duration_ms: 1.422
+  ...
+# Subtest: scaffold fails closed without real platform evidence
+ok 2 - scaffold fails closed without real platform evidence
+  ---
+  duration_ms: 48.899375
+  ...
+# Subtest: comparator quantizes coordinates and accepts three real equivalent observations
+ok 3 - comparator quantizes coordinates and accepts three real equivalent observations
+  ---
+  duration_ms: 58.63675
+  ...
+# Subtest: comparator detects canonical divergence
+ok 4 - comparator detects canonical divergence
+  ---
+  duration_ms: 50.798833
+  ...
+# Subtest: real observations cannot omit artifact identity
+ok 5 - real observations cannot omit artifact identity
+  ---
+  duration_ms: 45.492083
+  ...
+# Subtest: a real platform may report an incomplete corpus only as blocked evidence
+ok 6 - a real platform may report an incomplete corpus only as blocked evidence
+  ---
+  duration_ms: 58.310917
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 345.090375

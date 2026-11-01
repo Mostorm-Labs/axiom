@@ -1,6 +1,6 @@
 #include "canvas/runtime/canvas_runtime_facade.hpp"
 
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/render/image_resource.hpp"
 #include "canvas/render/image_crop_geometry.hpp"
 #include "sha256_internal.hpp"

@@ -14,19 +14,27 @@ void logInput(State& state, const char* event, bool accepted,
               const canvas::input::PointerKey& key,
               const canvas::input::PlatformPointerBatch* batch = nullptr) {
   if (!state.inputLog) return;
-  auto& composition = state.host->composition();
-  const auto receipt = composition.readback();
+  auto& composition = state.host->publicComposition();
+  const auto observation = composition.hostObservation();
+  if (!observation) return;
   const auto snapshot = composition.controlFacade().readRuntimeState();
-  const auto frame = composition.lastSubmittedCanonicalFrame();
   const auto text = composition.controlFacade().readTextEditor();
+  std::string handoff = "unavailable";
+  if (state.platformAdapter) {
+    const auto status = state.platformAdapter->frameStatus();
+    if (status.available) handoff = std::to_string(status.pendingCanonicalHandoff);
+  }
+#if defined(AXIOM_RUNTIME_QUALIFICATION) && AXIOM_RUNTIME_QUALIFICATION
+  else handoff = std::to_string(state.frameOpportunity.pendingCanonicalHandoff);
+#endif
   std::fprintf(state.inputLog.get(),
-      "event=%s accepted=%d source=%llu pointer=%llu generation=%llu state=%u objects=%zu operations=%llu frame=%llu handoff=%zu preview=%d camera=(%.6f,%.3f,%.3f) tool=%u text_phase=%u text_session=%llu canvas_focus=%d\n",
+      "event=%s accepted=%d source=%llu pointer=%llu generation=%llu state=%u objects=%llu operations=%llu frame=%llu handoff=%s preview=%d camera=(%.6f,%.3f,%.3f) tool=%u text_phase=%u text_session=%llu canvas_focus=%d\n",
       event, accepted, static_cast<unsigned long long>(key.source),
       static_cast<unsigned long long>(key.pointer), static_cast<unsigned long long>(key.generation),
-      static_cast<unsigned>(receipt.state), composition.semanticObjectCount(),
+      observation->lifecycleState, static_cast<unsigned long long>(observation->objectCount),
       static_cast<unsigned long long>(snapshot.identity.documentRevision),
-      static_cast<unsigned long long>(frame ? frame->frameId.value() : 0U),
-      state.frameOpportunity.pendingCanonicalHandoff, composition.previewActive(),
+      static_cast<unsigned long long>(observation->lastCanonicalFrame),
+      handoff.c_str(), observation->previewActive,
       snapshot.camera.scale, snapshot.camera.translationX, snapshot.camera.translationY,
       snapshot.tool.toolId, static_cast<unsigned>(text.phase),
       static_cast<unsigned long long>(text.token.session), GetFocus() == state.window);
@@ -45,7 +53,7 @@ void logInput(State& state, const char* event, bool accepted,
 
 void cancelKey(State& state, const canvas::input::PointerKey& key, const char* reason) {
   state.timestamp = (std::max)(state.timestamp + 1U, nativeTimestamp(GetTickCount()));
-  const bool cancelled = state.host->composition().cancelPlatformPointer(
+  const bool cancelled = state.host->publicComposition().cancelContact(
       key, ++state.sequence, state.timestamp);
   logInput(state, reason, cancelled, key);
   InvalidateRect(state.window, nullptr, FALSE);
@@ -124,8 +132,8 @@ bool sendNativePointer(State& state, UINT message, UINT32 id) {
     cancelNativePointer(state, id, "pointer-cancelled");
     return true;
   }
-  (void)state.host->composition().ownerPump();
-  const auto surface = state.host->composition().surfaceSnapshot();
+  (void)state.host->publicComposition().ownerPump();
+  const auto surface = state.host->publicComposition().surfaceMetrics().value_or(canvas::runtime::RuntimeSurfaceMetrics{});
   if (!surface.available || !surface.width || !surface.height ||
       !std::isfinite(surface.logicalWidth) || !std::isfinite(surface.logicalHeight) ||
       surface.logicalWidth <= 0.0F || surface.logicalHeight <= 0.0F) {
@@ -225,9 +233,11 @@ bool sendNativePointer(State& state, UINT message, UINT32 id) {
   if (batch.samples.empty()) return true;
   if (down && GetFocus() != state.window) SetFocus(state.window);
   const auto oldKey = down ? PointerKey{} : existing->second.key;
-  const bool accepted = state.host->submit(batch);
+  auto key = down ? state.host->publicComposition().beginContact(batch)
+                  : std::optional<PointerKey>(oldKey);
+  const bool accepted = down ? key.has_value()
+                             : state.host->publicComposition().submitContact(oldKey, batch);
   state.nativeWatermarks[identity] = current;
-  const auto key = down ? state.host->composition().platformKey(source, id) : std::optional<PointerKey>(oldKey);
   logInput(state, "pointer", accepted, key.value_or(PointerKey{}), &batch);
   if (!accepted) {
     if (key) cancelKey(state, *key, "pointer-rejected");

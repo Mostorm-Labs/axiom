@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "D:\\Softwares\\Anaconda\\python.exe",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "verification/sdk01/real_consumer",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "test_driver_wrong_observations_are_rejected (test_driver_boundary.DriverBoundaryTests.test_driver_wrong_observations_are_rejected) ... ok\ntest_invalid_expected_hash_blocks_before_run (test_driver_boundary.DriverBoundaryTests.test_invalid_expected_hash_blocks_before_run) ... ok\ntest_missing_driver_records_blocker (test_driver_boundary.DriverBoundaryTests.test_missing_driver_records_blocker) ... ok\ntest_success_exit_without_observations_is_not_pass (test_driver_boundary.DriverBoundaryTests.test_success_exit_without_observations_is_not_pass) ... ok\ntest_complete_exact_observations (test_observation_contract.ObservationContractTests.test_complete_exact_observations) ... ok\ntest_duplicate_json_key_is_rejected (test_observation_contract.ObservationContractTests.test_duplicate_json_key_is_rejected) ... ok\ntest_empty_results_fail (test_observation_contract.ObservationContractTests.test_empty_results_fail) ... ok\ntest_extra_scenarios_are_not_ignored (test_observation_contract.ObservationContractTests.test_extra_scenarios_are_not_ignored) ... ok\ntest_missing_step_fails (test_observation_contract.ObservationContractTests.test_missing_step_fails) ... ok\ntest_nonfinite_json_is_rejected (test_observation_contract.ObservationContractTests.test_nonfinite_json_is_rejected) ... ok\ntest_type_confusion_and_nonfinite_fail (test_observation_contract.ObservationContractTests.test_type_confusion_and_nonfinite_fail) ... ok\ntest_wrong_color_or_unselected_object_fails (test_observation_contract.ObservationContractTests.test_wrong_color_or_unselected_object_fails) ... ok\ntest_wrong_history_or_receipt_fails (test_observation_contract.ObservationContractTests.test_wrong_history_or_receipt_fails) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 1.498s\n\nOK\n"
+}

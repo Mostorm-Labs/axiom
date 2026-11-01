@@ -10,7 +10,7 @@ namespace {
 class WebDebugUi final : public canvas::runtime::PlatformDiagnostics {
     static constexpr int kPanelWidth = 410;
     static constexpr int kPanelHeight = 650;
-    canvas::runtime::RuntimeComposition& composition_;
+    canvas::runtime::RuntimeCompositionCore& composition_;
     std::unique_ptr<canvas::debug_ui::DebugController> controller_;
     std::unique_ptr<canvas::render::WebGlSurfaceProvider> provider_;
     ImGuiContext* context_ = nullptr;
@@ -18,7 +18,7 @@ class WebDebugUi final : public canvas::runtime::PlatformDiagnostics {
     bool visible_ = false;
 
   public:
-    explicit WebDebugUi(canvas::runtime::RuntimeComposition& composition)
+    explicit WebDebugUi(canvas::runtime::RuntimeCompositionCore& composition)
         : composition_(composition) {}
     ~WebDebugUi() {
         if (context_) {
@@ -33,10 +33,8 @@ class WebDebugUi final : public canvas::runtime::PlatformDiagnostics {
             return false;
         canvas::debug_ui::DebugControllerContext controls{};
         controls.runtime = &composition_.controlFacade();
-        auto& multiSelection = composition_.multiSelectionPort();
-        if (!multiSelection.setPermissionMode(canvas::runtime::MultiSelectionPermissionMode::kLocalSingleUser))
+        if (!controls.runtime->setMultiSelectionPermission(canvas::runtime::MultiSelectionPermissionMode::kLocalSingleUser))
             return false;
-        controls.multiSelection = &multiSelection;
         controls.platformDiagnostics = this;
         controller_ = std::make_unique<canvas::debug_ui::DebugController>(std::move(controls));
         IMGUI_CHECKVERSION();

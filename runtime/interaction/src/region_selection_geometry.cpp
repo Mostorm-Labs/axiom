@@ -60,7 +60,8 @@ RegionIntersection intersectSelectionRegion(const semantic::ObjectRecord& object
     const auto* image=std::get_if<semantic::ImageContent>(&object.content);
     const bool styledShape=object.kind==semantic::ObjectKind::kShape&&std::any_of(object.properties.entries.begin(),object.properties.entries.end(),
         [](const auto& p){return p.field_id==0x100U||p.field_id==0x101U;});
-    if (styledShape||!object.erase_masks.empty()||(object.kind!=semantic::ObjectKind::kShape&&
+    const bool styledSection=object.kind==semantic::ObjectKind::kSection&&std::any_of(object.properties.entries.begin(),object.properties.entries.end(),[](const auto& p){return p.field_id==0x102U;});
+    if (styledShape||styledSection||!object.erase_masks.empty()||(object.kind!=semantic::ObjectKind::kShape&&
         object.kind!=semantic::ObjectKind::kSticky&&object.kind!=semantic::ObjectKind::kImage&&object.kind!=semantic::ObjectKind::kSection)||
         (image&&image->content_mode==semantic::ImageContentMode::kFit)) {
         RuntimeSceneRecord r=published?*published:RuntimeSceneRecord{};

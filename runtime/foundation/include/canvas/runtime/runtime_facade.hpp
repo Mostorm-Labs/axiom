@@ -1,11 +1,16 @@
 #pragma once
 
 #include "canvas/runtime/product_control.hpp"
+#include "canvas/runtime/multi_selection.hpp"
 #include "canvas/runtime/runtime_state.hpp"
 #include "canvas/runtime/selection_summary.hpp"
 #include "canvas/runtime/text_input.hpp"
 #include "canvas/runtime/image_input.hpp"
+#include "canvas/runtime/image_export.hpp"
 #include "canvas/runtime/connector_sticky_input.hpp"
+#include "canvas/runtime/table_input.hpp"
+#include "canvas/runtime/appearance.hpp"
+#include "canvas/runtime/vector_path_input.hpp"
 
 #include <utility>
 #include <vector>
@@ -16,7 +21,24 @@ namespace canvas::runtime {
 class RuntimeFacade {
  public:
   virtual ~RuntimeFacade() = default;
+  [[nodiscard]] virtual bool transientInkActive() const noexcept { return false; }
+  [[nodiscard]] virtual ImageExportResult exportImage(const ImageExportOptions&) noexcept { return {}; }
+  [[nodiscard]] virtual std::optional<foundation::DocumentBackground> readBackground() const noexcept { return std::nullopt; }
   [[nodiscard]] virtual SelectionSummary readSelectionSummary() const { return {}; }
+  // Public C++ projection and intents; default implementations fail closed.
+  // The concrete composition remains the only selection and History owner.
+  [[nodiscard]] virtual bool setMultiSelectionPermission(MultiSelectionPermissionMode) noexcept { return false; }
+  [[nodiscard]] virtual MultiSelectionProjection readMultiSelection() const noexcept { return {}; }
+  [[nodiscard]] virtual std::optional<std::vector<MultiSelectionRootPropertyValue>> readMultiSelectionPropertyValues(
+      std::uint32_t, const MultiSelectionStamp&, const std::vector<foundation::ObjectId>&) const noexcept { return {}; }
+  [[nodiscard]] virtual MultiSelectionSubmitReceipt submitMultiSelectionProperty(
+      std::uint32_t, const semantic::PropertyValue&, const MultiSelectionStamp&,
+      const std::vector<foundation::ObjectId>&, std::uint64_t, std::uint64_t) noexcept { return {}; }
+  [[nodiscard]] virtual MultiSelectionSubmitReceipt submitMultiSelectionStrokeWidth(
+      double, const MultiSelectionStamp&, const std::vector<foundation::ObjectId>&,
+      std::uint64_t, std::uint64_t) noexcept { return {}; }
+  [[nodiscard]] virtual std::optional<MultiSelectionOutcome> multiSelectionReceipt(
+      std::uint64_t, std::uint64_t) const noexcept { return {}; }
   [[nodiscard]] virtual SectionSnapshot readSection(foundation::ObjectId = {}) const { return {}; }
   [[nodiscard]] ProductControlReceipt submitSectionIntent(const SectionIntent& intent,
       std::uint64_t requestId,std::uint64_t clientId=1) noexcept {
@@ -73,6 +95,12 @@ class RuntimeFacade {
   [[nodiscard]] virtual StickyCommandReceipt createSticky(const StickyCreateRequest&) { return {}; }
   [[nodiscard]] virtual ConnectorSnapshot readSelectedConnector() const { return {}; }
   [[nodiscard]] virtual ConnectorSnapshot readConnectorState(semantic::ObjectId) const { return {}; }
+  [[nodiscard]] virtual VectorPathResult createVectorPath(const VectorPathCreateRequest&) { return {}; }
+  [[nodiscard]] virtual VectorPathSnapshot readVectorPath(foundation::ObjectId = {}) const { return {}; }
+  [[nodiscard]] virtual AppearanceSnapshot readAppearance(bool = false) const { return {}; }
+  [[nodiscard]] virtual AppearanceResult appearanceCommand(const AppearanceRequest&) { return {}; }
+  [[nodiscard]] virtual TableResult tableCommand(const TableRequest&) { return {}; }
+  [[nodiscard]] virtual TableSnapshot readTable(foundation::ObjectId = {}) const { return {}; }
   [[nodiscard]] virtual StickySnapshot readSelectedSticky() const { return {}; }
   [[nodiscard]] virtual ProductControlReceipt submitSelectionPointer(
       const SelectionPointerRequest& request) noexcept {

@@ -23,10 +23,16 @@ int main() {
     using namespace canvas::runtime;
     minimal_runtime_host::MinimalRuntimeHost host;
     auto& composition = host.composition();
+    REQUIRE(&host.publicComposition().controlFacade() == &composition.controlFacade());
     REQUIRE(composition.bindSurface(640, 480));
     REQUIRE(minimal_runtime_host::bindHostTextFont(composition, FC02_HOST_FONT));
     minimal_runtime_host::MinimalRuntimeFacade adapter(host);
     RuntimeFacade& consumer = adapter;
+    REQUIRE(consumer.setMultiSelectionPermission(MultiSelectionPermissionMode::kLocalSingleUser));
+    const auto publicMulti = consumer.readMultiSelection();
+    const auto ownerMulti = composition.controlFacade().readMultiSelection();
+    REQUIRE(publicMulti.available && ownerMulti.available);
+    REQUIRE(publicMulti.stamp == ownerMulti.stamp && publicMulti.roots == ownerMulti.roots);
     const auto catalog = consumer.readFontCatalog();
     REQUIRE(!catalog.entries.empty());
     const auto font = foundation::ObjectId::fromUint64(0xFC0202);

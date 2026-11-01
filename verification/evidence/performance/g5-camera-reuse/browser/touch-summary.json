@@ -1,0 +1,53 @@
+{
+  "scope": "Chrome CDP paced wheel, root SDK RAF callback CPU duration; not physical latency or GPU timer",
+  "sdk_sha256": {
+    "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+    "axiom.wasm": "ae42bbe5061ab11ad95eb8357e8e35a909d3f679cc562e2a0d0320bc8bffb8e4",
+    "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+    "internal/axiom.mjs": "36d016d0b82c507a433c2717396f3ab1e3dc27bb432fe8ced5634afebfbd9436"
+  },
+  "runs": [
+    {
+      "objects": 64,
+      "mode": "pan",
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)",
+      "render_callbacks": 56,
+      "expensive_callbacks": 1,
+      "render_p50_ms": 0,
+      "expensive_p50_ms": 224.60000002384186,
+      "wheel_p50_ms": 0.19999998807907104,
+      "present_callbacks": 1,
+      "document_unchanged": true,
+      "events": 16,
+      "errors": []
+    },
+    {
+      "objects": 64,
+      "mode": "zoom",
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)",
+      "render_callbacks": 55,
+      "expensive_callbacks": 1,
+      "render_p50_ms": 0.09999996423721313,
+      "expensive_p50_ms": 267.10000002384186,
+      "wheel_p50_ms": 0.30000001192092896,
+      "present_callbacks": 1,
+      "document_unchanged": true,
+      "events": 16,
+      "errors": []
+    },
+    {
+      "objects": 64,
+      "mode": "touch",
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)",
+      "render_callbacks": 42,
+      "expensive_callbacks": 1,
+      "render_p50_ms": 0.09999996423721313,
+      "expensive_p50_ms": 358.9000000357628,
+      "wheel_p50_ms": null,
+      "present_callbacks": 1,
+      "document_unchanged": true,
+      "events": 0,
+      "errors": []
+    }
+  ]
+}

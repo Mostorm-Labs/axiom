@@ -1,0 +1,9 @@
+# Clean-revision verification — 016
+
+Source revision `f43bd4604f3b54890a2e7564e16d3c7b5893ac27` was clean during configuration, builds and tests. The actual browser observation records that exact revision with `dirty: 0`, the RuntimeComposition owner and Debug UI enabled. Windows executable and Web WASM hashes are in `manifest.json`; binaries are local ignored build artifacts, not committed.
+
+MSVC Windows host build and Emscripten Web build: exit 0. Four exact native CTests: 4 passed, 0 failed, 0 skipped. Actual headless Chrome/WASM selection and Debug UI: 44 assertions, 0 failed. User input is synthetic, not physical acceptance. Detailed commands, exit codes, hashes, raw JUnit and browser observations are preserved. The Web configure/build helper used here is recorded below; it consumes resolved locked SDK environment facts and the verified prebuilt Skia rather than rebuilding dependencies.
+
+These results validate the bounded C++ multi-selection bridge, not a complete installable SDK, full C++ API matrix, D07 OOM resolution, Gate, or physical acceptance. Earlier full 18-test native run and 13+13 Web build regressions are at result 015 and were performed on its recorded dirty source hashes, which match the content of this revision.
+
+A real `cmake --install` probe to a new temporary directory exited 0 but installed zero files; the exact command and output are in `raw/install-probe.json`. The current `runtime_composition.hpp` exposes interaction and render types, so compiling the abstract public `RuntimeFacade` header alone does not give an external application a usable Runtime instance. A public ownership/lifecycle boundary, installation/export targets and independently linked consumer remain required. The existing multi-selection write path submits one whole value for each eligible object; per-object leaf-preserving style changes are not established by this bridge.

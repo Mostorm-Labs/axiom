@@ -6,6 +6,7 @@
 
 #include "protobuf_codec_internal.hpp"
 #include "protobuf_object_mapping.hpp"
+#include "document_background_mapping.hpp"
 #include "container_operation_mapping.hpp"
 #include "container_operation_internal.hpp"
 
@@ -761,10 +762,13 @@ bool mapPropertyValue(const auditoryworks::axiom::v1::PropertyValue& source, can
     using P=auditoryworks::axiom::v1::PropertyValue;
     auto color = [](const auditoryworks::axiom::v1::ColorValue& s, canvas::semantic::ColorValue& d) { if(!s.has_r()||!s.has_g()||!s.has_b()||!s.has_a()) return false; d={s.r(),s.g(),s.b(),s.a()}; return true; };
     switch(source.value_case()) {
+      case P::kCornerStyle: {const auto& s=source.corner_style();if(!s.has_version()||!s.has_radius())return false;destination=canvas::semantic::CornerStyleV1{s.version(),s.radius()};return true;}
+      case P::kSketchStyle: { const auto& s=source.sketch_style();if(!s.has_version()||!s.has_seed()||!s.has_roughness()||!s.has_enabled())return false;destination=canvas::semantic::SketchStyleV1{s.version(),s.seed(),s.roughness(),s.enabled()};return true; }
       case P::kBoolValue: destination=source.bool_value(); return true;
       case P::kF32Value: destination=source.f32_value(); return true;
       case P::kColorValue: { canvas::semantic::ColorValue d; if(!color(source.color_value(),d)) return false; destination=d; return true; }
       case P::kFillStyle: {
+        if(source.fill_style().has_pattern()){const auto& f=source.fill_style().pattern();canvas::semantic::ColorValue c;if(!f.has_version()||!f.has_color()||!color(f.color(),c)||!f.has_kind()||!f.has_angle()||!f.has_gap()||!f.has_width())return false;destination=canvas::semantic::FillStyleValue{canvas::semantic::PatternFillV1{f.version(),c,static_cast<canvas::semantic::PatternKind>(f.kind()),f.angle(),f.gap(),f.width()}};return true;}
         if(source.fill_style().has_none()) { destination=canvas::semantic::FillStyleValue{canvas::semantic::NoFill{}}; return true; }
         if(source.fill_style().has_solid() && source.fill_style().solid().has_color()) { canvas::semantic::ColorValue d; if(!color(source.fill_style().solid().color(),d)) return false; destination=canvas::semantic::FillStyleValue{canvas::semantic::SolidFill{d}}; return true; }
         return false;
@@ -1423,6 +1427,8 @@ CodecResult SemanticCodec::encodeProtobufOperation(OperationKind kind) {
         case OperationKind::kUpdateResourceManifest: operation.mutable_payload()->mutable_update_resource_manifest(); break;
         case OperationKind::kSetSectionContent: operation.mutable_payload()->mutable_set_section_content(); break;
         case OperationKind::kEditContainerTopology: operation.mutable_payload()->mutable_edit_container_topology(); break;
+        case OperationKind::kSetDocumentBackground: operation.mutable_payload()->mutable_set_document_background(); break;
+        case OperationKind::kEditTable: operation.mutable_payload()->mutable_edit_table(); break;
     }
     std::string bytes;
     if (!operation.SerializeToString(&bytes)) return {SemanticError::kMalformedWire, {}};
@@ -1588,6 +1594,18 @@ DecodedOperation SemanticCodec::decodeProtobufOperation(const std::vector<std::u
                 else return false;
             }, operation.payload);
             break;
+        case auditoryworks::axiom::v1::OperationPayload::kEditTable: {
+            EditTableOp value;const auto& item=decoded.payload().edit_table();
+            payload_ok=item.has_object_id()&&mapId(item.object_id(),value.object_id)&&item.has_action()&&item.action()>=1&&item.action()<=6&&item.has_expected()&&item.has_replacement()&&internal::fromProtobufTableContent(item.expected(),value.expected)&&internal::fromProtobufTableContent(item.replacement(),value.replacement);
+            value.action=static_cast<TableEditKind>(item.action());operation.payload=std::move(value);break;
+        }
+        case auditoryworks::axiom::v1::OperationPayload::kSetDocumentBackground: {
+            SetDocumentBackgroundOp value;
+            const auto& item = decoded.payload().set_document_background();
+            payload_ok = item.has_value() && internal::fromProtobufBackground(item.value(), value.value);
+            operation.payload = value;
+            break;
+        }
         case auditoryworks::axiom::v1::OperationPayload::PAYLOAD_NOT_SET:
             return DecodedOperation({}, presence, {}, SemanticError::kMalformedWire);
     }
@@ -1647,6 +1665,8 @@ DecodedOperation SemanticCodec::decodeOperation(const std::vector<std::uint8_t>&
         case OperationKind::kUpdateResourceManifest: operation.payload = UpdateResourceManifestOp{}; break;
         case OperationKind::kSetSectionContent: operation.payload = SetSectionContentOp{}; break;
         case OperationKind::kEditContainerTopology: operation.payload = EditContainerTopologyOp{}; break;
+        case OperationKind::kSetDocumentBackground: operation.payload = SetDocumentBackgroundOp{}; break;
+        case OperationKind::kEditTable: operation.payload = EditTableOp{}; break;
     }
     return {std::move(operation), {}, std::move(fields), SemanticError::kNone};
 }

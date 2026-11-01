@@ -7,6 +7,7 @@ add_library(canvas_runtime_semantic STATIC
     src/idempotency.cpp
     src/object_index.cpp
     src/reference_object_store.cpp
+    src/table_content.cpp
     src/semantic_types.cpp
     src/container_operation_normalization.cpp
     src/container_operation_validation.cpp
@@ -31,6 +32,7 @@ add_library(canvas_runtime_semantic STATIC
     src/snapshot.cpp
     src/snapshot_bootstrap.cpp
     src/protobuf_object_mapping.cpp
+    src/compact_stroke_mapping.cpp
     src/replay.cpp
     src/apply_plan.cpp
     src/atomic_apply.cpp
@@ -111,6 +113,11 @@ else()
   target_compile_options(canvas_runtime_semantic PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 
+if(BUILD_TESTING AND CANVAS_SEMANTIC_ENABLE_PROTOBUF)
+  add_executable(axiom_ink_v2_compact_tests tests/ink_v2_compact_test.cpp)
+  target_link_libraries(axiom_ink_v2_compact_tests PRIVATE canvas_runtime_semantic)
+  add_test(NAME InkV2Compact COMMAND axiom_ink_v2_compact_tests)
+endif()
 if(CANVAS_BUILD_SEMANTIC AND BUILD_TESTING)
   if(NOT EXISTS ${PROJECT_SOURCE_DIR}/.deps/googletest/CMakeLists.txt)
     message(FATAL_ERROR "Missing GoogleTest. Run: python3 tools/bootstrap_deps.py --core")

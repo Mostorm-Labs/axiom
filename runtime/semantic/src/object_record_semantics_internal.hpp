@@ -9,6 +9,8 @@ namespace canvas::semantic::internal {
 // the public semantic ABI.
 [[nodiscard]] bool normalizeObjectRecord(ObjectRecord& object);
 [[nodiscard]] bool validateObjectRecord(const ObjectRecord& object) noexcept;
+[[nodiscard]] bool normalizeTableContent(TableContent&);
+[[nodiscard]] bool validateTableContent(const TableContent&) noexcept;
 [[nodiscard]] bool normalizeSectionContent(SectionContent& content);
 [[nodiscard]] bool validateSectionContent(const SectionContent& content) noexcept;
 

@@ -1,0 +1,61 @@
+{
+  "command": [
+    "C:\\Users\\Chado\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+    "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\verification\\sdk_js\\verify_browser.mjs",
+    "out/preview-fresh-web/sdk/web",
+    "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "out/sdk-js-v1/browser-final.json"
+  ],
+  "consumer": "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-js-sdk-XHO3FC\\consumer",
+  "result": {
+    "status": "FAIL",
+    "results": [
+      "independent document identity",
+      "real pointer input and instance isolation",
+      "actual blue rectangle pixels",
+      "real Undo",
+      "real Redo",
+      "absolute viewport scale",
+      "object eraser readback",
+      "partial eraser readback",
+      "owned snapshot and checkpoint digest",
+      "fresh-owner checkpoint restore without invented History",
+      "real remote operation apply",
+      "remote deduplication without local echo",
+      "native carrier into real text owner",
+      "public confirmed text replacement and selection",
+      "text committed as object",
+      "typed rejection",
+      "owned operation byte delivery",
+      "late calls reject after close",
+      "late text reads reject after close",
+      "second instance remains usable after first closes",
+      "missing permission is not implicit authorization",
+      "explicit local permission projection",
+      "real multi-property readback",
+      "stale multi edit rejects"
+    ],
+    "error": "AxiomError: COMMAND_REJECTED\n    at call (http://127.0.0.1:12185/axiom.mjs:38:29)\n    at http://127.0.0.1:12185/axiom.mjs:108:26\n    at http://127.0.0.1:12185/axiom.mjs:54:129",
+    "errors": []
+  },
+  "exceptions": [],
+  "browserVersion": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/155.0.8059.86",
+    "revision": "@804d6b05f089b27af8342622a36558c49401a1d4",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "jsVersion": "15.5.35.25"
+  },
+  "mode": "headless Chrome/WebGL2; synthetic DOM input",
+  "files": {
+    "axiom.mjs": "0181723e362c70884d0f2d8f487beb2f4106970c82616afdce2de3c31e286697",
+    "axiom.d.mts": "26bbe721654290859ebe7c0b8dbbd3fac64a136031b6489b9947d8a336909408",
+    "axiom-runtime.mjs": "ec658ece6f67f7bb375c72d9ef21708deec812a44de5cca98fd92eea56198025",
+    "axiom-runtime.wasm": "a86fdb5690daaa56ab5115d63cbd14c5bcfc7a5a68d0552093d41ca2de42d37f",
+    "axiom-runtime.data": "afba06991ac1e6c785ddb2c967ffb7f4d079a2d77fb6397bacb394a171df8ff1",
+    "pointer_input.mjs": "07868b2c2f2e5d9f67a929df9f86877a89edaf17751dc5bac1540a6fd0bb9d5d",
+    "text_input.mjs": "5ffb731ac989cece8b6e4d53c3f828600723a1bb26ebe9b952cd559488858fa4"
+  },
+  "exitCode": 1,
+  "error": "Error: JS SDK browser acceptance failed"
+}

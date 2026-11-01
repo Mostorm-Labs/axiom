@@ -109,6 +109,7 @@ bool isConnectableObjectKind(ObjectKind kind, std::uint32_t kind_version) noexce
         case ObjectKind::kDabStroke:
         case ObjectKind::kConnector:
         case ObjectKind::kGroup:
+        case ObjectKind::kTable:
         case ObjectKind::kSection:
             return false;
     }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "canvas/foundation/result.hpp"
-#include "canvas/scene/damage_tracker.hpp"
+#include "canvas/scene/scene_change_journal.hpp"
 #include "canvas/scene/render_scene.hpp"
 #include "canvas/scene/scene_frame.hpp"
 #include "canvas/scene/scene_query.hpp"
@@ -121,7 +121,7 @@ class Scene final {
         return _commitDiagnostics;
     }
     [[nodiscard]] DamageDiagnostics damageDiagnostics() const {
-        return _damageTracker.diagnostics();
+        return _changeJournal.diagnostics();
     }
 
   private:
@@ -185,7 +185,7 @@ class Scene final {
     SceneRecordStore _records;
     std::unique_ptr<IRenderScene> _renderScene;
     std::unique_ptr<ISpatialIndex> _spatialIndex;
-    DamageTracker _damageTracker;
+    SceneChangeJournal _changeJournal;
     SceneRevision _revision;
     semantic::SemanticGeneration _semanticGeneration{};
     semantic::SemanticGeneration _publishedSemanticGeneration{};

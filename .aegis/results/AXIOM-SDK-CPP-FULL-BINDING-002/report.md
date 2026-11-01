@@ -1,0 +1,7 @@
+# C++-first full SDK verification binding audit
+
+This is a content-addressed gap audit against the current C++-first implementation, not a replacement of the historical v0.4 package, an accepted complete verification design, or a Gate conclusion. `bindings.json` binds the prior package and oracle files plus current real tests/evidence to source revision `a5b73b588ee5e1c92dfd3f0b0e5041a428fef79d`. It explicitly classifies P01–P10 and API01–API12 as partial or not run; no missing driver is marked passed.
+
+The prior independent `expected-v1.json` remains unchanged. Real owner and native Debug UI mixed-stroke tests assert the same values in actual Runtime state, but have not produced the frozen normalized observations from an installed external consumer or both actual platform hosts. The standalone installed Windows consumer currently exercises Section lifecycle and Undo, not full input/resource/frame behavior. The Runtime wrapper does not yet subsume platform adapters. Chrome's 44 passing assertions are the existing selection regression, not the mixed-stroke host case.
+
+Consequently the full SDK package is not ready to be marked complete or accepted. Next implementation evidence should add real installed C++ observation drivers for partial fill and per-root stroke, then bind real Windows and Chrome host observations and resolve the agreed scope of external platform lifecycle/input/resources. Keep previous verification inputs and D07 OOM records intact.

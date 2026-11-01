@@ -1,0 +1,57 @@
+{
+  "classification": "PASS_WITH_FINDINGS",
+  "terminal_state": "READY_FOR_CONTROL_REVIEW",
+  "scope": "Ink-only navigation world tile realization; no formal G5/P34 PASS",
+  "timings": [
+    {
+      "viewport": "browser-final",
+      "mode": "zoom",
+      "max_raf_cpu_ms": 20.200000047683716,
+      "exact_receipt_after_input_ms": 1182.6000000238419,
+      "errors": [],
+      "semantic_unchanged": true
+    },
+    {
+      "viewport": "browser-final",
+      "mode": "touch",
+      "max_raf_cpu_ms": 9.300000071525574,
+      "exact_receipt_after_input_ms": 1182.8000000715256,
+      "errors": [],
+      "semantic_unchanged": true
+    },
+    {
+      "viewport": "browser-final-small",
+      "mode": "zoom",
+      "max_raf_cpu_ms": 12.200000047683716,
+      "exact_receipt_after_input_ms": 1116.5,
+      "errors": [],
+      "semantic_unchanged": true
+    },
+    {
+      "viewport": "browser-final-small",
+      "mode": "touch",
+      "max_raf_cpu_ms": 8.200000047683716,
+      "exact_receipt_after_input_ms": 1183.2999999523163,
+      "errors": [],
+      "semantic_unchanged": true
+    }
+  ],
+  "native_components": "25/25; final identity guard rerun separately",
+  "full_ctest": {
+    "total": 236,
+    "passed": 214,
+    "failed": 22,
+    "new_failure_names": [],
+    "note": "Full run before final work-policy/cancellation/identity guards; final focused and GPU tests cover those additions."
+  },
+  "node": "Historical C8 generator exact-source test fails with git ENOBUFS; not repaired",
+  "physical_platforms": "BLOCKED_EVIDENCE",
+  "limitations": [
+    "Cold first tile work still may stall; no fixed frame SLO.",
+    "Exact settled render remains CPU Direct and about 1.2 seconds in this diagnostic.",
+    "Only untransformed unmasked vector-solid and compact ink on default background; mixed content falls back.",
+    "No prefetch/idle pyramid prewarming or complete production Tile Gate closure.",
+    "Material shaders and outline path draw are atomic; compact coverage yields every 32 knots."
+  ],
+  "matching_artifact_browser": "Final SDK delivery acceptance and size measurements bind artifacts.json"
+}

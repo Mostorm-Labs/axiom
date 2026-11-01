@@ -1,0 +1,17 @@
+{
+  "task_id": "AXIOM-SDK-NPM-RELEASE-20261031",
+  "repository": "Mostorm-Labs/axiom",
+  "task_anchor": {"revision": "baef86f348201ee5555205493019cb48f61db2e9", "relation": "ancestor"},
+  "authorization": "User explicitly requests actual npm publication after CI and Secret configuration.",
+  "p32_authorized": true,
+  "release": {"package": "@axiom/axiom", "version": "1.0.0-preview.2", "dist_tag": "preview", "registry": "http://npm.nearhub.cc/"},
+  "required_changes": ["Advance both SDK version files together", "Create and push a new immutable SDK preview tag at the exact tested clean revision", "Run the existing full Windows/Web/GitHub Release/private npm pipeline", "Verify the published registry version, preview tag and package integrity/source manifest"],
+  "allowed_source_changes": ["sdk/version.json", "sdk/web/package.json", "narrow release-tooling fixes required by real CI failures, preserving all existing qualification gates"],
+  "forbidden_changes": ["Force-push, retagging, existing asset overwrite or npm version overwrite", "Publishing old local candidate bytes", "Skipping required build/consumer qualification", "Literal secrets in source or evidence", "Dependency rebuilds/lock changes", "Runtime behavior changes or main merge", "Stable release or physical/Gate acceptance claims"],
+  "hosted_verification_required": ["Windows SDK consumer build and regression", "Web/WASM build, ZIP/npm/TypeScript/Chrome consumers", "Verified GitHub prerelease assets", "Actual private registry upload"],
+  "terminal_success": "The exact package/version and preview dist-tag are visible in the private registry, package integrity/source match the published Release, and the exact tag/revision/run are returned",
+  "terminal_blockers": ["Registry authorization or CI network denied", "Frozen build/qualification failure requiring product changes outside release scope", "Unavailable locked dependency or runner environment", "Immutable version already occupied"],
+  "continue_until_terminal_state": true,
+  "credential": "Existing GitHub Secret AXIOM_NPM_TOKEN; never materialize its value",
+  "prior_constraint_supersession": "The previous task's no-real-publication limitation is superseded by this explicit user request; its original record and evidence remain immutable."
+}

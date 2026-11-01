@@ -1,0 +1,15 @@
+Test project C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/preview-fresh-windows
+    Start 224: SDKPublicOperationIdentity
+1/1 Test #224: SDKPublicOperationIdentity .......Exit code 0xc0000409***Exception:   3.49 sec
+[axiom] present begin frame=1 objects=1 scene_records=1
+[axiom] present begin frame=2 objects=2 scene_records=2
+Assertion failed: !operation.id.isZero() && identities.insert(operation.id).second, file C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\composition\tests\public_operation_identity_test.cpp, line 66
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   3.86 sec
+
+The following tests FAILED:
+	224 - SDKPublicOperationIdentity (Exit code 0xc0000409)
+Errors while running CTest

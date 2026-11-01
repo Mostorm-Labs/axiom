@@ -1,0 +1,30 @@
+{
+  "task":"table-v1", "status":"user-accepted-scoped-execution-contract",
+  "repository":{"provider":"github","full_name":"Mostorm-Labs/axiom"},
+  "task_anchor":{"revision":"cbd62f80a46f8d30c850e98334a0e20e3019519a","relation":"ancestor"},
+  "authorization":"User explicitly accepted table-v1-design.md and requested implementation, with future hand-drawn line compatibility. This is a scoped feature extension, not an official Gate or replacement of unrelated frozen authority.",
+  "authority":["AGENTS.md","docs/planning/sdk/table-v1-design.md","docs/planning/sdk/js-v1-contract.md","docs/planning/sdk/windows-consumer-v1.md"],
+  "decisions":{
+    "wire":"Append Table/1 ObjectKind 11, ObjectContent branch 13 and EditTable Operation/tag 20. Existing tags and legacy bytes retain meaning. Table requires snapshot3, table-v1 requirement and explicit reader bit64; all-current reader profile127. Table is a leaf.",
+    "identity":"Rows/columns use Runtime-allocated Id128 values scoped to their table. Cell identity is table,row,column. Only Runtime creates axis identities; explicit Undo restores preimages. No SDK construction of canonical objects.",
+    "limits":"1..64 rows and columns, at most1024 cells; dimensions24..16384 world units; at most1MiB UTF-8 text per table. Default3x3, row48, column120. Cell padding6; fixed height with wrapped clipped text. Finite colors in[0,1], font size1..512, grid width0..16.",
+    "editing":"EditTable holds action kind and complete validated before/after TableContent. Runtime constructs domain changes. Compare-before guard rejects conflicts atomically, including compensation, rather than overwriting unrelated remote edits; v1 deliberately conservative conflict policy, no CRDT. Text cell edits use existing RichTextDelta preparation and TextEditSession/IME with explicit row/column token identity. All fields are owned values.",
+    "grid":"Canonical grid style version1 stores color and width. It does not bake lines into shapes or text. Shared renderer receives row/column boundary geometry. A future versioned stroke style/seed must be capability-gated; unknown styles fail closed. No reserved bytes interpreted as hand-drawn today.",
+    "sdk":"runtime.table facade delegates to shared Runtime owner: create/read/select/edit/insert/remove/resize/style/grid. Numeric indices only for creation/insertion position; mutations of existing cells/axes use stable IDs and generation. Windows uses shared Session vocabulary, no new DLL export/internal type exposure.",
+    "version":"Feature implementation is local development; do not republish0.0.1 or create a Release without another publication request. Next feature release follows0.1.0 policy."
+  },
+  "EXECUTION_CLOSURE_CONTRACT":{
+    "implementation":{"required_changes":["canonical model validation codec atomic conditional edits and snapshot capability","Runtime table commands and shared text editing","derived table layout geometry and shared rendering/export","JS/TS and Windows Session DTO bindings","Web Demo creation cell/axis/style controls"],"forbidden_changes":["dependency rebuilds or lock changes","internal owner exposure","Shell-owned canonical table state","unconditional full-table SDK writes","formula/merge/clipboard features","published tag/npm overwrites","unrelated Gate/authority changes"]},
+    "tests":{"required":[
+      {"id":"TABLE-SEM","command_or_oracle":"Native real OperationEngine tests: insert/edit/invalid rows, identity, before-guard, dedup, wire roundtrip and unsupported reader","expected_result":"Valid operations apply exactly once; invalid/conflicting operations preserve generation/content","blocking_reason":"data integrity"},
+      {"id":"TABLE-RUNTIME","command_or_oracle":"Public Runtime commands with undo/redo, stable cell after row insert, stale target and Snapshot restore","expected_result":"Correct committed values and preserved identity/history","blocking_reason":"shared editing integration"},
+      {"id":"TABLE-WEB","command_or_oracle":"Matching built JS/WASM in Chrome: public table calls, actual input/text, styles, geometry, resize, restore, remote no-echo and PNG/JPEG","expected_result":"Actual rendered content and readback agree; public API only","blocking_reason":"consumer and renderer correctness"},
+      {"id":"TABLE-REGRESSION","command_or_oracle":"Configured native CTest suite, existing JS API/types, runtime boundary checker and packaging checks","expected_result":"Affected paths pass; any existing unrelated failure explicitly reported","blocking_reason":"regressions and encapsulation"}
+    ]},
+    "hosted_verification":{"required":[],"optional":["Windows CI and physical IME/device qualification"]},
+    "evidence":{"blocking":["native logs","Chrome consumer results","matching build identity"],"corroborative":["manual demo review"]},
+    "terminal_success":{"all_of":["required behavior implemented and local evidence passes","Web demo served for user testing","state remaining platform limitations explicitly"]},
+    "terminal_blockers":{"explicit_classes":["AUTHORITY_CONFLICT","ENVIRONMENT_BLOCKER","FROZEN_VERIFICATION_FAILURE","NEW_HIGH_IMPACT_FAILURE_MODE"]},
+    "return_policy":{"continue_until_terminal_state":true}
+  }
+}

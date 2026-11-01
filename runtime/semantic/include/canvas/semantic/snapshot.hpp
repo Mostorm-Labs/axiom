@@ -11,7 +11,7 @@
 
 namespace canvas::semantic {
 
-enum class SnapshotCapability : std::uint8_t {
+enum class SnapshotCapability : std::uint16_t {
     kLegacyV1 = 0,
     kShape2Triangle = 1,
     // Explicit capability bits; 0/1 retain their released identities.
@@ -20,6 +20,16 @@ enum class SnapshotCapability : std::uint8_t {
     kRichTextFormattingV3 = 6,
     kShape2TriangleAndRichTextFormattingV3 = 7,
     kShape2TriangleRichTextFormattingAndConnectorAttachmentV1 = 15,
+    // Section/1 requires an explicit reader capability and a v3 manifest.
+    kSectionV1 = 16,
+    kShape2TriangleRichTextFormattingConnectorAndSectionV1 = 31,
+    kAllWithBackgroundV1 = 63,
+    kAllWithTableV1 = 127,
+    kAllWithSketchV1 = 255,
+    kAllWithSketchExtendedV1 = 511,
+    kAllWithRoundedV1 = 1023,
+    kAllWithRoundedAndFontFallbackV1 = 2047,
+    kAllWithCompactStrokeV1 = 4095,
 };
 
 struct SemanticSnapshot final {
@@ -34,6 +44,7 @@ struct SemanticSnapshot final {
     std::vector<std::uint8_t> document_digest;
     std::vector<std::uint8_t> capability_requirements;
     std::vector<std::uint8_t> checkpoint_digest;
+    foundation::DocumentBackground background{};
 
     bool operator==(const SemanticSnapshot&) const = default;
 };
@@ -50,6 +61,8 @@ struct SnapshotDecodeResult final {
 class SnapshotCodec final {
   public:
     // Captured objects/manifest/revision/frontier must already share one read view.
+    // Derives the canonical requirements from the captured object values.
+    [[nodiscard]] static bool populateRequirements(SemanticSnapshot& snapshot);
     // Computes the accepted algorithm1 projections; does not invent a frontier.
     [[nodiscard]] static bool bindDigests(SemanticSnapshot&, SnapshotCapability capability = SnapshotCapability::kLegacyV1);
     [[nodiscard]] static CodecResult encode(const SemanticSnapshot& snapshot, SnapshotCapability capability = SnapshotCapability::kLegacyV1);

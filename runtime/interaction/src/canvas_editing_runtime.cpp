@@ -1,7 +1,10 @@
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/interaction/canvas_editing_runtime.hpp"
+#include "canvas/semantic/table_content.hpp"
 #include "undoable_command.hpp"
 
 #include "canvas/semantic/brush_engine_codec.hpp"
+#include "canvas/semantic/codec.hpp"
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
 #include "qualification_checkpoint.hpp"
 #endif
@@ -36,6 +39,21 @@
 
 namespace canvas::interaction {
 namespace {
+class PublicationReservation final {
+    LocalOperationSink* sink_;
+    bool ready_;
+
+  public:
+    PublicationReservation(LocalOperationSink* sink, const semantic::Operation& op)
+        : sink_(sink), ready_(!sink || sink->preparePublication({&op, 1})) {}
+    ~PublicationReservation() {
+        if (sink_)
+            sink_->abortPreparedPublication();
+    }
+    explicit operator bool() const noexcept {
+        return ready_;
+    }
+};
 bool propertyBool(const semantic::PropertyBag& bag, std::uint32_t id, bool fallback) {
   for (const auto& entry : bag.entries) if (entry.field_id == id)
     if (const auto* value = std::get_if<bool>(&entry.value)) return *value;
@@ -50,6 +68,9 @@ bool validAppearance(const runtime::CanvasAppearance& a) {
   };
   return validColor(a.fill)&&validColor(a.stroke)&&std::isfinite(a.strokeWidth)&&
       a.strokeWidth>0&&std::isfinite(a.opacity)&&a.opacity>=0&&a.opacity<=1;
+}
+bool usesDerivedAppearance(const semantic::PropertyBag& bag) {
+  for(const auto& p:bag.entries){if(p.field_id==0x102U||p.field_id==0x103U)return true;if(const auto* fill=std::get_if<semantic::FillStyleValue>(&p.value);fill&&std::holds_alternative<semantic::PatternFillV1>(*fill))return true;}return false;
 }
 semantic::PropertyBag appearanceProperties(const runtime::CanvasAppearance& a,bool shape) {
   const auto color=[](runtime::RgbaColor c){return semantic::ColorValue{c.r,c.g,c.b,c.a};};
@@ -66,7 +87,8 @@ semantic::PropertyBag appearanceProperties(const runtime::CanvasAppearance& a,bo
   return bag;
 }
 
-std::string sceneContentStamp(const canvas::scene::InspectionRecord& record) {
+template<class Record>
+std::string sceneContentStamp(const Record& record) {
   std::ostringstream out;
   out.precision(17);
   out << record.referenceGeometryDigest << '|';
@@ -85,10 +107,14 @@ std::string sceneContentStamp(const canvas::scene::InspectionRecord& record) {
         out << value.index();
         std::visit([&](const auto& fill) {
           using F = std::decay_t<decltype(fill)>;
-          if constexpr (std::is_same_v<F, semantic::SolidFill>) {
+          if constexpr (std::is_same_v<F, semantic::SolidFill> || std::is_same_v<F, semantic::PatternFillV1>) {
             out << fill.color.r << ',' << fill.color.g << ',' << fill.color.b << ',' << fill.color.a;
+            if constexpr(std::is_same_v<F,semantic::PatternFillV1>)out << ':' << fill.version << ':' << static_cast<unsigned>(fill.kind) << ':' << fill.angle << ':' << fill.gap << ':' << fill.width;
           }
         }, value);
+      } else if constexpr (std::is_same_v<T, semantic::CornerStyleV1>) {out << value.version << ":" << value.radius;
+      } else if constexpr (std::is_same_v<T, semantic::SketchStyleV1>) {
+        out << value.version << ':' << value.seed << ':' << value.roughness << ':' << value.enabled;
       } else if constexpr (std::is_same_v<T, semantic::StrokeStyleValue>) {
         out << value.index();
         std::visit([&](const auto& stroke) {
@@ -138,7 +164,8 @@ std::string sceneContentStamp(const canvas::scene::InspectionRecord& record) {
   return out.str();
 }
 
-std::uint32_t sceneContentGeneration(const canvas::scene::InspectionRecord& record) {
+template<class Record>
+std::uint32_t sceneContentGeneration(const Record& record) {
   constexpr std::uint32_t kOffset = 2166136261U;
   constexpr std::uint32_t kPrime = 16777619U;
   auto hash = kOffset;
@@ -147,10 +174,6 @@ std::uint32_t sceneContentGeneration(const canvas::scene::InspectionRecord& reco
     hash *= kPrime;
   }
   return hash == 0U ? 1U : hash;
-}
-
-canvas::SceneOrderKey renderOrderKey(const canvas::scene::InspectionRecord& record) {
-  return canvas::SceneOrderKey(record.placement.order_key.bytes());
 }
 
 bool runtimeTraversalLess(const canvas::RuntimeSceneRecord& left,
@@ -206,15 +229,20 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
       const semantic::SemanticReadView& view) const override {
     const auto projection = canvas::scene::FullSceneCompiler::compile(view, nullptr, true);
     if (!projection) return foundation::Result<canvas::CompiledSceneSnapshot>::failure(projection.error());
-    canvas::CompiledSceneSnapshot result{canvas::SceneRevision(view.generation().value()), {}};
-    result.records.reserve(projection.value().records.size());
+    return compileRecords(std::span<const canvas::scene::InspectionRecord>(projection.value().records), view.generation(), true);
+  }
+  template<class Record>
+  foundation::Result<canvas::CompiledSceneSnapshot> compileRecords(
+      std::span<const Record> records, semantic::SemanticGeneration generation, bool prune) const {
+    canvas::CompiledSceneSnapshot result{canvas::SceneRevision(generation.value()), {}};
+    result.records.reserve(records.size());
     std::unordered_set<foundation::ObjectId, foundation::ObjectIdHash> activeIds;
-    activeIds.reserve(projection.value().records.size());
-    for (const auto& record : projection.value().records) activeIds.insert(record.objectId);
-    for (auto it = renderSlots_.begin(); it != renderSlots_.end();) {
+    activeIds.reserve(records.size());
+    for (const auto& record : records) activeIds.insert(record.objectId);
+    if (prune) for (auto it = renderSlots_.begin(); it != renderSlots_.end();) {
       it = activeIds.contains(it->first) ? std::next(it) : renderSlots_.erase(it);
     }
-    for (auto it = hitSlots_.begin(); it != hitSlots_.end();) {
+    if (prune) for (auto it = hitSlots_.begin(); it != hitSlots_.end();) {
       it = activeIds.contains(it->first) ? std::next(it) : hitSlots_.erase(it);
     }
     const auto allocateSlot = [](auto& slots, auto& used, std::uint32_t candidate,
@@ -228,9 +256,9 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
         ++candidate;
       }
     };
-    const bool hierarchical=std::any_of(projection.value().records.begin(),projection.value().records.end(),[](const auto& r){return r.kind==semantic::ObjectKind::kSection||r.kind==semantic::ObjectKind::kGroup;});
+    const bool hierarchical=std::any_of(records.begin(),records.end(),[](const auto& r){return r.kind==semantic::ObjectKind::kSection||r.kind==semantic::ObjectKind::kGroup;});
     std::uint64_t traversalOrdinal=0;
-    for (const auto& record : projection.value().records) {
+    for (const auto& record : records) {
       ++traversalOrdinal;
       if(record.kind==semantic::ObjectKind::kGroup)continue;
       canvas::SceneObjectKind kind = canvas::SceneObjectKind::kShape;
@@ -252,7 +280,7 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
       std::uint64_t slot = 1469598103934665603ULL;
       for (const auto byte : record.objectId.bytes) { slot ^= byte; slot *= 1099511628211ULL; }
       const auto generation = sceneContentGeneration(record);
-      auto order = renderOrderKey(record);
+      auto order = canvas::SceneOrderKey(record.placement.order_key.bytes());
       if(hierarchical) {
         std::array<std::uint8_t,8> bytes{};
         for(unsigned i=0;i<8;++i)bytes[i]=static_cast<std::uint8_t>(traversalOrdinal>>(56-8*i));
@@ -275,6 +303,25 @@ class EditingSceneCompiler final : public canvas::ISemanticSceneCompiler {
     (void)changes;
     return foundation::Result<canvas::CompiledSceneDelta>::failure(
         {foundation::ErrorCode::kRequiresFullRebuild, "editor scene changes use the shared full projection"});
+  }
+  foundation::Result<canvas::CompiledSceneDelta> compilePreparedDelta(
+      const semantic::SemanticReadView& view, const semantic::ChangeSet& changes,
+      std::span<const canvas::RuntimeSceneRecord> affected, const canvas::SceneReadView& before) const override {
+    auto compiled = compileRecords(affected, view.generation(), false);
+    if (!compiled) return foundation::Result<canvas::CompiledSceneDelta>::failure(compiled.error());
+    canvas::CompiledSceneDelta delta{before.revision(),
+      canvas::SceneRevision(std::max(before.revision().value()+1,view.generation().value())),{},std::nullopt};
+    for (const auto& change : changes.objects()) {
+      const auto* old = before.find(change.object_id);
+      const auto found = std::find_if(compiled.value().records.begin(),compiled.value().records.end(),
+        [&](const auto& r){return r.objectId==change.object_id;});
+      const bool haveNew = found!=compiled.value().records.end();
+      if (old && haveNew) {
+        if (*old != *found) delta.mutations.push_back({canvas::SceneMutationKind::kUpdate,change.object_id,*old,*found});
+      } else if (haveNew) delta.mutations.push_back({canvas::SceneMutationKind::kInsert,change.object_id,std::nullopt,*found});
+      else if (old) delta.mutations.push_back({canvas::SceneMutationKind::kRemove,change.object_id,*old,std::nullopt});
+    }
+    return foundation::Result<canvas::CompiledSceneDelta>::success(std::move(delta));
   }
  private:
   mutable std::unordered_map<foundation::ObjectId, std::uint32_t,
@@ -319,6 +366,16 @@ std::uint64_t hashOutline(const std::vector<canvas::ink::reference::StrokeOutlin
   return hash;
 }
 
+std::uint64_t hashCompactKnots(const std::vector<canvas::foundation::InkKnot>& knots) noexcept {
+  auto hash = kFnvOffset;
+  for (const auto& knot : knots) {
+    hash = hashValue(hash, knot.x);
+    hash = hashValue(hash, knot.y);
+    hash = hashValue(hash, knot.pressure);
+  }
+  return hash;
+}
+
 canvas::foundation::WorldRect transformedBounds(
     const canvas::foundation::WorldRect& bounds,
     const canvas::semantic::Transform2D& transform) noexcept {
@@ -341,6 +398,10 @@ canvas::foundation::WorldRect transformedBounds(
   }
   return result;
 }
+canvas::foundation::WorldRect interactionBounds(const canvas::RuntimeSceneRecord& record) noexcept {
+  return canvas::interaction::usesDerivedAppearance(record.properties)?transformedBounds(record.geometryBounds,record.transform):record.worldBounds;
+}
+
 
 canvas::foundation::WorldRect viewBounds(
     const canvas::foundation::WorldRect& world,
@@ -400,6 +461,7 @@ CanvasEditingRuntime::CanvasEditingRuntime(render::ViewId viewId)
 void CanvasEditingRuntime::bindResourceServices(
     render::ImageResourceResolver* images,
     text::RichTextLayoutService* textService) noexcept {
+  imageResolver_ = images;
   skiaRenderer_.setImageResolver(images);
   previewRenderer_.setImageResolver(images);
   textLayoutService_ = textService;
@@ -413,7 +475,7 @@ void CanvasEditingRuntime::refreshResourceManifestServices() noexcept {
       if (entry.resource_kind != semantic::ResourceKind::kFont) continue;
       textLayoutService_->registerFont({entry.resource_id,
                                         entry.content_hash.substr(7U),
-                                        fontCollectionIndex(entry.metadata)});
+                                        fontCollectionIndex(entry.metadata),semantic::fontFallbackResource(entry.metadata)});
     }
   }
   (void)refreshResourceDerivedState();
@@ -439,6 +501,7 @@ void CanvasEditingRuntime::close() noexcept {
   canvas::qualification::deactivateGroup(fc08Qualification_.get());
 #endif
   if (closed_) return;
+  clearAppearancePreview();
   abortExplicitIntent();
   cancelConnectorRouting();
   if (surfaceTransitionActive_) {
@@ -527,11 +590,20 @@ bool CanvasEditingRuntime::brushBatch(
     std::span<const input::PointerSample> samples,
     std::uint64_t session) noexcept {
   if (samples.empty()) return false;
+  if(laserTrails_.trails().contains(session)||
+      (samples.front().phase==input::PointerPhase::kDown&&inkBrushConfig_&&inkBrushConfig_->family==foundation::InkFamily::kLaser)){
+    const auto now=static_cast<std::uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
+    if(samples.front().phase==input::PointerPhase::kDown){
+        if(!laserTrails_.begin(session,*inkBrushConfig_)||!previewController_||!previewProvider_||!previewController_->begin(1,session,1,previewProvider_->generation()))return false;
+        auto style=render::PreviewStyleOverride{};style.preferCapturedPaint=true;previewController_->setPresentationStyle(style);
+    }
+    for(const auto& s:samples){if(s.phase==input::PointerPhase::kCancel){laserTrails_.cancel(session);if(previewController_&&previewProvider_)(void)previewController_->retireSession(session,previewProvider_->generation());return true;}
+        if(!s.predicted&&!laserTrails_.append(session,s.x,s.y,now))return false;}
+    advanceLaserPresentation(now);return true;
+  }
   if (samples.front().phase == input::PointerPhase::kDown) {
-    const auto profile = selectedBrushProfile_ == "vector-solid-v1" ? 1U
-        : selectedBrushProfile_ == "marker-flat-v1" ? 2U
-        : selectedBrushProfile_ == "chalk-grain-v1" ? 3U : 4U;
-    if (!beginBrushSession(session, profile)) return false;
+    const auto loaded=brushCatalog_.loadDefault(selectedBrushProfile_,selectedBrushRevision_);
+    if(!loaded||!beginBrushSession(session,loaded.package,0x4500ULL+session))return false;
   }
   std::vector<ink::BrushSample> confirmed;
   std::vector<ink::BrushSample> predicted;
@@ -539,7 +611,7 @@ bool CanvasEditingRuntime::brushBatch(
   for (const auto& sample : samples) {
     if (sample.phase == input::PointerPhase::kCancel) break;
     const ink::BrushSample point{sample.x, sample.y, sample.pressure,
-                                 sample.capabilities.pressure, sample.sequence};
+                                 sample.capabilities.pressure, sample.sequence,sample.timestampNs,sample.capabilities.pressure,sample.phase==input::PointerPhase::kUp};
     if (sample.predicted) predicted.push_back(point);
     else {
       // A confirmed observation replaces the preceding speculative tail.
@@ -753,6 +825,7 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
   if (selectionMode_ || creationMode_ || creationActive() || panTool_) {
     for (const auto& sample : routedSamples) {
       if (!sample.key.valid()) continue;
+      if(!sample.predicted&&sample.capabilities.tool!=input::PointerTool::kFinger&&tablePointer(sample.key,sample.phase,sample.x,sample.y))continue;
       if (selectionMode_ && (sample.capabilities.tool==input::PointerTool::kFinger ||
           coordinator_->hasContact(sample.key))) {
         const auto routing=coordinator_->route(sample);
@@ -770,6 +843,9 @@ bool CanvasEditingRuntime::acceptPlatformBatch(const input::PlatformPointerBatch
         if (!routing.routesToInk) continue;
       }
       if (!dispatchRuntime_.submit(sample)) return false;
+      if(selectionMode_&&selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint&&selectedObjectCount()==1&&(sample.phase==input::PointerPhase::kDown||sample.phase==input::PointerPhase::kUp)){
+        runtime::TextIntent cell;cell.object=selection_.primary();cell.viewX=sample.x;cell.viewY=sample.y;(void)tableTargetAt(cell);
+      }
       if (selectionMode_ && selectionAcquisitionMode_==runtime::CanvasSelectionMode::kPoint && !textTool_ &&
           (!interaction_->textSession() ||
            interaction_->textSession()->read().phase == runtime::TextPhase::kClosed))
@@ -963,7 +1039,8 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
           (semanticRecord->kind != semantic::ObjectKind::kShape &&
            semanticRecord->kind != semantic::ObjectKind::kImage &&
            semanticRecord->kind != semantic::ObjectKind::kSticky)) continue;
-      const auto& bounds = record.worldBounds;
+      const auto* projected=sceneCoordinator_?sceneCoordinator_->runtimeScene().find(record.objectId):nullptr;
+      const auto bounds=projected?interactionBounds(*projected):record.worldBounds;
       const std::array<foundation::WorldPoint, 4> points{{
           {(bounds.left + bounds.right) * 0.5F, bounds.top - gap},
           {bounds.right + gap, (bounds.top + bounds.bottom) * 0.5F},
@@ -1006,7 +1083,8 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
            record->kind != canvas::SceneObjectKind::kSticky) ||
           std::find(selection_.selected().begin(), selection_.selected().end(), id) !=
               selection_.selected().end()) continue;
-      targets.push_back({id, record->worldBounds, false, false});
+      const auto* projected=sceneCoordinator_->runtimeScene().find(id);
+      targets.push_back({id, projected?interactionBounds(*projected):record->worldBounds, false, false});
     }
     creation.setSnapTargets(std::move(targets));
     creation.setSnapScale(viewportController_->state().scale);
@@ -1025,9 +1103,13 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
       creation.setStartAttachment(start);
     }
     const auto seed = ++creationSerial_ + (std::uint64_t{1} << 48U);
-    if (!creation.begin(key, creationPreset_, CreationStyle{appearanceProperties(futureAppearance_,
-                        creationPreset_<=CreationPreset::kTriangle)},
-                        {content.first, content.second}, viewport, seed)) { eraseSession(); return false; }
+    const auto objectId = allocateObjectIdentity(foundation::ObjectId::fromUint64(seed));
+    if (objectId.isZero()) { eraseSession(); return false; }
+    const bool filledCreation=creationPreset_<=CreationPreset::kTriangle || (creationPreset_==CreationPreset::kSticky&&futureStyleConfigured_);
+    auto creationProperties=appearanceProperties(futureAppearance_,filledCreation);
+    materializeAppearance(creationProperties,filledCreation,creationPreset_==CreationPreset::kSticky,creationPreset_!=CreationPreset::kSticky&&creationPreset_!=CreationPreset::kEllipse);
+    if (!creation.begin(key, creationPreset_, CreationStyle{std::move(creationProperties)},
+                        {content.first, content.second}, viewport, seed, objectId)) { eraseSession(); return false; }
   canonicalPresentationDirty_ = true;
     if (platformPresentationDeferred_) transientOverlayDirty_ = true;
     else (void)presentTransientOverlayFrame(nextCanonicalFrameId());
@@ -1116,7 +1198,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
   // pointer-up flash seen on Windows.
   transientOverlayDirty_ = false;
   transientOverlayHandoffPending_ = true;
-  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(true);
+  if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(!platformPresentationDeferred_);
   if (!commit.has_value()) {
     return true;
   }
@@ -1155,7 +1237,8 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
         };
         const std::uint32_t targetPort = oppositePort(sourcePort);
         semantic::ObjectRecord target{};
-        target.id = foundation::ObjectId::fromUint64(targetOrdinal);
+        target.id = allocateObjectIdentity(foundation::ObjectId::fromUint64(targetOrdinal));
+        if (target.id.isZero()) return false;
         target.kind = semantic::ObjectKind::kShape;
         target.kind_version = 1U;
         target.placement.order_key = semantic::OrderKey{{0xFD, 0xFE,
@@ -1211,6 +1294,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
             break;
         }
         target.properties = appearanceProperties(futureAppearance_, true);
+        materializeAppearance(target.properties,true,target.kind==semantic::ObjectKind::kSticky,target.kind==semantic::ObjectKind::kShape&&(std::get<semantic::ShapeContent>(target.content).shape_kind==1||std::get<semantic::ShapeContent>(target.content).shape_kind==3));
         connectorContent->end.value = semantic::AttachedEndpoint{
             target.id, semantic::StablePortAnchor{targetPort}};
         inserted.push_back(std::move(target));
@@ -1235,7 +1319,7 @@ bool CanvasEditingRuntime::creationPointer(const input::PointerKey& key, input::
     }
   }
   semantic::Operation operation{
-      semantic::OperationId(foundation::ObjectId::fromUint64(ordinal)), documentId_,
+      localOperationIdentity(ordinal), documentId_,
       1U, 1U, semantic::InsertObjectsOp{std::move(inserted)}};
   const auto inverseId = allocateOperationId();
   if (inverseId.isZero()) return false;
@@ -1321,6 +1405,7 @@ void CanvasEditingRuntime::cancelAllPointers() noexcept {
     (void)pointer;
     session->cancel();
   }
+  laserTrails_.clear();
   brushSessions_.clear();
   brushSessionPackages_.clear();
   brushSessionSeeds_.clear();
@@ -1351,7 +1436,7 @@ bool CanvasEditingRuntime::beginBrushSession(std::uint64_t pointerId,
   std::lock_guard lock(previewStateMutex_);
   if (pointerId == 0U ||
       (package.profileId != "vector-solid-v1" && package.profileId != "marker-flat-v1" &&
-       package.profileId != "chalk-grain-v1" && package.profileId != "membrane-v1") ||
+       package.profileId != "chalk-grain-v1" && package.profileId != "membrane-v1" && !package.compactConfig) ||
       package.packageId.empty() ||
       brushSessions_.contains(pointerId)) return false;
   auto capturedPackage = package;
@@ -1361,6 +1446,8 @@ bool CanvasEditingRuntime::beginBrushSession(std::uint64_t pointerId,
   capturedPackage.paint.blue = inkBlue_;
   capturedPackage.paint.alpha = inkAlpha_;
   capturedPackage.paint.opacity = inkOpacity_;
+  if(capturedPackage.compactConfig&&inkBrushConfig_)capturedPackage.compactConfig=inkBrushConfig_;
+  if(capturedPackage.compactConfig){auto& c=*capturedPackage.compactConfig;c.size=inkSize_;c.opacity=inkOpacity_;c.color={inkRed_,inkGreen_,inkBlue_,inkAlpha_};}
   auto state = ink::resolveBrushState(capturedPackage, seed);
   brushPackageDigest_ = ink::brushPackageCanonicalDigest(package);
   brushResolvedStateDigest_ = kFnvOffset;
@@ -1391,6 +1478,8 @@ bool CanvasEditingRuntime::beginBrushSession(std::uint64_t pointerId,
     style.opacityMultiplier = 0.92F;
     style.overrideColor = true;
     style.overrideOpacity = true;
+    // Keep the product's amber handoff cue for compact and legacy brushes.
+    // The renderer preserves captured geometry/material and tints only paint.
     style.preferCapturedPaint = false;
     previewController_->setPresentationStyle(style);
   }
@@ -1528,6 +1617,17 @@ semantic::ApplyResult CanvasEditingRuntime::applyExternalOperation(
   return result;
 }
 
+bool CanvasEditingRuntime::setDocumentBackground(const foundation::DocumentBackground& value) {
+  if (!foundation::validDocumentBackground(value) || !canonicalWriteAdmission() ||
+      explicitIntentActive_ || !historySceneReady() || !snapshotCaptureReady() ||
+      (interaction_->textSession() &&
+       interaction_->textSession()->read().phase != runtime::TextPhase::kClosed)) return false;
+  if (semanticObjects_.documentBackground() == value) return true;
+  semantic::Operation operation{allocateOperationId(), documentId_, 1, 1,
+      semantic::SetDocumentBackgroundOp{value}};
+  return history_.executeUndoable(operation);
+}
+
 bool CanvasEditingRuntime::canonicalWriteAdmission() const noexcept {
   return !closed_ && !surfaceTransitionActive_ && surface_.available &&
          std::this_thread::get_id() == ownerThread_ && !publicationCallbackActive_;
@@ -1597,11 +1697,21 @@ bool CanvasEditingRuntime::prepareExplicitIntentInternal(
                                          std::move(beforeExpectations), std::move(afterExpectations));
     if (!entry) return false;
   }
-  if (!sceneCoordinator_->prepareIntent(*sceneCompiler_, input)) return false;
+  if (localOperationSink_ && !localOperationSink_->preparePublication(operations))
+      return false;
+  if (!sceneCoordinator_->prepareIntent(*sceneCompiler_, input)) {
+      if (localOperationSink_)
+          localOperationSink_->abortPreparedPublication();
+      return false;
+  }
   explicitIntentHistory_ = std::move(entry);
   explicitIntent_ = std::move(prepared);
   return true;
-} catch (const std::bad_alloc&) { return false; }
+} catch (const std::bad_alloc&) {
+    if (localOperationSink_)
+        localOperationSink_->abortPreparedPublication();
+    return false;
+}
 
 bool CanvasEditingRuntime::commitExplicitIntent() noexcept {
   if (!explicitIntentActive_ || !explicitIntent_ || !explicitIntentHistory_ ||
@@ -1636,10 +1746,13 @@ bool CanvasEditingRuntime::commitExplicitIntent() noexcept {
 }
 
 void CanvasEditingRuntime::abortExplicitIntent() noexcept {
-  if (sceneCoordinator_) sceneCoordinator_->abortIntent();
-  explicitIntent_.reset();
-  explicitIntentHistory_.reset();
-  explicitIntentActive_ = false;
+    if (localOperationSink_)
+        localOperationSink_->abortPreparedPublication();
+    if (sceneCoordinator_)
+        sceneCoordinator_->abortIntent();
+    explicitIntent_.reset();
+    explicitIntentHistory_.reset();
+    explicitIntentActive_ = false;
 }
 
 bool CanvasEditingRuntime::submitHistoryIntent(std::span<const semantic::Operation> operations,
@@ -1673,7 +1786,7 @@ bool CanvasEditingRuntime::submitHistoryIntent(std::span<const semantic::Operati
 
 bool CanvasEditingRuntime::textReady() const noexcept {
   return canonicalWriteAdmission() && historySceneReady() && brushSessions_.empty() && eraserTraces_.empty() && keyedStrokeIds_.empty() &&
-         creations_.empty() && panPointers_.empty() && dispatchRuntime_.activeCount()==0 && !selectionTransformActive();
+         creations_.empty() && panPointers_.empty() && dispatchRuntime_.activeCount()==0 && !selectionTransformActive() && !tableResize_;
 }
 bool CanvasEditingRuntime::textWritable(semantic::ObjectId id) const noexcept {
   const auto* current=semanticObjects_.find(id);
@@ -1689,7 +1802,9 @@ bool CanvasEditingRuntime::textWritable(semantic::ObjectId id) const noexcept {
 }
 semantic::ObjectId CanvasEditingRuntime::allocateTextIdentity() {
   while(nextTextIdentity_!=0) {
-    auto id=foundation::ObjectId::fromUint64(nextTextIdentity_++);id.bytes[15]=0xF2;
+    auto legacyId=foundation::ObjectId::fromUint64(nextTextIdentity_++);legacyId.bytes[15]=0xF2;
+    const auto id=allocateObjectIdentity(legacyId);
+    if(id.isZero())return {};
     bool found=semanticObjects_.contains(id);
     for(const auto& object:semanticObjects_.allObjects())if(const auto* rich=std::get_if<semantic::RichTextContent>(&object.content))
       for(const auto& paragraph:rich->document.paragraphs)found=found || paragraph.id==id;
@@ -1703,6 +1818,9 @@ semantic::PrepareResult CanvasEditingRuntime::prepareTextOperation(const semanti
 bool CanvasEditingRuntime::applyResourceManifestOperation(const semantic::Operation& operation) noexcept {
   if (!canonicalWriteAdmission() || !resourceManifestPort_ ||
       operation.kind() != semantic::OperationKind::kUpdateResourceManifest) return false;
+  PublicationReservation publication(localOperationSink_, operation);
+  if (!publication)
+      return false;
   const auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalCommand,
       semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   if (applied.disposition != semantic::ApplyDisposition::kApplied) return false;
@@ -1736,6 +1854,7 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
   if(forward.kind()==semantic::OperationKind::kSetObjectSize) aspect=interaction::HistoryAspect::kSize;
   if(forward.kind()==semantic::OperationKind::kSetPlacements) aspect=interaction::HistoryAspect::kPlacement;
   if(forward.kind()==semantic::OperationKind::kPatchProperties) aspect=interaction::HistoryAspect::kProperties;
+  if(forward.kind()==semantic::OperationKind::kEditTable) aspect=interaction::HistoryAspect::kRichTextContent;
   if(forward.kind()==semantic::OperationKind::kEditRichText) aspect=interaction::HistoryAspect::kRichTextContent;
   std::vector<interaction::HistoryExpectation> before,after;
   const auto capture=[&](semantic::ObjectId id,const semantic::ObjectRecord* post) {
@@ -1757,6 +1876,9 @@ bool CanvasEditingRuntime::applyLocalHistoryOperation(
       canvas::qualification::kApplyPlan | canvas::qualification::kHistoryEntry};
   if (canvas::qualification::notify(&fc08Context, canvas::qualification::Point::kCmdAdmitted, forward)) return false;
 #endif
+  PublicationReservation publication(localOperationSink_, forward);
+  if (!publication)
+      return false;
   const auto applied = resourceManifestPort_
       ? operationEngine_.apply(forward, semantic::ApplySource::kLocalInteraction, semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_)
       : operationEngine_.apply(forward, semantic::ApplySource::kLocalInteraction, semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
@@ -1966,16 +2088,19 @@ bool CanvasEditingRuntime::unlockSelectedObjects() noexcept {
 
 bool CanvasEditingRuntime::setFutureAppearance(const runtime::CanvasAppearance& appearance) noexcept {
   if(!validAppearance(appearance))return false;
+  if(!futureAppearance_.fillEnabled&&appearance.fillEnabled)futureStyle_.fillKind=runtime::AppearanceFill::kSolid;
   futureAppearance_=appearance; return true;
 }
 bool CanvasEditingRuntime::setSelectedAppearance(const runtime::CanvasAppearance& appearance) noexcept {
   if (selectedObjectCount()!=1U) return false;
   const auto* before=semanticObjects_.find(selection_.primary());
   if(!before || selectedObjectLocked() || !validAppearance(appearance) ||
-      (before->kind!=semantic::ObjectKind::kShape && before->kind!=semantic::ObjectKind::kConnector))return false;
+      (before->kind!=semantic::ObjectKind::kShape && before->kind!=semantic::ObjectKind::kConnector && before->kind!=semantic::ObjectKind::kSticky))return false;
   semantic::PatchPropertiesOp forward,inverse;
-  auto desiredProperties = appearanceProperties(appearance,before->kind==semantic::ObjectKind::kShape);
+  auto desiredProperties = appearanceProperties(appearance,before->kind!=semantic::ObjectKind::kConnector);
+  if(before->kind==semantic::ObjectKind::kSticky&&std::none_of(before->properties.entries.begin(),before->properties.entries.end(),[](const auto& p){return p.field_id==0x102U;}))desiredProperties.entries.push_back({0x102U,semantic::SketchStyleV1{1,allocateSketchSeed(),1,false}});
   for (auto& entry : desiredProperties.entries) {
+    if(entry.field_id==0x100U&&appearance.fillEnabled)for(const auto& old:before->properties.entries)if(old.field_id==0x100U)if(const auto* f=std::get_if<semantic::FillStyleValue>(&old.value))if(const auto* pattern=std::get_if<semantic::PatternFillV1>(f)){auto p=*pattern;p.color={appearance.fill.r,appearance.fill.g,appearance.fill.b,appearance.fill.a};entry.value=semantic::FillStyleValue{p};}
     if (entry.field_id == 0x101U && appearance.strokeEnabled) {
       const auto current = std::find_if(before->properties.entries.begin(),
           before->properties.entries.end(), [](const auto& item) { return item.field_id == 0x101U; });
@@ -2139,6 +2264,11 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
     selectionView_.reset();
     return false;
   }
+  std::optional<canvas::RuntimeSceneRecord> appearanceRecord;
+  if (appearanceSession_ && appearanceSessionCurrent()) {
+    appearanceRecord = *record;
+    if (applyAppearanceToRecord(*appearanceRecord)) record = &*appearanceRecord;
+  }
   const auto viewport = viewportController_->state();
   const float zoom = viewport.scale > 0.0F && std::isfinite(viewport.scale)
       ? viewport.scale : 1.0F;
@@ -2173,7 +2303,7 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
     // outline used by the selection chrome.  Using geometryBounds here leaves
     // the top and left ports inside the outline whenever a stroke expands the
     // visual bounds, which makes those two ports look offset from the object.
-    const auto& bounds = cropBounds ? cropBounds->visual : record->visualBounds;
+    const auto& bounds = cropBounds ? cropBounds->visual : usesDerivedAppearance(record->properties)?record->geometryBounds:record->visualBounds;
     // Acute stroke joins can expand visual bounds asymmetrically. Keep the
     // transverse port axes at the authored geometry center, as the semantic
     // StablePort anchors do; only the outward gap follows the visible outline.
@@ -2221,7 +2351,8 @@ bool CanvasEditingRuntime::renderSelectionOverlay() noexcept {
     point(bounds.left, axisY);
   }
   if (transformDrag_.active()) attachmentPoints.clear();
-  auto overlayBounds=cropBounds ? cropBounds->visual : record->visualBounds;
+  const bool sketchChrome=usesDerivedAppearance(record->properties);
+  auto overlayBounds=cropBounds ? cropBounds->visual : sketchChrome?record->geometryBounds:record->visualBounds;
   if(sectionBoundaryDrag_) {
     const auto& b=sectionBoundaryDrag_->preview.boundary;
     overlayBounds={static_cast<float>(b.x),static_cast<float>(b.y),static_cast<float>(b.x+b.width),static_cast<float>(b.y+b.height)};
@@ -2265,8 +2396,13 @@ bool CanvasEditingRuntime::hoverSelectionAtViewPoint(float x, float y) noexcept 
   const bool connectorCreation = creationMode_ &&
       (creationPreset_ == CreationPreset::kLine ||
        creationPreset_ == CreationPreset::kArrow);
-  if ((!selectionMode_ && !connectorCreation) || selection_.primary().isZero() || !selectionView_ ||
+  if ((!selectionMode_ && !connectorCreation) || selection_.primary().isZero() ||
       !std::isfinite(x) || !std::isfinite(y)) return false;
+  // Clearing a finished preview can release the transient view while the
+  // selected object's canonical overlay remains visible. Recreate it before
+  // hit testing hover, just as selectionPointer does for pointer-down.
+  if (!selectionView_) (void)renderSelectionOverlay();
+  if (!selectionView_) return false;
   auto& points = selectionView_->editingOverlay().mutableAttachmentPoints();
   bool changed = false;
   for (auto& point : points) {
@@ -2352,7 +2488,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       if (phase == input::PointerPhase::kUp) {
         const bool accepted = !editingChanged_ || transformDrag_.commit();
         const bool handoff = accepted && editingChanged_;
-        if (handoff) { transientOverlayHandoffPending_ = true; if (previewProvider_) previewProvider_->setOverlayVisible(true); }
+        if (handoff) { transientOverlayHandoffPending_ = true; if (previewProvider_) previewProvider_->setOverlayVisible(!platformPresentationDeferred_); }
         cancelSelectionTransform();
         if (!handoff) (void)clearTransientOverlay();
         return accepted;
@@ -2428,7 +2564,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
     if (!transformDrag_.begin(targets)) return false;
     editingPointer_ = key;
     editingInitial_ = t;
-    editingLocalBounds_ = bounds.visual;
+    editingLocalBounds_ = usesDerivedAppearance(object->properties)?bounds.geometry:bounds.visual;
     editingDownWorld_ = {world.first,world.second};
     editingGeneration_ = semanticGeneration_.current();
     editingCameraGeneration_=cameraGeneration();editingMetricsGeneration_=surface_.metricsGeneration;
@@ -2510,7 +2646,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
         const auto* record = sceneCoordinator_->runtimeScene().find(objectId);
         if (record == nullptr) continue;
         if (record->objectId == selection_.primary()) continue;
-        targets.push_back({record->objectId, viewBounds(record->worldBounds, viewport),
+        targets.push_back({record->objectId, viewBounds(interactionBounds(*record), viewport),
                            false, transformOverrides_.find(record->objectId) != nullptr});
       }
       const auto resolved = snapResolver_.resolve(
@@ -2595,7 +2731,7 @@ bool CanvasEditingRuntime::selectionPointer(const input::PointerKey& key, input:
       const bool needsHandoff = accepted && editingChanged_;
       if (needsHandoff) {
         transientOverlayHandoffPending_ = true;
-        if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(true);
+        if (previewProvider_ != nullptr) previewProvider_->setOverlayVisible(!platformPresentationDeferred_);
       }
       cancelSelectionTransform();
       // A click on an already selected Shape draws an opaque transient copy,
@@ -2666,12 +2802,13 @@ interaction::SubmitResult CanvasEditingRuntime::submit(const semantic::SetTransf
 bool CanvasEditingRuntime::selectBrushProfile(std::string_view profileId,
                                            std::uint32_t revision) noexcept {
   if (!brushSessions_.empty() ||
-      (revision != 1U && !(profileId == "chalk-grain-v1" &&
+      (revision != 1U && revision != 2U && revision != 3U && revision != 4U && !(profileId == "chalk-grain-v1" &&
                             (revision == 2U || revision == 3U || revision == 4U)))) return false;
   const auto loaded = brushCatalog_.loadDefault(profileId, revision);
   if (!loaded) return false;
   selectedBrushProfile_ = std::string(profileId);
   selectedBrushRevision_ = revision;
+  inkBrushConfig_=loaded.package.compactConfig;
   if (!inkSizeOverride_) inkSize_ = static_cast<float>(loaded.package.vector.size);
   if (!inkColorOverride_) {
     inkRed_ = static_cast<float>(loaded.package.paint.red);
@@ -2703,6 +2840,41 @@ bool CanvasEditingRuntime::setInkOptions(float size, float red, float green, flo
 }
 
 void CanvasEditingRuntime::clearInkSizeOverride() noexcept { inkSizeOverride_ = false; }
+std::optional<foundation::InkBrushConfig> CanvasEditingRuntime::inkBrushConfig() const noexcept {
+  auto config=inkBrushConfig_;
+  if(config){config->size=inkSize_;config->opacity=inkOpacity_;config->color={inkRed_,inkGreen_,inkBlue_,inkAlpha_};}
+  return config;
+}
+bool CanvasEditingRuntime::configureInkBrush(const foundation::InkBrushConfig& config) noexcept {
+  if(closed_||std::this_thread::get_id()!=ownerThread_||publicationCallbackActive_||!foundation::validInkBrushConfig(config))return false;
+  inkBrushConfig_=config;
+  selectedBrushProfile_=config.family==foundation::InkFamily::kLaser?"laser-transient":
+      config.family==foundation::InkFamily::kMarker?"marker-compact-v1":
+      config.family==foundation::InkFamily::kChalk?"chalk-compact-v1":
+      config.family==foundation::InkFamily::kCrayon?"crayon-wax-v1":
+      config.family==foundation::InkFamily::kWatercolor?"watercolor-lite-v1":
+      config.roundMode==foundation::InkRoundMode::kRegular?"round-regular":"round-handdrawn";
+  selectedBrushRevision_=(config.algorithmVersion==5||config.algorithmVersion==6)?3:config.algorithmVersion==4?4:config.algorithmVersion==3?3:config.algorithmVersion==2?2:1;
+  inkSize_=static_cast<float>(config.size);inkOpacity_=static_cast<float>(config.opacity);
+  inkRed_=static_cast<float>(config.color[0]);inkGreen_=static_cast<float>(config.color[1]);inkBlue_=static_cast<float>(config.color[2]);inkAlpha_=static_cast<float>(config.color[3]);
+  return true;
+}
+void CanvasEditingRuntime::advanceLaserPresentation(std::uint64_t now) noexcept {
+  std::vector<std::uint64_t> previous;
+  for(const auto& [id,t]:laserTrails_.trails()){(void)t;previous.push_back(id);}
+  (void)laserTrails_.tick(now);
+  if(!previewController_||!previewProvider_)return;
+  for(auto id:previous)if(!laserTrails_.trails().contains(id))(void)previewController_->retireSession(id,previewProvider_->generation());
+  const auto viewport=viewportController_->state();
+  for(const auto& [id,t]:laserTrails_.trails()){
+    ink::BrushPreviewDelta delta;delta.revision=++laserRevision_;delta.compactConfig=t.config;
+    const auto age=now>=t.points.back().time?now-t.points.back().time:0;
+    delta.compactConfig->opacity*=std::clamp(1.-double(age)/(double(t.config.laserFadeMs)*1e6),0.,1.);
+    auto chunk=std::make_shared<ink::BrushPreviewDelta::Chunk>();
+    for(const auto& p:t.points)chunk->knots.push_back({p.x,p.y,32768});delta.compactChunks=chunk;
+    (void)previewController_->updateForSession(id,delta,viewport.scale,viewport.translationX,viewport.translationY);
+  }
+}
 void CanvasEditingRuntime::clearInkColorOverride() noexcept { inkColorOverride_ = false; }
 void CanvasEditingRuntime::clearInkOpacityOverride() noexcept { inkOpacityOverride_ = false; }
 
@@ -2933,7 +3105,7 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
   semantic::Operation operation;
   const auto operationOrdinal = localOperationOrdinal();
   if (operationOrdinal == 0U) return false;
-  operation.id = semantic::OperationId(foundation::ObjectId::fromUint64(operationOrdinal));
+  operation.id = localOperationIdentity(operationOrdinal);
   operation.document_id = documentId_;
   operation.schema_version = 1U;
   operation.payload_version = 1U;
@@ -3064,6 +3236,11 @@ bool CanvasEditingRuntime::eraserFinish(std::uint64_t pointerId) noexcept {
     }
     inverse.payload = std::move(remove);
   }
+  PublicationReservation publication(localOperationSink_, operation);
+  if (!publication) {
+      (void)eraserCancel(pointerId);
+      return false;
+  }
   const auto applied = operationEngine_.apply(operation, semantic::ApplySource::kLocalInteraction,
       semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
   eraserTraces_.erase(it);
@@ -3114,7 +3291,7 @@ bool CanvasEditingRuntime::eraserCancel(std::uint64_t pointerId) noexcept {
 bool CanvasEditingRuntime::appendBrushSample(std::uint64_t pointerId, double x, double y,
                                           double pressure, std::uint64_t sequence,
                                           bool predicted, bool renderPreview) noexcept {
-  const ink::BrushSample sample{x, y, pressure, true, sequence};
+  const ink::BrushSample sample{x, y, pressure, true, sequence,sequence,true};
   return predicted
       ? appendBrushSamples(pointerId, {}, std::span<const ink::BrushSample>(&sample, 1), renderPreview)
       : appendBrushSamples(pointerId, std::span<const ink::BrushSample>(&sample, 1), {}, renderPreview);
@@ -3253,35 +3430,57 @@ bool CanvasEditingRuntime::finishBrushSession(std::uint64_t pointerId) noexcept 
   AXIOM_ANDROID_DIAG("finish begin pointer=%llu objects=%zu scene_gen=%llu", static_cast<unsigned long long>(pointerId), semanticObjects_.size(), static_cast<unsigned long long>(semanticGeneration_.current().value()));
   ink::BrushCommitIntent intent;
   if (it->second->seal(intent) != ink::BrushSessionError::kNone) return false;
-  brushSealedOutlineDigest_ = hashOutline(intent.outline);
+  brushSealedOutlineDigest_ = intent.compactConfig ? hashCompactKnots(intent.knots)
+                                                   : hashOutline(intent.outline);
   const auto package = brushSessionPackages_.at(pointerId);
   const auto seed = brushSessionSeeds_.at(pointerId);
   ink::BrushSession replay(pointerId, ink::resolveBrushState(package, seed));
     ink::BrushPreviewDelta replayPreview;
   ink::BrushCommitIntent replayIntent;
-  if (!replay.begin() ||
+  if (!intent.compactConfig && (!replay.begin() ||
       replay.append(intent.confirmed, {}, replayPreview) != ink::BrushSessionError::kNone ||
-      replay.seal(replayIntent) != ink::BrushSessionError::kNone) return false;
+      replay.seal(replayIntent) != ink::BrushSessionError::kNone)) return false;
   brushReplayDigest_ = hashOutline(replayIntent.outline);
-  if (brushReplayDigest_ != brushSealedOutlineDigest_) return false;
+  if (!intent.compactConfig && brushReplayDigest_ != brushSealedOutlineDigest_) return false;
   const bool usesDabs = (package.profileId == "chalk-grain-v1" &&
                          package.revision >= 2U && package.revision <= 4U) ||
                         package.profileId == "membrane-v1";
   if (usesDabs && replayIntent.dabDigest != intent.dabDigest) return false;
   if (!BrushCommitAdapter::valid(intent, package)) return false;
-  brushDigest_ = hashValue(hashValue(hashValue(kFnvOffset, brushSealedOutlineDigest_),
-                                     brushReplayDigest_), intent.revision);
   const auto operationId = localOperationOrdinal();
   if (operationId == 0U) return false;
+  const auto objectId = allocateObjectIdentity(foundation::ObjectId::fromUint64(operationId));
+  if (objectId.isZero()) return false;
   const auto operation = BrushCommitAdapter::build(
-      intent, package, operationId, documentId_);
+      intent, package, operationId, documentId_, localOperationIdentity(operationId), objectId);
+  if (intent.compactConfig) {
+    // Compact replay starts from persisted effective pressure, never from raw
+    // device samples or the live simulator. Verify the actual codec boundary.
+    const auto encoded = semantic::SemanticCodec::encodeProtobufOperation(operation);
+    if (!encoded.ok()) return false;
+    const auto decoded = semantic::SemanticCodec::decodeProtobufOperation(encoded.bytes);
+    if (!decoded.ok()) return false;
+    const auto* stroke = std::get_if<semantic::AddStrokeOp>(&decoded.operation.payload);
+    const auto* content = stroke ? std::get_if<semantic::CompactStrokeContent>(&stroke->object.content) : nullptr;
+    if (!content || content->stroke.config != *intent.compactConfig ||
+        content->stroke.seed != intent.seed || content->stroke.knots != intent.knots) return false;
+    brushReplayDigest_ = hashCompactKnots(content->stroke.knots);
+    if (brushReplayDigest_ != brushSealedOutlineDigest_) return false;
+  }
+  brushDigest_ = hashValue(hashValue(hashValue(kFnvOffset, brushSealedOutlineDigest_),
+                                     brushReplayDigest_), intent.revision);
   semantic::Operation inverse;
   inverse.id = allocateOperationId();
   if (inverse.id.isZero()) return false;
   inverse.document_id = documentId_;
   inverse.schema_version = 1U;
   inverse.payload_version = 1U;
-  inverse.payload = semantic::DeleteObjectsOp{{foundation::ObjectId::fromUint64(operationId)}};
+  inverse.payload = semantic::DeleteObjectsOp{{objectId}};
+  PublicationReservation publication(localOperationSink_, operation);
+  if (!publication) {
+      (void)cancelBrushSession(pointerId);
+      return false;
+  }
   const auto applied = operationEngine_.apply(
       operation, semantic::ApplySource::kLocalInteraction, semanticObjects_,
       appliedOperations_, semanticGeneration_, canonicalCommitClock_);
@@ -3540,6 +3739,9 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
   if (operation.document_id != documentId_ ||
       operation.id != semantic::OperationId(canvas::foundation::ObjectId::fromUint64(request.operationId)))
     return interaction::SubmitResult::rejected();
+  PublicationReservation publication(localOperationSink_, operation);
+  if (!publication)
+      return interaction::SubmitResult::rejected();
   const auto applied = operationEngine_.apply(
       operation, semantic::ApplySource::kLocalInteraction, semanticObjects_,
       appliedOperations_, semanticGeneration_, canonicalCommitClock_);
@@ -3591,6 +3793,9 @@ interaction::SubmitResult CanvasEditingRuntime::submitAdmitted(
   if (historyPublicationPending_ || !canonicalWriteAdmission() || !historySceneReady() ||
       (source != semantic::ApplySource::kLocalInteraction && source != semantic::ApplySource::kUndoRedo) ||
       !interaction::supportsUndoableCommand(operation.kind())) return interaction::SubmitResult::rejected();
+  PublicationReservation publication(localOperationSink_, operation);
+  if (!publication)
+      return interaction::SubmitResult::rejected();
   auto* commandAdmission = &admission;
 #if defined(AXIOM_FC08_QUALIFICATION_HOOKS)
   class QualifiedAdmission final : public semantic::OperationAdmission {
@@ -3663,9 +3868,29 @@ void CanvasEditingRuntime::publishAdmitted() noexcept {
 
 semantic::OperationId CanvasEditingRuntime::allocateOperationId() {
   while (nextHistoryOperationOrdinal_ != 0U) {
-    const auto id = semantic::OperationId(
-        foundation::ObjectId::fromUint64(nextHistoryOperationOrdinal_++));
-    if (!appliedOperations_.find(id).has_value()) return id;
+    const auto id = localOperationIdentity(nextHistoryOperationOrdinal_++);
+    if (!id.isZero() && !appliedOperations_.find(id).has_value()) return id;
+  }
+  return {};
+}
+
+semantic::OperationId CanvasEditingRuntime::localOperationIdentity(std::uint64_t ordinal) const noexcept {
+  auto id = foundation::ObjectId::fromUint64(ordinal);
+  for (std::size_t index = 0; index < id.bytes.size(); ++index)
+    id.bytes[index] ^= operationNamespace_.bytes[index];
+  return semantic::OperationId{id};
+}
+
+foundation::ObjectId CanvasEditingRuntime::allocateObjectIdentity(foundation::ObjectId legacyIdentity) noexcept {
+  if (!operationNamespaceBound_) return legacyIdentity;
+  while (nextObjectIdentityOrdinal_ != 0U) {
+    auto id = foundation::ObjectId::fromUint64(nextObjectIdentityOrdinal_++);
+    // Separate generated objects/paragraphs from the operation ordinal domain.
+    // Composition supplies fresh entropy on every open, including restore.
+    id.bytes[15] = 0x4FU;
+    for (std::size_t index = 0; index < id.bytes.size(); ++index)
+      id.bytes[index] ^= operationNamespace_.bytes[index];
+    if (!id.isZero() && !semanticObjects_.contains(id)) return id;
   }
   return {};
 }
@@ -3676,7 +3901,8 @@ std::uint64_t CanvasEditingRuntime::localOperationOrdinal() const noexcept {
   auto ordinal = static_cast<std::uint64_t>(submittedOperationCount_ + 1U);
   while (ordinal != 0U && ordinal < (std::uint64_t{1} << 63U)) {
     const auto id = foundation::ObjectId::fromUint64(ordinal);
-    if (!appliedOperations_.find(semantic::OperationId(id)).has_value() &&
+    const auto operationId = localOperationIdentity(ordinal);
+    if (!operationId.isZero() && !appliedOperations_.find(operationId).has_value() &&
         !semanticObjects_.contains(id)) return ordinal;
     ++ordinal;
   }
@@ -3696,6 +3922,24 @@ bool CanvasEditingRuntime::recoverHistoryScene() noexcept {
   const canvas::SceneCommitInput recovery(semanticGeneration_.current(), view);
   return static_cast<bool>(sceneCoordinator_->recover(*sceneCompiler_, recovery));
 }
+SnapshotRestoreOutcome CanvasEditingRuntime::restoreSnapshotBeforeSurface(const semantic::SemanticSnapshot& snapshot,
+    const semantic::SnapshotBootstrapper::CheckpointBinding& binding,
+    semantic::ResourceManifest& manifest) noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || closed_ || surface_.available || semanticObjects_.size() != 0U ||
+      snapshot.document_id != documentId_ || sceneCoordinator_ == nullptr || sceneCompiler_ == nullptr) return SnapshotRestoreOutcome::kInvalid;
+  try {
+    auto state = semantic::DocumentRuntimeState::kLoading;
+    constexpr auto capability = semantic::SnapshotCapability::kAllWithCompactStrokeV1;
+    const auto restored = semantic::SnapshotBootstrapper::restore(snapshot, capability, state,
+        semanticObjects_, manifest, semanticGeneration_, binding);
+    if (!restored.restored) return SnapshotRestoreOutcome::kInvalid;
+    const semantic::SemanticReadView view(semanticObjects_, semanticGeneration_.current(), &manifest);
+    const canvas::SceneCommitInput input(semanticGeneration_.current(), view);
+    if (!sceneCoordinator_->recover(*sceneCompiler_, input)) return SnapshotRestoreOutcome::kSceneFailed;
+    canonicalPresentationDirty_ = true;
+    return SnapshotRestoreOutcome::kRestored;
+  } catch (...) { return SnapshotRestoreOutcome::kSceneFailed; }
+}
 
 interaction::SubmitResult CanvasEditingRuntime::submit(
     std::span<const semantic::Operation> operations, semantic::ApplySource source) {
@@ -3706,12 +3950,25 @@ interaction::SubmitResult CanvasEditingRuntime::submit(
   if (operations.size() != 1U || source != semantic::ApplySource::kUndoRedo ||
       !historySceneReady()) return interaction::SubmitResult::rejected();
   for (const auto& operation : operations) {
-    const auto applied = resourceManifestPort_
-        ? operationEngine_.apply(operation, source, semanticObjects_, *resourceManifestPort_, appliedOperations_, semanticGeneration_, canonicalCommitClock_)
-        : operationEngine_.apply(operation, source, semanticObjects_, appliedOperations_, semanticGeneration_, canonicalCommitClock_);
-    if (applied.disposition != semantic::ApplyDisposition::kApplied) {
-      return interaction::SubmitResult::rejected();
-    }
+      PublicationReservation publication(localOperationSink_, operation);
+      if (!publication)
+          return interaction::SubmitResult::rejected();
+      const auto applied = resourceManifestPort_ ? operationEngine_.apply(operation,
+                                                                          source,
+                                                                          semanticObjects_,
+                                                                          *resourceManifestPort_,
+                                                                          appliedOperations_,
+                                                                          semanticGeneration_,
+                                                                          canonicalCommitClock_)
+                                                 : operationEngine_.apply(operation,
+                                                                          source,
+                                                                          semanticObjects_,
+                                                                          appliedOperations_,
+                                                                          semanticGeneration_,
+                                                                          canonicalCommitClock_);
+      if (applied.disposition != semantic::ApplyDisposition::kApplied) {
+          return interaction::SubmitResult::rejected();
+      }
     observeApplied(operation, applied);
     if (applied.commit_record.has_value() && sceneCoordinator_ != nullptr &&
         sceneCompiler_ != nullptr) {
@@ -3882,6 +4139,7 @@ bool CanvasEditingRuntime::resizeSurface(const render::SurfaceMetrics& metrics) 
 
 bool CanvasEditingRuntime::loseSurface() noexcept {
   if (closed_ || std::this_thread::get_id() != ownerThread_) return false;
+  clearAppearancePreview();
   resetTouchTextTap();
   if (surfaceTransitionActive_) {
     surfaceAbortRequested_ = true;
@@ -4010,9 +4268,73 @@ bool CanvasEditingRuntime::previewActive() const noexcept {
   return previewController_ != nullptr && previewController_->active();
 }
 
+bool CanvasEditingRuntime::serviceNavigationPresentation(std::chrono::steady_clock::time_point now, bool& presented) noexcept {
+  presented=false;
+  const auto* exact=lastPresentedCanonicalFrameState_.get();
+  // A live preview or its seal changes navigation eligibility, not the cost
+  // of rebuilding this camera. Keep exact preparation cooperative until a
+  // replacement is submitted, including when input interrupts the settle.
+  navigationExactPreparation_=platformPresentationDeferred_ && exact &&
+      surface_.available && exact->surfaceGeneration.value()==surface_.generation &&
+      exact->metricsGeneration.value()==surface_.metricsGeneration &&
+      exact->camera.generation.value()!=cameraGeneration();
+  if(!exact || !surface_.available || !activeSurfaceProvider() ||
+     lastSubmittedCanonicalFrame_ || !canonicalPresentationDirty_ ||
+     exact->sceneGeneration!=semanticGeneration_.current() || exact->sceneReadToken.value()!=sceneRevision() ||
+     exact->surfaceGeneration.value()!=surface_.generation || exact->metricsGeneration.value()!=surface_.metricsGeneration ||
+     !pendingCanonicalIdentities_.empty() || selectionOverlay() ||
+     creationActive() || selectionTransformActive() || regionSelectionActive() ||
+     semanticObjects_.documentBackground()!=foundation::DocumentBackground{}){
+      skiaRenderer_.cancelNavigationWork();
+      navigationActive_=false;return false;
+  }
+  // Viewport-only canonical work has no semantic handoff to satisfy while
+  // confirmed input is still arriving. Let Composition submit the independent
+  // latest preview without spending this opportunity on background refinement.
+  if(!brushSessions_.empty()){
+      skiaRenderer_.cancelNavigationWork();navigationActive_=false;return navigationExactPreparation_;
+  }
+  if(previewActive()){
+      skiaRenderer_.cancelNavigationWork();navigationActive_=false;return false;
+  }
+  const auto generation=cameraGeneration();
+  if(navigationCameraGeneration_!=generation){
+      navigationCameraGeneration_=generation;navigationChangedAt_=now;navigationActive_=true;
+  }
+  if(!navigationActive_)return false;
+  if(!coordinator_->viewportClaimed() && now-navigationChangedAt_>=std::chrono::milliseconds(100) &&
+     skiaRenderer_.navigationWork().coverageComplete){
+      skiaRenderer_.cancelNavigationWork();
+      navigationActive_=false;navigationExactPreparation_=true;return false;
+  }
+  const bool idlePrewarm=!coordinator_->viewportClaimed()&&
+      now-navigationChangedAt_>=std::chrono::milliseconds(40);
+  if(navigationSubmittedGeneration_==generation && !skiaRenderer_.navigationWork().pending && !idlePrewarm)return true;
+  const auto& camera=viewportController_->state();
+  // Runtime owns the Scene query and ordered immutable commands. Render asks
+  // for whole world tile regions, including its filter gutter.
+  const render::NavigationSourceQuery query=[&](const foundation::WorldRect& region,
+      std::vector<render::ReferenceTraversalEntry>& entries){
+      const auto found=runtimeSceneHost_->query(SceneQuery{region});
+      if(!found || found.value().revision!=exact->sceneReadToken)return false;
+      const render::VisibilityResult visibility{exact->sceneGeneration,exact->sceneReadToken,
+          region,found.value().diagnostics.candidatesExamined,found.value().backToFront.size(),
+          found.value().backToFront};
+      auto sources=render::DirectReferenceSource::buildNavigation(*exact,visibility,sceneCoordinator_->runtimeScene());
+      if(!sources)return false;
+      entries=std::move(sources.value().entries);return true;
+  };
+  const auto result=skiaRenderer_.renderNavigation(*activeSurfaceProvider(),
+      {camera.scale,camera.translationX,camera.translationY},*exact,query,idlePrewarm);
+  if(result.code!=render::BackendSubmissionCode::kAccepted){navigationActive_=false;return false;}
+  navigationSubmittedGeneration_=generation;presented=skiaRenderer_.navigationWork().presented;
+  return true;
+}
+
 bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
                                               double frameMs,
                                               bool retirePreview) noexcept {
+  AXIOM_FRAME_TIMING_BEGIN(navigationExactPreparation_,viewId_.value(),frameId,semanticGeneration().value(),sceneRevision(),cameraGeneration(),surface_.generation,surface_.metricsGeneration);
   canonicalPresentationRetryable_ = false;
   AXIOM_ANDROID_DIAG("present begin frame=%llu objects=%zu scene_records=%zu", static_cast<unsigned long long>(frameId), semanticObjects_.size(), sceneCoordinator_ == nullptr ? 0U : sceneCoordinator_->runtimeScene().records().size());
   if (!surface_.available || frameId == 0U) { AXIOM_ANDROID_DIAG("present reject surface=%d frame=%llu", surface_.available ? 1 : 0, static_cast<unsigned long long>(frameId)); return false; }
@@ -4074,7 +4396,9 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       {frame.viewId, frame.frameId, frame.sceneReadToken.value(),
        frame.sceneGeneration.value(), frame.surfaceGeneration, frame.metricsGeneration},
       frame.metrics, render::FrameRole::kCanonical};
+  AXIOM_FRAME_TIMING_SCOPE(visibilityTiming,visibility);
   auto visibility = render::VisibilityResolver::resolve(frame, *runtimeSceneHost_);
+  AXIOM_FRAME_TIMING_END(visibilityTiming);
   if (!visibility) { AXIOM_ANDROID_DIAG("present visibility failed"); return false; }
   // A selected object can be dragged into view from outside the canonical
   // visibility set. Extend only this view's transient traversal, never Scene.
@@ -4123,9 +4447,19 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     });
     visibility.value().visibleRecords = ids.size();
   }
+  if(appearanceSession_&&appearanceSessionCurrent()){
+    auto& ids=visibility.value().backToFront;
+    for(const auto& o:appearanceSession_->after)if(sceneCoordinator_->runtimeScene().find(o.id)&&std::find(ids.begin(),ids.end(),o.id)==ids.end())ids.push_back(o.id);
+    if(appearanceSession_->routingChanged)for(const auto& record:sceneCoordinator_->runtimeScene().records())if(record.kind==semantic::ObjectKind::kConnector&&std::find(ids.begin(),ids.end(),record.objectId)==ids.end())ids.push_back(record.objectId);
+    std::sort(ids.begin(),ids.end(),[&](auto a,auto b){return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a),*sceneCoordinator_->runtimeScene().find(b));});visibility.value().visibleRecords=ids.size();
+  }
+  AXIOM_FRAME_TIMING_SCOPE(referenceTiming,reference_build);
   auto references = render::DirectReferenceSource::build(
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
+  AXIOM_FRAME_TIMING_END(referenceTiming);
+  AXIOM_FRAME_TIMING_SCOPE(adaptTiming,presentation_adapt);
   if (!references) { AXIOM_ANDROID_DIAG("present references failed"); return false; }
+  applyAppearancePreview(references.value());
   if (transformDrag_.active()) for(auto& entry:references.value().entries) {
     if(entry.record.kind!=semantic::ObjectKind::kConnector)continue;
     const auto* object=semanticObjects_.find(entry.record.objectId);
@@ -4261,8 +4595,15 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
       }
     }
   }
+  if(textLayoutService_)for(auto& entry:references.value().entries)if(auto* table=std::get_if<semantic::TableContent>(&entry.record.content)){
+    if(tableResize_&&entry.record.objectId==tableResize_->object){auto& axes=tableResize_->column.isZero()?table->rows:table->columns;const auto id=tableResize_->column.isZero()?tableResize_->row:tableResize_->column;for(auto& a:axes)if(a.id==id)a.size=tableResize_->preview;for(std::size_t i=0;i<table->cells.size();++i)table->cells[i].text.layout=semantic::RichTextLayout{table->columns[i%table->columns.size()].size-12};}
+    entry.record.textLayout=textLayoutService_->resolveTable(entry.record.objectId,*table);entry.command=render::TableReferenceCommand{*table,entry.record.textLayout};
+  }
+  for(auto& entry:references.value().entries)if(auto* command=std::get_if<render::TableReferenceCommand>(&entry.command);command&&selectedObjectCount()==1&&entry.record.objectId==selection_.primary())command->activeCell=semantic::tableCellIndex(command->content,tableRow_,tableColumn_);
   if (interaction_->textSession() && textLayoutService_) {
     if (const auto object = textPresentation()) {
+      if(const auto* table=std::get_if<semantic::TableContent>(&object->content))for(auto& entry:references.value().entries)if(entry.record.objectId==object->id){entry.record.content=*table;entry.record.textLayout=textLayoutService_->resolveTable(object->id,*table);entry.command=render::TableReferenceCommand{*table,entry.record.textLayout};}
+
       const semantic::RichTextContent* content = std::get_if<semantic::RichTextContent>(&object->content);
       const semantic::ShapeContent* shape = std::get_if<semantic::ShapeContent>(&object->content);
       if (shape != nullptr && shape->label.has_value()) content = &*shape->label;
@@ -4373,7 +4714,8 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     }
   }
   applyContainerPreview(references.value());
-  const auto plan = render::FramePlanBuilder::build(frame, references.value());
+  AXIOM_FRAME_TIMING_END(adaptTiming);
+  const auto plan = render::FramePlanBuilder::build(frame, references.value(), semanticObjects_.documentBackground());
   if (!plan) { AXIOM_ANDROID_DIAG("present plan failed"); return false; }
   const bool connectorCreation = creationMode_ &&
       (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow);
@@ -4413,10 +4755,13 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
     if(geometry.available){selectionView_->editingOverlay().textCaret=geometry.caret;selectionView_->editingOverlay().textSelection=geometry.selection;}
     selectionView_->editingOverlay().textCaretVisible = textCaretVisible_;
   }
+  const render::RenderPreparationBudget preparation{};
   const auto rendered = skiaRenderer_.renderFrame(*activeSurfaceProvider(), plan.value(),
-                                                  selectionOverlay());
+      selectionOverlay(), platformPresentationDeferred_ && navigationExactPreparation_
+          ? &preparation : nullptr);
   if (rendered.code != render::BackendSubmissionCode::kAccepted) {
     canonicalPresentationRetryable_ = rendered.code == render::BackendSubmissionCode::kRetry;
+    AXIOM_FRAME_TIMING_OUTCOME(canonicalPresentationRetryable_?"retry":"rejected");
     if (canonicalPresentationRetryable_) canonicalPresentationDirty_ = true;
     AXIOM_ANDROID_DIAG("present skia failed: %s framegen=%llu providergen=%llu",
                        rendered.message.c_str(),
@@ -4446,6 +4791,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   recordPresentation("canonical-submitted", pendingCanonicalIdentities_.size(), frameMs);
   ++canonicalFrameCount_;
   canonicalPresentationDirty_ = false;
+  navigationActive_=false;navigationExactPreparation_=false;navigationCameraGeneration_=cameraGeneration();
   // Creation/selection overlays have no ARC handoff identity. Once their
   // replacement canonical frame has been accepted locally, retire them
   // immediately; brush previews remain gated by platform-qualified feedback
@@ -4472,6 +4818,7 @@ bool CanvasEditingRuntime::presentCanonicalFrame(std::uint64_t frameId,
   // intentionally ignored here.  RuntimeFrameCoordinator can only qualify a
   // handoff after receivePlatformPresented() supplies matching platform facts.
   (void)retirePreview;
+  AXIOM_FRAME_TIMING_OUTCOME("accepted");
   return true;
 }
 
@@ -4562,7 +4909,10 @@ bool CanvasEditingRuntime::receivePlatformPresented(
   return true;
 }
 
-bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) noexcept {
+bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId, bool frameOpportunity) noexcept {
+  // Deferred hosts consume only the latest transform at a display opportunity.
+  // Pointer callbacks never build/rasterize a complete transient scene.
+  if(platformPresentationDeferred_&&!frameOpportunity){transientOverlayDirty_=true;return true;}
   std::lock_guard renderLock(previewRenderMutex_);
   std::lock_guard providerLock(previewProviderMutex_);
   transientOverlayDirty_ = true;
@@ -4667,9 +5017,16 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
     });
     visibility.value().visibleRecords = ids.size();
   }
+  if(appearanceSession_&&appearanceSessionCurrent()){
+    auto& ids=visibility.value().backToFront;
+    for(const auto& o:appearanceSession_->after)if(sceneCoordinator_->runtimeScene().find(o.id)&&std::find(ids.begin(),ids.end(),o.id)==ids.end())ids.push_back(o.id);
+    if(appearanceSession_->routingChanged)for(const auto& record:sceneCoordinator_->runtimeScene().records())if(record.kind==semantic::ObjectKind::kConnector&&std::find(ids.begin(),ids.end(),record.objectId)==ids.end())ids.push_back(record.objectId);
+    std::sort(ids.begin(),ids.end(),[&](auto a,auto b){return runtimeTraversalLess(*sceneCoordinator_->runtimeScene().find(a),*sceneCoordinator_->runtimeScene().find(b));});visibility.value().visibleRecords=ids.size();
+  }
   auto references = render::DirectReferenceSource::build(
       frame, visibility.value(), sceneCoordinator_->runtimeScene());
   if (!references) return false;
+  applyAppearancePreview(references.value());
   const auto composeTransform = [](const semantic::Transform2D& parent,
                                    const semantic::Transform2D& child) {
     return semantic::Transform2D{
@@ -4783,7 +5140,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
     }
   }
   applyContainerPreview(references.value());
-  const auto plan = render::FramePlanBuilder::build(frame, references.value());
+  const auto plan = render::FramePlanBuilder::build(frame, references.value(), semanticObjects_.documentBackground());
   if (!plan) return false;
   const bool connectorCreation = creationMode_ &&
       (creationPreset_ == CreationPreset::kLine || creationPreset_ == CreationPreset::kArrow);
@@ -4819,15 +5176,21 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
         ? std::optional(previewConnectorGeometry(creationPreview().record)) : std::nullopt;
     selectionView_->editingOverlay().setCreationPreview(previewRecord, guides, route);
   }
-  const auto rendered = previewRenderer_.renderTransientOverlay(
-      *previewProvider_, plan.value(), selectionOverlay());
+  // Deferred editing uses the canonical target's warm cache for approximate
+  // full replacement feedback. No SkImage crosses contexts and no canonical
+  // receipt is issued until the terminal semantic frame is presented.
+  auto* target = platformPresentationDeferred_ ? activeSurfaceProvider() : previewProvider_;
+  if (target == nullptr) return false;
+  auto& renderer = platformPresentationDeferred_ ? skiaRenderer_ : previewRenderer_;
+  const auto rendered = renderer.renderTransientOverlay(
+      *target, plan.value(), selectionOverlay());
   if (rendered.code != render::BackendSubmissionCode::kAccepted) return false;
   if (frameCoordinator_.submit(render::FrameRole::kPreview, frame.frameId, false) !=
       render::RuntimeFrameDisposition::kAccepted) return false;
   if (frameCoordinator_.receive({previewCapture.identity, render::FrameRole::kPreview,
                                  true, render::RuntimePresentEvidence::kApproximate}) !=
       render::RuntimeFrameDisposition::kAccepted) return false;
-  previewProvider_->setOverlayVisible(true);
+  previewProvider_->setOverlayVisible(!platformPresentationDeferred_);
   transientOverlayDirty_ = false;
   return true;
 }
@@ -4835,7 +5198,7 @@ bool CanvasEditingRuntime::presentTransientOverlayFrame(std::uint64_t frameId) n
 bool CanvasEditingRuntime::retryTransientOverlayFrame() noexcept {
   if (!transientOverlayDirty_) return true;
   if (!creationActive() && !selectionTransformActive() && !regionSelectionActive()) return clearTransientOverlay();
-  return presentTransientOverlayFrame(nextCanonicalFrameId());
+  return presentTransientOverlayFrame(nextCanonicalFrameId(),true);
 }
 
 bool CanvasEditingRuntime::clearTransientOverlay() noexcept {

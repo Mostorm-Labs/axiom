@@ -77,15 +77,20 @@ semantic::Operation BrushCommitAdapter::build(
     const ink::BrushCommitIntent& intent,
     const ink::BrushPackage& package,
     std::uint64_t operationId,
-    semantic::DocumentId documentId) noexcept {
+    semantic::DocumentId documentId,
+    semantic::OperationId canonicalOperationId,
+    semantic::ObjectId canonicalObjectId) noexcept {
   semantic::Operation operation;
-  operation.id = semantic::OperationId(canvas::foundation::ObjectId::fromUint64(operationId));
+  operation.id = canonicalOperationId.isZero()
+      ? semantic::OperationId(canvas::foundation::ObjectId::fromUint64(operationId))
+      : canonicalOperationId;
   operation.document_id = documentId;
   operation.schema_version = 1U;
   operation.payload_version = 2U;
 
   semantic::ObjectRecord object;
-  object.id = canvas::foundation::ObjectId::fromUint64(operationId);
+  object.id = canonicalObjectId.isZero()
+      ? canvas::foundation::ObjectId::fromUint64(operationId) : canonicalObjectId;
   const bool texturedDab = (package.profileId == "chalk-grain-v1" &&
                             package.revision >= 2U && package.revision <= 4U) ||
                            package.profileId == "membrane-v1";
@@ -98,6 +103,11 @@ semantic::Operation BrushCommitAdapter::build(
   // existing content while preserving deterministic ordering between strokes.
   object.placement.order_key = semantic::OrderKey({0xFFU,
       static_cast<std::uint8_t>((operationId % 254U) + 1U)});
+  if(intent.compactConfig){
+    operation.payload_version=3;object.kind=semantic::ObjectKind::kVectorStroke;object.kind_version=3;
+    object.content=semantic::CompactStrokeContent{{*intent.compactConfig,intent.seed,intent.knots}};
+    operation.payload=semantic::AddStrokeOp{std::move(object)};return operation;
+  }
   if (texturedDab) {
     semantic::DabBrushStrokeContent content;
     content.stroke.snapshot = snapshot(intent, package);
@@ -141,6 +151,7 @@ semantic::Operation BrushCommitAdapter::build(
 
 bool BrushCommitAdapter::valid(const ink::BrushCommitIntent& intent,
                                const ink::BrushPackage& package) noexcept {
+  if(intent.compactConfig)return intent.session&&intent.revision&&semantic::validCompactStroke({*intent.compactConfig,intent.seed,intent.knots});
   const bool texturedDab = (package.profileId == "chalk-grain-v1" &&
                             package.revision >= 2U && package.revision <= 4U) ||
                            package.profileId == "membrane-v1";

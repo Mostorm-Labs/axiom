@@ -95,7 +95,7 @@ bool supportsUndoableCommand(OperationKind kind) noexcept {
     return kind == OperationKind::kSetSectionContent || kind == OperationKind::kEditContainerTopology ||
         kind == OperationKind::kInsertObjects || kind == OperationKind::kDeleteObjects ||
         kind == OperationKind::kRestoreObjects || kind == OperationKind::kSetTransforms ||
-        kind == OperationKind::kPatchProperties;
+        kind == OperationKind::kPatchProperties || kind == OperationKind::kSetDocumentBackground;
 }
 bool isContainerCommand(const Operation& op, const ObjectStore& store) noexcept {
     if (op.kind() == OperationKind::kSetSectionContent || op.kind() == OperationKind::kEditContainerTopology) return true;
@@ -112,6 +112,8 @@ bool isContainerCommand(const Operation& op, const ObjectStore& store) noexcept 
     return false;
 }
 bool historyFootprintMatches(const PreparedApplyPlan& plan, std::span<const HistoryExpectation> expected) {
+    if (plan.background)
+        return expected.size() == 1 && expected.front().aspect == HistoryAspect::kDocumentBackground;
     const auto actual = footprint(plan);
     std::set<ObjectId> ids;
     for (const auto& item : expected) ids.insert(item.objectId);
@@ -129,6 +131,17 @@ std::optional<PreparedUndoableCommand> prepareUndoableCommand(
     do { u.id = OperationId{ObjectId::fromUint64(nonce--)}; }
     while (nonce && (u.id == f.id || context.applied_operations.find(u.id)));
     if (!nonce) return std::nullopt;
+    if (plan.background) {
+        if (before.documentBackground() == after.documentBackground()) return std::nullopt;
+        u.payload = SetDocumentBackgroundOp{before.documentBackground()};
+        const auto forwardSize = SemanticCodec::measureProtobufOperation(f);
+        const auto inverseSize = SemanticCodec::measureProtobufOperation(u);
+        if (!forwardSize.ok() || !inverseSize.ok()) return std::nullopt;
+        PreparedUndoableCommand result{f, std::move(u), {}, {}, forwardSize.bytes, inverseSize.bytes};
+        result.before.push_back({{}, {}, HistoryAspect::kDocumentBackground, {}, before.documentBackground()});
+        result.after.push_back({{}, {}, HistoryAspect::kDocumentBackground, {}, after.documentBackground()});
+        return result;
+    }
     HistoryAspect aspect = HistoryAspect::kWholeRecord;
     if (const auto* section = std::get_if<SetSectionContentOp>(&f.payload)) {
         SetSectionContentOp inverse;

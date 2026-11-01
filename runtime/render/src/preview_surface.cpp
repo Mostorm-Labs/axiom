@@ -42,7 +42,8 @@ bool PreviewSurfaceController::begin(std::uint64_t documentEpoch,
                            return contour.session == session;
                        }),
         geometry_.contours.end());
-    geometry_.contours.push_back({session, 0U, false, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, {}, {}});
+    PreviewGeometry::Contour initial;initial.session=session;
+    geometry_.contours.push_back(std::move(initial));
     defaultSession_ = session;
     state_.generation = surfaceGeneration;
     state_.dirty = true;
@@ -78,6 +79,7 @@ bool PreviewSurfaceController::updateForSession(
                                     return value.session == session;
                                 });
     if (contour == geometry_.contours.end()) return false;
+    if(delta.revision<contour->revision)return false;
     if (delta.revision == contour->revision && !viewportChanged) return true;
     contour->revision = delta.revision;
     contour->hasPaint = delta.hasPaint;
@@ -88,6 +90,7 @@ bool PreviewSurfaceController::updateForSession(
     contour->opacity = delta.opacity;
     contour->outline = delta.outline;
     contour->dabs = delta.dabs;
+    contour->compactSeed=delta.compactSeed;contour->compactConfig=delta.compactConfig;contour->compactChunks=delta.compactChunks;
     geometry_.revision = std::max(geometry_.revision, delta.revision);
     if (session == defaultSession_) {
         geometry_.outline = delta.outline;
@@ -129,6 +132,7 @@ bool PreviewSurfaceController::cancelSession(std::uint64_t session) noexcept {
     if (it == geometry_.contours.end()) return false;
     it->outline.clear();
     it->dabs.clear();
+    it->compactChunks.reset();it->compactConfig.reset();
     ++it->revision;
     if (session == defaultSession_) { geometry_.outline.clear(); geometry_.dabs.clear(); }
     ++geometry_.revision;
@@ -207,7 +211,7 @@ bool PreviewSurfaceController::renderIfDirty(const PreviewStyleOverride& style) 
     if (!active_ || !state_.dirty) return true;
     if (provider_.generation() != geometry_.surfaceGeneration.value()) return false;
     bool hasGeometry = false;
-    for (const auto& contour : geometry_.contours) hasGeometry |= !contour.outline.empty() || !contour.dabs.empty();
+    for (const auto& contour : geometry_.contours) hasGeometry |= !contour.outline.empty() || !contour.dabs.empty() || bool(contour.compactChunks);
     const auto result = !hasGeometry
         ? renderer_.clearPreview(provider_, geometry_.surfaceGeneration)
         : renderer_.renderPreview(provider_, geometry_, style);

@@ -92,7 +92,27 @@ int main() {
   opacity.payload.appearance.opacity = 0.6F;
   assert(styleFacade.submitCanvasControl(opacity).state == canvas::runtime::ProductControlState::kQueued);
   assert(styleRuntime.setSelectedStrokeWidth(19.0));
-  assert(styleFacade.process(1U) == 1U);
+  const auto concurrent = styleFacade.readCanvasControlSnapshot(styleFacade.target());
+  assert(concurrent.semanticGeneration != before.semanticGeneration);
+  assert(styleFacade.process(1U) == 0U);
+  const auto staleStyle = styleFacade.canvasControlReceipt({4U, 1U});
+  assert(staleStyle.has_value());
+  assert(staleStyle->state == canvas::runtime::CanvasControlReceiptState::kStaleTarget);
+  assert(staleStyle->error == canvas::runtime::CanvasControlError::kStaleTarget);
+  const auto afterRejection = styleFacade.readCanvasControlSnapshot(styleFacade.target());
+  assert(afterRejection.semanticGeneration == concurrent.semanticGeneration);
+  assert(afterRejection.selectedAppearance.opacity == 0.25F);
+  assert(afterRejection.selectedAppearance.strokeWidth == 19.0F);
+
+  // Explicitly refresh the field patch and use a fresh request identity.
+  opacity.requestId = 2U;
+  opacity.payload.appearance = afterRejection.selectedAppearance;
+  opacity.payload.appearance.opacity = 0.6F;
+  assert(styleFacade.submitCanvasControl(opacity).state == canvas::runtime::ProductControlState::kQueued);
+  assert(styleFacade.process(2U) == 1U);
+  const auto refreshedStyle = styleFacade.canvasControlReceipt({4U, 2U});
+  assert(refreshedStyle.has_value());
+  assert(refreshedStyle->state == canvas::runtime::CanvasControlReceiptState::kApplied);
   const auto styleSnapshot = styleFacade.readCanvasControlSnapshot(styleFacade.target());
   assert(styleSnapshot.selectedAppearance.fill.r == 0.9F);
   assert(styleSnapshot.selectedTransform[4] == 17.0);

@@ -1,0 +1,12 @@
+{
+  "task_id": "AXIOM-SDK-CPP-INSTALL",
+  "status": "USER_DIRECTED_BOUNDED_SLICE",
+  "repository": "Mostorm-Labs/axiom",
+  "task_anchor": "aa62a058cf976dfdba177c259ea814653a99be7a",
+  "authorization": "User requested installable C++ Runtime lifecycle and external consumer first; this slice does not authorize a release or claim acceptance of the older C ABI package.",
+  "scope": ["public C++ Runtime lifetime wrapper backed by one existing RuntimeComposition", "matching-toolchain C++ SDK installation and exported dependency targets", "real outside-repository lifecycle, edit, receipt, undo and close test"],
+  "forbidden": ["second document, selection or history owner", "change SDK dependency locks", "rebuild published Semantic or Skia", "alter legacy C ABI or historical evidence", "claim D07 OOM or physical-device pass"],
+  "verification": ["fresh outside-repository install, configure, compile, link and real run", "lifecycle and failure behavior", "existing native Runtime/selection regressions", "Windows/Web platform impact check"],
+  "exit": "All tests run with exact results, or report a specific blocker; retain artifacts and failures.",
+  "continue_until_terminal_state": true
+}

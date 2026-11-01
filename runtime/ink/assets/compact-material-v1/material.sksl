@@ -1,0 +1,37 @@
+
+            uniform shader coverage;
+            uniform float4 paint; uniform float family;
+            uniform float density; uniform float textureScale;
+            uniform float deposition; uniform float wetEdge; uniform float2 seed;
+            float hash(float2 p) {
+                float2 q=mod(floor(p),251.);
+                float n=mod(q.x*17.+q.y*131.,251.);
+                n=mod(n*n+43.,251.);n=mod(n*n+17.,251.);
+                return n/251.;
+            }
+            float noise(float2 p) {
+                float2 i=floor(p), f=fract(p);f=f*f*(3.-2.*f);
+                return mix(mix(hash(i),hash(i+float2(1,0)),f.x),
+                           mix(hash(i+float2(0,1)),hash(i+float2(1,1)),f.x),f.y);
+            }
+            half4 main(float2 p) {
+                float c=coverage.eval(p).r;
+                float body=smoothstep(0.,.035,c);
+                float paper=noise(p/textureScale+seed);
+                float tooth=hash(floor(p*2.+seed));
+                float alpha=body;
+                if(family==3.) {
+                    float pores=smoothstep(1.-density-.12,1.-density+.12,
+                                          .55*paper+.45*tooth);
+                    alpha=body*pores*(.45+.55*paper)*(.6+.4*c);
+                } else if(family==4.) {
+                    float wax=smoothstep(.65-deposition*.6,.83-deposition*.6,
+                                        .8*paper+.2*tooth);
+                    alpha=body*(.15+.85*wax)*(.55+.45*deposition);
+                } else if(family==5.) {
+                    float edge=(1.-smoothstep(.08,.3,c))*wetEdge;
+                    alpha=body*clamp(.22+.16*paper+.52*edge,0.,1.);
+                }
+                alpha*=paint.a;
+                return half4(paint.rgb*alpha,alpha);
+            }

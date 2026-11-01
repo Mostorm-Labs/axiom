@@ -1,0 +1,35 @@
+# SDK-01 real-consumer driver contract v1 — draft for review
+
+This contract specifies what needs to be implemented; the drivers and SDK are **not currently implemented or run**. The draft case table is `verification/sdk01/p20-cases-v1.json`. The fixture and independent expected observations for the two multi-selection cases are `verification/sdk01/real_consumer/expected-v1.json`; negative scenarios are in `rejection-expectations-v1.json`. All these inputs and the checker must be content-addressed by the eventual accepted package. The tests below are exit requirements for SDK-01, not prerequisites that an unimplemented product already passes.
+
+## Driver process protocol
+
+Both drivers accept `--output <absolute-path>` and emit exactly one UTF-8 JSON observation object of schema version 1 for the two golden scenarios, with field and array order normalized as specified in `real_consumer/README.md`. They must fail nonzero instead of writing successful observations when SDK setup, named cases, capture, selection, host UI or decoding is unavailable. The output file is newly created by `run_observation_driver.py` inside an empty temporary directory. It is compared with the pinned expected data. A match alone remains `MATCH_REQUIRES_PROVENANCE_REVIEW`.
+
+Each driver additionally records, in separate raw evidence: the test name and case ID; OS/toolchain, source revision and dirty flag; installed SDK header/library and executable hashes; real target instance and full 128-bit role-to-ID mapping; immutable expected and fixture hashes; exact control/input arguments, admission and final receipts; actual canonical object/scene snapshots and history cursor before/after; browser identity and generated WASM/JS hashes for Web. Verify all five distinct role IDs and both shape IDs before the command. Normalize History to its initial relative offset, not a fabricated cursor. Real independent observation can be read by a separate, test-only native/wasm qualification observer on the **same** runtime owner; it must not affect the tested command or be installed as SDK API. If no trustworthy observer exists, report the test blocked. A consumer that reads only its own receipt is insufficient.
+
+## Proposed Windows driver
+
+Target `axiom_sdk01_windows_consumer_driver`, built in the production Windows Minimal Host integration test configuration. Its command is `<built-driver> --output <fresh-path>`; use `run_observation_driver.py` with the executable and locked expected SHA-256. It must instantiate the real SDK and actual Debug UI/control route, seed the specified fixtures through real product/qualification setup, select objects through actual public ingress, inspect scope/partial consent, apply through the public SDK, and observe exact canonical results plus one Undo/Redo. Never use `MultiSelectionPort` to submit the product command under test. Existing `apps/minimal_runtime_host/windows_main.cpp` and `debug_ui/src/control_router.cpp` are migration subjects, not test drivers. Existing Window/IME/touch regressions remain applicable; this automated driver does not claim real touch or IME.
+
+## Proposed Chrome/WASM driver
+
+File `verification/sdk01/real_consumer/chrome_sdk01_driver.mjs` (to be implemented), invoked as `node <driver.mjs> --chrome <verified-chrome> --build <actual-web-build> --output <fresh-path>`. Run via `run_observation_driver.py` with Node as driver and the JS path/arguments after `--`; the package/evidence must separately hash the JS, Chrome executable, generated HTML/JS/WASM, SDK files and code revision. Use real Chrome + CDP and the actual `axiom_canvas_demo_web` host, not Node-only WASM or an old Playground. Use DOM input through the production host and actual public SDK multi-selection route; compare the same fixture and capture independent canonical/History results from the same runtime. The CDP input is synthetic and is not physical touch/IME acceptance. Existing `apps/axiom_canvas_demo/tests/web_selection_batch3.mjs` shows the Chrome/host mechanism but does not establish SDK migration.
+
+## Baseline and error paths
+
+Before product changes, preserve `AXIOM-SDK-01-LIFECYCLE-RED-009`, where real external C and C++ consumer linking fails on the existing Runtime archive's missing C symbols. At implementation exit, install the actual library outside the source tree and run `python verification/sdk01/run_external.py --include-dir <installed-include> --library <installed-library> --output <json>`; require both exact CTest names and zero skips. This only proves its two lifetime smoke cases, not all SDK features.
+
+For precommit rejection, the P20 candidate cases in `rejection-expectations-v1.json` require pre/post actual canonical, Scene, History cursor and redo observations; if there is a valid intervening update, take the baseline after that update and before execution of the stale request. For per-object denied/unavailable providers and allocation fault injection without a real production-capable seam, record `NOT_RUN` and retain MSE-20/23/26 and D07 OOM as separate findings. Do not create a fake provider and do not make an unaccepted stronger atomicity claim.
+
+## Exact execution commands after the targets exist
+
+1. `python verification/sdk01/validate_scope_matrix.py --header docs/api/canvas_runtime_api_v1.h --matrix verification/sdk01/scope-matrix-v1.json`
+2. `python verification/sdk01/validate_p20_cases.py --repo . --cases verification/sdk01/p20-cases-v1.json`
+3. `python -m unittest verification.sdk01.test_scope_matrix verification.sdk01.test_p20_cases` and `python -m unittest discover -s verification/sdk01/real_consumer -p test_*.py -v` verify the verification tools only.
+4. `python verification/sdk01/run_external.py --include-dir <installed-include> --library <installed-library> --output <external-result.json>` runs the installed SDK consumers; `--shared --runtime-dir <dll-dir>` applies to a DLL.
+5. `python verification/sdk01/real_consumer/run_observation_driver.py --driver <actual-windows-driver> --driver-sha256 <driver-hash> --expected verification/sdk01/real_consumer/expected-v1.json --expected-sha256 <expected-hash> --output <windows-result.json>`.
+6. `python verification/sdk01/real_consumer/run_observation_driver.py --driver <node-executable> --driver-sha256 <node-hash> --expected verification/sdk01/real_consumer/expected-v1.json --expected-sha256 <expected-hash> --output <chrome-result.json> -- <actual-chrome-driver.mjs> --chrome <chrome-executable> --build <web-build>`.
+7. Run all named SDK-01 product/owner regressions with `--no-tests=error` and verify exact JUnit case names and no skips, including the 12 existing names locked in v0.4. Separate future-stage obligations and physical results cannot be backfilled with these checks.
+
+P20 acceptance still requires a review of the exact public ABI, scope mapping, expected values, supported failure policy, observer and hosted evidence boundary. Do not claim the draft is accepted merely because these files parse or the checker self-tests pass.

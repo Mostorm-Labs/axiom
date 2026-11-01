@@ -1,0 +1,26 @@
+[
+  {
+    "check": "integrity",
+    "command": "python .aegis/packages/AXIOM-SDK-01-v0.2/preflight.py --repo . --check integrity",
+    "exit_code": 2,
+    "output": "BLOCKED_INTEGRITY: source/worktree hash mismatch: verification/sdk01/owner-tests.cmake\r\n"
+  },
+  {
+    "check": "PackageBindingPreflight",
+    "command": "python .aegis/packages/AXIOM-SDK-01-v0.2/preflight.py --repo . --check PackageBindingPreflight",
+    "exit_code": 2,
+    "output": "BLOCKED_INTEGRITY: source/worktree hash mismatch: verification/sdk01/owner-tests.cmake\r\n"
+  },
+  {
+    "check": "EvidenceContractPreflight",
+    "command": "python .aegis/packages/AXIOM-SDK-01-v0.2/preflight.py --repo . --check EvidenceContractPreflight",
+    "exit_code": 2,
+    "output": "BLOCKED_INTEGRITY: source/worktree hash mismatch: verification/sdk01/owner-tests.cmake\r\n"
+  },
+  {
+    "check": "DesignPreflight",
+    "command": "python .aegis/packages/AXIOM-SDK-01-v0.2/preflight.py --repo . --check DesignPreflight",
+    "exit_code": 2,
+    "output": "BLOCKED_INTEGRITY: source/worktree hash mismatch: verification/sdk01/owner-tests.cmake\r\n"
+  }
+]

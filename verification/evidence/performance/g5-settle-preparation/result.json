@@ -1,0 +1,71 @@
+{
+  "classification": "PASS_WITH_FINDINGS",
+  "scope": "CPU RAF callback diagnostic, Chrome ANGLE Metal Apple M2, 64 strokes; not physical latency or G5 acceptance",
+  "rows": [
+    {
+      "variant": "before",
+      "mode": "zoom",
+      "max_callback_ms": 285.10000002384186,
+      "post_input_cpu_sum_ms": 286.3000000715256,
+      "exact_receipt_after_input_ms": 397.2000000476837,
+      "document_unchanged": true,
+      "errors": []
+    },
+    {
+      "variant": "before",
+      "mode": "touch",
+      "max_callback_ms": 367,
+      "post_input_cpu_sum_ms": 367.60000002384186,
+      "exact_receipt_after_input_ms": 482.0,
+      "document_unchanged": true,
+      "errors": []
+    },
+    {
+      "variant": "matched",
+      "mode": "zoom",
+      "max_callback_ms": 14.100000023841858,
+      "post_input_cpu_sum_ms": 438.0999995470047,
+      "exact_receipt_after_input_ms": 1182.2000000476837,
+      "document_unchanged": true,
+      "errors": []
+    },
+    {
+      "variant": "matched",
+      "mode": "touch",
+      "max_callback_ms": 18.699999928474426,
+      "post_input_cpu_sum_ms": 499.5000001192093,
+      "exact_receipt_after_input_ms": 1180.5,
+      "document_unchanged": true,
+      "errors": []
+    },
+    {
+      "variant": "small",
+      "mode": "zoom",
+      "max_callback_ms": 6,
+      "post_input_cpu_sum_ms": 312.10000014305115,
+      "exact_receipt_after_input_ms": 1183.6000000238419,
+      "document_unchanged": true,
+      "errors": []
+    },
+    {
+      "variant": "small",
+      "mode": "touch",
+      "max_callback_ms": 7.5,
+      "post_input_cpu_sum_ms": 404.9000006914139,
+      "exact_receipt_after_input_ms": 1182.6000000238419,
+      "document_unchanged": true,
+      "errors": []
+    }
+  ],
+  "findings": [
+    "Exact completion is slower: bounded slices spread work over about 1.2 seconds.",
+    "A group remains atomic; no hard latency bound for one long stroke.",
+    "Repeated visibility/reference planning still adds CPU work.",
+    "General masks/mixed objects/capacity failure use synchronous fallback."
+  ],
+  "native_components": "25/25 final source including material/lifecycle oracle cases",
+  "full_ctest": "Not rerun in this slice; previous baseline retains 22 failures.",
+  "physical_platforms": "BLOCKED_EVIDENCE",
+  "node_workspaces": "Historical C8 generator test fails at committed base HEAD with git ENOBUFS; isolated retry 6/7; semantic CLI 137/138.",
+  "matching_sdk_browser": "PASS; buildInfo base 6aa330a8d27b8925f8c8be5f93625b07542c3292 dirty=true; artifact identities match served demo"
+}

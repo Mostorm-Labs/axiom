@@ -1,0 +1,2 @@
+add_library(canvas_runtime_scheduling INTERFACE)
+target_include_directories(canvas_runtime_scheduling INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")

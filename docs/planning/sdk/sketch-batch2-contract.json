@@ -1,0 +1,27 @@
+{
+  "task": "sketch-v1-batch2",
+  "status": "user-authorized-scoped-execution",
+  "repository": {"provider": "github", "full_name": "Mostorm-Labs/axiom"},
+  "task_anchor": {"revision": "af5b1778284211c3834957084dd0a03e48308d69", "relation": "ancestor"},
+  "authority": ["2026-11-01 user-authorized delegation", "AGENTS.md", "docs/planning/sdk/sketch-batch2-design.md"],
+  "preserved_work": "out/sketch-batch2/baseline.json and baseline-source; all first batch dirty work",
+  "implementation_design_preflight": {"authority_conflict": false, "verification_conflict": false, "package_scope_conflict": false, "unresolved_semantic_decisions": []},
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": ["VectorPath exact clip/fill-rule/subpath sketch and bounded public creation/readback", "Table shared grid stable identity substreams, Section document appearance", "canonical applicability/default/clear/capability rejection and shared appearance owner", "matching SDK/Session/Windows wrapper and actual Demo"],
+      "forbidden_changes": ["overwrite first batch work or algorithm outputs", "dependency rebuilds/lock changes", "parallel document/history/selection owners or browser business renderer", "font/brush/node-editor refactor", "Table cell pattern extension", "automatic commit/push/publication", "formal Gate claims"]
+    },
+    "tests": {"required": [
+      {"id": "B2-GEOMETRY", "oracle": "native/WASM path fixtures; legacy hash equality; open/closed curve and exact clip; stable Table grid lines", "expected_result": "bounded deterministic paths, unchanged first batch output, correct holes and stable identities"},
+      {"id": "B2-SEMANTIC", "oracle": "codec/Snapshot/profile255 rejection/default and clear checks", "expected_result": "new values survive roundtrip; unsupported reader/field combinations reject"},
+      {"id": "B2-RUNTIME", "oracle": "real Runtime/Chrome public SDK preview/history/multi/restore/remote/stale/foreign tests", "expected_result": "one commit/Undo, no-op/cancel none, seeds/targets preserved and invalid requests atomic"},
+      {"id": "B2-RENDER", "oracle": "real matching Chrome Demo, PNG pixels and native checks", "expected_result": "holes/curve/open path, grid count/text order, Section header/membership and visual bounds correct"},
+      {"id": "B2-REGRESSION", "oracle": "configured CTest, first batch and Table/Section consumers, strict TS/API/package/boundary/schema checks", "expected_result": "affected checks pass, historical/new failures explicitly recorded"}
+    ]},
+    "hosted_verification": {"required": [], "optional": ["Windows DLL ABI/physical device qualification"]},
+    "evidence": {"blocking": ["repo-local implementation report", "native logs", "real Chrome matching asset hashes and results", "usable Demo and visual samples"], "corroborative": ["manual visual review"]},
+    "terminal_success": {"all_of": ["all required feature paths usable and affected checks pass", "local matching-assets Demo", "all historical/new failures and platform limits recorded"]},
+    "terminal_blockers": {"explicit_classes": ["AUTHORITY_CONFLICT", "MISSING_REQUIRED_INPUT", "ENVIRONMENT_BLOCKER", "FROZEN_VERIFICATION_FAILURE", "NEW_HIGH_IMPACT_FAILURE_MODE"]},
+    "return_policy": {"continue_until_terminal_state": true}
+  }
+}

@@ -28,7 +28,7 @@ frame.addEventListener('load',async()=>{
     await host.toggleDebugUi(); await host.flush();
     for(const [index,side] of [50.625,1.25,-3.5,40.75].entries()) {
       await click(45,232); // actual Fit Content button
-      await click(135,326); // actual Sticky tool button
+      await click(135,363); // actual Sticky tool button (below the selection modes)
       assert(host.observation().creationPreset===5 && host.observation().creationMode,'Sticky tool not selected');
       const before=host.observation().objects;
       const module=host.module, complete=module._axiom_web_complete_frame;

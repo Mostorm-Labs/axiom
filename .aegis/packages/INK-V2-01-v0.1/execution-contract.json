@@ -1,0 +1,290 @@
+{
+  "schema_version": "0.1",
+  "package_id": "INK-V2-01-v0.1",
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": [
+        "落实本包task-plan.md全部步骤和profile范围",
+        "模拟压力为默认，device显式且能力事实真实；预览/提交使用同一有效信号",
+        "新紧凑写入保存唯一中心线与effective pressure，不保存逐dab/outline/raw副本",
+        "共用现有owner、OperationEngine、History、Scene/Skia与资源通道",
+        "匹配Web declarations/wrapper、Session、Windows caller wrapper与真实Demo",
+        "获取本包verification.lock.json全部必需结果及精确来源",
+        "新carrier/算法/能力增量正式绑定后再编码，旧分支不改义",
+        "圆头规则/手绘与时间驱动瞬态激光端到端完成"
+      ],
+      "forbidden_changes": [
+        "覆盖/回退既有dirty手绘/Table/圆角/字体成果",
+        "重建已发布Semantic/Skia依赖或修改锁",
+        "把dab搬到blob/Undo/cache/资源列表冒充压缩",
+        "新profile持久化完整raw+spine+outline/dabs多份表示",
+        "将预测样本或激光写入canonical/普通导出",
+        "默认自动切换device或把浏览器常量pressure当硬件能力",
+        "浏览器业务renderer、平行document/selection/history owner",
+        "任意Brush Studio节点图/刷包导入/全湿画模拟/新同步协议",
+        "重新解释旧kind/version/wire tag或静默丢未知材质",
+        "未有新授权自动提交/推送/发布/发送其他会话任务",
+        "执行者颁发正式Gate PASS或以Web通过代替Windows ABI资格"
+      ],
+      "scope": {
+        "allowed_roots": [
+          "runtime/input",
+          "runtime/ink",
+          "runtime/interaction",
+          "runtime/composition",
+          "runtime/foundation/include/canvas/runtime",
+          "runtime/scene",
+          "runtime/render",
+          "runtime/semantic",
+          "schema/axiom/v1",
+          "sdk",
+          "apps/axiom_canvas_demo",
+          "verification",
+          "docs/planning/ink-v2",
+          "apps/minimal_runtime_host",
+          "cmake",
+          "tools/ink_v2",
+          "tools/release",
+          "docs/planning/sdk"
+        ],
+        "frozen_package_inputs": ".aegis/packages/INK-V2-01-v0.1/",
+        "do_not_rewrite_existing_reference_or_expected_value_corpora": true,
+        "require_current_owner_mapping_before_edits": true,
+        "allowed_exact_paths": [
+          "CMakeLists.txt",
+          "docs/notion/manifest.yaml",
+          ".aegis/authorities.json"
+        ],
+        "bounded_scope_notes": [
+          "apps/minimal_runtime_host仅限SDK复用输入adapter/资源接线；不重构应用宿主",
+          "cmake/root CMake仅限本包新target、消费者安装/资源接线，不修改依赖供应链",
+          "tools/release仅限新资源/公开SDK打包检查，不运行发布",
+          "manifest/authorities仅登记用户后续接受的新增契约，不改历史冻结来源"
+        ]
+      },
+      "task_plan_ref": {
+        "path": "task-plan.md",
+        "sha256": "de52edefadacc12ac4a74e37bfb9e97084a06574560a6edd6aed2189edc01f36"
+      },
+      "preserved_work": "Actual starting worktree delta and all valid descendant work; snapshot source manifest before edits; do not infer validity or completeness from HEAD alone"
+    },
+    "preconditions": {
+      "repository_identity_first": {
+        "provider": "github",
+        "full_name": "Mostorm-Labs/axiom"
+      },
+      "package_binding_preflight": true,
+      "evidence_contract_preflight": true,
+      "implementation_design_preflight": true,
+      "semantic_binding_before_runtime_mutation": true,
+      "production_execution_request_required": true,
+      "unresolved_decisions_policy": "Do not allocate conflicting schema IDs or override Current Authority; package preparation does not approve a new semantic release"
+    },
+    "tests": {
+      "required": [
+        {
+          "id": "V-PRESSURE",
+          "profile_scope": [
+            "round-regular",
+            "round-handdrawn",
+            "laser-transient"
+          ],
+          "command_or_oracle": "真正 source/capability ingress + G02/G03，独立公式参考",
+          "expected_result": "默认忽略伪 pressure；慢/快稳定段平均 p 差 >=.15；同轨迹 120/240Hz p 最大差 <=.03；同输入 batch 分区结果一致；非法批次零部分接受",
+          "blocking_reason": "错误压力来源或采样频率依赖会改变所有笔画",
+          "artifact": "v-pressure.json"
+        },
+        {
+          "id": "V-PERSIST",
+          "profile_scope": [
+            "round-regular",
+            "round-handdrawn",
+            "laser-transient"
+          ],
+          "command_or_oracle": "真实 AddStroke/Snapshot/远端应用；禁用 live simulator/catalog 后恢复",
+          "expected_result": "压力/配置/seed/version exact roundtrip，输出几何在 frozen tolerance 内相同；缺失 evaluator/resource/version 明确拒绝",
+          "blocking_reason": "数据无法确定性恢复或错误回放",
+          "artifact": "v-persist.json"
+        },
+        {
+          "id": "V-COMPACT",
+          "profile_scope": [
+            "round-regular",
+            "round-handdrawn",
+            "laser-transient"
+          ],
+          "command_or_oracle": "实际 protobuf Operation 与 Snapshot 独立解码，字段计数和 byte 长度",
+          "expected_result": "dab/outline/raw 计数全为零；位置与压力只有一份；每笔数据 <=16KiB+18*K（K 为 retained knots，资源 blob 另计且全局去重）",
+          "blocking_reason": "规范字节仍展开会违反用户空间目标",
+          "artifact": "v-compact.json"
+        },
+        {
+          "id": "V-RESAMPLE",
+          "profile_scope": [
+            "round-regular",
+            "round-handdrawn",
+            "laser-transient"
+          ],
+          "command_or_oracle": "独立距离/宽度 oracle，G01/G02 高密度基准",
+          "expected_result": "max 几何偏差 <=min(.25,size/32)；压力重采样误差 <=.02；短点与急转保留；120/240Hz 编码体积差 <=15%",
+          "blocking_reason": "压缩导致几何/压力特征丢失",
+          "artifact": "v-resample.json"
+        },
+        {
+          "id": "V-WORK",
+          "profile_scope": [
+            "round-regular",
+            "round-handdrawn",
+            "laser-transient"
+          ],
+          "command_or_oracle": "G05 实际输入访问、历史复制、几何生成/上传 byte 计数，非墙钟伪计数",
+          "expected_result": "N=2048 相对512、8192相对2048的总工作量比均<=5；append 无全历史 one-shot 调用；seal 全量求值至多一次；几何正确性不能因性能优化放宽",
+          "blocking_reason": "长笔画二次工作会破坏实时输入",
+          "artifact": "v-work.json"
+        },
+        {
+          "id": "V-CACHE",
+          "profile_scope": [
+            "round-regular",
+            "round-handdrawn",
+            "laser-transient"
+          ],
+          "command_or_oracle": "G06 真实 retained/upload/tile bytes + 清缓存后恢复",
+          "expected_result": "derived<=32MiB、临时tile<=16MiB；无完整常驻 dab 影子；视口外不生成纹理 tile；连续无变化帧生成次数0；清缓存后同像素/容差结果",
+          "blocking_reason": "无界派生数据会把规范存储问题转移到内存",
+          "artifact": "v-cache.json"
+        },
+        {
+          "id": "V-PEN",
+          "profile_scope": [
+            "round-regular",
+            "round-handdrawn",
+            "laser-transient"
+          ],
+          "command_or_oracle": "公开设置与 G01/G02，native + Chrome",
+          "expected_result": "规则模式主体宽度恒定、圆头；手绘体现有效压力；尖角/收尾不意外断线；不对旧 R01 golden 反向改期望值",
+          "blocking_reason": "规则/手绘模式未成为真实产品行为",
+          "artifact": "v-pen.json"
+        },
+        {
+          "id": "V-LASER",
+          "profile_scope": [
+            "round-regular",
+            "round-handdrawn",
+            "laser-transient"
+          ],
+          "command_or_oracle": "注入单调时钟的真实 Runtime/SDK + pause/close/focus/cancel",
+          "expected_result": "对象数/operation数/Undo/Snapshot字节不变；1000ms默认消退且空间/内存有界；无需新输入也继续动画与失效；普通导出无激光",
+          "blocking_reason": "瞬态指示污染文档或留存轨迹",
+          "artifact": "v-laser.json"
+        },
+        {
+          "id": "V-LIFECYCLE",
+          "profile_scope": [
+            "round-regular",
+            "round-handdrawn",
+            "laser-transient"
+          ],
+          "command_or_oracle": "G07、data overload、retry/close、foreign token/source",
+          "expected_result": "prediction不改变confirmed/seed/提交；cancel无操作；每笔一次Undo；重试复用operation身份；正式材质预览与提交一致",
+          "blocking_reason": "预测或取消泄漏为规范修改",
+          "artifact": "v-lifecycle.json"
+        },
+        {
+          "id": "V-CONSUMER",
+          "profile_scope": [
+            "round-regular",
+            "round-handdrawn",
+            "laser-transient"
+          ],
+          "command_or_oracle": "匹配 JS/types/WASM/resources Chrome外部消费者、原生shared Session、TS正负例",
+          "expected_result": "本包交付笔型可选择/读回，第三包覆盖全部六种；默认无压力可绘；invalid枚举/token/数值拒绝；不用private deep import；Demo实际参数影响图像",
+          "blocking_reason": "内部测试不能证明外部能力可用",
+          "artifact": "v-consumer.json"
+        },
+        {
+          "id": "V-REGRESSION",
+          "profile_scope": [
+            "round-regular",
+            "round-handdrawn",
+            "laser-transient"
+          ],
+          "command_or_oracle": "基线旧brush fixtures、手绘两批/Table/Section/字体/导出consumer，boundary/descriptor/package检查",
+          "expected_result": "受影响必需项通过；新失败修复；历史失败绑定执行前真实记录，不直接沿用旧的22这个数量",
+          "blocking_reason": "破坏已有数据/画板功能",
+          "artifact": "v-regression.json"
+        }
+      ],
+      "suggested_commands": [
+        "ctest --test-dir <matching-native-build> -R \"^(InkV2(Pressure|Compact|Resample|Work|Cache|Pen|Laser|Lifecycle|Consumer)|G45PerfectFreehandReference)$\" --output-on-failure",
+        "node verification/sdk_js/verify_ink_v2.mjs --package INK-V2-01-v0.1 --sdk <matching-sdk-root> --output <evidence-root>/chrome.json",
+        "node --test verification/sdk_js/api_test.mjs",
+        "node <existing-typescript-runtime>/tsc --noEmit --strict --target es2022 --module nodenext --moduleResolution nodenext verification/sdk_js/api_types_test.mts",
+        "python3 tools/check_runtime_boundaries.py --root .",
+        "python3 -m unittest verification.tests.test_current_semantic_descriptor"
+      ],
+      "command_note": "Placeholders bind actual existing configured tool paths during design preflight. Implement the new InkV2 tests/harness as required work; do not report them as currently existing or passing."
+    },
+    "hosted_verification": {
+      "required": [],
+      "optional": [
+        "Windows DLL external consumer/ABI execution",
+        "physical pressure-device qualification",
+        "extra hardware wall-clock timing"
+      ]
+    },
+    "evidence": {
+      "blocking": [
+        "v-pressure.json",
+        "v-persist.json",
+        "v-compact.json",
+        "v-resample.json",
+        "v-work.json",
+        "v-cache.json",
+        "v-pen.json",
+        "v-laser.json",
+        "v-lifecycle.json",
+        "v-consumer.json",
+        "v-regression.json",
+        "source-manifest.json",
+        "regression.json",
+        "result.json"
+      ],
+      "corroborative": [
+        "optional-timing.json",
+        "optional-device.json",
+        "extra-visual-review.md"
+      ]
+    },
+    "terminal_success": {
+      "all_of": [
+        "本包已发布profile真实可用，所有必需义务满足acceptance",
+        "依赖真实结果与来源精确绑定且现有有效成果保留",
+        "匹配资产的native与Chrome验证、字节/工作量等本包指标完成",
+        "新增失败修复，历史失败与平台边界明确记录",
+        "本地可复核source/result/evidence manifest与可用Demo交付"
+      ]
+    },
+    "terminal_blockers": {
+      "explicit_classes": [
+        "BLOCKED_REPOSITORY_IDENTITY",
+        "AUTHORITY_CONFLICT",
+        "MISSING_REQUIRED_INPUT",
+        "ENVIRONMENT_BLOCKER",
+        "FROZEN_VERIFICATION_FAILURE",
+        "NEW_HIGH_IMPACT_FAILURE_MODE",
+        "TASK_PACKAGE_DEFECT",
+        "VERIFICATION_DESIGN_DEFECT"
+      ],
+      "ordinary_resolvable_implementation_choices_are_not_blockers": true
+    },
+    "return_policy": {
+      "continue_until_terminal_state": true,
+      "return_surface": "CONTROL_REVIEW",
+      "intermediate_checkpoint_is_terminal": false,
+      "official_gate_pass_forbidden": true,
+      "result_status": "READY_FOR_CONTROL_REVIEW",
+      "mutation_in_this_preparation_turn": false
+    }
+  }
+}

@@ -1,0 +1,46 @@
+node:internal/modules/run_main:122
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /const bool wasPending/. Input:
+
+'sdk::Json frame(bool force) override {\n' +
+  '        auto result = adapter_->frameStatus().pending ? adapter_->pollFrame()\n' +
+  '                                                       : adapter_->prepareFrame(force);\n' +
+  '        // A completed fence frees this same owner opportunity for latest\n' +
+  '        // demand. Pending fences retain bounded backpressure and never block.\n' +
+  '        if (result == platform::WebFrameResult::kRetry && !adapter_->frameStatus().pending)\n' +
+  '            result = adapter_->prepareFrame(force);\n' +
+  '        return {{"ok", result != platform::WebFrameResult::kRejected},\n' +
+  '                {"code", "FRAME_REJECTED"},\n' +
+  '                {"pending", adapter_->frameStatus().pending},\n' +
+  '                {"retry", result == platform::WebFrameResult::kRetry},\n' +
+  '                {"presented", std::to_string(adapter_->presentedCount())}};\n' +
+  '    }\n' +
+  '    '
+
+    at file:///Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/g5-settle-slices/frame_retry_test.mjs:5:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:271:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'sdk::Json frame(bool force) override {\n' +
+    '        auto result = adapter_->frameStatus().pending ? adapter_->pollFrame()\n' +
+    '                                                       : adapter_->prepareFrame(force);\n' +
+    '        // A completed fence frees this same owner opportunity for latest\n' +
+    '        // demand. Pending fences retain bounded backpressure and never block.\n' +
+    '        if (result == platform::WebFrameResult::kRetry && !adapter_->frameStatus().pending)\n' +
+    '            result = adapter_->prepareFrame(force);\n' +
+    '        return {{"ok", result != platform::WebFrameResult::kRejected},\n' +
+    '                {"code", "FRAME_REJECTED"},\n' +
+    '                {"pending", adapter_->frameStatus().pending},\n' +
+    '                {"retry", result == platform::WebFrameResult::kRetry},\n' +
+    '                {"presented", std::to_string(adapter_->presentedCount())}};\n' +
+    '    }\n' +
+    '    ',
+  expected: /const bool wasPending/,
+  operator: 'match'
+}
+
+Node.js v22.14.0

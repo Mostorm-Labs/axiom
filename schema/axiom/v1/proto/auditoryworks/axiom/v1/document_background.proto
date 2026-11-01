@@ -1,0 +1,12 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+import "auditoryworks/axiom/v1/paint.proto";
+
+message DocumentBackgroundV1 {
+  uint32 version = 1;
+  uint32 mode = 2;
+  ColorValue color = 3;
+  ColorValue pattern_color = 4;
+}
+message SetDocumentBackgroundOp { DocumentBackgroundV1 value = 1; }

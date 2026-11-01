@@ -1,4 +1,5 @@
 #pragma once
+#include "canvas/semantic/compact_stroke.hpp"
 
 #include "canvas/semantic/property_value.hpp"
 #include "canvas/semantic/semantic_geometry.hpp"
@@ -213,6 +214,31 @@ struct RichTextContent final {
     bool operator==(const RichTextContent&) const = default;
 };
 
+struct TableAxis final {
+    ObjectId id{};
+    double size = 48;
+    bool operator==(const TableAxis&) const = default;
+};
+struct TableCell final {
+    RichTextContent text{};
+    ColorValue fill{1,1,1,1};
+    bool operator==(const TableCell&) const = default;
+};
+// Versioned grid paint is independent of row/column geometry. SketchStyleV1
+// separately versions derived grid paths; grid color/width remain owned here.
+struct TableGridStyle final {
+    std::uint32_t version = 1;
+    ColorValue color{0.25F,0.28F,0.32F,1};
+    double width = 1;
+    bool operator==(const TableGridStyle&) const = default;
+};
+struct TableContent final {
+    std::vector<TableAxis> rows, columns;
+    std::vector<TableCell> cells; // row-major; row/column IDs are identity
+    TableGridStyle grid{};
+    bool operator==(const TableContent&) const = default;
+};
+
 // Shape remains a hierarchy leaf.  Version 3 optionally embeds a RichText
 // label in the same canonical object; it is never materialized as a child
 // object or a second text owner.
@@ -397,6 +423,6 @@ using ObjectContent = std::variant<
     GroupContent,
     BrushStrokeContent,
     DabBrushStrokeContent,
-    SectionContent>;
+    SectionContent, TableContent, CompactStrokeContent>;
 
 } // namespace canvas::semantic

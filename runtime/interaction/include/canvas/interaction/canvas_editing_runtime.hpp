@@ -1,6 +1,11 @@
 #pragma once
+#include "canvas/ink/laser_trail.hpp"
+#include "canvas/runtime/table_input.hpp"
+#include "canvas/runtime/appearance.hpp"
+#include "canvas/runtime/image_export.hpp"
 namespace canvas::runtime { class CanvasRuntimeFacade; class MultiSelectionPort; }
 #include "canvas/interaction/text_edit_session.hpp"
+#include "canvas/semantic/snapshot_bootstrap.hpp"
 
 #include "canvas/input/input_router.hpp"
 #include "canvas/input/platform_input_contract.hpp"
@@ -63,6 +68,8 @@ namespace canvas::ink_playground { class InkPlaygroundHistoryTestAccess; }
 namespace canvas::render { class ImageResourceResolver; }
 
 namespace canvas::interaction {
+
+enum class SnapshotRestoreOutcome : std::uint8_t { kRestored, kInvalid, kSceneFailed };
 
 struct HudSnapshot final {
   double sampleHz = 0.0;
@@ -274,6 +281,27 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] std::uint64_t qualificationSceneGeneration() const noexcept {
     return runtimeSceneHost_ == nullptr ? 0U : runtimeSceneHost_->revision().value();
   }
+  // Called only by Composition before the initial document is opened.
+  [[nodiscard]] bool setInitialDocumentId(semantic::DocumentId id) noexcept {
+    if (id.isZero() || closed_ || surface_.available || semanticObjects_.size() != 0U) return false;
+    documentId_ = id; return true;
+  }
+  [[nodiscard]] semantic::DocumentId documentId() const noexcept { return documentId_; }
+  // Composition supplies a fresh origin before open, including checkpoint recovery.
+  // Standalone qualification owners retain their deterministic numeric fixture IDs.
+  [[nodiscard]] bool setInitialOperationNamespace(foundation::ObjectId origin) noexcept {
+    if (origin.isZero() || operationNamespaceBound_ || closed_ || surface_.available ||
+        semanticObjects_.size() != 0U || submittedOperationCount_ != 0U) return false;
+    operationNamespace_ = origin; operationNamespaceBound_ = true; return true;
+  }
+  [[nodiscard]] bool snapshotCaptureReady() const noexcept { return textReady(); }
+  [[nodiscard]] runtime::ImageExportResult exportImage(const runtime::ImageExportOptions&) noexcept;
+  [[nodiscard]] foundation::DocumentBackground documentBackground() const noexcept { return semanticObjects_.documentBackground(); }
+  [[nodiscard]] bool setDocumentBackground(const foundation::DocumentBackground&);
+  [[nodiscard]] std::vector<semantic::ObjectRecord> snapshotObjects() const { return semanticObjects_.allObjects(); }
+  [[nodiscard]] SnapshotRestoreOutcome restoreSnapshotBeforeSurface(const semantic::SemanticSnapshot& snapshot,
+      const semantic::SnapshotBootstrapper::CheckpointBinding& binding,
+      semantic::ResourceManifest& manifest) noexcept;
   [[nodiscard]] std::uint64_t selectionOverlayUpdates() const noexcept {
     return selectionOverlayUpdates_;
   }
@@ -294,6 +322,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   bool textTool() const noexcept {return textTool_;}
   [[nodiscard]] bool selectBrushProfile(std::string_view profileId,
                                         std::uint32_t revision = 1U) noexcept;
+  [[nodiscard]] bool configureInkBrush(const foundation::InkBrushConfig&) noexcept;
+  void advanceLaserPresentation(std::uint64_t monotonicNs) noexcept;
+  [[nodiscard]] bool laserActive()const noexcept{return laserTrails_.activeCount()!=0;}
+  [[nodiscard]] std::optional<foundation::InkBrushConfig> inkBrushConfig() const noexcept;
   [[nodiscard]] bool setInkOptions(float size, float red, float green, float blue,
                                    float alpha, float opacity) noexcept;
   void clearInkSizeOverride() noexcept;
@@ -384,6 +416,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     canonicalVisibilitySink_ = sink;
   }
   void setLocalOperationSink(LocalOperationSink* sink) noexcept { localOperationSink_ = sink; }
+  [[nodiscard]] semantic::CanonicalCommitStamp canonicalCommitFence() const noexcept {
+    return {canonicalCommitClock_.runtimeEpoch(), canonicalCommitClock_.lastCommittedOrdinal()};
+  }
   [[nodiscard]] semantic::ApplyResult applyExternalOperation(
       const semantic::Operation&, semantic::ApplySource);
   [[nodiscard]] OperationOutcomeSnapshot operationOutcome() const noexcept {
@@ -501,7 +536,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
     return frameIdHighWater_ == std::numeric_limits<std::uint64_t>::max()
                ? 0U : frameIdHighWater_ + 1U;
   }
-  [[nodiscard]] bool presentTransientOverlayFrame(std::uint64_t frameId) noexcept;
+  [[nodiscard]] bool presentTransientOverlayFrame(std::uint64_t frameId, bool frameOpportunity = false) noexcept;
   [[nodiscard]] bool retryTransientOverlayFrame() noexcept;
   [[nodiscard]] bool clearTransientOverlay() noexcept;
   [[nodiscard]] bool transientOverlayDirty() const noexcept {
@@ -513,6 +548,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] bool canonicalPresentationDirty() const noexcept {
     return canonicalPresentationDirty_ || connectorRoutingPending_ || connectorPreviewRoutingPending();
   }
+  // Shared owner frame opportunity; true holds exact work until navigation settles.
+  bool serviceNavigationPresentation(std::chrono::steady_clock::time_point now, bool& presented) noexcept;
   bool serviceConnectorRouting() noexcept;
   [[nodiscard]] bool connectorPreviewRoutingPending() const noexcept;
   scene::ConnectorGeometry previewConnectorGeometry(const semantic::ObjectRecord&);
@@ -525,7 +562,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   }
   // Owner-side derived resources can invalidate the current pixels without
   // mutating the semantic document or history.
-  void markCanonicalPresentationDirty() noexcept { canonicalPresentationDirty_ = true; }
+  void markCanonicalPresentationDirty() noexcept { canonicalPresentationDirty_ = true; navigationActive_=false; navigationExactPreparation_=false; navigationCameraGeneration_=cameraGeneration(); }
   void cancelConnectorRouting() noexcept;
   void bindResourceServices(render::ImageResourceResolver* images,
                             text::RichTextLayoutService* textService) noexcept;
@@ -609,6 +646,10 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   [[nodiscard]] semantic::Operation legacyStrokeOperation(
       const ink::StrokeRecord&, std::uint64_t operationId) const;
   [[nodiscard]] std::uint64_t localOperationOrdinal() const noexcept;
+  [[nodiscard]] semantic::OperationId localOperationIdentity(std::uint64_t ordinal) const noexcept;
+  // Public owners share one namespace/counter for every automatically allocated
+  // object or RichText identity. Unbound qualification fixtures keep numeric IDs.
+  [[nodiscard]] foundation::ObjectId allocateObjectIdentity(foundation::ObjectId legacyIdentity) noexcept;
   [[nodiscard]] bool historySceneReady() const noexcept;
   [[nodiscard]] bool canonicalWriteAdmission() const noexcept;
   [[nodiscard]] bool prepareExplicitIntentInternal(std::span<const semantic::Operation>, bool);
@@ -619,6 +660,14 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   runtime::TextGeometrySnapshot textGeometry(const runtime::CanvasTargetKey&);
   std::optional<std::uint32_t> textHit(const semantic::ObjectRecord&,float,float);
   semantic::ObjectId hitTextAtView(float,float);
+  [[nodiscard]] runtime::TableResult tableCommand(const runtime::TableRequest&);
+  [[nodiscard]] runtime::TableSnapshot tableSnapshot(semantic::ObjectId = {}) const;
+  bool tableTargetAt(runtime::TextIntent&);
+  bool tablePointer(const input::PointerKey&,input::PointerPhase,float,float);
+  semantic::ObjectId tableObject_{},tableRow_{},tableColumn_{};
+  struct TableResize {input::PointerKey key;semantic::ObjectId object,row,column;double start=0,size=0,preview=0;std::uint64_t generation=0;};
+  std::optional<TableResize> tableResize_;
+
   bool enterGroupAtViewPoint(float,float);
   bool textPointer(const input::PointerSample&);
   bool observeTouchTextTap(const input::PointerSample&);
@@ -693,6 +742,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unordered_map<std::uint64_t, std::uint64_t> brushSessionSeeds_;
   std::unordered_map<std::uint64_t, std::vector<ink::reference::StrokeOutlinePoint>> brushPreviews_;
   ToolMode toolMode_ = ToolMode::kBrush;
+  std::optional<foundation::InkBrushConfig> inkBrushConfig_;
+  ink::LaserTrail laserTrails_;
+  std::uint64_t laserRevision_=0;
   bool panTool_ = false;
   std::uint32_t eraserMode_ = 2U;
   std::unordered_map<input::PointerKey, std::pair<float, float>, input::PointerKeyHash> panPointers_;
@@ -736,6 +788,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   semantic::ResourceManifest* resourceManifestPort_ = &resourceManifest_;
   semantic::DocumentId documentId_{canvas::foundation::ObjectId::fromUint64(1U)};
   std::uint64_t nextHistoryOperationOrdinal_ = (std::uint64_t{1} << 63U);
+  foundation::ObjectId operationNamespace_{};
+  bool operationNamespaceBound_ = false;
+  std::uint64_t nextObjectIdentityOrdinal_ = 1;
     std::uint64_t nextTextIdentity_ = 1;
   bool textTool_=false;
   runtime::TextSessionToken caretToken_{};
@@ -783,6 +838,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::optional<interaction::SubmitResult> tryCommitSectionDrop(const semantic::SetTransformsOp&) noexcept;
   runtime::SectionOutcome executeSectionCommand(const runtime::SectionIntent&,const semantic::SetTransformsOp* confirmedDrop) noexcept;
   void applyContainerPreview(render::ReferenceDrawList&);
+  void applyAppearancePreview(render::ReferenceDrawList&);
+  bool applyAppearanceToRecord(canvas::RuntimeSceneRecord&);
   semantic::SemanticGeneration presentedSemanticGeneration_{};
   render::SurfaceGeneration presentedSurfaceGeneration_{};
   render::MetricsGeneration presentedMetricsGeneration_{};
@@ -791,6 +848,8 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unique_ptr<canvas::IncrementalRuntimeCoordinator> sceneCoordinator_;
   std::unique_ptr<canvas::ISemanticSceneCompiler> sceneCompiler_;
   text::RichTextLayoutService* textLayoutService_ = nullptr;
+  render::ImageResourceResolver* imageResolver_ = nullptr;
+  bool imageExportActive_ = false;
   std::unique_ptr<render::RenderViewRuntime> selectionView_;
   // Owner-controlled presentation override; never part of Semantic or Scene.
   std::optional<semantic::ObjectRecord> imageCropPresentation_;
@@ -809,6 +868,9 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::unique_ptr<render::FrameState> lastSubmittedCanonicalFrameState_;
   std::optional<render::RuntimeFrameIdentity> lastPresentedCanonicalFrame_;
   std::unique_ptr<render::FrameState> lastPresentedCanonicalFrameState_;
+  std::uint64_t navigationCameraGeneration_=0,navigationSubmittedGeneration_=0;
+  std::chrono::steady_clock::time_point navigationChangedAt_{};
+  bool navigationActive_=false, navigationExactPreparation_=false;
   bool canonicalPresentationDirty_ = false;
   bool connectorRoutingPending_ = false;
   semantic::ConnectorRouting connectorRoutingPreset_ = semantic::ConnectorRouting::kStraight;
@@ -894,6 +956,20 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   input::PointerKey latestCreationPointer_{};
   CreationPreset creationPreset_ = CreationPreset::kRectangle;
   runtime::CanvasAppearance futureAppearance_{};
+  runtime::AppearanceValues futureStyle_=[] {runtime::AppearanceValues v;v.fillKind=runtime::AppearanceFill::kSolid;return v;}();
+  bool futureStyleConfigured_=false;
+  struct AppearanceSession { runtime::AppearanceToken token; std::vector<semantic::ObjectRecord> before,after;std::vector<std::uint64_t> seeds; bool routingChanged=false; };
+  std::optional<AppearanceSession> appearanceSession_;
+  std::uint64_t appearanceSerial_=0, appearancePreviewRevision_=0;
+  std::uint64_t allocateSketchSeed();
+  runtime::AppearanceValues appearanceDefaults() const;
+  void materializeAppearance(semantic::PropertyBag&,bool,bool sticky=false,bool rounded=false);
+  void materializeStructuralAppearance(semantic::ObjectRecord&);
+  runtime::AppearanceValues appearanceValuesFor(const semantic::ObjectRecord&) const;
+  runtime::AppearanceSnapshot appearanceSnapshot(const runtime::MultiSelectionProjection&,bool) const;
+  runtime::AppearanceResult appearanceCommand(const runtime::AppearanceRequest&,const runtime::MultiSelectionProjection&);
+  bool appearanceSessionCurrent() const;
+  void clearAppearancePreview();
   std::uint64_t creationSerial_ = 0;
   bool creationMode_ = false;
   std::thread::id ownerThread_{};

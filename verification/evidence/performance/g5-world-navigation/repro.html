@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><style>body{margin:0}#mount{width:800px;height:500px}</style><div id="mount"></div>
+<script type="module">
+import {createRuntime} from '/sdk/axiom.mjs';
+window.frameCount=0;window.errors=[];window.hold=false;window.held=[];
+const raw=requestAnimationFrame.bind(window);
+window.requestAnimationFrame=fn=>raw(t=>{if(hold){held.push(fn);return;}fn(t);if(window.capture){
+ window.capture=false;window.navImage=runtime.canvas.toDataURL();window.navState=runtime.readState();window.navFrameCount=frameCount;window.hold=true;
+}});
+window.ready=(async()=>{window.runtime=await createRuntime({mount:document.querySelector('#mount'),documentId:'00000000000000000000000000000879',builtinFonts:false,permission:'localSingleUser',onFrame:()=>++frameCount,onError:e=>errors.push(String(e))});runtime.data.attach({capacity:1024});await runtime.selectBrush('round-handdrawn',1);return true;})();
+window.release=()=>{hold=false;for(const fn of held.splice(0))requestAnimationFrame(fn);};
+</script>

@@ -61,7 +61,8 @@ class ChangeSet final {
         SemanticGeneration before_generation,
         SemanticGeneration after_generation,
         std::vector<ObjectSemanticChange> objects,
-        std::vector<ResourceManifestSemanticChange> resources);
+        std::vector<ResourceManifestSemanticChange> resources,
+        bool document_background_changed = false);
 
     [[nodiscard]] constexpr const SemanticGeneration& beforeGeneration() const noexcept {
         return before_generation_;
@@ -73,6 +74,7 @@ class ChangeSet final {
         return objects_;
     }
     [[nodiscard]] std::span<const ResourceManifestSemanticChange> resourceChanges() const noexcept { return resource_changes_; }
+    [[nodiscard]] bool documentBackgroundChanged() const noexcept { return document_background_changed_; }
 
   private:
     friend ChangeSet internal::finalizeChangeSet(
@@ -84,12 +86,14 @@ class ChangeSet final {
         SemanticGeneration before_generation,
         SemanticGeneration after_generation,
         std::vector<ObjectSemanticChange> objects,
-        std::vector<ResourceManifestSemanticChange> resources = {}) noexcept;
+        std::vector<ResourceManifestSemanticChange> resources = {},
+        bool document_background_changed = false) noexcept;
 
     SemanticGeneration before_generation_{};
     SemanticGeneration after_generation_{};
     std::vector<ObjectSemanticChange> objects_;
     std::vector<ResourceManifestSemanticChange> resource_changes_;
+    bool document_background_changed_ = false;
 };
 
 } // namespace canvas::semantic

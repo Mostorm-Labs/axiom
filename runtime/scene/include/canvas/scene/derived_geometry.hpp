@@ -16,9 +16,10 @@ struct ConnectorGeometry final {
     runtime::ConnectorRouteWork work{};
     foundation::WorldRect searchedDomain{};
     std::uint32_t algorithmRevision = 2;
+    std::vector<foundation::WorldRect> sketchObstacles{};
     bool operator==(const ConnectorGeometry& o) const {
         if (start.x != o.start.x || start.y != o.start.y || end.x != o.end.x ||
-            end.y != o.end.y || arrow_end != o.arrow_end || status != o.status ||
+            end.y != o.end.y || sketchObstacles != o.sketchObstacles || arrow_end != o.arrow_end || status != o.status ||
             work != o.work || algorithmRevision != o.algorithmRevision ||
             searchedDomain != o.searchedDomain || route.size() != o.route.size()) return false;
         for (std::size_t i=0; i<route.size(); ++i)

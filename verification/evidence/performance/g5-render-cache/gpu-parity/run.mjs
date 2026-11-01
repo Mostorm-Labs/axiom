@@ -1,0 +1,7 @@
+import {chromium} from '/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/verification/node_modules/playwright/index.mjs';
+import fs from 'node:fs/promises';import http from 'node:http';import path from 'node:path';
+const root=path.resolve('out/g5-render-cache/web-gpu');
+const server=http.createServer(async(req,res)=>{try{const p=path.resolve(root,'.'+new URL(req.url,'http://localhost').pathname);if(!p.startsWith(root+'/'))throw Error('path');res.setHeader('Content-Type',p.endsWith('.wasm')?'application/wasm':p.endsWith('.js')?'text/javascript':'text/html');res.end(await fs.readFile(p));}catch{res.statusCode=404;res.end();}});
+await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+const browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
+try{const page=await browser.newPage();await page.goto(`http://127.0.0.1:${server.address().port}/probe.html`);await page.waitForFunction(()=>window.cacheProbe?.done,{},{timeout:120000});const result=await page.evaluate(()=>({ ...cacheProbe,renderer:(()=>{const g=document.querySelector('canvas')?.getContext('webgl2');return g?.getParameter(g.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL);})()}));await fs.writeFile(path.join(root,'result.json'),JSON.stringify(result,null,2));console.log(result);if(result.code!==0)process.exitCode=1;}finally{await browser.close();await new Promise(resolve=>server.close(resolve));}

@@ -25,13 +25,14 @@ semantic::OrderKey makeOrder(std::uint64_t seed) {
 
 bool CreationSession::begin(input::PointerKey pointer, CreationPreset preset, CreationStyle style,
                             foundation::WorldPoint start, foundation::WorldRect viewport,
-                            std::uint64_t objectSeed) noexcept {
+                            std::uint64_t objectSeed, semantic::ObjectId objectId) noexcept {
   if (!pointer.valid() || !finitePoint(start) || !viewport.isFiniteAndOrdered() ||
       viewport.right <= viewport.left || viewport.bottom <= viewport.top || active()) return false;
   pointer_ = pointer; objectSeed_ = objectSeed; preset_ = preset; style_ = std::move(style); viewport_ = viewport;
   preview_ = {}; preview_.active = true; preview_.preset = preset; preview_.start = start; preview_.end = start; preview_.viewport = viewport;
   snappedEndpoint_.reset();
-  preview_.record.id = makeId(objectSeed); preview_.record.placement.order_key = makeOrder(objectSeed); preview_.record.properties = style_.properties;
+  preview_.record.id = objectId.isZero() ? makeId(objectSeed) : objectId;
+  preview_.record.placement.order_key = makeOrder(objectSeed); preview_.record.properties = style_.properties;
   return rebuild(start);
 }
 
@@ -99,7 +100,12 @@ bool CreationSession::rebuild(foundation::WorldPoint end) noexcept {
       const bool endpointFeature = candidate->sourceFeature ==
           (increasing ? interaction::SnapFeatureKind::kMaxEdge : interaction::SnapFeatureKind::kMinEdge);
       if (!center && !endpointFeature) return;
-      endpoint += (center ? 2.0F : 1.0F) * candidate->correction / snapScale_;
+      const float snapped = endpoint + (center ? 2.0F : 1.0F) * candidate->correction / snapScale_;
+      // A center/edge snap must not collapse or reverse a positive box extent.
+      // In particular, a small box starting on an existing edge can otherwise
+      // snap its center back to that fixed edge and submit an invalid zero size.
+      if (boxPreset && (increasing ? snapped <= fixed : snapped >= fixed)) return;
+      endpoint = snapped;
       preview_.snapped = true;
       // The movable endpoint is the only endpoint that can be attached by a
       // drag.  Preserve the target identity while the resolver supplies the

@@ -1,0 +1,207 @@
+{
+  "source_revision": "459383332c4abae4942116b19b29a5be5680f755",
+  "dirty": true,
+  "scope": "crayon rendering-only target-compatible coverage and high-DPI retained prefix",
+  "classification": "LOCAL_REVIEW_READY_WITH_BASELINE_FINDINGS",
+  "material_identity": {
+    "id": "ink-crayon-material-v3",
+    "version": 3,
+    "algorithmVersion": 5,
+    "signalVersion": 3,
+    "samplingVersion": 1,
+    "sha256": "dd0b39a4689fa850609a71f3f8453ca318acd1850cc062ecda9bd0397a5db2e9",
+    "sources": [
+      "coverage.sksl",
+      "material.sksl"
+    ],
+    "kind": "builtin-procedural-material",
+    "external_resource_bytes": 0
+  },
+  "geometry_or_wire_change": false,
+  "browser_measurement": "CDP input round-trip plus two RAF completion; headless Chrome software GPU; same DPR2 view/points/size; not frame time or a performance Gate",
+  "browser_latency_before": [
+    {
+      "row": 0,
+      "release_ms": 2129.1713750000017,
+      "p50": 565.8409170000014,
+      "p95": 655.7281250000015
+    },
+    {
+      "row": 1,
+      "release_ms": 2455.026917000003,
+      "p50": 644.1074170000065,
+      "p95": 861.8956249999974
+    }
+  ],
+  "browser_latency_after": [
+    {
+      "row": 0,
+      "release_ms": 99.82520799999838,
+      "p50": 49.97724999999991,
+      "p95": 70.9798750000009
+    },
+    {
+      "row": 1,
+      "release_ms": 131.5101250000007,
+      "p50": 50.154624999999214,
+      "p95": 53.892541999997775
+    }
+  ],
+  "raster_preview_diagnostic": "Input <1ms/36pts, original DPR2 preview p50~74ms. Native after benchmark ran concurrently with full build/ctest and is not comparable for speed. GPU benefit supported by matched browser run.",
+  "retina_prefix": {
+    "samples": 80,
+    "rendered_knots_before": 4352,
+    "after": 951,
+    "retained_bytes": 10400000,
+    "temporary_bytes": 10400000,
+    "budget": 33554432
+  },
+  "screenshot_diff": {
+    "maximum_channel_error": 6,
+    "mean_absolute_channel_error": 0.018345897435897436,
+    "channels_error_over8": 0,
+    "reason": "CPU/GPU rounding; shader source/resource identity unchanged"
+  },
+  "full_ctest": {
+    "total": 242,
+    "passed": 220,
+    "failures": [
+      "canvas_fc02_shape_label_scene",
+      "canvas_g2_a3_full_incremental_equivalence",
+      "G3HeadlessCanvasDemo",
+      "FC02Text",
+      "FC00XRuntimeComposition",
+      "FC04.MSE-11",
+      "FC04.MSE-20",
+      "FC04.MSE-23",
+      "FC04.MSE-24",
+      "FC04.MSE-25",
+      "FC04.MSE-26",
+      "FC01Creation-width-style",
+      "G4InkPlaygroundComposition",
+      "G4InkPlaygroundSurface",
+      "G4InkPlaygroundRepeatedStrokes",
+      "G4MultiPointerPlayground",
+      "G4ViewportGestureState",
+      "G46BQueryStructure",
+      "G46PlaygroundTransform",
+      "G46CQualificationBundle",
+      "G46CQualificationBehavior",
+      "G45BrushRuntimePipeline"
+    ],
+    "new_failure_names": [],
+    "new_retina_test": "separately run after registration"
+  },
+  "browser_functional": {
+    "DPR1": "103 checks PASS",
+    "DPR2": "103 checks PASS",
+    "note": "103 checks each before final mixed-cache admission tightening; final rebuilt artifact smoke (same single-session rendering path) verifies repeated drawing and timing. Final four-contact native cache tests pass."
+  },
+  "physical_touch_status": "NOT_PERFORMED",
+  "user_perceived_lag": "User accepted the result and requested commit/push.",
+  "windows_abi": "NOT_QUALIFIED",
+  "demo_url": "http://127.0.0.1:4198/example.html?brush=crayon&v=crayon-gpu-preview-final",
+  "limitations": [
+    "No claim of fixed interactive frame rate",
+    "Very large surfaces still use bounded fallback",
+    "Four-contact cache budget preserved; eviction can require prefix reconstruction",
+    "No commit/push/release this turn"
+  ],
+  "final_focused": {
+    "passed": 4,
+    "failed": 0,
+    "tests": [
+      "InkV2RetinaPreview (four contacts)",
+      "InkV2Material-parity",
+      "InkV2Material-wax",
+      "InkV2Material-wax-mask"
+    ]
+  },
+  "types": "PASS",
+  "runtime_boundary": "PASS (115 contracts)",
+  "source_sha256": {
+    "runtime/composition/src/canvas_runtime_facade.cpp": "a498debb59ddf4ecab1336527449e9bce5f915ad3eaf7ab55d52f6449d7d64f7",
+    "runtime/foundation/include/canvas/runtime/ink_brush.hpp": "32c484cf9cef3aa888475ab2650a6bb9f667b5bf0d88dd81283571c9698b7a0e",
+    "runtime/ink/src/brush_package_catalog.cpp": "92bb54c259ed247827ca8176701b173355c971432dc1795b8b449d38b53ced44",
+    "runtime/ink/src/compact_brush_quality.cpp": "981c455b1d738ade2a4aa910440e3a20cb71a802269c45c18ba125b8e211add0",
+    "runtime/ink/src/compact_brush_session.cpp": "3ae72e308eb92869a696e56e6d791f78de3ab6f167711b3672eeb33c599642e4",
+    "runtime/ink/tests/vector_quality_test.cpp": "4df01ac1e9d0372438bff47c6ab18d75200d89e04374d7cb02a491f84903aa1c",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "294b4b27f1a9ba0e4a8d8c48cef7a7523e0c3b53356e7e6a1901c312f898afdc",
+    "runtime/render/CMakeLists.txt": "584aeb7256c02edb95dcbadb1700d2b0dd8c32d9c3b75dec51af53f014e5da4e",
+    "runtime/render/include/canvas/render/skia_scene_renderer.hpp": "b0d825c3a619660de0837ac7122e3676c703838132bd313634b38c388e4d8ad2",
+    "runtime/render/src/skia_compact_material.cpp": "4cf76597823ad1fb380a546860e0e07892750acc781177bec699c8477e0e742c",
+    "runtime/render/src/skia_navigation_tiles.cpp": "fc9ef163a3396e3b5f68473f814b4ca461cf9e4c2b28b3f89d9ac59c8b7c759d",
+    "runtime/render/src/skia_render_cache.cpp": "42ae95f58de1afe54830342a5da6efcbd05e602a7e410e4837783abd7b1e7f36",
+    "runtime/render/src/skia_renderer.cpp": "afa30762d627b888d413ed313d151cf5839ec5480dc4b4015253672062180a02",
+    "runtime/render/tests/ink_v2_material_test.cpp": "0d493ac42093e0167aa8130dd7bbc2405dbc3c63867a0608c6500faa27a2efb4",
+    "runtime/render/tests/ink_v2_work_test.cpp": "63d503251306f872cd817b7fadf0525b1737c0ec17fdedf698d80d9295135a10",
+    "runtime/semantic/tests/ink_v2_compact_test.cpp": "f0805a92390d8d2bc49945e60d79b73d847699524bf95f185d99b54a772b9be5",
+    "sdk/common/ink_v2_session_test.cpp": "05b759b51d48f86afc88fc415ad566fb25002b1b9d757723d6b13582e66606b9",
+    "sdk/common/session.cpp": "1f0b515488f0b1abdb5f9d9247b9643703a6708d4906431bdd8a529b3643aef0",
+    "sdk/web/README.md": "3e83f9c8f942668da9ca37067b4e4adcd32f904ac952c4717f1d731a7fca441c",
+    "sdk/web/example.html": "98e52b7f0986b92806a93cdb510ea9a0cdd348768fee41e14be59bcc4a4d5b1e",
+    "sdk/windows/README.md": "5215fcf722872dab1490a098c305e76343b0217c64258a3bb6d54743163b1c51",
+    "verification/sdk_js/ink-v2.html": "cdfb44e06bb6701968dd6689c5cc90a3bb51a607a2aae25d715a283c3dc78734",
+    "verification/sdk_js/verify_ink_v2.mjs": "78cfd9e50dd55d104157c4c831abe214e8a55666993b93448940e92e929050b6",
+    "docs/planning/ink-v2/crayon-material-v3.md": "d1c0e97e6e3f97461676235d03ad50249fe929c2e2c6edee1b7b2f8cb935fcc0",
+    "docs/planning/ink-v2/crayon-performance.md": "7878089b730e0181741eaaf8fb47dfb4691de68b23c6c7c4e7075abef3ff6639",
+    "runtime/ink/assets/crayon-material-v3/coverage.sksl": "c6676aa87455182bd03737bf959dc136a395b4681a0ea60aec64fcdee3de28a5",
+    "runtime/ink/assets/crayon-material-v3/manifest.json": "16f7abefaad1e722c8c51b54691c25ac3a4aad676260a176abacbd26d82374fd",
+    "runtime/ink/assets/crayon-material-v3/material.sksl": "27b722a2083d2a02a1de98eaa80d64512bae3520de66f449dd42105f6ad2a6b2",
+    "verification/sdk_js/verify_crayon_latency.mjs": "2b470d073316e689eded00f6632a4f7b86af56e17b7fe742e79b602220c64860"
+  },
+  "final_artifact_smoke": {
+    "status": "PASS",
+    "checks": {
+      "demoDrawCommits": true
+    },
+    "measurements": [
+      {
+        "row": 0,
+        "release_ms": 67.58200000000033,
+        "p50": 49.83458300000166,
+        "p95": 51.46691600000122
+      },
+      {
+        "row": 1,
+        "release_ms": 34.12954200000058,
+        "p50": 49.91741700000057,
+        "p95": 50.95850000000064
+      }
+    ]
+  },
+  "browser_latency_final": [
+    {
+      "row": 0,
+      "release_ms": 67.58200000000033,
+      "p50": 49.83458300000166,
+      "p95": 51.46691600000122
+    },
+    {
+      "row": 1,
+      "release_ms": 34.12954200000058,
+      "p50": 49.91741700000057,
+      "p95": 50.95850000000064
+    }
+  ],
+  "precommit_verification": {
+    "passed": 7,
+    "failed": 0,
+    "log": "precommit-focused.log",
+    "checks": [
+      "InkV2RetinaPreview",
+      "InkV2Material-wax",
+      "InkV2Material-wax-mask",
+      "InkV2Material-parity",
+      "InkV2Compact",
+      "InkV2NativeSession",
+      "InkV2VectorQuality"
+    ],
+    "runtime_boundary": "PASS (115 contracts)",
+    "js_syntax": "PASS",
+    "typescript": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "delivery_authorization": "User explicitly authorized committing and pushing crayon material + performance changes in this turn; earlier no-commit boundaries describe prior implementation turns.",
+  "material_evidence_provenance": "../crayon-material-v3 describes the earlier CPU-rendered material checkpoint. Its recorded four source hash differences are expected renderer/cache/test changes; this performance checkpoint binds the final combined implementation."
+}

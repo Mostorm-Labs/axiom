@@ -1,0 +1,30 @@
+{
+  "schema": "g5-draw-after-zoom-v1",
+  "count": 64,
+  "dpr": 2,
+  "scenario": "pinch-in-draw",
+  "brush": {
+    "profile": "round-handdrawn",
+    "revision": 3
+  },
+  "scope": "fixed-timestamp synthetic pointer corpus; single-thread CPU wall elapsed, nested exclusive/inclusive; GL submission and exact receipt are not GPU execution or physical presentation",
+  "summary": {
+    "drawStart": 9666.200000047684,
+    "firstPreviewDelayMs": 1622.3999999761581,
+    "maxPointerMs": 1657.2999999523163,
+    "maxDrawRafMs": 2.100000023841858,
+    "maxGapMs": 1658.8999999761581
+  },
+  "image": {
+    "width": 1600,
+    "height": 1000,
+    "rgbaSha256": "7f343f1364e87041ad12946cd08c40125bb9591873fbc0aaac9962df20b93213",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+  },
+  "sha256": {
+    "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+    "axiom.wasm": "aaee3e45f4bfe50df239ae956477eb8b1a1d727be4f0e36a9eb8611a82aae529",
+    "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+    "internal/axiom.mjs": "2710c3eb3fb2097c2cdc03e4f074317a2a4e471b99aba2a58ae4ac52f6ff051f"
+  }
+}

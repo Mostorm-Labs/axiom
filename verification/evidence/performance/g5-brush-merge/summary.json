@@ -1,0 +1,52 @@
+{
+  "repository": "github.com/Mostorm-Labs/axiom",
+  "destination_parent": "caaae6e1563e7707646b616a4aefd2e945f49aba",
+  "brush_parent": "f2e391cd13180cd7627561c911120dcec058e5ee",
+  "classification": "READY_FOR_CONTROL_REVIEW_WITH_FINDINGS",
+  "native": {
+    "passed": 34,
+    "failed": 0
+  },
+  "sdk_browser": "PASS",
+  "sdk_frame_handoff": "PASS",
+  "sdk_shell_axis": "PASS",
+  "navigation": "PASS",
+  "ink_dpr2": {
+    "checks": 103,
+    "failed": 0
+  },
+  "gpu_probe": {
+    "code": 0,
+    "deadline_ms": 240000,
+    "pixel_assertions_unchanged": true,
+    "non_timing_errors": [],
+    "initial_120s_timeout": "Expanded new-algorithm corpus exceeded old harness deadline; completed identical probe with live diagnostics and 240s harness deadline"
+  },
+  "shape": {
+    "checks": {
+      "singleCommit": true,
+      "noCanonicalDuringDrag": true,
+      "moved": true,
+      "feedback": true,
+      "noErrors": true
+    },
+    "summary": {
+      "drawStart": 14526.899999976158,
+      "firstPreviewDelayMs": 19.799999952316284,
+      "maxPointerMs": 2.399999976158142,
+      "maxDrawRafMs": 3.8000000715255737,
+      "maxGapMs": 20.700000047683716
+    },
+    "pixel_sha256": "7f343f1364e87041ad12946cd08c40125bb9591873fbc0aaac9962df20b93213"
+  },
+  "physical_platform_evidence": "BLOCKED_EVIDENCE",
+  "full_root_rerun": false,
+  "demo": "http://127.0.0.1:4194/example.html",
+  "artifact_sha256": {
+    "axiom.mjs": "6d10f5af995f44a683d72922de91dbc6450b3a77bfd72bb0efc39f0b730529cc",
+    "axiom.wasm": "fb4866abc4b5e2198818e61170389ad43c777eeb90e0e0e83a7299aa2ccb964c",
+    "axiom.data": "e48d8df2bbf3fb46abef1c74dfc8afa0a82c7ac06c0ed21e72921217d2b1999e",
+    "internal/axiom.mjs": "9057873b402af0dc838a0cf15305bd80bc9ff8c539bf487110e621bfc90dbfcf"
+  },
+  "scope_note": "source exact f2e391cd; excludes subsequently started uncommitted chalk/watercolor work in sibling worktree"
+}

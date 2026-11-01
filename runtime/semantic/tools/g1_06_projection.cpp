@@ -117,6 +117,7 @@ Json writeColor(const ColorValue& value) {
 
 Json writeFillStyle(const FillStyleValue& value) {
     return std::visit(Overloaded{
+        [](const PatternFillV1&) -> Json { throw std::invalid_argument("historical G1 projection does not support PatternFillV1"); },
         [](const NoFill&) {
             Json result = Json::object();
             result["none"] = Json::object();
@@ -194,6 +195,8 @@ Json writeStrokeStyle(const StrokeStyleValue& value) {
 
 Json writePropertyValue(const PropertyValue& value) {
     return std::visit(Overloaded{
+        [](const CornerStyleV1&) -> Json {throw std::invalid_argument("historical G1 projection does not support CornerStyleV1");},
+        [](const SketchStyleV1&) -> Json { throw std::invalid_argument("historical G1 projection does not support SketchStyleV1"); },
         [](bool item) {
             Json result = Json::object();
             result["bool_value"] = item;
@@ -543,6 +546,8 @@ Json writeContent(const ObjectContent& value) {
         [](const GroupContent&) {
             Json result = Json::object(); result["group"] = Json::object(); return result;
         },
+        [](const TableContent&) -> Json { throw std::invalid_argument("Table is unsupported by the legacy G1 projection"); },
+        [](const CompactStrokeContent&) -> Json { throw std::invalid_argument("CompactStroke is unsupported by the legacy G1 projection"); },
         [](const SectionContent&) -> Json {
             // The historical G1 projection has no Section representation.
             throw std::invalid_argument("Section is unsupported by the legacy G1 projection");

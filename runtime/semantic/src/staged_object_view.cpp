@@ -3,18 +3,19 @@
 #include "canvas/semantic/indexed_object_store.hpp"
 #include "canvas/semantic/object_content.hpp"
 #include "g1_08_indexed_access_probe_internal.hpp"
+#include "object_store_mutator.hpp"
 
 #include <algorithm>
 
 namespace canvas::semantic {
 
-StagedObjectView::StagedObjectView(const ObjectStore& base) : base_(base) {
+StagedObjectView::StagedObjectView(const ObjectStore& base) : ObjectStore(base), base_(base) {
     // Register allocating acceleration state before any noexcept read.
     internal::noteStagedBase(*this, base_);
 }
 
 StagedObjectView::StagedObjectView(const StagedObjectView& other)
-    : base_(other.base_), creates_(other.creates_), replacements_(other.replacements_), deletes_(other.deletes_) {
+    : ObjectStore(other), base_(other.base_), creates_(other.creates_), replacements_(other.replacements_), deletes_(other.deletes_) {
     try {
         internal::noteStagedBase(*this, base_);
         for (const auto& [id, record] : creates_) { static_cast<void>(id); internal::noteStagedCreate(*this, record); }
@@ -27,6 +28,10 @@ StagedObjectView::StagedObjectView(const StagedObjectView& other)
 }
 
 StagedObjectView::~StagedObjectView() { internal::forgetStagedBase(*this); }
+
+void StagedObjectView::stageDocumentBackground(const foundation::DocumentBackground& value) noexcept {
+    internal::ObjectStoreMutator::setDocumentBackground(*this, value);
+}
 
 std::size_t StagedObjectView::size() const noexcept {
     auto count = base_.size() + creates_.size();

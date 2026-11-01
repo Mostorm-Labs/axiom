@@ -1,0 +1,21 @@
+
+            uniform float2 a; uniform float2 b; uniform float2 radii;
+            uniform float aaWidth; uniform float2 clipCaps; uniform float2 axis; uniform float flatness;
+            half4 main(float2 p) {
+                float2 q=p-a, v=b-a;
+                q=float2(dot(q,axis),dot(q,float2(-axis.y,axis.x))/flatness);
+                v=float2(dot(v,axis),dot(v,float2(-axis.y,axis.x))/flatness);
+                float projected=dot(q,v)/max(dot(v,v),0.000001);
+                if((clipCaps.x>0. && projected<0.) || (clipCaps.y>0. && projected>1.))return half4(0,0,0,1);
+                float t=clamp(projected,0.,1.);
+                float r=mix(radii.x,radii.y,t);
+                float2 offset=q-t*v;
+                float distance=length(offset);
+                float2 normal=offset/max(distance,0.0001);
+                float width=max(.0001,aaWidth*length(float2(normal.x,normal.y/flatness)));
+                float coverage=clamp(.5+(r-distance)/width,0.,1.);
+                // Round/marker material v2 maps coverage [0,.045] through
+                // smoothstep. Encode a one-device-pixel analytic edge ramp.
+                half c=half(.045*coverage);
+                return half4(c,c,c,1.);
+            }

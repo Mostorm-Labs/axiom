@@ -1,21 +1,43 @@
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/skia_renderer.hpp"
 
 #include "canvas/render/skia_brush_renderer.hpp"
 #include "canvas/render/brush_outline_skia_path.hpp"
 #include "canvas/render/skia_ink_backend.hpp"
 #include "canvas/render/skia_scene_renderer.hpp"
+#include "skia_render_cache_internal.hpp"
+#include "skia_navigation_tiles.hpp"
 
 #include "include/core/SkCanvas.h"
 #include "include/core/SkBlendMode.h"
 #include "include/core/SkPaint.h"
 #include "include/core/SkPathBuilder.h"
 #include "include/core/SkSurface.h"
+#include "include/core/SkImage.h"
+#include <unordered_map>
+#include <unordered_set>
+#include <optional>
 
 #include <cmath>
 #include <algorithm>
 #include <type_traits>
 
 namespace canvas::render {
+struct SkiaRenderer::NavigationCache final {
+    const void* provider=nullptr;
+    sk_sp<SkImage> image;
+    std::unique_ptr<FrameState> frame;
+    WorldToViewAffine transform;
+    resources::ResourceLease lease;
+    SkColor background=SK_ColorWHITE;
+    std::optional<CanonicalViewportTransform> feedbackCamera;
+};
+struct SkiaRenderer::CompactCache final {
+    struct Entry {std::shared_ptr<const ink::BrushPreviewDelta::Chunk> prefix;sk_sp<SkSurface> surface;foundation::InkBrushConfig config;};
+    std::unordered_map<std::uint64_t,Entry> entries;
+    sk_sp<SkSurface> scratch;
+    std::uint64_t generation=0;float scale=0,x=0,y=0,px=0,py=0;int width=0,height=0;
+};
 namespace {
 void drawAcquisition(SkCanvas& canvas,const EditingOverlay& overlay) {
     SkPaint paint;paint.setAntiAlias(true);paint.setStrokeWidth(1.5F);
@@ -41,8 +63,15 @@ void drawAcquisition(SkCanvas& canvas,const EditingOverlay& overlay) {
 
 BackendSubmissionResult SkiaRenderer::renderFrame(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
-    const EditingOverlay* selectionOverlay) {
+    const EditingOverlay* selectionOverlay, const RenderPreparationBudget* preparation) {
+    AXIOM_FRAME_TIMING_SCOPE(renderTiming,render);
+    const auto& metrics=plan.frame.metrics;
+    if(!std::isfinite(metrics.logicalWidth)||!std::isfinite(metrics.logicalHeight)||
+       metrics.logicalWidth<=0||metrics.logicalHeight<=0||!metrics.physicalWidth||!metrics.physicalHeight)
+        return BackendSubmissionResult::rejected("invalid frame surface metrics");
+    AXIOM_FRAME_TIMING_SCOPE(acquireTiming,acquire);
     const auto acquired = provider.acquire();
+    AXIOM_FRAME_TIMING_END(acquireTiming);
     if (acquired.code != SkiaSurfaceAcquireCode::kAcquired || acquired.frame.surface == nullptr) {
         return acquired.code == SkiaSurfaceAcquireCode::kUnavailable
             ? BackendSubmissionResult::retry(acquired.message)
@@ -52,14 +81,54 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         provider.release();
         return BackendSubmissionResult::rejected("stale Skia surface generation");
     }
+    if(acquired.frame.surface->width()!=static_cast<int>(metrics.physicalWidth)||
+       acquired.frame.surface->height()!=static_cast<int>(metrics.physicalHeight)){
+        provider.release();return BackendSubmissionResult::rejected("frame target dimensions differ");
+    }
     if (plan.referenceDrawList.frame.surfaceGeneration != plan.frame.surfaceGeneration ||
         plan.referenceDrawList.frame.frameId != plan.frame.frameId ||
         plan.referenceDrawList.frame.sceneGeneration != plan.frame.sceneGeneration) {
         provider.release();
         return BackendSubmissionResult::rejected("inconsistent FramePlan identity");
     }
+    std::unordered_set<foundation::ObjectId,foundation::ObjectIdHash> uniqueSources;
+    for(const auto& entry:plan.referenceDrawList.entries)
+        if(entry.record.objectId.isZero()||!uniqueSources.insert(entry.record.objectId).second){
+            provider.release();return BackendSubmissionResult::rejected("invalid or duplicated render source identity");
+        }
+    const auto validation=internal::validateReferencePlan(plan);
+    if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
+    internal::SkiaRenderCache* cache=nullptr;
+    try {
+        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
+            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
+        if (!renderCache_) renderCache_=std::make_shared<internal::SkiaRenderCache>();
+        renderCache_->budget=resourceBudget_;
+        renderCache_->options=renderCacheOptions_;
+        AXIOM_FRAME_TIMING_SCOPE(beginTiming,cache_begin);
+        renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_);
+        cache=renderCache_.get();
+    } catch(const std::bad_alloc&) {clearRenderCache();}
+    if(preparation && cache && selectionOverlay==nullptr){
+        auto* target=acquired.frame.surface->getCanvas();target->save();
+        target->scale(metrics.physicalWidth/metrics.logicalWidth,metrics.physicalHeight/metrics.logicalHeight);
+        const auto& clip=plan.referenceDrawList.viewportClip;
+        target->clipRect(SkRect::MakeLTRB(clip.left,clip.top,clip.right,clip.bottom));
+        auto prepared=internal::SkiaRenderCache::Preparation::kFallback;
+        const auto beforePreparation=cache->work.rasterizedGroups;
+        try{AXIOM_FRAME_TIMING_SCOPE(prepareTiming,cache_prepare);prepared=cache->prepare(*target,plan,*preparation);}
+        catch(const std::bad_alloc&){cache->clear();}
+        target->restore();
+        rasterizations_+=cache->work.rasterizedGroups-beforePreparation;
+        if(prepared==internal::SkiaRenderCache::Preparation::kPending){
+            provider.release();return BackendSubmissionResult::retry("exact cache preparation pending");
+        }
+    }
+    const auto beforeRaster=cache?cache->work.rasterizedGroups:0;
+    AXIOM_FRAME_TIMING_SCOPE(sceneTiming,scene_draw);
     const auto result = internal::drawReferencePlanToSkCanvas(
-        *acquired.frame.surface->getCanvas(), plan, images_, &textResources_);
+        *acquired.frame.surface->getCanvas(), plan, images_, &textResources_,true,cache);
+    AXIOM_FRAME_TIMING_END(sceneTiming);
     if (result.code == BackendSubmissionCode::kAccepted && selectionOverlay != nullptr) {
         auto* canvas = acquired.frame.surface->getCanvas();
         if (selectionOverlay->creationPreview()) {
@@ -127,12 +196,107 @@ BackendSubmissionResult SkiaRenderer::renderFrame(
         }
         canvas->restore();
     }
+    if(result.code==BackendSubmissionCode::kAccepted){
+        AXIOM_FRAME_TIMING_SCOPE(snapshotTiming,navigation_snapshot);
+        try {
+            const auto bytes=std::uint64_t(metrics.physicalWidth)*metrics.physicalHeight*4;
+            if(resourceBudget_ && renderCacheOptions_.enabled && bytes<=renderCacheOptions_.maxBytes && selectionOverlay==nullptr &&
+               plan.background.mode==foundation::BackgroundMode::kPlain && !plan.transparentBackground){
+                navigationCache_.reset();
+                const auto reservation=resourceBudget_->reserve(resources::ResourceClass::kNavigation,bytes,true);
+                if(!reservation)throw std::bad_alloc();
+                resources::ResourceLease lease(resourceBudget_,*reservation);
+                auto candidate=std::make_shared<NavigationCache>();candidate->lease=std::move(lease);
+                candidate->provider=&provider;candidate->image=acquired.frame.surface->makeImageSnapshot();
+                candidate->frame=std::make_unique<FrameState>(plan.frame);
+                candidate->transform=plan.referenceDrawList.worldToView;
+                const auto& color=plan.background.color;
+                candidate->background=SkColor4f{color[0],color[1],color[2],color[3]}.toSkColor();
+                navigationCache_=std::move(candidate);
+            }else navigationCache_.reset();
+        }catch(const std::bad_alloc&){navigationCache_.reset();}
+    }
     provider.release();
-    if (result.code != BackendSubmissionCode::kAccepted) return result;
+    if (result.code != BackendSubmissionCode::kAccepted) {clearRenderCache();return result;}
     ++submissions_;
-    ++rasterizations_;
+    rasterizations_+=cache?cache->work.rasterizedGroups-beforeRaster:1;
+    AXIOM_FRAME_TIMING_SCOPE(presentTiming,provider_present);
+    const auto presented=provider.present();
+    AXIOM_FRAME_TIMING_END(presentTiming);
+    if(presented.code!=BackendSubmissionCode::kAccepted)clearRenderCache();
+    return presented;
+}
+
+BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
+    const CanonicalViewportTransform& camera,const FrameState& current){
+    const auto cache=navigationCache_;
+    if(!cache || !cache->image || cache->provider!=&provider || !cache->frame ||
+       cache->frame->viewId!=current.viewId || cache->frame->sceneGeneration!=current.sceneGeneration ||
+       cache->frame->sceneReadToken!=current.sceneReadToken || cache->frame->metrics!=current.metrics ||
+       cache->frame->metricsGeneration!=current.metricsGeneration ||
+       cache->frame->surfaceGeneration!=current.surfaceGeneration ||
+       !std::isfinite(camera.scale)||camera.scale<=0 ||
+       !std::isfinite(camera.translationX)||!std::isfinite(camera.translationY))
+        return BackendSubmissionResult::retry("navigation source unavailable");
+    const auto acquired=provider.acquire();
+    if(acquired.code!=SkiaSurfaceAcquireCode::kAcquired || !acquired.frame.surface)
+        return BackendSubmissionResult::retry("navigation target unavailable");
+    if(acquired.frame.generation!=current.surfaceGeneration.value()){
+        provider.release();return BackendSubmissionResult::rejected("stale navigation surface");
+    }
+    const auto& old=cache->transform;
+    if(old.a<=0 || old.d!=old.a || old.b!=0 || old.c!=0){
+        provider.release();return BackendSubmissionResult::retry("navigation transform ineligible");
+    }
+    const float ratio=camera.scale/old.a;
+    const float sx=current.metrics.physicalWidth/current.metrics.logicalWidth;
+    const float sy=current.metrics.physicalHeight/current.metrics.logicalHeight;
+    auto* canvas=acquired.frame.surface->getCanvas();
+    canvas->save();canvas->resetMatrix();canvas->clear(cache->background);
+    canvas->translate((camera.translationX-ratio*old.tx)*sx,(camera.translationY-ratio*old.ty)*sy);
+    canvas->scale(ratio,ratio);
+    canvas->drawImage(cache->image,0,0,SkSamplingOptions(SkFilterMode::kLinear));
+    canvas->restore();provider.release();
     return provider.present();
 }
+BackendSubmissionResult SkiaRenderer::renderNavigation(SkiaSurfaceProvider& provider,
+    const CanonicalViewportTransform& camera,const FrameState& current,const NavigationSourceQuery& query,bool allowPrewarm){
+    if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
+        resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
+    if(!navigationTiles_)navigationTiles_=std::make_shared<internal::SkiaNavigationTiles>();
+    std::optional<BackendSubmissionResult> feedbackFailure;
+    const auto retained=[&]()->bool{
+        const auto cache=navigationCache_;if(!cache||!cache->frame)return false;
+        const auto& old=cache->transform;const auto previous=cache->feedbackCamera;
+        const bool changed=!previous||previous->scale!=camera.scale||
+            previous->translationX!=camera.translationX||previous->translationY!=camera.translationY;
+        const double ratio=camera.scale/old.a;
+        const double x=camera.translationX-ratio*old.tx,y=camera.translationY-ratio*old.ty;
+        // Complete current viewport only. A cold zoom-out never uses cropped pixels.
+        if(!changed||old.a<=0||old.d!=old.a||old.b!=0||old.c!=0||x>0||y>0||
+           x+cache->frame->metrics.logicalWidth*ratio<current.metrics.logicalWidth||
+           y+cache->frame->metrics.logicalHeight*ratio<current.metrics.logicalHeight)return false;
+        const auto feedback=renderNavigation(provider,camera,current);
+        if(feedback.code!=BackendSubmissionCode::kAccepted){feedbackFailure=feedback;return false;}
+        cache->feedbackCamera=camera;return true;
+    };
+    try{
+        const auto result=navigationTiles_->render(provider,camera,current,query,resourceEpoch_,renderCacheOptions_,resourceBudget_,allowPrewarm,retained);
+        if(feedbackFailure){navigationTiles_.reset();return *feedbackFailure;}
+        if(result.code!=BackendSubmissionCode::kAccepted)navigationTiles_.reset();
+        return result;
+    }catch(const std::bad_alloc&){navigationTiles_.reset();return BackendSubmissionResult::retry("world navigation allocation failure");}
+}
+void SkiaRenderer::cancelNavigationWork() noexcept {if(navigationTiles_)navigationTiles_->cancelWork();}
+NavigationWork SkiaRenderer::navigationWork() const noexcept {
+    return navigationTiles_?navigationTiles_->work:NavigationWork{};
+}
+void SkiaRenderer::setRenderCacheOptions(RenderCacheOptions options) {
+    clearRenderCache();resourceBudget_.reset();renderCacheOptions_=options;
+}
+void SkiaRenderer::clearRenderCache() noexcept {navigationTiles_.reset();navigationCache_.reset();if(renderCache_)renderCache_->clear();}
+RenderCacheWork SkiaRenderer::renderCacheWork()const noexcept{return renderCache_?renderCache_->work:RenderCacheWork{};}
+RenderDamage SkiaRenderer::renderDamage()const{return renderCache_?renderCache_->damage:RenderDamage{};}
 
 BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     SkiaSurfaceProvider& provider, const FramePlan& plan,
@@ -145,6 +309,21 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
         return BackendSubmissionResult::rejected(acquired.message);
     }
     auto* canvas = acquired.frame.surface->getCanvas();
+    if(acquired.frame.generation!=plan.frame.surfaceGeneration.value()||
+       acquired.frame.surface->width()!=int(plan.frame.metrics.physicalWidth)||
+       acquired.frame.surface->height()!=int(plan.frame.metrics.physicalHeight)){
+        provider.release();return BackendSubmissionResult::rejected("stale transient target");
+    }
+    const auto validation=internal::validateReferencePlan(plan);
+    if(validation.code!=BackendSubmissionCode::kAccepted){provider.release();return validation;}
+    internal::SkiaRenderCache* cache=nullptr;
+    try{
+        if(!resourceBudget_)resourceBudget_=std::make_shared<resources::ResourceBudgetManager>(
+            resources::BudgetLimits{renderCacheOptions_.maxBytes,renderCacheOptions_.maxBytes*3});
+        if(!renderCache_)renderCache_=std::make_shared<internal::SkiaRenderCache>();
+        renderCache_->budget=resourceBudget_;renderCache_->options=renderCacheOptions_;
+        renderCache_->begin(plan,&provider,*acquired.frame.surface,resourceEpoch_);cache=renderCache_.get();
+    }catch(const std::bad_alloc&){clearRenderCache();}
     // Selection/creation transient presentation is a complete replacement
     // frame for the overlay window.  Drawing only the moved object on a
     // transparent surface leaves the old canonical pixels visible underneath
@@ -153,7 +332,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     // whole scene first and then add the editing chrome.
     const auto scene = internal::drawReferencePlanToSkCanvas(
         *canvas, plan, images_, &textResources_,
-        !selectionOverlay->creationPreview().has_value());
+        !selectionOverlay->creationPreview().has_value(),cache);
     if (scene.code != BackendSubmissionCode::kAccepted) {
         provider.release();
         return scene;
@@ -161,7 +340,7 @@ BackendSubmissionResult SkiaRenderer::renderTransientOverlay(
     if (selectionOverlay->creationPreview()) {
         internal::drawTransientObjectToSkCanvas(*canvas, plan,
                                                  *selectionOverlay->creationPreview(),selectionOverlay->creationRoute());
-        internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_);
+        internal::drawInkEntriesToSkCanvas(*canvas, plan, images_, &textResources_,cache);
     }
     canvas->save();
     canvas->scale(plan.frame.metrics.physicalWidth / plan.frame.metrics.logicalWidth,
@@ -292,6 +471,76 @@ BackendSubmissionResult SkiaRenderer::renderPreview(
         }
     };
     auto drawContour = [&](const PreviewGeometry::Contour& contour) {
+        if(contour.compactConfig&&contour.compactChunks){
+            auto config=*contour.compactConfig;
+            if (!style.preferCapturedPaint) {
+                if (style.overrideColor)
+                    config.color = {style.red, style.green, style.blue, 1.0};
+                // As with outline/dab previews, this is the effective overlay
+                // alpha. Do not multiply by the captured stroke opacity again.
+                if (style.overrideOpacity) {
+                    config.color[3] = 1.0;
+                    config.opacity = alpha;
+                }
+            }
+            const auto info=acquired.frame.surface->imageInfo();
+            const auto bytes=std::uint64_t(info.width())*info.height()*4;
+            if(!compactCache_||compactCache_->generation!=geometry.surfaceGeneration.value()||compactCache_->scale!=geometry.viewport.scale||
+               compactCache_->x!=geometry.viewport.translationX||compactCache_->y!=geometry.viewport.translationY||compactCache_->px!=geometry.logicalToPhysicalX||compactCache_->py!=geometry.logicalToPhysicalY||compactCache_->width!=info.width()||compactCache_->height!=info.height()){
+                compactCache_=std::make_shared<CompactCache>();compactCache_->generation=geometry.surfaceGeneration.value();
+                compactCache_->scale=geometry.viewport.scale;compactCache_->x=geometry.viewport.translationX;compactCache_->y=geometry.viewport.translationY;
+                compactCache_->px=geometry.logicalToPhysicalX;compactCache_->py=geometry.logicalToPhysicalY;compactCache_->width=info.width();compactCache_->height=info.height();
+            }
+            auto& cache=*compactCache_;
+            // Persistent coverage is view-bounded and disposable. Large hosts
+            // fall back to clipped reconstruction rather than exceed budget.
+            const bool gpuMaterial=config.algorithmVersion==5||config.algorithmVersion==6;
+            // Keep a 2x 1000x650 view incremental: two view surfaces fit the
+            // existing 32MiB aggregate budget. Oversized views stay bounded.
+            const std::uint64_t surfaceLimit=gpuMaterial?16*1024*1024:8*1024*1024;
+            if(bytes>surfaceLimit){
+                std::vector<const ink::BrushPreviewDelta::Chunk*> chunks;
+                for(auto c=contour.compactChunks.get();c;c=c->previous.get())chunks.push_back(c);
+                std::vector<foundation::InkKnot> knots;
+                for(auto i=chunks.rbegin();i!=chunks.rend();++i)knots.insert(knots.end(),(*i)->knots.begin(),(*i)->knots.end());
+                compactWork_.generatedKnots+=knots.size();internal::drawCompactStrokeToSkCanvas(*canvas,config,knots,contour.compactSeed);return;
+            }
+            const auto stableLimit=gpuMaterial?32*1024*1024-bytes:
+                cache.scratch?32*1024*1024-2*bytes:24*1024*1024;
+            const auto nextCount=cache.entries.size()+(cache.entries.contains(contour.session)?0:1);
+            if(bytes*nextCount>stableLimit)cache.entries.clear();
+            auto& entry=cache.entries[contour.session];
+            auto prefix=contour.compactChunks->previous;
+            std::vector<const ink::BrushPreviewDelta::Chunk*> added;
+            auto c=prefix;
+            while(c&&c!=entry.prefix){added.push_back(c.get());c=c->previous;}
+            if(!entry.surface||c!=entry.prefix||entry.config!=config){
+                entry.surface=gpuMaterial?acquired.frame.surface->makeSurface(info):SkSurfaces::Raster(info);
+                if(!entry.surface)return;
+                entry.surface->getCanvas()->clear(SK_ColorBLACK);entry.prefix.reset();added.clear();
+                for(auto v=prefix;v;v=v->previous)added.push_back(v.get());
+            }
+            auto* stable=entry.surface->getCanvas();stable->save();
+            stable->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);
+            stable->translate(geometry.viewport.translationX,geometry.viewport.translationY);stable->scale(geometry.viewport.scale,geometry.viewport.scale);
+            for(auto i=added.rbegin();i!=added.rend();++i){compactWork_.generatedKnots+=(*i)->knots.size();if(config.algorithmVersion==4)internal::drawCompactContourCoverageToSkCanvas(*stable,config,(*i)->contour);
+                else internal::drawCompactCoverageToSkCanvas(*stable,config,(*i)->knots,(*i)->startDistance,contour.compactChunks->totalDistance,contour.compactSeed);}
+            stable->restore();entry.prefix=prefix;entry.config=config;
+            // Use the target backend, retaining one disposable scratch. A CPU
+            // Raster here interprets every procedural shader pixel on Web.
+            if(gpuMaterial&&!cache.scratch)cache.scratch=acquired.frame.surface->makeSurface(info);
+            auto combined=gpuMaterial?cache.scratch:SkSurfaces::Raster(info);if(!combined)return;
+            auto* temporary=combined->getCanvas();temporary->resetMatrix();temporary->clear(SK_ColorBLACK);
+            temporary->drawImage(entry.surface->makeImageSnapshot(),0,0);
+            temporary->scale(geometry.logicalToPhysicalX,geometry.logicalToPhysicalY);
+            temporary->translate(geometry.viewport.translationX,geometry.viewport.translationY);temporary->scale(geometry.viewport.scale,geometry.viewport.scale);
+            compactWork_.generatedKnots+=contour.compactChunks->knots.size();
+            if(config.algorithmVersion==4)internal::drawCompactContourCoverageToSkCanvas(*temporary,config,contour.compactChunks->contour);
+            else internal::drawCompactCoverageToSkCanvas(*temporary,config,contour.compactChunks->knots,contour.compactChunks->startDistance,contour.compactChunks->totalDistance,contour.compactSeed);
+            internal::compositeCompactCoverageToSkCanvas(*canvas,*combined->makeImageSnapshot(),config,contour.compactSeed);
+            compactWork_.retainedBytes=bytes*cache.entries.size();compactWork_.temporaryBytes=bytes;
+            return;
+        }
         SkPaint contourPaint = paint;
         if (contour.hasPaint && style.preferCapturedPaint) {
             const float effectiveAlpha = std::clamp(contour.alpha * contour.opacity, 0.0F, 1.0F);

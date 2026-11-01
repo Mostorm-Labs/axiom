@@ -31,11 +31,38 @@ std::optional<BrushSample> BrushSession::normalize(const BrushSample& sample) co
 }
 
 BrushSession::BrushSession(std::uint64_t id, ResolvedBrushState state) : id_(id), state_(std::move(state)) {}
-bool BrushSession::begin() { if (active_ || id_ == 0) return false; active_ = true; return true; }
+bool BrushSession::begin() {
+    if (active_ || id_ == 0) return false;
+    if (state_.package.compactConfig && !compact_) {
+        CompactBrushConfig c;
+        c.geometryEpsilon = std::min(.25, state_.package.compactConfig->size / 32.);
+        c.algorithmVersion = state_.package.compactConfig->algorithmVersion;
+        const auto& config=*state_.package.compactConfig;
+        c.pressureModel=config.pressureModel;c.size=config.size;c.streamline=config.streamline;
+        c.smoothing=config.smoothing;c.endTaper=config.endTaper;c.geometryConfig=config;
+        c.pressureSource = state_.package.compactConfig->pressureSource == foundation::InkPressureSource::kDevice
+            ? BrushPressureSource::kDevice : BrushPressureSource::kSimulated;
+        compact_.emplace(c, state_.seed);
+    }
+    active_ = true;
+    return true;
+}
 BrushSessionError BrushSession::append(std::span<const BrushSample> confirmed,
                                        std::span<const BrushSample> predicted,
                                        BrushPreviewDelta& out) {
     if (!active_) { error_ = BrushSessionError::kInvalid; return error_; }
+    if(compact_){
+        std::vector<TimedBrushSample> c,p;
+        for(const auto& s:confirmed)c.push_back({s.x,s.y,s.pressure,s.pressurePresent,s.sequence,s.timestampNs,s.pressureCapability,s.terminal});
+        for(const auto& s:predicted)p.push_back({s.x,s.y,s.pressure,s.pressurePresent,s.sequence,s.timestampNs,s.pressureCapability,s.terminal});
+        if(!compact_->append(c,p))return error_=BrushSessionError::kPressure;
+        out={};out.revision=++revision_;out.compactSeed=state_.seed;out.compactConfig=state_.package.compactConfig;out.compactChunks=compact_->chunks();
+        out.hasPaint=true;const auto& paint=*out.compactConfig;
+        out.red=static_cast<float>(paint.color[0]);out.green=static_cast<float>(paint.color[1]);out.blue=static_cast<float>(paint.color[2]);
+        out.alpha=static_cast<float>(paint.color[3]);out.opacity=static_cast<float>(paint.opacity);
+        metrics_.appendEvaluations++;metrics_.maxAppendInputSamples=std::max<std::uint64_t>(metrics_.maxAppendInputSamples,c.size()+p.size());
+        return error_=BrushSessionError::kNone;
+    }
     auto sequence = lastSequence_;
     std::vector<BrushSample> normalizedConfirmed;
     normalizedConfirmed.reserve(confirmed.size());
@@ -95,6 +122,11 @@ BrushSessionError BrushSession::append(std::span<const BrushSample> confirmed,
     return error_ = BrushSessionError::kNone;
 }
 BrushSessionError BrushSession::seal(BrushCommitIntent& out) {
+    if(compact_){
+        if(!active_||compact_->confirmedCount()==0)return error_=BrushSessionError::kEmpty;
+        out={};out.session=id_;out.revision=++revision_;out.seed=state_.seed;out.compactConfig=state_.package.compactConfig;out.knots=compact_->knots();
+        active_=false;metrics_.sealEvaluations++;return error_=BrushSessionError::kNone;
+    }
     if (!active_ || confirmed_.empty()) { error_ = BrushSessionError::kEmpty; return error_; }
     std::vector<reference::VectorStrokeInput> input;
     for (const auto& sample : confirmed_) input.push_back({sample.x, sample.y, sample.pressurePresent ? sample.pressure : std::numeric_limits<double>::quiet_NaN()});
@@ -118,5 +150,5 @@ BrushSessionError BrushSession::seal(BrushCommitIntent& out) {
     active_ = false;
     return error_ = BrushSessionError::kNone;
 }
-void BrushSession::cancel() noexcept { active_ = false; confirmed_.clear(); }
+void BrushSession::cancel() noexcept { active_ = false; confirmed_.clear(); compact_.reset(); }
 }

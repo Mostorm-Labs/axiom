@@ -1,0 +1,168 @@
+{
+  "schema_version": "0.1",
+  "package_id": "INK-V2-01-v0.1",
+  "verification_spec_ref": {
+    "path": "verification-spec.md",
+    "sha256": "1b67317e46c14945ea0dc3c488cd98e85fdd5240b5d32e9c0d80ef7996b54ccd"
+  },
+  "profile_scope": [
+    "round-regular",
+    "round-handdrawn",
+    "laser-transient"
+  ],
+  "obligations": [
+    {
+      "id": "V-PRESSURE",
+      "requirement": "无硬件压力也有有效模拟；device 入口保留",
+      "oracle": "真正 source/capability ingress + G02/G03，独立公式参考",
+      "acceptance": "默认忽略伪 pressure；慢/快稳定段平均 p 差 >=.15；同轨迹 120/240Hz p 最大差 <=.03；同输入 batch 分区结果一致；非法批次零部分接受",
+      "profile_scope": [
+        "round-regular",
+        "round-handdrawn",
+        "laser-transient"
+      ],
+      "blocking_reason": "错误压力来源或采样频率依赖会改变所有笔画",
+      "evidence_required": "v-pressure.json"
+    },
+    {
+      "id": "V-PERSIST",
+      "requirement": "固化有效压力，不在回放重算",
+      "oracle": "真实 AddStroke/Snapshot/远端应用；禁用 live simulator/catalog 后恢复",
+      "acceptance": "压力/配置/seed/version exact roundtrip，输出几何在 frozen tolerance 内相同；缺失 evaluator/resource/version 明确拒绝",
+      "profile_scope": [
+        "round-regular",
+        "round-handdrawn",
+        "laser-transient"
+      ],
+      "blocking_reason": "数据无法确定性恢复或错误回放",
+      "evidence_required": "v-persist.json"
+    },
+    {
+      "id": "V-COMPACT",
+      "requirement": "新紧凑载体与圆头新写入不存展开副本",
+      "oracle": "实际 protobuf Operation 与 Snapshot 独立解码，字段计数和 byte 长度",
+      "acceptance": "dab/outline/raw 计数全为零；位置与压力只有一份；每笔数据 <=16KiB+18*K（K 为 retained knots，资源 blob 另计且全局去重）",
+      "profile_scope": [
+        "round-regular",
+        "round-handdrawn",
+        "laser-transient"
+      ],
+      "blocking_reason": "规范字节仍展开会违反用户空间目标",
+      "evidence_required": "v-compact.json",
+      "scope_note": "纹理视觉/纹理体积比较属于02，不作为01完成依赖"
+    },
+    {
+      "id": "V-RESAMPLE",
+      "requirement": "压缩中心线不丢几何/压力特征",
+      "oracle": "独立距离/宽度 oracle，G01/G02 高密度基准",
+      "acceptance": "max 几何偏差 <=min(.25,size/32)；压力重采样误差 <=.02；短点与急转保留；120/240Hz 编码体积差 <=15%",
+      "profile_scope": [
+        "round-regular",
+        "round-handdrawn",
+        "laser-transient"
+      ],
+      "blocking_reason": "压缩导致几何/压力特征丢失",
+      "evidence_required": "v-resample.json"
+    },
+    {
+      "id": "V-WORK",
+      "requirement": "长笔画不逐次重算/复制完整历史",
+      "oracle": "G05 实际输入访问、历史复制、几何生成/上传 byte 计数，非墙钟伪计数",
+      "acceptance": "N=2048 相对512、8192相对2048的总工作量比均<=5；append 无全历史 one-shot 调用；seal 全量求值至多一次；几何正确性不能因性能优化放宽",
+      "profile_scope": [
+        "round-regular",
+        "round-handdrawn",
+        "laser-transient"
+      ],
+      "blocking_reason": "长笔画二次工作会破坏实时输入",
+      "evidence_required": "v-work.json"
+    },
+    {
+      "id": "V-CACHE",
+      "requirement": "派生内存有界且可丢弃",
+      "oracle": "G06 真实 retained/upload/tile bytes + 清缓存后恢复",
+      "acceptance": "derived<=32MiB、临时tile<=16MiB；无完整常驻 dab 影子；视口外不生成纹理 tile；连续无变化帧生成次数0；清缓存后同像素/容差结果",
+      "profile_scope": [
+        "round-regular",
+        "round-handdrawn",
+        "laser-transient"
+      ],
+      "blocking_reason": "无界派生数据会把规范存储问题转移到内存",
+      "evidence_required": "v-cache.json"
+    },
+    {
+      "id": "V-PEN",
+      "requirement": "圆头规则/手绘可用",
+      "oracle": "公开设置与 G01/G02，native + Chrome",
+      "acceptance": "规则模式主体宽度恒定、圆头；手绘体现有效压力；尖角/收尾不意外断线；不对旧 R01 golden 反向改期望值",
+      "profile_scope": [
+        "round-regular",
+        "round-handdrawn",
+        "laser-transient"
+      ],
+      "blocking_reason": "规则/手绘模式未成为真实产品行为",
+      "evidence_required": "v-pen.json"
+    },
+    {
+      "id": "V-LASER",
+      "requirement": "瞬态激光不污染文档",
+      "oracle": "注入单调时钟的真实 Runtime/SDK + pause/close/focus/cancel",
+      "acceptance": "对象数/operation数/Undo/Snapshot字节不变；1000ms默认消退且空间/内存有界；无需新输入也继续动画与失效；普通导出无激光",
+      "profile_scope": [
+        "round-regular",
+        "round-handdrawn",
+        "laser-transient"
+      ],
+      "blocking_reason": "瞬态指示污染文档或留存轨迹",
+      "evidence_required": "v-laser.json"
+    },
+    {
+      "id": "V-LIFECYCLE",
+      "requirement": "预测/预览/提交/取消一致",
+      "oracle": "G07、data overload、retry/close、foreign token/source",
+      "acceptance": "prediction不改变confirmed/seed/提交；cancel无操作；每笔一次Undo；重试复用operation身份；正式材质预览与提交一致",
+      "profile_scope": [
+        "round-regular",
+        "round-handdrawn",
+        "laser-transient"
+      ],
+      "blocking_reason": "预测或取消泄漏为规范修改",
+      "evidence_required": "v-lifecycle.json"
+    },
+    {
+      "id": "V-CONSUMER",
+      "requirement": "公开接口与同构资源真正可用",
+      "oracle": "匹配 JS/types/WASM/resources Chrome外部消费者、原生shared Session、TS正负例",
+      "acceptance": "本包交付笔型可选择/读回，第三包覆盖全部六种；默认无压力可绘；invalid枚举/token/数值拒绝；不用private deep import；Demo实际参数影响图像",
+      "profile_scope": [
+        "round-regular",
+        "round-handdrawn",
+        "laser-transient"
+      ],
+      "blocking_reason": "内部测试不能证明外部能力可用",
+      "evidence_required": "v-consumer.json",
+      "scope_note": "只要求本包交付profile；03为全部六笔型（圆头两种模式）"
+    },
+    {
+      "id": "V-REGRESSION",
+      "requirement": "保留既有功能与旧数据读取",
+      "oracle": "基线旧brush fixtures、手绘两批/Table/Section/字体/导出consumer，boundary/descriptor/package检查",
+      "acceptance": "受影响必需项通过；新失败修复；历史失败绑定执行前真实记录，不直接沿用旧的22这个数量",
+      "profile_scope": [
+        "round-regular",
+        "round-handdrawn",
+        "laser-transient"
+      ],
+      "blocking_reason": "破坏已有数据/画板功能",
+      "evidence_required": "v-regression.json"
+    }
+  ],
+  "oracle_rules": [
+    "Tests observe real Runtime/SDK/encoded output, not source-string checks",
+    "Preserve pinned upstream reference and negative corpus; do not rewrite expected values to match product implementation",
+    "New tests/harnesses must implement the frozen oracle and record provenance",
+    "Reuse unchanged dependency evidence with exact source/build/input bindings instead of rerunning for status only"
+  ],
+  "wall_clock_timing": "corroborative_only",
+  "physical_device_and_hosted_windows_qualification": "optional_for_this_local_scope; do not claim verified if not run"
+}

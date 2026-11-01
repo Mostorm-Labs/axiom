@@ -1,0 +1,222 @@
+{
+  "schema_version": "0.1",
+  "package_id": "INK-V2-03-v0.1",
+  "result_root": "out/ink-v2/INK-V2-03-v0.1/",
+  "review_boundary": "shared local workspace; no remote evidence-only commit required",
+  "blocking": [
+    {
+      "artifact": "v-water.json",
+      "obligation": "V-WATER",
+      "minimum_fields": [
+        "package_sha256",
+        "source_manifest_sha256",
+        "build_identity",
+        "input_sha256",
+        "resource_hashes",
+        "oracle",
+        "command",
+        "exit_code",
+        "raw_observations",
+        "acceptance_evaluation"
+      ],
+      "not_satisfied_by": "A prose claim, screenshot alone or source grep"
+    },
+    {
+      "artifact": "v-persist.json",
+      "obligation": "V-PERSIST",
+      "minimum_fields": [
+        "package_sha256",
+        "source_manifest_sha256",
+        "build_identity",
+        "input_sha256",
+        "resource_hashes",
+        "oracle",
+        "command",
+        "exit_code",
+        "raw_observations",
+        "acceptance_evaluation"
+      ],
+      "not_satisfied_by": "A prose claim, screenshot alone or source grep"
+    },
+    {
+      "artifact": "v-compact.json",
+      "obligation": "V-COMPACT",
+      "minimum_fields": [
+        "package_sha256",
+        "source_manifest_sha256",
+        "build_identity",
+        "input_sha256",
+        "resource_hashes",
+        "oracle",
+        "command",
+        "exit_code",
+        "raw_observations",
+        "acceptance_evaluation"
+      ],
+      "not_satisfied_by": "A prose claim, screenshot alone or source grep"
+    },
+    {
+      "artifact": "v-size.json",
+      "obligation": "V-SIZE",
+      "minimum_fields": [
+        "package_sha256",
+        "source_manifest_sha256",
+        "build_identity",
+        "input_sha256",
+        "resource_hashes",
+        "oracle",
+        "command",
+        "exit_code",
+        "raw_observations",
+        "acceptance_evaluation"
+      ],
+      "not_satisfied_by": "A prose claim, screenshot alone or source grep"
+    },
+    {
+      "artifact": "v-resample.json",
+      "obligation": "V-RESAMPLE",
+      "minimum_fields": [
+        "package_sha256",
+        "source_manifest_sha256",
+        "build_identity",
+        "input_sha256",
+        "resource_hashes",
+        "oracle",
+        "command",
+        "exit_code",
+        "raw_observations",
+        "acceptance_evaluation"
+      ],
+      "not_satisfied_by": "A prose claim, screenshot alone or source grep"
+    },
+    {
+      "artifact": "v-work.json",
+      "obligation": "V-WORK",
+      "minimum_fields": [
+        "package_sha256",
+        "source_manifest_sha256",
+        "build_identity",
+        "input_sha256",
+        "resource_hashes",
+        "oracle",
+        "command",
+        "exit_code",
+        "raw_observations",
+        "acceptance_evaluation"
+      ],
+      "not_satisfied_by": "A prose claim, screenshot alone or source grep"
+    },
+    {
+      "artifact": "v-cache.json",
+      "obligation": "V-CACHE",
+      "minimum_fields": [
+        "package_sha256",
+        "source_manifest_sha256",
+        "build_identity",
+        "input_sha256",
+        "resource_hashes",
+        "oracle",
+        "command",
+        "exit_code",
+        "raw_observations",
+        "acceptance_evaluation"
+      ],
+      "not_satisfied_by": "A prose claim, screenshot alone or source grep"
+    },
+    {
+      "artifact": "v-lifecycle.json",
+      "obligation": "V-LIFECYCLE",
+      "minimum_fields": [
+        "package_sha256",
+        "source_manifest_sha256",
+        "build_identity",
+        "input_sha256",
+        "resource_hashes",
+        "oracle",
+        "command",
+        "exit_code",
+        "raw_observations",
+        "acceptance_evaluation"
+      ],
+      "not_satisfied_by": "A prose claim, screenshot alone or source grep"
+    },
+    {
+      "artifact": "v-consumer.json",
+      "obligation": "V-CONSUMER",
+      "minimum_fields": [
+        "package_sha256",
+        "source_manifest_sha256",
+        "build_identity",
+        "input_sha256",
+        "resource_hashes",
+        "oracle",
+        "command",
+        "exit_code",
+        "raw_observations",
+        "acceptance_evaluation"
+      ],
+      "not_satisfied_by": "A prose claim, screenshot alone or source grep"
+    },
+    {
+      "artifact": "v-regression.json",
+      "obligation": "V-REGRESSION",
+      "minimum_fields": [
+        "package_sha256",
+        "source_manifest_sha256",
+        "build_identity",
+        "input_sha256",
+        "resource_hashes",
+        "oracle",
+        "command",
+        "exit_code",
+        "raw_observations",
+        "acceptance_evaluation"
+      ],
+      "not_satisfied_by": "A prose claim, screenshot alone or source grep"
+    },
+    {
+      "artifact": "source-manifest.json",
+      "obligation": "repository/source/build binding",
+      "minimum_fields": [
+        "repository",
+        "task_anchor",
+        "observed_head",
+        "dirty_paths_and_sha256",
+        "package_sha256",
+        "compiler_and_build_assets"
+      ]
+    },
+    {
+      "artifact": "regression.json",
+      "obligation": "V-REGRESSION",
+      "minimum_fields": [
+        "baseline_identity",
+        "affected_checks",
+        "new_failures",
+        "historical_failures",
+        "platform_limits"
+      ]
+    },
+    {
+      "artifact": "result.json",
+      "obligation": "all required package obligations",
+      "minimum_fields": [
+        "status",
+        "package_sha256",
+        "actual_source_manifest_sha256",
+        "result_revision_if_committed_else_null",
+        "evidence_refs_and_sha256",
+        "demo_url",
+        "unverified_platforms"
+      ],
+      "status_rule": "Do not invent a commit SHA for a dirty result; no official Gate verdict."
+    }
+  ],
+  "corroborative": [
+    "named-host p50/p95/p99 timings",
+    "additional devices and actual pressure hardware",
+    "extra manual visual review"
+  ],
+  "unknown_provider_values": "null with reason, never invented",
+  "release_authorization": false
+}

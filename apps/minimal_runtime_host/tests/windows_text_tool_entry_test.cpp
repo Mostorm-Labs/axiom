@@ -1,3 +1,5 @@
+#include "host_font_resources.hpp"
+#include "canvas/debug_ui/snapshot_assembler.hpp"
 #include "imgui.h"
 #include "imgui_internal.h"
 
@@ -8,6 +10,14 @@
 
 namespace {
 POINTER_INFO nativePointer{};
+bool syntheticPointerClock = false;
+ULONGLONG pointerClockMs = 0;
+ULONGLONG observedTickCount64() {
+    return syntheticPointerClock ? pointerClockMs : ::GetTickCount64();
+}
+DWORD observedTickCount() {
+    return syntheticPointerClock ? static_cast<DWORD>(pointerClockMs) : ::GetTickCount();
+}
 BOOL observedPointer(UINT32 id, POINTER_INFO* out) {
     if (id != nativePointer.pointerId)
         return FALSE;
@@ -31,6 +41,8 @@ SHORT observedKeyState(int) {
 #define GetPointerTouchInfoHistory noTouchHistory
 #define GetPointerTouchInfo noTouchInfo
 #define GetKeyState observedKeyState
+#define GetTickCount64 observedTickCount64
+#define GetTickCount observedTickCount
 #define WinMain AxiomWindowEntryForTextToolTest
 #include "../windows_main.cpp"
 #undef WinMain
@@ -38,6 +50,8 @@ SHORT observedKeyState(int) {
 #undef GetPointerTouchInfoHistory
 #undef GetPointerTouchInfo
 #undef GetKeyState
+#undef GetTickCount64
+#undef GetTickCount
 
 int main(int argc, char** argv) {
     _set_error_mode(_OUT_TO_STDERR);
@@ -47,7 +61,7 @@ int main(int argc, char** argv) {
     const bool checkFocus = mode != "entry";
     State state;
     state.host = std::make_unique<MinimalRuntimeHost>();
-    state.facade = std::make_unique<MinimalRuntimeFacade>(*state.host);
+    state.facade = &state.host->publicComposition().controlFacade();
     const auto instance = GetModuleHandleW(nullptr);
     WNDCLASSW klass{};
     klass.hInstance = instance;
@@ -68,6 +82,32 @@ int main(int argc, char** argv) {
                                        &state);
     assert(owner);
     auto& composition = state.host->composition();
+    if (mode == "public-adapter") {
+        state.platformAdapter = std::make_unique<platform::WindowsRuntimeAdapter>(state.host->publicComposition(), owner);
+        if (!state.platformAdapter->bind(800, 600, 1.0F)) return 77;
+        assert(&state.host->publicComposition().controlFacade() == &composition.controlFacade());
+        debug_ui::DebugSnapshotAssembler assembler;
+        const auto snapshot = assembler.capture({state.facade, nullptr, nullptr, state.platformAdapter.get()});
+        assert(snapshot.platform.availability == debug_ui::DebugAvailability::kAvailable);
+        assert(snapshot.platform.value.width == 800 && snapshot.platform.value.height == 600);
+        assert(!state.platformAdapter->loadHostFonts(L"missing-axiom-font.otf", L"fonts"));
+        assert(state.platformAdapter->loadHostFonts(L"axiom-font.otf", L"fonts"));
+        assert(!state.host->publicComposition().controlFacade().readFontCatalog().entries.empty());
+        assert(!state.platformAdapter->loadHostFonts(L"axiom-font.otf", L"fonts"));
+        SendMessageW(owner, WM_TIMER, 1, 0);
+        assert(state.platformAdapter->frameStatus().canonicalWorkId != 0);
+        ShowWindow(owner, SW_SHOWNOACTIVATE);
+        InvalidateRect(owner, nullptr, FALSE);
+        UpdateWindow(owner);
+        assert(state.platformAdapter->frameStatus().canonicalWorkId == 0);
+        SendMessageW(owner, WM_SIZE, 0, MAKELPARAM(640, 480));
+        assert(composition.surfaceSnapshot().width == 640);
+        assert(state.platformAdapter->shutdown());
+        assert(composition.close());
+        DestroyWindow(owner);
+        std::puts("PASS Windows Host public adapter same-owner surface and resize");
+        return 0;
+    }
     assert(composition.bindSurface(800, 600));
     assert(state.host->registerSource(1));
     assert(minimal_runtime_host::bindHostTextFont(composition, "axiom-font.otf"));
@@ -136,10 +176,13 @@ int main(int argc, char** argv) {
             assert(state.facade->submitCanvasControl(control).state == runtime::ProductControlState::kQueued);
             assert(composition.ownerPump());
         };
-        DWORD clock = GetTickCount();
+        // These are synthetic native facts, not hardware delivery timings.
+        // Synchronous rendering must not turn a 120 ms double tap into a
+        // >500 ms pair or turn a 40 ms tap into a long press under CPU load.
+        pointerClockMs = GetTickCount64();
+        syntheticPointerClock = true;
         const auto touch = [&](UINT message, UINT32 id, int x, int y, DWORD elapsed = 40) {
-            Sleep(elapsed);
-            clock = GetTickCount();
+            pointerClockMs += elapsed;
             nativePointer = {};
             nativePointer.pointerType = PT_TOUCH;
             nativePointer.pointerId = id;
@@ -147,7 +190,7 @@ int main(int argc, char** argv) {
             nativePointer.hwndTarget = owner;
             nativePointer.ptPixelLocation = {x, y};
             assert(ClientToScreen(owner, &nativePointer.ptPixelLocation));
-            nativePointer.dwTime = clock;
+            nativePointer.dwTime = static_cast<DWORD>(pointerClockMs);
             nativePointer.pointerFlags = message == WM_POINTERUP ? POINTER_FLAG_UP :
                 message == WM_POINTERDOWN ? POINTER_FLAG_DOWN | POINTER_FLAG_INCONTACT :
                                             POINTER_FLAG_UPDATE | POINTER_FLAG_INCONTACT;
@@ -182,6 +225,7 @@ int main(int argc, char** argv) {
             const auto generation = composition.controlFacade().readRuntimeState().identity.documentRevision;
             // The tap that selected the Shape plus the next rapid tap enters
             // its label editor; touch must not depend on promoted mouse clicks.
+            if (preset == 0) Sleep(600); // Processing delay does not alter source event facts.
             tap(centerX, y + 40, 120);
             assert(state.facade->readTextEditor().phase == runtime::TextPhase::kEditing);
             assert(state.facade->readTextEditor().token.object == selected);
@@ -350,7 +394,7 @@ int main(int argc, char** argv) {
         state.debugUi = std::make_unique<debug_ui::WindowsDebugUiHost>();
         assert(state.debugUi->initialize(owner));
         state.controller = std::make_unique<debug_ui::DebugController>(
-            debug_ui::DebugControllerContext{state.facade.get()});
+            debug_ui::DebugControllerContext{state.facade});
         state.controller->uiState().setWorkspace(debug_ui::WorkspaceId::kControl);
         state.debugUi->setController(state.controller.get());
         auto& io = ImGui::GetIO();
@@ -438,7 +482,7 @@ int main(int argc, char** argv) {
     state.debugUi = std::make_unique<debug_ui::WindowsDebugUiHost>();
     assert(state.debugUi->initialize(owner));
     state.controller = std::make_unique<debug_ui::DebugController>(
-        debug_ui::DebugControllerContext{state.facade.get()});
+        debug_ui::DebugControllerContext{state.facade});
     state.controller->uiState().setWorkspace(debug_ui::WorkspaceId::kControl);
     state.debugUi->setController(state.controller.get());
     auto& io = ImGui::GetIO();

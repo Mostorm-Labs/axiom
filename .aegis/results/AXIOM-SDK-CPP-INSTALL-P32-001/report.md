@@ -1,0 +1,7 @@
+# C++ install/lifecycle initial Windows profile
+
+The source baseline is the prior C++ bridge revision recorded in `manifest.json`. The user requested this bounded increment; this record is not Control Review, SDK release or Gate acceptance. Build/test inputs were the working-tree changes committed alongside this evidence, not an independently clean revision.
+
+A real external Windows x64 Release/MSVC `/MT` consumer installs the libraries and public headers outside the repository, configures and links the installed CMake target, opens and binds two separate Runtime owners, creates a Section through the borrowed public facade, reads the actual receipt and state, performs Undo, closes the first owner and observes that the other remains usable. The five-step runner includes an incompatible `/MD` rejection. See `sdk-cpp-install-final.json`. Initial missing package and initial unguarded `/MD` negative failures are retained as RED results. The package checks exact producer compiler and locked Semantic/Skia manifest hashes; individual SDK artifact integrity is supplied by the existing resolvers.
+
+Windows host build and six selected CTests passed. Web demo WASM build and real headless Chrome selection regression passed; `sdk-cpp-install-chrome.log` records the exact result. Synthetic browser input is not physical validation. Commands, exits, output and hashes are retained. This initial profile does not yet expose the full platform/input/resource/frame API, installable Web profile, stable C++ ABI, or full SDK-01 functionality. D07 OOM remains unresolved.

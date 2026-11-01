@@ -1,0 +1,32 @@
+{
+  "task": "image-export-v1",
+  "status": "scoped-execution-contract",
+  "repository": {"provider":"github","full_name":"Mostorm-Labs/axiom"},
+  "task_anchor": {"revision":"a884a7a22db911f71047c78e9cb1f0253f3e5089","relation":"ancestor"},
+  "authorization": "User requested board PNG/JPG/JPEG export, reviewed the offscreen shared-Runtime approach, accepted background implementation and requested image export next.",
+  "authority": ["AGENTS.md","docs/adr/0025-product-shell-page-operation-data-runtime.md","docs/planning/sdk/js-v1-contract.md","docs/planning/sdk/windows-consumer-v1.md","docs/planning/sdk/shell-axis-preview-contract.md"],
+  "decisions": {
+    "owner": "Read-only owner-thread Runtime export. Shared Scene visibility/ordering, DirectReferenceSource, text/image services and Skia drawing; a separate CPU raster target and encoder. No capture/resize/pan of the live surface and no second document or renderer command mapping.",
+    "capture": "Capture committed semantic generation and immutable derived content. Exclude selection/caret/handles, provisional creation, drag/crop overrides, active ink and IME preedit. Export must not finish text or mutate canonical state, History, camera, selection, presentation counters, or outbound Operations. Reject reentry, wrong thread, closed/unavailable owner, conflicting publication or stale requested generation.",
+    "region": "Default bounds are the union of visible non-Group canonical render records, including content outside the current viewport. Empty documents export the finite current viewport. An optional explicit world-space [left,top,right,bottom] rectangle replaces automatic bounds. Scale is pixels per world unit, default 1. Padding is output pixels, default 16; output dimensions round up and returned bounds include padding/rounding.",
+    "formats": "PNG and JPEG. The JS/JSON jpg alias uses JPEG bytes and image/jpeg MIME. JPEG quality in [0,1], default 0.92. Validated PNG quality is otherwise ignored. Reuse accepted prebuilt Skia encoding; no new dependency or lock edits.",
+    "background": "Default document background including its pattern; includePattern=false suppresses dots/grid. PNG may request transparent background, which excludes the background/pattern. An explicit opaque RGBA color replaces document background with a solid color. JPEG transparent requests reject; no silent black flattening or format fallback. Export composites each object erase mask within its own layer so erased regions reveal the requested background (including transparent), without changing legacy live-surface behavior.",
+    "limits": "Dimensions 1..8192, at most 16777216 output pixels, at most 128 MiB encoded output; finite positive scale, finite ordered nonempty bounds, integer padding 0..1024, finite color/quality ranges. Validate dimensions before allocation; return no partial bytes on failure. Missing/failed image or required text font resources reject rather than exporting placeholders.",
+    "public_api": "Web exportImage(options) returns Promise<{bytes,mimeType,width,height,bounds,generation}> with owned Uint8Array and exact decimal-string generation. Matching source facade value DTOs and Windows caller wrapper use existing JSON/owned buffer ABI; no new DLL export and no Scene/Skia/WASM-owner exposure. Demo owns filename, Blob/download and UI, using the public API only.",
+    "non_goals": ["PDF/SVG/video","clipboard","new document or Operation semantics","worker/tiled/unlimited-size export","storage/cloud provider","Windows physical acceptance","fixing independently recorded preexisting repository failures","automatic release/push of export changes"]
+  },
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {"required_changes":["public export DTO/API and strict validation","owner-side committed offscreen frame preparation","shared raster PNG/JPEG encoding and transparency","JS/TS and Windows caller bindings","Demo format/scale/background controls and download"],"forbidden_changes":["dependency rebuilds/lock changes","live viewport capture or mutation as full-content export","canonical mutations or new History/Document owner","internal types in consumer ABI","frozen historical corpus edits","unrelated feature work"]},
+    "tests": {"required":[
+      {"id":"EX-CONTENT","command_or_oracle":"Native and real-browser public consumers decode PNG/JPEG; check literal bounds, dimensions, colors and offscreen/negative-coordinate objects; hidden objects excluded","expected_result":"Correct complete content and requested encoding/background; no editor chrome","blocking_reason":"Detects truncated or incorrect exported images"},
+      {"id":"EX-STATE","command_or_oracle":"Compare camera, selection, semantic generation, Snapshot bytes and outbound queue before/after export, including active text/creation where feasible","expected_result":"Read-only export preserves editing state and uses committed content","blocking_reason":"Detects document corruption and accidental commit"},
+      {"id":"EX-ERROR","command_or_oracle":"Public malformed options, non-finite values, oversized requests, stale generation, missing image/font, wrong-thread/closed owner","expected_result":"Explicit rejection without partial bytes or state changes","blocking_reason":"Detects bad allocations, stale results and placeholder exports"},
+      {"id":"EX-BOUNDARY","command_or_oracle":"Relevant native CTest, actual Chrome/WASM export and Demo download, JS API/types, package and header/export checks, runtime boundary checker, configured full CTest suite with previously recorded failures classified","expected_result":"Affected checks pass; package remains encapsulated; report exact exceptions","blocking_reason":"Detects integration/consumer regressions"}
+    ]},
+    "hosted_verification":{"required":[],"optional":["Windows CI/device acceptance"]},
+    "evidence":{"blocking":["native logs","real browser decoded-image/download results","same-build hashes"],"corroborative":["manual UI inspection"]},
+    "terminal_success":{"all_of":["all required export behavior implemented and verified","matching Web demo served for testing","report exact checks and remaining platform/repository limitations"]},
+    "terminal_blockers":{"explicit_classes":["AUTHORITY_CONFLICT","MISSING_REQUIRED_INPUT","ENVIRONMENT_BLOCKER","FROZEN_VERIFICATION_FAILURE","NEW_HIGH_IMPACT_FAILURE_MODE"]},
+    "return_policy":{"continue_until_terminal_state":true}
+  }
+}

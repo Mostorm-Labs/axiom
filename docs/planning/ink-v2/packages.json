@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "initiative": "ink-v2",
+  "date": "2026-11-01",
+  "status": "PACKAGES_PREPARED_NOT_DISPATCHED",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "task_anchor": {
+    "revision": "af5b1778284211c3834957084dd0a03e48308d69",
+    "relation": "ancestor"
+  },
+  "packages": [
+    {
+      "id": "INK-V2-01-v0.1",
+      "rel": ".aegis/packages/INK-V2-01-v0.1",
+      "hash": "e29f79f1166ede03d2c2244600db36cf10edac6a559610db4a0b40e263b0936e"
+    },
+    {
+      "id": "INK-V2-02-v0.1",
+      "rel": ".aegis/packages/INK-V2-02-v0.1",
+      "hash": "39faefd557c7ec42fbecdb1ab6bed22e0ca7b74c6805bc34c8d91dd84db9dfea"
+    },
+    {
+      "id": "INK-V2-03-v0.1",
+      "rel": ".aegis/packages/INK-V2-03-v0.1",
+      "hash": "9dc5ea188f057e868161b9266a5a18e6b2cbc25d6fff7ff1b85b1a7f5c17ea30"
+    }
+  ],
+  "requirements": [
+    "default simulated pressure; explicit device capability path",
+    "compact texture records; no persistent expanded dabs"
+  ],
+  "execution_started": false
+}

@@ -57,6 +57,7 @@ PresentFeedbackDisposition mappedFeedback(WebSurfaceHost& host, const PresentedF
 
 void rejectsStaleSurfaceAndAcceptsFreshDprMetrics() {
     WebSurfaceHost host{surface(10, 20)};
+    assert(&host.publicComposition().controlFacade() == &host.composition().controlFacade());
     assert(host.bind(host.lifecycle().current()) == WebSurfaceDisposition::kRebound);
     assert(host.bind(surface(9, 20)) == WebSurfaceDisposition::kRejectedStale);
     const auto before = host.lifecycle().current();
@@ -104,6 +105,9 @@ void runtimeCompositionCanonicalFeedbackClosesTheHandoff() {
 
 void compositionAndPlatformShareSurfaceIdentity() {
     WebSurfaceHost host{surface(1, 1, metrics(320U, 180U))};
+    const auto publicSurface = host.publicComposition().surfaceMetrics();
+    assert(publicSurface && publicSurface->available && publicSurface->viewId == kView.value());
+    assert(publicSurface->width == 320U && publicSurface->height == 180U);
     const auto runtimeGeneration = host.composition().surfaceSnapshot().surfaceGeneration;
     assert(runtimeGeneration != 0U);
     assert(host.lifecycle().current().surfaceGeneration.value() == runtimeGeneration);

@@ -1,0 +1,809 @@
+{
+  "status": "DRAFT_REVIEW_NOT_ACCEPTED",
+  "scope": "SDK-01 verification applicability and current V1 symbol inventory; no product PASS",
+  "reference": "docs/planning/sdk/verification.md",
+  "functions": [
+    {
+      "symbol": "canvas_runtime_get_abi_version",
+      "disposition": "required",
+      "owner": "RuntimeComposition lifecycle and public handle/error adapter",
+      "inventory_note": "SDK-01 required core; diagnostics optional but truthful",
+      "family_refs": [
+        "API01",
+        "API02",
+        "API03"
+      ],
+      "case_group": "LIFECYCLE",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_status_message",
+      "disposition": "required",
+      "owner": "RuntimeComposition lifecycle and public handle/error adapter",
+      "inventory_note": "SDK-01 required core; diagnostics optional but truthful",
+      "family_refs": [
+        "API01",
+        "API02",
+        "API03"
+      ],
+      "case_group": "LIFECYCLE",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_get_last_error",
+      "disposition": "required",
+      "owner": "RuntimeComposition lifecycle and public handle/error adapter",
+      "inventory_note": "SDK-01 required core; diagnostics optional but truthful",
+      "family_refs": [
+        "API01",
+        "API02",
+        "API03"
+      ],
+      "case_group": "LIFECYCLE",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_runtime_create",
+      "disposition": "required",
+      "owner": "RuntimeComposition lifecycle and public handle/error adapter",
+      "inventory_note": "SDK-01 required core; diagnostics optional but truthful",
+      "family_refs": [
+        "API01",
+        "API02",
+        "API03"
+      ],
+      "case_group": "LIFECYCLE",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_runtime_destroy",
+      "disposition": "required",
+      "owner": "RuntimeComposition lifecycle and public handle/error adapter",
+      "inventory_note": "SDK-01 required core; diagnostics optional but truthful",
+      "family_refs": [
+        "API01",
+        "API02",
+        "API03"
+      ],
+      "case_group": "LIFECYCLE",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_runtime_get_capabilities",
+      "disposition": "required",
+      "owner": "RuntimeComposition lifecycle and public handle/error adapter",
+      "inventory_note": "SDK-01 required core; diagnostics optional but truthful",
+      "family_refs": [
+        "API01",
+        "API02",
+        "API03"
+      ],
+      "case_group": "LIFECYCLE",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_runtime_copy_diagnostics",
+      "disposition": "required",
+      "owner": "RuntimeComposition lifecycle and public handle/error adapter",
+      "inventory_note": "SDK-01 required core; diagnostics optional but truthful",
+      "family_refs": [
+        "API01",
+        "API02",
+        "API03"
+      ],
+      "case_group": "LIFECYCLE",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_document_open",
+      "disposition": "required",
+      "owner": "RuntimeComposition / real document and codec owners",
+      "inventory_note": "SDK-01 handle core; data/recovery SDK-02 required pending DataBridge acceptance",
+      "family_refs": [
+        "API03",
+        "API07"
+      ],
+      "case_group": "DOC_HANDLE",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_document_close",
+      "disposition": "required",
+      "owner": "RuntimeComposition / real document and codec owners",
+      "inventory_note": "SDK-01 handle core; data/recovery SDK-02 required pending DataBridge acceptance",
+      "family_refs": [
+        "API03",
+        "API07"
+      ],
+      "case_group": "DOC_HANDLE",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_document_get_state",
+      "disposition": "required",
+      "owner": "RuntimeComposition / real document and codec owners",
+      "inventory_note": "SDK-01 handle core; data/recovery SDK-02 required pending DataBridge acceptance",
+      "family_refs": [
+        "API03",
+        "API07"
+      ],
+      "case_group": "DOC_HANDLE",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_document_copy_recovery_frontier",
+      "disposition": "deferred",
+      "owner": "RuntimeComposition / real document and codec owners",
+      "inventory_note": "SDK-01 handle core; data/recovery SDK-02 required pending DataBridge acceptance",
+      "family_refs": [
+        "API03",
+        "API07"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-02",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_document_create_snapshot",
+      "disposition": "deferred",
+      "owner": "RuntimeComposition / real document and codec owners",
+      "inventory_note": "SDK-01 handle core; data/recovery SDK-02 required pending DataBridge acceptance",
+      "family_refs": [
+        "API03",
+        "API07"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-02",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_document_apply_remote_operations",
+      "disposition": "deferred",
+      "owner": "RuntimeComposition / real document and codec owners",
+      "inventory_note": "SDK-01 handle core; data/recovery SDK-02 required pending DataBridge acceptance",
+      "family_refs": [
+        "API03",
+        "API07"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-02",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_document_update_operation_durability",
+      "disposition": "optional",
+      "owner": "DataBridge candidate; no SDK backing established",
+      "inventory_note": "Legacy/optional; semantics not assumed, no false success",
+      "family_refs": [
+        "API07"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "separately decided optional contract",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_document_apply_remote_presence",
+      "disposition": "optional",
+      "owner": "DataBridge candidate; no SDK backing established",
+      "inventory_note": "Legacy/optional; semantics not assumed, no false success",
+      "family_refs": [
+        "API07"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "separately decided optional contract",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_document_provide_resource",
+      "disposition": "deferred",
+      "owner": "RuntimeComposition resource token / resolver",
+      "inventory_note": "SDK-02 required for resource cases; candidate pending",
+      "family_refs": [
+        "API08"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-02",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_document_fail_resource",
+      "disposition": "deferred",
+      "owner": "RuntimeComposition resource token / resolver",
+      "inventory_note": "SDK-02 required for resource cases; candidate pending",
+      "family_refs": [
+        "API08"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-02",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_document_evict_resource",
+      "disposition": "deferred",
+      "owner": "RuntimeComposition resource token / resolver",
+      "inventory_note": "SDK-02 required for resource cases; candidate pending",
+      "family_refs": [
+        "API08"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-02",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_view_create",
+      "disposition": "required",
+      "owner": "RuntimeComposition / explicit document-view binding",
+      "inventory_note": "SDK-01 required, one active view per runtime proposed",
+      "family_refs": [
+        "API02",
+        "API03"
+      ],
+      "case_group": "VIEW_CAMERA",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_destroy",
+      "disposition": "required",
+      "owner": "RuntimeComposition / explicit document-view binding",
+      "inventory_note": "SDK-01 required, one active view per runtime proposed",
+      "family_refs": [
+        "API02",
+        "API03"
+      ],
+      "case_group": "VIEW_CAMERA",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_set_viewport",
+      "disposition": "required",
+      "owner": "RuntimeFacade camera controls / runtime view transform",
+      "inventory_note": "SDK-01 required explicit view and full target identity",
+      "family_refs": [
+        "API03",
+        "API04"
+      ],
+      "case_group": "VIEW_CAMERA",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_set_camera",
+      "disposition": "required",
+      "owner": "RuntimeFacade camera controls / runtime view transform",
+      "inventory_note": "SDK-01 required explicit view and full target identity",
+      "family_refs": [
+        "API03",
+        "API04"
+      ],
+      "case_group": "VIEW_CAMERA",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_get_camera",
+      "disposition": "required",
+      "owner": "RuntimeFacade camera controls / runtime view transform",
+      "inventory_note": "SDK-01 required explicit view and full target identity",
+      "family_refs": [
+        "API03",
+        "API04"
+      ],
+      "case_group": "VIEW_CAMERA",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_pan_by",
+      "disposition": "required",
+      "owner": "RuntimeFacade camera controls / runtime view transform",
+      "inventory_note": "SDK-01 required explicit view and full target identity",
+      "family_refs": [
+        "API03",
+        "API04"
+      ],
+      "case_group": "VIEW_CAMERA",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_zoom_at",
+      "disposition": "required",
+      "owner": "RuntimeFacade camera controls / runtime view transform",
+      "inventory_note": "SDK-01 required explicit view and full target identity",
+      "family_refs": [
+        "API03",
+        "API04"
+      ],
+      "case_group": "VIEW_CAMERA",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_screen_to_world",
+      "disposition": "required",
+      "owner": "RuntimeFacade camera controls / runtime view transform",
+      "inventory_note": "SDK-01 required explicit view and full target identity",
+      "family_refs": [
+        "API03",
+        "API04"
+      ],
+      "case_group": "VIEW_CAMERA",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_world_to_screen",
+      "disposition": "required",
+      "owner": "RuntimeFacade camera controls / runtime view transform",
+      "inventory_note": "SDK-01 required explicit view and full target identity",
+      "family_refs": [
+        "API03",
+        "API04"
+      ],
+      "case_group": "VIEW_CAMERA",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_attach_surface",
+      "disposition": "deferred",
+      "owner": "RuntimeComposition frameOpportunity / platform feedback",
+      "inventory_note": "platform work required in SDK-03/04; exact identity mapping unresolved",
+      "family_refs": [
+        "API06"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-03/04",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_view_update_surface",
+      "disposition": "deferred",
+      "owner": "RuntimeComposition frameOpportunity / platform feedback",
+      "inventory_note": "platform work required in SDK-03/04; exact identity mapping unresolved",
+      "family_refs": [
+        "API06"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-03/04",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_view_detach_surface",
+      "disposition": "deferred",
+      "owner": "RuntimeComposition frameOpportunity / platform feedback",
+      "inventory_note": "platform work required in SDK-03/04; exact identity mapping unresolved",
+      "family_refs": [
+        "API06"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-03/04",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_view_push_pointer_batch",
+      "disposition": "required",
+      "owner": "PlatformInteractionIngress / registered source owner",
+      "inventory_note": "SDK-01 ordered ingress; platform details SDK-03/04",
+      "family_refs": [
+        "API04",
+        "API09"
+      ],
+      "case_group": "INGRESS_ORDER",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_push_wheel_event",
+      "disposition": "required",
+      "owner": "PlatformInteractionIngress / registered source owner",
+      "inventory_note": "SDK-01 ordered ingress; platform details SDK-03/04",
+      "family_refs": [
+        "API04",
+        "API09"
+      ],
+      "case_group": "INGRESS_ORDER",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_push_key_event",
+      "disposition": "required",
+      "owner": "PlatformInteractionIngress / registered source owner",
+      "inventory_note": "SDK-01 ordered ingress; platform details SDK-03/04",
+      "family_refs": [
+        "API04",
+        "API09"
+      ],
+      "case_group": "INGRESS_ORDER",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_push_ime_event",
+      "disposition": "deferred",
+      "owner": "RuntimeFacade Text intent/session/TextLayout",
+      "inventory_note": "SDK-02 required text/IME; V1 session identity insufficient",
+      "family_refs": [
+        "API09"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-02",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_view_get_text_input_state",
+      "disposition": "deferred",
+      "owner": "RuntimeFacade Text intent/session/TextLayout",
+      "inventory_note": "SDK-02 required text/IME; V1 session identity insufficient",
+      "family_refs": [
+        "API09"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-02",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_view_copy_surrounding_text",
+      "disposition": "deferred",
+      "owner": "RuntimeFacade Text intent/session/TextLayout",
+      "inventory_note": "SDK-02 required text/IME; V1 session identity insufficient",
+      "family_refs": [
+        "API09"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-02",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_view_set_active_tool",
+      "disposition": "required",
+      "owner": "RuntimeFacade setTool/setBrush/setEraser / control snapshots",
+      "inventory_note": "SDK-01 required, typed conversion and receipt/readback",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "TOOL_CONTROL",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_set_brush",
+      "disposition": "required",
+      "owner": "RuntimeFacade setTool/setBrush/setEraser / control snapshots",
+      "inventory_note": "SDK-01 required, typed conversion and receipt/readback",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "TOOL_CONTROL",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_set_eraser",
+      "disposition": "required",
+      "owner": "RuntimeFacade setTool/setBrush/setEraser / control snapshots",
+      "inventory_note": "SDK-01 required, typed conversion and receipt/readback",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "TOOL_CONTROL",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_get_tool_state",
+      "disposition": "required",
+      "owner": "RuntimeFacade setTool/setBrush/setEraser / control snapshots",
+      "inventory_note": "SDK-01 required, typed conversion and receipt/readback",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "TOOL_CONTROL",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_get_brush",
+      "disposition": "required",
+      "owner": "RuntimeFacade setTool/setBrush/setEraser / control snapshots",
+      "inventory_note": "SDK-01 required, typed conversion and receipt/readback",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "TOOL_CONTROL",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_get_eraser",
+      "disposition": "required",
+      "owner": "RuntimeFacade setTool/setBrush/setEraser / control snapshots",
+      "inventory_note": "SDK-01 required, typed conversion and receipt/readback",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "TOOL_CONTROL",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_execute_command",
+      "disposition": "required",
+      "owner": "RuntimeFacade control lane / EditorHistory / Semantic",
+      "inventory_note": "SDK-01 typed core required; validate each opcode; no fake generic batch",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "COMMAND_HISTORY",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_undo",
+      "disposition": "required",
+      "owner": "RuntimeFacade control lane / EditorHistory / Semantic",
+      "inventory_note": "SDK-01 typed core required; validate each opcode; no fake generic batch",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "COMMAND_HISTORY",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_redo",
+      "disposition": "required",
+      "owner": "RuntimeFacade control lane / EditorHistory / Semantic",
+      "inventory_note": "SDK-01 typed core required; validate each opcode; no fake generic batch",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "COMMAND_HISTORY",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_begin_command_batch",
+      "disposition": "required",
+      "owner": "RuntimeFacade / existing explicit Intent; D07 unresolved",
+      "inventory_note": "Accepted V1: one undo intention; Operation transport batch is not cross-operation atomic. SDK-01 realization and D07 fault proof remain open",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "COMMAND_HISTORY",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_end_command_batch",
+      "disposition": "required",
+      "owner": "RuntimeFacade / existing explicit Intent; D07 unresolved",
+      "inventory_note": "Accepted V1: one undo intention; Operation transport batch is not cross-operation atomic. SDK-01 realization and D07 fault proof remain open",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "COMMAND_HISTORY",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_cancel_command_batch",
+      "disposition": "required",
+      "owner": "RuntimeFacade / existing explicit Intent; D07 unresolved",
+      "inventory_note": "Accepted V1: one undo intention; Operation transport batch is not cross-operation atomic. SDK-01 realization and D07 fault proof remain open",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "COMMAND_HISTORY",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_get_selection_summary",
+      "disposition": "required",
+      "owner": "RuntimeFacade readSelectionSummary / SelectionSession",
+      "inventory_note": "SDK-01 required; V1 summary omits exact targets/properties/stamps",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "SELECTION",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_copy_selection_ids",
+      "disposition": "required",
+      "owner": "RuntimeFacade readSelectionSummary / SelectionSession",
+      "inventory_note": "SDK-01 required; V1 summary omits exact targets/properties/stamps",
+      "family_refs": [
+        "API04",
+        "API05"
+      ],
+      "case_group": "SELECTION",
+      "future_owner": "",
+      "unimplemented_behavior": "not_applicable"
+    },
+    {
+      "symbol": "canvas_view_set_local_presence",
+      "disposition": "optional",
+      "owner": "DataBridge candidate; no SDK backing established",
+      "inventory_note": "Legacy/optional; semantics not assumed, no false success",
+      "family_refs": [
+        "API07"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "separately decided optional contract",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_view_on_vsync",
+      "disposition": "deferred",
+      "owner": "RuntimeComposition frameOpportunity / platform feedback",
+      "inventory_note": "platform work required in SDK-03/04; exact identity mapping unresolved",
+      "family_refs": [
+        "API06"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-03/04",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_view_render_frame",
+      "disposition": "deferred",
+      "owner": "RuntimeComposition frameOpportunity / platform feedback",
+      "inventory_note": "platform work required in SDK-03/04; exact identity mapping unresolved",
+      "family_refs": [
+        "API06"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "SDK-03/04",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    },
+    {
+      "symbol": "canvas_view_set_debug_overlay",
+      "disposition": "optional",
+      "owner": "Debug UI / diagnostics; no semantic ownership",
+      "inventory_note": "Optional diagnostics; product controls must work when absent",
+      "family_refs": [
+        "API11"
+      ],
+      "case_group": "DEFERRED",
+      "future_owner": "separately decided optional contract",
+      "unimplemented_behavior": "not_supported_no_mutation"
+    }
+  ],
+  "case_groups": {
+    "LIFECYCLE": {
+      "applies_to": "runtime ABI/version, creation, capabilities, errors and destruction",
+      "fixture": "verification/sdk01/external-consumer/external_smoke.c",
+      "oracle": "Two live runtimes have nonzero distinct handles; destroying one does not change the other; invalid version preserves output; stale/double-destroy rejects; successful calls use real owner; exact V1 errors, callbacks, sizes and actual capacities require public-boundary tests."
+    },
+    "DOC_HANDLE": {
+      "applies_to": "single document open/close/state and wrong/foreign/stale handles",
+      "fixture": "docs/api/RUNTIME_C_API_CONTRACT.md",
+      "oracle": "Document and view are bound to their real owning runtime; invalid/foreign/stale handle and second active document reject without mutation; V1 state has truthful actual revision. Recovery and remote apply remain SDK-02 obligations."
+    },
+    "VIEW_CAMERA": {
+      "applies_to": "view creation and camera/viewport/coordinate functions",
+      "fixture": "runtime/composition/tests/canvas_runtime_facade_test.cpp",
+      "oracle": "Create a valid view for its actual document; wrong or stale handles reject; camera reads match submitted state; use an independent numeric affine transform to compare world-to-screen and inverse, including invalid/zero scales."
+    },
+    "INGRESS_ORDER": {
+      "applies_to": "pointer, wheel and key ingress",
+      "fixture": "verification/sdk01/facade_stale_retry_test.cpp",
+      "oracle": "An accepted tool switch followed by down is processed in sequence against the explicit view; preserve actual input identity/cancel; bounds/invalid input reject without partial application. Native/IME physical evidence remains later."
+    },
+    "TOOL_CONTROL": {
+      "applies_to": "set/get tool brush eraser",
+      "fixture": "debug_ui/tests/selection_summary_ui_test.cpp",
+      "oracle": "Use explicit typed mapping; queued admission is distinguished from final applied/rejected state; invalid enum leaves actual tool/brush unchanged; subsequent valid query matches control."
+    },
+    "COMMAND_HISTORY": {
+      "applies_to": "typed command, undo/redo and batch boundaries",
+      "fixture": "verification/fc04_d07/CMakeLists.txt",
+      "oracle": "One accepted explicit user intent commits its supported typed operations and undoes/redoes once; separately submitted commands undo separately; invalid/stale precommit leaves canonical and history unchanged. D07 injected OOM hang remains separate unresolved evidence and is not relabeled."
+    },
+    "SELECTION": {
+      "applies_to": "summary/selection IDs and added multi-selection API",
+      "fixture": "verification/sdk01/real_consumer/expected-v1.json",
+      "oracle": "Caller copies full IDs and revision-bound actual selection; too-small output is unchanged except required size; exact eligible/excluded, mixed/partial, permission, refusal, receipt and per-root leaf results must match independent fixture on real SDK and both actual hosts."
+    },
+    "DEFERRED": {
+      "applies_to": "later-stage or optional functionality",
+      "fixture": "docs/planning/sdk/verification.md",
+      "oracle": "A currently unimplemented function is not falsely reported as successful; if an exported compatibility entry exists, unsupported must be explicit and non-mutating. Deferral does not establish its future contract or override mandatory multi-selection consumer parity."
+    }
+  },
+  "families": {
+    "API01": {
+      "sdk01_gate": "Required: actual installed C/C++ consumers; header, exports and no private leak",
+      "future_owner": "SDK-01 plus SDK-03/04 packaging"
+    },
+    "API02": {
+      "sdk01_gate": "Required: sizes, versions, nulls, buffers, ownership and target ABI layout for SDK-01 types",
+      "future_owner": "SDK-01; expand with later APIs"
+    },
+    "API03": {
+      "sdk01_gate": "Required: real isolated Runtime/Document/View handle domains and full IDs",
+      "future_owner": "SDK-01"
+    },
+    "API04": {
+      "sdk01_gate": "Required: ordered controls, typed target, receipts, stale and supported ingress",
+      "future_owner": "SDK-01; close/DataBridge in SDK-02/03"
+    },
+    "API05": {
+      "sdk01_gate": "Required: selected supported edits, per-root preservation, History, actual Windows/Web multi-selection migration",
+      "future_owner": "SDK-01; D07 full OOM sweep remains independent"
+    },
+    "API06": {
+      "sdk01_gate": "Required: do not misrepresent submission as presentation; existing host stays functional during migration",
+      "future_owner": "SDK-03/04 full surface identity and actual presentation"
+    },
+    "API07": {
+      "sdk01_gate": "Required: SDK-01 handle/state only; unsupported deferred calls never claim success",
+      "future_owner": "SDK-02 document/recovery/DataBridge"
+    },
+    "API08": {
+      "sdk01_gate": "Required: deferred resource calls never claim success; preserve existing host behavior",
+      "future_owner": "SDK-02 resource lifecycle"
+    },
+    "API09": {
+      "sdk01_gate": "Required: SDK-01 supported pointer/wheel/key identity and order",
+      "future_owner": "SDK-02/03/04 native IME/platform/physical"
+    },
+    "API10": {
+      "sdk01_gate": "Required: no 128-bit ID truncation in first native and web consumer bridge",
+      "future_owner": "SDK-03/04 complete wrappers; SDK-06/07 mobile"
+    },
+    "API11": {
+      "sdk01_gate": "Required: installed public header/library external smoke and no internal leakage",
+      "future_owner": "SDK-03/04/05 full movable distribution and assets"
+    },
+    "API12": {
+      "sdk01_gate": "Required: prohibit full-document serialization on each pointer event; instrument actual path",
+      "future_owner": "SDK-05 accepted quantitative budget and benchmark"
+    }
+  },
+  "critical_required_symbols": [
+    "canvas_runtime_create",
+    "canvas_runtime_destroy",
+    "canvas_view_push_pointer_batch",
+    "canvas_view_execute_command",
+    "canvas_view_undo",
+    "canvas_view_redo",
+    "canvas_view_get_selection_summary",
+    "canvas_view_copy_selection_ids"
+  ],
+  "additional_required_candidate": "docs/planning/sdk/candidate-multi-selection-v1.h; typed multi-selection and actual Windows/Web consumers are mandatory, never silently deferred",
+  "qualifications": [
+    "SDK01 symbol deferral cannot be used to suppress existing host features",
+    "Deferred/optional only reports unsupported truthfully; actual accepted operation semantics preserved",
+    "No independent oracle, executable test or physical pass is implied"
+  ]
+}

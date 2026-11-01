@@ -32,6 +32,7 @@ bool hasVisibleFill(const semantic::PropertyBag& properties) noexcept {
         if (entry.field_id != 0x100U) continue;
         if (const auto* fill = std::get_if<semantic::FillStyleValue>(&entry.value)) {
             if (const auto* solid = std::get_if<semantic::SolidFill>(fill)) return solid->color.a > 0.0F;
+            if (const auto* pattern = std::get_if<semantic::PatternFillV1>(fill)) return pattern->color.a > 0.0F;
             return false;
         }
     }
@@ -263,6 +264,8 @@ DirectRenderScene::preciseHitTest(const PreciseHitRequest& request) const {
             makeError(foundation::ErrorCode::kMissingObject, "Precise hit ObjectId is missing"));
     }
     const RenderRecord& record = _records[found->second];
+    float sketchTolerance=0;
+    for(const auto& p:record.properties.entries)if(const auto* style=std::get_if<semantic::SketchStyleV1>(&p.value);style&&style->enabled){const auto& t=record.localTransform;const double scale=std::sqrt(t.a*t.a+t.b*t.b+t.c*t.c+t.d*t.d);sketchTolerance=static_cast<float>(4*style->roughness*scale);}
     float distance = distanceToRect(request.worldPoint, record.worldBounds);
     bool hit = distance <= request.tolerance;
     const auto world = [&](WorldPoint point) {
@@ -270,6 +273,8 @@ DirectRenderScene::preciseHitTest(const PreciseHitRequest& request) const {
         return WorldPoint{static_cast<float>(transform.a * point.x + transform.c * point.y + transform.tx),
                           static_cast<float>(transform.b * point.x + transform.d * point.y + transform.ty)};
     };
+    if(std::any_of(record.properties.entries.begin(),record.properties.entries.end(),[](const auto& p){return p.field_id==0x103U;}))
+        return foundation::Result<PreciseHit>::success(PreciseHit{hit,distance});
     if (const auto* section=std::get_if<scene::SectionBoundaryGeometry>(&record.derivedGeometry)) {
         const auto& b=section->boundary;
         const auto a=world({b.left,b.top}),c=world({b.right,b.bottom});
@@ -285,14 +290,14 @@ DirectRenderScene::preciseHitTest(const PreciseHitRequest& request) const {
                              scene::distanceToSegment(request.worldPoint, transformed.left, transformed.top)});
         const float stroke = strokeHalfWidth(record.properties);
         hit = (hasVisibleFill(record.properties) && scene::pointInTriangle(request.worldPoint, transformed)) ||
-              distance <= request.tolerance + stroke;
+              distance <= request.tolerance + stroke + sketchTolerance;
         if (hit) distance = 0.0F;
     } else if (const auto* connector = std::get_if<scene::ConnectorGeometry>(&record.derivedGeometry)) {
         std::vector<foundation::WorldPoint> transformedRoute;
         transformedRoute.reserve(connector->route.size());
         for (const auto point : connector->route) transformedRoute.push_back(world(point));
         const scene::ConnectorGeometry transformed{world(connector->start), world(connector->end), std::move(transformedRoute), connector->arrow_end};
-        hit = scene::pointOnConnector(request.worldPoint, transformed, request.tolerance);
+        hit = scene::pointOnConnector(request.worldPoint, transformed, request.tolerance + (sketchTolerance>0?strokeHalfWidth(record.properties)+sketchTolerance:0));
         distance = scene::distanceToSegment(request.worldPoint, transformed.start, transformed.end);
         if (connector->arrow_end) {
             const auto head = scene::arrowHead(*connector);

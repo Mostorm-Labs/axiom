@@ -1,0 +1,94 @@
+{
+  "status": "DRAFT_NOT_AUTHORIZED",
+  "implementation": {
+    "proposed_scope": [
+      "sdk/**",
+      "samples/sdk/**",
+      "tests/sdk/**",
+      "runtime/composition/**",
+      "runtime/foundation/**",
+      "runtime/control/**",
+      "apps/minimal_runtime_host/**",
+      "apps/axiom_canvas_demo/platform/web/**",
+      "apps/axiom_canvas_demo/tests/**",
+      "debug_ui/**",
+      "CMakeLists.txt",
+      "docs/sdk/**",
+      "verification/sdk01/**"
+    ],
+    "scope_is_proposed_not_authorized": true,
+    "required_changes": [
+      "Implement additive public types and export path as reviewed; preserve V1 ABI",
+      "Implement per-root read and leaf patch using existing selection, semantic, Scene and History owners; atomically validate and commit eligible cohort",
+      "Implement real library and external consumers and independent before/after oracle",
+      "Migrate Windows and Web Debug UI to equivalent public path only after public path verified; remove internal accessor use only after both migrations",
+      "Implement executable real Win and Chrome drivers and complete P01-P10 plus retained API01-API12"
+    ],
+    "forbidden_changes": [
+      "Do not modify frozen V1 manifest or existing numeric ABI",
+      "Do not add parallel canonical store, selection, History or semantic owner",
+      "Do not weaken D07 OOM injection, relabel physical or Gate, or claim Node as Chrome",
+      "Do not modify SDK locks or rebuild locked dependencies",
+      "Do not merge main or publish SDK"
+    ]
+  },
+  "tests": {
+    "required_existing_commands": [
+      "python tools/check_runtime_abi_manifest.py --root .",
+      "python tools/check_runtime_boundaries.py --root .",
+      "ctest --test-dir <build> -R '^(FC00XRuntimeComposition|FC00XRuntimeFacade|FC00XFrameCoordinator|FC00XRuntimeIsolation|FC02Text|FC03ImageFacade|FC05ConnectorFacade|FC08SectionConsumer|PX0ControlRouter|SelectionBatch3Summary|FC01ASelectionInputIntegration|SelectionBatch3Ui)$' --output-on-failure --no-tests=error",
+      "ctest --test-dir <build> -R '^SDK01FacadeStaleRetry$' --output-on-failure --no-tests=error"
+    ],
+    "required_obligations": [
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P07",
+      "P08",
+      "P09",
+      "P10"
+    ],
+    "driver_commands": "NOT_MATERIALIZED; bind exact executable commands in accepted verification before P32"
+  },
+  "hosted_verification": {
+    "required": "NOT_FROZEN",
+    "optional": [
+      "physical input remains PHYSICAL_PENDING"
+    ]
+  },
+  "evidence": {
+    "blocking": [
+      "accepted exact ABI/owner and verification bindings",
+      "actual external SDK product and real Windows/Chrome consumers",
+      "P01-P10 and existing API01-API12",
+      "per-case raw observations and source/fixture/binary/toolchain hashes"
+    ],
+    "corroborative": [
+      "draft declaration compilation and Node/WASM layout",
+      "existing owner-only control"
+    ]
+  },
+  "terminal_success": {
+    "status": "DRAFT_NOT_ACCEPTED",
+    "all_of": [
+      "accepted content-addressed execution package and preflights",
+      "actual real-SUT obligations passed with no skips or zero-test substitutions",
+      "reviewer-accessible exact revision and raw results"
+    ]
+  },
+  "terminal_blockers": [
+    "AUTHORITY_CONFLICT",
+    "MISSING_REQUIRED_INPUT",
+    "VERIFICATION_DESIGN_DEFECT",
+    "ENVIRONMENT_BLOCKER",
+    "FROZEN_VERIFICATION_FAILURE",
+    "NEW_HIGH_IMPACT_FAILURE_MODE"
+  ],
+  "return_policy": {
+    "continue_until_terminal_state": true,
+    "return_surface": "CONTROL_REVIEW"
+  }
+}

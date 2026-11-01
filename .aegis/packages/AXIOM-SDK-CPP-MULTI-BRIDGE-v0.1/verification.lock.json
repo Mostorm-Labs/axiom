@@ -1,0 +1,54 @@
+{
+  "status": "SLICE_VERIFICATION_BOUND_NOT_PRODUCT_PASS",
+  "source_revision": "65d29dc78734a03bdf98e9671b730beedb93809f",
+  "red": {
+    "path": ".aegis/results/AXIOM-SDK-CPP-FIRST-RED-013/raw/build.log",
+    "sha256": "67686bbd5c940e02198dbfe0a081ef353814d4581fd98c0ce0d786ba2fcc4f5b",
+    "expected": "MSVC reports absent RuntimeFacade public multi-selection methods; build exit 1 before production edits"
+  },
+  "required": [
+    {
+      "id": "CPP-MULTI-OWNER",
+      "target": "axiom_sdk_cpp_public_multi_owner_test",
+      "ctest": "SDKCppPublicMultiOwner",
+      "oracle": "real RuntimeFacade on one actual RuntimeComposition; unknown permission rejects; select exact objects, apply exact fill and one Undo; read terminal receipt",
+      "zero_skips": true
+    },
+    {
+      "id": "CPP-MULTI-UI",
+      "ctest": "SelectionBatch3Ui",
+      "oracle": "actual Debug UI uses same public facade and owner; no internal mutable port dependency in migrated host",
+      "zero_skips": true
+    },
+    {
+      "id": "CPP-MULTI-REGRESSION",
+      "ctest_regex": "^(FC00XRuntimeComposition|FC00XRuntimeFacade|FC00XFrameCoordinator|FC00XRuntimeIsolation|FC02Text|FC03ImageFacade|FC05ConnectorFacade|FC08SectionConsumer|PX0ControlRouter|SelectionBatch3Summary|FC01ASelectionInputIntegration|SelectionBatch3Ui)$",
+      "oracle": "all 12 exact test names present and pass, no skips",
+      "zero_skips": true
+    },
+    {
+      "id": "CPP-MULTI-WIN",
+      "target": "axiom_minimal_runtime_host_windows",
+      "oracle": "MSVC /WX production Windows host builds with real facade integration; physical testing remains pending",
+      "zero_skips": true
+    },
+    {
+      "id": "CPP-MULTI-WEB",
+      "target": "axiom_canvas_demo_web",
+      "oracle": "real WASM build and actual Chrome consumer regression; report unavailable environment as blocker, no physical claim",
+      "zero_skips": true
+    },
+    {
+      "id": "CPP-BOUNDARY",
+      "command": "python tools/check_runtime_abi_manifest.py --root . and python tools/check_runtime_boundaries.py --root .",
+      "oracle": "V1 C manifest unchanged and module boundary checks pass"
+    }
+  ],
+  "separate_pending": [
+    "Independent external installed C++ consumer and packaging",
+    "Per-root mixed stroke leaf patch; UI must continue not to overwrite mixed styles",
+    "MSE-20/23/26 missing provider/fault paths",
+    "D07 protobuf/Abseil OOM",
+    "Real physical Windows/Web input"
+  ]
+}

@@ -1,4 +1,4 @@
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/text/text_layout.hpp"
 #include "host_font_resources.hpp"
 
@@ -11,7 +11,7 @@
 using namespace canvas;
 namespace {
 struct Host {
-    runtime::RuntimeComposition runtime;
+    runtime::RuntimeCompositionCore runtime;
     runtime::RuntimeFacade& facade = runtime.controlFacade();
     std::uint64_t request = 0;
     explicit Host(bool hostFont = false) {
@@ -1661,9 +1661,11 @@ TEST(FC02Formatting, ImportedFamiliesAreNamedSelectableAndActuallyRender) {
     using namespace runtime;
     ASSERT_EQ(h.intent(TextIntentKind::kCreate).status, TextStatus::kApplied);
     const auto options = h.facade.readTextEditor().fonts;
-    ASSERT_EQ(options.size(), 12U);
     const std::vector<std::string> names{"Comic Neue", "Fira Sans", "IBM Plex Mono", "IBM Plex Sans",
-        "Inter", "Inter Tight", "Open Sans", "Oswald", "Roboto", "STIX Two Text", "Ubuntu"};
+        "Inter", "Inter Tight", "Open Sans", "Oswald", "Roboto", "STIX Two Text", "Ubuntu",
+        "Excalifont", "Xiaolai"};
+    ASSERT_EQ(options.size(), names.size() + 1U);
+    ASSERT_EQ(options.front().name, "Noto Sans CJK SC");
     ASSERT_EQ(h.input(TextInputKind::kReplace, u"Axiom 123").status, TextStatus::kApplied);
     ASSERT_EQ(h.intent(TextIntentKind::kSelectAll).status, TextStatus::kObserved);
     for (const auto& name : names) {
@@ -1749,7 +1751,7 @@ TEST(FC08SectionTextGeometry, MetadataTitleUsesRegisteredFontAndDrawsGlyphPixels
     EXPECT_NE(titlePixels,blankPixels)<<"Plain metadata titles must produce glyph pixels";
 }
 TEST(FC08SectionTextGeometry, LateFontPublicationRefreshesMetadataTitle) {
-    runtime::RuntimeComposition composition;ASSERT_TRUE(composition.open());ASSERT_TRUE(composition.bindSurface(256,256));
+    runtime::RuntimeCompositionCore composition;ASSERT_TRUE(composition.open());ASSERT_TRUE(composition.bindSurface(256,256));
     auto& facade=composition.controlFacade();runtime::SectionIntent intent;
     intent.objectId=foundation::ObjectId::fromUint64(6003);intent.content.title="Late font";
     ASSERT_EQ(facade.submitSectionIntent(intent,1,8807).state,runtime::ProductControlState::kQueued);
@@ -1809,7 +1811,7 @@ TEST(SelectionBatch2Text, UnavailableFontGeometryDoesNotBecomeAnEmptySuccessfulQ
     Host h;ASSERT_TRUE(h.runtime.registerSource(6001));
     // Retain the admitted font manifest without publishing its bytes in
     // a fresh composition, rather than manufacture a layout snapshot.
-    runtime::RuntimeComposition cold;ASSERT_TRUE(cold.open());ASSERT_TRUE(cold.bindSurface(256,256));
+    runtime::RuntimeCompositionCore cold;ASSERT_TRUE(cold.open());ASSERT_TRUE(cold.bindSurface(256,256));
     ASSERT_TRUE(cold.bindManifest(h.runtime.resources().manifest,1));ASSERT_TRUE(cold.registerSource(6002));auto& facade=cold.controlFacade();
     runtime::StickyCreateRequest sticky;sticky.objectId=foundation::ObjectId::fromUint64(9970);sticky.transform.tx=200;sticky.transform.ty=200;sticky.content={30,30};
     ASSERT_EQ(facade.createSticky(sticky).state,runtime::ConnectorCommandState::kApplied);
@@ -1837,7 +1839,7 @@ TEST(SelectionBatch2Text, PartiallyAvailableMixedFontGeometryAlsoPreservesSelect
     Host h;ASSERT_TRUE(h.runtime.registerSource(6001));
     // Retain the admitted font manifest without publishing its bytes in
     // a fresh composition, rather than manufacture a layout snapshot.
-    runtime::RuntimeComposition cold;ASSERT_TRUE(cold.open());ASSERT_TRUE(cold.bindSurface(256,256));
+    runtime::RuntimeCompositionCore cold;ASSERT_TRUE(cold.open());ASSERT_TRUE(cold.bindSurface(256,256));
     auto manifest=h.runtime.resources().manifest;auto missing=manifest.entries.front();
     missing.resource_id=semantic::ResourceId{foundation::ObjectId::fromUint64(501)};manifest.entries.push_back(missing);
     ASSERT_TRUE(cold.bindManifest(manifest,1));

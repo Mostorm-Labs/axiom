@@ -1,0 +1,165 @@
+{
+  "date": "2026-10-31",
+  "released": {
+    "url": "https://github.com/Mostorm-Labs/axiom/releases/tag/axiom-sdk-preview-20261031-8e76ed25",
+    "archive_sha256": "672fc0d7effb7a25d42b2d95167f9aecb8d7e504f74aab577ba0b8f609fe3d25",
+    "status": "FAIL",
+    "buildInfo": {
+      "apiVersion": 1,
+      "dirty": false,
+      "features": {
+        "resourceCustody": 1,
+        "shellAxis": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "1.0.0-preview.2",
+      "sourceRevision": "8e76ed252fdb8b8173451b14f1482c4c9568316d"
+    },
+    "ids": {
+      "a": "01000000000001000000000000000000",
+      "b": "01000000000001000000000000000000"
+    },
+    "checks": {
+      "independentObjectIds": false,
+      "snapshotThenPointerCreation": false,
+      "restoredUndoRedo": false,
+      "remoteMerge": false,
+      "noRemoteEcho": true,
+      "remoteDeduplication": false,
+      "collaborativeUndoRedo": false,
+      "cleanClose": false,
+      "noRuntimeErrors": false,
+      "noUncaughtExceptions": true
+    },
+    "files": {
+      "axiom.mjs": "acd2abe140d5c3566bc0fbf661cf558de68e56edce734776b58c43add92a3604",
+      "axiom.wasm": "0f65ed9a3263e1af78e4735e30fb94d78fcdb8f509acdc4ed55bec702c13a10d",
+      "axiom.data": "afba06991ac1e6c785ddb2c967ffb7f4d079a2d77fb6397bacb394a171df8ff1",
+      "pointer_input.mjs": "746cde1b14edda9529b05898f142e8cb5eaf9459752e45e6b9cd9ce47074d3be",
+      "text_input.mjs": "cab8ca6ece28cc8f70ca8a1bda3c845b3050b645bdaf7d7f795d68efc5f6944d",
+      "internal/axiom.mjs": "704f9a8c54125be582cb7b211fd16d37d6abcb533d882cb2b89e6d060d1074c6"
+    },
+    "errors": [
+      {
+        "owner": "c",
+        "code": "INPUT_REJECTED",
+        "message": "AxiomError: INPUT_REJECTED"
+      }
+    ],
+    "browserVersion": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/156.0.8078.74",
+      "revision": "@d331de35ca8ab1358c7a17e4bd41627d55eaef51",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+      "jsVersion": "15.6.75.25"
+    },
+    "remote_dispositions": {
+      "intoA": [
+        {
+          "ok": false,
+          "disposition": 2
+        }
+      ],
+      "intoB": [
+        {
+          "ok": false,
+          "disposition": 2
+        }
+      ]
+    },
+    "cleanup": "BUSY after rejected restored pointer commit"
+  },
+  "repaired": {
+    "status": "PASS",
+    "buildInfo": {
+      "apiVersion": 1,
+      "dirty": true,
+      "features": {
+        "resourceCustody": 1,
+        "shellAxis": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "1.0.0-preview.2",
+      "sourceRevision": "dcc55e53dac51441e4e7e0ac142a8d58cd8fe075"
+    },
+    "ids": {
+      "a": "2ef89ae3ef5c91744753a72f2b0fea31",
+      "b": "a4bb0174bc94186de92f1b24dc87bde9",
+      "c": "266f45096e7f4033314748b064dfc8b2"
+    },
+    "checks": {
+      "independentObjectIds": true,
+      "snapshotThenPointerCreation": true,
+      "restoredUndoRedo": true,
+      "remoteMerge": true,
+      "noRemoteEcho": true,
+      "remoteDeduplication": true,
+      "collaborativeUndoRedo": true,
+      "cleanClose": true,
+      "noRuntimeErrors": true,
+      "noUncaughtExceptions": true
+    },
+    "files": {
+      "axiom.mjs": "acd2abe140d5c3566bc0fbf661cf558de68e56edce734776b58c43add92a3604",
+      "axiom.wasm": "2a1f995b832be34cbbd01acb05a5186565c5440f78839bad759fa3cd46aaf984",
+      "axiom.data": "afba06991ac1e6c785ddb2c967ffb7f4d079a2d77fb6397bacb394a171df8ff1",
+      "pointer_input.mjs": "07868b2c2f2e5d9f67a929df9f86877a89edaf17751dc5bac1540a6fd0bb9d5d",
+      "text_input.mjs": "5ffb731ac989cece8b6e4d53c3f828600723a1bb26ebe9b952cd559488858fa4",
+      "internal/axiom.mjs": "505360c3c235a92223b08ca4674736af9e4896f655bd4be474fc64136f817bd6"
+    },
+    "errors": [],
+    "browserVersion": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/156.0.8078.74",
+      "revision": "@d331de35ca8ab1358c7a17e4bd41627d55eaef51",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+      "jsVersion": "15.6.75.25"
+    }
+  },
+  "general_browser": {
+    "exit_code": 0,
+    "assertions": 52,
+    "shell_axis_assertions": 20,
+    "frame_regression": {
+      "status": "PASS",
+      "results": [
+        "canonical input committed while prior fence pending",
+        "no rejected completion after superseded preview",
+        "idle opportunities do not acknowledge an already presented frame",
+        "resize invalidates old work without losing document",
+        "real context loss extension",
+        "lost GPU fences do not become successful presentations",
+        "no stale completion after context recovery"
+      ],
+      "scenarios": [
+        "pending-input",
+        "no-duplicate-completion",
+        "pending-resize",
+        "native-loss-before-dom",
+        "context-recovery"
+      ],
+      "delayed": 4,
+      "frames": 4
+    },
+    "example": {
+      "status": "1 objects \u00b7 0 selected \u00b7 Zoom 1.00",
+      "toolIndicated": true,
+      "visibleRectangle": true,
+      "input": "Chrome CDP mouse"
+    }
+  },
+  "verified_source_sha256": {
+    "runtime/interaction/include/canvas/interaction/canvas_editing_runtime.hpp": "4695bfd441214559d9e52fc385f6cf4db73b01d9ce32308fa0950205be0e9c3b",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "20a7b3f708347838bc9856027ccec69131bb5a78d606efcc03d9b6de40e595bc",
+    "runtime/interaction/include/canvas/interaction/creation_session.hpp": "972a55bb4c82c4ca4076b8da267328247c10878da784292938a6a4ea8682ef55",
+    "runtime/interaction/src/creation_session.cpp": "60789f2bb6cc68ccebb1b9ad2dc990155fa514668fd1aad703b9cd298108ed78",
+    "runtime/interaction/include/canvas/interaction/brush_commit_adapter.hpp": "9046f2b10db602436fb4347bb9d9829d2642a1d294d8aead86929c6f0a1acb94",
+    "runtime/interaction/src/brush_commit_adapter.cpp": "dd2cd520724e1bd9639d3b21b01987ec09996b51391abc0806d5b6edb594ed6f",
+    "verification/sdk_js/object_identity.html": "1d37babf027207cbb495e669577139def4d62d9703ac87f4de3f12b3d48ae30f",
+    "verification/sdk_js/verify_object_identity.mjs": "9921ca094fbc1c1103dee4221d3ac8d745eca403fdb19fb782d7498afd3dbf00"
+  },
+  "mode": "real headless Chrome/WebGL2 with SwiftShader; CDP synthetic mouse; public SDK copied outside checkout",
+  "local_sdk_directory": "/Users/qing/Desktop/sources/git/Mostorm-Labs/axiom/out/object-identity-web/build/sdk/web"
+}

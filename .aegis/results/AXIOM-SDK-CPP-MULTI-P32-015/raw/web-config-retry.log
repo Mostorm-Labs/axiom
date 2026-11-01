@@ -1,0 +1,27 @@
+COMMAND ["cmake", "-S", ".", "-B", "out/sdk-cpp-first-web", "-G", "Ninja", "-DCMAKE_TOOLCHAIN_FILE=C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake", "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_TESTING=OFF", "-DCANVAS_BUILD_POC01=OFF", "-DCANVAS_BUILD_INK_PLAYGROUND=OFF", "-DCANVAS_BUILD_SEMANTIC=ON", "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON", "-DCANVAS_BUILD_RENDER=ON", "-DCANVAS_BUILD_RF01=ON", "-DCANVAS_BUILD_CONTROL=ON", "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON", "-DAXIOM_BUILD_DEBUG_UI=ON", "-DAXIOM_DEBUG_UI_PROFILE=full", "-DCANVAS_SKIA_SDK_VARIANT=release", "-DCANVAS_SKIA_SDK_ROOT=C:/Users/Chado/.codex/worktrees/next-stage-main/canvas/.deps/skia-sdk/web-wasm-webgl2/release", "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b", "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe", "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b", "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY", "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF", "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"]
+CMake Error at C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake:103 (message):
+  Failed to fetch Emscripten version information with command
+  "'C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/upstream/emscripten/emcc.exe'
+  -v"!
+
+  Process returned with error code 1.
+
+  Output:
+
+  Traceback (most recent call last):
+
+    File "C:\Users\Chado\AppData\Local\Axiom\toolchains\emsdk-6.0.6\upstream\emscripten\emcc.py", line 37, in <module>
+      assert sys.version_info >= (3, 10), f'emscripten requires python 3.10 or above ({sys.executable} {sys.version})'
+
+  AssertionError: emscripten requires python 3.10 or above
+  (D:\GitRepos\skia\third_party\externals\emsdk\python\3.9.2-nuget_64bit\python.exe
+  3.9.2 (tags/v3.9.2:1a79785, Feb 19 2021, 13:44:55) [MSC v.1928 64 bit
+  (AMD64)])
+
+Call Stack (most recent call first):
+  D:/Softwares/CMake/share/cmake-4.3/Modules/CMakeDetermineSystem.cmake:146 (include)
+  CMakeLists.txt:3 (project)
+
+
+CMake Error: CMake was unable to find a build program corresponding to "Ninja".  CMAKE_MAKE_PROGRAM is not set.  You probably need to select a different build tool.
+-- Configuring incomplete, errors occurred!

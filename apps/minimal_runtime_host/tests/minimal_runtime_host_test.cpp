@@ -163,7 +163,7 @@ int main() {
   assert(clockHost.composition().runtime().creationMode());
 
   // Public mutation ports reject non-owner calls before touching the runtime.
-  canvas::runtime::RuntimeComposition threadFence;
+  canvas::runtime::RuntimeCompositionCore threadFence;
   assert(threadFence.open() && threadFence.bindSurface(256U, 256U));
   bool resized = true;
   bool registered = true;

@@ -87,6 +87,7 @@ namespace canvas::semantic::internal {
 
 void ObjectStoreMutator::swapContents(ReferenceObjectStore& a, ReferenceObjectStore& b) noexcept {
     a.records_.swap(b.records_);
+    swapDocumentBackground(a, b);
 }
 
 bool ObjectStoreMutator::insertFresh(ReferenceObjectStore& store, ObjectRecord record) {

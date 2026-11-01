@@ -1,4 +1,5 @@
 #include "canvas/interaction/canvas_editing_runtime.hpp"
+#include "canvas/semantic/table_content.hpp"
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/scene/bounds_system.hpp"
 #include "canvas/scene/derived_geometry.hpp"
@@ -67,6 +68,9 @@ std::vector<std::uint32_t> CanvasEditingRuntime::textGraphemes(const std::u16str
 }
 std::optional<std::uint32_t>
 CanvasEditingRuntime::textHit(const semantic::ObjectRecord& record, float x, float y) {
+    if(const auto* t=std::get_if<semantic::TableContent>(&record.content)){
+        const auto state=interaction_->textSession()->read();const auto i=semantic::tableCellIndex(*t,state.token.row,state.token.column);return i?textHit(semantic::tableTextView(record,*i),x,y):std::nullopt;
+    }
     if(!historySceneReady())return {};
     if (!textLayoutService_)
         return {};
@@ -117,6 +121,11 @@ semantic::ObjectId CanvasEditingRuntime::hitTextAtView(float x, float y) {
     const auto point = viewToContent(x, y);
     for (const auto& o : objects) {
         if (!textWritable(o.id)) continue;
+        if(const auto* table=std::get_if<semantic::TableContent>(&o.content)){
+            const auto& m=o.transform;const auto det=m.a*m.d-m.b*m.c;if(std::abs(det)<1e-12)continue;
+            const auto dx=point.first-m.tx,dy=point.second-m.ty;const auto lx=(m.d*dx-m.c*dy)/det,ly=(m.a*dy-m.b*dx)/det;
+            if(lx>=0&&ly>=0&&lx<=semantic::tableWidth(*table)&&ly<=semantic::tableHeight(*table))return o.id;continue;
+        }
         if (o.kind == semantic::ObjectKind::kSticky) {
             const auto* sticky = std::get_if<semantic::StickyContent>(&o.content);
             if (!sticky) continue;
@@ -280,7 +289,8 @@ CanvasEditingRuntime::textGeometry(const runtime::CanvasTargetKey& target) {
         return out;
     auto& editor = *interaction_->textSession();
     const auto state = editor.read();
-    const auto record = textPresentation();
+    auto record = textPresentation();
+    if(record)if(const auto* table=std::get_if<semantic::TableContent>(&record->content)){const auto i=semantic::tableCellIndex(*table,state.token.row,state.token.column);if(!i)return out;record=semantic::tableTextView(*record,*i);}
     if (!record)
         return out;
     const auto start =
@@ -378,10 +388,13 @@ bool CanvasEditingRuntime::textPointer(const input::PointerSample& sample) {
             create.object = existingForEdit;
             create.viewX = sample.x;
             create.viewY = sample.y;
+            (void)tableTargetAt(create);
             (void)editor->intent(create);
         } else if (const auto record = textPresentation()) {
             const auto point = viewToContent(x, y);
             bool inside = insideShape(*record, {point.first, point.second});
+            if(const auto* table=std::get_if<semantic::TableContent>(&record->content)){const auto i=semantic::tableCellIndex(*table,state.token.row,state.token.column);if(i){auto view=semantic::tableTextView(*record,*i);const auto& t=view.transform;const auto det=t.a*t.d-t.b*t.c;const auto dx=point.first-t.tx,dy=point.second-t.ty;const auto r=semantic::tableCellRect(*table,*i);if(std::abs(det)>1e-12){const auto lx=(t.d*dx-t.c*dy)/det,ly=(t.a*dy-t.b*dx)/det;inside=lx>=-6&&ly>=-6&&lx<=r[2]-r[0]-6&&ly<=r[3]-r[1]-6;}}}
+
             if (const auto* content = std::get_if<semantic::RichTextContent>(&record->content)) {
                 const auto layout = textLayoutService_->resolve(record->id, *content);
                 const auto bounds = scene::computeBounds(*record, layout.get()).world;
@@ -443,7 +456,7 @@ bool CanvasEditingRuntime::beginShapeTextEditAt(float x, float y,
         return false;
     const auto* record = semanticObjects_.find(expected);
     if (!record || (record->kind != semantic::ObjectKind::kShape &&
-                    record->kind != semantic::ObjectKind::kSticky))
+                    record->kind != semantic::ObjectKind::kSticky && record->kind != semantic::ObjectKind::kTable))
         return false;
 
     runtime::TextIntent edit;
@@ -451,6 +464,7 @@ bool CanvasEditingRuntime::beginShapeTextEditAt(float x, float y,
     edit.object = expected;
     edit.viewX = x;
     edit.viewY = y;
+    (void)tableTargetAt(edit);
     if (editor->intent(edit).status != runtime::TextStatus::kApplied)
         return false;
 
@@ -505,7 +519,7 @@ bool CanvasEditingRuntime::observeTouchTextTap(const input::PointerSample& sampl
         const auto* record = object.isZero() ? nullptr : semanticObjects_.find(object);
         touchTapContacts_.insert_or_assign(
             sample.key, TouchTapContact{record && (grouped || record->kind == semantic::ObjectKind::kShape ||
-                                                   record->kind == semantic::ObjectKind::kSticky)
+                                                   record->kind == semantic::ObjectKind::kSticky || record->kind == semantic::ObjectKind::kTable)
                                             ? object : semantic::ObjectId{},
                                         sample.x, sample.y, sample.timestampNs, false});
         return false;

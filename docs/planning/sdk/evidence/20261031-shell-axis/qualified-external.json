@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "commands": [
+    {
+      "command": [
+        "cmake",
+        "-S",
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-dll-consumer-7e7_6zie\\example",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DAxiomSDK_DIR=C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-shell-axis-native\\lib\\cmake\\AxiomSDK",
+        "-B",
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-dll-consumer-7e7_6zie\\build",
+        "-DAXIOM_EXAMPLE_CRT=MD"
+      ],
+      "cwd": "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-dll-consumer-7e7_6zie",
+      "exit_code": 0,
+      "stdout": "-- The C compiler identification is MSVC 19.51.36246.0\n-- The CXX compiler identification is MSVC 19.51.36246.0\n-- Detecting C compiler ABI info\n-- Detecting C compiler ABI info - done\n-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped\n-- Detecting C compile features\n-- Detecting C compile features - done\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- Configuring done (4.8s)\n-- Generating done (0.0s)\n-- Build files have been written to: C:/Users/Chado/AppData/Local/Temp/axiom-dll-consumer-7e7_6zie/build\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-dll-consumer-7e7_6zie\\build"
+      ],
+      "cwd": "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-dll-consumer-7e7_6zie",
+      "exit_code": 0,
+      "stdout": "[1/6] Building C object CMakeFiles\\axiom_c_loader.dir\\load_library.c.obj\n[2/6] Linking C executable axiom_c_loader.exe\n[3/6] Building CXX object CMakeFiles\\axiom_bridge_tests.dir\\bridge.cpp.obj\n[4/6] Linking CXX executable axiom_bridge_tests.exe\n[5/6] Building CXX object CMakeFiles\\axiom_example.dir\\main.cpp.obj\n[6/6] Linking CXX executable axiom_example.exe\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-dll-consumer-7e7_6zie\\build\\axiom_example.exe",
+        "--test"
+      ],
+      "cwd": "C:\\Users\\Chado\\AppData\\Local\\Temp",
+      "exit_code": 0,
+      "stdout": "BUILD {\"apiVersion\":1,\"dirty\":true,\"features\":{\"resourceCustody\":1,\"shellAxis\":1},\"ok\":true,\"platform\":\"windows\",\"sdkVersion\":\"1.0.0-preview.1\",\"sourceRevision\":\"4fc3ebfe1325c9197024f1cd7137e54473a1c76d\"}\nPASS DLL /MD external app, real HWND input, commands, isolated owners, lifecycle\n",
+      "stderr": "[d3d12] resize owner=1 old=0x0 new=884x661 gen=0\\n[d3d12] resize ready owner=1 gen=1\\n[d3d12] resize owner=0 old=0x0 new=884x661 gen=0\\n[d3d12] resize ready owner=0 gen=1\\n[d3d12] resize owner=1 old=884x661 new=884x641 gen=1\\n[d3d12] resize ready owner=1 gen=2\\n[d3d12] resize owner=0 old=884x661 new=884x641 gen=1\\n[d3d12] resize ready owner=0 gen=2\\n[axiom] present begin frame=1 objects=1 scene_records=1\n[axiom] finish begin pointer=2 objects=1 scene_gen=3\n[axiom] scene apply pointer=2 ok=1 objects=2 scene_gen=4\n[d3d12] resize owner=1 old=0x0 new=884x641 gen=0\\n[d3d12] resize ready owner=1 gen=1\\n[d3d12] resize owner=0 old=0x0 new=884x641 gen=0\\n[d3d12] resize ready owner=0 gen=1\\n[axiom] finish begin pointer=3 objects=2 scene_gen=4\n[axiom] scene apply pointer=3 ok=1 objects=3 scene_gen=5\n[axiom] present begin frame=2 objects=4 scene_records=4\n[axiom] present begin frame=3 objects=4 scene_records=4\n[d3d12] resize owner=1 old=0x0 new=884x641 gen=0\\n[d3d12] resize ready owner=1 gen=1\\n[d3d12] resize owner=0 old=0x0 new=884x641 gen=0\\n[d3d12] resize ready owner=0 gen=1\\n[d3d12] resize owner=1 old=884x641 new=600x440 gen=2\\n[d3d12] resize ready owner=1 gen=3\\n[d3d12] resize owner=0 old=884x641 new=600x440 gen=2\\n[d3d12] resize ready owner=0 gen=3\\n[d3d12] resize owner=1 old=600x440 new=600x440 gen=3\\n[d3d12] resize ready owner=1 gen=4\\n[d3d12] resize owner=0 old=600x440 new=600x440 gen=3\\n[d3d12] resize ready owner=0 gen=4\\n[axiom] present begin frame=4 objects=8 scene_records=8\n"
+    },
+    {
+      "command": [
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-dll-consumer-7e7_6zie\\build\\axiom_c_loader.exe"
+      ],
+      "cwd": "C:\\Users\\Chado\\AppData\\Local\\Temp",
+      "exit_code": 0,
+      "stdout": "PASS pure C LoadLibrary/unload/reload and ABI version rejection\n",
+      "stderr": "[d3d12] resize owner=1 old=0x0 new=484x311 gen=0\\n[d3d12] resize ready owner=1 gen=1\\n[d3d12] resize owner=0 old=0x0 new=484x311 gen=0\\n[d3d12] resize ready owner=0 gen=1\\n[d3d12] resize owner=1 old=0x0 new=484x311 gen=0\\n[d3d12] resize ready owner=1 gen=1\\n[d3d12] resize owner=0 old=0x0 new=484x311 gen=0\\n[d3d12] resize ready owner=0 gen=1\\n[d3d12] resize owner=1 old=0x0 new=484x311 gen=0\\n[d3d12] resize ready owner=1 gen=1\\n[d3d12] resize owner=0 old=0x0 new=484x311 gen=0\\n[d3d12] resize ready owner=0 gen=1\\n"
+    },
+    {
+      "command": [
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-dll-consumer-7e7_6zie\\build\\axiom_bridge_tests.exe"
+      ],
+      "cwd": "C:\\Users\\Chado\\AppData\\Local\\Temp",
+      "exit_code": 0,
+      "stdout": "PASS ShellAxisBridge: deferred subscription, identity, custody, overload, status, mixed remote, no-echo, close, Undo/Redo\n",
+      "stderr": "[d3d12] resize owner=1 old=0x0 new=784x561 gen=0\\n[d3d12] resize ready owner=1 gen=1\\n[d3d12] resize owner=0 old=0x0 new=784x561 gen=0\\n[d3d12] resize ready owner=0 gen=1\\n[d3d12] resize owner=1 old=0x0 new=784x561 gen=0\\n[d3d12] resize ready owner=1 gen=1\\n[d3d12] resize owner=0 old=0x0 new=784x561 gen=0\\n[d3d12] resize ready owner=0 gen=1\\n[d3d12] resize owner=1 old=0x0 new=784x561 gen=0\\n[d3d12] resize ready owner=1 gen=1\\n[d3d12] resize owner=0 old=0x0 new=784x561 gen=0\\n[d3d12] resize ready owner=0 gen=1\\n[d3d12] resize owner=1 old=0x0 new=784x561 gen=0\\n[d3d12] resize ready owner=1 gen=1\\n[d3d12] resize owner=0 old=0x0 new=784x561 gen=0\\n[d3d12] resize ready owner=0 gen=1\\n[axiom] finish begin pointer=1 objects=1 scene_gen=1\n[d3d12] resize owner=1 old=0x0 new=784x561 gen=0\\n[d3d12] resize ready owner=1 gen=1\\n[d3d12] resize owner=0 old=0x0 new=784x561 gen=0\\n[d3d12] resize ready owner=0 gen=1\\n[d3d12] resize owner=1 old=0x0 new=784x561 gen=0\\n[d3d12] resize ready owner=1 gen=1\\n[d3d12] resize owner=0 old=0x0 new=784x561 gen=0\\n[d3d12] resize ready owner=0 gen=1\\n"
+    },
+    {
+      "command": [
+        "dumpbin",
+        "/dependents",
+        "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-shell-axis-native\\bin\\axiom.dll"
+      ],
+      "cwd": "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-dll-consumer-7e7_6zie",
+      "exit_code": 0,
+      "stdout": "Microsoft (R) COFF/PE Dumper Version 14.51.36246.0\nCopyright (C) Microsoft Corporation.  All rights reserved.\n\n\nDump of file C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-shell-axis-native\\bin\\axiom.dll\n\nFile Type: DLL\n\n  Image has the following dependencies:\n\n    ole32.dll\n    USER32.dll\n    dcomp.dll\n    IMM32.dll\n    d3d12.dll\n    dxgi.dll\n    D3DCOMPILER_47.dll\n    KERNEL32.dll\n    dbghelp.dll\n\n  Summary\n\n       21000 .data\n        1000 .fptable\n       70000 .pdata\n      265000 .rdata\n        C000 .reloc\n        1000 .rsrc\n      A0F000 .text\n        1000 malloc_h\n        4000 protodes\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "dumpbin",
+        "/exports",
+        "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-shell-axis-native\\bin\\axiom.dll"
+      ],
+      "cwd": "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-dll-consumer-7e7_6zie",
+      "exit_code": 0,
+      "stdout": "Microsoft (R) COFF/PE Dumper Version 14.51.36246.0\nCopyright (C) Microsoft Corporation.  All rights reserved.\n\n\nDump of file C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-shell-axis-native\\bin\\axiom.dll\n\nFile Type: DLL\n\n  Section contains the following exports for axiom.dll\n\n    00000000 characteristics\n    FFFFFFFF time date stamp\n        0.00 version\n           1 ordinal base\n          16 number of functions\n          16 number of names\n\n    ordinal hint RVA      name\n\n          1    0 00144070 axiom_abandon\n          2    1 00144090 axiom_abi_version\n          3    2 001440A0 axiom_buffer_copy\n          4    3 001441A0 axiom_buffer_release\n          5    4 001442A0 axiom_buffer_size\n          6    5 00144380 axiom_call\n          7    6 00144440 axiom_close\n          8    7 00144460 axiom_create\n          9    8 00144E50 axiom_dispatch_events\n         10    9 00144E60 axiom_input_begin\n         11    A 00144ED0 axiom_input_cancel\n         12    B 00144F20 axiom_input_source\n         13    C 00144F50 axiom_input_submit\n         14    D 00144FA0 axiom_subscribe\n         15    E 00145020 axiom_unsubscribe\n         16    F 00145040 axiom_window\n\n  Summary\n\n       21000 .data\n        1000 .fptable\n       70000 .pdata\n      265000 .rdata\n        C000 .reloc\n        1000 .rsrc\n      A0F000 .text\n        1000 malloc_h\n        4000 protodes\n",
+      "stderr": ""
+    }
+  ],
+  "build_identity": {
+    "apiVersion": 1,
+    "dirty": true,
+    "features": {
+      "resourceCustody": 1,
+      "shellAxis": 1
+    },
+    "ok": true,
+    "platform": "windows",
+    "sdkVersion": "1.0.0-preview.1",
+    "sourceRevision": "4fc3ebfe1325c9197024f1cd7137e54473a1c76d"
+  },
+  "dll_sha256": "053a2ff11911428503147443693c11a84037bc96ebd1597ebbab36cf3b8d3bb6",
+  "exports": [
+    "axiom_abandon",
+    "axiom_abi_version",
+    "axiom_buffer_copy",
+    "axiom_buffer_release",
+    "axiom_buffer_size",
+    "axiom_call",
+    "axiom_close",
+    "axiom_create",
+    "axiom_dispatch_events",
+    "axiom_input_begin",
+    "axiom_input_cancel",
+    "axiom_input_source",
+    "axiom_input_submit",
+    "axiom_subscribe",
+    "axiom_unsubscribe",
+    "axiom_window"
+  ],
+  "physical_ime_touch": "PHYSICAL_PENDING"
+}

@@ -29,7 +29,8 @@ namespace {
 }
 
 [[nodiscard]] bool supportsField(ObjectKind kind, std::uint32_t field_id) noexcept {
-    if (kind == ObjectKind::kSection) return field_id == 0x3U || field_id == 0x100U;
+    if (kind == ObjectKind::kTable) return (field_id>=1U && field_id<=4U) || field_id==0x102U;
+    if (kind == ObjectKind::kSection) return field_id == 0x3U || field_id == 0x100U || field_id==0x101U || field_id==0x102U;
     switch (field_id) {
         case 0x00000001U:
         case 0x00000002U:
@@ -45,6 +46,9 @@ namespace {
         case 0x00000101U:
             return kind == ObjectKind::kShape || kind == ObjectKind::kVectorPath ||
                    kind == ObjectKind::kConnector || kind == ObjectKind::kSticky;
+        case 0x103U: return kind==ObjectKind::kShape||kind==ObjectKind::kConnector;
+        case 0x102U:
+            return kind == ObjectKind::kShape || kind == ObjectKind::kConnector || kind == ObjectKind::kSticky || kind == ObjectKind::kVectorPath;
         case 0x00000200U:
         case 0x00000201U:
             return kind == ObjectKind::kConnector;
@@ -66,6 +70,8 @@ namespace {
             return std::holds_alternative<FillStyleValue>(value);
         case 0x00000101U:
             return std::holds_alternative<StrokeStyleValue>(value);
+        case 0x103U: return std::holds_alternative<CornerStyleV1>(value);
+        case 0x102U: return std::holds_alternative<SketchStyleV1>(value);
         case 0x00000200U:
         case 0x00000201U:
             return std::holds_alternative<ConnectorDecorationValue>(value);
@@ -93,6 +99,8 @@ StatefulResult requireKindVersion(
     if (!isKnownObjectKind(record.kind) || !isKnownObjectKind(kind)) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
+    const bool compact = kind == ObjectKind::kVectorStroke && kind_version == 3U &&
+                          std::holds_alternative<CompactStrokeContent>(record.content);
     const bool brush_v2 = kind == ObjectKind::kVectorStroke && kind_version == 2U &&
                           std::holds_alternative<BrushStrokeContent>(record.content);
     const bool dab_v2 = kind == ObjectKind::kDabStroke && kind_version == 2U &&
@@ -102,7 +110,7 @@ StatefulResult requireKindVersion(
     const bool shape_v3 = kind == ObjectKind::kShape && kind_version == 3U &&
                           std::holds_alternative<ShapeContent>(record.content);
     if (record.kind != kind || record.kind_version != kind_version ||
-        (!brush_v2 && !dab_v2 && !shape_v2 && !shape_v3 && !(kind==ObjectKind::kRichText && (kind_version==2U || kind_version==3U)) && kind_version != 1U)) {
+        (!compact && !brush_v2 && !dab_v2 && !shape_v2 && !shape_v3 && !(kind==ObjectKind::kRichText && (kind_version==2U || kind_version==3U)) && kind_version != 1U)) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
     return StatefulResult{};
@@ -117,6 +125,7 @@ StatefulResult requirePropertyApplicability(
     if (!isKnownObjectKind(record.kind) || (record.kind_version != 1U && !shape_v2 && !shape_v3 && !(record.kind==ObjectKind::kRichText && (record.kind_version==2U || record.kind_version==3U)))) {
         return invalid(StatefulIssue::kInvalidKindVersion);
     }
+    if(field_id==0x103U&&record.kind==ObjectKind::kShape){const auto* shape=std::get_if<ShapeContent>(&record.content);if(!shape||(shape->shape_kind!=1&&shape->shape_kind!=3))return invalid(StatefulIssue::kInvalidApplicability);}
     if (!supportsField(record.kind, field_id)) {
         return invalid(StatefulIssue::kInvalidApplicability);
     }
@@ -131,6 +140,7 @@ StatefulResult validateRecordStateForOperation(const ObjectRecord& record, State
          !(record.kind == ObjectKind::kRichText && (record.kind_version == 2U || record.kind_version == 3U) && std::holds_alternative<RichTextContent>(record.content)) &&
          !(record.kind == ObjectKind::kShape && (record.kind_version == 2U || record.kind_version == 3U) &&
            std::holds_alternative<ShapeContent>(record.content)) &&
+         !(record.kind == ObjectKind::kVectorStroke && record.kind_version == 3U && std::holds_alternative<CompactStrokeContent>(record.content)) &&
          !(record.kind == ObjectKind::kVectorStroke && record.kind_version == 2U &&
            std::holds_alternative<BrushStrokeContent>(record.content)) &&
          !(record.kind == ObjectKind::kDabStroke && record.kind_version == 2U &&

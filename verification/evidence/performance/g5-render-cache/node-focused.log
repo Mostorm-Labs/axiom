@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: all input samples and down/up terminals are retained at every length
+ok 1 - all input samples and down/up terminals are retained at every length
+  ---
+  duration_ms: 35.131375
+  ...
+# Subtest: no warmup samples or long tasks are silently removed from raw timings
+ok 2 - no warmup samples or long tasks are silently removed from raw timings
+  ---
+  duration_ms: 2.623125
+  ...
+# Subtest: a browser receipt is not physical latency or a GPU timer
+ok 3 - a browser receipt is not physical latency or a GPU timer
+  ---
+  duration_ms: 0.309542
+  ...
+# Subtest: accumulation is grouped by actual canonical object count
+ok 4 - accumulation is grouped by actual canonical object count
+  ---
+  duration_ms: 0.669459
+  ...
+# Subtest: the final accumulation bin retains the largest document and warmup object
+ok 5 - the final accumulation bin retains the largest document and warmup object
+  ---
+  duration_ms: 0.240334
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 165.637459

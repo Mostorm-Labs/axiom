@@ -1,0 +1,21 @@
+schema: auditoryworks.axiom.v1.rounded-font-extension
+version: 1
+status: user-accepted-scoped-extension
+contract: docs/planning/sdk/rounded-font-v1-design.md
+fields:
+  - id: 0x00000103
+    name: cornerStyle
+    value_type: CornerStyleV1
+    applicable_kinds: [1,7]
+    shape_kinds: [1,3]
+    radius: [0,16384]
+    default: zero_elided
+    clear: remove_entry
+snapshot:
+  corners: {bit: 512, requirement: rounded-corners-v1}
+  font_fallback: {bit: 1024, requirement: font-fallback-v2}
+font_metadata:
+  version: 2
+  layout_version: 2
+  fallback: explicit_single_hop_resource_id
+  target: admitted_font_metadata_v1

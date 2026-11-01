@@ -1,0 +1,26 @@
+[
+  {
+    "check": "integrity",
+    "command": "python .aegis/packages/AXIOM-SDK-01-v0.2/preflight.py --repo . --check integrity",
+    "exit_code": 0,
+    "output": "INTEGRITY_OK: identity, anchor, package refs, review docs and locked source bytes\r\nDRAFT_ONLY: integrity does not establish Authority, Verification or P32 approval\r\n"
+  },
+  {
+    "check": "PackageBindingPreflight",
+    "command": "python .aegis/packages/AXIOM-SDK-01-v0.2/preflight.py --repo . --check PackageBindingPreflight",
+    "exit_code": 2,
+    "output": "INTEGRITY_OK: identity, anchor, package refs, review docs and locked source bytes\r\nBLOCKED: PackageBindingPreflight: P32 authorization and exact accepted package absent\r\nBLOCKED: PackageBindingPreflight: public ABI/target/threading and multi-selection Authority unresolved\r\n"
+  },
+  {
+    "check": "EvidenceContractPreflight",
+    "command": "python .aegis/packages/AXIOM-SDK-01-v0.2/preflight.py --repo . --check EvidenceContractPreflight",
+    "exit_code": 2,
+    "output": "INTEGRITY_OK: identity, anchor, package refs, review docs and locked source bytes\r\nBLOCKED: EvidenceContractPreflight: public multi-selection and Windows/Web drivers/oracles not materialized or accepted\r\n"
+  },
+  {
+    "check": "DesignPreflight",
+    "command": "python .aegis/packages/AXIOM-SDK-01-v0.2/preflight.py --repo . --check DesignPreflight",
+    "exit_code": 2,
+    "output": "INTEGRITY_OK: identity, anchor, package refs, review docs and locked source bytes\r\nBLOCKED: DesignPreflight: public types, handles and lifecycle require accepted decisions\r\n"
+  }
+]

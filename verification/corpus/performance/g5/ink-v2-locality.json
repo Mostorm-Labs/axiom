@@ -1,0 +1,14 @@
+{
+  "schema_version": "g5-ink-v2-locality-v1",
+  "basis_revision": "6c46f540c3fe5a3a38f4d0d5147e64f81a95dd0b",
+  "profiles": [
+    {"profile": "round-handdrawn", "revision": 1, "package_digest": "024179dc985ee2a0a7a317b761b3e5c7d1265cc3bcb77f3f1c55f0bfd46ea8bf"},
+    {"profile": "chalk-compact-v1", "revision": 1, "package_digest": "51f7bf21b3b3f4dd48978329d729ac3ee41b2a0faed7ade53d0949ef2720f431"}
+  ],
+  "component": {"sample_counts": [512, 2048, 8192], "batch_sizes": [1, 8], "repeats": 3},
+  "web_accumulation": {"samples_per_stroke": 8, "measured_strokes": 32, "warmup_strokes": 1, "repeats": 3, "width": 800, "height": 500, "dpr": 1},
+  "native_accumulation": {"samples_per_stroke": 16, "strokes": 64, "distributions": ["visible", "offscreen-prefix"]},
+  "threshold_policy": "diagnostic observations; no product SLO or official Gate acceptance",
+  "permanent_oracles": ["ReferenceObjectStore", "FullSceneCompiler", "LinearSpatialIndex", "DirectCanonicalNonTiled"],
+  "next_boundary": "single-object commit dependency closure and full projection locality before Damage/RenderGroup/Tile"
+}

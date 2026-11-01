@@ -1,11 +1,11 @@
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
 #include <cassert>
 #include <iostream>
 
 using namespace canvas;
 static foundation::ObjectId id(std::uint64_t v){return foundation::ObjectId::fromUint64(v);}
-static runtime::ConnectorSnapshot settled(runtime::RuntimeComposition& c,runtime::RuntimeFacade& f,
+static runtime::ConnectorSnapshot settled(runtime::RuntimeCompositionCore& c,runtime::RuntimeFacade& f,
                                            foundation::ObjectId object) {
     for(unsigned i=0;i<64;++i) {
         assert(c.ownerPump());
@@ -16,7 +16,7 @@ static runtime::ConnectorSnapshot settled(runtime::RuntimeComposition& c,runtime
     assert(false&&"route must terminate within work budget");return {};
 }
 int main() {
-    runtime::RuntimeComposition c;assert(c.open()&&c.bindSurface(800,600));
+    runtime::RuntimeCompositionCore c;assert(c.open()&&c.bindSurface(800,600));
     runtime::RuntimeFacade& f=c.controlFacade();
     runtime::StickyCreateRequest a{};a.objectId=id(100);a.content={80,80};a.transform.tx=20;a.transform.ty=100;
     auto b=a;b.objectId=id(101);b.transform.tx=400;
@@ -66,7 +66,7 @@ int main() {
     // Invalid/no-route create fails atomically with a typed reason.
     auto invalid=wire;invalid.objectId=id(104);
     invalid.content.start.value=semantic::FreePointEndpoint{{230,130}};
-    const auto count=c.semanticObjectCount(),before=c.readback().semanticGeneration;
+    const auto count=c.semanticObjectCount();const auto before=c.readback().semanticGeneration;
     assert(f.createConnector(invalid).reason==runtime::ConnectorFailureReason::kNoRouteInDomain);
     assert(c.semanticObjectCount()==count&&c.readback().semanticGeneration==before);
     auto straight=invalid;straight.objectId=id(106);straight.content.routing=semantic::ConnectorRouting::kStraight;

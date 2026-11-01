@@ -52,5 +52,29 @@ int main() {
         frame.metricsGeneration, frame.frameId};
     FramePlan stalePlan{staleFrame, drawList};
     assert(renderer.renderFrame(provider, stalePlan).code == BackendSubmissionCode::kRejected);
+    const FrameState backgroundFrame{
+        frame.viewId, frame.camera, frame.worldViewport, frame.metrics,
+        frame.sceneGeneration, frame.sceneReadToken, SurfaceGeneration{provider.generation()},
+        frame.metricsGeneration, frame.frameId};
+    ReferenceDrawList backgroundList{
+        backgroundFrame, canvas::foundation::WorldRect{0,0,64,64}, 0U, 0U,
+        WorldToViewAffine{}, canvas::foundation::WorldRect{0,0,64,64},
+        {}, ReferenceTraversalDiagnostics{}, ReferenceDrawList::kCanonicalEncodingVersion,
+        CanonicalByteOrder::kLittleEndian, {}, {}};
+    canvas::foundation::DocumentBackground background;
+    background.color = {0,0,1,1}; background.patternColor = {1,0,0,1};
+    std::vector<std::uint8_t> backgroundPixels(64U*64U*4U);
+    const auto renderBackground = [&] {
+        const auto plan = FramePlanBuilder::build(backgroundFrame, backgroundList, background);
+        assert(plan && renderer.renderFrame(provider, plan.value()).code == BackendSubmissionCode::kAccepted);
+        assert(provider.readbackRgba(backgroundPixels).code == BackendSubmissionCode::kAccepted);
+    };
+    const auto red = [&](unsigned x,unsigned y) { return backgroundPixels[(y*64U+x)*4U]; };
+    renderBackground();
+    assert(red(12,12) == 0 && backgroundPixels[(12U*64U+12U)*4U+2U] == 255);
+    background.mode = canvas::foundation::BackgroundMode::kDots;
+    renderBackground(); assert(red(24,24) > 100 && red(12,12) == 0 && red(24,12) == 0);
+    background.mode = canvas::foundation::BackgroundMode::kGrid;
+    renderBackground(); assert(red(24,12) > 0 && red(12,12) == 0);
     return 0;
 }

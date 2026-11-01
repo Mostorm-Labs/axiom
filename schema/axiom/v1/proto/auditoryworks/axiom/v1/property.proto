@@ -12,6 +12,8 @@ enum PropertyValueKind {
   PROPERTY_VALUE_STROKE_STYLE = 5;
   PROPERTY_VALUE_BLEND_MODE = 6;
   PROPERTY_VALUE_CONNECTOR_DECORATION = 7;
+  PROPERTY_VALUE_SKETCH_STYLE_V1 = 8;
+  PROPERTY_VALUE_CORNER_STYLE_V1 = 9;
 }
 message PropertyValue {
   oneof value {
@@ -22,6 +24,8 @@ message PropertyValue {
     StrokeStyleValue stroke_style = 5;
     BlendModeValue blend_mode = 6;
     ConnectorDecorationValue connector_decoration = 7;
+    SketchStyleV1 sketch_style = 8;
+    CornerStyleV1 corner_style = 9;
   }
 }
 message PropertyEntry { uint32 field_id = 1; PropertyValue value = 2; }

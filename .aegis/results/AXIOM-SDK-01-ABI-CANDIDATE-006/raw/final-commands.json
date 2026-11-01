@@ -1,0 +1,114 @@
+[
+  {
+    "exit_code": 0,
+    "command": "call \"C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat\" >nul && cl /nologo /W4 /WX /std:c11 /I docs/api /I docs/planning/sdk /c verification/sdk01/multi_candidate_compile.c /Foout/sdk01-review/multi-candidate-c.obj && cl /nologo /W4 /WX /std:c11 /I docs/api /I docs/planning/sdk /c verification/sdk01/multi_candidate_consumer.c /Foout/sdk01-review/multi-candidate-consumer.obj && cl /nologo /W4 /WX /std:c11 /I docs/api /I docs/planning/sdk /c verification/sdk01/multi_candidate_leaf_consumer.c /Foout/sdk01-review/multi-candidate-leaf.obj && cl /nologo /W4 /WX /EHsc /std:c++17 /I docs/api /I docs/planning/sdk /c verification/sdk01/multi_candidate_compile.cpp /Foout/sdk01-review/multi-candidate-cpp.obj && cl /nologo /W4 /WX /std:c11 /I docs/api /I docs/planning/sdk verification/sdk01/multi_candidate_layout.c /Foout/sdk01-review/layout-native.obj /Feout/sdk01-review/layout-native.exe",
+    "output": "multi_candidate_compile.c\r\nmulti_candidate_consumer.c\r\nmulti_candidate_leaf_consumer.c\r\nmulti_candidate_compile.cpp\r\nmulti_candidate_layout.c\r\n",
+    "name": "native_compile"
+  },
+  {
+    "exit_code": 0,
+    "executable": "emcc.bat",
+    "output": "",
+    "name": "wasm_c",
+    "args": [
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I",
+      "docs/api",
+      "-I",
+      "docs/planning/sdk",
+      "-c",
+      "verification/sdk01/multi_candidate_compile.c",
+      "-o",
+      "out/sdk01-review/multi-candidate-wasm.o"
+    ]
+  },
+  {
+    "exit_code": 0,
+    "executable": "emcc.bat",
+    "output": "",
+    "name": "wasm_consumer",
+    "args": [
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I",
+      "docs/api",
+      "-I",
+      "docs/planning/sdk",
+      "-c",
+      "verification/sdk01/multi_candidate_consumer.c",
+      "-o",
+      "out/sdk01-review/multi-candidate-consumer-wasm.o"
+    ]
+  },
+  {
+    "exit_code": 0,
+    "executable": "emcc.bat",
+    "output": "",
+    "name": "wasm_leaf",
+    "args": [
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I",
+      "docs/api",
+      "-I",
+      "docs/planning/sdk",
+      "-c",
+      "verification/sdk01/multi_candidate_leaf_consumer.c",
+      "-o",
+      "out/sdk01-review/multi-candidate-leaf-wasm.o"
+    ]
+  },
+  {
+    "exit_code": 0,
+    "executable": "em++.bat",
+    "output": "",
+    "name": "wasm_cpp",
+    "args": [
+      "-std=c++17",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I",
+      "docs/api",
+      "-I",
+      "docs/planning/sdk",
+      "-c",
+      "verification/sdk01/multi_candidate_compile.cpp",
+      "-o",
+      "out/sdk01-review/multi-candidate-wasm-cpp.o"
+    ]
+  },
+  {
+    "exit_code": 0,
+    "executable": "emcc.bat",
+    "output": "",
+    "name": "wasm_layout_build",
+    "args": [
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I",
+      "docs/api",
+      "-I",
+      "docs/planning/sdk",
+      "verification/sdk01/multi_candidate_layout.c",
+      "-sENVIRONMENT=node",
+      "-o",
+      "out/sdk01-review/layout-wasm.js"
+    ]
+  },
+  {
+    "exit_code": 0,
+    "command": "python verification/sdk01/verify_multi_candidate_layout.py --native <raw/native_layout.json> --wasm <raw/wasm_layout.json>",
+    "output": "windows-x64: candidate layout matches proposed values; pointer width=8\r\nwasm32: candidate layout matches proposed values; pointer width=4\r\nDRAFT ONLY: compile/layout does not prove public SDK linkage, Runtime behavior or acceptance\r\n",
+    "name": "layout_compare"
+  }
+]

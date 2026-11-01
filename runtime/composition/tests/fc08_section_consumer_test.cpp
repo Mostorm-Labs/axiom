@@ -1,4 +1,4 @@
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/runtime_facade.hpp"
 #include <gtest/gtest.h>
 #include <thread>
@@ -6,7 +6,7 @@
 namespace {
 using namespace canvas;
 TEST(FC08SectionConsumer, EmptyCreateRenameResizeReleaseUseRealHistory) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
     runtime::RuntimeFacade& f=c.controlFacade();
     runtime::SectionIntent intent;intent.objectId=foundation::ObjectId::fromUint64(5100);
     intent.transform.tx=50;intent.transform.ty=60;
@@ -33,7 +33,7 @@ TEST(FC08SectionConsumer, EmptyCreateRenameResizeReleaseUseRealHistory) {
     EXPECT_TRUE(c.close());
 }
 TEST(FC08SectionConsumer, WrapReparentReleasePreserveWorldAndRejectCycleAtomically) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
     auto& f=c.controlFacade();
     const auto a=foundation::ObjectId::fromUint64(5200),b=foundation::ObjectId::fromUint64(5201);
     runtime::StickyCreateRequest sticky;sticky.objectId=a;sticky.content={80,80};sticky.transform.tx=40;sticky.transform.ty=60;
@@ -61,7 +61,7 @@ TEST(FC08SectionConsumer, WrapReparentReleasePreserveWorldAndRejectCycleAtomical
     EXPECT_TRUE(c.close());
 }
 TEST(FC08SectionConsumer, DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));auto& f=c.controlFacade();
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));auto& f=c.controlFacade();
     runtime::SectionIntent intent;intent.objectId=foundation::ObjectId::fromUint64(5400);
     EXPECT_EQ(f.submitSectionIntent(intent,1,8802).state,runtime::ProductControlState::kQueued);
     EXPECT_EQ(f.submitSectionIntent(intent,1,8802).state,runtime::ProductControlState::kQueued);
@@ -81,7 +81,7 @@ TEST(FC08SectionConsumer, DuplicateCollisionStaleAndRecoveryHaveTruthfulReceipts
     EXPECT_TRUE(c.close());
 }
 TEST(FC08SectionConsumer, BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothing) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));auto& f=c.controlFacade();
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));auto& f=c.controlFacade();
     runtime::SectionIntent create;create.objectId=foundation::ObjectId::fromUint64(5500);create.content.boundary={0,0,200,160};create.transform.tx=40;create.transform.ty=50;
     ASSERT_EQ(f.submitSectionIntent(create,1,8803).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
     auto state=f.readRuntimeState();ASSERT_EQ(f.setSelectionMode(true,2,state.identity.runtimeGeneration,8803).state,runtime::ProductControlState::kQueued);ASSERT_TRUE(c.ownerPump());
@@ -107,7 +107,7 @@ TEST(FC08SectionConsumer, BoundaryPointerChangesOnlyBoundaryAndCancelWritesNothi
     EXPECT_TRUE(c.close());
 }
 TEST(FC08SectionConsumer, DefaultSectionRemovalReleasesChildren) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));auto& f=c.controlFacade();
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));auto& f=c.controlFacade();
     const auto a=foundation::ObjectId::fromUint64(5600),section=foundation::ObjectId::fromUint64(5601);
     runtime::StickyCreateRequest sticky;sticky.objectId=a;sticky.content={80,80};
     ASSERT_EQ(f.createSticky(sticky).state,runtime::ConnectorCommandState::kApplied);
@@ -120,7 +120,7 @@ TEST(FC08SectionConsumer, DefaultSectionRemovalReleasesChildren) {
     EXPECT_TRUE(c.close());
 }
 TEST(FC08SectionConsumer, MixedRemovalAndInvalidResizePreserveRedo) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));auto& f=c.controlFacade();
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));auto& f=c.controlFacade();
     std::uint64_t n=0;
     auto command=[&](runtime::SectionIntent intent) {
         const auto request=++n;EXPECT_EQ(f.submitSectionIntent(intent,request,8805).state,runtime::ProductControlState::kQueued);
@@ -149,7 +149,7 @@ TEST(FC08SectionConsumer, MixedRemovalAndInvalidResizePreserveRedo) {
     EXPECT_TRUE(c.close());
 }
 TEST(FC08SectionConsumer, ExistingGroupScopeResolvesSectionWithoutNewMembershipModel) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));auto& f=c.controlFacade();
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));auto& f=c.controlFacade();
     semantic::ObjectRecord group;group.id=foundation::ObjectId::fromUint64(5800);group.kind=semantic::ObjectKind::kGroup;group.kind_version=1;
     group.placement.order_key=semantic::OrderKey({1});group.transform={0,2,-2,0,100,200};group.content=semantic::GroupContent{};
     auto section=group;section.id=foundation::ObjectId::fromUint64(5801);section.kind=semantic::ObjectKind::kSection;section.placement.parent_id=group.id;
@@ -184,7 +184,7 @@ TEST(FC08SectionConsumer, ExistingGroupScopeResolvesSectionWithoutNewMembershipM
     EXPECT_TRUE(c.close());
 }
 TEST(FC08SectionConsumer, ProducerOnlyQueuesAndClosingRetiresPendingRequest) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));auto& f=c.controlFacade();
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));auto& f=c.controlFacade();
     runtime::SectionIntent intent;intent.objectId=foundation::ObjectId::fromUint64(5900);
     runtime::ProductControlReceipt accepted;
     std::thread producer([&]{accepted=f.submitSectionIntent(intent,1,8808);});producer.join();
@@ -205,7 +205,7 @@ TEST(FC08SectionConsumer, ProducerOnlyQueuesAndClosingRetiresPendingRequest) {
 }
 class SectionDropTest : public testing::Test {
 protected:
-    runtime::RuntimeComposition c;
+    runtime::RuntimeCompositionCore c;
     runtime::RuntimeFacade& f=c.controlFacade();
     std::uint64_t request=0,sequence=0;
     const foundation::ObjectId actor=foundation::ObjectId::fromUint64(6601);
@@ -358,7 +358,7 @@ TEST_F(SectionDropTest, SurfaceMetricsChangeInvalidatesDropAndLateUp) {
 }
 
 TEST(FC08SectionConsumer, GroupSelectedRootsAdvertisesCapability) {
-    runtime::RuntimeComposition c; ASSERT_TRUE(c.open()); ASSERT_TRUE(c.bindSurface(800,600));
+    runtime::RuntimeCompositionCore c; ASSERT_TRUE(c.open()); ASSERT_TRUE(c.bindSurface(800,600));
     semantic::InsertObjectsOp insert;
     for (std::uint64_t i=1;i<=2;++i) {
         semantic::ObjectRecord object;
@@ -422,7 +422,7 @@ TEST(FC08SectionConsumer, GroupSelectedRootsAdvertisesCapability) {
 }
 
 TEST(FC08SectionConsumer, UngroupTransformedGroupPreservesSectionWorldPose) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
     auto& f=c.controlFacade();
     semantic::ObjectRecord group;group.id=foundation::ObjectId::fromUint64(4001);
     group.kind=semantic::ObjectKind::kGroup;group.kind_version=1;
@@ -455,7 +455,7 @@ TEST(FC08SectionConsumer, UngroupTransformedGroupPreservesSectionWorldPose) {
 }
 
 TEST(FC08SectionConsumer, NestedGroupAndSectionKeepWorldPoseAcrossUndoRedo) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
     auto& f=c.controlFacade();
     const auto sectionA=foundation::ObjectId::fromUint64(4101);
     const auto sectionB=foundation::ObjectId::fromUint64(4102);
@@ -503,7 +503,7 @@ TEST(FC08SectionConsumer, NestedGroupAndSectionKeepWorldPoseAcrossUndoRedo) {
 }
 
 TEST(FC08SectionConsumer, DragGroupedSectionsMovesEachOnceAndUndoRestores) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
     auto& f=c.controlFacade();constexpr std::uint64_t client=4200;
     const auto a=foundation::ObjectId::fromUint64(4201),b=foundation::ObjectId::fromUint64(4202);
     const auto group=foundation::ObjectId::fromUint64(4203);
@@ -542,7 +542,7 @@ TEST(FC08SectionConsumer, DragGroupedSectionsMovesEachOnceAndUndoRestores) {
 }
 
 TEST(FC08SectionConsumer, DoubleClickEntersGroupAndDraggingChildNeverRemovesMembership) {
-    runtime::RuntimeComposition c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
+    runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
     auto& f=c.controlFacade();constexpr std::uint64_t client=4300;
     const auto a=foundation::ObjectId::fromUint64(4301),b=foundation::ObjectId::fromUint64(4302);
     const auto group=foundation::ObjectId::fromUint64(4303);

@@ -1,0 +1,220 @@
+COMMAND ["cmake", "-S", "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-web-baseline-e89d\\source", "-B", "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-web-baseline-e89d\\build", "-G", "Ninja", "-DCMAKE_TOOLCHAIN_FILE=C:/Users/Chado/AppData/Local/Axiom/toolchains/emsdk-6.0.6/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake", "-DCMAKE_MAKE_PROGRAM=D:/git/depot_tools/ninja.exe", "-DCMAKE_BUILD_TYPE=Release", "-DBUILD_TESTING=OFF", "-DCANVAS_BUILD_POC01=OFF", "-DCANVAS_BUILD_INK_PLAYGROUND=OFF", "-DCANVAS_BUILD_SEMANTIC=ON", "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON", "-DCANVAS_BUILD_RENDER=ON", "-DCANVAS_BUILD_RF01=ON", "-DCANVAS_BUILD_CONTROL=ON", "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON", "-DAXIOM_BUILD_DEBUG_UI=ON", "-DAXIOM_DEBUG_UI_PROFILE=full", "-DCANVAS_SKIA_SDK_VARIANT=release", "-DCANVAS_SKIA_SDK_ROOT=C:/Users/Chado/.codex/worktrees/next-stage-main/canvas/.deps/skia-sdk/web-wasm-webgl2/release", "-DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b", "-DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe", "-DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/4502ac8be46f25ae4548d78508ef9b0e593b3c6545f655e47fa5570dbf8b4d2b", "-DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY", "-DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF", "-DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF"]
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Found Python3: D:/Softwares/Anaconda/python.exe (found version "3.13.9") found components: Interpreter
+-- Performing Test AXIOM_HAVE_MISSING_DESIGNATED_FIELD_SUPPRESSION
+-- Performing Test AXIOM_HAVE_MISSING_DESIGNATED_FIELD_SUPPRESSION - Success
+-- Configuring done (15.5s)
+-- Generating done (0.4s)
+-- Build files have been written to: C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk-web-baseline-e89d/build
+COMMAND ["cmake", "--build", "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk-web-baseline-e89d\\build", "--target", "axiom_canvas_demo_web", "--parallel", "6"]
+[0/2] Re-checking globbed directories...
+[1/208] Building CXX object runtime/input/CMakeFiles/canvas_runtime_input.dir/src/arc_input_adapter.cpp.o
+[2/208] Building CXX object runtime/input/CMakeFiles/canvas_runtime_input.dir/src/web_input_adapter.cpp.o
+[3/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/pointer_trace.cpp.o
+[4/208] Building CXX object runtime/input/CMakeFiles/canvas_runtime_input.dir/src/input_router.cpp.o
+[5/208] Building CXX object runtime/input/CMakeFiles/canvas_runtime_input.dir/src/active_pointer_registry.cpp.o
+[6/208] Building CXX object runtime/input/CMakeFiles/canvas_runtime_input.dir/src/platform_interaction_ingress.cpp.o
+[7/208] Linking CXX static library runtime\input\libcanvas_runtime_input.a
+[8/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/brush_engine.cpp.o
+[9/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/replay_runner.cpp.o
+[10/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/stroke_session.cpp.o
+[11/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/ink_engine.cpp.o
+[12/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/multipointer_replay.cpp.o
+[13/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/brush_package_catalog.cpp.o
+[14/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/arc_preview_bridge.cpp.o
+[15/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/legacy_v1_readonly.cpp.o
+[16/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/preview_model.cpp.o
+[17/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/programmable_brush.cpp.o
+[18/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/brush_session.cpp.o
+[19/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/brush_execution_plan.cpp.o
+[20/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/resolved_brush_state.cpp.o
+[21/208] Generating generated/membrane_shape_png.hpp
+[22/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/chalk_dab_evaluator.cpp.o
+[23/208] Generating generated/chalk_shape_png.hpp
+[24/208] Generating generated/chalk_grain_png.hpp
+[25/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/brush_preview_handoff.cpp.o
+[26/208] Generating generated/membrane_grain_png.hpp
+[27/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/brush_package.cpp.o
+[28/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/vector_path_node.cpp.o
+[29/208] Generating generated/auditoryworks/axiom/v1/brush_engine.pb.cc, generated/auditoryworks/axiom/v1/brush_stroke.pb.cc, generated/auditoryworks/axiom/v1/common.pb.cc, generated/auditoryworks/axiom/v1/connector.pb.cc, generated/auditoryworks/axiom/v1/container_operations.pb.cc, generated/auditoryworks/axiom/v1/erase_mask.pb.cc, generated/auditoryworks/axiom/v1/geometry.pb.cc, generated/auditoryworks/axiom/v1/object.pb.cc, generated/auditoryworks/axiom/v1/operation.pb.cc, generated/auditoryworks/axiom/v1/paint.pb.cc, generated/auditoryworks/axiom/v1/property.pb.cc, generated/auditoryworks/axiom/v1/rich_text.pb.cc, generated/auditoryworks/axiom/v1/section.pb.cc, generated/auditoryworks/axiom/v1/snapshot.pb.cc, generated/auditoryworks/axiom/v1/vector_path.pb.cc, generated/auditoryworks/axiom/v1/brush_engine.pb.h, generated/auditoryworks/axiom/v1/brush_stroke.pb.h, generated/auditoryworks/axiom/v1/common.pb.h, generated/auditoryworks/axiom/v1/connector.pb.h, generated/auditoryworks/axiom/v1/container_operations.pb.h, generated/auditoryworks/axiom/v1/erase_mask.pb.h, generated/auditoryworks/axiom/v1/geometry.pb.h, generated/auditoryworks/axiom/v1/object.pb.h, generated/auditoryworks/axiom/v1/operation.pb.h, generated/auditoryworks/axiom/v1/paint.pb.h, generated/auditoryworks/axiom/v1/property.pb.h, generated/auditoryworks/axiom/v1/rich_text.pb.h, generated/auditoryworks/axiom/v1/section.pb.h, generated/auditoryworks/axiom/v1/snapshot.pb.h, generated/auditoryworks/axiom/v1/vector_path.pb.h
+[30/208] Building CXX object runtime/ink/CMakeFiles/canvas_runtime_ink.dir/src/vector_stroke_reference.cpp.o
+[31/208] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/build_info.cpp.o
+[32/208] Building CXX object runtime/text/CMakeFiles/canvas_runtime_text.dir/src/sha256.cpp.o
+[33/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/damage_tracker.cpp.o
+[34/208] Building CXX object runtime/control/CMakeFiles/canvas_runtime_control.dir/src/canvas_control_service.cpp.o
+[35/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/direct_render_scene.cpp.o
+[36/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene_binding.cpp.o
+[37/208] Building CXX object runtime/text/CMakeFiles/canvas_runtime_text.dir/src/text_layout.cpp.o
+[38/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/reference_geometry.cpp.o
+[39/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/incremental_runtime_full_materialization_bridge.cpp.o
+[40/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene.cpp.o
+[41/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/bounds_system.cpp.o
+[42/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/incremental_runtime_coordinator.cpp.o
+[43/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/derived_geometry.cpp.o
+[44/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene_impact.cpp.o
+[45/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene_dependency_graph.cpp.o
+[46/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene_view.cpp.o
+[47/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/hierarchy_geometry.cpp.o
+[48/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/connector_router.cpp.o
+[49/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/spatial_delta.cpp.o
+[50/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene_delta.cpp.o
+[51/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/shadow_render_scene.cpp.o
+[52/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/scene_record_store.cpp.o
+[53/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/linear_spatial_index.cpp.o
+[54/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/uniform_grid_spatial_index.cpp.o
+[55/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/interaction_runtime.cpp.o
+[56/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/hit_test_service.cpp.o
+[57/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/editor_session.cpp.o
+[58/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/eraser_session.cpp.o
+[59/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/creation_session.cpp.o
+[60/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/full_scene_compiler.cpp.o
+[61/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/region_selection_geometry.cpp.o
+[62/208] Building CXX object runtime/scene/CMakeFiles/canvas_runtime_scene.dir/src/runtime_scene_projection.cpp.o
+[63/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/brush_commit_adapter.cpp.o
+[64/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/interaction_dispatch_runtime.cpp.o
+[65/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_text_geometry.cpp.o
+[66/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/transform_session.cpp.o
+[67/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_connector_routing.cpp.o
+[68/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/text_edit_session.cpp.o
+[69/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/transform_handle_drag.cpp.o
+[70/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/region_selection_session.cpp.o
+[71/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/selection_session.cpp.o
+[72/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/interaction_dependency_footprint.cpp.o
+[73/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/session_manager.cpp.o
+[74/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/multi_contact_coordinator.cpp.o
+[75/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/gesture_arbiter.cpp.o
+[76/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/viewport_constraints.cpp.o
+[77/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/canvas_interaction_coordinator.cpp.o
+[78/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/viewport_interaction_controller.cpp.o
+[79/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/editor_history.cpp.o
+[80/208] Linking CXX static library runtime\ink\libcanvas_runtime_ink.a
+[81/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_interaction.dir/src/undoable_command.cpp.o
+[82/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_region_selection.cpp.o
+[83/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/selection_region_geometry.cpp.o
+[84/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_selection_summary.cpp.o
+[85/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/visibility_resolver.cpp.o
+[86/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_backend.cpp.o
+[87/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_section_commands.cpp.o
+[88/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/surface_lifecycle.cpp.o
+[89/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/presentation_tracker.cpp.o
+[90/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/canonical_handoff.cpp.o
+[91/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/render_target.cpp.o
+[92/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/frame_plan.cpp.o
+[93/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/editing_overlay.cpp.o
+[94/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/runtime_frame_coordinator.cpp.o
+[95/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/brush_outline_skia_path.cpp.o
+[96/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/runtime_app_binding.cpp.o
+[97/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/direct_reference_source.cpp.o
+[98/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/preview_surface.cpp.o
+[99/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/image_resource.cpp.o
+[100/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/webgl_surface_backend.cpp.o
+[101/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_text_resources.cpp.o
+[102/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_surface_provider.cpp.o
+[103/208] Building CXX object runtime/interaction/CMakeFiles/canvas_runtime_editor.dir/src/canvas_editing_runtime.cpp.o
+[104/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_headless_backend.cpp.o
+[105/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_brush_renderer.cpp.o
+[106/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_scene_renderer.cpp.o
+[107/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/snapshot.cpp.o
+[108/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_ink_backend.cpp.o
+[109/208] Building CXX object runtime/render/CMakeFiles/canvas_runtime_render.dir/src/skia_renderer.cpp.o
+[110/208] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/resource_binding.cpp.o
+[111/208] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/scene_adapter.cpp.o
+[112/208] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/public_composition.cpp.o
+[113/208] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/runtime_composition.cpp.o
+[114/208] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_section.cpp.o
+[115/208] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_connector_sticky.cpp.o
+[116/208] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_image.cpp.o
+[117/208] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_text.cpp.o
+[118/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/workbench.cpp.o
+[119/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/controller.cpp.o
+[120/208] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/canvas_runtime_facade.cpp.o
+[121/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/snapshot_assembler.cpp.o
+[122/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/control_router.cpp.o
+[123/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/activity_log.cpp.o
+[124/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/input_capture.cpp.o
+[125/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/panel_registry.cpp.o
+[126/208] Building CXX object runtime/composition/CMakeFiles/canvas_runtime_composition.dir/src/multi_selection_port.cpp.o
+[127/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/imgui_skia_renderer.cpp.o
+[128/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/builtin_panels.cpp.o
+[129/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/panels/inspect.cpp.o
+[130/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/panels/dashboard.cpp.o
+[131/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/panel_model.cpp.o
+[132/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/panels/scenarios.cpp.o
+[133/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/panels/control.cpp.o
+[134/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/__/.deps/imgui/imgui_draw.cpp.o
+[135/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/panels/features/ink.cpp.o
+[136/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/panels/performance.cpp.o
+[137/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/__/.deps/imgui/imgui_tables.cpp.o
+[138/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/src/panels/runtime.cpp.o
+[139/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/__/.deps/imgui/imgui.cpp.o
+[140/208] Building CXX object debug_ui/CMakeFiles/canvas_debug_ui.dir/__/.deps/imgui/imgui_widgets.cpp.o
+[141/208] Building CXX object apps/axiom_canvas_demo/CMakeFiles/axiom_canvas_demo_common.dir/common/camera_controller.cpp.o
+[142/208] Linking CXX static library runtime\control\libcanvas_runtime_control.a
+[143/208] Building CXX object apps/axiom_canvas_demo/CMakeFiles/axiom_canvas_demo_common.dir/platform/windows/windows_surface_adapter.cpp.o
+[144/208] Building CXX object apps/axiom_canvas_demo/CMakeFiles/axiom_canvas_demo_common.dir/common/demo_hit_select.cpp.o
+[145/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/sha256_internal.cpp.o
+[146/208] Building CXX object apps/axiom_canvas_demo/CMakeFiles/axiom_canvas_demo_common.dir/platform/web/web_surface_host.cpp.o
+[147/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/resource_manifest.cpp.o
+[148/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/change_set.cpp.o
+[149/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/applied_operation_ledger.cpp.o
+[150/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/idempotency.cpp.o
+[151/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/object_index.cpp.o
+[152/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/stateful_validation.cpp.o
+[153/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/semantic_types.cpp.o
+[154/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/reference_object_store.cpp.o
+[155/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/indexed_object_store.cpp.o
+[156/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/container_operation_validation.cpp.o
+[157/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/container_operation_normalization.cpp.o
+[158/208] Building CXX object apps/axiom_canvas_demo/CMakeFiles/axiom_canvas_demo_web.dir/platform/web/bridge.cpp.o
+[159/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/operation_state_validator.cpp.o
+[160/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/connector_validation.cpp.o
+[161/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/container_topology_plan.cpp.o
+[162/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/operation_fingerprint.cpp.o
+[163/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/hierarchy_validation.cpp.o
+[164/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/container_operation_mapping.cpp.o
+[165/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/staged_object_view.cpp.o
+[166/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/delete_closure.cpp.o
+[167/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/validator.cpp.o
+[168/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/hierarchy_capability_validation.cpp.o
+[169/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/operation_specific_validation.cpp.o
+[170/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/rich_text_state_plan.cpp.o
+[171/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/restore_planner.cpp.o
+[172/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/brush_engine_codec.cpp.o
+[173/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/normalizer.cpp.o
+[174/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/replay.cpp.o
+[175/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/rich_text_state.cpp.o
+[176/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/snapshot.cpp.o
+[177/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/snapshot_bootstrap.cpp.o
+[178/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/change_set_builder.cpp.o
+[179/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/codec.cpp.o
+[180/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/atomic_apply.cpp.o
+[181/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/operation_engine.cpp.o
+[182/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/protobuf_object_mapping.cpp.o
+[183/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/brush_engine.pb.cc.o
+[184/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/brush_stroke.pb.cc.o
+[185/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/rich_text.pb.cc.o
+[186/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/src/apply_plan.cpp.o
+[187/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/paint.pb.cc.o
+[188/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/property.pb.cc.o
+[189/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/section.pb.cc.o
+[190/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/vector_path.pb.cc.o
+[191/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/snapshot.pb.cc.o
+[192/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/common.pb.cc.o
+[193/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/container_operations.pb.cc.o
+[194/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/object.pb.cc.o
+[195/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/geometry.pb.cc.o
+[196/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/connector.pb.cc.o
+[197/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/erase_mask.pb.cc.o
+[198/208] Building CXX object runtime/semantic/CMakeFiles/canvas_runtime_semantic.dir/generated/auditoryworks/axiom/v1/operation.pb.cc.o
+[199/208] Linking CXX static library runtime\semantic\libcanvas_runtime_semantic.a
+[200/208] Linking CXX static library runtime\text\libcanvas_runtime_text.a
+[201/208] Linking CXX static library runtime\interaction\libcanvas_runtime_interaction.a
+[202/208] Linking CXX static library runtime\scene\libcanvas_runtime_scene.a
+[203/208] Linking CXX static library runtime\render\libcanvas_runtime_render.a
+[204/208] Linking CXX static library runtime\interaction\libcanvas_runtime_editor.a
+[205/208] Linking CXX static library runtime\composition\libcanvas_runtime_composition.a
+[206/208] Linking CXX static library debug_ui\libcanvas_debug_ui.a
+[207/208] Linking CXX static library apps\axiom_canvas_demo\libaxiom_canvas_demo_common.a
+[208/208] Linking CXX executable apps\axiom_canvas_demo\axiom_canvas_demo_web.js

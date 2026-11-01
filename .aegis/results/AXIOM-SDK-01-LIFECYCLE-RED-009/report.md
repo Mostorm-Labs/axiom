@@ -1,0 +1,7 @@
+# SDK-01 lifecycle external link baseline — 009
+
+Subject: `48f08cd3a2e13353f85d479d4e6ab732a88e1875`. The actual existing `canvas_runtime_composition.lib` from the SDK review build and the checked-in V1 C header were copied to a fresh directory outside the repository. They are the existing Runtime archive and public header, not an installed SDK. Hashes and exact commands/outputs are in `facts.json` and `raw/consumer.json`. The archive was built from the existing Runtime sources using the locked dependency build documented in result 006; no SDK or dependency was rebuilt for this probe.
+
+The real external C and C++ consumer sources compiled, CMake configured (exit 0), and the link failed (build exit 1): `canvas_runtime_get_abi_version`, `canvas_runtime_create`, `canvas_runtime_destroy` and `canvas_runtime_get_capabilities` have no definitions in the existing archive. No consumer executed. This is an observed link RED for the absence of the public C entry points in the existing archive, not evidence of current Runtime lifecycle behavior, SDK testing, a host driver or a physical result. It does not prove that no other locally installed library exists.
+
+Once an actual SDK target is implemented, rerun `verification/sdk01/run_external.py` with its installed header and library and require both distinct consumers to execute; do not substitute this archive as a future SDK. The exact tested header and archive hashes are preserved.

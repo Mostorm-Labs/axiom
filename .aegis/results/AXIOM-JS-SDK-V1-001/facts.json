@@ -1,0 +1,34 @@
+{
+  "base_revision": "fc536ad0586d58834d7abec0caeee1ea177ab9d2",
+  "source_sha256": {
+    "sdk/web/axiom.d.mts": "4118f828ae0d72665f1e7eb00af7e3affa9043f1c21c02f604c1d73e9f27bb29",
+    "sdk/web/axiom.mjs": "1dfa6afeba64adabadf802684011ec340c412df34a7a1a1439fda4382f8aa953",
+    "sdk/web/bridge.cpp": "536004f9f317af01e84dd5c98f4107149f1549b0e480f098eeee77fe655c13b8",
+    "sdk/web/CMakeLists.txt": "448a30c216ccddf0869222da42781fb28a2f726a8fbf644883cd40868763c254",
+    "sdk/web/example.html": "06302d355031cc136cab5025b5debdd2aa8b046c146993d994796bf9f49738d9",
+    "sdk/web/package.json": "ede5766fa220af5d5113a171ab3e33a59dc235e02d3a7a080b0d9ceb8cbcdf12",
+    "sdk/web/README.md": "8f28a56ba9b35f9b92a21fba4526757dd6fc300522ac7c64b0ef0aa9013d0ed9",
+    "CMakeLists.txt": "4a9d41572d25c476e66213d8e9ee30a6bb3d3968b2cc2b0053642933376eb785",
+    "tools/release/build_preview.py": "a8af1a360f4c76e6d4c84608932adce0e3d90f0f301d060b1189abcd3c1e5145",
+    "tools/release/preview_package.py": "25600147f9c85ae0657fb4971dd861325881e2520a6daf28344cbd4d6780dc99",
+    ".github/workflows/sdk-preview-release.yml": "de3be307a7c939952b7cab816abcb89ea31d35a8b5a15dfe9b976ef656e9c0f4",
+    "apps/axiom_canvas_demo/platform/web/text_input.js": "5ffb731ac989cece8b6e4d53c3f828600723a1bb26ebe9b952cd559488858fa4",
+    "verification/sdk_web_external/consumer/pointer_input.mjs": "07868b2c2f2e5d9f67a929df9f86877a89edaf17751dc5bac1540a6fd0bb9d5d",
+    "verification/sdk_js/api_test.mjs": "4157762f3a488a5cd4c52d9729a04c9e588e2f3c2c8235de678b917df274878f",
+    "verification/sdk_js/api_types_test.mts": "2049f2da19b5ca97e637b9e83f739a2faa30d314ff9b028261c3d8222fac57b2",
+    "verification/sdk_js/browser.html": "8f7a33ae2ec08a32b9afe646c17d63c59e166fda361ed7e73816c90579cf4b2d",
+    "verification/sdk_js/verify_browser.mjs": "2abf5363f6cd737cde5dd0be4266913724411fb4b04907ca917c8fc3c0f0a8e3"
+  },
+  "scope": "Standalone JS SDK v1; synthetic Chrome/WebGL2 and installed consumers; not physical or production qualification",
+  "known_open": [
+    "D07 Protobuf/Abseil OOM hang",
+    "MSE-20/23/26 remaining real-provider/fault evidence",
+    "physical IME/touch and non-Chrome profiles"
+  ],
+  "raw_sha256": {
+    "browser-final.json": "d82378604e5b0ebcc7b988c49e4e9393552ccb2fc015006895951e49590773c9",
+    "installed-example-green.json": "da184b39c164194ff1aeb8f5ef827535852d92a6b7f29adb73bfec92c8f5d042",
+    "invalid-range-red.json": "ea9eab74e0ed8e194c38c8f32115489f404495e1c18a5993aa86aa755807c1ec",
+    "legacy-regression.json": "301f0b92e88fb6bf1b104e36d84c9b610a9c92b104113dde91b35d98e924c0ec"
+  }
+}

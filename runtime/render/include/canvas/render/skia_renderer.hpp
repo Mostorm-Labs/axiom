@@ -7,6 +7,10 @@
 #include "canvas/render/preview_surface.hpp"
 #include "canvas/render/editing_overlay.hpp"
 #include "canvas/render/frame_plan.hpp"
+#include "canvas/render/render_cache.hpp"
+#include "canvas/render/navigation_sources.hpp"
+#include "canvas/resources/resource_budget_manager.hpp"
+#include "canvas/render/damage_tracker.hpp"
 #include "canvas/ink/programmable_brush.hpp"
 
 #include <cstdint>
@@ -16,6 +20,7 @@
 class SkCanvas;
 
 namespace canvas::render {
+namespace internal {class SkiaRenderCache;class SkiaNavigationTiles;}
 
 struct CanonicalStrokePoint;
 struct CanonicalViewportTransform;
@@ -26,10 +31,19 @@ class SkiaRenderer final {
   public:
     SkiaRenderer() = default;
     explicit SkiaRenderer(ImageResourceResolver* images) : images_(images) {}
-    void setImageResolver(ImageResourceResolver* images) noexcept { images_ = images; }
+    void setImageResolver(ImageResourceResolver* images) noexcept { images_ = images; ++resourceEpoch_; clearRenderCache(); }
     [[nodiscard]] BackendSubmissionResult renderFrame(
         SkiaSurfaceProvider& provider, const FramePlan& plan,
-        const EditingOverlay* selectionOverlay = nullptr);
+        const EditingOverlay* selectionOverlay = nullptr,
+        const RenderPreparationBudget* preparation = nullptr);
+    // Approximate navigation feedback only; never a canonical coverage receipt.
+    [[nodiscard]] BackendSubmissionResult renderNavigation(
+        SkiaSurfaceProvider&, const CanonicalViewportTransform&, const FrameState&);
+    [[nodiscard]] BackendSubmissionResult renderNavigation(
+        SkiaSurfaceProvider&, const CanonicalViewportTransform&, const FrameState&,
+        const NavigationSourceQuery&, bool allowPrewarm=false);
+    [[nodiscard]] NavigationWork navigationWork() const noexcept;
+    void cancelNavigationWork() noexcept;
     [[nodiscard]] BackendSubmissionResult renderTransientOverlay(
         SkiaSurfaceProvider& provider, const FramePlan& plan,
         const EditingOverlay* selectionOverlay);
@@ -56,12 +70,29 @@ class SkiaRenderer final {
 
     [[nodiscard]] std::uint64_t submissionCount() const noexcept { return submissions_; }
     [[nodiscard]] std::uint64_t rasterizationCount() const noexcept { return rasterizations_; }
+    struct CompactWork final {std::uint64_t generatedKnots=0,retainedBytes=0,temporaryBytes=0;};
+    [[nodiscard]] CompactWork compactWork()const noexcept{return compactWork_;}
+    void clearCompactCache() noexcept {compactCache_.reset();compactWork_.retainedBytes=0;}
+    void setRenderCacheOptions(RenderCacheOptions options);
+    void clearRenderCache() noexcept;
+    [[nodiscard]] RenderCacheWork renderCacheWork() const noexcept;
+    [[nodiscard]] RenderDamage renderDamage() const;
 
   private:
+    std::shared_ptr<internal::SkiaNavigationTiles> navigationTiles_;
+    struct NavigationCache;
+    std::shared_ptr<NavigationCache> navigationCache_;
+    std::shared_ptr<resources::ResourceBudgetManager> resourceBudget_;
     ImageResourceResolver* images_ = nullptr;
     SkiaTextResources textResources_;
     std::uint64_t submissions_ = 0;
     std::uint64_t rasterizations_ = 0;
+    struct CompactCache;
+    std::shared_ptr<CompactCache> compactCache_;
+    CompactWork compactWork_{};
+    std::shared_ptr<internal::SkiaRenderCache> renderCache_;
+    RenderCacheOptions renderCacheOptions_{};
+    std::uint64_t resourceEpoch_=0;
 };
 
 } // namespace canvas::render

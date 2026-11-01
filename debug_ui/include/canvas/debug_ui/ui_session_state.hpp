@@ -2,9 +2,7 @@
 
 #include "canvas/debug_ui/workspace.hpp"
 #include "canvas/runtime/canvas_control_types.hpp"
-#if AXIOM_DEBUG_UI_HAS_MULTI_SELECTION
-#include "canvas/runtime/internal/multi_selection_port.hpp"
-#endif
+#include "canvas/runtime/multi_selection.hpp"
 
 namespace canvas::debug_ui {
 

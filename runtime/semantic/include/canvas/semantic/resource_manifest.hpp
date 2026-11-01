@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <string>
+#include <optional>
 #include <vector>
 
 namespace canvas::semantic {
@@ -60,6 +61,7 @@ struct ReactivateResource final {
     bool operator==(const ReactivateResource&) const = default;
 };
 
+[[nodiscard]] std::optional<ResourceId> fontFallbackResource(const std::vector<std::uint8_t>&) noexcept;
 [[nodiscard]] bool validateResourceManifestEntry(const ResourceManifestEntry&) noexcept;
 [[nodiscard]] bool normalizeResourceManifestEntry(ResourceManifestEntry&) noexcept;
 [[nodiscard]] bool validateResourceManifest(const ResourceManifest&) noexcept;

@@ -82,6 +82,16 @@ struct SectionReferenceCommand final {
     bool operator==(const SectionReferenceCommand&) const = default;
 };
 
+struct TableReferenceCommand final {
+    semantic::TableContent content;
+    std::shared_ptr<const text::TextLayoutSnapshot> layout;
+    std::optional<std::size_t> activeCell = std::nullopt;
+    bool operator==(const TableReferenceCommand&) const = default;
+};
+struct CompactStrokeReferenceCommand final {
+    semantic::CompactStrokeContent content;
+    bool operator==(const CompactStrokeReferenceCommand&) const=default;
+};
 using ReferenceCommand = std::variant<
     ShapeReferenceCommand,
     ImageReferenceCommand,
@@ -94,7 +104,7 @@ using ReferenceCommand = std::variant<
     GroupReferenceCommand,
     BrushStrokeReferenceCommand,
     DabBrushStrokeReferenceCommand,
-    SectionReferenceCommand>;
+    SectionReferenceCommand, TableReferenceCommand, CompactStrokeReferenceCommand>;
 
 struct ReferenceTraversalEntry final {
     RuntimeSceneRecord record;

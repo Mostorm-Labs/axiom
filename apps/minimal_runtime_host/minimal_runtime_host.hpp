@@ -1,6 +1,8 @@
 #pragma once
 
 #include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
+#include "canvas/runtime/internal/runtime_platform_access.hpp"
 
 namespace canvas::minimal_runtime_host {
 // No tool callbacks or private editor state: only input registration and an
@@ -13,7 +15,10 @@ class MinimalRuntimeHost final {
                                       std::uint64_t sequence,
                                       std::uint64_t timestampNs) noexcept;
   [[nodiscard]] bool submit(const input::PlatformPointerBatch& batch) noexcept;
-  [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
+  [[nodiscard]] runtime::RuntimeCompositionCore& composition() noexcept {
+    return runtime::RuntimePlatformAccess::core(composition_);
+  }
+  [[nodiscard]] runtime::RuntimeComposition& publicComposition() noexcept { return composition_; }
  private:
   runtime::RuntimeComposition composition_;
 };

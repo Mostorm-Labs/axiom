@@ -18,7 +18,7 @@
 
 namespace canvas::runtime {
 
-class RuntimeComposition;
+class RuntimeCompositionCore;
 struct MultiSelectionControlWork;
 
 // Shared product-control owner used by Minimal, Playground, Windows and Web.
@@ -26,19 +26,22 @@ struct MultiSelectionControlWork;
 // CanvasEditingRuntime; it never creates a second document or history owner.
 class CanvasRuntimeFacade : public RuntimeFacade {
  public:
+  [[nodiscard]] bool transientInkActive() const noexcept override { return runtime_.laserActive(); }
 #if defined(AXIOM_RUNTIME_QUALIFICATION)
   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
                       CanvasTargetKey target,std::uint64_t runtimeInstance = 1,
-                      RuntimeComposition* composition = nullptr) noexcept;
+                      RuntimeCompositionCore* composition = nullptr) noexcept;
 #else
  private:
-  friend class RuntimeComposition;
+  friend class RuntimeCompositionCore;
   CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
                       CanvasTargetKey target,std::uint64_t runtimeInstance = 1,
-                      RuntimeComposition* composition = nullptr) noexcept;
+                      RuntimeCompositionCore* composition = nullptr) noexcept;
  public:
 #endif
   ~CanvasRuntimeFacade() override;
+  [[nodiscard]] ImageExportResult exportImage(const ImageExportOptions&) noexcept override;
+  [[nodiscard]] std::optional<foundation::DocumentBackground> readBackground() const noexcept override;
   [[nodiscard]] TextReceipt submitTextIntent(const TextIntent&) override;
   [[nodiscard]] TextReceipt submitTextInput(const TextInputEvent&) override;
   [[nodiscard]] TextEditorSnapshot readTextEditor() const override;
@@ -63,9 +66,27 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   [[nodiscard]] StickyCommandReceipt createSticky(const StickyCreateRequest&) override;
   [[nodiscard]] ConnectorSnapshot readSelectedConnector() const override;
   [[nodiscard]] ConnectorSnapshot readConnectorState(semantic::ObjectId) const override;
+  [[nodiscard]] VectorPathResult createVectorPath(const VectorPathCreateRequest&) override;
+  [[nodiscard]] VectorPathSnapshot readVectorPath(foundation::ObjectId = {}) const override;
+  [[nodiscard]] AppearanceSnapshot readAppearance(bool = false) const override;
+  [[nodiscard]] AppearanceResult appearanceCommand(const AppearanceRequest&) override;
+  [[nodiscard]] TableResult tableCommand(const TableRequest&) override;
+  [[nodiscard]] TableSnapshot readTable(foundation::ObjectId = {}) const override;
   [[nodiscard]] StickySnapshot readSelectedSticky() const override;
   [[nodiscard]] SectionSnapshot readSection(foundation::ObjectId = {}) const override;
     [[nodiscard]] SelectionSummary readSelectionSummary() const override;
+  [[nodiscard]] bool setMultiSelectionPermission(MultiSelectionPermissionMode) noexcept override;
+  [[nodiscard]] MultiSelectionProjection readMultiSelection() const noexcept override;
+  [[nodiscard]] std::optional<std::vector<MultiSelectionRootPropertyValue>> readMultiSelectionPropertyValues(
+      std::uint32_t, const MultiSelectionStamp&, const std::vector<foundation::ObjectId>&) const noexcept override;
+  [[nodiscard]] MultiSelectionSubmitReceipt submitMultiSelectionProperty(
+      std::uint32_t, const semantic::PropertyValue&, const MultiSelectionStamp&,
+      const std::vector<foundation::ObjectId>&, std::uint64_t, std::uint64_t) noexcept override;
+  [[nodiscard]] MultiSelectionSubmitReceipt submitMultiSelectionStrokeWidth(
+      double, const MultiSelectionStamp&, const std::vector<foundation::ObjectId>&,
+      std::uint64_t, std::uint64_t) noexcept override;
+  [[nodiscard]] std::optional<MultiSelectionOutcome> multiSelectionReceipt(
+      std::uint64_t, std::uint64_t) const noexcept override;
   CanvasRuntimeFacade(const CanvasRuntimeFacade&) = delete;
   CanvasRuntimeFacade& operator=(const CanvasRuntimeFacade&) = delete;
 
@@ -86,15 +107,15 @@ class CanvasRuntimeFacade : public RuntimeFacade {
 
 #if defined(AXIOM_RUNTIME_QUALIFICATION)
  public:
-  // White-box qualification only. RuntimeComposition is the only production
+  // White-box qualification only. RuntimeCompositionCore is the only production
   // owner that invokes these execution seams; ordinary consumers receive the
-  // RuntimeFacade base interface from RuntimeComposition::controlFacade().
+  // RuntimeFacade base interface from RuntimeCompositionCore::controlFacade().
 #else
  private:
-  // Internal RuntimeComposition execution seam; ordinary consumers cannot
+  // Internal RuntimeCompositionCore execution seam; ordinary consumers cannot
   // reach the concrete binding or editor.
 #endif
-  friend class RuntimeComposition;
+  friend class RuntimeCompositionCore;
   friend class MultiSelectionPort;
   void discardImageCrop() noexcept;
   [[nodiscard]] CanvasControlApplyResult applyControl(
@@ -147,7 +168,7 @@ class CanvasRuntimeFacade : public RuntimeFacade {
   void refreshTarget() const noexcept;
 
   interaction::CanvasEditingRuntime& runtime_;
-  RuntimeComposition* composition_ = nullptr;
+  RuntimeCompositionCore* composition_ = nullptr;
   mutable std::unique_ptr<Binding> binding_;
   mutable std::unique_ptr<CanvasControlService> service_;
   const std::thread::id ownerThread_ = std::this_thread::get_id();

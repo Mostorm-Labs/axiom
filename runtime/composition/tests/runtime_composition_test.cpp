@@ -1,4 +1,4 @@
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/canvas_runtime_facade.hpp"
 #include <cassert>
 #include <algorithm>
@@ -35,7 +35,7 @@ class ResizeFailureProvider final : public canvas::render::SkiaSurfaceProvider {
 };
 
 void stagedProvidersAndDualRoleFailure() {
-  canvas::runtime::RuntimeComposition composition;
+  canvas::runtime::RuntimeCompositionCore composition;
   assert(composition.open() && composition.bindSurface(256U, 256U));
   const auto before = composition.surfaceSnapshot();
   const auto oldTarget = composition.controlFacade().mountedCanvasTargets().front();
@@ -65,7 +65,7 @@ void stagedProvidersAndDualRoleFailure() {
 
 void failedCandidatesKeepAcceptedBindingAndReentrantCloseAborts() {
   using namespace canvas;
-  runtime::RuntimeComposition composition;
+  runtime::RuntimeCompositionCore composition;
   assert(composition.open() && composition.bindSurface(256U, 256U));
   const auto before = composition.surfaceSnapshot();
   const auto target = composition.controlFacade().mountedCanvasTargets().front();
@@ -85,7 +85,7 @@ void failedCandidatesKeepAcceptedBindingAndReentrantCloseAborts() {
   assert(composition.serviceFrameOpportunity(true, frame));
   assert(frame.canonicalFrame.has_value());
 
-  runtime::RuntimeComposition closed;
+  runtime::RuntimeCompositionCore closed;
   assert(closed.open() && closed.bindSurface(256U, 256U));
   auto closing = std::make_unique<ResizeFailureProvider>();
   auto* raw = closing.get();
@@ -98,7 +98,7 @@ void failedCandidatesKeepAcceptedBindingAndReentrantCloseAborts() {
   assert(!closed.surfaceSnapshot().available);
   assert(!closed.serviceFrameOpportunity(true, frame));
   for (const bool lose : {false, true}) {
-    runtime::RuntimeComposition interrupted;
+    runtime::RuntimeCompositionCore interrupted;
     assert(interrupted.open() && interrupted.bindSurface(256U, 256U));
     auto provider = std::make_unique<ResizeFailureProvider>();
     auto* providerRaw = provider.get();
@@ -121,7 +121,7 @@ void failedCandidatesKeepAcceptedBindingAndReentrantCloseAborts() {
 void brushPixelsAndMetricsFenceUseTheAcceptedLogicalSpace() {
   using namespace canvas;
   for (const float dpr : {1.0F, 1.25F, 2.0F}) {
-    runtime::RuntimeComposition composition;
+    runtime::RuntimeCompositionCore composition;
     const auto physical = static_cast<std::uint32_t>(128.0F * dpr);
     assert(composition.open());
     assert(composition.bindSurface({128.0F, 128.0F, physical, physical, dpr, 1.0F}));
@@ -167,7 +167,7 @@ void brushPixelsAndMetricsFenceUseTheAcceptedLogicalSpace() {
 }
 
 void logicalInputMatchesCanonicalAndPreviewPixels() {
-  canvas::runtime::RuntimeComposition composition;
+  canvas::runtime::RuntimeCompositionCore composition;
   assert(composition.open());
   assert(composition.bindSurface({128.0F, 128.0F, 256U, 256U, 2.0F, 1.0F}));
   assert(composition.registerSource(91U));
@@ -233,7 +233,7 @@ void logicalInputMatchesCanonicalAndPreviewPixels() {
 void bindingReplacementKeepsPendingBrushHandoff() {
   using namespace canvas;
   for (const bool canonicalFirst : {false, true}) {
-    runtime::RuntimeComposition composition;
+    runtime::RuntimeCompositionCore composition;
     assert(composition.open() && composition.bindSurface(128U, 128U));
     assert(composition.registerSource(93U));
     assert(composition.setPlatformPresentationDeferred(true));
@@ -273,7 +273,7 @@ void bindingReplacementKeepsPendingBrushHandoff() {
 
 void invalidMetricsAndWrongThreadKeepAcceptedResources() {
   using namespace canvas;
-  runtime::RuntimeComposition composition;
+  runtime::RuntimeCompositionCore composition;
   assert(composition.open() && composition.bindSurface(128U, 128U));
   const auto before = composition.surfaceSnapshot();
   const auto target = composition.controlFacade().mountedCanvasTargets().front();
@@ -325,7 +325,7 @@ canvas::semantic::ResourceManifest makeManifest(std::uint64_t count) {
 
 void bindingChangeInvalidatesControlAndResourceResults() {
   using namespace canvas;
-  runtime::RuntimeComposition composition;
+  runtime::RuntimeCompositionCore composition;
   assert(composition.open() && composition.bindSurface(128U, 128U));
   assert(composition.bindManifest(makeManifest(1U), 44U));
   const auto id = foundation::ObjectId::fromUint64(1U);
@@ -382,7 +382,7 @@ canvas::semantic::ObjectRecord shape(std::uint64_t id) {
 
 void canonicalFeedbackCannotQualifyAnotherInstance() {
   using namespace canvas;
-  runtime::RuntimeComposition a(render::ViewId{1U}), b(render::ViewId{1U});
+  runtime::RuntimeCompositionCore a(render::ViewId{1U}), b(render::ViewId{1U});
   for (auto* c : {&a, &b}) {
     assert(c->open() && c->bindSurface(128U, 128U) && c->registerSource(94U));
     assert(c->setPlatformPresentationDeferred(true));
@@ -422,7 +422,7 @@ void canonicalFeedbackCannotQualifyAnotherInstance() {
   assert(!a.previewActive() && a.qualificationRuntime().pendingCanonicalHandoffCount() == 0U);
 
   assert(b.close());
-  runtime::RuntimeComposition recreated(render::ViewId{1U});
+  runtime::RuntimeCompositionCore recreated(render::ViewId{1U});
   assert(recreated.open() && recreated.bindSurface(128U, 128U));
   assert(recreated.setPlatformPresentationDeferred(true));
   runtime::RuntimeFrameOpportunity fresh{};
@@ -436,7 +436,7 @@ void canonicalFeedbackCannotQualifyAnotherInstance() {
 
 void canonicalWorkRejectsOldUnknownAndFailedQualification() {
   using namespace canvas;
-  runtime::RuntimeComposition c;
+  runtime::RuntimeCompositionCore c;
   assert(c.open() && c.bindSurface(128U, 128U) && c.setPlatformPresentationDeferred(true));
   runtime::RuntimeFrameOpportunity a{}, b{}, retry{};
   assert(c.serviceFrameOpportunity(true, a) && a.canonicalWork);
@@ -484,7 +484,7 @@ void canonicalWorkRejectsOldUnknownAndFailedQualification() {
 
 void reentrantCloseCannotBecomeLost() {
   using namespace canvas;
-  runtime::RuntimeComposition c;
+  runtime::RuntimeCompositionCore c;
   assert(c.open() && c.bindSurface(128U, 128U));
   auto provider = std::make_unique<ResizeFailureProvider>();
   auto* raw = provider.get();
@@ -506,7 +506,7 @@ void reentrantCloseCannotBecomeLost() {
 void terminalEventsCannotPublishOrAdvanceBindings() {
   using namespace canvas;
   for (const bool close : {false, true}) {
-    runtime::RuntimeComposition c;
+    runtime::RuntimeCompositionCore c;
     assert(c.open() && c.bindSurface(128U, 128U) && c.registerSource(95U));
     assert(c.setPlatformPresentationDeferred(true));
     auto provider = std::make_unique<ResizeFailureProvider>();
@@ -559,7 +559,7 @@ void terminalEventsCannotPublishOrAdvanceBindings() {
 
 void cancelPointersKeepsViewport() {
   using namespace canvas;
-  runtime::RuntimeComposition composition;
+  runtime::RuntimeCompositionCore composition;
   assert(composition.open() && composition.bindSurface(800U, 600U));
   assert(composition.registerSource(17U));
   auto& facade = composition.controlFacade();
@@ -616,7 +616,7 @@ void cancelPointersKeepsViewport() {
 
 void fitIncludesEarlierUnchangedObjects() {
   using namespace canvas;
-  runtime::RuntimeComposition composition;
+  runtime::RuntimeCompositionCore composition;
   assert(composition.open() && composition.bindSurface(800U,600U) && composition.registerSource(18U));
   assert(composition.setPlatformPresentationDeferred(true));
   auto& facade = composition.controlFacade();
@@ -672,13 +672,13 @@ int main(int argc, char** argv) {
   canonicalWorkRejectsOldUnknownAndFailedQualification();
   reentrantCloseCannotBecomeLost();
   terminalEventsCannotPublishOrAdvanceBindings();
-  canvas::runtime::RuntimeComposition composition;
+  canvas::runtime::RuntimeCompositionCore composition;
   assert(composition.state() == canvas::runtime::RuntimeCompositionState::kCreated);
   assert(composition.open());
   assert(composition.bindSurface(256U, 256U));
   // Full platform metrics must survive the composition boundary without
   // being collapsed to physical pixels or DPR=1.
-  canvas::runtime::RuntimeComposition metricsComposition;
+  canvas::runtime::RuntimeCompositionCore metricsComposition;
   assert(metricsComposition.open());
   const canvas::render::SurfaceMetrics acceptedMetrics{
       100.0F, 80.0F, 200U, 160U, 2.0F, 1.25F};
@@ -702,7 +702,7 @@ int main(int argc, char** argv) {
 
   // Registering an input source is not a surface bind. It must not promote a
   // Bound composition to Ready merely because a provider was prepared.
-  canvas::runtime::RuntimeComposition preBind;
+  canvas::runtime::RuntimeCompositionCore preBind;
   assert(preBind.open());
   auto preparedProvider = std::make_unique<canvas::render::RasterSkiaSurfaceProvider>();
   assert(preparedProvider->resize(256U, 256U).code ==
@@ -800,7 +800,7 @@ int main(int argc, char** argv) {
   assert(!composition.publishResource(*firstToken, {0x01U}));
   assert(composition.lastResourceError() == canvas::runtime::ResourcePortError::kStaleBinding);
 
-  canvas::runtime::RuntimeComposition queueComposition;
+  canvas::runtime::RuntimeCompositionCore queueComposition;
   assert(queueComposition.open());
   assert(queueComposition.bindSurface(256U, 256U));
   assert(queueComposition.bindManifest(makeManifest(256U), 7U));
@@ -824,7 +824,7 @@ int main(int argc, char** argv) {
   assert(afterQueueFull->state == canvas::runtime::ResourceBindingState::kBytesValidated);
   assert(afterQueueFull->providerGeneration == beforeQueueFull->providerGeneration);
 
-  canvas::runtime::RuntimeComposition rebindComposition;
+  canvas::runtime::RuntimeCompositionCore rebindComposition;
   assert(rebindComposition.open());
   assert(rebindComposition.bindSurface(256U, 256U));
   auto sameResource = makeManifest(1U);
@@ -850,7 +850,7 @@ int main(int argc, char** argv) {
   assert(!rebindComposition.resourceReceipt(canvas::foundation::ObjectId::fromUint64(1U)).has_value());
 
   // Publishing one resource must not invalidate a token issued for another.
-  canvas::runtime::RuntimeComposition independent;
+  canvas::runtime::RuntimeCompositionCore independent;
   assert(independent.open());
   assert(independent.bindSurface(256U, 256U));
   auto pairManifest = makeManifest(2U);
@@ -864,7 +864,7 @@ int main(int argc, char** argv) {
   assert(independent.publishResource(*tokenB, {0x01U}));
 
   // Raw Runtime ingress must honor the same Lost fence as Composition::submit.
-  canvas::runtime::RuntimeComposition lostRaw;
+  canvas::runtime::RuntimeCompositionCore lostRaw;
   assert(lostRaw.open());
   assert(lostRaw.bindSurface(256U, 256U));
   assert(lostRaw.registerSource(17U));
@@ -891,7 +891,7 @@ int main(int argc, char** argv) {
 
   // A restore publishes a new control attachment and fences requests queued
   // against the lost surface. Requests using the new target remain usable.
-  canvas::runtime::RuntimeComposition restored;
+  canvas::runtime::RuntimeCompositionCore restored;
   assert(restored.open());
   assert(restored.bindSurface(256U, 256U));
   auto& restoredFacade = restored.controlFacade();
@@ -929,7 +929,7 @@ int main(int argc, char** argv) {
   // Every canonical mutation ingress remains fenced after close, including
   // history compensation and remote replay.  This guards the shared owner
   // boundary instead of only testing UI-facing controls.
-  canvas::runtime::RuntimeComposition closedMutation;
+  canvas::runtime::RuntimeCompositionCore closedMutation;
   assert(closedMutation.open());
   assert(closedMutation.bindSurface(256U, 256U));
   assert(closedMutation.runtime().selectCreationPreset(
@@ -964,7 +964,7 @@ int main(int argc, char** argv) {
 
   // Every direct canonical owner ingress must reject writes after the
   // surface is lost, before the semantic engine is touched.
-  canvas::runtime::RuntimeComposition lostIngress;
+  canvas::runtime::RuntimeCompositionCore lostIngress;
   assert(lostIngress.open());
   assert(lostIngress.bindSurface(256U, 256U));
   assert(lostIngress.registerSource(31U));
@@ -1001,7 +1001,7 @@ int main(int argc, char** argv) {
 
   // A successful canonical commit must leave a frame demand for a deferred
   // platform presenter to consume.
-  canvas::runtime::RuntimeComposition demandComposition;
+  canvas::runtime::RuntimeCompositionCore demandComposition;
   assert(demandComposition.open());
   assert(demandComposition.bindSurface(256U, 256U));
   assert(demandComposition.registerSource(41U));
@@ -1025,7 +1025,7 @@ int main(int argc, char** argv) {
   // A public frame opportunity must also advance accepted controls and
   // resource notifications when no pointer batch arrives. This is the Web
   // rAF/present path and must not depend on a host-specific ownerPump call.
-  canvas::runtime::RuntimeComposition idleFrameComposition;
+  canvas::runtime::RuntimeCompositionCore idleFrameComposition;
   assert(idleFrameComposition.open());
   assert(idleFrameComposition.bindSurface(256U, 256U));
   auto idleManifest = makeManifest(1U);
@@ -1050,7 +1050,7 @@ int main(int argc, char** argv) {
   // A resource notification accepted immediately before a public frame
   // opportunity must be consumed by that same opportunity; hosts must not
   // need a second timer tick to discover the canonical demand.
-  canvas::runtime::RuntimeComposition sameOpportunity;
+  canvas::runtime::RuntimeCompositionCore sameOpportunity;
   assert(sameOpportunity.open());
   assert(sameOpportunity.bindSurface(256U, 256U));
   assert(sameOpportunity.bindManifest(idleManifest, 32U));
@@ -1074,7 +1074,7 @@ int main(int argc, char** argv) {
   // frame contract. An automatic control application must not consume the
   // frame id that the surrounding frame opportunity is about to submit.
   for (const bool deferred : {false, true}) {
-    canvas::runtime::RuntimeComposition cameraComposition;
+    canvas::runtime::RuntimeCompositionCore cameraComposition;
     assert(cameraComposition.open());
     assert(cameraComposition.bindSurface(256U, 256U));
     cameraComposition.runtime().setPlatformPresentationDeferred(deferred);
@@ -1096,7 +1096,7 @@ int main(int argc, char** argv) {
 
   // A superseded preview capture must not pin the composition to stale
   // pixels after a newer move arrives before the platform acknowledgement.
-  canvas::runtime::RuntimeComposition supersededPreview;
+  canvas::runtime::RuntimeCompositionCore supersededPreview;
   assert(supersededPreview.open());
   assert(supersededPreview.bindSurface(256U, 256U));
   assert(supersededPreview.registerSource(51U));
@@ -1136,7 +1136,7 @@ int main(int argc, char** argv) {
   assert(supersededPreview.finishFrameOpportunity({secondPreview.previewWork, true}));
 
   // A completion for superseded work A must not qualify replacement work B.
-  canvas::runtime::RuntimeComposition delayedPreview;
+  canvas::runtime::RuntimeCompositionCore delayedPreview;
   assert(delayedPreview.open());
   assert(delayedPreview.bindSurface(256U, 256U));
   assert(delayedPreview.registerSource(52U));
@@ -1171,10 +1171,10 @@ int main(int argc, char** argv) {
   assert(delayedPreview.finishFrameOpportunity({delayedB.previewWork, true}));
   assert(!delayedPreview.previewRenderState().dirty);
 
-  // Work identities from separate RuntimeComposition instances must not
+  // Work identities from separate RuntimeCompositionCore instances must not
   // compare equal or authorize one another's preview completion.
-  canvas::runtime::RuntimeComposition instanceA;
-  canvas::runtime::RuntimeComposition instanceB;
+  canvas::runtime::RuntimeCompositionCore instanceA;
+  canvas::runtime::RuntimeCompositionCore instanceB;
   assert(instanceA.open() && instanceA.bindSurface(256U, 256U) && instanceA.registerSource(61U));
   assert(instanceB.open() && instanceB.bindSurface(256U, 256U) && instanceB.registerSource(62U));
   assert(instanceA.setPlatformPresentationDeferred(true));
@@ -1208,7 +1208,7 @@ int main(int argc, char** argv) {
   assert(!instanceB.finishFrameOpportunity({replacementWork.previewWork, true}));
   assert(instanceA.finishFrameOpportunity({aOpportunity.previewWork, true}));
   assert(!instanceA.finishFrameOpportunity({aOpportunity.previewWork, true}));
-  canvas::runtime::RuntimeComposition recreated;
+  canvas::runtime::RuntimeCompositionCore recreated;
   assert(recreated.open() && recreated.bindSurface(256U, 256U) && recreated.registerSource(62U));
   assert(recreated.setPlatformPresentationDeferred(true));
   assert(recreated.submit(bDown) && recreated.submit(bMove));

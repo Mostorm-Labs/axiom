@@ -1,0 +1,24 @@
+test_never_overwrites_existing_work (tools.release.tests.test_npm_publish.NpmPublicationTest.test_never_overwrites_existing_work) ... ok
+test_package_is_publishable_only_to_the_requested_scope_and_registry (tools.release.tests.test_npm_publish.NpmPublicationTest.test_package_is_publishable_only_to_the_requested_scope_and_registry) ... ok
+test_rejects_corrupt_bytes_before_creating_output (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_corrupt_bytes_before_creating_output) ... ok
+test_rejects_foreign_registry_scope_private_and_lifecycle_scripts (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_foreign_registry_scope_private_and_lifecycle_scripts) ... ok
+test_rejects_missing_required_assets_even_with_consistent_manifest (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_missing_required_assets_even_with_consistent_manifest) ... ok
+test_rejects_stable_version_and_missing_npm_provenance (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_stable_version_and_missing_npm_provenance) ... ok
+test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) ... C:\Users\Chado\AppData\Local\Programs\Python\Python312\Lib\zipfile\__init__.py:1611: UserWarning: Duplicate name: 'axiom.mjs'
+  return self._open_to_write(zinfo, force_zip64=force_zip64)
+ok
+test_rejects_unmanifested_files (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_unmanifested_files) ... ok
+test_rejects_wrong_source_kind_or_version (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_wrong_source_kind_or_version) ... ok
+test_verified_release_bytes_are_extracted_without_rewriting (tools.release.tests.test_npm_publish.NpmPublicationTest.test_verified_release_bytes_are_extracted_without_rewriting) ... ok
+test_manifest_and_archive_preserve_exact_assets (tools.release.tests.test_preview_package.PreviewPackageTest.test_manifest_and_archive_preserve_exact_assets) ... ok
+test_missing_required_file_does_not_create_archive (tools.release.tests.test_preview_package.PreviewPackageTest.test_missing_required_file_does_not_create_archive) ... ok
+test_rejects_symlink_and_invalid_revision (tools.release.tests.test_preview_package.PreviewPackageTest.test_rejects_symlink_and_invalid_revision) ... ok
+test_release_requires_four_distinct_assets_for_exact_revision (tools.release.tests.test_preview_package.PreviewPackageTest.test_release_requires_four_distinct_assets_for_exact_revision) ... ok
+test_rejects_internal_static_archives (tools.release.tests.test_consumer_package.ConsumerPayloadTest.test_rejects_internal_static_archives) ... ok
+test_requires_licenses_and_runtime_assets (tools.release.tests.test_consumer_package.ConsumerPayloadTest.test_requires_licenses_and_runtime_assets) ... ok
+test_same_revision_is_insufficient_when_platform_versions_differ (tools.release.tests.test_consumer_package.ConsumerPayloadTest.test_same_revision_is_insufficient_when_platform_versions_differ) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.757s
+
+OK

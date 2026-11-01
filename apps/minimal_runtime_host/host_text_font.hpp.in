@@ -9,6 +9,7 @@ struct HostImportedFont final {
     std::uint64_t id;
     std::string_view file, sha256;
     std::uint64_t bytes;
+    std::uint64_t fallback = 0;
 };
 inline constexpr std::array<HostImportedFont, @AXIOM_IMPORTED_FONT_COUNT@> kHostImportedFonts{{
 @AXIOM_IMPORTED_FONT_ENTRIES@}};

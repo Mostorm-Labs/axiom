@@ -1,0 +1,51 @@
+{
+  "command": [
+    "C:\\Users\\Chado\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+    "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\verification\\sdk_js\\verify_browser.mjs",
+    "out/sdk-js-v1/install/js",
+    "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "out/sdk-js-v1/invalid-range-red.json"
+  ],
+  "consumer": "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-js-sdk-xpJnLK\\consumer",
+  "result": {
+    "status": "FAIL",
+    "results": [
+      "independent document identity",
+      "real pointer input and instance isolation",
+      "actual blue rectangle pixels",
+      "real Undo",
+      "real Redo",
+      "absolute viewport scale",
+      "object eraser readback",
+      "partial eraser readback",
+      "owned snapshot and checkpoint digest",
+      "fresh-owner checkpoint restore without invented History",
+      "real remote operation apply",
+      "remote deduplication without local echo",
+      "native carrier into real text owner",
+      "public confirmed text replacement and selection"
+    ],
+    "error": "Error: text range cannot wrap to uint32: RuntimeError: Aborted(undefined). Build with -sASSERTIONS for more info.\n    at assert (http://127.0.0.1:12537/:7:40)\n    at http://127.0.0.1:12537/:45:90",
+    "errors": []
+  },
+  "exceptions": [],
+  "browserVersion": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/155.0.8059.86",
+    "revision": "@804d6b05f089b27af8342622a36558c49401a1d4",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "jsVersion": "15.5.35.25"
+  },
+  "mode": "headless Chrome/WebGL2; synthetic DOM input",
+  "files": {
+    "axiom.mjs": "000ed17a3f8dffdfcb152b432a19638837f2ec7f7bc185a4fe7950415fef153d",
+    "axiom.d.mts": "7e8e5a579896659d5356d384360ee8408eaf7b3eb31ab9ad3d8c3c6d92f8681b",
+    "axiom-runtime.mjs": "ec658ece6f67f7bb375c72d9ef21708deec812a44de5cca98fd92eea56198025",
+    "axiom-runtime.wasm": "a86fdb5690daaa56ab5115d63cbd14c5bcfc7a5a68d0552093d41ca2de42d37f",
+    "axiom-runtime.data": "afba06991ac1e6c785ddb2c967ffb7f4d079a2d77fb6397bacb394a171df8ff1",
+    "pointer_input.mjs": "07868b2c2f2e5d9f67a929df9f86877a89edaf17751dc5bac1540a6fd0bb9d5d",
+    "text_input.mjs": "5ffb731ac989cece8b6e4d53c3f828600723a1bb26ebe9b952cd559488858fa4"
+  },
+  "exitCode": 1,
+  "error": "Error: JS SDK browser acceptance failed"
+}

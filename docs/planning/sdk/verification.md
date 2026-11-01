@@ -1,0 +1,38 @@
+# SDK verification, platform support and staged dependencies — DRAFT
+
+Each row specifies a proposed acceptance oracle, not an already-passed test. Current tests are corroborative until an external installed consumer exercises the real ABI. Independent expected observations must be specified and accepted before P32; no missing executable, zero matched tests, invented future runner or physical result counts as PASS.
+
+| ID | Proposed obligation and independently observed acceptance | Evidence and owner |
+|---|---|---|
+| API01 | Install headers/libraries to a fresh external directory; C and C++ programs include only installed headers, compile, link and invoke real symbols; scan installed dependency closure and exported allowlist; fail on internal Editor/Scene/Skia/qualification leakage. | actual compiler/link/run outputs, installed file hashes, symbol/dependency listing; SDK-01 owns |
+| API02 | Feed each struct size/version, null, overflow, stride and short-buffer boundary; assert exact error, required size, no out-of-bounds/partial output; test exception boundary, allocation owner, old V1 header/new library compatibility and platform layout. | external C harness and sanitizers or equivalent, independent canaries and layout probe; SDK-01 |
+| API03 | Create two actual runtimes/views; cross instances, wrong types, stale/destroyed and reused handles fail without affecting either state. Two IDs with same lower 64 bits remain distinct; late callbacks fail after generation change. | external consumer observations, full IDs, state before/after; SDK-01 |
+| API04 | Queue tool switch followed immediately by real Pointer Down, drive a no-input owner opportunity, assert intended resulting tool/object, admission versus final receipt, exact client/request/target, stale target and dedupe; close drains accepted operations and blocks late callbacks. | real Facade/owner and external SDK invocation, ordered trace and expected state; SDK-01, close portion SDK-02/03 |
+| API05 | For every promised typed capability, create/edit/cancel/Undo/Redo and compare independent expected state/targets, not just receipt. Unknown permission rejects, local mode must be explicit, partial eligibility/exclusions/mixed and all stamp components rechecked; both native and Web Debug UI migrate before internal port is hidden. Group and Section reuse canonical ownership. | product consumer, actual operations and History plus unchanged-state rejection checks; SDK-01 and feature owners. Full D07 atomicity and MSE-20/23/26 remain separate blockers |
+| API06 | Canonical/preview work identities, resize/DPR/lost/restore, failure rollback, stale token, actual presentation feedback and retirement. Submitted work/rAF alone cannot satisfy visibility. | platform trace with role/token/generation and independently observable presentation; SDK-03/04 |
+| API07 | Create/edit/export/destroy/restore and independently compare canonical contents; malformed/unsupported snapshot does not half-replace, remote/replay no local echo, ordered local output/close barrier. | real codec and document owner, raw bytes/hashes and operation trace; SDK-02, depends on DataBridge acceptance |
+| API08 | Verify version/hash/identity, copy lifetime after caller releases bytes, invalid bytes/hash, failure/cancel, rebind and late completion; no callback after close. | real resource owner/decoder events and outputs; SDK-02 |
+| API09 | Source/pointer/generation/sequence collision, batches/history/cancel and native IME begin/update/result/cancel/focus geometry; no fake confirmation or promoted input duplicate. | actual ingress + real native/browser driver; physical touch/IME remains PHYSICAL_PENDING; SDK-02/03/04 |
+| API10 | Platform wrappers preserve Id128, 64-bit values, lengths and lifetimes, same intent/readback semantics; reject invalid/stale values. | actual C/JS/native binding tests; future Android/Apple runs separately qualified |
+| API11 | Relocate install package, run without source tree; scan assets/licenses/absolute paths and Debug UI off/on isolation. | installed artifact and external build/run hashes; SDK-03/04/05 |
+| API12 | Same-environment baseline vs SDK wrapper allocation/copy/latency for input/frame/idle/close; assert no per-pointer full-document scan/serialization. Quantitative threshold must be measured and accepted rather than invented. | repeatable benchmark, environment and raw samples; P20 before SDK-05 |
+
+## Existing executable bindings
+
+Existing sources register `FC00XRuntimeComposition`, `FC00XRuntimeFacade`, `FC00XFrameCoordinator`, `FC00XRuntimeIsolation`, `FC02Text`, `FC03ImageFacade`, `FC05ConnectorFacade`, `FC08SectionConsumer`, `PX0ControlRouter`, `SelectionBatch3Summary`, `FC01ASelectionInputIntegration`, and `SelectionBatch3Ui` in their respective CMakeLists. `ctest -N` on the existing fc04 build found all 12 names, but reported missing binaries for `FC00XRuntimeIsolation`, `FC00XFrameCoordinator`, `FC00XRuntimeFacade`, and `PX0ControlRouter`; discovery exit 0 is not a product PASS. Future SDK-01 must build the corresponding exact targets before running `ctest --test-dir <build> -R '^(FC00XRuntimeComposition|FC00XRuntimeFacade|FC00XFrameCoordinator|FC00XRuntimeIsolation|FC02Text|FC03ImageFacade|FC05ConnectorFacade|FC08SectionConsumer|PX0ControlRouter|SelectionBatch3Summary|FC01ASelectionInputIntegration|SelectionBatch3Ui)$' --output-on-failure --no-tests=error` and check that **all 12 exact names** appear in the JUnit result; subset, skip, missing binaries and zero matches fail. Targets are in `runtime/composition/CMakeLists.txt`, `runtime/render/CMakeLists.txt`, and `debug_ui/CMakeLists.txt`.
+
+SDK-00 ran only `python tools/check_runtime_abi_manifest.py --root .` (exit 0; 54/49/163 declarations/layout inventory) and `python tools/check_runtime_boundaries.py --root .` (exit 0; 103 contract files). These are static checks, not proof of definitions, SDK install, linkage, D07, browser, or device behavior. No product tests were executed by SDK-00.
+
+## Target profiles and staged execution
+
+| Package | Dependency | Planned deliverable | Status |
+|---|---|---|---|
+| SDK-01 | exact accepted SDK-00 Authority/Verification and accepted six-file package | real C ABI/core plus external link/behavior and existing regression | DRAFT, P32 unauthorized |
+| SDK-02 | accepted exact SDK-01 result; accepted DataBridge/Resource/Text decisions | document/recovery/resources/IME bridge | DRAFT; no future result ref |
+| SDK-03 | accepted exact SDK-02 result, locked Windows ABI and Skia | Windows D3D12 installed SDK and out-of-tree sample | DRAFT; real device/IME PHYSICAL_PENDING |
+| SDK-04 | accepted exact SDK-02 result, locked web-wasm32 + web-wasm-webgl2 | Web WASM/ESM/TS install and external browser sample | DRAFT; physical browser/touch/IME PHYSICAL_PENDING |
+| SDK-05 | accepted exact SDK-03 and 04 | consistent, movable Windows/Web preview packages and qualification | DRAFT; no release authorization |
+| SDK-06 | accepted exact SDK-05, published Android ABI and device | JNI/AAR Android adapter | DRAFT; environment and physical validation unknown |
+| SDK-07 | accepted shared contracts, Apple toolchain and devices | iOS/iPadOS Metal XCFramework and wrapper | DRAFT; Windows host cannot establish Apple build/physical results |
+
+Current Semantic and Skia locks are consumption authorities, not authorization to rebuild their dependency stack. SDK-01 execution must use the resolver facts (`AXIOM_PROTOC`, `AXIOM_SEMANTIC_RUNTIME_ROOT`, `CMAKE_PREFIX_PATH`) and relevant locked prebuilt packages; offline check verifies package availability but not SDK correctness.

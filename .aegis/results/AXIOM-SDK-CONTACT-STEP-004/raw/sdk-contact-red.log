@@ -1,0 +1,17 @@
+[0/2] Re-checking globbed directories...
+[1/2] Building CXX object runtime\input\CMakeFiles\axiom_platform_interaction_ingress_tests.dir\tests\platform_interaction_ingress_test.cpp.obj
+cl : Command line warning D9025 : overriding '/DNDEBUG' with '/UNDEBUG'
+[2/2] Linking CXX executable runtime\input\axiom_platform_interaction_ingress_tests.exe
+Test project C:/Users/Chado/.codex/worktrees/axiom-sdk-api-p31/canvas/out/sdk01-review/build
+    Start 121: C1CommonIngress
+1/1 Test #121: C1CommonIngress ..................Exit code 0xc0000409***Exception:  14.34 sec
+Assertion failed: !late.accepted && ingress.activeCount() == 1, file C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\input\tests\platform_interaction_ingress_test.cpp, line 58
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =  14.68 sec
+
+The following tests FAILED:
+	121 - C1CommonIngress (Exit code 0xc0000409)
+Errors while running CTest

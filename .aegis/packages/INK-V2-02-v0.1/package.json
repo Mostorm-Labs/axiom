@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.1",
+  "package_id": "INK-V2-02-v0.1",
+  "task_id": "INK-V2-02",
+  "status": "PREPARED_NOT_DISPATCHED",
+  "purpose": "马克笔、粉笔、蜡笔固定算法与低存储纹理",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom",
+    "execution_ref": "codex/sdk-shell-axis-bridge"
+  },
+  "execution_authority_mode": "repo_materialized",
+  "task_anchor": {
+    "revision": "af5b1778284211c3834957084dd0a03e48308d69",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "p32_authorized": false,
+  "authorization_reason": "用户本轮仅要求先写好实施包，尚未请求执行本包",
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "dependencies": [
+    {
+      "package_id": "INK-V2-01-v0.1",
+      "package_ref": {
+        "repository_path": ".aegis/packages/INK-V2-01-v0.1/package.json",
+        "sha256": "e29f79f1166ede03d2c2244600db36cf10edac6a559610db4a0b40e263b0936e"
+      },
+      "required_result": "Exact source/result manifest and applicable required evidence for the dependency; a plan/final message is insufficient",
+      "ancestry": "reconcile valid descendant and dirty overlay; do not require historical HEAD equality"
+    }
+  ],
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "b1508bb2f95d1e09d61adf1a2fd58e0f57e83f59025123b8fdf274408d13f7ee"
+  },
+  "baseline_lock_ref": {
+    "path": "baseline.lock.json",
+    "sha256": "3976ffa9d19e2f5eaf4f9b82db53ce8af97bab6a79191cbe564030e9e1b9c49d"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "8e624cad8db60cb07368534525d7943432b1fcb872c7cb069c291fc81327649b"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "a6cd1967ca55e47bde3d1ea350622e1caaa698f896106d8c17e35da0fb8d74d0"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "c0f169e1df11659da931020a48da3230d0077ff03d8efeb6890bb3e07c2d4de9"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "48fe828925f0027cad3379abdd63773885e43f3abee845694c0cac9225601da2"
+  },
+  "proposed_design_ref": {
+    "path": "design-proposal.md",
+    "sha256": "a87f53bab5e9383962f1dda16f63df4862ed4c6eccb778c9bb74fce45b836f40"
+  },
+  "requirements_ref": {
+    "path": "requirements.md",
+    "sha256": "fe6ceabc5fda84a405d4bd36a8c0b394e629b08b37d3a924d83adeb594869d22"
+  },
+  "verification_spec_ref": {
+    "path": "verification-spec.md",
+    "sha256": "1b67317e46c14945ea0dc3c488cd98e85fdd5240b5d32e9c0d80ef7996b54ccd"
+  },
+  "task_plan_ref": {
+    "path": "task-plan.md",
+    "sha256": "8e31b0e5266cf0a449166ef05a53319b8eb51e99e2de5ed049690384a72d875d"
+  },
+  "materialization": {
+    "same_repository": true,
+    "path": ".aegis/packages/INK-V2-02-v0.1",
+    "state": "local_prepared_files",
+    "remote_materialization_ref": null,
+    "no_commit_or_publication_claimed": true
+  },
+  "semantic_status": "new compact carrier/version IDs remain proposed until versioned contract binding at implementation preflight",
+  "handoff_dispatched": false
+}

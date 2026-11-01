@@ -1,0 +1,49 @@
+{
+  "task_id": "AXIOM-SDK-01",
+  "package_version": "0.4",
+  "stage": "P31",
+  "status": "DRAFT_PHASE_ORDER_CORRECTED_AWAITING_ACCEPTANCE",
+  "p32_authorized": false,
+  "execution_authority_mode": "repo_materialized",
+  "repository": {
+    "provider": "github",
+    "full_name": "Mostorm-Labs/axiom"
+  },
+  "execution_ref": "refs/heads/codex/sdk-01-public-core",
+  "task_anchor": {
+    "revision": "a92c05734cd81f0f11e285692015d324239fbd7f",
+    "relation": "ancestor"
+  },
+  "resume_cursor": null,
+  "continue_until_terminal_state": true,
+  "return_surface": "CONTROL_REVIEW",
+  "predecessor": {
+    "path": ".aegis/packages/AXIOM-SDK-01-v0.3/package.json",
+    "revision": "a92c05734cd81f0f11e285692015d324239fbd7f",
+    "sha256": "c772b187484fd7cf1ba8016ca9c1a2d1ab660a5174b51c0a317598dd0763ecc8"
+  },
+  "authority_lock_ref": {
+    "path": "authority.lock.json",
+    "sha256": "6ddf72f8b2399212b92a9828884d47f8b2ba6a95338b0159a76cd45eb08b4e37"
+  },
+  "verification_lock_ref": {
+    "path": "verification.lock.json",
+    "sha256": "20cc16dda830c838ccaaa509547bbb1ffa959782e68a7a4e3a1f91266a316243"
+  },
+  "execution_contract_ref": {
+    "path": "execution-contract.json",
+    "sha256": "cfa3b2bbc4a9b5e640f0559bb9931c33a9ecf3f58fbeae5a166020f554e4e408"
+  },
+  "implementation_context_ref": {
+    "path": "implementation-context.md",
+    "sha256": "b47f310def270f28568cb1e5c69737b92f2725ad46eccf619e87a9a7e2819965"
+  },
+  "evidence_contract_ref": {
+    "path": "evidence-contract.json",
+    "sha256": "19f833ecdd29ec18a9d7b003a0f67655efd87c8789a5580ac20cead5661a4e09"
+  },
+  "preflight_ref": {
+    "path": "preflight.py",
+    "sha256": "0177fcaf19a2f09c5453b1dbf60d2270a2321ff99db81631066d05576cc421ad"
+  }
+}

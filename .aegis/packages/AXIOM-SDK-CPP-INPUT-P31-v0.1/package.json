@@ -1,0 +1,10 @@
+{
+  "task_id": "AXIOM-SDK-CPP-INPUT",
+  "status": "USER_DIRECTED_BOUNDED_SLICE",
+  "repository": "Mostorm-Labs/axiom",
+  "task_anchor": "c12b4e2e8eb1f87ca96f79be11114a012f892729",
+  "scope": ["expose existing complete platform input facts through public C++ Runtime", "install its input contract without Editor/Scene/Skia public headers", "exercise the frozen two-Shape mixed-stroke scenario through an installed C++ consumer"],
+  "forbidden": ["reimplement gestures or alter input identity and batching", "invent pressure, history, capabilities or geometry", "change historic oracle, SDK locks or C ABI", "replace existing Runtime, selection, History or input owners"],
+  "verification": ["real installed consumer creates and selects two Shapes via actual pointer facts", "independent expected styles and full IDs before/after/Undo/Redo", "mixed-source batches fail without mutation", "Windows and Web regressions"],
+  "continue_until_terminal_state": true
+}

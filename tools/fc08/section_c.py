@@ -58,7 +58,7 @@ def main():
   r=subprocess.run(list(map(str,argv)),cwd=ROOT,env=env,capture_output=True,text=True,encoding="utf-8",errors="replace")
   (out/(name+".stdout.log")).write_text(r.stdout,encoding="utf-8");(out/(name+".stderr.log")).write_text(r.stderr,encoding="utf-8")
   journal.append({"argv":list(map(str,argv)),"exit_code":r.returncode});print(name+": "+str(r.returncode),flush=True);return r.returncode
- code=run("configure",["cmake","-S",ROOT,"-B",build,"-G","Ninja","-DCMAKE_BUILD_TYPE=Release","-DCMAKE_EXPORT_COMPILE_COMMANDS=ON","-DBUILD_TESTING=ON","-DCANVAS_BUILD_POC01=OFF","-DCANVAS_BUILD_SEMANTIC=ON","-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON","-DCANVAS_BUILD_INK_PLAYGROUND=OFF","-DCANVAS_BUILD_RENDER=OFF","-DCANVAS_BUILD_RF01=OFF","-DCANVAS_SKIA_SDK_VARIANT=release","-DAXIOM_FC08_QUALIFICATION_HOOKS=OFF",*consumer_cmake_arguments(Path(env["AXIOM_SEMANTIC_RUNTIME_ROOT"]),Path(env["AXIOM_PROTOC"]))])
+ code=run("configure",["cmake","-S",ROOT,"-B",build,"-G","Ninja","-DCMAKE_BUILD_TYPE=Release","-DCMAKE_EXPORT_COMPILE_COMMANDS=ON","-DBUILD_TESTING=ON","-DCANVAS_BUILD_POC01=OFF","-DCANVAS_BUILD_SEMANTIC=ON","-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON","-DAXIOM_BUILD_RUNTIME_QUALIFICATION=OFF","-DCANVAS_BUILD_RENDER=OFF","-DCANVAS_BUILD_RF01=OFF","-DCANVAS_SKIA_SDK_VARIANT=release","-DAXIOM_FC08_QUALIFICATION_HOOKS=OFF",*consumer_cmake_arguments(Path(env["AXIOM_SEMANTIC_RUNTIME_ROOT"]),Path(env["AXIOM_PROTOC"]))])
  if code==0:code=run("build",["cmake","--build",build,"--target",*a.targets,"--parallel","6"])
  if code==0:code=run("discover",["ctest","--test-dir",build,"--show-only=json-v1"])
  if code==0:

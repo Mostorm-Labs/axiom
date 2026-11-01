@@ -1,0 +1,100 @@
+{
+  "checks": [
+    {
+      "check": "integrity",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        ".aegis/packages/AXIOM-SDK-01-v0.3/preflight.py",
+        "--repo",
+        ".",
+        "--check",
+        "integrity"
+      ],
+      "exit_code": 0,
+      "stdout": "INTEGRITY_OK: repository, anchor, package bytes, locked revisions, owners and P01-P10\nDRAFT_ONLY: integrity does not imply P20 acceptance, P32 authorization or product pass\n",
+      "stderr": ""
+    },
+    {
+      "check": "PackageBindingPreflight",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        ".aegis/packages/AXIOM-SDK-01-v0.3/preflight.py",
+        "--repo",
+        ".",
+        "--check",
+        "PackageBindingPreflight"
+      ],
+      "exit_code": 2,
+      "stdout": "INTEGRITY_OK: repository, anchor, package bytes, locked revisions, owners and P01-P10\nBLOCKED: PackageBindingPreflight: accepted exact ABI and P32 authorization are absent\n",
+      "stderr": ""
+    },
+    {
+      "check": "EvidenceContractPreflight",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        ".aegis/packages/AXIOM-SDK-01-v0.3/preflight.py",
+        "--repo",
+        ".",
+        "--check",
+        "EvidenceContractPreflight"
+      ],
+      "exit_code": 2,
+      "stdout": "INTEGRITY_OK: repository, anchor, package bytes, locked revisions, owners and P01-P10\nBLOCKED: EvidenceContractPreflight: independent public SDK and Windows/Chrome drivers/oracles remain incomplete or unaccepted\n",
+      "stderr": ""
+    },
+    {
+      "check": "DesignPreflight",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        ".aegis/packages/AXIOM-SDK-01-v0.3/preflight.py",
+        "--repo",
+        ".",
+        "--check",
+        "DesignPreflight"
+      ],
+      "exit_code": 2,
+      "stdout": "INTEGRITY_OK: repository, anchor, package bytes, locked revisions, owners and P01-P10\nBLOCKED: DesignPreflight: public ABI/lifecycle and per-root owner path require acceptance\n",
+      "stderr": ""
+    },
+    {
+      "check": "all",
+      "argv": [
+        "D:\\Softwares\\Anaconda\\python.exe",
+        ".aegis/packages/AXIOM-SDK-01-v0.3/preflight.py",
+        "--repo",
+        ".",
+        "--check",
+        "all"
+      ],
+      "exit_code": 2,
+      "stdout": "INTEGRITY_OK: repository, anchor, package bytes, locked revisions, owners and P01-P10\nBLOCKED: PackageBindingPreflight: accepted exact ABI and P32 authorization are absent\nBLOCKED: EvidenceContractPreflight: independent public SDK and Windows/Chrome drivers/oracles remain incomplete or unaccepted\nBLOCKED: DesignPreflight: public ABI/lifecycle and per-root owner path require acceptance\n",
+      "stderr": ""
+    }
+  ],
+  "tamper_control": {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      ".aegis/packages/AXIOM-SDK-01-v0.3/preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "integrity"
+    ],
+    "exit_code": 2,
+    "stdout": "BLOCKED_INTEGRITY: package ref mismatch: implementation_context_ref\n",
+    "stderr": ""
+  },
+  "restored_integrity": {
+    "argv": [
+      "D:\\Softwares\\Anaconda\\python.exe",
+      ".aegis/packages/AXIOM-SDK-01-v0.3/preflight.py",
+      "--repo",
+      ".",
+      "--check",
+      "integrity"
+    ],
+    "exit_code": 0,
+    "stdout": "INTEGRITY_OK: repository, anchor, package bytes, locked revisions, owners and P01-P10\nDRAFT_ONLY: integrity does not imply P20 acceptance, P32 authorization or product pass\n",
+    "stderr": ""
+  }
+}

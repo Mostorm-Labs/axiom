@@ -1,7 +1,7 @@
 #include "auditoryworks/axiom/v1/operation.pb.h"
 #include "auditoryworks/axiom/v1/snapshot.pb.h"
 #include "canvas/interaction/editor_history.hpp"
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/semantic/applied_operation_ledger.hpp"
 #include "canvas/semantic/operation_engine.hpp"
 #include "canvas/semantic/rich_text_state.hpp"
@@ -404,7 +404,7 @@ TEST(FC02Snapshot, MixedTriangleTextAndManifestRoundTripAndBoundRestore) {
 }
 
 struct RealHost {
-    canvas::runtime::RuntimeComposition composition;
+    canvas::runtime::RuntimeCompositionCore composition;
     canvas::runtime::RuntimeFacade& facade = composition.controlFacade();
     std::uint64_t request = 0, sequence = 0;
     RealHost() {
@@ -662,7 +662,7 @@ TEST(FC02Facade, FakeImeCommitsThroughRealHistoryAndCanonicalStore) {
     ASSERT_EQ(h.intent(TextIntentKind::kCreate).status, TextStatus::kApplied);
     EXPECT_EQ(h.composition.semanticObjectCount(), 0U);
     EXPECT_EQ(h.operations(), 0U);
-    EXPECT_NE(h.facade.readTextEditor().token.object.bytes[15], 0);
+    EXPECT_FALSE(h.facade.readTextEditor().token.object.isZero());
     ASSERT_EQ(h.send(h.event(TextInputKind::kBegin)).status, TextStatus::kObserved);
     for (const auto* value : {u"n", u"ni", u"\u4F60"})
         EXPECT_EQ(h.send(h.event(TextInputKind::kUpdate, value)).status, TextStatus::kObserved);

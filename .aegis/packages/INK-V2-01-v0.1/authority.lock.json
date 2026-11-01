@@ -1,0 +1,239 @@
+{
+  "schema_version": "0.1",
+  "package_id": "INK-V2-01-v0.1",
+  "authority_status": "CURRENT_USER_SCOPE_WITH_EXPLICIT_PROPOSED_DESIGN",
+  "source_identity": {
+    "provider": "human_conversation",
+    "date": "2026-11-01",
+    "request": "根据这两条注意事项，先写好实施包",
+    "annotation_1": "当前默认模拟压力，保留真实压感可能性",
+    "annotation_2": "固定纹理算法，改善过多dab的空间和时间成本",
+    "scope_authorized": "package_preparation_only"
+  },
+  "requirements": [
+    {
+      "id": "REQ-PRESSURE",
+      "statement": "当前默认使用模拟压力；保留真实压感输入可能性",
+      "source": "本轮批注 1",
+      "classification": "Current user scope / preserved repository boundary"
+    },
+    {
+      "id": "REQ-COMPACT",
+      "statement": "纹理笔刷减少 dab 数据存储和重复计算，采用固定绘制算法",
+      "source": "本轮批注 2",
+      "classification": "Current user scope / preserved repository boundary"
+    },
+    {
+      "id": "REQ-PEN",
+      "statement": "圆头笔支持规则、手绘切换",
+      "source": "上轮六笔型需求",
+      "classification": "Current user scope / preserved repository boundary"
+    },
+    {
+      "id": "REQ-LASER",
+      "statement": "激光笔为自动消退的演示指示，不保存到文档",
+      "source": "用户异步选项答复",
+      "classification": "Current user scope / preserved repository boundary"
+    },
+    {
+      "id": "REQ-EDIT",
+      "statement": "持久笔型可撤销、重做、保存、恢复、远端应用、导出",
+      "source": "既有画板/SDK 边界",
+      "classification": "Current user scope / preserved repository boundary"
+    },
+    {
+      "id": "REQ-OWNER",
+      "statement": "共用 Runtime/OperationEngine/Scene/Skia，消费者不复制所有权",
+      "source": "AGENTS.md 与 SDK 契约",
+      "classification": "Current user scope / preserved repository boundary"
+    },
+    {
+      "id": "REQ-COMPAT",
+      "statement": "保留已有笔画和在研手绘/Table/字体工作；新能力显式版本化",
+      "source": "现有数据与工作区边界",
+      "classification": "Current user scope / preserved repository boundary"
+    }
+  ],
+  "sources": [
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "AGENTS.md",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "d828bd81b583139d8b3f5417b784dc5ebbaeff21fa8b368991fb866d0e70b2bd",
+      "classification": "Existing repository boundary/reference"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "docs/notion/manifest.yaml",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "8ba89972025e331fac2d55d6e8631b91d7f1fb09664d09e211e044254cd26459",
+      "classification": "Existing repository boundary/reference"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "docs/planning/sdk/js-v1-contract.md",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "5713830f1debd8590bec08fa4d0cced805f7b189f7233fcde928dbcf2512475c",
+      "classification": "Existing repository boundary/reference"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "docs/planning/sdk/windows-consumer-v1.md",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "a4fa69c811144b271b6b074ddc7e1ce92f786b686bdc51ccc06393085c6ab108",
+      "classification": "Existing repository boundary/reference"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "docs/planning/sdk/shell-axis-preview-contract.md",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "c200aed3f05665234f9810db6d7955e57a3e960abb91e3df604f284594499093",
+      "classification": "Existing repository boundary/reference"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "docs/planning/brush-engine-v0.4/CONTRACT.md",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "50c6975dfd4886740f11b7ad7d5510d40356c660dc7406481160be676f599484",
+      "classification": "Historical/Scoped contract"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "tools/reference/perfect_freehand/README.md",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "c1cbcfd4f8f789bc6e39e5de9d17828a899de5035e833e128ccc8cfeae6179f2",
+      "classification": "Existing repository boundary/reference"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": ".aegis/packages/GT-G4-5-R01/reference.lock.json",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "2ba67eeaaa8c5231c342fdfbce1a7b19d42d2105d1b573994a9b4e864b3d28e6",
+      "classification": "Existing repository boundary/reference"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "runtime/ink/src/brush_session.cpp",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "28604e135bf1533b10a21830b335475bde8da67f1460fa342e377c6102b7b8fb",
+      "classification": "Implementation Reality"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "runtime/ink/src/vector_path_node.cpp",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "1a4a0ac311f64b819597aada8ca802e3f4e217fdf6e0fd804452f1b5c43a8c9a",
+      "classification": "Implementation Reality"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "runtime/ink/src/chalk_dab_evaluator.cpp",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "f437db360085339a22814b91559e700ccf4b9d7d60861b36279f160425ffb70b",
+      "classification": "Implementation Reality"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "runtime/ink/src/brush_execution_plan.cpp",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "d8eb78c5e25fd1ac11b701a2790c5debff1daae913e73c896dcd02881f64cc20",
+      "classification": "Implementation Reality"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "runtime/ink/include/canvas/ink/brush_commit_intent.hpp",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "627a7704d7252b656b2a95c6ff21e62c00df4359b4c2e2377a7686d80cf901c4",
+      "classification": "Implementation Reality"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "runtime/interaction/src/brush_commit_adapter.cpp",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "dd2cd520724e1bd9639d3b21b01987ec09996b51391abc0806d5b6edb594ed6f",
+      "classification": "Implementation Reality"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "runtime/interaction/src/canvas_editing_runtime.cpp",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "9f7a4e1f813e76c46b91803518331872cd1117a376875cd23b41713803114d8f",
+      "classification": "Implementation Reality"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "runtime/render/src/skia_scene_renderer.cpp",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "2b9ce1ae6633d08a44a59b1f1762853c696cbb904d3e5c10e555ce5122b7afe1",
+      "classification": "Implementation Reality"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "runtime/render/src/brush_outline_skia_path.cpp",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "e66a38c93c077ef1c916ae791734f5e0873e5ce441452f31651ef21ecd5c873a",
+      "classification": "Implementation Reality"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "runtime/semantic/include/canvas/semantic/object_content.hpp",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "6bca69ede304802861adc82818a489fbba505209867ea48e990f839146615c8c",
+      "classification": "Implementation Reality"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "schema/axiom/v1/proto/auditoryworks/axiom/v1/brush_engine.proto",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "d61abcb963dca259aecd01598350ff2579f939911a5f511eaaa2acc8db7209ec",
+      "classification": "Implementation Reality"
+    },
+    {
+      "provider": "repository",
+      "repository": "Mostorm-Labs/axiom",
+      "path": "sdk/web/axiom.d.mts",
+      "observed_ancestor": "af5b1778284211c3834957084dd0a03e48308d69",
+      "sha256": "117209d4f2bcc58096ca09265143bf55583d4263e93bc06818c1c38eba0d322e",
+      "classification": "Implementation Reality"
+    }
+  ],
+  "requirements_ref": {
+    "path": "requirements.md",
+    "sha256": "fe6ceabc5fda84a405d4bd36a8c0b394e629b08b37d3a924d83adeb594869d22"
+  },
+  "technical_proposal": {
+    "path": "design-proposal.md",
+    "sha256": "a87f53bab5e9383962f1dda16f63df4862ed4c6eccb778c9bb74fce45b836f40",
+    "classification": "Draft/Proposed",
+    "does_not_replace_historical_semantic_authority": true,
+    "wire_ids_not_allocated": true,
+    "required_before_runtime_mutation": "Record the versioned semantic/operation/reader capability binding for this accepted execution request; reconcile with current registry without overwriting historical carriers."
+  },
+  "preserved_authority_rules": [
+    "OperationEngine is canonical mutation owner",
+    "Shared Runtime owns editing and input sessions",
+    "New authoring must not reinterpret legacy stroke carriers",
+    "Public APIs expose owned value DTOs and complete identity/lifetime facts",
+    "Consume locked published Semantic and Skia SDKs"
+  ],
+  "execution_authorization_claimed": false
+}

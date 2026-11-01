@@ -1,0 +1,13 @@
+# SDK-01 stale property decision and real-owner regression
+
+On 2026-10-29 the user chose rejection of a stale queued property request followed by an explicit refresh and retry. See `docs/planning/sdk/decision-stale-target-v0.1.md`. This is a narrow decision, not approval of the whole SDK-01 P31 or DataBridge contract.
+
+The prior `FC00XRuntimeFacade` failure is preserved at `.aegis/results/AXIOM-SDK-01-REVIEW-002/`. Its old assertion expected a queued opacity edit to apply after a concurrent stroke-width change; after the user's choice, the existing regression now asserts `kStaleTarget`, unchanged semantic generation/opacity and preserved width, then a newly identified request based on the fresh snapshot applies the opacity and preserves the concurrent stroke width. No Runtime implementation, schema, ABI, dependency, historical result or SDK lock was changed.
+
+A separate `SDK01FacadeStaleRetry` test invokes the existing real `CanvasEditingRuntime`, Facade and History/semantic path and independently checks the same stale/no-mutation/explicit-retry behavior. This test initially could not build because its test-only target lacked the existing `AXIOM_RUNTIME_QUALIFICATION=1` visibility definition; adding that **private test target** definition fixed the compile. The production qualification policy was not changed. The new test exercises behavior the Runtime already implemented; its first execution passed, so it is not represented as an implementation RED/GREEN.
+
+- `ctest --test-dir out/sdk01-review/build -R '^SDK01FacadeStaleRetry$' --output-on-failure --no-tests=error --output-junit <absolute stale-retry.xml>`: exit 0, 1/1.
+- `ctest --test-dir out/sdk01-review/build -R '^(SDK01FacadeStaleRetry|FC00XRuntimeComposition|FC00XRuntimeFacade|FC00XFrameCoordinator|FC00XRuntimeIsolation|FC02Text|FC03ImageFacade|FC05ConnectorFacade|FC08SectionConsumer|PX0ControlRouter|SelectionBatch3Summary|FC01ASelectionInputIntegration|SelectionBatch3Ui)$' --output-on-failure --no-tests=error --output-junit <absolute regression-after-decision.xml>`: exit 0, 13/13, zero skips; JUnit and raw log are under `raw/`.
+- ABI manifest and runtime boundary static checks: exit 0 each. They do not establish SDK link or physical behavior.
+
+The product tree is still the `50e53124ffe7ed2959d6bcf956c3d252fce6451a` baseline apart from the explicitly modified **test source**. The old test failure is historical evidence, not erased. The SDK public library, external consumer execution, public multi-selection API and Windows/Web consumer migration remain NOT_RUN; MSE-20/23/26 and D07 OOM records remain open. The existing SDK-01 package remains DRAFT with `p32_authorized=false`.

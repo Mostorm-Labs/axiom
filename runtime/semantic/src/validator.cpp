@@ -1,5 +1,6 @@
 #include "canvas/semantic/validator.hpp"
 #include "canvas/semantic/rich_text_state.hpp"
+#include "canvas/semantic/table_content.hpp"
 #include "canvas/semantic/geometry_accounting_v1.hpp"
 
 #include "object_record_semantics_internal.hpp"
@@ -226,6 +227,8 @@ GeometryCount geometryUnits(const ObjectContent& content) noexcept {
         } else if constexpr (std::is_same_v<Item, DabStrokeContent>) {
             if (const auto* data = std::get_if<DabStrokeData>(&value.stroke.data)) return multiplyGeometryUnits(data->dabs.size(), geometry_accounting_v1::kDabInstance);
             return {0U, ValidationIssue::kIntegerOverflow};
+        } else if constexpr (std::is_same_v<Item, CompactStrokeContent>) {
+            return multiplyGeometryUnits(value.stroke.knots.size(),1);
         } else if constexpr (std::is_same_v<Item, DabBrushStrokeContent>) {
             return multiplyGeometryUnits(value.stroke.dab_output.dabs.size(), geometry_accounting_v1::kDabInstance);
         }
@@ -330,6 +333,12 @@ bool validPropertyValue(std::uint32_t field_id, const PropertyValue& value) noex
             return std::visit([](const auto& fill) -> bool {
                 using Fill = std::decay_t<decltype(fill)>;
                 if constexpr (std::is_same_v<Fill, NoFill>) return true;
+                else if constexpr (std::is_same_v<Fill, PatternFillV1>)
+                    return fill.version == 1 && validColor(fill.color) &&
+                        (fill.kind == PatternKind::kDiagonal || fill.kind == PatternKind::kCrosshatch) &&
+                        std::isfinite(fill.angle) && fill.angle >= -180 && fill.angle <= 180 &&
+                        std::isfinite(fill.gap) && fill.gap >= 2 && fill.gap <= 1024 &&
+                        std::isfinite(fill.width) && fill.width >= .1 && fill.width <= 64;
                 else return validColor(fill.color);
             }, std::get<FillStyleValue>(value));
         case 0x00000101U:
@@ -339,6 +348,11 @@ bool validPropertyValue(std::uint32_t field_id, const PropertyValue& value) noex
                 if constexpr (std::is_same_v<Stroke, NoStroke>) return true;
                 else return validStrokeStyle(stroke);
             }, std::get<StrokeStyleValue>(value));
+        case 0x103U: {const auto* v=std::get_if<CornerStyleV1>(&value);return v&&v->version==1&&std::isfinite(v->radius)&&v->radius>=0&&v->radius<=16384;}
+        case 0x102U: {
+            const auto* style = std::get_if<SketchStyleV1>(&value);
+            return style && style->version == 1 && style->seed != 0 && std::isfinite(style->roughness) && style->roughness >= 0 && style->roughness <= 3;
+        }
         case 0x00000200U:
         case 0x00000201U:
             if (const auto* decoration = std::get_if<ConnectorDecorationValue>(&value)) {
@@ -352,7 +366,9 @@ bool validPropertyValue(std::uint32_t field_id, const PropertyValue& value) noex
 }
 
 bool fieldAppliesToObjectKind(ObjectKind kind, std::uint32_t field_id) noexcept {
-    if (kind == ObjectKind::kSection) return field_id == 0x3U || field_id == 0x100U;
+    if(field_id==0x103U)return kind==ObjectKind::kShape||kind==ObjectKind::kConnector;
+    if (kind == ObjectKind::kTable) return (field_id>=1U && field_id<=4U) || field_id==0x102U;
+    if (kind == ObjectKind::kSection) return field_id == 0x3U || field_id == 0x100U || field_id==0x101U || field_id==0x102U;
     switch (field_id) {
         case 0x00000001U:
         case 0x00000002U:
@@ -367,6 +383,8 @@ bool fieldAppliesToObjectKind(ObjectKind kind, std::uint32_t field_id) noexcept 
         case 0x00000101U:
             return kind == ObjectKind::kShape || kind == ObjectKind::kVectorPath ||
                    kind == ObjectKind::kConnector || kind == ObjectKind::kSticky;
+        case 0x102U:
+            return kind == ObjectKind::kShape || kind == ObjectKind::kConnector || kind == ObjectKind::kSticky || kind == ObjectKind::kVectorPath;
         case 0x00000200U:
         case 0x00000201U:
             return kind == ObjectKind::kConnector;
@@ -380,6 +398,11 @@ bool validPropertyBag(ObjectKind kind, const PropertyBag& bag) {
     for (std::size_t index = 0; index < bag.entries.size(); ++index) {
         const auto& entry = bag.entries[index];
         if (!fieldAppliesToObjectKind(kind, entry.field_id) || !validPropertyValue(entry.field_id, entry.value)) return false;
+        if (const auto* fill = std::get_if<FillStyleValue>(&entry.value); fill && std::holds_alternative<PatternFillV1>(*fill) && kind != ObjectKind::kShape && kind != ObjectKind::kSticky && kind != ObjectKind::kVectorPath && kind != ObjectKind::kSection) return false;
+        if(kind==ObjectKind::kSticky && entry.field_id==0x100U && std::holds_alternative<NoFill>(std::get<FillStyleValue>(entry.value)) &&
+            std::none_of(bag.entries.begin(),bag.entries.end(),[](const auto& p){return p.field_id==0x102U&&std::holds_alternative<SketchStyleV1>(p.value);}))return false;
+        if(kind==ObjectKind::kSection && entry.field_id==0x101U &&
+            std::none_of(bag.entries.begin(),bag.entries.end(),[](const auto& p){return p.field_id==0x102U&&std::holds_alternative<SketchStyleV1>(p.value);}))return false;
         if (index > 0U && bag.entries[index - 1U].field_id >= entry.field_id) return false;
     }
     return true;
@@ -568,6 +591,8 @@ bool validSection(const SectionContent& value) noexcept {
 
 bool validObjectKindTriple(const ObjectRecord& object) noexcept {
     if (!validId(object.id)) return false;
+    if (object.kind == ObjectKind::kVectorStroke && object.kind_version == 3U)
+        return std::holds_alternative<CompactStrokeContent>(object.content);
     if (object.kind == ObjectKind::kVectorStroke && object.kind_version == 2U) {
         return std::holds_alternative<BrushStrokeContent>(object.content);
     }
@@ -601,6 +626,8 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
             return std::holds_alternative<StickyContent>(object.content);
         case ObjectKind::kGroup:
             return std::holds_alternative<GroupContent>(object.content);
+        case ObjectKind::kTable:
+            return std::holds_alternative<TableContent>(object.content);
         case ObjectKind::kSection:
             return std::holds_alternative<SectionContent>(object.content);
     }
@@ -609,6 +636,9 @@ bool validObjectKindTriple(const ObjectRecord& object) noexcept {
 
 bool validObjectRecordStructure(const ObjectRecord& object) {
     if (!validObjectKindTriple(object) || !validPropertyBag(object.kind, object.properties)) return false;
+    if (const auto* table = std::get_if<TableContent>(&object.content)) {
+        if (!internal::validateTableContent(*table) || !object.erase_masks.empty()) return false;
+    }
     if (const auto* section = std::get_if<SectionContent>(&object.content)) {
         if (!validSection(*section) || !object.erase_masks.empty()) return false;
     }
@@ -633,9 +663,12 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
     }
     if (const auto* path = std::get_if<VectorPathContent>(&object.content)) {
         if (!validVectorPath(path->geometry)) return false;
+        const bool styled=std::any_of(object.properties.entries.begin(),object.properties.entries.end(),[](const auto& p){return std::holds_alternative<SketchStyleV1>(p.value)||(std::holds_alternative<FillStyleValue>(p.value)&&std::holds_alternative<PatternFillV1>(std::get<FillStyleValue>(p.value)));});
+        if(styled&&!validateSketchVectorPath(path->geometry))return false;
     }
     if (const auto* shape = std::get_if<ShapeContent>(&object.content)) {
         if (!validShapeForVersion(*shape, object.kind_version)) return false;
+        if(shape->shape_kind!=1&&shape->shape_kind!=3&&std::any_of(object.properties.entries.begin(),object.properties.entries.end(),[](const auto& p){return p.field_id==0x103U;}))return false;
     }
     if (const auto* image = std::get_if<ImageContent>(&object.content)) {
         if (!validImage(*image)) return false;
@@ -646,6 +679,8 @@ bool validObjectRecordStructure(const ObjectRecord& object) {
     if (const auto* connector = std::get_if<ConnectorContent>(&object.content)) {
         if (!validConnector(*connector)) return false;
     }
+    if(const auto* compact=std::get_if<CompactStrokeContent>(&object.content))
+        if(object.kind!=ObjectKind::kVectorStroke||object.kind_version!=3U||!validCompactStroke(compact->stroke))return false;
     if (const auto* brush = std::get_if<BrushStrokeContent>(&object.content)) {
         if (object.kind != ObjectKind::kVectorStroke || object.kind_version != 2U) return false;
         if (brush->stroke.snapshot.snapshot_version != 2U || brush->stroke.snapshot.profile_id == 0U ||
@@ -694,13 +729,45 @@ bool validPatch(const PropertyPatch& patch) noexcept {
                    (patch.field_id == 0x00000001U || patch.field_id == 0x00000002U ||
                     patch.field_id == 0x00000003U || patch.field_id == 0x00000004U ||
                     patch.field_id == 0x00000100U || patch.field_id == 0x00000101U ||
-                    patch.field_id == 0x00000200U || patch.field_id == 0x00000201U);
+                    patch.field_id == 0x00000200U || patch.field_id == 0x00000201U || patch.field_id == 0x102U || patch.field_id == 0x103U);
         case PropertyPatchAction::kInvalid:
             return false;
     }
     return false;
 }
 
+bool validTableEditChange(const EditTableOp& edit) {
+    const auto& before=edit.expected;const auto& after=edit.replacement;
+    const auto inserted=[](const TableContent& a,const TableContent& b){
+        if(a.grid!=b.grid)return false;
+        const bool row=b.rows.size()==a.rows.size()+1&&b.columns==a.columns;
+        const bool col=b.columns.size()==a.columns.size()+1&&b.rows==a.rows;
+        if(!row&&!col)return false;
+        const auto& small=row?a.rows:a.columns;const auto& large=row?b.rows:b.columns;
+        std::size_t matched=0;for(const auto& item:large)if(matched<small.size()&&item==small[matched])++matched;
+        if(matched!=small.size())return false;
+        for(std::size_t i=0;i<a.cells.size();++i){const auto j=tableCellIndex(b,a.rows[i/a.columns.size()].id,a.columns[i%a.columns.size()].id);if(!j||a.cells[i]!=b.cells[*j])return false;}return true;
+    };
+    if(edit.action==TableEditKind::kInsert)return inserted(before,after);
+    if(edit.action==TableEditKind::kRemove)return inserted(after,before);
+    if(edit.action==TableEditKind::kResize){
+        if(before.grid!=after.grid||before.rows.size()!=after.rows.size()||before.columns.size()!=after.columns.size())return false;
+        std::size_t changes=0;const auto axes=[&](const auto& a,const auto& b){for(std::size_t i=0;i<a.size();++i){if(a[i].id!=b[i].id)return false;if(a[i].size!=b[i].size)++changes;}return true;};
+        if(!axes(before.rows,after.rows)||!axes(before.columns,after.columns)||changes>1)return false;
+        for(std::size_t i=0;i<before.cells.size();++i)if(before.cells[i].fill!=after.cells[i].fill||before.cells[i].text.document!=after.cells[i].text.document)return false;return true;
+    }
+    if(before.rows!=after.rows||before.columns!=after.columns)return false;
+    if(edit.action==TableEditKind::kGridStyle)return before.cells==after.cells;
+    if(before.grid!=after.grid)return false;
+    std::size_t changes=0;
+    const auto plain=[](const RichTextContent& t){std::string text;bool first=true;for(const auto& p:t.document.paragraphs){if(!first)text+='\n';first=false;for(const auto& r:p.runs)text+=r.text;}return text;};
+    for(std::size_t i=0;i<before.cells.size();++i){const auto& a=before.cells[i];const auto& b=after.cells[i];if(a==b)continue;if(++changes>1||a.text.layout!=b.text.layout)return false;
+        if(edit.action==TableEditKind::kText){if(a.fill!=b.fill)return false;}
+        else if(edit.action==TableEditKind::kCellStyle){if(plain(a.text)!=plain(b.text))return false;}
+        else return false;
+    }
+    return true;
+}
 bool allUnique(std::vector<ObjectId> values) {
     std::sort(values.begin(), values.end());
     return std::adjacent_find(values.begin(), values.end()) == values.end();
@@ -724,6 +791,15 @@ bool propertyAppliesToObjectKind(ObjectKind kind,std::uint32_t fieldId) noexcept
     return fieldAppliesToObjectKind(kind,fieldId);
 }
 
+bool internal::validateTableContent(const TableContent& t) noexcept {
+    if(t.rows.empty()||t.columns.empty()||t.rows.size()>64||t.columns.size()>64||t.rows.size()*t.columns.size()>1024||t.cells.size()!=t.rows.size()*t.columns.size())return false;
+    const auto axes=[](const auto& values){for(std::size_t i=0;i<values.size();++i){const auto& a=values[i];if(a.id.isZero()||!std::isfinite(a.size)||a.size<24||a.size>16384)return false;for(std::size_t j=0;j<i;++j)if(values[j].id==a.id)return false;}return true;};
+    if(!axes(t.rows)||!axes(t.columns)||t.grid.version!=1||!validColor(t.grid.color)||!std::isfinite(t.grid.width)||t.grid.width<0||t.grid.width>16)return false;
+    std::size_t bytes=0;
+    for(std::size_t i=0;i<t.cells.size();++i){const auto& c=t.cells[i];if(!validColor(c.fill)||!validRichTextDocument(c.text.document)||!validRichTextLayoutState(3,c.text)||!c.text.layout||c.text.layout->wrap_width!=t.columns[i%t.columns.size()].size-12)return false;
+        for(const auto& p:c.text.document.paragraphs)for(const auto& r:p.runs){if(!r.style.font_resource_id||r.style.font_size<1||r.style.font_size>512)return false;bytes+=r.text.size();if(bytes>1048576)return false;}}
+    return true;
+}
 bool internal::validateSectionContent(const SectionContent& content) noexcept {
     return validSection(content);
 }
@@ -744,10 +820,14 @@ ValidationResult validateEnvelope(
                (object.kind == ObjectKind::kDabStroke && object.kind_version == 2U &&
                 std::holds_alternative<DabBrushStrokeContent>(object.content));
     };
+    bool containsCompact = false;
+    bool onlyCompact = true;
     bool containsNewBrush = false;
     bool containsLegacyStroke = false;
     bool containsOther = false;
     const auto classify = [&](const ObjectRecord& object) noexcept {
+        const bool compact=object.kind==ObjectKind::kVectorStroke&&object.kind_version==3U&&std::holds_alternative<CompactStrokeContent>(object.content);
+        containsCompact|=compact;onlyCompact&=compact;
         const bool newBrush = isNewBrush(object);
         const bool legacyStroke = object.kind == ObjectKind::kVectorStroke &&
                                   object.kind_version == 1U &&
@@ -771,7 +851,8 @@ ValidationResult validateEnvelope(
     if (!presence.schema_version || !presence.payload_version || operation.schema_version != 1U ||
         (operation.payload_version != 1U &&
          !(containsNewBrush && !containsLegacyStroke && !containsOther &&
-           operation.payload_version == 2U))) {
+           operation.payload_version == 2U) &&
+         !(containsCompact&&onlyCompact&&operation.payload_version==3U))) {
         return {ValidationIssue::kUnsupportedVersion};
     }
     return {};
@@ -851,6 +932,10 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
                 if constexpr (std::is_same_v<Payload, SetConnectorContentOp>) {
                     if (!validConnector(payload.content)) return {ValidationIssue::kInvalidLeaf};
                 }
+            } else if constexpr (std::is_same_v<Payload, EditTableOp>) {
+                if(!validId(payload.object_id)||static_cast<unsigned>(payload.action)<1||static_cast<unsigned>(payload.action)>6||!internal::validateTableContent(payload.expected)||!internal::validateTableContent(payload.replacement)||!validTableEditChange(payload))return {ValidationIssue::kInvalidLeaf};
+            } else if constexpr (std::is_same_v<Payload, SetDocumentBackgroundOp>) {
+                if (!foundation::validDocumentBackground(payload.value)) return {ValidationIssue::kInvalidLeaf};
             } else if constexpr (std::is_same_v<Payload, SetSectionContentOp> || std::is_same_v<Payload, EditContainerTopologyOp>) {
                 if (!internal::validateContainerOperation(payload)) return invalidCollection();
             } else if constexpr (std::is_same_v<Payload, UpdateResourceManifestOp>) {
@@ -905,6 +990,13 @@ ValidationResult validatePayloadStructure(const Operation& operation) noexcept {
             return {};
         },
         operation.payload);
+}
+
+bool validateSketchVectorPath(const VectorPathGeometry& path) noexcept {
+    if(path.commands.size()>4096 || !validVectorPath(path))return false;
+    const auto point=[](Vec2 p){return std::abs(p.x)<=1e7&&std::abs(p.y)<=1e7;};
+    for(const auto& c:path.commands)if(!std::visit([&](const auto& v){using T=std::decay_t<decltype(v)>;if constexpr(std::is_same_v<T,MoveTo>)return point(v.point);else if constexpr(std::is_same_v<T,ClosePath>)return true;else if constexpr(std::is_same_v<T,QuadTo>)return point(v.control)&&point(v.end);else if constexpr(std::is_same_v<T,CubicTo>)return point(v.control1)&&point(v.control2)&&point(v.end);else return point(v.end);},c))return false;
+    return true;
 }
 
 } // namespace canvas::semantic

@@ -1,0 +1,690 @@
+TAP version 13
+# Subtest: Android instrumentation build declares ELF and APK 16 KB gates
+ok 1 - Android instrumentation build declares ELF and APK 16 KB gates
+  ---
+  duration_ms: 6.048166
+  ...
+# schema validation: 24 schemas and 24 fixtures valid
+# Subtest: Android adapter evidence contains 28 facts-only observations and hashed manifest
+ok 2 - Android adapter evidence contains 28 facts-only observations and hashed manifest
+  ---
+  duration_ms: 181.130791
+  ...
+# schema validation: 24 schemas and 24 fixtures valid
+# Subtest: Apple Evidence keeps iPhone and iPadOS reports independent and facts-only
+ok 3 - Apple Evidence keeps iPhone and iPadOS reports independent and facts-only
+  ---
+  duration_ms: 275.10475
+  ...
+# Subtest: Apple Evidence attaches an iPhone physical report without claiming iPadOS
+ok 4 - Apple Evidence attaches an iPhone physical report without claiming iPadOS
+  ---
+  duration_ms: 96.340791
+  ...
+# Subtest: Apple Evidence attaches independent iPhone and iPadOS physical reports
+ok 5 - Apple Evidence attaches independent iPhone and iPadOS physical reports
+  ---
+  duration_ms: 43.013458
+  ...
+# Subtest: GT-G0-15 WORKTREE Evidence has five profiles, PG groups and complete manifest hashes
+ok 6 - GT-G0-15 WORKTREE Evidence has five profiles, PG groups and complete manifest hashes
+  ---
+  duration_ms: 110.674292
+  ...
+# schema validation: 24 schemas and 24 fixtures valid
+# Subtest: C1 authoring root is complete and authority-bound
+ok 7 - C1 authoring root is complete and authority-bound
+  ---
+  duration_ms: 11.940334
+  ...
+# schema validation: 24 schemas and 24 fixtures valid
+# Subtest: manual case and expected require non-empty authority refs
+ok 8 - manual case and expected require non-empty authority refs
+  ---
+  duration_ms: 2.409708
+  ...
+# Subtest: C expected truth is no-mutation and authority-manual only
+ok 9 - C expected truth is no-mutation and authority-manual only
+  ---
+  duration_ms: 1.891959
+  ...
+# Subtest: non-authority records cannot validate as manual case or expected
+ok 10 - non-authority records cannot validate as manual case or expected
+  ---
+  duration_ms: 1.544333
+  ...
+# schema validation: 24 schemas and 24 fixtures valid
+# Subtest: BLOCKED_OPEN is not a valid expected disposition
+ok 11 - BLOCKED_OPEN is not a valid expected disposition
+  ---
+  duration_ms: 0.962291
+  ...
+# Subtest: closed Connector and geometry policies reject openPolicy true
+ok 12 - closed Connector and geometry policies reject openPolicy true
+  ---
+  duration_ms: 0.110708
+  ...
+# Subtest: closed policies allow absent or false openPolicy
+ok 13 - closed policies allow absent or false openPolicy
+  ---
+  duration_ms: 0.106208
+  ...
+# Subtest: unknown policies are not silently promoted to CLOSED
+ok 14 - unknown policies are not silently promoted to CLOSED
+  ---
+  duration_ms: 0.077917
+  ...
+# schema validation: 24 schemas and 24 fixtures valid
+# Subtest: each C0 trust-domain record has a strict valid schema
+ok 15 - each C0 trust-domain record has a strict valid schema
+  ---
+  duration_ms: 4.665291
+  ...
+# Subtest: wrong formatVersion and provenance are rejected
+ok 16 - wrong formatVersion and provenance are rejected
+  ---
+  duration_ms: 1.631458
+  ...
+# Subtest: unknown top-level fields are rejected
+ok 17 - unknown top-level fields are rejected
+  ---
+  duration_ms: 2.570417
+  ...
+# Subtest: observation result and gate cannot masquerade as authority-manual input
+ok 18 - observation result and gate cannot masquerade as authority-manual input
+  ---
+  duration_ms: 1.894375
+  ...
+# Subtest: all input samples and down/up terminals are retained at every length
+ok 19 - all input samples and down/up terminals are retained at every length
+  ---
+  duration_ms: 49.740958
+  ...
+# Subtest: no warmup samples or long tasks are silently removed from raw timings
+ok 20 - no warmup samples or long tasks are silently removed from raw timings
+  ---
+  duration_ms: 0.456
+  ...
+# Subtest: a browser receipt is not physical latency or a GPU timer
+ok 21 - a browser receipt is not physical latency or a GPU timer
+  ---
+  duration_ms: 0.103959
+  ...
+# Subtest: accumulation is grouped by actual canonical object count
+ok 22 - accumulation is grouped by actual canonical object count
+  ---
+  duration_ms: 0.280375
+  ...
+# Subtest: the final accumulation bin retains the largest document and warmup object
+ok 23 - the final accumulation bin retains the largest document and warmup object
+  ---
+  duration_ms: 0.095166
+  ...
+# Subtest: nightly and release use the same reusable full-conformance graph
+ok 24 - nightly and release use the same reusable full-conformance graph
+  ---
+  duration_ms: 8.981042
+  ...
+# Subtest: release workflow is read-only and pins a 40-character main revision
+ok 25 - release workflow is read-only and pins a 40-character main revision
+  ---
+  duration_ms: 1.837959
+  ...
+# Subtest: reusable graph enumerates trusted roots, five profiles, aggregate and artifact chain
+ok 26 - reusable graph enumerates trusted roots, five profiles, aggregate and artifact chain
+  ---
+  duration_ms: 1.054375
+  ...
+# Subtest: every platform runner builds the verification CLI before invoking adapters
+ok 27 - every platform runner builds the verification CLI before invoking adapters
+  ---
+  duration_ms: 1.216792
+  ...
+# Subtest: aggregate consumes the flattened artifact layout produced by upload-artifact
+ok 28 - aggregate consumes the flattened artifact layout produced by upload-artifact
+  ---
+  duration_ms: 1.022708
+  ...
+# Subtest: workflow matrix never blesses or updates checked-in corpus
+ok 29 - workflow matrix never blesses or updates checked-in corpus
+  ---
+  duration_ms: 1.515625
+  ...
+# schema validation: 24 schemas and 24 fixtures valid
+# Subtest: fixture and common observation schemas are strict
+ok 30 - fixture and common observation schemas are strict
+  ---
+  duration_ms: 1.76875
+  ...
+# Subtest: scaffold fails closed without real platform evidence
+ok 31 - scaffold fails closed without real platform evidence
+  ---
+  duration_ms: 44.14675
+  ...
+# Subtest: comparator quantizes coordinates and accepts three real equivalent observations
+ok 32 - comparator quantizes coordinates and accepts three real equivalent observations
+  ---
+  duration_ms: 57.010542
+  ...
+# Subtest: comparator detects canonical divergence
+ok 33 - comparator detects canonical divergence
+  ---
+  duration_ms: 49.455208
+  ...
+# Subtest: real observations cannot omit artifact identity
+ok 34 - real observations cannot omit artifact identity
+  ---
+  duration_ms: 42.367917
+  ...
+# Subtest: a real platform may report an incomplete corpus only as blocked evidence
+ok 35 - a real platform may report an incomplete corpus only as blocked evidence
+  ---
+  duration_ms: 41.44125
+  ...
+# schema validation: 24 schemas and 24 fixtures valid
+# Subtest: platform scenario evidence contains all four reproducible reports
+ok 36 - platform scenario evidence contains all four reproducible reports
+  ---
+  duration_ms: 153.560208
+  ...
+# schema validation: 24 schemas and 24 fixtures valid
+# Subtest: platform-seed-v0.1 materializes exactly 28 stable scenarios
+ok 37 - platform-seed-v0.1 materializes exactly 28 stable scenarios
+  ---
+  duration_ms: 13.495875
+  ...
+# Subtest: platform seed has one shared scenario file and no platform-specific expected copies
+ok 38 - platform seed has one shared scenario file and no platform-specific expected copies
+  ---
+  duration_ms: 8.115167
+  ...
+# Subtest: platform seed encodes shared semantic fixtures and explicit lifecycle boundaries
+ok 39 - platform seed encodes shared semantic fixtures and explicit lifecycle boundaries
+  ---
+  duration_ms: 6.113
+  ...
+# Subtest: platform seed passes schema and semantic validation
+ok 40 - platform seed passes schema and semantic validation
+  ---
+  duration_ms: 60.905583
+  ...
+# Subtest: duplicate scenario references are rejected
+ok 41 - duplicate scenario references are rejected
+  ---
+  duration_ms: 6.131291
+  ...
+# Subtest: missing scenario files are rejected
+ok 42 - missing scenario files are rejected
+  ---
+  duration_ms: 2.552042
+  ...
+# Subtest: empty SPEC oracle is rejected
+ok 43 - empty SPEC oracle is rejected
+  ---
+  duration_ms: 4.057667
+  ...
+# Subtest: unknown capabilities are rejected
+ok 44 - unknown capabilities are rejected
+  ---
+  duration_ms: 3.29325
+  ...
+# Subtest: capabilities unrelated to a scenario recipe are rejected
+ok 45 - capabilities unrelated to a scenario recipe are rejected
+  ---
+  duration_ms: 4.975292
+  ...
+# Subtest: missing required capabilities are rejected
+ok 46 - missing required capabilities are rejected
+  ---
+  duration_ms: 2.538625
+  ...
+# Subtest: unknown or private authority references are rejected
+ok 47 - unknown or private authority references are rejected
+  ---
+  duration_ms: 2.104833
+  ...
+# Subtest: duplicate platform targets are rejected
+ok 48 - duplicate platform targets are rejected
+  ---
+  duration_ms: 2.876417
+  ...
+# Subtest: broken fixture references are rejected
+ok 49 - broken fixture references are rejected
+  ---
+  duration_ms: 4.604292
+  ...
+# Subtest: broken checkpoint references are rejected
+ok 50 - broken checkpoint references are rejected
+  ---
+  duration_ms: 24.933708
+  ...
+# Subtest: duplicate checkpoint IDs are rejected
+ok 51 - duplicate checkpoint IDs are rejected
+  ---
+  duration_ms: 7.35025
+  ...
+# Subtest: partial-order references outside required events are rejected
+ok 52 - partial-order references outside required events are rejected
+  ---
+  duration_ms: 4.182042
+  ...
+# Subtest: broken generation source references are rejected
+ok 53 - broken generation source references are rejected
+  ---
+  duration_ms: 18.842959
+  ...
+# Subtest: hidden RUNNING preconditions are rejected
+ok 54 - hidden RUNNING preconditions are rejected
+  ---
+  duration_ms: 3.764625
+  ...
+# Subtest: platform-private expected truth is rejected
+ok 55 - platform-private expected truth is rejected
+  ---
+  duration_ms: 2.290708
+  ...
+# Subtest: correctness sleep is rejected
+ok 56 - correctness sleep is rejected
+  ---
+  duration_ms: 2.23525
+  ...
+# Subtest: Arc scenarios reject a Web target
+ok 57 - Arc scenarios reject a Web target
+  ---
+  duration_ms: 12.506333
+  ...
+# Subtest: semantic bootstrap is explicitly non-G1 and bound to deterministic sources
+ok 58 - semantic bootstrap is explicitly non-G1 and bound to deterministic sources
+  ---
+  duration_ms: 79.2765
+  ...
+# Subtest: PR workflow exposes the accepted dependency layers and aggregate always runs
+ok 59 - PR workflow exposes the accepted dependency layers and aggregate always runs
+  ---
+  duration_ms: 1.610166
+  ...
+# Subtest: checked-in GT-G0-14 evidence binds hosted success and four failure layers
+ok 60 - checked-in GT-G0-14 evidence binds hosted success and four failure layers
+  ---
+  duration_ms: 10.894208
+  ...
+# Subtest: all 56 vectors execute on both boundaries
+ok 61 - all 56 vectors execute on both boundaries
+  ---
+  duration_ms: 160.594458
+  ...
+# Subtest: mutation guard duplicate-completion
+ok 62 - mutation guard duplicate-completion
+  ---
+  duration_ms: 132.220083
+  ...
+# Subtest: mutation guard stale-epoch
+ok 63 - mutation guard stale-epoch
+  ---
+  duration_ms: 76.968583
+  ...
+# Subtest: mutation guard lease-leak
+ok 64 - mutation guard lease-leak
+  ---
+  duration_ms: 68.550375
+  ...
+# Subtest: mutation guard fault-transition
+ok 65 - mutation guard fault-transition
+  ---
+  duration_ms: 67.290167
+  ...
+# Subtest: mutation guard late-fence
+ok 66 - mutation guard late-fence
+  ---
+  duration_ms: 67.38125
+  ...
+# Subtest: mutation guard transport-drop
+ok 67 - mutation guard transport-drop
+  ---
+  duration_ms: 65.542666
+  ...
+# Subtest: mutation guard boundary-equivalence
+ok 68 - mutation guard boundary-equivalence
+  ---
+  duration_ms: 65.523084
+  ...
+# Subtest: protocol-seed-v0.1 has exactly 56 unique stable vectors
+ok 69 - protocol-seed-v0.1 has exactly 56 unique stable vectors
+  ---
+  duration_ms: 2.910833
+  ...
+# Subtest: expected values are contract-authored and do not contain observed runner output
+ok 70 - expected values are contract-authored and do not contain observed runner output
+  ---
+  duration_ms: 0.153875
+  ...
+# Subtest: blocking negative families are represented
+ok 71 - blocking negative families are represented
+  ---
+  duration_ms: 0.072
+  ...
+# Subtest: protocol vector HPR-ENV-SESSION-01
+ok 72 - protocol vector HPR-ENV-SESSION-01
+  ---
+  duration_ms: 0.0465
+  ...
+# Subtest: protocol vector HPR-ENV-SESSION-02
+ok 73 - protocol vector HPR-ENV-SESSION-02
+  ---
+  duration_ms: 0.092792
+  ...
+# Subtest: protocol vector HPR-ENV-SESSION-03
+ok 74 - protocol vector HPR-ENV-SESSION-03
+  ---
+  duration_ms: 0.031875
+  ...
+# Subtest: protocol vector HPR-ENV-SESSION-04
+ok 75 - protocol vector HPR-ENV-SESSION-04
+  ---
+  duration_ms: 0.095542
+  ...
+# Subtest: protocol vector HPR-ENV-SESSION-05
+ok 76 - protocol vector HPR-ENV-SESSION-05
+  ---
+  duration_ms: 0.031292
+  ...
+# Subtest: protocol vector HPR-ENV-SESSION-06
+ok 77 - protocol vector HPR-ENV-SESSION-06
+  ---
+  duration_ms: 0.2625
+  ...
+# Subtest: protocol vector HPR-ENV-SESSION-07
+ok 78 - protocol vector HPR-ENV-SESSION-07
+  ---
+  duration_ms: 0.327416
+  ...
+# Subtest: protocol vector HPR-ENV-SESSION-08
+ok 79 - protocol vector HPR-ENV-SESSION-08
+  ---
+  duration_ms: 0.089917
+  ...
+# Subtest: protocol vector HPR-ACTION-RECEIPT-01
+ok 80 - protocol vector HPR-ACTION-RECEIPT-01
+  ---
+  duration_ms: 0.029541
+  ...
+# Subtest: protocol vector HPR-ACTION-RECEIPT-02
+ok 81 - protocol vector HPR-ACTION-RECEIPT-02
+  ---
+  duration_ms: 0.025
+  ...
+# Subtest: protocol vector HPR-ACTION-RECEIPT-03
+ok 82 - protocol vector HPR-ACTION-RECEIPT-03
+  ---
+  duration_ms: 0.020542
+  ...
+# Subtest: protocol vector HPR-ACTION-RECEIPT-04
+ok 83 - protocol vector HPR-ACTION-RECEIPT-04
+  ---
+  duration_ms: 0.020084
+  ...
+# Subtest: protocol vector HPR-ACTION-RECEIPT-05
+ok 84 - protocol vector HPR-ACTION-RECEIPT-05
+  ---
+  duration_ms: 0.0195
+  ...
+# Subtest: protocol vector HPR-ACTION-RECEIPT-06
+ok 85 - protocol vector HPR-ACTION-RECEIPT-06
+  ---
+  duration_ms: 0.02025
+  ...
+# Subtest: protocol vector HPR-ACTION-RECEIPT-07
+ok 86 - protocol vector HPR-ACTION-RECEIPT-07
+  ---
+  duration_ms: 0.053625
+  ...
+# Subtest: protocol vector HPR-ACTION-RECEIPT-08
+ok 87 - protocol vector HPR-ACTION-RECEIPT-08
+  ---
+  duration_ms: 0.048166
+  ...
+# Subtest: protocol vector HPR-COMPLETION-TOKEN-01
+ok 88 - protocol vector HPR-COMPLETION-TOKEN-01
+  ---
+  duration_ms: 0.034
+  ...
+# Subtest: protocol vector HPR-COMPLETION-TOKEN-02
+ok 89 - protocol vector HPR-COMPLETION-TOKEN-02
+  ---
+  duration_ms: 0.024042
+  ...
+# Subtest: protocol vector HPR-COMPLETION-TOKEN-03
+ok 90 - protocol vector HPR-COMPLETION-TOKEN-03
+  ---
+  duration_ms: 0.089667
+  ...
+# Subtest: protocol vector HPR-COMPLETION-TOKEN-04
+ok 91 - protocol vector HPR-COMPLETION-TOKEN-04
+  ---
+  duration_ms: 0.0325
+  ...
+# Subtest: protocol vector HPR-COMPLETION-TOKEN-05
+ok 92 - protocol vector HPR-COMPLETION-TOKEN-05
+  ---
+  duration_ms: 0.02725
+  ...
+# Subtest: protocol vector HPR-COMPLETION-TOKEN-06
+ok 93 - protocol vector HPR-COMPLETION-TOKEN-06
+  ---
+  duration_ms: 0.023042
+  ...
+# Subtest: protocol vector HPR-COMPLETION-TOKEN-07
+ok 94 - protocol vector HPR-COMPLETION-TOKEN-07
+  ---
+  duration_ms: 0.022042
+  ...
+# Subtest: protocol vector HPR-COMPLETION-TOKEN-08
+ok 95 - protocol vector HPR-COMPLETION-TOKEN-08
+  ---
+  duration_ms: 0.023291
+  ...
+# Subtest: protocol vector HPR-SOURCE-EVENT-01
+ok 96 - protocol vector HPR-SOURCE-EVENT-01
+  ---
+  duration_ms: 0.096291
+  ...
+# Subtest: protocol vector HPR-SOURCE-EVENT-02
+ok 97 - protocol vector HPR-SOURCE-EVENT-02
+  ---
+  duration_ms: 0.096875
+  ...
+# Subtest: protocol vector HPR-SOURCE-EVENT-03
+ok 98 - protocol vector HPR-SOURCE-EVENT-03
+  ---
+  duration_ms: 0.041833
+  ...
+# Subtest: protocol vector HPR-SOURCE-EVENT-04
+ok 99 - protocol vector HPR-SOURCE-EVENT-04
+  ---
+  duration_ms: 0.026708
+  ...
+# Subtest: protocol vector HPR-SOURCE-EVENT-05
+ok 100 - protocol vector HPR-SOURCE-EVENT-05
+  ---
+  duration_ms: 0.022417
+  ...
+# Subtest: protocol vector HPR-SOURCE-EVENT-06
+ok 101 - protocol vector HPR-SOURCE-EVENT-06
+  ---
+  duration_ms: 0.020667
+  ...
+# Subtest: protocol vector HPR-SOURCE-EVENT-07
+ok 102 - protocol vector HPR-SOURCE-EVENT-07
+  ---
+  duration_ms: 0.022375
+  ...
+# Subtest: protocol vector HPR-SOURCE-EVENT-08
+ok 103 - protocol vector HPR-SOURCE-EVENT-08
+  ---
+  duration_ms: 0.021916
+  ...
+# Subtest: protocol vector HPR-FAULT-HANDLE-01
+ok 104 - protocol vector HPR-FAULT-HANDLE-01
+  ---
+  duration_ms: 0.020666
+  ...
+# Subtest: protocol vector HPR-FAULT-HANDLE-02
+ok 105 - protocol vector HPR-FAULT-HANDLE-02
+  ---
+  duration_ms: 0.020583
+  ...
+# Subtest: protocol vector HPR-FAULT-HANDLE-03
+ok 106 - protocol vector HPR-FAULT-HANDLE-03
+  ---
+  duration_ms: 0.022
+  ...
+# Subtest: protocol vector HPR-FAULT-HANDLE-04
+ok 107 - protocol vector HPR-FAULT-HANDLE-04
+  ---
+  duration_ms: 0.021458
+  ...
+# Subtest: protocol vector HPR-FAULT-HANDLE-05
+ok 108 - protocol vector HPR-FAULT-HANDLE-05
+  ---
+  duration_ms: 0.02
+  ...
+# Subtest: protocol vector HPR-FAULT-HANDLE-06
+ok 109 - protocol vector HPR-FAULT-HANDLE-06
+  ---
+  duration_ms: 0.021167
+  ...
+# Subtest: protocol vector HPR-FAULT-HANDLE-07
+ok 110 - protocol vector HPR-FAULT-HANDLE-07
+  ---
+  duration_ms: 0.02025
+  ...
+# Subtest: protocol vector HPR-FAULT-HANDLE-08
+ok 111 - protocol vector HPR-FAULT-HANDLE-08
+  ---
+  duration_ms: 0.022125
+  ...
+# Subtest: protocol vector HPR-LATE-FENCE-01
+ok 112 - protocol vector HPR-LATE-FENCE-01
+  ---
+  duration_ms: 0.02325
+  ...
+# Subtest: protocol vector HPR-LATE-FENCE-02
+ok 113 - protocol vector HPR-LATE-FENCE-02
+  ---
+  duration_ms: 0.035292
+  ...
+# Subtest: protocol vector HPR-LATE-FENCE-03
+ok 114 - protocol vector HPR-LATE-FENCE-03
+  ---
+  duration_ms: 0.023375
+  ...
+# Subtest: protocol vector HPR-LATE-FENCE-04
+ok 115 - protocol vector HPR-LATE-FENCE-04
+  ---
+  duration_ms: 0.022916
+  ...
+# Subtest: protocol vector HPR-LATE-FENCE-05
+ok 116 - protocol vector HPR-LATE-FENCE-05
+  ---
+  duration_ms: 0.022333
+  ...
+# Subtest: protocol vector HPR-LATE-FENCE-06
+ok 117 - protocol vector HPR-LATE-FENCE-06
+  ---
+  duration_ms: 0.020167
+  ...
+# Subtest: protocol vector HPR-LATE-FENCE-07
+ok 118 - protocol vector HPR-LATE-FENCE-07
+  ---
+  duration_ms: 0.020625
+  ...
+# Subtest: protocol vector HPR-LATE-FENCE-08
+ok 119 - protocol vector HPR-LATE-FENCE-08
+  ---
+  duration_ms: 0.020458
+  ...
+# Subtest: protocol vector HPR-BOUNDARY-FINAL-01
+ok 120 - protocol vector HPR-BOUNDARY-FINAL-01
+  ---
+  duration_ms: 0.019666
+  ...
+# Subtest: protocol vector HPR-BOUNDARY-FINAL-02
+ok 121 - protocol vector HPR-BOUNDARY-FINAL-02
+  ---
+  duration_ms: 0.020583
+  ...
+# Subtest: protocol vector HPR-BOUNDARY-FINAL-03
+ok 122 - protocol vector HPR-BOUNDARY-FINAL-03
+  ---
+  duration_ms: 0.021125
+  ...
+# Subtest: protocol vector HPR-BOUNDARY-FINAL-04
+ok 123 - protocol vector HPR-BOUNDARY-FINAL-04
+  ---
+  duration_ms: 0.025334
+  ...
+# Subtest: protocol vector HPR-BOUNDARY-FINAL-05
+ok 124 - protocol vector HPR-BOUNDARY-FINAL-05
+  ---
+  duration_ms: 0.020583
+  ...
+# Subtest: protocol vector HPR-BOUNDARY-FINAL-06
+ok 125 - protocol vector HPR-BOUNDARY-FINAL-06
+  ---
+  duration_ms: 0.021583
+  ...
+# Subtest: protocol vector HPR-BOUNDARY-FINAL-07
+ok 126 - protocol vector HPR-BOUNDARY-FINAL-07
+  ---
+  duration_ms: 0.0195
+  ...
+# Subtest: protocol vector HPR-BOUNDARY-FINAL-08
+ok 127 - protocol vector HPR-BOUNDARY-FINAL-08
+  ---
+  duration_ms: 0.021083
+  ...
+# schema validation: 24 schemas and 24 fixtures valid
+# Subtest: unknown top-level field is rejected
+ok 128 - unknown top-level field is rejected
+  ---
+  duration_ms: 2.242792
+  ...
+# Subtest: wrong formatVersion is rejected
+ok 129 - wrong formatVersion is rejected
+  ---
+  duration_ms: 0.573833
+  ...
+# Subtest: unsafe artifact paths are rejected
+ok 130 - unsafe artifact paths are rejected
+  ---
+  duration_ms: 0.845709
+  ...
+# Subtest: invalid tagged u64 generation is rejected
+ok 131 - invalid tagged u64 generation is rejected
+  ---
+  duration_ms: 0.513625
+  ...
+# Subtest: published lowercase namespaced capabilities with underscores are accepted
+ok 132 - published lowercase namespaced capabilities with underscores are accepted
+  ---
+  duration_ms: 0.699125
+  ...
+# Subtest: full run-set rejects unknown fields and invalid source identity
+ok 133 - full run-set rejects unknown fields and invalid source identity
+  ---
+  duration_ms: 0.542959
+  ...
+# Subtest: release decision requires wiring-only authority and reproducibility uses lowercase hashes
+ok 134 - release decision requires wiring-only authority and reproducibility uses lowercase hashes
+  ---
+  duration_ms: 1.219625
+  ...
+1..134
+# tests 134
+# suites 0
+# pass 134
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 877.991625

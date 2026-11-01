@@ -18,7 +18,6 @@ struct DebugControllerContext final {
   canvas::runtime::AxiomDebugControl* axiomDebug = nullptr;
   canvas::runtime::PlatformDebugControl* platformDebug = nullptr;
   std::function<ImageFileResult()> chooseImageFile;
-  canvas::runtime::MultiSelectionPort* multiSelection = nullptr;
 };
 
 class DebugController final {

@@ -1,0 +1,153 @@
+{
+  "status": "DRAFT_NOT_ACCEPTED",
+  "baseline_revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+  "existing_authority_lock": {
+    "path": ".aegis/packages/AXIOM-SDK-01-v0.2/authority.lock.json",
+    "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+    "sha256": "e63baef1cfbd6a6abe1b0e31dfccf91794168c0aa6779c55f02639a6928bfd6b"
+  },
+  "candidate_bindings": [
+    {
+      "path": "docs/planning/sdk/candidate-multi-selection-v1.h",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "7982432e113f5d2f78083bb4f04eea7a2ff5075f3e149b2fd666fdd2132fb03b"
+    },
+    {
+      "path": "docs/planning/sdk/multi-selection-abi-candidate-v0.1.md",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "9f4b7f05282d009aefad8f61b46a2776a52fbcc7f68be6f02c49bc25b5b188cf"
+    },
+    {
+      "path": "verification/sdk01/case-bindings-v0.3.json",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "549d7429c6734b7b6fd3483121e2e4e8a7f1a26b23b7675b7dc5b383ece0a94d"
+    },
+    {
+      "path": "verification/sdk01/multi_candidate_consumer.c",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "950f9d683d1e601572ac289f34994f389d860136b70bee135a6a0448e6898c93"
+    },
+    {
+      "path": "verification/sdk01/multi_candidate_leaf_consumer.c",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "a4ee5718d6ed54e3c46342c0f9e868b9fbe40ceba3b9d2d60b1dfbb6ea1d4725"
+    },
+    {
+      "path": "verification/sdk01/multi_candidate_layout.c",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "5b0b6d53c0e3d474c2330914a85d0231346d1a6d651fed0506eb70d9f17e1bef"
+    },
+    {
+      "path": "verification/sdk01/verify_multi_candidate_layout.py",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "fdf01bd80a32115787bdb985c244bdfa6b3a69042d3af485d49984230851e157"
+    },
+    {
+      "path": ".aegis/results/AXIOM-SDK-01-ABI-CANDIDATE-006/report.md",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "7fea12c5fb879d088f744a66eb8345e9bd88650b27ef22f0ff0c575d757b84af"
+    },
+    {
+      "path": ".aegis/results/AXIOM-SDK-01-ABI-CANDIDATE-006/facts.json",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "f60535b63d0f26db00d0b51ee6608185758de5c8420967ec246fac5a1a37aadf"
+    }
+  ],
+  "owner_sources": [
+    {
+      "path": "runtime/composition/include/canvas/runtime/runtime_composition.hpp",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "87d86348a8360d383be46a5b5c9e98d303a9e93e9eb8b31935f0118fa74d373e"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/canvas_runtime_facade.hpp",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "07351fbc122f3432e0b8a2b375ee50e2b82b24e8cf64436c87ff60e3f1dd5cc9"
+    },
+    {
+      "path": "runtime/composition/include/canvas/runtime/internal/multi_selection_port.hpp",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "90a6b521e061290150740b031566ca0d3c8949c6a53316de7ceeb42b11c088df"
+    },
+    {
+      "path": "runtime/composition/src/multi_selection_port.cpp",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "beb99b8702316a60daf1da7d84774a4f010e17a980e8d1bbd93acfb9542018a9"
+    },
+    {
+      "path": "runtime/composition/src/canvas_runtime_facade.cpp",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "31c6a131b572ad3d077850d7c8f3c1deb5bf52302d5b3e975268e874d6e8e66f"
+    },
+    {
+      "path": "runtime/composition/src/runtime_composition.cpp",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "3fc689496b11d1aab9e5b0312b408f946e5bc33e2ad58299cece717f945b6349"
+    },
+    {
+      "path": "debug_ui/include/canvas/debug_ui/control_router.hpp",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "6a88c9a20b0ccbd16ac8b11f1a496ca2c1e15f1cdaf654bd70d9b95ca4914f0f"
+    },
+    {
+      "path": "debug_ui/include/canvas/debug_ui/ui_session_state.hpp",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "55d793c872fd7b595429fd1c97e6a77cee398bfe97d9c5e7496e46ec8813b3de"
+    },
+    {
+      "path": "debug_ui/src/control_router.cpp",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "0a50a09315ba6fd56ae26c1613464e9a2ba1e27f92c6903f27a40a2c81acc798"
+    },
+    {
+      "path": "debug_ui/src/controller.cpp",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "246cb170a858b00d7336164a9b0c88a84d1626545363125dede72208398a1b7d"
+    },
+    {
+      "path": "apps/minimal_runtime_host/windows_main.cpp",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "c20de3974594dd343e7c7fd45e10cf51db1800ee6fc3e6b9711a3b4d348f62b3"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/platform/web/web_debug_ui.inl",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "4e64a30dfb6eb3a17ac0303293c0b0dd958f2f12d4f3ddd1afb108182de9c5e8"
+    },
+    {
+      "path": "apps/minimal_runtime_host/CMakeLists.txt",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "75010eb8534a6ac3764f5cd15408b854ebd9b2da68e24819a98be06c87f8f930"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/CMakeLists.txt",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "2b7a6d929ad4ca48307bed00c11fba9052d4e1183206eb135f49124fc9317b12"
+    },
+    {
+      "path": "apps/axiom_canvas_demo/tests/web_selection_batch3.mjs",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "55b08346f30cf9fde104d699e8dfce783cf35a4c6d9904edee837bc26e15c9d7"
+    },
+    {
+      "path": "debug_ui/tests/selection_summary_ui_test.cpp",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "5baa4401577e7920be545fdc4089dc66067429ae932a796ef9de569c97bf571c"
+    },
+    {
+      "path": "docs/api/canvas_runtime_api_v1.h",
+      "revision": "ff34c2c4fe58be0c1e7bf75f954b0972a760db02",
+      "sha256": "cbc55b2ccd396a8f843fb202531bcf09e708a75f41da1ef0c960ec0cd303011e"
+    }
+  ],
+  "accepted_user_decisions": [
+    "Reject stale edits, refresh and explicitly retry",
+    "Local single-user permission mode was accepted for multi-selection"
+  ],
+  "not_accepted": [
+    "Public SDK ABI additions and type/handle/lifecycle decisions",
+    "Leaf-level per-root patch and authorized property read public contract",
+    "P20 Windows/Web consumer oracles and artifact boundary"
+  ],
+  "p32_authorized": false
+}

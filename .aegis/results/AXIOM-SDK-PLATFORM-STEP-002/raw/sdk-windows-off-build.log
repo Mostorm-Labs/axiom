@@ -1,0 +1,18 @@
+Configure: cmake -S . -B out/sdk01-review-off/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DCANVAS_BUILD_POC01=OFF -DCANVAS_BUILD_SEMANTIC=ON -DCANVAS_SEMANTIC_ENABLE_PROTOBUF=ON -DCANVAS_BUILD_RENDER=ON -DCANVAS_BUILD_RF01=ON -DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON -DAXIOM_BUILD_DEBUG_UI=OFF -DAXIOM_DEBUG_UI_PROFILE=full -DCANVAS_BUILD_INK_PLAYGROUND=OFF -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCANVAS_SKIA_SDK_VARIANT=release -DCANVAS_SKIA_SDK_ROOT=C:/Users/Chado/AppData/Local/Temp/axiom-locked-skia-independent-cciddm46/release -DCMAKE_PREFIX_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c -DAXIOM_PROTOC=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/host-tools/fa578fb7243cb40803e2b649a94755a7fb533232bd12c6f9e833b62163871f85/bin/protoc.exe -DCMAKE_FIND_ROOT_PATH=C:/Users/Chado/AppData/Local/Axiom/sdk/packages/semantic/runtimes/aea5fd111a38376ea9c68f28f246fe925ea513191aa026985d25f820eec1045c -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF -DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF
+-- The C compiler identification is MSVC 19.51.36246.0
+-- The CXX compiler identification is MSVC 19.51.36246.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+CMake Error at CMakeLists.txt:48 (message):
+  AXIOM_DEBUG_UI_PROFILE requires AXIOM_BUILD_DEBUG_UI=ON
+
+
+-- Configuring incomplete, errors occurred!

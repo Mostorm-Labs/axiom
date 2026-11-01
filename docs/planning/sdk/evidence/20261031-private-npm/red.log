@@ -1,0 +1,208 @@
+test_never_overwrites_existing_work (tools.release.tests.test_npm_publish.NpmPublicationTest.test_never_overwrites_existing_work) ... FAIL
+test_package_is_publishable_only_to_the_requested_scope_and_registry (tools.release.tests.test_npm_publish.NpmPublicationTest.test_package_is_publishable_only_to_the_requested_scope_and_registry) ... FAIL
+test_rejects_corrupt_bytes_before_creating_output (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_corrupt_bytes_before_creating_output) ... FAIL
+test_rejects_foreign_registry_scope_private_and_lifecycle_scripts (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_foreign_registry_scope_private_and_lifecycle_scripts) ... 
+  test_rejects_foreign_registry_scope_private_and_lifecycle_scripts (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_foreign_registry_scope_private_and_lifecycle_scripts) (metadata={'name': '@other/axiom'}) ... FAIL
+  test_rejects_foreign_registry_scope_private_and_lifecycle_scripts (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_foreign_registry_scope_private_and_lifecycle_scripts) (metadata={'private': True}) ... FAIL
+  test_rejects_foreign_registry_scope_private_and_lifecycle_scripts (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_foreign_registry_scope_private_and_lifecycle_scripts) (metadata={'publishConfig': {'registry': 'https://registry.npmjs.org/', 'tag': 'preview'}}) ... FAIL
+  test_rejects_foreign_registry_scope_private_and_lifecycle_scripts (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_foreign_registry_scope_private_and_lifecycle_scripts) (metadata={'scripts': {'prepublishOnly': 'untrusted'}}) ... FAIL
+test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) ... 
+  test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) (name='../escape') ... FAIL
+  test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) (name='/escape') ... FAIL
+  test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) (name='x\\escape') ... FAIL
+  test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) (name='.npmrc') ... FAIL
+  test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) (name='nested/.npmrc') ... FAIL
+  test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) (name='.env') ... FAIL
+test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) ... FAIL
+test_rejects_wrong_source_kind_or_version (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_wrong_source_kind_or_version) ... 
+  test_rejects_wrong_source_kind_or_version (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_wrong_source_kind_or_version) (options={'revision': 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'}) ... FAIL
+  test_rejects_wrong_source_kind_or_version (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_wrong_source_kind_or_version) (options={'kind': 'web-demo'}) ... FAIL
+  test_rejects_wrong_source_kind_or_version (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_wrong_source_kind_or_version) (options={'version': '1.0.0-preview.2'}) ... FAIL
+test_verified_release_bytes_are_extracted_without_rewriting (tools.release.tests.test_npm_publish.NpmPublicationTest.test_verified_release_bytes_are_extracted_without_rewriting) ... FAIL
+
+======================================================================
+FAIL: test_never_overwrites_existing_work (tools.release.tests.test_npm_publish.NpmPublicationTest.test_never_overwrites_existing_work)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 104, in test_never_overwrites_existing_work
+    self.prepare(archive, output)
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_package_is_publishable_only_to_the_requested_scope_and_registry (tools.release.tests.test_npm_publish.NpmPublicationTest.test_package_is_publishable_only_to_the_requested_scope_and_registry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 19, in test_package_is_publishable_only_to_the_requested_scope_and_registry
+    self.assertEqual(package['name'], '@axiom/axiom')
+AssertionError: '@mostorm/axiom' != '@axiom/axiom'
+- @mostorm/axiom
++ @axiom/axiom
+
+
+======================================================================
+FAIL: test_rejects_corrupt_bytes_before_creating_output (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_corrupt_bytes_before_creating_output)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 63, in test_rejects_corrupt_bytes_before_creating_output
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_foreign_registry_scope_private_and_lifecycle_scripts (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_foreign_registry_scope_private_and_lifecycle_scripts) (metadata={'name': '@other/axiom'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 80, in test_rejects_foreign_registry_scope_private_and_lifecycle_scripts
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_foreign_registry_scope_private_and_lifecycle_scripts (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_foreign_registry_scope_private_and_lifecycle_scripts) (metadata={'private': True})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 80, in test_rejects_foreign_registry_scope_private_and_lifecycle_scripts
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_foreign_registry_scope_private_and_lifecycle_scripts (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_foreign_registry_scope_private_and_lifecycle_scripts) (metadata={'publishConfig': {'registry': 'https://registry.npmjs.org/', 'tag': 'preview'}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 80, in test_rejects_foreign_registry_scope_private_and_lifecycle_scripts
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_foreign_registry_scope_private_and_lifecycle_scripts (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_foreign_registry_scope_private_and_lifecycle_scripts) (metadata={'scripts': {'prepublishOnly': 'untrusted'}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 80, in test_rejects_foreign_registry_scope_private_and_lifecycle_scripts
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) (name='../escape')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 87, in test_rejects_traversal_duplicates_symlinks_and_credentials
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) (name='/escape')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 87, in test_rejects_traversal_duplicates_symlinks_and_credentials
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) (name='x\\escape')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 87, in test_rejects_traversal_duplicates_symlinks_and_credentials
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) (name='.npmrc')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 87, in test_rejects_traversal_duplicates_symlinks_and_credentials
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) (name='nested/.npmrc')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 87, in test_rejects_traversal_duplicates_symlinks_and_credentials
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) (name='.env')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 87, in test_rejects_traversal_duplicates_symlinks_and_credentials
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_traversal_duplicates_symlinks_and_credentials (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 97, in test_rejects_traversal_duplicates_symlinks_and_credentials
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_wrong_source_kind_or_version (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_wrong_source_kind_or_version) (options={'revision': 'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 71, in test_rejects_wrong_source_kind_or_version
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_wrong_source_kind_or_version (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_wrong_source_kind_or_version) (options={'kind': 'web-demo'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 71, in test_rejects_wrong_source_kind_or_version
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_rejects_wrong_source_kind_or_version (tools.release.tests.test_npm_publish.NpmPublicationTest.test_rejects_wrong_source_kind_or_version) (options={'version': '1.0.0-preview.2'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 71, in test_rejects_wrong_source_kind_or_version
+    self.prepare(archive, root / 'npm')
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+======================================================================
+FAIL: test_verified_release_bytes_are_extracted_without_rewriting (tools.release.tests.test_npm_publish.NpmPublicationTest.test_verified_release_bytes_are_extracted_without_rewriting)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 53, in test_verified_release_bytes_are_extracted_without_rewriting
+    result = self.prepare(archive, output)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\tools\release\tests\test_npm_publish.py", line 26, in prepare
+    self.assertIsNotNone(spec, 'missing verified Release-to-npm preparation entry')
+AssertionError: unexpectedly None : missing verified Release-to-npm preparation entry
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.059s
+
+FAILED (failures=18)

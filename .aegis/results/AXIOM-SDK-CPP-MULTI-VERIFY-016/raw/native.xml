@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="4"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="HIMEKO"
+	time="2"
+	timestamp="2026-10-29T23:09:36"
+	>
+	<testcase name="SDKCppPublicMultiOwner" classname="SDKCppPublicMultiOwner" time="0.0474688" status="run">
+		<properties/>
+		<system-out>PASS public RuntimeFacade multi-selection delegates to one real owner
+</system-out>
+	</testcase>
+	<testcase name="SDKCppPublicMultiPermissionStale" classname="SDKCppPublicMultiPermissionStale" time="0.482381" status="run">
+		<properties/>
+		<system-out>Running main() from C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\.deps\googletest\googletest\src\gtest_main.cc
+Note: Google Test filter = MultiSelectionMSE.PublicFacadePermissionChangeInvalidatesQueuedWrite
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from MultiSelectionMSE
+[ RUN      ] MultiSelectionMSE.PublicFacadePermissionChangeInvalidatesQueuedWrite
+[       OK ] MultiSelectionMSE.PublicFacadePermissionChangeInvalidatesQueuedWrite (2 ms)
+[----------] 1 test from MultiSelectionMSE (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 1 test.
+</system-out>
+	</testcase>
+	<testcase name="FC02MinimalTextConsumer" classname="FC02MinimalTextConsumer" time="0.685708" status="run">
+		<properties/>
+		<system-out>FC02 ordinary Minimal RuntimeFacade consumer: PASS
+</system-out>
+	</testcase>
+	<testcase name="SelectionBatch3Ui" classname="SelectionBatch3Ui" time="0.381949" status="run">
+		<properties/>
+		<system-out>PASS read-only summary UI, typed disabled actions and stale selection fence
+</system-out>
+	</testcase>
+</testsuite>

@@ -1,0 +1,54 @@
+[0/2] Re-checking globbed directories...
+[1/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\rich_text_state.cpp.obj
+[2/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\container_operation_mapping.cpp.obj
+[3/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot_bootstrap.cpp.obj
+[4/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\snapshot.cpp.obj
+[5/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\protobuf_object_mapping.cpp.obj
+[6/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\src\codec.cpp.obj
+[7/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\common.pb.cc.obj
+[8/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_engine.pb.cc.obj
+[9/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\connector.pb.cc.obj
+[10/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\brush_stroke.pb.cc.obj
+[11/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\container_operations.pb.cc.obj
+[12/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\erase_mask.pb.cc.obj
+[13/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\paint.pb.cc.obj
+[14/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\geometry.pb.cc.obj
+[15/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\object.pb.cc.obj
+[16/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\operation.pb.cc.obj
+[17/32] Building CXX object runtime\input\CMakeFiles\axiom_input_router_tests.dir\tests\input_router_test.cpp.obj
+cl : Command line warning D9025 : overriding '/DNDEBUG' with '/UNDEBUG'
+[18/32] Linking CXX executable runtime\input\axiom_input_router_tests.exe
+[19/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\rich_text.pb.cc.obj
+[20/32] Building CXX object runtime\input\CMakeFiles\axiom_multipointer_foundation_tests.dir\tests\multipointer_foundation_test.cpp.obj
+cl : Command line warning D9025 : overriding '/DNDEBUG' with '/UNDEBUG'
+[21/32] Linking CXX executable runtime\input\axiom_multipointer_foundation_tests.exe
+[22/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\property.pb.cc.obj
+[23/32] Building CXX object runtime\input\CMakeFiles\axiom_platform_normalization_tests.dir\tests\platform_normalization_test.cpp.obj
+cl : Command line warning D9025 : overriding '/DNDEBUG' with '/UNDEBUG'
+[24/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\section.pb.cc.obj
+[25/32] Linking CXX executable runtime\input\axiom_platform_normalization_tests.exe
+[26/32] Building CXX object runtime\input\CMakeFiles\axiom_c1_platform_fixture_tests.dir\tests\c1_platform_fixture_test.cpp.obj
+cl : Command line warning D9025 : overriding '/DNDEBUG' with '/UNDEBUG'
+[27/32] Linking CXX executable runtime\input\axiom_c1_platform_fixture_tests.exe
+[28/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\vector_path.pb.cc.obj
+[29/32] Building CXX object runtime\semantic\CMakeFiles\canvas_runtime_semantic.dir\generated\auditoryworks\axiom\v1\snapshot.pb.cc.obj
+[30/32] Linking CXX static library runtime\semantic\canvas_runtime_semantic.lib
+[31/32] Building CXX object apps\minimal_runtime_host\CMakeFiles\axiom_minimal_windows_input_pipeline_tests.dir\tests\windows_input_pipeline_test.cpp.obj
+FAILED: apps/minimal_runtime_host/CMakeFiles/axiom_minimal_windows_input_pipeline_tests.dir/tests/windows_input_pipeline_test.cpp.obj 
+C:\PROGRA~1\MICROS~3\18\COMMUN~1\VC\Tools\MSVC\1451~1.362\bin\Hostx64\x64\cl.exe  /nologo /TP -DAXIOM_MINIMAL_HAS_DEBUG_UI=0 -DAXIOM_RUNTIME_QUALIFICATION=1 -DCANVAS_RENDER_HAS_SKIA=1 -DCANVAS_SEMANTIC_PROTOBUF=1 -DNOMINMAX -DSK_RELEASE -D_HAS_ITERATOR_DEBUGGING=0 -D_ITERATOR_DEBUG_LEVEL=0 -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\out\sdk01-review\build\generated -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\control\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\foundation\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\composition\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\interaction\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\scene\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\text\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\semantic\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\input\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\render\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\runtime\ink\include -IC:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\.deps\nlohmann-json\single_include -external:IC:\Users\Chado\.codex\worktrees\fc00x-runtime-minimum-closure\canvas\.deps\skia-sdk\windows-x64-d3d12\release -external:W0 /DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -std:c++20 -MT /W4 /permissive- /WX /EHsc /UNDEBUG /wd4201 /wd4244 /wd4267 /showIncludes /Foapps\minimal_runtime_host\CMakeFiles\axiom_minimal_windows_input_pipeline_tests.dir\tests\windows_input_pipeline_test.cpp.obj /Fdapps\minimal_runtime_host\CMakeFiles\axiom_minimal_windows_input_pipeline_tests.dir\ /FS -c C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp
+cl : Command line warning D9025 : overriding '/DNDEBUG' with '/UNDEBUG'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp(232): error C2039: 'WindowsD3D12SurfaceProvider': is not a member of 'canvas::minimal_runtime_host'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\host_font_resources.hpp(9): note: see declaration of 'canvas::minimal_runtime_host'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp(232): error C2065: 'WindowsD3D12SurfaceProvider': undeclared identifier
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp(232): error C2146: syntax error: missing ';' before identifier 'preview'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp(232): error C3861: 'preview': identifier not found
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp(233): error C2039: 'previewProvider': is not a member of '`anonymous-namespace'::State'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\../windows_main.cpp(48): note: see declaration of '`anonymous-namespace'::State'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp(233): error C2065: 'preview': undeclared identifier
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp(234): error C2065: 'preview': undeclared identifier
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp(235): error C2065: 'preview': undeclared identifier
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp(244): error C2065: 'preview': undeclared identifier
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp(254): error C2039: 'previewProvider': is not a member of '`anonymous-namespace'::State'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\../windows_main.cpp(48): note: see declaration of '`anonymous-namespace'::State'
+C:\Users\Chado\.codex\worktrees\axiom-sdk-api-p31\canvas\apps\minimal_runtime_host\tests\windows_input_pipeline_test.cpp(256): error C2065: 'preview': undeclared identifier
+ninja: build stopped: subcommand failed.

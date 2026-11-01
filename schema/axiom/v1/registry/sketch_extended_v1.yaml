@@ -1,0 +1,23 @@
+schema: auditoryworks.axiom.v1.sketch-extended-object-capability
+version: 1
+status: user-authorized-scoped-extension
+contract: docs/planning/sdk/sketch-batch2-design.md
+extends: sketch_v1.yaml
+fields:
+  - id: 0x00000102
+    name: sketchStyle
+    additional_applicable_kinds: [3,10,11]
+    value_type: SketchStyleV1
+    clear: remove_entry_unless_section_stroke_requires_metadata
+  - id: 0x00000101
+    name: strokeStyle
+    additional_applicable_kinds: [10]
+    requires: SketchStyleV1_even_when_disabled
+    default: {kind: solid, color: [0.4,0.45,0.5,0.65], width: 1, cap: butt, join: {miter: 4}, dash: solid}
+fill_extension:
+  value_type: PatternFillV1
+  additional_applicable_kinds: [3,10]
+snapshot_reader_bit: 256
+capability_requirement: extended-sketch-v1
+table_grid_paint_owner: TableContent.grid
+table_sketch_owner: PropertyBag.sketchStyle

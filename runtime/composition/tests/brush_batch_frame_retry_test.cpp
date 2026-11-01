@@ -1,4 +1,4 @@
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 
 #include <cassert>
 #include <chrono>
@@ -256,7 +256,7 @@ class BusyProvider final : public render::SkiaSurfaceProvider {
 };
 
 void busyCanonicalPreservesAlreadySubmittedFeedback() {
-  runtime::RuntimeComposition composition;
+  runtime::RuntimeCompositionCore composition;
   assert(composition.open());
   auto canonical = std::make_unique<BusyProvider>();
   auto* raw = canonical.get();
@@ -281,7 +281,7 @@ void busyCanonicalPreservesAlreadySubmittedFeedback() {
 void fatalProviderFailureIsNotRetry() {
   for (const bool canonicalFails : {true, false}) {
     for (const bool lose : {true, false}) {
-      runtime::RuntimeComposition composition;
+      runtime::RuntimeCompositionCore composition;
       assert(composition.open());
       auto canonical = std::make_unique<BusyProvider>();
       auto preview = std::make_unique<BusyProvider>();
@@ -305,7 +305,7 @@ void fatalProviderFailureIsNotRetry() {
 
 void busyRoleDoesNotBlockOtherRole(bool canonicalBusy) {
   for (const bool failAcquire : {true, false}) {
-    runtime::RuntimeComposition composition;
+    runtime::RuntimeCompositionCore composition;
     assert(composition.open());
     auto canonical = std::make_unique<BusyProvider>();
     auto preview = std::make_unique<BusyProvider>();

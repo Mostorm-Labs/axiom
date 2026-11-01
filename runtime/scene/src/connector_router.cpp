@@ -1,3 +1,4 @@
+#include "canvas/scene/corner_geometry.hpp"
 #include "canvas/scene/connector_router.hpp"
 #include <algorithm>
 #include <array>
@@ -128,7 +129,10 @@ bool endpoint(const semantic::ObjectRecord& c,const semantic::ConnectorEndpoint&
     const double maximum=std::max(std::abs(d.x),std::abs(d.y)); d.x/=maximum;d.y/=maximum;
     const auto* shape=std::get_if<semantic::ShapeContent>(&target->content);
     P p{},n{},cornerNormal{};
-    if (shape&&shape->shape_kind==2U) {
+    double radius=0;for(const auto& e:target->properties.entries)if(const auto* style=std::get_if<semantic::CornerStyleV1>(&e.value))radius=style->radius;
+    semantic::Vec2 roundedPosition,roundedNormal;
+    if(shape&&radius>0&&roundedShapePerimeter(*shape,radius,{d.x,d.y},roundedPosition,roundedNormal)){p={roundedPosition.x,roundedPosition.y};n={roundedNormal.x,roundedNormal.y};}
+    else if (shape&&shape->shape_kind==2U) {
         const double denom=std::hypot(d.x/(w*0.5),d.y/(h*0.5));
         p={w*0.5+d.x/denom,h*0.5+d.y/denom};
         n={(p.x-w*0.5)/(w*w),(p.y-h*0.5)/(h*h)};
@@ -218,6 +222,13 @@ struct ConnectorRouteJob::Impl {
         result.route.clear();
         for(const auto p:path) {P local{};if(!inverse(connector.transform,p,local)){fail(Status::kInvalidEndpoint);return;}
             result.route.push_back({static_cast<float>(local.x),static_cast<float>(local.y)});}
+        result.sketchObstacles.clear();
+        for(const auto& obstacle:obstacles){
+            // Include attached targets too: terminal stubs may deterministically fall back to exact geometry.
+            const auto& r=obstacle.rect; foundation::WorldRect box{};bool first=true;
+            for(auto p:std::array<P,4>{{{r.l,r.t},{r.r,r.t},{r.r,r.b},{r.l,r.b}}}){P local{};if(!inverse(connector.transform,p,local))continue;foundation::WorldRect point{static_cast<float>(local.x),static_cast<float>(local.y),static_cast<float>(local.x),static_cast<float>(local.y)};box=first?point:foundation::unionRects(box,point);first=false;}
+            if(!first)result.sketchObstacles.push_back(box);
+        }
         result.status=status; result.work.obstacles=static_cast<std::uint32_t>(obstacles.size());
     }
     void considerPath(std::vector<P> path) {

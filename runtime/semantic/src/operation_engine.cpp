@@ -191,13 +191,15 @@ bool admitPlan(OperationAdmission* admission, const PreparedApplyPlan& plan,
     if (plan.manifest || (kind != OperationKind::kSetSectionContent &&
         kind != OperationKind::kEditContainerTopology && kind != OperationKind::kInsertObjects &&
         kind != OperationKind::kRestoreObjects && kind != OperationKind::kDeleteObjects &&
-        kind != OperationKind::kSetTransforms && kind != OperationKind::kPatchProperties)) return false;
+        kind != OperationKind::kSetTransforms && kind != OperationKind::kPatchProperties &&
+        kind != OperationKind::kSetDocumentBackground)) return false;
     const auto basisGeneration = generation.current();
     const auto basisOrdinal = clock.lastCommittedOrdinal();
     StagedObjectView after(context.objects);
     for (const auto& r : plan.creates) if (!after.stageCreate(r)) return false;
     for (const auto& r : plan.replacements) if (!after.stageReplace(r)) return false;
     for (const auto& id : plan.deletes) if (!after.stageDelete(id)) return false;
+    if (plan.background) after.stageDocumentBackground(*plan.background);
     return admission->admit(plan, context, after) &&
         generation.current() == basisGeneration && clock.lastCommittedOrdinal() == basisOrdinal;
 }

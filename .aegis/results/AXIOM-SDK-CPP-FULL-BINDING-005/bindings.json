@@ -1,0 +1,90 @@
+{
+  "source_revision": "9ec290e988e65f463a842c1ff64b715fc3d0638f",
+  "status": "DRAFT_PARTIAL_NOT_COMPLETE_PACKAGE_OR_GATE",
+  "user_direction": "C++ first, no full stable C ABI prerequisite",
+  "historic_package": "preserved, p32_authorized remains false",
+  "inputs": {
+    ".aegis/packages/AXIOM-SDK-01-v0.4/package.json": "c1fa8847ba6ef175cbe83520224950e5d48a46d7560ef14c335b6185644855d5",
+    "verification/sdk01/real_consumer/expected-v1.json": "7e32a4945a65aacea09a195f0675446bc7d5ce1a352ffbbfe074a60215c16f34",
+    "verification/sdk01/real_consumer/check_observations.py": "67d464a7d1db35a0d2d2a04e6c8c23d2f0da31fd5bd9f28b34aa594841f9fd8a",
+    "verification/sdk_cpp_install/run_external.py": "e7b8c1e4d3b48884605e093ab5e18c8f86d7ba33af3de839d9af19b1e28668ae",
+    "verification/sdk_cpp_install/consumer/main.cpp": "146b1763717c44a5e6680cca511bc4166cb12bd8b37e984e34946a011a084a1b",
+    "verification/fc04_mse/mse_01_27_test.cpp": "6978316982dd16c7020705a0a16f71095271449677e1818ffdce23c70651d6f4",
+    "debug_ui/tests/selection_summary_ui_test.cpp": "092a8cebbef1e23dbe0741fa0042e84edc6194163127e4663df1c2b9cf7e3d9a",
+    "apps/axiom_canvas_demo/tests/web_selection_batch3.mjs": "35e8736a8091386f203acf3f6ac4392659f51438562113b2a269d8e11fd8ec82",
+    ".aegis/results/AXIOM-SDK-CPP-INSTALL-P32-001/report.md": "1b0da96b6d62ff439407b8c75c77fc063ca2955cb57b1af09845ac9e4e499e11",
+    ".aegis/results/AXIOM-SDK-CPP-STROKE-P32-001/report.md": "37f02bef68dd4fd3f605ef2b4936b3bba397895b05ac358564698122199cffa2",
+    "verification/sdk_cpp_install/consumer/multi_style.cpp": "82bc572034dc1f056690b24a095cc33b94260c4a9b47bffa09cd7d7d747adfcd",
+    ".aegis/results/AXIOM-SDK-CPP-EXTERNAL-STYLE-003/report.md": "f42bc5101bc3e1ebfc84596ab6f8820f86231d13c952d5f5bce4707370ab6b08",
+    ".aegis/results/AXIOM-SDK-CPP-EXTERNAL-STYLE-003/external-results.json": "1cd910241afb3983cfae0f3e6600794e76040b039621c6030811a97f001e1b8d",
+    "verification/sdk_cpp_install/consumer/multi_shape.cpp": "73b01152aa7bed7d72aec2d051f1390da6521e0ab9a06849b0d0ea9fa145fa2a",
+    "runtime/composition/include/canvas/runtime/runtime.hpp": "cc775a4e3d0b2fa13f2c8aec7913917e78fa5e57369b7d17870ac96b50901dae",
+    ".aegis/results/AXIOM-SDK-CPP-INPUT-P32-001/report.md": "e26111d36e036f2f51a957ac20be4f80e867e7d2dcf19de20f64f3cace1da45f",
+    ".aegis/results/AXIOM-SDK-CPP-INPUT-P32-001/raw/sdk-cpp-external-shape-final3.json": "12225a0983daa19c901b15a7d996bbcd6e922f0d0a7e01f9204226dbf4844ad1"
+  },
+  "p01_p10": {
+    "P01": {
+      "state": "PARTIAL",
+      "binding_and_gap": "MSE-07 real owner covers partial targets/exclusions; installed C++ role-to-ID driver absent"
+    },
+    "P02": {
+      "state": "PARTIAL",
+      "binding_and_gap": "owner permission/stale tests exist; independent installed C++ state/redo driver absent"
+    },
+    "P03": {
+      "state": "PARTIAL",
+      "binding_and_gap": "owner and native UI tests exist; actual Windows/Chrome partial-consent and excluded-object drivers absent"
+    },
+    "P04": {
+      "state": "PARTIAL",
+      "binding_and_gap": "Installed external C++ consumer creates and edits the exact two-Shape style fixture and independently asserts values and Undo/Redo; frozen JSON observation driver and Windows/Chrome host variants remain."
+    },
+    "P05": {
+      "state": "PARTIAL",
+      "binding_and_gap": "real invalid/stale/permission/NoStroke tests exist; full failure-provider matrix and MSE-20/23/26 remain"
+    },
+    "P06": {
+      "state": "PARTIAL",
+      "binding_and_gap": "Installed external C++ lifecycle, pointer-created Shapes and mixed style tests pass; full surface/presentation, resource and complete SDK API remain."
+    },
+    "P07": {
+      "state": "PARTIAL",
+      "binding_and_gap": "Windows host builds and real Debug UI owner test pass; independent host driver for P01-P05 absent"
+    },
+    "P08": {
+      "state": "PARTIAL",
+      "binding_and_gap": "Chrome/WASM 44-assertion selection regression passes; no mixed-width P01-P05 browser driver"
+    },
+    "P09": {
+      "state": "PARTIAL",
+      "binding_and_gap": "Windows profile rejects mismatched CRT and requires exact compiler/manifests; no stable C++ ABI guarantee or wasm package compatibility claim"
+    },
+    "P10": {
+      "state": "PARTIAL",
+      "binding_and_gap": "12 old named tests passed at prior bridge result; scoped 11 tests passed here; not all SDK/full faults rerun"
+    }
+  },
+  "api01_api12": {
+    "API01": "PARTIAL: external installed Windows C++ compile/link/lifecycle, no complete closure or portability",
+    "API02": "NOT_RUN: C ABI layout tests remain historical; C++ profile ownership/exception and compatibility tests incomplete",
+    "API03": "PARTIAL: external two-owner isolation for one Section; complete ID/stale/callback cases not run",
+    "API04": "PARTIAL: existing owner regressions; external queued input/order/close barrier not implemented",
+    "API05": "PARTIAL: installed C++ two-Shape/sticky width cases and native Debug UI pass; frozen observation-driver output, full eligibility and both platform-host scenario drivers incomplete.",
+    "API06": "NOT_RUN: external presentation/preview identity and recovery",
+    "API07": "NOT_RUN: external document export/restore and independent canonical comparison",
+    "API08": "NOT_RUN: external resource lifecycle",
+    "API09": "PARTIAL: public full pointer facts delegate to ingress; external mixed-source/retired-source rejection passed. Full native/browser device input and IME remain not run.",
+    "API10": "NOT_RUN: external language/platform binding parity",
+    "API11": "PARTIAL: external temp install exercised; relocation, assets and license/dependency closure not qualified",
+    "API12": "NOT_RUN: quantitative performance thresholds and benchmark"
+  },
+  "separate_findings": [
+    "D07 Protobuf/Abseil fault-injection hang remains open",
+    "physical input and IME remain PHYSICAL_PENDING"
+  ],
+  "not_claimed": [
+    "full SDK-01 ready",
+    "release",
+    "Gate pass"
+  ]
+}

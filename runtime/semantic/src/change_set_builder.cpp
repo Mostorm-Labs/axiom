@@ -38,6 +38,7 @@ SemanticChangeFlags replacementFlag(OperationKind kind) {
     case OperationKind::kSetObjectSize:
     case OperationKind::kSetVectorPathGeometry:
     case OperationKind::kSetImageContent:
+    case OperationKind::kEditTable:
     case OperationKind::kEditRichText:
     case OperationKind::kSetConnectorContent:
     case OperationKind::kSetSectionContent:
@@ -108,6 +109,7 @@ std::optional<PreparedChangeSet> prepareChangeSet(const PreparedApplyPlan& plan)
     }
     normalize(prepared.changes);
     prepared.resource_changes = plan.resource_changes;
+    prepared.document_background_changed = plan.background.has_value();
     return prepared;
 }
 
@@ -115,7 +117,7 @@ ChangeSet finalizeChangeSet(
     PreparedChangeSet prepared,
     SemanticGeneration before,
     SemanticGeneration after) {
-    return ChangeSet::fromChanges(before, after, std::move(prepared.changes), std::move(prepared.resource_changes));
+    return ChangeSet::fromChanges(before, after, std::move(prepared.changes), std::move(prepared.resource_changes), prepared.document_background_changed);
 }
 
 } // namespace canvas::semantic::internal

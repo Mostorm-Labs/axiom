@@ -1,0 +1,45 @@
+edition = "2024";
+package auditoryworks.axiom.v1;
+
+// Additive INK-V2-01 binding. Packed positions: interleaved binary64 LE x,y;
+// pressure: uint16 LE, exactly one value per knot. No expanded geometry.
+message CompactBrushConfig {
+  uint32 version=1;
+  uint32 algorithm_version=2;
+  uint32 signal_version=3;
+  uint32 material_version=4;
+  uint32 family=5;
+  uint32 round_mode=6;
+  uint32 pressure_source=7;
+  repeated double paint=8 [features.repeated_field_encoding=PACKED];
+  double size=9;
+  double opacity=10;
+  double marker_angle=11;
+  double marker_flatness=12;
+  double density=13;
+  double texture_scale=14;
+  double deposition=15;
+  double wet_edge=16;
+  string material_resource_id=17;
+  string material_resource_sha256=18;
+  uint32 material_sampling_version=19;
+  uint32 laser_fade_ms=20;
+  double laser_tail_length=21;
+  // Config v2, evaluator 3; absent in legacy v1 records.
+  double thinning=22;
+  double streamline=23;
+  double smoothing=24;
+  uint32 easing=25;
+  uint32 pressure_model=26;
+  double start_taper=27;
+  double end_taper=28;
+  bool start_cap=29;
+  bool end_cap=30;
+}
+message CompactStrokeContent {
+  CompactBrushConfig config=1;
+  fixed64 seed=2;
+  uint32 knot_count=3;
+  bytes positions_le=4;
+  bytes effective_pressure_le=5;
+}

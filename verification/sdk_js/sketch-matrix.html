@@ -1,0 +1,9 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Axiom 手绘 v1 样例</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f4f6f9;font:14px system-ui;color:#24344a}header{display:flex;align-items:center;gap:20px;padding:18px 28px;background:white;border-bottom:1px solid #e0e6ef}h1{font-size:18px;margin:0}a{color:#2866ba}p{margin:12px 28px;color:#6b7b90}#board{width:800px;height:550px;background:white;margin:20px 28px;box-shadow:0 3px 24px #1e304412}button{border:1px solid #d6dfeb;border-radius:6px;background:white;padding:7px 14px;color:inherit;cursor:pointer}#status{font-size:12px}</style>
+<header><h1>手绘风格 v1</h1><a href="example.html">打开可编辑 Demo</a><button id="export" disabled>导出 PNG</button></header>
+<p>规则、轻微与明显的笔触；矩形、椭圆、三角形、便签与箭头。包含实线、虚线、透明度、斜线及交叉排线。</p>
+<div id="board"></div><p id="status">正在加载样例…</p>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+try{const runtime=await createRuntime({mount:document.getElementById('board'),documentId:'73737373737373737373737373737373',permission:'localSingleUser',builtinFonts:false});await runtime.applyRemoteOperation(new Uint8Array(await(await fetch('fixture.bin')).arrayBuffer()));await runtime.selectTool('select');document.getElementById('status').textContent='从左上开始：程度 0、1、2；下排含程度 3 虚线、便签与稳定端点箭头。选择对象可测试交互，导出图片会保留外观。';const button=document.getElementById('export');button.disabled=false;button.onclick=async()=>{const image=await runtime.exportImage({bounds:[0,0,800,550],padding:0}),url=URL.createObjectURL(new Blob([image.bytes],{type:image.mimeType})),link=document.createElement('a');link.href=url;link.download='axiom-sketch-v1.png';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};}catch(error){document.getElementById('status').textContent=String(error);}
+</script></html>

@@ -1,0 +1,35 @@
+{
+  "base_revision": "d2318c731c8180561855a56210c59c46c6602119",
+  "scope": "candidate Section snapshot compatibility, public document channels and external Web consumer; not a release or physical acceptance",
+  "source_sha256": {
+    "runtime/composition/include/canvas/runtime/runtime_composition.hpp": "9aedc162bd47dd95a382d386fb8fcdccff2baa17899150e469ab0e6f2a0929c5",
+    "runtime/composition/src/public_composition.cpp": "423c83f1e1c33b89b7e1b7b7c98d59f2227ec5aee91cda5f777932cf55ff292c",
+    "runtime/composition/src/runtime_composition.cpp": "a4df30a75f187d2af2546863a98da683e20b01c45f80d3261b9102d768ca6958",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "dcc066305912d5ff33920afd9f20b207cc3768040596faf40bf9dc62dd535954",
+    "runtime/semantic/src/snapshot.cpp": "1760889fded16d7012f71c65c4824431c0070b4dd6b2423c801d7ada8152ed59",
+    "runtime/semantic/src/snapshot_bootstrap.cpp": "c3681ca6b04e5121578d646bc33061f54299679a03a79b850821386acd51c7c7",
+    "runtime/semantic/tests/fc08_section_codec_test.cpp": "ae05b383bdfab4800ef4ac7a69ac01378aafdb4bc53aecf97d94d8fa8934cdb4",
+    "runtime/composition/tests/public_document_snapshot_test.cpp": "0301a80a25635d0ac1a062ee0c8a0bf3e59bb648f6e90e7a611cc7df892b8108",
+    "runtime/composition/tests/public_document_operations_test.cpp": "5c4a8760168fff55a3854e3a87d3bd71bf5a41fe0fd14cda0d979f13f102166d",
+    "verification/sdk_web_external/consumer/index.html": "c13baf3ee8c0613de33e3cc7932f2babdc4ec7ff2fa7e7d603f112ad24559f4f",
+    "verification/sdk_web_external/consumer/main.cpp": "612e79b37eadbabf9d8a243d248399d99b5c1340da406f805b577382251ffcea",
+    "verification/sdk_web_external/verify_manual_browser.mjs": "25f8cd57b0f9635cb30043764d8606278c1177c53ca5eb739ec173654513bc1c"
+  },
+  "raw_sha256": {
+    "borrowed-facade-red.log": "62fbcb0086d29fbe6f83f17cf84190fa0eee856782aa2e1e18ef4c1e0723542f",
+    "hover-red.json": "401fb69dfa886e01c5ea280a080222807da7a24f3590faba2ad129e752390f69",
+    "section-codec.log.gz": "cc24f15c09faf8af6fef4ab2166834758d9d59403da8323b35b6cde494afe8d8",
+    "web-build.log": "dd0e83cb7ed0948c4f26efab2b4634972ef51c99586a25db350f22c99a82de64",
+    "web-external.json": "e30ea5d8f33e3a9fd9ed7bfaefee7c69542e1767326c153da022f219ab838c42",
+    "windows-external.json": "381d753d5e585f0d1c45821e108e5b470a974c3eda67c66c4ea575e2df50b4b0",
+    "windows-public-tests.log": "28606be47567c8f61e58765e469acd4bb77af84c8f4072c4743808b6044bc91b"
+  },
+  "results": {
+    "windows_public_ctest": "4/4 PASS",
+    "section_codec": "49/49 PASS",
+    "windows_external": "PASS_SCOPED",
+    "web_external_actual_chrome_synthetic": "PASS_SCOPED",
+    "prior_hover_red": "FAIL as expected before fix",
+    "prior_borrowed_facade_red": "FAIL as expected before fix"
+  }
+}

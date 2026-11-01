@@ -130,7 +130,21 @@ foundation::Result<HitTestResult> CanvasEditingRuntime::selectionPointHits(found
     auto result=runtimeSceneHost_->hitTest({point,4,{HitTestKindMask::kAll,true},std::max<std::size_t>(1,semanticObjects_.size())});
     if(!result)return result;
     auto& ids=result.value().frontToBack;
-    ids.erase(std::remove_if(ids.begin(),ids.end(),[&](auto id){return resolveSelectionRoot(id).isZero();}),ids.end());
+    const std::array<RegionPoint,4> neighborhood{{{point.x-4,point.y-4},{point.x+4,point.y-4},{point.x+4,point.y+4},{point.x-4,point.y+4}}};
+    bool invalid=false;
+    ids.erase(std::remove_if(ids.begin(),ids.end(),[&](auto id){
+        if(resolveSelectionRoot(id).isZero())return true;
+        const auto* object=semanticObjects_.find(id);
+        if(!object)return false;
+        if(object->kind!=semantic::ObjectKind::kVectorPath&&std::none_of(object->properties.entries.begin(),object->properties.entries.end(),[](const auto& e){return e.field_id==0x103U;}))return false;
+        const auto* published=sceneCoordinator_->runtimeScene().find(id);
+        if(!published){invalid=true;return true;}
+        auto world=*object;world.transform=published->transform;
+        const auto hit=intersectSelectionRegion(world,neighborhood,published);
+        if(hit==RegionIntersection::kInvalid||hit==RegionIntersection::kUnsupported)invalid=true;
+        return hit!=RegionIntersection::kHit;
+    }),ids.end());
+    if(invalid)return foundation::Result<HitTestResult>::failure({foundation::ErrorCode::kInvalidRecord,"VectorPath selection geometry unavailable"});
     return result;
 }
 bool CanvasEditingRuntime::enterGroupAtViewPoint(float x,float y) {

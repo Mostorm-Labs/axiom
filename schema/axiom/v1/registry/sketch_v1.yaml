@@ -1,0 +1,20 @@
+schema: auditoryworks.axiom.v1.sketch-extension
+version: 1
+status: user-accepted-scoped-extension
+contract: docs/planning/sdk/sketch-v1-design.md
+fields:
+  - id: 0x00000102
+    name: sketchStyle
+    value_type: SketchStyleV1
+    applicable_kinds: [1,7,8]
+    default: absent_regular
+    clear: remove_entry
+    disabled: retain_seed_record
+    explicit_zero_roughness: retain
+fill_extension:
+  tag: 3
+  value_type: PatternFillV1
+  applicable_kinds: [1,8]
+  version: 1
+sticky_fill_default: [1,1,0.5,1]
+sticky_none_requires: SketchStyleV1_even_when_disabled

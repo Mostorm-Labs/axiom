@@ -1,0 +1,20 @@
+[
+  {
+    "argv": [
+      "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk01-review\\build\\axiom_sdk01_owner_mixed_stroke_probe.exe",
+      "--observe-replacement"
+    ],
+    "exit_code": 1,
+    "stdout": "selection_after_first=1\nselection_after_second=1\n",
+    "stderr": "FAIL line 76: facade.readSelectionSummary().count == 2U\n"
+  },
+  {
+    "argv": [
+      "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk01-review\\build\\axiom_sdk01_owner_mixed_stroke_probe.exe",
+      "--expect-preserved"
+    ],
+    "exit_code": 1,
+    "stdout": "selection_after_first=1\nselection_after_second=1\n",
+    "stderr": "FAIL line 76: facade.readSelectionSummary().count == 2U\n"
+  }
+]

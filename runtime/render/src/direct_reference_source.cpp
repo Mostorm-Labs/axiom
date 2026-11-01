@@ -1,3 +1,4 @@
+#include "canvas/foundation/internal/frame_timing.hpp"
 #include "canvas/render/direct_reference_source.hpp"
 #include "canvas/text/text_layout.hpp"
 
@@ -182,6 +183,11 @@ void encodeContent(CanonicalWriter& out, const semantic::ObjectContent& content,
                     encodeRichTextCanonical(out, label);
                 });
             }
+        } else if constexpr (std::is_same_v<T, semantic::TableContent>) {
+            out.u64(value.rows.size());for(const auto& a:value.rows){out.id(a.id);out.f64(a.size);}
+            out.u64(value.columns.size());for(const auto& a:value.columns){out.id(a.id);out.f64(a.size);}
+            for(const auto& c:value.cells){out.color(c.fill);encodeRichTextCanonical(out,c.text);}
+            out.u32(value.grid.version);out.color(value.grid.color);out.f64(value.grid.width);
         } else if constexpr (std::is_same_v<T, semantic::ImageContent>) {
             out.id(value.resource_id.value);
             out.f64(value.intrinsic_width); out.f64(value.intrinsic_height);
@@ -208,6 +214,19 @@ void encodeContent(CanonicalWriter& out, const semantic::ObjectContent& content,
         } else if constexpr (std::is_same_v<T, semantic::VectorStrokeContent> ||
                              std::is_same_v<T, semantic::DabStrokeContent>) {
             encodeStroke(out, value.stroke);
+        } else if constexpr (std::is_same_v<T, semantic::CompactStrokeContent>) {
+            const auto& c=value.stroke.config;
+            out.u32(c.version);out.u32(c.algorithmVersion);out.u32(c.signalVersion);out.u32(c.materialVersion);
+            out.u32(static_cast<unsigned>(c.family));out.u32(static_cast<unsigned>(c.roundMode));out.u32(static_cast<unsigned>(c.pressureSource));
+            out.f64(c.size);out.f64(c.opacity);for(auto x:c.color)out.f64(x);
+            out.f64(c.markerAngle);out.f64(c.markerFlatness);out.f64(c.density);out.f64(c.textureScale);out.f64(c.deposition);out.f64(c.wetEdge);
+            out.u32(c.laserFadeMs);out.f64(c.laserTailLength);
+            out.string(c.materialResourceId);out.string(c.materialResourceSha256);out.u32(c.materialSamplingVersion);
+            if(c.version==2){out.f64(c.thinning);out.f64(c.streamline);out.f64(c.smoothing);
+                out.u32(static_cast<unsigned>(c.easing));out.u32(static_cast<unsigned>(c.pressureModel));
+                out.f64(c.startTaper);out.f64(c.endTaper);out.u32(c.startCap);out.u32(c.endCap);}
+            out.u64(value.stroke.seed);out.u64(value.stroke.knots.size());
+            for(const auto& k:value.stroke.knots){out.f64(k.x);out.f64(k.y);out.u32(k.pressure);}
         } else if constexpr (std::is_same_v<T, semantic::BrushStrokeContent>) {
             out.u32(value.stroke.snapshot.snapshot_version);
             out.u32(value.stroke.snapshot.package_revision);
@@ -260,6 +279,7 @@ void encodePropertyValue(CanonicalWriter& out, const semantic::PropertyValue& pr
         } else if constexpr (std::is_same_v<T, semantic::FillStyleValue>) {
             out.byte(static_cast<std::uint8_t>(value.index()));
             if (const auto* fill = std::get_if<semantic::SolidFill>(&value)) out.color(fill->color);
+            if (const auto* fill = std::get_if<semantic::PatternFillV1>(&value)) {out.u64(fill->version);out.color(fill->color);out.byte(static_cast<std::uint8_t>(fill->kind));out.f64(fill->angle);out.f64(fill->gap);out.f64(fill->width);}
         } else if constexpr (std::is_same_v<T, semantic::StrokeStyleValue>) {
             out.byte(static_cast<std::uint8_t>(value.index()));
             if (const auto* stroke = std::get_if<semantic::SolidStroke>(&value)) {
@@ -276,6 +296,9 @@ void encodePropertyValue(CanonicalWriter& out, const semantic::PropertyValue& pr
                     out.f64(dash->offset);
                 }
             }
+        } else if constexpr(std::is_same_v<T,semantic::CornerStyleV1>) {out.u64(value.version);out.f64(value.radius);
+        } else if constexpr(std::is_same_v<T,semantic::SketchStyleV1>) {
+            out.u64(value.version);out.u64(value.seed);out.f64(value.roughness);out.boolean(value.enabled);
         } else {
             out.byte(static_cast<std::uint8_t>(value));
         }
@@ -421,6 +444,11 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
                                          record.placement.parent_id.has_value()});
         break;
     case semantic::ObjectKind::kVectorStroke:
+        if(record.kindVersion==3U){
+            if(const auto* value=std::get_if<semantic::CompactStrokeContent>(&record.content))
+                return foundation::Result<ReferenceCommand>::success(CompactStrokeReferenceCommand{*value});
+            break;
+        }
         if (record.kindVersion == 2U) {
             if (const auto* value = std::get_if<semantic::BrushStrokeContent>(&record.content))
                 return foundation::Result<ReferenceCommand>::success(BrushStrokeReferenceCommand{*value});
@@ -451,6 +479,9 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
         if (std::holds_alternative<semantic::GroupContent>(record.content))
             return foundation::Result<ReferenceCommand>::success(GroupReferenceCommand{});
         break;
+    case semantic::ObjectKind::kTable:
+        if(const auto* value=std::get_if<semantic::TableContent>(&record.content))return foundation::Result<ReferenceCommand>::success(TableReferenceCommand{*value,record.textLayout});
+        break;
     case semantic::ObjectKind::kSection:
         if (const auto* value=std::get_if<semantic::SectionContent>(&record.content))
             return foundation::Result<ReferenceCommand>::success(SectionReferenceCommand{*value,record.textLayout});
@@ -461,10 +492,10 @@ foundation::Result<ReferenceCommand> commandFor(const RuntimeSceneRecord& record
 
 } // namespace
 
-foundation::Result<ReferenceDrawList> DirectReferenceSource::build(
+static foundation::Result<ReferenceDrawList> buildSources(
     const FrameState& frame,
     const VisibilityResult& visibility,
-    const RuntimeScene& runtimeScene) {
+    const RuntimeScene& runtimeScene,bool canonical) {
     if (frame.sceneGeneration != visibility.sceneGeneration ||
         frame.sceneReadToken != visibility.sceneReadToken ||
         frame.sceneGeneration != runtimeScene.generation()) {
@@ -494,6 +525,9 @@ foundation::Result<ReferenceDrawList> DirectReferenceSource::build(
         .canonicalBytes = {},
         .digest = {},
     };
+    AXIOM_FRAME_TIMING_ADD(candidates,visibility.candidatesExamined);
+    AXIOM_FRAME_TIMING_ADD(sources,visibility.backToFront.size());
+    AXIOM_FRAME_TIMING_SCOPE(entriesTiming,reference_entries);
     list.entries.reserve(visibility.backToFront.size());
     for (const foundation::ObjectId id : visibility.backToFront) {
         ++list.diagnostics.visibleIdsProcessed;
@@ -512,9 +546,25 @@ foundation::Result<ReferenceDrawList> DirectReferenceSource::build(
             .command = std::move(command.value()),
         });
     }
-    list.canonicalBytes = canonicalBytes(list);
-    list.digest = stableDigest(list.canonicalBytes);
+    AXIOM_FRAME_TIMING_END(entriesTiming);
+    if(canonical){
+      AXIOM_FRAME_TIMING_SCOPE(encodeTiming,reference_encode);
+      list.canonicalBytes = canonicalBytes(list);
+      AXIOM_FRAME_TIMING_END(encodeTiming);
+      AXIOM_FRAME_TIMING_ADD(encoded_bytes,list.canonicalBytes.size());
+      AXIOM_FRAME_TIMING_SCOPE(digestTiming,reference_digest);
+      list.digest = stableDigest(list.canonicalBytes);
+    }
     return foundation::Result<ReferenceDrawList>::success(std::move(list));
+}
+
+foundation::Result<ReferenceDrawList> DirectReferenceSource::build(
+    const FrameState& frame,const VisibilityResult& visibility,const RuntimeScene& scene){
+    return buildSources(frame,visibility,scene,true);
+}
+foundation::Result<ReferenceDrawList> DirectReferenceSource::buildNavigation(
+    const FrameState& frame,const VisibilityResult& visibility,const RuntimeScene& scene){
+    return buildSources(frame,visibility,scene,false);
 }
 
 } // namespace canvas::render

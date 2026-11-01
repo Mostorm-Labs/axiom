@@ -1,0 +1,109 @@
+{
+  "task_id": "AXIOM-SDK-SHELL-AXIS-20261031",
+  "branch": "codex/sdk-shell-axis-bridge",
+  "base_revision": "4fc3ebfe1325c9197024f1cd7137e54473a1c76d",
+  "return_surface": "CONTROL_REVIEW",
+  "status": "BLOCKED_RUNTIME_RECOVERY_IDENTITY",
+  "functional_adapter_status": "VERIFIED_SCOPED",
+  "tested_artifact_identity": {
+    "apiVersion": 1,
+    "dirty": true,
+    "features": {
+      "resourceCustody": 1,
+      "shellAxis": 1
+    },
+    "ok": true,
+    "platform": "windows",
+    "sdkVersion": "1.0.0-preview.1",
+    "sourceRevision": "4fc3ebfe1325c9197024f1cd7137e54473a1c76d"
+  },
+  "source_binding": "source-files.json",
+  "windows_commands": [
+    [
+      "cmake",
+      0
+    ],
+    [
+      "cmake",
+      0
+    ],
+    [
+      "axiom_example.exe",
+      0
+    ],
+    [
+      "axiom_c_loader.exe",
+      0
+    ],
+    [
+      "axiom_bridge_tests.exe",
+      0
+    ],
+    [
+      "dumpbin",
+      0
+    ],
+    [
+      "dumpbin",
+      0
+    ]
+  ],
+  "dll_sha256": "053a2ff11911428503147443693c11a84037bc96ebd1597ebbab36cf3b8d3bb6",
+  "exports": [
+    "axiom_abandon",
+    "axiom_abi_version",
+    "axiom_buffer_copy",
+    "axiom_buffer_release",
+    "axiom_buffer_size",
+    "axiom_call",
+    "axiom_close",
+    "axiom_create",
+    "axiom_dispatch_events",
+    "axiom_input_begin",
+    "axiom_input_cancel",
+    "axiom_input_source",
+    "axiom_input_submit",
+    "axiom_subscribe",
+    "axiom_unsubscribe",
+    "axiom_window"
+  ],
+  "chrome_core_checks": 52,
+  "chrome_bridge_checks": 18,
+  "frame_scenarios": [
+    "pending-input",
+    "no-duplicate-completion",
+    "pending-resize",
+    "native-loss-before-dom",
+    "context-recovery"
+  ],
+  "regression_total": 93,
+  "regression_failures": [
+    "FC02WindowsTouchShapeLabelEntry",
+    "G4InkPlaygroundSelection"
+  ],
+  "physical": "PHYSICAL_PENDING",
+  "blockers": [
+    {
+      "id": "SDK-AXIS-RECOVERY-ID-01",
+      "classification": "IMPLEMENTATION_DEFECT",
+      "owner": "Runtime identity allocation / checkpoint recovery",
+      "baseline_subject": "4fc3ebfe1325c9197024f1cd7137e54473a1c76d",
+      "failure": "Different edits before checkpoint and after restore reuse the same OperationId",
+      "observed_id": "00000000000000800000000000000000",
+      "impact": "Axis journal/outbox deduplication may reject or drop a genuine new edit; ID collision across distinct payloads",
+      "required_repair": "Correct Runtime-owned identity allocation across recovery without SDK/Axis rewriting committed operation IDs",
+      "evidence": "identity-observation.json",
+      "independent_oracle": "known_failures/recovery-identity wire ID reader and unequal payload assertion"
+    }
+  ],
+  "unchanged_debt": [
+    "D07 injected Protobuf/Abseil OOM hang",
+    "MSE-20/23/26 provider gaps"
+  ],
+  "release_changed": false,
+  "touch_observation": {
+    "broad_runs": "FAIL at windows_text_tool_entry_test.cpp:227",
+    "isolated_runs": "PASS twice",
+    "closure": "NOT_CLOSED; timing-sensitive fixture/device path requires follow-up"
+  }
+}

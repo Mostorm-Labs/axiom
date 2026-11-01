@@ -1,6 +1,6 @@
 // Isolated audit process. Fail the first real C++ allocation AFTER canonical
 // generation advances. No production hooks or allocation policy are changed.
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 
 #include <cstdio>
 #include <cstdlib>
@@ -126,7 +126,7 @@ int main(int argc, char** argv) {
             observe("TERMINATE_REACHED");
         std::_Exit(86); // Capture the fatal boundary without an OS error dialog.
     });
-    runtime::RuntimeComposition c;
+    runtime::RuntimeCompositionCore c;
     if (!c.open() || !c.bindSurface(64, 64))
         return 2;
     const auto id = [](std::uint64_t n) { return foundation::ObjectId::fromUint64(n); };

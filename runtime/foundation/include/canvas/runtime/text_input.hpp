@@ -10,7 +10,7 @@ namespace canvas::runtime {
 struct TextSessionToken final {
     std::uint64_t runtimeInstance = 0, attachment = 0, view = 0, adapter = 0, session = 0,
                   projection = 0;
-    foundation::ObjectId document{}, object{};
+    foundation::ObjectId document{}, object{}, row{}, column{};
     bool operator==(const TextSessionToken&) const = default;
 };
 struct TextRange final {
@@ -101,7 +101,7 @@ struct TextIntent final {
     std::uint64_t clientId = 0, requestId = 0;
     TextIntentKind kind = TextIntentKind::kCreate;
     TextSessionToken token{};
-    foundation::ObjectId object{};
+    foundation::ObjectId object{},row{},column{};
     float viewX = 0, viewY = 0;
     double width = 320;
     TextFormatPatch format{};

@@ -1,0 +1,264 @@
+{
+  "status": "DRAFT_NOT_EXECUTED_NOT_ACCEPTED",
+  "scope": "Proposed SDK-01 blocking cases; future SDK stages retain full obligations",
+  "base_header": "docs/api/canvas_runtime_api_v1.h",
+  "case_count": 25,
+  "cases": [
+    {
+      "id": "ABI-01",
+      "family": "API01",
+      "requirement": "Installed public C/C++ ABI",
+      "fixture": "Copy installed header and real SDK library to a fresh directory outside source; C/C++ build, link, run and export/dependency scan",
+      "expected": "Both distinct clients execute; expected public names resolve; no private owner, Skia or qualification header leaks",
+      "source_anchor": "verification/sdk01/run_external.py",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "ABI-02",
+      "family": "API02",
+      "requirement": "ABI version and short structs",
+      "fixture": "Pass ABI version 2 and struct_size shorter than V1 to create; initialize out-handle to 0x12345678",
+      "expected": "Reject using documented error, leave canary/output unchanged, no instance is published",
+      "source_anchor": "verification/sdk01/external-consumer/external_smoke.c",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "ABI-03",
+      "family": "API02",
+      "requirement": "Caller buffer bounds",
+      "fixture": "Use null zero-capacity count query, exact-capacity output and one-byte-short guarded buffer",
+      "expected": "Required length is exact; too-small returns buffer-too-small with payload and canaries unchanged; pointer-length mismatch rejects",
+      "source_anchor": "docs/api/RUNTIME_C_API_CONTRACT.md",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "ABI-04",
+      "family": "API02",
+      "requirement": "Unknown ABI, enums, flags and invalid numbers",
+      "fixture": "For supported inputs submit unknown version/enum/mask, invalid pointer length, NaN, Inf and overflows",
+      "expected": "Documented non-success; no exception crosses C ABI; output canaries and canonical state unchanged",
+      "source_anchor": "docs/api/RUNTIME_C_API_CONTRACT.md",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "ABI-05",
+      "family": "API02",
+      "requirement": "Native and WASM type layout",
+      "fixture": "Measure widths, alignments and offsets using compilers on installed header; retain exact compiler identity",
+      "expected": "Match independently specified per-target values; do not copy pointer-bearing structs between native and WASM",
+      "source_anchor": "verification/sdk01/verify_multi_candidate_layout.py",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "HANDLE-01",
+      "family": "API03",
+      "requirement": "Runtime lifetime/isolation",
+      "fixture": "Create runtime A and B; destroy A; query B; repeat destroy A",
+      "expected": "A and B have distinct valid handles; destroyed A fails; B state unchanged; second destroy fails",
+      "source_anchor": "verification/sdk01/external-consumer/external_smoke.c",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "HANDLE-02",
+      "family": "API03",
+      "requirement": "Wrong kind, foreign and stale capability",
+      "fixture": "Create runtime/document/view, cross instance IDs, destroy then exercise old handles after slot reuse",
+      "expected": "Exact documented error; no accidental access to another instance or mutation; reused slot cannot resurrect stale handle",
+      "source_anchor": "docs/api/RUNTIME_C_API_CONTRACT.md",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "HANDLE-03",
+      "family": "API03",
+      "requirement": "Full identity fidelity",
+      "fixture": "Use two 128-bit IDs with same low 64 bits and distinct high halves through owner-backed operation and readback",
+      "expected": "Both identities remain distinct through admission, target and receipt; no alias, truncation or cross-instance collision",
+      "source_anchor": "docs/planning/sdk/contract-decisions.md",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "CAMERA-01",
+      "family": "API04",
+      "requirement": "Affine conversion and inverse",
+      "fixture": "Set scale 2 and translation (12,-7); world point (3,4); round-trip",
+      "expected": "Screen point (18,1), inverse world point (3,4); invalid/nonfinite scale rejects without camera change",
+      "source_anchor": "runtime/composition/tests/canvas_runtime_facade_test.cpp",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "CONTROL-01",
+      "family": "API04",
+      "requirement": "Control and pointer ordering",
+      "fixture": "Queue supported tool switch then down/up before frame; pump real owner once",
+      "expected": "Result uses switched tool; admission is not presented as applied; actual object and final receipt match sequence and explicit target",
+      "source_anchor": "runtime/composition/tests/canvas_runtime_facade_test.cpp",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "CONTROL-02",
+      "family": "API04",
+      "requirement": "Stale and duplicate request",
+      "fixture": "Capture selection/revision, change semantic or selection before execute; resubmit duplicate request ID",
+      "expected": "Original rejected with no unintended mutation; explicit refreshed request succeeds; duplicate never applies twice",
+      "source_anchor": "verification/sdk01/facade_stale_retry_test.cpp",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "INPUT-01",
+      "family": "API09",
+      "requirement": "Input identity and cancellation",
+      "fixture": "Two registered sources reuse same local pointer number; deliver down/move/up and cancellation with actual owner routing",
+      "expected": "Identities do not collide; every accepted up/cancel reaches corresponding session; no fabricated pressure or duplicate promoted touch input",
+      "source_anchor": "docs/api/RUNTIME_C_API_CONTRACT.md",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "MULTI-01",
+      "family": "API05",
+      "requirement": "Partial applicability/projection",
+      "fixture": "Seed 3 blue Shapes and 2 Images; select 5; use real SDK capture",
+      "expected": "Exact eligible and excluded roles/reasons; no canonical or History mutation; support, availability, permission independent",
+      "source_anchor": "verification/sdk01/real_consumer/expected-v1.json",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "MULTI-02",
+      "family": "API05",
+      "requirement": "Partial explicit consent and atomic write",
+      "fixture": "Use the same selection; reject unconfigured permission and absent explicit acknowledgment; then submit red fill with ack",
+      "expected": "Rejections leave objects and History unchanged; final receipt reports exact 3 changed and 2 skipped; images unchanged; one Undo/Redo",
+      "source_anchor": "verification/sdk01/real_consumer/expected-v1.json",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "MULTI-03",
+      "family": "API05",
+      "requirement": "Mixed stroke leaf preservation",
+      "fixture": "Seed two explicit different stroke colors, widths, caps, miter and dash values; update width only",
+      "expected": "Both widths 19; per-root other leaves stay exact, through one Undo and Redo; no common-primary-style overwrite",
+      "source_anchor": "verification/sdk01/real_consumer/expected-v1.json",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "MULTI-04",
+      "family": "API05",
+      "requirement": "Reject precommit invalidation",
+      "fixture": "Run specified revision/permission/locked/target/mask/capacity cases against real owner",
+      "expected": "Each candidate negative case rejects without changing canonical, Scene, History cursor or redo; unavailable real provider or injector remains NOT_RUN and cannot be called pass",
+      "source_anchor": "verification/sdk01/real_consumer/rejection-expectations-v1.json",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "HISTORY-01",
+      "family": "API05",
+      "requirement": "One intention versus separate commands",
+      "fixture": "Real supported typed explicit intent with two operations; compare separately submitted commands",
+      "expected": "Explicit intent has one user Undo; independent commands need independent Undo; preserve world state and monotonic IDs; no claim about unresolved D07 OOM",
+      "source_anchor": "verification/fc04_d07/CMakeLists.txt",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "PLATFORM-WIN-01",
+      "family": "API05",
+      "requirement": "Real Windows Debug UI public migration",
+      "fixture": "Drive actual Windows host through installed public SDK on partial and mixed fixtures, with independent real owner snapshots",
+      "expected": "Projection disclosure, explicit action, targets, final result, one-step history and excluded state match expected; no internal mutable port use in migrated consumer",
+      "source_anchor": "apps/minimal_runtime_host/windows_main.cpp",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "PLATFORM-WEB-01",
+      "family": "API05",
+      "requirement": "Real Chrome/WASM Debug UI public migration",
+      "fixture": "Use actual Chrome+WASM production web host and CDP input, public API and same two fixtures",
+      "expected": "Same independent expectations as Windows; record browser, wasm, JS, SDK and source hashes; synthetic CDP input is not physical",
+      "source_anchor": "apps/axiom_canvas_demo/platform/web/web_debug_ui.inl",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "NONCLAIM-01",
+      "family": "API06",
+      "requirement": "No false presentation",
+      "fixture": "Submit or pump frame without actual host present feedback",
+      "expected": "Do not assert screen-visible/presented merely from submission, owner pump or requestAnimationFrame; preserve existing host",
+      "source_anchor": "docs/api/RUNTIME_C_API_CONTRACT.md",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "NONCLAIM-02",
+      "family": "API07",
+      "requirement": "Deferred data methods",
+      "fixture": "Exercise deferred document export/recovery/remote calls where not implemented",
+      "expected": "Return explicit documented unsupported/non-success, no data or History mutation; full data/recovery qualification belongs SDK-02",
+      "source_anchor": "docs/planning/sdk/verification.md",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "NONCLAIM-03",
+      "family": "API08",
+      "requirement": "Deferred resource methods",
+      "fixture": "Exercise resource lifecycle calls where not implemented",
+      "expected": "Return explicit documented unsupported/non-success; do not change resources or claim completion; full resource qualification belongs SDK-02",
+      "source_anchor": "docs/planning/sdk/verification.md",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "BINDING-01",
+      "family": "API10",
+      "requirement": "Full-width IDs in both first consumers",
+      "fixture": "Drive values crossing native C and JS/WASM binding with same-low64 distinct IDs",
+      "expected": "Full 16-byte IDs and lengths survive roundtrip; no floating point truncation of 64-bit IDs/lengths",
+      "source_anchor": "docs/planning/sdk/contract-decisions.md",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "INSTALL-01",
+      "family": "API11",
+      "requirement": "Minimal SDK external install",
+      "fixture": "Use fresh installed header/library and real external test outside source tree with Debug UI not linked",
+      "expected": "Both consumers compile/link/run; installed header matches accepted V1 plus approved additions, no private header or test macros leak",
+      "source_anchor": "verification/sdk01/run_external.py",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    },
+    {
+      "id": "PERF-01",
+      "family": "API12",
+      "requirement": "Prevent pointer-event full-document copies",
+      "fixture": "Instrument real SDK ingress while increasing object count, without imposing a numeric latency threshold",
+      "expected": "No full-document serialization/copy is performed per pointer event; report actual instrumentation. Full timing thresholds belong SDK-05",
+      "source_anchor": "docs/planning/sdk/verification.md",
+      "planned_status": "NOT_MATERIALIZED",
+      "evidence": "Exact case and input hashes, real SUT/binary and source identity, independent expected and observed data, command/exit, platform/toolchain and raw logs."
+    }
+  ],
+  "limitations": [
+    "These are test specifications, not executable product drivers or observed product results.",
+    "The typed public multi-selection interface must be accepted; fields and error mapping remain a candidate.",
+    "Unsupported later-stage functions must not be represented as successful and existing host features must not be suppressed.",
+    "MSE-20/23/26 and D07 protobuf/Abseil OOM remain separate incomplete findings."
+  ]
+}

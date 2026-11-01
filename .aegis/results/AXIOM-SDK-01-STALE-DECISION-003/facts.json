@@ -1,0 +1,53 @@
+{
+  "parent_revision": "82b7b7015c59ccc9c7888c2fedab042a170768d4",
+  "product_baseline": "50e53124ffe7ed2959d6bcf956c3d252fce6451a",
+  "decision": "user selected stale rejection then explicit refresh and retry",
+  "checks": [
+    {
+      "file": "raw/regression.xml",
+      "count": 13,
+      "names": [
+        "SDK01FacadeStaleRetry",
+        "FC00XRuntimeIsolation",
+        "FC00XFrameCoordinator",
+        "SelectionBatch3Summary",
+        "FC01ASelectionInputIntegration",
+        "FC08SectionConsumer",
+        "FC05ConnectorFacade",
+        "FC02Text",
+        "FC00XRuntimeComposition",
+        "FC00XRuntimeFacade",
+        "FC03ImageFacade",
+        "SelectionBatch3Ui",
+        "PX0ControlRouter"
+      ],
+      "failed": [],
+      "skipped": []
+    },
+    {
+      "file": "raw/stale-retry.xml",
+      "count": 1,
+      "names": [
+        "SDK01FacadeStaleRetry"
+      ],
+      "failed": [],
+      "skipped": []
+    }
+  ],
+  "source_sha256": {
+    "runtime/composition/tests/canvas_runtime_facade_test.cpp": "d90f95bb59007405e9a900fa5e422fa341ce1aa91a64f384acce08bba7e2608b",
+    "verification/sdk01/facade_stale_retry_test.cpp": "bdbbaddec93c9a10e75c43ed9800b13326f38d9e2bd334bd76c1b3b873b3051a",
+    "verification/sdk01/owner-tests.cmake": "686cd31480691f853a5340afef1b903cbfc39f5cdf677717c8941711d8c830ce",
+    "verification/sdk01/case-bindings-v0.2.json": "d035cbd90aa4a1cbe2038a05fe01b44f6815c7526fff1cfe7a90300e77afc2af",
+    "docs/planning/sdk/decision-stale-target-v0.1.md": "824312f619cd6fcf28fdf62dca408f4da5877d43774f8b7ec3a3a2d9caf40b15"
+  },
+  "raw_sha256": {
+    "abi.log": "d0e32b46a6ed8044d768f459c7569a495710709accf6dda7bfad11eebfd90fcc",
+    "boundaries.log": "653bf6966aa8ef084d6c81237b9575e6315056721705f6ec61778ebe1a8329f1",
+    "regression.log": "c4f1a3997b8b787aa99753ad1a4efa40a281d63499554a1b7e9c2686de0a3fda",
+    "regression.xml": "4ae599181a063d8bdbaac6092bf3c5bb4a5e923fd774fda8f1a3cc44f6f69f5b",
+    "stale-retry.log": "88e5847248b60282608de437936620140e686185fcf54e1a8ca608685a7631d4",
+    "stale-retry.xml": "f964c4c9d8a4b61999e199ab8c1f5544b332614e63c7a992f6d916480e92534f"
+  },
+  "p32_authorized": false
+}

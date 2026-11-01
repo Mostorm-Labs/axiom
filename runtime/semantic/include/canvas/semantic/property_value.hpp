@@ -25,7 +25,29 @@ struct SolidFill final {
     bool operator==(const SolidFill&) const = default;
 };
 
-using FillStyleValue = std::variant<NoFill, SolidFill>;
+enum class PatternKind : std::uint8_t { kDiagonal = 1, kCrosshatch = 2 };
+struct PatternFillV1 final {
+    std::uint32_t version = 1;
+    ColorValue color{};
+    PatternKind kind = PatternKind::kDiagonal;
+    double angle = -45, gap = 8, width = 1;
+    bool operator==(const PatternFillV1&) const = default;
+};
+using FillStyleValue = std::variant<NoFill, SolidFill, PatternFillV1>;
+
+struct SketchStyleV1 final {
+    std::uint32_t version = 1;
+    std::uint64_t seed = 0;
+    double roughness = 1;
+    bool enabled = true;
+    bool operator==(const SketchStyleV1&) const = default;
+};
+
+struct CornerStyleV1 final {
+    std::uint32_t version = 1;
+    double radius = 0;
+    bool operator==(const CornerStyleV1&) const = default;
+};
 
 struct NoStroke final {
     bool operator==(const NoStroke&) const = default;
@@ -87,9 +109,10 @@ enum class ConnectorDecorationValue : std::uint8_t {
     kArrow = 2,
 };
 
-// Frozen V1 PropertyValue: a closed, renderer-neutral tagged union. Property
-// applicability, defaults, clear semantics and range validation are deferred
-// to GT-G1-04; an opaque payload is never canonical property state.
+// Closed renderer-neutral tagged union. Released V1 alternatives retain their
+// indices; the accepted sketch-v1 extension appends a versioned value. Registry,
+// normalization and validation define applicability/default/clear semantics.
+// An opaque payload is never canonical property state.
 using PropertyValue = std::variant<
     bool,
     float,
@@ -97,7 +120,9 @@ using PropertyValue = std::variant<
     FillStyleValue,
     StrokeStyleValue,
     BlendModeValue,
-    ConnectorDecorationValue>;
+    ConnectorDecorationValue,
+    SketchStyleV1,
+    CornerStyleV1>;
 
 struct PropertyEntry final {
     std::uint32_t field_id = 0;

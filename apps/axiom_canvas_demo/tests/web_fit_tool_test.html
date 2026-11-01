@@ -24,8 +24,8 @@ frame.addEventListener('load',async()=>{
       `${where} reset fitted camera: ${JSON.stringify(before)} -> ${JSON.stringify(camera())}`);
     event(canvas,'pointerdown',600,100);event(canvas,'pointermove',700,180);event(canvas,'pointerup',700,180);await host.flush();
     await host.toggleDebugUi();await host.flush();
-    const tools=[['Select',45,291,1],['Ink',145,291,0],['Eraser',230,291,2],['Text',335,291,4],
-      ['Shape',45,326,null,0],['Sticky',135,326,null,5],['Connector',220,326,null,3]];
+    const tools=[['Select',45,291,1],['Ink',145,327,0],['Eraser',230,327,2],['Text',310,327,4],
+      ['Shape',45,363,null,0],['Sticky',135,363,null,5],['Connector',220,363,null,3]];
     for(const [name,x,y,tool,preset] of tools) {
       await click(45,232);const fitted=camera();assert(fitted.scale!==1,'Fit Content fixture must change zoom');
       await click(x,y);sameCamera(fitted,`Debug UI ${name}`);

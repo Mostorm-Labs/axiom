@@ -1,0 +1,7 @@
+# Public host observations and hover — intermediate result
+
+Composition provides owner-thread read-only host observations and forwards hover to the existing Runtime owner. Windows input logging, control-activity logging and hover no longer call the private Core directly; the existing Web bridge also uses the public hover entry. Other private Windows test fallback and host-header dependencies are not claimed removed. Cross-thread observation returns no value.
+
+The RED compile demonstrated the public entry points were missing. The UI-on build and 12 targeted Windows/Web surface tests passed; UI-off adapter test passed. An installed, outside-repository real Win32 window consumer verified observation counts and real selected attachment-point hover transitions, and Chrome/WASM Demo regression passed 45 assertions. Inputs are synthetic; no real touch/IME/scanout claim is made. Full command and outcome records are in raw.
+
+Web still has no independently installable platform adapter or outside-repository browser consumer. The existing WebGL provider, context ownership, fence completion, input/IME and host callbacks must be extracted and verified as a coherent public boundary; the existing Demo regression is not proof of that outcome. Full SDK, Gate, release and PHYS PASS are not claimed. D07 OOM remains open. Source bytes tested while dirty are hashed in manifest and pinned by the enclosing commit.

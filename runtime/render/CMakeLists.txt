@@ -4,6 +4,8 @@ option(CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH
     "Build the shared Skia programmable-DAB renderer" OFF)
 
 add_library(canvas_runtime_render STATIC
+    src/damage_tracker.cpp
+    src/render_group_manager.cpp
     src/selection_region_geometry.cpp
     src/visibility_resolver.cpp
     src/direct_reference_source.cpp
@@ -17,6 +19,7 @@ add_library(canvas_runtime_render STATIC
     src/presentation_tracker.cpp
     src/canonical_handoff.cpp
     src/preview_surface.cpp)
+target_link_libraries(canvas_runtime_render PUBLIC canvas_runtime_scheduling canvas_runtime_resources)
 
 if(EMSCRIPTEN AND (CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR
                    CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_BRUSH))
@@ -45,6 +48,59 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
         NO_CMAKE_FIND_ROOT_PATH)
     find_package(Python3 COMPONENTS Interpreter REQUIRED)
     set(CANVAS_CHALK_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+    set(CANVAS_COMPACT_MATERIAL_HEADERS)
+    foreach(material coverage material)
+      if(material STREQUAL "coverage")
+        set(material_symbol kInkCoverageSksl)
+      else()
+        set(material_symbol kInkMaterialSksl)
+      endif()
+      add_custom_command(
+        OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/ink_${material}_sksl.hpp"
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+                "${CANVAS_CHALK_GENERATED_DIR}/ink_${material}_sksl.hpp" "${material_symbol}"
+                "${PROJECT_SOURCE_DIR}/runtime/ink/assets/compact-material-v1/${material}.sksl"
+        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+                "${PROJECT_SOURCE_DIR}/runtime/ink/assets/compact-material-v1/${material}.sksl")
+      list(APPEND CANVAS_COMPACT_MATERIAL_HEADERS "${CANVAS_CHALK_GENERATED_DIR}/ink_${material}_sksl.hpp")
+    endforeach()
+    foreach(part coverage material)
+      add_custom_command(OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/crayon_${part}_v3_sksl.hpp"
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+                "${CANVAS_CHALK_GENERATED_DIR}/crayon_${part}_v3_sksl.hpp" "kCrayon_${part}_v3"
+                "${PROJECT_SOURCE_DIR}/runtime/ink/assets/crayon-material-v3/${part}.sksl"
+        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+                "${PROJECT_SOURCE_DIR}/runtime/ink/assets/crayon-material-v3/${part}.sksl")
+      list(APPEND CANVAS_COMPACT_MATERIAL_HEADERS "${CANVAS_CHALK_GENERATED_DIR}/crayon_${part}_v3_sksl.hpp")
+    endforeach()
+    foreach(part coverage material)
+      add_custom_command(OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/drywet_${part}_v3_sksl.hpp"
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+                "${CANVAS_CHALK_GENERATED_DIR}/drywet_${part}_v3_sksl.hpp" "kDryWet_${part}_v3"
+                "${PROJECT_SOURCE_DIR}/runtime/ink/assets/chalk-watercolor-v3/${part}.sksl"
+        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+                "${PROJECT_SOURCE_DIR}/runtime/ink/assets/chalk-watercolor-v3/${part}.sksl")
+      list(APPEND CANVAS_COMPACT_MATERIAL_HEADERS "${CANVAS_CHALK_GENERATED_DIR}/drywet_${part}_v3_sksl.hpp")
+    endforeach()
+    add_custom_target(canvas_compact_material_assets DEPENDS ${CANVAS_COMPACT_MATERIAL_HEADERS})
+    add_custom_command(
+      OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/ink_material_v2_sksl.hpp"
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${CANVAS_CHALK_GENERATED_DIR}/ink_material_v2_sksl.hpp" "kInkMaterialV2Sksl"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/compact-material-v2/material.sksl"
+      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/compact-material-v2/material.sksl")
+    add_custom_target(canvas_compact_material_v2_assets DEPENDS "${CANVAS_CHALK_GENERATED_DIR}/ink_material_v2_sksl.hpp")
+    add_dependencies(canvas_runtime_render canvas_compact_material_v2_assets)
+    add_custom_command(OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/ink_coverage_v3_sksl.hpp"
+      COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${CANVAS_CHALK_GENERATED_DIR}/ink_coverage_v3_sksl.hpp" kInkCoverageV3Sksl
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/compact-material-v3/coverage.sksl"
+      DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
+              "${PROJECT_SOURCE_DIR}/runtime/ink/assets/compact-material-v3/coverage.sksl")
+    add_custom_target(canvas_compact_coverage_v3_assets DEPENDS "${CANVAS_CHALK_GENERATED_DIR}/ink_coverage_v3_sksl.hpp")
+    add_dependencies(canvas_runtime_render canvas_compact_coverage_v3_assets)
+    add_dependencies(canvas_runtime_render canvas_compact_material_assets)
     add_custom_command(
       OUTPUT "${CANVAS_CHALK_GENERATED_DIR}/chalk_shape_png.hpp"
       COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/embed_binary.py"
@@ -85,13 +141,21 @@ if(CANVAS_RENDER_ENABLE_SKIA_HEADLESS OR CANVAS_RENDER_ENABLE_SKIA_PROGRAMMABLE_
     add_dependencies(canvas_runtime_render canvas_chalk_texture_assets)
     target_include_directories(canvas_runtime_render PRIVATE "${CANVAS_CHALK_GENERATED_DIR}")
     target_sources(canvas_runtime_render PRIVATE src/skia_headless_backend.cpp)
-    target_sources(canvas_runtime_render PRIVATE src/image_resource.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/image_resource.cpp src/image_encode.cpp)
+    # Accepted Skia binaries omit RTTI; this private SkWStream subclass must match.
+    if(MSVC)
+      set_property(SOURCE src/image_encode.cpp APPEND PROPERTY COMPILE_OPTIONS /GR-)
+    else()
+      set_property(SOURCE src/image_encode.cpp APPEND PROPERTY COMPILE_OPTIONS -fno-rtti)
+    endif()
     target_sources(canvas_runtime_render PRIVATE src/skia_text_resources.cpp)
     target_sources(canvas_runtime_render PRIVATE src/brush_outline_skia_path.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_scene_renderer.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_compact_material.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_ink_backend.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_surface_provider.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_renderer.cpp)
+    target_sources(canvas_runtime_render PRIVATE src/skia_render_cache.cpp src/skia_navigation_tiles.cpp)
     target_sources(canvas_runtime_render PRIVATE src/skia_brush_renderer.cpp)
     target_link_libraries(canvas_runtime_render PRIVATE CanvasSkia::Skia CanvasSkia::Paragraph)
     target_compile_definitions(canvas_runtime_render PUBLIC CANVAS_RENDER_HAS_SKIA=1)
@@ -126,6 +190,16 @@ else()
 endif()
 
 if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
+    add_executable(axiom_render_cache_tests tests/render_cache_test.cpp)
+    target_link_libraries(axiom_render_cache_tests PRIVATE canvas_runtime_render)
+    add_test(NAME G5RenderCache COMMAND axiom_render_cache_tests)
+    add_executable(axiom_tile_work_tests tests/tile_work_test.cpp)
+    target_link_libraries(axiom_tile_work_tests PRIVATE canvas_runtime_render)
+    target_compile_features(axiom_tile_work_tests PRIVATE cxx_std_20)
+    add_test(NAME G5TileWork COMMAND axiom_tile_work_tests)
+    add_executable(axiom_render_damage_tests tests/damage_ownership_test.cpp)
+    target_link_libraries(axiom_render_damage_tests PRIVATE canvas_runtime_render)
+    add_test(NAME G5RenderDamage COMMAND axiom_render_damage_tests)
     add_executable(axiom_image_resource_tests tests/image_resource_test.cpp)
     target_link_libraries(axiom_image_resource_tests PRIVATE canvas_runtime_render)
     target_compile_features(axiom_image_resource_tests PRIVATE cxx_std_20)
@@ -240,6 +314,16 @@ if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)
         -Wno-error=gnu-anonymous-struct)
     endif()
     add_test(NAME G4SkiaChalkContinuousTexture COMMAND axiom_render_chalk_continuous_texture_tests)
+    add_executable(axiom_ink_v2_work_tests tests/ink_v2_work_test.cpp)
+    target_link_libraries(axiom_ink_v2_work_tests PRIVATE canvas_runtime_render)
+    add_test(NAME InkV2Work COMMAND axiom_ink_v2_work_tests)
+    add_test(NAME InkV2RetinaPreview COMMAND axiom_ink_v2_work_tests retina)
+    add_executable(axiom_ink_v2_material_tests tests/ink_v2_material_test.cpp)
+    target_link_libraries(axiom_ink_v2_material_tests PRIVATE canvas_runtime_render CanvasSkia::Skia)
+    target_include_directories(axiom_ink_v2_material_tests PRIVATE "${CANVAS_SKIA_SDK_ROOT}")
+    foreach(material marker chalk crayon water parity presets sampling cache scene-mask visual tuning quality wax wax-mask drywet drywet-parity drywet-mask)
+      add_test(NAME InkV2Material-${material} COMMAND axiom_ink_v2_material_tests ${material})
+    endforeach()
 endif()
 
 if(BUILD_TESTING AND CANVAS_RENDER_ENABLE_SKIA_HEADLESS)

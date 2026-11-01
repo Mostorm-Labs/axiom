@@ -53,6 +53,9 @@ struct PreviewGeometry final {
         float opacity = 1.0F;
         std::vector<ink::reference::StrokeOutlinePoint> outline;
         std::vector<ink::BrushDab> dabs;
+        std::optional<foundation::InkBrushConfig> compactConfig;
+    std::uint64_t compactSeed=0;
+        std::shared_ptr<const ink::BrushPreviewDelta::Chunk> compactChunks;
     };
     std::vector<Contour> contours;
     std::vector<ink::reference::StrokeOutlinePoint> outline;

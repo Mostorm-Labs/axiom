@@ -1,11 +1,49 @@
 #include "canvas/runtime/canvas_runtime_facade.hpp"
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
+#include "canvas/runtime/internal/multi_selection_port.hpp"
 #include "canvas/interaction/text_edit_session.hpp"
 #include "canvas/semantic/property_value.hpp"
 #include "multi_selection_queue.hpp"
 #include <algorithm>
 
 namespace canvas::runtime {
+
+ImageExportResult CanvasRuntimeFacade::exportImage(const ImageExportOptions& options) noexcept {
+  return runtime_.exportImage(options);
+}
+
+std::optional<foundation::DocumentBackground> CanvasRuntimeFacade::readBackground() const noexcept {
+  if (std::this_thread::get_id() != ownerThread_ || runtime_.closed()) return std::nullopt;
+  return runtime_.documentBackground();
+}
+
+bool CanvasRuntimeFacade::setMultiSelectionPermission(MultiSelectionPermissionMode mode) noexcept {
+  return composition_ && composition_->multiSelectionPort().setPermissionMode(mode);
+}
+MultiSelectionProjection CanvasRuntimeFacade::readMultiSelection() const noexcept {
+  return composition_ ? composition_->multiSelectionPort().read() : MultiSelectionProjection{};
+}
+std::optional<std::vector<MultiSelectionRootPropertyValue>> CanvasRuntimeFacade::readMultiSelectionPropertyValues(
+    std::uint32_t field, const MultiSelectionStamp& stamp,
+    const std::vector<foundation::ObjectId>& eligible) const noexcept {
+  return composition_ ? composition_->multiSelectionPort().readPropertyValues(field, stamp, eligible) : std::nullopt;
+}
+MultiSelectionSubmitReceipt CanvasRuntimeFacade::submitMultiSelectionProperty(
+    std::uint32_t field, const semantic::PropertyValue& value, const MultiSelectionStamp& stamp,
+    const std::vector<foundation::ObjectId>& eligible, std::uint64_t client, std::uint64_t request) noexcept {
+  return composition_ ? composition_->multiSelectionPort().submitProperty(field, value, stamp, eligible, client, request)
+                      : MultiSelectionSubmitReceipt{};
+}
+MultiSelectionSubmitReceipt CanvasRuntimeFacade::submitMultiSelectionStrokeWidth(
+    double width, const MultiSelectionStamp& stamp, const std::vector<foundation::ObjectId>& eligible,
+    std::uint64_t client, std::uint64_t request) noexcept {
+  return composition_ ? composition_->multiSelectionPort().submitStrokeWidth(width, stamp, eligible, client, request)
+                      : MultiSelectionSubmitReceipt{};
+}
+std::optional<MultiSelectionOutcome> CanvasRuntimeFacade::multiSelectionReceipt(
+    std::uint64_t client, std::uint64_t request) const noexcept {
+  return composition_ ? composition_->multiSelectionPort().receipt(client, request) : std::nullopt;
+}
 
 struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
  public:
@@ -30,6 +68,10 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     bool applied = false;
 
     switch (p.kind) {
+      case CanvasControlPayloadKind::kDocumentBackground:
+        applied = runtime.setDocumentBackground(p.background); break;
+      case CanvasControlPayloadKind::kInkBrushConfig:
+        applied=runtime.configureInkBrush(p.brushConfig);break;
       case CanvasControlPayloadKind::kSection:
       {
         const auto result=runtime.executeSectionIntent(p.section);
@@ -172,6 +214,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
     out.axisLocalDurable = static_cast<std::uint8_t>(outcome.axis.localDurable);
     out.axisCloudSynced = static_cast<std::uint8_t>(outcome.axis.cloudSynced);
     out.preset = {runtime.selectedBrushProfile(), runtime.selectedBrushRevision()};
+    out.brushConfig=runtime.inkBrushConfig();
     out.size = runtime.inkSize(); out.opacity = runtime.inkOpacity();
     const auto color = runtime.inkColor(); out.color = {color[0], color[1], color[2], color[3]};
     out.eraserMode = runtime.eraserMode(); out.eraserDiameterLogicalPx = runtime.eraserDiameterLogicalPx();
@@ -191,6 +234,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
       out.selectedAppearance.fillEnabled = false;
       out.selectedAppearance.strokeEnabled = false;
       out.selectedAppearance.opacity = 1.0F;
+      if(record->kind==semantic::ObjectKind::kSticky){out.selectedAppearance.fillEnabled=true;out.selectedAppearance.fill={1,1,.5F,1};}
       for (const auto& entry : record->properties.entries) {
         if (entry.field_id == 1U) {
           if (const auto* value = std::get_if<bool>(&entry.value)) out.selectedVisible = *value;
@@ -198,6 +242,8 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
           if (const auto* value = std::get_if<float>(&entry.value)) out.selectedAppearance.opacity = *value;
         } else if (entry.field_id == 0x100U) {
           if (const auto* style = std::get_if<semantic::FillStyleValue>(&entry.value)) {
+            if(std::holds_alternative<semantic::NoFill>(*style))out.selectedAppearance.fillEnabled=false;
+            if(const auto* fill=std::get_if<semantic::PatternFillV1>(style)){out.selectedAppearance.fillEnabled=true;out.selectedAppearance.fill={fill->color.r,fill->color.g,fill->color.b,fill->color.a};}
             if (const auto* fill = std::get_if<semantic::SolidFill>(style)) {
               out.selectedAppearance.fillEnabled = true;
               out.selectedAppearance.fill = {fill->color.r, fill->color.g, fill->color.b, fill->color.a};
@@ -236,7 +282,7 @@ struct CanvasRuntimeFacade::Binding final : public CanvasControlPort {
 
 CanvasRuntimeFacade::CanvasRuntimeFacade(interaction::CanvasEditingRuntime& runtime,
                                          CanvasTargetKey target,std::uint64_t runtimeInstance,
-                                         RuntimeComposition* composition) noexcept
+                                         RuntimeCompositionCore* composition) noexcept
     : runtime_(runtime), composition_(composition), binding_(std::make_unique<Binding>(runtime)),
       service_(std::make_unique<CanvasControlService>(*binding_)) {
   binding_->setTarget(target);
@@ -294,7 +340,7 @@ void CanvasRuntimeFacade::setTarget(CanvasTargetKey target) noexcept {
   std::scoped_lock lock(ingressMutex_);
   if (binding_ == nullptr) return;
   const auto previous = binding_->target();
-  if (previous != target) {runtime_.cancelRegionSelection();if (service_ != nullptr) service_->destroyTarget(previous);}
+  if (previous != target) {runtime_.clearAppearancePreview();runtime_.cancelRegionSelection();if (service_ != nullptr) service_->destroyTarget(previous);}
   binding_->setTarget(target);
 }
 const CanvasTargetKey& CanvasRuntimeFacade::target() const noexcept { return binding_->target(); }
@@ -487,7 +533,7 @@ std::vector<CanvasTargetKey> CanvasRuntimeFacade::mountedCanvasTargets() const {
   return target().runtimeEpoch==0||(ownerThread()&&runtime_.closed())?std::vector<CanvasTargetKey>{}:std::vector<CanvasTargetKey>{target()};
 }
 std::vector<BrushPresetRef> CanvasRuntimeFacade::brushPresets() const {
-  return {{"vector-solid-v1",1U},{"marker-flat-v1",1U},{"chalk-grain-v1",4U},{"membrane-v1",1U}};
+  return {{"round-regular",1U},{"round-regular",2U},{"round-regular",3U},{"round-regular",4U},{"round-handdrawn",1U},{"round-handdrawn",2U},{"round-handdrawn",3U},{"round-handdrawn",4U},{"laser-transient",1U},{"marker-compact-v1",1U},{"marker-compact-v1",2U},{"marker-compact-v1",3U},{"marker-compact-v1",4U},{"chalk-compact-v1",1U},{"chalk-compact-v1",2U},{"chalk-compact-v1",3U},{"crayon-wax-v1",1U},{"crayon-wax-v1",2U},{"crayon-wax-v1",3U},{"watercolor-lite-v1",1U},{"watercolor-lite-v1",2U},{"watercolor-lite-v1",3U},{"vector-solid-v1",1U},{"marker-flat-v1",1U},{"chalk-grain-v1",4U},{"membrane-v1",1U}};
 }
 std::optional<CanvasControlReceipt> CanvasRuntimeFacade::canvasControlReceipt(CanvasControlReceiptKey key) const noexcept {
   auto receipt=service_->receipt(key);

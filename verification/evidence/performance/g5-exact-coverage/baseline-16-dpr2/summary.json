@@ -1,0 +1,181 @@
+{
+  "preparation_span_ms": 486.1,
+  "between_attempts_ms": 3.0,
+  "cpu_coverage_percent": 98.05423307803767,
+  "count": 16,
+  "dpr": 2,
+  "reverse": false,
+  "attempts": 16,
+  "retries": 15,
+  "accepted": 1,
+  "cpu_attempt_ms": 483.1,
+  "exact_receipt_delay_ms": 627.7999999523163,
+  "counts": {
+    "candidates": 256,
+    "sources": 256,
+    "encoded_bytes": 300768,
+    "plan_entries": 256,
+    "prepare_knots": 8448,
+    "built_groups": 16,
+    "coverage_tiles": 54,
+    "coverage_pixels": 3502080
+  },
+  "stages": {
+    "cpu_coverage": {
+      "inclusive_ms": 473.7,
+      "exclusive_ms": 473.7,
+      "exclusive_percent": 98.05423307803767,
+      "calls": 54
+    },
+    "attempt": {
+      "inclusive_ms": 483.1,
+      "exclusive_ms": 3.6,
+      "exclusive_percent": 0.7451873318153591,
+      "calls": 16
+    },
+    "material_submit": {
+      "inclusive_ms": 2.2,
+      "exclusive_ms": 2.2,
+      "exclusive_percent": 0.45539225833160835,
+      "calls": 54
+    },
+    "provider_present": {
+      "inclusive_ms": 0.6,
+      "exclusive_ms": 0.6,
+      "exclusive_percent": 0.12419788863589319,
+      "calls": 1
+    },
+    "reference_digest": {
+      "inclusive_ms": 0.5,
+      "exclusive_ms": 0.5,
+      "exclusive_percent": 0.103498240529911,
+      "calls": 16
+    },
+    "frame_plan": {
+      "inclusive_ms": 0.4,
+      "exclusive_ms": 0.4,
+      "exclusive_percent": 0.0827985924239288,
+      "calls": 16
+    },
+    "reference_entries": {
+      "inclusive_ms": 0.3,
+      "exclusive_ms": 0.3,
+      "exclusive_percent": 0.062098944317946596,
+      "calls": 16
+    },
+    "reference_encode": {
+      "inclusive_ms": 0.3,
+      "exclusive_ms": 0.3,
+      "exclusive_percent": 0.062098944317946596,
+      "calls": 16
+    },
+    "render": {
+      "inclusive_ms": 477.9,
+      "exclusive_ms": 0.2,
+      "exclusive_percent": 0.0413992962119644,
+      "calls": 16
+    },
+    "group_update": {
+      "inclusive_ms": 0.2,
+      "exclusive_ms": 0.2,
+      "exclusive_percent": 0.0413992962119644,
+      "calls": 16
+    },
+    "prepare_scan": {
+      "inclusive_ms": 0.2,
+      "exclusive_ms": 0.2,
+      "exclusive_percent": 0.0413992962119644,
+      "calls": 16
+    },
+    "scratch_draw": {
+      "inclusive_ms": 476.1,
+      "exclusive_ms": 0.2,
+      "exclusive_percent": 0.0413992962119644,
+      "calls": 16
+    },
+    "raster_snapshot": {
+      "inclusive_ms": 0.2,
+      "exclusive_ms": 0.2,
+      "exclusive_percent": 0.0413992962119644,
+      "calls": 16
+    },
+    "reference_build": {
+      "inclusive_ms": 1.2,
+      "exclusive_ms": 0.1,
+      "exclusive_percent": 0.0206996481059822,
+      "calls": 16
+    },
+    "validation": {
+      "inclusive_ms": 0.1,
+      "exclusive_ms": 0.1,
+      "exclusive_percent": 0.0206996481059822,
+      "calls": 17
+    },
+    "cache_begin": {
+      "inclusive_ms": 0.3,
+      "exclusive_ms": 0.1,
+      "exclusive_percent": 0.0206996481059822,
+      "calls": 16
+    },
+    "cache_prepare": {
+      "inclusive_ms": 476.6,
+      "exclusive_ms": 0.1,
+      "exclusive_percent": 0.0206996481059822,
+      "calls": 16
+    },
+    "cache_draw": {
+      "inclusive_ms": 476.4,
+      "exclusive_ms": 0.1,
+      "exclusive_percent": 0.0206996481059822,
+      "calls": 32
+    },
+    "visibility": {
+      "inclusive_ms": 0.0,
+      "exclusive_ms": 0.0,
+      "exclusive_percent": 0.0,
+      "calls": 16
+    },
+    "presentation_adapt": {
+      "inclusive_ms": 0.0,
+      "exclusive_ms": 0.0,
+      "exclusive_percent": 0.0,
+      "calls": 16
+    },
+    "acquire": {
+      "inclusive_ms": 0.0,
+      "exclusive_ms": 0.0,
+      "exclusive_percent": 0.0,
+      "calls": 16
+    },
+    "damage": {
+      "inclusive_ms": 0.0,
+      "exclusive_ms": 0.0,
+      "exclusive_percent": 0.0,
+      "calls": 16
+    },
+    "coverage_record": {
+      "inclusive_ms": 0.0,
+      "exclusive_ms": 0.0,
+      "exclusive_percent": 0.0,
+      "calls": 16
+    },
+    "scene_draw": {
+      "inclusive_ms": 0.1,
+      "exclusive_ms": 0.0,
+      "exclusive_percent": 0.0,
+      "calls": 1
+    },
+    "navigation_snapshot": {
+      "inclusive_ms": 0.0,
+      "exclusive_ms": 0.0,
+      "exclusive_percent": 0.0,
+      "calls": 1
+    }
+  },
+  "image": {
+    "width": 1600,
+    "height": 1000,
+    "rgbaSha256": "6f2ec8ecba0a8d5c893fa75dc4a95dc598be1b8ff92e3679bc29712d2a4e4af2",
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+  }
+}

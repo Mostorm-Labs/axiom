@@ -1,0 +1,7 @@
+# Windows host font adapter — intermediate result
+
+The Windows adapter now loads the existing checked-in application font catalog using the existing manifest/resource validation and owner pump. Windows Minimal Host calls the public adapter instead of including the host font loader. This method is startup-only, accepts the existing catalog layout, is one-shot after success, rejects existing semantic content, and replaces the resource manifest; it is not a general document/resource or arbitrary-font API. No font bytes or SDK locks changed.
+
+The RED compile established the public adapter was absent. UI-on host and public adapter tests, native mouse/touch/text tests, the external installed Windows HWND sample with supplied font fixtures, and the UI-off adapter build/test were run; exact commands, observations and exits are in raw. The independent runner copies font fixtures to an outside checkout temporary directory; the SDK does not itself distribute them. These tests do not establish real IME, font visual rendering, physical touch or physical scanout.
+
+Windows still has private surface, diagnostics and facade seams. Web still lacks an independently installable SDK adapter and external browser consumer. The general Document/resource interface and D07 OOM issue remain open. No SDK, Gate, release or PHYS PASS is claimed. Sources were dirty during tests; manifest hashes and the enclosing commit identify them.

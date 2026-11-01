@@ -1,0 +1,41 @@
+{
+  "status": "FAILED_OR_BLOCKED",
+  "checks": [
+    {
+      "command": [
+        "cmake",
+        "-S",
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-sdk01-consumer-2_5pc4q1\\consumer",
+        "-B",
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-sdk01-consumer-2_5pc4q1\\build",
+        "-DAXIOM_SDK_INCLUDE_DIR=C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-sdk01-real-baseline-008\\include",
+        "-DAXIOM_SDK_LIBRARY=C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-sdk01-real-baseline-008\\lib\\canvas_runtime_composition.lib",
+        "-DAXIOM_SDK_SHARED=OFF",
+        "-G",
+        "Ninja"
+      ],
+      "exit_code": 0,
+      "stdout": "-- The C compiler identification is MSVC 19.51.36246.0\n-- The CXX compiler identification is MSVC 19.51.36246.0\n-- Detecting C compiler ABI info\n-- Detecting C compiler ABI info - done\n-- Check for working C compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped\n-- Detecting C compile features\n-- Detecting C compile features - done\n-- Detecting CXX compiler ABI info\n-- Detecting CXX compiler ABI info - done\n-- Check for working CXX compiler: C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped\n-- Detecting CXX compile features\n-- Detecting CXX compile features - done\n-- Configuring done (3.5s)\n-- Generating done (0.0s)\n-- Build files have been written to: C:/Users/Chado/AppData/Local/Temp/axiom-sdk01-consumer-2_5pc4q1/build\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-sdk01-consumer-2_5pc4q1\\build",
+        "--config",
+        "Release"
+      ],
+      "exit_code": 1,
+      "stdout": "[1/4] Building CXX object CMakeFiles\\sdk01_external_cpp_link.dir\\external_link.cpp.obj\n[2/4] Building C object CMakeFiles\\sdk01_external_c_smoke.dir\\external_smoke.c.obj\n[3/4] Linking CXX executable sdk01_external_cpp_link.exe\nFAILED: sdk01_external_cpp_link.exe \nC:\\WINDOWS\\system32\\cmd.exe /C \"cd . && D:\\Softwares\\CMake\\bin\\cmake.exe -E vs_link_exe --msvc-ver=1951 --intdir=CMakeFiles\\sdk01_external_cpp_link.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~3\\18\\COMMUN~1\\VC\\Tools\\MSVC\\1451~1.362\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\sdk01_external_cpp_link.dir\\external_link.cpp.obj  /out:sdk01_external_cpp_link.exe /implib:sdk01_external_cpp_link.lib /pdb:sdk01_external_cpp_link.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console  C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-sdk01-real-baseline-008\\lib\\canvas_runtime_composition.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd .\"\nLINK Pass 1: command \"C:\\PROGRA~1\\MICROS~3\\18\\COMMUN~1\\VC\\Tools\\MSVC\\1451~1.362\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\sdk01_external_cpp_link.dir\\external_link.cpp.obj /out:sdk01_external_cpp_link.exe /implib:sdk01_external_cpp_link.lib /pdb:sdk01_external_cpp_link.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-sdk01-real-baseline-008\\lib\\canvas_runtime_composition.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\\sdk01_external_cpp_link.dir/intermediate.manifest CMakeFiles\\sdk01_external_cpp_link.dir/manifest.res\" failed (exit code 1120) with the following output:\nexternal_link.cpp.obj : error LNK2019: unresolved external symbol canvas_runtime_get_abi_version referenced in function main\n\nsdk01_external_cpp_link.exe : fatal error LNK1120: 1 unresolved externals\n\n[4/4] Linking C executable sdk01_external_c_smoke.exe\nFAILED: sdk01_external_c_smoke.exe \nC:\\WINDOWS\\system32\\cmd.exe /C \"cd . && D:\\Softwares\\CMake\\bin\\cmake.exe -E vs_link_exe --msvc-ver=1951 --intdir=CMakeFiles\\sdk01_external_c_smoke.dir --rc=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\rc.exe --mt=C:\\PROGRA~2\\WI3CF2~1\\10\\bin\\100261~1.0\\x64\\mt.exe --manifests  -- C:\\PROGRA~1\\MICROS~3\\18\\COMMUN~1\\VC\\Tools\\MSVC\\1451~1.362\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\sdk01_external_c_smoke.dir\\external_smoke.c.obj  /out:sdk01_external_c_smoke.exe /implib:sdk01_external_c_smoke.lib /pdb:sdk01_external_c_smoke.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console  C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-sdk01-real-baseline-008\\lib\\canvas_runtime_composition.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && cd .\"\nLINK Pass 1: command \"C:\\PROGRA~1\\MICROS~3\\18\\COMMUN~1\\VC\\Tools\\MSVC\\1451~1.362\\bin\\Hostx64\\x64\\link.exe /nologo CMakeFiles\\sdk01_external_c_smoke.dir\\external_smoke.c.obj /out:sdk01_external_c_smoke.exe /implib:sdk01_external_c_smoke.lib /pdb:sdk01_external_c_smoke.pdb /version:0.0 /machine:x64 /debug /INCREMENTAL /subsystem:console C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-sdk01-real-baseline-008\\lib\\canvas_runtime_composition.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTFILE:CMakeFiles\\sdk01_external_c_smoke.dir/intermediate.manifest CMakeFiles\\sdk01_external_c_smoke.dir/manifest.res\" failed (exit code 1120) with the following output:\nexternal_smoke.c.obj : error LNK2019: unresolved external symbol canvas_runtime_get_abi_version referenced in function main\n\nexternal_smoke.c.obj : error LNK2019: unresolved external symbol canvas_runtime_create referenced in function main\n\nexternal_smoke.c.obj : error LNK2019: unresolved external symbol canvas_runtime_destroy referenced in function main\n\nexternal_smoke.c.obj : error LNK2019: unresolved external symbol canvas_runtime_get_capabilities referenced in function main\n\nsdk01_external_c_smoke.exe : fatal error LNK1120: 4 unresolved externals\n\nninja: build stopped: subcommand failed.\n",
+      "stderr": ""
+    }
+  ],
+  "input": {
+    "include": "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-sdk01-real-baseline-008\\include",
+    "library": "C:\\Users\\Chado\\AppData\\Local\\Temp\\axiom-sdk01-real-baseline-008\\lib\\canvas_runtime_composition.lib",
+    "shared": false,
+    "header_sha256": "cbc55b2ccd396a8f843fb202531bcf09e708a75f41da1ef0c960ec0cd303011e",
+    "library_sha256": "59853dece40a4d2212d7e483a72922941dbedd237d477217f99444018807f8c5"
+  }
+}

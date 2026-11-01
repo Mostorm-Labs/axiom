@@ -1,4 +1,6 @@
 #include "canvas/text/text_layout.hpp"
+#include "canvas/semantic/table_content.hpp"
+#include "canvas/semantic/table_content.hpp"
 #include "sha256.h"
 
 #include <algorithm>
@@ -159,6 +161,11 @@ struct RichTextLayoutService::Impl {
             if(descriptor!=descriptors.end()) {
                 key.string(descriptor->second.sha256); key.number(descriptor->second.collectionIndex);
             } else key.string("unregistered-font");
+            if(descriptor!=descriptors.end()&&descriptor->second.fallback) {
+                const auto fallback=*descriptor->second.fallback;key.id(fallback.value);key.number(resources.resolve(fallback.value).generation);
+                const auto next=descriptors.find(fallback.value);if(next!=descriptors.end()){key.string(next->second.sha256);key.number(next->second.collectionIndex);}
+                else key.string("unregistered-fallback");
+            }
         }
     }
 #ifdef CANVAS_TEXT_HAS_SKIA
@@ -203,9 +210,15 @@ struct RichTextLayoutService::Impl {
         lastShaped.reset();
         if(!unicode) out->diagnostics.push_back("text-unicode-unavailable");
         auto provider=sk_make_sp<TypefaceFontProvider>();
-        std::vector<Face*> resolved;
+        std::vector<Face*> resolved,fallbacks;
+        std::vector<std::size_t> primaryIndices,fallbackIndices;
         for(const auto& run:p.runs) {
-            auto& f=font(run.style,allowSyntheticStyle); resolved.push_back(&f); out->fonts.push_back(f.observation);
+            auto& f=font(run.style,allowSyntheticStyle); resolved.push_back(&f);primaryIndices.push_back(out->fonts.size());out->fonts.push_back(f.observation);
+            Face* fallback=nullptr;const auto descriptor=run.style.font_resource_id?descriptors.find(run.style.font_resource_id->value):descriptors.end();
+            if(descriptor!=descriptors.end()&&descriptor->second.fallback){auto fallbackStyle=run.style;fallbackStyle.font_resource_id=descriptor->second.fallback;const auto target=descriptors.find(fallbackStyle.font_resource_id->value);
+                if(target==descriptors.end()||target->second.fallback||target==descriptor)out->diagnostics.push_back("font-fallback-invalid");
+                else {fallback=&font(fallbackStyle,allowSyntheticStyle);if(!fallback->diagnostic.empty())out->diagnostics.push_back(fallback->diagnostic);else provider->registerTypeface(fallback->face,SkString((std::to_string(resolved.size()-1)+"-fallback").c_str()));}}
+            fallbacks.push_back(fallback);fallbackIndices.push_back(out->fonts.size());if(fallback)out->fonts.push_back(fallback->observation);
             if(!f.diagnostic.empty()) out->diagnostics.push_back(f.diagnostic);
             else provider->registerTypeface(f.face,SkString(std::to_string(resolved.size()-1).c_str()));
             if(!std::isfinite(run.style.font_size) || run.style.font_size<=0 || run.style.font_size>65536)
@@ -229,7 +242,9 @@ struct RichTextLayoutService::Impl {
             std::vector<std::size_t> starts; std::size_t byteStart=0;
             for(std::size_t i=0;i<p.runs.size();++i) {
                 const auto& r=p.runs[i]; starts.push_back(byteStart); byteStart+=r.text.size();
-                TextStyle text; text.setFontFamilies({SkString(std::to_string(i).c_str())});
+                TextStyle text;
+                if(fallbacks[i])text.setFontFamilies({SkString(std::to_string(i).c_str()),SkString((std::to_string(i)+"-fallback").c_str())});
+                else text.setFontFamilies({SkString(std::to_string(i).c_str())});
                 text.setTypeface(resolved[i]->face); text.setFontStyle(resolved[i]->face->fontStyle());
                 text.setFontSize(static_cast<float>(r.style.font_size));
                 text.setColor(SkColor4f{r.style.color.r,r.style.color.g,r.style.color.b,r.style.color.a}.toSkColor());
@@ -263,11 +278,15 @@ struct RichTextLayoutService::Impl {
                     const auto upper=std::upper_bound(starts.begin(),starts.end(),cluster);
                     const auto index=upper==starts.begin()?0:static_cast<std::size_t>(upper-starts.begin()-1);
                     // No guessed font matching: shaped glyphs must come from the exact admitted face.
+                    auto fontIndex=primaryIndices[index];
                     if(info->font.getTypeface()->uniqueID()!=resolved[index]->face->uniqueID()) {
+                        if(fallbacks[index]&&info->font.getTypeface()->uniqueID()==fallbacks[index]->face->uniqueID())fontIndex=fallbackIndices[index];
+                        else {
                         out->diagnostics.push_back("font-shaped-face-mismatch"); return;
+                        }
                     }
-                    if(index!=current) {
-                        out->runs.push_back({index,info->font.getSize(),p.runs[index].style.color,p.id,{},{},{}}); current=index;
+                    if(fontIndex!=current) {
+                        out->runs.push_back({fontIndex,info->font.getSize(),p.runs[index].style.color,p.id,{},{},{}}); current=fontIndex;
                     }
                     auto& run=out->runs.back(); const auto position=info->origin+info->positions[g];
                     run.glyphs.push_back(info->glyphs[g]); run.positions.push_back({position.x(),position.y()});
@@ -782,5 +801,18 @@ EditingGeometry RichTextLayoutService::stickyEditingGeometry(
     }
     return geometry;
 }
-LayoutMetrics RichTextLayoutService::metrics() const noexcept { return impl_->counters; }
+LayoutMetrics RichTextLayoutService::metrics() const noexcept { return impl_->counters; }std::shared_ptr<const TextLayoutSnapshot> RichTextLayoutService::resolveTable(foundation::ObjectId id,const semantic::TableContent& table) {
+    auto result=std::make_shared<TextLayoutSnapshot>();
+    result->localBounds={0,0,static_cast<float>(semantic::tableWidth(table)),static_cast<float>(semantic::tableHeight(table))};
+    result->digest="table-v1:";
+    for(std::size_t i=0;i<table.cells.size();++i){
+        auto key=id;const auto& row=table.rows[i/table.columns.size()].id;const auto& col=table.columns[i%table.columns.size()].id;
+        for(std::size_t n=0;n<16;++n)key.bytes[n]^=row.bytes[n]^col.bytes[(n+7)%16];
+        auto layout=resolve(key,table.cells[i].text);result->tableCells.push_back(layout);
+        if(layout){result->digest+=layout->digest+":";result->fonts.insert(result->fonts.end(),layout->fonts.begin(),layout->fonts.end());result->diagnostics.insert(result->diagnostics.end(),layout->diagnostics.begin(),layout->diagnostics.end());}
+        else result->diagnostics.push_back("TableCellLayoutUnavailable");
+    }
+    return result;
+}
+
 }

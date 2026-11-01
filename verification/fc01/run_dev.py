@@ -108,24 +108,24 @@ def main() -> int:
                  f"-DCMAKE_CXX_FLAGS_RELEASE={release_flags}", f"-DCMAKE_MAKE_PROGRAM={ninja}",
                  "-DCANVAS_BUILD_POC01=OFF", "-DCANVAS_BUILD_POC02=OFF", "-DCANVAS_BUILD_POC03=OFF",
                  "-DCANVAS_BUILD_POC05=OFF",
-                 "-DCANVAS_BUILD_INK_PLAYGROUND=" + ("ON" if args.playground else "OFF"),
+                 "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=" + ("ON" if args.playground else "OFF"),
                  "-DCANVAS_BUILD_RF01=" + ("ON" if args.scene else "OFF"), "-DCANVAS_BUILD_RENDER=OFF", "-DCANVAS_BUILD_SEMANTIC=ON",
                  "-DBUILD_TESTING=ON", "-DCANVAS_SKIA_SDK_VARIANT=release",
                  "-DCANVAS_SEMANTIC_ENABLE_PROTOBUF=" + ("OFF" if args.no_protobuf else "ON")]
     if args.profile in {"core", "windows-host"}:
         configure += [f"-DCMAKE_C_COMPILER={env['CC']}", f"-DCMAKE_CXX_COMPILER={env['CXX']}"]
     else:
-        configure += ["-DBUILD_TESTING=OFF", "-DCANVAS_BUILD_ARC=ON",
+        configure += ["-DBUILD_TESTING=OFF",
                       "-DCANVAS_BUILD_RF01=ON", "-DCANVAS_BUILD_RENDER=ON",
-                      "-DCANVAS_BUILD_INK_PLAYGROUND=ON",
+                      "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=ON",
                       "-DAXIOM_BUILD_DEBUG_UI=" + ("ON" if args.debug_ui else "OFF"),
                       "-DAXIOM_DEBUG_UI_PROFILE=" + ("full" if args.debug_ui else "off")]
     if args.skia_root:
         configure += [f"-DCANVAS_SKIA_SDK_ROOT={args.skia_root.resolve().as_posix()}",
                       "-DCANVAS_RENDER_ENABLE_SKIA_HEADLESS=ON"]
     if args.windows_host:
-        configure += ["-DCANVAS_BUILD_ARC=ON", "-DCANVAS_BUILD_RF01=ON", "-DCANVAS_BUILD_RENDER=ON",
-                      "-DCANVAS_BUILD_INK_PLAYGROUND=ON", "-DAXIOM_BUILD_DEBUG_UI=ON",
+        configure += ["-DCANVAS_BUILD_RF01=ON", "-DCANVAS_BUILD_RENDER=ON",
+                      "-DAXIOM_BUILD_RUNTIME_QUALIFICATION=ON", "-DAXIOM_BUILD_DEBUG_UI=ON",
                       "-DAXIOM_DEBUG_UI_PROFILE=full"]
     rc = 0
     if not args.no_protobuf:

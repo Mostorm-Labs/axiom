@@ -1,0 +1,2114 @@
+{
+  "diagnostic": {
+    "type": "object",
+    "value": {
+      "observation": {
+        "owner": "RuntimeComposition",
+        "revision": "e89d47686f5bc7077fb612b55a4f0af1634625f1",
+        "dirty": 1,
+        "debugUiEnabled": true,
+        "state": 2,
+        "objects": 1,
+        "operations": 1,
+        "pointerSamples": 3,
+        "rejectedInputs": 0,
+        "activePointers": 0,
+        "presentedFrames": 7,
+        "retries": 11,
+        "pendingFrame": false,
+        "previewActive": false,
+        "surfaceGeneration": 1,
+        "metricsGeneration": 1,
+        "width": 2200,
+        "height": 1522,
+        "logicalWidth": 1100,
+        "logicalHeight": 761,
+        "dpr": 2,
+        "controlState": 9,
+        "tool": 0,
+        "selectedCount": 0,
+        "selectionMode": 0,
+        "regionActive": false,
+        "regionCandidates": 0,
+        "regionQuery": 6,
+        "creationMode": false,
+        "creationPreset": 0,
+        "size": 16,
+        "opacity": 1,
+        "camera": {
+          "scale": 7.72201,
+          "x": -4466.63,
+          "y": -697.878
+        },
+        "lastPointer": {
+          "source": 1,
+          "pointer": 1,
+          "generation": 1
+        },
+        "error": "",
+        "selectionSummary": {
+          "actions": [
+            {
+              "action": 0,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 1,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 2,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 3,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 4,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 5,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 6,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 7,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 8,
+              "reason": 1,
+              "state": 0
+            },
+            {
+              "action": 9,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 10,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 11,
+              "reason": 14,
+              "state": 0
+            },
+            {
+              "action": 12,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 13,
+              "reason": 13,
+              "state": 2
+            },
+            {
+              "action": 14,
+              "reason": 13,
+              "state": 2
+            }
+          ],
+          "bounds": {
+            "reason": 1,
+            "status": 0,
+            "world": null
+          },
+          "count": 0,
+          "groupScope": null,
+          "kindCounts": [],
+          "primary": "00000000000000000000000000000000",
+          "properties": [
+            {
+              "applicableRoots": 0,
+              "applicableValuesMixed": false,
+              "fieldId": 1,
+              "knownRoots": 0,
+              "reason": 1,
+              "state": 0,
+              "value": null
+            },
+            {
+              "applicableRoots": 0,
+              "applicableValuesMixed": false,
+              "fieldId": 2,
+              "knownRoots": 0,
+              "reason": 1,
+              "state": 0,
+              "value": null
+            },
+            {
+              "applicableRoots": 0,
+              "applicableValuesMixed": false,
+              "fieldId": 3,
+              "knownRoots": 0,
+              "reason": 1,
+              "state": 0,
+              "value": null
+            }
+          ],
+          "reason": 0,
+          "roots": [],
+          "sceneGeneration": "1",
+          "sceneRevision": "1",
+          "selectionRevision": "1",
+          "semanticGeneration": "1",
+          "status": 1
+        },
+        "failure": "",
+        "trace": [
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 0,
+            "timestampNs": "1017000000",
+            "x": 600,
+            "y": 100,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 1,
+            "timestampNs": "1034000000",
+            "x": 700,
+            "y": 180,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "pointer",
+            "source": 1,
+            "pointer": 1,
+            "generation": "1",
+            "phase": 2,
+            "timestampNs": "1051000000",
+            "x": 700,
+            "y": 180,
+            "pressure": 0,
+            "history": false
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "debug-toggle"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "debug-input"
+          },
+          {
+            "kind": "cancel-all",
+            "reason": "debug-input"
+          }
+        ]
+      },
+      "width": 2200,
+      "height": 1522,
+      "status": "对象 1 · 操作 1 · 缩放 7.72 · 帧 7"
+    }
+  },
+  "browser": "Chrome/155.0.8059.86",
+  "mode": "Chrome headless SwiftShader, synthetic DOM events",
+  "page": "web_sticky_fractional_test",
+  "result": "{\"status\":\"FAIL\",\"results\":[],\"error\":\"Error: Sticky tool not selected\",\"observation\":{\"owner\":\"RuntimeComposition\",\"revision\":\"e89d47686f5bc7077fb612b55a4f0af1634625f1\",\"dirty\":1,\"debugUiEnabled\":true,\"state\":2,\"objects\":1,\"operations\":1,\"pointerSamples\":3,\"rejectedInputs\":0,\"activePointers\":0,\"presentedFrames\":7,\"retries\":11,\"pendingFrame\":false,\"previewActive\":false,\"surfaceGeneration\":1,\"metricsGeneration\":1,\"width\":2200,\"height\":1522,\"logicalWidth\":1100,\"logicalHeight\":761,\"dpr\":2,\"controlState\":9,\"tool\":0,\"selectedCount\":0,\"selectionMode\":0,\"regionActive\":false,\"regionCandidates\":0,\"regionQuery\":6,\"creationMode\":false,\"creationPreset\":0,\"size\":16,\"opacity\":1,\"camera\":{\"scale\":7.72201,\"x\":-4466.63,\"y\":-697.878},\"lastPointer\":{\"source\":1,\"pointer\":1,\"generation\":1},\"error\":\"\",\"selectionSummary\":{\"actions\":[{\"action\":0,\"reason\":1,\"state\":0},{\"action\":1,\"reason\":1,\"state\":0},{\"action\":2,\"reason\":1,\"state\":0},{\"action\":3,\"reason\":1,\"state\":0},{\"action\":4,\"reason\":1,\"state\":0},{\"action\":5,\"reason\":1,\"state\":0},{\"action\":6,\"reason\":1,\"state\":0},{\"action\":7,\"reason\":1,\"state\":0},{\"action\":8,\"reason\":1,\"state\":0},{\"action\":9,\"reason\":13,\"state\":2},{\"action\":10,\"reason\":13,\"state\":2},{\"action\":11,\"reason\":14,\"state\":0},{\"action\":12,\"reason\":13,\"state\":2},{\"action\":13,\"reason\":13,\"state\":2},{\"action\":14,\"reason\":13,\"state\":2}],\"bounds\":{\"reason\":1,\"status\":0,\"world\":null},\"count\":0,\"groupScope\":null,\"kindCounts\":[],\"primary\":\"00000000000000000000000000000000\",\"properties\":[{\"applicableRoots\":0,\"applicableValuesMixed\":false,\"fieldId\":1,\"knownRoots\":0,\"reason\":1,\"state\":0,\"value\":null},{\"applicableRoots\":0,\"applicableValuesMixed\":false,\"fieldId\":2,\"knownRoots\":0,\"reason\":1,\"state\":0,\"value\":null},{\"applicableRoots\":0,\"applicableValuesMixed\":false,\"fieldId\":3,\"knownRoots\":0,\"reason\":1,\"state\":0,\"value\":null}],\"reason\":0,\"roots\":[],\"sceneGeneration\":\"1\",\"sceneRevision\":\"1\",\"selectionRevision\":\"1\",\"semanticGeneration\":\"1\",\"status\":1},\"failure\":\"\",\"trace\":[{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"1\",\"phase\":0,\"timestampNs\":\"1017000000\",\"x\":600,\"y\":100,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"1\",\"phase\":1,\"timestampNs\":\"1034000000\",\"x\":700,\"y\":180,\"pressure\":0,\"history\":false},{\"kind\":\"pointer\",\"source\":1,\"pointer\":1,\"generation\":\"1\",\"phase\":2,\"timestampNs\":\"1051000000\",\"x\":700,\"y\":180,\"pressure\":0,\"history\":false},{\"kind\":\"cancel-all\",\"reason\":\"debug-toggle\"},{\"kind\":\"cancel-all\",\"reason\":\"debug-input\"},{\"kind\":\"cancel-all\",\"reason\":\"debug-input\"}]}}",
+  "events": [
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1793326920697.152,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 88401
+              },
+              {
+                "functionName": "$func3702",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 2240574
+              },
+              {
+                "functionName": "$func7294",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 5070170
+              },
+              {
+                "functionName": "$func6852",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4690601
+              },
+              {
+                "functionName": "$func6494",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4310791
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9607415
+              },
+              {
+                "functionName": "",
+                "scriptId": "5",
+                "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 26,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1793326920697.321,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 88401
+              },
+              {
+                "functionName": "$func3702",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 2240574
+              },
+              {
+                "functionName": "$func7294",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 5070187
+              },
+              {
+                "functionName": "$func6852",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4690601
+              },
+              {
+                "functionName": "$func6494",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4310791
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9607415
+              },
+              {
+                "functionName": "",
+                "scriptId": "5",
+                "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 26,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1793326920697.502,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "emscriptenWebGLGet",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 82107
+              },
+              {
+                "functionName": "_emscripten_glGetFloatv",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 83397
+              },
+              {
+                "functionName": "$func1869",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 964573
+              },
+              {
+                "functionName": "$func7294",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 5075341
+              },
+              {
+                "functionName": "$func6852",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4690601
+              },
+              {
+                "functionName": "$func6494",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4310791
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9607415
+              },
+              {
+                "functionName": "",
+                "scriptId": "5",
+                "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 26,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1793326920698.012,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 88401
+              },
+              {
+                "functionName": "$func3702",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 2240574
+              },
+              {
+                "functionName": "$func7294",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 5070170
+              },
+              {
+                "functionName": "$func6852",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4690601
+              },
+              {
+                "functionName": "$func6494",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4310900
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9607415
+              },
+              {
+                "functionName": "",
+                "scriptId": "5",
+                "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 26,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1793326920698.108,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 88401
+              },
+              {
+                "functionName": "$func3702",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 2240574
+              },
+              {
+                "functionName": "$func7294",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 5070187
+              },
+              {
+                "functionName": "$func6852",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4690601
+              },
+              {
+                "functionName": "$func6494",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4310900
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9607415
+              },
+              {
+                "functionName": "",
+                "scriptId": "5",
+                "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 26,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1793326920698.22,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "emscriptenWebGLGet",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 82107
+              },
+              {
+                "functionName": "_emscripten_glGetFloatv",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 83397
+              },
+              {
+                "functionName": "$func1869",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 964573
+              },
+              {
+                "functionName": "$func7294",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 5075341
+              },
+              {
+                "functionName": "$func6852",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4690601
+              },
+              {
+                "functionName": "$func6494",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4310900
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9607415
+              },
+              {
+                "functionName": "",
+                "scriptId": "5",
+                "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 26,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1793326921189.32,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 88401
+              },
+              {
+                "functionName": "$func3702",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 2240574
+              },
+              {
+                "functionName": "$func7294",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 5070170
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9612914
+              },
+              {
+                "functionName": "",
+                "scriptId": "5",
+                "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 26,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, WEBGL_debug_renderer_info not enabled",
+          "timestamp": 1793326921189.405,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glGetString",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 88401
+              },
+              {
+                "functionName": "$func3702",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 2240574
+              },
+              {
+                "functionName": "$func7294",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 5070187
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9612914
+              },
+              {
+                "functionName": "",
+                "scriptId": "5",
+                "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 26,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: getParameter: invalid parameter name, EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1793326921189.474,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "emscriptenWebGLGet",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 82107
+              },
+              {
+                "functionName": "_emscripten_glGetFloatv",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 83397
+              },
+              {
+                "functionName": "$func1869",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 964573
+              },
+              {
+                "functionName": "$func7294",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 5075341
+              },
+              {
+                "functionName": "$Md",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9612914
+              },
+              {
+                "functionName": "",
+                "scriptId": "5",
+                "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 26,
+                "columnNumber": 22
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=1 objects=0 scene_records=0"
+          }
+        ],
+        "executionContextId": 11,
+        "timestamp": 1793326921191.638,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 18703
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 17975
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 45849
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 108552
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 109000
+            },
+            {
+              "functionName": "$func13408",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 8238894
+            },
+            {
+              "functionName": "$func7115",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 4915850
+            },
+            {
+              "functionName": "$func929",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 353542
+            },
+            {
+              "functionName": "$func1866",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 942329
+            },
+            {
+              "functionName": "$Xd",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 7991511
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "5",
+              "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 60,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] finish begin pointer=1 objects=0 scene_gen=0"
+          }
+        ],
+        "executionContextId": 11,
+        "timestamp": 1793326921199.104,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 18703
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 17975
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 45849
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 108552
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 109000
+            },
+            {
+              "functionName": "$func13408",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 8238894
+            },
+            {
+              "functionName": "$func7115",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 4915850
+            },
+            {
+              "functionName": "$func929",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 353542
+            },
+            {
+              "functionName": "$func8480",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 6477983
+            },
+            {
+              "functionName": "$func16404",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 9465914
+            },
+            {
+              "functionName": "$func3671",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 2229748
+            },
+            {
+              "functionName": "$func5703",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 3667125
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 8038670
+            },
+            {
+              "functionName": "forward",
+              "scriptId": "5",
+              "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 118,
+              "columnNumber": 30
+            },
+            {
+              "functionName": "",
+              "scriptId": "5",
+              "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 157,
+              "columnNumber": 48
+            },
+            {
+              "functionName": "event",
+              "scriptId": "27",
+              "url": "http://127.0.0.1:8769/tests/web_sticky_fractional_test.html",
+              "lineNumber": 20,
+              "columnNumber": 69
+            },
+            {
+              "functionName": "frame.addEventListener.once",
+              "scriptId": "27",
+              "url": "http://127.0.0.1:8769/tests/web_sticky_fractional_test.html",
+              "lineNumber": 26,
+              "columnNumber": 4
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] scene apply pointer=1 ok=1 objects=1 scene_gen=1"
+          }
+        ],
+        "executionContextId": 11,
+        "timestamp": 1793326921200.258,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 18703
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 17975
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 45849
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 108552
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 109000
+            },
+            {
+              "functionName": "$func13408",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 8238894
+            },
+            {
+              "functionName": "$func7115",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 4915850
+            },
+            {
+              "functionName": "$func929",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 353542
+            },
+            {
+              "functionName": "$func8480",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 6484850
+            },
+            {
+              "functionName": "$func16404",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 9465914
+            },
+            {
+              "functionName": "$func3671",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 2229748
+            },
+            {
+              "functionName": "$func5703",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 3667125
+            },
+            {
+              "functionName": "$Wd",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 8038670
+            },
+            {
+              "functionName": "forward",
+              "scriptId": "5",
+              "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 118,
+              "columnNumber": 30
+            },
+            {
+              "functionName": "",
+              "scriptId": "5",
+              "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 157,
+              "columnNumber": 48
+            },
+            {
+              "functionName": "event",
+              "scriptId": "27",
+              "url": "http://127.0.0.1:8769/tests/web_sticky_fractional_test.html",
+              "lineNumber": 20,
+              "columnNumber": 69
+            },
+            {
+              "functionName": "frame.addEventListener.once",
+              "scriptId": "27",
+              "url": "http://127.0.0.1:8769/tests/web_sticky_fractional_test.html",
+              "lineNumber": 26,
+              "columnNumber": 4
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=2 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 11,
+        "timestamp": 1793326921201.99,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 18703
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 17975
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 45849
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 108552
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 109000
+            },
+            {
+              "functionName": "$func13408",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 8238894
+            },
+            {
+              "functionName": "$func7115",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 4915850
+            },
+            {
+              "functionName": "$func929",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 353542
+            },
+            {
+              "functionName": "$func1866",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 942329
+            },
+            {
+              "functionName": "$Xd",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 7991511
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "5",
+              "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 60,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: samplerParameter: EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1793326921261.812,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glSamplerParameterf",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 93871
+              },
+              {
+                "functionName": "$func16711",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9571377
+              },
+              {
+                "functionName": "$func2886",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 1647463
+              },
+              {
+                "functionName": "$func16582",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9526503
+              },
+              {
+                "functionName": "$func8950",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 6717381
+              },
+              {
+                "functionName": "$func5131",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 3220765
+              },
+              {
+                "functionName": "$func9669",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 6927426
+              },
+              {
+                "functionName": "$func5442",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 3398878
+              },
+              {
+                "functionName": "$func2166",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 1137437
+              },
+              {
+                "functionName": "$func7273",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 5051624
+              },
+              {
+                "functionName": "$func1866",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 961314
+              },
+              {
+                "functionName": "$Xd",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 7991511
+              },
+              {
+                "functionName": "tick",
+                "scriptId": "5",
+                "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 60,
+                "columnNumber": 30
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: samplerParameter: EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1793326921285.87,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glSamplerParameterf",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 93871
+              },
+              {
+                "functionName": "$func16711",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9571377
+              },
+              {
+                "functionName": "$func2886",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 1647463
+              },
+              {
+                "functionName": "$func16582",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9526503
+              },
+              {
+                "functionName": "$func8950",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 6717381
+              },
+              {
+                "functionName": "$func5131",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 3220765
+              },
+              {
+                "functionName": "$func9669",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 6927426
+              },
+              {
+                "functionName": "$func5442",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 3398878
+              },
+              {
+                "functionName": "$func2166",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 1137437
+              },
+              {
+                "functionName": "$func7273",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 5051624
+              },
+              {
+                "functionName": "$func7041",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 4881972
+              },
+              {
+                "functionName": "$Xd",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 7992632
+              },
+              {
+                "functionName": "tick",
+                "scriptId": "5",
+                "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 60,
+                "columnNumber": 30
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Log.entryAdded",
+      "params": {
+        "entry": {
+          "source": "rendering",
+          "level": "warning",
+          "text": "WebGL: INVALID_ENUM: samplerParameter: EXT_texture_filter_anisotropic not enabled",
+          "timestamp": 1793326921447.384,
+          "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+          "lineNumber": 0,
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "_emscripten_glSamplerParameterf",
+                "scriptId": "6",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 93871
+              },
+              {
+                "functionName": "$func16711",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9571377
+              },
+              {
+                "functionName": "$func2886",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 1647463
+              },
+              {
+                "functionName": "$func16563",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9520789
+              },
+              {
+                "functionName": "$func2163",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 1136726
+              },
+              {
+                "functionName": "$func2163",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 1136769
+              },
+              {
+                "functionName": "$func2163",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 1136769
+              },
+              {
+                "functionName": "$func2163",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 1136769
+              },
+              {
+                "functionName": "$func2163",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 1136769
+              },
+              {
+                "functionName": "$func16582",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 9526778
+              },
+              {
+                "functionName": "$func8931",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 6713886
+              },
+              {
+                "functionName": "$func5131",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 3220765
+              },
+              {
+                "functionName": "$func9669",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 6927426
+              },
+              {
+                "functionName": "$func5442",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 3398878
+              },
+              {
+                "functionName": "$func2166",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 1137437
+              },
+              {
+                "functionName": "$func7273",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 5051624
+              },
+              {
+                "functionName": "$func6027",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 3996736
+              },
+              {
+                "functionName": "$$d",
+                "scriptId": "9",
+                "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 0,
+                "columnNumber": 7565083
+              },
+              {
+                "functionName": "toggleDebugUi",
+                "scriptId": "5",
+                "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+                "lineNumber": 216,
+                "columnNumber": 11
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=3 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 11,
+        "timestamp": 1793326921452.124,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 18703
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 17975
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 45849
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 108552
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 109000
+            },
+            {
+              "functionName": "$func13408",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 8238894
+            },
+            {
+              "functionName": "$func7115",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 4915850
+            },
+            {
+              "functionName": "$func929",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 353542
+            },
+            {
+              "functionName": "$func1866",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 942329
+            },
+            {
+              "functionName": "$Xd",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 7991511
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "5",
+              "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 60,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=4 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 11,
+        "timestamp": 1793326921551.365,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 18703
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 17975
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 45849
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 108552
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 109000
+            },
+            {
+              "functionName": "$func13408",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 8238894
+            },
+            {
+              "functionName": "$func7115",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 4915850
+            },
+            {
+              "functionName": "$func929",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 353542
+            },
+            {
+              "functionName": "$func1866",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 942329
+            },
+            {
+              "functionName": "$Xd",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 7991511
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "5",
+              "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 60,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=5 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 11,
+        "timestamp": 1793326921602.554,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 18703
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 17975
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 45849
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 108552
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 109000
+            },
+            {
+              "functionName": "$func13408",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 8238894
+            },
+            {
+              "functionName": "$func7115",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 4915850
+            },
+            {
+              "functionName": "$func929",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 353542
+            },
+            {
+              "functionName": "$func1866",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 942329
+            },
+            {
+              "functionName": "$Xd",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 7991511
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "5",
+              "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 60,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=6 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 11,
+        "timestamp": 1793326921686.373,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 18703
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 17975
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 45849
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 108552
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 109000
+            },
+            {
+              "functionName": "$func13408",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 8238894
+            },
+            {
+              "functionName": "$func7115",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 4915850
+            },
+            {
+              "functionName": "$func929",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 353542
+            },
+            {
+              "functionName": "$func1866",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 942329
+            },
+            {
+              "functionName": "$Xd",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 7991511
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "5",
+              "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 60,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    },
+    {
+      "method": "Runtime.consoleAPICalled",
+      "params": {
+        "type": "error",
+        "args": [
+          {
+            "type": "string",
+            "value": "[axiom] present begin frame=7 objects=1 scene_records=1"
+          }
+        ],
+        "executionContextId": 11,
+        "timestamp": 1793326921758.396,
+        "stackTrace": {
+          "callFrames": [
+            {
+              "functionName": "put_char",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 18703
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 17975
+            },
+            {
+              "functionName": "write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 45849
+            },
+            {
+              "functionName": "doWritev",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 108552
+            },
+            {
+              "functionName": "_fd_write",
+              "scriptId": "6",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 109000
+            },
+            {
+              "functionName": "$func13408",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 8238894
+            },
+            {
+              "functionName": "$func7115",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 4915850
+            },
+            {
+              "functionName": "$func929",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 353542
+            },
+            {
+              "functionName": "$func1866",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 942329
+            },
+            {
+              "functionName": "$Xd",
+              "scriptId": "9",
+              "url": "http://127.0.0.1:8769/axiom_canvas_demo_web.wasm?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 0,
+              "columnNumber": 7991511
+            },
+            {
+              "functionName": "tick",
+              "scriptId": "5",
+              "url": "http://127.0.0.1:8769/host.js?rev=8c361d9f4884c03e64f1276cb661ee9910c689b17de5250a52bcdd9fdf294286",
+              "lineNumber": 60,
+              "columnNumber": 30
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -12,6 +12,10 @@ class DirectReferenceSource final {
         const FrameState& frame,
         const VisibilityResult& visibility,
         const RuntimeScene& runtimeScene);
+    // Navigation has no canonical digest/receipt. It shares command mapping
+    // without serializing every confirmed sample on each tile request.
+    [[nodiscard]] static foundation::Result<ReferenceDrawList> buildNavigation(
+        const FrameState&,const VisibilityResult&,const RuntimeScene&);
 };
 
 } // namespace canvas::render

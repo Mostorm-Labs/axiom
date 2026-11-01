@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.24)
+project(axiom_windows_sdk_consumer LANGUAGES CXX)
+set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded)
+find_package(AxiomRuntime CONFIG REQUIRED)
+add_executable(windows_sdk_consumer main.cpp)
+target_compile_features(windows_sdk_consumer PRIVATE cxx_std_20)
+target_compile_options(windows_sdk_consumer PRIVATE /W4 /WX /EHsc /UNDEBUG)
+target_link_libraries(windows_sdk_consumer PRIVATE Axiom::PlatformWindows)
+axiom_runtime_copy_assets(windows_sdk_consumer)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/axiom-font.otf" AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/fonts/catalog.json")
+  add_custom_command(TARGET windows_sdk_consumer POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/axiom-font.otf" "$<TARGET_FILE_DIR:windows_sdk_consumer>/axiom-font.otf"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/fonts" "$<TARGET_FILE_DIR:windows_sdk_consumer>/fonts")
+endif()
+enable_testing()
+add_test(NAME ExternalWindowsSdkWindow COMMAND windows_sdk_consumer)
+set_tests_properties(ExternalWindowsSdkWindow PROPERTIES SKIP_RETURN_CODE 77)

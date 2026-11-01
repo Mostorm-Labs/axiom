@@ -4,7 +4,7 @@
 
 #include "canvas/render/frame_plan.hpp"
 #include "canvas/render/render_backend.hpp"
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 
 #include <cstdint>
 #include <string>
@@ -52,7 +52,7 @@ class WindowsCanonicalSurfaceHost final {
                                const render::FramePlan& plan,
                                std::string* error);
     [[nodiscard]] bool paintCanonical(HDC dc, std::string* error);
-    [[nodiscard]] runtime::RuntimeComposition& composition() noexcept { return composition_; }
+    [[nodiscard]] runtime::RuntimeCompositionCore& composition() noexcept { return composition_; }
     [[nodiscard]] std::uint64_t nextInputSequence() noexcept { return ++inputSequence_; }
     [[nodiscard]] bool releasingCaptureForPointerUp() const noexcept;
     void beginPointerUpCaptureRelease() noexcept;
@@ -66,7 +66,7 @@ class WindowsCanonicalSurfaceHost final {
     Impl* impl_ = nullptr;
     WindowsSmokeObservation observation_{};
     WindowsSurfaceAdapter* surface_ = nullptr;
-    runtime::RuntimeComposition composition_;
+    runtime::RuntimeCompositionCore composition_;
     std::atomic<std::uint64_t> inputSequence_{0};
     std::uint64_t lastPresentedFrame_ = 0;
 };

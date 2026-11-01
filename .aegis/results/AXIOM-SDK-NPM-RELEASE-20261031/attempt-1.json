@@ -1,0 +1,14 @@
+{
+  "source_revision": "784ba9a9018fa50c24f3baae2f810dc888f54809",
+  "tag": "axiom-sdk-preview-20261031-784ba9a9",
+  "run": "https://github.com/Mostorm-Labs/axiom/actions/runs/41160091581",
+  "conclusion": "failure",
+  "published": false,
+  "findings": [
+    {"job": "Build and verify web", "job_id": 124415524933, "failure": "Browser wrapper/engine build identity mismatch", "cause": "Exported JS SDK_VERSION and declaration version strings remained preview.1 after the central/package version advanced to preview.2"},
+    {"job": "Build and verify windows", "job_id": 124415524763, "passed": "28 native consumer regressions", "failure": "missing or mismatched actual DLL identity", "cause": "External verifier hardcoded preview.1 instead of reading the installed SDK version identity"}
+  ],
+  "classification": "RELEASE_IDENTITY_BINDING_DEFECT",
+  "repair_scope": "Release version metadata/declarations, external verifier's expected version source, early version consistency tests and release instructions; no Runtime behavior change",
+  "preservation": "Failed run and immutable tag retained. A new commit and new tag will repeat all qualification; no gate bypass or existing asset overwrite."
+}

@@ -2,7 +2,7 @@
 #include "canvas/debug_ui/control_router.hpp"
 #include "canvas/debug_ui/controller.hpp"
 #include "canvas/debug_ui/snapshot_assembler.hpp"
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/runtime/canvas_runtime_facade.hpp"
 #include "canvas/runtime/debug_control.hpp"
 #include "canvas/runtime/surface_debug_control.hpp"
@@ -501,7 +501,7 @@ int main() {
 
   // The UI may be hidden while the Runtime owner keeps pumping. The request
   // deadline must use the owner's clock, not the first UI snapshot sequence.
-  canvas::runtime::RuntimeComposition composition;
+  canvas::runtime::RuntimeCompositionCore composition;
   assert(composition.open() && composition.bindSurface(256U, 256U));
   auto& facade = composition.controlFacade();
   for (std::uint64_t i = 0; i < 300U; ++i) assert(composition.ownerPump());

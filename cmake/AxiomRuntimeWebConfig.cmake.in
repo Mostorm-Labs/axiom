@@ -1,0 +1,40 @@
+if(NOT EMSCRIPTEN OR NOT CMAKE_BUILD_TYPE STREQUAL "Release" OR
+   NOT CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL "@CMAKE_CXX_COMPILER_VERSION@")
+  message(FATAL_ERROR "AxiomRuntime Web requires the matching Emscripten compiler and Release configuration")
+endif()
+execute_process(COMMAND "${CMAKE_CXX_COMPILER}" --version OUTPUT_VARIABLE _axiom_web_compiler_version
+  RESULT_VARIABLE _axiom_web_compiler_result OUTPUT_STRIP_TRAILING_WHITESPACE)
+string(REGEX MATCH "^[^\r\n]+" _axiom_web_compiler_id "${_axiom_web_compiler_version}")
+if(NOT _axiom_web_compiler_result EQUAL 0 OR NOT _axiom_web_compiler_id STREQUAL "@AXIOM_RUNTIME_WEB_COMPILER_ID@")
+  message(FATAL_ERROR "AxiomRuntime requires the exact Emscripten compiler release")
+endif()
+include(CMakeFindDependencyMacro)
+find_dependency(Protobuf 36.0.0 EXACT CONFIG REQUIRED)
+find_dependency(CanvasSkia CONFIG REQUIRED)
+get_filename_component(_axiom_semantic_root "${Protobuf_DIR}/../../.." ABSOLUTE)
+get_filename_component(_axiom_skia_root "${CanvasSkia_DIR}/../../.." ABSOLUTE)
+foreach(_axiom_family IN ITEMS semantic skia)
+  if(NOT EXISTS "${_axiom_${_axiom_family}_root}/manifest.json")
+    message(FATAL_ERROR "AxiomRuntime requires the locked ${_axiom_family} SDK manifest")
+  endif()
+  file(SHA256 "${_axiom_${_axiom_family}_root}/manifest.json" _axiom_${_axiom_family}_hash)
+endforeach()
+if(NOT _axiom_semantic_hash STREQUAL "@AXIOM_RUNTIME_SEMANTIC_MANIFEST_SHA256@" OR
+   NOT _axiom_skia_hash STREQUAL "@AXIOM_RUNTIME_SKIA_MANIFEST_SHA256@")
+  message(FATAL_ERROR "AxiomRuntime requires the exact locked Semantic and Skia SDKs")
+endif()
+get_filename_component(_axiom_prefix "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
+foreach(_axiom_component IN ITEMS composition editor interaction render scene text ink input control semantic)
+  add_library(AxiomInternal::${_axiom_component} STATIC IMPORTED)
+  set_target_properties(AxiomInternal::${_axiom_component} PROPERTIES
+    IMPORTED_LOCATION "${_axiom_prefix}/lib/libcanvas_runtime_${_axiom_component}.a")
+endforeach()
+add_library(Axiom::Runtime INTERFACE IMPORTED)
+set_target_properties(Axiom::Runtime PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "${_axiom_prefix}/include"
+  INTERFACE_COMPILE_FEATURES cxx_std_20
+  INTERFACE_LINK_LIBRARIES "AxiomInternal::composition;AxiomInternal::editor;AxiomInternal::interaction;AxiomInternal::render;AxiomInternal::scene;AxiomInternal::text;AxiomInternal::ink;AxiomInternal::input;AxiomInternal::control;AxiomInternal::semantic;CanvasSkia::Paragraph;CanvasSkia::Skia;protobuf::libprotobuf")
+add_library(AxiomInternal::web_adapter STATIC IMPORTED)
+set_target_properties(AxiomInternal::web_adapter PROPERTIES IMPORTED_LOCATION "${_axiom_prefix}/lib/libaxiom_web_runtime_adapter.a")
+add_library(Axiom::PlatformWeb INTERFACE IMPORTED)
+set_target_properties(Axiom::PlatformWeb PROPERTIES INTERFACE_LINK_LIBRARIES "AxiomInternal::web_adapter;Axiom::Runtime")

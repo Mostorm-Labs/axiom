@@ -11,12 +11,20 @@
 #include <type_traits>
 
 namespace canvas::semantic {
+std::optional<PropertyValue> propertyDefaultValue(ObjectKind kind, std::uint32_t fieldId) noexcept {
+    if (kind == ObjectKind::kSticky && fieldId == 0x100U)
+        return PropertyValue{FillStyleValue{SolidFill{{1,1,.5F,1}}}};
+    if (kind == ObjectKind::kSection && fieldId == 0x101U)
+        return PropertyValue{StrokeStyleValue{SolidStroke{{.4F,.45F,.5F,.65F},1,StrokeCap::kButt,MiterJoin{4},SolidDash{}}}};
+    return propertyDefaultValue(fieldId);
+}
 std::optional<PropertyValue> propertyDefaultValue(std::uint32_t fieldId) noexcept {
     switch (fieldId) {
         case 0x00000001U: return PropertyValue{true};
         case 0x00000002U: return PropertyValue{false};
         case 0x00000003U: return PropertyValue{1.0F};
         case 0x00000004U: return PropertyValue{BlendModeValue::kNormal};
+        case 0x103U: return PropertyValue{CornerStyleV1{}};
         case 0x00000100U: return PropertyValue{FillStyleValue{NoFill{}}};
         case 0x00000101U: return PropertyValue{StrokeStyleValue{NoStroke{}}};
         case 0x00000200U:
@@ -81,9 +89,15 @@ bool normalizePropertyValue(PropertyValue& value) {
                     [](auto& fill) -> bool {
                         using Fill = std::decay_t<decltype(fill)>;
                         if constexpr (std::is_same_v<Fill, NoFill>) return true;
+                        else if constexpr (std::is_same_v<Fill, PatternFillV1>)
+                            return normalizeColor(fill.color) && normalizeDouble(fill.angle) && normalizeDouble(fill.gap) && normalizeDouble(fill.width);
                         else return normalizeColor(fill.color);
                     },
                     item);
+            } else if constexpr (std::is_same_v<Item, CornerStyleV1>) {
+                return item.version==1 && normalizeDouble(item.radius) && item.radius>=0 && item.radius<=16384;
+            } else if constexpr (std::is_same_v<Item, SketchStyleV1>) {
+                return normalizeDouble(item.roughness);
             } else if constexpr (std::is_same_v<Item, StrokeStyleValue>) {
                 return std::visit(
                     [](auto& stroke) -> bool {
@@ -107,11 +121,6 @@ bool normalizePropertyValue(PropertyValue& value) {
             }
         },
         value);
-}
-
-bool isExplicitDefaultProperty(const PropertyEntry& entry) noexcept {
-    const auto defaultValue = propertyDefaultValue(entry.field_id);
-    return defaultValue && *defaultValue == entry.value;
 }
 
 template <typename Vector, typename Compare>
@@ -342,6 +351,10 @@ bool normalizeContent(ObjectContent& content) {
                 return normalizeStroke(value.stroke);
             } else if constexpr (std::is_same_v<Item, DabStrokeContent>) {
                 return normalizeStroke(value.stroke);
+            } else if constexpr (std::is_same_v<Item, CompactStrokeContent>) {
+                if(!validCompactStroke(value.stroke))return false;
+                for(auto& knot:value.stroke.knots)if(!normalizeDouble(knot.x)||!normalizeDouble(knot.y))return false;
+                return true;
             } else if constexpr (std::is_same_v<Item, BrushStrokeContent>) {
                 auto& snapshot = value.stroke.snapshot;
                 if (!normalizeDouble(snapshot.vector.size) || !normalizeDouble(snapshot.vector.thinning) ||
@@ -374,6 +387,11 @@ bool normalizeContent(ObjectContent& content) {
                 return true;
             } else if constexpr (std::is_same_v<Item, ConnectorContent>) {
                 return normalizeConnector(value);
+            } else if constexpr (std::is_same_v<Item, TableContent>) {
+                for(auto& axis:value.rows) if(!normalizeDouble(axis.size))return false;
+                for(auto& axis:value.columns) if(!normalizeDouble(axis.size))return false;
+                for(auto& cell:value.cells) if(!normalizeRichTextContent(cell.text)||!normalizeColor(cell.fill))return false;
+                return normalizeColor(value.grid.color)&&normalizeDouble(value.grid.width);
             } else if constexpr (std::is_same_v<Item, SectionContent>) {
                 return normalizeSection(value);
             } else if constexpr (std::is_same_v<Item, StickyContent>) {
@@ -386,10 +404,16 @@ bool normalizeContent(ObjectContent& content) {
 }
 
 bool normalizeObject(ObjectRecord& object) {
+    for(const auto& p:object.properties.entries)if(p.field_id==0x103U) {
+        const auto* shape=std::get_if<ShapeContent>(&object.content);
+        if(object.kind!=ObjectKind::kConnector && !(object.kind==ObjectKind::kShape&&shape&&(shape->shape_kind==1||shape->shape_kind==3)))return false;
+    }
+    if(object.kind==ObjectKind::kTable)for(const auto& entry:object.properties.entries)if(!((entry.field_id>=1U&&entry.field_id<=4U)||entry.field_id==0x102U))return false;
     if (object.kind == ObjectKind::kSection) {
         // Reject forbidden Section properties before explicit defaults disappear.
         for (const auto& entry : object.properties.entries) {
-            if (entry.field_id != 0x3U && entry.field_id != 0x100U) return false;
+            if(entry.field_id==0x101U && std::none_of(object.properties.entries.begin(),object.properties.entries.end(),[](const auto& e){return e.field_id==0x102U&&std::holds_alternative<SketchStyleV1>(e.value);}))return false;
+            if (entry.field_id != 0x3U && entry.field_id != 0x100U && entry.field_id != 0x101U && entry.field_id != 0x102U) return false;
         }
     }
     if (!validObjectId(object.id)) return false;
@@ -406,7 +430,7 @@ bool normalizeObject(ObjectRecord& object) {
     }
     object.properties.entries.erase(
         std::remove_if(object.properties.entries.begin(), object.properties.entries.end(),
-                       isExplicitDefaultProperty), object.properties.entries.end());
+                       [&](const auto& entry) { const auto d = propertyDefaultValue(object.kind,entry.field_id); return d && *d == entry.value; }), object.properties.entries.end());
     if (!normalizeContent(object.content) || !normalizeEraseMasks(object.erase_masks)) return false;
     return true;
 }
@@ -496,6 +520,13 @@ bool normalizeOperationPayload(OperationPayload& payload) {
             } else if constexpr (std::is_same_v<Item, EditRichTextOp>) {
                 if (!validObjectId(value.object_id)) return false;
                 return normalizeRichTextDelta(value.delta);
+            } else if constexpr (std::is_same_v<Item, EditTableOp>) {
+                return internal::normalizeTableContent(value.expected)&&internal::normalizeTableContent(value.replacement);
+            } else if constexpr (std::is_same_v<Item, SetDocumentBackgroundOp>) {
+                if (!foundation::validDocumentBackground(value.value)) return false;
+                for (auto* color : {&value.value.color, &value.value.patternColor})
+                    for (auto& component : *color) if (component == 0) component = 0;
+                return true;
             } else if constexpr (std::is_same_v<Item, SetSectionContentOp> || std::is_same_v<Item, EditContainerTopologyOp>) {
                 return internal::normalizeContainerOperation(value);
             } else if constexpr (std::is_same_v<Item, UpdateResourceManifestOp>) {
@@ -519,6 +550,11 @@ bool normalizeOperationPayload(OperationPayload& payload) {
 
 } // namespace
 
+bool internal::normalizeTableContent(TableContent& content) {
+    ObjectContent value=content;
+    if(!normalizeContent(value))return false;
+    content=std::get<TableContent>(std::move(value));return true;
+}
 bool internal::normalizeSectionContent(SectionContent& content) {
     return normalizeSection(content);
 }

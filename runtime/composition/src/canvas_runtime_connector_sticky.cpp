@@ -1,7 +1,8 @@
 #include "canvas/runtime/canvas_runtime_facade.hpp"
-#include "canvas/runtime/runtime_composition.hpp"
+#include "canvas/runtime/internal/runtime_composition_core.hpp"
 #include "canvas/scene/derived_geometry.hpp"
 #include "canvas/scene/hierarchy_geometry.hpp"
+#include "canvas/semantic/validator.hpp"
 
 namespace canvas::runtime {
 namespace {
@@ -41,6 +42,7 @@ ConnectorCommandReceipt CanvasRuntimeFacade::createConnector(const ConnectorCrea
   if (!ownerThread()) return rejectConnector(ConnectorFailureReason::kWrongThread);
   if (!composition_ || !composition_->canMutate() || request.objectId.isZero()) return rejectConnector(ConnectorFailureReason::kNotReady);
   semantic::ObjectRecord object{}; object.id=request.objectId; object.kind=semantic::ObjectKind::kConnector; object.kind_version=1; object.placement=request.placement; object.transform=request.transform; object.content=request.content;
+  runtime_.materializeAppearance(object.properties,object.kind==semantic::ObjectKind::kSticky,object.kind==semantic::ObjectKind::kSticky,object.kind==semantic::ObjectKind::kConnector);
   if (!assignRootOrderKey(runtime_.textObjects(), object.placement)) return rejectConnector(ConnectorFailureReason::kInvalidRequest);
   const auto f=runtime_.allocateOperationId(), i=runtime_.allocateOperationId();
   if(f.isZero()||i.isZero()) return rejectConnector(ConnectorFailureReason::kObjectRejected);
@@ -60,6 +62,7 @@ StickyCommandReceipt CanvasRuntimeFacade::createSticky(const StickyCreateRequest
   if (!ownerThread()) return rejectSticky(ConnectorFailureReason::kWrongThread);
   if (!composition_ || !composition_->canMutate() || request.objectId.isZero()) return rejectSticky(ConnectorFailureReason::kNotReady);
   semantic::ObjectRecord object{}; object.id=request.objectId; object.kind=semantic::ObjectKind::kSticky; object.kind_version=1; object.placement=request.placement; object.transform=request.transform; object.content=request.content;
+  runtime_.materializeAppearance(object.properties,object.kind==semantic::ObjectKind::kSticky,object.kind==semantic::ObjectKind::kSticky,object.kind==semantic::ObjectKind::kConnector);
   if (!assignRootOrderKey(runtime_.textObjects(), object.placement)) return rejectSticky(ConnectorFailureReason::kInvalidRequest);
   const auto f=runtime_.allocateOperationId(), i=runtime_.allocateOperationId();
   if(f.isZero()||i.isZero()) return rejectSticky(ConnectorFailureReason::kObjectRejected);
@@ -126,5 +129,46 @@ ConnectorSnapshot CanvasRuntimeFacade::readConnectorState(semantic::ObjectId id)
   }
   return snapshot;
 }
+AppearanceSnapshot CanvasRuntimeFacade::readAppearance(bool defaults) const {
+ if(!ownerThread())return {};return runtime_.appearanceSnapshot(readMultiSelection(),defaults);
+}
+AppearanceResult CanvasRuntimeFacade::appearanceCommand(const AppearanceRequest& request) {
+ if(!ownerThread()||!composition_||!composition_->canMutate())return {};
+ return runtime_.appearanceCommand(request,readMultiSelection());
+}
+TableResult CanvasRuntimeFacade::tableCommand(const TableRequest& request) {
+  if(!ownerThread()||!composition_||!composition_->canMutate())return {};
+  return runtime_.tableCommand(request);
+}
+TableSnapshot CanvasRuntimeFacade::readTable(foundation::ObjectId id) const {
+  return ownerThread()?runtime_.tableSnapshot(id):TableSnapshot{};
+}
 StickySnapshot CanvasRuntimeFacade::readSelectedSticky() const { if(runtime_.selectedObjectCount()!=1U)return {}; StickySnapshot r{}; const auto* o=runtime_.textRecord(runtime_.selection_.primary()); if(o&&o->kind==semantic::ObjectKind::kSticky){r.available=true;r.objectId=o->id;r.content=std::get<semantic::StickyContent>(o->content);} return r; }
+VectorPathResult CanvasRuntimeFacade::createVectorPath(const VectorPathCreateRequest& request) {
+  VectorPathResult out;out.objectId=request.objectId;
+  if(!ownerThread()){out.error=VectorPathError::kWrongThread;return out;}
+  if(!composition_||!composition_->canMutate()){out.error=VectorPathError::kNotReady;return out;}
+  if(!runtime_.canonicalWriteAdmission()||runtime_.appearanceSession_||runtime_.creationActive()||runtime_.selectionTransformActive()||runtime_.dispatchRuntime_.activeCount()!=0){out.error=VectorPathError::kBusy;return out;}
+  if(!semantic::validateSketchVectorPath(request.geometry)){out.error=VectorPathError::kInvalid;return out;}
+  semantic::ObjectRecord object;object.id=request.objectId.isZero()?runtime_.allocateTextIdentity():request.objectId;out.objectId=object.id;if(object.id.isZero()){out.error=VectorPathError::kRejected;return out;}object.kind=semantic::ObjectKind::kVectorPath;object.kind_version=1;object.content=semantic::VectorPathContent{request.geometry};object.transform=request.transform;
+  object.placement.parent_id=runtime_.selection_.groupScope();
+  if(object.placement.parent_id){const auto* parent=runtime_.sceneCoordinator_->runtimeScene().find(*object.placement.parent_id);semantic::Transform2D inverse;if(!parent||!runtime_.textWritable(parent->objectId)||!scene::inverseTransform(parent->transform,inverse)){out.error=VectorPathError::kRejected;return out;}object.transform=scene::composeTransform(inverse,object.transform);}
+  const auto values=runtime_.appearanceDefaults();
+  object.properties.entries={{3U,static_cast<float>(values.opacity)},{0x100U,values.fillKind==AppearanceFill::kNone?semantic::FillStyleValue{semantic::NoFill{}}:semantic::FillStyleValue{semantic::SolidFill{values.fill}}},{0x101U,values.strokeEnabled?semantic::StrokeStyleValue{semantic::SolidStroke{values.stroke,values.strokeWidth,semantic::StrokeCap::kButt,semantic::MiterJoin{4},semantic::SolidDash{}}}:semantic::StrokeStyleValue{semantic::NoStroke{}}}};
+  runtime_.materializeAppearance(object.properties,true);
+  // This entry point uses versioned fill/stroke semantics even with roughness off.
+  // Legacy unversioned paths retain their historical painter and reader contract.
+  if(std::none_of(object.properties.entries.begin(),object.properties.entries.end(),[](const auto& p){return p.field_id==0x102U;}))
+    object.properties.entries.push_back({0x102U,semantic::SketchStyleV1{1,runtime_.allocateSketchSeed(),values.roughness,values.enabled}});
+  if(object.placement.parent_id){std::vector<std::uint8_t> order;for(const auto& r:runtime_.textObjects())if(r.placement.parent_id==object.placement.parent_id&&(order.empty()||semantic::OrderKey(order)<r.placement.order_key))order.assign(r.placement.order_key.bytes().begin(),r.placement.order_key.bytes().end());if(order.size()>=semantic::OrderKey::kMaxSize){out.error=VectorPathError::kRejected;return out;}order.push_back(128);object.placement.order_key=semantic::OrderKey(order);}
+  if(!assignRootOrderKey(runtime_.textObjects(),object.placement)){out.error=VectorPathError::kRejected;return out;}
+  const auto forward=runtime_.allocateOperationId(),inverse=runtime_.allocateOperationId();
+  if(forward.isZero()||inverse.isZero()||!runtime_.applyLocalHistoryOperation({forward,runtime_.textDocument(),1,1,semantic::InsertObjectsOp{{object}}},{inverse,runtime_.textDocument(),1,1,semantic::DeleteObjectsOp{{object.id}}})){out.error=VectorPathError::kRejected;return out;}
+  (void)runtime_.selection_.click(object.id);runtime_.canonicalPresentationDirty_=true;out.applied=true;out.error=VectorPathError::kNone;out.generation=runtime_.semanticGeneration().value();return out;
+}
+VectorPathSnapshot CanvasRuntimeFacade::readVectorPath(foundation::ObjectId id) const {
+  VectorPathSnapshot out;if(!ownerThread()||!runtime_.historySceneReady())return out;if(id.isZero())id=runtime_.selection_.primary();const auto* object=runtime_.semanticObjects_.find(id);if(!object||object->kind!=semantic::ObjectKind::kVectorPath)return out;
+  out.available=true;out.objectId=id;out.geometry=std::get<semantic::VectorPathContent>(object->content).geometry;out.transform=object->transform;out.appearance=runtime_.appearanceValuesFor(*object);out.generation=runtime_.semanticGeneration().value();return out;
+}
+
 }

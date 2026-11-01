@@ -1,4 +1,6 @@
 #include "canvas/scene/bounds_system.hpp"
+#include "canvas/scene/sketch_geometry.hpp"
+#include "canvas/semantic/table_content.hpp"
 
 #include "canvas/scene/reference_geometry.hpp"
 #include "canvas/scene/derived_geometry.hpp"
@@ -19,6 +21,8 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record,
         using T = std::decay_t<decltype(content)>;
         if constexpr (std::is_same_v<T, semantic::ShapeContent>) {
             return {0.0F, 0.0F, static_cast<float>(content.width), static_cast<float>(content.height)};
+        } else if constexpr (std::is_same_v<T, semantic::TableContent>) {
+            return {0,0,static_cast<float>(semantic::tableWidth(content)),static_cast<float>(semantic::tableHeight(content))};
         } else if constexpr (std::is_same_v<T, semantic::ImageContent>) {
             return {0.0F, 0.0F, static_cast<float>(content.width), static_cast<float>(content.height)};
         } else if constexpr (std::is_same_v<T, semantic::StickyContent>) {
@@ -85,6 +89,10 @@ foundation::WorldRect shapeRect(const semantic::ObjectRecord& record,
                     static_cast<float>(dab.center.y) + radius};
                 result = have ? foundation::unionRects(result, r) : r; have = true;
             }
+            return result;
+        } else if constexpr (std::is_same_v<T, semantic::CompactStrokeContent>) {
+            foundation::WorldRect result{};bool have=false;const auto radius=static_cast<float>(content.stroke.config.size);
+            for(const auto& k:content.stroke.knots){foundation::WorldRect r{static_cast<float>(k.x)-radius,static_cast<float>(k.y)-radius,static_cast<float>(k.x)+radius,static_cast<float>(k.y)+radius};result=have?foundation::unionRects(result,r):r;have=true;}
             return result;
         } else if constexpr (std::is_same_v<T, semantic::BrushStrokeContent>) {
             const auto& outline = content.stroke.vector_output.outline;
@@ -164,7 +172,8 @@ BoundsResult computeBounds(const semantic::ObjectRecord& record,
                 }
             }
         }
-        return record.kind == semantic::ObjectKind::kConnector ? 2.0F : 0.0F;
+        if(const auto* t=std::get_if<semantic::TableContent>(&record.content))return static_cast<float>(t->grid.width/2);
+        return record.kind == semantic::ObjectKind::kConnector ? 2.0F : record.kind == semantic::ObjectKind::kSection && std::any_of(record.properties.entries.begin(),record.properties.entries.end(),[](const auto& e){return std::holds_alternative<semantic::SketchStyleV1>(e.value);}) ? .5F : 0.0F;
     }();
     result.visual = {result.geometry.left - stroke, result.geometry.top - stroke,
                      result.geometry.right + stroke, result.geometry.bottom + stroke};
@@ -189,6 +198,17 @@ BoundsResult computeBounds(const semantic::ObjectRecord& record,
                             result.visual=foundation::unionRects(result.visual,{x,y,x,y});
                         }
                     }
+    }
+    if(const auto sketch=sketchGeometry(record.content,record.properties,connectorGeometryOverride)) {
+        const auto& b=sketch->bounds;
+        double hatch=0;for(const auto& e:record.properties.entries)if(const auto* f=std::get_if<semantic::FillStyleValue>(&e.value))if(const auto* p=std::get_if<semantic::PatternFillV1>(f))hatch=p->width/2;
+        float outline=stroke;
+        for(const auto& e:record.properties.entries)if(const auto* v=std::get_if<semantic::StrokeStyleValue>(&e.value))if(const auto* s=std::get_if<semantic::SolidStroke>(v)){
+            if(s->cap==semantic::StrokeCap::kSquare)outline=std::max(outline,stroke*1.414214F);
+            if(const auto* m=std::get_if<semantic::MiterJoin>(&s->join))outline=std::max(outline,static_cast<float>(stroke*std::max(1.,m->limit)));
+        }
+        const float extra=std::max(outline,static_cast<float>(hatch));
+        result.visual=foundation::unionRects(result.visual,{b.left-extra,b.top-extra,b.right+extra,b.bottom+extra});
     }
     const double xs[] = {result.visual.left, result.visual.right};
     const double ys[] = {result.visual.top, result.visual.bottom};

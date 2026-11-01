@@ -34,7 +34,7 @@ class CreationSession final {
  public:
   [[nodiscard]] bool begin(input::PointerKey, CreationPreset, CreationStyle,
                            foundation::WorldPoint, foundation::WorldRect,
-                           std::uint64_t) noexcept;
+                           std::uint64_t orderSeed, semantic::ObjectId objectId = {}) noexcept;
   [[nodiscard]] bool move(input::PointerKey, foundation::WorldPoint) noexcept;
   [[nodiscard]] std::optional<CreationCommit> finish(input::PointerKey) noexcept;
   [[nodiscard]] bool cancel(input::PointerKey) noexcept;

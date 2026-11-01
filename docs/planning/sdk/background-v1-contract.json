@@ -1,0 +1,39 @@
+{
+  "task": "document-background-v1",
+  "status": "scoped-execution-contract",
+  "repository": {"provider": "github", "full_name": "Mostorm-Labs/axiom"},
+  "task_anchor": {"revision": "647f29fb54052471a08b867209c29bcf31f319c5", "relation": "ancestor"},
+  "authorization": "User requested background colors, dots/grid, required preservation across devices, reviewed the document-settings proposal, then requested background implementation first.",
+  "authority": ["AGENTS.md", "docs/adr/0025-product-shell-page-operation-data-runtime.md", "docs/planning/sdk/js-v1-contract.md", "docs/planning/sdk/windows-consumer-v1.md", "docs/planning/sdk/shell-axis-preview-contract.md"],
+  "scope": {
+    "state": "One document-level value retained by the existing canonical store owner; no synthetic ObjectRecord, second document, or host-owned semantic state.",
+    "value": "Version 1: mode plain/dots/grid; opaque RGBA background color; RGBA pattern color. All color components finite in [0,1]; base alpha must be 1. Invalid modes/values reject atomically. Default: plain white, pattern [0.7,0.75,0.8,0.55]. Grid spacing is a fixed 24 world units in v1; zoom-dependent thinning is derived presentation state.",
+    "mutation": "Append SetDocumentBackground Operation kind/payload tag 19, full replacement, using existing normalization, validation, deduplication, preparation, publication and History. No-op local changes succeed without a new Operation. Same ordered canonical stream yields same final value. No new distributed conflict algorithm.",
+    "history": "Capture background before/after values before commit; Undo/Redo emit fresh ordinary Operations. A conflicting remote background change rejects local compensation rather than overwriting it.",
+    "snapshot": "Append DocumentSnapshot field 11. Non-default settings require document-background-v1 plus reader capability bit 32. Legacy snapshots omit background and retain their existing bytes/digests/default white behavior. Include non-default background in semantic and checkpoint digests. Restore before surface binding and reject unsupported readers.",
+    "wire": "DocumentBackgroundV1 carries version=1, mode, color, pattern_color, with complete field presence. Existing published dependency locks and host protoc are reused; only Axiom-owned schema/code changes.",
+    "sdk": "Expose readBackground and setBackground DTOs through the existing source facade, shared Session control vocabulary, JS module/TypeScript declarations and caller-side Windows wrapper. No new DLL export or internal owner access. Owner-thread, lifecycle, busy, full target stamp, admission and receipts remain existing controls.",
+    "render": "Shared renderer draws the background before canonical content and interaction overlays. Pattern follows world origin and camera, with bounded zoom-dependent density. No effect on object count, selection, erasing, z-order or content bounds. Frame plans carry an immutable background value.",
+    "demo": "Background mode and color controls apply through the public SDK. Draft control values do not mutate canonical state until Apply; reset draft from current committed settings on Cancel. No additional public preview API.",
+    "non_goals": ["image export implementation", "fonts", "table", "hand-drawn shape", "cloud/storage provider", "Windows device acceptance", "new dependency packages", "formal Gate/release verdict"]
+  },
+  "EXECUTION_CLOSURE_CONTRACT": {
+    "implementation": {
+      "required_changes": ["canonical background Operation and state", "snapshot/digest/compatibility", "conditional Undo/Redo", "shared renderer and SDK bindings", "Web demo controls"],
+      "forbidden_changes": ["dependency lock changes or source dependency rebuilds", "internal owner exposure", "hidden background objects", "editing frozen historical corpora or expected values", "unrelated features or refactors"]
+    },
+    "tests": {
+      "required": [
+        {"id": "BG-SEM", "command_or_oracle": "Native semantic/composition tests: defaults, valid modes, invalid/non-finite values, duplicate/collision rejection, canonical generation, publication capacity, Undo/Redo and remote conflict", "expected_result": "All changed behavior passes through actual owners; rejection preserves canonical state and history", "blocking_reason": "Detects document corruption and false commit/publication"},
+        {"id": "BG-SNAPSHOT", "command_or_oracle": "Native roundtrip/bootstrap/digest tests and existing snapshot regressions", "expected_result": "Background survives restore and later edits; legacy bytes remain valid; tampering and unsupported readers reject", "blocking_reason": "Detects lost or silently reinterpreted saved settings"},
+        {"id": "BG-WEB", "command_or_oracle": "Real browser consumer against matching built JS/WASM: read/write, pixels for solid/dots/grid, pan/zoom, Snapshot restore, two Runtime Operation transfer, Undo/Redo and malformed calls", "expected_result": "Public SDK behavior and rendered pixels agree without internal object access", "blocking_reason": "Detects bridge and presentation integration failures"},
+        {"id": "BG-REGRESSION", "command_or_oracle": "Native configured CTest suite, runtime boundary checker, consumer packaging tests, JS/TS syntax/type checks", "expected_result": "Affected regressions pass; existing unrelated failures reported explicitly; consumer payload remains encapsulated", "blocking_reason": "Detects damage to existing editing and external contracts"}
+      ]
+    },
+    "hosted_verification": {"required": [], "optional": ["Windows CI/device tests"]},
+    "evidence": {"blocking": ["local native logs", "real browser results", "matching build identity"], "corroborative": ["manual demo inspection"]},
+    "terminal_success": {"all_of": ["all required behavior implemented and verified", "Web demo served for user testing", "report validation and platform limitations without claiming Gate or cloud-sync acceptance"]},
+    "terminal_blockers": {"explicit_classes": ["AUTHORITY_CONFLICT", "MISSING_REQUIRED_INPUT", "ENVIRONMENT_BLOCKER", "FROZEN_VERIFICATION_FAILURE", "NEW_HIGH_IMPACT_FAILURE_MODE"]},
+    "return_policy": {"continue_until_terminal_state": true}
+  }
+}

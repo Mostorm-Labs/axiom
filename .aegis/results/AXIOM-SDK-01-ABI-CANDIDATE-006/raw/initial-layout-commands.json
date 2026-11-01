@@ -1,0 +1,45 @@
+[
+  {
+    "name": "native_layout",
+    "argv": [
+      "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk01-review\\layout-native.exe"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"pointer_size\":8,\"object_id_size\":16,\"token_size\":16,\"excluded_size\":20,\"excluded_reason_offset\":16,\"projection_size\":72,\"projection_token_offset\":8,\"projection_total_offset\":48,\"value_size\":96,\"value_dash_pointer_offset\":80,\"value_dash_count_offset\":88,\"receipt_size\":48,\"receipt_counts_offset\":24}\n",
+    "stderr": ""
+  },
+  {
+    "name": "node_version",
+    "argv": [
+      "C:\\Users\\Chado\\AppData\\Local\\Axiom\\toolchains\\emsdk-6.0.6\\node\\24.19.0_64bit\\node.exe",
+      "--version"
+    ],
+    "exit_code": 0,
+    "stdout": "v24.19.0\n",
+    "stderr": ""
+  },
+  {
+    "name": "wasm_layout",
+    "argv": [
+      "C:\\Users\\Chado\\AppData\\Local\\Axiom\\toolchains\\emsdk-6.0.6\\node\\24.19.0_64bit\\node.exe",
+      "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\out\\sdk01-review\\layout-wasm.js"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"pointer_size\":4,\"object_id_size\":16,\"token_size\":16,\"excluded_size\":20,\"excluded_reason_offset\":16,\"projection_size\":72,\"projection_token_offset\":8,\"projection_total_offset\":48,\"value_size\":96,\"value_dash_pointer_offset\":80,\"value_dash_count_offset\":88,\"receipt_size\":48,\"receipt_counts_offset\":24}\n",
+    "stderr": ""
+  },
+  {
+    "name": "layout_candidate_compare",
+    "argv": [
+      "python",
+      "verification/sdk01/verify_multi_candidate_layout.py",
+      "--native",
+      "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\.aegis\\results\\AXIOM-SDK-01-ABI-CANDIDATE-006\\raw\\native_layout.json",
+      "--wasm",
+      "C:\\Users\\Chado\\.codex\\worktrees\\axiom-sdk-api-p31\\canvas\\.aegis\\results\\AXIOM-SDK-01-ABI-CANDIDATE-006\\raw\\wasm_layout.json"
+    ],
+    "exit_code": 0,
+    "stdout": "windows-x64: candidate layout matches proposed values; pointer width=8\nwasm32: candidate layout matches proposed values; pointer width=4\nDRAFT ONLY: compile/layout does not prove public SDK linkage, Runtime behavior or acceptance\n",
+    "stderr": ""
+  }
+]

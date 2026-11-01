@@ -1,4 +1,5 @@
 #include "canvas/scene/scene.hpp"
+#include "incremental_runtime_full_materialization_bridge.hpp"
 #include "canvas/scene/scene_delta.hpp"
 #include "canvas/scene/spatial_delta.hpp"
 #include "canvas/scene/scene_impact.hpp"
@@ -54,6 +55,7 @@ RuntimeSceneProjection projectRuntimeScene(
         else if (const auto* shape = std::get_if<semantic::ShapeContent>(&record.content);
                  shape != nullptr && shape->label.has_value())
             textContent = &*shape->label;
+        if(record.kind==semantic::ObjectKind::kTable&&textService)projection.records.back().textLayout=textService->resolveTable(record.id,std::get<semantic::TableContent>(record.content));
         if (textService != nullptr && record.kind == semantic::ObjectKind::kShape) {
             auto& derived = projection.records.back();
             derived.textLayout = textService->resolveShape(record.id,
@@ -173,6 +175,7 @@ bool isSupportedRuntimeKind(semantic::ObjectKind kind) noexcept {
     case semantic::ObjectKind::kConnector:
     case semantic::ObjectKind::kSticky:
     case semantic::ObjectKind::kGroup:
+    case semantic::ObjectKind::kTable:
     case semantic::ObjectKind::kSection:
         return true;
     }
@@ -260,6 +263,21 @@ foundation::Result<RuntimeSceneProjection> RuntimeScene::replace(
 foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
     const semantic::SemanticReadView& post_state) const {
     try {
+        if (_fullProjectionAuthority) {
+            auto compiled = internal::materializeFullScene(post_state, _textLayoutService, deferConnectorRoutes_);
+            if (!compiled) return foundation::Result<PreparedPublication>::failure(compiled.error());
+            RuntimeSceneProjection projection{post_state.generation(), {}};
+            projection.records.reserve(compiled.value().records.size());
+            for (auto& r : compiled.value().records) projection.records.push_back({
+                r.objectId,r.kind,r.kindVersion,std::move(r.placement),r.transform,
+                std::move(r.properties),std::move(r.content),std::move(r.eraseMasks),
+                std::move(r.derivedGeometry),r.geometryBounds,r.visualBounds,r.worldBounds,
+                std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
+                std::move(r.textLayout),r.hierarchyOrder});
+            PreparedPublication result{std::move(projection)};
+            result.fullProjectionAuthority = true;
+            return foundation::Result<PreparedPublication>::success(std::move(result));
+        }
         const std::vector<semantic::ObjectRecord> source = post_state.allObjects();
         for (const semantic::ObjectRecord& record : source) {
             if (record.id.isZero() || !isSupportedRuntimeKind(record.kind)) {
@@ -279,8 +297,28 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
 
 foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
     RuntimeSceneProjection projection) const {
-    return foundation::Result<PreparedPublication>::success(
-        PreparedPublication{std::move(projection)});
+    try {
+        std::unordered_set<semantic::ObjectId, foundation::ObjectIdHash> seen;
+        seen.reserve(projection.records.size());
+        for (const auto& record : projection.records) {
+            if (record.objectId.isZero() || !isSupportedRuntimeKind(record.kind)) {
+                return foundation::Result<PreparedPublication>::failure(
+                    makeError(foundation::ErrorCode::kInvalidRecord,
+                              "RuntimeScene projection contains an invalid record"));
+            }
+            if (!seen.insert(record.objectId).second) {
+                return foundation::Result<PreparedPublication>::failure(
+                    makeError(foundation::ErrorCode::kDuplicateObject,
+                              "RuntimeScene projection contains a duplicate ObjectId"));
+            }
+        }
+        return foundation::Result<PreparedPublication>::success(
+            PreparedPublication{std::move(projection)});
+    } catch (const std::bad_alloc&) {
+        return foundation::Result<PreparedPublication>::failure(
+            makeError(foundation::ErrorCode::kOutOfMemory,
+                      "Unable to prepare RuntimeScene lookup index"));
+    }
 }
 
 foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncremental(
@@ -293,14 +331,72 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                       "RuntimeScene incremental generation does not match published state"));
     }
     try {
-        // Attached Connector routes and Sticky RichText child world transforms
-        // depend on objects outside the ChangeSet item itself. Reproject the
-        // complete immutable source for this owner-side publication so parent
-        // moves update children, routes, bounds and hit geometry atomically.
-        const auto full = projectRuntimeScene(post_state.allObjects(),
-                                               post_state.generation(), _textLayoutService, deferConnectorRoutes_);
-        return foundation::Result<PreparedPublication>::success(
-            PreparedPublication{std::move(full)});
+        // A flat independent-leaf document is a closed dependency domain. Any
+        // structural/relation/resource uncertainty uses the existing full path.
+        if (!_flatIndependent || !changes.resourceChanges().empty()) return prepare(post_state);
+        std::vector<semantic::ObjectRecord> changed;
+        changed.reserve(changes.objects().size());
+        std::unordered_set<semantic::ObjectId, foundation::ObjectIdHash> selected;
+        selected.reserve(changes.objects().size());
+        std::unordered_set<semantic::ObjectId, foundation::ObjectIdHash> removed;
+        for (const auto& change : changes.objects()) {
+            if (!selected.insert(change.object_id).second) continue;
+            if (const auto* object = post_state.find(change.object_id)) {
+                if (object->placement.parent_id || object->kind == semantic::ObjectKind::kConnector ||
+                    object->kind == semantic::ObjectKind::kGroup || object->kind == semantic::ObjectKind::kSection ||
+                    object->kind == semantic::ObjectKind::kTable)
+                    return prepare(post_state);
+                if (!isSupportedRuntimeKind(object->kind) || object->id.isZero())
+                    return foundation::Result<PreparedPublication>::failure(
+                        makeError(foundation::ErrorCode::kInvalidRecord, "Invalid incremental object"));
+                changed.push_back(*object);
+            } else {
+                removed.insert(change.object_id);
+            }
+        }
+        RuntimeSceneProjection patch{post_state.generation(), {}};
+        // Recovery publishes the FullSceneCompiler inspection payload. Preserve
+        // that authority (including digests/resources) on subsequent local edits.
+        if (_fullProjectionAuthority) {
+            auto compiled = internal::materializeSceneRecords(changed, post_state.generation(),
+                _textLayoutService, deferConnectorRoutes_);
+            if (!compiled) return foundation::Result<PreparedPublication>::failure(compiled.error());
+            patch.records.clear();
+            for (auto& r : compiled.value().records) patch.records.push_back({
+                r.objectId,r.kind,r.kindVersion,std::move(r.placement),r.transform,
+                std::move(r.properties),std::move(r.content),std::move(r.eraseMasks),
+                std::move(r.derivedGeometry),r.geometryBounds,r.visualBounds,r.worldBounds,
+                std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
+                std::move(r.textLayout),r.hierarchyOrder});
+        } else {
+            patch = projectRuntimeScene(changed, post_state.generation(), _textLayoutService, deferConnectorRoutes_);
+        }
+        RuntimeSceneProjection next = _projection;
+        next.generation = post_state.generation();
+        bool reorder = !removed.empty();
+        for (const auto& record : patch.records) {
+            const auto found = std::lower_bound(_lookup.begin(), _lookup.end(), record.objectId,
+                [](const auto& entry, auto id) { return entry.first < id; });
+            if (found == _lookup.end() || found->first != record.objectId) {
+                next.records.push_back(record);
+                reorder = true;
+            } else {
+                auto& previous = next.records[found->second];
+                reorder = reorder || previous.placement != record.placement;
+                previous = record;
+            }
+        }
+        if (!removed.empty()) std::erase_if(next.records, [&](const auto& r) { return removed.contains(r.objectId); });
+        if (reorder) std::sort(next.records.begin(), next.records.end(), [](const auto& a, const auto& b) {
+            if (a.placement.order_key != b.placement.order_key)
+                return a.placement.order_key < b.placement.order_key;
+            return a.objectId < b.objectId;
+        });
+        PreparedPublication publication{std::move(next)};
+        publication.localized = true;
+        publication.fullProjectionAuthority = _fullProjectionAuthority;
+        publication.changedRecords = std::move(patch.records);
+        return foundation::Result<PreparedPublication>::success(std::move(publication));
     } catch (const std::bad_alloc&) {
         return foundation::Result<PreparedPublication>::failure(
             makeError(foundation::ErrorCode::kOutOfMemory,
@@ -310,7 +406,11 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
 
 void RuntimeScene::publish(PreparedPublication publication) noexcept {
     _stableProjection = std::move(_projection);
+    _stableLookup = std::move(_lookup);
     _projection = std::move(publication.projection);
+    _lookup = std::move(publication.lookup);
+    _flatIndependent = publication.flatIndependent;
+    _fullProjectionAuthority = publication.fullProjectionAuthority;
 }
 
 foundation::Result<RuntimeSceneProjection> RuntimeScene::apply(
@@ -400,7 +500,7 @@ foundation::Result<std::unique_ptr<Scene::PreparedIntent>> Scene::prepareIntent(
             foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"));
         if (checkpoint && checkpoint(checkpointContext, 14U)) return Result::failure(makeError(
             foundation::ErrorCode::kParticipantRejected, "Damage prepare checkpoint failure"));
-        auto damage = _damageTracker.prepareReplace(_revision, snapshot.sourceRevision,
+        auto damage = _changeJournal.prepareReplace(_revision, snapshot.sourceRevision,
                                                      previousBounds, bounds);
         if (!damage) return Result::failure(damage.error());
         if (checkpoint && checkpoint(checkpointContext, 15U)) return Result::failure(makeError(
@@ -436,7 +536,7 @@ void Scene::commitIntent(std::unique_ptr<PreparedIntent> prepared) noexcept {
     _records.commit(std::move(prepared->records));
     _renderScene->commit(std::move(prepared->render));
     _spatialIndex->commit(std::move(prepared->spatial));
-    _damageTracker.commit(std::move(prepared->damage));
+    _changeJournal.commit(std::move(prepared->damage));
     _stablePublishedRecords = std::move(_publishedRecords);
     _stablePublishedBounds = _publishedBounds;
     _stableInvalidationGeneration = _invalidationGeneration;
@@ -494,7 +594,7 @@ foundation::Result<SceneApplyReceipt> Scene::replace(CompiledSceneSnapshot snaps
 
         const WorldRect oldContentBounds = _records.contentBounds();
         const WorldRect newContentBounds = preparedRecords.contentBounds();
-        auto damageResult = _damageTracker.prepareReplace(
+        auto damageResult = _changeJournal.prepareReplace(
             _revision, snapshot.sourceRevision, oldContentBounds, newContentBounds);
         if (!damageResult) {
             return foundation::Result<SceneApplyReceipt>::failure(damageResult.error());
@@ -542,7 +642,7 @@ foundation::Result<SceneApplyReceipt> Scene::replace(CompiledSceneSnapshot snaps
         if (_publicationGate != nullptr && _publicationGate->observation != nullptr) {
             _publicationGate->observation(_publicationGate->observationContext);
         }
-        _damageTracker.commit(std::move(damageResult.value()));
+        _changeJournal.commit(std::move(damageResult.value()));
         _commitDiagnostics.damageStage = ++stage;
         if (_publicationGate != nullptr && _publicationGate->observation != nullptr) {
             _publicationGate->observation(_publicationGate->observationContext);
@@ -631,7 +731,12 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
             return foundation::Result<SceneApplyReceipt>::failure(makeError(
                 foundation::ErrorCode::kOutOfMemory, "Unable to stage published Scene snapshot"));
         }
-        const WorldRect newContentBounds = preparedRecords.contentBounds();
+        WorldRect newContentBounds{};
+        bool haveBounds = false;
+        for (const auto& record : stagedRecords) {
+            newContentBounds = haveBounds ? foundation::unionRects(newContentBounds, record.worldBounds) : record.worldBounds;
+            haveBounds = true;
+        }
         const SceneDelta runtimeDelta = makeSceneDelta(delta);
         if (checkpoint != nullptr && checkpoint(checkpointContext, 4U)) {
             return foundation::Result<SceneApplyReceipt>::failure(makeError(
@@ -675,7 +780,7 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
             return foundation::Result<SceneApplyReceipt>::failure(makeError(
                 foundation::ErrorCode::kParticipantRejected, "Invalidation checkpoint failure"));
         }
-        auto damageResult = _damageTracker.prepareApply(delta);
+        auto damageResult = _changeJournal.prepareApply(delta);
         if (!damageResult) {
             return foundation::Result<SceneApplyReceipt>::failure(damageResult.error());
         }
@@ -712,7 +817,7 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
         if (_publicationGate != nullptr && _publicationGate->observation != nullptr) {
             _publicationGate->observation(_publicationGate->observationContext);
         }
-        _damageTracker.commit(std::move(damageResult.value()));
+        _changeJournal.commit(std::move(damageResult.value()));
         _commitDiagnostics.damageStage = ++stage;
         if (_publicationGate != nullptr && _publicationGate->observation != nullptr) {
             _publicationGate->observation(_publicationGate->observationContext);
@@ -974,11 +1079,11 @@ foundation::Result<SceneFrameInput> Scene::buildFrame(const SceneQuery& request,
 }
 
 DamageSet Scene::collectDamage(SceneRevision afterExclusive, SceneRevision throughInclusive) const {
-    return _damageTracker.collect(afterExclusive, throughInclusive);
+    return _changeJournal.collect(afterExclusive, throughInclusive);
 }
 
 void Scene::compactDamageThrough(SceneRevision revision) {
-    _damageTracker.compactThrough(revision);
+    _changeJournal.compactThrough(revision);
 }
 
 } // namespace canvas

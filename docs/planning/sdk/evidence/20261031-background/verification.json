@@ -1,0 +1,353 @@
+{
+  "scope": "Document background v1; local implementation verification, no formal Gate or release verdict",
+  "source": {
+    "baseRevision": "647f29fb54052471a08b867209c29bcf31f319c5",
+    "uncommitted": true,
+    "sdkVersion": "1.0.0-preview.3",
+    "changedFilesSha256ExcludingThisRecord": "e6cbb333d7de4694e1f25f4816b9c9710e2a63d71ada0eb8e80c994486edd735"
+  },
+  "behavior": [
+    "plain/dots/grid and colors",
+    "owner-thread/lifecycle and strict DTO validation",
+    "no synthetic objects",
+    "atomic canonical mutation/publication admission",
+    "conditional Undo/Redo",
+    "Snapshot/digest/reader compatibility",
+    "ordered Operation replay without remote echo",
+    "shared CPU/WASM rendering and world-aligned pattern",
+    "public demo Apply/Cancel"
+  ],
+  "browser": {
+    "status": "PASS",
+    "checks": {
+      "legacySnapshotBytes": true,
+      "solidPixels": true,
+      "invalidAtomic": true,
+      "dotPixels": true,
+      "worldAligned": true,
+      "zoomDensity": true,
+      "gridPixels": true,
+      "undo": true,
+      "redo": true,
+      "snapshotRestore": true,
+      "editAfterRestore": true,
+      "remoteReplay": true,
+      "noEcho": true,
+      "remoteDedup": true,
+      "undoConflict": true,
+      "noObjects": true,
+      "cleanClose": true,
+      "noRuntimeErrors": true,
+      "noUncaughtExceptions": true,
+      "demoDefaultTool": true,
+      "demoDraft": true,
+      "demoCancel": true,
+      "demoApply": true
+    },
+    "buildInfo": {
+      "apiVersion": 1,
+      "dirty": true,
+      "features": {
+        "documentBackground": 1,
+        "resourceCustody": 1,
+        "shellAxis": 1
+      },
+      "ok": true,
+      "platform": "web",
+      "sdkVersion": "1.0.0-preview.3",
+      "sourceRevision": "647f29fb54052471a08b867209c29bcf31f319c5"
+    },
+    "artifactSha256": {
+      "axiom.mjs": "662d3ce9639a66c2044f8893d7e6e7b0ee909c0d635898f9eeef1e7f0c5212fc",
+      "axiom.wasm": "d13e3b65a1e6648b8acf3b8f27e7c264abd4518bdfd30e4abd36ef359fbd0b41",
+      "axiom.data": "afba06991ac1e6c785ddb2c967ffb7f4d079a2d77fb6397bacb394a171df8ff1",
+      "pointer_input.mjs": "07868b2c2f2e5d9f67a929df9f86877a89edaf17751dc5bac1540a6fd0bb9d5d",
+      "text_input.mjs": "5ffb731ac989cece8b6e4d53c3f828600723a1bb26ebe9b952cd559488858fa4",
+      "example.html": "c5f75fc6bfcb1f1378781eef00113a7b2d533ffed0f587f00ec066856de47870",
+      "internal/axiom.mjs": "5e7ff530f5de5e3a1763e965be64188799a709843b2f36a71d0d52f89088e88c"
+    },
+    "legacySnapshotSha256": "4e48b98da503729d9cfdb953e2170ee3f2c577f0db3f6ff60d0c13958a301694",
+    "legacySnapshotMatchesBeforeChange": true,
+    "log": "out/object-identity/background-web-final.json",
+    "screenshot": "out/object-identity/background-web-final.png"
+  },
+  "nativeFocused": {
+    "log": "out/object-identity/background-focused-ctest.log",
+    "coverage": [
+      "ReferenceObjectStore and IndexedObjectStore canonical apply and generation",
+      "raw non-finite wire rejection",
+      "default/no-op/invalid settings",
+      "publication rejection preserves state",
+      "new IDs for Undo/Redo",
+      "remote duplicate/collision/conflicting undo",
+      "wrong thread/closed read",
+      "Snapshot restore then edit/undo",
+      "unsupported reader and digest tampering",
+      "initial manifest binding rejected after background commit",
+      "CPU raster solid/dots/grid pixels"
+    ],
+    "status": "PASS",
+    "passedTests": [
+      "G3SkiaSurfaceProvider",
+      "SDKPublicResources",
+      "SDKPublicDocumentIdentity",
+      "SDKPublicDocumentOperations",
+      "SDKPublicDocumentSnapshot",
+      "SDKPublicOperationIdentity",
+      "SDKPublicDocumentBackground",
+      "SDKPublicObjectIdentity",
+      "SDKPublicObjectIdentityProcessIsolation",
+      "SDKPublicSelectionInput"
+    ]
+  },
+  "otherChecks": {
+    "runtimeBoundaries": "passed",
+    "consumerPackageTests": "passed",
+    "jsApiTests": "passed",
+    "typescript": "passed",
+    "windowsCallerHeaders": "outside-checkout syntax check on macOS only; no DLL/device acceptance",
+    "jsPackageWhitelist": "39 files inspected; required matching preview.3 assets; no internal headers or static archives"
+  },
+  "broadRegression": {
+    "initialRunLog": "out/object-identity/background-full-ctest.log",
+    "rerunLog": "out/object-identity/background-rerun-ctest.log",
+    "remainingNonpassingTests": [
+      {
+        "name": "canvas_g2_a1_runtime_record_projection",
+        "result": "Not Run"
+      },
+      {
+        "name": "canvas_fc02_shape_label_scene",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "canvas_g2_a3_full_incremental_equivalence",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "G3HeadlessCanvasDemo",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "G3DirectReference",
+        "result": "Not Run"
+      },
+      {
+        "name": "G3FrameOrchestration",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC01ASelectionInputIntegration",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC05ConnectorFacade",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC00XRuntimeComposition",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "FC04.MSE-01",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-02",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-03",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-04",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-05",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-06",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-07",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-08",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-09",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-10",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-11",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-12",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-13",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-14",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-15",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-16",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-17",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-18",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-19",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-20",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-21",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-22",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-23",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-24",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-25",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-26",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC04.MSE-27",
+        "result": "Not Run"
+      },
+      {
+        "name": "SDKCppPublicMultiPermissionStale",
+        "result": "Not Run"
+      },
+      {
+        "name": "SDKCppPublicMultiStrokeWidth",
+        "result": "Not Run"
+      },
+      {
+        "name": "FC01Creation-width-style",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "G4InkPlaygroundComposition",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "G4InkPlaygroundSurface",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "G4InkPlaygroundRepeatedStrokes",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "G4MultiPointerPlayground",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "G4ViewportGestureState",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "G46BQueryStructure",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "G46PlaygroundTransform",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "G47TextHost",
+        "result": "Subprocess aborted"
+      },
+      {
+        "name": "G46CQualificationBundle",
+        "result": "Not Run"
+      },
+      {
+        "name": "G46CQualificationBehavior",
+        "result": "Failed"
+      },
+      {
+        "name": "G45BrushRuntimePipeline",
+        "result": "Subprocess aborted"
+      }
+    ],
+    "preexistingRuntimeAssertionFailuresReproduced": [
+      "FC00XRuntimeComposition",
+      "FC01Creation-width-style",
+      "G3HeadlessCanvasDemo",
+      "G45BrushRuntimePipeline",
+      "G46BQueryStructure",
+      "G46PlaygroundTransform",
+      "G47TextHost",
+      "G4InkPlaygroundComposition",
+      "G4InkPlaygroundRepeatedStrokes",
+      "G4InkPlaygroundSurface",
+      "G4MultiPointerPlayground",
+      "G4ViewportGestureState",
+      "canvas_fc02_shape_label_scene",
+      "canvas_g2_a3_full_incremental_equivalence"
+    ],
+    "preexistingCompileFailureSourcesUnchanged": [
+      "runtime/scene/tests/runtime_record_projection_test.cpp",
+      "runtime/render/tests/direct_reference_source_test.cpp",
+      "runtime/render/tests/frame_orchestration_test.cpp",
+      "runtime/composition/tests/fc05_connector_facade_test.cpp",
+      "runtime/composition/tests/selection_input_integration_test.cpp",
+      "verification/runtime_qualification/tests/g46c_qualification_runner.cpp"
+    ],
+    "baselineRevision": "647f29fb54052471a08b867209c29bcf31f319c5",
+    "baselineLogs": [
+      "out/object-identity/background-baseline-build.log",
+      "out/object-identity/background-baseline-ctest.log"
+    ],
+    "note": "The initial background regression exposed late initial-manifest admission and was fixed; the focused rerun passes. The baseline-only FC02Text 60-second timeout is not a current failure: the current complete suite passed FC02Text in 244.92 seconds. G46C behavior depends on its unavailable qualification runner. Broad repository qualification remains incomplete."
+  },
+  "limits": [
+    "External Data/Axis owns actual disk/cloud persistence and ordered network delivery; no provider added",
+    "Windows DLL/device and other platform device acceptance not run",
+    "Image export is separate future work"
+  ],
+  "demo": "http://127.0.0.1:4187/example.html"
+}

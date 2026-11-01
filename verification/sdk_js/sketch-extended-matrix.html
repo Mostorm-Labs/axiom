@@ -1,0 +1,17 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Axiom 手绘第二批样例</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f4f6f9;font:14px system-ui;color:#24344a}header{display:flex;align-items:center;gap:20px;padding:18px 28px;background:white;border-bottom:1px solid #e0e6ef}h1{font-size:18px;margin:0}a{color:#2866ba}p{margin:12px 28px;color:#6b7b90}#board{width:calc(100% - 56px);max-width:1000px;aspect-ratio:1000/680;min-height:320px;background:white;margin:20px 28px;box-shadow:0 3px 24px #1e304412}button{border:1px solid #d6dfeb;border-radius:6px;background:white;padding:7px 14px;color:inherit;cursor:pointer}#status{font-size:12px}</style>
+<header><h1>手绘第二批</h1><a href="example.html">打开可编辑 Demo</a><button id="export" disabled>导出 PNG</button></header>
+<p>上排：Even-odd 孔洞、Nonzero 同向填充、Nonzero 反向孔洞；下排：开放曲线、共享网格、分区边界。可点击选择对象。</p><div id="board"></div><p id="status">正在加载样例…</p>
+<script type="module">
+import {createRuntime} from './axiom.mjs';
+try {
+ const sdk=await createRuntime({mount:document.getElementById('board'),documentId:'85858585858585858585858585858585',permission:'localSingleUser'});await sdk.selectTool('select');
+ await sdk.createSection({boundary:[690,320,270,280],title:'Section'});const section=sdk.readSection().objectId;await sdk.appearance.patch({enabled:true,roughness:2,strokeEnabled:true,strokeWidth:2,stroke:[.2,.35,.45,1],fillKind:'hachure',fill:[.8,.65,.25,.4],gap:12});
+ const outer=[{op:'move',point:[0,0]},{op:'line',point:[160,0]},{op:'line',point:[160,160]},{op:'line',point:[0,160]},{op:'close'}],inner=[{op:'move',point:[40,40]},{op:'line',point:[120,40]},{op:'line',point:[120,120]},{op:'line',point:[40,120]},{op:'close'}],reverse=[{op:'move',point:[40,40]},{op:'line',point:[40,120]},{op:'line',point:[120,120]},{op:'line',point:[120,40]},{op:'close'}];
+ await sdk.appearance.setDefaults({enabled:true,roughness:1.5,fillKind:'crosshatch',fill:[.2,.5,.8,1],strokeEnabled:true,stroke:[.1,.2,.3,1],strokeWidth:2});
+ await sdk.createVectorPath({commands:[...outer,...inner],fillRule:'evenodd',x:40,y:40});await sdk.createVectorPath({commands:[...outer,...inner],fillRule:'nonzero',x:290,y:40});await sdk.createVectorPath({commands:[...outer,...reverse],fillRule:'nonzero',x:540,y:40});
+ await sdk.appearance.setDefaults({fillKind:'none',roughness:2.5,strokeWidth:3});await sdk.createVectorPath({commands:[{op:'move',point:[0,40]},{op:'quad',control:[65,-45],point:[130,40]},{op:'cubic',control1:[180,120],control2:[240,-45],point:[280,40]}],x:40,y:365});
+ const table=(await sdk.table.create({rows:3,columns:2,x:365,y:325})).objectId;await sdk.table.setGridStyle({objectId:table,width:2,color:[.2,.35,.45,1]});const read=sdk.table.read(table);await sdk.table.edit({objectId:table,rowId:read.rows[0].id,columnId:read.columns[0].id});await sdk.text.replace('Table A1');await sdk.text.finish();await sdk.selectSection(section);await sdk.fitContent();
+ document.getElementById('status').textContent='样例已就绪。填充孔洞保持留空，表格保留行列和文字编辑，分区标题与成员不继承边界笔触。';const button=document.getElementById('export');button.disabled=false;button.onclick=async()=>{const image=await sdk.exportImage({bounds:[0,0,1000,680],padding:0}),url=URL.createObjectURL(new Blob([image.bytes],{type:image.mimeType})),link=document.createElement('a');link.href=url;link.download='axiom-sketch-extended.png';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+} catch(error){document.getElementById('status').textContent=String(error);}
+</script></html>
