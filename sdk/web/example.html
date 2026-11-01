@@ -193,7 +193,7 @@ try {
     control.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c){await sdk.setBrushConfig({...c,[key]:Number(control.value)});syncBrush();}});
   }
   const vectorControls=['thinning','streamline','smoothing','startTaper','endTaper'];
-  const familyControls={1:['size','opacity',...vectorControls],2:['size','opacity','markerAngle','markerFlatness',...vectorControls],3:['size','opacity','density','textureScale'],4:['size','opacity','deposition','textureScale'],5:['size','opacity','wetEdge','textureScale'],6:['size','opacity']};
+  const familyControls={1:['size','opacity',...vectorControls],2:['size','opacity','markerAngle','markerFlatness',...vectorControls],3:['size','opacity','density','textureScale'],4:['size','opacity','deposition','textureScale','thinning','streamline','startTaper','endTaper'],5:['size','opacity','wetEdge','textureScale'],6:['size','opacity']};
   const easingMode=select(inkGroup,'粗细响应 Easing','ink-easing',[['1','Linear'],['2','Ease in'],['3','Ease out'],['4','Smoothstep']]);
   const pressureModel=select(inkGroup,'模拟压力算法','ink-pressure-model',[['2','点间距（perfect-freehand 风格）'],['1','速度 / 时间']]);
   const startCap=field(inkGroup,'起笔圆头 Cap','checkbox','ink-start-cap');
@@ -201,14 +201,15 @@ try {
   for(const [control,key] of [[easingMode,'easing'],[pressureModel,'pressureModel'],[startCap,'startCap'],[endCap,'endCap']]){
     control.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c){await sdk.setBrushConfig({...c,[key]:control.type==='checkbox'?control.checked:Number(control.value)});syncBrush();}});
   }
-  const familyHints={1:'平滑圆头 · 速度模拟粗细',2:'斜切扁头 · 半透明叠色',3:'干颗粒 · 纸面留白',4:'密实蜡质 · 方向纹理',5:'透明色洗 · 湿边积色',6:'临时光迹 · 自动消退'};
-  const syncBrush=()=>{const c=sdk.readBrushConfig();for(const [key,control] of Object.entries(inkControls)){control.disabled=!c;control.parentElement.hidden=!!c&&!familyControls[c.family]?.includes(key);if(c)control.value=c[key];const output=control.parentElement.querySelector('output');if(output)output.textContent=control.value;}const vector=!!c&&(c.family===1||c.family===2);
+  const familyHints={1:'平滑圆头 · 速度模拟粗细',2:'斜切扁头 · 半透明叠色',3:'干颗粒 · 纸面留白',4:'柔边蜡笔 · 压力控制出墨与纸纹',5:'透明色洗 · 湿边积色',6:'临时光迹 · 自动消退'};
+  const syncBrush=()=>{const c=sdk.readBrushConfig();for(const [key,control] of Object.entries(inkControls)){control.disabled=!c;control.parentElement.hidden=!!c&&!familyControls[c.family]?.includes(key);if(c)control.value=c[key];const output=control.parentElement.querySelector('output');if(output)output.textContent=control.value;}const vector=!!c&&(c.family===1||c.family===2||(c.family===4&&c.version===2));
     for(const [control,key] of [[easingMode,'easing'],[pressureModel,'pressureModel'],[startCap,'startCap'],[endCap,'endCap']]){control.parentElement.hidden=!vector;control.disabled=!vector;if(c){if(control.type==='checkbox')control.checked=c[key];else control.value=String(c[key]);}}
     pressureModel.parentElement.hidden=!vector||c?.pressureSource!==1;
     pressureMode.disabled=!c;pressureMode.parentElement.hidden=c?.family===6;inkColor.disabled=!c;if(c){pressureMode.value=String(c.pressureSource);inkColor.value=hex(c.color);}brushHint.textContent=c?(c.family===1&&c.thinning===0?'平滑圆头 · 固定笔宽':familyHints[c.family]):'兼容笔刷';};
   inkGroup.append(brushHint);
   pressureMode.onchange=()=>run(async()=>{const c=sdk.readBrushConfig();if(c){await sdk.setBrushConfig({...c,pressureSource:Number(pressureMode.value)});syncBrush();}});
-  const initialPreset=presets.find(p=>p.profileId==='round-handdrawn');
+  const initialBrush=new URLSearchParams(location.search).get('brush');
+  const initialPreset=presets.find(p=>p.profileId===(initialBrush==='crayon'?'crayon-wax-v1':'round-handdrawn'));
   await sdk.selectBrush(initialPreset.profileId,initialPreset.revision);brush.value=String(presets.indexOf(initialPreset));syncBrush();
 
   const selectionGroup = group(context, 'selection-parameters');

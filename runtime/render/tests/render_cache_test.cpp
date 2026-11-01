@@ -1,5 +1,6 @@
 #include "canvas/render/skia_renderer.hpp"
 #include "canvas/scene/scene_types.hpp"
+#include "canvas/ink/brush_package_catalog.hpp"
 #include <iostream>
 #include <stdexcept>
 #if defined(G5_TEST_WEBGL)
@@ -159,6 +160,46 @@ int main(int argc,char** argv) {
             masked.record.eraseMasks={{ObjectId::fromUint64(881),mask}};
             compareOverlay(plan(585,{masked,shape}));
             cached.setImageResolver(nullptr);compareOverlay(plan(586,{masked,shape}));
+        }
+        {
+            // Integration oracle for new brush evaluators through G5's
+            // bounded canonical path, including material seed and AA contours.
+            for(const auto profile:{"round-handdrawn","marker-compact-v1","crayon-wax-v1"}){
+                const auto revision=std::string_view(profile)=="crayon-wax-v1"?3:4;
+                auto entry=stroke(885);
+                auto content=std::get<CompactStrokeReferenceCommand>(entry.command).content;
+                content.stroke.config=*ink::BrushPackageCatalog{}.loadDefault(profile,revision).package.compactConfig;
+                content.stroke.config.size=18;content.stroke.config.opacity=.55;content.stroke.seed=19377;
+                content.stroke.knots.clear();
+                for(unsigned k=0;k<100;++k)content.stroke.knots.push_back({15.+k*2.1,64.+std::sin(k*.16)*23,static_cast<std::uint16_t>(18000+k*300)});
+                entry.command=CompactStrokeReferenceCommand{content};entry.record.content=content;
+                SkiaRenderer cached,oracle;oracle.setRenderCacheOptions(disabled);
+                auto frame=plan(590,{entry});RenderPreparationBudget budget;budget.maxCoverageSteps=1;
+                BackendSubmissionResult result;unsigned slices=0;
+                do{result=cached.renderFrame(provider,frame,nullptr,&budget);require(++slices<128,"new evaluator preparation does not converge");}
+                while(result.code==BackendSubmissionCode::kRetry);
+                require(result.code==BackendSubmissionCode::kAccepted&&slices>1,"new evaluator bypassed bounded coverage");
+                require(oracle.renderFrame(reference,frame).code==BackendSubmissionCode::kAccepted&&pixels(provider)==pixels(reference),
+                        "new evaluator resumed/cache pixels differ from Direct");
+                const auto misses=cached.renderCacheWork().misses;
+                const auto warm=plan(591,{entry});
+                require(cached.renderFrame(provider,warm).code==BackendSubmissionCode::kAccepted&&
+                        cached.renderCacheWork().misses==misses&&pixels(provider)==pixels(reference),"new evaluator warm cache invalid");
+                SkiaRenderer navigation;RenderCacheOptions options;
+                options.navigationMaxSteps=256;options.navigationMicroseconds=1000000;
+                navigation.setRenderCacheOptions(options);
+                NavigationSourceQuery query=[&](const foundation::WorldRect&,std::vector<ReferenceTraversalEntry>& entries){entries={entry};return true;};
+                for(unsigned n=0;n<128;++n){
+                    require(navigate(navigation,provider,{1,0,0},frame.frame,query).code==BackendSubmissionCode::kAccepted,
+                            "new evaluator navigation rejected");
+                    if(!navigation.navigationWork().pending)break;
+                    require(n<127,"new evaluator navigation does not converge");
+                }
+                const auto feedback=pixels(provider);
+                require(navigation.navigationWork().coverageComplete&&navigation.navigationWork().sourceSteps>0&&
+                        navigation.submissionCount()==0&&std::any_of(feedback.begin(),feedback.end(),[](auto channel){return channel<240;}),
+                        "new evaluator navigation missing coverage or manufactured canonical work");
+            }
         }
 #if defined(G5_TEST_WEBGL)
         // Multiple device-grid boundaries, partial edge extents, transparent

@@ -43,6 +43,7 @@ class CompactStrokeRasterJob final {
     int x_=0,y_=0;
     std::size_t knot_=0;
     double distance_=0,totalDistance_=0;
+    std::optional<ink::CompactContourCompiler> contour_;
     sk_sp<SkSurface> tile_;
 };
 }

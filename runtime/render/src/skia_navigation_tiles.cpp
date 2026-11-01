@@ -255,9 +255,17 @@ BackendSubmissionResult SkiaNavigationTiles::render(SkiaSurfaceProvider& provide
         const auto& entry=job.sources->entries[job.source];submitted=true;
         if(const auto* c=std::get_if<CompactStrokeReferenceCommand>(&entry.command)){
             const auto& stroke=c->content.stroke;auto* draw=job.coverage->getCanvas();
-            if(job.knot==0){job.distance=0;job.totalDistance=ink::compactLength(stroke.knots);draw->resetMatrix();draw->clear(SK_ColorBLACK);draw->setMatrix(job.surface->getCanvas()->getTotalMatrix());}
+            if(job.knot==0){
+                job.distance=0;job.totalDistance=ink::compactLength(stroke.knots);
+                if(stroke.config.algorithmVersion==4)job.contour.emplace(stroke.config);else job.contour.reset();
+                draw->resetMatrix();draw->clear(SK_ColorBLACK);draw->setMatrix(job.surface->getCanvas()->getTotalMatrix());
+            }
             const auto end=std::min(job.knot+32,stroke.knots.size());
-            drawCompactCoverageRangeToSkCanvas(*draw,stroke.config,stroke.knots,job.knot,end,job.distance,job.totalDistance);
+            if(job.contour){
+                ink::CompactContour contours;job.contour->append({stroke.knots.data()+job.knot,end-job.knot},job.totalDistance,contours);
+                if(end==stroke.knots.size())job.contour->finish(job.totalDistance,contours);
+                drawCompactContourCoverageToSkCanvas(*draw,stroke.config,contours);
+            }else drawCompactCoverageRangeToSkCanvas(*draw,stroke.config,stroke.knots,job.knot,end,job.distance,job.totalDistance,stroke.seed);
             for(std::size_t i=std::max(std::size_t(1),job.knot);i<end;++i)job.distance+=std::hypot(stroke.knots[i].x-stroke.knots[i-1].x,stroke.knots[i].y-stroke.knots[i-1].y);
             work.knotSteps+=end-job.knot;job.steps+=end-job.knot;job.knot=end;++steps;
             if(job.knot<stroke.knots.size())continue;

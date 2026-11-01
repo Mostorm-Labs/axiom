@@ -7,6 +7,7 @@
 #include <memory>
 #include <optional>
 #include "canvas/runtime/ink_brush.hpp"
+#include "canvas/ink/compact_contour.hpp"
 
 namespace canvas::ink {
 
@@ -43,7 +44,7 @@ struct BrushPreviewDelta final {
     std::uint64_t compactSeed=0;
     // Immutable shared chunks keep stable prefix publications O(1). New
     // revisions replace only the last chunk; consumers retain by shared owner.
-    struct Chunk final {std::shared_ptr<const Chunk> previous;std::vector<foundation::InkKnot> knots;double startDistance=0,totalDistance=0;};
+    struct Chunk final {std::shared_ptr<const Chunk> previous;std::vector<foundation::InkKnot> knots;double startDistance=0,totalDistance=0;CompactContour contour;};
     std::shared_ptr<const Chunk> compactChunks;
 };
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "canvas/render/navigation_sources.hpp"
 #include "canvas/render/render_cache.hpp"
+#include "canvas/ink/compact_contour.hpp"
 #include "canvas/render/preview_surface.hpp"
 #include "canvas/render/skia_surface_provider.hpp"
 #include "canvas/resources/resource_budget_manager.hpp"
@@ -35,6 +36,7 @@ class SkiaNavigationTiles final {
         sk_sp<SkSurface> surface,coverage;
         std::size_t source=0,knot=0;
         double distance=0,totalDistance=0;
+        std::optional<ink::CompactContourCompiler> contour;
         std::uint64_t id=0,steps=0;
         bool prewarm=false;
         resources::ResourceLease lease;

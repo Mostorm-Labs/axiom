@@ -91,7 +91,7 @@ sk_sp<SkPicture> SkiaRenderCache::coverage(const ReferenceTraversalEntry& source
     const auto admitted=scheduler_.take();if(!admitted||admitted->id!=job)return nullptr;
     SkPictureRecorder recorder;
     auto* canvas=recorder.beginRecording(support.makeOutset(2,2));
-    drawCompactCoverageToSkCanvas(*canvas,stroke.config,stroke.knots);
+    drawCompactCoverageToSkCanvas(*canvas,stroke.config,stroke.knots,0,-1,stroke.seed);
     auto picture=recorder.finishRecordingAsPicture();(void)scheduler_.finish(job,1);if(!picture)return nullptr;
     const auto bytes=std::max<std::size_t>(picture->approximateBytesUsed(),estimate);
     if(bytes>options.maxEntryBytes || bytes>options.maxBytes)return nullptr;

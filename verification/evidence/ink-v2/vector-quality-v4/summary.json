@@ -1,0 +1,138 @@
+{
+  "source_revision": "de27416190ec6285f05eedce410a3050043228fe",
+  "dirty": true,
+  "source_sha256": {
+    "runtime/composition/src/canvas_runtime_facade.cpp": "007549dd839bdc524104cc0e072a9f445b0212a3e3ec53c7c14ad3c7260e405c",
+    "runtime/foundation/include/canvas/runtime/ink_brush.hpp": "5a4303eddf0ce0cadb546000a4593e370b373b531ada60729a39ed5fbae05d9c",
+    "runtime/ink/CMakeLists.txt": "621a2108fe65e91ad50101c890f9df10cf64e2b8f5bed39469bb48c45b72cc48",
+    "runtime/ink/include/canvas/ink/brush_preview_delta.hpp": "a0167b13a0016a5f1c920f90c970bf2cff851066b3f11d7de75e0ec8fdef1254",
+    "runtime/ink/include/canvas/ink/compact_brush_session.hpp": "1143dbbc274fa09ff32dc518fff5301b3f7f63c68825e338c7ea8708b482d766",
+    "runtime/ink/include/canvas/ink/compact_geometry.hpp": "09ce066782e3a97548b2cc8f661b29788959e3b5b774fc986b3837c7fff3811f",
+    "runtime/ink/src/brush_package_catalog.cpp": "00050ffa61c9705676f05b131731aada3b8b412a34286a4e60b3fbe14449f927",
+    "runtime/ink/src/brush_session.cpp": "70484e461914b4f33afc4e2a937af4b298397c55db9df6a872c42a7618cf661b",
+    "runtime/ink/src/compact_brush_session.cpp": "a03c41fd3bc9a3ae548cc5660951bb5c7832db95da6bf7a6870688a9b41cc666",
+    "runtime/interaction/src/canvas_editing_runtime.cpp": "1c82e1d9281ab543f3de08beefcabfc8575f9fd77163060efd1b4a3ad65434c8",
+    "runtime/render/CMakeLists.txt": "e63eacbd65ba988032353b302c8d0f17f68e3c074d5a35e24bf05bc90ff566a8",
+    "runtime/render/include/canvas/render/skia_scene_renderer.hpp": "aae4c19b62b348d3b8d12818397be705f24539615e97060d0ef9c1c8f9e164e7",
+    "runtime/render/src/skia_compact_material.cpp": "47f3d00c79c88d86a3b67190e1a7353356cb4286ce2f700f0249ebe9619b31e5",
+    "runtime/render/src/skia_navigation_tiles.cpp": "e054daa6fe6089b830d76684b343d467404a3bf12fd99d8066442875e7503ed0",
+    "runtime/render/src/skia_navigation_tiles.hpp": "b43b60f3360f9b2020ddd5c2fa0e4e4ef6749db9a84c658789ea06afcc58ad75",
+    "runtime/render/src/skia_renderer.cpp": "c4266b65e217de90f587c68d0efea3ab0311ee023899aed6863fe5861b44ac05",
+    "runtime/render/tests/ink_v2_material_test.cpp": "dba4f07c0206b783ab2f4a6ac2bd5d7bbefa5c71b0d78bbdbe0ff33cd9dac2ee",
+    "runtime/semantic/tests/ink_v2_compact_test.cpp": "b4a68d8e1558f61ef2d7ea74337bd7f60ddc3f49deaa0715204f40806acac601",
+    "sdk/common/ink_v2_session_test.cpp": "2e06a1d87f59dd616e0ed0c57113eb612472b91e78113520c23683a9c3488205",
+    "sdk/common/session.cpp": "41a04438bbae03ef7e62dc8147c1a4b7be64e5e06db009da6995d4498dd6073f",
+    "sdk/web/README.md": "b9c37e14b6be303a5e0891c5205b874aeebbab627e391883b0a95b067353e9e7",
+    "sdk/windows/README.md": "48ede678ce0d2f52f3435c7a83ba463a3eaf7735e3aedf7238d1ed63c1ea925b",
+    "verification/sdk_js/ink-v2.html": "401b0831f33b28169e884d8c1eaacfb9ff19ab881203d70f03610768b65fe6e8",
+    "verification/sdk_js/verify_ink_v2.mjs": "14346ef2202aca2793b31ffa6f8fe8a6fdc3effe7681aae1213c8aa6e9e45cb5",
+    "docs/planning/ink-v2/vector-quality-v4.md": "522e410f5f1584fcc6574979af201c762dba11615a4dec29965d3cb9545e4f12",
+    "runtime/ink/include/canvas/ink/compact_contour.hpp": "d7404f23baf2f0e466b83311f4030ac15db7ccf9603b70c1a606d4eef7c62dc0",
+    "runtime/ink/src/compact_brush_quality.cpp": "1c538e75bfca0c7f5bfe3de51e69eb66850ea6d12dd8fdbe7fbf3c99a0978d85",
+    "runtime/ink/src/compact_contour.cpp": "b92a6220981763dbac789851f95670490d398a13f2025d1f927cf9d9b268fada",
+    "runtime/ink/tests/vector_quality_test.cpp": "2e61ca1db20402928a0dae582f3c6344757f9bb437989640904c1c021eeb768a"
+  },
+  "scope": "round/marker package revision 4: startup pressure, continuous quadratic outlines and deterministic incremental coverage",
+  "public_api_change": "none; existing tuning controls and compact wire fields; new evaluator/signal binding 4/3",
+  "geometry_persistence": "normalized centerline and quantized effective pressure; curves disposable",
+  "browser_runs": [
+    {
+      "artifact": "browser.json",
+      "dpr": 1,
+      "status": "PASS",
+      "checks": 101
+    },
+    {
+      "artifact": "browser-dpr2.json",
+      "dpr": 2,
+      "status": "PASS",
+      "checks": 101
+    }
+  ],
+  "physical_touch_status": "NOT_PERFORMED",
+  "windows_dll_status": "NOT_QUALIFIED",
+  "user_visual_review": "PENDING",
+  "demo_url": "http://127.0.0.1:4198/example.html?v=vector-quality-v4",
+  "classification": "LOCAL_REVIEW_READY_WITH_BASELINE_FINDINGS",
+  "red_observations": [
+    "old fixed .5 startup yields fat start; default taper16 forces pointed tail",
+    "chunk boundary patch redrawn with AA: 72 pixels differ, maximum alpha difference37 despite contour error<5e-14",
+    "timed model reset at startup",
+    "two-point device endpoint pressure becomes .5 in PF synthetic normalization",
+    "sparse tapered two-point carrier loses full-width middle"
+  ],
+  "limitations": [
+    "incremental paired-side adaptation; not all-input exact PF parity",
+    "distance proxy depends on event spacing, not true elapsed speed",
+    "earlier package revisions preserve previous appearance",
+    "no commit, push, SDK release, or Gate verdict issued"
+  ],
+  "focused_suite": {
+    "passed": 27,
+    "failed": 0,
+    "source": "full-ctest.log",
+    "includes": "InkV2*, G45BrushPackage, G45BrushPackageCatalog, G45BrushSession, G3PreviewSurface"
+  },
+  "boundary_check": {
+    "status": "PASS",
+    "contract_files": 115
+  },
+  "types_check": {
+    "status": "PASS",
+    "command": "tsc --noEmit --strict --target es2022 --module nodenext --moduleResolution nodenext verification/sdk_js/api_types_test.mts"
+  },
+  "render_observations": {
+    "round_marker_preview_canonical_alpha_difference": 0,
+    "quality_edge_roughness": 47.3454,
+    "independent_pinned_pf_edge_roughness": 54.5541,
+    "note": "same-scale jagged fixture; pixel quantization contributes to metric; not a visual parity claim",
+    "stateful_range_turns": "PASS",
+    "sparse_taper_body": "PASS",
+    "quadratic_tangent_continuity": "PASS"
+  },
+  "initial_browser_observation": {
+    "status": "previewAtPointer0 failed before screenshot",
+    "followup": "capture before raw framebuffer probe; DPR1 and DPR2 complete runs pass; initial missing pixels not attributed to a product change"
+  },
+  "full_ctest": {
+    "total": 240,
+    "passed": 218,
+    "failed_or_timeout": 22,
+    "failures": [
+      "canvas_fc02_shape_label_scene",
+      "canvas_g2_a3_full_incremental_equivalence",
+      "G3HeadlessCanvasDemo",
+      "FC02Text",
+      "FC00XRuntimeComposition",
+      "FC04.MSE-11",
+      "FC04.MSE-20",
+      "FC04.MSE-23",
+      "FC04.MSE-24",
+      "FC04.MSE-25",
+      "FC04.MSE-26",
+      "FC01Creation-width-style",
+      "G4InkPlaygroundComposition",
+      "G4InkPlaygroundSurface",
+      "G4InkPlaygroundRepeatedStrokes",
+      "G4MultiPointerPlayground",
+      "G4ViewportGestureState",
+      "G46BQueryStructure",
+      "G46PlaygroundTransform",
+      "G46CQualificationBundle",
+      "G46CQualificationBehavior",
+      "G45BrushRuntimePipeline"
+    ],
+    "new_failure_names": [],
+    "all_failure_names_present_in_previous_baseline": true,
+    "FC02Text": "Timeout at 240 seconds",
+    "log": "full-ctest.log",
+    "log_normalization": "Trailing horizontal whitespace removed from console output for repository diff hygiene; test results unchanged."
+  },
+  "browser_runner_cleanup": "Final DPR1 repeat wrote PASS/101 checks and captures; runner retained an IPC handle after output and was terminated during cleanup. Earlier DPR1 and DPR2 runs exited 0.",
+  "served_artifacts": "HTTP bytes of wrapper, WASM, data, internal JS, and HTML match local build artifacts",
+  "precommit_focused_suite": {
+    "passed": 27,
+    "failed": 0,
+    "duration_seconds": 47.27
+  }
+}

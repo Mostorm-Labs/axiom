@@ -39,7 +39,7 @@ bool BrushSession::begin() {
         c.algorithmVersion = state_.package.compactConfig->algorithmVersion;
         const auto& config=*state_.package.compactConfig;
         c.pressureModel=config.pressureModel;c.size=config.size;c.streamline=config.streamline;
-        c.smoothing=config.smoothing;c.endTaper=config.endTaper;
+        c.smoothing=config.smoothing;c.endTaper=config.endTaper;c.geometryConfig=config;
         c.pressureSource = state_.package.compactConfig->pressureSource == foundation::InkPressureSource::kDevice
             ? BrushPressureSource::kDevice : BrushPressureSource::kSimulated;
         compact_.emplace(c, state_.seed);
