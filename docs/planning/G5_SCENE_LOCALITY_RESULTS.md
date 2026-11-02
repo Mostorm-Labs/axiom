@@ -17,6 +17,9 @@ It is an engineering result only; it does not issue G5 or P34 acceptance.
   authoritative full recovery.
 - Existing publication gates, before images, order handling, A6 rollback and
   full-authority projection are preserved.
+- Scene delta publication reuses the already-published ordered snapshot. Pure
+  content/transform updates avoid a second ordered-cache materialization and
+  sort; insert/delete/order changes still perform the required publication sort.
 
 ## Evidence
 
@@ -42,7 +45,8 @@ authority.
 The Scene publication and ordered-cache layers still materialize/copy contiguous
 record vectors for some reads and mutations. This slice removes unnecessary
 semantic-store scans and per-object geometry/layout reevaluation; it does not
-claim constant-time publication, persistent/chunked Scene storage, GeometryChunk,
+claim constant-time publication or eliminate the final published-snapshot copy,
+persistent/chunked Scene storage, GeometryChunk,
 Tile, Scheduler, or ResourceBudget completion.
 
 No SDK/API/ABI, semantic schema, BrushEngine, Skia lock, or platform contract was

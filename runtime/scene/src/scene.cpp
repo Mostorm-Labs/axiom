@@ -688,9 +688,7 @@ foundation::Result<SceneApplyReceipt> Scene::replace(CompiledSceneSnapshot snaps
                 foundation::ErrorCode::kOutOfMemory, "Unable to stage published Scene snapshot"));
         }
 
-        _commitDiagnostics = SceneCommitDiagnostics{
-            .transactionCount = _commitDiagnostics.transactionCount + 1,
-        };
+        _commitDiagnostics.transactionCount += 1;
         std::uint8_t stage = 0;
         _records.commit(std::move(preparedRecords));
         _commitDiagnostics.recordStoreStage = ++stage;
@@ -772,11 +770,18 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
 
     try {
         std::vector<SceneRecord> stagedRecords;
-        auto currentRecords = _records.materializeSnapshot();
-        if (!currentRecords) {
-            return foundation::Result<SceneApplyReceipt>::failure(currentRecords.error());
+        bool reusedPublishedSnapshot = false;
+        if (_publishedSnapshotValid) {
+            stagedRecords = _publishedRecords;
+            reusedPublishedSnapshot = true;
+        } else {
+            auto currentRecords = _records.materializeSnapshot();
+            if (!currentRecords) {
+                return foundation::Result<SceneApplyReceipt>::failure(currentRecords.error());
+            }
+            stagedRecords = std::move(currentRecords.value());
         }
-        stagedRecords = std::move(currentRecords.value());
+        bool requiresPublicationSort = false;
         for (const auto& mutation : delta.mutations) {
             auto it = std::find_if(stagedRecords.begin(), stagedRecords.end(),
                                    [&](const SceneRecord& record) {
@@ -784,14 +789,20 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
                                    });
             if (mutation.kind == SceneMutationKind::kInsert && mutation.after) {
                 stagedRecords.push_back(*mutation.after);
+                requiresPublicationSort = true;
             } else if (mutation.kind == SceneMutationKind::kUpdate && mutation.after &&
                        it != stagedRecords.end()) {
+                requiresPublicationSort = requiresPublicationSort ||
+                    mutation.before->orderKey != mutation.after->orderKey;
                 *it = *mutation.after;
             } else if (mutation.kind == SceneMutationKind::kRemove && it != stagedRecords.end()) {
                 stagedRecords.erase(it);
+                requiresPublicationSort = true;
             }
         }
-        std::sort(stagedRecords.begin(), stagedRecords.end(), backToFrontLess);
+        if (requiresPublicationSort) {
+            std::sort(stagedRecords.begin(), stagedRecords.end(), backToFrontLess);
+        }
         if (!stagePublicationSnapshot(stagedRecords)) {
             return foundation::Result<SceneApplyReceipt>::failure(makeError(
                 foundation::ErrorCode::kOutOfMemory, "Unable to stage published Scene snapshot"));
@@ -863,9 +874,9 @@ foundation::Result<SceneApplyReceipt> Scene::applyPreparedDelta(
                 foundation::ErrorCode::kParticipantRejected, "Publication checkpoint failure"));
         }
 
-        _commitDiagnostics = SceneCommitDiagnostics{
-            .transactionCount = _commitDiagnostics.transactionCount + 1,
-        };
+        _commitDiagnostics.transactionCount += 1;
+        if (reusedPublishedSnapshot) ++_commitDiagnostics.publishedSnapshotReuseCount;
+        if (requiresPublicationSort) ++_commitDiagnostics.publicationSortCount;
         std::uint8_t stage = 0;
         _records.commit(std::move(preparedRecords));
         _commitDiagnostics.recordStoreStage = ++stage;

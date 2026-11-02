@@ -29,6 +29,8 @@ struct SceneApplyReceipt final {
 
 struct SceneCommitDiagnostics final {
     std::uint64_t transactionCount = 0;
+    std::uint64_t publishedSnapshotReuseCount = 0;
+    std::uint64_t publicationSortCount = 0;
     std::uint8_t recordStoreStage = 0;
     std::uint8_t renderSceneStage = 0;
     std::uint8_t spatialIndexStage = 0;

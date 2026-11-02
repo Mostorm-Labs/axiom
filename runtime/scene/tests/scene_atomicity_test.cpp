@@ -203,6 +203,9 @@ void testSuccessfulInsertUpdateRemove(TestContext& context) {
     EXPECT(context, fixture.scene->apply(std::move(remove)).hasValue());
     EXPECT(context, fixture.scene->read().find(after.objectId) == nullptr);
     EXPECT(context, fixture.scene->revision() == SceneRevision(4));
+    const auto locality = fixture.scene->commitDiagnostics();
+    EXPECT(context, locality.publishedSnapshotReuseCount == 3);
+    EXPECT(context, locality.publicationSortCount == 2);
 }
 
 void testRenderPrepareFailureIsAtomic(TestContext& context) {
