@@ -76,6 +76,12 @@ ObjectRecord record(ObjectKind kind, std::uint64_t identity) {
         case ObjectKind::kGroup:
             value.content = GroupContent{};
             break;
+        case ObjectKind::kSection:
+            value.content = SectionContent{{0.0, 0.0, 10.0, 10.0}, "", 0.0, 0.0};
+            break;
+        case ObjectKind::kTable:
+            value.content = TableContent{};
+            break;
     }
     return value;
 }
@@ -222,7 +228,8 @@ TEST(PayloadStructure, AcceptsOnlyReleasedObjectKindVersionContentTriples) {
     constexpr std::array kinds{
         ObjectKind::kShape, ObjectKind::kImage, ObjectKind::kVectorPath,
         ObjectKind::kRichText, ObjectKind::kVectorStroke, ObjectKind::kDabStroke,
-        ObjectKind::kConnector, ObjectKind::kSticky, ObjectKind::kGroup};
+        ObjectKind::kConnector, ObjectKind::kSticky, ObjectKind::kGroup,
+        ObjectKind::kSection, ObjectKind::kTable};
     for (std::size_t index = 0; index < kinds.size(); ++index) {
         SCOPED_TRACE(index);
         Operation operation;
