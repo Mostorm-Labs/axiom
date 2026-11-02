@@ -1,0 +1,34 @@
+test_rejects_internal_static_archives (test_consumer_package.ConsumerPayloadTest.test_rejects_internal_static_archives) ... ok
+test_requires_licenses_and_runtime_assets (test_consumer_package.ConsumerPayloadTest.test_requires_licenses_and_runtime_assets) ... ok
+test_same_revision_is_insufficient_when_platform_versions_differ (test_consumer_package.ConsumerPayloadTest.test_same_revision_is_insufficient_when_platform_versions_differ) ... ok
+test_apple_assets_keep_directory_identity_for_cocoapods (test_native_package.NativePackageTest.test_apple_assets_keep_directory_identity_for_cocoapods) ... ok
+test_dirty_or_foreign_source_is_not_relabelled (test_native_package.NativePackageTest.test_dirty_or_foreign_source_is_not_relabelled) ... ok
+test_incomplete_ios_pair_and_failed_assembly_leave_no_output (test_native_package.NativePackageTest.test_incomplete_ios_pair_and_failed_assembly_leave_no_output) ... ok
+test_internal_archives_or_foreign_version_reject_before_output (test_native_package.NativePackageTest.test_internal_archives_or_foreign_version_reject_before_output) ... ok
+test_ios_device_and_simulator_are_assembled_for_podspec (test_native_package.NativePackageTest.test_ios_device_and_simulator_are_assembled_for_podspec) ... ok
+test_native_host_projects_are_concrete_and_use_accepted_ndk (test_native_package.NativePackageTest.test_native_host_projects_are_concrete_and_use_accepted_ndk) ... ok
+test_native_source_revision_cannot_be_relabelled_by_staging (test_native_package.NativePackageTest.test_native_source_revision_cannot_be_relabelled_by_staging) ... ok
+test_no_platforms_and_overwrite_reject (test_native_package.NativePackageTest.test_no_platforms_and_overwrite_reject) ... ok
+test_rejects_mixed_resource_sets_before_creating_output (test_native_package.NativePackageTest.test_rejects_mixed_resource_sets_before_creating_output) ... ok
+test_stage_has_self_contained_shared_api_and_native_payload (test_native_package.NativePackageTest.test_stage_has_self_contained_shared_api_and_native_payload) ... ok
+test_never_overwrites_existing_work (test_npm_publish.NpmPublicationTest.test_never_overwrites_existing_work) ... ok
+test_package_is_publishable_only_to_the_requested_scope_and_registry (test_npm_publish.NpmPublicationTest.test_package_is_publishable_only_to_the_requested_scope_and_registry) ... ok
+test_rejects_corrupt_bytes_before_creating_output (test_npm_publish.NpmPublicationTest.test_rejects_corrupt_bytes_before_creating_output) ... ok
+test_rejects_foreign_registry_scope_private_and_lifecycle_scripts (test_npm_publish.NpmPublicationTest.test_rejects_foreign_registry_scope_private_and_lifecycle_scripts) ... ok
+test_rejects_missing_required_assets_even_with_consistent_manifest (test_npm_publish.NpmPublicationTest.test_rejects_missing_required_assets_even_with_consistent_manifest) ... ok
+test_rejects_prerelease_or_malformed_version_and_missing_npm_provenance (test_npm_publish.NpmPublicationTest.test_rejects_prerelease_or_malformed_version_and_missing_npm_provenance) ... ok
+test_rejects_traversal_duplicates_symlinks_and_credentials (test_npm_publish.NpmPublicationTest.test_rejects_traversal_duplicates_symlinks_and_credentials) ... C:\Users\Chado\AppData\Local\Programs\Python\Python311\Lib\zipfile.py:1549: UserWarning: Duplicate name: 'axiom.mjs'
+  return self._open_to_write(zinfo, force_zip64=force_zip64)
+ok
+test_rejects_unmanifested_files (test_npm_publish.NpmPublicationTest.test_rejects_unmanifested_files) ... ok
+test_rejects_wrong_source_kind_or_version (test_npm_publish.NpmPublicationTest.test_rejects_wrong_source_kind_or_version) ... ok
+test_verified_release_bytes_are_extracted_without_rewriting (test_npm_publish.NpmPublicationTest.test_verified_release_bytes_are_extracted_without_rewriting) ... ok
+test_manifest_and_archive_preserve_exact_assets (test_preview_package.PreviewPackageTest.test_manifest_and_archive_preserve_exact_assets) ... ok
+test_missing_required_file_does_not_create_archive (test_preview_package.PreviewPackageTest.test_missing_required_file_does_not_create_archive) ... ok
+test_rejects_symlink_and_invalid_revision (test_preview_package.PreviewPackageTest.test_rejects_symlink_and_invalid_revision) ... ok
+test_release_requires_four_distinct_assets_for_exact_revision (test_preview_package.PreviewPackageTest.test_release_requires_four_distinct_assets_for_exact_revision) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 1.432s
+
+OK

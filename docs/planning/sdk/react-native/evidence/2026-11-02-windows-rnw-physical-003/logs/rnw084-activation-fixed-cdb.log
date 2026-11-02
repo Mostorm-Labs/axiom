@@ -1,0 +1,183 @@
+
+************* Preparing the environment for Debugger Extensions Gallery repositories **************
+   ExtensionRepository : Implicit
+   UseExperimentalFeatureForNugetShare : true
+   AllowNugetExeUpdate : true
+   NonInteractiveNuget : true
+   AllowNugetMSCredentialProviderInstall : true
+   AllowParallelInitializationOfLocalRepositories : true
+
+   EnableRedirectToV8JsProvider : false
+
+   -- Configuring repositories
+      ----> Repository : LocalInstalled, Enabled: true
+      ----> Repository : UserExtensions, Enabled: true
+
+>>>>>>>>>>>>> Preparing the environment for Debugger Extensions Gallery repositories completed, duration 0.000 seconds
+
+************* Waiting for Debugger Extensions Gallery to Initialize **************
+
+>>>>>>>>>>>>> Waiting for Debugger Extensions Gallery to Initialize completed, duration 0.000 seconds
+   ----> Repository : UserExtensions, Enabled: true, Packages count: 0
+   ----> Repository : LocalInstalled, Enabled: true, Packages count: 29
+
+Microsoft (R) Windows Debugger Version 10.0.26100.3323 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+CommandLine: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\AxiomRNPhysical.exe
+
+************* Path validation summary **************
+Response                         Time (ms)     Location
+Deferred                                       srv*
+Symbol search path is: srv*
+Executable search path is: 
+ModLoad: 00007ff6`c4870000 00007ff6`c48b6000   AxiomRNPhysical.exe
+ModLoad: 00007ff8`3bdd0000 00007ff8`3bfc8000   ntdll.dll
+ModLoad: 00007ff8`3a270000 00007ff8`3a332000   C:\WINDOWS\System32\KERNEL32.DLL
+ModLoad: 00007ff8`396b0000 00007ff8`399af000   C:\WINDOWS\System32\KERNELBASE.dll
+ModLoad: 00007ff8`3b8f0000 00007ff8`3ba8d000   C:\WINDOWS\System32\USER32.dll
+ModLoad: 00007ff8`39530000 00007ff8`39552000   C:\WINDOWS\System32\win32u.dll
+ModLoad: 00007ff8`3af70000 00007ff8`3af9b000   C:\WINDOWS\System32\GDI32.dll
+ModLoad: 00007ff8`39b70000 00007ff8`39c8a000   C:\WINDOWS\System32\gdi32full.dll
+ModLoad: 00007ff8`399b0000 00007ff8`39a4d000   C:\WINDOWS\System32\msvcp_win.dll
+ModLoad: 00007ff8`39560000 00007ff8`39660000   C:\WINDOWS\System32\ucrtbase.dll
+ModLoad: 00007ff8`39e50000 00007ff8`39f1d000   C:\WINDOWS\System32\OLEAUT32.dll
+ModLoad: 00007ff8`3afa0000 00007ff8`3b2f5000   C:\WINDOWS\System32\combase.dll
+ModLoad: 00007ff8`3ba90000 00007ff8`3bbb3000   C:\WINDOWS\System32\RPCRT4.dll
+(6ac.6980): Break instruction exception - code 80000003 (first chance)
+ntdll!LdrpDoDebuggerBreak+0x30:
+00007ff8`3bea07a0 cc              int     3
+0:000> cdb: Reading initial command 'sxe -c ".exr -1; kv; q" eh; sxe -c ".exr -1; kv; q" c0000409; g'
+ModLoad: 00007ff8`3a160000 00007ff8`3a18f000   C:\WINDOWS\System32\IMM32.DLL
+ModLoad: 00007fff`bc730000 00007fff`bc976000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\Microsoft.WindowsAppRuntime.dll
+ModLoad: 00007ff8`3bbd0000 00007ff8`3bc7f000   C:\WINDOWS\System32\ADVAPI32.dll
+ModLoad: 00007ff8`3bce0000 00007ff8`3bd7e000   C:\WINDOWS\System32\msvcrt.dll
+ModLoad: 00007ff8`3ac60000 00007ff8`3acff000   C:\WINDOWS\System32\sechost.dll
+ModLoad: 00007ff8`39470000 00007ff8`39497000   C:\WINDOWS\System32\bcrypt.dll
+ModLoad: 00007ff8`39f20000 00007ff8`3a04b000   C:\WINDOWS\System32\ole32.dll
+ModLoad: 00007ff8`39320000 00007ff8`3934e000   C:\WINDOWS\SYSTEM32\USERENV.dll
+ModLoad: 00007ff8`39df0000 00007ff8`39e45000   C:\WINDOWS\System32\SHLWAPI.dll
+ModLoad: 00007ff8`33fe0000 00007ff8`34137000   C:\WINDOWS\SYSTEM32\wintypes.dll
+ModLoad: 00007ff8`33930000 00007ff8`33966000   C:\WINDOWS\SYSTEM32\XmlLite.dll
+ModLoad: 00000191`8e8d0000 00000191`8e91b000   C:\WINDOWS\SYSTEM32\powrprof.dll
+ModLoad: 00007ff8`394a0000 00007ff8`39522000   C:\WINDOWS\System32\bcryptPrimitives.dll
+ModLoad: 00007ff8`002b0000 00007ff8`002eb000   C:\WINDOWS\SYSTEM32\RoMetadata.dll
+ModLoad: 00007ff8`37c80000 00007ff8`37c92000   C:\WINDOWS\SYSTEM32\kernel.appcore.dll
+ModLoad: 00007ff8`38e00000 00007ff8`38e4b000   C:\WINDOWS\SYSTEM32\powrprof.dll
+ModLoad: 00007ff8`38dd0000 00007ff8`38de2000   C:\WINDOWS\SYSTEM32\UMPDC.dll
+ModLoad: 00007ff8`3b3c0000 00007ff8`3b46d000   C:\WINDOWS\System32\shcore.dll
+ModLoad: 00007ff8`35e00000 00007ff8`35e9e000   C:\WINDOWS\system32\uxtheme.dll
+ModLoad: 00007ff8`3ad00000 00007ff8`3ada9000   C:\WINDOWS\System32\clbcatq.dll
+ModLoad: 00007fff`4c120000 00007fff`4c82a000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\Microsoft.ReactNative.dll
+ModLoad: 00007ff8`1f5e0000 00007ff8`1f8d5000   C:\WINDOWS\SYSTEM32\uiautomationcore.dll
+ModLoad: 00007ff8`371e0000 00007ff8`37443000   C:\WINDOWS\SYSTEM32\d3d11.dll
+ModLoad: 00007ff8`35c00000 00007ff8`35db4000   C:\WINDOWS\SYSTEM32\WindowsCodecs.dll
+ModLoad: 00007ff8`1b6b0000 00007ff8`1b8de000   C:\WINDOWS\SYSTEM32\icu.dll
+ModLoad: 00007ff8`36090000 00007ff8`360bf000   C:\WINDOWS\SYSTEM32\dwmapi.dll
+ModLoad: 00007ff8`36540000 00007ff8`36b00000   C:\WINDOWS\SYSTEM32\d2d1.dll
+ModLoad: 00007ff8`24d40000 00007ff8`24d47000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\VCRUNTIME140_1_APP.dll
+ModLoad: 00007ff8`36b00000 00007ff8`36d7f000   C:\WINDOWS\SYSTEM32\DWrite.dll
+ModLoad: 00007ff8`0ead0000 00007ff8`0eb12000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\MSVCP140_APP.dll
+ModLoad: 00007ff8`224a0000 00007ff8`224a8000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\VCRUNTIME140_APP.dll
+ModLoad: 00007ff8`35390000 00007ff8`35486000   C:\WINDOWS\SYSTEM32\PROPSYS.dll
+ModLoad: 00007ff8`37ca0000 00007ff8`37d96000   C:\WINDOWS\SYSTEM32\dxgi.dll
+ModLoad: 00007ff8`24280000 00007ff8`242ac000   C:\WINDOWS\SYSTEM32\VCRUNTIME140.dll
+ModLoad: 00007ff8`1d070000 00007ff8`1d10c000   C:\WINDOWS\SYSTEM32\msvcp140.DLL
+ModLoad: 00000191`8ec20000 00000191`8ec4c000   C:\WINDOWS\SYSTEM32\VCRUNTIME140.dll
+ModLoad: 00000191`8ec50000 00000191`8ec7c000   C:\WINDOWS\SYSTEM32\VCRUNTIME140.dll
+ModLoad: 00000191`8ec20000 00000191`8ec2c000   C:\WINDOWS\SYSTEM32\vcruntime140_1.DLL
+ModLoad: 00007ff8`24b10000 00007ff8`24b1c000   C:\WINDOWS\SYSTEM32\VCRUNTIME140_1.dll
+ModLoad: 00007fff`c0040000 00007fff`c013d000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\CoreMessagingXP.dll
+ModLoad: 00007ff8`35060000 00007ff8`35152000   C:\Windows\System32\CoreMessaging.dll
+ModLoad: 00007ff8`3af00000 00007ff8`3af6b000   C:\WINDOWS\System32\WS2_32.dll
+ModLoad: 00007fff`fc0c0000 00007fff`fc0ec000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\MostormAxiom.dll
+ModLoad: 00007fff`4b320000 00007fff`4c118000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\axiom_native.dll
+ModLoad: 00007ff8`342a0000 00007ff8`34484000   C:\WINDOWS\SYSTEM32\dcomp.dll
+ModLoad: 00007ff8`33b80000 00007ff8`33fdd000   C:\WINDOWS\SYSTEM32\D3DCOMPILER_47.dll
+ModLoad: 00007fff`fbe50000 00007fff`fbe75000   C:\WINDOWS\SYSTEM32\d3d12.dll
+ModLoad: 00007ff8`36ff0000 00007ff8`371d4000   C:\WINDOWS\SYSTEM32\dbghelp.dll
+ModLoad: 00007ff8`38d90000 00007ff8`38da8000   C:\WINDOWS\SYSTEM32\CRYPTSP.dll
+ModLoad: 00007fff`bd1a0000 00007fff`bd334000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\dcompi.dll
+ModLoad: 00007ff8`21f50000 00007ff8`21f5e000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\Microsoft.UI.Composition.OSSupport.dll
+ModLoad: 00007fff`c01b0000 00007fff`c022e000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\marshal.dll
+ModLoad: 00007fff`b8360000 00007fff`b861b000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\dwmcorei.dll
+ModLoad: 00007fff`bd940000 00007fff`bda21000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\Microsoft.Internal.FrameworkUdk.dll
+ModLoad: 00000191`8ec40000 00000191`8ed21000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\Microsoft.Internal.FrameworkUdk.dll
+ModLoad: 00007ff8`38660000 00007ff8`38693000   C:\WINDOWS\SYSTEM32\ntmarta.dll
+ModLoad: 00007ff8`2e6d0000 00007ff8`2e72b000   C:\WINDOWS\SYSTEM32\Bcp47Langs.dll
+ModLoad: 00007ff8`393a0000 00007ff8`393c5000   C:\WINDOWS\SYSTEM32\profapi.dll
+ModLoad: 00007fff`f3d50000 00007fff`f3dbe000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\Microsoft.InputStateManager.dll
+ModLoad: 00007fff`9ff10000 00007fff`a00ae000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\Microsoft.UI.Input.dll
+ModLoad: 00007fff`bffb0000 00007fff`c0033000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\Microsoft.UI.Windowing.Core.dll
+ModLoad: 00007ff8`360c0000 00007ff8`360d4000   C:\WINDOWS\SYSTEM32\resourcepolicyclient.dll
+ModLoad: 00007ff8`3adb0000 00007ff8`3aec5000   C:\WINDOWS\System32\msctf.dll
+onecore\internal\sdk\inc\wil/resource.h(967)\dwmcorei.dll!00007FFFB83713CE: (caller: 00007FFFB83797C5) ReturnNt(1) tid(3524) C0000022 ModLoad: 00007ff8`2dc60000 00007ff8`2dd05000   C:\WINDOWS\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_51f685305808e3a5\igd10iumd64.dll
+ModLoad: 00007ff8`35890000 00007ff8`35924000   C:\WINDOWS\SYSTEM32\apphelp.dll
+ModLoad: 00007fff`bc640000 00007fff`bc6c5000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\Microsoft.UI.Windowing.dll
+ModLoad: 00007ff8`2d540000 00007ff8`2dc53000   C:\WINDOWS\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_51f685305808e3a5\igd10um64gen11.DLL
+ModLoad: 00007ff8`39c90000 00007ff8`39dec000   C:\WINDOWS\System32\CRYPT32.dll
+ModLoad: 00007ff8`38f10000 00007ff8`38f37000   C:\WINDOWS\SYSTEM32\ncrypt.dll
+ModLoad: 00007ff8`38eb0000 00007ff8`38eeb000   C:\WINDOWS\SYSTEM32\NTASN1.dll
+ModLoad: 00007ff8`3adb0000 00007ff8`3aec5000   C:\WINDOWS\System32\MSCTF.dll
+ModLoad: 00007ff8`2c600000 00007ff8`2ca09000   C:\WINDOWS\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_51f685305808e3a5\igdgmm64.dll
+ModLoad: 00007ff8`2dc60000 00007ff8`2dd05000   C:\WINDOWS\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_51f685305808e3a5\igd10iumd64.dll
+ModLoad: 00007ff8`2c600000 00007ff8`2ca09000   C:\WINDOWS\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_51f685305808e3a5\igdgmm64.dll
+ModLoad: 00007ff8`28e60000 00007ff8`2c5f4000   C:\WINDOWS\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_51f685305808e3a5\igc64.dll
+ModLoad: 00007ff8`3a4f0000 00007ff8`3ac5d000   C:\WINDOWS\System32\SHELL32.dll
+ModLoad: 00007ff8`2ca10000 00007ff8`2cb09000   C:\WINDOWS\SYSTEM32\textinputframework.dll
+ModLoad: 00007ff8`345d0000 00007ff8`3492b000   C:\WINDOWS\System32\CoreUIComponents.dll
+ModLoad: 00007fff`ee9f0000 00007fff`eeb45000   C:\WINDOWS\system32\wetype_tip.dll
+ModLoad: 00007ff8`37490000 00007ff8`37c34000   C:\WINDOWS\SYSTEM32\windows.storage.dll
+ModLoad: 00007ff8`38d40000 00007ff8`38d6b000   C:\WINDOWS\SYSTEM32\Wldp.dll
+ModLoad: 00007ff8`38410000 00007ff8`38448000   C:\WINDOWS\system32\rsaenh.dll
+ModLoad: 00007ff8`38d80000 00007ff8`38d8c000   C:\WINDOWS\SYSTEM32\CRYPTBASE.dll
+ModLoad: 00007ff8`335e0000 00007ff8`3361b000   C:\WINDOWS\SYSTEM32\dxcore.dll
+ModLoad: 00007ff8`39660000 00007ff8`396ae000   C:\WINDOWS\System32\cfgmgr32.dll
+ModLoad: 00007fff`ee4b0000 00007fff`ee9e5000   C:\Program Files\Tencent\WeType\WetypeCore_3.0.0.38\x64\wetype_tip_core.dll
+ModLoad: 00007fff`ee210000 00007fff`ee2bc000   C:\Program Files\Tencent\WeType\WetypeCore_3.0.0.38\x64\CrashRpt1500.dll
+ModLoad: 00007ff8`1eaa0000 00007ff8`1eb06000   C:\WINDOWS\SYSTEM32\OLEACC.dll
+ModLoad: 00007fff`f3cf0000 00007fff`f3d50000   C:\WINDOWS\SYSTEM32\input.dll
+ModLoad: 00007ff8`33330000 00007ff8`3333b000   C:\WINDOWS\SYSTEM32\ktmw32.dll
+ModLoad: 00007ff8`31520000 00007ff8`3152a000   C:\WINDOWS\SYSTEM32\VERSION.dll
+onecoreuap\windows\frameworkudk\warppal.cpp(783)\Microsoft.Internal.FrameworkUdk.dll!00007FFFBD9C3588: (caller: 00007FFFBD973DDD) ReturnHr(1) tid(3524) 80004002 No such interface supported
+ModLoad: 00007ff8`2cb10000 00007ff8`2cc4f000   C:\Windows\System32\Windows.UI.dll
+ModLoad: 00007ff8`31550000 00007ff8`315f1000   C:\Windows\System32\WindowManagementAPI.dll
+ModLoad: 00007ff8`2cf00000 00007ff8`2d052000   C:\Windows\System32\InputHost.dll
+ModLoad: 00007ff8`30fb0000 00007ff8`311b3000   C:\WINDOWS\SYSTEM32\twinapi.appcore.dll
+ModLoad: 00000191`95d50000 00000191`95f53000   C:\Windows\System32\twinapi.appcore.dll
+ModLoad: 00007ff8`27380000 00007ff8`274b8000   C:\Windows\System32\Windows.UI.Immersive.dll
+ModLoad: 00007fff`492c0000 00007fff`49a35000   C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\hermes.dll
+(6ac.6980): Unknown exception - code 8001010d (first chance)
+ModLoad: 00007ff8`1cf20000 00007ff8`1cf47000   C:\WINDOWS\SYSTEM32\WINMM.dll
+ModLoad: 00007ff8`242b0000 00007ff8`2432f000   C:\Windows\System32\OneCoreCommonProxyStub.dll
+ModLoad: 00007ff8`00960000 00007ff8`00ad7000   C:\Windows\System32\Windows.Web.Http.dll
+ModLoad: 00007ff8`39350000 00007ff8`39382000   C:\WINDOWS\SYSTEM32\SspiCli.dll
+ModLoad: 00007ff8`2ee30000 00007ff8`2f604000   C:\Windows\System32\OneCoreUAPCommonProxyStub.dll
+ModLoad: 00007ff8`22260000 00007ff8`22306000   C:\WINDOWS\System32\StructuredQuery.dll
+ModLoad: 00007ff8`24370000 00007ff8`244b6000   C:\Windows\System32\Windows.StateRepositoryPS.dll
+ModLoad: 00007ff8`21a40000 00007ff8`21aa4000   C:\Windows\System32\Windows.FileExplorer.Common.dll
+ModLoad: 00007ff8`27640000 00007ff8`278ff000   C:\Windows\System32\iertutil.dll
+ModLoad: 00007ff8`275c0000 00007ff8`275e8000   C:\Windows\System32\srvcli.dll
+ModLoad: 00007ff8`388e0000 00007ff8`388ec000   C:\Windows\System32\netutils.dll
+ModLoad: 00007ff8`1b460000 00007ff8`1b529000   C:\WINDOWS\system32\Windows.Storage.Search.dll
+ModLoad: 00007ff8`13b00000 00007ff8`13b28000   C:\WINDOWS\system32\mssprxy.dll
+ModLoad: 00007ff8`20630000 00007ff8`20652000   C:\Windows\System32\cldapi.dll
+ModLoad: 00007ff8`220a0000 00007ff8`220ab000   C:\Windows\System32\FLTLIB.DLL
+ModLoad: 00007ff8`129f0000 00007ff8`12a14000   C:\WINDOWS\SYSTEM32\edputil.dll
+ModLoad: 00007ff8`26b00000 00007ff8`26bac000   C:\WINDOWS\SYSTEM32\TextShaping.dll
+onecoreuap\windows\frameworkudk\warppal.cpp(783)\Microsoft.Internal.FrameworkUdk.dll!00007FFFBD9C3588: (caller: 00007FFFBD973DDD) ReturnHr(2) tid(6980) 80004002 No such interface supported
+Invalid visual/content size
+Invalid visual/content size
+Invalid visual/content size
+Invalid visual/content size
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\icudtl.dat.
+SkIcuLoader: datafile missing: C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer-084-new\windows\x64\Release\icudtl.dat.
+[d3d12] resize owner=1 old=0x0 new=946x625 gen=0\nModLoad: 00007fff`9f230000 00007fff`9f3fd000   C:\WINDOWS\SYSTEM32\D3D12Core.dll
+ModLoad: 00007fff`fb950000 00007fff`fb974000   C:\WINDOWS\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_51f685305808e3a5\igd12umd64.dll
+ModLoad: 00007fff`48880000 00007fff`492c0000   C:\WINDOWS\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_51f685305808e3a5\igd12um64kbl.dll
+ModLoad: 00007fff`fae60000 00007fff`fae8b000   C:\WINDOWS\SYSTEM32\D3DSCache.dll
+ModLoad: 00007fff`45790000 00007fff`48876000   C:\WINDOWS\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_51f685305808e3a5\igd12dxva64.dll
+ModLoad: 00007ff8`3b470000 00007ff8`3b8e1000   C:\WINDOWS\System32\SETUPAPI.dll
+ModLoad: 00007ff8`1bad0000 00007ff8`1baf7000   C:\WINDOWS\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_51f685305808e3a5\igdinfo64.dll
+ModLoad: 00007fff`b8710000 00007fff`b8849000   C:\WINDOWS\SYSTEM32\dxilconv.dll
+[d3d12] resize ready owner=1 gen=1\n[d3d12] resize owner=0 old=0x0 new=946x625 gen=0\n[d3d12] resize ready owner=0 gen=1\n[axiom] present begin frame=1 objects=0 scene_records=0

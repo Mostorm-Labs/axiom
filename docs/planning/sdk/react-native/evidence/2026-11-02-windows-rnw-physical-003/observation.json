@@ -1,0 +1,131 @@
+{
+  "format": "axiom-rnw-physical-partial-v1",
+  "runId": "2026-11-02-windows-rnw-physical-003",
+  "date": "2026-11-02",
+  "timezone": "Asia/Shanghai",
+  "status": "RNW_INTEGRATION_FEASIBLE_PARTIAL",
+  "qualification": "NOT_QUALIFIED",
+  "sdkVersion": "0.2.0",
+  "remoteBaseAtSubmission": "f4d179c3284022cca46d87dba348e086bdd8b207",
+  "testedNativeSourceRevision": "1c8aebc4909c410465cd1bd3c554d01b64be170a",
+  "physicalAppContainsUncommittedBindingChanges": true,
+  "bindings": "binding-sources.json",
+  "nativeManifest": "original-native-manifest.json",
+  "packageManifest": "original-package-manifest.json",
+  "manifestLimit": "Original native bytes verified; the patched RN package no longer matches its original manifest. No new source revision is assigned to old binaries.",
+  "matrix": {
+    "react": "19.2.3",
+    "reactNative": "0.84.1",
+    "reactNativeWindows": "0.84.0",
+    "node": "22.13.0",
+    "architecture": "Fabric / New Architecture / x64",
+    "renderBackend": "Skia Ganesh / D3D12 + DirectComposition",
+    "providerIdentityEvidence": "rnw084-activation-fixed-cdb.log: distinct owner=1 and owner=0 D3D12 surfaces; windows-d3d12-canonical and windows-d3d12-preview from sdk/native/src/windows_surface.cpp; not a public Controller readback"
+  },
+  "observations": [
+    {
+      "id": "BUILD",
+      "expected": "real RNW Release app builds",
+      "observed": "three MSBuild runs exit 0",
+      "status": "PASS",
+      "evidence": "logs/rnw084-build-003.exit"
+    },
+    {
+      "id": "STARTUP",
+      "expected": "Axiom Controller and Fabric canvas attach",
+      "observed": "Accessibility tree: Ready — native D3D12 session; Objects 0; Generation 0; Scale 1.00; Surface 946x625; Contacts 0. Runtime log creates distinct canonical/preview D3D12 surfaces.",
+      "status": "PASS",
+      "source": "direct UI accessibility observation + runtime log"
+    },
+    {
+      "id": "TOOLBAR",
+      "expected": "RN commands invoke SDK",
+      "observed": "User reported: 按钮有效，笔记无效，没有preview",
+      "status": "PASS_LIMITED",
+      "limit": "No individual brush/Undo/Redo receipt was captured; button responsiveness only."
+    },
+    {
+      "id": "DRAWING_BEFORE_ZORDER_FIX",
+      "expected": "mouse ink and live preview",
+      "observed": "user reported no ink / no preview",
+      "status": "FAIL"
+    },
+    {
+      "id": "CANVAS_ZORDER",
+      "expected": "canvas center hits native canvas HWND",
+      "observed": "before: Microsoft.UI.Content.DesktopChildSiteBridge (exit 1); after HWND_TOP: AxiomRNCanvasV1 (exit 0)",
+      "status": "PASS_HOST_CHECK",
+      "evidence": [
+        "logs/rnw084-zorder-before.json",
+        "logs/rnw084-zorder-after.json"
+      ],
+      "limit": "Read-only HWND hit-test check, not a drawing/preview test."
+    },
+    {
+      "id": "DRAWING_AFTER_ZORDER_FIX",
+      "expected": "ink / preview and canonical handoff",
+      "observed": "NOT_RUN: user pressed physical Escape to stop Computer Use",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "CAPTURE",
+      "expected": "screenshots or recording",
+      "observed": "Windows.Graphics.Capture repeatedly timed out; no screenshot/recording obtained",
+      "status": "UNAVAILABLE"
+    },
+    {
+      "id": "SIX_BRUSHES_ERASERS_HISTORY_DETACH",
+      "expected": "full physical checklist",
+      "observed": "No completed per-step evidence",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "RESIZE_FOCUS_DPI_DEVICE_LOST",
+      "expected": "generation/dirty and lost/rebind recovery",
+      "observed": "No complete physical evidence; do not infer from button response",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TOUCH_PEN_PRESSURE",
+      "expected": "physical device inputs",
+      "observed": "No confirmed physical touch/stylus hardware inventory",
+      "status": "UNAVAILABLE"
+    },
+    {
+      "id": "IME",
+      "expected": "native RN IME integration",
+      "observed": "Not implemented in RN hosts",
+      "status": "OPEN/BLOCKED"
+    }
+  ],
+  "supersedesDiagnosis": {
+    "historicalRun": "2026-11-02-windows-rnw-physical-002",
+    "rejectedClaim": "createNativeController / Promise / native session initialization caused 0xC0000409",
+    "correctedFinding": "First-chance C++ EH stack shows 0x80040154 while activating MostormAxiom.ReactPackageProvider from RegisterAutolinkedNativeModulePackages, before session creation. DLL basename mismatched activation namespace. By-value ReactPromise is valid RNW; retained unchanged.",
+    "evidence": "logs/rnw084-first-exception-cdb.log"
+  },
+  "openItems": [
+    "Physical drawing/preview after z-order fix",
+    "Six brush/eraser/History/attachment/lifecycle checklist",
+    "Screenshots/video and individual receipts",
+    "Skia ICU lookup warning: executable-root icudtl.dat absent while AxiomAssets/icudtl.dat exists",
+    "RN native IME"
+  ],
+  "conclusion": "Real Windows RNW application integration is feasible. This partial run does not qualify drawing/preview or RN SDK release; no Gate/P34/PHYS PASS.",
+  "submissionValidation": {
+    "base": "f4d179c3284022cca46d87dba348e086bdd8b207",
+    "nativeAndRnwRebuiltAfterSync": false,
+    "physicalRetestAfterSync": false,
+    "releasePackageTests": {
+      "tests": 27,
+      "exit": 0,
+      "evidence": "logs/latest-release-tests.log"
+    },
+    "controllerTransportTests": {
+      "tests": 12,
+      "exit": 0,
+      "evidence": "logs/latest-controller-tests.log"
+    },
+    "upstreamNavigationAbi": "preserved; not covered by older physical binaries"
+  }
+}

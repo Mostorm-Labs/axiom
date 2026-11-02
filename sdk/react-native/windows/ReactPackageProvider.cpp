@@ -1,3 +1,4 @@
+#include "pch.h"
 #include <windows.h>
 #include <unknwn.h>
 #include <winrt/base.h>

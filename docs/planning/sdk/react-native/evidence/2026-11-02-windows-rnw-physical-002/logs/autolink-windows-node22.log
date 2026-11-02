@@ -1,0 +1,94 @@
+warn Package @mostorm/axiom-react-native contains invalid configuration: "dependency.platforms.ios.podspecPath" is not allowed. Please verify it's properly linked using "npx react-native config" command and contact the package maintainers about this.
+The command could not be loaded, possibly because:
+  * You intended to execute a .NET application:
+      The application 'nuget' does not exist.
+  * You intended to execute a .NET SDK command:
+      No .NET SDKs were found.
+
+Download a .NET SDK:
+https://aka.ms/dotnet-download
+
+Learn about SDK resolution:
+https://aka.ms/dotnet/sdk-not-found
+The command could not be loaded, possibly because:
+  * You intended to execute a .NET application:
+      The application 'nuget' does not exist.
+  * You intended to execute a .NET SDK command:
+      No .NET SDKs were found.
+
+Download a .NET SDK:
+https://aka.ms/dotnet-download
+
+Learn about SDK resolution:
+https://aka.ms/dotnet/sdk-not-found
+- Running x64 node on a x64 machine
+i Running x64 node on a x64 machine
+- Auto-linking...
+
+Parsing project...
+Found Windows app project, config:
+{
+  folder: 'C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\out\\rn-windows-consumer',
+  sourceDir: 'windows',
+  solutionFile: 'AxiomRNPhysical.sln',
+  project: {
+    projectFile: 'AxiomRNPhysical\\AxiomRNPhysical.vcxproj',
+    projectName: 'AxiomRNPhysical',
+    projectLang: 'cpp',
+    projectGuid: '{08382878-DD4C-47CB-99A3-517E5E33CA1C}'
+  },
+  experimentalFeatures: {
+    RnwNewArch: 'true',
+    UseExperimentalNuget: 'true',
+    ReactExperimentalFeaturesSet: 'true'
+  },
+  rnwConfig: {
+    'init-windows': {
+      name: 'AxiomRNPhysical',
+      namespace: 'AxiomRNPhysical',
+      template: 'cpp-app'
+    },
+    projectArch: 'new',
+    projectLang: 'cpp',
+    projectType: 'app'
+  }
+}
+Parsing dependencies...
+@mostorm/axiom-react-native has Windows implementation, config:
+{
+  folder: 'C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\out\\rn-windows-consumer\\node_modules\\@mostorm\\axiom-react-native',
+  projects: [
+    {
+      projectFile: 'AxiomReactNative.vcxproj',
+      directDependency: true,
+      projectName: 'AxiomReactNative',
+      projectLang: 'cpp',
+      projectGuid: '{A6812F1E-610F-42B7-97DA-C4DD8DA09782}',
+      cppHeaders: [Array],
+      cppPackageProviders: [Array],
+      csNamespaces: [Array],
+      csPackageProviders: [Array]
+    }
+  ],
+  solutionFile: null,
+  nugetPackages: [],
+  sourceDir: 'windows'
+}
+Adding @mostorm/axiom-react-native.
+Calculating AutolinkedNativeModules.g.cpp...
+Reading AutolinkedNativeModules.g.cpp...
+No changes to AutolinkedNativeModules.g.cpp.
+Calculating AutolinkedNativeModules.g.h...
+Reading AutolinkedNativeModules.g.h...
+No changes to AutolinkedNativeModules.g.h.
+Calculating AutolinkedNativeModules.g.props...
+Reading AutolinkedNativeModules.g.props...
+No changes to AutolinkedNativeModules.g.props.
+Calculating AutolinkedNativeModules.g.targets...
+Reading AutolinkedNativeModules.g.targets...
+No changes to AutolinkedNativeModules.g.targets.
+Calculating AxiomRNPhysical.sln changes...
+Processing AxiomReactNative.vcxproj...
+No changes to AxiomRNPhysical.sln.
+√ Auto-linking...
+Success: No auto-linking changes necessary. (32ms)

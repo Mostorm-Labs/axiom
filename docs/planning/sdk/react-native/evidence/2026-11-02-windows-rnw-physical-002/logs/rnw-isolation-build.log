@@ -1,0 +1,25 @@
+MSBuild version 18.6.3+84d3e95b4 for .NET Framework
+Build started 11/2/2026 1:06:37 AM.
+
+     1>Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj" on node 1 (Build target(s)).
+     1>ROSLYNCODETASKFACTORYCSHARPCOMPILER : warning CS1668: Invalid search path 'C:\Program Files\Mega-Nerd\libsndfile\lib' specified in 'LIB environment variable' -- 'directory does not exist' [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+     1>Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj" (1) is building "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\Microsoft.ReactNative\Microsoft.ReactNative.vcxproj" (2) on node 1 (default targets).
+     2>C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\PropertySheets\React.Cpp.props(140,26): error MSB4086: A numeric comparison was attempted on "$(PlatformToolsetVersion)" that evaluates to "" instead of a number, in condition "$(PlatformToolsetVersion)<145". [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\Microsoft.ReactNative\Microsoft.ReactNative.vcxproj]
+     2>Done Building Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\Microsoft.ReactNative\Microsoft.ReactNative.vcxproj" (default targets) -- FAILED.
+     1>Done Building Project "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+       "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj" (Build target) (1) ->
+       (WindowsAppSDKVerifyTransitiveDependencies target) -> 
+         ROSLYNCODETASKFACTORYCSHARPCOMPILER : warning CS1668: Invalid search path 'C:\Program Files\Mega-Nerd\libsndfile\lib' specified in 'LIB environment variable' -- 'directory does not exist' [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj]
+
+
+       "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\windows\AxiomRNPhysical\AxiomRNPhysical.vcxproj" (Build target) (1) ->
+       "C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\Microsoft.ReactNative\Microsoft.ReactNative.vcxproj" (default target) (2) ->
+         C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\PropertySheets\React.Cpp.props(140,26): error MSB4086: A numeric comparison was attempted on "$(PlatformToolsetVersion)" that evaluates to "" instead of a number, in condition "$(PlatformToolsetVersion)<145". [C:\Users\Chado\.codex\worktrees\axiom-rn-windows-physical\out\rn-windows-consumer\node_modules\react-native-windows\Microsoft.ReactNative\Microsoft.ReactNative.vcxproj]
+
+    1 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:00.65

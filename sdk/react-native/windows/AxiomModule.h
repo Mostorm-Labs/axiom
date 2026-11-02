@@ -9,11 +9,11 @@
 namespace MostormAxiom {
 REACT_MODULE(AxiomNative,L"AxiomNative")
 struct AxiomNative {
- Microsoft::ReactNative::ReactContext context;
+ winrt::Microsoft::ReactNative::ReactContext context;
  REACT_INIT(Initialize)
- void Initialize(Microsoft::ReactNative::ReactContext const& value)noexcept{context=value;}
+ void Initialize(winrt::Microsoft::ReactNative::ReactContext const& value)noexcept{context=value;}
  REACT_METHOD(createSession)
- void createSession(std::string options,std::vector<double> snapshot,Microsoft::ReactNative::ReactPromise<std::string> promise)noexcept{
+ void createSession(std::string options,std::vector<double> snapshot,winrt::Microsoft::ReactNative::ReactPromise<std::string> promise)noexcept{
   context.UIDispatcher().Post([options=std::move(options),snapshot=std::move(snapshot),promise]()mutable{
    try{wchar_t executable[32768]{};const auto length=GetModuleFileNameW(nullptr,executable,32768);
     if(!length||length>=32768)throw std::runtime_error("module location");
@@ -25,7 +25,7 @@ struct AxiomNative {
   });
  }
  REACT_METHOD(request)
- void request(std::string token,std::string request,std::vector<double> input,Microsoft::ReactNative::ReactPromise<std::string> promise)noexcept{
+ void request(std::string token,std::string request,std::vector<double> input,winrt::Microsoft::ReactNative::ReactPromise<std::string> promise)noexcept{
   context.UIDispatcher().Post([token=std::move(token),request=std::move(request),input=std::move(input),promise]()mutable{
    try{std::vector<std::uint8_t> bytes;for(auto v:input){if(v<0||v>255||std::floor(v)!=v)throw std::invalid_argument("byte");bytes.push_back(static_cast<std::uint8_t>(v));}
     axiom_native_buffer buffer=0;if(axiom_native_call(token.c_str(),request.data(),request.size(),bytes.data(),bytes.size(),&buffer))throw std::runtime_error("call rejected");
@@ -34,6 +34,6 @@ struct AxiomNative {
   });
  }
  REACT_METHOD(close)
- void close(std::string token,Microsoft::ReactNative::ReactPromise<void> promise)noexcept{context.UIDispatcher().Post([token=std::move(token),promise](){if(axiom_native_close(token.c_str()))promise.Reject("CLOSE_REJECTED: finish IME or drain data custody");else promise.Resolve();});}
+ void close(std::string token,winrt::Microsoft::ReactNative::ReactPromise<void> promise)noexcept{context.UIDispatcher().Post([token=std::move(token),promise](){if(axiom_native_close(token.c_str()))promise.Reject("CLOSE_REJECTED: finish IME or drain data custody");else promise.Resolve();});}
 };
 }

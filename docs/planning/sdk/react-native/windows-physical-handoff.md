@@ -22,7 +22,8 @@ SDK：0.2.0 development，private / NOT_QUALIFIED，禁止发布或修改 v0.1.0
    windows-consumer-v1.md、shell-axis-preview-contract.md。
 
 2. 确认 x64 Windows、Node 22、Python 3.12、CMake/Ninja 和 VS C++/Windows SDK。
-   RN 固定 0.83.10，React 固定 19.2.0，react-native-windows 固定 0.83.3。
+   用户于 2026-11-02 接受 Windows 独立版本线：RN 固定 0.84.1，React 固定
+   19.2.3，react-native-windows 固定 0.84.0。其他平台原有 0.83 证据不重标记。
    当前 RNW 工程要求 v145；核对接受的 Skia/CRT/toolchain 兼容性，不能盲目降级。
    在匹配的 x64 Developer PowerShell 中执行构建。
    Semantic 必须使用 semantic-sdk.lock.json 的 windows-x64-msvc-static；
@@ -41,7 +42,7 @@ SDK：0.2.0 development，private / NOT_QUALIFIED，禁止发布或修改 v0.1.0
    正常消费者只能得到成品 DLL/import lib、公开 C header、资源和许可证，
    不得包含内部 Runtime/Skia/Protobuf headers 或静态库。
 
-4. 在 out/ 下创建独立 RN Windows 0.83.3 / RN 0.83.10 Fabric 消费者工程。
+4. 在 out/ 下创建独立 RN Windows 0.84.0 / RN 0.84.1 Fabric 消费者工程。
    先阅读官方当前模板/本地 CLI --help，再调用 init-windows/run-windows，
    不猜 CLI 参数，不切换到旧架构。安装 out/rn-windows-package 后确认
    autolink/codegen 包含 AxiomNative TurboModule 与 AxiomCanvasView component。
@@ -54,6 +55,10 @@ SDK：0.2.0 development，private / NOT_QUALIFIED，禁止发布或修改 v0.1.0
    本地 file: symlink 时给 Metro 配置 staged package watchFolders 和 app
    node_modulesPaths，按 RNW 的 platform resolver 解析 react-native。
    确认 axiom_native.dll、ICU/fonts/assets 实际复制到 App 可访问的位置。
+   非打包应用必须初始化 app-local Windows App SDK。C++/WinRT provider
+   的输出名为 MostormAxiom.dll（与 activation namespace 一致）；不要再用
+   AxiomReactNative.dll 的旧输出冒充本轮构建。Canvas HWND 必须在自己的
+   有界矩形内位于 RNW ContentIsland 兄弟窗口上方，并验证命中目标。
    构建并启动真实 x64 RNW 窗口，保存完整构建、部署、启动日志。
 
 5. 真机逐项验证并保存前后截图/录像、Controller state 和 command results：

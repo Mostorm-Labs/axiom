@@ -50,13 +50,15 @@ public:
  }
  winrt::Microsoft::UI::Composition::Visual CreateVisual(const winrt::Microsoft::ReactNative::ComponentView& view)noexcept{auto v=view.as<winrt::Microsoft::ReactNative::Composition::ComponentView>().Compositor().CreateSpriteVisual();v.Opacity(0);return v;}
  void UpdateProps(const winrt::Microsoft::ReactNative::ComponentView&,const winrt::com_ptr<AxiomCanvasViewProps>& props,const winrt::com_ptr<AxiomCanvasViewProps>&)noexcept{
-  const auto token=winrt::to_string(props->sessionToken);if(token!=token_){detach();token_=token;attach();}
+  const auto& token=props->sessionToken;if(token!=token_){detach();token_=token;attach();}
  }
  void UpdateLayoutMetrics(const winrt::Microsoft::ReactNative::ComponentView& view,const winrt::Microsoft::ReactNative::LayoutMetrics& metrics,const winrt::Microsoft::ReactNative::LayoutMetrics&)noexcept{
   try{if(!parent_)return;float x=metrics.Frame.X,y=metrics.Frame.Y;auto parent=view.Parent();while(parent){x+=parent.LayoutMetrics().Frame.X;y+=parent.LayoutMetrics().Frame.Y;parent=parent.Parent();}
    width_=metrics.Frame.Width;height_=metrics.Frame.Height;dpr_=metrics.PointScaleFactor>0?metrics.PointScaleFactor:1;
    if(!window_){window_=CreateWindowExW(0,L"AxiomRNCanvasV1",L"",WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS,0,0,1,1,parent_,nullptr,GetModuleHandleW(nullptr),this);if(window_)SetTimer(window_,1,16,nullptr);}
-   if(!window_)return;SetWindowPos(window_,nullptr,int(std::lround(x*dpr_)),int(std::lround(y*dpr_)),int(std::lround(width_*dpr_)),int(std::lround(height_*dpr_)),SWP_NOACTIVATE|SWP_NOZORDER);
+   // RNW's ContentIsland is a sibling HWND. Keep this bounded native canvas
+   // above that sibling so the canvas, rather than RNW, receives its input.
+   if(!window_)return;SetWindowPos(window_,HWND_TOP,int(std::lround(x*dpr_)),int(std::lround(y*dpr_)),int(std::lround(width_*dpr_)),int(std::lround(height_*dpr_)),SWP_NOACTIVATE|SWP_SHOWWINDOW);
    if(generation_)axiom_native_resize(token_.c_str(),generation_,width_,height_,dpr_);else attach();
   }catch(...){detach();}
  }

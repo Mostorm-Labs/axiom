@@ -51,6 +51,9 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v145</PlatformToolset>
+    <!-- C++/WinRT resolves ReactPackageProvider by its namespace activation
+         name (MostormAxiom), so the DLL filename must match that namespace. -->
+    <TargetName>MostormAxiom</TargetName>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
@@ -71,7 +74,7 @@
   </ImportGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
       <WarningLevel>Level4</WarningLevel>
@@ -113,6 +116,10 @@
     <ClInclude Include="AxiomModule.h" />
     <ClInclude Include="AxiomCanvasView.h" />
     <ClInclude Include="ReactPackageProvider.h" />
+    <ClInclude Include="pch.h" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="ReactPackageProvider.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <Midl Include="ReactPackageProvider.idl" />

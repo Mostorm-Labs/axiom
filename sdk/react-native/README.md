@@ -1,7 +1,7 @@
 # @mostorm/axiom-react-native (0.2.0 development package)
 
 This package exposes the shared async Controller and Fabric `AxiomCanvasView`
-contract for React Native 0.83.10. The same TypeScript calls are used on
+contract for the React Native development lanes below. The same TypeScript calls are used on
 Windows/RNW, macOS/RN macOS, Android and iOS. Native implementations must bind
 one Session to one view and route pointer samples directly to Runtime.
 
@@ -15,7 +15,17 @@ validation. No POC05 state or renderer is used as a product owner.
 
 Build a matching native install with `tools/release/build_native_sdk.py`, then stage the RN consumer with `tools/release/native_package.py`. The package includes only the public C header, finished platform library/framework, deterministic assets and licenses; it does not include Runtime or Skia archives.
 
-The package uses React Native 0.83.10, React 19.2.0, RN Windows 0.83.3 and RN macOS 0.83.0. Android/iOS/macOS/Windows hosts all attach one opaque session token to one `AxiomCanvasView`; the Controller and view share that session.
+The Windows development lane uses React Native 0.84.1, React 19.2.3 and RN Windows
+0.84.0, selected by the user on 2026-11-02. Existing Apple/Android evidence remains
+bound to React Native 0.83.10 / React 19.2.0 (RN macOS 0.83.0). The peer alternatives
+allow those separate exact lanes; they do not establish arbitrary cross-version
+combinations or requalify the other platforms. All hosts attach one opaque session
+token to one `AxiomCanvasView`; the Controller and view share that session.
+
+The Windows RNW/Fabric app has been built and launched on a physical Windows
+machine, with Controller state and working toolbar buttons. Canvas input Z order
+was corrected after the user reported no ink/preview; drawing after that correction
+still requires physical revalidation. See the [Windows report](../../docs/planning/sdk/react-native/evidence/2026-11-02-windows-rnw-physical-003/report.md).
 
 This package is marked `qualification = NOT_QUALIFIED` until each platform has a real RN app build and physical input/lifecycle evidence.
 

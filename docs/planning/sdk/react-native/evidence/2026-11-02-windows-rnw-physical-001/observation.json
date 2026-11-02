@@ -1,0 +1,138 @@
+{
+  "result": "BLOCKED_EVIDENCE",
+  "runId": "2026-11-02-windows-rnw-physical-001",
+  "sourceRevision": "1c8aebc4909c410465cd1bd3c554d01b64be170a",
+  "sourceCleanBeforeEvidence": true,
+  "sdk": {
+    "version": "0.2.0",
+    "qualification": "NOT_QUALIFIED",
+    "target": "windows-x64",
+    "semanticProfile": "windows-x64-msvc-static",
+    "skiaProfile": "windows-x64-d3d12",
+    "nativeManifest": "out/rn-windows-install/native-manifest.json",
+    "packageManifest": "out/rn-windows-package/manifest.json"
+  },
+  "execution": {
+    "realRnWindowsApp": false,
+    "web": false,
+    "webview": false,
+    "win32Demo": false,
+    "hostTestsAsPhysicalEvidence": false,
+    "buildExitCode": 1,
+    "windowLaunch": "BLOCKED_BUILD",
+    "backend": "Unavailable",
+    "canonicalProvider": "Unavailable",
+    "previewProvider": "Unavailable",
+    "ime": "OPEN/BLOCKED"
+  },
+  "steps": [
+    {
+      "id": "sync",
+      "expected": "exact revision, clean worktree",
+      "observed": "1c8aebc4909c410465cd1bd3c554d01b64be170a; clean before evidence",
+      "pass": true
+    },
+    {
+      "id": "native-package",
+      "expected": "native SDK and package manifests exact",
+      "observed": "SDK 0.2.0; revision 1c8aebc4909c410465cd1bd3c554d01b64be170a; DLL and import library hashed",
+      "pass": true
+    },
+    {
+      "id": "rnw-init",
+      "expected": "RN 0.83.10 + RNW 0.83.3 Fabric app",
+      "observed": "cpp-app template generated; RnwNewArch=true; RNW 0.83.3",
+      "pass": true
+    },
+    {
+      "id": "autolink",
+      "expected": "AxiomNative and AxiomCanvasView autolink",
+      "observed": "MostormAxiom::ReactPackageProvider registered; Fabric codegen generated AxiomCanvasView.g.h",
+      "pass": true
+    },
+    {
+      "id": "build",
+      "expected": "Debug x64 real RNW app",
+      "observed": "MSBuild exit 1; package compile errors and DesktopBridge template error",
+      "pass": false
+    },
+    {
+      "id": "physical-window",
+      "expected": "real RNW window and input",
+      "observed": "NOT_RUN because build blocked",
+      "pass": false,
+      "unavailable": true
+    },
+    {
+      "id": "native-ime",
+      "expected": "native IME",
+      "observed": "OPEN/BLOCKED per package contract",
+      "pass": false,
+      "unavailable": true
+    }
+  ],
+  "blockers": [
+    {
+      "code": "RNW_PACKAGE_SOURCE_INCOMPATIBLE",
+      "detail": "sdk/react-native/windows AxiomModule.h/AxiomPackageProvider.h/AxiomCanvasView.h do not compile against RNW 0.83.3 APIs; see out/consumer-logs/axiom-native-build-v2.log",
+      "files": [
+        "out/rn-windows-package/windows/AxiomModule.h",
+        "out/rn-windows-package/windows/AxiomPackageProvider.h",
+        "out/rn-windows-package/windows/AxiomCanvasView.h"
+      ]
+    },
+    {
+      "code": "RNW_PACKAGE_PCH_MISSING",
+      "detail": "AxiomReactNative.vcxproj compiles RNW Cxx sources that include pch.h but staged package has no pch.h; see build log"
+    },
+    {
+      "code": "HOST_TOOLCHAIN_TEMPLATE",
+      "detail": "solution .wapproj requires Microsoft.DesktopBridge.props absent on host; no package-only workaround was used for qualification"
+    }
+  ],
+  "artifacts": {
+    "nativeBuildLog": "out/rn-windows-native-build-v2.log",
+    "nativeInstallLog": "out/rn-windows-install.log",
+    "rnwInitLog": "out/consumer-logs/rnw-init-windows.log",
+    "autolinkLog": "out/consumer-logs/autolink-windows-node22.log",
+    "codegenLog": "out/consumer-logs/codegen-windows.log",
+    "buildLog": "out/consumer-logs/rnw-build-debug-v2.log",
+    "nativeCompileLog": "out/consumer-logs/axiom-native-build-v2.log",
+    "msbuildBinlog": "out/consumer-logs/axiom-native-build-v2.binlog",
+    "capturePath": "C:\\Users\\Chado\\.codex\\worktrees\\axiom-rn-windows-physical\\docs\\planning\\sdk\\react-native\\evidence\\2026-11-02-windows-rnw-physical-001\\screenshots"
+  },
+  "environment": {
+    "computer": "HIMEKO",
+    "os": "Microsoft Windows 10 专业版",
+    "osVersion": "10.0.19045",
+    "architecture": "x64-based PC",
+    "gpu": "OrayIddDriver Device",
+    "gpuDriver": "17.50.19.949",
+    "windowsKits": [
+      "10.0.18362.0",
+      "10.0.19041.0",
+      "10.0.26100.0",
+      "wdf",
+      "win7",
+      "win8",
+      "winv6.3"
+    ],
+    "node": "22.13.0",
+    "python": "3.12.10",
+    "react": "19.2.0",
+    "reactNative": "0.83.10",
+    "reactNativeWindows": "0.83.3",
+    "visualStudio": "18.6.11828.311",
+    "msvc": "v145 / 19.51.36246",
+    "cmake": "4.3.3",
+    "ninja": "1.13.2",
+    "dotnetSdk": "10.0.403",
+    "proxy": "http://127.0.0.1:7897"
+  },
+  "hashes": {
+    "share/axiom-native/version.json": "70d45d94ebeb7047958f0e5830293977f8147995018c906a1c21887da94c9863",
+    "include/axiom/native.h": "805fcd6a46faadd51da59cba98c9eb03591d17a55e9f47419ad91f35faf01f5b",
+    "lib/axiom_native.lib": "5541943761674a869550c6ef9530860b7ec6e90d303807c48d6baf6af6eab483",
+    "bin/axiom_native.dll": "fc8e410f513a12d98e6cf5edb983a9dd4c899b52acc8b727a5101f49c1a99c6a"
+  }
+}
