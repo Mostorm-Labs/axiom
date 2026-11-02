@@ -421,6 +421,127 @@ TEST(FC08SectionConsumer, GroupSelectedRootsAdvertisesCapability) {
     EXPECT_TRUE(c.close());
 }
 
+TEST(FC08SectionConsumer, GroupAcceptsVisualOrderDifferentFromObjectIdOrder) {
+    runtime::RuntimeCompositionCore c; ASSERT_TRUE(c.open()); ASSERT_TRUE(c.bindSurface(800,600));
+    semantic::InsertObjectsOp insert;
+    const auto visualFirst=foundation::ObjectId::fromUint64(200);
+    const auto visualSecond=foundation::ObjectId::fromUint64(100);
+    for (const auto [id, order, x] : std::array<std::tuple<foundation::ObjectId, std::uint8_t, double>, 2>{
+             std::tuple{visualFirst, 1U, 40.0}, std::tuple{visualSecond, 2U, 180.0}}) {
+        semantic::ObjectRecord object;
+        object.id=id; object.kind=semantic::ObjectKind::kShape; object.kind_version=1;
+        object.content=semantic::ShapeContent{1,40,30}; object.transform.tx=x;
+        object.placement.order_key=semantic::OrderKey({order}); insert.objects.push_back(object);
+    }
+    semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(3990)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,std::move(insert)};
+    ASSERT_EQ(c.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,
+              semantic::ApplyDisposition::kApplied);
+    auto& f=c.controlFacade();
+    const auto groupId=foundation::ObjectId::fromUint64(3991);
+    ASSERT_EQ(f.groupObjects({visualFirst,visualSecond},groupId,1,3990).state,
+              runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());
+    const auto receipt=f.canvasControlReceipt({3990,1}); ASSERT_TRUE(receipt);
+    EXPECT_EQ(receipt->state,runtime::CanvasControlReceiptState::kApplied);
+    EXPECT_EQ(c.semanticObjectCount(),3U);
+    EXPECT_TRUE(c.close());
+}
+
+TEST(FC08SectionConsumer, GroupSerializesUnselectedSiblingGuardsByObjectIdentity) {
+    runtime::RuntimeCompositionCore c; ASSERT_TRUE(c.open()); ASSERT_TRUE(c.bindSurface(800,600));
+    semantic::InsertObjectsOp insert;
+    const std::array<std::pair<std::uint64_t, bool>, 4> values{{{400, true}, {100, true}, {300, true}, {200, false}}};
+    std::uint8_t order=1;
+    for (const auto [raw, selected] : values) {
+        semantic::ObjectRecord object;
+        object.id=foundation::ObjectId::fromUint64(raw); object.kind=semantic::ObjectKind::kShape;
+        object.kind_version=1; object.content=semantic::ShapeContent{1,40,30};
+        object.transform.tx=static_cast<double>(order*60); object.placement.order_key=semantic::OrderKey({order++});
+        insert.objects.push_back(object); static_cast<void>(selected);
+    }
+    semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(3992)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,std::move(insert)};
+    ASSERT_EQ(c.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,
+              semantic::ApplyDisposition::kApplied);
+    auto& f=c.controlFacade();
+    ASSERT_EQ(f.groupObjects({foundation::ObjectId::fromUint64(400),
+                              foundation::ObjectId::fromUint64(100),
+                              foundation::ObjectId::fromUint64(300)},
+                             foundation::ObjectId::fromUint64(3993),1,3992).state,
+              runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());
+    const auto receipt=f.canvasControlReceipt({3992,1}); ASSERT_TRUE(receipt);
+    EXPECT_EQ(receipt->state,runtime::CanvasControlReceiptState::kApplied);
+    EXPECT_EQ(c.semanticObjectCount(),5U);
+    EXPECT_TRUE(c.close());
+}
+
+TEST(FC08SectionConsumer, GroupAcceptsVectorStrokeWithShapeRoots) {
+    runtime::RuntimeCompositionCore c; ASSERT_TRUE(c.open()); ASSERT_TRUE(c.bindSurface(800,600));
+    semantic::InsertObjectsOp insert;
+    semantic::ObjectRecord stroke; stroke.id=foundation::ObjectId::fromUint64(700);
+    stroke.kind=semantic::ObjectKind::kVectorStroke; stroke.kind_version=1;
+    stroke.placement.order_key=semantic::OrderKey({1});
+    semantic::StrokeRecord vector; vector.brush.brush_family_id=1; vector.brush.brush_version=1;
+    vector.brush.color={0,0,0,1}; vector.brush.nominal_size=2; vector.brush.opacity=1;
+    vector.data=semantic::VectorStrokeData{{{{0,0},1,{0,0}},{{80,60},1,{0,0}}}};
+    stroke.content=semantic::VectorStrokeContent{vector}; insert.objects.push_back(stroke);
+    for (const auto [raw, order, x] : std::array<std::tuple<std::uint64_t, std::uint8_t, double>, 2>{
+             std::tuple{1000, 2U, 100.0}, std::tuple{1100, 3U, 240.0}}) {
+        semantic::ObjectRecord shape; shape.id=foundation::ObjectId::fromUint64(raw);
+        shape.kind=semantic::ObjectKind::kShape; shape.kind_version=1;
+        shape.content=semantic::ShapeContent{1,40,30}; shape.transform.tx=x;
+        shape.placement.order_key=semantic::OrderKey({order}); insert.objects.push_back(shape);
+    }
+    semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(7990)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,std::move(insert)};
+    ASSERT_EQ(c.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,
+              semantic::ApplyDisposition::kApplied);
+    auto& f=c.controlFacade();
+    ASSERT_EQ(f.groupObjects({foundation::ObjectId::fromUint64(700),
+                              foundation::ObjectId::fromUint64(1000),
+                              foundation::ObjectId::fromUint64(1100)},
+                             foundation::ObjectId::fromUint64(7991),1,7990).state,
+              runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());
+    const auto receipt=f.canvasControlReceipt({7990,1}); ASSERT_TRUE(receipt);
+    EXPECT_EQ(receipt->state,runtime::CanvasControlReceiptState::kApplied);
+    EXPECT_EQ(c.semanticObjectCount(),4U);
+    EXPECT_TRUE(c.close());
+}
+
+TEST(FC08SectionConsumer, GroupAcceptsCompactInkV2WithShapeRoots) {
+    runtime::RuntimeCompositionCore c; ASSERT_TRUE(c.open()); ASSERT_TRUE(c.bindSurface(800,600));
+    semantic::InsertObjectsOp insert;
+    semantic::ObjectRecord compact; compact.id=foundation::ObjectId::fromUint64(900);
+    compact.kind=semantic::ObjectKind::kVectorStroke; compact.kind_version=3;
+    compact.placement.order_key=semantic::OrderKey({1});
+    semantic::CompactStrokeContent content; content.stroke.config.version=2;
+    content.stroke.config.algorithmVersion=4; content.stroke.config.signalVersion=3;
+    content.stroke.config.materialVersion=2;
+    content.stroke.config.materialResourceId=foundation::kInkMaterialV2ResourceId;
+    content.stroke.config.materialResourceSha256=foundation::kInkMaterialV2ResourceSha256;
+    content.stroke.knots={{0,0,32768},{80,60,65535}}; compact.content=content;
+    insert.objects.push_back(compact);
+    semantic::ObjectRecord shape; shape.id=foundation::ObjectId::fromUint64(901);
+    shape.kind=semantic::ObjectKind::kShape; shape.kind_version=1;
+    shape.content=semantic::ShapeContent{1,40,30}; shape.transform.tx=180;
+    shape.placement.order_key=semantic::OrderKey({2}); insert.objects.push_back(shape);
+    semantic::Operation seed{semantic::OperationId{foundation::ObjectId::fromUint64(8990)},
+        semantic::DocumentId{foundation::ObjectId::fromUint64(1)},1,1,std::move(insert)};
+    ASSERT_EQ(c.applyExternalOperation(seed,semantic::ApplySource::kRemoteSync).disposition,
+              semantic::ApplyDisposition::kApplied);
+    auto& f=c.controlFacade();
+    ASSERT_EQ(f.groupObjects({compact.id,shape.id},foundation::ObjectId::fromUint64(8991),1,8990).state,
+              runtime::ProductControlState::kQueued);
+    ASSERT_TRUE(c.ownerPump());
+    const auto receipt=f.canvasControlReceipt({8990,1}); ASSERT_TRUE(receipt);
+    EXPECT_EQ(receipt->state,runtime::CanvasControlReceiptState::kApplied);
+    EXPECT_EQ(c.semanticObjectCount(),3U);
+    EXPECT_TRUE(c.close());
+}
+
 TEST(FC08SectionConsumer, UngroupTransformedGroupPreservesSectionWorldPose) {
     runtime::RuntimeCompositionCore c;ASSERT_TRUE(c.open());ASSERT_TRUE(c.bindSurface(800,600));
     auto& f=c.controlFacade();

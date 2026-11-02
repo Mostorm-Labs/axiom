@@ -17,6 +17,7 @@ using namespace canvas;
 class WebPlatform final : public sdk::SessionPlatform {
     std::unique_ptr<platform::WebRuntimeAdapter> adapter_;
     int canonical_ = 0, preview_ = 0;
+    std::uint64_t resizePresented_ = 0;
 
   public:
     ~WebPlatform() override {
@@ -48,7 +49,9 @@ class WebPlatform final : public sdk::SessionPlatform {
         if (!std::isfinite(w) || !std::isfinite(h) || !std::isfinite(d) || w <= 0 || h <= 0 ||
             d <= 0 || w * d > 16384 || h * d > 16384)
             return false;
-        return adapter_ && adapter_->bind(canonical_,
+        if (!adapter_) return false;
+        resizePresented_ = adapter_->presentedCount();
+        return adapter_->bind(canonical_,
                                           preview_,
                                           w,
                                           h,
@@ -71,6 +74,9 @@ class WebPlatform final : public sdk::SessionPlatform {
                 {"code", "FRAME_REJECTED"},
                 {"pending", adapter_->frameStatus().pending},
                 {"retry", result == platform::WebFrameResult::kRetry},
+                // Private transport fact: a qualified canonical completion
+                // since the latest binding, never disposable navigation work.
+                {"surfaceReady", adapter_->presentedCount() > resizePresented_},
                 {"presented", std::to_string(adapter_->presentedCount())}};
     }
     bool shutdown() override {

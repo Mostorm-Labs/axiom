@@ -5,7 +5,7 @@
 <title>Axiom SDK Demo</title>
 <style>
   * { box-sizing: border-box; }
-  body { margin: 0; height: 100dvh; display: flex; flex-direction: column; font: 13px system-ui, sans-serif; color: #243246; background: #f5f7fa; }
+  body { margin: 0; height: 100dvh; overflow: hidden; font: 13px system-ui, sans-serif; color: #243246; background: #f5f7fa; }
   button, select, input { font: inherit; }
   button, select, input[type=number] { min-height: 32px; border: 1px solid #d7dee8; border-radius: 6px; color: inherit; background: white; }
   button { padding: 5px 11px; white-space: nowrap; cursor: pointer; }
@@ -14,13 +14,19 @@
   button:disabled { opacity: .4; cursor: default; }
   :focus-visible { outline: 2px solid #3978cf; outline-offset: 2px; }
   [hidden] { display: none !important; }
-  #tools { flex: none; background: #fff; border-bottom: 1px solid #dbe2ec; }
-  .toolbar-row { display: flex; align-items: center; min-height: 52px; padding: 0 16px; border-bottom: 1px solid #edf0f5; }
+  #tools { position: fixed; z-index: 3; top: 12px; left: 16px; right: 16px; overflow: hidden; border: 1px solid #d7dee8; border-radius: 12px; background: #fffffff2; box-shadow: 0 5px 24px #172c4c1a; }
+  .toolbar-row { display: flex; align-items: center; height: 52px; flex: none; padding: 0 16px; border-bottom: 1px solid #edf0f5; }
   .toolbar-row:last-child { border: 0; background: #f8fafc; }
   .row-label { flex: 0 0 44px; color: #7b8798; font-size: 12px; }
   .row-content { min-width: 0; flex: 1; display: flex; align-items: center; gap: 16px; overflow-x: auto; padding: 8px 2px; scrollbar-width: thin; }
   .group { display: flex; flex: none; align-items: center; gap: 6px; white-space: nowrap; }
-  #ink-parameters { flex-wrap: wrap; white-space: normal; max-width: min(1500px, calc(100vw - 90px)); row-gap: 10px; }
+  #workspace { position: fixed; inset: 0; overflow: hidden; }
+  #properties { position: absolute; z-index: 2; bottom: 44px; left: 16px; right: 16px; max-height: min(38vh, 260px); overflow: auto; border: 1px solid #d7dee8; border-radius: 12px; background: #fffffff2; box-shadow: 0 5px 24px #172c4c1a; }
+  #properties .toolbar-row { height: auto; min-height: 48px; }
+  #properties .row-content { flex-wrap: wrap; overflow: visible; gap: 10px; }
+  #properties .group { flex-wrap: wrap; gap: 6px; max-width: 100%; padding: 0; border: 0; }
+  #properties .group + .group { border-left: 1px solid #e1e6ee; padding-left: 12px; }
+  #ink-parameters { flex-wrap: wrap; white-space: normal; row-gap: 10px; }
   #ink-parameters output { min-width: 30px; font-variant-numeric: tabular-nums; }
   .group + .group { border-left: 1px solid #e1e6ee; padding-left: 16px; }
   label { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
@@ -33,8 +39,8 @@
   select { max-width: 170px; padding: 4px 8px; }
   .hint { color: #8290a3; white-space: nowrap; }
   #context-title { color: #52657d; font-weight: 500; white-space: nowrap; flex: none; }
-  #canvas { flex: 1; min-height: 160px; position: relative; overflow: hidden; background: white; }
-  #status { flex: none; min-height: 28px; padding: 6px 16px; margin: 0; color: #6a7a90; font-size: 12px; white-space: pre-wrap; }
+  #canvas { position: absolute; inset: 0; overflow: hidden; background: white; }
+  #status { position: fixed; z-index: 3; left: 16px; bottom: 8px; max-width: calc(100vw - 32px); max-height: 28px; overflow: auto; padding: 6px 12px; margin: 0; border-radius: 8px; color: #6a7a90; background: #fffffff2; font-size: 12px; white-space: pre-wrap; pointer-events: none; }
   #status[data-error=true] { color: #b42318; background: #fff1f0; }
   dialog { width: min(390px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; margin: auto; padding: 22px; border: 1px solid #dbe2ec; border-radius: 12px; color: inherit; box-shadow: 0 12px 60px #172c4c30; }
   dialog::backdrop { background: #15243a35; }
@@ -51,11 +57,15 @@
 </style>
 <header id="tools" aria-busy="true" inert>
   <nav class="toolbar-row" aria-label="绘制工具"><span class="row-label">工具</span><div id="drawing-tools" class="row-content"></div></nav>
-  <nav class="toolbar-row" aria-label="工具与对象参数"><span class="row-label">参数</span><div id="context-tools" class="row-content"><span id="context-title"></span></div></nav>
-  <nav class="toolbar-row" aria-label="文字与对象属性"><span class="row-label">属性</span><div id="detail-tools" class="row-content"></div></nav>
   <nav class="toolbar-row" aria-label="画板操作"><span class="row-label">画板</span><div id="board-tools" class="row-content"></div></nav>
 </header>
-<div id="canvas"></div>
+<main id="workspace">
+  <div id="canvas"></div>
+  <aside id="properties" aria-label="工具与对象属性" aria-busy="true" inert>
+    <div class="toolbar-row"><span class="row-label">参数</span><div id="context-tools" class="row-content"><span id="context-title"></span></div></div>
+    <div class="toolbar-row"><span class="row-label">属性</span><div id="detail-tools" class="row-content"></div></div>
+  </aside>
+</main>
 <output id="status" role="status">Loading SDK…</output>
 <input id="file" type="file" accept="image/png,image/jpeg,image/webp" hidden>
 <dialog id="background-panel" aria-labelledby="background-title">
@@ -380,7 +390,7 @@ try {
     const toolName = toolButtons.find(element => element.dataset.tool === activeKey)?.textContent || '工具';
     $('context-title').textContent = selected.count ? `已选 ${selected.count} 个对象` : toolName;
     inkGroup.hidden = state.creationMode || state.tool !== 0 || selected.count > 0;
-    selectionGroup.hidden = state.creationMode || state.tool !== 1 || selected.count > 0;
+    selectionGroup.hidden = state.creationMode || state.tool !== 1;
     eraserGroup.hidden = state.creationMode || state.tool !== 2;
     selectionMode.value = ['point', 'rectangle', 'lasso'][state.selectionMode];
     eraserMode.value = state.eraserMode === 1 ? 'objectEraser' : 'partialEraser';
@@ -477,7 +487,7 @@ try {
       throw error;
     } finally { exportButton.disabled = false; }
   });
-  tools.inert = false; tools.setAttribute('aria-busy', 'false'); show();
+  tools.inert = false; tools.setAttribute('aria-busy', 'false'); $('properties').inert = false; $('properties').setAttribute('aria-busy', 'false'); show();
   window.addEventListener('pagehide', () => { void sdk.close().catch(fail); }, {once: true});
 } catch (error) { fail(error); }
 </script>

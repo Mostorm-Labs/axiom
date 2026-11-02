@@ -225,6 +225,7 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
             return std::any_of(paragraph.runs.begin(),paragraph.runs.end(),[](const auto& run){return !run.text.empty();});
         });
         if(hasText) {
+            result.publishable=false;
             result.status=Status::kPartial;
             const auto kind=static_cast<std::uint32_t>(r.kind);
             if(std::find(result.unsupportedKinds.begin(),result.unsupportedKinds.end(),kind)==result.unsupportedKinds.end())result.unsupportedKinds.push_back(kind);
@@ -252,6 +253,12 @@ CanvasEditingRuntime::RegionQueryResult CanvasEditingRuntime::querySelectionRegi
         const auto intersection=intersectSelectionRegion(object,world,projection);
         if (intersection==RegionIntersection::kInvalid) {result.status=Status::kFailed;return result;}
         if (intersection==RegionIntersection::kUnsupported) {
+            // Only intentionally unsupported brush coverage may be skipped.
+            // Missing layout/routes/resources still preserve the old selection.
+            const bool brush=object.kind==semantic::ObjectKind::kDabStroke ||
+                (object.kind==semantic::ObjectKind::kVectorStroke&&
+                 std::holds_alternative<semantic::CompactStrokeContent>(object.content));
+            result.publishable&=brush;
             result.status=Status::kPartial;
             const auto kind=static_cast<std::uint32_t>(object.kind);
             if (std::find(result.unsupportedKinds.begin(),result.unsupportedKinds.end(),kind)==result.unsupportedKinds.end())
@@ -287,9 +294,10 @@ bool CanvasEditingRuntime::regionSelectionPointer(const input::PointerSample& sa
         regionCandidates_.clear();regionUnsupportedKinds_.clear();
         if (result.status==RegionFinishStatus::kReady) {
             const auto query=querySelectionRegion(result.points);regionQueryStatus_=query.status;regionUnsupportedKinds_=query.unsupportedKinds;
-            if (query.status==Status::kComplete&&publishSelectionAcquisition(query.roots,result.combine,result.context.selectionRevision)) {
-                snapGuides_.clear();
-            } else if (query.status==Status::kComplete) regionQueryStatus_=Status::kStale;
+            if (query.publishable&&(query.status==Status::kComplete||query.status==Status::kPartial)) {
+                if(publishSelectionAcquisition(query.roots,result.combine,result.context.selectionRevision))snapGuides_.clear();
+                else regionQueryStatus_=Status::kStale;
+            }
         } else if (result.status==RegionFinishStatus::kClick) {
             regionQueryStatus_=publishSelectionAcquisition({},result.combine,result.context.selectionRevision)?Status::kComplete:Status::kStale;
         } else regionQueryStatus_=Status::kInvalid;

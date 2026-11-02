@@ -84,10 +84,14 @@ bool WebRuntimeAdapter::bind(std::int32_t canonical, std::int32_t preview,
     impl_->discard();
     const render::SurfaceMetrics metrics{lw, lh, width, height, dpr, 1.0F};
     const auto before = impl_->core.surfaceSnapshot();
-    if (before.available && before.width == width && before.height == height &&
+    // The browser owns the same pair of contexts across a window resize. Keep
+    // that surface binding transactional without losing the context or camera.
+    // Only a real context loss/replacement needs the lose/rebind path.
+    if (before.available &&
         impl_->canonical == static_cast<EMSCRIPTEN_WEBGL_CONTEXT_HANDLE>(canonical) &&
-        impl_->preview == static_cast<EMSCRIPTEN_WEBGL_CONTEXT_HANDLE>(preview))
+        impl_->preview == static_cast<EMSCRIPTEN_WEBGL_CONTEXT_HANDLE>(preview)) {
       return impl_->core.resizeSurface(metrics);
+    }
     if (impl_->core.state() == runtime::RuntimeCompositionState::kReady && !impl_->core.loseSurface()) return false;
     auto first = std::make_unique<render::WebGlSurfaceProvider>(
         render::WebGlSurfaceConfig{{}, width, height, canonical, {}});

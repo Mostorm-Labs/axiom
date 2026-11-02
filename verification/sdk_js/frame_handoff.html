@@ -59,9 +59,10 @@ try{
   await until(()=>sdk.readState().surface.width===520,'new surface metrics');
   held=false;
   await until(()=>frames>before,'resized real presentation');
+  await until(()=>!document.querySelector('#mount canvas[id$="-retained"]'),'resized qualified display');
   check(sdk.readState().objects===1&&!errors.length,'resize invalidates old work without losing document');
   scenarios.push('pending-resize');
-  const canvases=[...document.querySelectorAll('#mount canvas')];
+  const canvases=[sdk.canvas,document.querySelector('#mount canvas[id$="-preview"]')];
   const extensions=canvases.map(c=>c.getContext('webgl2').getExtension('WEBGL_lose_context'));
   check(extensions.every(Boolean),'real context loss extension');
   held=true;const previousLossDelays=delayed;

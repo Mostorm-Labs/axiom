@@ -50,6 +50,17 @@ engine, wasm, data and collector modules. Physical IME/touch results and stable
 release acceptance remain separate evidence. Do not claim stability from merely
 enumerating declarations or a successful synthetic test name.
 
+Web display continuity correction: Shell chrome overlays the mount rather than
+participating in its layout. Continuous mount resize observations are coalesced
+for 120 ms; drawing layers keep their previous logical pixel size and top-left
+origin during that interval. The next pointer Down flushes pending metrics before
+the shared collector translates coordinates. Actual resize/rebind still follows
+the Runtime-owned paired provider transaction and generation validation, with no
+implicit camera change. Retained pixels are disposable display feedback until a
+qualified presentation of the new binding. Close cancels pending resize callbacks
+and restores the mount's previous inline overflow. No public API or semantic schema
+change is introduced.
+
 
 Image export extension (preview.4): `exportImage` is a queued read-only capability;
 it does not call text finish or schedule live presentation. Requests/results and

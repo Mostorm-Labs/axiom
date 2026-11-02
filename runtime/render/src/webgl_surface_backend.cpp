@@ -90,14 +90,37 @@ BackendSubmissionResult WebGlSurfaceProvider::resize(
   if (!impl_ || width == 0U || height == 0U) {
     return BackendSubmissionResult::rejected("WebGL surface dimensions are invalid");
   }
-  // Registration validates the provider by replaying its declared metrics.
-  // That operation is intentionally idempotent for the already-created
-  // app-owned context. A real size change still requires the Web App to
-  // recreate the provider so the framebuffer is wrapped at the new size.
   if (width == impl_->config.physicalWidth && height == impl_->config.physicalHeight) {
     return BackendSubmissionResult::accepted();
   }
-  return BackendSubmissionResult::rejected("WebGL surface resize requires provider recreation");
+  if (impl_->webgl <= 0 || !impl_->context ||
+      emscripten_webgl_make_context_current(impl_->webgl) != EMSCRIPTEN_RESULT_SUCCESS) {
+    return BackendSubmissionResult::rejected("WebGL context activation failed");
+  }
+  if (impl_->acquired) {
+    return BackendSubmissionResult::rejected("WebGL surface is acquired");
+  }
+
+  // The Web App has already resized the drawing buffer. Rewrap that same
+  // framebuffer in a new SkSurface while retaining the context and provider
+  // identity. The registry will advance the provider generation atomically.
+  impl_->surface.reset();
+  GLint framebuffer = 0;
+  glGetIntegerv(GL_FRAMEBUFFER_BINDING, &framebuffer);
+  const auto target = GrBackendRenderTargets::MakeGL(
+      static_cast<int>(width), static_cast<int>(height), 1, 8,
+      GrGLFramebufferInfo{static_cast<GrGLuint>(framebuffer), static_cast<GrGLenum>(GL_RGBA8)});
+  impl_->surface = SkSurfaces::WrapBackendRenderTarget(
+      impl_->context.get(), target, kBottomLeft_GrSurfaceOrigin,
+      kRGBA_8888_SkColorType, SkColorSpace::MakeSRGB(), nullptr);
+  if (!impl_->surface) {
+    impl_->lost = true;
+    return BackendSubmissionResult::rejected("Skia WebGL2 surface resize failed");
+  }
+  impl_->config.physicalWidth = width;
+  impl_->config.physicalHeight = height;
+  impl_->lost = false;
+  return BackendSubmissionResult::accepted();
 }
 BackendSubmissionResult WebGlSurfaceProvider::readbackRgba(std::span<std::uint8_t>) noexcept { return BackendSubmissionResult::rejected("WebGL provider does not expose readback"); }
 std::uint64_t WebGlSurfaceProvider::presentCount() const noexcept { return impl_ == nullptr ? 0 : impl_->presents; }

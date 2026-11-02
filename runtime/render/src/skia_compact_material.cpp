@@ -2,6 +2,7 @@
 #include "canvas/render/skia_scene_renderer.hpp"
 #include "canvas/ink/compact_geometry.hpp"
 #include "compact_raster_internal.hpp"
+#include "compact_contour_skia_path.hpp"
 #include "include/core/SkCanvas.h"
 #include "include/core/SkImage.h"
 #include "include/core/SkPaint.h"
@@ -123,12 +124,7 @@ void drawCompactContourCoverageToSkCanvas(SkCanvas& canvas,const foundation::Ink
     // exactly once regardless of input batching. A pending last patch must not
     // be drawn separately: AA edges accumulate when drawn again with its pair.
     for(std::size_t first=0;first+1<contour.patches.size();++first){
-        const auto end=first+2;
-        SkPathBuilder path;const auto& start=contour.patches[first];path.moveTo(static_cast<SkScalar>(start.leftStart.x),static_cast<SkScalar>(start.leftStart.y));
-        for(std::size_t i=first;i<end;++i){const auto& p=contour.patches[i];path.quadTo(static_cast<SkScalar>(p.leftControl.x),static_cast<SkScalar>(p.leftControl.y),static_cast<SkScalar>(p.leftEnd.x),static_cast<SkScalar>(p.leftEnd.y));}
-        const auto& last=contour.patches[end-1];path.lineTo(static_cast<SkScalar>(last.rightEnd.x),static_cast<SkScalar>(last.rightEnd.y));
-        for(std::size_t i=end;i-->first;){const auto& p=contour.patches[i];path.quadTo(static_cast<SkScalar>(p.rightControl.x),static_cast<SkScalar>(p.rightControl.y),static_cast<SkScalar>(p.rightStart.x),static_cast<SkScalar>(p.rightStart.y));}
-        path.close();canvas.drawPath(path.detach(),paint);
+        canvas.drawPath(compactContourRibbon(std::span(contour.patches).subspan(first,2)),paint);
     }
     for(const auto& cap:contour.caps){canvas.save();canvas.translate(static_cast<SkScalar>(cap.x),static_cast<SkScalar>(cap.y));
         if(config.family==foundation::InkFamily::kMarker){canvas.rotate(static_cast<SkScalar>(config.markerAngle*57.29577951308232));canvas.scale(1,static_cast<SkScalar>(config.markerFlatness));}

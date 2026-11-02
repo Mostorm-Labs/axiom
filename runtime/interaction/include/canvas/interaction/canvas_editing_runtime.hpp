@@ -911,6 +911,7 @@ class CanvasEditingRuntime : public interaction::SemanticReadPort,
   std::uint64_t regionBinding_=1;
   struct RegionQueryResult final {
     runtime::SelectionQueryStatus status=runtime::SelectionQueryStatus::kFailed;
+    bool publishable=true;
     std::vector<foundation::ObjectId> roots;
     std::vector<std::uint32_t> unsupportedKinds;
   };

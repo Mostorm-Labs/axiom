@@ -60,6 +60,31 @@ TEST(SelectionCoverage, LegacyDabsAreSeparateSquaresAndSolidBrushDabsAreDisks) {
     d.stroke.snapshot.material_mode=4;r.content=d;
     EXPECT_EQ(intersectSelectionRegion(r,box(19,19)),RegionIntersection::kUnsupported);
 }
+TEST(SelectionCoverage, CompactStrokeParticipatesWithoutMakingUnsupportedDabsFatal) {
+    semantic::CompactStrokeContent c;
+    c.stroke.config.version = 2;
+    c.stroke.config.size = 20;
+    c.stroke.config.opacity = 1;
+    c.stroke.config.algorithmVersion = 4;
+    c.stroke.config.signalVersion = 3;
+    c.stroke.config.materialVersion = 2;
+    c.stroke.config.materialResourceId = std::string(foundation::kInkMaterialV2ResourceId);
+    c.stroke.config.materialResourceSha256 = std::string(foundation::kInkMaterialV2ResourceSha256);
+    c.stroke.knots = {{10, 10, 32768}, {90, 90, 32768}};
+    auto r = object(semantic::ObjectKind::kVectorStroke, c);
+    r.kind_version = 3;
+    EXPECT_EQ(intersectSelectionRegion(r, box(42, 42, 8, 8)), RegionIntersection::kHit);
+    EXPECT_EQ(intersectSelectionRegion(r, box(10, 80, 8, 8)), RegionIntersection::kMiss);
+
+    semantic::DabBrushStrokeContent textured;
+    textured.stroke.snapshot.paint.alpha = 1;
+    textured.stroke.snapshot.paint.opacity = 1;
+    textured.stroke.snapshot.material_mode = 4;
+    textured.stroke.dab_output.dabs = {{{20, 20}, 24, 0, 1}};
+    auto dab = object(semantic::ObjectKind::kDabStroke, textured);
+    dab.kind_version = 2;
+    EXPECT_EQ(intersectSelectionRegion(dab, box(18, 18, 4, 4)), RegionIntersection::kUnsupported);
+}
 TEST(SelectionCoverage, ConnectorUsesPublishedRouteAndArrowheadAndUnavailableIsExplicit) {
     semantic::ConnectorContent c;c.start.value=semantic::FreePointEndpoint{{0,0}};c.end.value=semantic::FreePointEndpoint{{100,100}};
     auto r=object(semantic::ObjectKind::kConnector,c);

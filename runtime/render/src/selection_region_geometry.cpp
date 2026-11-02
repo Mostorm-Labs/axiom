@@ -1,7 +1,9 @@
 #include "canvas/render/selection_region_geometry.hpp"
 #include "canvas/scene/sketch_geometry.hpp"
+#include "canvas/ink/compact_geometry.hpp"
 #if CANVAS_RENDER_HAS_SKIA
 #include "skia_geometry_internal.hpp"
+#include "compact_contour_skia_path.hpp"
 #include "canvas/render/brush_outline_skia_path.hpp"
 #include "canvas/render/image_crop_geometry.hpp"
 #include "canvas/text/text_layout.hpp"
@@ -42,6 +44,23 @@ Hit geometry(const RuntimeSceneRecord& r,SkPath& path,std::vector<SkPath>& decor
         if(const auto* c=std::get_if<semantic::BrushStrokeContent>(&r.content)) {
             if(c->stroke.snapshot.paint.alpha*c->stroke.snapshot.paint.opacity>0)
                 path=buildVectorBrushOutlineSkPath(c->stroke.vector_output.outline,c->stroke.vector_output.fill_rule,c->stroke.vector_output.closed);
+        } else if(const auto* compact=std::get_if<semantic::CompactStrokeContent>(&r.content)) {
+            const auto& s=compact->stroke;const auto& config=s.config;
+            if(!semantic::validCompactStroke(s))return Hit::kInvalid;
+            if(config.family!=foundation::InkFamily::kRound&&config.family!=foundation::InkFamily::kMarker)return Hit::kUnsupported;
+            if(config.opacity*config.color[3]<=0)break;
+            if(config.algorithmVersion!=4)return Hit::kUnsupported;
+            // Reuse the renderer's compiler and ribbon path, including pressure,
+            // smoothing, caps and tapers. No second brush geometry algorithm.
+            const auto contour=ink::compileCompactContour(config,s.knots);
+            for(std::size_t i=0;i+1<contour.patches.size();++i)
+                decorations.push_back(internal::compactContourRibbon(std::span(contour.patches).subspan(i,2)));
+            for(const auto& cap:contour.caps){
+                SkPathBuilder b;b.addCircle(0,0,f(cap.radius));auto p=b.detach();
+                SkMatrix matrix;matrix.setTranslate(f(cap.x),f(cap.y));
+                if(config.family==foundation::InkFamily::kMarker){matrix.preRotate(f(config.markerAngle*57.29577951308232));matrix.preScale(1,f(config.markerFlatness));}
+                decorations.push_back(p.makeTransform(matrix));
+            }
         } else if(const auto* legacy=std::get_if<semantic::VectorStrokeContent>(&r.content)) {
             const auto* data=std::get_if<semantic::VectorStrokeData>(&legacy->stroke.data);if(!data)return Hit::kInvalid;
             if(legacy->stroke.brush.opacity*legacy->stroke.brush.color.a<=0)break;
