@@ -13,7 +13,7 @@ const observation = {checks: {}, errors: [], exceptions: [], ids: {}, input: 'Ch
 try {
   await fs.mkdir(files);
   const hashes = {};
-  for (const name of ['axiom.mjs', 'internal', 'axiom.wasm', 'axiom.data', 'pointer_input.mjs', 'text_input.mjs']) {
+  for (const name of ['axiom.mjs', 'internal', 'api', 'axiom.wasm', 'axiom.data', 'pointer_input.mjs', 'text_input.mjs']) {
     await fs.cp(path.resolve(process.argv[2], name), path.join(files, name), {recursive: true});
     if (name !== 'internal') hashes[name] = createHash('sha256').update(await fs.readFile(path.join(files, name))).digest('hex');
   }

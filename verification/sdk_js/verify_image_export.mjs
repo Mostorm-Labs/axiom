@@ -14,7 +14,7 @@ const observation = {checks: {}, errors: [], exceptions: [], input: 'Chrome CDP 
 try {
   await fs.mkdir(files);
   const hashes = {};
-  for (const name of ['axiom.mjs', 'internal', 'axiom.wasm', 'axiom.data', 'pointer_input.mjs', 'text_input.mjs', 'example.html']) {
+  for (const name of ['axiom.mjs', 'internal', 'api', 'axiom.wasm', 'axiom.data', 'pointer_input.mjs', 'text_input.mjs', 'example.html']) {
     await fs.cp(path.resolve(process.argv[2], name), path.join(files, name), {recursive: true});
     if (name !== 'internal') hashes[name] = createHash('sha256').update(await fs.readFile(path.join(files, name))).digest('hex');
   }
