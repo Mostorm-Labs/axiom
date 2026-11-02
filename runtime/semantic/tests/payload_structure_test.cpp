@@ -79,9 +79,16 @@ ObjectRecord record(ObjectKind kind, std::uint64_t identity) {
         case ObjectKind::kSection:
             value.content = SectionContent{{0.0, 0.0, 10.0, 10.0}, "", 0.0, 0.0};
             break;
-        case ObjectKind::kTable:
-            value.content = TableContent{};
+        case ObjectKind::kTable: {
+            TableContent table;
+            table.rows = {{id(identity * 10U + 1U), 48.0}};
+            table.columns = {{id(identity * 10U + 2U), 48.0}};
+            TableCell cell;
+            cell.text.layout = RichTextLayout{36.0};
+            table.cells = {cell};
+            value.content = std::move(table);
             break;
+        }
     }
     return value;
 }
