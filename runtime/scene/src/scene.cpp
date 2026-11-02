@@ -6,6 +6,7 @@
 #include "canvas/scene/bounds_system.hpp"
 #include "canvas/text/text_layout.hpp"
 #include "canvas/scene/hierarchy_geometry.hpp"
+#include "canvas/scene/geometry_chunk.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -49,6 +50,7 @@ RuntimeSceneProjection projectRuntimeScene(
         projection.records.back().geometryBounds = bounds.geometry;
         projection.records.back().visualBounds = bounds.visual;
         projection.records.back().worldBounds = bounds.world;
+        projection.records.back().geometryChunks = scene::buildGeometryChunks(record.content);
         const semantic::RichTextContent* textContent = nullptr;
         if (record.kind == semantic::ObjectKind::kRichText)
             textContent = std::get_if<semantic::RichTextContent>(&record.content);
@@ -311,7 +313,8 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
                 std::move(r.properties),std::move(r.content),std::move(r.eraseMasks),
                 std::move(r.derivedGeometry),r.geometryBounds,r.visualBounds,r.worldBounds,
                 std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
-                std::move(r.textLayout),r.hierarchyOrder});
+                std::move(r.geometryChunks),std::move(r.textLayout),r.hierarchyOrder});
+                projection.records.back().geometryChunks = scene::buildGeometryChunks(projection.records.back().content);
             PreparedPublication result{std::move(projection)};
             result.fullProjectionAuthority = true;
             return foundation::Result<PreparedPublication>::success(std::move(result));
@@ -432,7 +435,8 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                 std::move(r.properties),std::move(r.content),std::move(r.eraseMasks),
                 std::move(r.derivedGeometry),r.geometryBounds,r.visualBounds,r.worldBounds,
                 std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
-                std::move(r.textLayout),r.hierarchyOrder});
+                std::move(r.geometryChunks),std::move(r.textLayout),r.hierarchyOrder});
+                patch.records.back().geometryChunks = scene::buildGeometryChunks(patch.records.back().content);
         } else {
             patch = projectRuntimeScene(changed, post_state.generation(), _textLayoutService, deferConnectorRoutes_);
         }

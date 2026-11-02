@@ -217,6 +217,29 @@ int main() {
     assert(scene.records().size() == 9);
     assert(scene.find(ObjectId::fromUint64(7))->kind == ObjectKind::kConnector);
 
+    ObjectRecord compact;
+    compact.id = ObjectId::fromUint64(600U);
+    compact.kind = ObjectKind::kVectorStroke;
+    compact.kind_version = 3U;
+    compact.content = canvas::semantic::CompactStrokeContent{};
+    auto& compactStroke = std::get<canvas::semantic::CompactStrokeContent>(compact.content).stroke;
+    compactStroke.config.size = 4.0F;
+    compactStroke.knots.reserve(513U);
+    for (std::uint32_t i = 0; i < 513U; ++i)
+        compactStroke.knots.push_back(canvas::foundation::InkKnot{static_cast<float>(i), 10.0F, 32768U});
+    const auto compactProjection = canvas::projectRuntimeScene(std::vector{compact}, SemanticGeneration(9));
+    assert(compactProjection.records.size() == 1U);
+    const auto& chunks = compactProjection.records.front().geometryChunks;
+    assert(chunks.size() == 3U);
+    assert(chunks[0].index == 0U && chunks[0].pointOffset == 0U && chunks[0].pointCount == 256U);
+    assert(chunks[1].pointOffset == 256U && chunks[1].pointCount == 256U);
+    assert(chunks[2].pointOffset == 512U && chunks[2].pointCount == 1U);
+    assert(chunks[0].bounds.left < chunks[0].bounds.right);
+    assert(chunks[0].bounds.right < chunks[1].bounds.left);
+    assert(!chunks[0].digest.empty() && chunks[0].digest != chunks[1].digest);
+    const auto compactProjectionAgain = canvas::projectRuntimeScene(std::vector{compact}, SemanticGeneration(9));
+    assert(compactProjectionAgain.records.front().geometryChunks == chunks);
+
     ObjectRecord changed = source[0];
     changed.transform.tx = 123.0;
     assert(ObjectStoreMutator::replaceExisting(store, changed));

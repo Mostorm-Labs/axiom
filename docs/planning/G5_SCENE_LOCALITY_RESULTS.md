@@ -24,6 +24,10 @@ It is an engineering result only; it does not issue G5 or P34 acceptance.
   handle index after localized mutations, so a single lookup does not rebuild
   the ordered cache. This is the first GeometryChunk prerequisite; it is not
   yet a chunked ordered publication or visible-candidate chunk index.
+- RuntimeScene now derives deterministic 256-point `GeometryChunk` metadata for
+  compact/vector/BrushStroke sources. Full and incremental projection share the
+  same helper; chunks carry source offsets, counts, local bounds and a stable
+  digest. This metadata is foundation-only until Visibility/Render consume it.
 
 ## Evidence
 

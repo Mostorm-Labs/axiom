@@ -3,6 +3,7 @@
 #include "canvas/scene/bounds_system.hpp"
 #include "canvas/scene/hierarchy_geometry.hpp"
 #include "canvas/scene/derived_geometry.hpp"
+#include "canvas/scene/geometry_chunk.hpp"
 
 #include <algorithm>
 #include <sstream>
@@ -242,7 +243,7 @@ foundation::Result<RuntimeSceneProjection> projectSemanticScene(const semantic::
         out.records.push_back(InspectionRecord{record.id, record.kind, record.kind_version,
             record.placement, projectedTransform, record.properties, record.content, record.erase_masks,
             std::move(derivedGeometry),
-            bounds.geometry, bounds.visual, bounds.world, layout ? layout->digest : geometryText(record), dependencies(record), layout});
+            bounds.geometry, bounds.visual, bounds.world, layout ? layout->digest : geometryText(record), dependencies(record), buildGeometryChunks(record.content), layout});
         if(record.kind==semantic::ObjectKind::kSection&&layout)
             for(const auto& font:layout->fonts)out.records.back().directDependencies.push_back(font.resourceId.value);
     }

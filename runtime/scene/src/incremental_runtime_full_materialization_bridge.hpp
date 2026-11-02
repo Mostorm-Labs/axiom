@@ -7,6 +7,7 @@
 #include "canvas/semantic/semantic_read_view.hpp"
 #include "canvas/text/text_layout.hpp"
 #include "canvas/scene/derived_geometry.hpp"
+#include "canvas/scene/scene_types.hpp"
 
 namespace canvas::internal {
 
@@ -27,6 +28,7 @@ struct FullMaterializedScene final {
         foundation::WorldRect worldBounds{};
         std::string referenceGeometryDigest;
         std::vector<semantic::ObjectId> directDependencies;
+        std::vector<GeometryChunk> geometryChunks;
         std::shared_ptr<const text::TextLayoutSnapshot> textLayout;
         std::uint64_t hierarchyOrder = 0;
     };

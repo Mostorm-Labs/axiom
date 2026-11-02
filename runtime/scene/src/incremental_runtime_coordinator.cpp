@@ -4,6 +4,7 @@
 #include "canvas/scene/bounds_system.hpp"
 #include "canvas/scene/hierarchy_geometry.hpp"
 #include "canvas/text/text_layout.hpp"
+#include "canvas/scene/geometry_chunk.hpp"
 
 #include <algorithm>
 
@@ -81,9 +82,11 @@ RuntimeSceneProjection projectionFromMaterialized(internal::FullMaterializedScen
             .worldBounds = record.worldBounds,
             .referenceGeometryDigest = std::move(record.referenceGeometryDigest),
             .directDependencies = std::move(record.directDependencies),
+            .geometryChunks = std::move(record.geometryChunks),
             .textLayout = std::move(record.textLayout),
             .hierarchyOrder = record.hierarchyOrder,
         });
+        projection.records.back().geometryChunks = scene::buildGeometryChunks(projection.records.back().content);
     }
     return projection;
 }
