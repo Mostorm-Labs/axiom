@@ -10,7 +10,7 @@ apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'com.facebook.react'
 def nativeSdk = project.findProperty('axiomNativeSdkRoot') ?: file('../native/android').absolutePath
 def availableAbis = file("${nativeSdk}/lib").listFiles()?.findAll {
- it.isDirectory() && new File(it, 'libaxiom_native.so').isFile()
+ it.isDirectory() && new File(it, 'libaxiom.so').isFile()
 }?.collect { it.name } ?: []
 def requestedAbis = project.findProperty('reactNativeArchitectures')?.split(',')?.toList() ?: availableAbis
 if (requestedAbis.isEmpty() || !availableAbis.containsAll(requestedAbis)) {

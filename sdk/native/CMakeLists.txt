@@ -38,9 +38,10 @@ if(ANDROID)
 endif()
 add_library(axiom_native SHARED src/native_api.cpp)
 target_sources(axiom_native PRIVATE include/axiom/native.h)
+set_target_properties(axiom_native PROPERTIES OUTPUT_NAME axiom)
 if(APPLE)
  set_target_properties(axiom_native PROPERTIES FRAMEWORK TRUE FRAMEWORK_VERSION A
-  OUTPUT_NAME AxiomNative MACOSX_FRAMEWORK_IDENTIFIER dev.mostorm.axiom.native
+  OUTPUT_NAME axiom MACOSX_FRAMEWORK_IDENTIFIER dev.mostorm.axiom
   PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/axiom/native.h")
 endif()
 target_compile_definitions(axiom_native PRIVATE AXIOM_NATIVE_BUILD)

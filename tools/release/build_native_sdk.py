@@ -74,7 +74,7 @@ def build(target, directory, output, ndk=None, offline=False):
     run(configure, env)
     run(['cmake', '--build', directory, '--target', 'axiom_native', '--parallel', '6'], env)
     run(['cmake', '--install', directory, '--prefix', output, '--component', 'AxiomNative'], env)
-    metadata = {'format': 'axiom-native-development-v1', 'target': target,
+    metadata = {'format': 'axiom-native-development-v1', 'target': target, 'runtime_name': 'axiom',
                 'sdk_version': json.loads((REPO / 'sdk/version.json').read_text())['version'],
                 'source_revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=REPO, text=True).strip(),
                 'dirty': bool(subprocess.check_output(['git', 'status', '--porcelain'], cwd=REPO, text=True).strip()),
