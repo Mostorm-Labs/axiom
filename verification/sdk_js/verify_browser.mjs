@@ -10,10 +10,10 @@ let browser,server,socket;let failure;let observation;
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 try {
   await fs.mkdir(files);
-  for(const name of ['axiom.mjs','axiom.d.mts','internal','axiom.wasm','axiom.data','pointer_input.mjs','text_input.mjs','package.json','README.md','example.html','serve.py','licenses'])
+  for(const name of ['axiom.mjs','axiom.d.mts','internal','api','axiom.wasm','axiom.data','pointer_input.mjs','text_input.mjs','package.json','README.md','example.html','serve.py','licenses'])
     await fs.cp(path.resolve(process.argv[2],name),path.join(files,name),{recursive:true});
-  const framesOnly=process.argv[5]==='frames';
-  await fs.copyFile(new URL(framesOnly?'./frame_handoff.html':'./browser.html',import.meta.url),path.join(files,'index.html'));
+  const framesOnly=process.argv[5]==='frames',controllerOnly=process.argv[5]==='controller';
+  await fs.copyFile(new URL(controllerOnly?'../sdk_controller/browser.html':framesOnly?'./frame_handoff.html':'./browser.html',import.meta.url),path.join(files,'index.html'));
   await fs.copyFile(new URL('./frame_handoff.html',import.meta.url),path.join(files,'frame_handoff.html'));
   await fs.copyFile(new URL('./shell_axis.html',import.meta.url),path.join(files,'shell_axis.html'));
   server=http.createServer(async(req,res)=>{try{const p=path.resolve(files,'.'+new URL(req.url,'http://localhost').pathname.replace(/\/$/,'/index.html'));
@@ -44,9 +44,9 @@ try {
   observation={consumer:files,result,exceptions:errors,consoleErrors,browserVersion,startup:started.diagnostics(),mode:'headless Chrome/WebGL2; synthetic DOM input',files:hashes};
   console.log(JSON.stringify(observation));
   const validFrames=value=>value?.status==='PASS'&&['pending-input','no-duplicate-completion','pending-resize','native-loss-before-dom','context-recovery'].every(id=>value.scenarios?.includes(id))&&value.delayed>0;
-  if(result?.status!=='PASS'||!Array.isArray(result.results)||(framesOnly?!validFrames(result):result.results.length<40)||errors.length)throw Error('JS SDK browser acceptance failed');
+  if(result?.status!=='PASS'||!Array.isArray(result.results)||(controllerOnly?result.results.length<15:framesOnly?!validFrames(result):result.results.length<40)||errors.length)throw Error('JS SDK browser acceptance failed');
   if(!framesOnly&&process.env.AXIOM_EXPECTED_REVISION&&(result.buildInfo?.sourceRevision!==process.env.AXIOM_EXPECTED_REVISION||result.buildInfo?.dirty))throw Error('JS engine is not the frozen clean release revision');
-  if(framesOnly){await closeBrowser();}
+  if(framesOnly||controllerOnly){await closeBrowser();}
   else {
   await send('Page.navigate',{url:`http://127.0.0.1:${server.address().port}/frame_handoff.html`});
   let handoff;

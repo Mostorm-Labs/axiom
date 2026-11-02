@@ -89,3 +89,12 @@ No qualification workflow is a `needs` dependency of SDK publication. Other
 semantic, dependency and platform CI retain their own scoped triggers; their
 failures must be classified independently rather than being treated as SDK
 publication results.
+
+## 0.2.0 routing and RN boundary
+
+The 0.2.0 release continues to publish the stable Windows/Web consumer assets
+through the tag-only workflow. The React Native package and its four-platform
+physical smoke evidence remain private development materialization until a
+separate RN publication contract is accepted. POC-02, POC-03, RF-01 and G3
+reference-host workflows are manual-only historical/reference lanes; they do not
+run for ordinary pull requests or `main` pushes and are not release dependencies.

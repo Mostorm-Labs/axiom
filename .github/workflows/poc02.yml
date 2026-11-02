@@ -1,17 +1,6 @@
 name: POC-02 Ink Engine
 
 on:
-  pull_request:
-    paths:
-      - "r1-full-skia-sdk.lock.json"
-      - "pocs/ink_engine/**"
-      - "pocs/fastink/**"
-  push:
-    branches: [main]
-    paths:
-      - "r1-full-skia-sdk.lock.json"
-      - "pocs/ink_engine/**"
-      - "pocs/fastink/**"
   workflow_dispatch:
 
 concurrency:

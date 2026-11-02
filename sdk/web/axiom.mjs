@@ -1,7 +1,8 @@
-export const SDK_VERSION = '0.1.1';
-export class AxiomError extends Error {
-  constructor(code, message = code, details = {}) { super(message); this.name = 'AxiomError'; this.code = code; this.details = details; }
-}
+import {SDK_VERSION, AxiomError} from '../api/axiom.mjs';
+import {adaptController} from '../api/internal/controller.mjs';
+export {SDK_VERSION, AxiomError};
+/** Async, DOM-free control contract shared with the native SDK. */
+export async function createController(options) {return adaptController(await createRuntime(options));}
 const enumValue = (values, name) => {
   if (!Object.hasOwn(values, name)) throw new AxiomError('INVALID_ARGUMENT', `Unknown value: ${name}`);
   return values[name];

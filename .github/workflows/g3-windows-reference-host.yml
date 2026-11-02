@@ -2,19 +2,6 @@ name: G3-09 Windows canonical surface reference host
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - 'apps/axiom_canvas_demo/**'
-      - 'runtime/render/**'
-      - 'runtime/scene/**'
-      - 'runtime/semantic/**'
-      - 'runtime/foundation/**'
-      - 'CMakeLists.txt'
-      - 'CMakePresets.json'
-      - 'r1-full-skia-sdk.lock.json'
-      - 'tools/skia/**'
-      - '.aegis/packages/GT-G3-09/**'
-      - '.github/workflows/g3-windows-reference-host.yml'
 
 jobs:
   windows-reference-host:

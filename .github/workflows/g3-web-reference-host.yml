@@ -2,20 +2,6 @@ name: G3-10 Web WASM/WebGL2 canonical surface reference host
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - 'apps/axiom_canvas_demo/**'
-      - 'runtime/render/**'
-      - 'runtime/scene/**'
-      - 'runtime/semantic/**'
-      - 'runtime/foundation/**'
-      - 'CMakeLists.txt'
-      - 'CMakePresets.json'
-      - 'r1-full-skia-sdk.lock.json'
-      - 'tools/skia/**'
-      - 'verification/packages/platform-harness-web/**'
-      - '.aegis/packages/GT-G3-10/**'
-      - '.github/workflows/g3-web-reference-host.yml'
 
 jobs:
   web-reference-host:
