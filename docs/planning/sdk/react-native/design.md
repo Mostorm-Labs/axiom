@@ -192,3 +192,26 @@ real Session/Runtime transport check passed, and release/package tests were 27/2
 Native IME, real pressure, measured performance, full physical editing/lifecycle
 coverage and exhaustive brush fidelity remain open. RN 0.2.0 stays private and
 `NOT_QUALIFIED`; no Gate, P34, or release acceptance is issued.
+
+## Android physical input follow-up (2026-11-02)
+
+The Pixel 7 Android 17 physical run initially showed no preview or canonical
+stroke. The failure was isolated with a real RN View/JNI/Runtime instrumentation
+RED run: Android `MotionEvent` pointer IDs are zero-based, while the shared
+Runtime reserves pointer identity zero as invalid. The RN Android host now maps
+`MotionEvent.getPointerId(i)` to `id + 1` at the platform boundary for every
+contact phase; Runtime identity rules remain unchanged.
+
+The corrected arm64 Release consumer was installed on the same USB Pixel 7.
+The user confirmed drawing, live preview and committed strokes were visible.
+The final capture shows 11 objects, no active contacts and zoom 0.71. The
+physical log records repeated contact enter/exit and committed generations.
+The instrumentation GREEN run also passed object commit, Undo/Redo and Cancel
+through the real RN View/JNI/Runtime path; it is supplemental synthetic input
+evidence and does not replace physical observations. Evidence is under
+`evidence/2026-11-02-android-pointer-input/`.
+
+This closes only the Android pointer identity and drawing/preview smoke scope.
+Object/partial eraser, complete manual lifecycle, IME, stylus/real pressure,
+performance and full Android/RN qualification remain open. RN 0.2.0 remains
+private and `NOT_QUALIFIED`; no Gate, P34 or release acceptance is issued.

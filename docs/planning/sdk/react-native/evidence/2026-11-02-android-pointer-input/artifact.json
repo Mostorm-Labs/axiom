@@ -1,0 +1,37 @@
+{
+  "format": "axiom-android-pointer-fix-artifact-v1",
+  "recorded_at": "2026-11-02T05:02:04.054846+00:00",
+  "native_source_revision": "afa46640fc5f18ee36323d934f8e7516f2ec54bc",
+  "rn_adapter_base_revision": "afa46640fc5f18ee36323d934f8e7516f2ec54bc",
+  "rn_adapter_status": "COMMITTED_IN_THIS_REVISION",
+  "patch_sha256": "aee51b8af9ad54f4640a552651ca62eb11d2528c121ac33873a3bfd15d8dabbc",
+  "source_files": {
+    "sdk/react-native/android/src/main/java/dev/mostorm/axiom/AxiomCanvasView.kt": "f3ff252644f8505f34d6712b377acfa759cbc5a01bc0f21b53c4ca512ca27ba7",
+    "verification/sdk_controller/android/CanvasInputInstrumentation.java": "0ec8845ef246400422d0149171fbfe95f428fb2ab171f7f6b629385bbcf2bd61"
+  },
+  "apk_sha256": "c461b8ea5594ea16af83fae0c3616041994e294a6156631ea439968acf26012b",
+  "apk_bytes": 72396609,
+  "apk_files": {
+    "lib/arm64-v8a/libaxiom_native.so": {
+      "sha256": "b8a855f1de389c24eb4b13aa593ffb908c0c859a1e311ab2799f778020f3fd6d",
+      "bytes": 24432224
+    },
+    "lib/arm64-v8a/libaxiom_rn.so": {
+      "sha256": "c0b5bd681f2a3a0d0a757b831d3bd00514c80396b135cdd7c43432c914e2751e",
+      "bytes": 277520
+    },
+    "assets/index.android.bundle": {
+      "sha256": "bc667bc07d9d66a794e90ca106a49dd45615b9edf742bcb89afdc33ac128e3b9",
+      "bytes": 969964
+    }
+  },
+  "qualification": "NOT_QUALIFIED",
+  "synthetic_regression": "SYNTHETIC_VIEW_JNI_RUNTIME_PASSED",
+  "physical_capture_sha256": "be72c92fe9d4e3711929771c29c679c0e66867e92cf6b7a74abd85ff85622906",
+  "physical_log_sha256": "8e20f12a1aebc81a6b3b867450370939203fb8e270a4716888b88ae43b0f602e",
+  "committed_patch": "sdk/react-native/android/src/main/java/dev/mostorm/axiom/AxiomCanvasView.kt",
+  "committed_at": "2026-11-02T05:53:34.712610+00:00",
+  "physical_retest": "USER_CONFIRMED_DRAWING_PREVIEW_NORMAL",
+  "base_source_revision": "afa46640fc5f18ee36323d934f8e7516f2ec54bc",
+  "provenance_note": "This evidence is committed in the current branch revision; the final commit is reported by Git after amend/push. Base native/runtime source remains afa46640."
+}

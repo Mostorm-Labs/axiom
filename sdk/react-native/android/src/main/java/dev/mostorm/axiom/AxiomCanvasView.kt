@@ -69,7 +69,10 @@ class AxiomCanvasView(context: Context): FrameLayout(context), Choreographer.Fra
       for(h in 0..history){val past=h<history;times[h]=(if(past)e.getHistoricalEventTime(h) else e.eventTime)*1000000
         points[h*3]=(if(past)e.getHistoricalX(i,h) else e.getX(i))/d;points[h*3+1]=(if(past)e.getHistoricalY(i,h) else e.getY(i))/d;points[h*3+2]=if(past)e.getHistoricalPressure(i,h) else e.getPressure(i)}
       val pen=e.getToolType(i)==MotionEvent.TOOL_TYPE_STYLUS||e.getToolType(i)==MotionEvent.TOOL_TYPE_ERASER
-      input(token,generation,e.getPointerId(i).toLong(),times,points,phase,if(pen)2 else 1,pen)
+      // MotionEvent ids are zero-based; shared Runtime reserves zero as invalid.
+      // Widen before adding so each Android contact retains a unique identity.
+      val pointer=e.getPointerId(i).toLong()+1L
+      input(token,generation,pointer,times,points,phase,if(pen)2 else 1,pen)
     }
     return true
   }
