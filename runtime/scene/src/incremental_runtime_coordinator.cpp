@@ -86,7 +86,6 @@ RuntimeSceneProjection projectionFromMaterialized(internal::FullMaterializedScen
             .textLayout = std::move(record.textLayout),
             .hierarchyOrder = record.hierarchyOrder,
         });
-        projection.records.back().geometryChunks = scene::buildGeometryChunks(projection.records.back().content);
     }
     return projection;
 }

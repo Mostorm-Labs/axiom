@@ -308,13 +308,14 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepare(
             if (!compiled) return foundation::Result<PreparedPublication>::failure(compiled.error());
             RuntimeSceneProjection projection{post_state.generation(), {}};
             projection.records.reserve(compiled.value().records.size());
-            for (auto& r : compiled.value().records) projection.records.push_back({
-                r.objectId,r.kind,r.kindVersion,std::move(r.placement),r.transform,
-                std::move(r.properties),std::move(r.content),std::move(r.eraseMasks),
-                std::move(r.derivedGeometry),r.geometryBounds,r.visualBounds,r.worldBounds,
-                std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
-                std::move(r.geometryChunks),std::move(r.textLayout),r.hierarchyOrder});
-                projection.records.back().geometryChunks = scene::buildGeometryChunks(projection.records.back().content);
+            for (auto& r : compiled.value().records) {
+                projection.records.push_back({
+                    r.objectId,r.kind,r.kindVersion,std::move(r.placement),r.transform,
+                    std::move(r.properties),std::move(r.content),std::move(r.eraseMasks),
+                    std::move(r.derivedGeometry),r.geometryBounds,r.visualBounds,r.worldBounds,
+                    std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
+                    std::move(r.geometryChunks),std::move(r.textLayout),r.hierarchyOrder});
+            }
             PreparedPublication result{std::move(projection)};
             result.fullProjectionAuthority = true;
             return foundation::Result<PreparedPublication>::success(std::move(result));
@@ -430,13 +431,14 @@ foundation::Result<RuntimeScene::PreparedPublication> RuntimeScene::prepareIncre
                 _textLayoutService, deferConnectorRoutes_);
             if (!compiled) return foundation::Result<PreparedPublication>::failure(compiled.error());
             patch.records.clear();
-            for (auto& r : compiled.value().records) patch.records.push_back({
-                r.objectId,r.kind,r.kindVersion,std::move(r.placement),r.transform,
-                std::move(r.properties),std::move(r.content),std::move(r.eraseMasks),
-                std::move(r.derivedGeometry),r.geometryBounds,r.visualBounds,r.worldBounds,
-                std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
-                std::move(r.geometryChunks),std::move(r.textLayout),r.hierarchyOrder});
-                patch.records.back().geometryChunks = scene::buildGeometryChunks(patch.records.back().content);
+            for (auto& r : compiled.value().records) {
+                patch.records.push_back({
+                    r.objectId,r.kind,r.kindVersion,std::move(r.placement),r.transform,
+                    std::move(r.properties),std::move(r.content),std::move(r.eraseMasks),
+                    std::move(r.derivedGeometry),r.geometryBounds,r.visualBounds,r.worldBounds,
+                    std::move(r.referenceGeometryDigest),std::move(r.directDependencies),
+                    std::move(r.geometryChunks),std::move(r.textLayout),r.hierarchyOrder});
+            }
         } else {
             patch = projectRuntimeScene(changed, post_state.generation(), _textLayoutService, deferConnectorRoutes_);
         }

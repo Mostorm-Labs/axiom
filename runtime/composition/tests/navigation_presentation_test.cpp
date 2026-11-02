@@ -145,10 +145,77 @@ void drawAfterZoom(bool settling, bool cancel){
  require(r.loseSurface(),"draw loss");
  require(!r.serviceNavigationPresentation(start+std::chrono::seconds(3),presented),"draw lost target reused");
 }
+void handPanUsesNavigationFeedback(){
+ interaction::CanvasEditingRuntime r;
+ require(r.bindSurface(256,128)&&r.registerInputSource(7,"hand-pan"),"hand pan setup");
+ require(r.selectBrushProfile("round-handdrawn",4),"hand pan brush");
+ r.setPlatformPresentationDeferred(true);
+ input::PlatformPointerSample s;s.source=7;s.pointer=1;s.sequence=0;s.timestampNs=0;
+ const auto pointer=[&](input::PointerPhase phase,float x,float y){
+  ++s.sequence;++s.timestampNs;s.phase=phase;s.x=x;s.y=y;
+  require(r.acceptPlatformBatch({{s}},s.sequence),"hand pan sample");
+ };
+ pointer(input::PointerPhase::kDown,30,40);pointer(input::PointerPhase::kUp,190,70);
+ unsigned attempts=0;while(!r.presentCanonicalFrame(r.nextCanonicalFrameId(),0))
+  require(r.canonicalPresentationRetryable()&&++attempts<64,"hand pan exact setup");
+ interaction::PreviewPresentationCapture capture;std::uint64_t count=0;
+ require(r.capturePreviewPresentation(capture)&&r.renderPreviewPresentation(capture,&count)&&
+         r.acknowledgePreviewPresentation(capture,count),"hand pan preview setup");
+ const auto exact=*r.lastSubmittedCanonicalFrame();
+ require(r.receivePlatformPresented({exact.viewId,exact.frameId,exact.surfaceGeneration,
+         exact.metricsGeneration,render::PresentOutcome::kPresented,
+         render::PresentEvidenceKind::kPlatformQualified,{}}),"hand pan exact setup feedback");
+ require(r.setPanTool(true),"hand pan tool");
+ attempts=0;while(!r.presentCanonicalFrame(r.nextCanonicalFrameId(),0))
+  require(r.canonicalPresentationRetryable()&&++attempts<64,"hand pan tool presentation");
+ const auto toolFrame=*r.lastSubmittedCanonicalFrame();
+ require(r.receivePlatformPresented({toolFrame.viewId,toolFrame.frameId,toolFrame.surfaceGeneration,
+         toolFrame.metricsGeneration,render::PresentOutcome::kPresented,
+         render::PresentEvidenceKind::kPlatformQualified,{}}),"hand pan tool feedback");
+ require(r.setViewportZoomAt(2.0F,128,64),"hand pan zoom");
+ bool presented=false;const auto now=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
+ unsigned steps=0;
+ while(!presented){
+  require(r.serviceNavigationPresentation(now,presented),"hand pan navigation feedback rejected");
+  require(++steps<64,"hand pan navigation feedback stalled");
+ }
+ require(!r.lastSubmittedCanonicalFrame(),"hand pan emitted exact canonical receipt during navigation");
+}
+void selectPinchUsesNavigationFeedback(){
+ interaction::CanvasEditingRuntime r;
+ require(r.bindSurface(256,128)&&r.registerInputSource(7,"select-pinch"),"select pinch setup");
+ r.setPlatformPresentationDeferred(true);
+ unsigned attempts=0;while(!r.presentCanonicalFrame(r.nextCanonicalFrameId(),0))
+  require(r.canonicalPresentationRetryable()&&++attempts<64,"select pinch exact setup");
+ const auto exact=*r.lastSubmittedCanonicalFrame();
+ require(r.receivePlatformPresented({exact.viewId,exact.frameId,exact.surfaceGeneration,
+         exact.metricsGeneration,render::PresentOutcome::kPresented,
+         render::PresentEvidenceKind::kPlatformQualified,{}}),"select pinch setup feedback");
+ std::uint64_t sequence=0;
+ const auto batch=[&](std::uint64_t pointer,input::PointerPhase phase,float x,float y){
+  input::PlatformPointerSample sample{};sample.source=7;sample.pointer=pointer;
+  sample.sequence=++sequence;sample.timestampNs=sequence*1'000'000;
+  sample.phase=phase;sample.x=x;sample.y=y;
+  require(r.acceptPlatformBatch({{sample}},sample.timestampNs),"select pinch sample");
+ };
+ batch(1,input::PointerPhase::kDown,70,50);
+ batch(2,input::PointerPhase::kDown,150,50);
+ batch(1,input::PointerPhase::kMove,60,45);
+ batch(2,input::PointerPhase::kMove,160,55);
+ bool presented=false;const auto now=std::chrono::steady_clock::time_point{}+std::chrono::seconds(1);
+ unsigned steps=0;
+ while(!presented){
+  require(r.serviceNavigationPresentation(now,presented),"select pinch navigation feedback rejected");
+  require(++steps<64,"select pinch navigation feedback stalled");
+ }
+ require(!r.lastSubmittedCanonicalFrame(),"select pinch emitted exact canonical receipt during gesture");
+ batch(1,input::PointerPhase::kUp,60,45);
+ batch(2,input::PointerPhase::kUp,160,55);
+}
 int main(){
  retainedDemand();
  deferredShapeDrag();
- drawAfterZoom(false,false);drawAfterZoom(true,false);drawAfterZoom(false,true);
+ drawAfterZoom(false,false);drawAfterZoom(true,false);drawAfterZoom(false,true);handPanUsesNavigationFeedback();selectPinchUsesNavigationFeedback();
  interaction::CanvasEditingRuntime r;
  require(r.bindSurface(256,128)&&r.registerInputSource(7,"navigation"),"prepare");
  require(r.selectBrushProfile("round-handdrawn",1),"compact brush");

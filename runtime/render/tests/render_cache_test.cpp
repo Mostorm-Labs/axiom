@@ -677,6 +677,46 @@ int main(int argc,char** argv) {
                     provider.presentCount()==cleanPresents,"clean navigation presented twice");
         }
         {
+            // A supported long stroke must keep sharing the navigation tile
+            // lane when a normal shape is present in the same viewport. The
+            // shape is authored in local coordinates and carries the same
+            // placement transform that canonical rendering applies.
+            SkiaRenderer mixedRenderer;
+            auto longEntry = stroke(902);
+            auto& longStroke = std::get<CompactStrokeReferenceCommand>(longEntry.command).content.stroke;
+            longStroke.knots = {{-120, 58, 32768}, {420, 58, 32768}};
+            longEntry.record.content = std::get<CompactStrokeReferenceCommand>(longEntry.command).content;
+            longEntry.record.worldBounds = {-140, 38, 440, 78};
+            semantic::ObjectRecord shapeObject;
+            shapeObject.id = ObjectId::fromUint64(903);
+            shapeObject.kind = semantic::ObjectKind::kShape;
+            shapeObject.kind_version = 1;
+            shapeObject.content = semantic::ShapeContent{1, 90, 54};
+            shapeObject.transform.tx = 64;
+            shapeObject.transform.ty = 32;
+            const auto shapeProjection = projectRuntimeScene({&shapeObject, 1}, semantic::SemanticGeneration{1});
+            ReferenceTraversalEntry shapeEntry{
+                shapeProjection.records.front(), true,
+                ShapeReferenceCommand{std::get<semantic::ShapeContent>(shapeObject.content)}};
+            const auto mixedFrame = plan(701, {longEntry, shapeEntry});
+            NavigationSourceQuery mixedQuery = [&](const foundation::WorldRect&,
+                                                   std::vector<ReferenceTraversalEntry>& entries) {
+                entries = {longEntry, shapeEntry};
+                return true;
+            };
+            for (unsigned n = 0; n < 128; ++n) {
+                require(navigate(mixedRenderer, provider, {1.2F, -12.0F, -8.0F},
+                                 mixedFrame.frame, mixedQuery).code == BackendSubmissionCode::kAccepted,
+                        "mixed stroke and shape navigation rejected");
+                if (!mixedRenderer.navigationWork().pending) break;
+                require(n < 127, "mixed stroke and shape navigation never converged");
+            }
+            require(mixedRenderer.navigationWork().coverageComplete &&
+                        mixedRenderer.navigationWork().tilesBuilt > 0 &&
+                        mixedRenderer.navigationWork().sourceSteps > 0,
+                    "mixed stroke and shape bypassed navigation tiles");
+        }
+        {
             // Retina pinch crosses a scale bucket immediately. The feedback
             // plane must reduce resolution to fit its budget, not abandon
             // navigation for an unbounded synchronous exact render.
