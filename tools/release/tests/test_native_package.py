@@ -204,10 +204,18 @@ class NativePackageTest(unittest.TestCase):
             # Simulate artifact transport materializing an additional framework
             # link as a regular file while preserving the native identity.
             (stage / 'lib/axiom.framework/Versions').mkdir()
-            (stage / 'lib/axiom.framework/Versions/Current').write_bytes(b'link-materialized')
+            (stage / 'lib/axiom.framework/Versions/A').mkdir()
+            (stage / 'lib/axiom.framework/Versions/A/axiom').write_bytes(b'canonical')
+            (stage / 'lib/axiom.framework/Versions/Current').mkdir()
+            (stage / 'lib/axiom.framework/Versions/Current/axiom').write_bytes(b'duplicate')
+            (stage / 'lib/axiom.framework/Headers').mkdir()
+            (stage / 'lib/axiom.framework/Resources').mkdir()
             result = self.module().stage_react_native_platform(REPO, 'macos',
                 {'macos-arm64': stage}, root / 'output', 'a' * 40)
             self.assertEqual(result['platform'], 'macos')
+            framework = root / 'output/native/macos/axiom.framework'
+            self.assertTrue((framework / 'Versions/Current').is_symlink())
+            self.assertTrue((framework / 'axiom').is_symlink())
 
     def apple_fixture(self, root, target):
         stage = self.fixture(root)

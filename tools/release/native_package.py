@@ -181,6 +181,31 @@ def _copy_tree(source, destination):
         shutil.copy2(source, destination)
 
 
+def _normalize_apple_framework(framework):
+    """Restore canonical framework symlinks after artifact transport."""
+    framework = Path(framework)
+    versions = framework / 'Versions'
+    canonical = versions / 'A'
+    if not canonical.is_dir():
+        return
+    current = versions / 'Current'
+    if current.exists() or current.is_symlink():
+        if current.is_dir() and not current.is_symlink():
+            shutil.rmtree(current)
+        else:
+            current.unlink()
+    current.symlink_to('A', target_is_directory=True)
+    for name in ('axiom', 'Headers', 'Resources'):
+        root = framework / name
+        if root.exists() or root.is_symlink():
+            if root.is_dir() and not root.is_symlink():
+                shutil.rmtree(root)
+            else:
+                root.unlink()
+        root.symlink_to(Path('Versions') / 'Current' / name,
+                        target_is_directory=name != 'axiom')
+
+
 def _package_files(root):
     return {p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in root.rglob('*') if p.is_file() and p.name != 'manifest.json'}
@@ -322,6 +347,7 @@ def _stage_react_native_platform(repo, platform, installs, output, revision):
             shutil.copytree(validated['ios-arm64'] / 'licenses', output / 'native/licenses')
         else:
             _copy_tree(validated['macos-arm64'] / 'lib/axiom.framework', output / 'native/macos/axiom.framework')
+            _normalize_apple_framework(output / 'native/macos/axiom.framework')
             shutil.copytree(validated['macos-arm64'] / 'assets', output / 'native/assets')
             _copy_tree(validated['macos-arm64'] / 'include', output / 'native/include')
             shutil.copytree(validated['macos-arm64'] / 'licenses', output / 'native/licenses')

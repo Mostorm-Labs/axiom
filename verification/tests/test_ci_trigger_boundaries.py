@@ -166,6 +166,8 @@ class CiTriggerBoundaryTest(unittest.TestCase):
         probe = (ROOT / "tools/release/chrome_probe.mjs").read_text(encoding="utf-8")
         self.assertIn("AbortSignal.timeout(60000)", probe)
         self.assertIn("diagnostics()", probe)
+        browser = (ROOT / "verification/sdk_js/verify_browser.mjs").read_text(encoding="utf-8")
+        self.assertIn("method==='Page.navigate'?120000:90000", browser)
 
 
 if __name__ == "__main__":
